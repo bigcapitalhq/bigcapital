@@ -99,7 +99,7 @@ function InvoiceForm({
       setSubmitting(false);
       return;
     }
-    // Transformes the values of the form to request.
+    // Transforms the values of the form to request.
     const form = {
       ...transformValueToRequest(values),
       delivered: submitPayload.deliver,

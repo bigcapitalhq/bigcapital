@@ -81,7 +81,7 @@ export function transformToEditForm(invoice) {
 }
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
@@ -147,7 +147,7 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
 ]);
 
 /**
- * Transformes the form values to request body values.
+ * Transforms the form values to request body values.
  */
 export function transformValueToRequest(values) {
   const entries = values.entries.filter(

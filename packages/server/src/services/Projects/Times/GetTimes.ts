@@ -30,7 +30,7 @@ export class GetTimelineService {
       .withGraphFetched('project.contact')
       .withGraphFetched('task');
 
-    // Transformes and returns object.
+    // Transforms and returns object.
     return this.transformer.transform(tenantId, times, new TimeTransformer());
   };
 }

@@ -24,7 +24,7 @@ export class GetVendor {
       .modify('vendor')
       .throwIfNotFound();
 
-    // Transformes the vendor.
+    // Transforms the vendor.
     return this.transformer.transform(
       tenantId,
       vendor,

@@ -43,7 +43,7 @@ export default class DashboardService {
   };
 
   /**
-   * Transformes role permissions to abilities.
+   * Transforms role permissions to abilities.
    */
   transformRoleAbility = (permissions) => {
     return permissions

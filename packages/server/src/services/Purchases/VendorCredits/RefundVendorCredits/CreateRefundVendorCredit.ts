@@ -105,7 +105,7 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
   };
 
   /**
-   * Transformes the refund DTO to refund vendor credit model.
+   * Transforms the refund DTO to refund vendor credit model.
    * @param   {IVendorCredit} vendorCredit -
    * @param   {IRefundVendorCreditDTO} vendorCreditDTO
    * @returns {IRefundVendorCredit}

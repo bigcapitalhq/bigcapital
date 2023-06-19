@@ -12,7 +12,7 @@ import { TenantMetadata } from '@/system/models';
 @Service()
 export class CreateEditCustomerDTO {
   /**
-   * Transformes the create/edit DTO.
+   * Transforms the create/edit DTO.
    * @param   {ICustomerNewDTO | ICustomerEditDTO} customerDTO
    * @returns
    */
@@ -26,7 +26,7 @@ export class CreateEditCustomerDTO {
   };
 
   /**
-   * Transformes the create DTO.
+   * Transforms the create DTO.
    * @param   {ICustomerNewDTO} customerDTO
    * @returns {}
    */
@@ -55,7 +55,7 @@ export class CreateEditCustomerDTO {
   };
 
   /**
-   * Transformes the edit DTO.
+   * Transforms the edit DTO.
    * @param   {ICustomerEditDTO} customerDTO
    * @returns
    */

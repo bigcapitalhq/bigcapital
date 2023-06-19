@@ -62,7 +62,7 @@ export const ERRORS = {
     'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
 };
 /**
- * Transformes the bill to initial values of edit form.
+ * Transforms the bill to initial values of edit form.
  */
 export const transformToEditForm = (bill) => {
   const initialEntries = [
@@ -87,7 +87,7 @@ export const transformToEditForm = (bill) => {
 };
 
 /**
- * Transformes bill entries to submit request.
+ * Transforms bill entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
   const transformBillEntry = R.compose(
@@ -105,7 +105,7 @@ export const filterNonZeroEntries = (entries) => {
 };
 
 /**
- * Transformes form values to request body.
+ * Transforms form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);

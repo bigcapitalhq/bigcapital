@@ -70,7 +70,7 @@ export class ExpenseDTOTransformer {
   }
 
   /**
-   * Transformes the expense create DTO.
+   * Transforms the expense create DTO.
    * @param   {number} tenantId
    * @param   {IExpenseCreateDTO} expenseDTO
    * @param   {ISystemUser} user
@@ -99,7 +99,7 @@ export class ExpenseDTOTransformer {
   };
 
   /**
-   * Transformes the expense edit DTO.
+   * Transforms the expense edit DTO.
    * @param   {number} tenantId
    * @param   {IExpenseEditDTO} expenseDTO
    * @param   {ISystemUser} user

@@ -22,7 +22,7 @@ export class BranchTransactionDTOTransform {
   };
 
   /**
-   * Transformes the input DTO for branches feature.
+   * Transforms the input DTO for branches feature.
    * @param   {number} tenantId -
    * @param   {T}      DTO -
    * @returns {Omit<T, 'branchId'> | T}

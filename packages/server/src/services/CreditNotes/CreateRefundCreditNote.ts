@@ -82,7 +82,7 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
   };
 
   /**
-   * Transformes the refund credit note DTO to model.
+   * Transforms the refund credit note DTO to model.
    * @param {number} creditNoteId
    * @param {ICreditNoteRefundDTO} creditNoteDTO
    * @returns {ICreditNote}

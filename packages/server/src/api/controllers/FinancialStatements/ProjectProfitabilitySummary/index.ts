@@ -84,7 +84,7 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(

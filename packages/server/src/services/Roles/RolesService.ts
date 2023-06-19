@@ -50,7 +50,7 @@ export default class RolesService {
     // Validates the invalid permissions.
     this.validateInvalidPermissions(createRoleDTO.permissions);
 
-    // Transformes the permissions DTO.
+    // Transforms the permissions DTO.
     const permissions = this.transformPermissionsDTO(createRoleDTO.permissions);
 
     // Creates a new role with associated entries under unit-of-work.
@@ -240,7 +240,7 @@ export default class RolesService {
   };
 
   /**
-   * Transformes new permissions DTO.
+   * Transforms new permissions DTO.
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {ICreateRolePermissionDTO[]}
    */
@@ -255,7 +255,7 @@ export default class RolesService {
   };
 
   /**
-   * Transformes edit permissions DTO.
+   * Transforms edit permissions DTO.
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {IEditRolePermissionDTO[]}
    */

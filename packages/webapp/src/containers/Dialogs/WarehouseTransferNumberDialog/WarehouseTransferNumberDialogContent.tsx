@@ -52,7 +52,7 @@ function WarehouseTransferNumberDialogContent({
       handleSuccess();
       return;
     }
-    // Transformes the form values to settings to save it.
+    // Transforms the form values to settings to save it.
     const options = transformFormToSettings(values, 'warehouse_transfers');
 
     // Save the settings.

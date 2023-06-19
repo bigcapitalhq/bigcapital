@@ -3,7 +3,7 @@ import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 import { useResourceData } from '../GenericResource';
 
 /**
- * Transformes the resource data to search entries based on
+ * Transforms the resource data to search entries based on
  * the given resource type.
  * @param {string} type
  * @param {any} resource

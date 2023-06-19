@@ -31,7 +31,7 @@ export default class GetVendorCreditToApplyBills extends BaseVendorCredit {
       .modify('dueBills')
       .modify('published');
 
-    // Transformes the bills to POJO.
+    // Transforms the bills to POJO.
     return this.transformer.transform(
       tenantId,
       openBills,

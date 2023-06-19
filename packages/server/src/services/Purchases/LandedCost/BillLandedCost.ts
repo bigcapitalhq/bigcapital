@@ -35,7 +35,7 @@ export default class BillLandedCost {
   };
 
   /**
-   * Transformes bill entry to landed cost entry.
+   * Transforms bill entry to landed cost entry.
    * @param {IBill} bill - Bill model.
    * @param {IItemEntry} billEntry - Bill entry.
    * @return {ILandedCostTransactionEntry}

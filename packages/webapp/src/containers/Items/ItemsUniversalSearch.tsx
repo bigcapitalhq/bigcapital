@@ -32,7 +32,7 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
 );
 
 /**
- * Transformes items to search.
+ * Transforms items to search.
  * @param {*} item
  * @returns
  */

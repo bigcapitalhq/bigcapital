@@ -52,7 +52,7 @@ export default class BaseLandedCostService {
   };
 
   /**
-   * Transformes DTO to bill landed cost model object.
+   * Transforms DTO to bill landed cost model object.
    * @param {ILandedCostDTO} landedCostDTO
    * @param {IBill} bill
    * @param {ILandedCostTransaction} costTransaction

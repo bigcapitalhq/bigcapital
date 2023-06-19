@@ -30,7 +30,7 @@ function PaymentMadeViewTabs({
   const handleTabsChange = (viewSlug) => {
     setPaymentsMadeTableState({ viewSlug });
   };
-  // Transformes payment views to tabs.
+  // Transforms payment views to tabs.
   const tabs = React.useMemo(
     () => transformPaymentViewsToTabs(paymentsMadeViews),
     [paymentsMadeViews],

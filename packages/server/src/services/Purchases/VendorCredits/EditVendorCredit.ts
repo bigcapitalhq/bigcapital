@@ -61,7 +61,7 @@ export default class EditVendorCredit extends BaseVendorCredit {
       'VendorCredit',
       vendorCreditDTO.entries
     );
-    // Transformes edit DTO to model storage layer.
+    // Transforms edit DTO to model storage layer.
     const vendorCreditModel = this.transformCreateEditDTOToModel(
       tenantId,
       vendorCreditDTO,

@@ -94,7 +94,7 @@ export function VendorCreditUniversalSearchItem(
 }
 
 /**
- * Transformes receipt resource item to search item.
+ * Transforms receipt resource item to search item.
  */
 const transformVendorCreditsToSearch = (vendorCredit) => ({
   id: vendorCredit.id,

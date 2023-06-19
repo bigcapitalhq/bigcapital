@@ -26,7 +26,7 @@ export function JSONResponseTransformer(transform: Function) {
 }
 
 /**
- * Transformes the given response keys to snake case.
+ * Transforms the given response keys to snake case.
  * @param response
  * @returns
  */

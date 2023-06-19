@@ -31,7 +31,7 @@ export default class ListVendorCreditRefunds extends RefundVendorCredit {
       .withGraphFetched('vendorCredit')
       .withGraphFetched('depositAccount');
 
-    // Transformes refund vendor credit models to POJO objects.
+    // Transforms refund vendor credit models to POJO objects.
     return this.transformer.transform(
       tenantId,
       refundVendorTransactions,

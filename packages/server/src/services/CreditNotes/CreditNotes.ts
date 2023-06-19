@@ -29,7 +29,7 @@ export default class BaseCreditNotes {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Transformes the credit/edit DTO to model.
+   * Transforms the credit/edit DTO to model.
    * @param {ICreditNoteNewDTO | ICreditNoteEditDTO} creditNoteDTO
    * @param {string} customerCurrencyCode -
    */

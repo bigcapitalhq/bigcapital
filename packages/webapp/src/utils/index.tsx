@@ -550,7 +550,7 @@ export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
 };
 
 /**
- * Transformes the pagination meta to table props.
+ * Transforms the pagination meta to table props.
  */
 export function getPagesCountFromPaginationMeta(pagination) {
   const { pageSize, total } = pagination;
@@ -563,7 +563,7 @@ function transformFilterRoles(filterRoles) {
 }
 
 /**
- * Transformes the table state to url query.
+ * Transforms the table state to url query.
  */
 export function transformTableStateToQuery(tableState) {
   const { pageSize, pageIndex, viewSlug, sortBy } = tableState;
@@ -590,7 +590,7 @@ export function transformTableStateToQuery(tableState) {
 }
 
 /**
- * Transformes the global table state to table state.
+ * Transforms the global table state to table state.
  */
 export function globalTableStateToTable(globalState) {
   return {
@@ -599,7 +599,7 @@ export function globalTableStateToTable(globalState) {
 }
 
 /**
- * Transformes the pagination meta response.
+ * Transforms the pagination meta response.
  */
 export function transformPagination(pagination) {
   const transformed = transformResponse(pagination);

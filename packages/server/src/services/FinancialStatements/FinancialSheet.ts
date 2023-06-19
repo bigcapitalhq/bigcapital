@@ -17,7 +17,7 @@ export default class FinancialSheet {
   readonly baseCurrency: string;
 
   /**
-   * Transformes the number format query to settings
+   * Transforms the number format query to settings
    */
   protected transformFormatQueryToSettings(): IFormatNumberSettings {
     const { numberFormat } = this;

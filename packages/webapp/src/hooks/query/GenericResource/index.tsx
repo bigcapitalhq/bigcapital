@@ -50,35 +50,35 @@ function getResourceUrlFromType(type) {
 }
 
 /**
- * Transformes invoices to resource data.
+ * Transforms invoices to resource data.
  */
 const transformInvoices = (response) => ({
   items: response.data.sales_invoices,
 });
 
 /**
- * Transformes items to resource data.
+ * Transforms items to resource data.
  */
 const transformItems = (response) => ({
   items: response.data.items,
 });
 
 /**
- * Transformes payment receives to resource data.
+ * Transforms payment receives to resource data.
  */
 const transformPaymentReceives = (response) => ({
   items: response.data.payment_receives,
 });
 
 /**
- * Transformes customers to resource data.
+ * Transforms customers to resource data.
  */
 const transformCustomers = (response) => ({
   items: response.data.customers,
 });
 
 /**
- * Transformes customers to resource data.
+ * Transforms customers to resource data.
  */
 const transformVendors = (response) => ({
   items: response.data.vendors,

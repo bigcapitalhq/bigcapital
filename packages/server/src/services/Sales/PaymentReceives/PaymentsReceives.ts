@@ -343,7 +343,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   };
 
   /**
-   * Transformes the create payment receive DTO to model object.
+   * Transforms the create payment receive DTO to model object.
    * @param {number} tenantId
    * @param {IPaymentReceiveCreateDTO|IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
    * @param {IPaymentReceive} oldPaymentReceive -
@@ -447,7 +447,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 
-    // Transformes the payment receive DTO to model.
+    // Transforms the payment receive DTO to model.
     const paymentReceiveObj = await this.transformCreateDTOToModel(
       tenantId,
       paymentCustomer,
@@ -544,7 +544,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 
-    // Transformes the payment receive DTO to model.
+    // Transforms the payment receive DTO to model.
     const paymentReceiveObj = await this.transformEditDTOToModel(
       tenantId,
       customer,

@@ -74,7 +74,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(

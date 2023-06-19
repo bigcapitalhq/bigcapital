@@ -2,7 +2,7 @@
 import { transformTableStateToQuery } from '@/utils';
 
 /**
- * Transformes the table state to list query.
+ * Transforms the table state to list query.
  */
 export const transformAccountsStateToQuery = (tableState) => {
   return {

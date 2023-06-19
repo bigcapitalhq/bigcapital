@@ -81,7 +81,7 @@ export class CreateAccount {
   };
 
   /**
-   * Transformes the create account DTO to input model.
+   * Transforms the create account DTO to input model.
    * @param   {IAccountCreateDTO} createAccountDTO
    */
   private transformDTOToModel = (
@@ -113,7 +113,7 @@ export class CreateAccount {
     // Authorize the account creation.
     await this.authorize(tenantId, accountDTO, tenantMeta.baseCurrency);
 
-    // Transformes the DTO to model.
+    // Transforms the DTO to model.
     const accountInputModel = this.transformDTOToModel(
       accountDTO,
       tenantMeta.baseCurrency

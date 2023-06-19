@@ -24,7 +24,7 @@ function CustomersViewsTabs({
   // Customers list context.
   const { customersViews } = useCustomersListContext();
 
-  // Transformes the views to tabs.
+  // Transforms the views to tabs.
   const tabs = transformViewsToTabs(customersViews);
 
   // Handle tabs change.

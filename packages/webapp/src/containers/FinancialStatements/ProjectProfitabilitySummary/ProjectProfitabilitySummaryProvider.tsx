@@ -9,7 +9,7 @@ import { transformFilterFormToQuery } from '../common';
 const ProjectProfitabilitySummaryContext = createContext();
 
 function ProjectProfitabilitySummaryProvider({ filter, ...props }) {
-  // Transformes the given filter to query.
+  // Transforms the given filter to query.
   const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // Handle fetching the items table based on the given query.

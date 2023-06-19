@@ -63,7 +63,7 @@ export const defaultRequestPayment = {
 };
 
 /**
- * Transformes the edit payment receive to initial values of the form.
+ * Transforms the edit payment receive to initial values of the form.
  */
 export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   ...transformToForm(paymentReceive, defaultPaymentReceive),
@@ -77,7 +77,7 @@ export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
 });
 
 /**
- * Transformes the given invoices to the new page receivable entries.
+ * Transforms the given invoices to the new page receivable entries.
  */
 export const transformInvoicesNewPageEntries = (invoices) => [
   ...invoices.map((invoice, index) => ({
@@ -182,7 +182,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);

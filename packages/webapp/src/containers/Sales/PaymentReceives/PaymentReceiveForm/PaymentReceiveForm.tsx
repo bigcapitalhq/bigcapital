@@ -113,7 +113,7 @@ function PaymentReceiveForm({
       setSubmitting(false);
       return;
     }
-    // Transformes the form values to request body.
+    // Transforms the form values to request body.
     const form = transformFormToRequest(values);
 
     // Handle request response success.

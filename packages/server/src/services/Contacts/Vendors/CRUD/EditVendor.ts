@@ -47,7 +47,7 @@ export class EditVendor {
       .modify('vendor')
       .throwIfNotFound();
 
-    // Transformes vendor DTO to object.
+    // Transforms vendor DTO to object.
     const vendorObj = this.transformDTO.transformEditDTO(vendorDTO);
 
     // Edits vendor contact under unit-of-work environment.

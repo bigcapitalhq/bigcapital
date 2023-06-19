@@ -100,7 +100,7 @@ export function InvoiceUniversalSearchItem(
 }
 
 /**
- * Transformes invoices to search.
+ * Transforms invoices to search.
  * @param {*} invoice
  * @returns
  */

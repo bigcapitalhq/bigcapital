@@ -11,7 +11,7 @@ const GeneralLedgerContext = createContext();
  * General ledger provider.
  */
 function GeneralLedgerProvider({ query, ...props }) {
-  // Transformes the report query to request query.
+  // Transforms the report query to request query.
   const requestQuery = React.useMemo(
     () => transformFilterFormToQuery(query),
     [query],

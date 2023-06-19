@@ -31,7 +31,7 @@ export class GetExpense {
       .withGraphFetched('branch')
       .throwIfNotFound();
 
-    // Transformes expense model to POJO.
+    // Transforms expense model to POJO.
     return this.transformer.transform(
       tenantId,
       expense,

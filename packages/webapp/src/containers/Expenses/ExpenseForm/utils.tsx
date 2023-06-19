@@ -72,7 +72,7 @@ export const transformErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Transformes the expense to form initial values in edit mode.
+ * Transforms the expense to form initial values in edit mode.
  */
 export const transformToEditForm = (
   expense,
@@ -129,7 +129,7 @@ export const filterNonZeroEntries = (categories) => {
 };
 
 /**
- * Transformes the form values to request body.
+ * Transforms the form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const categories = filterNonZeroEntries(values.categories);

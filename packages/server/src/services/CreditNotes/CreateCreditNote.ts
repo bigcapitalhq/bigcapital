@@ -59,7 +59,7 @@ export default class CreateCreditNote extends BaseCreditNotes {
       tenantId,
       creditNoteDTO.entries
     );
-    // Transformes the given DTO to storage layer data.
+    // Transforms the given DTO to storage layer data.
     const creditNoteModel = this.transformCreateEditDTOToModel(
       tenantId,
       creditNoteDTO,

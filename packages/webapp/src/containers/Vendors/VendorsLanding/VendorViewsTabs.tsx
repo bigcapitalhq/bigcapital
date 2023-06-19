@@ -21,7 +21,7 @@ function VendorViewsTabs({
 }) {
   const { vendorsViews } = useVendorsListContext();
 
-  // Transformes the resource views to tabs.
+  // Transforms the resource views to tabs.
   const tabs = transformViewsToTabs(vendorsViews);
 
   // Handle dashboard tabs change.

@@ -33,7 +33,7 @@ export default class BaseVendorCredit {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Transformes the credit/edit vendor credit DTO to model.
+   * Transforms the credit/edit vendor credit DTO to model.
    * @param   {number} tenantId -
    * @param   {IVendorCreditCreateDTO | IVendorCreditEditDTO} vendorCreditDTO
    * @param   {string} vendorCurrencyCode -

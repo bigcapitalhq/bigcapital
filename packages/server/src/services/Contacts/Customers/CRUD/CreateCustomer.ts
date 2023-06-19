@@ -40,7 +40,7 @@ export class CreateCustomer {
   ): Promise<ICustomer> {
     const { Contact } = this.tenancy.models(tenantId);
 
-    // Transformes the customer DTO to customer object.
+    // Transforms the customer DTO to customer object.
     const customerObj = await this.customerDTO.transformCreateDTO(
       tenantId,
       customerDTO

@@ -142,7 +142,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Transformes the flatten nodes to nested nodes.
+   * Transforms the flatten nodes to nested nodes.
    * @param {ITrialBalanceAccount[]} flattenAccounts
    * @returns {ITrialBalanceAccount[]}
    */

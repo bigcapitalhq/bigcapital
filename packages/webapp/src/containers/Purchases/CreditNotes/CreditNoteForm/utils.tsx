@@ -51,7 +51,7 @@ export const defaultVendorsCreditNote = {
 };
 
 /**
- * Transformes the credit note to initial values of edit form.
+ * Transforms the credit note to initial values of edit form.
  */
 export const transformToEditForm = (creditNote) => {
   const initialEntries = [
@@ -75,7 +75,7 @@ export const transformToEditForm = (creditNote) => {
 };
 
 /**
- * Transformes credit note entries to submit request.
+ * Transforms credit note entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
   const transformCreditNoteEntry = R.compose(
@@ -96,7 +96,7 @@ export const filterNonZeroEntries = (entries) => {
 };
 
 /**
- * Transformes form values to request body.
+ * Transforms form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);

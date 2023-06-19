@@ -11,7 +11,7 @@ export const AccountDialogAction = {
 };
 
 /**
- * Transformes the response API errors.
+ * Transforms the response API errors.
  */
 export const transformApiErrors = (errors) => {
   const fields = {};
@@ -80,7 +80,7 @@ function getConditions() {
 }
 
 /**
- * Transformes the given payload to account form initial values.
+ * Transforms the given payload to account form initial values.
  */
 export const transformAccountToForm = (account, payload) => {
   const conditions = getConditions();
@@ -124,7 +124,7 @@ export const parentAccountShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Transformes the form values to the request.
+ * Transforms the form values to the request.
  */
 export const transformFormToReq = (form) => {
   return R.compose(

@@ -52,7 +52,7 @@ export default class CreateVendorCredit extends BaseVendorCredit {
       tenantId,
       vendorCreditCreateDTO.entries
     );
-    // Transformes the credit DTO to storage layer.
+    // Transforms the credit DTO to storage layer.
     const vendorCreditModel = this.transformCreateEditDTOToModel(
       tenantId,
       vendorCreditCreateDTO,

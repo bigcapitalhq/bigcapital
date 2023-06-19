@@ -15,7 +15,7 @@ export const FULL_ACCESS_CHECKBOX_STATE = {
 };
 
 /**
- * Transformes the permissions object to array.
+ * Transforms the permissions object to array.
  * @returns
  */
 export const transformToArray = ({ permissions }) => {
@@ -40,7 +40,7 @@ function transformPermissions(permissions) {
 }
 
 /**
- * Transformes permissions array to object.
+ * Transforms permissions array to object.
  * @param {*} permissions -
  * @returns
  */

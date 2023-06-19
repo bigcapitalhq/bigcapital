@@ -25,7 +25,7 @@ export default abstract class DynamicFilterAbstractor
   }
 
   /**
-   * Transformes filter roles to map by index.
+   * Transforms filter roles to map by index.
    * @param {IModel} model
    * @param {IFilterRole[]} roles
    * @returns

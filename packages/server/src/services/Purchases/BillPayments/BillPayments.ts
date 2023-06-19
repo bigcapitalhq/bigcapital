@@ -646,7 +646,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the bill payments models to POJO.
+    // Transforms the bill payments models to POJO.
     const billPayments = await this.transformer.transform(
       tenantId,
       results,

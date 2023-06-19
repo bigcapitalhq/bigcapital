@@ -47,7 +47,7 @@ export class EditCustomer {
       .modify('customer')
       .throwIfNotFound();
 
-    // Transformes the given customer DTO to object.
+    // Transforms the given customer DTO to object.
     const customerObj = this.customerDTO.transformEditDTO(customerDTO);
 
     // Edits the given customer under unit-of-work environment.

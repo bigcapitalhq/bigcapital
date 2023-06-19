@@ -25,7 +25,7 @@ export class TransformerInjectable {
   }
 
   /**
-   * Transformes the given transformer after inject the tenant context.
+   * Transforms the given transformer after inject the tenant context.
    * @param   {number} tenantId
    * @param   {Record<string, any> | Record<string, any>[]} object
    * @param   {Transformer} transformer

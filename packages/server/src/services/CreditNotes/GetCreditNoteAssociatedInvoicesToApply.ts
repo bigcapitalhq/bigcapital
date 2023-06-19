@@ -32,7 +32,7 @@ export default class GetCreditNoteAssociatedInvoicesToApply extends BaseCreditNo
       .modify('dueInvoices')
       .modify('published');
 
-    // Transformes the sale invoices models to POJO.
+    // Transforms the sale invoices models to POJO.
     return this.transformer.transform(
       tenantId,
       saleInvoices,

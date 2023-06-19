@@ -126,7 +126,7 @@ export const handleErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Transformes the form values to request body.
+ * Transforms the form values to request body.
  * @param {*} values
  * @returns
  */

@@ -10,7 +10,7 @@ import { transformCustomersStateToQuery } from './utils';
 const CustomersListContext = createContext();
 
 function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
-  // Transformes the table state to fetch query.
+  // Transforms the table state to fetch query.
   const tableQuery = transformCustomersStateToQuery(tableState);
 
   // Fetch customers resource views and fields.

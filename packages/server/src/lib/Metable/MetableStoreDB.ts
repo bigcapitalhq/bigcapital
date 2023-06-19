@@ -36,7 +36,7 @@ export default class MetableDBStore
   }
 
   /**
-   * Transformes meta query.
+   * Transforms meta query.
    * @param {IMetadata} meta
    */
   private transformMetaExtraColumns(meta: IMetadata) {

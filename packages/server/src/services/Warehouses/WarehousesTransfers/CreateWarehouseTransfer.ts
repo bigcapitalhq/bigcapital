@@ -40,7 +40,7 @@ export class CreateWarehouseTransfer extends CommandWarehouseTransfer {
   private autoIncrementOrders: WarehouseTransferAutoIncrement;
 
   /**
-   * Transformes the given new warehouse transfer DTO to model.
+   * Transforms the given new warehouse transfer DTO to model.
    * @param   {ICreateWarehouseTransferDTO} warehouseTransferDTO
    * @returns {IWarehouseTransfer}
    */
@@ -97,7 +97,7 @@ export class CreateWarehouseTransfer extends CommandWarehouseTransfer {
   );
 
   /**
-   * Transformes warehouse transfer entries.
+   * Transforms warehouse transfer entries.
    * @param    {number} tenantId
    * @param    {ICreateWarehouseTransferDTO} warehouseTransferDTO
    * @param    {IWarehouseTransferEntryDTO[]} entries
@@ -170,7 +170,7 @@ export class CreateWarehouseTransfer extends CommandWarehouseTransfer {
     // Authorize warehouse transfer before creating.
     await this.authorize(tenantId, warehouseTransferDTO);
 
-    // Transformes the warehouse transfer DTO to model.
+    // Transforms the warehouse transfer DTO to model.
     const warehouseTransferModel = await this.transformDTOToModel(
       tenantId,
       warehouseTransferDTO

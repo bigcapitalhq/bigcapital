@@ -63,7 +63,7 @@ export default class InventoryAdjustmentService {
   private transformer: TransformerInjectable;
 
   /**
-   * Transformes the quick inventory adjustment DTO to model object.
+   * Transforms the quick inventory adjustment DTO to model object.
    * @param  {IQuickInventoryAdjustmentDTO} adjustmentDTO -
    * @return {IInventoryAdjustment}
    */

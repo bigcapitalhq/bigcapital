@@ -29,7 +29,7 @@ const VendorUniversalSearchSelectAction = withDrawerActions(
 );
 
 /**
- * Transformes vendor resource item to search.
+ * Transforms vendor resource item to search.
  */
 const vendorToSearch = (contact) => ({
   id: contact.id,

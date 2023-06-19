@@ -38,7 +38,7 @@ export default class ExpenseLandedCost {
   };
 
   /**
-   * Transformes expense entry to landed cost entry.
+   * Transforms expense entry to landed cost entry.
    * @param {IExpenseCategory & { expenseAccount: IAccount }} expenseEntry -
    * @return {ILandedCostTransactionEntry}
    */

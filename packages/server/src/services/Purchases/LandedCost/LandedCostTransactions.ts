@@ -70,7 +70,7 @@ export default class LandedCostTransactions {
   };
 
   /**
-   * Transformes the landed cost transaction.
+   * Transforms the landed cost transaction.
    * @param {ILandedCostTransaction} transaction
    */
   public transformLandedCostTransaction = (

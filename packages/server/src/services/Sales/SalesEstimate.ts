@@ -450,7 +450,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (!estimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
-    // Transformes sale estimate model to POJO.
+    // Transforms sale estimate model to POJO.
     return this.transformer.transform(
       tenantId,
       estimate,

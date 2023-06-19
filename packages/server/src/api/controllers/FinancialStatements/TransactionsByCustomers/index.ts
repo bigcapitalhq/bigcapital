@@ -59,7 +59,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
   }
 
   /**
-   * Transformes the statement to table rows response.
+   * Transforms the statement to table rows response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
   private transformToTableResponse(customersTransactions, tenantId) {
@@ -76,7 +76,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
   }
 
   /**
-   * Transformes the statement to json response.
+   * Transforms the statement to json response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
   private transformToJsonResponse(

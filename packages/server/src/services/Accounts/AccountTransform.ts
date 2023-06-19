@@ -42,7 +42,7 @@ export class AccountTransformer extends Transformer {
   };
 
   /**
-   * Transformes the accounts collection to flat or nested array.
+   * Transforms the accounts collection to flat or nested array.
    * @param {IAccount[]}
    * @returns {IAccount[]}
    */

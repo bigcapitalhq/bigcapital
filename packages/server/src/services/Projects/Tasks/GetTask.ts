@@ -27,7 +27,7 @@ export class GetTaskService {
     // Retrieve the project.
     const task = await Task.query().findById(taskId).throwIfNotFound();
 
-    // Transformes and returns object.
+    // Transforms and returns object.
     return this.transformer.transform(tenantId, task, new TaskTransformer());
   };
 }

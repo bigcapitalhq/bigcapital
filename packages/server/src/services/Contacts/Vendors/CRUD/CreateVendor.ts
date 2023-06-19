@@ -39,7 +39,7 @@ export class CreateVendor {
   ) {
     const { Contact } = this.tenancy.models(tenantId);
 
-    // Transformes create DTO to customer object.
+    // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(
       tenantId,
       vendorDTO

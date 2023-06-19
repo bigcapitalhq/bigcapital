@@ -82,7 +82,7 @@ export default class CashFlowController extends BaseFinancialReportController {
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(

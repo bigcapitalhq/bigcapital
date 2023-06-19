@@ -20,7 +20,7 @@ export const FinancialEvaluateEquation = (Base) =>
     };
 
     /**
-     * Transformes the given nodes nested array to object key/value by id.
+     * Transforms the given nodes nested array to object key/value by id.
      * @param nodes
      * @returns
      */

@@ -27,7 +27,7 @@ export default class SetupService {
   sysRepositories: any;
 
   /**
-   * Transformes the setup DTO to settings.
+   * Transforms the setup DTO to settings.
    * @param {IOrganizationSetupDTO} setupDTO
    * @returns
    */

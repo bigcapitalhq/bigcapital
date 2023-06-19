@@ -491,7 +491,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the estimates models to POJO.
+    // Transforms the estimates models to POJO.
     const salesEstimates = await this.transformer.transform(
       tenantId,
       results,

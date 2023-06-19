@@ -61,7 +61,7 @@ export class GetManualJournals {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the manual journals models to POJO.
+    // Transforms the manual journals models to POJO.
     const manualJournals = await this.transformer.transform(
       tenantId,
       results,

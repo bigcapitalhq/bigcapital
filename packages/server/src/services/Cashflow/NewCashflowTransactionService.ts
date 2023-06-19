@@ -65,7 +65,7 @@ export default class NewCashflowTransactionService {
   };
 
   /**
-   * Transformes owner contribution DTO to cashflow transaction.
+   * Transforms owner contribution DTO to cashflow transaction.
    * @param {ICashflowNewCommandDTO} newCashflowTransactionDTO - New transaction DTO.
    * @returns {ICashflowTransaction} - Cashflow transaction object.
    */
@@ -141,7 +141,7 @@ export default class NewCashflowTransactionService {
     // Authorize before creating cashflow transaction.
     await this.authorize(tenantId, newTransactionDTO, creditAccount);
 
-    // Transformes owner contribution DTO to cashflow transaction.
+    // Transforms owner contribution DTO to cashflow transaction.
     const cashflowTransactionObj = this.transformCashflowTransactionDTO(
       tenantId,
       newTransactionDTO,

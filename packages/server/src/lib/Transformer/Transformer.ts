@@ -74,7 +74,7 @@ export class Transformer {
   };
 
   /**
-   * Transformes the given item to desired output.
+   * Transforms the given item to desired output.
    * @param item
    * @returns
    */

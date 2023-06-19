@@ -10,7 +10,7 @@ const ARAgingSummaryContext = createContext();
  * A/R aging summary provider.
  */
 function ARAgingSummaryProvider({ filter, ...props }) {
-  // Transformes the filter from to the url query.
+  // Transforms the filter from to the url query.
   const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // A/R aging summary sheet context.

@@ -90,7 +90,7 @@ function PaymentMadeForm({
       setSubmitting(false);
       return;
     }
-    // Transformes the form values to request body.
+    // Transforms the form values to request body.
     const form = transformFormToRequest(values);
 
     // Triggers once the save request success.

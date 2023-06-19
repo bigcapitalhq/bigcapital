@@ -26,7 +26,7 @@ export default class GetAppliedBillsToVendorCredit extends BaseVendorCredit {
       .withGraphFetched('bill')
       .withGraphFetched('vendorCredit');
 
-    // Transformes the models to POJO.
+    // Transforms the models to POJO.
     return this.transformer.transform(
       tenantId,
       appliedToBills,

@@ -109,7 +109,7 @@ export default class OrganizationService {
     // Throw error if tenant is currently building.
     this.throwIfTenantIsBuilding(tenant);
 
-    // Transformes build DTO object.
+    // Transforms build DTO object.
     const transformedBuildDTO = this.transformBuildDTO(buildDTO);
 
     // Saves the tenant metadata.
@@ -121,7 +121,7 @@ export default class OrganizationService {
       buildDTO,
       authorizedUser,
     });
-    // Transformes the mongodb id to string.
+    // Transforms the mongodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
     // Marks the tenant as currently building.
@@ -203,7 +203,7 @@ export default class OrganizationService {
   }
 
   /**
-   * Transformes build DTO object.
+   * Transforms build DTO object.
    * @param {IOrganizationBuildDTO} buildDTO
    * @returns {IOrganizationBuildDTO}
    */

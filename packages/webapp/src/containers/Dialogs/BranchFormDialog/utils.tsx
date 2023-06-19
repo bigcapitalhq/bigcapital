@@ -2,7 +2,7 @@
 import intl from 'react-intl-universal';
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.find((error) => error.type === 'BRANCH_CODE_NOT_UNIQUE')) {

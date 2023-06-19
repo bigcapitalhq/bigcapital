@@ -185,7 +185,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   }
 
   /**
-   * Transformes edit DTO to model.
+   * Transforms edit DTO to model.
    * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
@@ -208,7 +208,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   };
 
   /**
-   * Transformes create DTO to model.
+   * Transforms create DTO to model.
    * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
@@ -228,7 +228,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   };
 
   /**
-   * Transformes the create DTO to invoice object model.
+   * Transforms the create DTO to invoice object model.
    * @param  {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
    * @param  {ISaleInvoice} oldSaleInvoice - Old sale invoice.
    * @return {ISaleInvoice}

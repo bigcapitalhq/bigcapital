@@ -10,7 +10,7 @@ import { transformVendorsStateToQuery } from './utils';
 const VendorsListContext = createContext();
 
 function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
-  // Transformes the vendors table state to fetch query.
+  // Transforms the vendors table state to fetch query.
   const tableQuery = transformVendorsStateToQuery(tableState);
 
   // Fetch vendors list with pagination meta.

@@ -86,7 +86,7 @@ export class EditItem {
   }
 
   /**
-   * Transformes edit item DTO to model.
+   * Transforms edit item DTO to model.
    * @param {IItemDTO} itemDTO - Item DTO.
    * @param {IItem} oldItem -
    */

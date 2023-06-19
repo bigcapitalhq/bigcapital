@@ -376,7 +376,7 @@ export default class Account extends mixin(TenantModel, [
   }
 
   /**
-   * Transformes the accounts list to dependency graph structure.
+   * Transforms the accounts list to dependency graph structure.
    * @param {IAccount[]} accounts
    */
   static toDependencyGraph(accounts) {

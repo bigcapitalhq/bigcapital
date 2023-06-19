@@ -65,7 +65,7 @@ export default class CustomerBalanceSummaryTable {
   };
 
   /**
-   * Transformes the customers to table rows.
+   * Transforms the customers to table rows.
    * @param   {ICustomerBalanceSummaryCustomer[]} customers
    * @returns {ITableRow[]}
    */
@@ -98,7 +98,7 @@ export default class CustomerBalanceSummaryTable {
   };
 
   /**
-   * Transformes the total to table row.
+   * Transforms the total to table row.
    * @param   {ICustomerBalanceSummaryTotal} total
    * @returns {ITableRow}
    */
@@ -113,7 +113,7 @@ export default class CustomerBalanceSummaryTable {
   };
 
   /**
-   * Transformes the customer balance summary to table rows.
+   * Transforms the customer balance summary to table rows.
    * @param   {ICustomerBalanceSummaryData} customerBalanceSummary
    * @returns {ITableRow[]}
    */

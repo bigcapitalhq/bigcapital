@@ -91,7 +91,7 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
   };
 
   /**
-   * Transformes apply DTO to model.
+   * Transforms apply DTO to model.
    * @param {IApplyCreditToInvoicesDTO} applyDTO
    * @param {ICreditNote} creditNote
    * @returns {IVendorCreditApplyToInvoicesModel}

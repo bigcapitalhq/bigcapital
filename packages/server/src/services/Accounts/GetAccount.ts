@@ -29,7 +29,7 @@ export class GetAccount {
 
     const accountsGraph = await accountRepository.getDependencyGraph();
 
-    // Transformes the account model to POJO.
+    // Transforms the account model to POJO.
     const transformed = await this.transformer.transform(
       tenantId,
       account,

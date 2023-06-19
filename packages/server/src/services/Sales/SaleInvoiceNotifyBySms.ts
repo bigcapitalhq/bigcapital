@@ -58,7 +58,7 @@ export default class SaleInvoiceNotifyBySms {
     this.saleSmsNotification.validateCustomerPhoneNumber(
       saleInvoice.customer.personalPhone
     );
-    // Transformes the invoice notification key to sms notification key.
+    // Transforms the invoice notification key to sms notification key.
     const notificationKey = this.transformDTOKeyToNotificationKey(
       invoiceNotificationType
     );
@@ -206,7 +206,7 @@ export default class SaleInvoiceNotifyBySms {
     // Current tenant metadata.
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
-    // Transformes the invoice notification key to sms notification key.
+    // Transforms the invoice notification key to sms notification key.
     const notificationKey = this.transformDTOKeyToNotificationKey(
       invoiceSmsDetailsDTO.notificationKey
     );
@@ -226,7 +226,7 @@ export default class SaleInvoiceNotifyBySms {
   };
 
   /**
-   * Transformes the invoice notification key DTO to notification key.
+   * Transforms the invoice notification key DTO to notification key.
    * @param {string} invoiceNotifKey
    * @returns {SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
    *   | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER}

@@ -65,7 +65,7 @@ export default class TransactionLandedCost {
   );
 
   /**
-   * Transformes the given expense or bill entry to landed cost transaction entry.
+   * Transforms the given expense or bill entry to landed cost transaction entry.
    * @param {string} transactionType
    * @param {} transactionEntry
    * @returns {ILandedCostTransactionEntry}

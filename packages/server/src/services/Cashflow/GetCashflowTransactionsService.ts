@@ -39,7 +39,7 @@ export default class GetCashflowTransactionsService {
 
     this.throwErrorCashflowTransactionNotFound(cashflowTransaction);
 
-    // Transformes the cashflow transaction model to POJO.
+    // Transforms the cashflow transaction model to POJO.
     return this.transformer.transform(
       tenantId,
       cashflowTransaction,

@@ -28,7 +28,7 @@ export const AccountUniversalSearchItemSelect = withDrawerActions(
 );
 
 /**
- * Transformes account item to search item.
+ * Transforms account item to search item.
  * @param {*} account
  * @returns
  */

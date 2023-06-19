@@ -48,7 +48,7 @@ function ItemCategoryForm({
     [itemCategory],
   );
 
-  // Transformes response errors.
+  // Transforms response errors.
   const transformErrors = (errors, { setErrors }) => {
     if (errors.find((error) => error.type === 'CATEGORY_NAME_EXISTS')) {
       setErrors({

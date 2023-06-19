@@ -76,7 +76,7 @@ export default class TransactionsByReferenceController extends BaseController {
   }
 
   /**
-   * Transformes the given report transaction to json response.
+   * Transforms the given report transaction to json response.
    * @param transactions
    * @returns
    */

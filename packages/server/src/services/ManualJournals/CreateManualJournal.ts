@@ -147,7 +147,7 @@ export class CreateManualJournalService {
       authorizedUser,
       tenantMeta.baseCurrency
     );
-    // Transformes the next DTO to model.
+    // Transforms the next DTO to model.
     const manualJournalObj = this.transformNewDTOToModel(
       tenantId,
       manualJournalDTO,

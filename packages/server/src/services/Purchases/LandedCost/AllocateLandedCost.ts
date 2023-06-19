@@ -70,7 +70,7 @@ export default class AllocateLandedCost extends BaseLandedCostService {
       costTransactionEntry.unallocatedCostAmount,
       amount
     );
-    // Transformes DTO to bill landed cost model object.
+    // Transforms DTO to bill landed cost model object.
     const billLandedCostObj = this.transformToBillLandedCost(
       allocateCostDTO,
       bill,

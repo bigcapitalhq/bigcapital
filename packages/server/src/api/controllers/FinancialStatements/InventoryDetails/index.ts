@@ -91,7 +91,7 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    */
   private transformToTableRows(inventoryDetails, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);

@@ -86,7 +86,7 @@ export function ReceiptUniversalSearchItem(
 }
 
 /**
- * Transformes receipt resource item to search item.
+ * Transforms receipt resource item to search item.
  */
 const transformReceiptsToSearch = (receipt) => ({
   id: receipt.id,

@@ -63,7 +63,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   }
 
   /**
-   * Transformes the balance summary statement to table rows.
+   * Transforms the balance summary statement to table rows.
    * @param {ICustomerBalanceSummaryStatement} statement -
    */
   private transformToTableRows(
@@ -83,7 +83,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   }
 
   /**
-   * Transformes the balance summary statement to raw json.
+   * Transforms the balance summary statement to raw json.
    * @param {ICustomerBalanceSummaryStatement} customerBalance -
    */
   private transformToJsonResponse({
