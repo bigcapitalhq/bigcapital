@@ -126,7 +126,7 @@ export default class InventoryDetails extends FinancialSheet {
   );
 
   /**
-   * Accumlate and mapping running quantity on transactions.
+   * Accumulate and mapping running quantity on transactions.
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction[]}
    */
@@ -150,7 +150,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Accumlate and mapping running valuation on transactions.
+   * Accumulate and mapping running valuation on transactions.
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction}
    */
