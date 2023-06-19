@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-import AuthenticationMailMesssages from '@/services/Authentication/AuthenticationMailMessages';
+import AuthenticationMailMessages from '@/services/Authentication/AuthenticationMailMessages';
 
 export default class ResetPasswordEmailJob {
   /**
@@ -22,7 +22,7 @@ export default class ResetPasswordEmailJob {
   public async handler(job, done: Function): Promise<void> {
     const { data } = job.attrs;
     const { user, token } = data;
-    const authService = Container.get(AuthenticationMailMesssages);
+    const authService = Container.get(AuthenticationMailMessages);
 
     try {
       await authService.sendResetPasswordMessage(user, token);
