@@ -101,7 +101,7 @@ export class ProjectProfitabilitySummaryTable {
   // # Columns.
   // ----------------------------------
   /**
-   * Retrievs the table columns
+   * Retrieved the table columns
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
