@@ -50,7 +50,7 @@ export default class InventoryAdjustmentsController extends BaseController {
         InventoryAdjustmentAction.CREATE,
         AbilitySubject.InventoryAdjustment
       ),
-      this.validatateQuickAdjustment,
+      this.validateQuickAdjustment,
       this.validationResult,
       this.asyncMiddleware(this.createQuickInventoryAdjustment.bind(this)),
       this.handleServiceErrors
@@ -99,7 +99,7 @@ export default class InventoryAdjustmentsController extends BaseController {
   /**
    * Quick inventory adjustment validation schema.
    */
-  get validatateQuickAdjustment() {
+  get validateQuickAdjustment() {
     return [
       check('date').exists().isISO8601(),
       check('type')

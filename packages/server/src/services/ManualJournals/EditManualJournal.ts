@@ -41,7 +41,7 @@ export class EditManualJournal {
     manualJournalDTO: IManualJournalDTO
   ) => {
     // Validates the total credit and debit to be equals.
-    this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
+    this.validator.validateCreditDebitTotalEquals(manualJournalDTO);
 
     // Validate the contacts existence.
     await this.validator.validateContactsExistence(tenantId, manualJournalDTO);

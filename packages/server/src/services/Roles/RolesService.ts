@@ -214,7 +214,7 @@ export default class RolesService {
   };
 
   /**
-   * Valdiates role is not predefined.
+   * Validates role is not predefined.
    * @param {IRole} role - Role object.
    */
   private validateRoleNotPredefined(role: IRole) {

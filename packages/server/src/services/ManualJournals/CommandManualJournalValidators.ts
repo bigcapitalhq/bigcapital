@@ -22,7 +22,7 @@ export class CommandManualJournalValidators {
    * Validate manual journal credit and debit should be equal.
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
+  public validateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
     let totalCredit = 0;
     let totalDebit = 0;
 

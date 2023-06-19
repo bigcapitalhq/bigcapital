@@ -91,7 +91,7 @@ export class CreateManualJournalService {
     baseCurrency: string
   ) => {
     // Validate the total credit should equals debit.
-    this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
+    this.validator.validateCreditDebitTotalEquals(manualJournalDTO);
 
     // Validate the contacts existence.
     await this.validator.validateContactsExistence(tenantId, manualJournalDTO);
