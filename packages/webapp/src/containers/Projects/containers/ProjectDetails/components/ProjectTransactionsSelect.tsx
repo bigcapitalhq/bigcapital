@@ -53,7 +53,7 @@ export function ProjectTransactionsSelect({ transactions, ...rest }) {
       <Button
         minimal={true}
         icon={<Icon icon={'plus'} />}
-        text={<T id={'projcet_details.action.new_transaction'} />}
+        text={<T id={'project_details.action.new_transaction'} />}
       />
     </Select>
   );

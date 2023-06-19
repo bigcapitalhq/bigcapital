@@ -8,7 +8,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
- * Projcet time entry form floating actions.
+ * Project time entry form floating actions.
  * @returns
  */
 function ProjectTimeEntryFormFloatingActions({
