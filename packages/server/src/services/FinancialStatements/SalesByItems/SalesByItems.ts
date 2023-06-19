@@ -116,7 +116,7 @@ export default class SalesByItemsReport extends FinancialSheet {
   };
 
   /**
-   * Mappes the given items to sales by items nodes.
+   * Maps the given items to sales by items nodes.
    * @param {IItem[]} items -
    * @returns {ISalesByItemsItem[]}
    */

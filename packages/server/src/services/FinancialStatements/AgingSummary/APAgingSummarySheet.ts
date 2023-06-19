@@ -98,7 +98,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Mappes the given vendor objects to vendor report node.
+   * Maps the given vendor objects to vendor report node.
    * @param {IVendor[]} vendors
    * @returns {IAPAgingSummaryVendor[]}
    */

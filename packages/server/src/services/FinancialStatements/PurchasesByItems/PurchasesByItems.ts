@@ -135,7 +135,7 @@ export default class InventoryValuationReport extends FinancialSheet {
   };
 
   /**
-   * Mappes purchase by items nodes.
+   * Maps purchase by items nodes.
    * @param items
    * @returns
    */

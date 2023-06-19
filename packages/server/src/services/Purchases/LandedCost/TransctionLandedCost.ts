@@ -41,7 +41,7 @@ export default class TransactionLandedCost {
   };
 
   /**
-   * Mappes the given expense or bill transaction to landed cost transaction.
+   * Maps the given expense or bill transaction to landed cost transaction.
    * @param {string} transactionType - Transaction type.
    * @param {IBill|IExpense} transaction - Expense or bill transaction.
    * @returns {ILandedCostTransaction}

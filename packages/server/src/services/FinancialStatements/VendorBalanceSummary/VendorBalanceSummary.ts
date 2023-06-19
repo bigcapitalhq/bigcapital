@@ -57,7 +57,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Mappes the vendor model object to vendor balance summary section.
+   * Maps the vendor model object to vendor balance summary section.
    * @param   {IVendor[]} vendors - Customers.
    * @returns {IVendorBalanceSummaryVendor[]}
    */

@@ -196,7 +196,7 @@ export default class Ledger implements ILedger {
   // ----------------------------------
 
   /**
-   * Mappes the account transactions to ledger entries.
+   * Maps the account transactions to ledger entries.
    * @param   {IAccountTransaction[]} entries
    * @returns {ILedgerEntry[]}
    */
@@ -205,7 +205,7 @@ export default class Ledger implements ILedger {
   }
 
   /**
-   * Mappes the account transaction to ledger entry.
+   * Maps the account transaction to ledger entry.
    * @param   {IAccountTransaction} entry
    * @returns {ILedgerEntry}
    */
@@ -238,7 +238,7 @@ export default class Ledger implements ILedger {
   }
 
   /**
-   * Mappes the account transactions to ledger entries.
+   * Maps the account transactions to ledger entries.
    * @param {IAccountTransaction[]} transactions
    * @returns {ILedger}
    */

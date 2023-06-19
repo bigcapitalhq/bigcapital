@@ -89,7 +89,7 @@ export default class BalanceSheet extends R.compose(
   };
 
   /**
-   * Mappes the aggregate schema node type.
+   * Maps the aggregate schema node type.
    * @param  {IBalanceSheetSchemaAggregateNode} node - Schema node.
    * @return {IBalanceSheetAggregateNode}
    */
@@ -122,7 +122,7 @@ export default class BalanceSheet extends R.compose(
   };
 
   /**
-   * Mappes the account model to report account node.
+   * Maps the account model to report account node.
    * @param   {IAccount} account
    * @returns {IBalanceSheetAccountNode}
    */
@@ -189,7 +189,7 @@ export default class BalanceSheet extends R.compose(
   };
 
   /**
-   * Mappes the accounts schema node type.
+   * Maps the accounts schema node type.
    * @param   {IBalanceSheetSchemaNode} node - Schema node.
    * @returns {IBalanceSheetAccountNode}
    */
@@ -235,7 +235,7 @@ export default class BalanceSheet extends R.compose(
   };
 
   /**
-   * Mappes the given report schema node.
+   * Maps the given report schema node.
    * @param  {IBalanceSheetSchemaNode} node - Schema node.
    * @return {IBalanceSheetDataNode}
    */
@@ -255,7 +255,7 @@ export default class BalanceSheet extends R.compose(
   };
 
   /**
-   * Mappes the report schema nodes.
+   * Maps the report schema nodes.
    * @param  {IBalanceSheetSchemaNode[]} nodes -
    * @return {IBalanceSheetStructureSection[]}
    */

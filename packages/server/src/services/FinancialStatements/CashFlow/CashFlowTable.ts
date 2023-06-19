@@ -219,7 +219,7 @@ export default class CashFlowTable implements ICashFlowTable {
   };
 
   /**
-   * Mappes the sections to the table rows.
+   * Maps the sections to the table rows.
    * @param {ICashFlowStatementSection[]} sections
    * @returns {ITableRow[]}
    */

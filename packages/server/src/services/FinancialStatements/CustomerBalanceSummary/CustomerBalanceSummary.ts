@@ -59,7 +59,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Mappes the customer model object to customer balance summary section.
+   * Maps the customer model object to customer balance summary section.
    * @param   {ICustomer[]} customers - Customers.
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */

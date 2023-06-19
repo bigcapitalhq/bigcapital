@@ -195,7 +195,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   };
 
   /**
-   * Mappes the items to inventory valuation items nodes.
+   * Maps the items to inventory valuation items nodes.
    * @param {IItem[]} items
    * @returns {IInventoryValuationItem[]}
    */

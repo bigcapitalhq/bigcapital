@@ -99,7 +99,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Mappes the given account object to trial balance account node.
+   * Maps the given account object to trial balance account node.
    * @param {IAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */

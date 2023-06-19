@@ -151,7 +151,7 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   * Mappes the given report node to table rows.
+   * Maps the given report node to table rows.
    * @param   {IBalanceSheetDataNode} node -
    * @returns {ITableRow}
    */
@@ -173,7 +173,7 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   * Mappes the given report sections to table rows.
+   * Maps the given report sections to table rows.
    * @param  {IBalanceSheetDataNode[]} nodes -
    * @return {ITableRow}
    */

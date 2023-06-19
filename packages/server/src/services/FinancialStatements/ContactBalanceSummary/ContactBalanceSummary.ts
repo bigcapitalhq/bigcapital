@@ -95,7 +95,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   };
 
   /**
-   * Mappes the contacts summary sections with percentage of column.
+   * Maps the contacts summary sections with percentage of column.
    * @param  {IContactBalanceSummaryContact[]} contacts -
    * @return {IContactBalanceSummaryContact[]}
    */

@@ -29,7 +29,7 @@ export const JournalUniversalSearchSelectAction = withDrawerActions(
 );
 
 /**
- * Mappes the manual journal item to search item.
+ * Maps the manual journal item to search item.
  */
 const manualJournalsToSearch = (manualJournal) => ({
   id: manualJournal.id,
