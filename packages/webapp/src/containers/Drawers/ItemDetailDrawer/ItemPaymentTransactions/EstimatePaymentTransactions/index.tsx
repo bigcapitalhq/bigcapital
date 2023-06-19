@@ -16,7 +16,7 @@ import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
- * Esimtate payment transactions.
+ * Estimate payment transactions.
  */
 function EstimatePaymentTransactions({
   // #withAlertsActions

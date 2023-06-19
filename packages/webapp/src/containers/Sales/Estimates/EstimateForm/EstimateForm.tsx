@@ -18,7 +18,7 @@ import EstimateItemsEntriesField from './EstimateItemsEntriesField';
 import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
-import EstimtaeFormTopBar from './EstimtaeFormTopBar';
+import EstimateFormTopBar from './EstimateFormTopBar';
 import { EstimateIncrementSyncSettingsToForm } from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
@@ -159,7 +159,7 @@ function EstimateForm({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <EstimtaeFormTopBar />
+          <EstimateFormTopBar />
           <EstimateFormHeader />
           <EstimateItemsEntriesField />
           <EstimateFormFooter />

@@ -152,7 +152,7 @@ function AmountAccessor({ amount, currency_code }) {
   return <Money amount={amount} currency={currency_code} />;
 }
 
-export function useEstiamtesTableColumns() {
+export function useEstimatesTableColumns() {
   return React.useMemo(
     () => [
       {

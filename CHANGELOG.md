@@ -75,7 +75,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 `@bigcapital/webapp`
 - fix: general, accountant and items preferences.
-- fix: auto-increment sale invoices, estiamtes, credit notes, payments and manual journals.
+- fix: auto-increment sale invoices, estimates, credit notes, payments and manual journals.
 - refactor: the setup organization form to use bound Formik components.
 
 ## [0.9.0] - 06-05-2023
