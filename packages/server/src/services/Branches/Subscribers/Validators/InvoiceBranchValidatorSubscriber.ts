@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import {
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleInvoiceEditingPayload,
 } from '@/interfaces';
 import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
@@ -28,12 +28,12 @@ export class InvoiceBranchValidateSubscriber {
 
   /**
    * Validate branch existence on invoice creating.
-   * @param {ISaleInvoiceCreatingPaylaod} payload
+   * @param {ISaleInvoiceCreatingPayload} payload
    */
   private validateBranchExistenceOnInvoiceCreating = async ({
     tenantId,
     saleInvoiceDTO,
-  }: ISaleInvoiceCreatingPaylaod) => {
+  }: ISaleInvoiceCreatingPayload) => {
     await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       saleInvoiceDTO.branchId

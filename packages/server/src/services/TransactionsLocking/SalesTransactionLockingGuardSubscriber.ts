@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import {
   ISaleReceiptCreatingPayload,
   IRefundCreditNoteCreatingPayload,
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleReceiptDeletingPayload,
   ICreditNoteDeletingPayload,
   IPaymentReceiveCreatingPayload,
@@ -132,12 +132,12 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on invoice creating.
-   * @param {ISaleInvoiceCreatingPaylaod} payload
+   * @param {ISaleInvoiceCreatingPayload} payload
    */
   private transactionLockingGuardOnInvoiceCreating = async ({
     saleInvoiceDTO,
     tenantId,
-  }: ISaleInvoiceCreatingPaylaod) => {
+  }: ISaleInvoiceCreatingPayload) => {
     // Can't continue if the new invoice is not published yet.
     if (!saleInvoiceDTO.delivered) return;
 
@@ -356,7 +356,7 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on payment deleting.
-   * @param {IRefundCreditNoteDeletingPayload} paylaod -
+   * @param {IRefundCreditNoteDeletingPayload} payload -
    */
   private transactionLockingGuardOnCreditRefundDeleting = async ({
     tenantId,

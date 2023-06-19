@@ -32,7 +32,7 @@ export default class ApplyVendorCreditSyncBillsSubscriber {
   /**
    * Increment credited amount of applied bills once the vendor credit
    * transaction created.
-   * @param {IVendorCreditApplyToBillsCreatedPayload}  paylaod -
+   * @param {IVendorCreditApplyToBillsCreatedPayload}  payload -
    */
   private incrementAppliedBillsOnceCreditCreated = async ({
     tenantId,

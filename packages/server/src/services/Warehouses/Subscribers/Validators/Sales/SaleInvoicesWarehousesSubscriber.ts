@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import {
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleInvoiceEditingPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
@@ -28,12 +28,12 @@ export class SaleInvoicesWarehousesValidateSubscriber {
 
   /**
    * Validate warehouse existence of sale invoice once creating.
-   * @param {ISaleInvoiceCreatingPaylaod}
+   * @param {ISaleInvoiceCreatingPayload}
    */
   private validateSaleInvoiceWarehouseExistenceOnCreating = async ({
     saleInvoiceDTO,
     tenantId,
-  }: ISaleInvoiceCreatingPaylaod) => {
+  }: ISaleInvoiceCreatingPayload) => {
     await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
       tenantId,
       saleInvoiceDTO

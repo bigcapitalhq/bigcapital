@@ -18,7 +18,7 @@ import {
   ISaleInvoiceDeletedPayload,
   ISaleInvoiceEventDeliveredPayload,
   ISaleInvoiceEditedPayload,
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleInvoiceEditingPayload,
   ISaleInvoiceDeliveringPayload,
   ICustomer,
@@ -362,7 +362,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
         saleInvoiceDTO,
         tenantId,
         trx,
-      } as ISaleInvoiceCreatingPaylaod);
+      } as ISaleInvoiceCreatingPayload);
 
       // Create sale invoice graph to the storage.
       const saleInvoice = await SaleInvoice.query(trx).upsertGraph(

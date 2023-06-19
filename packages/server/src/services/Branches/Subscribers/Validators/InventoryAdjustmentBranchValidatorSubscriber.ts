@@ -21,7 +21,7 @@ export class InventoryAdjustmentBranchValidateSubscriber {
 
   /**
    * Validate branch existence on invoice creating.
-   * @param {ISaleInvoiceCreatingPaylaod} payload
+   * @param {ISaleInvoiceCreatingPayload} payload
    */
   private validateBranchExistenceOnInventoryCreating = async ({
     tenantId,

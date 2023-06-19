@@ -88,7 +88,7 @@ export interface ISaleInvoiceCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface ISaleInvoiceCreatingPaylaod {
+export interface ISaleInvoiceCreatingPayload {
   tenantId: number;
   saleInvoiceDTO: ISaleInvoiceCreateDTO;
   trx: Knex.Transaction;
