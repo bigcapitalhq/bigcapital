@@ -709,7 +709,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Retrieve sale invoices that assocaited to the given payment receive.
+   * Retrieve sale invoices that associated to the given payment receive.
    * @param {number} tenantId - Tenant id.
    * @param {number} paymentReceiveId - Payment receive id.
    * @return {Promise<ISaleInvoice>}

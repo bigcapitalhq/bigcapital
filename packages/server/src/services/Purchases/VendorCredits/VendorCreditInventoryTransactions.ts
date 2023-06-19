@@ -51,7 +51,7 @@ export default class VendorCreditInventoryTransactions {
   };
 
   /**
-   * Edits vendor credit assocaited inventory transactions.
+   * Edits vendor credit associated inventory transactions.
    * @param {number} tenantId
    * @param {number} creditNoteId
    * @param {ICreditNote} creditNote

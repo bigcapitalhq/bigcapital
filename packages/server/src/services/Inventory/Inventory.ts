@@ -95,7 +95,7 @@ export default class InventoryService {
   ) {
     const { Item } = this.tenancy.models(tenantId);
 
-    // Fetches the item with assocaited item category.
+    // Fetches the item with associated item category.
     const item = await Item.query().findById(itemId);
 
     // Cannot continue if the given item was not inventory item.

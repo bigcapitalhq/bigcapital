@@ -12,7 +12,7 @@ export class GetManualJournal {
   private transformer: TransformerInjectable;
 
   /**
-   * Retrieve manual journal details with assocaited journal transactions.
+   * Retrieve manual journal details with associated journal transactions.
    * @param {number} tenantId
    * @param {number} manualJournalId
    */

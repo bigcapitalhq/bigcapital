@@ -498,7 +498,7 @@ export default class BillsService
     // Validate the givne bill has no associated landed cost transactions.
     await this.validateBillHasNoLandedCost(tenantId, billId);
 
-    // Validate the purchase bill has no assocaited payments transactions.
+    // Validate the purchase bill has no associated payments transactions.
     await this.validateBillHasNoEntries(tenantId, billId);
 
     // Validate the given bill has no associated reconciled with vendor credits.
@@ -683,7 +683,7 @@ export default class BillsService
   ): Promise<void> {
     const { Bill } = this.tenancy.models(tenantId);
 
-    // Retireve bill with assocaited entries and allocated cost entries.
+    // Retireve bill with associated entries and allocated cost entries.
     const bill = await Bill.query(trx)
       .findById(billId)
       .withGraphFetched('entries.allocatedCostEntries');

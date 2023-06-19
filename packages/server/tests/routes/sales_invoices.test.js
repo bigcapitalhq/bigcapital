@@ -471,7 +471,7 @@ describe('route: `/sales/invoices`', () => {
       });
     });
 
-    it('Should delete the given sale invoice with assocaited entries.', async () => {
+    it('Should delete the given sale invoice with associated entries.', async () => {
       const saleInvoice = await tenantFactory.create('sale_invoice');
       const saleInvoiceEntey = await tenantFactory.create('sale_invoice_entry', {
         sale_invoice_id: saleInvoice.id,

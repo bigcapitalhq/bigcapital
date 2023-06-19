@@ -584,7 +584,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (oldSaleEstimate.isDelivered) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
     }
-    // Updates the sale estimate transaction with assocaited transactions
+    // Updates the sale estimate transaction with associated transactions
     // under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimateDelivering` event.

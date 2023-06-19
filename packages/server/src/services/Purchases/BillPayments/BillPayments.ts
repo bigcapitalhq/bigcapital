@@ -541,7 +541,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
         oldBillPayment,
       } as IBillPaymentDeletingPayload);
 
-      // Deletes the bill payment assocaited entries.
+      // Deletes the bill payment associated entries.
       await BillPaymentEntry.query(trx)
         .where('bill_payment_id', billPaymentId)
         .delete();

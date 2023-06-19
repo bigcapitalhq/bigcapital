@@ -507,7 +507,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     if (oldSaleInvoice.isDelivered) {
       throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
     }
-    // Update sale invoice transaction with assocaite transactions
+    // Update sale invoice transaction with associate transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceDelivering` event.

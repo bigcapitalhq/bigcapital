@@ -12,7 +12,7 @@ export default class InvoicePaymentsService {
   private transformer: TransformerInjectable;
 
   /**
-   * Retrieve the invoice assocaited payments transactions.
+   * Retrieve the invoice associated payments transactions.
    * @param {number} tenantId - Tenant id.
    * @param {number} invoiceId - Invoice id.
    */
