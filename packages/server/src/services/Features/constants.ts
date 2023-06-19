@@ -1,6 +1,6 @@
-import { Features, IFeatureConfiugration } from '@/interfaces';
+import { Features, IFeatureConfiguration } from '@/interfaces';
 
-export const FeaturesConfigure: IFeatureConfiugration[] = [
+export const FeaturesConfigure: IFeatureConfiguration[] = [
   {
     name: Features.BRANCHES,
     defaultValue: false,
