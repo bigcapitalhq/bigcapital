@@ -35,7 +35,7 @@ export const TRANSACRIONS_TYPE = [
   'OwnerContribution',
   'OtherIncome',
   'TransferFromAccount',
-  'OnwersDrawing',
+  'OwnersDrawing',
   'OtherExpense',
   'TransferToAccount',
 ];
