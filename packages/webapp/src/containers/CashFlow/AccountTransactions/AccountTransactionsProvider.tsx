@@ -59,7 +59,7 @@ function AccountTransactionsProvider({ query, ...props }) {
     isLoading: isCurrentAccountLoading,
   } = useAccount(accountId, { keepPreviousData: true });
 
-  // Handle the observer ineraction.
+  // Handle the observer interaction.
   const handleObserverInteract = React.useCallback(() => {
     if (!isFetchingNextPage && hasNextPage) {
       fetchNextTransactionsPage();
