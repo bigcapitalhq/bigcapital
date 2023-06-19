@@ -54,7 +54,7 @@ export default class OrganizationService {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
-    this.throwIfTenantInitizalized(tenant);
+    this.throwIfTenantInitialized(tenant);
 
     // Drop the database if is already exists.
     await this.tenantsManager.dropDatabaseIfExists(tenant);
@@ -104,7 +104,7 @@ export default class OrganizationService {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
-    this.throwIfTenantInitizalized(tenant);
+    this.throwIfTenantInitialized(tenant);
 
     // Throw error if tenant is currently building.
     this.throwIfTenantIsBuilding(tenant);
@@ -260,7 +260,7 @@ export default class OrganizationService {
    * Throws error in case the given tenant is already initialized.
    * @param {ITenant} tenant
    */
-  private throwIfTenantInitizalized(tenant: ITenant) {
+  private throwIfTenantInitialized(tenant: ITenant) {
     if (tenant.builtAt) {
       throw new ServiceError(ERRORS.TENANT_ALREADY_BUILT);
     }
