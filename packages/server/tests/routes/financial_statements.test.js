@@ -34,18 +34,18 @@ describe('routes: `/financial_statements`', () => {
     const expenseAccount = await tenantFactory.create('account', { account_type_id: expenseType.id });
     // const income2Account = await tenantFactory.create('account', { account_type_id: incomeType.id });
 
-    const accountTransactionMixied = { date: '2020-1-10' };
+    const accountTransactionMixed = { date: '2020-1-10' };
 
     // Expense --
     // 1000 Credit  - Credit account 
     //    1000 Debit - expense account.
     await tenantFactory.create('account_transaction', {
       credit: 1000, debit: 0, account_id: debitAccount.id, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      referenceId: 1, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
       credit: 0, debit: 1000, account_id: expenseAccount.id, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      referenceId: 1, ...accountTransactionMixed,
     });
 
     // Journal
@@ -53,23 +53,23 @@ describe('routes: `/financial_statements`', () => {
     //     2000 Debit - Asset account
     //     2000 Debit - Asset account
     await tenantFactory.create('account_transaction', {
-      credit: 4000, debit: 0, account_id: creditAccount.id, ...accountTransactionMixied,
+      credit: 4000, debit: 0, account_id: creditAccount.id, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixed,
     });
 
     // Income Journal.
     // 2000 Credit - Income account.
     //    2000 Debit - Asset account.
     await tenantFactory.create('account_transaction', {
-      credit: 2000, account_id: incomeAccount.id, ...accountTransactionMixied
+      credit: 2000, account_id: incomeAccount.id, ...accountTransactionMixed
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixed,
     });
 
     // -----------------------------------------

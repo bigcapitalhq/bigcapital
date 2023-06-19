@@ -17,18 +17,18 @@ let incomeType;
 
 describe('routes: `/financial_statements`', () => {
   beforeEach(async () => {
-    const accountTransactionMixied = { date: '2020-1-10' };
+    const accountTransactionMixed = { date: '2020-1-10' };
 
     // Expense --
     // 1000 Credit  - Cash account 
     //    1000 Debit - Bank account.
     await tenantFactory.create('account_transaction', {
       credit: 1000, debit: 0, account_id: 2, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      referenceId: 1, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
       credit: 0, debit: 1000, account_id: 7, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      referenceId: 1, ...accountTransactionMixed,
     });
 
     // Journal
@@ -36,23 +36,23 @@ describe('routes: `/financial_statements`', () => {
     //     2000 Debit - Bank account
     //     2000 Debit - Bank account
     await tenantFactory.create('account_transaction', {
-      credit: 4000, debit: 0, account_id: 5, ...accountTransactionMixied,
+      credit: 4000, debit: 0, account_id: 5, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixed,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixed,
     });
 
     // Income Journal.
     // 2000 Credit - Income account.
     //    2000 Debit - Bank account.
     await tenantFactory.create('account_transaction', {
-      credit: 2000, account_id: 4, ...accountTransactionMixied
+      credit: 2000, account_id: 4, ...accountTransactionMixed
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixied,
+      debit: 2000, credit: 0, account_id: 2, ...accountTransactionMixed,
     });
 
     // -----------------------------------------

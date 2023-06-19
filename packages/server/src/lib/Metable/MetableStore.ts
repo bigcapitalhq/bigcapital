@@ -60,7 +60,7 @@ export default class MetableStore implements IMetableStore {
   /**
    * Retrieve metadata of the given key.
    * @param {String} key -
-   * @param {Mixied} defaultValue -
+   * @param {Mixed} defaultValue -
    */
   get(query: string | IMetaQuery, defaultValue: any): any | false {
     const metadata = this.find(query);
