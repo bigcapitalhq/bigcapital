@@ -78,7 +78,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
         columns: tableRows.tableColumns(),
         data: tableRows.tableRows(),
       },
-      query: this.transfromToResponse(query),
+      query: this.transformToResponse(query),
     };
   }
 
@@ -92,9 +92,9 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
     query,
   }: ICustomerBalanceSummaryStatement) {
     return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
+      data: this.transformToResponse(data),
+      columns: this.transformToResponse(columns),
+      query: this.transformToResponse(query),
     };
   }
 

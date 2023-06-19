@@ -2,7 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { IExpense } from '@/interfaces';
 
-export class ExpenseTransfromer extends Transformer {
+export class ExpenseTransformer extends Transformer {
   /**
    * Include these attributes to expense object.
    * @returns {Array}

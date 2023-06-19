@@ -217,7 +217,7 @@ export default class ItemsCategoriesController extends BaseController {
       );
       return res.status(200).send({
         item_categories: itemCategories,
-        filter_meta: this.transfromToResponse(filterMeta),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

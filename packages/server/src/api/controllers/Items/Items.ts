@@ -322,7 +322,7 @@ export default class ItemsController extends BaseController {
       const item = await this.itemsApplication.getItem(tenantId, itemId);
 
       return res.status(200).send({
-        item: this.transfromToResponse(item),
+        item: this.transformToResponse(item),
       });
     } catch (error) {
       next(error);
@@ -351,9 +351,9 @@ export default class ItemsController extends BaseController {
         await this.itemsApplication.getItems(tenantId, filter);
 
       return res.status(200).send({
-        items: this.transfromToResponse(items),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        items: this.transformToResponse(items),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

@@ -33,7 +33,7 @@ export default class ItemsController extends BaseController {
       const job = await this.jobsService.getJob(id);
 
       return res.status(200).send({
-        job: this.transfromToResponse(job),
+        job: this.transformToResponse(job),
       });
     } catch (error) {
       next(error);

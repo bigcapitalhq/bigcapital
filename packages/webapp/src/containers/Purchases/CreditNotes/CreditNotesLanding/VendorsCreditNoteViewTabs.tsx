@@ -7,7 +7,7 @@ import { DashboardViewsTabs } from '@/components';
 import withVendorsCreditNotes from './withVendorsCreditNotes';
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 
 /**
@@ -28,7 +28,7 @@ function VendorsCreditNoteViewTabs({
     setVendorsCreditNoteTableState({ viewSlug: viewSlug || null });
   };
 
-  const tabs = transfromViewsToTabs(VendorCreditsViews);
+  const tabs = transformViewsToTabs(VendorCreditsViews);
   return (
     <Navbar className={'navbar--dashboard-views'}>
       <NavbarGroup align={Alignment.LEFT}>

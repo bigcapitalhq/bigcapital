@@ -77,9 +77,9 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
     const { data, query, meta } = projectProfitabilityPOJO;
 
     return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
+      data: this.transformToResponse(data),
+      query: this.transformToResponse(query),
+      meta: this.transformToResponse(meta),
     };
   }
 
@@ -102,8 +102,8 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
         data: projectProfitabilityTable.tableData(),
         columns: projectProfitabilityTable.tableColumns(),
       },
-      query: this.transfromToResponse(projectProfitabilityPOJO.query),
-      // meta: this.transfromToResponse(cashFlowDOO.meta),
+      query: this.transformToResponse(projectProfitabilityPOJO.query),
+      // meta: this.transformToResponse(cashFlowDOO.meta),
     };
   }
 

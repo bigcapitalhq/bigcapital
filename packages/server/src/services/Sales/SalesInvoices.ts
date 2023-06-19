@@ -191,7 +191,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
    * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
    * @param {ISaleInvoice} oldSaleInvoice
    */
-  private tranformEditDTOToModel = async (
+  private transformEditDTOToModel = async (
     tenantId: number,
     customer: ICustomer,
     saleInvoiceDTO: ISaleInvoiceEditDTO,
@@ -430,7 +430,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       saleInvoiceDTO.entries
     );
     // Transform DTO object to model object.
-    const saleInvoiceObj = await this.tranformEditDTOToModel(
+    const saleInvoiceObj = await this.transformEditDTOToModel(
       tenantId,
       customer,
       saleInvoiceDTO,

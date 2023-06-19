@@ -292,7 +292,7 @@ export default class BillsController extends BaseController {
     try {
       const bill = await this.billsService.getBill(tenantId, billId);
 
-      return res.status(200).send(this.transfromToResponse({ bill }));
+      return res.status(200).send(this.transformToResponse({ bill }));
     } catch (error) {
       next(error);
     }
@@ -341,9 +341,9 @@ export default class BillsController extends BaseController {
         await this.billsService.getBills(tenantId, filter);
 
       return res.status(200).send({
-        bills: this.transfromToResponse(bills),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        bills: this.transformToResponse(bills),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

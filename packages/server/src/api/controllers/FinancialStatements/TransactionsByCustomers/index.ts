@@ -79,14 +79,14 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
    * Transformes the statement to json response.
    * @param {ITransactionsByCustomersStatement} statement -
    */
-  private transfromToJsonResponse(
+  private transformToJsonResponse(
     data,
     columns
   ): ITransactionsByCustomersStatement {
     return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
+      data: this.transformToResponse(data),
+      columns: this.transformToResponse(columns),
+      query: this.transformToResponse(query),
     };
   }
 
@@ -117,7 +117,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
         case 'json':
           return res
             .status(200)
-            .send(this.transfromToJsonResponse(report.data, report.columns));
+            .send(this.transformToJsonResponse(report.data, report.columns));
         case 'application/json+table':
         default:
           return res

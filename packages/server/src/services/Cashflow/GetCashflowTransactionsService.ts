@@ -16,7 +16,7 @@ export default class GetCashflowTransactionsService {
   private i18nService: I18nService;
 
   @Inject()
-  private transfromer: TransformerInjectable;
+  private transformer: TransformerInjectable;
 
   /**
    * Retrieve the given cashflow transaction.
@@ -40,7 +40,7 @@ export default class GetCashflowTransactionsService {
     this.throwErrorCashflowTransactionNotFound(cashflowTransaction);
 
     // Transformes the cashflow transaction model to POJO.
-    return this.transfromer.transform(
+    return this.transformer.transform(
       tenantId,
       cashflowTransaction,
       new CashflowTransactionTransformer()

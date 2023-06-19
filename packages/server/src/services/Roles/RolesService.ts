@@ -51,7 +51,7 @@ export default class RolesService {
     this.validateInvalidPermissions(createRoleDTO.permissions);
 
     // Transformes the permissions DTO.
-    const permissions = this.tranaformPermissionsDTO(createRoleDTO.permissions);
+    const permissions = this.transformPermissionsDTO(createRoleDTO.permissions);
 
     // Creates a new role with associated entries under unit-of-work.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -91,7 +91,7 @@ export default class RolesService {
     // Retrieve the given role or throw not found service error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
-    const permissions = this.tranaformEditPermissionsDTO(
+    const permissions = this.transformEditPermissionsDTO(
       editRoleDTO.permissions
     );
     // Updates the role on the storage.
@@ -244,7 +244,7 @@ export default class RolesService {
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {ICreateRolePermissionDTO[]}
    */
-  private tranaformPermissionsDTO = (
+  private transformPermissionsDTO = (
     permissions: ICreateRolePermissionDTO[]
   ) => {
     return permissions.map((permission: ICreateRolePermissionDTO) => ({
@@ -259,7 +259,7 @@ export default class RolesService {
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {IEditRolePermissionDTO[]}
    */
-  private tranaformEditPermissionsDTO = (
+  private transformEditPermissionsDTO = (
     permissions: IEditRolePermissionDTO[]
   ) => {
     return permissions.map((permission: IEditRolePermissionDTO) => ({

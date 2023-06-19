@@ -254,7 +254,7 @@ export default class VendorsController extends ContactsController {
         vendorId,
         user
       );
-      return res.status(200).send(this.transfromToResponse({ vendor }));
+      return res.status(200).send(this.transformToResponse({ vendor }));
     } catch (error) {
       next(error);
     }
@@ -283,9 +283,9 @@ export default class VendorsController extends ContactsController {
         await this.vendorsApplication.getVendors(tenantId, vendorsFilter);
 
       return res.status(200).send({
-        vendors: this.transfromToResponse(vendors),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        vendors: this.transformToResponse(vendors),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
-import ContactTransfromer from '../ContactTransformer';
+import ContactTransformer from '../ContactTransformer';
 
-export default class VendorTransfromer extends ContactTransfromer {
+export default class VendorTransformer extends ContactTransformer {
   /**
    * Include these attributes to expense object.
    * @returns {Array}

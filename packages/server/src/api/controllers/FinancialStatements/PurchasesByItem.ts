@@ -71,9 +71,9 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
       const { data, query, meta } =
         await this.purchasesByItemsService.purchasesByItems(tenantId, filter);
       return res.status(200).send({
-        meta: this.transfromToResponse(meta),
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
+        meta: this.transformToResponse(meta),
+        data: this.transformToResponse(data),
+        query: this.transformToResponse(query),
       });
     } catch (error) {
       next(error);

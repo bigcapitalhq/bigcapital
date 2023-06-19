@@ -36,7 +36,7 @@ const IFieldType = {
   DATE: 'date',
 };
 
-function tansformDateValue(date, defaultValue = null) {
+function transformDateValue(date, defaultValue = null) {
   return date ? moment(date).toDate() : defaultValue;
 }
 /**
@@ -100,7 +100,7 @@ export default function AdvancedFilterValueField2({
       <Choose.When condition={fieldType === IFieldType.DATE}>
         <DateInput
           {...momentFormatter('YYYY/MM/DD')}
-          value={tansformDateValue(localValue)}
+          value={transformDateValue(localValue)}
           onChange={handleDateChange}
           popoverProps={{
             minimal: true,

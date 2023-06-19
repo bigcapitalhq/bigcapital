@@ -279,7 +279,7 @@ export default class SalesReceiptsController extends BaseController {
       const { data, pagination, filterMeta } =
         await this.saleReceiptService.salesReceiptsList(tenantId, filter);
 
-      const response = this.transfromToResponse({
+      const response = this.transformToResponse({
         data,
         pagination,
         filterMeta,
@@ -310,7 +310,7 @@ export default class SalesReceiptsController extends BaseController {
         'application/json': () => {
           return res
             .status(200)
-            .send(this.transfromToResponse({ saleReceipt }));
+            .send(this.transformToResponse({ saleReceipt }));
         },
         'application/pdf': async () => {
           const pdfContent = await this.saleReceiptsPdf.saleReceiptPdf(

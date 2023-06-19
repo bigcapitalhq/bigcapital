@@ -250,7 +250,7 @@ export default class CustomersController extends ContactsController {
       );
 
       return res.status(200).send({
-        customer: this.transfromToResponse(customer),
+        customer: this.transformToResponse(customer),
       });
     } catch (error) {
       next(error);
@@ -302,9 +302,9 @@ export default class CustomersController extends ContactsController {
         await this.customersApplication.getCustomers(tenantId, filter);
 
       return res.status(200).send({
-        customers: this.transfromToResponse(customers),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        customers: this.transformToResponse(customers),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

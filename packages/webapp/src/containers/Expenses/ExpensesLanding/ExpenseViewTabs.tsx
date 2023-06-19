@@ -8,7 +8,7 @@ import { useExpensesListContext } from './ExpensesListProvider';
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Expense views tabs.
@@ -30,7 +30,7 @@ function ExpenseViewTabs({
     });
   };
 
-  const tabs = transfromViewsToTabs(expensesViews);
+  const tabs = transformViewsToTabs(expensesViews);
 
   // Handle click a new view tab.
   const handleClickNewView = () => {};

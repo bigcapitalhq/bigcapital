@@ -50,7 +50,7 @@ export default class GetCashflowAccounts extends BaseController {
         );
 
       return res.status(200).send({
-        cashflow_transaction: this.transfromToResponse(cashflowTransaction),
+        cashflow_transaction: this.transformToResponse(cashflowTransaction),
       });
     } catch (error) {
       next(error);

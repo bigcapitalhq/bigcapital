@@ -84,7 +84,7 @@ export default class TransactionsByReferenceController extends BaseController {
     transactions: ITransactionsByReferenceTransaction[]
   ) {
     return {
-      transactions: this.transfromToResponse(transactions),
+      transactions: this.transformToResponse(transactions),
     };
   }
 }

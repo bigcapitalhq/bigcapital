@@ -303,7 +303,7 @@ export default class PaymentReceivesController extends BaseController {
           paymentReceiveId
         );
 
-      return res.status(200).send(this.transfromToResponse({ saleInvoices }));
+      return res.status(200).send(this.transformToResponse({ saleInvoices }));
     } catch (error) {
       next(error);
     }
@@ -330,9 +330,9 @@ export default class PaymentReceivesController extends BaseController {
         await this.paymentReceiveService.listPaymentReceives(tenantId, filter);
 
       return res.status(200).send({
-        payment_receives: this.transfromToResponse(paymentReceives),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        payment_receives: this.transformToResponse(paymentReceives),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -358,7 +358,7 @@ export default class PaymentReceivesController extends BaseController {
         customerId
       );
       return res.status(200).send({
-        entries: this.transfromToResponse(entries),
+        entries: this.transformToResponse(entries),
       });
     } catch (error) {
       next(error);
@@ -388,8 +388,8 @@ export default class PaymentReceivesController extends BaseController {
         );
 
       return res.status(200).send({
-        payment_receive: this.transfromToResponse({ ...paymentReceive }),
-        entries: this.transfromToResponse([...entries]),
+        payment_receive: this.transformToResponse({ ...paymentReceive }),
+        entries: this.transformToResponse([...entries]),
       });
     } catch (error) {
       next(error);
@@ -419,7 +419,7 @@ export default class PaymentReceivesController extends BaseController {
       res.format({
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res.status(200).send({
-            payment_receive: this.transfromToResponse(paymentReceive),
+            payment_receive: this.transformToResponse(paymentReceive),
           });
         },
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {

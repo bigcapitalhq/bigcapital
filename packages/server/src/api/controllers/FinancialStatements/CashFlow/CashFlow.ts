@@ -75,9 +75,9 @@ export default class CashFlowController extends BaseFinancialReportController {
     const { data, query, meta } = cashFlowDOO;
 
     return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
+      data: this.transformToResponse(data),
+      query: this.transformToResponse(query),
+      meta: this.transformToResponse(meta),
     };
   }
 
@@ -97,8 +97,8 @@ export default class CashFlowController extends BaseFinancialReportController {
         data: cashFlowTable.tableRows(),
         columns: cashFlowTable.tableColumns(),
       },
-      query: this.transfromToResponse(cashFlowDOO.query),
-      meta: this.transfromToResponse(cashFlowDOO.meta),
+      query: this.transformToResponse(cashFlowDOO.query),
+      meta: this.transformToResponse(cashFlowDOO.meta),
     };
   }
 

@@ -2,7 +2,7 @@
 import moment from 'moment';
 import { transformToCamelCase, flatObject } from '@/utils';
 
-export const transfromFilterFormToQuery = (form) => {
+export const transformFilterFormToQuery = (form) => {
   return flatObject(transformToCamelCase(form));
 };
 

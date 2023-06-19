@@ -251,7 +251,7 @@ export default class ManualJournalsController extends BaseController {
           manualJournalId
         );
       return res.status(200).send({
-        manual_journal: this.transfromToResponse(manualJournal),
+        manual_journal: this.transformToResponse(manualJournal),
       });
     } catch (error) {
       next(error);
@@ -341,9 +341,9 @@ export default class ManualJournalsController extends BaseController {
         );
 
       return res.status(200).send({
-        manual_journals: this.transfromToResponse(manualJournals),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        manual_journals: this.transformToResponse(manualJournals),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -404,7 +404,7 @@ export default class ManualJournalsController extends BaseController {
             {
               type: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
               code: 600,
-              meta: this.transfromToResponse(error.payload),
+              meta: this.transformToResponse(error.payload),
             },
           ],
         });
@@ -415,7 +415,7 @@ export default class ManualJournalsController extends BaseController {
             {
               type: 'CONTACTS_SHOULD_ASSIGN_WITH_VALID_ACCOUNT',
               code: 700,
-              meta: this.transfromToResponse(error.payload),
+              meta: this.transformToResponse(error.payload),
             },
           ],
         });

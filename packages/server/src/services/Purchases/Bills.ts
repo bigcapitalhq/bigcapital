@@ -587,7 +587,7 @@ export default class BillsService
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Tranform the bills to POJO.
+    // Transform the bills to POJO.
     const bills = await this.transformer.transform(
       tenantId,
       results,

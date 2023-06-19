@@ -31,7 +31,7 @@ import { Features, ACCOUNT_TYPE } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { CLASSES } from '@/constants/classes';
@@ -97,7 +97,7 @@ export default function OtherExpenseFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,

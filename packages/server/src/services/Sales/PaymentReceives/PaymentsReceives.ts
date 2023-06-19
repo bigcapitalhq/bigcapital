@@ -34,7 +34,7 @@ import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
+import { PaymentReceiveTransformer } from './PaymentReceiveTransformer';
 import UnitOfWork from '@/services/UnitOfWork';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { TenantMetadata } from '@/system/models';
@@ -704,7 +704,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     return this.transformer.transform(
       tenantId,
       paymentReceive,
-      new PaymentReceiveTransfromer()
+      new PaymentReceiveTransformer()
     );
   }
 
@@ -779,7 +779,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     const transformedPayments = await this.transformer.transform(
       tenantId,
       results,
-      new PaymentReceiveTransfromer()
+      new PaymentReceiveTransformer()
     );
     return {
       paymentReceives: transformedPayments,

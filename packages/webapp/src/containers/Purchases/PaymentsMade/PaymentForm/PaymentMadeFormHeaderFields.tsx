@@ -33,7 +33,7 @@ import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { PaymentMadeExchangeRateInputField } from './components';
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   inputIntent,
   compose,
@@ -101,7 +101,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('payment_date', formattedDate);
               })}

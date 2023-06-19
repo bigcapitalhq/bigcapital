@@ -466,7 +466,7 @@ export default class PaymentReceivesController extends BaseController {
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res
             .status(200)
-            .send({ credit_note: this.transfromToResponse(creditNote) });
+            .send({ credit_note: this.transformToResponse(creditNote) });
         },
         // Pdf content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {

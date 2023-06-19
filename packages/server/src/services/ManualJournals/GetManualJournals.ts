@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ManualJournalTransfromer } from './ManualJournalTransformer';
+import { ManualJournalTransformer } from './ManualJournalTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -65,7 +65,7 @@ export class GetManualJournals {
     const manualJournals = await this.transformer.transform(
       tenantId,
       results,
-      new ManualJournalTransfromer()
+      new ManualJournalTransformer()
     );
 
     return {

@@ -35,7 +35,7 @@ export class GetWarehouseTransfer extends CRUDWarehouseTransfer {
 
     this.throwIfTransferNotFound(warehouseTransfer);
 
-    // Retrieves the transfromed warehouse transfers.
+    // Retrieves the transformed warehouse transfers.
     return this.transformer.transform(
       tenantId,
       warehouseTransfer,

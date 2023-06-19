@@ -91,9 +91,9 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
     columns,
   }: IVendorBalanceSummaryStatement) {
     return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
+      data: this.transformToResponse(data),
+      columns: this.transformToResponse(columns),
+      query: this.transformToResponse(query),
     };
   }
 

@@ -137,7 +137,7 @@ export const handleErrors = (errors, { setErrors }) => {
 /**
  * Transform the form values to request body.
  */
-export const transfromsFormValuesToRequest = (values) => {
+export const transformsFormValuesToRequest = (values) => {
   const entries = values.entries.filter(
     (item) => item.item_id && item.quantity,
   );

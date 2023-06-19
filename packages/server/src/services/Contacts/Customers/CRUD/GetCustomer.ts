@@ -2,7 +2,7 @@ import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Service, Inject } from 'typedi';
-import CustomerTransfromer from '../CustomerTransformer';
+import CustomerTransformer from '../CustomerTransformer';
 
 @Service()
 export class GetCustomer {
@@ -30,7 +30,7 @@ export class GetCustomer {
     return this.transformer.transform(
       tenantId,
       customer,
-      new CustomerTransfromer()
+      new CustomerTransformer()
     );
   }
 }

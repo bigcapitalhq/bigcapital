@@ -8,7 +8,7 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
-import { transfromVendorToForm } from './utils';
+import { transformVendorToForm } from './utils';
 
 const VendorOpeningBalanceContext = React.createContext();
 
@@ -44,7 +44,7 @@ function VendorOpeningBalanceFormProvider({
   // State provider.
   const provider = {
     branches,
-    vendor: transfromVendorToForm(vendor),
+    vendor: transformVendorToForm(vendor),
     isBranchesSuccess,
     isBranchesLoading,
     dialogName,

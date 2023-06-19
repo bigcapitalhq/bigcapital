@@ -84,9 +84,9 @@ export default class InventoryDetailsController extends BaseController {
     const { data, query, meta } = inventoryDetails;
 
     return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
+      data: this.transformToResponse(data),
+      query: this.transformToResponse(query),
+      meta: this.transformToResponse(meta),
     };
   }
 
@@ -105,8 +105,8 @@ export default class InventoryDetailsController extends BaseController {
         data: inventoryDetailsTable.tableData(),
         columns: inventoryDetailsTable.tableColumns(),
       },
-      query: this.transfromToResponse(inventoryDetails.query),
-      meta: this.transfromToResponse(inventoryDetails.meta),
+      query: this.transformToResponse(inventoryDetails.query),
+      meta: this.transformToResponse(inventoryDetails.meta),
     };
   }
 

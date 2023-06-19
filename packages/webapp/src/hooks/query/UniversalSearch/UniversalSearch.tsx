@@ -9,7 +9,7 @@ import { useResourceData } from '../GenericResource';
  * @param {any} resource
  * @returns
  */
-function transfromResourceDataToSearch(resource) {
+function transformResourceDataToSearch(resource) {
   const selectItem = getUniversalSearchBind(resource._type, 'itemSelect');
 
   return resource.items
@@ -33,7 +33,7 @@ export function useUniversalSearch(type, searchKeyword, props) {
     },
     props,
   );
-  const searchData = transfromResourceDataToSearch(data);
+  const searchData = transformResourceDataToSearch(data);
 
   return {
     data: searchData,

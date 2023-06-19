@@ -73,9 +73,9 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       );
 
       return res.status(200).send({
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
+        data: this.transformToResponse(data),
+        query: this.transformToResponse(query),
+        meta: this.transformToResponse(meta),
       });
     } catch (error) {
       next(error);

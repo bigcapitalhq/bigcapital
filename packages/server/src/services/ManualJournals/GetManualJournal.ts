@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ManualJournalTransfromer } from './ManualJournalTransformer';
+import { ManualJournalTransformer } from './ManualJournalTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -34,7 +34,7 @@ export class GetManualJournal {
     return this.transformer.transform(
       tenantId,
       manualJournal,
-      new ManualJournalTransfromer()
+      new ManualJournalTransformer()
     );
   };
 }

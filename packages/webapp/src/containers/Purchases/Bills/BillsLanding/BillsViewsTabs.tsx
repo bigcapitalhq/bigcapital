@@ -8,7 +8,7 @@ import { useBillsListContext } from './BillsListProvider';
 import withBills from './withBills';
 import withBillActions from './withBillsActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Bills view tabs.
@@ -30,7 +30,7 @@ function BillViewTabs({
     });
   };
 
-  const tabs = transfromViewsToTabs(billsViews);
+  const tabs = transformViewsToTabs(billsViews);
 
   return (
     <Navbar className={'navbar--dashboard-views'}>

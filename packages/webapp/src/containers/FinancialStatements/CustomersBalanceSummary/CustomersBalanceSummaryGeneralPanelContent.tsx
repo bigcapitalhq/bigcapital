@@ -14,7 +14,7 @@ import classNames from 'classnames';
 
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
@@ -42,7 +42,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((selectedDate) => {
                     form.setFieldValue('asDate', selectedDate);
                   })}

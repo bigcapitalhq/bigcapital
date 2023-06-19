@@ -2,7 +2,7 @@
 import {
   transformToForm,
   optionsMapToArray,
-  transfromToSnakeCase,
+  transformToSnakeCase,
   transactionNumber,
 } from '@/utils';
 import { omit } from 'lodash';
@@ -19,7 +19,7 @@ export const transformSettingsToForm = (settings) => ({
 });
 
 export const transformFormToSettings = (values, group) => {
-  const options = transfromToSnakeCase({
+  const options = transformToSnakeCase({
     ...transformToForm(values, defaultInvoiceNoSettings),
     autoIncrement: values.incrementMode === 'auto',
   });

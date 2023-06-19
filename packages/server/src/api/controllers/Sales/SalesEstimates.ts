@@ -353,7 +353,7 @@ export default class SalesEstimatesController extends BaseController {
       res.format({
         // JSON content type.
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send(this.transfromToResponse({ estimate }));
+          return res.status(200).send(this.transformToResponse({ estimate }));
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
@@ -395,7 +395,7 @@ export default class SalesEstimatesController extends BaseController {
       res.format({
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res.status(200).send(
-            this.transfromToResponse({
+            this.transformToResponse({
               salesEstimates,
               pagination,
               filterMeta,

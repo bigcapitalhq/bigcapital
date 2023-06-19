@@ -6,7 +6,7 @@ import { DashboardViewsTabs } from '@/components';
 import withWarehouseTransfers from './withWarehouseTransfers';
 import withWarehouseTransfersActions from './withWarehouseTransfersActions';
 import { useWarehouseTransfersListContext } from './WarehouseTransfersListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Warehouse transfer view tabs.
@@ -20,7 +20,7 @@ function WarehouseTransfersViewTabs({
 }) {
   const { WarehouseTransferView } = useWarehouseTransfersListContext();
 
-  const tabs = transfromViewsToTabs(WarehouseTransferView);
+  const tabs = transformViewsToTabs(WarehouseTransferView);
 
   // Handles click a new view tab.
   const handleClickNewView = () => {};

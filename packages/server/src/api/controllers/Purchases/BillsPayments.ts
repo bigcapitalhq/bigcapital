@@ -164,7 +164,7 @@ export default class BillsPayments extends BaseController {
         vendorId
       );
       return res.status(200).send({
-        entries: this.transfromToResponse(entries),
+        entries: this.transformToResponse(entries),
       });
     } catch (error) {}
   }
@@ -190,8 +190,8 @@ export default class BillsPayments extends BaseController {
         );
 
       return res.status(200).send({
-        bill_payment: this.transfromToResponse(billPayment),
-        entries: this.transfromToResponse(entries),
+        bill_payment: this.transformToResponse(billPayment),
+        entries: this.transformToResponse(entries),
       });
     } catch (error) {
       next(error);
@@ -288,7 +288,7 @@ export default class BillsPayments extends BaseController {
       );
 
       return res.status(200).send({
-        bill_payment: this.transfromToResponse(billPayment),
+        bill_payment: this.transformToResponse(billPayment),
       });
     } catch (error) {
       next(error);
@@ -341,9 +341,9 @@ export default class BillsPayments extends BaseController {
         );
 
       return res.status(200).send({
-        bill_payments: this.transfromToResponse(billPayments),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        bill_payments: this.transformToResponse(billPayments),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);

@@ -306,12 +306,12 @@ function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
       ? defaultOrTransformedValue
       : defaultValue;
 
-  const _transfromedValue =
+  const _transformedValue =
     typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
   return value == null || value !== value || value === ''
     ? _defaultValue
-    : _transfromedValue;
+    : _transformedValue;
 }
 
 const transformToMap = (objects, key) => {

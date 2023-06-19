@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ExpenseTransfromer } from './ExpenseTransformer';
+import { ExpenseTransformer } from './ExpenseTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -61,7 +61,7 @@ export class GetExpenses {
     const expenses = await this.transformer.transform(
       tenantId,
       results,
-      new ExpenseTransfromer()
+      new ExpenseTransformer()
     );
     return {
       expenses,

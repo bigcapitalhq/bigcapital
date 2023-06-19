@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import CustomerTransfromer from '../CustomerTransformer';
+import CustomerTransformer from '../CustomerTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -66,7 +66,7 @@ export class GetCustomers {
     const customers = await this.transformer.transform(
       tenantId,
       results,
-      new CustomerTransfromer()
+      new CustomerTransformer()
     );
     return {
       customers,

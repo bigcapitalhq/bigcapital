@@ -8,7 +8,7 @@ import {
 } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
-import { transfromCustomerToForm } from './utils';
+import { transformCustomerToForm } from './utils';
 
 const CustomerOpeningBalanceContext = React.createContext();
 
@@ -45,7 +45,7 @@ function CustomerOpeningBalanceFormProvider({
   // State provider.
   const provider = {
     branches,
-    customer: transfromCustomerToForm(customer),
+    customer: transformCustomerToForm(customer),
 
     isBranchesSuccess,
     isBranchesLoading,

@@ -68,7 +68,7 @@ export default class GetCashflowAccounts extends BaseController {
         );
 
       return res.status(200).send({
-        cashflow_accounts: this.transfromToResponse(cashflowAccounts),
+        cashflow_accounts: this.transformToResponse(cashflowAccounts),
       });
     } catch (error) {
       next(error);

@@ -4,7 +4,7 @@ import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
 import { useCustomersListContext } from './CustomersListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -25,7 +25,7 @@ function CustomersViewsTabs({
   const { customersViews } = useCustomersListContext();
 
   // Transformes the views to tabs.
-  const tabs = transfromViewsToTabs(customersViews);
+  const tabs = transformViewsToTabs(customersViews);
 
   // Handle tabs change.
   const handleTabsChange = (viewSlug) => {

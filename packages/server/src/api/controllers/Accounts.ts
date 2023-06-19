@@ -261,7 +261,7 @@ export default class AccountsController extends BaseController {
       );
       return res
         .status(200)
-        .send({ account: this.transfromToResponse(account) });
+        .send({ account: this.transformToResponse(account) });
     } catch (error) {
       next(error);
     }
@@ -360,8 +360,8 @@ export default class AccountsController extends BaseController {
         await this.accountsApplication.getAccounts(tenantId, filter);
 
       return res.status(200).send({
-        accounts: this.transfromToResponse(accounts, 'accountTypeLabel', req),
-        filter_meta: this.transfromToResponse(filterMeta),
+        accounts: this.transformToResponse(accounts, 'accountTypeLabel', req),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -386,7 +386,7 @@ export default class AccountsController extends BaseController {
           transactionsFilter
         );
       return res.status(200).send({
-        transactions: this.transfromToResponse(transactions),
+        transactions: this.transformToResponse(transactions),
       });
     } catch (error) {
       next(error);

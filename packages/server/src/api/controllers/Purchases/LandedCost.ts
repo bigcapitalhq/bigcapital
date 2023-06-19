@@ -208,7 +208,7 @@ export default class BillAllocateLandedCost extends BaseController {
 
       return res.status(200).send({
         billId,
-        transactions: this.transfromToResponse(transactions),
+        transactions: this.transformToResponse(transactions),
       });
     } catch (error) {
       next(error);

@@ -2,7 +2,7 @@ import { IExpense } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Service, Inject } from 'typedi';
-import { ExpenseTransfromer } from './ExpenseTransformer';
+import { ExpenseTransformer } from './ExpenseTransformer';
 
 @Service()
 export class GetExpense {
@@ -35,7 +35,7 @@ export class GetExpense {
     return this.transformer.transform(
       tenantId,
       expense,
-      new ExpenseTransfromer()
+      new ExpenseTransformer()
     );
   }
 }

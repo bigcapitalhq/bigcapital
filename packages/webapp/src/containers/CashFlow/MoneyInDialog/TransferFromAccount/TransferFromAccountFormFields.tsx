@@ -31,7 +31,7 @@ import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { useMoneyInDialogContext } from '../MoneyInDialogProvider';
@@ -96,7 +96,7 @@ export default function TransferFromAccountFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,

@@ -22,7 +22,7 @@ import {
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   inputIntent,
 } from '@/utils';
@@ -89,7 +89,7 @@ export default function ReceiptFormHeader() {
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('receipt_date', formattedDate);
               })}

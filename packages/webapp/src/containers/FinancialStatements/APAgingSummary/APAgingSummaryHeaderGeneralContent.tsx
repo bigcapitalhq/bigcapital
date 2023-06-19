@@ -22,7 +22,7 @@ import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterVendorsOptions } from './constants';
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
@@ -47,7 +47,7 @@ export default function APAgingSummaryHeaderGeneralContent() {
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((selectedDate) => {
                     form.setFieldValue('asDate', selectedDate);
                   })}

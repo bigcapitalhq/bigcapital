@@ -60,7 +60,7 @@ export default class InventoryAdjustmentService {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   @Inject()
-  private transfromer: TransformerInjectable;
+  private transformer: TransformerInjectable;
 
   /**
    * Transformes the quick inventory adjustment DTO to model object.
@@ -351,7 +351,7 @@ export default class InventoryAdjustmentService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed inventory adjustments.
-    const inventoryAdjustments = await this.transfromer.transform(
+    const inventoryAdjustments = await this.transformer.transform(
       tenantId,
       results,
       new InventoryAdjustmentTransformer()
@@ -444,7 +444,7 @@ export default class InventoryAdjustmentService {
     // Throw not found if the given adjustment transaction not exists.
     this.throwIfAdjustmentNotFound(inventoryAdjustment);
 
-    return this.transfromer.transform(
+    return this.transformer.transform(
       tenantId,
       inventoryAdjustment,
       new InventoryAdjustmentTransformer()

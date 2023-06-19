@@ -33,7 +33,7 @@ import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   compose,
 } from '@/utils';
@@ -102,7 +102,7 @@ export default function TransferToAccountFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,

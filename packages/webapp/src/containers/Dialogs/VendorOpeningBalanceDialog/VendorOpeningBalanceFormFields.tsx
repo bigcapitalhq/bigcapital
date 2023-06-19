@@ -4,7 +4,7 @@ import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { isEqual } from 'lodash';
 import { FastField, useFormikContext } from 'formik';
-import { momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
+import { momentFormatter, transformDateValue, handleDateChange } from '@/utils';
 import { Features } from '@/constants';
 import classNames from 'classnames';
 
@@ -71,7 +71,7 @@ function VendorOpeningBalanceFormFields({
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('opening_balance_at', formattedDate);
               })}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               popoverProps={{ position: Position.BOTTOM, minimal: true }}
               inputProps={{
                 leftIcon: <Icon icon={'date-range'} />,

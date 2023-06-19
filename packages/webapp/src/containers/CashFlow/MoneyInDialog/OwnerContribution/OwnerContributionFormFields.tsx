@@ -31,7 +31,7 @@ import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { useMoneyInDialogContext } from '../MoneyInDialogProvider';
@@ -97,7 +97,7 @@ export default function OwnerContributionFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,

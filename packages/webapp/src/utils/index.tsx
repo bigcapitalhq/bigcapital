@@ -289,7 +289,7 @@ export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
   });
 };
 
-export const tansformDateValue = (date) => {
+export const transformDateValue = (date) => {
   return moment(date).toDate() || new Date();
 };
 
@@ -427,12 +427,12 @@ export function defaultToTransform(
       ? defaultOrTransformedValue
       : defaultValue;
 
-  const _transfromedValue =
+  const _transformedValue =
     typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
   return value == null || value !== value || value === ''
     ? _defaultValue
-    : _transfromedValue;
+    : _transformedValue;
 }
 
 export function isBlank(value) {
@@ -472,12 +472,12 @@ export const transformToCamelCase = (object) => {
   return deepMapKeys(object, (key) => _.camelCase(key));
 };
 
-export const transfromToSnakeCase = (object) => {
+export const transformToSnakeCase = (object) => {
   return deepMapKeys(object, (key) => _.snakeCase(key));
 };
 
 export const transformTableQueryToParams = (object) => {
-  return transfromToSnakeCase(object);
+  return transformToSnakeCase(object);
 };
 
 export function flatObject(obj) {
@@ -586,7 +586,7 @@ export function transformTableStateToQuery(tableState) {
         }
       : {}),
   };
-  return transfromToSnakeCase(query);
+  return transformToSnakeCase(query);
 }
 
 /**
@@ -750,7 +750,7 @@ export const ensureEntriesHasEmptyLine = R.curry(
   },
 );
 
-export const transfromViewsToTabs = (views) => {
+export const transformViewsToTabs = (views) => {
   return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));
 };
 

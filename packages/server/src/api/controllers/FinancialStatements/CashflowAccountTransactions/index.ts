@@ -68,8 +68,8 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
     const { transactions, pagination } = cashflowAccountTransactions;
 
     return {
-      transactions: this.transfromToResponse(transactions),
-      pagination: this.transfromToResponse(pagination),
+      transactions: this.transformToResponse(transactions),
+      pagination: this.transformToResponse(pagination),
     };
   }
 
@@ -89,8 +89,8 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
         data: cashFlowTable.tableRows(),
         columns: cashFlowTable.tableColumns(),
       },
-      query: this.transfromToResponse(cashFlowDOO.query),
-      meta: this.transfromToResponse(cashFlowDOO.meta),
+      query: this.transformToResponse(cashFlowDOO.query),
+      meta: this.transformToResponse(cashFlowDOO.meta),
     };
   }
 

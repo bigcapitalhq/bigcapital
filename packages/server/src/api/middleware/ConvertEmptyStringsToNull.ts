@@ -7,7 +7,7 @@ function convertEmptyStringsToNull(data) {
 }
 
 export default (req: Request, res: Response, next: NextFunction) => {  
-  const transfomedBody = convertEmptyStringsToNull(req.body);
-  req.body = transfomedBody;
+  const transformedBody = convertEmptyStringsToNull(req.body);
+  req.body = transformedBody;
   next();
 };

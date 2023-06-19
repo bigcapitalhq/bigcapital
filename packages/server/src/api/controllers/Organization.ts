@@ -113,7 +113,7 @@ export default class OrganizationController extends BaseController {
         tenantId
       );
       return res.status(200).send({
-        organization: this.transfromToResponse(organization),
+        organization: this.transformToResponse(organization),
       });
     } catch (error) {
       next(error);
@@ -139,7 +139,7 @@ export default class OrganizationController extends BaseController {
       await this.organizationService.updateOrganization(tenantId, tenantDTO);
 
       return res.status(200).send(
-        this.transfromToResponse({
+        this.transformToResponse({
           tenantId,
           message: 'Organization information has been updated successfully.',
         })

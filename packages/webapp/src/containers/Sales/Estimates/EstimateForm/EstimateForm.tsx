@@ -30,7 +30,7 @@ import { useEstimateFormContext } from './EstimateFormProvider';
 import {
   transformToEditForm,
   defaultEstimate,
-  transfromsFormValuesToRequest,
+  transformsFormValuesToRequest,
   handleErrors,
   resetFormState,
 } from './utils';
@@ -102,7 +102,7 @@ function EstimateForm({
       return;
     }
     const form = {
-      ...transfromsFormValuesToRequest(values),
+      ...transformsFormValuesToRequest(values),
       delivered: submitPayload.deliver,
     };
     // Handle the request success.

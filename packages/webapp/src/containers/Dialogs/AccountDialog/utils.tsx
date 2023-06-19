@@ -34,7 +34,7 @@ export const transformApiErrors = (errors) => {
 /**
  * Payload transformer in account edit mode.
  */
-function tranformNewChildAccountPayload(account, payload) {
+function transformNewChildAccountPayload(account, payload) {
   return {
     parent_account_id: payload.parentAccountId || '',
     account_type: payload.accountType || '',
@@ -74,7 +74,7 @@ const defaultPayloadTransform = (account, payload) => ({
 function getConditions() {
   return [
     [AccountDialogAction.Edit],
-    [AccountDialogAction.NewChild, tranformNewChildAccountPayload],
+    [AccountDialogAction.NewChild, transformNewChildAccountPayload],
     [AccountDialogAction.NewDefinedType, transformNewDefinedTypePayload],
   ];
 }

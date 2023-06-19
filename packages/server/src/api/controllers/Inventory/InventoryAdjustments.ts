@@ -236,7 +236,7 @@ export default class InventoryAdjustmentsController extends BaseController {
         );
 
       return res.status(200).send({
-        data: this.transfromToResponse(inventoryAdjustment),
+        data: this.transformToResponse(inventoryAdjustment),
       });
     } catch (error) {
       next(error);
@@ -273,7 +273,7 @@ export default class InventoryAdjustmentsController extends BaseController {
 
       return res.status(200).send({
         inventory_adjustments: inventoryAdjustments,
-        pagination: this.transfromToResponse(pagination),
+        pagination: this.transformToResponse(pagination),
       });
     } catch (error) {
       next(error);

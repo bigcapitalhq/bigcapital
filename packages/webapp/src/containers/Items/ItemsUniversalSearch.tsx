@@ -36,7 +36,7 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
  * @param {*} item
  * @returns
  */
-const transfromItemsToSearch = (item) => ({
+const transformItemsToSearch = (item) => ({
   id: item.id,
   text: item.name,
   subText: item.code,
@@ -51,7 +51,7 @@ export const universalSearchItemBind = () => ({
   resourceType: RESOURCES_TYPES.ITEM,
   optionItemLabel: intl.get('items'),
   selectItemAction: ItemUniversalSearchSelectAction,
-  itemSelect: transfromItemsToSearch,
+  itemSelect: transformItemsToSearch,
   permission: {
     ability: ItemAction.View,
     subject: AbilitySubject.Item,

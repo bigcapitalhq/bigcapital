@@ -92,7 +92,7 @@ export default class BaseController {
    * Transform the given data to response.
    * @param {any} data
    */
-  protected transfromToResponse(
+  protected transformToResponse(
     data: any,
     translatable?: string | string[],
     req?: Request
