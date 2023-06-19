@@ -6,8 +6,8 @@ export default class DynamicFilterAbstractor {
    * @return {String} - join relation table.
    */
   protected getTableFromRelationColumn = (column: string) => {
-    const splitedColumn = column.split('.');
-    return splitedColumn.length > 0 ? splitedColumn[0] : '';
+    const splitColumn = column.split('.');
+    return splitColumn.length > 0 ? splitColumn[0] : '';
   };
 
   /**
