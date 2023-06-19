@@ -243,7 +243,7 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
   files.forEach((file) => {
     const formData = new FormData();
     formData.append('attachment', file.file);
-    // const oper = new PProgress((resolve, reject, progress) => {
+    // const oper = new Progress((resolve, reject, progress) => {
     //   actionCb(formData, file, (requestProgress) => {
     //     progress(requestProgress);
     //   })
@@ -256,7 +256,7 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
     // });
     // opers.push(oper);
   });
-  // return PProgress.all(opers);
+  // return Progress.all(opers);
 };
 
 export const firstLettersArgs = (...args) => {
