@@ -473,7 +473,7 @@ describe('route: `/sales/invoices`', () => {
 
     it('Should delete the given sale invoice with associated entries.', async () => {
       const saleInvoice = await tenantFactory.create('sale_invoice');
-      const saleInvoiceEntey = await tenantFactory.create('sale_invoice_entry', {
+      const saleInvoiceEntry = await tenantFactory.create('sale_invoice_entry', {
         sale_invoice_id: saleInvoice.id,
       });
 
@@ -484,7 +484,7 @@ describe('route: `/sales/invoices`', () => {
         .send();
 
       const storedSaleInvoice = await SaleInvoice.tenant().query().where('id', saleInvoice.id);
-      const storedSaleInvoiceEntry = await SaleInvoiceEntry.tenant().query().where('id', saleInvoiceEntey.id);
+      const storedSaleInvoiceEntry = await SaleInvoiceEntry.tenant().query().where('id', saleInvoiceEntry.id);
 
       expect(res.status).equals(200);
       expect(storedSaleInvoice.length).equals(0);
