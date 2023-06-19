@@ -17,20 +17,20 @@ export class CreditNoteWarehousesValidateSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.creditNote.onCreating,
-      this.validateCreditNoteWarehouseExistanceOnCreating
+      this.validateCreditNoteWarehouseExistenceOnCreating
     );
     bus.subscribe(
       events.creditNote.onEditing,
-      this.validateCreditNoteWarehouseExistanceOnEditing
+      this.validateCreditNoteWarehouseExistenceOnEditing
     );
     return bus;
   }
 
   /**
-   * Validate warehouse existance of sale invoice once creating.
+   * Validate warehouse existence of sale invoice once creating.
    * @param {ICreditNoteCreatingPayload}
    */
-  private validateCreditNoteWarehouseExistanceOnCreating = async ({
+  private validateCreditNoteWarehouseExistenceOnCreating = async ({
     creditNoteDTO,
     tenantId,
   }: ICreditNoteCreatingPayload) => {
@@ -41,10 +41,10 @@ export class CreditNoteWarehousesValidateSubscriber {
   };
 
   /**
-   * Validate warehouse existance of sale invoice once editing.
+   * Validate warehouse existence of sale invoice once editing.
    * @param {ICreditNoteEditingPayload}
    */
-  private validateCreditNoteWarehouseExistanceOnEditing = async ({
+  private validateCreditNoteWarehouseExistenceOnEditing = async ({
     tenantId,
     creditNoteEditDTO,
   }: ICreditNoteEditingPayload) => {

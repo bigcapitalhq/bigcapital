@@ -14,20 +14,20 @@ export class BillWarehousesValidateSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.bill.onCreating,
-      this.validateBillWarehouseExistanceOnCreating
+      this.validateBillWarehouseExistenceOnCreating
     );
     bus.subscribe(
       events.bill.onEditing,
-      this.validateSaleEstimateWarehouseExistanceOnEditing
+      this.validateSaleEstimateWarehouseExistenceOnEditing
     );
     return bus;
   }
 
   /**
-   * Validate warehouse existance of sale invoice once creating.
+   * Validate warehouse existence of sale invoice once creating.
    * @param {IBillCreatingPayload}
    */
-  private validateBillWarehouseExistanceOnCreating = async ({
+  private validateBillWarehouseExistenceOnCreating = async ({
     billDTO,
     tenantId,
   }: IBillCreatingPayload) => {
@@ -38,10 +38,10 @@ export class BillWarehousesValidateSubscriber {
   };
 
   /**
-   * Validate warehouse existance of sale invoice once editing.
+   * Validate warehouse existence of sale invoice once editing.
    * @param {IBillEditingPayload}
    */
-  private validateSaleEstimateWarehouseExistanceOnEditing = async ({
+  private validateSaleEstimateWarehouseExistenceOnEditing = async ({
     tenantId,
     billDTO,
   }: IBillEditingPayload) => {

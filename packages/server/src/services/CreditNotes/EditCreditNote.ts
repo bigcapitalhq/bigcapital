@@ -39,14 +39,14 @@ export default class EditCreditNote extends BaseCreditNotes {
       tenantId,
       creditNoteId
     );
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .modify('customer')
       .findById(creditNoteEditDTO.customerId)
       .throwIfNotFound();
 
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       creditNoteEditDTO.entries
     );
@@ -55,8 +55,8 @@ export default class EditCreditNote extends BaseCreditNotes {
       tenantId,
       creditNoteEditDTO.entries
     );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the items entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       creditNoteId,
       'CreditNote',

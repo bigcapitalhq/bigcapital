@@ -87,7 +87,7 @@ export default class BillsService
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Validates the given bill existance.
+   * Validates the given bill existence.
    * @async
    * @param {number} tenantId -
    * @param {number} billId -
@@ -106,7 +106,7 @@ export default class BillsService
   }
 
   /**
-   * Validates the bill number existance.
+   * Validates the bill number existence.
    * @async
    * @param {Request} req
    * @param {Response} res
@@ -338,8 +338,8 @@ export default class BillsService
     // Validate the bill number uniqiness on the storage.
     await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
-    // Validate items IDs existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       billDTO.entries
     );
@@ -421,15 +421,15 @@ export default class BillsService
     if (billDTO.billNumber) {
       await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
     }
-    // Validate the entries ids existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the entries ids existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       billId,
       'Bill',
       billDTO.entries
     );
-    // Validate the items ids existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate the items ids existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       billDTO.entries
     );

@@ -315,7 +315,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice, Contact } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .modify('customer')
       .findById(saleInvoiceDTO.customerId)
@@ -331,8 +331,8 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       // Validate the sale estimate is not already converted to invoice.
       this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
     }
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleInvoiceDTO.entries
     );
@@ -406,14 +406,14 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceId
     );
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .findById(saleInvoiceDTO.customerId)
       .modify('customer')
       .throwIfNotFound();
 
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleInvoiceDTO.entries
     );
@@ -422,8 +422,8 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceDTO.entries
     );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the items entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       saleInvoiceId,
       'SaleInvoice',

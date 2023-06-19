@@ -56,7 +56,7 @@ export class EditWarehouseTransfer extends CommandWarehouseTransfer {
       editWarehouseDTO.toWarehouseId
     );
     // Validates the not found entries items ids.
-    const items = await this.itemsEntries.validateItemsIdsExistance(
+    const items = await this.itemsEntries.validateItemsIdsExistence(
       tenantId,
       editWarehouseDTO.entries
     );

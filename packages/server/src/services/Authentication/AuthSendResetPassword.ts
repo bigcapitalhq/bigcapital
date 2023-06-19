@@ -30,7 +30,7 @@ export class AuthSendResetPassword {
    * @return {<Promise<IPasswordReset>}
    */
   public async sendResetPassword(email: string): Promise<PasswordReset> {
-    const user = await this.validateEmailExistance(email);
+    const user = await this.validateEmailExistence(email);
 
     const token: string = uniqid();
 
@@ -114,11 +114,11 @@ export class AuthSendResetPassword {
   }
 
   /**
-   * Validates the given email existance on the storage.
+   * Validates the given email existence on the storage.
    * @throws {ServiceError}
    * @param {string} email - email address.
    */
-  private async validateEmailExistance(email: string): Promise<ISystemUser> {
+  private async validateEmailExistence(email: string): Promise<ISystemUser> {
     const { systemUserRepository } = this.sysRepositories;
     const userByEmail = await systemUserRepository.findOneByEmail(email);
 

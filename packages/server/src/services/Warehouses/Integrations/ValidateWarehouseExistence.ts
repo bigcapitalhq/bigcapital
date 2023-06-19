@@ -5,16 +5,16 @@ import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
-export class ValidateWarehouseExistance {
+export class ValidateWarehouseExistence {
   @Inject()
   tenancy: HasTenancyService;
 
   /**
-   * Validate transaction warehouse id existance.
+   * Validate transaction warehouse id existence.
    * @param transDTO
    * @param entries
    */
-  public validateWarehouseIdExistance = (
+  public validateWarehouseIdExistence = (
     transDTO: { warehouseId?: number },
     entries: { warehouseId?: number }[] = []
   ) => {
@@ -29,11 +29,11 @@ export class ValidateWarehouseExistance {
   };
 
   /**
-   * Validate warehouse existance.
+   * Validate warehouse existence.
    * @param {number} tenantId
    * @param {number} warehouseId
    */
-  public validateWarehouseExistance = (
+  public validateWarehouseExistence = (
     tenantId: number,
     warehouseId: number
   ) => {
@@ -51,7 +51,7 @@ export class ValidateWarehouseExistance {
    * @param {number} tenantId
    * @param {{ warehouseId?: number }[]} entries
    */
-  public validateItemEntriesWarehousesExistance = async (
+  public validateItemEntriesWarehousesExistence = async (
     tenantId: number,
     entries: { warehouseId?: number }[]
   ) => {

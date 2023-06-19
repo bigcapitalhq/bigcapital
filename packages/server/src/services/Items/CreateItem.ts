@@ -32,25 +32,25 @@ export class CreateItem {
     await this.validators.validateItemNameUniquiness(tenantId, itemDTO.name);
 
     if (itemDTO.categoryId) {
-      await this.validators.validateItemCategoryExistance(
+      await this.validators.validateItemCategoryExistence(
         tenantId,
         itemDTO.categoryId
       );
     }
     if (itemDTO.sellAccountId) {
-      await this.validators.validateItemSellAccountExistance(
+      await this.validators.validateItemSellAccountExistence(
         tenantId,
         itemDTO.sellAccountId
       );
     }
     if (itemDTO.costAccountId) {
-      await this.validators.validateItemCostAccountExistance(
+      await this.validators.validateItemCostAccountExistence(
         tenantId,
         itemDTO.costAccountId
       );
     }
     if (itemDTO.inventoryAccountId) {
-      await this.validators.validateItemInventoryAccountExistance(
+      await this.validators.validateItemInventoryAccountExistence(
         tenantId,
         itemDTO.inventoryAccountId
       );

@@ -48,30 +48,30 @@ export class EditItem {
       itemDTO.name,
       oldItem.id
     );
-    // Validate the item category existance on the storage,
+    // Validate the item category existence on the storage,
     if (itemDTO.categoryId) {
-      await this.validators.validateItemCategoryExistance(
+      await this.validators.validateItemCategoryExistence(
         tenantId,
         itemDTO.categoryId
       );
     }
-    // Validate the sell account existance on the storage.
+    // Validate the sell account existence on the storage.
     if (itemDTO.sellAccountId) {
-      await this.validators.validateItemSellAccountExistance(
+      await this.validators.validateItemSellAccountExistence(
         tenantId,
         itemDTO.sellAccountId
       );
     }
-    // Validate the cost account existance on the storage.
+    // Validate the cost account existence on the storage.
     if (itemDTO.costAccountId) {
-      await this.validators.validateItemCostAccountExistance(
+      await this.validators.validateItemCostAccountExistence(
         tenantId,
         itemDTO.costAccountId
       );
     }
-    // Validate the inventory account existance onthe storage.
+    // Validate the inventory account existence onthe storage.
     if (itemDTO.inventoryAccountId) {
-      await this.validators.validateItemInventoryAccountExistance(
+      await this.validators.validateItemInventoryAccountExistence(
         tenantId,
         itemDTO.inventoryAccountId
       );
@@ -110,7 +110,7 @@ export class EditItem {
   public async editItem(tenantId: number, itemId: number, itemDTO: IItemDTO) {
     const { Item } = this.tenancy.models(tenantId);
 
-    // Validates the given item existance on the storage.
+    // Validates the given item existence on the storage.
     const oldItem = await Item.query().findById(itemId).throwIfNotFound();
 
     // Authorize before editing item.

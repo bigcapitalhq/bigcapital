@@ -6,12 +6,12 @@ import {
   IVendorEventCreatingPayload,
   IVendorOpeningBalanceEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class ContactBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -19,11 +19,11 @@ export class ContactBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.customers.onCreating,
-      this.validateBranchExistanceOnCustomerCreating
+      this.validateBranchExistenceOnCustomerCreating
     );
     bus.subscribe(
       events.customers.onOpeningBalanceChanging,
-      this.validateBranchExistanceOnCustomerOpeningBalanceEditing
+      this.validateBranchExistenceOnCustomerOpeningBalanceEditing
     );
     bus.subscribe(
       events.vendors.onCreating,
@@ -31,46 +31,46 @@ export class ContactBranchValidateSubscriber {
     );
     bus.subscribe(
       events.vendors.onOpeningBalanceChanging,
-      this.validateBranchExistanceOnVendorOpeningBalanceEditing
+      this.validateBranchExistenceOnVendorOpeningBalanceEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on customer creating.
+   * Validate branch existence on customer creating.
    * @param {ICustomerEventCreatingPayload} payload
    */
-  private validateBranchExistanceOnCustomerCreating = async ({
+  private validateBranchExistenceOnCustomerCreating = async ({
     tenantId,
     customerDTO,
   }: ICustomerEventCreatingPayload) => {
     // Can't continue if the customer opening balance is zero.
     if (!customerDTO.openingBalance) return;
 
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       customerDTO.openingBalanceBranchId
     );
   };
 
   /**
-   * Validate branch existance once customer opening balance editing.
+   * Validate branch existence once customer opening balance editing.
    * @param {ICustomerOpeningBalanceEditingPayload} payload
    */
-  private validateBranchExistanceOnCustomerOpeningBalanceEditing = async ({
+  private validateBranchExistenceOnCustomerOpeningBalanceEditing = async ({
     openingBalanceEditDTO,
     tenantId,
   }: ICustomerOpeningBalanceEditingPayload) => {
     if (!openingBalanceEditDTO.openingBalance) return;
 
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       openingBalanceEditDTO.openingBalanceBranchId
     );
   };
 
   /**
-   * Validates the branch existance on vendor creating.
+   * Validates the branch existence on vendor creating.
    * @param {IVendorEventCreatingPayload} payload -
    */
   private validateBranchExistanceonVendorCreating = async ({
@@ -80,23 +80,23 @@ export class ContactBranchValidateSubscriber {
     // Can't continue if the customer opening balance is zero.
     if (!vendorDTO.openingBalance) return;
 
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       vendorDTO.openingBalanceBranchId
     );
   };
 
   /**
-   * Validate branch existance once the vendor opening balance editing.
+   * Validate branch existence once the vendor opening balance editing.
    * @param {IVendorOpeningBalanceEditingPayload}
    */
-  private validateBranchExistanceOnVendorOpeningBalanceEditing = async ({
+  private validateBranchExistenceOnVendorOpeningBalanceEditing = async ({
     tenantId,
     openingBalanceEditDTO,
   }: IVendorOpeningBalanceEditingPayload) => {
     if (!openingBalanceEditDTO.openingBalance) return;
 
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       openingBalanceEditDTO.openingBalanceBranchId
     );

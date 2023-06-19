@@ -43,11 +43,11 @@ export class CommandManualJournalValidators {
   }
 
   /**
-   * Validate manual entries accounts existance on the storage.
+   * Validate manual entries accounts existence on the storage.
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO -
    */
-  public async validateAccountsExistance(
+  public async validateAccountsExistence(
     tenantId: number,
     manualJournalDTO: IManualJournalDTO
   ) {
@@ -182,11 +182,11 @@ export class CommandManualJournalValidators {
   }
 
   /**
-   * Validate entries contacts existance.
+   * Validate entries contacts existence.
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public async validateContactsExistance(
+  public async validateContactsExistence(
     tenantId: number,
     manualJournalDTO: IManualJournalDTO
   ) {

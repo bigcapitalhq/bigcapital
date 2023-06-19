@@ -39,7 +39,7 @@ export class CommandExpenseValidator {
    * @throws  {ServiceError}
    * @returns {Promise<IAccount[]>}
    */
-  public validateExpensesAccountsExistance(
+  public validateExpensesAccountsExistence(
     expenseAccounts: IAccount[],
     DTOAccountsIds: number[]
   ) {

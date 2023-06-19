@@ -29,7 +29,7 @@ export class DeleteTimeService {
   public deleteTime = async (tenantId: number, timeId: number) => {
     const { Time } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldTime = await Time.query().findById(timeId).throwIfNotFound();
 
     // Triggers `onProjectDelete` event.

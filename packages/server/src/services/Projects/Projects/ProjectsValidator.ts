@@ -14,7 +14,7 @@ export class ProjectsValidator {
   public async validateContactExists(tenantId: number, contactId: number) {
     const { Contact } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     await Contact.query()
       .modify('customer')
       .findById(contactId)

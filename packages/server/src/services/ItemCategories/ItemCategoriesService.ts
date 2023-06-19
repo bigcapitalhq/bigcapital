@@ -156,7 +156,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates sell account existance and type.
+   * Validates sell account existence and type.
    * @param {number} tenantId - Tenant id.
    * @param {number} sellAccountId - Sell account id.
    * @return {Promise<void>}
@@ -174,7 +174,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates COGS account existance and type.
+   * Validates COGS account existence and type.
    * @param {number} tenantId -
    * @param {number} costAccountId -
    * @return {Promise<void>}
@@ -192,7 +192,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates inventory account existance and type.
+   * Validates inventory account existence and type.
    * @param {number} tenantId
    * @param {number} inventoryAccountId
    * @return {Promise<void>}

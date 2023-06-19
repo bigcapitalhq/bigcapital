@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { IBillCreatingPayload, IBillEditingPayload } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class BillBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -14,38 +14,38 @@ export class BillBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.bill.onCreating,
-      this.validateBranchExistanceOnBillCreating
+      this.validateBranchExistenceOnBillCreating
     );
     bus.subscribe(
       events.bill.onEditing,
-      this.validateBranchExistanceOnBillEditing
+      this.validateBranchExistenceOnBillEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  private validateBranchExistanceOnBillCreating = async ({
+  private validateBranchExistenceOnBillCreating = async ({
     tenantId,
     billDTO,
   }: IBillCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       billDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnBillEditing = async ({
+  private validateBranchExistenceOnBillEditing = async ({
     billDTO,
     tenantId,
   }: IBillEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       billDTO.branchId
     );

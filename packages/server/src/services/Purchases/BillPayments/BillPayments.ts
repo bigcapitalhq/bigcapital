@@ -62,7 +62,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   private branchDTOTransform: BranchTransactionDTOTransform;
 
   /**
-   * Validates the bill payment existance.
+   * Validates the bill payment existence.
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
@@ -148,7 +148,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async validateBillsExistance(
+  public async validateBillsExistence(
     tenantId: number,
     billPaymentEntries: { billId: number }[],
     vendorId: number
@@ -228,12 +228,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validate the payment receive entries IDs existance.
+   * Validate the payment receive entries IDs existence.
    * @param {Request} req
    * @param {Response} res
    * @return {Response}
    */
-  private async validateEntriesIdsExistance(
+  private async validateEntriesIdsExistence(
     tenantId: number,
     billPaymentId: number,
     billPaymentEntries: IBillPaymentEntry[]
@@ -351,7 +351,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentDTO,
       vendor
     );
-    // Validate the payment account existance and type.
+    // Validate the payment account existence and type.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
@@ -360,8 +360,8 @@ export default class BillPaymentsService implements IBillPaymentsService {
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
     }
-    // Validates the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(
+    // Validates the bills existence and associated to the given vendor.
+    await this.validateBillsExistence(
       tenantId,
       billPaymentObj.entries,
       billPaymentDTO.vendorId
@@ -451,19 +451,19 @@ export default class BillPaymentsService implements IBillPaymentsService {
     // Validate vendor not modified.
     this.validateVendorNotModified(billPaymentDTO, oldBillPayment);
 
-    // Validate the payment account existance and type.
+    // Validate the payment account existence and type.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
     );
-    // Validate the items entries IDs existance on the storage.
-    await this.validateEntriesIdsExistance(
+    // Validate the items entries IDs existence on the storage.
+    await this.validateEntriesIdsExistence(
       tenantId,
       billPaymentId,
       billPaymentObj.entries
     );
-    // Validate the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(
+    // Validate the bills existence and associated to the given vendor.
+    await this.validateBillsExistence(
       tenantId,
       billPaymentObj.entries,
       billPaymentDTO.vendorId

@@ -17,20 +17,20 @@ export class VendorCreditWarehousesValidateSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.vendorCredit.onCreating,
-      this.validateVendorCreditWarehouseExistanceOnCreating
+      this.validateVendorCreditWarehouseExistenceOnCreating
     );
     bus.subscribe(
       events.vendorCredit.onEditing,
-      this.validateSaleEstimateWarehouseExistanceOnEditing
+      this.validateSaleEstimateWarehouseExistenceOnEditing
     );
     return bus;
   }
 
   /**
-   * Validate warehouse existance of sale invoice once creating.
+   * Validate warehouse existence of sale invoice once creating.
    * @param {IVendorCreditCreatingPayload}
    */
-  private validateVendorCreditWarehouseExistanceOnCreating = async ({
+  private validateVendorCreditWarehouseExistenceOnCreating = async ({
     vendorCreditCreateDTO,
     tenantId,
   }: IVendorCreditCreatingPayload) => {
@@ -41,10 +41,10 @@ export class VendorCreditWarehousesValidateSubscriber {
   };
 
   /**
-   * Validate warehouse existance of sale invoice once editing.
+   * Validate warehouse existence of sale invoice once editing.
    * @param {IVendorCreditEditingPayload}
    */
-  private validateSaleEstimateWarehouseExistanceOnEditing = async ({
+  private validateSaleEstimateWarehouseExistenceOnEditing = async ({
     tenantId,
     vendorCreditDTO,
   }: IVendorCreditEditingPayload) => {

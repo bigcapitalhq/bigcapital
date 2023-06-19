@@ -4,12 +4,12 @@ import {
   IBillPaymentCreatingPayload,
   IBillPaymentEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class PaymentMadeBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class PaymentMadeBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.billPayment.onCreating,
-      this.validateBranchExistanceOnPaymentCreating
+      this.validateBranchExistenceOnPaymentCreating
     );
     bus.subscribe(
       events.billPayment.onEditing,
-      this.validateBranchExistanceOnPaymentEditing
+      this.validateBranchExistenceOnPaymentEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  private validateBranchExistanceOnPaymentCreating = async ({
+  private validateBranchExistenceOnPaymentCreating = async ({
     tenantId,
     billPaymentDTO,
   }: IBillPaymentCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       billPaymentDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnPaymentEditing = async ({
+  private validateBranchExistenceOnPaymentEditing = async ({
     billPaymentDTO,
     tenantId,
   }: IBillPaymentEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       billPaymentDTO.branchId
     );

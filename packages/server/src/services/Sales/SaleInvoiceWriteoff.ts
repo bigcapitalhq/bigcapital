@@ -48,7 +48,7 @@ export default class SaleInvoiceWriteoff {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    // Validate the sale invoice existance.
+    // Validate the sale invoice existence.
     // Retrieve the sale invoice or throw not found service error.
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
@@ -103,7 +103,7 @@ export default class SaleInvoiceWriteoff {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    // Validate the sale invoice existance.
+    // Validate the sale invoice existence.
     // Retrieve the sale invoice or throw not found service error.
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)

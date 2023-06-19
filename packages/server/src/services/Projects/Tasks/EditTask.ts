@@ -37,7 +37,7 @@ export class EditTaskService {
   ): Promise<IProjectTaskEditPOJO> => {
     const { Task } = this.tenancy.models(tenantId);
 
-    // Validate task existance.
+    // Validate task existence.
     const oldTask = await Task.query().findById(taskId).throwIfNotFound();
 
     // Triggers `onProjectTaskEdit` event.

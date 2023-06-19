@@ -202,7 +202,7 @@ export default class UsersService {
   }
 
   /**
-   * Validate user existance throw error in case user was not found.,
+   * Validate user existence throw error in case user was not found.,
    * @param {number} tenantId -
    * @param {number} userId -
    * @returns {ISystemUser}

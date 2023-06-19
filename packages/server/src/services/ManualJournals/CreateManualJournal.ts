@@ -93,11 +93,11 @@ export class CreateManualJournalService {
     // Validate the total credit should equals debit.
     this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
 
-    // Validate the contacts existance.
-    await this.validator.validateContactsExistance(tenantId, manualJournalDTO);
+    // Validate the contacts existence.
+    await this.validator.validateContactsExistence(tenantId, manualJournalDTO);
 
-    // Validate entries accounts existance.
-    await this.validator.validateAccountsExistance(tenantId, manualJournalDTO);
+    // Validate entries accounts existence.
+    await this.validator.validateAccountsExistence(tenantId, manualJournalDTO);
 
     // Validate manual journal number require when auto-increment not enabled.
     this.validator.validateJournalNoRequireWhenAutoNotEnabled(

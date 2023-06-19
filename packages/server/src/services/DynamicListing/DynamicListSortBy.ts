@@ -19,7 +19,7 @@ export default class DynamicListSortBy extends DynamicListAbstract {
     columnSortBy: string,
     sortOrder: ISortOrder
   ) {
-    this.validateSortColumnExistance(model, columnSortBy);
+    this.validateSortColumnExistence(model, columnSortBy);
 
     return new DynamicFilterSortBy(columnSortBy, sortOrder);
   }
@@ -30,7 +30,7 @@ export default class DynamicListSortBy extends DynamicListAbstract {
    * @param  {string} columnSortBy - Sort column
    * @throws {ServiceError}
    */
-  private validateSortColumnExistance(model: any, columnSortBy: string) {
+  private validateSortColumnExistence(model: any, columnSortBy: string) {
     const field = model.getField(columnSortBy);
 
     if (!field) {

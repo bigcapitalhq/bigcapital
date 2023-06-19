@@ -14,16 +14,16 @@ export class InventoryAdjustmentWarehouseValidatorSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.inventoryAdjustment.onQuickCreating,
-      this.validateAdjustmentWarehouseExistanceOnCreating
+      this.validateAdjustmentWarehouseExistenceOnCreating
     );
     return bus;
   }
 
   /**
-   * Validate warehouse existance of sale invoice once creating.
+   * Validate warehouse existence of sale invoice once creating.
    * @param {IBillCreatingPayload}
    */
-  private validateAdjustmentWarehouseExistanceOnCreating = async ({
+  private validateAdjustmentWarehouseExistenceOnCreating = async ({
     quickAdjustmentDTO,
     tenantId,
   }: IInventoryAdjustmentCreatingPayload) => {

@@ -68,7 +68,7 @@ export default class MediaService implements IMediaService {
    * @param {string} modelName 
    * @param {number} modelId 
    */
-  async validateModelNameAndIdExistance(tenantId: number, modelName: string, modelId: number) {
+  async validateModelNameAndIdExistence(tenantId: number, modelName: string, modelId: number) {
     const models = this.tenancy.models(tenantId);
     this.logger.info('[media] trying to validate model name and id.', { tenantId, modelName, modelId });
 
@@ -90,13 +90,13 @@ export default class MediaService implements IMediaService {
   }
 
   /**
-   * Validates the media existance.
+   * Validates the media existence.
    * @param {number} tenantId 
    * @param {number} mediaId 
    * @param {number} modelId 
    * @param {string} modelName 
    */
-  async validateMediaLinkExistance(
+  async validateMediaLinkExistence(
     tenantId: number,
     mediaId: number,
     modelId: number,
@@ -124,10 +124,10 @@ export default class MediaService implements IMediaService {
   async linkMedia(tenantId: number, mediaId: number, modelId: number, modelName: string) {
     this.logger.info('[media] trying to link media.', { tenantId, mediaId, modelId, modelName });
     const { MediaLink } = this.tenancy.models(tenantId);
-    await this.validateMediaLinkExistance(tenantId, mediaId, modelId, modelName);
+    await this.validateMediaLinkExistence(tenantId, mediaId, modelId, modelName);
 
     const media = await this.getMediaOrThrowError(tenantId, mediaId);
-    await this.validateModelNameAndIdExistance(tenantId, modelName, modelId);
+    await this.validateModelNameAndIdExistence(tenantId, modelName, modelId);
 
     await MediaLink.query().insert({ mediaId, modelId, modelName });
   }
@@ -200,7 +200,7 @@ export default class MediaService implements IMediaService {
       throw new ServiceError(ERRORS.MINETYPE_NOT_SUPPORTED);
     }
     if (modelName && modelId) {
-      await this.validateModelNameAndIdExistance(tenantId, modelName, modelId);
+      await this.validateModelNameAndIdExistence(tenantId, modelName, modelId);
     }
     try {
       await attachment.mv(`${publicPath}${tenant.organizationId}/${fileName}`);

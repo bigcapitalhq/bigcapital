@@ -54,8 +54,8 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
       applyCreditToBillsDTO,
       vendorCredit
     );
-    // Validate bills entries existance.
-    const appliedBills = await this.billPayment.validateBillsExistance(
+    // Validate bills entries existence.
+    const appliedBills = await this.billPayment.validateBillsExistence(
       tenantId,
       vendorCreditAppliedModel.entries,
       vendorCredit.vendorId

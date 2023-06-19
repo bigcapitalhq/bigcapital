@@ -44,11 +44,11 @@ export default class GeneralLedgerService {
   }
 
   /**
-   * Validates accounts existance on the storage.
+   * Validates accounts existence on the storage.
    * @param {number} tenantId
    * @param {number[]} accountsIds
    */
-  async validateAccountsExistance(tenantId: number, accountsIds: number[]) {
+  async validateAccountsExistence(tenantId: number, accountsIds: number[]) {
     const { Account } = this.tenancy.models(tenantId);
 
     const storedAccounts = await Account.query().whereIn('id', accountsIds);

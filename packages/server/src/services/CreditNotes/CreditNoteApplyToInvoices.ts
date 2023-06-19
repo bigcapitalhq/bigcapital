@@ -50,7 +50,7 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
     );
     // Retrieve the applied invoices that associated to the credit note customer.
     const appliedInvoicesEntries =
-      await this.paymentReceive.validateInvoicesIDsExistance(
+      await this.paymentReceive.validateInvoicesIDsExistence(
         tenantId,
         creditNote.customerId,
         applyCreditToInvoicesDTO.entries

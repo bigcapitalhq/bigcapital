@@ -36,7 +36,7 @@ export class EditTimeService {
   ): Promise<IProjectTimeEditPOJO> => {
     const { Time } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldTime = await Time.query().findById(timeId).throwIfNotFound();
 
     // Triggers `onProjectEdit` event.

@@ -4,12 +4,12 @@ import {
   ISaleInvoiceCreatingPaylaod,
   ISaleInvoiceEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class InvoiceBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class InvoiceBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.saleInvoice.onCreating,
-      this.validateBranchExistanceOnInvoiceCreating
+      this.validateBranchExistenceOnInvoiceCreating
     );
     bus.subscribe(
       events.saleInvoice.onEditing,
-      this.validateBranchExistanceOnInvoiceEditing
+      this.validateBranchExistenceOnInvoiceEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on invoice creating.
+   * Validate branch existence on invoice creating.
    * @param {ISaleInvoiceCreatingPaylaod} payload
    */
-  private validateBranchExistanceOnInvoiceCreating = async ({
+  private validateBranchExistenceOnInvoiceCreating = async ({
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceCreatingPaylaod) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       saleInvoiceDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once invoice editing.
+   * Validate branch existence once invoice editing.
    * @param {ISaleInvoiceEditingPayload} payload
    */
-  private validateBranchExistanceOnInvoiceEditing = async ({
+  private validateBranchExistenceOnInvoiceEditing = async ({
     saleInvoiceDTO,
     tenantId,
   }: ISaleInvoiceEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       saleInvoiceDTO.branchId
     );

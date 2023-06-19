@@ -40,10 +40,10 @@ export default class EditProjectService {
   ): Promise<IProjectEditPOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldProject = await Project.query().findById(projectId).throwIfNotFound();
 
-    // Validate the project's contact id existance.
+    // Validate the project's contact id existence.
     if (oldProject.contactId !== projectDTO.contactId) {
       await this.projectsValidator.validateContactExists(
         tenantId,

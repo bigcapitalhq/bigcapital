@@ -80,7 +80,7 @@ export default class ItemsEntriesService {
    * @param {number} tenantId -
    * @param {IItemEntryDTO} itemEntries -
    */
-  public async validateItemsIdsExistance(
+  public async validateItemsIdsExistence(
     tenantId: number,
     itemEntries: IItemEntryDTO[]
   ) {
@@ -99,12 +99,12 @@ export default class ItemsEntriesService {
   }
 
   /**
-   * Validates the entries ids existance on the storage.
+   * Validates the entries ids existence on the storage.
    * @param {number} tenantId -
    * @param {number} billId -
    * @param {IItemEntry[]} billEntries -
    */
-  public async validateEntriesIdsExistance(
+  public async validateEntriesIdsExistence(
     tenantId: number,
     referenceId: number,
     referenceType: string,

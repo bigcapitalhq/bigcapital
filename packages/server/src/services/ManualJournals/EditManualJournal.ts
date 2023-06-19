@@ -43,11 +43,11 @@ export class EditManualJournal {
     // Validates the total credit and debit to be equals.
     this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
 
-    // Validate the contacts existance.
-    await this.validator.validateContactsExistance(tenantId, manualJournalDTO);
+    // Validate the contacts existence.
+    await this.validator.validateContactsExistence(tenantId, manualJournalDTO);
 
-    // Validates entries accounts existance.
-    await this.validator.validateAccountsExistance(tenantId, manualJournalDTO);
+    // Validates entries accounts existence.
+    await this.validator.validateAccountsExistence(tenantId, manualJournalDTO);
 
     // Validates the manual journal number uniquiness.
     if (manualJournalDTO.journalNumber) {
@@ -105,7 +105,7 @@ export class EditManualJournal {
   }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
-    // Validates the manual journal existance on the storage.
+    // Validates the manual journal existence on the storage.
     const oldManualJournal = await ManualJournal.query()
       .findById(manualJournalId)
       .throwIfNotFound();

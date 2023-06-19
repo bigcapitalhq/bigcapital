@@ -47,12 +47,12 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
   };
 
   /**
-   * Validates existance the fields of filter roles.
+   * Validates existence the fields of filter roles.
    * @param  {IModel} model
    * @param  {IFilterRole[]} filterRoles
    * @throws {ServiceError}
    */
-  private validateFilterRolesFieldsExistance = (
+  private validateFilterRolesFieldsExistence = (
     model: IModel,
     filterRoles: IFilterRole[]
   ) => {
@@ -96,7 +96,7 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
     this.validateFilterRolesSchema(filterRolesParsed);
 
     // Validate the model resource fields.
-    this.validateFilterRolesFieldsExistance(model, filterRoles);
+    this.validateFilterRolesFieldsExistence(model, filterRoles);
 
     return new DynamicFilterAdvancedFilter(filterRolesParsed);
   };

@@ -96,7 +96,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
    * @param {Response} res
    * @param {Function} next
    */
-  async validateEstimateNumberExistance(
+  async validateEstimateNumberExistence(
     tenantId: number,
     estimateNumber: string,
     notEstimateId?: number
@@ -111,7 +111,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
         }
       });
     if (foundSaleEstimate) {
-      throw new ServiceError(ERRORS.SALE_ESTIMATE_NUMBER_EXISTANCE);
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NUMBER_EXISTENCE);
     }
   }
 
@@ -257,12 +257,12 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       customer
     );
     // Validate estimate number uniquiness on the storage.
-    await this.validateEstimateNumberExistance(
+    await this.validateEstimateNumberExistence(
       tenantId,
       estimateObj.estimateNumber
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       estimateDTO.entries
     );
@@ -331,21 +331,21 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     );
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
-      await this.validateEstimateNumberExistance(
+      await this.validateEstimateNumberExistence(
         tenantId,
         estimateDTO.estimateNumber,
         estimateId
       );
     }
-    // Validate sale estimate entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate sale estimate entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       estimateId,
       'SaleEstimate',
       estimateDTO.entries
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       estimateDTO.entries
     );

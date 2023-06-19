@@ -37,14 +37,14 @@ export class ProjectBillableTasksSubscriber {
   }
 
   /**
-   * Validate the tasks refs ids existance.
+   * Validate the tasks refs ids existence.
    * @param {ISaleInvoiceCreatedPayload} payload -
    */
   public handleValidateInvoiceTasksRefs = async ({
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceCreatedPayload) => {
-    await this.projectBillableTasksValidator.validateTasksRefsExistance(
+    await this.projectBillableTasksValidator.validateTasksRefsExistence(
       tenantId,
       saleInvoiceDTO
     );

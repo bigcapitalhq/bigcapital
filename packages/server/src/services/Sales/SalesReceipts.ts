@@ -100,7 +100,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
    * @param {number} tenantId - Tenant id.
    * @param {number} accountId - Account id.
    */
-  async validateReceiptDepositAccountExistance(
+  async validateReceiptDepositAccountExistence(
     tenantId: number,
     accountId: number
   ) {
@@ -256,13 +256,13 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       saleReceiptDTO,
       paymentCustomer
     );
-    // Validate receipt deposit account existance and type.
-    await this.validateReceiptDepositAccountExistance(
+    // Validate receipt deposit account existence and type.
+    await this.validateReceiptDepositAccountExistence(
       tenantId,
       saleReceiptDTO.depositAccountId
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleReceiptDTO.entries
     );
@@ -334,13 +334,13 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       paymentCustomer,
       oldSaleReceipt
     );
-    // Validate receipt deposit account existance and type.
-    await this.validateReceiptDepositAccountExistance(
+    // Validate receipt deposit account existence and type.
+    await this.validateReceiptDepositAccountExistence(
       tenantId,
       saleReceiptDTO.depositAccountId
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleReceiptDTO.entries
     );

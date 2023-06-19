@@ -502,7 +502,7 @@ export default class SalesEstimatesController extends BaseController {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 600 }],
         });
       }
-      if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTANCE') {
+      if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTENCE') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 700 }],
         });

@@ -4,12 +4,12 @@ import {
   ICreditNoteCreatingPayload,
   ICreditNoteEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class CreditNoteBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class CreditNoteBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.creditNote.onCreating,
-      this.validateBranchExistanceOnCreditCreating
+      this.validateBranchExistenceOnCreditCreating
     );
     bus.subscribe(
       events.creditNote.onEditing,
-      this.validateBranchExistanceOnCreditEditing
+      this.validateBranchExistenceOnCreditEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ICreditNoteCreatingPayload} payload
    */
-  private validateBranchExistanceOnCreditCreating = async ({
+  private validateBranchExistenceOnCreditCreating = async ({
     tenantId,
     creditNoteDTO,
   }: ICreditNoteCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       creditNoteDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnCreditEditing = async ({
+  private validateBranchExistenceOnCreditEditing = async ({
     creditNoteEditDTO,
     tenantId,
   }: ICreditNoteEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       creditNoteEditDTO.branchId
     );

@@ -37,7 +37,7 @@ export default class CreateProject {
   ): Promise<IProjectCreatePOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     await this.validator.validateContactExists(tenantId, projectDTO.contactId);
 
     // Triggers `onProjectCreate` event.

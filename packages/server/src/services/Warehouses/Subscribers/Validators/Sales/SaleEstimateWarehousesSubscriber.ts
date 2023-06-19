@@ -17,20 +17,20 @@ export class SaleEstimateWarehousesValidateSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.saleEstimate.onCreating,
-      this.validateSaleEstimateWarehouseExistanceOnCreating
+      this.validateSaleEstimateWarehouseExistenceOnCreating
     );
     bus.subscribe(
       events.saleEstimate.onEditing,
-      this.validateSaleEstimateWarehouseExistanceOnEditing
+      this.validateSaleEstimateWarehouseExistenceOnEditing
     );
     return bus;
   }
 
   /**
-   * Validate warehouse existance of sale invoice once creating.
+   * Validate warehouse existence of sale invoice once creating.
    * @param {ISaleEstimateCreatingPayload}
    */
-  private validateSaleEstimateWarehouseExistanceOnCreating = async ({
+  private validateSaleEstimateWarehouseExistenceOnCreating = async ({
     estimateDTO,
     tenantId,
   }: ISaleEstimateCreatingPayload) => {
@@ -41,10 +41,10 @@ export class SaleEstimateWarehousesValidateSubscriber {
   };
 
   /**
-   * Validate warehouse existance of sale invoice once editing.
+   * Validate warehouse existence of sale invoice once editing.
    * @param {ISaleEstimateEditingPayload}
    */
-  private validateSaleEstimateWarehouseExistanceOnEditing = async ({
+  private validateSaleEstimateWarehouseExistenceOnEditing = async ({
     tenantId,
     estimateDTO,
   }: ISaleEstimateEditingPayload) => {

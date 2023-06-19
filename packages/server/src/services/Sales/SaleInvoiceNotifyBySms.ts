@@ -54,7 +54,7 @@ export default class SaleInvoiceNotifyBySms {
       .findById(saleInvoiceId)
       .withGraphFetched('customer');
 
-    // Validate the customer phone number existance and number validation.
+    // Validate the customer phone number existence and number validation.
     this.saleSmsNotification.validateCustomerPhoneNumber(
       saleInvoice.customer.personalPhone
     );
@@ -200,8 +200,8 @@ export default class SaleInvoiceNotifyBySms {
       .findById(saleInvoiceId)
       .withGraphFetched('customer');
 
-    // Validates the sale invoice existance.
-    this.validateSaleInvoiceExistance(saleInvoice);
+    // Validates the sale invoice existence.
+    this.validateSaleInvoiceExistence(saleInvoice);
 
     // Current tenant metadata.
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
@@ -247,10 +247,10 @@ export default class SaleInvoiceNotifyBySms {
   };
 
   /**
-   * Validates the sale invoice existance.
+   * Validates the sale invoice existence.
    * @param {ISaleInvoice|null} saleInvoice
    */
-  private validateSaleInvoiceExistance(saleInvoice: ISaleInvoice | null) {
+  private validateSaleInvoiceExistence(saleInvoice: ISaleInvoice | null) {
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }

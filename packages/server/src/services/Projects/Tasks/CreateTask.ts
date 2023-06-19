@@ -37,7 +37,7 @@ export class CreateTaskService {
   ): Promise<IProjectTaskCreatePOJO> => {
     const { Task, Project } = this.tenancy.models(tenantId);
 
-    // Validate project existance.
+    // Validate project existence.
     const project = await Project.query().findById(projectId).throwIfNotFound();
 
     // Triggers `onProjectTaskCreate` event.

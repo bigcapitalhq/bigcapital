@@ -28,7 +28,7 @@ export default class EditProjectStatusService {
   ) => {
     const { Project } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldProject = await Project.query()
       .findById(projectId)
       .throwIfNotFound();

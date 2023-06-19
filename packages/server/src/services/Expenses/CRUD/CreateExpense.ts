@@ -42,7 +42,7 @@ export class CreateExpense {
   ) => {
     const { Account } = await this.tenancy.models(tenantId);
 
-    // Validate payment account existance on the storage.
+    // Validate payment account existence on the storage.
     const paymentAccount = await Account.query()
       .findById(expenseDTO.paymentAccountId)
       .throwIfNotFound();
@@ -57,7 +57,7 @@ export class CreateExpense {
       DTOExpenseAccountsIds
     );
     // Validate expense accounts exist on the storage.
-    this.validator.validateExpensesAccountsExistance(
+    this.validator.validateExpensesAccountsExistence(
       expenseAccounts,
       DTOExpenseAccountsIds
     );
@@ -74,11 +74,11 @@ export class CreateExpense {
   /**
    * Precedures.
    * ---------
-   * 1. Validate payment account existance on the storage.
+   * 1. Validate payment account existence on the storage.
    * 2. Validate expense accounts exist on the storage.
    * 3. Validate payment account type.
    * 4. Validate expenses accounts type.
-   * 5. Validate the expense payee contact id existance on storage.
+   * 5. Validate the expense payee contact id existence on storage.
    * 6. Validate the given expense categories not equal zero.
    * 7. Stores the expense to the storage.
    * ---------

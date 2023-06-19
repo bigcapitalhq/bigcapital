@@ -5,7 +5,7 @@ import { BranchesSettings } from '../BranchesSettings';
 import { ERRORS } from './constants';
 
 @Service()
-export class ValidateBranchExistance {
+export class ValidateBranchExistence {
   @Inject()
   tenancy: HasTenancyService;
 
@@ -31,7 +31,7 @@ export class ValidateBranchExistance {
   };
 
   /**
-   * Validate transaction branch id existance.
+   * Validate transaction branch id existence.
    * @param  {number} tenantId 
    * @param  {number} branchId 
    * @return {Promise<void>}
@@ -41,17 +41,17 @@ export class ValidateBranchExistance {
     branchId: number | null
   ) => {
     //
-    this.validateBranchIdExistance(branchId);
+    this.validateBranchIdExistence(branchId);
 
     //
-    await this.validateBranchExistance(tenantId, branchId);
+    await this.validateBranchExistence(tenantId, branchId);
   };
 
   /**
    *
    * @param branchId
    */
-  public validateBranchIdExistance = (branchId: number | null) => {
+  public validateBranchIdExistence = (branchId: number | null) => {
     if (!branchId) {
       throw new ServiceError(ERRORS.BRANCH_ID_REQUIRED);
     }
@@ -62,7 +62,7 @@ export class ValidateBranchExistance {
    * @param tenantId
    * @param branchId
    */
-  public validateBranchExistance = async (tenantId: number, branchId: number) => {
+  public validateBranchExistence = async (tenantId: number, branchId: number) => {
     const { Branch } = this.tenancy.models(tenantId);
 
     const branch = await Branch.query().findById(branchId);

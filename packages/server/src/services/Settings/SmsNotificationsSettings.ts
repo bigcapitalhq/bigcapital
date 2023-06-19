@@ -144,7 +144,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Vaidates the sms notification key existance.
+   * Vaidates the sms notification key existence.
    * @param {string} notificationKey
    */
   private validateSmsNotificationExists = (

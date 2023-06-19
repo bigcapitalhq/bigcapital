@@ -40,12 +40,12 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item COGS account existance and type.
+   * Validate item COGS account existence and type.
    * @param {number} tenantId
    * @param {number} costAccountId
    * @return {Promise<void>}
    */
-  public async validateItemCostAccountExistance(
+  public async validateItemCostAccountExistence(
     tenantId: number,
     costAccountId: number
   ): Promise<void> {
@@ -63,11 +63,11 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item sell account existance and type.
+   * Validate item sell account existence and type.
    * @param {number} tenantId - Tenant id.
    * @param {number} sellAccountId - Sell account id.
    */
-  public async validateItemSellAccountExistance(
+  public async validateItemSellAccountExistence(
     tenantId: number,
     sellAccountId: number
   ) {
@@ -83,11 +83,11 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item inventory account existance and type.
+   * Validate item inventory account existence and type.
    * @param {number} tenantId
    * @param {number} inventoryAccountId
    */
-  public async validateItemInventoryAccountExistance(
+  public async validateItemInventoryAccountExistence(
     tenantId: number,
     inventoryAccountId: number
   ) {
@@ -105,11 +105,11 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item category existance.
+   * Validate item category existence.
    * @param {number} tenantId
    * @param {number} itemCategoryId
    */
-  public async validateItemCategoryExistance(
+  public async validateItemCategoryExistence(
     tenantId: number,
     itemCategoryId: number
   ) {

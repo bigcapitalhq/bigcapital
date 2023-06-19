@@ -32,7 +32,7 @@ export class DeleteTaskService {
   ): Promise<void> => {
     const { Task } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldTask = await Task.query().findById(taskId).throwIfNotFound();
 
     // Triggers `onDeleteProjectTask` event.
