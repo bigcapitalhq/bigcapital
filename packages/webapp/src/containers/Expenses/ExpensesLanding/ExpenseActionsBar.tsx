@@ -59,7 +59,7 @@ function ExpensesActionsBar({
   // Expenses refresh action.
   const { refresh } = useRefreshExpenses();
 
-  // Handles the new expense buttn click.
+  // Handles the new expense button click.
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
