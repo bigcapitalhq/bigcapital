@@ -156,7 +156,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Retrieve unspported message arguments.
+   * Retrieve unsupported message arguments.
    * @param {string} smsMessage - SMS message.
    * @param {string[]} args -
    * @returns {string[]}
