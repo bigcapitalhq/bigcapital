@@ -52,7 +52,7 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
         ),
         R.when(
           this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearChangetNode
+          this.assocPreviousYearChangedNode
         ),
         this.assocPreviousYearAccountNode
       )(node);
@@ -226,7 +226,7 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
           ),
           R.when(
             this.query.isPreviousYearChangeActive,
-            this.assocPreviousYearChangetNode
+            this.assocPreviousYearChangedNode
           ),
           R.when(
             this.query.isPreviousYearActive,

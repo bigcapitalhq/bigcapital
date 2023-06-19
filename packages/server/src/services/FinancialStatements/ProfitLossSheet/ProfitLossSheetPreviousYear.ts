@@ -52,7 +52,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
         ),
         R.when(
           this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearChangetNode
+          this.assocPreviousYearChangedNode
         ),
         this.assocPreviousYearTotalAccountNode
       )(accountNode);
@@ -197,7 +197,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
           ),
           R.when(
             this.query.isPreviousYearChangeActive,
-            this.assocPreviousYearChangetNode
+            this.assocPreviousYearChangedNode
           ),
           R.when(
             this.query.isPreviousYearActive,

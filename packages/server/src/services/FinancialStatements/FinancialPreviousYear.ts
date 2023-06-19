@@ -16,7 +16,7 @@ export const FinancialPreviousYear = (Base) =>
      * @param    {IProfitLossSheetAccountNode} accountNode
      * @returns  {IProfitLossSheetAccountNode}
      */
-    protected assocPreviousYearChangetNode = (
+    protected assocPreviousYearChangedNode = (
       node: IFinancialCommonNode & IFinancialNodeWithPreviousYear
     ): IFinancialNodeWithPreviousYear => {
       const change = this.getAmountChange(
