@@ -72,7 +72,7 @@ export default class MetableStore implements IMetableStore {
   }
 
   /**
-   * Markes the metadata to should be deleted.
+   * Marks the metadata to should be deleted.
    * @param {String} key -
    */
   remove(query: string | IMetaQuery): void {

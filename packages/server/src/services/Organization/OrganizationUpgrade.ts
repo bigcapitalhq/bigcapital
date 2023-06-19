@@ -77,7 +77,7 @@ export default class OrganizationUpgrade {
     // Transformes the mangodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
-    // Markes the tenant as currently building.
+    // Marks the tenant as currently building.
     await Tenant.markAsUpgrading(tenantId, jobId);
 
     return { jobId };

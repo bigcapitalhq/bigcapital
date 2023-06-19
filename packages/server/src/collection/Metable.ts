@@ -104,7 +104,7 @@ export default {
   },
 
   /**
-   * Markes the metadata to should be deleted.
+   * Marks the metadata to should be deleted.
    * @param {String} key -
    */
   async removeMeta(key) {

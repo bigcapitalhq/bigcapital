@@ -82,7 +82,7 @@ export default class OrganizationService {
       systemUser,
     } as IOrganizationBuildEventPayload);
 
-    // Markes the tenant as completed building.
+    // Marks the tenant as completed building.
     await Tenant.markAsBuilt(tenantId);
     await Tenant.markAsBuildCompleted(tenantId);
 
@@ -124,7 +124,7 @@ export default class OrganizationService {
     // Transformes the mangodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
-    // Markes the tenant as currently building.
+    // Marks the tenant as currently building.
     await Tenant.markAsBuilding(tenantId, jobId);
 
     return {

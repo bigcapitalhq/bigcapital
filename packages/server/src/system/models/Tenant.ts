@@ -123,7 +123,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Markes the given tenant as upgraded.
+   * Marks the given tenant as upgraded.
    * @param {number} tenantId
    * @returns
    */
