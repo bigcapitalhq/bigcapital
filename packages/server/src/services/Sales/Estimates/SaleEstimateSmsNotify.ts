@@ -142,7 +142,7 @@ export default class SaleEstimateNotifyBySms {
   };
 
   /**
-   * Formattes the estimate sms notification details message.
+   * Formats the estimate sms notification details message.
    * @param {string} smsMessage
    * @param {ISaleEstimate} saleEstimate
    * @param {TenantMetadata} tenantMetadata

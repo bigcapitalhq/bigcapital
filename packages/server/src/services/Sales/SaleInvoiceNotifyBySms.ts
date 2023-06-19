@@ -67,7 +67,7 @@ export default class SaleInvoiceNotifyBySms {
       tenantId,
       saleInvoice,
     });
-    // Formattes the sms message and sends sms notification.
+    // Formats the sms message and sends sms notification.
     await this.sendSmsNotification(tenantId, notificationKey, saleInvoice);
 
     // Triggers `onSaleInvoiceNotifySms` event.

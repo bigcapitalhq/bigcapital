@@ -139,7 +139,7 @@ export default class SaleReceiptNotifyBySms {
   };
 
   /**
-   * Formattes the receipt sms notification message.
+   * Formats the receipt sms notification message.
    * @param {string} smsMessage
    * @param {ISaleReceipt} saleReceipt
    * @param {TenantMetadata} tenantMetadata

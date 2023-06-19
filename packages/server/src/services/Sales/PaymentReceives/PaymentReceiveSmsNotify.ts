@@ -134,7 +134,7 @@ export default class PaymentReceiveNotifyBySms {
   };
 
   /**
-   * Formattes the payment details sms notification messafge.
+   * Formats the payment details sms notification messafge.
    * @param {string} smsMessage
    * @param {IPaymentReceive} payment
    * @param {ICustomer} customer
@@ -148,7 +148,7 @@ export default class PaymentReceiveNotifyBySms {
   ): string => {
     const invoiceNumbers = this.stringifyPaymentInvoicesNumber(payment);
 
-    // Formattes the payment number variable.
+    // Formats the payment number variable.
     const formattedPaymentNumber = formatNumber(payment.amount, {
       currencyCode: payment.currencyCode,
     });
