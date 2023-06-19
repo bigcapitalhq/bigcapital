@@ -142,7 +142,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
   };
 
   /**
-   * Retrieve the reprot data node.
+   * Retrieve the report data node.
    * @returns {ICashflowAccountTransaction[]}
    */
   public reportData(): ICashflowAccountTransaction[] {
