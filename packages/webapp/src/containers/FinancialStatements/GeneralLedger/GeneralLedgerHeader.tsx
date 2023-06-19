@@ -20,7 +20,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Geenral Ledger (GL) - Header.
+ * General Ledger (GL) - Header.
  */
 function GeneralLedgerHeader({
   // #ownProps

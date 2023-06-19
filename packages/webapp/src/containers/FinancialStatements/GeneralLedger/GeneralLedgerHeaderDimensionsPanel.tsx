@@ -11,7 +11,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Gereral ledger sheet header dimension panel.
+ * General ledger sheet header dimension panel.
  * @returns
  */
 export default function GeneralLedgerHeaderDimensionsPanel() {
@@ -23,7 +23,7 @@ export default function GeneralLedgerHeaderDimensionsPanel() {
 }
 
 /**
- * Gereral ledger sheet header dimension panel content.
+ * General ledger sheet header dimension panel content.
  * @returns
  */
 function GeneralLedgerHeaderDimensionsPanelContent() {
