@@ -62,7 +62,7 @@ describe('JournalPoster', () => {
       expect(journalEntries.balancesChange).to.have.property(1, -100);
     });
 
-    it('Should decrement balance amount after debit entry wiht debit normal account.', () => {
+    it('Should decrement balance amount after debit entry with debit normal account.', () => {
       const journalEntries = new JournalPoster(accountsDepGraph);
       const journalEntry = new JournalEntry({
         referenceId: 1,
