@@ -74,7 +74,7 @@ function useAppLoadLocales(currentLocale) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    // Lodas the locales data file.
+    // Loads the locales data file.
     loadLocales(currentLocale)
       .then((results) => {
         return intl.init({
