@@ -56,7 +56,7 @@ cefa73fe2881   bigcapital-redis   "docker-entrypoint.s…"   7 seconds ago   Up 
 1ea059198cb4   bigcapital-mongo   "docker-entrypoint.s…"   7 seconds ago   Up 1 second   0.0.0.0:27017->27017/tcp            bigcapital-mongo-1
 ```
 
-- There're some CLI commands we should run before running the server like databaase migration, so we need to build the `server` app first.
+- There're some CLI commands we should run before running the server like database migration, so we need to build the `server` app first.
 
 ```
 npm run build:server
