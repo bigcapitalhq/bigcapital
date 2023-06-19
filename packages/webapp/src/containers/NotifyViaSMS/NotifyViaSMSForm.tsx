@@ -6,7 +6,7 @@ import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Callout, Classes, Intent } from '@blueprintjs/core';
 
-import '@/style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
+import '@/style/pages/NotifyContactViaSMS/NotifyContactViaSMSDialog.scss';
 
 import { CreateNotifyViaSMSFormSchema } from './NotifyViaSMSForm.schema';
 import NotifyViaSMSFormFields from './NotifyViaSMSFormFields';
