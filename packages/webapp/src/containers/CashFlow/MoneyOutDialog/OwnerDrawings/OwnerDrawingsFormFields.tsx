@@ -153,7 +153,7 @@ export default function OwnerDrawingsFormFields() {
       </If>
       <Row>
         <Col xs={5}>
-          {/*------------ equitty account -----------*/}
+          {/*------------ equity account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
