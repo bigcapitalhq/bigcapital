@@ -7,7 +7,7 @@ import withDrawerActions from '../Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
- * Vendor univesal search item select action.
+ * Vendor universal search item select action.
  */
 function VendorUniversalSearchSelectComponent({
   resourceType,

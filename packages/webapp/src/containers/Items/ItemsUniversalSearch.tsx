@@ -9,7 +9,7 @@ import { DRAWERS } from '@/constants/drawers';
 import { AbilitySubject, ItemAction } from '@/constants/abilityOption';
 
 /**
- * Item univrsal search item select action.
+ * Item universal search item select action.
  */
 function ItemUniversalSearchSelectComponent({
   // #ownProps
