@@ -662,7 +662,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve total balnace of the given customer/vendor contact.
+   * Retrieve total balance of the given customer/vendor contact.
    * @param {Number} accountId
    * @param {Number} contactId
    * @param {String} contactType
@@ -717,7 +717,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve total balnace of the given customer/vendor contact.
+   * Retrieve total balance of the given customer/vendor contact.
    * @param {Number} accountId
    * @param {Number} contactId
    * @param {String} contactType

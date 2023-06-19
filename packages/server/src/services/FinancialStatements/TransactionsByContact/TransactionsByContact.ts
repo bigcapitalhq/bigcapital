@@ -157,7 +157,7 @@ export default class TransactionsByContact extends FinancialSheet {
   };
 
   /**
-   * Filters customer section has zero closing balnace.
+   * Filters customer section has zero closing balance.
    * @param {ITransactionsByCustomersCustomer} transactionsByCustomer
    * @returns {boolean}
    */

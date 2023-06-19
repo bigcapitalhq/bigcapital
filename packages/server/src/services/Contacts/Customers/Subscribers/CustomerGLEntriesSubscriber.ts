@@ -66,7 +66,7 @@ export class CustomerWriteGLOpeningBalanceSubscriber {
   };
 
   /**
-   * Handles the rewrite opening balance entries once opening balnace changed.
+   * Handles the rewrite opening balance entries once opening balance changed.
    * @param {ICustomerOpeningBalanceEditedPayload} payload -
    */
   private handleRewriteOpeningEntriesOnChanged = async ({

@@ -476,7 +476,7 @@ describe('routes: `/financial_statements`', () => {
       });
     });
     
-    it('Should parent account balance sumation of total balane all children accounts.', async () => {
+    it('Should parent account balance sumation of total balance all children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: debitAccount.id,
         account_type_id: 1
