@@ -60,7 +60,7 @@ export interface IAuthSignInPOJO {
   tenant: ITenant;
 }
 
-export interface IAuthResetedPasswordEventPayload {
+export interface IAuthResetPasswordEventPayload {
   user: SystemUser;
   token: string;
   password: string;

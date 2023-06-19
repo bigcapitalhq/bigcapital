@@ -3,7 +3,7 @@ import uniqid from 'uniqid';
 import moment from 'moment';
 import config from '@/config';
 import {
-  IAuthResetedPasswordEventPayload,
+  IAuthResetPasswordEventPayload,
   IAuthSendedResetPassword,
   IAuthSendingResetPassword,
   IPasswordReset,
@@ -101,7 +101,7 @@ export class AuthSendResetPassword {
       user,
       token,
       password,
-    } as IAuthResetedPasswordEventPayload);
+    } as IAuthResetPasswordEventPayload);
   }
 
   /**
