@@ -485,7 +485,7 @@ export default class SaleInvoicesController extends BaseController {
 
       return res.status(200).send({
         id: saleInvoice.id,
-        message: 'The given sale invoice has been writte-off successfully.',
+        message: 'The given sale invoice has been written-off successfully.',
       });
     } catch (error) {
       next(error);
