@@ -50,7 +50,7 @@ export class PublishExpense {
     // Publishes expense transactions with associated transactions
     // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Trigggers `onExpensePublishing` event.
+      // Triggers `onExpensePublishing` event.
       await this.eventPublisher.emitAsync(events.expenses.onPublishing, {
         trx,
         oldExpense,
