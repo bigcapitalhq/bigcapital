@@ -11,7 +11,7 @@ const WarehouseTransferNumberDialogContent = React.lazy(
 /**
  * Warehouse transfer number dialog.
  */
-function WarehouseTransferNumberDilaog({
+function WarehouseTransferNumberDialog({
   dialogName,
   payload: { initialFormValues },
   isOpen,
@@ -37,4 +37,4 @@ function WarehouseTransferNumberDilaog({
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(WarehouseTransferNumberDilaog);
+export default compose(withDialogRedux())(WarehouseTransferNumberDialog);

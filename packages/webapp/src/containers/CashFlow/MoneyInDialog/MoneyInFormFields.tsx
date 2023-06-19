@@ -6,7 +6,7 @@ import { Classes } from '@blueprintjs/core';
 import { If } from '@/components';
 import MoneyInContentFields from './MoneyInContentFields';
 import TransactionTypeFields from './TransactionTypeFields';
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInDialogContext } from './MoneyInDialogProvider';
 
 /**
  * Money in form fields.
@@ -15,7 +15,7 @@ function MoneyInFormFields() {
   const { values } = useFormikContext();
 
   // Money in dialog context.
-  const { accountId } = useMoneyInDailogContext();
+  const { accountId } = useMoneyInDialogContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>

@@ -8,7 +8,7 @@ const VendorCreditNumberDialogContext = React.createContext();
 /**
  * Vendor credit number dialog provider
  */
-function VendorCreditNumberDilaogProvider({ query, ...props }) {
+function VendorCreditNumberDialogProvider({ query, ...props }) {
   const { isLoading: isSettingsLoading } = useSettingsVendorCredits();
 
   // Provider payload.
@@ -26,4 +26,4 @@ function VendorCreditNumberDilaogProvider({ query, ...props }) {
 const useVendorCreditNumberDialogContext = () =>
   React.useContext(VendorCreditNumberDialogContext);
 
-export { VendorCreditNumberDilaogProvider, useVendorCreditNumberDialogContext };
+export { VendorCreditNumberDialogProvider, useVendorCreditNumberDialogContext };

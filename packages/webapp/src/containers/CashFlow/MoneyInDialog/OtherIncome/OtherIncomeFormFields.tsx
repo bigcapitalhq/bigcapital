@@ -35,7 +35,7 @@ import {
   handleDateChange,
 } from '@/utils';
 
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useMoneyInDialogContext } from '../MoneyInDialogProvider';
 import {
   useSetPrimaryBranchToForm,
   useForeignAccount,
@@ -48,7 +48,7 @@ import { MoneyInOutTransactionNoField } from '../../_components';
  */
 export default function OtherIncomeFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyInDialogContext();
   const { values } = useFormikContext();
   const amountFieldRef = useAutofocus();
   const isForeigAccount = useForeignAccount();

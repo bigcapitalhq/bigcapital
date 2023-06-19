@@ -14,14 +14,14 @@ import {
 import { inputIntent } from '@/utils';
 import { CLASSES, getAddMoneyInOptions } from '@/constants';
 
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInDialogContext } from './MoneyInDialogProvider';
 
 /**
  * Transaction type fields.
  */
 export default function TransactionTypeFields() {
   // Money in dialog context.
-  const { cashflowAccounts } = useMoneyInDailogContext();
+  const { cashflowAccounts } = useMoneyInDialogContext();
 
   // Retrieves the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);

@@ -3,7 +3,7 @@ import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsWarehouseTransfers } from '@/hooks/query';
 
-const WarehouseTransferNumberDilaogContext = createContext();
+const WarehouseTransferNumberDialogContext = createContext();
 
 /**
  * Warehouse transfer number dialog provier.
@@ -18,7 +18,7 @@ function WarehouseTransferNumberDialogProvider({ query, ...props }) {
 
   return (
     <DialogContent isLoading={isSettingsLoading}>
-      <WarehouseTransferNumberDilaogContext.Provider
+      <WarehouseTransferNumberDialogContext.Provider
         value={provider}
         {...props}
       />
@@ -27,7 +27,7 @@ function WarehouseTransferNumberDialogProvider({ query, ...props }) {
 }
 
 const useWarehouseTransferNumberDialogContext = () =>
-  React.useContext(WarehouseTransferNumberDilaogContext);
+  React.useContext(WarehouseTransferNumberDialogContext);
 
 export {
   WarehouseTransferNumberDialogProvider,

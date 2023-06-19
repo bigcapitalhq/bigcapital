@@ -4,7 +4,7 @@ import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInDialogContext } from './MoneyInDialogProvider';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
@@ -20,7 +20,7 @@ function MoneyInFloatingActions({
   const { isSubmitting, submitForm } = useFormikContext();
   //  money in  dialog context.
   const { dialogName, setSubmitPayload, submitPayload } =
-    useMoneyInDailogContext();
+    useMoneyInDialogContext();
 
   // handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
