@@ -130,7 +130,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve peridos of cash at beginning transactions.
+   * Retrieve periods of cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
    * @return {Promise<IAccountTransaction[]>}
