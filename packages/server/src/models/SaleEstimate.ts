@@ -148,7 +148,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
         query.orderByRaw(`delivered_at is null ${order}`);
       },
       /**
-       * Filtering the estimates oreders by status field.
+       * Filtering the estimates orders by status field.
        */
       filterByStatus(query, filterType) {
         switch (filterType) {
