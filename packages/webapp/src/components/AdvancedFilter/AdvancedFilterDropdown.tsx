@@ -365,7 +365,7 @@ export function AdvancedFilterDropdown({
   const handleFitlerDropdownSubmit = (values) => {
     const conditions = filterConditionRoles(values.conditions);
 
-    // Campare the current conditions with previous conditions, if they were equal
+    // Compare the current conditions with previous conditions, if they were equal
     // there is no need to execute `onFilterChange` function.
     if (!isEqual(prevConditions, conditions)) {
       onFilterChange && onFilterChange(conditions);
