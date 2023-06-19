@@ -305,7 +305,7 @@ export default class ContactsService {
   }
 
   /**
-   * Chanages the opening balance of the given contact.
+   * Changes the opening balance of the given contact.
    * @param {number} tenantId
    * @param {number} contactId
    * @param {ICustomerChangeOpeningBalanceDTO} changeOpeningBalance
