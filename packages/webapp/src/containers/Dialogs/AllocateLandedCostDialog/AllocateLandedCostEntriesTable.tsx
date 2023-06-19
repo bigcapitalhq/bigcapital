@@ -29,7 +29,7 @@ export default function AllocateLandedCostEntriesTable({
   );
 
   return (
-    <AllocateLandeedCostEntriesEditableTable
+    <AllocateLandedCostEntriesEditableTable
       columns={columns}
       data={entries}
       payload={{
@@ -40,7 +40,7 @@ export default function AllocateLandedCostEntriesTable({
   );
 }
 
-export const AllocateLandeedCostEntriesEditableTable = styled(
+export const AllocateLandedCostEntriesEditableTable = styled(
   DataTableEditable,
 )`
   .table {
