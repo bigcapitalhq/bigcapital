@@ -27,9 +27,9 @@ import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
 
 /**
- * Vendor Finaniceal Panel Tab.
+ * Vendor Financial Panel Tab.
  */
-export default function VendorFinanicalPanelTab() {
+export default function VendorFinancialPanelTab() {
   const { currencies, branches } = useVendorFormContext();
 
   // Sets the primary branch to form.

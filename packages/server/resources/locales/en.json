@@ -594,7 +594,7 @@
   "balance_sheet.percentage_of_row": "% of Row",
 
   "financial_sheet.previoud_period_date": "{{date}} (PP)",
-  "fianncial_sheet.previous_period_change": "Change (PP)",
+  "financial_sheet.previous_period_change": "Change (PP)",
   "financial_sheet.previous_period_percentage": "% Change (PP)",
 
   "financial_sheet.previous_year_date": "{{date}} (PY)",

@@ -37,7 +37,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
     protected getPreviousPeriodChangeColumn = (): ITableColumn => {
       return {
         key: 'previous_period_change',
-        label: this.i18n.__('fianncial_sheet.previous_period_change'),
+        label: this.i18n.__('financial_sheet.previous_period_change'),
       };
     };
 
