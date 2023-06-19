@@ -137,7 +137,7 @@ export default class TransactionsLockingController extends BaseController {
         );
       return res.status(200).send({
         message:
-          'Transactions locking haas been unlocked partially successfully.',
+          'Transactions locking has been unlocked partially successfully.',
         data: transactionMeta,
       });
     } catch (error) {

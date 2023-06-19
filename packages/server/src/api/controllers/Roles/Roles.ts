@@ -138,7 +138,7 @@ export default class RolesController extends BaseController {
 
       return res.status(200).send({
         data: { roleId },
-        message: 'The given role hsa been updated successfully.',
+        message: 'The given role has been updated successfully.',
       });
     } catch (error) {
       next(error);

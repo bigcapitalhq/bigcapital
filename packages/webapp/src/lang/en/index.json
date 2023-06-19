@@ -1681,7 +1681,7 @@
   "unlocking_partial_transactions.dialog.from_date": "Unlocking from date",
   "unlocking_partial_transactions.dialog.to_date": "To date",
   "unlocking_partial_transactions.dialog.reason": "Unlocking reason",
-  "unlocking_partial_transactions.dialog.success_message": "Transactions locking haas been unlocked partially successfully.",
+  "unlocking_partial_transactions.dialog.success_message": "Transactions locking has been unlocked partially successfully.",
   "unlocking_full_transactions.dialog.label": "Full unlocking transactions",
   "unlocking_full_transactions.dialog.reason": "Unlocking reason",
   "unlocking_partial_transactions.alert.cancel_message": "Partial transaction unlocking has been canceled successfully.",
