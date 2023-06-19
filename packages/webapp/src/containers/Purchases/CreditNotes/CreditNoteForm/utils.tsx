@@ -171,7 +171,7 @@ export const useSetPrimaryWarehouseToForm = () => {
   }, [isWarehousesSuccess, setFieldValue, warehouses]);
 };
 
-export const useVendorCrditNoteTotals = () => {
+export const useVendorCreditNoteTotals = () => {
   const {
     values: { entries, currency_code: currencyCode },
   } = useFormikContext();

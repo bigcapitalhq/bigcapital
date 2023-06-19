@@ -4,7 +4,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
 
 @Service()
-export default class DeleteCustomerLinkedCreidtNote {
+export default class DeleteCustomerLinkedCreditNote {
   @Inject()
   tenancy: TenancyService;
 

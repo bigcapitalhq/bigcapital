@@ -3,7 +3,7 @@ import { ServiceError } from '@/exceptions';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { ICustomerDeletingPayload } from '@/interfaces';
-import DeleteCustomerLinkedCreidtNote from './DeleteCustomerLinkedCreditNote';
+import DeleteCustomerLinkedCreditNote from './DeleteCustomerLinkedCreditNote';
 
 const ERRORS = {
   CUSTOMER_HAS_TRANSACTIONS: 'CUSTOMER_HAS_TRANSACTIONS',
@@ -15,7 +15,7 @@ export default class DeleteCustomerLinkedCreditSubscriber {
   tenancy: TenancyService;
 
   @Inject()
-  deleteCustomerLinkedCredit: DeleteCustomerLinkedCreidtNote;
+  deleteCustomerLinkedCredit: DeleteCustomerLinkedCreditNote;
 
   /**
    * Attaches events with handlers.

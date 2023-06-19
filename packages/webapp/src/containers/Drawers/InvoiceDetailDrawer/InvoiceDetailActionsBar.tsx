@@ -57,7 +57,7 @@ function InvoiceDetailActionsBar({
   };
 
   // Handle convert to invoice.
-  const handleConvertToCreitNote = () => {
+  const handleConvertToCreditNote = () => {
     history.push(`/credit-notes/new?from_invoice_id=${invoiceId}`, {
       invoiceId: invoiceId,
     });
@@ -140,7 +140,7 @@ function InvoiceDetailActionsBar({
               onBadDebt: handleBadDebtInvoice,
               onCancelBadDebt: handleCancelBadDebtInvoice,
               onNotifyViaSMS: handleNotifyViaSMS,
-              onConvert: handleConvertToCreitNote,
+              onConvert: handleConvertToCreditNote,
             }}
           />
         </Can>

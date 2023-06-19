@@ -105,7 +105,7 @@ function CreditNotesDataTable({
     openDialog('refund-credit-note', { creditNoteId: id });
   };
 
-  // Handle cancel/confirm crdit note open.
+  // Handle cancel/confirm credit note open.
   const handleOpenCreditNote = ({ id }) => {
     openAlert('credit-note-open', { creditNoteId: id });
   };

@@ -156,7 +156,7 @@ export default class CreditNoteGLEntries {
   };
 
   /**
-   * Retrieves the creidt note A/R entry.
+   * Retrieves the credit note A/R entry.
    * @param   {ICreditNote} creditNote -
    * @param   {number} ARAccountId -
    * @returns {ILedgerEntry}

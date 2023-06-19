@@ -171,7 +171,7 @@ export function useRefreshVendorCredits() {
 }
 
 /**
- * Create Round vendor creidt
+ * Create Round vendor credit
  */
 export function useCreateRefundVendorCredit(props) {
   const queryClient = useQueryClient();
