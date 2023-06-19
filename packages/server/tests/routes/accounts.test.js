@@ -426,7 +426,7 @@ describe('routes: /accounts/', () => {
       expect(res.body.accounts.length).equals(1);
     });
 
-    it('Shoud retrieve filtered accounts according to the given account description filter condition.', async () => {
+    it('Should retrieve filtered accounts according to the given account description filter condition.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const resourceField = await tenantFactory.create('resource_field', {
         key: 'description',

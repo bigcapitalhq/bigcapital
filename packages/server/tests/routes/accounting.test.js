@@ -861,7 +861,7 @@ describe('routes: `/accounting`', () => {
   });
 
   describe('route: `/accounting/quick-journal-entries`', async () => {
-    it('Shoud `credit_account_id` be required', () => {
+    it('Should `credit_account_id` be required', () => {
 
     });
     it('Should `debit_account_id` be required.', () => {
