@@ -274,7 +274,7 @@ commander
         migrateOpers.push(oper);
       }
       Promise.all(migrateOpers).then(() => {
-        success('All tenants are rollbacked.');
+        success('All tenants are rolled back.');
       });
     } catch (error) {
       exit(error);
