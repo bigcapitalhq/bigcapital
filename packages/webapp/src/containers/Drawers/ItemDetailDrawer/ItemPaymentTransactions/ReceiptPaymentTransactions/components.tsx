@@ -71,7 +71,7 @@ export const useReceiptTransactionsColumns = () => {
         textOverview: true,
       },
       {
-        id: 'qunatity',
+        id: 'quantity',
         Header: intl.get('item.drawer_quantity_sold'),
         accessor: 'quantity',
         align: 'right',

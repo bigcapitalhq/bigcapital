@@ -208,7 +208,7 @@ export default class InventoryAverageCostMethod
           // Cost = the transaction quantity * Average cost.
           const cost = this.getCost(averageCost, quantity);
 
-          // Revenue = transaction quanity * rate.
+          // Revenue = transaction quantity * rate.
           // const revenue = quantity * invTransaction.rate;
           costTransactions.push({
             ...commonEntry,
