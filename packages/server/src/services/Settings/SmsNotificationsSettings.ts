@@ -46,7 +46,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Transformes the sms notification config to notificatin meta.
+   * Transformes the sms notification config to notification meta.
    * @param {Settings} settings
    * @param {ISmsNotificationDefined} smsNotification
    * @returns {ISmsNotificationMeta}
