@@ -231,7 +231,7 @@ export const useBillTotals = () => {
     values: { entries, currency_code: currencyCode },
   } = useFormikContext();
 
-  // Retrieves the bili entries total.
+  // Retrieves the bill entries total.
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
