@@ -268,7 +268,7 @@ export default class UsersController extends BaseController {
         );
       }
       if (error.errorType === 'EMAIL_ALREADY_EXISTS') {
-        return res.boom.badRequest('Exmail is already exists.', {
+        return res.boom.badRequest('Email is already exists.', {
           errors: [{ type: 'EMAIL_ALREADY_EXISTS', code: 500 }],
         });
       }
