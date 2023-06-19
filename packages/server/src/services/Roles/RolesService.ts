@@ -88,7 +88,7 @@ export default class RolesService {
     // Validates the invalid permissions.
     this.validateInvalidPermissions(editRoleDTO.permissions);
 
-    // Retrieve the given role or throw not found serice error.
+    // Retrieve the given role or throw not found service error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
     const permissions = this.tranaformEditPermissionsDTO(
@@ -155,7 +155,7 @@ export default class RolesService {
   ): Promise<void> => {
     const { Role, RolePermission } = this.tenancy.models(tenantId);
 
-    // Retrieve the given role or throw not found serice error.
+    // Retrieve the given role or throw not found service error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
     // Validate role is not predefined.

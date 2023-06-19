@@ -40,7 +40,7 @@ export default class SaleInvoicesController extends BaseController {
   saleInvoiceSmsNotify: SaleInvoiceNotifyBySms;
 
   @Inject()
-  invoicePaymentsSerivce: InvoicePaymentsService;
+  invoicePaymentsService: InvoicePaymentsService;
 
   /**
    * Router constructor.
@@ -599,7 +599,7 @@ export default class SaleInvoicesController extends BaseController {
 
     try {
       const invoicePayments =
-        await this.invoicePaymentsSerivce.getInvoicePayments(
+        await this.invoicePaymentsService.getInvoicePayments(
           tenantId,
           invoiceId
         );

@@ -131,7 +131,7 @@ export const getNewRoleInitialValues = (schema) => {
  * @param {*} columnKey
  * @returns
  */
-export function getSerivceColumnPermission(service, columnKey) {
+export function getServiceColumnPermission(service, columnKey) {
   return service.permissions.find((permission) => {
     return permission.relatedColumn === columnKey;
   });

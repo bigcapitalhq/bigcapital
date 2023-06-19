@@ -127,7 +127,7 @@ export default class UsersService {
     // Retrieve the user or throw not found service error.
     const tenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
 
-    // Throw serivce error if the user is already activated.
+    // Throw service error if the user is already activated.
     this.throwErrorIfUserActive(tenantUser);
 
     // Marks the tenant user as active.
@@ -161,7 +161,7 @@ export default class UsersService {
     // Retrieve the user or throw not found service error.
     const tenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
 
-    // Throw serivce error if the user is already inactivated.
+    // Throw service error if the user is already inactivated.
     this.throwErrorIfUserInactive(tenantUser);
 
     // Marks the tenant user as active.
