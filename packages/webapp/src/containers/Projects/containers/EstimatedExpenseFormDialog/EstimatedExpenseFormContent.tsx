@@ -8,7 +8,7 @@ import EstimatedExpenseFormFloatingActions from './EstimatedExpenseFormFloatingA
  * Estimated expense form content.
  * @returns
  */
-export default function EstimatedExpenseFormConent() {
+export default function EstimatedExpenseFormContent() {
   return (
     <Form>
       <EstimatedExpenseFormFields />

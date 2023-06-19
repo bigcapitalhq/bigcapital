@@ -3,7 +3,7 @@ import React from 'react';
 import { Formik } from 'formik';
 import { AppToaster } from '@/components';
 import { CreateEstimatedExpenseFormSchema } from './EstimatedExpense.schema';
-import EstimatedExpenseFormConent from './EstimatedExpenseFormConent';
+import EstimatedExpenseFormContent from './EstimatedExpenseFormContent';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
@@ -49,7 +49,7 @@ function EstimatedExpenseForm({
       validationSchema={CreateEstimatedExpenseFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
-      component={EstimatedExpenseFormConent}
+      component={EstimatedExpenseFormContent}
     />
   );
 }
