@@ -25,7 +25,7 @@ describe('routes: `/financial_statements`', () => {
     incomeType = await tenantFactory.create('account_type', { normal: 'credit', income_sheet: true });
     const expenseType = await tenantFactory.create('account_type', { normal: 'debit', income_sheet: true });
 
-    // Assets & liabilites accounts.
+    // Assets & liabilities accounts.
     creditAccount = await tenantFactory.create('account', { account_type_id: liabilityType.id });
     debitAccount = await tenantFactory.create('account', { account_type_id: assetType.id });
 

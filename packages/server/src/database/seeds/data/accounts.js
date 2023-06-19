@@ -84,7 +84,7 @@ export default [
     description:'An account that holds valuation of products or goods that available for sale.',
   },
 
-  // Libilities
+  // Liabilities
   {
     name:'Accounts Payable (A/P)',
     slug: 'accounts-payable',
