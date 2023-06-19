@@ -27,7 +27,7 @@ export default function TransactionTypeFields() {
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
 
   return (
-    <div className="trasnaction-type-fileds">
+    <div className="trasnaction-type-fields">
       <Row>
         <Col xs={5}>
           {/*------------ Current account -----------*/}

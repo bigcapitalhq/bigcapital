@@ -85,7 +85,7 @@ export const transformFieldsToOptions = (fields) =>
 
 /**
  * Filtered conditions that don't contain atleast on required fields or
- * fileds keys that not exists.
+ * fields keys that not exists.
  * @param {IFilterRole[]} conditions
  * @returns
  */
