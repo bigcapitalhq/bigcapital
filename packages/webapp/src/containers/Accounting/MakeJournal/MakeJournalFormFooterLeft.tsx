@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import intl from 'react-intl-universal';
 import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 
 export function MakeJournalFormFooterLeft() {
@@ -13,7 +14,7 @@ export function MakeJournalFormFooterLeft() {
       >
         <FEditableText
           name={'description'}
-          placeholder={<T id={'make_jorunal.decscrption.placeholder'} />}
+          placeholder={intl.get('make_jorunal.decscrption.placeholder')}
         />
       </DescriptionFormGroup>
     </React.Fragment>
