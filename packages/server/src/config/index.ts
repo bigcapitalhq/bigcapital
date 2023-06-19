@@ -95,16 +95,15 @@ module.exports = {
    * JWT secret.
    */
   jwtSecret: process.env.JWT_SECRET,
+
+  /**
+   * 
+   */
   resetPasswordSeconds: 600,
 
   /**
-   *
+   * Application base URL.
    */
-  customerSuccess: {
-    email: 'success@bigcapital.ly',
-    phoneNumber: '(218) 92 791 8381',
-  },
-
   baseURL: process.env.BASE_URL,
 
   /**
@@ -138,16 +137,6 @@ module.exports = {
   },
 
   /**
-   * Users registeration configuration.
-   */
-  registration: {
-    countries: {
-      whitelist: ['LY'],
-      blacklist: [],
-    },
-  },
-
-  /**
    * Sign-up restrictions
    */
   signupRestrictions: {
@@ -167,8 +156,6 @@ module.exports = {
     browserWSEndpoint: process.env.BROWSER_WS_ENDPOINT,
   },
 
-  protocol: '',
-  hostname: '',
   scheduleComputeItemCost: 'in 5 seconds',
 
   /**
