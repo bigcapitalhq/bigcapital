@@ -24,7 +24,7 @@ export default function ReceiptDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

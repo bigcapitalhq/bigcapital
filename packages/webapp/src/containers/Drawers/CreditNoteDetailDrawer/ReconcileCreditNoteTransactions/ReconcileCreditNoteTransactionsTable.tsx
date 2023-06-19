@@ -40,7 +40,7 @@ function RefundCreditNoteTransactionsTable({
         payload={{
           onDelete: handleDeleteReconcileCreditNote,
         }}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         className={'datatable--refund-transactions'}
       />
     </Card>

@@ -2,6 +2,6 @@
 
 
 export const TableStyle = {
-  Constrant: 'constrant',
+  Constraint: 'constraint',
   Regular: 'regular'
 }

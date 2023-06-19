@@ -21,7 +21,7 @@ export default function ManualJournalDrawerTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={manualJournal.entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

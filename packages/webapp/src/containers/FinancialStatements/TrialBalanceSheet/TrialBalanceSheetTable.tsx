@@ -42,7 +42,7 @@ export default function TrialBalanceSheetTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

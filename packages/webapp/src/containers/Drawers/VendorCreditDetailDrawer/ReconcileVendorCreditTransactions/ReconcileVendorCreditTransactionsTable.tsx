@@ -34,7 +34,7 @@ function ReconcileVendorCreditTransactionsTable({
         columns={columns}
         data={reconcileVendorCredits}
         ContextMenu={ActionsMenu}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         payload={{
           onDelete: handleDeleteReconcileVendorCredit,
         }}

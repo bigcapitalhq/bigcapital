@@ -22,7 +22,7 @@ export default function PaymentReceiveDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

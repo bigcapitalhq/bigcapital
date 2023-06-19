@@ -22,7 +22,7 @@ export default function PaymentMadeDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={paymentMade.entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

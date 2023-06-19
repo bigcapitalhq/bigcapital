@@ -63,7 +63,7 @@ function BillPaymentTransactions({
         onEdit: handleEditPaymentTransactions,
         onDelete: handleDeletePaymentTransactons,
       }}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}
       sticky={true}
     />

@@ -32,7 +32,7 @@ export default function WarehouseLocationsTable() {
         headerLoading={isItemWarehousesLoading}
         progressBarLoading={isItemWarehousesFetching}
         TableLoadingRenderer={TableSkeletonRows}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </WarehouseLocationsGLEntriesRoot>
   );

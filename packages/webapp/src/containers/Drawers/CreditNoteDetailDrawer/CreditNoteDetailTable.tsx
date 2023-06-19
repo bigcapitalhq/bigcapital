@@ -22,7 +22,7 @@ export default function CreditNoteDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
-      className={'table-constrant'}
+      className={'table-constraint'}
     />
   );
 }

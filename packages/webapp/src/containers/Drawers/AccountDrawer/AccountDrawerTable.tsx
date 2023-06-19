@@ -62,7 +62,7 @@ function AccountDrawerDataTable() {
       columns={columns}
       data={accounts}
       payload={{ account }}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

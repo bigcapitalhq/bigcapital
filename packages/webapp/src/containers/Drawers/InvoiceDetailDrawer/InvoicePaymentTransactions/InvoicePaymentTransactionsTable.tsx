@@ -66,7 +66,7 @@ function InvoicePaymentTransactionsTable({
         headerLoading={isPaymentTransactionLoading}
         progressBarLoading={isPaymentTransactionFetching}
         TableLoadingRenderer={TableSkeletonRows}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         ContextMenu={ActionsMenu}
         payload={{
           onDelete: handleDeletePaymentTransactons,

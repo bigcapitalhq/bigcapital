@@ -50,7 +50,7 @@ export function FinancialSheetSkeleton({
           data={[]}
           noInitialFetch={true}
           expandable={true}
-          styleName={TableStyle.Constrant}
+          styleName={TableStyle.Constraint}
           TableLoadingRenderer={TableSkeletonRows}
           TableHeaderSkeletonRenderer={TableSkeletonHeader}
           headerLoading={true}

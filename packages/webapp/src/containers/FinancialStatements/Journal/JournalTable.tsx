@@ -58,7 +58,7 @@ export function JournalTable({ companyName }) {
         vListOverscanRowCount={2}
         TableCellRenderer={TableFastCell}
         id={'journal'}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

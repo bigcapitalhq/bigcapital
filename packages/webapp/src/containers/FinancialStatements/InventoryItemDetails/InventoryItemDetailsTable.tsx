@@ -48,7 +48,7 @@ export function InventoryItemDetailsTable({
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );
