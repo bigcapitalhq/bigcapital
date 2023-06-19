@@ -92,7 +92,7 @@ export default class ProfitLossSheetService {
       tenant.metadata.baseCurrency,
       i18n
     );
-    // Profit/loss report data and collumns.
+    // Profit/loss report data and columns.
     const profitLossData = profitLossInstance.reportData();
 
     return {
