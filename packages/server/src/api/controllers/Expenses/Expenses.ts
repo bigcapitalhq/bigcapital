@@ -286,7 +286,7 @@ export class ExpensesController extends BaseController {
   }
 
   /**
-   * Publishs the given expense.
+   * Publish the given expense.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
