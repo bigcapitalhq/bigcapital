@@ -34,7 +34,7 @@ export function ActionsMenu({
  *
  * @returns
  */
-function TaskChrageType({ values: { charge_type, rate } }) {
+function TaskChargeType({ values: { charge_type, rate } }) {
   return (
     <Choose>
       <Choose.When condition={charge_type === 'TIME'}>
@@ -57,7 +57,7 @@ export function TaskAccessor(task) {
         <TaskTitle>{task.name}</TaskTitle>
       </TaskHeader>
       <TaskContent>
-        <TaskChrageType values={task} />
+        <TaskChargeType values={task} />
 
         <TaskDescription>
           {task.estimate_hours &&
