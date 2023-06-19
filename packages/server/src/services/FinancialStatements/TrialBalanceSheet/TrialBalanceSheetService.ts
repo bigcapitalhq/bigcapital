@@ -95,7 +95,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       .findById(tenantId)
       .withGraphFetched('metadata');
 
-    this.logger.info('[trial_balance_sheet] trying to calcualte the report.', {
+    this.logger.info('[trial_balance_sheet] trying to calculate the report.', {
       tenantId,
       filter,
     });
