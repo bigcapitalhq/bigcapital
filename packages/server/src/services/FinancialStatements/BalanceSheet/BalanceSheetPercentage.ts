@@ -62,8 +62,8 @@ export const BalanceSheetPercentage = (Base: any) =>
         parentTotal: number,
         node: IBalanceSheetDataNode
       ): IBalanceSheetDataNode => {
-        const assocRowPercen = this.assocReportNodeRowPercentage(parentTotal);
-        const horTotals = R.map(assocRowPercen)(node.horizontalTotals);
+        const assocRowPercent = this.assocReportNodeRowPercentage(parentTotal);
+        const horTotals = R.map(assocRowPercent)(node.horizontalTotals);
 
         return R.assoc('horizontalTotals', horTotals, node);
       }
