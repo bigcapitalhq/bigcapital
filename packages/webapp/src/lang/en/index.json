@@ -1312,7 +1312,7 @@
   "plan.yearly": "Yearly",
   "payment_via_voucher.success_message": "Payment has been done successfully.",
   "payment_via_voucher.license_code_not_valid": "The license code is not valid, please try agin.",
-  "payment_via_voucher.dialog.description": "Pleasse enter your voucher number that you received from reseller.",
+  "payment_via_voucher.dialog.description": "Please enter your voucher number that you received from reseller.",
   "setup.organization.note_you_can_change_your_preferences": "Note: You can change your preferences later in dashboard, if needed.",
   "setup.congrats.title": "Congrats! You are ready to go",
   "setup.congrats.description": "Congrats, Your organization is set up successfully. you can start working once go to dashboard.",
