@@ -513,7 +513,7 @@
   "due_date_": "Due date",
   "invoice_message": "Invoice Message",
   "reference_no": "Reference No",
-  "invocie_number": "Invoice Number",
+  "invoice_number": "Invoice Number",
   "amount_due": "Amount Due",
   "payment_amount": "Payment Amount",
   "edit_invoice": "Edit Invoice",

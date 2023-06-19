@@ -92,7 +92,7 @@ export const useReconcileCreditNoteTableColumns = () => {
 };
 
 /**
- * Sets max credit amount from sale invoicue balance.
+ * Sets max credit amount from sale invoice balance.
  */
 export const maxAmountCreditFromRemaining = (entries) => {
   return entries.map((entry) => ({

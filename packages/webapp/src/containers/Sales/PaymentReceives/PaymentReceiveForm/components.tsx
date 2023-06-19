@@ -51,7 +51,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'date',
       },
       {
-        Header: intl.get('invocie_number'),
+        Header: intl.get('invoice_number'),
         accessor: InvNumberCellAccessor,
         disableSortBy: true,
         className: 'invoice_number',
