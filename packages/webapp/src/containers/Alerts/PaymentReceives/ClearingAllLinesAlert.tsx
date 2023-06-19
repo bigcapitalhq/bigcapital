@@ -9,9 +9,9 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import { saveInvoke, compose } from '@/utils';
 
 /**
- * Clearning all lines alert.
+ * Clearing all lines alert.
  */
-function ClearningAllLinesAlert({
+function ClearingAllLinesAlert({
   name,
   onConfirm,
 
@@ -52,4 +52,4 @@ function ClearningAllLinesAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(ClearningAllLinesAlert);
+)(ClearingAllLinesAlert);

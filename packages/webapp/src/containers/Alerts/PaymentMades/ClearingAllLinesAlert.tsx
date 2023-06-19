@@ -9,7 +9,7 @@ import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import { compose } from '@/utils';
 
 /**
- * Clearning all lines alert.
+ * Clearing all lines alert.
  */
 function ClearAllLinesAlert({
   name,
