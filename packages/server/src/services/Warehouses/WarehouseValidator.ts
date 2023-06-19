@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError, ServiceErrors } from '@/exceptions';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class WarehouseValidator {

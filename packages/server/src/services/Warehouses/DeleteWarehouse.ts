@@ -7,7 +7,7 @@ import events from '@/subscribers/events';
 import { IWarehouseDeletedPayload, IWarehouseDeletePayload } from '@/interfaces';
 import { CRUDWarehouse } from './CRUDWarehouse';
 import { WarehouseValidator } from './WarehouseValidator';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeleteWarehouse extends CRUDWarehouse {

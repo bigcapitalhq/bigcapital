@@ -8,7 +8,7 @@ import { CreateInitialWarehouse } from './CreateInitialWarehouse';
 import { WarehousesSettings } from './WarehousesSettings';
 
 import events from '@/subscribers/events';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class ActivateWarehouses {
