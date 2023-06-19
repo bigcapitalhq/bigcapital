@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { IWarehouseTransfer } from '@/interfaces';
 import { CRUDWarehouseTransfer } from './CRUDWarehouseTransfer';
-import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
+import { WarehouseTransferTransformer } from './WarehouseTransferTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
