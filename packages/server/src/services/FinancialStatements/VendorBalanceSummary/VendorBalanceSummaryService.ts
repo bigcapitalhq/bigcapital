@@ -67,7 +67,7 @@ export default class VendorBalanceSummaryService
   }
 
   /**
-   * Retrieve the statment of customer balance summary report.
+   * Retrieve the statement of customer balance summary report.
    * @param {number} tenantId - Tenant id.
    * @param {IVendorBalanceSummaryQuery} query -
    * @return {Promise<IVendorBalanceSummaryStatement>}

@@ -61,7 +61,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Retrieve the cashflow account transactions statment to json response.
+   * Retrieve the cashflow account transactions statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(cashflowAccountTransactions) {
@@ -95,7 +95,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

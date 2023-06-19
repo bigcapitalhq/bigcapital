@@ -70,7 +70,7 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
+   * Retrieve the cashflow statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(projectProfitabilityPOJO: IProjectProfitabilitySummaryPOJO) {
@@ -108,7 +108,7 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

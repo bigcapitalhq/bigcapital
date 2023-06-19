@@ -10,7 +10,7 @@ import { useCashFlowStatementContext } from './CashFlowStatementProvider';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 /**
- * Cashflow stement body.
+ * Cashflow statement body.
  * @returns {React.JSX}
  */
 function CashFlowStatementBodyJSX({

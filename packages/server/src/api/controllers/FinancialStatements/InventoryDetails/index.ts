@@ -77,7 +77,7 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
+   * Retrieve the cashflow statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(inventoryDetails) {
@@ -111,7 +111,7 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
