@@ -13,7 +13,7 @@ export default {
     sendResetPassword: 'onSendResetPassword',
 
     resetPassword: 'onResetPassword',
-    resetingPassword: 'onResetingPassword'
+    resettingPassword: 'onResettingPassword'
   },
 
   /**
