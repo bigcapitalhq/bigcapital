@@ -1693,7 +1693,7 @@
   "transactions_locking.lock": "Lock",
   "transactions_locking.unlock": "Unlock",
   "transactions_locking.full_unlock": "Full Unlock",
-  "transactions_locking.paetial_unlock": "Partial Unlock",
+  "transactions_locking.partial_unlock": "Partial Unlock",
   "transactions_locking.cancel_partial_unlock": "Cancel Partial Unlock",
   "transactions_locking.of_the_module_locked_to": "Transactions of the module locked to <strong>{value}</strong>.",
   "transactions_locking.lock_reason": "<strong>Lock Reason</strong>: {value}.",

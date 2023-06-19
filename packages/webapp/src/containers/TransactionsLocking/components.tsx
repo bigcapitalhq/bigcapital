@@ -301,7 +301,7 @@ function TransactionsLockingItemActions() {
 
               <If condition={!isPartialUnlock}>
                 <MenuItem
-                  text={<T id={'transactions_locking.paetial_unlock'} />}
+                  text={<T id={'transactions_locking.partial_unlock'} />}
                   onClick={handleUnlockPartial}
                 />
               </If>

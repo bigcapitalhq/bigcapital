@@ -13,7 +13,7 @@ const cancelUnlockingPartialAlert = React.lazy(
  */
 export default [
   {
-    name: 'cancel-unlocking-partail',
+    name: 'cancel-unlocking-partial',
     component: cancelUnlockingPartialAlert,
   },
 ];

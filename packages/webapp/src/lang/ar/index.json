@@ -1671,7 +1671,7 @@
   "transactions_locking.lock": "قفل",
   "transactions_locking.unlock": "الغاء القفل",
   "transactions_locking.full_unlock": "إلغاء القفل الكامل",
-  "transactions_locking.paetial_unlock": "إلغاء القفل الجزئي",
+  "transactions_locking.partial_unlock": "إلغاء القفل الجزئي",
   "transactions_locking.cancel_partial_unlock": "Cancel Partial Unlock",
   "transactions_locking.of_the_module_locked_to": "تم قفل معاملات الوحدة حتى <strong>{value}</strong>.",
   "transactions_locking.lock_reason": "<strong>سبب القفل </strong>: {value}.",
