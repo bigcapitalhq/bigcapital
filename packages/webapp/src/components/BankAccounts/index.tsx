@@ -70,9 +70,9 @@ export function BankAccount({
         <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
           {title}
         </BankAccountTitle>
-        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
+        <BankAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
           {code}
-        </BnakAccountCode>
+        </BankAccountCode>
         {!loading && <BankAccountTypeIcon type={type} />}
       </BankAccountHeader>
 
@@ -131,7 +131,7 @@ const BankAccountTitle = styled.div`
   padding-right: 24px;
 `;
 
-const BnakAccountCode = styled.div`
+const BankAccountCode = styled.div`
   font-size: 11px;
   margin-top: 4px;
   color: rgb(23, 43, 77);
