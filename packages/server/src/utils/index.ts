@@ -366,7 +366,7 @@ const accumSum = (data, callback) => {
   }, 0);
 };
 
-const mergeObjectsBykey = (object1, object2, key) => {
+const mergeObjectsByKey = (object1, object2, key) => {
   var merged = _.merge(_.keyBy(object1, key), _.keyBy(object2, key));
   return _.values(merged);
 };
@@ -500,7 +500,7 @@ export {
   transformToMapBy,
   dateRangeFromToCollection,
   transformToMapKeyValue,
-  mergeObjectsBykey,
+  mergeObjectsByKey,
   nestedArrayToFlatten,
   assocDepthLevelToObjectTree,
   castCommaListEnvVarToArray
