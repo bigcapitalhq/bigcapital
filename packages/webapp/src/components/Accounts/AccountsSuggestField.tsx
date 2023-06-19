@@ -10,7 +10,7 @@ import { CLASSES } from '@/constants/classes';
 import { DialogsName } from '@/constants/dialogs';
 
 import { MenuItemNestedText, FormattedMessage as T } from '@/components';
-import { nestedArrayToflatten, filterAccountsByQuery } from '@/utils';
+import { nestedArrayToFlatten, filterAccountsByQuery } from '@/utils';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -78,7 +78,7 @@ function AccountsSuggestFieldRoot({
   ...suggestProps
 }) {
   const flattenAccounts = useMemo(
-    () => nestedArrayToflatten(accounts),
+    () => nestedArrayToFlatten(accounts),
     [accounts],
   );
 

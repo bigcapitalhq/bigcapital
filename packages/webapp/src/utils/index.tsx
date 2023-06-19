@@ -754,7 +754,7 @@ export const transfromViewsToTabs = (views) => {
   return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));
 };
 
-export function nestedArrayToflatten(
+export function nestedArrayToFlatten(
   collection,
   property = 'children',
   parseItem = (a, level) => a,
@@ -775,7 +775,7 @@ export function nestedArrayToflatten(
     localItems.push(parsedItem);
 
     if (Array.isArray(currentValue[property])) {
-      const flattenArray = nestedArrayToflatten(
+      const flattenArray = nestedArrayToFlatten(
         currentValue[property],
         property,
         parseItem,

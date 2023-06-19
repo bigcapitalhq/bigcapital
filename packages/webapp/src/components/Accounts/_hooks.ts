@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { filterAccountsByQuery, nestedArrayToflatten } from '@/utils';
+import { filterAccountsByQuery, nestedArrayToFlatten } from '@/utils';
 
 interface PreprocessingAccountsOptions {
   filterByRootTypes: string[];
@@ -18,7 +18,7 @@ export const usePreprocessingAccounts = (
   }: PreprocessingAccountsOptions,
 ) => {
   return useMemo(() => {
-    const flattenAccounts = nestedArrayToflatten(items);
+    const flattenAccounts = nestedArrayToFlatten(items);
     const filteredAccounts = filterAccountsByQuery(flattenAccounts, {
       filterByRootTypes,
       filterByParentTypes,
