@@ -335,7 +335,7 @@ export default class BillsService
       .findById(billDTO.vendorId)
       .throwIfNotFound();
 
-    // Validate the bill number uniqiness on the storage.
+    // Validate the bill number uniqueness on the storage.
     await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
     // Validate items IDs existence.
@@ -417,7 +417,7 @@ export default class BillsService
       .modify('vendor')
       .throwIfNotFound();
 
-    // Validate bill number uniqiness on the storage.
+    // Validate bill number uniqueness on the storage.
     if (billDTO.billNumber) {
       await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
     }

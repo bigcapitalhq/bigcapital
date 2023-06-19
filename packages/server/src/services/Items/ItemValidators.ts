@@ -21,7 +21,7 @@ export class ItemsValidators {
    * @param  {number} notItemId
    * @return {Promise<void>}
    */
-  public async validateItemNameUniquiness(
+  public async validateItemNameUniqueness(
     tenantId: number,
     itemName: string,
     notItemId?: number

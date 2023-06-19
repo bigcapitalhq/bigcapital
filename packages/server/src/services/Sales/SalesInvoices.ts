@@ -348,7 +348,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       saleInvoiceDTO,
       authorizedUser
     );
-    // Validate sale invoice number uniquiness.
+    // Validate sale invoice number uniqueness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
@@ -437,7 +437,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       oldSaleInvoice,
       authorizedUser
     );
-    // Validate sale invoice number uniquiness.
+    // Validate sale invoice number uniqueness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,

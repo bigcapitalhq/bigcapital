@@ -114,7 +114,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validates the payment number uniqness.
+   * Validates the payment number uniqueness.
    * @param {number} tenantId -
    * @param {string} paymentMadeNumber -
    * @return {Promise<IBillPayment>}
@@ -356,7 +356,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       tenantId,
       billPaymentObj.paymentAccountId
     );
-    // Validate the payment number uniquiness.
+    // Validate the payment number uniqueness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
     }
@@ -474,7 +474,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentObj.entries,
       oldBillPayment.entries
     );
-    // Validate the payment number uniquiness.
+    // Validate the payment number uniqueness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(
         tenantId,

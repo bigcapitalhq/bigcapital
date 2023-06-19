@@ -105,7 +105,7 @@ export default class AcceptInviteUserService
   };
 
   /**
-   * Validate the given user email and phone number uniquine.
+   * Validate the given user email and phone number uniqueness.
    * @param {IInviteUserInput} inviteUserInput
    */
   private validateUserPhoneNumberNotExists = async (

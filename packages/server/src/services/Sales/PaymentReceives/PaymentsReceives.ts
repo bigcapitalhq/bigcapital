@@ -453,7 +453,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       paymentCustomer,
       paymentReceiveDTO
     );
-    // Validate payment receive number uniquiness.
+    // Validate payment receive number uniqueness.
     await this.validatePaymentReceiveNoExistence(
       tenantId,
       paymentReceiveObj.paymentReceiveNo
@@ -554,7 +554,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     // Validate customer whether modified.
     this.validateCustomerNotModified(paymentReceiveDTO, oldPaymentReceive);
 
-    // Validate payment receive number uniquiness.
+    // Validate payment receive number uniqueness.
     if (paymentReceiveDTO.paymentReceiveNo) {
       await this.validatePaymentReceiveNoExistence(
         tenantId,

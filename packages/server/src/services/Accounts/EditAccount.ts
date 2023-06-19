@@ -38,8 +38,8 @@ export class EditAccount {
     accountDTO: IAccountEditDTO,
     oldAccount: IAccount
   ) => {
-    // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
+    // Validate account name uniqueness.
+    await this.validator.validateAccountNameUniqueness(
       tenantId,
       accountDTO.name,
       accountId

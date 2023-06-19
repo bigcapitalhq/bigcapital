@@ -32,7 +32,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {string} currencyCode
    * @param {number} currencyId
    */
-  private async validateCurrencyCodeUniquiness(
+  private async validateCurrencyCodeUniqueness(
     tenantId: number,
     currencyCode: string,
     currencyId?: number
@@ -100,8 +100,8 @@ export default class CurrenciesService implements ICurrenciesService {
   public async newCurrency(tenantId: number, currencyDTO: ICurrencyDTO) {
     const { Currency } = this.tenancy.models(tenantId);
 
-    // Validate currency code uniquiness.
-    await this.validateCurrencyCodeUniquiness(
+    // Validate currency code uniqueness.
+    await this.validateCurrencyCodeUniqueness(
       tenantId,
       currencyDTO.currencyCode
     );

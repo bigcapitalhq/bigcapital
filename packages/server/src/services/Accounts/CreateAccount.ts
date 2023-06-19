@@ -38,12 +38,12 @@ export class CreateAccount {
     accountDTO: IAccountCreateDTO,
     baseCurrency: string
   ) => {
-    // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
+    // Validate account name uniqueness.
+    await this.validator.validateAccountNameUniqueness(
       tenantId,
       accountDTO.name
     );
-    // Validate the account code uniquiness.
+    // Validate the account code uniqueness.
     if (accountDTO.code) {
       await this.validator.isAccountCodeUniqueOrThrowError(
         tenantId,

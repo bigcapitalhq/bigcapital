@@ -104,7 +104,7 @@ export class CreateManualJournalService {
       tenantId,
       manualJournalDTO.journalNumber
     );
-    // Validate manual journal uniquiness on the storage.
+    // Validate manual journal uniqueness on the storage.
     if (manualJournalDTO.journalNumber) {
       await this.validator.validateManualJournalNoUnique(
         tenantId,

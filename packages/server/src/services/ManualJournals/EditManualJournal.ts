@@ -49,7 +49,7 @@ export class EditManualJournal {
     // Validates entries accounts existence.
     await this.validator.validateAccountsExistence(tenantId, manualJournalDTO);
 
-    // Validates the manual journal number uniquiness.
+    // Validates the manual journal number uniqueness.
     if (manualJournalDTO.journalNumber) {
       await this.validator.validateManualJournalNoUnique(
         tenantId,

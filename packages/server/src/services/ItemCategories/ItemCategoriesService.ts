@@ -82,12 +82,12 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates the category name uniquiness.
+   * Validates the category name uniqueness.
    * @param {number} tenantId - Tenant id.
    * @param {string} categoryName - Category name.
    * @param {number} notAccountId - Ignore the account id.
    */
-  private async validateCategoryNameUniquiness(
+  private async validateCategoryNameUniqueness(
     tenantId: number,
     categoryName: string,
     notCategoryId?: number
@@ -119,8 +119,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
-    // Validate the category name uniquiness.
-    await this.validateCategoryNameUniquiness(tenantId, itemCategoryOTD.name);
+    // Validate the category name uniqueness.
+    await this.validateCategoryNameUniqueness(tenantId, itemCategoryOTD.name);
 
     if (itemCategoryOTD.sellAccountId) {
       await this.validateSellAccount(tenantId, itemCategoryOTD.sellAccountId);
@@ -234,7 +234,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       itemCategoryId
     );
     // Validate the category name whether unique on the storage.
-    await this.validateCategoryNameUniquiness(
+    await this.validateCategoryNameUniqueness(
       tenantId,
       itemCategoryOTD.name,
       itemCategoryId

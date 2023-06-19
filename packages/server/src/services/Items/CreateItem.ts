@@ -29,7 +29,7 @@ export class CreateItem {
    */
   async authorize(tenantId: number, itemDTO: IItemDTO) {
     // Validate whether the given item name already exists on the storage.
-    await this.validators.validateItemNameUniquiness(tenantId, itemDTO.name);
+    await this.validators.validateItemNameUniqueness(tenantId, itemDTO.name);
 
     if (itemDTO.categoryId) {
       await this.validators.validateItemCategoryExistence(

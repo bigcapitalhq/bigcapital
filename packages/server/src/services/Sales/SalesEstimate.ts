@@ -256,7 +256,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       estimateDTO,
       customer
     );
-    // Validate estimate number uniquiness on the storage.
+    // Validate estimate number uniqueness on the storage.
     await this.validateEstimateNumberExistence(
       tenantId,
       estimateObj.estimateNumber
@@ -329,7 +329,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       oldSaleEstimate,
       customer
     );
-    // Validate estimate number uniquiness on the storage.
+    // Validate estimate number uniqueness on the storage.
     if (estimateDTO.estimateNumber) {
       await this.validateEstimateNumberExistence(
         tenantId,

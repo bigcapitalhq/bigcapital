@@ -116,7 +116,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
   }
 
   /**
-   * Validate sale receipt number uniquiness on the storage.
+   * Validate sale receipt number uniqueness on the storage.
    * @param {number} tenantId -
    * @param {string} receiptNumber -
    * @param {number} notReceiptId -
@@ -271,7 +271,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       tenantId,
       saleReceiptDTO.entries
     );
-    // Validate sale receipt number uniuqiness.
+    // Validate sale receipt number uniqueness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validateReceiptNumberUnique(
         tenantId,
@@ -349,7 +349,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       tenantId,
       saleReceiptDTO.entries
     );
-    // Validate sale receipt number uniuqiness.
+    // Validate sale receipt number uniqueness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validateReceiptNumberUnique(
         tenantId,

@@ -59,7 +59,7 @@ export default class UsersService {
       authorizedUser
     );
     // Validate user email should be unique.
-    await this.validateUserEmailUniquiness(tenantId, email, userId);
+    await this.validateUserEmailUniqueness(tenantId, email, userId);
 
     // Retrieve the given role or throw not found service error.
     const role = await this.rolesService.getRoleOrThrowError(
@@ -278,7 +278,7 @@ export default class UsersService {
    * @param {string} email
    * @param {number} userId
    */
-  private validateUserEmailUniquiness = async (
+  private validateUserEmailUniqueness = async (
     tenantId: number,
     email: string,
     userId: number

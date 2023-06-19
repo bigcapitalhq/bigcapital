@@ -43,7 +43,7 @@ export class EditItem {
       itemDTO
     );
     // Validate whether the given item name already exists on the storage.
-    await this.validators.validateItemNameUniquiness(
+    await this.validators.validateItemNameUniqueness(
       tenantId,
       itemDTO.name,
       oldItem.id
