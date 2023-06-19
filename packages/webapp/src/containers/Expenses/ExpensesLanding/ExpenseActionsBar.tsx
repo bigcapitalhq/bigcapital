@@ -67,7 +67,7 @@ function ExpensesActionsBar({
   // Handle delete button click.
   const handleBulkDelete = () => {};
 
-  // Handles the tab chaning.
+  // Handles the tab changing.
   const handleTabChange = (view) => {
     setExpensesTableState({
       viewSlug: view ? view.slug : null,

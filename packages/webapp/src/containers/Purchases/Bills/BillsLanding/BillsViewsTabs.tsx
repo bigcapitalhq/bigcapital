@@ -23,7 +23,7 @@ function BillViewTabs({
   // Bills list context.
   const { billsViews } = useBillsListContext();
 
-  // Handle tab chaging.
+  // Handle tab changing.
   const handleTabsChange = (viewSlug) => {
     setBillsTableState({
       viewSlug: viewSlug || null,

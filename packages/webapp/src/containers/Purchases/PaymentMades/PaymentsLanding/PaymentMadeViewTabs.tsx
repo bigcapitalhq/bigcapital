@@ -26,7 +26,7 @@ function PaymentMadeViewTabs({
   // Payment receives list context.
   const { paymentMadesViews } = usePaymentMadesListContext();
 
-  // Handle the active tab changning.
+  // Handle the active tab changing.
   const handleTabsChange = (viewSlug) => {
     setPaymentMadesTableState({ viewSlug });
   };

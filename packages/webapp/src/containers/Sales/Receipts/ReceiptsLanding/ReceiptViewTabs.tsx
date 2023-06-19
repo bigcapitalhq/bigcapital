@@ -24,7 +24,7 @@ function ReceiptViewTabs({
 
   const tabs = transfromViewsToTabs(receiptsViews);
 
-  // Handles the active tab chaning.
+  // Handles the active tab changing.
   const handleTabsChange = (viewSlug) => {
     setReceiptsTableState({
       viewSlug: viewSlug || null,
