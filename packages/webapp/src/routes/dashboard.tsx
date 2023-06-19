@@ -946,8 +946,8 @@ export const getDashboardRoutes = () => [
           '@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
         ),
     ),
-    breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
-    pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
+    breadcrumb: intl.get('vendor_credits.label_vendor_credit_list'),
+    pageTitle: intl.get('vendor_credits.label_vendor_credit_list'),
     defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },

@@ -1580,7 +1580,7 @@
   "credit_note.drawer.label_refund_transactions": "Refund Transactions",
   "credit_note.drawer.label_invoices_reconciled": "Invoices Reconciled",
   "sidebar_vendor_credits": "Vendor Credits",
-  "vendor_credits.lable_vendor_credit_list": "Vendor Credits List",
+  "vendor_credits.label_vendor_credit_list": "Vendor Credits List",
   "vendor_credits.label.new_vendor_credit": "New Vendor Credit",
   "vendor_credits.label.edit_vendor_credit": "Edit Vendor Credit",
   "vendor_credits.label.amount_to_credit": "Amount to credit",
