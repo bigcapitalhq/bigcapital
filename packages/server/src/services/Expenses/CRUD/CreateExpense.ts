@@ -102,7 +102,7 @@ export class CreateExpense {
       authorizedUser
     );
     // Writes the expense transaction with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onExpenseCreating` event.
       await this.eventPublisher.emitAsync(events.expenses.onCreating, {

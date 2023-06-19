@@ -34,7 +34,7 @@ export class WarehouseMarkPrimary extends CRUDWarehouse {
       tenantId,
       warehouseId
     );
-    // Updates the branches under unit-of-work enivrement.
+    // Updates the branches under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseMarkPrimary` event.
       await this.eventPublisher.emitAsync(events.warehouse.onMarkPrimary, {

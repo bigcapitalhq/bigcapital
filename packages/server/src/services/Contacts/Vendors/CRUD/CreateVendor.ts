@@ -44,7 +44,7 @@ export class CreateVendor {
       tenantId,
       vendorDTO
     );
-    // Creates vendor contact under unit-of-work evnirement.
+    // Creates vendor contact under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreating` event.
       await this.eventPublisher.emitAsync(events.vendors.onCreating, {

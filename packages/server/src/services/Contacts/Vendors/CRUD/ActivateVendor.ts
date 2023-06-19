@@ -42,7 +42,7 @@ export class ActivateVendor {
     // Validate whether the vendor is already published.
     this.validators.validateNotAlreadyPublished(oldVendor);
 
-    // Edits the vendor with associated transactions on unit-of-work envirement.
+    // Edits the vendor with associated transactions on unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorActivating` event.
       await this.eventPublisher.emitAsync(events.vendors.onActivating, {

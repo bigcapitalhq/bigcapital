@@ -40,7 +40,7 @@ export class DeleteManualJournal {
       .findById(manualJournalId)
       .throwIfNotFound();
 
-    // Deletes the manual journal with associated transactions under unit-of-work envirement.
+    // Deletes the manual journal with associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onManualJournalDeleting` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onDeleting, {

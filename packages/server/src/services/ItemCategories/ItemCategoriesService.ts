@@ -138,7 +138,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       itemCategoryOTD,
       authorizedUser
     );
-    // Creates item category under unit-of-work evnirement.
+    // Creates item category under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Inserts the item category.
       const itemCategory = await ItemCategory.query(trx).insert({

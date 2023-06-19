@@ -45,7 +45,7 @@ export class CreateCustomer {
       tenantId,
       customerDTO
     );
-    // Creates a new customer under unit-of-work envirement.
+    // Creates a new customer under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCustomerCreating` event.
       await this.eventPublisher.emitAsync(events.customers.onCreating, {

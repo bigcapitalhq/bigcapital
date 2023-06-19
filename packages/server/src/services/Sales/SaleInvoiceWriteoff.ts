@@ -58,7 +58,7 @@ export default class SaleInvoiceWriteoff {
     this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
 
     // Saves the invoice write-off transaction with associated transactions 
-    // under unit-of-work envirmenet.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       const eventPayload = {
         tenantId,

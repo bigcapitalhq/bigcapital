@@ -526,7 +526,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
     if (oldSaleReceipt.isClosed) {
       throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);
     }
-    // Updates the sale recept transaction under unit-of-work envirement.
+    // Updates the sale recept transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleReceiptClosing` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onClosing, {

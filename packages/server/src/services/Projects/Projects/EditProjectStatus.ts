@@ -33,7 +33,7 @@ export default class EditProjectStatusService {
       .findById(projectId)
       .throwIfNotFound();
 
-    // Edits the given project under unit-of-work envirement.
+    // Edits the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Upsert the project object.
       const project = await Project.query(trx).upsertGraph({

@@ -148,7 +148,7 @@ export default class NewCashflowTransactionService {
       cashflowAccount,
       userId
     );
-    // Creates a new cashflow transaction under UOW envirement.
+    // Creates a new cashflow transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCashflowTransactionCreate` event.
       await this.eventPublisher.emitAsync(

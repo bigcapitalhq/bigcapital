@@ -456,7 +456,7 @@ export default class BillsService
       oldBill.entries,
       billObj.entries
     );
-    // Edits bill transactions and associated transactions under UOW envirement.
+    // Edits bill transactions and associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillEditing` event.
       await this.eventPublisher.emitAsync(events.bill.onEditing, {
@@ -505,7 +505,7 @@ export default class BillsService
     await this.validateBillHasNoAppliedToCredit(tenantId, billId);
 
     // Deletes bill transaction with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillDeleting` event.
       await this.eventPublisher.emitAsync(events.bill.onDeleting, {

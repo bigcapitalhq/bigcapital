@@ -119,7 +119,7 @@ export class EditItem {
     // Transform the edit item DTO to model.
     const itemModel = this.transformEditItemDTOToModel(itemDTO, oldItem);
 
-    // Edits the item with associated transactions under unit-of-work envirement.
+    // Edits the item with associated transactions under unit-of-work environment.
     const newItem = this.uow.withTransaction(
       tenantId,
       async (trx: Knex.Transaction) => {

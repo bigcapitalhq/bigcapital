@@ -71,7 +71,7 @@ export class TransferredWarehouseTransfer extends CommandWarehouseTransfer {
     // Validate the warehouse transfer should be initiated.
     this.validateWarehouseTranbsferShouldInitiated(oldWarehouseTransfer);
 
-    // Edits warehouse transfer transaction under unit-of-work envirement.
+    // Edits warehouse transfer transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseTransferInitiate` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onTransfer, {

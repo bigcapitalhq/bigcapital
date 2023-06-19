@@ -65,7 +65,7 @@ export class ActivateBranches {
     // Throw error if mutli-branches is already activated.
     this.throwIfMultiBranchesActivated(isActivated);
 
-    // Activate multi-branches under unit-of-work envirement.
+    // Activate multi-branches under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBranchActivate` branch.
       await this.eventPublisher.emitAsync(events.branch.onActivate, {

@@ -41,7 +41,7 @@ export class DeleteTaskService {
       taskId,
     } as ITaskDeleteEventPayload);
 
-    // Deletes the given project under unit-of-work envirement.
+    // Deletes the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectDeleting` event.
       await this.eventPublisher.emitAsync(events.projectTask.onDeleting, {

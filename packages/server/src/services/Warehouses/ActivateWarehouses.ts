@@ -51,7 +51,7 @@ export class ActivateWarehouses {
     // Throw error if the warehouses is already activated.
     this.throwIfWarehousesActivated(isActivated);
 
-    // Activates multi-warehouses on unit-of-work envirement.
+    // Activates multi-warehouses on unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseActivate` event.
       await this.eventPublisher.emitAsync(events.warehouse.onActivate, {

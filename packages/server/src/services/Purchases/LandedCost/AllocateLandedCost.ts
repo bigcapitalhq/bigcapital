@@ -78,7 +78,7 @@ export default class AllocateLandedCost extends BaseLandedCostService {
       costTransactionEntry
     );
     // Saves landed cost transactions with associated tranasctions under
-    // unit-of-work eniverment.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Save the bill landed cost model.
       const billLandedCost = await BillLandedCost.query(trx).insertGraph(

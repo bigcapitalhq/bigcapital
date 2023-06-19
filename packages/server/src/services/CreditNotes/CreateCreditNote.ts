@@ -65,7 +65,7 @@ export default class CreateCreditNote extends BaseCreditNotes {
       creditNoteDTO,
       customer.currencyCode
     );
-    // Creates a new credit card transactions under unit-of-work envirement.
+    // Creates a new credit card transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCreditNoteCreating` event.
       await this.eventPublisher.emitAsync(events.creditNote.onCreating, {

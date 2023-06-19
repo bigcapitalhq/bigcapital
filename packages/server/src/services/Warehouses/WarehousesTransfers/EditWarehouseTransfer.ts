@@ -63,7 +63,7 @@ export class EditWarehouseTransfer extends CommandWarehouseTransfer {
     // Validate the items entries should be inventory type.
     this.validateItemsShouldBeInventory(items);
 
-    // Edits warehouse transfer transaction under unit-of-work envirement.
+    // Edits warehouse transfer transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseTransferEdit` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onEdit, {

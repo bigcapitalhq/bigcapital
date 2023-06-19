@@ -376,7 +376,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       tenantMeta.baseCurrency
     );
     // Writes bill payment transacation with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentCreating` event.
       await this.eventPublisher.emitAsync(events.billPayment.onCreating, {
@@ -489,7 +489,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       tenantMeta.baseCurrency
     );
     // Edits the bill transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentEditing` event.
       await this.eventPublisher.emitAsync(events.billPayment.onEditing, {
@@ -532,7 +532,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentId
     );
     // Deletes the bill transactions with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentDeleting` payload.
       await this.eventPublisher.emitAsync(events.billPayment.onDeleting, {

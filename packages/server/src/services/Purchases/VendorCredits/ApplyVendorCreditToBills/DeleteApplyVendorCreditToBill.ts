@@ -39,7 +39,7 @@ export default class DeleteApplyVendorCreditToBill extends BaseVendorCredit {
       tenantId,
       oldCreditAppliedToBill.vendorCreditId
     );
-    // Deletes vendor credit apply under unit-of-work envirement.
+    // Deletes vendor credit apply under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Delete vendor credit applied to bill transaction.
       await VendorCreditAppliedBill.query(trx)

@@ -480,7 +480,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       paymentCustomer.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Creates a payment receive transaction under UOW envirment.
+    // Creates a payment receive transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onPaymentReceiveCreating` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onCreating, {
@@ -592,7 +592,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       customer.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Creates payment receive transaction under UOW envirement.
+    // Creates payment receive transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onPaymentReceiveEditing` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onEditing, {

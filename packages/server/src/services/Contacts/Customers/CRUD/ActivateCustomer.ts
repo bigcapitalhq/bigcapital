@@ -44,7 +44,7 @@ export class ActivateCustomer {
 
     this.validators.validateNotAlreadyPublished(oldCustomer);
 
-    // Edits the given customer with associated transactions on unit-of-work envirement.
+    // Edits the given customer with associated transactions on unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCustomerActivating` event.
       await this.eventPublisher.emitAsync(events.customers.onActivating, {

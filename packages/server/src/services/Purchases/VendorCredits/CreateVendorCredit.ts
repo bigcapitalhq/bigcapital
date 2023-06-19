@@ -58,7 +58,7 @@ export default class CreateVendorCredit extends BaseVendorCredit {
       vendorCreditCreateDTO,
       vendor.currencyCode
     );
-    // Saves the vendor credit transactions under UOW envirement.
+    // Saves the vendor credit transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreditCreating` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onCreating, {

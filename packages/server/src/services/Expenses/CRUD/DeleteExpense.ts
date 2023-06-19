@@ -49,7 +49,7 @@ export class DeleteExpense {
     await this.validator.validateNoAssociatedLandedCost(tenantId, expenseId);
 
     // Deletes expense transactions with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onExpenseDeleting` event.
       await this.eventPublisher.emitAsync(events.expenses.onDeleting, {

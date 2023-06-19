@@ -28,7 +28,7 @@ export class InactivateItem {
     // Retrieves the item or throw not found error.
     const oldItem = await Item.query().findById(itemId).throwIfNotFound();
 
-    // Inactivate item under unit-of-work envirement.
+    // Inactivate item under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Activate item on the storage.
       await Item.query(trx).findById(itemId).patch({ active: false });

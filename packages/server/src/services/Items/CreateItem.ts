@@ -82,7 +82,7 @@ export class CreateItem {
     // Authorize the item before creating.
     await this.authorize(tenantId, itemDTO);
 
-    // Creates a new item with associated transactions under unit-of-work envirement.
+    // Creates a new item with associated transactions under unit-of-work environment.
     const item = this.uow.withTransaction(
       tenantId,
       async (trx: Knex.Transaction) => {

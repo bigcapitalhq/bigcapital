@@ -47,7 +47,7 @@ export class EditTaskService {
       taskDTO,
     } as ITaskEditEventPayload);
 
-    // Edits the given project under unit-of-work envirement.
+    // Edits the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectTaskEditing` event.
       await this.eventPublisher.emitAsync(events.projectTask.onEditing, {

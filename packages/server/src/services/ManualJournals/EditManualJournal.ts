@@ -119,7 +119,7 @@ export class EditManualJournal {
       oldManualJournal
     );
     // Edits the manual journal transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onManualJournalEditing` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onEditing, {

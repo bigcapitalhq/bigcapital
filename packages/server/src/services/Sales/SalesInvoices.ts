@@ -450,7 +450,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       saleInvoiceObj.balance,
       oldSaleInvoice.paymentAmount
     );
-    // Edit sale invoice transaction in UOW envirment.
+    // Edit sale invoice transaction in UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceEditing` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onEditing, {
@@ -508,7 +508,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
     }
     // Update sale invoice transaction with associate transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceDelivering` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDelivering, {

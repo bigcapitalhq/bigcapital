@@ -46,7 +46,7 @@ export default class CreateProject {
       projectDTO,
     } as IProjectCreatedEventPayload);
 
-    // Creates a new project under unit-of-work envirement.
+    // Creates a new project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectCreating` event.
       await this.eventPublisher.emitAsync(events.project.onCreating, {

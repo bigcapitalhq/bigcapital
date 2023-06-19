@@ -125,7 +125,7 @@ export class EditExpense {
       tenantId,
       expenseDTO
     );
-    // Edits expense transactions and associated transactions under UOW envirement.
+    // Edits expense transactions and associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onExpenseEditing` event.
       await this.eventPublisher.emitAsync(events.expenses.onEditing, {

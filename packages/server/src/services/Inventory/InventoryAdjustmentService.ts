@@ -169,7 +169,7 @@ export default class InventoryAdjustmentService {
       authorizedUser
     );
     // Writes inventory adjustment transaction with associated transactions
-    // under unit-of-work envirment.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onInventoryAdjustmentCreating` event.
       await this.eventPublisher.emitAsync(
@@ -276,7 +276,7 @@ export default class InventoryAdjustmentService {
     this.validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment);
 
     // Publishes inventory adjustment with associated inventory transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await this.eventPublisher.emitAsync(
         events.inventoryAdjustment.onPublishing,

@@ -46,7 +46,7 @@ export class ActivateAccount {
 
     const patchAccountsIds = [...dependenciesAccounts, accountId];
 
-    // Activate account and associated transactions under unit-of-work envirement.
+    // Activate account and associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Activate and inactivate the given accounts ids.
       activate

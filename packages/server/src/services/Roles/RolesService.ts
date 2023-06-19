@@ -164,7 +164,7 @@ export default class RolesService {
     // Validates the given role is not associated to any user.
     await this.validateRoleNotAssociatedToUser(tenantId, roleId);
 
-    // Deletes the given role and associated models under unit-of-work envirement.
+    // Deletes the given role and associated models under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Deletes the role associated permissions from the storage.
       await RolePermission.query(trx).where('roleId', roleId).delete();

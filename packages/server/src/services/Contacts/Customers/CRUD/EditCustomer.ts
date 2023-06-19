@@ -50,7 +50,7 @@ export class EditCustomer {
     // Transformes the given customer DTO to object.
     const customerObj = this.customerDTO.transformEditDTO(customerDTO);
 
-    // Edits the given customer under unit-of-work evnirement.
+    // Edits the given customer under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCustomerEditing` event.
       await this.eventPublisher.emitAsync(events.customers.onEditing, {

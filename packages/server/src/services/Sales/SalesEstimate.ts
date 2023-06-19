@@ -355,7 +355,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       estimateDTO.entries
     );
     // Edits estimate transaction with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx) => {
       // Trigger `onSaleEstimateEditing` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onEditing, {
@@ -405,7 +405,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
-    // Deletes the estimate with associated transactions under UOW enivrement.
+    // Deletes the estimate with associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimatedDeleting` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDeleting, {
@@ -585,7 +585,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
     }
     // Updates the sale estimate transaction with associated transactions
-    // under UOW envirement.
+    // under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimateDelivering` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDelivering, {

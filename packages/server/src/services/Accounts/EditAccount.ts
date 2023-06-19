@@ -89,7 +89,7 @@ export class EditAccount {
     // Authorize the account editing.
     await this.authorize(tenantId, accountId, accountDTO, oldAccount);
 
-    // Edits account and associated transactions under unit-of-work envirement.
+    // Edits account and associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onAccountEditing` event.
       await this.eventPublisher.emitAsync(events.accounts.onEditing, {

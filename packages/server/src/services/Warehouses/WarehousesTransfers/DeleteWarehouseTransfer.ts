@@ -39,7 +39,7 @@ export class DeleteWarehouseTransfer extends CRUDWarehouseTransfer {
       .findById(warehouseTransferId)
       .throwIfNotFound();
 
-    // Deletes the warehouse transfer under unit-of-work envirement.
+    // Deletes the warehouse transfer under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseTransferCreate` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onDelete, {

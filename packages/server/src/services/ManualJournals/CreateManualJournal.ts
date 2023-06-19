@@ -155,7 +155,7 @@ export class CreateManualJournalService {
       tenantMeta.baseCurrency
     );
     // Creates a manual journal transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onManualJournalCreating` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onCreating, {

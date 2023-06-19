@@ -46,7 +46,7 @@ export class CreateTaskService {
       taskDTO,
     } as ITaskCreateEventPayload);
 
-    // Creates a new project under unit-of-work envirement.
+    // Creates a new project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectTaskCreating` event.
       await this.eventPublisher.emitAsync(events.projectTask.onCreating, {

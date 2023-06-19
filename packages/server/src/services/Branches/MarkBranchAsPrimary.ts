@@ -37,7 +37,7 @@ export class MarkBranchAsPrimary extends CURDBranch {
     // Retrieves the old branch or throw not found service error.
     const oldBranch = await this.getBranchOrThrowNotFound(tenantId, branchId);
 
-    // Updates the branches under unit-of-work envirement.
+    // Updates the branches under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBranchMarkPrimary` event.
       await this.eventPublisher.emitAsync(events.branch.onMarkPrimary, {

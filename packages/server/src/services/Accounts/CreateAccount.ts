@@ -118,7 +118,7 @@ export class CreateAccount {
       accountDTO,
       tenantMeta.baseCurrency
     );
-    // Creates a new account with associated transactions under unit-of-work envirement.
+    // Creates a new account with associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onAccountCreating` event.
       await this.eventPublisher.emitAsync(events.accounts.onCreating, {

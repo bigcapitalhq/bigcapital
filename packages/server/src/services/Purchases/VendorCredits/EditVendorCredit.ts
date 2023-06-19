@@ -68,7 +68,7 @@ export default class EditVendorCredit extends BaseVendorCredit {
       vendor.currencyCode,
       oldVendorCredit
     );
-    // Edits the vendor credit graph under unit-of-work envirement.
+    // Edits the vendor credit graph under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx) => {
       // Triggers `onVendorCreditEditing` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onEditing, {

@@ -70,7 +70,7 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
       vendorCredit,
       vendorCreditAppliedModel.amount
     );
-    // Saves vendor credit applied to bills under unit-of-work envirement.
+    // Saves vendor credit applied to bills under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Inserts vendor credit applied to bills graph to the storage layer.
       const vendorCreditAppliedBills =
