@@ -12,6 +12,10 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate item warehouses.
   queryClient.invalidateQueries(t.ITEM_WAREHOUSES_LOCATION);
+
+  // Invalidate items.
+  queryClient.invalidateQueries(t.ITEMS);
+  queryClient.invalidateQueries(t.ITEM);
 };
 
 /**

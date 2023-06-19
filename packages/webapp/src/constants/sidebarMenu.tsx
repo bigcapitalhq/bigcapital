@@ -72,12 +72,6 @@ export const SidebarMenu = [
                 },
               },
               {
-                text: <T id={'sidebar.warehouse_transfer'} />,
-                href: '/warehouses-transfers',
-                type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses,
-              },
-              {
                 text: <T id={'category_list'} />,
                 href: '/items/categories',
                 type: ISidebarMenuItemType.Link,
@@ -85,6 +79,12 @@ export const SidebarMenu = [
                   subject: AbilitySubject.Item,
                   ability: ItemAction.View,
                 },
+              },
+              {
+                text: <T id={'sidebar.warehouse_transfer'} />,
+                href: '/warehouses-transfers',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses,
               },
             ],
           },
@@ -100,12 +100,6 @@ export const SidebarMenu = [
                   subject: AbilitySubject.Item,
                   ability: ItemAction.Create,
                 },
-              },
-              {
-                text: <T id={'sidebar.new_warehouse_transfer'} />,
-                href: '/warehouses-transfers/new',
-                type: ISidebarMenuItemType.Link,
-                feature: Features.Warehouses,
               },
               {
                 text: <T id={'sidebar.new_service'} />,
@@ -125,6 +119,12 @@ export const SidebarMenu = [
                   subject: AbilitySubject.Item,
                   ability: ItemAction.Create,
                 },
+              },
+              {
+                text: <T id={'sidebar.new_warehouse_transfer'} />,
+                href: '/warehouses-transfers/new',
+                type: ISidebarMenuItemType.Link,
+                feature: Features.Warehouses,
               },
             ],
           },
