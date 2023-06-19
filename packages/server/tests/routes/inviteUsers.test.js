@@ -71,7 +71,7 @@ describe('routes: `/api/invite_users`', () => {
       expect(foundInviteToken.token).is.not.null;
     });
 
-    it('Should invite email be insereted to users tenant database.', async () => {
+    it('Should invite email be inserted to users tenant database.', async () => {
       const res = await request()
         .post('/api/invite/send')
         .set('x-access-token', loginRes.body.token)
@@ -210,7 +210,7 @@ describe('routes: `/api/invite_users`', () => {
       expect(foundTenantUser.updatedAt).is.not.null;
     });
 
-    it('Should user details be insereted to the system database', async () => {
+    it('Should user details be inserted to the system database', async () => {
       const user = await createUser(tenantWebsite);
       const res = await request()
         .post(`/api/invite/accept/${inviteUser.token}`)
