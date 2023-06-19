@@ -88,7 +88,7 @@ export default function TableHeader() {
     },
   } = useContext(TableContext);
 
-  // Can't contiunue if the thead is disabled.
+  // Can't continue if the thead is disabled.
   if (hideTableHeader) {
     return null;
   }

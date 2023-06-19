@@ -12,7 +12,7 @@ export default function TableFooter() {
     table: { footerGroups },
   } = useContext(TableContext);
 
-  // Can't contiunue if the footer is disabled.
+  // Can't continue if the footer is disabled.
   if (!footer) { return null; }
   
   return (
