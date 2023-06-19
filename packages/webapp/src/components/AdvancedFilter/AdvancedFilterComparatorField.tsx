@@ -2,13 +2,13 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
 import { ListSelect } from '../Select';
-import { getConditionTypeCompatators } from './utils';
+import { getConditionTypeComparators } from './utils';
 
-export default function DynamicFilterCompatatorField({
+export default function DynamicFilterComparatorField({
   dataType,
   ...restProps
 }) {
-  const options = getConditionTypeCompatators(dataType);
+  const options = getConditionTypeComparators(dataType);
 
   return (
     <ListSelect

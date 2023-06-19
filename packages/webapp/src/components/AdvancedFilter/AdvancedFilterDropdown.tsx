@@ -18,14 +18,14 @@ import {
   useFilterCondition,
   useAdvancedFilterContext,
 } from './AdvancedFilterDropdownContext';
-import AdvancedFilterCompatatorField from './AdvancedFilterCompatatorField';
+import AdvancedFilterComparatorField from './AdvancedFilterComparatorField';
 import AdvancedFilterValueField from './AdvancedFilterValueField';
 import {
   filterConditionRoles,
   getConditionalsOptions,
   transformFieldsToOptions,
   shouldFilterValueFieldUpdate,
-  getConditionTypeCompatators,
+  getConditionTypeComparators,
 } from './utils';
 import { getFilterDropdownSchema } from './AdvancedFilter.schema';
 import { useAdvancedFilterAutoSubmit } from './components';
@@ -94,9 +94,9 @@ function FilterConditionField() {
 }
 
 /**
- * Compatator field.
+ * Comparator field.
  */
-function FilterCompatatorFilter() {
+function FilterComparatorFilter() {
   const { getConditionFieldPath, fieldMeta } = useFilterCondition();
 
   const comparatorFieldPath = getConditionFieldPath('comparator');
@@ -106,7 +106,7 @@ function FilterCompatatorFilter() {
     <FastField name={comparatorFieldPath}>
       {({ form, field }) => (
         <FormGroup className={'form-group--comparator'}>
-          <AdvancedFilterCompatatorField
+          <AdvancedFilterComparatorField
             dataType={fieldType}
             className={Classes.FILL}
             selectedItem={field.value}
@@ -132,7 +132,7 @@ function useDefaultComparatorFieldValue({
   const fieldKeyValue = getConditionValue('fieldKey');
 
   const comparatorsOptions = React.useMemo(
-    () => getConditionTypeCompatators(fieldMeta.fieldType),
+    () => getConditionTypeComparators(fieldMeta.fieldType),
     [fieldMeta.fieldType],
   );
 
@@ -251,7 +251,7 @@ function AdvancedFilterDropdownCondition({ conditionIndex, onRemoveClick }) {
       <FilterConditionProvider conditionIndex={conditionIndex}>
         <FilterConditionField />
         <FilterFieldsField />
-        <FilterCompatatorFilter />
+        <FilterComparatorFilter />
         <FilterValueField />
 
         <Button

@@ -107,6 +107,6 @@ export interface IAdvancedFilterPopover {
 }
 
 
-export interface IDynamicFilterCompatatorFieldProps {
+export interface IDynamicFilterComparatorFieldProps {
   dataType: string;
 }

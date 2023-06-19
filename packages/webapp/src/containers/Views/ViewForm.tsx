@@ -199,9 +199,9 @@ function ViewForm({
   );
 
   // Compatotors items.
-  const compatatorsItems = useMemo(
+  const comparatorsItems = useMemo(
     () => [
-      { value: '', label: 'Compatator' },
+      { value: '', label: 'Comparator' },
       { value: 'equals', label: 'Equals' },
       { value: 'not_equal', label: 'Not Equal' },
       { value: 'contain', label: 'Contain' },
@@ -330,7 +330,7 @@ function ViewForm({
                 intent={hasError(`roles[${index}].comparator`) && Intent.DANGER}
               >
                 <HTMLSelect
-                  options={compatatorsItems}
+                  options={comparatorsItems}
                   value={role.comparator}
                   className={Classes.FILL}
                   {...getFieldProps(`roles[${index}].comparator`)}

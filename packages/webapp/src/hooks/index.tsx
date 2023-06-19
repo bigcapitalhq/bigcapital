@@ -7,7 +7,7 @@ import { useLocalStorage } from './utils/useLocalStorage';
 export * from './utils';
 export * from './useQueryString';
 
-export function useIsValuePassed(value, compatatorValue) {
+export function useIsValuePassed(value, comparatorValue) {
   const cache = useRef([value]);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export function useIsValuePassed(value, compatatorValue) {
     }
   }, [value]);
 
-  return cache.current.indexOf(compatatorValue) !== -1;
+  return cache.current.indexOf(comparatorValue) !== -1;
 }
 
 const isCurrentFocus = (autoFocus, columnId, rowIndex) => {
