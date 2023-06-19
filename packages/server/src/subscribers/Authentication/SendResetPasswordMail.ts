@@ -4,7 +4,7 @@ import events from '@/subscribers/events';
 @Service()
 export default class AuthenticationSubscriber {
   @Inject('agenda')
-  agenda: any;
+  private agenda: any;
 
   /**
    * Attaches events with handlers.
