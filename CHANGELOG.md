@@ -247,7 +247,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ### Fixed
 
-- fix syled components dependency with imported as default components.
+- fix styled components dependency with imported as default components.
 
 ## [0.6.0] - 18-02-2022
 
