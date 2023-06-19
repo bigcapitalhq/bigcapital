@@ -123,7 +123,7 @@ export class MenuItem extends AbstractPureComponent2 {
     constructor(props) {
         super(props);
         this.state = {
-          isCollapseActive: this.props.callapseActive || false,
+          isCollapseActive: this.props.collapseActive || false,
         };
       }
 
@@ -197,9 +197,9 @@ export class MenuItem extends AbstractPureComponent2 {
     }
 
     componentWillReceiveProps(nextProps){
-      if(nextProps.callapseActive!==this.props.callapseActive){
+      if(nextProps.collapseActive!==this.props.collapseActive){
         //Perform some operation
-        this.setState({ isCollapseActive: nextProps.callapseActive });
+        this.setState({ isCollapseActive: nextProps.collapseActive });
       }
     }
 
