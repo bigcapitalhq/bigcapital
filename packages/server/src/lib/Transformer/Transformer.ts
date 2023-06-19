@@ -107,7 +107,7 @@ export class Transformer {
   };
 
   /**
-   * Incldues virtual attributes.
+   * Includes virtual attributes.
    */
   protected getIncludeAttributesTransformed = (item) => {
     const attributes = this.includeAttributes();
