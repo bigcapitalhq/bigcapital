@@ -209,7 +209,7 @@ export default class CreditNoteGLEntries {
   /**
    * Retrieve the credit note GL entries.
    * @param   {ICreditNote} creditNote - Credit note.
-   * @param   {IAccount} receivableAccount - Receviable account.
+   * @param   {IAccount} receivableAccount - Receivable account.
    * @returns {ILedgerEntry[]} - Ledger entries.
    */
   public getCreditNoteGLEntries = (

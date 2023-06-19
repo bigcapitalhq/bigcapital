@@ -25,7 +25,7 @@ export class SaleInvoiceWriteoffGLEntries {
   };
 
   /**
-   * Retrieves the invoice write-off receiveable GL entry.
+   * Retrieves the invoice write-off receivable GL entry.
    * @param   {number} ARAccountId
    * @param   {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry}
