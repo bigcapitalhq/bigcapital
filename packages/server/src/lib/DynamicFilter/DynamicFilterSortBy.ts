@@ -32,7 +32,7 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   }
 
   /**
-   * Retrieve field comparator relatin column.
+   * Retrieve field comparator relation column.
    * @param field 
    * @returns {string}
    */
