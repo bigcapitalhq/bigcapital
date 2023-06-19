@@ -39,13 +39,13 @@ export const BalanceSheetPercentage = (Base: any) =>
         parentTotal: number,
         node: IBalanceSheetDataNode
       ): IBalanceSheetDataNode => {
-        const percenatage = this.getPercentageBasis(
+        const percentage = this.getPercentageBasis(
           parentTotal,
           node.total.amount
         );
         return R.assoc(
           'percentageRow',
-          this.getPercentageAmountMeta(percenatage),
+          this.getPercentageAmountMeta(percentage),
           node
         );
       }

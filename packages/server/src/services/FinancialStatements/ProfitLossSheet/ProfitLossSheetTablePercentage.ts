@@ -94,7 +94,7 @@ export const ProfitLossSheetTablePercentage = (Base) =>
      * @param   {number} index
      * @returns {ITableColumn[]}
      */
-    protected percetangeHorizontalColumnsAccessor = (
+    protected percentageHorizontalColumnsAccessor = (
       index: number
     ): ITableColumnAccessor[] => {
       return R.pipe(

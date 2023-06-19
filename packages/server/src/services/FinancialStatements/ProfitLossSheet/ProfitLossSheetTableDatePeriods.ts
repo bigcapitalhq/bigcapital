@@ -42,7 +42,7 @@ export const ProfitLossSheetTableDatePeriods = (Base) =>
             this.query.isPreviousYearActive,
             R.concat(this.previousYearHorizontalColumnAccessors(index))
           ),
-          R.concat(this.percetangeHorizontalColumnsAccessor(index)),
+          R.concat(this.percentageHorizontalColumnsAccessor(index)),
           R.concat([
             {
               key: `date-range-${index}`,

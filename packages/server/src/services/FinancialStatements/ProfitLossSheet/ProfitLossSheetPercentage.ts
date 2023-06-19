@@ -79,7 +79,7 @@ export const ProfitLossSheetPercentage = (Base) =>
      * @param   {IProfitLossSheetNode[]} nodes
      * @returns {IProfitLossSheetNode[]}
      */
-    private incomePercetageCompose = (
+    private incomePercentageCompose = (
       nodes: IProfitLossSheetNode[]
     ): IProfitLossSheetNode[] => {
       const incomeNode = this.findNodeById(
@@ -214,11 +214,11 @@ export const ProfitLossSheetPercentage = (Base) =>
      * @param   {IProfitLossSheetNode[]} nodes
      * @returns {IProfitLossSheetNode[]}
      */
-    protected reportColumnsPerentageCompose = (
+    protected reportColumnsPercentageCompose = (
       nodes: IProfitLossSheetNode[]
     ): IProfitLossSheetNode[] => {
       return R.compose(
-        R.when(this.query.isIncomePercentage, this.incomePercetageCompose),
+        R.when(this.query.isIncomePercentage, this.incomePercentageCompose),
         R.when(this.query.isColumnPercentage, this.columnPercentageCompose),
         R.when(this.query.isExpensesPercentage, this.expensesPercentageCompose),
         R.when(this.query.isRowPercentage, this.rowPercentageCompose)

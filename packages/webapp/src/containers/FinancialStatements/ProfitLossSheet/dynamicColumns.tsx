@@ -208,7 +208,7 @@ const previousPeriodPercentageAccessor = R.curry((data, column) => {
 const totalColumnsMapper = R.curry((data, column) => {
   return R.compose(
     R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
-    // Percetage of column/row.
+    // Percentage of column/row.
     R.when(
       R.pathEq(['key'], 'percentage_column'),
       percentageOfColumnAccessor(data),

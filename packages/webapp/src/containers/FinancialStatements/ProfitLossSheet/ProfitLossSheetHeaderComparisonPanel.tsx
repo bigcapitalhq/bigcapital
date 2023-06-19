@@ -60,7 +60,7 @@ function ProfitLossComparisonPanelFields() {
                 <Checkbox
                   inline={true}
                   small={true}
-                  label={<T id={'profit_loss_sheet.perentage_change'} />}
+                  label={<T id={'profit_loss_sheet.percentage_change'} />}
                   {...field}
                   onChange={handlePreviousYearPercentageCheckboxChange(form)}
                 />
@@ -108,7 +108,7 @@ function ProfitLossComparisonPanelFields() {
                 <Checkbox
                   inline={true}
                   small={true}
-                  label={<T id={'profit_loss_sheet.perentage_change'} />}
+                  label={<T id={'profit_loss_sheet.percentage_change'} />}
                   {...field}
                   onChange={handlePreviousPeriodPercentageCheckboxChange(form)}
                 />

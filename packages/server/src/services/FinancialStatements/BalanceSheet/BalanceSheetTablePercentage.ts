@@ -60,7 +60,7 @@ export const BalanceSheetTablePercentage = (Base) =>
      * @param   {number} index
      * @returns {ITableColumn[]}
      */
-    protected percetangeDatePeriodColumnsAccessor = (
+    protected percentageDatePeriodColumnsAccessor = (
       index: number
     ): ITableColumn[] => {
       return R.pipe(

@@ -316,7 +316,7 @@ export default class ProfitLossSheet extends R.compose(
     return R.compose(
       this.reportFilterPlugin,
       this.reportRowsPercentageCompose,
-      this.reportColumnsPerentageCompose,
+      this.reportColumnsPercentageCompose,
       this.reportSchemaEquationNodesCompose,
       this.reportSchemaAccountsNodesCompose
     )(schema);
