@@ -6,19 +6,18 @@ import {
   Position,
   ControlGroup,
 } from '@blueprintjs/core';
-import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, ErrorMessage } from 'formik';
-import { FFormGroup, FormattedMessage as T } from '@/components';
+import { DateInput } from '@blueprintjs/datetime';
+import {
+  FFormGroup,
+  FormattedMessage as T,
+  WarehouseSelect,
+} from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
-import {
-  AccountsSelect,
-  FieldRequiredHint,
-  Icon,
-  InputPrependButton,
-} from '@/components';
+import { FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 import { inputIntent, handleDateChange } from '@/utils';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { useObserveTransferNoSettings } from './utils';
@@ -140,9 +139,9 @@ function WarehouseTransferFormHeaderFields({
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >
-        <AccountsSelect
+        <WarehouseSelect
           name={'from_warehouse_id'}
-          items={warehouses}
+          warehouses={warehouses}
           placeholder={<T id={'select_warehouse_transfer'} />}
           allowCreate={true}
           fill={true}
@@ -156,9 +155,9 @@ function WarehouseTransferFormHeaderFields({
         inline={true}
         labelInfo={<FieldRequiredHint />}
       >
-        <AccountsSelect
+        <WarehouseSelect
           name={'to_warehouse_id'}
-          items={warehouses}
+          warehouses={warehouses}
           placeholder={<T id={'select_warehouse_transfer'} />}
           fill={true}
           allowCreate={true}

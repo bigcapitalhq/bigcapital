@@ -23,7 +23,6 @@ import {
   BranchSelect,
   WarehouseSelect,
   BranchSelectButton,
-  WarehouseSelectButton,
   AccountsSuggestField,
 } from '@/components';
 import {
@@ -94,7 +93,6 @@ export default function InventoryAdjustmentFormDialogFields() {
               <WarehouseSelect
                 name={'warehouse_id'}
                 warehouses={warehouses}
-                input={WarehouseSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>
