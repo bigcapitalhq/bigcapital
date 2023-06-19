@@ -29,7 +29,7 @@ export default [
     component: WarehouseTransferDeleteAlert,
   },
   {
-    name: 'warehouse-transfer-initate',
+    name: 'warehouse-transfer-initiate',
     component: WarehouseTransferInitiateAlert,
   },
   {

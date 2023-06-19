@@ -59,7 +59,7 @@ function WarehouseTransferInitiateAlert({
       loading={isLoading}
     >
       <p>
-        <T id={'warehouse_transfer.alert.are_you_sure_you_want_to_initate'} />
+        <T id={'warehouse_transfer.alert.are_you_sure_you_want_to_initiate'} />
       </p>
     </Alert>
   );

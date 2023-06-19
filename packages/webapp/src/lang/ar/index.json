@@ -1925,7 +1925,7 @@
   "warehouse_transfer.label.transferred": "تم النقل",
   "warehouse_transfer.label.initiate": "بدء النقل",
   "warehouse_transfer.alert.initiate_warehouse": "تم بدء عملية نقل المخزن .",
-  "warehouse_transfer.alert.are_you_sure_you_want_to_initate": "هل أنت متأكد أنك تريد بدء عملية نقل هذا المخزن",
+  "warehouse_transfer.alert.are_you_sure_you_want_to_initiate": "هل أنت متأكد أنك تريد بدء عملية نقل هذا المخزن",
   "warehouse_transfer.alert.transferred_warehouse": "تم نقل المخزن .",
   "warehouse_transfer.alert.are_you_sure_you_want_to_deliver": "هل أنت متأكد أنك تريد نقل هذا المخزن",
   "customer_opening_balance.success_message": "تم تغيير الرصيد الافتتاحي للعميل بنجاح. ",

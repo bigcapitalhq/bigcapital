@@ -77,7 +77,7 @@ export default function WarehouseTransferFloatingActions() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      {/* ----------- Save Intitate & transferred ----------- */}
+      {/* ----------- Save Initiate & transferred ----------- */}
       <If condition={!warehouseTransfer || !warehouseTransfer?.is_transferred}>
         <ButtonGroup>
           <Button

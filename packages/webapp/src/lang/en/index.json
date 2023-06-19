@@ -1950,7 +1950,7 @@
   "warehouse_transfer.label.transferred": "Transferred",
   "warehouse_transfer.label.initiate": "Initiate",
   "warehouse_transfer.alert.initiate_warehouse": "The given warehouse transfer has been initialized.",
-  "warehouse_transfer.alert.are_you_sure_you_want_to_initate": "Are you sure you want to initiate this warehouse transfer?",
+  "warehouse_transfer.alert.are_you_sure_you_want_to_initiate": "Are you sure you want to initiate this warehouse transfer?",
   "warehouse_transfer.alert.transferred_warehouse": "The given warehouse transfer has been delivered",
   "warehouse_transfer.alert.are_you_sure_you_want_to_deliver": "Are you sure you want to deliver this warehouse transfer?",
   "accounts.error.account_currency_not_same_parent_account": "You could not create an account in a currency different from the parent account currency.",

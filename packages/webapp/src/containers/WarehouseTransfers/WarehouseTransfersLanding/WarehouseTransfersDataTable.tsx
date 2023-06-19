@@ -93,8 +93,8 @@ function WarehouseTransfersDataTable({
   };
 
   // Handle initiate warehouse transfer.
-  const handleInitateWarehouseTransfer = ({ id }) => {
-    openAlert('warehouse-transfer-initate', { warehouseTransferId: id });
+  const handleInitiateWarehouseTransfer = ({ id }) => {
+    openAlert('warehouse-transfer-initiate', { warehouseTransferId: id });
   };
   // Handle transferred warehouse transfer.
   const handleTransferredWarehouseTransfer = ({ id }) => {
@@ -137,7 +137,7 @@ function WarehouseTransfersDataTable({
           onViewDetails: handleViewDetailWarehouseTransfer,
           onDelete: handleDeleteWarehouseTransfer,
           onEdit: handleEditWarehouseTransfer,
-          onInitate: handleInitateWarehouseTransfer,
+          onInitiate: handleInitiateWarehouseTransfer,
           onTransfer: handleTransferredWarehouseTransfer,
         }}
       />
