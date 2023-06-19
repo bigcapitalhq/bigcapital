@@ -1,5 +1,6 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
+import intl from 'react-intl-universal';
 import { useFormikContext } from 'formik';
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
 import { first } from 'lodash';
@@ -47,4 +48,13 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const getAdjustmentTypeOptions = () => [
+  { name: intl.get('decrement'), value: 'decrement' },
+  { name: intl.get('increment'), value: 'increment' },
+];
+
+export const useGetAdjustmentTypeOptions = () => {
+  return useMemo(() => getAdjustmentTypeOptions(), []);
 };

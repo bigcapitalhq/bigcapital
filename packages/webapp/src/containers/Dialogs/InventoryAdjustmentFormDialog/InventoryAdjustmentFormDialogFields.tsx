@@ -34,16 +34,17 @@ import {
   toSafeNumber,
 } from '@/utils';
 import { Features, CLASSES } from '@/constants';
-import adjustmentType from '@/constants/adjustmentType';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
+import { useFeatureCan } from '@/hooks/state';
+
+import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 import {
   diffQuantity,
   useSetPrimaryBranchToForm,
   useSetPrimaryWarehouseToForm,
+  useGetAdjustmentTypeOptions,
 } from './utils';
-import { useFeatureCan } from '@/hooks/state';
-import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFields';
 
 /**
  * Inventory adjustment form dialogs fields.
@@ -51,6 +52,9 @@ import InventoryAdjustmentQuantityFields from './InventoryAdjustmentQuantityFiel
 export default function InventoryAdjustmentFormDialogFields() {
   // Features guard.
   const { featureCan } = useFeatureCan();
+
+  // Retrieves memorized adjustment types options.
+  const adjustmentTypes = useGetAdjustmentTypeOptions();
 
   const dateFieldRef = useAutofocus();
 
@@ -149,7 +153,7 @@ export default function InventoryAdjustmentFormDialogFields() {
                 className={classNames(CLASSES.FILL, 'form-group--type')}
               >
                 <ListSelect
-                  items={adjustmentType}
+                  items={adjustmentTypes}
                   onItemSelect={(type) => {
                     const result = diffQuantity(
                       toSafeNumber(values.quantity),
