@@ -220,7 +220,7 @@ export default class InventoryAdjustmentsGL {
     // Reverts GL entries of the given inventory adjustment.
     await this.revertAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);
 
-    // Writes GL entries of th egiven inventory adjustment.
+    // Writes GL entries of the given inventory adjustment.
     await this.writeAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);
   };
 }
