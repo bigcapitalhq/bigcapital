@@ -28,7 +28,7 @@ export default {
   },
 
   /**
-   * Organization managment service.
+   * Organization management service.
    */
   organization: {
     build: 'onOrganizationBuild',
@@ -38,7 +38,7 @@ export default {
   },
 
   /**
-   * Tenants managment service.
+   * Tenants management service.
    */
   tenantManager: {
     databaseCreated: 'onDatabaseCreated',
