@@ -55,7 +55,7 @@ export interface ISalesReceiptsService {
   deleteSaleReceipt(tenantId: number, saleReceiptId: number): Promise<void>;
 
   salesReceiptsList(
-    tennatid: number,
+    tenantid: number,
     salesReceiptsFilter: ISalesReceiptsFilter
   ): Promise<{
     salesReceipts: ISaleReceipt[];

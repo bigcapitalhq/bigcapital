@@ -41,7 +41,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Creates a new teant with unique organization id.
+   * Creates a new tenant with unique organization id.
    * @param {ITenant} tenant
    * @return {Promise<ITenant>}
    */

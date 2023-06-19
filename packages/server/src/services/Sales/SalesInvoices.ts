@@ -186,7 +186,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
 
   /**
    * Transformes edit DTO to model.
-   * @param {number} tennatId -
+   * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
    * @param {ISaleInvoice} oldSaleInvoice

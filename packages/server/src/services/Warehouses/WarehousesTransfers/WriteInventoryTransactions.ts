@@ -89,7 +89,7 @@ export class WarehouseTransferInventoryTransactions {
 
   /**
    * Reverts warehouse transfer inventory transactions.
-   * @param   {number} tenatnId
+   * @param   {number} tenantId
    * @param   {number} warehouseTransferId
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
