@@ -36,7 +36,7 @@ export default function BillFloatingActions() {
     submitForm();
   };
 
-  // Handle submit, open and anothe new button click.
+  // Handle submit, open and another new button click.
   const handleSubmitOpenAndNewBtnClick = (event) => {
     setSubmitPayload({ redirect: false, status: true, resetForm: true });
     submitForm();
