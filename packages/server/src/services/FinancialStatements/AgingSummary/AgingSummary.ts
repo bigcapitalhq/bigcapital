@@ -199,7 +199,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve to total sumation of the given contacts summeries sections.
+   * Retrieve to total sumation of the given contacts summaries sections.
    * @param {IARAgingSummaryCustomer[]} contactsSections -
    * @return {number}
    */
