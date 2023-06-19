@@ -54,7 +54,7 @@ export class ManualJournalWriteGLSubscriber {
     manualJournal,
     trx,
   }: IManualJournalEventCreatedPayload) => {
-    // Ingore writing manual journal journal entries in case was not published.
+    // Ignore writing manual journal journal entries in case was not published.
     if (manualJournal.publishedAt) {
       await this.manualJournalGLEntries.createManualJournalGLEntries(
         tenantId,

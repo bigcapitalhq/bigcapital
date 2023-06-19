@@ -899,7 +899,7 @@ export function flatten(opts, target) {
 }
 
 /**
- * Ingores the given selectors from event callback.
+ * Ignores the given selectors from event callback.
  */
 export function ignoreEventFromSelectors(event, selectors) {
   return selectors

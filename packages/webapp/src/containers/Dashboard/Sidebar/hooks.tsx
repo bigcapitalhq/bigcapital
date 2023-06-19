@@ -23,7 +23,7 @@ const deepDashConfig = {
   childrenPath: 'children',
   pathFormat: 'array',
 };
-const ingoreTypesEmpty = [
+const ignoreTypesEmpty = [
   ISidebarMenuItemType.Group,
   ISidebarMenuItemType.Overlay,
 ];
@@ -350,7 +350,7 @@ export function useIsSidebarMenuItemActive(item) {
 export function filterSidebarItemHasNoChildren(items) {
   return filterValuesDeep((item) => {
     // If it was group item and has no children items so discard that item.
-    if (ingoreTypesEmpty.indexOf(item.type) !== -1 && isEmpty(item.children)) {
+    if (ignoreTypesEmpty.indexOf(item.type) !== -1 && isEmpty(item.children)) {
       return false;
     }
     return true;

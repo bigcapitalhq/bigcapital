@@ -53,7 +53,7 @@ export class CreateAccount {
     // Retrieve the account type meta or throw service error if not found.
     this.validator.getAccountTypeOrThrowError(accountDTO.accountType);
 
-    // Ingore the parent account validation if not presented.
+    // Ignore the parent account validation if not presented.
     if (accountDTO.parentAccountId) {
       const parentAccount = await this.validator.getParentAccountOrThrowError(
         tenantId,
