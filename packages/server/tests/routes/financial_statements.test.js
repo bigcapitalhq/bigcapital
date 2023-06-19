@@ -73,7 +73,7 @@ describe('routes: `/financial_statements`', () => {
     });
 
     // -----------------------------------------
-    // Assets account balance  = 5000  |  Libility account balance = 4000
+    // Assets account balance  = 5000  |  Liability account balance = 4000
     // Expense account balance = 1000  |  Income account balance   = 2000
   });
 
