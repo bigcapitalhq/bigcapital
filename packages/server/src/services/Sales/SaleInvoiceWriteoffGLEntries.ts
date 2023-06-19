@@ -34,10 +34,10 @@ export class SaleInvoiceWriteoffGLEntries {
     ARAccountId: number,
     saleInvoice: ISaleInvoice
   ): ILedgerEntry => {
-    const commontEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
+    const commonEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
 
     return {
-      ...commontEntry,
+      ...commonEntry,
       credit: saleInvoice.localWrittenoffAmount,
       accountId: ARAccountId,
       contactId: saleInvoice.customerId,
@@ -56,10 +56,10 @@ export class SaleInvoiceWriteoffGLEntries {
   private getInvoiceWriteoffGLExpenseEntry = (
     saleInvoice: ISaleInvoice
   ): ILedgerEntry => {
-    const commontEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
+    const commonEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
 
     return {
-      ...commontEntry,
+      ...commonEntry,
       debit: saleInvoice.localWrittenoffAmount,
       accountId: saleInvoice.writtenoffExpenseAccountId,
       credit: 0,
