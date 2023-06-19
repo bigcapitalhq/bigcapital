@@ -66,14 +66,14 @@ export class LedgerContactsBalanceStorage {
   ): Promise<(entry: ILedgerEntry) => boolean> => {
     const { Account } = this.tenancy.models(tenantId);
 
-    const ARAPAcounts = await Account.query(trx).whereIn('accountType', [
+    const ARAPAccounts = await Account.query(trx).whereIn('accountType', [
       ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE,
       ACCOUNT_TYPE.ACCOUNTS_PAYABLE,
     ]);
-    const ARAPAcountsIds = ARAPAcounts.map((a) => a.id);
+    const ARAPAccountsIds = ARAPAccounts.map((a) => a.id);
 
     return (entry: ILedgerEntry) => {
-      return ARAPAcountsIds.indexOf(entry.accountId) !== -1;
+      return ARAPAccountsIds.indexOf(entry.accountId) !== -1;
     };
   };
 

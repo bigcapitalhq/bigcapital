@@ -108,7 +108,7 @@ export class LedegrAccountsStorage {
     const { Account } = this.tenancy.models(tenantId);
     const account = await Account.query(trx).findById(accountId);
 
-    // Filters the ledger entries by the current acount.
+    // Filters the ledger entries by the current account.
     const accountLedger = ledger.whereAccountId(accountId);
 
     // Retrieves the given tenant metadata.
