@@ -332,7 +332,7 @@ export function useObserveSidebarExpendedBodyclass(sidebarExpended) {
 }
 
 /**
- * Detamrines whether the given sidebar menu item is active.
+ * Determines whether the given sidebar menu item is active.
  * @returns {boolean}
  */
 export function useIsSidebarMenuItemActive(item) {

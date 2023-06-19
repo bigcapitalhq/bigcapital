@@ -34,7 +34,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Detarimes the tenant whether is build currently running.
+   * Determines the tenant whether is build currently running.
    */
   get isBuildRunning() {
     return !!this.buildJobId;

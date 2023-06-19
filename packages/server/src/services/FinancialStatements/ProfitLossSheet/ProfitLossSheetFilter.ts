@@ -71,7 +71,7 @@ export const ProfitLossSheetFilter = (Base) =>
     // # Aggregate.
     // ----------------
     /**
-     * Detearmines aggregate none-children filtering.
+     * Determines aggregate none-children filtering.
      * @param   {IProfitLossSheetNode} node
      * @returns {boolean}
      */

@@ -70,7 +70,7 @@ export const BalanceSheetFiltering = (Base) =>
     // # Aggregate/Accounts.
     // -----------------------
     /**
-     * Detearmines aggregate none-children filtering.
+     * Determines aggregate none-children filtering.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
