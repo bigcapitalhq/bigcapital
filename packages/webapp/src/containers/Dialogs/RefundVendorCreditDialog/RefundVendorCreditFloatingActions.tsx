@@ -9,7 +9,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
 
 /**
- * Refund vendor flaoting actions.
+ * Refund vendor floating actions.
  */
 function RefundVendorCreditFloatingActions({
   // #withDialogActions
