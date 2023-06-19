@@ -137,12 +137,12 @@ export default class ItemsEntriesService {
     const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const purchasbleItems = await Item.query()
+    const purchasableItems = await Item.query()
       .where('purchasable', true)
       .whereIn('id', itemsIds);
 
-    const purchasbleItemsIds = purchasbleItems.map((item: IItem) => item.id);
-    const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
+    const purchasableItemsIds = purchasableItems.map((item: IItem) => item.id);
+    const notPurchasableItems = difference(itemsIds, purchasableItemsIds);
 
     if (notPurchasableItems.length > 0) {
       throw new ServiceError(ERRORS.NOT_PURCHASE_ABLE_ITEMS);
