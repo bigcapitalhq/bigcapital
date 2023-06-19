@@ -16,7 +16,7 @@ const transformFormValuesToRequest = (values) => {
   return pick(values, ['notification_key']);
 };
 
-// Momerize the notification types.
+// Memorize the notification types.
 const notificationTypes = [
   {
     key: 'details',

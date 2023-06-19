@@ -390,5 +390,5 @@ straightforward as possible.
 - fix: Submit buttons loading state once payment made/receive form is submitting.
 - fix: Ensure items entries should have one empty line atleast.
 - fix: items entries total calculation.
-- fix: Momerized fields re-rendering conditions.
+- fix: Memorized fields re-rendering conditions.
 - fix: auto-complete item entry with cost price on purchase invoice form.
