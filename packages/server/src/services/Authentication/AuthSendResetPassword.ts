@@ -73,7 +73,7 @@ export class AuthSendResetPassword {
     if (!tokenModel) {
       throw new ServiceError(ERRORS.TOKEN_INVALID);
     }
-    // Different between tokne creation datetime and current time.
+    // Different between token creation datetime and current time.
     if (
       moment().diff(tokenModel.createdAt, 'seconds') >
       config.resetPasswordSeconds
