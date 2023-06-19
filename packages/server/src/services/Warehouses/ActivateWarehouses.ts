@@ -63,7 +63,7 @@ export class ActivateWarehouses {
         await this.createInitialWarehouse.createInitialWarehouse(tenantId);
 
       // Marks the multi-warehouses is activated.
-      this.settings.markMultiwarehoussAsActivated(tenantId);
+      this.settings.markMultiWarehousesAsActivated(,,,,,tenantId);
 
       // Triggers `onWarehouseActivated` event.
       await this.eventPublisher.emitAsync(events.warehouse.onActivated, {
