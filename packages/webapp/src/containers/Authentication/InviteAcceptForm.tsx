@@ -66,7 +66,7 @@ export default function InviteAcceptForm() {
             });
             history.push('/auth/login');
           }
-          if (errors.find((e) => e.type === 'PHONE_MUMNER.ALREADY.EXISTS')) {
+          if (errors.find((e) => e.type === 'PHONE_NUMBER.ALREADY.EXISTS')) {
             setErrors({
               phone_number: 'This phone number is used in another account.',
             });

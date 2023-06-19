@@ -199,7 +199,7 @@ export class ItemsValidators {
   /**
    * Validate the item inventory account whether modified and item
    * has associated inventory transactions.
-   * @param {numnber} tenantId
+   * @param {number} tenantId
    * @param {IItem} oldItem
    * @param {IItemDTO} newItemDTO
    * @returns

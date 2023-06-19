@@ -211,7 +211,7 @@ export class CommandAccountValidators {
 
   /**
    * Validates the max depth level of accounts chart.
-   * @param {numebr} tenantId - Tenant id.
+   * @param {number} tenantId - Tenant id.
    * @param {number} parentAccountId - Parent account id.
    */
   public async validateMaxParentAccountDepthLevels(

@@ -181,7 +181,7 @@ describe('routes: `/api/invite_users`', () => {
       
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PHONE_MUMNER.ALREADY.EXISTS', code: 400,
+        type: 'PHONE_NUMBER.ALREADY.EXISTS', code: 400,
       });
     });
 
