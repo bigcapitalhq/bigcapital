@@ -15,7 +15,7 @@ export default class VendorCreditInventoryTransactions {
   /**
    * Creates vendor credit associated inventory transactions.
    * @param {number} tenantId
-   * @param {IVnedorCredit} vendorCredit
+   * @param {IVendorCredit} vendorCredit
    * @param {Knex.Transaction} trx
    */
   public createInventoryTransactions = async (
