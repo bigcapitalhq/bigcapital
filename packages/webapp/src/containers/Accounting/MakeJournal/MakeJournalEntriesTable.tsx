@@ -17,7 +17,7 @@ import { updateAdjustEntries } from './utils';
  * Make journal entries table component.
  */
 export default function MakeJournalEntriesTable({
-  // #ownPorps
+  // #ownProps
   onChange,
   entries,
   defaultEntry,
