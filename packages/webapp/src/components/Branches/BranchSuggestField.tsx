@@ -93,7 +93,7 @@ export function BranchSuggestField({
 
   /**
    *
-   * @param {*} inputVaue
+   * @param {*} inputValue
    * @returns
    */
   const branchInputValueRenderer = (inputValue) => {

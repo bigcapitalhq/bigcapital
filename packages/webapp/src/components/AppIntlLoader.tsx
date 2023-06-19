@@ -116,7 +116,7 @@ function useAppYupLoadLocales(currentLocale) {
       .then(() => {});
   }, [currentLocale, stopLoading]);
 
-  // Watches the valiue to start/stop splash screen.
+  // Watches the value to start/stop splash screen.
   useWatchImmediate(
     (value) => (value ? startLoading() : stopLoading()),
     isLoading,

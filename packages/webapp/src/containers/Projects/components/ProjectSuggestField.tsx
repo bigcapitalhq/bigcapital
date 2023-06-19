@@ -96,7 +96,7 @@ export function ProjectSuggestField({
 
   /**
    *
-   * @param {*} inputVaue
+   * @param {*} inputValue
    * @returns
    */
   const projectInputValueRenderer = (inputValue) => {
