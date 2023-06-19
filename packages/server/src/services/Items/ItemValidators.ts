@@ -117,7 +117,7 @@ export class ItemsValidators {
     const foundCategory = await ItemCategory.query().findById(itemCategoryId);
 
     if (!foundCategory) {
-      throw new ServiceError(ERRORS.ITEM_CATEOGRY_NOT_FOUND);
+      throw new ServiceError(ERRORS.ITEM_CATEGORY_NOT_FOUND);
     }
   }
 
