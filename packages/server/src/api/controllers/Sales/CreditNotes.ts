@@ -21,7 +21,7 @@ import ListCreditNoteRefunds from '@/services/CreditNotes/ListCreditNoteRefunds'
 import OpenCreditNote from '@/services/CreditNotes/OpenCreditNote';
 import CreateRefundCreditNote from '@/services/CreditNotes/CreateRefundCreditNote';
 import CreditNoteApplyToInvoices from '@/services/CreditNotes/CreditNoteApplyToInvoices';
-import DeletreCreditNoteApplyToInvoices from '@/services/CreditNotes/DeleteCreditNoteApplyToInvoices';
+import DeleteCreditNoteApplyToInvoices from '@/services/CreditNotes/DeleteCreditNoteApplyToInvoices';
 import GetCreditNoteAssociatedInvoicesToApply from '@/services/CreditNotes/GetCreditNoteAssociatedInvoicesToApply';
 import GetCreditNoteAssociatedAppliedInvoices from '@/services/CreditNotes/GetCreditNoteAssociatedAppliedInvoices';
 import GetRefundCreditTransaction from '@/services/CreditNotes/GetRefundCreditNoteTransaction';
@@ -66,7 +66,7 @@ export default class PaymentReceivesController extends BaseController {
   applyCreditNoteToInvoicesService: CreditNoteApplyToInvoices;
 
   @Inject()
-  deleteApplyCreditToInvoicesService: DeletreCreditNoteApplyToInvoices;
+  deleteApplyCreditToInvoicesService: DeleteCreditNoteApplyToInvoices;
 
   @Inject()
   getCreditAssociatedInvoicesToApply: GetCreditNoteAssociatedInvoicesToApply;

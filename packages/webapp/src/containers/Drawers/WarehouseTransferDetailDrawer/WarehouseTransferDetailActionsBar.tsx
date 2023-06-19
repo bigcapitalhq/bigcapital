@@ -40,7 +40,7 @@ function WarehouseTransferDetailActionsBar({
   };
 
   // Handle delete warehouse transfer.
-  const handleDeletetWarehosueTransfer = () => {
+  const handleDeleteWarehosueTransfer = () => {
     openAlert('warehouse-transfer-delete', { warehouseTransferId });
   };
 
@@ -59,7 +59,7 @@ function WarehouseTransferDetailActionsBar({
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={handleDeletetWarehosueTransfer}
+          onClick={handleDeleteWarehosueTransfer}
         />
       </NavbarGroup>
     </DrawerActionsBar>
