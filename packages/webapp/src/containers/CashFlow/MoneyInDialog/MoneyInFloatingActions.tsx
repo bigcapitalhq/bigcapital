@@ -28,7 +28,7 @@ function MoneyInFloatingActions({
     submitForm();
   };
   // Handle submit  button click.
-  const handleSubmittBtnClick = (event) => {
+  const handleSubmitBtnClick = (event) => {
     setSubmitPayload({ publish: true });
   };
   // Handle close button click.
@@ -62,7 +62,7 @@ function MoneyInFloatingActions({
           loading={isSubmitting && submitPayload.publish}
           style={{ minWidth: '75px' }}
           type="submit"
-          onClick={handleSubmittBtnClick}
+          onClick={handleSubmitBtnClick}
         >
           {<T id={'save_and_publish'} />}
         </Button>
