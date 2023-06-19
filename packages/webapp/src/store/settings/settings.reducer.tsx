@@ -73,7 +73,7 @@ const initialState = {
 
 const STORAGE_KEY = 'bigcapital:settings';
 
-const PRESIST_CONFIG = {
+const PERSIST_CONFIG = {
   key: STORAGE_KEY,
   whitelist: ['data'],
   storage,
@@ -112,4 +112,4 @@ const reducerInstance = createReducer(initialState, {
   },
 });
 
-export default persistReducer(PRESIST_CONFIG, reducerInstance);
+export default persistReducer(PERSIST_CONFIG, reducerInstance);
