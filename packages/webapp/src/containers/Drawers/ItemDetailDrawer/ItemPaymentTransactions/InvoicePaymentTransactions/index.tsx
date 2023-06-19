@@ -44,7 +44,7 @@ function InvoicePaymentTransactions({
   });
 
   // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ invoice_id }) => {
+  const handleDeletePaymentTransactions = ({ invoice_id }) => {
     openAlert('invoice-delete', {
       invoiceId: invoice_id,
     });
@@ -65,7 +65,7 @@ function InvoicePaymentTransactions({
       ContextMenu={ActionsMenu}
       payload={{
         onEdit: handleEditPaymentTransactions,
-        onDelete: handleDeletePaymentTransactons,
+        onDelete: handleDeletePaymentTransactions,
       }}
       styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}

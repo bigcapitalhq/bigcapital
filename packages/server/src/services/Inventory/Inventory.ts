@@ -213,7 +213,7 @@ export default class InventoryService {
   }
 
   /**
-   * Writes the inventory transactiosn on the storage from the given
+   * Writes the inventory transactions on the storage from the given
    * inventory transactions entries.
    *
    * @param {number} tenantId -

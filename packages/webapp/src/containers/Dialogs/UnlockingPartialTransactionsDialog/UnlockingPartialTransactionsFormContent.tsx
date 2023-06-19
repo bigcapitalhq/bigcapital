@@ -6,7 +6,7 @@ import UnlockingPartialTransactionsFormFields from './UnlockingPartialTransactio
 import UnlockingPartialTransactionsFormFloatingActions from './UnlockingPartialTransactionsFormFloatingActions';
 
 /**
- * Partial Unlocking trsnactions form content.
+ * Partial Unlocking transactions form content.
  */
 export default function PartialUnlockingTransactionsFormContent() {
   return (

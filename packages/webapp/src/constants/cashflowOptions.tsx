@@ -31,7 +31,7 @@ export const getAddMoneyOutOptions = () => [
   },
 ];
 
-export const TRANSACRIONS_TYPE = [
+export const TRANSACTIONS_TYPE = [
   'OwnerContribution',
   'OtherIncome',
   'TransferFromAccount',

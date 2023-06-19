@@ -42,7 +42,7 @@ function EstimatePaymentTransactions({
   });
 
   // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ estimate_id }) => {
+  const handleDeletePaymentTransactions = ({ estimate_id }) => {
     openAlert('estimate-delete', {
       estimateId: estimate_id,
     });
@@ -64,7 +64,7 @@ function EstimatePaymentTransactions({
       ContextMenu={ActionsMenu}
       payload={{
         onEdit: handleEditPaymentTransactions,
-        onDelete: handleDeletePaymentTransactons,
+        onDelete: handleDeletePaymentTransactions,
       }}
       styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}

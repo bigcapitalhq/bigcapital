@@ -601,7 +601,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
    * @param {boolean} override - Allow to override old transactions.
    * @return {Promise<void>}
    */
-  public async recordInventoryTranscactions(
+  public async recordInventoryTransactions(
     tenantId: number,
     saleInvoice: ISaleInvoice,
     override?: boolean,

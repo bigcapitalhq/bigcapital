@@ -140,7 +140,7 @@ export class ItemsValidators {
       throw new ServiceError(
         ids.length > 1
           ? ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS
-          : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS
+          : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS
       );
     }
   }

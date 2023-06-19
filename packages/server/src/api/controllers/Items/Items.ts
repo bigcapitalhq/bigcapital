@@ -449,9 +449,9 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS', code: 310 }],
         });
       }
-      if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTINS') {
+      if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS') {
         return res.status(400).send({
-          errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTINS', code: 320 }],
+          errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTIONS', code: 320 }],
         });
       }
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT') {

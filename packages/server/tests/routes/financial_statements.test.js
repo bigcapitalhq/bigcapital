@@ -136,7 +136,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.journal.length).equals(1);
     });
 
-    it('Should retrieve tranasactions with the given types.', async () => {
+    it('Should retrieve transactions with the given types.', async () => {
       const res = await request()
         .get('/api/financial_statements/journal')
         .set('x-access-token', loginRes.body.token)

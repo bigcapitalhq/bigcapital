@@ -72,7 +72,7 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
 // handle delete errors.
 export const handleDeleteErrors = (errors) => {
   if (
-    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')
+    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')
   ) {
     AppToaster.show({
       message: intl.get('the_item_has_associated_transactions'),

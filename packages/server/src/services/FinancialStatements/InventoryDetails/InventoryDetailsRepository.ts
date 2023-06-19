@@ -92,7 +92,7 @@ export default class InventoryDetailsRepository {
   }
 
   /**
-   * Retrieve the items inventory tranasactions.
+   * Retrieve the items inventory transactions.
    * @param {number} tenantId -
    * @param {IInventoryDetailsQuery}
    * @return {Promise<IInventoryTransaction>}
