@@ -12,7 +12,7 @@ export class LedegrAccountsStorage {
   tenancy: HasTenancyService;
 
   /**
-   * Retrieve depepants ids of the give accounts ids.
+   * Retrieve dependents ids of the give accounts ids.
    * @param   {number[]} accountsIds
    * @param   depGraph
    * @returns {number[]}
