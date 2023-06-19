@@ -5,7 +5,7 @@ import { SMSIntegrationProvider } from './SMSIntegrationProvider';
 import SMSIntegrationTabs from './SMSIntegrationTabs';
 
 /**
- * SMS SMS Integration
+ * SMS Integration
  */
 export default function SMSIntegration() {
   return (
