@@ -238,10 +238,11 @@ function PaymentFormVendorSelect() {
     <FFormGroup
       name={'vendor_id'}
       label={<T id={'vendor_name'} />}
-      inline={true}
       labelInfo={<FieldRequiredHint />}
-      vendors={vendors}
+      inline={true}
+      fastField={true}
       shouldUpdate={vendorsFieldShouldUpdate}
+      shouldUpdateDeps={{ items: vendors }}
     >
       <VendorsSelect
         name={'vendor_id'}
@@ -254,6 +255,9 @@ function PaymentFormVendorSelect() {
         }}
         disabled={!isNewMode}
         allowCreate={true}
+        fastField={true}
+        shouldUpdate={vendorsFieldShouldUpdate}
+        shouldUpdateDeps={{ items: vendors }}
       />
       {values.vendor_id && (
         <VendorButtonLink vendorId={values.vendor_id}>

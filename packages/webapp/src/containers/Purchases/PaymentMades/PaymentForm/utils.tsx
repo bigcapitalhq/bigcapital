@@ -74,7 +74,7 @@ export const transformToNewPageEntries = (entries) => {
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.vendors !== oldProps.vendors ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

@@ -2,12 +2,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
+
 import { FeatureCan, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-
 import {
   FFormGroup,
   FieldRequiredHint,
@@ -168,9 +168,9 @@ function BillFormVendorField() {
       label={<T id={'vendor_name'} />}
       inline={true}
       labelInfo={<FieldRequiredHint />}
-      vendors={vendors}
       fastField={true}
       shouldUpdate={vendorsFieldShouldUpdate}
+      shouldUpdateDeps={{ items: vendors }}
     >
       <VendorsSelect
         name={'vendor_id'}
@@ -181,6 +181,9 @@ function BillFormVendorField() {
           setFieldValue('currency_code', contact?.currency_code);
         }}
         allowCreate={true}
+        fastField={true}
+        shouldUpdate={vendorsFieldShouldUpdate}
+        shouldUpdateDeps={{ items: vendors }}
       />
       {values.vendor_id && (
         <VendorButtonLink vendorId={values.vendor_id}>

@@ -244,9 +244,9 @@ function EstimateFormCustomerSelect() {
       inline={true}
       labelInfo={<FieldRequiredHint />}
       name={'customer_id'}
-      customers={customers}
-      shouldUpdate={customersFieldShouldUpdate}
       fastField={true}
+      shouldUpdate={customersFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
     >
       <CustomersSelect
         name={'customer_id'}
@@ -259,6 +259,8 @@ function EstimateFormCustomerSelect() {
         popoverFill={true}
         allowCreate={true}
         fastField={true}
+        shouldUpdate={customersFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
       />
       {values.customer_id && (
         <CustomerButtonLink customerId={values.customer_id}>

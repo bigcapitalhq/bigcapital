@@ -259,12 +259,12 @@ function InvoiceFormCustomerSelect() {
   return (
     <FFormGroup
       name={'customer_id'}
-      customers={customers}
-      shouldUpdate={customerNameFieldShouldUpdate}
       label={<T id={'customer_name'} />}
       inline={true}
       labelInfo={<FieldRequiredHint />}
       fastField={true}
+      shouldUpdate={customerNameFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
     >
       <CustomersSelect
         name={'customer_id'}
@@ -276,6 +276,8 @@ function InvoiceFormCustomerSelect() {
         }}
         allowCreate={true}
         fastField={true}
+        shouldUpdate={customerNameFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
       />
       {values.customer_id && (
         <CustomerButtonLink customerId={values.customer_id}>

@@ -245,11 +245,11 @@ function ReceiptFormCustomerSelect() {
     <FFormGroup
       name={'customer_id'}
       label={<T id={'customer_name'} />}
-      inline={true}
       labelInfo={<FieldRequiredHint />}
-      customers={customers}
+      inline={true}
       fastField={true}
       shouldUpdate={customersFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
     >
       <CustomersSelect
         name={'customer_id'}
@@ -261,6 +261,9 @@ function ReceiptFormCustomerSelect() {
         }}
         popoverFill={true}
         allowCreate={true}
+        fastField={true}
+        shouldUpdate={customersFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
       />
       {values.customer_id && (
         <CustomerButtonLink customerId={values.customer_id}>

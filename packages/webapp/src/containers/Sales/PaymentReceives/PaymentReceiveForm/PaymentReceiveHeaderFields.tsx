@@ -341,9 +341,9 @@ function PaymentReceiveCustomerSelect() {
       inline={true}
       labelInfo={<FieldRequiredHint />}
       name={'customer_id'}
-      customers={customers}
       fastField={true}
       shouldUpdate={customersFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
     >
       <CustomersSelect
         name={'customer_id'}
@@ -358,6 +358,8 @@ function PaymentReceiveCustomerSelect() {
         disabled={!isNewMode}
         allowCreate={true}
         fastField={true}
+        shouldUpdate={customersFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
       />
       {values.customer_id && (
         <CustomerButtonLink customerId={values.customer_id}>

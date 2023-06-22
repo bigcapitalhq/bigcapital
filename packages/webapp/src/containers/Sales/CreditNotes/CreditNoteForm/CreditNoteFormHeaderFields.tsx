@@ -191,11 +191,11 @@ function CreditNoteCustomersSelect() {
     <FFormGroup
       name={'customer_id'}
       label={<T id={'customer_name'} />}
-      customers={customers}
       labelInfo={<FieldRequiredHint />}
       inline={true}
       fastField={true}
       shouldUpdate={customerNameFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
     >
       <CustomersSelect
         name={'customer_id'}
@@ -207,6 +207,9 @@ function CreditNoteCustomersSelect() {
         }}
         popoverFill={true}
         allowCreate={true}
+        fastField={true}
+        shouldUpdate={customerNameFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
       />
       {values.customer_id && (
         <CustomerButtonLink customerId={values.customer_id}>

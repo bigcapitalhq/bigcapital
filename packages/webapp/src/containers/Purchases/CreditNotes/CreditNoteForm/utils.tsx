@@ -113,7 +113,7 @@ export const transformFormValuesToRequest = (values) => {
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.vendors !== oldProps.vendors ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

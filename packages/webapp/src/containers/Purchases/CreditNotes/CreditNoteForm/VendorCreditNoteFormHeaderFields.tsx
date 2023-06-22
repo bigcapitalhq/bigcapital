@@ -185,9 +185,10 @@ function VendorCreditFormVendorSelect() {
       name={'vendor_id'}
       label={<T id={'vendor_name'} />}
       inline={true}
-      vendors={vendors}
-      shouldUpdate={vendorsFieldShouldUpdate}
       labelInfo={<FieldRequiredHint />}
+      fastField={true}
+      shouldUpdate={vendorsFieldShouldUpdate}
+      shouldUpdateDeps={{ items: vendors }}
     >
       <VendorsSelect
         name={'vendor_id'}
@@ -199,6 +200,9 @@ function VendorCreditFormVendorSelect() {
         }}
         popoverFill={true}
         allowCreate={true}
+        fastField={true}
+        shouldUpdate={vendorsFieldShouldUpdate}
+        shouldUpdateDeps={{ items: vendors }}
       />
       {values.vendor_id && (
         <VendorButtonLink vendorId={values.vendor_id}>

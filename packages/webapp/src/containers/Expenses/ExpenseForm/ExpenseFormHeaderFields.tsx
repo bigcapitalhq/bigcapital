@@ -140,7 +140,8 @@ function ExpenseFormCustomerSelect() {
       labelInfo={<Hint />}
       inline={true}
       name={'customer_id'}
-      customers={customers}
+      fastField={true}
+      shouldUpdateDeps={{ items: customers }}
       shouldUpdate={customersFieldShouldUpdate}
     >
       <CustomersSelect
@@ -149,6 +150,9 @@ function ExpenseFormCustomerSelect() {
         placeholder={<T id={'select_customer_account'} />}
         allowCreate={true}
         popoverFill={true}
+        fastField={true}
+        shouldUpdateDeps={{ items: customers }}
+        shouldUpdate={customersFieldShouldUpdate}
       />
     </FormGroup>
   );
