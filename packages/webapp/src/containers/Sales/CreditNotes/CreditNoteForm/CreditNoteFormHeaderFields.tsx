@@ -22,6 +22,7 @@ import {
   CustomerDrawerLink,
   FFormGroup,
   FInputGroup,
+  CustomersSelect,
 } from '@/components';
 import { customerNameFieldShouldUpdate } from './utils';
 
@@ -121,49 +122,10 @@ const CreditNoteTransactionNoField = R.compose(
  * Credit note form header fields.
  */
 export default function CreditNoteFormHeaderFields({}) {
-  // Credit note form context.
-  const { customers } = useCreditNoteFormContext();
-
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customerNameFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames(
-              'form-group--customer-name',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('currency_code', customer?.currency_code);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-            {value && (
-              <CustomerButtonLink customerId={value}>
-                <T id={'view_customer_details'} />
-              </CustomerButtonLink>
-            )}
-          </FormGroup>
-        )}
-      </FastField>
+      <CreditNoteCustomersSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <CreditNoteExchangeRateInputField
@@ -213,6 +175,45 @@ export default function CreditNoteFormHeaderFields({}) {
         )}
       </FastField>
     </div>
+  );
+}
+
+/**
+ * Customer select field of credit note form.
+ * @returns {React.ReactNode}
+ */
+function CreditNoteCustomersSelect() {
+  // Credit note form context.
+  const { customers } = useCreditNoteFormContext();
+  const { setFieldValue, values } = useFormikContext();
+
+  return (
+    <FFormGroup
+      name={'customer_id'}
+      label={<T id={'customer_name'} />}
+      customers={customers}
+      labelInfo={<FieldRequiredHint />}
+      inline={true}
+      fastField={true}
+      shouldUpdate={customerNameFieldShouldUpdate}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        onItemChange={(customer) => {
+          setFieldValue('customer_id', customer.id);
+          setFieldValue('currency_code', customer?.currency_code);
+        }}
+        popoverFill={true}
+        allowCreate={true}
+      />
+      {values.customer_id && (
+        <CustomerButtonLink customerId={values.customer_id}>
+          <T id={'view_customer_details'} />
+        </CustomerButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 

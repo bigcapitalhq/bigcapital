@@ -3,7 +3,7 @@ import React from 'react';
 import { InputGroup, FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from '@/components';
+import { CustomersSelect, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -121,33 +121,35 @@ export default function ExpenseFormHeader() {
         )}
       </FastField>
 
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customersFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer'} />}
-            className={classNames('form-group--select-list', Classes.FILL)}
-            labelInfo={<Hint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'assign_to_customer'} />}
-            inline={true}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-              }}
-              allowCreate={true}
-              popoverFill={true}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      {/* ----------- Customer ----------- */}
+      <ExpenseFormCustomerSelect />
     </div>
+  );
+}
+
+/**
+ * Customer select field of expense form.
+ * @returns {React.ReactNode}
+ */
+function ExpenseFormCustomerSelect() {
+  const { customers } = useExpenseFormContext();
+
+  return (
+    <FormGroup
+      label={<T id={'customer'} />}
+      labelInfo={<Hint />}
+      inline={true}
+      name={'customer_id'}
+      customers={customers}
+      shouldUpdate={customersFieldShouldUpdate}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        allowCreate={true}
+        popoverFill={true}
+      />
+    </FormGroup>
   );
 }

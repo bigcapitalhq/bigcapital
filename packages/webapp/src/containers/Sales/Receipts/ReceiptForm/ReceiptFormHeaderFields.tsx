@@ -10,7 +10,7 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage, useFormikContext, useFormik } from 'formik';
 import * as R from 'ramda';
 
 import { CLASSES } from '@/constants/classes';
@@ -27,6 +27,7 @@ import {
   FormattedMessage as T,
   FeatureCan,
   FInputGroup,
+  CustomersSelect,
 } from '@/components';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
@@ -130,44 +131,12 @@ const ReceiptFormReceiptNumberField = R.compose(
  * Receipt form header fields.
  */
 export default function ReceiptFormHeader() {
-  const { accounts, customers, projects } = useReceiptFormContext();
+  const { accounts, projects } = useReceiptFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customersFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames(CLASSES.FILL, 'form-group--customer')}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('currency_code', customer?.currency_code);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-            {value && (
-              <CustomerButtonLink customerId={value}>
-                <T id={'view_customer_details'} />
-              </CustomerButtonLink>
-            )}
-          </FormGroup>
-        )}
-      </FastField>
+      <ReceiptFormCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <ReceiptExchangeRateInputField
@@ -261,6 +230,44 @@ export default function ReceiptFormHeader() {
         </FFormGroup>
       </FeatureCan>
     </div>
+  );
+}
+
+/**
+ * Customer select field of receipt form.
+ * @returns {React.ReactNode}
+ */
+function ReceiptFormCustomerSelect() {
+  const { setFieldValue, values } = useFormikContext();
+  const { customers } = useReceiptFormContext();
+
+  return (
+    <FFormGroup
+      name={'customer_id'}
+      label={<T id={'customer_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      customers={customers}
+      fastField={true}
+      shouldUpdate={customersFieldShouldUpdate}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        onItemChange={(customer) => {
+          setFieldValue('customer_id', customer.id);
+          setFieldValue('currency_code', customer?.currency_code);
+        }}
+        popoverFill={true}
+        allowCreate={true}
+      />
+      {values.customer_id && (
+        <CustomerButtonLink customerId={values.customer_id}>
+          <T id={'view_customer_details'} />
+        </CustomerButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 

@@ -15,11 +15,10 @@ import {
   FMoneyInputGroup,
   InputPrependText,
   FormattedMessage as T,
-  FieldRequiredHint,
-  CustomerSelectField,
   Stack,
+  CustomersSelect,
 } from '@/components';
-import { inputIntent, momentFormatter } from '@/utils';
+import { momentFormatter } from '@/utils';
 import { useProjectFormContext } from './ProjectFormProvider';
 
 /**
@@ -27,9 +26,6 @@ import { useProjectFormContext } from './ProjectFormProvider';
  * @returns
  */
 function ProjectFormFields() {
-  // project form dialog context.
-  const { customers } = useProjectFormContext();
-
   // Formik context.
   const { values } = useFormikContext();
 
@@ -37,26 +33,7 @@ function ProjectFormFields() {
     <div className={Classes.DIALOG_BODY}>
       <Stack spacing={25}>
         {/*------------ Contact -----------*/}
-        <FastField name={'contact_id'}>
-          {({ form, field: { value }, meta: { error, touched } }) => (
-            <FormGroup
-              label={intl.get('projects.dialog.contact')}
-              className={classNames('form-group--select-list', Classes.FILL)}
-              intent={inputIntent({ error, touched })}
-            >
-              <CustomerSelectField
-                contacts={customers}
-                selectedContactId={value}
-                defaultSelectText={'Find or create a customer'}
-                onContactSelected={(customer) => {
-                  form.setFieldValue('contact_id', customer.id);
-                }}
-                allowCreate={true}
-                popoverFill={true}
-              />
-            </FormGroup>
-          )}
-        </FastField>
+        <ProjectFormCustomerSelect />
 
         {/*------------ Project Name -----------*/}
         <FFormGroup
@@ -110,6 +87,23 @@ function ProjectFormFields() {
         </FFormGroup>
       </Stack>
     </div>
+  );
+}
+
+function ProjectFormCustomerSelect() {
+  // project form dialog context.
+  const { customers } = useProjectFormContext();
+
+  return (
+    <FormGroup name={'contact_id'} label={intl.get('projects.dialog.contact')}>
+      <CustomersSelect
+        name={'contact_id'}
+        items={customers}
+        placeholder={'Find or create a customer'}
+        allowCreate={true}
+        popoverFill={true}
+      />
+    </FormGroup>
   );
 }
 

@@ -12,14 +12,13 @@ import {
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import { FormattedMessage as T } from '@/components';
+import { FormattedMessage as T, VendorsSelect } from '@/components';
 import { toSafeInteger } from 'lodash';
 import { CLASSES } from '@/constants/classes';
 
 import {
   FFormGroup,
   AccountsSelect,
-  VendorSelectField,
   FieldRequiredHint,
   InputPrependText,
   Money,
@@ -55,8 +54,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   } = useFormikContext();
 
   // Payment made form context.
-  const { vendors, accounts, isNewMode, setPaymentVendorId } =
-    usePaymentMadeFormContext();
+  const { accounts } = usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
   const payableFullAmount = useMemo(
@@ -82,41 +80,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------------ Vendor name ------------ */}
-      <FastField
-        name={'vendor_id'}
-        vendors={vendors}
-        shouldUpdate={vendorsFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FFormGroup
-            name={'vendor_id'}
-            label={<T id={'vendor_name'} />}
-            inline={true}
-            className={classNames('form-group--select-list', Classes.FILL)}
-            labelInfo={<FieldRequiredHint />}
-          >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                form.setFieldValue('currency_code', contact?.currency_code);
-                setPaymentVendorId(contact.id);
-              }}
-              disabled={!isNewMode}
-              popoverFill={true}
-              allowCreate={true}
-            />
-
-            {value && (
-              <VendorButtonLink vendorId={value}>
-                <T id={'view_vendor_details'} />
-              </VendorButtonLink>
-            )}
-          </FFormGroup>
-        )}
-      </FastField>
+      <PaymentFormVendorSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <PaymentMadeExchangeRateInputField
@@ -255,6 +219,48 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
         )}
       </FastField>
     </div>
+  );
+}
+
+/**
+ * Vendor select field of payment receive form.
+ * @returns {React.ReactNode}
+ */
+function PaymentFormVendorSelect() {
+  // Formik form context.
+  const { values, setFieldValue } = useFormikContext();
+
+  // Payment made form context.
+  const { vendors, isNewMode, setPaymentVendorId } =
+    usePaymentMadeFormContext();
+
+  return (
+    <FFormGroup
+      name={'vendor_id'}
+      label={<T id={'vendor_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      vendors={vendors}
+      shouldUpdate={vendorsFieldShouldUpdate}
+    >
+      <VendorsSelect
+        name={'vendor_id'}
+        items={vendors}
+        placeholder={<T id={'select_vender_account'} />}
+        onItemChange={(contact) => {
+          setFieldValue('vendor_id', contact.id);
+          setFieldValue('currency_code', contact?.currency_code);
+          setPaymentVendorId(contact.id);
+        }}
+        disabled={!isNewMode}
+        allowCreate={true}
+      />
+      {values.vendor_id && (
+        <VendorButtonLink vendorId={values.vendor_id}>
+          <T id={'view_vendor_details'} />
+        </VendorButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 
