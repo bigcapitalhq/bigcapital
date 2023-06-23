@@ -50,7 +50,7 @@ function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
-  //  provider.
+  // Provider data.
   const provider = {
     accounts,
     account,
@@ -69,15 +69,15 @@ function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
     setSubmitPayload,
   };
 
+  const isLoading =
+    isAccountsLoading ||
+    isCashFlowAccountsLoading ||
+    isBranchesLoading ||
+    isSettingsLoading ||
+    isAccountLoading;
+
   return (
-    <DialogContent
-      isLoading={
-        isAccountsLoading ||
-        isCashFlowAccountsLoading ||
-        isBranchesLoading ||
-        isSettingsLoading
-      }
-    >
+    <DialogContent isLoading={isLoading}>
       <MoneyInDialogContent.Provider value={provider} {...props} />
     </DialogContent>
   );
