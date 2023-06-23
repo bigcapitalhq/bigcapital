@@ -12,9 +12,9 @@ import {
   Col,
   Row,
   CustomerDrawerLink,
-  CustomerSelectField,
   FieldRequiredHint,
   FeatureCan,
+  CustomersSelect,
 } from '@/components';
 import {
   momentFormatter,
@@ -42,49 +42,13 @@ import { Features } from '@/constants';
  */
 export default function InvoiceFormHeaderFields() {
   // Invoice form context.
-  const { customers, projects } = useInvoiceFormContext();
+  const { projects } = useInvoiceFormContext();
   const { values } = useFormikContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customerNameFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FFormGroup
-            name={'customer_id'}
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames(
-              'form-group--customer-name',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
-            labelInfo={<FieldRequiredHint />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('currency_code', customer?.currency_code);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-
-            {value && (
-              <CustomerButtonLink customerId={value}>
-                <T id={'view_customer_details'} />
-              </CustomerButtonLink>
-            )}
-          </FFormGroup>
-        )}
-      </FastField>
+      <InvoiceFormCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <InvoiceExchangeRateInputField
@@ -189,6 +153,46 @@ export default function InvoiceFormHeaderFields() {
         </FFormGroup>
       </FeatureCan>
     </div>
+  );
+}
+
+/**
+ * Customer select field of the invoice form.
+ * @returns {React.ReactNode}
+ */
+function InvoiceFormCustomerSelect() {
+  const { customers } = useInvoiceFormContext();
+  const { values, setFieldValue } = useFormikContext();
+
+  return (
+    <FFormGroup
+      name={'customer_id'}
+      label={<T id={'customer_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      fastField={true}
+      shouldUpdate={customerNameFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        onItemChange={(customer) => {
+          setFieldValue('customer_id', customer.id);
+          setFieldValue('currency_code', customer?.currency_code);
+        }}
+        allowCreate={true}
+        fastField={true}
+        shouldUpdate={customerNameFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
+      />
+      {values.customer_id && (
+        <CustomerButtonLink customerId={values.customer_id}>
+          <T id={'view_customer_details'} />
+        </CustomerButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 

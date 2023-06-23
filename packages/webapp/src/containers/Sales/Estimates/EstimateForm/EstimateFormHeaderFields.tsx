@@ -4,16 +4,16 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 
 import {
   FeatureCan,
   FFormGroup,
   FormattedMessage as T,
-  CustomerSelectField,
   FieldRequiredHint,
   Icon,
   CustomerDrawerLink,
+  CustomersSelect,
 } from '@/components';
 import {
   momentFormatter,
@@ -42,41 +42,7 @@ export default function EstimateFormHeader() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Customer name ----------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customersFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames(CLASSES.FILL, 'form-group--customer')}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('currency_code', customer?.currency_code);
-              }}
-              popoverFill={true}
-              intent={inputIntent({ error, touched })}
-              allowCreate={true}
-            />
-
-            {value && (
-              <CustomerButtonLink customerId={value}>
-                <T id={'view_customer_details'} />
-              </CustomerButtonLink>
-            )}
-          </FormGroup>
-        )}
-      </FastField>
+      <EstimateFormCustomerSelect />
 
       {/* ----------- Exchange Rate ----------- */}
       <EstimateExchangeRateInputField
@@ -174,6 +140,47 @@ export default function EstimateFormHeader() {
         </FFormGroup>
       </FeatureCan>
     </div>
+  );
+}
+
+/**
+ * Customer select field of estimate form.
+ * @returns {React.ReactNode}
+ */
+function EstimateFormCustomerSelect() {
+  const { setFieldValue, values } = useFormikContext();
+  const { customers } = useEstimateFormContext();
+
+  return (
+    <FFormGroup
+      label={<T id={'customer_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      name={'customer_id'}
+      fastField={true}
+      shouldUpdate={customersFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        onItemChange={(customer) => {
+          setFieldValue('customer_id', customer.id);
+          setFieldValue('currency_code', customer?.currency_code);
+        }}
+        popoverFill={true}
+        allowCreate={true}
+        fastField={true}
+        shouldUpdate={customersFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
+      />
+      {values.customer_id && (
+        <CustomerButtonLink customerId={values.customer_id}>
+          <T id={'view_customer_details'} />
+        </CustomerButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 

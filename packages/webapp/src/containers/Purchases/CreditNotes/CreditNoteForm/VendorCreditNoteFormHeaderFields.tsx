@@ -9,17 +9,17 @@ import {
   ControlGroup,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { FastField, ErrorMessage } from 'formik';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { CLASSES } from '@/constants/classes';
 
 import {
   FFormGroup,
-  VendorSelectField,
   FieldRequiredHint,
   InputPrependButton,
   Icon,
   FormattedMessage as T,
   VendorDrawerLink,
+  VendorsSelect,
 } from '@/components';
 import {
   vendorsFieldShouldUpdate,
@@ -51,9 +51,6 @@ function VendorCreditNoteFormHeaderFields({
   vendorcreditNumberPrefix,
   vendorcreditNextNumber,
 }) {
-  // Vendor Credit form context.
-  const { vendors } = useVendorCreditNoteFormContext();
-
   // Handle vendor credit number changing.
   const handleVendorCreditNumberChange = () => {
     openDialog('vendor-credit-form');
@@ -81,39 +78,7 @@ function VendorCreditNoteFormHeaderFields({
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ----------- Vendor name ----------- */}
-      <FastField
-        name={'vendor_id'}
-        vendors={vendors}
-        shouldUpdate={vendorsFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FFormGroup
-            name={'vendor_id'}
-            label={<T id={'vendor_name'} />}
-            inline={true}
-            className={classNames(CLASSES.FILL, 'form-group--vendor')}
-            labelInfo={<FieldRequiredHint />}
-          >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                form.setFieldValue('currency_code', contact?.currency_code);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-
-            {value && (
-              <VendorButtonLink vendorId={value}>
-                <T id={'view_vendor_details'} />
-              </VendorButtonLink>
-            )}
-          </FFormGroup>
-        )}
-      </FastField>
+      <VendorCreditFormVendorSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <VendorCreditNoteExchangeRateInputField
@@ -202,6 +167,49 @@ function VendorCreditNoteFormHeaderFields({
         )}
       </FastField>
     </div>
+  );
+}
+
+/**
+ * Vendor select field of vendor credit form.
+ * @returns {React.ReactNode}
+ */
+function VendorCreditFormVendorSelect() {
+  const { values, setFieldValue } = useFormikContext();
+
+  // Vendor Credit form context.
+  const { vendors } = useVendorCreditNoteFormContext();
+
+  return (
+    <FFormGroup
+      name={'vendor_id'}
+      label={<T id={'vendor_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      fastField={true}
+      shouldUpdate={vendorsFieldShouldUpdate}
+      shouldUpdateDeps={{ items: vendors }}
+    >
+      <VendorsSelect
+        name={'vendor_id'}
+        items={vendors}
+        placeholder={<T id={'select_vender_account'} />}
+        onItemChange={(contact) => {
+          setFieldValue('vendor_id', contact.id);
+          setFieldValue('currency_code', contact?.currency_code);
+        }}
+        popoverFill={true}
+        allowCreate={true}
+        fastField={true}
+        shouldUpdate={vendorsFieldShouldUpdate}
+        shouldUpdateDeps={{ items: vendors }}
+      />
+      {values.vendor_id && (
+        <VendorButtonLink vendorId={values.vendor_id}>
+          <T id={'view_vendor_details'} />
+        </VendorButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 

@@ -80,7 +80,7 @@ export const transformToEditForm = (estimate) => {
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.customers !== oldProps.customers ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

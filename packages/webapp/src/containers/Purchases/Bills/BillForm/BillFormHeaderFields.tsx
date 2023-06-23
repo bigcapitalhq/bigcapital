@@ -2,18 +2,18 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
+import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { FormGroup, InputGroup, Classes, Position } from '@blueprintjs/core';
-import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
+
 import { FeatureCan, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-
 import {
   FFormGroup,
-  VendorSelectField,
   FieldRequiredHint,
   Icon,
   VendorDrawerLink,
+  VendorsSelect,
 } from '@/components';
 
 import { useBillFormContext } from './BillFormProvider';
@@ -43,43 +43,7 @@ function BillFormHeader() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------- Vendor name ------ */}
-      <FastField
-        name={'vendor_id'}
-        vendors={vendors}
-        shouldUpdate={vendorsFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FFormGroup
-            name={'vendor_id'}
-            label={<T id={'vendor_name'} />}
-            inline={true}
-            className={classNames(
-              'form-group--vendor-name',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
-            labelInfo={<FieldRequiredHint />}
-          >
-            <VendorSelectField
-              contacts={vendors}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_vender_account'} />}
-              onContactSelected={(contact) => {
-                form.setFieldValue('vendor_id', contact.id);
-                form.setFieldValue('currency_code', contact?.currency_code);
-              }}
-              popoverFill={true}
-              allowCreate={true}
-            />
-
-            {value && (
-              <VendorButtonLink vendorId={value}>
-                <T id={'view_vendor_details'} />
-              </VendorButtonLink>
-            )}
-          </FFormGroup>
-        )}
-      </FastField>
+      <BillFormVendorField />
 
       {/* ----------- Exchange rate ----------- */}
       <BillExchangeRateInputField
@@ -187,6 +151,46 @@ function BillFormHeader() {
         </FFormGroup>
       </FeatureCan>
     </div>
+  );
+}
+
+/**
+ * Vendor select field of bill form.
+ * @returns {JSX.Element}
+ */
+function BillFormVendorField() {
+  const { values, setFieldValue } = useFormikContext();
+  const { vendors } = useBillFormContext();
+
+  return (
+    <FFormGroup
+      name={'vendor_id'}
+      label={<T id={'vendor_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      fastField={true}
+      shouldUpdate={vendorsFieldShouldUpdate}
+      shouldUpdateDeps={{ items: vendors }}
+    >
+      <VendorsSelect
+        name={'vendor_id'}
+        items={vendors}
+        placeholder={<T id={'select_vender_account'} />}
+        onItemChange={(contact) => {
+          setFieldValue('vendor_id', contact.id);
+          setFieldValue('currency_code', contact?.currency_code);
+        }}
+        allowCreate={true}
+        fastField={true}
+        shouldUpdate={vendorsFieldShouldUpdate}
+        shouldUpdateDeps={{ items: vendors }}
+      />
+      {values.vendor_id && (
+        <VendorButtonLink vendorId={values.vendor_id}>
+          <T id={'view_vendor_details'} />
+        </VendorButtonLink>
+      )}
+    </FFormGroup>
   );
 }
 
