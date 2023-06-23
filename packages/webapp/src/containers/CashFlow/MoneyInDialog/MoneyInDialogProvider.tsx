@@ -27,7 +27,7 @@ function MoneyInDialogProvider({
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
-  const { isFetching: isAccountsLoading, data: accounts } = useAccounts();
+  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
   // Fetches the specific account details.
   const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
@@ -54,7 +54,7 @@ function MoneyInDialogProvider({
   // Submit payload.
   const [submitPayload, setSubmitPayload] = React.useState({});
 
-  //  provider.
+  // Provider data.
   const provider = {
     accounts,
     account,
@@ -73,15 +73,15 @@ function MoneyInDialogProvider({
     setSubmitPayload,
   };
 
+  const isLoading =
+    isAccountsLoading ||
+    isCashFlowAccountsLoading ||
+    isBranchesLoading ||
+    isSettingsLoading ||
+    isAccountLoading;
+
   return (
-    <DialogContent
-      isLoading={
-        isAccountsLoading ||
-        isCashFlowAccountsLoading ||
-        isBranchesLoading ||
-        isSettingsLoading
-      }
-    >
+    <DialogContent isLoading={isLoading}>
       <MoneyInDialogContent.Provider value={provider} {...props} />
     </DialogContent>
   );
