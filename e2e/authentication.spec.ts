@@ -1,5 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { clearLocalStorage } from './_utils';
 
 let authPage: Page;
 
@@ -7,9 +8,16 @@ test.describe('authentication', () => {
   test.beforeAll(async ({ browser }) => {
     authPage = await browser.newPage();
   });
+  test.afterAll(async () => {
+    await authPage.close();
+  });
+  test.afterEach(async ({ context }) => {
+    context.clearCookies();
+    await clearLocalStorage(authPage);
+  });
 
   test.describe('login', () => {
-    test.beforeAll(async () => {
+    test.beforeEach(async () => {
       await authPage.goto('/auth/login');
     });
     test('should show the login page.', async () => {
@@ -31,11 +39,23 @@ test.describe('authentication', () => {
       await authPage.getByRole('link', { name: 'Sign up' }).click();
       await expect(authPage.url()).toContain('/auth/register');
     });
-    test('should the email or password is not correct.', async () => {});
+    test('should the email or password is not correct.', async () => {
+      await authPage.getByLabel('Email Address').click();
+      await authPage.getByLabel('Email Address').fill(faker.internet.email());
+
+      await authPage.getByLabel('Password').click();
+      await authPage.getByLabel('Password').fill(faker.internet.password());
+
+      await authPage.getByRole('button', { name: 'Log in' }).click();
+
+      await expect(authPage.locator('body')).toContainText(
+        'The email and password you entered did not match our records.'
+      );
+    });
   });
 
   test.describe('register', () => {
-    test.beforeAll(async () => {
+    test.beforeEach(async () => {
       await authPage.goto('/auth/register');
     });
     test('should first name, last name, email and password be required.', async () => {
@@ -56,18 +76,20 @@ test.describe('authentication', () => {
     });
     test('should signup successfully.', async () => {
       const form = authPage.locator('form');
-      await form
-        .locator('input[name="first_name"]')
-        .fill(faker.person.firstName());
-      await form
-        .locator('input[name="last_name"]')
-        .fill(faker.person.lastName());
-      await form.locator('input[name="email"]').fill(faker.internet.email());
-      await form
-        .locator('input[name="password"]')
-        .fill(faker.internet.password());
+      await form.getByLabel('First Name').click();
+      await form.getByLabel('First Name').fill(faker.person.firstName());
+
+      await form.getByLabel('Email').click();
+      await form.getByLabel('Email').fill(faker.internet.email());
+
+      await form.getByLabel('Last Name').click();
+      await form.getByLabel('Last Name').fill(faker.person.lastName());
+
+      await form.getByLabel('Password').click();
+      await form.getByLabel('Password').fill(faker.internet.password());
 
       await authPage.getByRole('button', { name: 'Register' }).click();
+
       await expect(authPage.locator('h1')).toContainText(
         'Register a New Organization now!'
       );
@@ -75,7 +97,13 @@ test.describe('authentication', () => {
   });
 
   test.describe('reset password', () => {
-    test.beforeAll(async () => {
+    test.beforeAll(async ({ browser }) => {
+      authPage = await browser.newPage();
+    });
+    test.afterAll(async () => {
+      await authPage.close();
+    });
+    test.beforeEach(async () => {
       await authPage.goto('/auth/send_reset_password');
     });
     test('should email be required.', async () => {
