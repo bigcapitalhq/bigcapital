@@ -19,7 +19,10 @@ import {
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
-import { isLandedCostDisabled, getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  isLandedCostDisabled,
+  getEntriesTotal,
+} from '@/containers/Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 
 export const MIN_LINES_NUMBER = 1;
@@ -153,7 +156,7 @@ export const handleDeleteErrors = (errors) => {
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.vendors !== oldProps.vendors ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

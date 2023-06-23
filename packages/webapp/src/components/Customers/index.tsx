@@ -1,3 +1,3 @@
 // @ts-nocheck
-export * from './CustomerSelectField';
 export * from './CustomerDrawerLink';
+export * from './CustomersSelect';
