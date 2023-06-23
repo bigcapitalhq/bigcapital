@@ -90,7 +90,9 @@ export default function ItemFormFormik({
   };
 
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_ITEM, className)}>
+    <div
+      class={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
+    >
       <Formik
         enableReinitialize={true}
         validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
