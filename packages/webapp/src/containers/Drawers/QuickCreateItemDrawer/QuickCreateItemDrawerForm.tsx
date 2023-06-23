@@ -18,16 +18,6 @@ import { useDrawerContext } from '@/components/Drawer/DrawerProvider';
 import { DRAWERS } from '@/constants/drawers';
 
 /**
- * Drawer item form loading.
- * @returns {JSX}
- */
-function DrawerItemFormLoading({ children }) {
-  const { isFormLoading } = useItemFormContext();
-
-  return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
-}
-
-/**
  * Quick create/edit item drawer form.
  */
 function QuickCreateItemDrawerForm({
@@ -72,6 +62,16 @@ function QuickCreateItemDrawerForm({
   );
 }
 
+/**
+ * Drawer item form loading.
+ * @returns {JSX}
+ */
+function DrawerItemFormLoading({ children }) {
+  const { isFormLoading } = useItemFormContext();
+
+  return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
+}
+
 export default R.compose(
   withDrawerActions,
   withDashboardActions,
@@ -79,10 +79,15 @@ export default R.compose(
 
 const ItemFormCard = styled(Card)`
   margin: 15px;
+  padding: 25px;
   margin-bottom: calc(15px + 65px);
 
-  .page-form__floating-actions {
-    margin-left: -36px;
-    margin-right: -36px;
+  .page-form {
+    padding: 0;
+
+    &__floating-actions {
+      margin-left: -41px;
+      margin-right: -41px;
+    }
   }
 `;
