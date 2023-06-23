@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
+import { faker } from '@faker-js/faker';
 
 let authPage: Page;
 
@@ -30,6 +31,7 @@ test.describe('authentication', () => {
       await authPage.getByRole('link', { name: 'Sign up' }).click();
       await expect(authPage.url()).toContain('/auth/register');
     });
+    test('should the email or password is not correct.', async () => {});
   });
 
   test.describe('register', () => {
@@ -50,6 +52,24 @@ test.describe('authentication', () => {
       );
       await expect(authPage.locator('form')).toContainText(
         'Password is a required field'
+      );
+    });
+    test('should signup successfully.', async () => {
+      const form = authPage.locator('form');
+      await form
+        .locator('input[name="first_name"]')
+        .fill(faker.person.firstName());
+      await form
+        .locator('input[name="last_name"]')
+        .fill(faker.person.lastName());
+      await form.locator('input[name="email"]').fill(faker.internet.email());
+      await form
+        .locator('input[name="password"]')
+        .fill(faker.internet.password());
+
+      await authPage.getByRole('button', { name: 'Register' }).click();
+      await expect(authPage.locator('h1')).toContainText(
+        'Register a New Organization now!'
       );
     });
   });
