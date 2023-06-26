@@ -7,6 +7,7 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { useFormikContext } from 'formik';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
+import { PAYMENT_MADE_ERRORS } from '@/containers/Purchases/PaymentMades/constants';
 
 // Default initial values of payment made.
 export const defaultPaymentMade = {
@@ -24,16 +25,16 @@ export const defaultPaymentMade = {
 export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);
 
-  if (getError('PAYMENT.NUMBER.NOT.UNIQUE')) {
+  if (getError(PAYMENT_MADE_ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
     setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
   }
-  if (getError('INVALID_BILL_PAYMENT_AMOUNT')) {
+  if (getError(PAYMENT_MADE_ERRORS.INVALID_BILL_PAYMENT_AMOUNT)) {
     setFieldError(
       'payment_amount',
       intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
     );
   }
-  if (getError('WITHDRAWAL_ACCOUNT_CURRENCY_INVALID')) {
+  if (getError(PAYMENT_MADE_ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID)) {
     AppToaster.show({
       message: intl.get(
         'payment_made.error.withdrawal_account_currency_invalid',
