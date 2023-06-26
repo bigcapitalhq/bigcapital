@@ -1,12 +1,12 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { clearLocalStorage } from './_utils';
+import { clearLocalStorage, defaultPageConfig } from './_utils';
 
 let authPage: Page;
 
 test.describe('authentication', () => {
   test.beforeAll(async ({ browser }) => {
-    authPage = await browser.newPage();
+    authPage = await browser.newPage({ ...defaultPageConfig() });
   });
   test.afterAll(async () => {
     await authPage.close();
@@ -98,7 +98,7 @@ test.describe('authentication', () => {
 
   test.describe('reset password', () => {
     test.beforeAll(async ({ browser }) => {
-      authPage = await browser.newPage();
+      authPage = await browser.newPage({ ...defaultPageConfig() });
     });
     test.afterAll(async () => {
       await authPage.close();

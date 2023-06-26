@@ -1,12 +1,13 @@
 import { test, expect, Page } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { defaultPageConfig } from './_utils';
 
 let authPage: Page;
 let businessLegalName: string = faker.company.name();
 
 test.describe('onboarding', () => {
   test.beforeAll(async ({ browser }) => {
-    authPage = await browser.newPage();
+    authPage = await browser.newPage({ ...defaultPageConfig() });
     await authPage.goto('/auth/register');
 
     const form = authPage.locator('form');
