@@ -106,11 +106,13 @@ export default function OtherIncomeFormFields() {
             )}
           </FastField>
         </Col>
+
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
           <MoneyInOutTransactionNoField />
         </Col>
       </Row>
+
       {/*------------ amount -----------*/}
       <FastField name={'amount'}>
         {({
