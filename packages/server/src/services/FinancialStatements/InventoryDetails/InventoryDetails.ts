@@ -92,7 +92,7 @@ export default class InventoryDetails extends FinancialSheet {
    * Retrieve the total number meta.
    * @param {number} number -
    * @param {IFormatNumberSettings} settings -
-   * @retrun {IInventoryDetailsNumber}
+   * @return {IInventoryDetailsNumber}
    */
   private getTotalNumberMeta(
     number: number,
@@ -126,7 +126,7 @@ export default class InventoryDetails extends FinancialSheet {
   );
 
   /**
-   * Accumlate and mapping running quantity on transactions.
+   * Accumulate and mapping running quantity on transactions.
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction[]}
    */
@@ -150,7 +150,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Accumlate and mapping running valuation on transactions.
+   * Accumulate and mapping running valuation on transactions.
    * @param {IInventoryDetailsItemTransaction[]} transactions
    * @returns {IInventoryDetailsItemTransaction}
    */
@@ -160,8 +160,8 @@ export default class InventoryDetails extends FinancialSheet {
     const initial = this.getNumberMeta(0);
 
     const mapAccumAppender = (a, b) => {
-      const adjusmtent = b.direction === 'OUT' ? -1 : 1;
-      const total = a.runningValuation.number + b.cost.number * adjusmtent;
+      const adjustment = b.direction === 'OUT' ? -1 : 1;
+      const total = a.runningValuation.number + b.cost.number * adjustment;
       const totalMeta = this.getNumberMeta(total, { excerptZero: false });
       const accum = { ...b, runningValuation: totalMeta };
 
@@ -186,9 +186,9 @@ export default class InventoryDetails extends FinancialSheet {
   };
 
   /**
-   * Mappes the item transaction to inventory item transaction node.
+   * Maps the item transaction to inventory item transaction node.
    * @param {IItem} item
-   * @param {IInvetoryTransaction} transaction
+   * @param {IInventoryTransaction} transaction
    * @returns {IInventoryDetailsItemTransaction}
    */
   private itemTransactionMapper(
@@ -214,7 +214,7 @@ export default class InventoryDetails extends FinancialSheet {
     return {
       nodeType: INodeTypes.TRANSACTION,
       date: this.getDateMeta(transaction.date),
-      transactionType: this.i18n.__(transaction.transcationTypeFormatted),
+      transactionType: this.i18n.__(transaction.transactionTypeFormatted),
       transactionNumber: transaction?.meta?.transactionNumber,
       direction: transaction.direction,
 
@@ -236,7 +236,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Retrieve the inventory transcations by item id.
+   * Retrieve the inventory transactions by item id.
    * @param {number} itemId
    * @returns {IInventoryTransaction[]}
    */
@@ -262,7 +262,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Mappes the given item transactions.
+   * Maps the given item transactions.
    * @param {IItem} item -
    * @returns {(
    *    IInventoryDetailsItemTransaction
@@ -278,7 +278,7 @@ export default class InventoryDetails extends FinancialSheet {
     | IInventoryDetailsClosing
   )[] {
     const transactions = this.getItemTransactions(item);
-    const openingValuation = this.getItemOpeingValuation(item);
+    const openingValuation = this.getItemOpeningValuation(item);
     const closingValuation = this.getItemClosingValuation(
       item,
       transactions,
@@ -295,7 +295,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the given item has opening balance transaction.
+   * Determines the given item has opening balance transaction.
    * @param {number} itemId - Item id.
    * @return {boolean}
    */
@@ -308,7 +308,7 @@ export default class InventoryDetails extends FinancialSheet {
    * @param {IItem} item -
    * @returns {IInventoryDetailsOpening}
    */
-  private getItemOpeingValuation(item: IItem): IInventoryDetailsOpening {
+  private getItemOpeningValuation(item: IItem): IInventoryDetailsOpening {
     const openingBalance = this.openingBalanceTransactions.get(item.id);
     const quantity = defaultTo(get(openingBalance, 'quantity'), 0);
     const value = defaultTo(get(openingBalance, 'value'), 0);
@@ -363,7 +363,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the given node equals the given type.
+   * Determines the given node equals the given type.
    * @param {string} nodeType
    * @param {IItem} node
    * @returns {boolean}
@@ -376,7 +376,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines whether the given item node has transactions.
+   * Determines whether the given item node has transactions.
    * @param {IInventoryDetailsItem} item
    * @returns {boolean}
    */
@@ -385,7 +385,7 @@ export default class InventoryDetails extends FinancialSheet {
   }
 
   /**
-   * Detarmines the filter
+   * Determines the filter
    * @param {IInventoryDetailsItem} item
    * @return {boolean}
    */

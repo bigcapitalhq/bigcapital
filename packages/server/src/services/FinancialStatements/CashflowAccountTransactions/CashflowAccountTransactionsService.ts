@@ -41,10 +41,10 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
   }
 
   /**
-   * Retrieve the cashflow accouynt transactions report data.
+   * Retrieve the cashflow account transactions report data.
    * @param {number} tenantId -
    * @param {ICashflowAccountTransactionsQuery} query -
-   * @return {Promise<IInvetoryItemDetailDOO>}
+   * @return {Promise<IInventoryItemDetailDOO>}
    */
   public async cashflowAccountTransactions(
     tenantId: number,
@@ -78,12 +78,12 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
       openingBalance,
       parsedQuery
     );
-    const reportTranasctions = report.reportData();
+    const reportTransactions = report.reportData();
 
     return {
       transactions: this.i18nService.i18nApply(
         [[qim.$each, 'formattedTransactionType']],
-        reportTranasctions,
+        reportTransactions,
         tenantId
       ),
       pagination,

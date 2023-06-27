@@ -4,12 +4,12 @@ import {
   ISaleReceiptCreatingPayload,
   ISaleReceiptEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class SaleReceiptBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class SaleReceiptBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.saleReceipt.onCreating,
-      this.validateBranchExistanceOnInvoiceCreating
+      this.validateBranchExistenceOnInvoiceCreating
     );
     bus.subscribe(
       events.saleReceipt.onEditing,
-      this.validateBranchExistanceOnInvoiceEditing
+      this.validateBranchExistenceOnInvoiceEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ISaleReceiptCreatingPayload} payload
    */
-  private validateBranchExistanceOnInvoiceCreating = async ({
+  private validateBranchExistenceOnInvoiceCreating = async ({
     tenantId,
     saleReceiptDTO,
   }: ISaleReceiptCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       saleReceiptDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleReceiptEditingPayload} payload
    */
-  private validateBranchExistanceOnInvoiceEditing = async ({
+  private validateBranchExistenceOnInvoiceEditing = async ({
     saleReceiptDTO,
     tenantId,
   }: ISaleReceiptEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       saleReceiptDTO.branchId
     );

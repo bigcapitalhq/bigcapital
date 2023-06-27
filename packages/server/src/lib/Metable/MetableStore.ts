@@ -60,7 +60,7 @@ export default class MetableStore implements IMetableStore {
   /**
    * Retrieve metadata of the given key.
    * @param {String} key -
-   * @param {Mixied} defaultValue -
+   * @param {Mixed} defaultValue -
    */
   get(query: string | IMetaQuery, defaultValue: any): any | false {
     const metadata = this.find(query);
@@ -72,7 +72,7 @@ export default class MetableStore implements IMetableStore {
   }
 
   /**
-   * Markes the metadata to should be deleted.
+   * Marks the metadata to should be deleted.
    * @param {String} key -
    */
   remove(query: string | IMetaQuery): void {
@@ -207,7 +207,7 @@ export default class MetableStore implements IMetableStore {
   }
 
   /**
-   * Reset the momerized metadata.
+   * Reset the memorized metadata.
    */
   resetMetadata() {
     this.metadata = [];

@@ -3,7 +3,7 @@ import BaseModel from 'models/Model';
 
 export default class SystemModel extends BaseModel{
   /**
-   * Loging all system database queries.
+   * Logging all system database queries.
    * @param  {...any} args 
    */
   static query(...args) {

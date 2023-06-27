@@ -46,7 +46,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Transformes the sms notification config to notificatin meta.
+   * Transforms the sms notification config to notification meta.
    * @param {Settings} settings
    * @param {ISmsNotificationDefined} smsNotification
    * @returns {ISmsNotificationMeta}
@@ -144,7 +144,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Vaidates the sms notification key existance.
+   * Validates the sms notification key existence.
    * @param {string} notificationKey
    */
   private validateSmsNotificationExists = (
@@ -156,7 +156,7 @@ export default class SmsNotificationsSettingsService {
   };
 
   /**
-   * Retrieve unspported message arguments.
+   * Retrieve unsupported message arguments.
    * @param {string} smsMessage - SMS message.
    * @param {string[]} args -
    * @returns {string[]}

@@ -48,7 +48,7 @@ export default class VendorBalanceSummaryService
   }
 
   /**
-   * Retrieve the vendors ledger entrjes.
+   * Retrieve the vendors ledger entries.
    * @param {number} tenantId -
    * @param {Date|string} date -
    * @returns {Promise<ILedgerEntry>}
@@ -67,7 +67,7 @@ export default class VendorBalanceSummaryService
   }
 
   /**
-   * Retrieve the statment of customer balance summary report.
+   * Retrieve the statement of customer balance summary report.
    * @param {number} tenantId - Tenant id.
    * @param {IVendorBalanceSummaryQuery} query -
    * @return {Promise<IVendorBalanceSummaryStatement>}

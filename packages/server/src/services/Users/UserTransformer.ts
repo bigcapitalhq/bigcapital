@@ -10,7 +10,7 @@ export class UserTransformer extends Transformer {
   };
 
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {

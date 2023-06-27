@@ -166,7 +166,7 @@ export default class CashFlowTable implements ICashFlowTable {
   };
 
   /**
-   * Detarmines the schema section type.
+   * Determines the schema section type.
    * @param {string} type
    * @param {ICashFlowSchemaSection} section
    * @returns {boolean}
@@ -219,7 +219,7 @@ export default class CashFlowTable implements ICashFlowTable {
   };
 
   /**
-   * Mappes the sections to the table rows.
+   * Maps the sections to the table rows.
    * @param {ICashFlowStatementSection[]} sections
    * @returns {ITableRow[]}
    */
@@ -340,15 +340,15 @@ export default class CashFlowTable implements ICashFlowTable {
   };
 
   /**
-   * Detarmines the given column type is the current.
-   * @reutrns {boolean}
+   * Determines the given column type is the current.
+   * @returns {boolean}
    */
   private isDisplayColumnsBy = (displayColumnsType: string): Boolean => {
     return this.report.query.displayColumnsType === displayColumnsType;
   };
 
   /**
-   * Detarmines whether the given display columns type is the current.
+   * Determines whether the given display columns type is the current.
    * @param {string} displayColumnsBy
    * @returns {boolean}
    */

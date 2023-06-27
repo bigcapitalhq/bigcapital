@@ -5,7 +5,7 @@ import { FormGroup, Classes } from '@blueprintjs/core';
 import { BranchMultiSelect, Row, Col } from '@/components';
 import {
   APAgingSummaryHeaderDimensionsProvider,
-  useAPAgingSummaryHeaderDimensonsContext,
+  useAPAgingSummaryHeaderDimensionsContext,
 } from './APAgingSummaryHeaderDimensionsProvider';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
@@ -27,9 +27,9 @@ export default function APAgingSummaryHeaderDimensions() {
  * @returns
  */
 function APAgingSummaryHeaderDimensionsContent() {
-  const { branches } = useAPAgingSummaryHeaderDimensonsContext();
+  const { branches } = useAPAgingSummaryHeaderDimensionsContext();
 
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

@@ -36,7 +36,7 @@ export function ContactSelectField({
     [initialContactId, contacts],
   );
 
-  const [selecetedContact, setSelectedContact] = useState(
+  const [selectedContact, setSelectedContact] = useState(
     initialContact || null,
   );
 
@@ -78,7 +78,7 @@ export function ContactSelectField({
       <Button
         disabled={disabled}
         text={
-          selecetedContact ? selecetedContact.display_name : defaultSelectText
+          selectedContact ? selectedContact.display_name : defaultSelectText
         }
         {...buttonProps}
       />

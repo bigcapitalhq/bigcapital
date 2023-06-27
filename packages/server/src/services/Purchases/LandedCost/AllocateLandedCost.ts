@@ -27,7 +27,7 @@ export default class AllocateLandedCost extends BaseLandedCostService {
    * - Get the given landed cost transaction or throw not found error.
    * - Validate landed cost transaction has enough unallocated cost amount.
    * - Validate landed cost transaction entry has enough unallocated cost amount.
-   * - Validate allocate entries existance and associated with cost bill transaction.
+   * - Validate allocate entries existence and associated with cost bill transaction.
    * - Writes inventory landed cost transaction.
    * - Increment the allocated landed cost transaction.
    * - Increment the allocated landed cost transaction entry.
@@ -70,15 +70,15 @@ export default class AllocateLandedCost extends BaseLandedCostService {
       costTransactionEntry.unallocatedCostAmount,
       amount
     );
-    // Transformes DTO to bill landed cost model object.
+    // Transforms DTO to bill landed cost model object.
     const billLandedCostObj = this.transformToBillLandedCost(
       allocateCostDTO,
       bill,
       costTransaction,
       costTransactionEntry
     );
-    // Saves landed cost transactions with associated tranasctions under
-    // unit-of-work eniverment.
+    // Saves landed cost transactions with associated transactions under
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Save the bill landed cost model.
       const billLandedCost = await BillLandedCost.query(trx).insertGraph(

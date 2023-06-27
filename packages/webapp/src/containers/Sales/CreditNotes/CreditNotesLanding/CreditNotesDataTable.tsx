@@ -90,7 +90,7 @@ function CreditNotesDataTable({
   };
 
   // Handle edit credit note.
-  const hanldeEditCreditNote = (creditNote) => {
+  const handleEditCreditNote = (creditNote) => {
     history.push(`/credit-notes/${creditNote.id}/edit`);
   };
 
@@ -105,7 +105,7 @@ function CreditNotesDataTable({
     openDialog('refund-credit-note', { creditNoteId: id });
   };
 
-  // Handle cancel/confirm crdit note open.
+  // Handle cancel/confirm credit note open.
   const handleOpenCreditNote = ({ id }) => {
     openAlert('credit-note-open', { creditNoteId: id });
   };
@@ -140,7 +140,7 @@ function CreditNotesDataTable({
         payload={{
           onViewDetails: handleViewDetailCreditNote,
           onDelete: handleDeleteCreditNote,
-          onEdit: hanldeEditCreditNote,
+          onEdit: handleEditCreditNote,
           onRefund: handleRefundCreditNote,
           onOpen: handleOpenCreditNote,
           onReconcile: handleReconcileCreditNote,

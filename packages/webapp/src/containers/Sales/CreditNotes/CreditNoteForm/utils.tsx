@@ -78,7 +78,7 @@ export function transformToEditForm(creditNote) {
 }
 
 /**
- * Transformes credit note entries to submit request.
+ * Transforms credit note entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
   const transformCreditNoteEntry = R.compose(
@@ -92,14 +92,14 @@ export const transformEntriesToSubmit = (entries) => {
 };
 
 /**
- * Filters the givne non-zero entries.
+ * Filters the given non-zero entries.
  */
 export const filterNonZeroEntries = (entries) => {
   return entries.filter((item) => item.item_id && item.quantity);
 };
 
 /**
- * Transformes form values to request body.
+ * Transforms form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
@@ -163,7 +163,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the credit note totals.
+ * Retrieves the credit note totals.
  */
 export const useCreditNoteTotals = () => {
   const {
@@ -192,7 +192,7 @@ export const useCreditNoteTotals = () => {
 };
 
 /**
- * Detarmines whether the receipt has foreign customer.
+ * Determines whether the receipt has foreign customer.
  * @returns {boolean}
  */
 export const useCreditNoteIsForeignCustomer = () => {

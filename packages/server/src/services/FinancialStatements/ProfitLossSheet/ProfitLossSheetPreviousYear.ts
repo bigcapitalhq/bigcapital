@@ -52,7 +52,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
         ),
         R.when(
           this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearChangetNode
+          this.assocPreviousYearChangedNode
         ),
         this.assocPreviousYearTotalAccountNode
       )(accountNode);
@@ -162,7 +162,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
     // # Horizontal Nodes - Account
     // ----------------------------------
     /**
-     * Assoc preivous year to account horizontal total node.
+     * Assoc previous year to account horizontal total node.
      * @param   {IProfitLossSheetAccountNode} node
      * @returns
      */
@@ -197,7 +197,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
           ),
           R.when(
             this.query.isPreviousYearChangeActive,
-            this.assocPreviousYearChangetNode
+            this.assocPreviousYearChangedNode
           ),
           R.when(
             this.query.isPreviousYearActive,
@@ -234,7 +234,7 @@ export const ProfitLossSheetPreviousYear = (Base) =>
      */
     private assocPreviousYearAggregateHorizTotal = R.curry(
       (node, index, totalNode) => {
-        const total = this.getPYHorizNodesTotalSumation(index, node);
+        const total = this.getPYHorizNodesTotalSummation(index, node);
 
         return R.assoc(
           'previousYear',

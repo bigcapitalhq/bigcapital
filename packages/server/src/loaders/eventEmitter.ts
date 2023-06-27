@@ -3,7 +3,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemSubscriber from '@/subscribers/Items/ItemSubscriber';
 import InventoryAdjustmentsSubscriber from '@/subscribers/Inventory/InventoryAdjustment';
 import BillWriteInventoryTransactionsSubscriber from '@/subscribers/Bills/WriteInventoryTransactions';
-import PaymentSyncBillBalance from '@/subscribers/PaymentMades/PaymentSyncBillBalance';
+import PaymentSyncBillBalance from '@/subscribers/PaymentsMade/PaymentSyncBillBalance';
 import SaleReceiptInventoryTransactionsSubscriber from '@/subscribers/SaleReceipt/WriteInventoryTransactions';
 import SaleInvoiceWriteInventoryTransactions from '@/subscribers/SaleInvoices/WriteInventoryTransactions';
 import SaleInvoiceWriteGLEntriesSubscriber from '@/subscribers/SaleInvoices/WriteJournalEntries';
@@ -41,7 +41,7 @@ import LandedCostInventoryTransactionsSubscriber from '@/services/Purchases/Land
 import CreditNoteGLEntriesSubscriber from '@/services/CreditNotes/CreditNoteGLEntriesSubscriber';
 import VendorCreditGlEntriesSubscriber from '@/services/Purchases/VendorCredits/VendorCreditGLEntriesSubscriber';
 import CreditNoteInventoryTransactionsSubscriber from '@/services/CreditNotes/CreditNoteInventoryTransactionsSubscriber';
-import VendorCreditInventoryTransactionsSubscriber from '@/services/Purchases/VendorCredits/VendorCreditInventoryTransactionsSusbcriber';
+import VendorCreditInventoryTransactionsSubscriber from '@/services/Purchases/VendorCredits/VendorCreditInventoryTransactionsSubscriber';
 import CreditNoteAutoSerialSubscriber from '@/services/CreditNotes/CreditNoteAutoSerialSubscriber';
 import VendorCreditAutoSerialSubscriber from '@/services/Purchases/VendorCredits/VendorCreditAutoSerialSubscriber';
 import LandedCostGLEntriesSubscriber from '@/services/Purchases/LandedCost/LandedCostGLEntriesSubscriber';
@@ -75,8 +75,8 @@ import { BillPaymentsGLEntriesRewriteSubscriber } from '@/services/Purchases/Bil
 import { InvoiceCostGLEntriesSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceCostGLEntriesSubscriber';
 import { InventoryCostGLBeforeWriteSubscriber } from '@/services/Inventory/subscribers/InventoryCostGLBeforeWriteSubscriber';
 import { SaleReceiptCostGLEntriesSubscriber } from '@/services/Sales/Receipts/subscribers/SaleReceiptCostGLEntriesSubscriber';
-import { SeedInitialCurrenciesOnSetupSubsriber } from '@/services/Currencies/subscribers/SeedInitialCurrenciesOnSetupSubscriber';
-import { MutateBaseCurrencyAccountsSubscriber } from '@/services/Accounts/susbcribers/MutateBaseCurrencyAccounts';
+import { SeedInitialCurrenciesOnSetupSubscriber } from '@/services/Currencies/subscribers/SeedInitialCurrenciesOnSetupSubscriber';
+import { MutateBaseCurrencyAccountsSubscriber } from '@/services/Accounts/subscribers/MutateBaseCurrencyAccounts';
 import { ProjectBillableTasksSubscriber } from '@/services/Projects/Projects/ProjectBillableTasksSubscriber';
 import { ProjectBillableExpensesSubscriber } from '@/services/Projects/Projects/ProjectBillableExpenseSubscriber';
 import { ProjectBillableBillSubscriber } from '@/services/Projects/Projects/ProjectBillableBillSubscriber';
@@ -86,7 +86,7 @@ export default () => {
   return new EventPublisher();
 };
 
-export const susbcribers = () => {
+export const subscribers = () => {
   return [
     ItemSubscriber,
     InventoryAdjustmentsSubscriber,
@@ -180,7 +180,7 @@ export const susbcribers = () => {
     BillGLEntriesSubscriber,
     PaymentWriteGLEntriesSubscriber,
 
-    SeedInitialCurrenciesOnSetupSubsriber,
+    SeedInitialCurrenciesOnSetupSubscriber,
     MutateBaseCurrencyAccountsSubscriber,
 
     // # Projects

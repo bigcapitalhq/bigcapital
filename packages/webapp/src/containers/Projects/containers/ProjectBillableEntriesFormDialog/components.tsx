@@ -6,7 +6,7 @@ import { Button } from '@blueprintjs/core';
 import styled from 'styled-components';
 
 /**
- * Projec billable entries box.
+ * Project billable entries box.
  * @returns
  */
 function BillableEntriesBox({ billableEntry }) {

@@ -67,7 +67,7 @@ export const ensureEntriesHaveEmptyLine = R.curry((defaultEntry, entries) => {
 });
 
 /**
- * Disable landed cost checkbox once the item type is not service or non-inventorty.
+ * Disable landed cost checkbox once the item type is not service or non-inventory.
  * @returns {boolean}
  */
 export const isLandedCostDisabled = (item) =>
@@ -115,7 +115,7 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_description
           : item.sell_description;
 
-      // Detarmines whether the landed cost checkbox should be disabled.
+      // Determines whether the landed cost checkbox should be disabled.
       const landedCostDisabled = isLandedCostDisabled(item);
 
       // The new row.

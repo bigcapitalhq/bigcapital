@@ -18,7 +18,7 @@ export default function BillDetailFooter() {
   const { bill } = useBillDrawerContext();
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={bill.note}>
           <DetailItem label={<T id={'note'} />}>{bill.note}</DetailItem>
         </If>

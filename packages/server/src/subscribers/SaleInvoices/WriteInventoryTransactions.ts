@@ -43,7 +43,7 @@ export default class WriteInventoryTransactions {
     saleInvoice,
     trx,
   }: ISaleInvoiceCreatedPayload) => {
-    await this.saleInvoicesService.recordInventoryTranscactions(
+    await this.saleInvoicesService.recordInventoryTransactions(
       tenantId,
       saleInvoice,
       false,
@@ -60,7 +60,7 @@ export default class WriteInventoryTransactions {
     saleInvoice,
     trx,
   }: ISaleInvoiceEditedPayload) => {
-    await this.saleInvoicesService.recordInventoryTranscactions(
+    await this.saleInvoicesService.recordInventoryTransactions(
       tenantId,
       saleInvoice,
       true,

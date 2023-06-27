@@ -14,7 +14,7 @@ import { compose } from '@/utils';
 /**
  * Cancel Unlocking partial transactions alerts.
  */
-function CancelUnlockingPartialTarnsactions({
+function CancelUnlockingPartialTransactions({
   name,
 
   // #withAlertStoreConnect
@@ -78,4 +78,4 @@ function CancelUnlockingPartialTarnsactions({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-)(CancelUnlockingPartialTarnsactions);
+)(CancelUnlockingPartialTransactions);

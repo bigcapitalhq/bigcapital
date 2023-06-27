@@ -8,7 +8,7 @@ export const ERRORS = {
   WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY:
     'WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY',
 
-  WAREHOUSE_TRANSFER_ALREAD_TRANSFERRED:
+  WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED:
     'WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED',
 
   WAREHOUSE_TRANSFER_ALREADY_INITIATED: 'WAREHOUSE_TRANSFER_ALREADY_INITIATED',
@@ -49,7 +49,7 @@ export const DEFAULT_VIEWS = [
         index: 1,
         fieldKey: 'status',
         comparator: 'equals',
-        value: 'tansferred',
+        value: 'transferred',
       },
     ],
     columns: [],

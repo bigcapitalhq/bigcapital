@@ -40,7 +40,7 @@ export default class SaleInvoicesController extends BaseController {
   saleInvoiceSmsNotify: SaleInvoiceNotifyBySms;
 
   @Inject()
-  invoicePaymentsSerivce: InvoicePaymentsService;
+  invoicePaymentsService: InvoicePaymentsService;
 
   /**
    * Router constructor.
@@ -380,7 +380,7 @@ export default class SaleInvoicesController extends BaseController {
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res
             .status(200)
-            .send(this.transfromToResponse({ saleInvoice }));
+            .send(this.transformToResponse({ saleInvoice }));
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
@@ -423,9 +423,9 @@ export default class SaleInvoicesController extends BaseController {
         await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
 
       return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        sales_invoices: this.transformToResponse(salesInvoices),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -453,7 +453,7 @@ export default class SaleInvoicesController extends BaseController {
         customerId
       );
       return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
+        sales_invoices: this.transformToResponse(salesInvoices),
       });
     } catch (error) {
       next(error);
@@ -485,7 +485,7 @@ export default class SaleInvoicesController extends BaseController {
 
       return res.status(200).send({
         id: saleInvoice.id,
-        message: 'The given sale invoice has been writte-off successfully.',
+        message: 'The given sale invoice has been written-off successfully.',
       });
     } catch (error) {
       next(error);
@@ -522,7 +522,7 @@ export default class SaleInvoicesController extends BaseController {
   };
 
   /**
-   * Sale invoice notfiy customer by sms.
+   * Sale invoice notify customer by sms.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -599,7 +599,7 @@ export default class SaleInvoicesController extends BaseController {
 
     try {
       const invoicePayments =
-        await this.invoicePaymentsSerivce.getInvoicePayments(
+        await this.invoicePaymentsService.getInvoicePayments(
           tenantId,
           invoiceId
         );

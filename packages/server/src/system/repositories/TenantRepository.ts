@@ -32,7 +32,7 @@ export default class TenantRepository extends SystemRepository {
   }
 
   /**
-   * Mark the the given organization as initialized.
+   * Mark the given organization as initialized.
    * @param {string} organizationId 
    */
   markAsInitialized(tenantId: number) {

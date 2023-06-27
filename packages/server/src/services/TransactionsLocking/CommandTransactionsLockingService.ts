@@ -31,7 +31,7 @@ export default class TransactionsLockingService {
   eventPublisher: EventPublisher;
 
   /**
-   * Enable/disable all  transacations locking.
+   * Enable/disable all  transactions locking.
    * @param   {number} tenantId
    * @param   {TransactionsLockingGroup} moduleGroup -
    * @param   {Partial<ITransactionsLockingAllDTO>} allLockingDTO
@@ -125,7 +125,7 @@ export default class TransactionsLockingService {
   };
 
   /**
-   * Unlock tranactions locking partially.
+   * Unlock transactions locking partially.
    * @param   {number} tenantId
    * @param   {TransactionsLockingGroup} moduleGroup
    * @param   {ITransactionLockingPartiallyDTO} partialTransactionLockingDTO

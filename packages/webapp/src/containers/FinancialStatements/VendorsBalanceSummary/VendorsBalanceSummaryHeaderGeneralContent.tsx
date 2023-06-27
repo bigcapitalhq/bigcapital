@@ -16,7 +16,7 @@ import { filterVendorsOptions } from '../constants';
 
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
@@ -43,7 +43,7 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((selectedDate) => {
                     form.setFieldValue('asDate', selectedDate);
                   })}

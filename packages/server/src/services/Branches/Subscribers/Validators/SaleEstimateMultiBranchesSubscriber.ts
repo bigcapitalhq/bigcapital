@@ -4,12 +4,12 @@ import {
   ISaleEstimateCreatingPayload,
   ISaleEstimateEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class SaleEstimateBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class SaleEstimateBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.saleEstimate.onCreating,
-      this.validateBranchExistanceOnEstimateCreating
+      this.validateBranchExistenceOnEstimateCreating
     );
     bus.subscribe(
       events.saleEstimate.onEditing,
-      this.validateBranchExistanceOnEstimateEditing
+      this.validateBranchExistenceOnEstimateEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  private validateBranchExistanceOnEstimateCreating = async ({
+  private validateBranchExistenceOnEstimateCreating = async ({
     tenantId,
     estimateDTO,
   }: ISaleEstimateCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       estimateDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnEstimateEditing = async ({
+  private validateBranchExistenceOnEstimateEditing = async ({
     estimateDTO,
     tenantId,
   }: ISaleEstimateEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       estimateDTO.branchId
     );

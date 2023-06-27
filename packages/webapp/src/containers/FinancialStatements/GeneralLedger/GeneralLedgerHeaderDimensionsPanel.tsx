@@ -11,7 +11,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Gereral ledger sheet header dismension panel.
+ * General ledger sheet header dimension panel.
  * @returns
  */
 export default function GeneralLedgerHeaderDimensionsPanel() {
@@ -23,13 +23,13 @@ export default function GeneralLedgerHeaderDimensionsPanel() {
 }
 
 /**
- * Gereral ledger sheet header dismension panel content.
+ * General ledger sheet header dimension panel content.
  * @returns
  */
 function GeneralLedgerHeaderDimensionsPanelContent() {
   const { branches } = useGeneralLedgerHeaderDimensionsContext();
 
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

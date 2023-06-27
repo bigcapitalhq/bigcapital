@@ -28,7 +28,7 @@ function TransactionTypeFields() {
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   return (
-    <div className="trasnaction-type-fileds">
+    <div className="transaction-type-fields">
       <Row>
         <Col xs={5}>
           {/*------------ Current account -----------*/}

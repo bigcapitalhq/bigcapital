@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError, ServiceErrors } from '@/exceptions';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class WarehouseValidator {
@@ -22,7 +22,7 @@ export class WarehouseValidator {
     const warehouses = await Warehouse.query().whereNot('id', warehouseId);
 
     if (warehouses.length === 0) {
-      throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_WAERHOUSE);
+      throw new ServiceError(ERRORS.COULD_NOT_DELETE_ONLY_WAREHOUSE);
     }
   };
 

@@ -19,7 +19,7 @@ export default function ReceiptDetailFooter() {
 
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={receipt.statement}>
           <DetailItem label={<T id={'receipt.details.statement'} />}>
             {receipt.statement}

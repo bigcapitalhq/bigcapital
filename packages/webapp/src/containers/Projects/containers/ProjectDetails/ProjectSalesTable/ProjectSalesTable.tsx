@@ -14,7 +14,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import { compose } from '@/utils';
 
 /**
- * Porject sales datatable.
+ * Project sales datatable.
  * @returns
  */
 function ProjectSalesTableRoot({

@@ -58,7 +58,7 @@ export default class CashFlowStatementService
    * Retrieve cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
-   * @retrun {Promise<IAccountTransaction[]>}
+   * @return {Promise<IAccountTransaction[]>}
    */
   private async cashAtBeginningTransactions(
     tenantId: number,
@@ -123,7 +123,7 @@ export default class CashFlowStatementService
       tenantId,
       filter
     );
-    // Transformes the transactions to ledgers.
+    // Transforms the transactions to ledgers.
     const ledger = Ledger.fromTransactions(transactions);
     const cashLedger = Ledger.fromTransactions(cashAtBeginningTransactions);
     const netIncomeLedger = Ledger.fromTransactions(netIncome);

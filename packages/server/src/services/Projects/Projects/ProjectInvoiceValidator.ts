@@ -11,12 +11,12 @@ export class ProjectInvoiceValidator {
   tenancy: HasTenancyService;
 
   /**
-   * Validate the tasks refs ids existance.
+   * Validate the tasks refs ids existence.
    * @param {number} tenantId
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO
    * @returns {Promise<void>}
    */
-  async validateTasksRefsExistance(
+  async validateTasksRefsExistence(
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO
   ) {

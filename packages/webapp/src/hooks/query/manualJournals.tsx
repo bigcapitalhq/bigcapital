@@ -71,7 +71,7 @@ export function useEditJournal(props) {
 }
 
 /**
- * Deletes the given manual jouranl.
+ * Deletes the given manual journal.
  */
 export function useDeleteJournal(props) {
   const queryClient = useQueryClient();

@@ -122,7 +122,7 @@ export class CustomersApplication {
   /**
    * Retrieve customers paginated list.
    * @param {number} tenantId - Tenant id.
-   * @param {ICustomersFilter} filter - Cusotmers filter.
+   * @param {ICustomersFilter} filter - Customers filter.
    */
   public getCustomers = (tenantId: number, filterDTO: ICustomersFilter) => {
     return this.getCustomersService.getCustomersList(tenantId, filterDTO);

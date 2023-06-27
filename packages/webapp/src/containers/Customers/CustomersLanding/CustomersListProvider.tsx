@@ -10,7 +10,7 @@ import { transformCustomersStateToQuery } from './utils';
 const CustomersListContext = createContext();
 
 function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
-  // Transformes the table state to fetch query.
+  // Transforms the table state to fetch query.
   const tableQuery = transformCustomersStateToQuery(tableState);
 
   // Fetch customers resource views and fields.
@@ -31,7 +31,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
     isFetching: isCustomersFetching,
   } = useCustomers(tableQuery, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(customers) && !isCustomersLoading && !tableStateChanged;
 

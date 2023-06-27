@@ -121,7 +121,7 @@ describe('routes: `/views`', () => {
   });
 
   describe('POST: `/views`', () => {
-    it('Should response unauthorzied in case the user was not authorized.', async () => {
+    it('Should response unauthorized in case the user was not authorized.', async () => {
       const res = await request().post('/api/views');
 
       expect(res.status).equals(401);

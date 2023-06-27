@@ -94,7 +94,7 @@ export default class CreditNoteGLEntries {
       .findById(creditNoteId)
       .withGraphFetched('entries.item');
 
-    // Retreive the the `accounts receivable` account based on the given currency.
+    // Retrieve the `accounts receivable` account based on the given currency.
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
       creditNoteWithItems.currencyCode
     );
@@ -156,7 +156,7 @@ export default class CreditNoteGLEntries {
   };
 
   /**
-   * Retrieves the creidt note A/R entry.
+   * Retrieves the credit note A/R entry.
    * @param   {ICreditNote} creditNote -
    * @param   {number} ARAccountId -
    * @returns {ILedgerEntry}
@@ -209,7 +209,7 @@ export default class CreditNoteGLEntries {
   /**
    * Retrieve the credit note GL entries.
    * @param   {ICreditNote} creditNote - Credit note.
-   * @param   {IAccount} receivableAccount - Receviable account.
+   * @param   {IAccount} receivableAccount - Receivable account.
    * @returns {ILedgerEntry[]} - Ledger entries.
    */
   public getCreditNoteGLEntries = (

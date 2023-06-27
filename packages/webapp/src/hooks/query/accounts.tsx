@@ -119,7 +119,7 @@ export function useDeleteAccount(props) {
 }
 
 /**
- * Actiavte the give account.
+ * Activate the give account.
  */
 export function useActivateAccount(props) {
   const client = useQueryClient();

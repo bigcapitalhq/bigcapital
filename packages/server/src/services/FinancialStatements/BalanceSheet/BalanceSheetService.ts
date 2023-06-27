@@ -120,14 +120,14 @@ export default class BalanceSheetStatementService
     await balanceSheetRepo.asyncInitialize();
 
     // Balance sheet report instance.
-    const balanceSheetInstanace = new BalanceSheetStatement(
+    const balanceSheetInstance = new BalanceSheetStatement(
       filter,
       balanceSheetRepo,
       tenant.metadata.baseCurrency,
       i18n
     );
     // Balance sheet data.
-    const balanceSheetData = balanceSheetInstanace.reportData();
+    const balanceSheetData = balanceSheetInstance.reportData();
 
     return {
       data: balanceSheetData,

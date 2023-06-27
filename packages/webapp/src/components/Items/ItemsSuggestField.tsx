@@ -68,7 +68,7 @@ function ItemsSuggestFieldRoot({
   initialItemId,
   selectedItemId,
 
-  defautlSelectText = 'Select item',
+  defaultSelectText = 'Select item',
   onItemSelected,
 
   sellable = false,
@@ -137,7 +137,7 @@ function ItemsSuggestFieldRoot({
       inputValueRenderer={handleInputValueRenderer}
       selectedItem={selectedItem}
       onItemSelect={onItemSelect}
-      inputProps={{ placeholder: defautlSelectText }}
+      inputProps={{ placeholder: defaultSelectText }}
       resetOnClose={true}
       fill={true}
       popoverProps={{ minimal: true, boundary: 'window' }}

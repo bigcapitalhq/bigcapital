@@ -5,9 +5,9 @@ import EstimatePaymentTransactions from './EstimatePaymentTransactions';
 import ReceiptPaymentTransactions from './ReceiptPaymentTransactions';
 import BillPaymentTransactions from './BillPaymentTransactions';
 
-export default function ItemPaymentTransactionsContent({ tansactionType }) {
+export default function ItemPaymentTransactionsContent({ transactionType }) {
   const handleType = () => {
-    switch (tansactionType) {
+    switch (transactionType) {
       case 'invoices':
       default:
         return <InvoicePaymentTransactions />;

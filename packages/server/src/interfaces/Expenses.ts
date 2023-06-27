@@ -26,7 +26,7 @@ export interface IExpense {
   exchangeRate: number;
   description?: string;
   paymentAccountId: number;
-  peyeeId?: number;
+  payeeId?: number;
   referenceNo?: string;
   publishedAt: Date | null;
   userId: number;
@@ -72,7 +72,7 @@ export interface IExpenseCommonDTO {
   exchangeRate?: number;
   description?: string;
   paymentAccountId: number;
-  peyeeId?: number;
+  payeeId?: number;
   referenceNo?: string;
   publish: boolean;
   userId: number;

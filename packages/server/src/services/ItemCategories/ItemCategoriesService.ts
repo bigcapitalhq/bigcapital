@@ -82,12 +82,12 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates the category name uniquiness.
+   * Validates the category name uniqueness.
    * @param {number} tenantId - Tenant id.
    * @param {string} categoryName - Category name.
    * @param {number} notAccountId - Ignore the account id.
    */
-  private async validateCategoryNameUniquiness(
+  private async validateCategoryNameUniqueness(
     tenantId: number,
     categoryName: string,
     notCategoryId?: number
@@ -119,8 +119,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
-    // Validate the category name uniquiness.
-    await this.validateCategoryNameUniquiness(tenantId, itemCategoryOTD.name);
+    // Validate the category name uniqueness.
+    await this.validateCategoryNameUniqueness(tenantId, itemCategoryOTD.name);
 
     if (itemCategoryOTD.sellAccountId) {
       await this.validateSellAccount(tenantId, itemCategoryOTD.sellAccountId);
@@ -138,7 +138,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       itemCategoryOTD,
       authorizedUser
     );
-    // Creates item category under unit-of-work evnirement.
+    // Creates item category under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Inserts the item category.
       const itemCategory = await ItemCategory.query(trx).insert({
@@ -156,7 +156,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates sell account existance and type.
+   * Validates sell account existence and type.
    * @param {number} tenantId - Tenant id.
    * @param {number} sellAccountId - Sell account id.
    * @return {Promise<void>}
@@ -174,7 +174,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   }
 
   /**
-   * Validates COGS account existance and type.
+   * Validates COGS account existence and type.
    * @param {number} tenantId -
    * @param {number} costAccountId -
    * @return {Promise<void>}
@@ -185,14 +185,14 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
-      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
+      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUND);
     } else if (!foundAccount.isRootType(ACCOUNT_ROOT_TYPE.EXPENSE)) {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_COGS);
     }
   }
 
   /**
-   * Validates inventory account existance and type.
+   * Validates inventory account existence and type.
    * @param {number} tenantId
    * @param {number} inventoryAccountId
    * @return {Promise<void>}
@@ -234,7 +234,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       itemCategoryId
     );
     // Validate the category name whether unique on the storage.
-    await this.validateCategoryNameUniquiness(
+    await this.validateCategoryNameUniqueness(
       tenantId,
       itemCategoryOTD.name,
       itemCategoryId
@@ -344,7 +344,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     );
     // Items categories.
     const itemCategories = await ItemCategory.query().onBuild((query) => {
-      // Subquery to calculate sumation of assocaited items to the item category.
+      // Subquery to calculate summation of associated items to the item category.
       query.select('*', ItemCategory.relatedQuery('items').count().as('count'));
 
       dynamicList.buildQuery()(query);

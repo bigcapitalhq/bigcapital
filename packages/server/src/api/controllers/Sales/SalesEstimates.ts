@@ -353,7 +353,7 @@ export default class SalesEstimatesController extends BaseController {
       res.format({
         // JSON content type.
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send(this.transfromToResponse({ estimate }));
+          return res.status(200).send(this.transformToResponse({ estimate }));
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
@@ -395,7 +395,7 @@ export default class SalesEstimatesController extends BaseController {
       res.format({
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res.status(200).send(
-            this.transfromToResponse({
+            this.transformToResponse({
               salesEstimates,
               pagination,
               filterMeta,
@@ -502,9 +502,9 @@ export default class SalesEstimatesController extends BaseController {
           errors: [{ type: 'CUSTOMER_NOT_FOUND', code: 600 }],
         });
       }
-      if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTANCE') {
+      if (error.errorType === 'SALE_ESTIMATE_NUMBER_EXISTENCE') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 700 }],
+          errors: [{ type: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE', code: 700 }],
         });
       }
       if (error.errorType === 'NOT_SELL_ABLE_ITEMS') {

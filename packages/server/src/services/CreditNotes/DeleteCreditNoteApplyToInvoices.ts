@@ -10,7 +10,7 @@ import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 
 @Service()
-export default class DeletreCreditNoteApplyToInvoices extends BaseCreditNotes {
+export default class DeleteCreditNoteApplyToInvoices extends BaseCreditNotes {
   @Inject('PaymentReceives')
   paymentReceive: PaymentReceiveService;
 

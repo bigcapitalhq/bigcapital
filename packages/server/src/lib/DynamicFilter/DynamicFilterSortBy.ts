@@ -1,4 +1,4 @@
-import DynamicFilterRoleAbstructor from '@/lib/DynamicFilter/DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstractor from '@/lib/DynamicFilter/DynamicFilterRoleAbstractor';
 import { FIELD_TYPE } from './constants';
 
 interface ISortRole {
@@ -6,7 +6,7 @@ interface ISortRole {
   order: string;
 }
 
-export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
+export default class DynamicFilterSortBy extends DynamicFilterRoleAbstractor {
   private sortRole: ISortRole = {};
 
   /**
@@ -25,14 +25,14 @@ export default class DynamicFilterSortBy extends DynamicFilterRoleAbstructor {
   }
 
   /**
-   * On initialize the dyanmic sort by.
+   * On initialize the dynamic sort by.
    */
   public onInitialize() {
     this.setRelationIfRelationField(this.sortRole.fieldKey);
   }
 
   /**
-   * Retrieve field comparator relatin column.
+   * Retrieve field comparator relation column.
    * @param field 
    * @returns {string}
    */

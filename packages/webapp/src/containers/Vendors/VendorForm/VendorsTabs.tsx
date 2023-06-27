@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { CLASSES } from '@/constants/classes';
 
-import VendorFinanicalPanelTab from './VendorFinanicalPanelTab';
+import VendorFinancialPanelTab from './VendorFinancialPanelTab';
 
 import CustomerAddressTabs from '@/containers/Customers/CustomerForm/CustomerAddressTabs';
 import CustomerNotePanel from '@/containers/Customers/CustomerForm/CustomerNotePanel';
@@ -25,7 +25,7 @@ export default function VendorTabs() {
         <Tab
           id={'financial'}
           title={intl.get('financial_details')}
-          panel={<VendorFinanicalPanelTab />}
+          panel={<VendorFinancialPanelTab />}
         />
         <Tab
           id={'address'}

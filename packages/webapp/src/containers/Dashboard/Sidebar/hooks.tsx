@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useAbilityContext } from '@/hooks';
 import {
-  useSidebarSubmnuActions,
+  useSidebarSubmenuActions,
   useDialogActions,
   useSubscription,
   useSidebarSubmenu,
@@ -23,7 +23,7 @@ const deepDashConfig = {
   childrenPath: 'children',
   pathFormat: 'array',
 };
-const ingoreTypesEmpty = [
+const ignoreTypesEmpty = [
   ISidebarMenuItemType.Group,
   ISidebarMenuItemType.Overlay,
 ];
@@ -48,7 +48,7 @@ function removeSidebarOverlayChildren(menu) {
 }
 
 /**
- * Retrives the main sidebar pre-menu.
+ * Retrieves the main sidebar pre-menu.
  * @returns {ISidebarMenuItem[]}
  */
 export function getMainSidebarMenu() {
@@ -73,13 +73,13 @@ function useFilterSidebarItemFeaturePredicater() {
 }
 
 /**
- * Predicates whether the sidebar item has permissio ability.
+ * Predicates whether the sidebar item has permission ability.
  */
 function useFilterSidebarItemAbilityPredicater() {
   const ability = useAbilityContext();
 
   return {
-    // Retruns false if the item has `permission` prop and that permission has no ability.
+    // Returns false if the item has `permission` prop and that permission has no ability.
     predicate: (item) => {
       if (
         item.permission &&
@@ -157,7 +157,7 @@ function useFlatSidebarMenu(menu) {
  */
 function useBindSidebarItemLinkClick() {
   const history = useHistory();
-  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
+  const { closeSidebarSubmenu } = useSidebarSubmenuActions();
 
   // Handle sidebar item click.
   const onClick = (item) => (event) => {
@@ -179,7 +179,7 @@ function useBindSidebarItemLinkClick() {
  * @param   {ISidebarMenuItem} item
  */
 function useBindSidebarItemDialogClick() {
-  const { closeSidebarSubmenu } = useSidebarSubmnuActions();
+  const { closeSidebarSubmenu } = useSidebarSubmenuActions();
   const { openDialog } = useDialogActions();
 
   // Handle sidebar item click.
@@ -202,7 +202,7 @@ function useBindSidebarItemDialogClick() {
  */
 function useBindSidebarItemOverlayClick() {
   const { toggleSidebarSubmenu, closeSidebarSubmenu } =
-    useSidebarSubmnuActions();
+    useSidebarSubmenuActions();
 
   // Handle sidebar item click.
   const onClick = (item) => (event) => {
@@ -332,7 +332,7 @@ export function useObserveSidebarExpendedBodyclass(sidebarExpended) {
 }
 
 /**
- * Detamrines whether the given sidebar menu item is active.
+ * Determines whether the given sidebar menu item is active.
  * @returns {boolean}
  */
 export function useIsSidebarMenuItemActive(item) {
@@ -350,7 +350,7 @@ export function useIsSidebarMenuItemActive(item) {
 export function filterSidebarItemHasNoChildren(items) {
   return filterValuesDeep((item) => {
     // If it was group item and has no children items so discard that item.
-    if (ingoreTypesEmpty.indexOf(item.type) !== -1 && isEmpty(item.children)) {
+    if (ignoreTypesEmpty.indexOf(item.type) !== -1 && isEmpty(item.children)) {
       return false;
     }
     return true;

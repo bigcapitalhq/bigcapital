@@ -4,7 +4,7 @@ import config from '@/config';
 import Mail from '@/lib/Mail';
 
 @Service()
-export default class AuthenticationMailMesssages {
+export default class AuthenticationMailMessages {
   /**
    * Sends reset password message.
    * @param {ISystemUser} user - The system user.

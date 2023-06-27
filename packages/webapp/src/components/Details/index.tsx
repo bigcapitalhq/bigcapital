@@ -6,7 +6,7 @@ import '@/style/components/Details.scss';
 
 const DIRECTION = {
   VERTICAL: 'vertical',
-  HORIZANTAL: 'horizantal',
+  HORIZONTAL: 'horizontal',
 };
 
 const DetailsMenuContext = React.createContext();
@@ -28,7 +28,7 @@ export function DetailsMenu({
         'details-menu',
         {
           'details-menu--vertical': direction === DIRECTION.VERTICAL,
-          'details-menu--horizantal': direction === DIRECTION.HORIZANTAL,
+          'details-menu--horizontal': direction === DIRECTION.HORIZONTAL,
           [`align-${textAlign}`]: textAlign,
         },
         className,

@@ -57,7 +57,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Mappes the vendor model object to vendor balance summary section.
+   * Maps the vendor model object to vendor balance summary section.
    * @param   {IVendor[]} vendors - Customers.
    * @returns {IVendorBalanceSummaryVendor[]}
    */
@@ -68,7 +68,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Detarmines whether the vendors post filter is active.
+   * Determines whether the vendors post filter is active.
    * @returns {boolean}
    */
   private isVendorsPostFilter = (): boolean => {
@@ -85,7 +85,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
       R.when(this.isVendorsPostFilter, this.contactsFilter),
       R.when(
         R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
+        this.contactComparisonPercentageOfColumn
       ),
       this.vendorsMapper
     )(vendors);

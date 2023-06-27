@@ -4,7 +4,7 @@ import { includes } from 'lodash';
 
 import { compose } from '@/utils';
 import { Redirect } from 'react-router-dom';
-import withSubscriptions from '@/containers/Subscriptions/withSubscriptionss';
+import withSubscriptions from '@/containers/Subscriptions/withSubscriptions';
 
 /**
  * Ensures the given subscription type is active or redirect to the given route.

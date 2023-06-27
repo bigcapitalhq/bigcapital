@@ -46,7 +46,7 @@ export default class DeleteRefundVendorCredit extends RefundVendorCredit {
       tenantId,
     } as IRefundVendorCreditDeletePayload);
 
-    // Deletes the refund vendor credit under unit-of-work envirement.
+    // Deletes the refund vendor credit under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       const eventPayload = {
         trx,

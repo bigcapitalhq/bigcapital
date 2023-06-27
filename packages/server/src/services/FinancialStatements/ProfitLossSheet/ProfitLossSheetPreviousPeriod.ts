@@ -241,7 +241,7 @@ export const ProfitLossSheetPreviousPeriod = (Base) =>
         index: number,
         totalNode: IProfitLossHorizontalDatePeriodNode
       ) => {
-        const total = this.getPPHorizNodesTotalSumation(index, node);
+        const total = this.getPPHorizNodesTotalSummation(index, node);
 
         return R.assoc(
           'previousPeriod',

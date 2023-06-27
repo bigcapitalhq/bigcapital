@@ -13,7 +13,7 @@ export enum DRAWERS {
   CUSTOMER_DETAILS = 'customer-detail-drawer',
   VENDOR_DETAILS = 'vendor-detail-drawer',
   INVENTORY_ADJUSTMENT_DETAILS = 'inventory-adjustment-drawer',
-  CASHFLOW_TRNASACTION_DETAILS = 'cashflow-transaction-drawer',
+  CASHFLOW_TRANSACTION_DETAILS = 'cashflow-transaction-drawer',
   QUICK_CREATE_CUSTOMER = 'quick-create-customer',
   QUICK_CREATE_ITEM = 'quick-create-item',
   QUICK_WRITE_VENDOR = 'quick-write-vendor',

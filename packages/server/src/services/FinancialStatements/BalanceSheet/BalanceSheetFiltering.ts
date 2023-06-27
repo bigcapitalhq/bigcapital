@@ -12,11 +12,11 @@ export const BalanceSheetFiltering = (Base) =>
     // # Account
     // -----------------------
     /**
-     * Filter report node detarmine.
+     * Filter report node determine.
      * @param  {IBalanceSheetDataNode} node - Balance sheet node.
      * @return {boolean}
      */
-    private accountNoneZeroNodesFilterDetarminer = (
+    private accountNoneZeroNodesFilterDeterminer = (
       node: IBalanceSheetDataNode
     ): boolean => {
       return R.ifElse(
@@ -27,11 +27,11 @@ export const BalanceSheetFiltering = (Base) =>
     };
 
     /**
-     * Detarmines account none-transactions node.
+     * Determines account none-transactions node.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    private accountNoneTransFilterDetarminer = (
+    private accountNoneTransFilterDeterminer = (
       node: IBalanceSheetDataNode
     ): boolean => {
       return R.ifElse(
@@ -51,7 +51,7 @@ export const BalanceSheetFiltering = (Base) =>
     ): IBalanceSheetDataNode[] => {
       return this.filterNodesDeep(
         nodes,
-        this.accountNoneZeroNodesFilterDetarminer
+        this.accountNoneZeroNodesFilterDeterminer
       );
     };
 
@@ -63,21 +63,21 @@ export const BalanceSheetFiltering = (Base) =>
     private accountsNoneTransactionsNodesFilter = (
       nodes: IBalanceSheetDataNode[]
     ) => {
-      return this.filterNodesDeep(nodes, this.accountNoneTransFilterDetarminer);
+      return this.filterNodesDeep(nodes, this.accountNoneTransFilterDeterminer);
     };
 
     // -----------------------
     // # Aggregate/Accounts.
     // -----------------------
     /**
-     * Detearmines aggregate none-children filtering.
+     * Determines aggregate none-children filtering.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    private aggregateNoneChildrenFilterDetarminer = (
+    private aggregateNoneChildrenFilterDeterminer = (
       node: IBalanceSheetDataNode
     ): boolean => {
-      // Detarmines whether the given node is aggregate or accounts node.
+      // Determines whether the given node is aggregate or accounts node.
       const isAggregateOrAccounts =
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.AGGREGATE, node) ||
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNTS, node);
@@ -85,7 +85,7 @@ export const BalanceSheetFiltering = (Base) =>
       // Retrieve the schema node of the given id.
       const schemaNode = this.getSchemaNodeById(node.id);
 
-      // Detarmines if the schema node is always should show.
+      // Determines if the schema node is always should show.
       const isSchemaAlwaysShow = get(schemaNode, 'alwaysShow', false);
 
       return isAggregateOrAccounts && !isSchemaAlwaysShow
@@ -102,7 +102,7 @@ export const BalanceSheetFiltering = (Base) =>
       nodes: IBalanceSheetDataNode[]
     ): IBalanceSheetDataNode[] => {
       return this.filterNodesDeep2(
-        this.aggregateNoneChildrenFilterDetarminer,
+        this.aggregateNoneChildrenFilterDeterminer,
         nodes
       );
     };
@@ -139,11 +139,11 @@ export const BalanceSheetFiltering = (Base) =>
     };
 
     /**
-     * Supress nodes when accounts transactions ledger is empty.
+     * Suppress nodes when accounts transactions ledger is empty.
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private supressNodesWhenAccountsTransactionsEmpty = (
+    private suppressNodesWhenAccountsTransactionsEmpty = (
       nodes: IBalanceSheetDataNode[]
     ): IBalanceSheetDataNode[] => {
       return this.repository.totalAccountsLedger.isEmpty() ? [] : nodes;
@@ -156,7 +156,7 @@ export const BalanceSheetFiltering = (Base) =>
      */
     protected reportFilterPlugin = (nodes: IBalanceSheetDataNode[]) => {
       return R.compose(
-        this.supressNodesWhenAccountsTransactionsEmpty,
+        this.suppressNodesWhenAccountsTransactionsEmpty,
         R.when(R.always(this.query.noneZero), this.filterNoneZeroNodesCompose),
         R.when(
           R.always(this.query.noneTransactions),

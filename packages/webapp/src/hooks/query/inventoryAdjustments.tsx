@@ -62,7 +62,7 @@ export function useDeleteInventoryAdjustment(props) {
 
 const inventoryAdjustmentsTransformer = (response) => {
   return {
-    transactions: response.data.inventoy_adjustments,
+    transactions: response.data.inventory_adjustments,
     pagination: transformPagination(response.data.pagination),
   };
 };

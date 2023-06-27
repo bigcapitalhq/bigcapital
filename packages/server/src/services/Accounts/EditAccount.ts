@@ -38,8 +38,8 @@ export class EditAccount {
     accountDTO: IAccountEditDTO,
     oldAccount: IAccount
   ) => {
-    // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
+    // Validate account name uniqueness.
+    await this.validator.validateAccountNameUniqueness(
       tenantId,
       accountDTO.name,
       accountId
@@ -89,7 +89,7 @@ export class EditAccount {
     // Authorize the account editing.
     await this.authorize(tenantId, accountId, accountDTO, oldAccount);
 
-    // Edits account and associated transactions under unit-of-work envirement.
+    // Edits account and associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onAccountEditing` event.
       await this.eventPublisher.emitAsync(events.accounts.onEditing, {

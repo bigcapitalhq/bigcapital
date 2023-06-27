@@ -37,7 +37,7 @@ function ReconcileVendorCreditFormProvider({
   const { mutateAsync: createReconcileVendorCreditMutate } =
     useCreateReconcileVendorCredit();
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(reconcileVendorCredits);
 
   // provider.

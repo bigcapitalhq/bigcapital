@@ -48,7 +48,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Cashflow account transactions validation schecma.
+   * Cashflow account transactions validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {
@@ -61,20 +61,20 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
   }
 
   /**
-   * Retrieve the cashflow account transactions statment to json response.
+   * Retrieve the cashflow account transactions statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
-  private transformJsonResponse(casahflowAccountTransactions) {
-    const { transactions, pagination } = casahflowAccountTransactions;
+  private transformJsonResponse(cashflowAccountTransactions) {
+    const { transactions, pagination } = cashflowAccountTransactions;
 
     return {
-      transactions: this.transfromToResponse(transactions),
-      pagination: this.transfromToResponse(pagination),
+      transactions: this.transformToResponse(transactions),
+      pagination: this.transformToResponse(pagination),
     };
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(
@@ -89,13 +89,13 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
         data: cashFlowTable.tableRows(),
         columns: cashFlowTable.tableColumns(),
       },
-      query: this.transfromToResponse(cashFlowDOO.query),
-      meta: this.transfromToResponse(cashFlowDOO.meta),
+      query: this.transformToResponse(cashFlowDOO.query),
+      meta: this.transformToResponse(cashFlowDOO.meta),
     };
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

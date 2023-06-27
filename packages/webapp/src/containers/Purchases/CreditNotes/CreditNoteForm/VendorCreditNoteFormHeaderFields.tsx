@@ -31,7 +31,7 @@ import { VendorCreditNoteExchangeRateInputField } from './components';
 import {
   momentFormatter,
   compose,
-  tansformDateValue,
+  transformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
@@ -102,7 +102,7 @@ function VendorCreditNoteFormHeaderFields({
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('vendor_credit_date', formattedDate);
               })}

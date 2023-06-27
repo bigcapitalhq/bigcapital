@@ -3,7 +3,7 @@ import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 import { useCreditNoteListContext } from './CreditNotesListProvider';
 
 import withCreditNotes from './withCreditNotes';
@@ -22,7 +22,7 @@ function CreditNotesViewTabs({
   // Credit note list context.
   const { CreditNotesView } = useCreditNoteListContext();
 
-  const tabs = transfromViewsToTabs(CreditNotesView);
+  const tabs = transformViewsToTabs(CreditNotesView);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {

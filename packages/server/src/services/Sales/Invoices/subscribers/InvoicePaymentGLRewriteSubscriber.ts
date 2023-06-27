@@ -20,7 +20,7 @@ export class InvoicePaymentGLRewriteSubscriber {
   };
 
   /**
-   * Writes associated invoiceso of payment receive once edit.
+   * Writes associated invoices of payment receive once edit.
    * @param {ISaleInvoiceEditingPayload} -
    */
   private paymentGLEntriesRewriteOnPaymentEdit = async ({

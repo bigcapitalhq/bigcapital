@@ -75,7 +75,7 @@ export class Lexer {
       // we must move the pos forward
       // so here we should throw error, for example `1 & 2`
       if (pos === this.currentIndex && tok !== undefined) {
-        const err = new Error(`unkonw token ${tok} from input string ${this.input}`);
+        const err = new Error(`unknown token ${tok} from input string ${this.input}`);
         err.name = 'UnknowToken';
         throw err;
       }
@@ -85,9 +85,9 @@ export class Lexer {
   }
 
   /**
-   * read next token, the index param can set next step, default go foward 1 step
+   * read next token, the index param can set next step, default go forward 1 step
    *
-   * @param index next postion
+   * @param index next position
    */
   pickNext(index = 0) {
     return this.input[index + this.currentIndex + 1];

@@ -10,7 +10,7 @@ export class CurrencyTransformer extends Transformer {
   };
 
   /**
-   * Detarmines whether the currency is base currency.
+   * Determines whether the currency is base currency.
    * @returns {boolean}
    */
   public isBaseCurrency(currency): boolean {

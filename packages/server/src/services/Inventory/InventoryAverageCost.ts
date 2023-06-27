@@ -36,7 +36,7 @@ export default class InventoryAverageCostMethod
    * Computes items costs from the given date using average cost method.
    * ----------
    * - Calculate the items average cost in the given date.
-   * - Remove the journal entries that associated to the inventory transacions
+   * - Remove the journal entries that associated to the inventory transactions
    *   after the given date.
    * - Re-compute the inventory transactions and re-write the journal entries
    *   after the given date.
@@ -49,7 +49,7 @@ export default class InventoryAverageCostMethod
   public async computeItemCost() {
     const { InventoryTransaction } = this.tenantModels;
     const { averageCost, openingQuantity, openingCost } =
-      await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
+      await this.getOpeningAverageCost(this.startingDate, this.itemId);
 
     const afterInvTransactions: IInventoryTransaction[] =
       await InventoryTransaction.query()
@@ -60,14 +60,14 @@ export default class InventoryAverageCostMethod
         .where('item_id', this.itemId)
         .withGraphFetched('item');
 
-    // Tracking inventroy transactions and retrieve cost transactions based on
+    // Tracking inventory transactions and retrieve cost transactions based on
     // average rate cost method.
     const costTransactions = this.trackingCostTransactions(
       afterInvTransactions,
       openingQuantity,
       openingCost
     );
-    // Revert the inveout out lots transactions
+    // Revert the inventory out lots transactions
     await this.revertTheInventoryOutLotTrans();
 
     // Store inventory lots cost transactions.
@@ -75,12 +75,12 @@ export default class InventoryAverageCostMethod
   }
 
   /**
-   * Get items Avarege cost from specific date from inventory transactions.
+   * Get items Average cost from specific date from inventory transactions.
    * @async
    * @param {Date} closingDate
    * @return {number}
    */
-  public async getOpeningAvaregeCost(closingDate: Date, itemId: number) {
+  public async getOpeningAverageCost(closingDate: Date, itemId: number) {
     const { InventoryCostLotTracker } = this.tenantModels;
 
     const commonBuilder = (builder: any) => {
@@ -94,24 +94,24 @@ export default class InventoryAverageCostMethod
       builder.first();
     };
     // Calculates the total inventory total quantity and rate `IN` transactions.
-    const inInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
+    const inInvSummationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
       .where('direction', 'IN');
 
     // Calculates the total inventory total quantity and rate `OUT` transactions.
-    const outInvSumationOper: Promise<any> = InventoryCostLotTracker.query()
+    const outInvSummationOper: Promise<any> = InventoryCostLotTracker.query()
       .onBuild(commonBuilder)
       .where('direction', 'OUT');
 
-    const [inInvSumation, outInvSumation] = await Promise.all([
-      inInvSumationOper,
-      outInvSumationOper,
+    const [inInvSummation, outInvSummation] = await Promise.all([
+      inInvSummationOper,
+      outInvSummationOper,
     ]);
     return this.computeItemAverageCost(
-      inInvSumation?.cost || 0,
-      inInvSumation?.quantity || 0,
-      outInvSumation?.cost || 0,
-      outInvSumation?.quantity || 0
+      inInvSummation?.cost || 0,
+      inInvSummation?.quantity || 0,
+      outInvSummation?.cost || 0,
+      outInvSummation?.quantity || 0
     );
   }
 
@@ -208,7 +208,7 @@ export default class InventoryAverageCostMethod
           // Cost = the transaction quantity * Average cost.
           const cost = this.getCost(averageCost, quantity);
 
-          // Revenue = transaction quanity * rate.
+          // Revenue = transaction quantity * rate.
           // const revenue = quantity * invTransaction.rate;
           costTransactions.push({
             ...commonEntry,

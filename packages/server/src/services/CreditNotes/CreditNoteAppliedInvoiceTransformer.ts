@@ -3,12 +3,12 @@ import { formatNumber } from 'utils';
 
 export class CreditNoteAppliedInvoiceTransformer extends Transformer {
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
     return [
-      'formttedAmount',
+      'formattedAmount',
       'creditNoteNumber',
       'creditNoteDate',
       'invoiceNumber',
@@ -25,7 +25,7 @@ export class CreditNoteAppliedInvoiceTransformer extends Transformer {
     return ['saleInvoice', 'creditNote'];
   };
 
-  formttedAmount = (item) => {
+  formattedAmount = (item) => {
     return formatNumber(item.amount, {
       currencyCode: item.creditNote.currencyCode,
     });

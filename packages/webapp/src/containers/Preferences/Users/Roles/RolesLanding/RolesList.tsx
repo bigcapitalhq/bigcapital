@@ -7,7 +7,7 @@ import RolesDataTable from './RolesDataTable';
 /**
  * Roles list.
  */
-function RolesListPrefernces() {
+function RolesListPreferences() {
   return (
     <RolesListProvider>
       <RolesDataTable />
@@ -15,4 +15,4 @@ function RolesListPrefernces() {
   );
 }
 
-export default RolesListPrefernces;
+export default RolesListPreferences;

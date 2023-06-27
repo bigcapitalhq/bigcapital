@@ -10,7 +10,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
     // # Columns
     // ----------------------------
     /**
-     * Retrive previous period total column.
+     * Retrieve previous period total column.
      * @param   {IDateRange} dateRange -
      * @returns {ITableColumn}
      */
@@ -24,7 +24,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
 
       return {
         key: 'previous_period',
-        label: this.i18n.__(`financial_sheet.previoud_period_date`, {
+        label: this.i18n.__(`financial_sheet.previous_period_date`, {
           date: PPFormatted,
         }),
       };
@@ -37,7 +37,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
     protected getPreviousPeriodChangeColumn = (): ITableColumn => {
       return {
         key: 'previous_period_change',
-        label: this.i18n.__('fianncial_sheet.previous_period_change'),
+        label: this.i18n.__('financial_sheet.previous_period_change'),
       };
     };
 

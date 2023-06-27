@@ -49,7 +49,7 @@ function PaymentNumberDialogContent({
 
   // Handle submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
-    // Transformes the form values to settings to save it.
+    // Transforms the form values to settings to save it.
     const options = transformFormToSettings(values, 'payment_receives');
 
     const handleSuccess = () => {

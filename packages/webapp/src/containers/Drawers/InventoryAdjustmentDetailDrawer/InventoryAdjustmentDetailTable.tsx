@@ -19,7 +19,7 @@ export default function InventoryAdjustmentDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={inventoryAdjustment.entries}
-      className={'table-constrant'}
+      className={'table-constraint'}
     />
   );
 }

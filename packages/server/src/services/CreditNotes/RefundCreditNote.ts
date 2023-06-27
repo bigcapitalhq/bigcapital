@@ -35,7 +35,7 @@ export default class RefundCreditNote extends BaseCreditNotes {
    * Validate the refund account type.
    * @param {IAccount} account
    */
-  public validateRefundWithdrawwalAccountType = (account: IAccount): void => {
+  public validateRefundWithdrawalAccountType = (account: IAccount): void => {
     const supportedTypes = ['bank', 'cash', 'fixed-asset'];
 
     if (supportedTypes.indexOf(account.accountType) === -1) {

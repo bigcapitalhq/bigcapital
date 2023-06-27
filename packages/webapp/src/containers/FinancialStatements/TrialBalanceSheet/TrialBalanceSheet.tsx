@@ -39,7 +39,7 @@ function TrialBalanceSheet({
     },
     [setLocationQuery],
   );
-  // Handle numebr format form submit.
+  // Handle number format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setLocationQuery({
       ...query,

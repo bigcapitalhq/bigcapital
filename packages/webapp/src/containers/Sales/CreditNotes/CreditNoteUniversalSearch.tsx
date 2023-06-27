@@ -93,7 +93,7 @@ export function CreditNoteUniversalSearchItem(
 }
 
 /**
- * Transformes receipt resource item to search item.
+ * Transforms receipt resource item to search item.
  */
 const transformReceiptsToSearch = (creditNote) => ({
   id: creditNote.id,

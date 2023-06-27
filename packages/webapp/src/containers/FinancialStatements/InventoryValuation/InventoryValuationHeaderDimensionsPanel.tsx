@@ -16,7 +16,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Inventory Valuation header dismension panel.
+ * Inventory Valuation header dimension panel.
  * @returns {JSX.Element}
  */
 export default function InventoryValuationHeaderDimensionsPanel() {
@@ -28,14 +28,14 @@ export default function InventoryValuationHeaderDimensionsPanel() {
 }
 
 /**
- * Inventory Valuation header dismension panel content.
+ * Inventory Valuation header dimension panel content.
  * @returns {JSX.Element}
  */
 function InventoryValuationHeaderDimensionsPanelContent() {
   const { warehouses, branches } =
     useInventoryValuationHeaderDimensionsPanelContext();
 
-  // Detarmines the given feature whether is enabled.
+  // Determines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

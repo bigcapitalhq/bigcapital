@@ -2,7 +2,7 @@ import { TenantSeeder } from '@/lib/Seeder/TenantSeeder';
 
 export default class SeedRolesAndPermissions extends TenantSeeder {
   /**
-   * Seeds roles and associated permissiojns.
+   * Seeds roles and associated permissions.
    * @param knex
    * @returns
    */

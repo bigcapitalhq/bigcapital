@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import {
   ISaleReceiptCreatingPayload,
   IRefundCreditNoteCreatingPayload,
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleReceiptDeletingPayload,
   ICreditNoteDeletingPayload,
   IPaymentReceiveCreatingPayload,
@@ -44,11 +44,11 @@ export default class SalesTransactionLockingGuardSubscriber {
     );
     bus.subscribe(
       events.saleInvoice.onWriteoff,
-      this.transactionLockinGuardOnInvoiceWritingoff
+      this.transactionLockingGuardOnInvoiceWritingoff
     );
     bus.subscribe(
       events.saleInvoice.onWrittenoffCancel,
-      this.transactionLockinGuardOnInvoiceWritingoffCanceling
+      this.transactionLockingGuardOnInvoiceWritingoffCanceling
     );
     bus.subscribe(
       events.saleInvoice.onDeleting,
@@ -106,7 +106,7 @@ export default class SalesTransactionLockingGuardSubscriber {
     );
     bus.subscribe(
       events.creditNote.onRefundDeleting,
-      this.transactionLockingGuardOnCreditRefundDeleteing
+      this.transactionLockingGuardOnCreditRefundDeleting
     );
 
     // Sale Estimate
@@ -132,12 +132,12 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on invoice creating.
-   * @param {ISaleInvoiceCreatingPaylaod} payload
+   * @param {ISaleInvoiceCreatingPayload} payload
    */
   private transactionLockingGuardOnInvoiceCreating = async ({
     saleInvoiceDTO,
     tenantId,
-  }: ISaleInvoiceCreatingPaylaod) => {
+  }: ISaleInvoiceCreatingPayload) => {
     // Can't continue if the new invoice is not published yet.
     if (!saleInvoiceDTO.delivered) return;
 
@@ -192,7 +192,7 @@ export default class SalesTransactionLockingGuardSubscriber {
    * Transaction locking guard on invoice writingoff.
    * @param {ISaleInvoiceWriteoffCreatePayload} payload
    */
-  private transactionLockinGuardOnInvoiceWritingoff = async ({
+  private transactionLockingGuardOnInvoiceWritingoff = async ({
     tenantId,
     saleInvoice,
   }: ISaleInvoiceWriteoffCreatePayload) => {
@@ -203,10 +203,10 @@ export default class SalesTransactionLockingGuardSubscriber {
   };
 
   /**
-   * Transaciton locking guard on canceling written-off invoice.
+   * Transaction locking guard on canceling written-off invoice.
    * @param {ISaleInvoiceWrittenOffCancelPayload} payload
    */
-  private transactionLockinGuardOnInvoiceWritingoffCanceling = async ({
+  private transactionLockingGuardOnInvoiceWritingoffCanceling = async ({
     tenantId,
     saleInvoice,
   }: ISaleInvoiceWrittenOffCancelPayload) => {
@@ -356,9 +356,9 @@ export default class SalesTransactionLockingGuardSubscriber {
 
   /**
    * Transaction locking guard on payment deleting.
-   * @param {IRefundCreditNoteDeletingPayload} paylaod -
+   * @param {IRefundCreditNoteDeletingPayload} payload -
    */
-  private transactionLockingGuardOnCreditRefundDeleteing = async ({
+  private transactionLockingGuardOnCreditRefundDeleting = async ({
     tenantId,
     oldRefundCredit,
   }: IRefundCreditNoteDeletingPayload) => {

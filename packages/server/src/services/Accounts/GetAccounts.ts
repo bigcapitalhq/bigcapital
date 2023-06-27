@@ -24,7 +24,7 @@ export class GetAccounts {
   private transformer: TransformerInjectable;
 
   /**
-   * Parsees accounts list filter DTO.
+   * Parses accounts list filter DTO.
    * @param filterDTO
    * @returns
    */

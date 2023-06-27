@@ -41,15 +41,15 @@ export class EditManualJournal {
     manualJournalDTO: IManualJournalDTO
   ) => {
     // Validates the total credit and debit to be equals.
-    this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
+    this.validator.validateCreditDebitTotalEquals(manualJournalDTO);
 
-    // Validate the contacts existance.
-    await this.validator.validateContactsExistance(tenantId, manualJournalDTO);
+    // Validate the contacts existence.
+    await this.validator.validateContactsExistence(tenantId, manualJournalDTO);
 
-    // Validates entries accounts existance.
-    await this.validator.validateAccountsExistance(tenantId, manualJournalDTO);
+    // Validates entries accounts existence.
+    await this.validator.validateAccountsExistence(tenantId, manualJournalDTO);
 
-    // Validates the manual journal number uniquiness.
+    // Validates the manual journal number uniqueness.
     if (manualJournalDTO.journalNumber) {
       await this.validator.validateManualJournalNoUnique(
         tenantId,
@@ -66,7 +66,7 @@ export class EditManualJournal {
 
   /**
    * Transform the edit manual journal DTO to upsert graph operation.
-   * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual journal DTO.
    * @param {IManualJournal} oldManualJournal
    */
   private transformEditDTOToModel = (
@@ -88,7 +88,7 @@ export class EditManualJournal {
   };
 
   /**
-   * Edits jouranl entries.
+   * Edits journal entries.
    * @param {number} tenantId
    * @param {number} manualJournalId
    * @param {IMakeJournalDTO} manualJournalDTO
@@ -105,7 +105,7 @@ export class EditManualJournal {
   }> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
-    // Validates the manual journal existance on the storage.
+    // Validates the manual journal existence on the storage.
     const oldManualJournal = await ManualJournal.query()
       .findById(manualJournalId)
       .throwIfNotFound();
@@ -119,7 +119,7 @@ export class EditManualJournal {
       oldManualJournal
     );
     // Edits the manual journal transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onManualJournalEditing` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onEditing, {

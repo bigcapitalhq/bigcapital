@@ -8,10 +8,10 @@ import { AppToaster } from '@/components';
  */
 export const handleDeleteErrors = (errors) => {
   if (
-    errors.find((error) => error.type === 'COULD_NOT_DELETE_ONLY_WAERHOUSE')
+    errors.find((error) => error.type === 'COULD_NOT_DELETE_ONLY_WAREHOUSE')
   ) {
     AppToaster.show({
-      message: intl.get('warehouse.error.could_not_delete_only_waerhouse'),
+      message: intl.get('warehouse.error.could_not_delete_only_warehouse'),
       intent: Intent.DANGER,
     });
   }

@@ -141,7 +141,7 @@ export default class ProfitLossSheet extends R.compose(
   };
 
   /**
-   * Mapps the accounts schema node to report node.
+   * Maps the accounts schema node to report node.
    * @param   {IProfitLossSchemaNode} node
    * @returns {IProfitLossSheetNode}
    */
@@ -316,7 +316,7 @@ export default class ProfitLossSheet extends R.compose(
     return R.compose(
       this.reportFilterPlugin,
       this.reportRowsPercentageCompose,
-      this.reportColumnsPerentageCompose,
+      this.reportColumnsPercentageCompose,
       this.reportSchemaEquationNodesCompose,
       this.reportSchemaAccountsNodesCompose
     )(schema);

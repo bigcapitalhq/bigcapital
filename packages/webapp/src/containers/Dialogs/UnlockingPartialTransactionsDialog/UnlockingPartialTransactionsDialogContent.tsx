@@ -5,7 +5,7 @@ import { UnlockingPartialTransactionsFormProvider } from './UnlockingPartialTran
 import UnlockingPartialTransactionsForm from './UnlockingPartialTransactionsForm';
 
 /**
- * Unlocking partail transactions dialog content.
+ * Unlocking partial transactions dialog content.
  */
 export default function UnlockingPartialTransactionsDialogContent({
   // #ownProps

@@ -17,7 +17,7 @@ export default function RefundVendorCreditDetailHeader() {
 
   return (
     <CommercialDocHeader>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <DetailItem
           label={intl.get('date')}
           children={
@@ -25,7 +25,7 @@ export default function RefundVendorCreditDetailHeader() {
           }
         />
         <DetailItem label={intl.get('refund_vendor_credit.drawer.label.amount')}>
-          <strong>{refundVendorTransaction.formtted_amount}</strong>
+          <strong>{refundVendorTransaction.formatted_amount}</strong>
         </DetailItem>
         <DetailItem
           label={intl.get('refund_vendor_credit.drawer.label.vendor_credit_no')}

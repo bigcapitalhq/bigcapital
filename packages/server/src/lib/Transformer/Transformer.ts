@@ -9,7 +9,7 @@ export class Transformer {
   public options: Record<string, any>;
 
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
@@ -25,7 +25,7 @@ export class Transformer {
   };
 
   /**
-   * Detarmines whether to exclude all attributes except the include attributes.
+   * Determines whether to exclude all attributes except the include attributes.
    * @returns {boolean}
    */
   public isExcludeAllAttributes = () => {
@@ -74,18 +74,18 @@ export class Transformer {
   };
 
   /**
-   * Transformes the given item to desired output.
+   * Transforms the given item to desired output.
    * @param item
    * @returns
    */
   protected getTransformation = (item) => {
-    const normlizedItem = this.normalizeModelItem(item);
+    const normalizedItem = this.normalizeModelItem(item);
 
     return R.compose(
       this.transform,
       R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
       this.includeAttributesTransformed
-    )(normlizedItem);
+    )(normalizedItem);
   };
 
   /**
@@ -107,7 +107,7 @@ export class Transformer {
   };
 
   /**
-   * Incldues virtual attributes.
+   * Includes virtual attributes.
    */
   protected getIncludeAttributesTransformed = (item) => {
     const attributes = this.includeAttributes();

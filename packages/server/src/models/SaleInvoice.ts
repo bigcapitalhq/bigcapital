@@ -68,7 +68,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the invoice is delivered.
+   * Determines whether the invoice is delivered.
    * @return {boolean}
    */
   get isDelivered() {
@@ -76,7 +76,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines the due date is over.
+   * Determines the due date is over.
    * @return {boolean}
    */
   get isOverdue() {
@@ -101,7 +101,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmine whether the invoice paid partially.
+   * Determine whether the invoice paid partially.
    * @return {boolean}
    */
   get isPartiallyPaid() {
@@ -109,7 +109,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Deetarmine whether the invoice paid fully.
+   * Determine whether the invoice paid fully.
    * @return {boolean}
    */
   get isFullyPaid() {
@@ -117,7 +117,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the invoice paid fully or partially.
+   * Determines whether the invoice paid fully or partially.
    * @return {boolean}
    */
   get isPaid() {
@@ -125,7 +125,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the sale invoice is written-off.
+   * Determines whether the sale invoice is written-off.
    * @return {boolean}
    */
   get isWrittenoff() {

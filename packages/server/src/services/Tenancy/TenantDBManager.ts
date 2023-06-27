@@ -36,7 +36,7 @@ export default class TenantDBManager implements ITenantDBManager {
   }
 
   /**
-   * Detarmines the tenant database weather exists.
+   * Determines the tenant database weather exists.
    * @return {Promise<boolean>}
    */
   public async databaseExists(tenant: ITenant) {
@@ -128,7 +128,7 @@ export default class TenantDBManager implements ITenantDBManager {
   }
 
   /**
-   * Retrieve knex instance from the givne tenant.
+   * Retrieve knex instance from the given tenant.
    */
   public getKnexInstance(tenantId: number) {
     const key: string = `${tenantId}`;

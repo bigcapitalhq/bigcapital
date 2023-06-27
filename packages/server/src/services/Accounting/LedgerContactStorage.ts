@@ -60,20 +60,20 @@ export class LedgerContactsBalanceStorage {
    * @param {Knex.Transaction} trx
    * @returns {Promise<(entry: ILedgerEntry) => boolean>}
    */
-  private filterARAPLedgerEntris = async (
+  private filterARAPLedgerEntries = async (
     tenantId: number,
     trx?: Knex.Transaction
   ): Promise<(entry: ILedgerEntry) => boolean> => {
     const { Account } = this.tenancy.models(tenantId);
 
-    const ARAPAcounts = await Account.query(trx).whereIn('accountType', [
+    const ARAPAccounts = await Account.query(trx).whereIn('accountType', [
       ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE,
       ACCOUNT_TYPE.ACCOUNTS_PAYABLE,
     ]);
-    const ARAPAcountsIds = ARAPAcounts.map((a) => a.id);
+    const ARAPAccountsIds = ARAPAccounts.map((a) => a.id);
 
     return (entry: ILedgerEntry) => {
-      return ARAPAcountsIds.indexOf(entry.accountId) !== -1;
+      return ARAPAccountsIds.indexOf(entry.accountId) !== -1;
     };
   };
 
@@ -96,11 +96,11 @@ export class LedgerContactsBalanceStorage {
     // Retrieves the given tenant metadata.
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    // Detarmines whether the contact has foreign currency.
+    // Determines whether the contact has foreign currency.
     const isForeignContact = contact.currencyCode !== tenantMeta.baseCurrency;
 
     // Filters the ledger base on the given contact id.
-    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(
+    const filterARAPLedgerEntries = await this.filterARAPLedgerEntries(
       tenantId,
       trx
     );
@@ -108,7 +108,7 @@ export class LedgerContactsBalanceStorage {
       // Filter entries only that have contact id.
       .whereContactId(contactId)
       // Filter entries on AR/AP accounts.
-      .filter(filterARAPLedgerEntris);
+      .filter(filterARAPLedgerEntries);
 
     const closingBalance = isForeignContact
       ? contactLedger

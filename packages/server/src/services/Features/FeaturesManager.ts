@@ -34,7 +34,7 @@ export class FeaturesManager {
   }
 
   /**
-   * Detarmines the given feature name is accessiable.
+   * Determines the given feature name is accessible.
    * @param   {number} tenantId
    * @param   {string} feature
    * @returns {Promise<void>}

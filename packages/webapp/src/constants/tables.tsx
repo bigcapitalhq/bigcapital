@@ -7,7 +7,7 @@ export const TABLES = {
   RECEIPTS: 'receipts',
   PAYMENT_RECEIVES: 'payment_receives',
   BILLS: 'bills',
-  PAYMENT_MADES: 'payment_mades',
+  PAYMENTS_MADE: 'payments_made',
   CUSTOMER: 'customers',
   VENDORS: 'vendors',
   ACCOUNTS: 'accounts',

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
 import { DashboardViewsTabs } from '@/components';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 import { useInvoicesListContext } from './InvoicesListProvider';
 
 import withInvoices from './withInvoices';
@@ -25,7 +25,7 @@ function InvoiceViewTabs({
   // Invoices list context.
   const { invoicesViews } = useInvoicesListContext();
 
-  const tabs = transfromViewsToTabs(invoicesViews);
+  const tabs = transformViewsToTabs(invoicesViews);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {

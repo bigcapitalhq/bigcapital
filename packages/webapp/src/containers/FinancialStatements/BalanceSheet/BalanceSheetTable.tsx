@@ -49,7 +49,7 @@ export default function BalanceSheetTable({
         expandColumnSpace={0.8}
         headerLoading={true}
         sticky={true}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

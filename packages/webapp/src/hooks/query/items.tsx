@@ -111,7 +111,7 @@ export function useInactivateItem(props) {
   });
 }
 
-// Transformes items response.
+// Transforms items response.
 const transformItemsResponse = (response) => {
   return {
     items: response.data.items,

@@ -15,7 +15,7 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { ServiceError } from '@/exceptions';
 import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReeceivePdf';
+import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReceivePdf';
 
 /**
  * Payments receives controller.
@@ -258,7 +258,7 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Delets the given payment receive id.
+   * Deletes the given payment receive id.
    * @param {Request} req
    * @param {Response} res
    */
@@ -303,7 +303,7 @@ export default class PaymentReceivesController extends BaseController {
           paymentReceiveId
         );
 
-      return res.status(200).send(this.transfromToResponse({ saleInvoices }));
+      return res.status(200).send(this.transformToResponse({ saleInvoices }));
     } catch (error) {
       next(error);
     }
@@ -330,9 +330,9 @@ export default class PaymentReceivesController extends BaseController {
         await this.paymentReceiveService.listPaymentReceives(tenantId, filter);
 
       return res.status(200).send({
-        payment_receives: this.transfromToResponse(paymentReceives),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        payment_receives: this.transformToResponse(paymentReceives),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -358,7 +358,7 @@ export default class PaymentReceivesController extends BaseController {
         customerId
       );
       return res.status(200).send({
-        entries: this.transfromToResponse(entries),
+        entries: this.transformToResponse(entries),
       });
     } catch (error) {
       next(error);
@@ -367,7 +367,7 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Retrieve the given payment receive details.
-   * @asycn
+   * @async
    * @param {Request} req -
    * @param {Response} res -
    */
@@ -388,8 +388,8 @@ export default class PaymentReceivesController extends BaseController {
         );
 
       return res.status(200).send({
-        payment_receive: this.transfromToResponse({ ...paymentReceive }),
-        entries: this.transfromToResponse([...entries]),
+        payment_receive: this.transformToResponse({ ...paymentReceive }),
+        entries: this.transformToResponse([...entries]),
       });
     } catch (error) {
       next(error);
@@ -419,7 +419,7 @@ export default class PaymentReceivesController extends BaseController {
       res.format({
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
           return res.status(200).send({
-            payment_receive: this.transfromToResponse(paymentReceive),
+            payment_receive: this.transformToResponse(paymentReceive),
           });
         },
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
@@ -440,7 +440,7 @@ export default class PaymentReceivesController extends BaseController {
   }
 
   /**
-   * Payment receive notfiy customer by sms.
+   * Payment receive notify customer by sms.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

@@ -21,12 +21,12 @@ import { useCurrentOrganization } from '@/hooks/state';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
-  CUSTOMERS_NOT_WITH_RECEVIABLE_ACC: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
+  CUSTOMERS_NOT_WITH_RECEIVABLE_ACC: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
   VENDORS_NOT_WITH_PAYABLE_ACCOUNT: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
   PAYABLE_ENTRIES_HAS_NO_VENDORS: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
   RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
-  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
-    'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+  CREDIT_DEBIT_SUMMATION_SHOULD_NOT_EQUAL_ZERO:
+    'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
   COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
     'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
@@ -185,7 +185,7 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -197,7 +197,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines currencies fast field should update.
+ * Determines currencies fast field should update.
  */
 export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -222,7 +222,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Journal totals.
+ * Retrieves the Journal totals.
  */
 export const useJournalTotals = () => {
   const {
@@ -252,7 +252,7 @@ export const useJournalTotals = () => {
 };
 
 /**
- * Detarmines whether the expenses has foreign .
+ * Determines whether the expenses has foreign .
  * @returns {boolean}
  */
 export const useJournalIsForeign = () => {

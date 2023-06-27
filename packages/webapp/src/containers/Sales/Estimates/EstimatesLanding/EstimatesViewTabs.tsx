@@ -8,7 +8,7 @@ import withEstimatesActions from './withEstimatesActions';
 import withEstimates from './withEstimates';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Estimates views tabs.
@@ -24,7 +24,7 @@ function EstimateViewTabs({
   const { estimatesViews } = useEstimatesListContext();
  
   // Estimates views.
-  const tabs = transfromViewsToTabs(estimatesViews);
+  const tabs = transformViewsToTabs(estimatesViews);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {

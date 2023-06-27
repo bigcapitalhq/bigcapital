@@ -51,7 +51,7 @@ export default class CashflowAccountTransactionsRepo {
       .limit(pagination.total)
       .offset(pagination.pageSize * (pagination.page - 1));
 
-    // Sumation of credit and debit balance.
+    // Summation of credit and debit balance.
     const openingBalances = await AccountTransaction.query()
       .sum('credit as credit')
       .sum('debit as debit')

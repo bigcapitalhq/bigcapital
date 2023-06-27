@@ -14,7 +14,7 @@ const PdfPreviewDialogContent = React.lazy(() =>
 );
 
 /**
- * Credit note PDF previwe dialog.
+ * Credit note PDF preview dialog.
  */
 function CreditNotePdfPreviewDialog({
   dialogName,

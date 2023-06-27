@@ -15,7 +15,7 @@ function InventoryItemDetailsProvider({ query, ...props }) {
     [query],
   );
 
-  // Fetching inventory item details report based on the givne query.
+  // Fetching inventory item details report based on the given query.
   const {
     data: inventoryItemDetails,
     isFetching: isInventoryItemDetailsFetching,

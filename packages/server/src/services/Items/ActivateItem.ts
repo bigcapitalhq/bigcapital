@@ -25,10 +25,10 @@ export class ActivateItem {
   public async activateItem(tenantId: number, itemId: number): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
 
-    // Retreives the given item or throw not found error.
+    // Retrieves the given item or throw not found error.
     const oldItem = await Item.query().findById(itemId).throwIfNotFound();
 
-    // Activate the given item with associated transactions under unit-of-work envirement.
+    // Activate the given item with associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Mutate item on the storage.
       await Item.query(trx).findById(itemId).patch({ active: true });

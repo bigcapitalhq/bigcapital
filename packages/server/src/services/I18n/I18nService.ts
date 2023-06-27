@@ -26,7 +26,7 @@ export default class I18nService {
   }
 
   /**
-   * Mappes array collection to i18n localization based in given attributes.
+   * Maps array collection to i18n localization based in given attributes.
    * @param {Array<any>} data - Array collection.
    * @param {string[]} attributes - Attributes.
    * @param {number} tenantId - Tenant id.

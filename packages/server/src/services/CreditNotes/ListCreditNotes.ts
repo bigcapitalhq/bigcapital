@@ -51,7 +51,7 @@ export default class ListCreditNotes extends BaseCreditNotes {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transforomes the credit notes to POJO.
+    // Transforms the credit notes to POJO.
     const creditNotes = await this.transformer.transform(
       tenantId,
       results,

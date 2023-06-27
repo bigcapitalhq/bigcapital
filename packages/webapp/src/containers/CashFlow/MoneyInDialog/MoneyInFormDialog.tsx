@@ -5,7 +5,7 @@ import { useFormikContext } from 'formik';
 import TransactionNumberDialog from '@/containers/Dialogs/TransactionNumberDialog';
 
 /**
- * Moneny in / transaction number form dialog.
+ * Money in / transaction number form dialog.
  */
 export default function MoneyInFormDialog() {
   const { setFieldValue } = useFormikContext();

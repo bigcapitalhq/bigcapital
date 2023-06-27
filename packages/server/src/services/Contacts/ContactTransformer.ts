@@ -3,7 +3,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { IContact } from '@/interfaces';
 
-export default class ContactTransfromer extends Transformer {
+export default class ContactTransformer extends Transformer {
   /**
    * Retrieve formatted expense amount.
    * @param {IExpense} expense
@@ -29,7 +29,7 @@ export default class ContactTransfromer extends Transformer {
   };
 
   /**
-   * Retriecve fromatted date.
+   * Retrieve formatted date.
    * @param {IExpense} expense
    * @returns {string}
    */

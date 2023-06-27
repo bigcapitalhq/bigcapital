@@ -81,10 +81,10 @@ export default [
     parent_account_id: null,
     index: 1,
     active: 1,
-    description:'An account that holds valuation of products or goods that availiable for sale.',
+    description:'An account that holds valuation of products or goods that available for sale.',
   },
 
-  // Libilities
+  // Liabilities
   {
     name:'Accounts Payable (A/P)',
     slug: 'accounts-payable',

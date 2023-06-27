@@ -35,7 +35,7 @@ export default function RegisterUserForm() {
     authRegisterMutate(values)
       .then((response) => {
         authLoginMutate({
-          crediential: values.email,
+          credential: values.email,
           password: values.password,
         }).catch(
           ({

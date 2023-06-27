@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.register-organization-form {
+  width: 690px;
+  margin: 0px auto;
+  padding: 80px 50px;
+
+  .register-org-title {
+    margin-bottom: 30px;
+
+    h2 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #555555;
+      line-height: 2em;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 400;
+    color: #888888;
+    margin-bottom: 20px;
+  }
+
+  .bp3-form-group {
+    .bp3-input-group {
+      .bp3-input {
+        position: relative;
+        width: 619px;
+        height: 38px;
+      }
+    }
+  }
+
+  .form-group--base-currency,
+  .form-group--language {
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      min-width: 300px;
+      min-height: 38px;
+    }
+  }
+  .form-group--language {
+    margin-left: 18px;
+  }
+  .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+    min-width: 619px;
+    min-height: 38px;
+  }
+
+  .form-group--time-zone {
+    .bp3-text-muted {
+      color: #000000;
+    }
+    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      background: #fff;
+      box-shadow: 0 0 0 transparent;
+      border: 1px solid #ced4da;
+      padding: 8px;
+    }
+  }
+
+  .register-org-note {
+    width: 618px;
+    font-size: 14px;
+    line-height: 2.7rem;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #f5f5f5;
+  }
+  .register-org-button {
+    .bp3-button {
+      background-color: #0052cc;
+      width: 174px;
+      min-height: 40px;
+    }
+  }
+}

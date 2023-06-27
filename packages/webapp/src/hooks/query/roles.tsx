@@ -62,7 +62,7 @@ export function useDeleteRole(props) {
 }
 
 /**
- * Retrive the roles permissions schema.
+ * Retrieve the roles permissions schema.
  */
 export function usePermissionsSchema(query, props) {
   return useRequestQuery(
@@ -79,7 +79,7 @@ export function usePermissionsSchema(query, props) {
 }
 
 /**
- * Retrieve the role permisstion schema.
+ * Retrieve the role permission schema.
  * @param {number} role_id - role id.
  */
 export function useRolePermission(role_id, props, requestProps) {

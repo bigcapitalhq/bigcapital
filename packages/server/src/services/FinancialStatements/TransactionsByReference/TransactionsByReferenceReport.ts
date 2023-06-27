@@ -33,7 +33,7 @@ export default class TransactionsByReference extends FinancialSheet {
   }
 
   /**
-   * Mappes the given account transaction to report transaction.
+   * Maps the given account transaction to report transaction.
    * @param {IAccountTransaction} transaction
    * @returns {ITransactionsByReferenceTransaction}
    */
@@ -61,7 +61,7 @@ export default class TransactionsByReference extends FinancialSheet {
   };
 
   /**
-   * Mappes the given accounts transactions to report transactions.
+   * Maps the given accounts transactions to report transactions.
    * @param {IAccountTransaction} transaction
    * @returns {ITransactionsByReferenceTransaction}
    */

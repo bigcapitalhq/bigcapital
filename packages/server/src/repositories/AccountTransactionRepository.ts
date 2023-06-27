@@ -6,7 +6,7 @@ interface IJournalTransactionsFilter {
   fromDate: string | Date;
   toDate: string | Date;
   accountsIds: number[];
-  sumationCreditDebit: boolean;
+  summationCreditDebit: boolean;
   fromAmount: number;
   toAmount: number;
   contactsIds?: number[];
@@ -33,8 +33,8 @@ export default class AccountTransactionsRepository extends TenantRepository {
       .modify('filterDateRange', filter.fromDate, filter.toDate)
       .withGraphFetched('account')
       .onBuild((query) => {
-        if (filter.sumationCreditDebit) {
-          query.modify('sumationCreditDebit');
+        if (filter.summationCreditDebit) {
+          query.modify('summationCreditDebit');
         }
         if (filter.fromAmount || filter.toAmount) {
           query.modify('filterAmountRange', filter.fromAmount, filter.toAmount);
@@ -80,7 +80,7 @@ export default class AccountTransactionsRepository extends TenantRepository {
   }
 
   /**
-   * Reverts the jouranl entries.
+   * Reverts the journal entries.
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */

@@ -51,7 +51,7 @@ function InvoiceNumberDialogContent({
       handleSuccess();
       return;
     }
-    // Transformes the form values to settings to save it.
+    // Transforms the form values to settings to save it.
     const options = transformFormToSettings(values, 'sales_invoices');
 
     // Save the settings.

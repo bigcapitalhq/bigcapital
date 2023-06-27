@@ -43,7 +43,7 @@ export default function InvoiceDetailHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('invoice_date')}>
               <FormatDate value={invoice.invoice_date} />
             </DetailItem>
@@ -70,7 +70,7 @@ export default function InvoiceDetailHeader() {
 
         <Col xs={6}>
           <DetailsMenu
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'180px'}
             textAlign={'right'}
           >

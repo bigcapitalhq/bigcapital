@@ -70,10 +70,10 @@ export default class ResourceService {
     const $enumerationType = (field) =>
       field.fieldType === 'enumeration' ? field : undefined;
 
-    const naviagations = [
+    const navigations = [
       ['fields', qim.$each, 'name'],
       ['fields', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
     ];
-    return this.i18nService.i18nApply(naviagations, meta, tenantId);
+    return this.i18nService.i18nApply(navigations, meta, tenantId);
   }
 }

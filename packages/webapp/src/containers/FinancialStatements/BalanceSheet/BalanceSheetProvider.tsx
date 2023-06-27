@@ -8,7 +8,7 @@ import { transformFilterFormToQuery } from '../common';
 const BalanceSheetContext = createContext();
 
 function BalanceSheetProvider({ filter, ...props }) {
-  // Transformes the given filter to query.
+  // Transforms the given filter to query.
   const query = React.useMemo(() => transformFilterFormToQuery(filter), [
     filter,
   ]);

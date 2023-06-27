@@ -21,7 +21,7 @@ export default class JournalCommands {
     this.models = this.journal.models;
   }
   /**
-   * Reverts the jouranl entries.
+   * Reverts the journal entries.
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */

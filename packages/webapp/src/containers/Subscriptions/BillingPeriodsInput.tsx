@@ -8,7 +8,7 @@ import { T, SubscriptionPeriods } from '@/components';
 import withPlan from './withPlan';
 
 /**
- * Sunscription periods enhanced.
+ * Subscription periods enhanced.
  */
 const SubscriptionPeriodsEnhanced = R.compose(
   withPlan(({ plan }) => ({ plan })),

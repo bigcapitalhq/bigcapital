@@ -28,7 +28,7 @@ import salesReceipts from './receipts/receipts.reducer';
 import bills from './Bills/bills.reducer';
 import vendors from './vendors/vendors.reducer';
 import paymentReceives from './PaymentReceives/paymentReceives.reducer';
-import paymentMades from './PaymentMades/paymentMades.reducer';
+import paymentsMade from './PaymentsMade/paymentsMade.reducer';
 import organizations from './organizations/organizations.reducers';
 import subscriptions from './subscription/subscription.reducer';
 import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.reducer';
@@ -66,7 +66,7 @@ const appReducer = combineReducers({
   bills,
   vendors,
   paymentReceives,
-  paymentMades,
+  paymentsMade,
   inventoryAdjustments,
   plans,
   creditNotes,

@@ -35,7 +35,7 @@ import {
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
@@ -179,7 +179,7 @@ function QuickPaymentMadeFormFields({
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('payment_date', formattedDate);
                   })}

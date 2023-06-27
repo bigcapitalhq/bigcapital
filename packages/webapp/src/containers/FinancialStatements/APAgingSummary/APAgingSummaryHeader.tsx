@@ -74,7 +74,7 @@ function APAgingSummaryHeader({
   const handleDrawerClose = () => {
     toggleFilterDrawerDisplay(false);
   };
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

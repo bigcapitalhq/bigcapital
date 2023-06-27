@@ -22,7 +22,7 @@ export function useRequestQuery(query, axios, props) {
     () => apiRequest.http({ ...axios, url: `/api/${axios.url}` }),
     props,
   );
-  // Momerize the default data.
+  // Memorize the default data.
   const defaultData = useRef(props.defaultData || undefined);
 
   return {

@@ -14,13 +14,13 @@ export default class InventoryItemsQuantitySync {
 
   /**
    * Reverse the given inventory transactions.
-   * @param {IInventoryTransaction[]} inventroyTransactions
+   * @param {IInventoryTransaction[]} inventoryTransactions
    * @return {IInventoryTransaction[]}
    */
   reverseInventoryTransactions(
-    inventroyTransactions: IInventoryTransaction[]
+    inventoryTransactions: IInventoryTransaction[]
   ): IInventoryTransaction[] {
-    return inventroyTransactions.map((transaction) => ({
+    return inventoryTransactions.map((transaction) => ({
       ...transaction,
       direction: transaction.direction === 'OUT' ? 'IN' : 'OUT',
     }));
@@ -28,29 +28,29 @@ export default class InventoryItemsQuantitySync {
 
   /**
    * Reverses the inventory transactions.
-   * @param {IInventoryTransaction[]} inventroyTransactions -
+   * @param {IInventoryTransaction[]} inventoryTransactions -
    * @return {IItemsQuantityChanges[]}
    */
   getReverseItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[]
+    inventoryTransactions: IInventoryTransaction[]
   ): IItemsQuantityChanges[] {
     const reversedTransactions = this.reverseInventoryTransactions(
-      inventroyTransactions
+      inventoryTransactions
     );
     return this.getItemsQuantityChanges(reversedTransactions);
   }
 
   /**
    * Retrieve the items quantity changes from the given inventory transactions.
-   * @param {IInventoryTransaction[]} inventroyTransactions - Inventory transactions.
+   * @param {IInventoryTransaction[]} inventoryTransactions - Inventory transactions.
    * @return {IItemsQuantityChanges[]}
    */
   getItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[]
+    inventoryTransactions: IInventoryTransaction[]
   ): IItemsQuantityChanges[] {
     const balanceMap: { [itemId: number]: number } = {};
 
-    inventroyTransactions.forEach(
+    inventoryTransactions.forEach(
       (inventoryTransaction: IInventoryTransaction) => {
         const { itemId, direction, quantity } = inventoryTransaction;
 

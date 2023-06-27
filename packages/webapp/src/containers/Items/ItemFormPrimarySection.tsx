@@ -147,7 +147,7 @@ export default function ItemFormPrimarySection() {
               >
                 <CategoriesSelectList
                   categories={itemsCategories}
-                  selecetedCategoryId={value}
+                  selectedCategoryId={value}
                   onCategorySelected={(category) => {
                     form.setFieldValue('category_id', category.id);
                   }}
@@ -162,7 +162,7 @@ export default function ItemFormPrimarySection() {
             initialFiles={initialAttachmentFiles}
             onDrop={handleDropFiles}
             onDeleteFile={handleDeleteFile}
-            hint={'Attachments: Maxiumum size: 20MB'}
+            hint={'Attachments: Maximum size: 20MB'}
             className={'mt2'}
           /> */}
         </Col>

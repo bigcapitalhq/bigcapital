@@ -39,13 +39,13 @@ export const BalanceSheetPercentage = (Base: any) =>
         parentTotal: number,
         node: IBalanceSheetDataNode
       ): IBalanceSheetDataNode => {
-        const percenatage = this.getPercentageBasis(
+        const percentage = this.getPercentageBasis(
           parentTotal,
           node.total.amount
         );
         return R.assoc(
           'percentageRow',
-          this.getPercentageAmountMeta(percenatage),
+          this.getPercentageAmountMeta(percentage),
           node
         );
       }
@@ -62,8 +62,8 @@ export const BalanceSheetPercentage = (Base: any) =>
         parentTotal: number,
         node: IBalanceSheetDataNode
       ): IBalanceSheetDataNode => {
-        const assocRowPercen = this.assocReportNodeRowPercentage(parentTotal);
-        const horTotals = R.map(assocRowPercen)(node.horizontalTotals);
+        const assocRowPercent = this.assocReportNodeRowPercentage(parentTotal);
+        const horTotals = R.map(assocRowPercent)(node.horizontalTotals);
 
         return R.assoc('horizontalTotals', horTotals, node);
       }
@@ -117,7 +117,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
         return R.compose(
           R.when(
-            this.isNodeHasHorizoTotals,
+            this.isNodeHasHorizontalTotals,
             this.assocColumnPercentageHorizTotals(parentNode)
           ),
           this.assocReportNodeColumnPercentage(parentTotal)
@@ -135,7 +135,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
       return R.compose(
         R.when(
-          this.isNodeHasHorizoTotals,
+          this.isNodeHasHorizontalTotals,
           this.assocRowPercentageHorizTotals(total)
         ),
         this.assocReportNodeRowPercentage(total)
@@ -164,7 +164,7 @@ export const BalanceSheetPercentage = (Base: any) =>
 
       return R.compose(
         R.when(
-          this.isNodeHasHorizoTotals,
+          this.isNodeHasHorizontalTotals,
           this.assocColumnPercentageHorizTotals(parentNode)
         ),
         this.assocReportNodeColumnPercentage(parentTotal),
@@ -211,11 +211,11 @@ export const BalanceSheetPercentage = (Base: any) =>
     };
 
     /**
-     * Detarmines whether the given node has horizontal total.
+     * Determines whether the given node has horizontal total.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    protected isNodeHasHorizoTotals = (
+    protected isNodeHasHorizontalTotals = (
       node: IBalanceSheetDataNode
     ): boolean => {
       return (

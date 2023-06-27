@@ -235,7 +235,7 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmine whether the bill is open.
+   * Determine whether the bill is open.
    * @return {boolean}
    */
   get isOpen() {
@@ -243,7 +243,7 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Deetarmine whether the bill paid partially.
+   * Determine whether the bill paid partially.
    * @return {boolean}
    */
   get isPartiallyPaid() {
@@ -251,7 +251,7 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Deetarmine whether the bill paid fully.
+   * Determine whether the bill paid fully.
    * @return {boolean}
    */
   get isFullyPaid() {
@@ -259,7 +259,7 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the bill paid fully or partially.
+   * Determines whether the bill paid fully or partially.
    * @return {boolean}
    */
   get isPaid() {
@@ -289,7 +289,7 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines the due date is over.
+   * Determines the due date is over.
    * @return {boolean}
    */
   get isOverdue() {

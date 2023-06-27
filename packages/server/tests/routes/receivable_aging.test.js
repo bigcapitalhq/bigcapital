@@ -31,7 +31,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
     expect(res.body.aging.customers[1].customer_name).equals('Mohamed');
   });
 
-  it('Should respon se the customers ids not found.', async () => {
+  it('Should respond the customers ids not found.', async () => {
     const res = await request()
       .get('/api/financial_statements/receivable_aging_summary')
       .set('x-access-token', loginRes.body.token)

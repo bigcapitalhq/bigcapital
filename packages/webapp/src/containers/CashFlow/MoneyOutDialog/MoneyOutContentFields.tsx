@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 
-import OtherExpnseFormFields from './OtherExpense/OtherExpnseFormFields';
+import OtherExpenseFormFields from './OtherExpense/OtherExpenseFormFields';
 import OwnerDrawingsFormFields from './OwnerDrawings/OwnerDrawingsFormFields';
 import TransferToAccountFormFields from './TransferToAccount/TransferToAccountFormFields';
 
@@ -12,7 +12,7 @@ function MoneyOutContentFields({ accountType }) {
         return <OwnerDrawingsFormFields />;
 
       case 'other_expense':
-        return <OtherExpnseFormFields />;
+        return <OtherExpenseFormFields />;
 
       case 'transfer_to_account':
         return <TransferToAccountFormFields />;

@@ -34,14 +34,14 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Detarimes the tenant whether is build currently running.
+   * Determines the tenant whether is build currently running.
    */
   get isBuildRunning() {
     return !!this.buildJobId;
   }
 
   /**
-   * Detarmines the tenant whether is upgrade currently running.
+   * Determines the tenant whether is upgrade currently running.
    */
   get isUpgradeRunning() {
     return !!this.upgradeJobId;
@@ -82,7 +82,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Mark the the given organization as initialized.
+   * Mark the given organization as initialized.
    * @param {string} organizationId
    */
   static markAsInitialized(tenantId) {
@@ -123,7 +123,7 @@ export default class Tenant extends BaseModel {
   }
 
   /**
-   * Markes the given tenant as upgraded.
+   * Marks the given tenant as upgraded.
    * @param {number} tenantId
    * @returns
    */

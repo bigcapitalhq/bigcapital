@@ -8,7 +8,7 @@ import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
 import I18nMiddleware from '@/api/middleware/I18nMiddleware';
-import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
+import I18nAuthenticatedMiddleware from '@/api/middleware/I18nAuthenticatedMiddleware';
 import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
 
 // Routes
@@ -51,7 +51,7 @@ import { WarehousesController } from './controllers/Warehouses';
 import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
 import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
 import { BranchIntegrationErrorsMiddleware } from '@/services/Branches/BranchIntegrationErrorsMiddleware';
-import { InventoryItemsCostController } from './controllers/Inventory/InventortyItemsCosts';
+import { InventoryItemsCostController } from './controllers/Inventory/InventoryItemsCosts';
 import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
@@ -80,7 +80,7 @@ export default () => {
   dashboard.use(TenancyMiddleware);
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
-  dashboard.use(I18nAuthenticatedMiddlware);
+  dashboard.use(I18nAuthenticatedMiddleware);
   dashboard.use(EnsureTenantIsSeeded);
   dashboard.use(AuthorizationMiddleware);
 

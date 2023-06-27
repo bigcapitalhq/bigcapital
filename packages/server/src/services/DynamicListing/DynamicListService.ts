@@ -86,12 +86,12 @@ export default class DynamicListService implements IDynamicListService {
     }
     // Sort by the given column.
     if (parsedFilter.columnSortBy) {
-      const dynmaicListSortBy = this.dynamicListSortBy.dynamicSortBy(
+      const dynamicListSortBy = this.dynamicListSortBy.dynamicSortBy(
         model,
         parsedFilter.columnSortBy,
         parsedFilter.sortOrder
       );
-      dynamicFilter.setFilter(dynmaicListSortBy);
+      dynamicFilter.setFilter(dynamicListSortBy);
     }
     // Filter roles.
     if (!isEmpty(parsedFilter.filterRoles)) {

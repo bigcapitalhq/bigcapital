@@ -22,7 +22,7 @@ export default class InventoryTransaction extends TenantModel {
    * Retrieve formatted reference type.
    * @return {string}
    */
-  get transcationTypeFormatted() {
+  get transactionTypeFormatted() {
     return InventoryTransaction.getReferenceTypeFormatted(this.transactionType);
   }
 
@@ -90,7 +90,7 @@ export default class InventoryTransaction extends TenantModel {
       },
 
       /**
-       * Filters transactions by the given warehosues.
+       * Filters transactions by the given warehouses.
        */
       filterByWarehouses(query, warehousesIds) {
         const formattedWarehousesIds = castArray(warehousesIds);

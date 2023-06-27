@@ -49,7 +49,7 @@ export default class DeleteVendorCredit extends BaseVendorCredit {
       tenantId,
       vendorCreditId
     );
-    // Deletes the vendor credit transactions under UOW envirement.
+    // Deletes the vendor credit transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreditEditing` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onDeleting, {

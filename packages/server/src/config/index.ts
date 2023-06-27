@@ -162,7 +162,7 @@ module.exports = {
    * Latest tenant database batch number.
    *
    * Should increment the batch number once you create a new migrations or seeds
-   * to application detarmines to upgrade.
+   * to application determines to upgrade.
    */
   databaseBatch: 4,
 };

@@ -59,7 +59,7 @@ export default class UsersService {
       authorizedUser
     );
     // Validate user email should be unique.
-    await this.validateUserEmailUniquiness(tenantId, email, userId);
+    await this.validateUserEmailUniqueness(tenantId, email, userId);
 
     // Retrieve the given role or throw not found service error.
     const role = await this.rolesService.getRoleOrThrowError(
@@ -127,7 +127,7 @@ export default class UsersService {
     // Retrieve the user or throw not found service error.
     const tenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
 
-    // Throw serivce error if the user is already activated.
+    // Throw service error if the user is already activated.
     this.throwErrorIfUserActive(tenantUser);
 
     // Marks the tenant user as active.
@@ -161,7 +161,7 @@ export default class UsersService {
     // Retrieve the user or throw not found service error.
     const tenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
 
-    // Throw serivce error if the user is already inactivated.
+    // Throw service error if the user is already inactivated.
     this.throwErrorIfUserInactive(tenantUser);
 
     // Marks the tenant user as active.
@@ -202,7 +202,7 @@ export default class UsersService {
   }
 
   /**
-   * Validate user existance throw error in case user was not found.,
+   * Validate user existence throw error in case user was not found.,
    * @param {number} tenantId -
    * @param {number} userId -
    * @returns {ISystemUser}
@@ -278,7 +278,7 @@ export default class UsersService {
    * @param {string} email
    * @param {number} userId
    */
-  private validateUserEmailUniquiness = async (
+  private validateUserEmailUniqueness = async (
     tenantId: number,
     email: string,
     userId: number

@@ -96,7 +96,7 @@ export function EstimateUniversalSearchItem(
 }
 
 /**
- * Transformes the estimates to search items.
+ * Transforms the estimates to search items.
  */
 const transformEstimatesToSearch = (estimate) => ({
   id: estimate.id,

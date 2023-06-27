@@ -20,7 +20,7 @@ export default function JournalEntriesTable({ transactions, ...restProps }) {
     <DataTable
       columns={columns}
       data={transactions}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}
       {...restProps}
     />

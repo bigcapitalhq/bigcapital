@@ -8,7 +8,7 @@ import { useBillsListContext } from './BillsListProvider';
 import withBills from './withBills';
 import withBillActions from './withBillsActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Bills view tabs.
@@ -23,14 +23,14 @@ function BillViewTabs({
   // Bills list context.
   const { billsViews } = useBillsListContext();
 
-  // Handle tab chaging.
+  // Handle tab changing.
   const handleTabsChange = (viewSlug) => {
     setBillsTableState({
       viewSlug: viewSlug || null,
     });
   };
 
-  const tabs = transfromViewsToTabs(billsViews);
+  const tabs = transformViewsToTabs(billsViews);
 
   return (
     <Navbar className={'navbar--dashboard-views'}>

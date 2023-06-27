@@ -32,7 +32,7 @@ function WarehouseMarkPrimaryAlert({
     closeAlert(name);
   };
 
-  // andle cancel mark primary confirm.
+  // handle cancel mark primary confirm.
   const handleConfirmMarkPrimaryWarehouse = () => {
     markPrimaryWarehouseMutate(warehouseId)
       .then(() => {

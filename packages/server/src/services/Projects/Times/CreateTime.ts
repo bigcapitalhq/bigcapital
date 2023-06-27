@@ -44,7 +44,7 @@ export class CreateTimeService {
       timeDTO,
     } as IProjectTimeCreateEventPayload);
 
-    // Creates a new project under unit-of-work envirement.
+    // Creates a new project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectTimeCreating` event.
       await this.eventPublisher.emitAsync(events.projectTime.onCreating, {

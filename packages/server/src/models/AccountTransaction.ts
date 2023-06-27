@@ -120,7 +120,7 @@ export default class AccountTransaction extends TenantModel {
           });
         }
       },
-      sumationCreditDebit(query) {
+      summationCreditDebit(query) {
         query.select(['accountId']);
 
         query.sum('credit as credit');
@@ -135,11 +135,11 @@ export default class AccountTransaction extends TenantModel {
       },
       openingBalance(query, fromDate) {
         query.modify('filterDateRange', null, fromDate);
-        query.modify('sumationCreditDebit');
+        query.modify('summationCreditDebit');
       },
       closingBalance(query, toDate) {
         query.modify('filterDateRange', null, toDate);
-        query.modify('sumationCreditDebit');
+        query.modify('summationCreditDebit');
       },
 
       contactsOpeningBalance(

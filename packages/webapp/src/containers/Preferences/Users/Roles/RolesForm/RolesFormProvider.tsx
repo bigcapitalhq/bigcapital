@@ -38,7 +38,7 @@ function RolesFormProvider({ roleId, ...props }) {
     },
   );
 
-  // Detarmines whether the new or edit mode.
+  // Determines whether the new or edit mode.
   const isNewMode = !roleId;
 
   // Provider state.

@@ -27,7 +27,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
   >;
 
   /**
-   * Setes initial aging periods to the contact.
+   * Sets initial aging periods to the contact.
    */
   protected getInitialAgingPeriodsTotal(): IAgingPeriodTotal[] {
     return this.agingPeriods.map((agingPeriod) => ({
@@ -199,7 +199,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
   }
 
   /**
-   * Retrieve to total sumation of the given contacts summeries sections.
+   * Retrieve to total summation of the given contacts summaries sections.
    * @param {IARAgingSummaryCustomer[]} contactsSections -
    * @return {number}
    */

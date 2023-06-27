@@ -7,7 +7,7 @@ import Warehouses from './Warehouses';
  * Warehouses Preferences.
  * @returns
  */
-export default function WarehousesPerences() {
+export default function WarehousesPreferences() {
   return (
     <WarehousesProvider>
       <Warehouses />

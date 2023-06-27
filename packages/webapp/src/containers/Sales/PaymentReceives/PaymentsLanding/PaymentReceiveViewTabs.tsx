@@ -33,7 +33,7 @@ function PaymentReceiveViewTabs({
     history.push('/custom_views/payment-receives/new');
   };
 
-  // Handles the active tab chaing.
+  // Handles the active tab change.
   const handleTabsChange = (customView) => {
     addPaymentReceivesTableQueries({
       customViewId: customView || null,

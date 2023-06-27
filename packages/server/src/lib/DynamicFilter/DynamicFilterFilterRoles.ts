@@ -1,7 +1,7 @@
-import DynamicFilterRoleAbstructor from './DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstractor from './DynamicFilterRoleAbstractor';
 import { IFilterRole } from '@/interfaces';
 
-export default class FilterRoles extends DynamicFilterRoleAbstructor {
+export default class FilterRoles extends DynamicFilterRoleAbstractor {
   private filterRoles: IFilterRole[];
 
   /**

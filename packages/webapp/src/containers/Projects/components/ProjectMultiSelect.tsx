@@ -55,7 +55,7 @@ const projectSelectProps = {
 };
 
 /**
- * projects mulit select.
+ * projects multi select.
  * @param param0
  * @returns {JSX.Element}
  */

@@ -12,7 +12,7 @@ import {
 } from '@/components';
 
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
+  payload: { onEdit, onDelete, onViewDetails, onInitiate, onTransfer },
   row: { original },
 }) {
   return (
@@ -33,7 +33,7 @@ export function ActionsMenu({
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
           text={intl.get('warehouse_transfer.action.initiate_transfer')}
-          onClick={safeCallback(onInitate, original)}
+          onClick={safeCallback(onInitiate, original)}
         />
       </If>
       <If condition={original.is_initiated && !original.is_transferred}>

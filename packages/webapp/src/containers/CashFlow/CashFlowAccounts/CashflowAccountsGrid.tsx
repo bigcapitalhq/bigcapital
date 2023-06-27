@@ -192,7 +192,7 @@ function CashflowAccountMoneyInContextMenu({ onClick }) {
   const handleItemClick = curry((transactionType, event) => {
     onClick && onClick(transactionType, event);
   });
-  // Retreives the add money in button options.
+  // Retrieves the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
 
   return addMoneyInOptions.map((option) => (
@@ -207,7 +207,7 @@ function CashflowAccountMoneyOutContextMenu({ onClick }) {
   const handleItemClick = curry((transactionType, event) => {
     onClick && onClick(transactionType, event);
   });
-  // Retreives the add money out button options.
+  // Retrieves the add money out button options.
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   return addMoneyOutOptions.map((option) => (

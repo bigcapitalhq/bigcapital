@@ -92,7 +92,7 @@ export function validateRolesLogicExpression(
   );
 }
 
-export function validateFieldKeyExistance(model: any, fieldKey: string) {
+export function validateFieldKeyExistence(model: any, fieldKey: string) {
   return model?.fields?.[fieldKey] || false;
 }
 

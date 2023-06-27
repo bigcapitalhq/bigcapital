@@ -26,7 +26,7 @@ const CheckboxEditableCell = ({
 
   const error = payload.errors?.[index]?.[id];
 
-  // Detarmines whether the checkbox is disabled.
+  // Determines whether the checkbox is disabled.
   const disabled = disabledAccessor ? get(original, disabledAccessor) : false;
 
   return (

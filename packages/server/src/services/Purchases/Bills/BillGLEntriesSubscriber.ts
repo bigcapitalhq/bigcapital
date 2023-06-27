@@ -18,7 +18,7 @@ export class BillGLEntriesSubscriber {
   billGLEntries: BillGLEntries;
 
   /**
-   * Attachs events with handles.
+   * Attaches events with handles.
    */
   attach(bus) {
     bus.subscribe(

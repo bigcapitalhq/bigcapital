@@ -33,7 +33,7 @@ import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   compose,
 } from '@/utils';
@@ -57,7 +57,7 @@ export default function TransferToAccountFormFields() {
   // Money in dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
   const { values } = useFormikContext();
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
 
   const accountRef = useAutofocus();
 
@@ -102,7 +102,7 @@ export default function TransferToAccountFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,
@@ -148,7 +148,7 @@ export default function TransferToAccountFormFields() {
           </FormGroup>
         )}
       </FastField>
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}

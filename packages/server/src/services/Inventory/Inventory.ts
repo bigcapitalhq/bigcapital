@@ -95,7 +95,7 @@ export default class InventoryService {
   ) {
     const { Item } = this.tenancy.models(tenantId);
 
-    // Fetches the item with assocaited item category.
+    // Fetches the item with associated item category.
     const item = await Item.query().findById(itemId);
 
     // Cannot continue if the given item was not inventory item.
@@ -213,7 +213,7 @@ export default class InventoryService {
   }
 
   /**
-   * Writes the inventory transactiosn on the storage from the given
+   * Writes the inventory transactions on the storage from the given
    * inventory transactions entries.
    *
    * @param {number} tenantId -
@@ -272,13 +272,13 @@ export default class InventoryService {
       return;
     }
     // Inventory transactions.
-    const inventoryTranscations =
+    const inventoryTransactions =
       this.transformItemEntriesToInventory(transaction);
 
     // Records the inventory transactions of the given sale invoice.
     await this.recordInventoryTransactions(
       tenantId,
-      inventoryTranscations,
+      inventoryTransactions,
       override,
       trx
     );

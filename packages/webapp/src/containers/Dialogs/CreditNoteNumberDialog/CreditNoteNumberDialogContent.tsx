@@ -50,7 +50,7 @@ function CreditNoteNumberDialogContent({
       handleSuccess();
       return;
     }
-    // Transformes the form values to settings to save it.
+    // Transforms the form values to settings to save it.
     const options = transformFormToSettings(values, 'credit_note');
 
     // Save the settings.

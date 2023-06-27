@@ -15,7 +15,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CASHFLOW_TRANSACTION_TYPE } from './constants';
 import { transformCashflowTransactionType } from './utils';
 import events from '@/subscribers/events';
-import { CommandCashflowValidator } from './CommandCasflowValidator';
+import { CommandCashflowValidator } from './CommandCashflowValidator';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CashflowTransactionAutoIncrement } from './CashflowTransactionAutoIncrement';
@@ -65,7 +65,7 @@ export default class NewCashflowTransactionService {
   };
 
   /**
-   * Transformes owner contribution DTO to cashflow transaction.
+   * Transforms owner contribution DTO to cashflow transaction.
    * @param {ICashflowNewCommandDTO} newCashflowTransactionDTO - New transaction DTO.
    * @returns {ICashflowTransaction} - Cashflow transaction object.
    */
@@ -87,7 +87,7 @@ export default class NewCashflowTransactionService {
       'creditAccountId',
       'branchId',
     ]);
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber =
       this.autoIncrement.getNextTransactionNumber(tenantId);
 
@@ -141,14 +141,14 @@ export default class NewCashflowTransactionService {
     // Authorize before creating cashflow transaction.
     await this.authorize(tenantId, newTransactionDTO, creditAccount);
 
-    // Transformes owner contribution DTO to cashflow transaction.
+    // Transforms owner contribution DTO to cashflow transaction.
     const cashflowTransactionObj = this.transformCashflowTransactionDTO(
       tenantId,
       newTransactionDTO,
       cashflowAccount,
       userId
     );
-    // Creates a new cashflow transaction under UOW envirement.
+    // Creates a new cashflow transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCashflowTransactionCreate` event.
       await this.eventPublisher.emitAsync(

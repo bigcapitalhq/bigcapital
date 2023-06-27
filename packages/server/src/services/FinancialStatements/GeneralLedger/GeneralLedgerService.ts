@@ -44,11 +44,11 @@ export default class GeneralLedgerService {
   }
 
   /**
-   * Validates accounts existance on the storage.
+   * Validates accounts existence on the storage.
    * @param {number} tenantId
    * @param {number[]} accountsIds
    */
-  async validateAccountsExistance(tenantId: number, accountsIds: number[]) {
+  async validateAccountsExistence(tenantId: number, accountsIds: number[]) {
     const { Account } = this.tenancy.models(tenantId);
 
     const storedAccounts = await Account.query().whereIn('id', accountsIds);
@@ -125,16 +125,16 @@ export default class GeneralLedgerService {
     const contacts = await contactRepository.all();
     const contactsByIdMap = transformToMap(contacts, 'id');
 
-    // Retreive journal transactions from/to the given date.
+    // Retrieve journal transactions from/to the given date.
     const transactions = await transactionsRepository.journal({
       fromDate: filter.fromDate,
       toDate: filter.toDate,
       branchesIds: filter.branchesIds
     });
-    // Retreive opening balance credit/debit sumation.
+    // Retrieve opening balance credit/debit summation.
     const openingBalanceTrans = await transactionsRepository.journal({
       toDate: moment(filter.fromDate).subtract(1, 'day'),
-      sumationCreditDebit: true,
+      summationCreditDebit: true,
       branchesIds: filter.branchesIds
     });
     // Transform array transactions to journal collection.

@@ -118,7 +118,7 @@ function UniversalQuerySearchActions() {
         <Tag>
           <Icon icon={'arrow-down-24'} iconSize={16} />
         </Tag>
-        <span class="text">{intl.get('universal_seach.navigate_text')}</span>
+        <span class="text">{intl.get('universal_search.navigate_text')}</span>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Creates a new teant with unique organization id.
+   * Creates a new tenant with unique organization id.
    * @param {ITenant} tenant
    * @return {Promise<ITenant>}
    */
@@ -75,7 +75,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Detarmines the tenant has database.
+   * Determines the tenant has database.
    * @param   {ITenant} tenant
    * @returns {Promise<boolean>}
    */
@@ -177,7 +177,7 @@ export default class TenantsManagerService implements ITenantManager {
   }
 
   /**
-   * Initialize seed migration contxt.
+   * Initialize seed migration context.
    * @param {ITenant} tenant
    * @returns
    */

@@ -72,7 +72,7 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
 // handle delete errors.
 export const handleDeleteErrors = (errors) => {
   if (
-    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')
+    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')
   ) {
     AppToaster.show({
       message: intl.get('the_item_has_associated_transactions'),
@@ -87,7 +87,7 @@ export const handleDeleteErrors = (errors) => {
   ) {
     AppToaster.show({
       message: intl.get(
-        'you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions',
+        'you_could_not_delete_item_that_has_associated_inventory_adjustments_transactions',
       ),
       intent: Intent.DANGER,
     });
@@ -115,7 +115,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 /**
- * Detarmines accounts fast field should update.
+ * Determines accounts fast field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -125,7 +125,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines categories fast field should update.
+ * Determines categories fast field should update.
  */
 export const categoriesFieldShouldUpdate = (newProps, oldProps) => {
   return (

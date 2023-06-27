@@ -59,7 +59,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(tenantId: number, transactions: any[]) {
@@ -74,7 +74,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
   }
 
   /**
-   * Transformes the report statement to json response.
+   * Transforms the report statement to json response.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToJsonResponse({
@@ -83,9 +83,9 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
     query,
   }: ITransactionsByVendorsStatement) {
     return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
+      data: this.transformToResponse(data),
+      columns: this.transformToResponse(columns),
+      query: this.transformToResponse(query),
     };
   }
 

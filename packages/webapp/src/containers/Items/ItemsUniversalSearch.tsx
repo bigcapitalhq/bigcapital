@@ -9,7 +9,7 @@ import { DRAWERS } from '@/constants/drawers';
 import { AbilitySubject, ItemAction } from '@/constants/abilityOption';
 
 /**
- * Item univrsal search item select action.
+ * Item universal search item select action.
  */
 function ItemUniversalSearchSelectComponent({
   // #ownProps
@@ -32,11 +32,11 @@ export const ItemUniversalSearchSelectAction = withDrawerActions(
 );
 
 /**
- * Transformes items to search.
+ * Transforms items to search.
  * @param {*} item
  * @returns
  */
-const transfromItemsToSearch = (item) => ({
+const transformItemsToSearch = (item) => ({
   id: item.id,
   text: item.name,
   subText: item.code,
@@ -51,7 +51,7 @@ export const universalSearchItemBind = () => ({
   resourceType: RESOURCES_TYPES.ITEM,
   optionItemLabel: intl.get('items'),
   selectItemAction: ItemUniversalSearchSelectAction,
-  itemSelect: transfromItemsToSearch,
+  itemSelect: transformItemsToSearch,
   permission: {
     ability: ItemAction.View,
     subject: AbilitySubject.Item,

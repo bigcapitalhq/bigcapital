@@ -165,7 +165,7 @@ export function useRefreshCreditNotes() {
 }
 
 /**
- * Create Round creidt note
+ * Create Round credit note
  */
 export function useCreateRefundCreditNote(props) {
   const queryClient = useQueryClient();

@@ -8,7 +8,7 @@ import withProjects from './withProjects';
 import withProjectsActions from './withProjectsActions';
 import { useProjectsListContext } from './ProjectsListProvider';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Projects views tabs.
@@ -25,7 +25,7 @@ function ProjectsViewTabs({
   const { projectsViews } = useProjectsListContext();
 
   // Projects views.
-  const tabs = transfromViewsToTabs(projectsViews);
+  const tabs = transformViewsToTabs(projectsViews);
 
   // Handle tab change.
   const handleTabsChange = (viewSlug) => {

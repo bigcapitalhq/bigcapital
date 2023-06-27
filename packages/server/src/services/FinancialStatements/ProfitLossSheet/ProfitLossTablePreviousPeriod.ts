@@ -70,7 +70,7 @@ export const ProfitLossTablePreviousPeriod = (Base) =>
     };
 
     /**
-     * Previous period period column accessor.
+     * Previous period column accessor.
      * @param   {number} index
      * @returns {ITableColumn[]}
      */

@@ -261,7 +261,7 @@ export default class AccountsController extends BaseController {
       );
       return res
         .status(200)
-        .send({ account: this.transfromToResponse(account) });
+        .send({ account: this.transformToResponse(account) });
     } catch (error) {
       next(error);
     }
@@ -360,8 +360,8 @@ export default class AccountsController extends BaseController {
         await this.accountsApplication.getAccounts(tenantId, filter);
 
       return res.status(200).send({
-        accounts: this.transfromToResponse(accounts, 'accountTypeLabel', req),
-        filter_meta: this.transfromToResponse(filterMeta),
+        accounts: this.transformToResponse(accounts, 'accountTypeLabel', req),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -386,7 +386,7 @@ export default class AccountsController extends BaseController {
           transactionsFilter
         );
       return res.status(200).send({
-        transactions: this.transfromToResponse(transactions),
+        transactions: this.transformToResponse(transactions),
       });
     } catch (error) {
       next(error);
@@ -412,7 +412,7 @@ export default class AccountsController extends BaseController {
           errors: [{ type: 'ACCOUNT.NOT.FOUND', code: 100 }],
         });
       }
-      if (error.errorType === 'account_name_not_unqiue') {
+      if (error.errorType === 'account_name_not_unique') {
         return res.boom.badRequest('The given account not unique.', {
           errors: [{ type: 'ACCOUNT.NAME.NOT.UNIQUE', code: 150 }],
         });

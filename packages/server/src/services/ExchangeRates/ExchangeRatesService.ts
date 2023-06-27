@@ -52,7 +52,7 @@ export default class ExchangeRatesService implements IExchangeRatesService {
       tenantId,
       exchangeRateDTO,
     });
-    await this.validateExchangeRatePeriodExistance(tenantId, exchangeRateDTO);
+    await this.validateExchangeRatePeriodExistence(tenantId, exchangeRateDTO);
 
     const exchangeRate = await ExchangeRate.query().insertAndFetch({
       ...exchangeRateDTO,
@@ -83,7 +83,7 @@ export default class ExchangeRatesService implements IExchangeRatesService {
       exchangeRateId,
       editExRateDTO,
     });
-    await this.validateExchangeRateExistance(tenantId, exchangeRateId);
+    await this.validateExchangeRateExistence(tenantId, exchangeRateId);
 
     await ExchangeRate.query()
       .where('id', exchangeRateId)
@@ -105,7 +105,7 @@ export default class ExchangeRatesService implements IExchangeRatesService {
     exchangeRateId: number
   ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
-    await this.validateExchangeRateExistance(tenantId, exchangeRateId);
+    await this.validateExchangeRateExistence(tenantId, exchangeRateId);
 
     await ExchangeRate.query().findById(exchangeRateId).delete();
   }
@@ -136,18 +136,18 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   }
 
   /**
-   * Validates period of the exchange rate existance.
+   * Validates period of the exchange rate existence.
    * @param {number} tenantId - Tenant id.
    * @param {IExchangeRateDTO} exchangeRateDTO - Exchange rate DTO.
    * @return {Promise<void>}
    */
-  private async validateExchangeRatePeriodExistance(
+  private async validateExchangeRatePeriodExistence(
     tenantId: number,
     exchangeRateDTO: IExchangeRateDTO
   ): Promise<void> {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
-    this.logger.info('[exchange_rates] trying to validate period existance.', {
+    this.logger.info('[exchange_rates] trying to validate period existence.', {
       tenantId,
     });
     const foundExchangeRate = await ExchangeRate.query()
@@ -163,19 +163,19 @@ export default class ExchangeRatesService implements IExchangeRatesService {
   }
 
   /**
-   * Validate the given echange rate id existance.
+   * Validate the given exchange rate id existence.
    * @param {number} tenantId - Tenant id.
    * @param {number} exchangeRateId - Exchange rate id.
    * @returns {Promise<void>}
    */
-  private async validateExchangeRateExistance(
+  private async validateExchangeRateExistence(
     tenantId: number,
     exchangeRateId: number
   ) {
     const { ExchangeRate } = this.tenancy.models(tenantId);
 
     this.logger.info(
-      '[exchange_rates] trying to validate exchange rate id existance.',
+      '[exchange_rates] trying to validate exchange rate id existence.',
       { tenantId, exchangeRateId }
     );
     const foundExchangeRate = await ExchangeRate.query().findById(

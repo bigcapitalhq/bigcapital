@@ -3,7 +3,7 @@
 import React from 'react';
 import { Form } from 'formik';
 import { Choose } from '@/components';
-import { EmptyStatuCallout } from './utils';
+import { EmptyStatusCallout } from './utils';
 import { useProjectBillableEntriesFormContext } from './ProjectBillableEntriesFormProvider';
 import ProjectBillableEntriesFormFields from './ProjectBillableEntriesFormFields';
 import ProjectBillableEntriesFormFloatingActions from './ProjectBillableEntriesFormFloatingActions';
@@ -17,7 +17,7 @@ export default function ProjectBillableEntriesFormContent() {
   return (
     <Choose>
       <Choose.When condition={isEmptyStatus}>
-        <EmptyStatuCallout />
+        <EmptyStatusCallout />
       </Choose.When>
       <Choose.Otherwise>
         <Form>

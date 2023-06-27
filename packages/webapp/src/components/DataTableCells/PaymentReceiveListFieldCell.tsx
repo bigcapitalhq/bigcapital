@@ -23,7 +23,7 @@ function PaymentReceiveListFieldCell({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames('form-group--selcet-list', Classes.FILL)}
+      className={classNames('form-group--select-list', Classes.FILL)}
     >
       <PaymentReceiveListField
         invoices={invoices}

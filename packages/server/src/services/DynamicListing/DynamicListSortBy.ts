@@ -1,12 +1,12 @@
 import { Service } from 'typedi';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterSortBy from '@/lib/DynamicFilter/DynamicFilterSortBy';
 import { IModel, ISortOrder } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 
 @Service()
-export default class DynamicListSortBy extends DynamicListAbstruct {
+export default class DynamicListSortBy extends DynamicListAbstract {
   /**
    * Dynamic list sort by.
    * @param {IModel} model
@@ -19,7 +19,7 @@ export default class DynamicListSortBy extends DynamicListAbstruct {
     columnSortBy: string,
     sortOrder: ISortOrder
   ) {
-    this.validateSortColumnExistance(model, columnSortBy);
+    this.validateSortColumnExistence(model, columnSortBy);
 
     return new DynamicFilterSortBy(columnSortBy, sortOrder);
   }
@@ -30,7 +30,7 @@ export default class DynamicListSortBy extends DynamicListAbstruct {
    * @param  {string} columnSortBy - Sort column
    * @throws {ServiceError}
    */
-  private validateSortColumnExistance(model: any, columnSortBy: string) {
+  private validateSortColumnExistence(model: any, columnSortBy: string) {
     const field = model.getField(columnSortBy);
 
     if (!field) {

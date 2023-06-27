@@ -96,7 +96,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
    * @param {Response} res
    * @param {Function} next
    */
-  async validateEstimateNumberExistance(
+  async validateEstimateNumberExistence(
     tenantId: number,
     estimateNumber: string,
     notEstimateId?: number
@@ -111,7 +111,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
         }
       });
     if (foundSaleEstimate) {
-      throw new ServiceError(ERRORS.SALE_ESTIMATE_NUMBER_EXISTANCE);
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NUMBER_EXISTENCE);
     }
   }
 
@@ -159,7 +159,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     saleEstimateDTO: ISaleEstimateDTO,
     oldSaleEstimate?: ISaleEstimate
   ): string {
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextEstimateNumber(tenantId);
 
     if (saleEstimateDTO.estimateNumber) {
@@ -184,10 +184,10 @@ export default class SaleEstimateService implements ISalesEstimatesService {
 
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextEstimateNumber(tenantId);
 
-    // Retreive the next estimate number.
+    // Retrieve the next estimate number.
     const estimateNumber =
       estimateDTO.estimateNumber ||
       oldSaleEstimate?.estimateNumber ||
@@ -256,13 +256,13 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       estimateDTO,
       customer
     );
-    // Validate estimate number uniquiness on the storage.
-    await this.validateEstimateNumberExistance(
+    // Validate estimate number uniqueness on the storage.
+    await this.validateEstimateNumberExistence(
       tenantId,
       estimateObj.estimateNumber
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       estimateDTO.entries
     );
@@ -329,23 +329,23 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       oldSaleEstimate,
       customer
     );
-    // Validate estimate number uniquiness on the storage.
+    // Validate estimate number uniqueness on the storage.
     if (estimateDTO.estimateNumber) {
-      await this.validateEstimateNumberExistance(
+      await this.validateEstimateNumberExistence(
         tenantId,
         estimateDTO.estimateNumber,
         estimateId
       );
     }
-    // Validate sale estimate entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate sale estimate entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       estimateId,
       'SaleEstimate',
       estimateDTO.entries
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       estimateDTO.entries
     );
@@ -355,7 +355,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       estimateDTO.entries
     );
     // Edits estimate transaction with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx) => {
       // Trigger `onSaleEstimateEditing` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onEditing, {
@@ -405,7 +405,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
-    // Deletes the estimate with associated transactions under UOW enivrement.
+    // Deletes the estimate with associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimatedDeleting` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDeleting, {
@@ -450,7 +450,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (!estimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }
-    // Transformes sale estimate model to POJO.
+    // Transforms sale estimate model to POJO.
     return this.transformer.transform(
       tenantId,
       estimate,
@@ -529,7 +529,7 @@ export default class SaleEstimateService implements ISalesEstimatesService {
       tenantId,
       estimateId
     );
-    // Marks the estimate as converted from the givne invoice.
+    // Marks the estimate as converted from the given invoice.
     await SaleEstimate.query(trx).where('id', estimateId).patch({
       convertedToInvoiceId: invoiceId,
       convertedToInvoiceAt: moment().toMySqlDateTime(),
@@ -584,8 +584,8 @@ export default class SaleEstimateService implements ISalesEstimatesService {
     if (oldSaleEstimate.isDelivered) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_ALREADY_DELIVERED);
     }
-    // Updates the sale estimate transaction with assocaited transactions
-    // under UOW envirement.
+    // Updates the sale estimate transaction with associated transactions
+    // under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimateDelivering` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDelivering, {

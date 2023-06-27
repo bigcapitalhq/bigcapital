@@ -48,7 +48,7 @@ export default class ResourceController extends BaseController {
         resourceModel
       );
       return res.status(200).send({
-        resource_meta: this.transfromToResponse(
+        resource_meta: this.transformToResponse(
           resourceMeta,
         ),
       });

@@ -34,7 +34,7 @@ export default class QueryTransactionsLocking {
   };
 
   /**
-   * Retireve the transactions locking all module.
+   * Retrieve the transactions locking all module.
    * @param   {number} tenantId
    * @returns {ITransactionLockingMetaPOJO}
    */

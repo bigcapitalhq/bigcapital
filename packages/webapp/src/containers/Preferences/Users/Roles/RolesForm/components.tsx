@@ -10,7 +10,7 @@ import {
 } from '@/constants/permissionsSchema';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
 import {
-  getSerivceColumnPermission,
+  getServiceColumnPermission,
   getServiceExtraPermissions,
   FULL_ACCESS_CHECKBOX_STATE,
   handleCheckboxFullAccessChange,
@@ -63,11 +63,11 @@ function ModulePermissionsServiceProvider({ service, children }) {
  * @returns {React.JSX}
  */
 function PermissionBodyColumn({ column }) {
-  // Module permssions service context.
+  // Module permissions service context.
   const { service } = useModulePermissionsServiceProvider();
 
   // Retrieve the related permission of the given column key.
-  const permission = getSerivceColumnPermission(service, column.key);
+  const permission = getServiceColumnPermission(service, column.key);
 
   // Display empty cell if the current column key has no related permissions.
   if (!permission) {

@@ -43,7 +43,7 @@ export default class OrganizationService {
 
   /**
    * Builds the database schema and seed data of the given organization id.
-   * @param  {srting} organizationId
+   * @param  {string} organizationId
    * @return {Promise<void>}
    */
   public async build(
@@ -54,7 +54,7 @@ export default class OrganizationService {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
-    this.throwIfTenantInitizalized(tenant);
+    this.throwIfTenantInitialized(tenant);
 
     // Drop the database if is already exists.
     await this.tenantsManager.dropDatabaseIfExists(tenant);
@@ -82,7 +82,7 @@ export default class OrganizationService {
       systemUser,
     } as IOrganizationBuildEventPayload);
 
-    // Markes the tenant as completed builing.
+    // Marks the tenant as completed building.
     await Tenant.markAsBuilt(tenantId);
     await Tenant.markAsBuildCompleted(tenantId);
 
@@ -104,12 +104,12 @@ export default class OrganizationService {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
-    this.throwIfTenantInitizalized(tenant);
+    this.throwIfTenantInitialized(tenant);
 
     // Throw error if tenant is currently building.
     this.throwIfTenantIsBuilding(tenant);
 
-    // Transformes build DTO object.
+    // Transforms build DTO object.
     const transformedBuildDTO = this.transformBuildDTO(buildDTO);
 
     // Saves the tenant metadata.
@@ -121,10 +121,10 @@ export default class OrganizationService {
       buildDTO,
       authorizedUser,
     });
-    // Transformes the mangodb id to string.
+    // Transforms the mongodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
-    // Markes the tenant as currently building.
+    // Marks the tenant as currently building.
     await Tenant.markAsBuilding(tenantId, jobId);
 
     return {
@@ -203,7 +203,7 @@ export default class OrganizationService {
   }
 
   /**
-   * Transformes build DTO object.
+   * Transforms build DTO object.
    * @param {IOrganizationBuildDTO} buildDTO
    * @returns {IOrganizationBuildDTO}
    */
@@ -260,7 +260,7 @@ export default class OrganizationService {
    * Throws error in case the given tenant is already initialized.
    * @param {ITenant} tenant
    */
-  private throwIfTenantInitizalized(tenant: ITenant) {
+  private throwIfTenantInitialized(tenant: ITenant) {
     if (tenant.builtAt) {
       throw new ServiceError(ERRORS.TENANT_ALREADY_BUILT);
     }

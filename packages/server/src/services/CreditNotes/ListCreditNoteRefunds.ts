@@ -31,7 +31,7 @@ export default class ListCreditNoteRefunds extends BaseCreditNotes {
       .withGraphFetched('creditNote')
       .withGraphFetched('fromAccount');
 
-    // Transformes refund credit note models to POJO objects.
+    // Transforms refund credit note models to POJO objects.
     return this.transformer.transform(
       tenantId,
       refundCreditTransactions,

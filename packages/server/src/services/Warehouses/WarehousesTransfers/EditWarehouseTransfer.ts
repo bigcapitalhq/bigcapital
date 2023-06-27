@@ -56,14 +56,14 @@ export class EditWarehouseTransfer extends CommandWarehouseTransfer {
       editWarehouseDTO.toWarehouseId
     );
     // Validates the not found entries items ids.
-    const items = await this.itemsEntries.validateItemsIdsExistance(
+    const items = await this.itemsEntries.validateItemsIdsExistence(
       tenantId,
       editWarehouseDTO.entries
     );
     // Validate the items entries should be inventory type.
     this.validateItemsShouldBeInventory(items);
 
-    // Edits warehouse transfer transaction under unit-of-work envirement.
+    // Edits warehouse transfer transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseTransferEdit` event.
       await this.eventPublisher.emitAsync(events.warehouseTransfer.onEdit, {

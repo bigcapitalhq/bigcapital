@@ -15,7 +15,7 @@ import {
 
 describe('routes: `/accounting`', () => {
   describe('route: `/accounting/make-journal-entries`', async () => {
-    it('Should sumation of credit or debit does not equal zero.', async () => {
+    it('Should summation of credit or debit does not equal zero.', async () => {
       const account = await tenantFactory.create('account');
       const res = await request()
         .post('/api/accounting/make-journal-entries')
@@ -42,7 +42,7 @@ describe('routes: `/accounting`', () => {
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+        type: 'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
         code: 400,
       });
     });
@@ -173,7 +173,7 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+        type: 'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
 
         code: 400,
       });
@@ -449,7 +449,7 @@ describe('routes: `/accounting`', () => {
       expect(res.status).equals(404);
     });
 
-    it('Should sumation of credit or debit be equal zero.', async () => {
+    it('Should summation of credit or debit be equal zero.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
@@ -476,12 +476,12 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+        type: 'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
         code: 400,
       });
     });
 
-    it('Should all credit and debit sumation be equal.', async () => {
+    it('Should all credit and debit summation be equal.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal');
 
       const res = await request()
@@ -861,7 +861,7 @@ describe('routes: `/accounting`', () => {
   });
 
   describe('route: `/accounting/quick-journal-entries`', async () => {
-    it('Shoud `credit_account_id` be required', () => {
+    it('Should `credit_account_id` be required', () => {
 
     });
     it('Should `debit_account_id` be required.', () => {

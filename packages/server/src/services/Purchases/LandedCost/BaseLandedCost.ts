@@ -12,7 +12,7 @@ import {
   ILandedCostTransactionEntry,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import TransactionLandedCost from './TransctionLandedCost';
+import TransactionLandedCost from './TransactionLandedCost';
 import { ERRORS } from './utils';
 import { CONFIG } from './utils';
 
@@ -52,7 +52,7 @@ export default class BaseLandedCostService {
   };
 
   /**
-   * Transformes DTO to bill landed cost model object.
+   * Transforms DTO to bill landed cost model object.
    * @param {ILandedCostDTO} landedCostDTO
    * @param {IBill} bill
    * @param {ILandedCostTransaction} costTransaction

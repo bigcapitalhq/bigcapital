@@ -63,11 +63,11 @@ export default class SaleInvoicesCost {
   ): IInventoryTransaction[] {
     return chain(inventoryTransactions)
       .reduce((acc: any, transaction) => {
-        const compatatorDate = acc[transaction.itemId];
+        const comparatorDate = acc[transaction.itemId];
 
         if (
-          !compatatorDate ||
-          moment(compatatorDate.date).isBefore(transaction.date)
+          !comparatorDate ||
+          moment(comparatorDate.date).isBefore(transaction.date)
         ) {
           return {
             ...acc,

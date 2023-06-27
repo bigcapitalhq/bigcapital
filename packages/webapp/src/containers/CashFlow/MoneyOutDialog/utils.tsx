@@ -12,7 +12,7 @@ export const useObserveTransactionNoSettings = (prefix, nextNumber) => {
 
   React.useEffect(() => {
     const TransactionNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('transacttion_numner', TransactionNo);
+    setFieldValue('transaction_number', TransactionNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
 

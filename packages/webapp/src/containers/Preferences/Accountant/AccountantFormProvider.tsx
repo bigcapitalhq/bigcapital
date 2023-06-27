@@ -29,7 +29,7 @@ function AccountantFormProvider({ ...props }) {
     isAccountsLoading,
     saveSettingMutate,
   };
-  // Detarmines whether if any query is loading.
+  // Determines whether if any query is loading.
   const isLoading = isSettingsLoading || isAccountsLoading;
 
   return (

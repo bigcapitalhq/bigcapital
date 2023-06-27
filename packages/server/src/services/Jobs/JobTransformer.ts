@@ -13,7 +13,7 @@ export class JobTransformer extends Transformer {
   };
 
   /**
-   * Detarmines the queued state.
+   * Determines the queued state.
    * @param {IJob} job
    * @returns {String}
    */
@@ -22,7 +22,7 @@ export class JobTransformer extends Transformer {
   };
 
   /**
-   * Detarmines the completed state.
+   * Determines the completed state.
    * @param job
    * @returns
    */
@@ -31,7 +31,7 @@ export class JobTransformer extends Transformer {
   };
 
   /**
-   * Detarmines the failed state.
+   * Determines the failed state.
    * @param job
    * @returns
    */

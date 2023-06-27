@@ -23,11 +23,11 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.saleReceipt.onCreated,
-      this.handleWriteReceiptIncomeJournalEntrieOnCreate
+      this.handleWriteReceiptIncomeJournalEntriesOnCreate
     );
     bus.subscribe(
       events.saleReceipt.onEdited,
-      this.handleWriteReceiptIncomeJournalEntrieOnEdited
+      this.handleWriteReceiptIncomeJournalEntriesOnEdited
     );
     bus.subscribe(
       events.saleReceipt.onDeleted,
@@ -39,7 +39,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
    * Handles writing sale receipt income journal entries once created.
    * @param {ISaleReceiptCreatedPayload} payload -
    */
-  public handleWriteReceiptIncomeJournalEntrieOnCreate = async ({
+  public handleWriteReceiptIncomeJournalEntriesOnCreate = async ({
     tenantId,
     saleReceiptId,
     trx,
@@ -53,7 +53,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   };
 
   /**
-   * Handles sale receipt revert jouranl entries once be deleted.
+   * Handles sale receipt revert journal entries once be deleted.
    * @param {ISaleReceiptEventDeletedPayload} payload -
    */
   public handleRevertReceiptJournalEntriesOnDeleted = async ({
@@ -72,7 +72,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
    * Handles writing sale receipt income journal entries once be edited.
    * @param {ISaleReceiptEditedPayload} payload -
    */
-  private handleWriteReceiptIncomeJournalEntrieOnEdited = async ({
+  private handleWriteReceiptIncomeJournalEntriesOnEdited = async ({
     tenantId,
     saleReceiptId,
     trx,

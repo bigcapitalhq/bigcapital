@@ -140,7 +140,7 @@ export const handlePreviousYearChangeCheckboxChange = R.curry((form, event) => {
 });
 
 /**
- * Handles preivous year percentage checkbox change.
+ * Handles previous year percentage checkbox change.
  */
 export const handlePreviousYearPercentageCheckboxChange = R.curry(
   (form, event) => {
@@ -156,7 +156,7 @@ export const handlePreviousYearPercentageCheckboxChange = R.curry(
 /**
  * Handles previous period percentage checkbox change.
  */
-export const handlePreivousPeriodPercentageCheckboxChange = R.curry(
+export const handlePreviousPeriodPercentageCheckboxChange = R.curry(
   (form, event) => {
     const isChecked = event.currentTarget.checked;
 

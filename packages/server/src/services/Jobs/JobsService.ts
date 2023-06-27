@@ -22,14 +22,14 @@ export default class JobsService {
   async getJob(jobId: string): Promise<IJobMeta> {
     const jobs = await this.agenda.jobs({ _id: new ObjectId(jobId) });
 
-    // Transformes job to json.
+    // Transforms job to json.
     const jobJson = this.transformJobToJson(first(jobs));
 
     return this.transformer.transform(null, jobJson, new JobTransformer());
   }
 
   /**
-   * Transformes the job to json.
+   * Transforms the job to json.
    * @param job
    * @returns
    */

@@ -7,7 +7,7 @@ import { FinancialSheetStructure } from './FinancialSheetStructure';
 export const FinancialEvaluateEquation = (Base) =>
   class extends compose(FinancialSheetStructure)(Base) {
     /**
-     * Evauluate equaation string with the given scope table.
+     * Evaluate equation string with the given scope table.
      * @param {string} equation -
      * @param {{ [key: string]: number }} scope -
      * @return {number}
@@ -20,7 +20,7 @@ export const FinancialEvaluateEquation = (Base) =>
     };
 
     /**
-     * Transformes the given nodes nested array to object key/value by id.
+     * Transforms the given nodes nested array to object key/value by id.
      * @param nodes
      * @returns
      */

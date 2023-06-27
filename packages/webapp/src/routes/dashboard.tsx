@@ -946,8 +946,8 @@ export const getDashboardRoutes = () => [
           '@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
         ),
     ),
-    breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
-    pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
+    breadcrumb: intl.get('vendor_credits.label_vendor_credit_list'),
+    pageTitle: intl.get('vendor_credits.label_vendor_credit_list'),
     defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
@@ -961,11 +961,11 @@ export const getDashboardRoutes = () => [
   },
   // Payment modes.
   {
-    path: `/payment-mades/:id/edit`,
+    path: `/payments-made/:id/edit`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-edit',
@@ -977,11 +977,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades/new`,
+    path: `/payments-made/new`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
+          '@/containers/Purchases/PaymentsMade/PaymentForm/PaymentMadeFormPage'
         ),
     ),
     name: 'payment-made-new',
@@ -993,11 +993,11 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
-    path: `/payment-mades`,
+    path: `/payments-made`,
     component: lazy(
       () =>
         import(
-          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
+          '@/containers/Purchases/PaymentsMade/PaymentsLanding/PaymentMadeList'
         ),
     ),
     breadcrumb: intl.get('payment_made_list'),
@@ -1016,7 +1016,7 @@ export const getDashboardRoutes = () => [
     ),
     sidebarExpand: false,
     backLink: true,
-    pageTitle: intl.get('cash_flow.label_account_transcations'),
+    pageTitle: intl.get('cash_flow.label_account_transactions'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
@@ -1026,7 +1026,7 @@ export const getDashboardRoutes = () => [
       () =>
         import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
     ),
-    pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
+    pageTitle: intl.get('sidebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
@@ -1035,7 +1035,7 @@ export const getDashboardRoutes = () => [
     component: lazy(
       () => import('@/containers/TransactionsLocking/TransactionsLockingPage'),
     ),
-    pageTitle: intl.get('sidebar.transactions_locaking'),
+    pageTitle: intl.get('sidebar.transactions_locking'),
   },
   {
     path: '/projects/:id/details',

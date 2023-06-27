@@ -25,13 +25,13 @@ export default class GetVendorCreditToApplyBills extends BaseVendorCredit {
       tenantId,
       vendorCreditId
     );
-    // Retrieive open bills associated to the given vendor.
+    // Retrieve open bills associated to the given vendor.
     const openBills = await Bill.query()
       .where('vendor_id', vendorCredit.vendorId)
       .modify('dueBills')
       .modify('published');
 
-    // Transformes the bills to POJO.
+    // Transforms the bills to POJO.
     return this.transformer.transform(
       tenantId,
       openBills,

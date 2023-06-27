@@ -10,7 +10,7 @@ import SetupOrganizationForm from './SetupOrganizationForm';
 import { useOrganizationSetup } from '@/hooks/query';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
-import { setCookie, compose, transfromToSnakeCase } from '@/utils';
+import { setCookie, compose, transformToSnakeCase } from '@/utils';
 import { getSetupOrganizationValidation } from './SetupOrganization.schema';
 
 // Initial values.
@@ -39,7 +39,7 @@ function SetupOrganizationPage({ wizard }) {
 
   // Handle the form submit.
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
-    organizationSetupMutate({ ...transfromToSnakeCase(values) })
+    organizationSetupMutate({ ...transformToSnakeCase(values) })
       .then((response) => {
         setSubmitting(false);
 
@@ -47,7 +47,7 @@ function SetupOrganizationPage({ wizard }) {
         setCookie('locale', values.language);
         wizard.next();
       })
-      .catch((erros) => {
+      .catch((errors) => {
         setSubmitting(false);
       });
   };

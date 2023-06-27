@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import VendorTransfromer from '../VendorTransformer';
+import VendorTransformer from '../VendorTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -24,11 +24,11 @@ export class GetVendor {
       .modify('vendor')
       .throwIfNotFound();
 
-    // Transformes the vendor.
+    // Transforms the vendor.
     return this.transformer.transform(
       tenantId,
       vendor,
-      new VendorTransfromer()
+      new VendorTransformer()
     );
   }
 }

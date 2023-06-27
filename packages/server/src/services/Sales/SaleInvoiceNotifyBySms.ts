@@ -54,11 +54,11 @@ export default class SaleInvoiceNotifyBySms {
       .findById(saleInvoiceId)
       .withGraphFetched('customer');
 
-    // Validate the customer phone number existance and number validation.
+    // Validate the customer phone number existence and number validation.
     this.saleSmsNotification.validateCustomerPhoneNumber(
       saleInvoice.customer.personalPhone
     );
-    // Transformes the invoice notification key to sms notification key.
+    // Transforms the invoice notification key to sms notification key.
     const notificationKey = this.transformDTOKeyToNotificationKey(
       invoiceNotificationType
     );
@@ -67,7 +67,7 @@ export default class SaleInvoiceNotifyBySms {
       tenantId,
       saleInvoice,
     });
-    // Formattes the sms message and sends sms notification.
+    // Formats the sms message and sends sms notification.
     await this.sendSmsNotification(tenantId, notificationKey, saleInvoice);
 
     // Triggers `onSaleInvoiceNotifySms` event.
@@ -200,13 +200,13 @@ export default class SaleInvoiceNotifyBySms {
       .findById(saleInvoiceId)
       .withGraphFetched('customer');
 
-    // Validates the sale invoice existance.
-    this.validateSaleInvoiceExistance(saleInvoice);
+    // Validates the sale invoice existence.
+    this.validateSaleInvoiceExistence(saleInvoice);
 
     // Current tenant metadata.
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
-    // Transformes the invoice notification key to sms notification key.
+    // Transforms the invoice notification key to sms notification key.
     const notificationKey = this.transformDTOKeyToNotificationKey(
       invoiceSmsDetailsDTO.notificationKey
     );
@@ -226,7 +226,7 @@ export default class SaleInvoiceNotifyBySms {
   };
 
   /**
-   * Transformes the invoice notification key DTO to notification key.
+   * Transforms the invoice notification key DTO to notification key.
    * @param {string} invoiceNotifKey
    * @returns {SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
    *   | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER}
@@ -247,10 +247,10 @@ export default class SaleInvoiceNotifyBySms {
   };
 
   /**
-   * Validates the sale invoice existance.
+   * Validates the sale invoice existence.
    * @param {ISaleInvoice|null} saleInvoice
    */
-  private validateSaleInvoiceExistance(saleInvoice: ISaleInvoice | null) {
+  private validateSaleInvoiceExistence(saleInvoice: ISaleInvoice | null) {
     if (!saleInvoice) {
       throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
     }

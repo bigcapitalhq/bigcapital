@@ -35,7 +35,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get balanceSheetValidationSchema(): ValidationChain[] {
@@ -61,14 +61,14 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       query('percentage_of_column').optional().isBoolean().toBoolean(),
       query('percentage_of_row').optional().isBoolean().toBoolean(),
 
-      // Camparsion periods periods.
+      // Comparison periods periods.
       query('previous_period').optional().isBoolean().toBoolean(),
       query('previous_period_amount_change').optional().isBoolean().toBoolean(),
       query('previous_period_percentage_change')
         .optional()
         .isBoolean()
         .toBoolean(),
-      // Camparsion periods periods.
+      // Comparison periods periods.
       query('previous_year').optional().isBoolean().toBoolean(),
       query('previous_year_amount_change').optional().isBoolean().toBoolean(),
       query('previous_year_percentage_change')

@@ -98,7 +98,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Mappes the given vendor objects to vendor report node.
+   * Maps the given vendor objects to vendor report node.
    * @param {IVendor[]} vendors
    * @returns {IAPAgingSummaryVendor[]}
    */
@@ -107,7 +107,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines whether the given vendor node is none zero.
+   * Determines whether the given vendor node is none zero.
    * @param {IAPAgingSummaryVendor} vendorNode
    * @returns {boolean}
    */
@@ -131,7 +131,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Filtesr the given report vendors nodes.
+   * Filter the given report vendors nodes.
    * @param {IAPAgingSummaryVendor[]} vendorNodes
    * @returns {IAPAgingSummaryVendor[]}
    */
@@ -142,7 +142,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines whether vendors nodes filter enabled.
+   * Determines whether vendors nodes filter enabled.
    * @returns {boolean}
    */
   private isVendorNodesFilter = (): boolean => {

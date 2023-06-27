@@ -9,7 +9,7 @@ import { CLASSES } from '@/constants/classes';
 
 export function CategoriesSelectList({
   categories,
-  selecetedCategoryId,
+  selectedCategoryId,
   defaultSelectText = <T id={'select_category'} />,
   onCategorySelected,
   popoverFill = false,
@@ -43,7 +43,7 @@ export function CategoriesSelectList({
     <ListSelect
       items={categories}
       selectedItemProp={'id'}
-      selectedItem={selecetedCategoryId}
+      selectedItem={selectedCategoryId}
       textProp={'name'}
       defaultText={defaultSelectText}
       onItemSelect={handleItemCategorySelected}

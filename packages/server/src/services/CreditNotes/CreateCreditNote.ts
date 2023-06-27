@@ -43,14 +43,14 @@ export default class CreateCreditNote extends BaseCreditNotes {
       tenantId,
       creditNoteDTO,
     });
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .modify('customer')
       .findById(creditNoteDTO.customerId)
       .throwIfNotFound();
 
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       creditNoteDTO.entries
     );
@@ -59,13 +59,13 @@ export default class CreateCreditNote extends BaseCreditNotes {
       tenantId,
       creditNoteDTO.entries
     );
-    // Transformes the given DTO to storage layer data.
+    // Transforms the given DTO to storage layer data.
     const creditNoteModel = this.transformCreateEditDTOToModel(
       tenantId,
       creditNoteDTO,
       customer.currencyCode
     );
-    // Creates a new credit card transactions under unit-of-work envirement.
+    // Creates a new credit card transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCreditNoteCreating` event.
       await this.eventPublisher.emitAsync(events.creditNote.onCreating, {

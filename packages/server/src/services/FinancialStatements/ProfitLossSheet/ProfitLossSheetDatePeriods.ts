@@ -101,7 +101,7 @@ export const ProfitLossSheetDatePeriods = (Base) =>
     // # Aggregate nodes.
     // --------------------------
     /**
-     * Retrieves sumation of the given aggregate node children totals.
+     * Retrieves summation of the given aggregate node children totals.
      * @param   {IProfitLossSheetAccountsNode} node
      * @param   {number} index
      * @returns {number}

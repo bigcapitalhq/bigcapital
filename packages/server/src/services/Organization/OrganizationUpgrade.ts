@@ -74,10 +74,10 @@ export default class OrganizationUpgrade {
     const jobMeta = await this.agenda.now('organization-upgrade', {
       tenantId,
     });
-    // Transformes the mangodb id to string.
+    // Transforms the mongodb id to string.
     const jobId = new ObjectId(jobMeta.attrs._id).toString();
 
-    // Markes the tenant as currently building.
+    // Marks the tenant as currently building.
     await Tenant.markAsUpgrading(tenantId, jobId);
 
     return { jobId };

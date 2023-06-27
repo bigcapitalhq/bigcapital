@@ -7,7 +7,7 @@ import { defaultTableQuery } from './manualJournals.reducers';
 
 const manualJournalsTableState = (state) => state.manualJournals.tableState;
 
-// Retrieve manual jouranls table state.
+// Retrieve manual journals table state.
 export const getManualJournalsTableStateFactory = () =>
   createDeepEqualSelector(
     paginationLocationQuery,

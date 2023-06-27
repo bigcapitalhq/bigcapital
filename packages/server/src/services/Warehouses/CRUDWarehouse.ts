@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 export class CRUDWarehouse {

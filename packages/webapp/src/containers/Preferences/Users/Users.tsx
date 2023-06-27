@@ -26,7 +26,7 @@ function UsersPreferences({ openDialog }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS,
       )}
     >
-      <UsersPereferencesCard>
+      <UsersPreferencesCard>
         <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
           <Tabs animate={true} onChange={onChangeTabs}>
             <Tab
@@ -41,13 +41,13 @@ function UsersPreferences({ openDialog }) {
             />
           </Tabs>
         </div>
-      </UsersPereferencesCard>
+      </UsersPreferencesCard>
     </div>
   );
 }
 
 export default withUserPreferences(UsersPreferences);
 
-const UsersPereferencesCard = styled(Card)`
+const UsersPreferencesCard = styled(Card)`
   padding: 0;
 `;

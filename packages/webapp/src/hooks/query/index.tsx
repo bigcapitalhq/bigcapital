@@ -16,7 +16,7 @@ export * from './bills';
 export * from './estimates';
 export * from './receipts';
 export * from './paymentReceives';
-export * from './paymentMades';
+export * from './paymentsMade';
 export * from './settings';
 export * from './users';
 export * from './invite';

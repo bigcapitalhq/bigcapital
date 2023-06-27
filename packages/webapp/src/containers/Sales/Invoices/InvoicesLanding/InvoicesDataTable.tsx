@@ -79,7 +79,7 @@ function InvoicesDataTable({
   };
 
   // Handle convert to credit note.
-  const handleConvertToCreitNote = ({ id }) => {
+  const handleConvertToCreditNote = ({ id }) => {
     history.push(`/credit-notes/new?from_invoice_id=${id}`, { invoiceId: id });
   };
 
@@ -156,7 +156,7 @@ function InvoicesDataTable({
           onQuick: handleQuickPaymentReceive,
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,
-          onConvert: handleConvertToCreitNote,
+          onConvert: handleConvertToCreditNote,
         }}
       />
     </DashboardContentTable>

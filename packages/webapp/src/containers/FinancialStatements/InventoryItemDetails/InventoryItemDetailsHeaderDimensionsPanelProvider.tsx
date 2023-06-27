@@ -16,14 +16,14 @@ function InventoryItemDetailsHeaderDimensionsProvider({ ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
 
-  // Detarmines whether the warehouses feature is accessiable.
+  // Determines whether the warehouses feature is accessible.
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
-  // Detarmines whether the branches feature is accessiable.
+  // Determines whether the branches feature is accessible.
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   // Fetches the warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
+  const { data: warehouses, isLoading: isWarehousesLoading } = useWarehouses(
     null,
     { enabled: isWarehouseFeatureCan },
   );
@@ -37,11 +37,11 @@ function InventoryItemDetailsHeaderDimensionsProvider({ ...props }) {
   const provider = {
     warehouses,
     branches,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isBranchesLoading,
   };
 
-  return isWarehouesLoading || isBranchesLoading ? (
+  return isWarehousesLoading || isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
     <InventoryItemDetailsHeaderDimensionsPanelContext.Provider

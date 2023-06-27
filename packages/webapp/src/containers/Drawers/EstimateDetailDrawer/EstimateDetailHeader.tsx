@@ -41,7 +41,7 @@ export default function EstimateDetailHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('estimate.details.estimate_number')}
               children={defaultTo(estimate.estimate_number, '-')}
@@ -72,7 +72,7 @@ export default function EstimateDetailHeader() {
         <Col xs={6}>
           <DetailsMenu
             textAlign={'right'}
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'180px'}
           >
             <DetailItem

@@ -4,7 +4,7 @@ import { IBalanceSheetDataNode, IBalanceSheetSchemaNode } from '@/interfaces';
 export const BalanceSheetBase = (Base) =>
   class extends Base {
     /**
-     * Detarmines the node type of the given schema node.
+     * Determines the node type of the given schema node.
      * @param  {IBalanceSheetStructureSection} node -
      * @param  {string} type -
      * @return {boolean}
@@ -22,7 +22,7 @@ export const BalanceSheetBase = (Base) =>
     );
 
     /**
-     * Detarmines the given display columns by type.
+     * Determines the given display columns by type.
      * @param   {string} displayColumnsBy
      * @returns {boolean}
      */

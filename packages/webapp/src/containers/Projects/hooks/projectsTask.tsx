@@ -74,7 +74,7 @@ export function useDeleteProjectTask(props) {
 }
 
 /**
- * Retrive the given project task.
+ * Retrieve the given project task.
  * @param taskId
  * @param props
  * @param requestProps

@@ -58,7 +58,7 @@ const warehouseSelectProps = {
 };
 
 /**
- * warehouses mulit select.
+ * warehouses multi select.
  * @param {*} param0
  * @returns
  */

@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterViews from '@/lib/DynamicFilter/DynamicFilterViews';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -7,12 +7,12 @@ import { ERRORS } from './constants';
 import { IModel } from '@/interfaces';
 
 @Service()
-export default class DynamicListCustomView extends DynamicListAbstruct {
+export default class DynamicListCustomView extends DynamicListAbstract {
   @Inject()
   tenancy: HasTenancyService;
 
   /**
-   * Retreive custom view or throws error not found.
+   * Retrieve custom view or throws error not found.
    * @param  {number} tenantId
    * @param  {number} viewId
    * @return {Promise<IView>}

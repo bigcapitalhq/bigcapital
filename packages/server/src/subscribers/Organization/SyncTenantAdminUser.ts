@@ -16,7 +16,7 @@ export default class OrgSyncTenantAdminUserSubscriber {
   }
 
   /**
-   * Assign the autorized system user as admin role.
+   * Assign the authorized system user as admin role.
    */
   public assignSystemUserAsAdminRole = async ({
     tenantId,

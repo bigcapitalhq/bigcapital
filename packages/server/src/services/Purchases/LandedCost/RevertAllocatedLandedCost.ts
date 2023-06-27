@@ -39,7 +39,7 @@ export default class RevertAllocatedLandedCost extends BaseLandedCost {
     );
     //  Deletes landed cost with associated transactions.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Delete landed cost transaction with assocaited locate entries.
+      // Delete landed cost transaction with associated locate entries.
       await this.deleteLandedCost(tenantId, landedCostId, trx);
 
       // Triggers the event `onBillLandedCostCreated`.
@@ -55,7 +55,7 @@ export default class RevertAllocatedLandedCost extends BaseLandedCost {
   };
 
   /**
-   * Deletes the landed cost transaction with assocaited allocate entries.
+   * Deletes the landed cost transaction with associated allocate entries.
    * @param {number} tenantId - Tenant id.
    * @param {number} landedCostId - Landed cost id.
    */

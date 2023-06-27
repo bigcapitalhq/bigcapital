@@ -26,7 +26,7 @@ function CustomerActivateAlert({
 }) {
   const { mutateAsync: activateContact, isLoading } = useActivateContact();
 
-  // Handle activate constomer alert cancel.
+  // Handle activate customer alert cancel.
   const handleCancelActivateCustomer = () => {
     closeAlert(name);
   };

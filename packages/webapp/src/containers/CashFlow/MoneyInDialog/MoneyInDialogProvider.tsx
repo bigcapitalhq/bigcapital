@@ -87,6 +87,6 @@ function MoneyInDialogProvider({
   );
 }
 
-const useMoneyInDailogContext = () => React.useContext(MoneyInDialogContent);
+const useMoneyInDialogContext = () => React.useContext(MoneyInDialogContent);
 
-export { MoneyInDialogProvider, useMoneyInDailogContext };
+export { MoneyInDialogProvider, useMoneyInDialogContext };

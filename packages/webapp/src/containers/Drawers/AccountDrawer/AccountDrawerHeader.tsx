@@ -49,7 +49,7 @@ export default function AccountDrawerHeader() {
         </DetailItem>
       </DetailsMenu>
 
-      <DetailsMenu direction={'horizantal'}>
+      <DetailsMenu direction={'horizontal'}>
         <DetailItem name={'description'} label={<T id={'description'} />}>
           {!isEmpty(account.description) ? account.description : '--'}
         </DetailItem>

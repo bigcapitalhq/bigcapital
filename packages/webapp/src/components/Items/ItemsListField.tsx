@@ -7,7 +7,7 @@ export function ItemsListField({
   items,
   initialItemId,
   selectedItemId,
-  defautlSelectText = 'Click to select an item.',
+  defaultSelectText = 'Click to select an item.',
   onItemSelected,
 
   sellable = false,
@@ -83,7 +83,7 @@ export function ItemsListField({
       selectedItem={`${selectedItemId}`}
       selectedItemProp={'id'}
       textProp={'name'}
-      defaultText={selectedItem ? selectedItem.name : defautlSelectText}
+      defaultText={selectedItem ? selectedItem.name : defaultSelectText}
     />
   );
 }

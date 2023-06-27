@@ -10,7 +10,7 @@ const InventoryValuationContext = React.createContext();
  * Inventory valuation sheet provider.
  */
 function InventoryValuationProvider({ query, ...props }) {
-  // Transformes the filter form query to request query.
+  // Transforms the filter form query to request query.
   const requestQuery = React.useMemo(
     () => transformFilterFormToQuery(query),
     [query],

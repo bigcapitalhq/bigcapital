@@ -9,7 +9,7 @@ import {
 
 
 describe('Model: ItemCategories', () => {
-  it('Shoud item category model has many associated items.', async () => {
+  it('Should item category model has many associated items.', async () => {
     const category = await tenantFactory.create('item_category');
     await tenantFactory.create('item', { category_id: category.id });
     await tenantFactory.create('item', { category_id: category.id });

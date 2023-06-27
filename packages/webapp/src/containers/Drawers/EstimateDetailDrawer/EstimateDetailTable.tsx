@@ -23,7 +23,7 @@ export default function EstimateDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

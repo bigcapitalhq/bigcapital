@@ -29,7 +29,7 @@ export class DeleteTimeService {
   public deleteTime = async (tenantId: number, timeId: number) => {
     const { Time } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldTime = await Time.query().findById(timeId).throwIfNotFound();
 
     // Triggers `onProjectDelete` event.
@@ -38,7 +38,7 @@ export class DeleteTimeService {
       timeId,
     } as IProjectTimeDeleteEventPayload);
 
-    // Deletes the given project under unit-of-work envirement.
+    // Deletes the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectDeleting` event.
       await this.eventPublisher.emitAsync(events.projectTime.onDeleting, {

@@ -11,7 +11,7 @@ const TransactionNumberDialogContent = React.lazy(
 /**
  * Transaction number dialog.
  */
-function TransctionNumberDialog({
+function TransactionNumberDialog({
   dialogName,
   payload: { initialFormValues },
   isOpen,
@@ -39,4 +39,4 @@ function TransctionNumberDialog({
   );
 }
 
-export default compose(withDialogRedux())(TransctionNumberDialog);
+export default compose(withDialogRedux())(TransactionNumberDialog);

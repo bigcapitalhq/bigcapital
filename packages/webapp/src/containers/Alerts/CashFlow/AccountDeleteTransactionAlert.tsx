@@ -42,14 +42,14 @@ function AccountDeleteTransactionAlert({
   };
 
   // handleConfirm delete transaction.
-  const handleConfirmTransactioneDelete = () => {
+  const handleConfirmTransactionDelete = () => {
     deleteTransactionMutate(referenceId)
       .then(() => {
         AppToaster.show({
           message: intl.get('cash_flow_transaction.delete.alert_message'),
           intent: Intent.SUCCESS,
         });
-        closeDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS);
+        closeDrawer(DRAWERS.CASHFLOW_TRANSACTION_DETAILS);
       })
       .catch(
         ({
@@ -71,7 +71,7 @@ function AccountDeleteTransactionAlert({
       intent={Intent.DANGER}
       isOpen={isOpen}
       onCancel={handleCancelDeleteAlert}
-      onConfirm={handleConfirmTransactioneDelete}
+      onConfirm={handleConfirmTransactionDelete}
       loading={isLoading}
     >
       <p>

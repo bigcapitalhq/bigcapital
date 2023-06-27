@@ -55,7 +55,7 @@ export default class InventoryCostLotTracker extends TenantModel {
       },
 
       /**
-       * Filters transactions by the given warehosues.
+       * Filters transactions by the given warehouses.
        */
       filterByWarehouses(query, branchesIds) {
         const formattedWarehousesIds = castArray(branchesIds);

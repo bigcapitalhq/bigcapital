@@ -38,7 +38,7 @@ export default function VendorCreditDetailHeader() {
       </CommercialDocTopHeader>
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('vendor_credit.drawer.label_vendor_credit_date')}
             >
@@ -64,7 +64,7 @@ export default function VendorCreditDetailHeader() {
         <Col xs={6}>
           <DetailsMenu
             textAlign={'right'}
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'180px'}
           >
             <DetailItem

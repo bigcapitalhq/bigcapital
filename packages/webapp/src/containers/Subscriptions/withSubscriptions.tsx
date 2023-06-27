@@ -1,21 +1,18 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
 import {
-  isSubscriptionOnTrialFactory,
-  isSubscriptionInactiveFactory,
-  isSubscriptionActiveFactory,
+  isSubscriptionsInactiveFactory,
+  isSubscriptionsActiveFactory,
 } from '@/store/subscription/subscription.selectors';
 
-export default (mapState, slug) => {
-  const isSubscriptionOnTrial = isSubscriptionOnTrialFactory(slug);
-  const isSubscriptionInactive = isSubscriptionInactiveFactory(slug);
-  const isSubscriptionActive = isSubscriptionActiveFactory(slug);
+export default (mapState) => {
+  const isSubscriptionsInactive = isSubscriptionsInactiveFactory();
+  const isSubscriptionsActive = isSubscriptionsActiveFactory();
 
   const mapStateToProps = (state, props) => {
     const mapped = {
-      isSubscriptionOnTrial: isSubscriptionOnTrial(state, props),
-      isSubscriptionInactive: isSubscriptionInactive(state, props),
-      isSubscriptionActive: isSubscriptionActive(state, props),
+      isSubscriptionsInactive: isSubscriptionsInactive(state, props),
+      isSubscriptionsActive: isSubscriptionsActive(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

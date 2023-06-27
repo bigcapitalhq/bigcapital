@@ -8,10 +8,10 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useVendorCrditNoteTotals } from './utils';
+import { useVendorCreditNoteTotals } from './utils';
 
 export function VendorCreditNoteFormFooterRight() {
-  const { formattedSubtotal, formattedTotal } = useVendorCrditNoteTotals();
+  const { formattedSubtotal, formattedTotal } = useVendorCreditNoteTotals();
 
   return (
     <VendorCreditNoteTotalLines

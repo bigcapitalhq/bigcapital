@@ -40,7 +40,7 @@ export const useSplashLoading = () => {
 /**
  * Sidebar submenu actions.
  */
-export const useSidebarSubmnuActions = () => {
+export const useSidebarSubmenuActions = () => {
   return {
     openSidebarSubmenu: useDispatchAction(openSidebarSubmenu),
     closeSidebarSubmenu: useDispatchAction(closeSidebarSubmenu),

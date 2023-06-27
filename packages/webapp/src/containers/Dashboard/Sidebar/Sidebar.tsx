@@ -5,7 +5,7 @@ import { SidebarContainer } from './SidebarContainer';
 import { SidebarHead } from './SidebarHead';
 import { SidebarMenu } from './SidebarMenu';
 import { useMainSidebarMenu } from './hooks';
-import { SidebarOverlayBinded } from '../SidebarOverlay';
+import { SidebarOverlayBound } from '../SidebarOverlay';
 
 import '@/style/containers/Dashboard/Sidebar.scss';
 
@@ -23,7 +23,7 @@ export function Sidebar() {
       <div className="sidebar__menu">
         <SidebarMenu menu={menu} />
       </div>
-      <SidebarOverlayBinded />
+      <SidebarOverlayBound />
       <SidebarFooterVersion />
     </SidebarContainer>
   );

@@ -68,7 +68,7 @@ export const useBillTransactionsColumns = () => {
         className: 'bill_number',
       },
       {
-        id: 'qunatity',
+        id: 'quantity',
         Header: intl.get('item.drawer_quantity_sold'),
         accessor: 'quantity',
         align: 'right',

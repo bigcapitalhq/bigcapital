@@ -33,7 +33,7 @@ export default class BaseVendorCredit {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Transformes the credit/edit vendor credit DTO to model.
+   * Transforms the credit/edit vendor credit DTO to model.
    * @param   {number} tenantId -
    * @param   {IVendorCreditCreateDTO | IVendorCreditEditDTO} vendorCreditDTO
    * @param   {string} vendorCurrencyCode -
@@ -54,10 +54,10 @@ export default class BaseVendorCredit {
       ...entry,
       referenceType: 'VendorCredit',
     }));
-    // Retreive the next vendor credit number.
+    // Retrieve the next vendor credit number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
-    // Detarmines the credit note number.
+    // Determines the credit note number.
     const vendorCreditNumber =
       vendorCreditDTO.vendorCreditNumber ||
       oldVendorCredit?.vendorCreditNumber ||

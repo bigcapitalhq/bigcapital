@@ -3,7 +3,7 @@ import React from 'react';
 import { MaterialProgressBar } from '@/components';
 
 /**
- * Financnail progress bar.
+ * Financial progress bar.
  */
 export default function FinancialLoadingBar() {
   return (

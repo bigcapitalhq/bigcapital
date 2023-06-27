@@ -50,8 +50,8 @@ export default class RolesService {
     // Validates the invalid permissions.
     this.validateInvalidPermissions(createRoleDTO.permissions);
 
-    // Transformes the permissions DTO.
-    const permissions = this.tranaformPermissionsDTO(createRoleDTO.permissions);
+    // Transforms the permissions DTO.
+    const permissions = this.transformPermissionsDTO(createRoleDTO.permissions);
 
     // Creates a new role with associated entries under unit-of-work.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -88,10 +88,10 @@ export default class RolesService {
     // Validates the invalid permissions.
     this.validateInvalidPermissions(editRoleDTO.permissions);
 
-    // Retrieve the given role or throw not found serice error.
+    // Retrieve the given role or throw not found service error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
-    const permissions = this.tranaformEditPermissionsDTO(
+    const permissions = this.transformEditPermissionsDTO(
       editRoleDTO.permissions
     );
     // Updates the role on the storage.
@@ -155,7 +155,7 @@ export default class RolesService {
   ): Promise<void> => {
     const { Role, RolePermission } = this.tenancy.models(tenantId);
 
-    // Retrieve the given role or throw not found serice error.
+    // Retrieve the given role or throw not found service error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
     // Validate role is not predefined.
@@ -164,7 +164,7 @@ export default class RolesService {
     // Validates the given role is not associated to any user.
     await this.validateRoleNotAssociatedToUser(tenantId, roleId);
 
-    // Deletes the given role and associated models under unit-of-work envirement.
+    // Deletes the given role and associated models under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Deletes the role associated permissions from the storage.
       await RolePermission.query(trx).where('roleId', roleId).delete();
@@ -214,12 +214,12 @@ export default class RolesService {
   };
 
   /**
-   * Valdiates role is not predefined.
+   * Validates role is not predefined.
    * @param {IRole} role - Role object.
    */
   private validateRoleNotPredefined(role: IRole) {
     if (role.predefined) {
-      throw new ServiceError(ERRORS.ROLE_PREFINED);
+      throw new ServiceError(ERRORS.ROLE_PREDEFINED);
     }
   }
 
@@ -240,11 +240,11 @@ export default class RolesService {
   };
 
   /**
-   * Transformes new permissions DTO.
+   * Transforms new permissions DTO.
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {ICreateRolePermissionDTO[]}
    */
-  private tranaformPermissionsDTO = (
+  private transformPermissionsDTO = (
     permissions: ICreateRolePermissionDTO[]
   ) => {
     return permissions.map((permission: ICreateRolePermissionDTO) => ({
@@ -255,11 +255,11 @@ export default class RolesService {
   };
 
   /**
-   * Transformes edit permissions DTO.
+   * Transforms edit permissions DTO.
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {IEditRolePermissionDTO[]}
    */
-  private tranaformEditPermissionsDTO = (
+  private transformEditPermissionsDTO = (
     permissions: IEditRolePermissionDTO[]
   ) => {
     return permissions.map((permission: IEditRolePermissionDTO) => ({
@@ -285,7 +285,7 @@ export default class RolesService {
 
     // Throw service error if the role has associated users.
     if (userAssociatedRole.length > 0) {
-      throw new ServiceError(ERRORS.CANNT_DELETE_ROLE_ASSOCIATED_TO_USERS);
+      throw new ServiceError(ERRORS.CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS);
     }
   };
 }

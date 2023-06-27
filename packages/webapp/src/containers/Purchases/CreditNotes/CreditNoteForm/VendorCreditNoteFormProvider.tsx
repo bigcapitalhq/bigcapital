@@ -63,7 +63,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isLoading: isWarehouesLoading,
+    isLoading: isWarehousesLoading,
     isSuccess: isWarehousesSuccess,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
@@ -85,7 +85,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   const isNewMode = !vendorCreditId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading = isWarehouesLoading || isBranchesLoading;
+  const isFeatureLoading = isWarehousesLoading || isBranchesLoading;
 
   const newVendorCredit = !isEmpty(bill)
     ? transformToEditForm({

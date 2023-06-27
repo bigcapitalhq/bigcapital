@@ -39,7 +39,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
   }
 
   /**
-   *Transformes the account transaction to to cashflow transaction node.
+   *Transforms the account transaction to to cashflow transaction node.
    * @param {IAccountTransaction} transaction
    * @returns {ICashflowAccountTransaction}
    */
@@ -118,7 +118,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
   };
 
   /**
-   * Transformes the given account transaction to cashflow report transaction.
+   * Transforms the given account transaction to cashflow report transaction.
    * @param {ICashflowAccountTransaction} transaction
    * @returns {ICashflowAccountTransaction}
    */
@@ -142,7 +142,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
   };
 
   /**
-   * Retrieve the reprot data node.
+   * Retrieve the report data node.
    * @returns {ICashflowAccountTransaction[]}
    */
   public reportData(): ICashflowAccountTransaction[] {

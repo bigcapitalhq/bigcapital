@@ -82,7 +82,7 @@ const transformWarehousesTransfer = (res) => ({
 });
 
 /**
- * Retrieve Warehoues list.
+ * Retrieve Warehouses list.
  */
 export function useWarehousesTransfers(query, props) {
   return useRequestQuery(

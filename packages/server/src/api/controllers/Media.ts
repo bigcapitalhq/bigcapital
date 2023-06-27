@@ -176,9 +176,9 @@ export default class MediaController extends BaseController {
    */
   handlerServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
-      if (error.errorType === 'MINETYPE_NOT_SUPPORTED') {
+      if (error.errorType === 'MIMETYPE_NOT_SUPPORTED') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'MINETYPE_NOT_SUPPORTED', code: 100, }]
+          errors: [{ type: 'MIMETYPE_NOT_SUPPORTED', code: 100, }]
         });
       }
       if (error.errorType === 'MEDIA_NOT_FOUND') {

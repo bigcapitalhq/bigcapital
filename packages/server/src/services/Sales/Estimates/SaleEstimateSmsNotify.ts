@@ -51,10 +51,10 @@ export default class SaleEstimateNotifyBySms {
       .findById(saleEstimateId)
       .withGraphFetched('customer');
 
-    // Validates the estimate transaction existance.
-    this.validateEstimateExistance(saleEstimate);
+    // Validates the estimate transaction existence.
+    this.validateEstimateExistence(saleEstimate);
 
-    // Validate the customer phone number existance and number validation.
+    // Validate the customer phone number existence and number validation.
     this.saleSmsNotification.validateCustomerPhoneNumber(
       saleEstimate.customer.personalPhone
     );
@@ -142,7 +142,7 @@ export default class SaleEstimateNotifyBySms {
   };
 
   /**
-   * Formattes the estimate sms notification details message.
+   * Formats the estimate sms notification details message.
    * @param {string} smsMessage
    * @param {ISaleEstimate} saleEstimate
    * @param {TenantMetadata} tenantMetadata
@@ -187,7 +187,7 @@ export default class SaleEstimateNotifyBySms {
       .findById(saleEstimateId)
       .withGraphFetched('customer');
 
-    this.validateEstimateExistance(saleEstimate);
+    this.validateEstimateExistence(saleEstimate);
 
     // Retrieve the current tenant metadata.
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
@@ -206,10 +206,10 @@ export default class SaleEstimateNotifyBySms {
   };
 
   /**
-   * Validates the sale estimate existance.
+   * Validates the sale estimate existence.
    * @param {ISaleEstimate} saleEstimate -
    */
-  private validateEstimateExistance(saleEstimate: ISaleEstimate) {
+  private validateEstimateExistence(saleEstimate: ISaleEstimate) {
     if (!saleEstimate) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
     }

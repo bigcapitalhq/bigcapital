@@ -17,9 +17,9 @@ export default class FinancialSheet {
   readonly baseCurrency: string;
 
   /**
-   * Transformes the number format query to settings
+   * Transforms the number format query to settings
    */
-  protected transfromFormatQueryToSettings(): IFormatNumberSettings {
+  protected transformFormatQueryToSettings(): IFormatNumberSettings {
     const { numberFormat } = this;
 
     return {
@@ -43,7 +43,7 @@ export default class FinancialSheet {
     overrideSettings: IFormatNumberSettings = {}
   ): string {
     const settings = {
-      ...this.transfromFormatQueryToSettings(),
+      ...this.transformFormatQueryToSettings(),
       ...overrideSettings,
     };
     return formatNumber(number, settings);

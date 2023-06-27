@@ -3,7 +3,7 @@ export const ERRORS = {
   ACCOUNT_TYPE_NOT_FOUND: 'account_type_not_found',
   PARENT_ACCOUNT_NOT_FOUND: 'parent_account_not_found',
   ACCOUNT_CODE_NOT_UNIQUE: 'account_code_not_unique',
-  ACCOUNT_NAME_NOT_UNIQUE: 'account_name_not_unqiue',
+  ACCOUNT_NAME_NOT_UNIQUE: 'account_name_not_unique',
   PARENT_ACCOUNT_HAS_DIFFERENT_TYPE: 'parent_has_different_type',
   ACCOUNT_TYPE_NOT_ALLOWED_TO_CHANGE: 'account_type_not_allowed_to_changed',
   ACCOUNT_PREDEFINED: 'account_predefined',

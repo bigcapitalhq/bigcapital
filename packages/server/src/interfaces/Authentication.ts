@@ -11,7 +11,7 @@ export interface IRegisterDTO {
 }
 
 export interface ILoginDTO {
-  crediential: string;
+  credential: string;
   password: string;
 }
 
@@ -60,7 +60,7 @@ export interface IAuthSignInPOJO {
   tenant: ITenant;
 }
 
-export interface IAuthResetedPasswordEventPayload {
+export interface IAuthResetPasswordEventPayload {
   user: SystemUser;
   token: string;
   password: string;

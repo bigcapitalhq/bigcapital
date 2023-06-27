@@ -40,12 +40,12 @@ export class CreateCustomer {
   ): Promise<ICustomer> {
     const { Contact } = this.tenancy.models(tenantId);
 
-    // Transformes the customer DTO to customer object.
+    // Transforms the customer DTO to customer object.
     const customerObj = await this.customerDTO.transformCreateDTO(
       tenantId,
       customerDTO
     );
-    // Creates a new customer under unit-of-work envirement.
+    // Creates a new customer under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCustomerCreating` event.
       await this.eventPublisher.emitAsync(events.customers.onCreating, {

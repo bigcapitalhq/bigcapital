@@ -5,8 +5,8 @@ import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
-import { PaymentReceiveFormFootetLeft } from './PaymentReceiveFormFootetLeft';
-import { PaymentReceiveFormFootetRight } from './PaymentReceiveFormFootetRight';
+import { PaymentReceiveFormFooterLeft } from './PaymentReceiveFormFooterLeft';
+import { PaymentReceiveFormFooterRight } from './PaymentReceiveFormFooterRight';
 
 /**
  * Payment receive form footer.
@@ -17,11 +17,11 @@ export default function PaymentReceiveFormFooter() {
       <PaymentReceiveFooterPaper>
         <Row>
           <Col md={8}>
-            <PaymentReceiveFormFootetLeft />
+            <PaymentReceiveFormFooterLeft />
           </Col>
 
           <Col md={4}>
-            <PaymentReceiveFormFootetRight />
+            <PaymentReceiveFormFooterRight />
           </Col>
         </Row>
       </PaymentReceiveFooterPaper>

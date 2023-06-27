@@ -15,7 +15,7 @@ export const FULL_ACCESS_CHECKBOX_STATE = {
 };
 
 /**
- * Transformes the permissions object to array.
+ * Transforms the permissions object to array.
  * @returns
  */
 export const transformToArray = ({ permissions }) => {
@@ -40,7 +40,7 @@ function transformPermissions(permissions) {
 }
 
 /**
- * Transformes permissions array to object.
+ * Transforms permissions array to object.
  * @param {*} permissions -
  * @returns
  */
@@ -100,7 +100,7 @@ export const getInitialServicesFullAccess = (formPermissions) => {
       const { subject } = service;
       const isFullChecked = isServiceFullChecked(subject, formPermissions);
       const isFullUnchecked = isServiceFullUnchecked(subject, formPermissions);
-      const value = detarmineCheckboxState(isFullChecked, isFullUnchecked);
+      const value = determineCheckboxState(isFullChecked, isFullUnchecked);
 
       return [service.subject, value];
     })
@@ -131,7 +131,7 @@ export const getNewRoleInitialValues = (schema) => {
  * @param {*} columnKey
  * @returns
  */
-export function getSerivceColumnPermission(service, columnKey) {
+export function getServiceColumnPermission(service, columnKey) {
   return service.permissions.find((permission) => {
     return permission.relatedColumn === columnKey;
   });
@@ -149,7 +149,7 @@ export function getServiceExtraPermissions(service) {
 }
 
 /**
- * Detarmines the given service subject is full permissions checked.
+ * Determines the given service subject is full permissions checked.
  */
 export function isServiceFullChecked(subject, permissions) {
   const serviceSchema = getPermissionsSchemaService(subject);
@@ -160,7 +160,7 @@ export function isServiceFullChecked(subject, permissions) {
 }
 
 /**
- * Detarmines the given service subject is fully associated permissions unchecked.
+ * Determines the given service subject is fully associated permissions unchecked.
  * @param {string} subject -
  * @param {Object} permissionsMap -
  */
@@ -206,7 +206,7 @@ export const handleCheckboxPermissionChange = R.curry(
     form.setFieldValue(`permissions.${subject}/${permission.key}`, isChecked);
     form.setFieldValue(
       `serviceFullAccess.${subject}`,
-      detarmineCheckboxState(isFullChecked, isFullUnchecked),
+      determineCheckboxState(isFullChecked, isFullUnchecked),
     );
 
     dependencies.forEach((depKey) => {
@@ -216,12 +216,12 @@ export const handleCheckboxPermissionChange = R.curry(
 );
 
 /**
- * Detarmines the permission checkbox state.
+ * Determines the permission checkbox state.
  * @param {boolean} isFullChecked
  * @param {boolean} isFullUnchecked
  * @returns {FULL_ACCESS_CHECKBOX_STATE}
  */
-function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
+function determineCheckboxState(isFullChecked, isFullUnchecked) {
   return isFullChecked
     ? FULL_ACCESS_CHECKBOX_STATE.ON
     : isFullUnchecked
@@ -230,7 +230,7 @@ function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
 }
 
 /**
- * Retreive the service all permissions paths.
+ * Retrieve the service all permissions paths.
  * @param {string} subject
  * @returns {string[]}
  */

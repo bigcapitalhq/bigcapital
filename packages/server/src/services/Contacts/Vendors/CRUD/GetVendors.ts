@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import VendorTransfromer from '../VendorTransformer';
+import VendorTransformer from '../VendorTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -60,7 +60,7 @@ export class GetVendors {
     const transformedVendors = await this.transformer.transform(
       tenantId,
       results,
-      new VendorTransfromer()
+      new VendorTransformer()
     );
     return {
       vendors: transformedVendors,

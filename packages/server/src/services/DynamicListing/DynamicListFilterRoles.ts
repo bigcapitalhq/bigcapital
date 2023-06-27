@@ -2,13 +2,13 @@ import { Service } from 'typedi';
 import * as R from 'ramda';
 import validator from 'is-my-json-valid';
 import { IFilterRole, IModel } from '@/interfaces';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterAdvancedFilter from '@/lib/DynamicFilter/DynamicFilterAdvancedFilter';
 import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
 
 @Service()
-export default class DynamicListFilterRoles extends DynamicListAbstruct {
+export default class DynamicListFilterRoles extends DynamicListAbstract {
   /**
    * Validates filter roles schema.
    * @param {IFilterRole[]} filterRoles - Filter roles.
@@ -47,12 +47,12 @@ export default class DynamicListFilterRoles extends DynamicListAbstruct {
   };
 
   /**
-   * Validates existance the fields of filter roles.
+   * Validates existence the fields of filter roles.
    * @param  {IModel} model
    * @param  {IFilterRole[]} filterRoles
    * @throws {ServiceError}
    */
-  private validateFilterRolesFieldsExistance = (
+  private validateFilterRolesFieldsExistence = (
     model: IModel,
     filterRoles: IFilterRole[]
   ) => {
@@ -96,7 +96,7 @@ export default class DynamicListFilterRoles extends DynamicListAbstruct {
     this.validateFilterRolesSchema(filterRolesParsed);
 
     // Validate the model resource fields.
-    this.validateFilterRolesFieldsExistance(model, filterRoles);
+    this.validateFilterRolesFieldsExistence(model, filterRoles);
 
     return new DynamicFilterAdvancedFilter(filterRolesParsed);
   };

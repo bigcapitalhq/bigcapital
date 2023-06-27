@@ -130,7 +130,7 @@ export class InventoryItemCostService {
     // Retrieves the inventory items ids.
     const inventoryItemsIds: number[] = items.map((item) => item.id);
 
-    // Retreives the items inventory IN/OUT map.
+    // Retrieves the items inventory IN/OUT map.
     const [OUTValuationMap, INValuationMap] =
       await this.getItemsInventoryInOutMap(tenantId, itemsId, date);
 

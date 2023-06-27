@@ -322,7 +322,7 @@ export default class ItemsController extends BaseController {
       const item = await this.itemsApplication.getItem(tenantId, itemId);
 
       return res.status(200).send({
-        item: this.transfromToResponse(item),
+        item: this.transformToResponse(item),
       });
     } catch (error) {
       next(error);
@@ -351,9 +351,9 @@ export default class ItemsController extends BaseController {
         await this.itemsApplication.getItems(tenantId, filter);
 
       return res.status(200).send({
-        items: this.transfromToResponse(items),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        items: this.transformToResponse(items),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -384,7 +384,7 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEMS_NOT_FOUND', code: 130 }],
         });
       }
-      if (error.errorType === 'ITEM_CATEOGRY_NOT_FOUND') {
+      if (error.errorType === 'ITEM_CATEGORY_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'ITEM_CATEGORY.NOT.FOUND', code: 140 }],
         });
@@ -394,7 +394,7 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEM.NAME.ALREADY.EXISTS', code: 210 }],
         });
       }
-      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
         });
@@ -414,7 +414,7 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'SELL.ACCOUNT.NOT.INCOME.TYPE', code: 230 }],
         });
       }
-      if (error.errorType === 'COST_ACCOUNT_NOT_FOUMD') {
+      if (error.errorType === 'COST_ACCOUNT_NOT_FOUND') {
         return res.status(400).send({
           errors: [{ type: 'COST.ACCOUNT.NOT.FOUND', code: 120 }],
         });
@@ -449,9 +449,9 @@ export default class ItemsController extends BaseController {
           errors: [{ type: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS', code: 310 }],
         });
       }
-      if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTINS') {
+      if (error.errorType === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS') {
         return res.status(400).send({
-          errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTINS', code: 320 }],
+          errors: [{ type: 'ITEM_HAS_ASSOCIATED_TRANSACTIONS', code: 320 }],
         });
       }
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT') {

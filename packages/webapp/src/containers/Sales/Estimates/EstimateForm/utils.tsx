@@ -50,7 +50,7 @@ export const defaultEstimate = {
 };
 
 const ERRORS = {
-  ESTIMATE_NUMBER_IS_NOT_UNQIUE: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
+  ESTIMATE_NUMBER_IS_NOT_UNIQUE: 'ESTIMATE.NUMBER.IS.NOT.UNIQUE',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
 };
 
@@ -76,7 +76,7 @@ export const transformToEditForm = (estimate) => {
 };
 
 /**
- * Detarmines customers fast field when update.
+ * Determines customers fast field when update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -86,7 +86,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -118,9 +118,9 @@ export const ITEMS_FILTER_ROLES = JSON.stringify([
  * @param {*} param1
  */
 export const handleErrors = (errors, { setErrors }) => {
-  if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNQIUE)) {
+  if (errors.some((e) => e.type === ERRORS.ESTIMATE_NUMBER_IS_NOT_UNIQUE)) {
     setErrors({
-      estimate_number: intl.get('estimate_number_is_not_unqiue'),
+      estimate_number: intl.get('estimate_number_is_not_unique'),
     });
   }
   if (
@@ -137,7 +137,7 @@ export const handleErrors = (errors, { setErrors }) => {
 /**
  * Transform the form values to request body.
  */
-export const transfromsFormValuesToRequest = (values) => {
+export const transformsFormValuesToRequest = (values) => {
   const entries = values.entries.filter(
     (item) => item.item_id && item.quantity,
   );
@@ -184,7 +184,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the estimate totals.
+ * Retrieves the estimate totals.
  */
 export const useEstimateTotals = () => {
   const {
@@ -213,7 +213,7 @@ export const useEstimateTotals = () => {
 };
 
 /**
- * Detarmines whether the estimate has foreign customer.
+ * Determines whether the estimate has foreign customer.
  * @returns {boolean}
  */
 export const useEstimateIsForeignCustomer = () => {

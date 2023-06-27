@@ -47,10 +47,10 @@ export class EditVendor {
       .modify('vendor')
       .throwIfNotFound();
 
-    // Transformes vendor DTO to object.
+    // Transforms vendor DTO to object.
     const vendorObj = this.transformDTO.transformEditDTO(vendorDTO);
 
-    // Edits vendor contact under unit-of-work envirement.
+    // Edits vendor contact under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorEditing` event.
       await this.eventPublisher.emitAsync(events.vendors.onEditing, {

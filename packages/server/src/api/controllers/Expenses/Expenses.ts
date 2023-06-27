@@ -286,7 +286,7 @@ export class ExpensesController extends BaseController {
   }
 
   /**
-   * Publishs the given expense.
+   * Publish the given expense.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -308,7 +308,7 @@ export class ExpensesController extends BaseController {
   }
 
   /**
-   * Retrieve expneses list.
+   * Retrieve expenses list.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -328,9 +328,9 @@ export class ExpensesController extends BaseController {
         await this.expensesApplication.getExpenses(tenantId, filter);
 
       return res.status(200).send({
-        expenses: this.transfromToResponse(expenses),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        expenses: this.transformToResponse(expenses),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -352,7 +352,7 @@ export class ExpensesController extends BaseController {
         tenantId,
         expenseId
       );
-      return res.status(200).send(this.transfromToResponse({ expense }));
+      return res.status(200).send(this.transformToResponse({ expense }));
     } catch (error) {
       next(error);
     }

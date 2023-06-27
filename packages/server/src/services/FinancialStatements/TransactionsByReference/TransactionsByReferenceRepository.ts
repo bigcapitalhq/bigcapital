@@ -8,7 +8,7 @@ export default class TransactionsByReferenceRepository {
   tenancy: HasTenancyService;
 
   /**
-   * Retrieve the accounts transactions of the givne reference id and type.
+   * Retrieve the accounts transactions of the given reference id and type.
    * @param {number} tenantId - 
    * @param {number} referenceId - Reference id.
    * @param {string} referenceType - Reference type.

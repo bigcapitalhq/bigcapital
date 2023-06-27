@@ -81,7 +81,7 @@ export function transformToEditForm(invoice) {
 }
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === ERROR.SALE_INVOICE_NUMBER_IS_EXISTS)) {
@@ -110,7 +110,7 @@ export const transformErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Detarmines customer name field when should update.
+ * Determines customer name field when should update.
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -120,7 +120,7 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines invoice entries field when should update.
+ * Determines invoice entries field when should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -147,7 +147,7 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
 ]);
 
 /**
- * Transformes the form values to request body values.
+ * Transforms the form values to request body values.
  */
 export function transformValueToRequest(values) {
   const entries = values.entries.filter(
@@ -206,7 +206,7 @@ export const useInvoiceTotal = () => {
 };
 
 /**
- * Retreives the invoice totals.
+ * Retrieves the invoice totals.
  */
 export const useInvoiceTotals = () => {
   const {
@@ -229,7 +229,7 @@ export const useInvoiceTotals = () => {
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
 
-  // Retireves the formatted payment total.
+  // Retrieves the formatted payment total.
   const formattedPaymentTotal = React.useMemo(
     () => formattedAmount(paymentTotal, currencyCode),
     [paymentTotal, currencyCode],
@@ -257,7 +257,7 @@ export const useInvoiceTotals = () => {
 };
 
 /**
- * Detarmines whether the invoice has foreign customer.
+ * Determines whether the invoice has foreign customer.
  * @returns {boolean}
  */
 export const useInvoiceIsForeignCustomer = () => {

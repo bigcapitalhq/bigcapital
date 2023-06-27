@@ -41,7 +41,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmine whether the sale receipt closed.
+   * Determine whether the sale receipt closed.
    * @return {boolean}
    */
   get isClosed() {
@@ -49,7 +49,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the sale receipt drafted.
+   * Determines whether the sale receipt drafted.
    * @return {boolean}
    */
   get isDraft() {

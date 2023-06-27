@@ -62,7 +62,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   private branchDTOTransform: BranchTransactionDTOTransform;
 
   /**
-   * Validates the bill payment existance.
+   * Validates the bill payment existence.
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
@@ -114,7 +114,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validates the payment number uniqness.
+   * Validates the payment number uniqueness.
    * @param {number} tenantId -
    * @param {string} paymentMadeNumber -
    * @return {Promise<IBillPayment>}
@@ -137,7 +137,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
     );
 
     if (foundBillPayment) {
-      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE);
+      throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNIQUE);
     }
     return foundBillPayment;
   }
@@ -148,7 +148,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async validateBillsExistance(
+  public async validateBillsExistence(
     tenantId: number,
     billPaymentEntries: { billId: number }[],
     vendorId: number
@@ -228,12 +228,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validate the payment receive entries IDs existance.
+   * Validate the payment receive entries IDs existence.
    * @param {Request} req
    * @param {Response} res
    * @return {Response}
    */
-  private async validateEntriesIdsExistance(
+  private async validateEntriesIdsExistence(
     tenantId: number,
     billPaymentId: number,
     billPaymentEntries: IBillPaymentEntry[]
@@ -271,7 +271,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Validates the payment account currency code. The deposit account curreny
+   * Validates the payment account currency code. The deposit account currency
    * should be equals the customer currency code or the base currency.
    * @param  {string} paymentAccountCurrency
    * @param  {string} customerCurrency
@@ -317,10 +317,10 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Creates a new bill payment transcations and store it to the storage
+   * Creates a new bill payment transactions and store it to the storage
    * with associated bills entries and journal transactions.
    *
-   * Precedures:-
+   * Procedures:-
    * ------
    * - Records the bill payment transaction.
    * - Records the bill payment associated entries.
@@ -351,17 +351,17 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentDTO,
       vendor
     );
-    // Validate the payment account existance and type.
+    // Validate the payment account existence and type.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
     );
-    // Validate the payment number uniquiness.
+    // Validate the payment number uniqueness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
     }
-    // Validates the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(
+    // Validates the bills existence and associated to the given vendor.
+    await this.validateBillsExistence(
       tenantId,
       billPaymentObj.entries,
       billPaymentDTO.vendorId
@@ -375,8 +375,8 @@ export default class BillPaymentsService implements IBillPaymentsService {
       vendor.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Writes bill payment transacation with associated transactions
-    // under unit-of-work envirement.
+    // Writes bill payment transaction with associated transactions
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentCreating` event.
       await this.eventPublisher.emitAsync(events.billPayment.onCreating, {
@@ -405,11 +405,11 @@ export default class BillPaymentsService implements IBillPaymentsService {
   /**
    * Edits the details of the given bill payment.
    *
-   * Preceducres:
+   * Procedures:
    * ------
    * - Update the bill payment transaction.
    * - Insert the new bill payment entries that have no ids.
-   * - Update the bill paymeny entries that have ids.
+   * - Update the bill payment entries that have ids.
    * - Delete the bill payment entries that not presented.
    * - Re-insert the journal transactions and update the diff accounts balance.
    * - Update the diff vendor balance.
@@ -451,19 +451,19 @@ export default class BillPaymentsService implements IBillPaymentsService {
     // Validate vendor not modified.
     this.validateVendorNotModified(billPaymentDTO, oldBillPayment);
 
-    // Validate the payment account existance and type.
+    // Validate the payment account existence and type.
     const paymentAccount = await this.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
     );
-    // Validate the items entries IDs existance on the storage.
-    await this.validateEntriesIdsExistance(
+    // Validate the items entries IDs existence on the storage.
+    await this.validateEntriesIdsExistence(
       tenantId,
       billPaymentId,
       billPaymentObj.entries
     );
-    // Validate the bills existance and associated to the given vendor.
-    await this.validateBillsExistance(
+    // Validate the bills existence and associated to the given vendor.
+    await this.validateBillsExistence(
       tenantId,
       billPaymentObj.entries,
       billPaymentDTO.vendorId
@@ -474,7 +474,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentObj.entries,
       oldBillPayment.entries
     );
-    // Validate the payment number uniquiness.
+    // Validate the payment number uniqueness.
     if (billPaymentObj.paymentNumber) {
       await this.validatePaymentNumber(
         tenantId,
@@ -489,7 +489,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       tenantMeta.baseCurrency
     );
     // Edits the bill transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentEditing` event.
       await this.eventPublisher.emitAsync(events.billPayment.onEditing, {
@@ -532,7 +532,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       billPaymentId
     );
     // Deletes the bill transactions with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillPaymentDeleting` payload.
       await this.eventPublisher.emitAsync(events.billPayment.onDeleting, {
@@ -541,7 +541,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
         oldBillPayment,
       } as IBillPaymentDeletingPayload);
 
-      // Deletes the bill payment assocaited entries.
+      // Deletes the bill payment associated entries.
       await BillPaymentEntry.query(trx)
         .where('bill_payment_id', billPaymentId)
         .delete();
@@ -581,12 +581,12 @@ export default class BillPaymentsService implements IBillPaymentsService {
   /**
    * Retrieve bill payment.
    * @param {number} tenantId
-   * @param {number} billPyamentId
+   * @param {number} billPaymentId
    * @return {Promise<IBillPayment>}
    */
   public async getBillPayment(
     tenantId: number,
-    billPyamentId: number
+    billPaymentId: number
   ): Promise<IBillPayment> {
     const { BillPayment } = this.tenancy.models(tenantId);
 
@@ -596,7 +596,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       .withGraphFetched('paymentAccount')
       .withGraphFetched('transactions')
       .withGraphFetched('branch')
-      .findById(billPyamentId);
+      .findById(billPaymentId);
 
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
@@ -613,7 +613,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
   }
 
   /**
-   * Retrieve bill payment paginted and filterable list.
+   * Retrieve bill payment paginated and filterable list.
    * @param {number} tenantId
    * @param {IBillPaymentsFilter} billPaymentsFilter
    */
@@ -646,7 +646,7 @@ export default class BillPaymentsService implements IBillPaymentsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the bill payments models to POJO.
+    // Transforms the bill payments models to POJO.
     const billPayments = await this.transformer.transform(
       tenantId,
       results,

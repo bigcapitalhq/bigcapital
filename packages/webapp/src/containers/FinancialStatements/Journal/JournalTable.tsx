@@ -27,7 +27,7 @@ export function JournalTable({ companyName }) {
     isLoading,
   } = useJournalSheetContext();
 
-  // Retreive the journal table columns.
+  // Retrieve the journal table columns.
   const columns = useJournalTableColumns();
 
   // Default expanded rows of general journal table.
@@ -58,7 +58,7 @@ export function JournalTable({ companyName }) {
         vListOverscanRowCount={2}
         TableCellRenderer={TableFastCell}
         id={'journal'}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

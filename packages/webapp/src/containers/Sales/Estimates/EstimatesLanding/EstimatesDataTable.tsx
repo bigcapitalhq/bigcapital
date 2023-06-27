@@ -17,7 +17,7 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
 } from '@/components';
-import { ActionsMenu, useEstiamtesTableColumns } from './components';
+import { ActionsMenu, useEstimatesTableColumns } from './components';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
@@ -54,7 +54,7 @@ function EstimatesDataTable({
   } = useEstimatesListContext();
 
   // Estimates table columns.
-  const columns = useEstiamtesTableColumns();
+  const columns = useEstimatesTableColumns();
 
   // Handle estimate edit action.
   const handleEditEstimate = (estimate) => {

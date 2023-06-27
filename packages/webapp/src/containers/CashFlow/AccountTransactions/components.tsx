@@ -10,7 +10,7 @@ import {
   MaterialProgressBar,
 } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { TRANSACRIONS_TYPE } from '@/constants/cashflowOptions';
+import { TRANSACTIONS_TYPE } from '@/constants/cashflowOptions';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
@@ -26,7 +26,7 @@ export function ActionsMenu({
         onClick={safeCallback(onViewDetails, original)}
       />
       <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
-        <If condition={TRANSACRIONS_TYPE.includes(original.reference_type)}>
+        <If condition={TRANSACTIONS_TYPE.includes(original.reference_type)}>
           <MenuDivider />
           <MenuItem
             text={intl.get('delete_transaction')}
@@ -40,7 +40,7 @@ export function ActionsMenu({
   );
 }
 /**
- * Retrieve account transctions table columns.
+ * Retrieve account transactions table columns.
  */
 export function useAccountTransactionsColumns() {
   return React.useMemo(

@@ -7,7 +7,7 @@ import { FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   inputIntent,
 } from '@/utils';
@@ -37,7 +37,7 @@ export default function ExchangeRateFormFields() {
           >
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('date', formattedDate);
               })}

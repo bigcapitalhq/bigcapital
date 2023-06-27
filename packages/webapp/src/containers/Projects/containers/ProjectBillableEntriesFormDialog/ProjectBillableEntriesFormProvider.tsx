@@ -30,7 +30,7 @@ function ProjectBillableEntriesFormProvider({
       },
     );
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(billableEntries);
 
   //state provider.

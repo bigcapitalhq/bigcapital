@@ -40,7 +40,7 @@ function BillPaymentTransactionTable({
   });
 
   // Handles delete bill payment transactions.
-  const handleDeleteBillPaymentTransactons = ({ bill_payment_id }) => {
+  const handleDeleteBillPaymentTransactions = ({ bill_payment_id }) => {
     openAlert('payment-made-delete', {
       paymentMadeId: bill_payment_id,
     });
@@ -48,7 +48,7 @@ function BillPaymentTransactionTable({
 
   // Handles edit  bill payment transactions.
   const handleEditBillPaymentTransactions = ({ bill_payment_id }) => {
-    history.push(`/payment-mades/${bill_payment_id}/edit`);
+    history.push(`/payments-made/${bill_payment_id}/edit`);
     closeDrawer(DRAWERS.BILL_DETAILS);
   };
 
@@ -61,10 +61,10 @@ function BillPaymentTransactionTable({
         headerLoading={isPaymentTransactionsLoading}
         progressBarLoading={isPaymentTransactionFetching}
         TableLoadingRenderer={TableSkeletonRows}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         ContextMenu={ActionsMenu}
         payload={{
-          onDelete: handleDeleteBillPaymentTransactons,
+          onDelete: handleDeleteBillPaymentTransactions,
           onEdit: handleEditBillPaymentTransactions,
         }}
       />

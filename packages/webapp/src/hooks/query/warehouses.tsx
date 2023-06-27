@@ -64,7 +64,7 @@ export function useDeleteWarehouse(props) {
 
   return useMutation((id) => apiRequest.delete(`warehouses/${id}`), {
     onSuccess: (res, id) => {
-      // Invalidate specific warehoue.
+      // Invalidate specific warehouse.
       queryClient.invalidateQueries([t.WAREHOUSE, id]);
 
       // Common invalidate queries.
@@ -75,7 +75,7 @@ export function useDeleteWarehouse(props) {
 }
 
 /**
- * Retrieve Warehoues list.
+ * Retrieve Warehouses list.
  */
 export function useWarehouses(query, props) {
   return useRequestQuery(

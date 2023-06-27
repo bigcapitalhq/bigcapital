@@ -28,7 +28,7 @@ function InvNumberCellAccessor(row) {
 }
 
 /**
- * Mobey table cell.
+ * Money table cell.
  */
 function MoneyTableCell({ row: { original }, value }) {
   return <Money amount={value} currency={original.currency_code} />;
@@ -51,7 +51,7 @@ export const usePaymentReceiveEntriesColumns = () => {
         className: 'date',
       },
       {
-        Header: intl.get('invocie_number'),
+        Header: intl.get('invoice_number'),
         accessor: InvNumberCellAccessor,
         disableSortBy: true,
         className: 'invoice_number',

@@ -80,7 +80,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {IContactBalanceSummaryContact} contact
    * @returns {IContactBalanceSummaryContact}
    */
-  private contactCamparsionPercentageOfColumnMapper = (
+  private contactComparisonPercentageOfColumnMapper = (
     total: number,
     contact: IContactBalanceSummaryContact
   ): IContactBalanceSummaryContact => {
@@ -95,19 +95,19 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   };
 
   /**
-   * Mappes the contacts summary sections with percentage of column.
+   * Maps the contacts summary sections with percentage of column.
    * @param  {IContactBalanceSummaryContact[]} contacts -
    * @return {IContactBalanceSummaryContact[]}
    */
-  protected contactCamparsionPercentageOfColumn = (
+  protected contactComparisonPercentageOfColumn = (
     contacts: IContactBalanceSummaryContact[]
   ): IContactBalanceSummaryContact[] => {
     const customersTotal = this.getContactsTotal(contacts);
-    const camparsionPercentageOfColummn = R.curry(
-      this.contactCamparsionPercentageOfColumnMapper
+    const comparisonPercentageOfColumn = R.curry(
+      this.contactComparisonPercentageOfColumnMapper
     )(customersTotal);
 
-    return contacts.map(camparsionPercentageOfColummn);
+    return contacts.map(comparisonPercentageOfColumn);
   };
 
   /**
@@ -183,7 +183,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
   private contactNodeFilter = (contact: IContactBalanceSummaryContact) => {
     const { noneTransactions, noneZero } = this.filter;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterContactNoneTransactions],
       [noneZero, this.filterContactNoneZero],

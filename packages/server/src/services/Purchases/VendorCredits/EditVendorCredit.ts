@@ -38,14 +38,14 @@ export default class EditVendorCredit extends BaseVendorCredit {
       tenantId,
       vendorCreditId
     );
-    // Validate customer existance.
+    // Validate customer existence.
     const vendor = await Contact.query()
       .modify('vendor')
       .findById(vendorCreditDTO.vendorId)
       .throwIfNotFound();
 
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       vendorCreditDTO.entries
     );
@@ -54,21 +54,21 @@ export default class EditVendorCredit extends BaseVendorCredit {
       tenantId,
       vendorCreditDTO.entries
     );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the items entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       vendorCreditId,
       'VendorCredit',
       vendorCreditDTO.entries
     );
-    // Transformes edit DTO to model storage layer.
+    // Transforms edit DTO to model storage layer.
     const vendorCreditModel = this.transformCreateEditDTOToModel(
       tenantId,
       vendorCreditDTO,
       vendor.currencyCode,
       oldVendorCredit
     );
-    // Edits the vendor credit graph under unit-of-work envirement.
+    // Edits the vendor credit graph under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx) => {
       // Triggers `onVendorCreditEditing` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onEditing, {

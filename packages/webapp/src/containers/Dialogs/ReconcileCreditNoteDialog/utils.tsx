@@ -30,7 +30,7 @@ export const transformErrors = (errors, { setErrors }) => {
  * Empty status callout.
  * @returns {React.JSX}
  */
-export function EmptyStatuCallout() {
+export function EmptyStatusCallout() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
@@ -92,7 +92,7 @@ export const useReconcileCreditNoteTableColumns = () => {
 };
 
 /**
- * Sets max credit amount from sale invoicue balance.
+ * Sets max credit amount from sale invoice balance.
  */
 export const maxAmountCreditFromRemaining = (entries) => {
   return entries.map((entry) => ({

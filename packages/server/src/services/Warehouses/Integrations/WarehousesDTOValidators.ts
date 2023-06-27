@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { isEmpty } from 'lodash';
-import { ValidateWarehouseExistance } from './ValidateWarehouseExistance';
+import { ValidateWarehouseExistence } from './ValidateWarehouseExistence';
 import { WarehousesSettings } from '../WarehousesSettings';
 
 interface IWarehouseTransactionDTO {
@@ -11,35 +11,35 @@ interface IWarehouseTransactionDTO {
 @Service()
 export class WarehousesDTOValidators {
   @Inject()
-  private validateWarehouseExistanceService: ValidateWarehouseExistance;
+  private validateWarehouseExistenceService: ValidateWarehouseExistence;
 
   @Inject()
   private warehousesSettings: WarehousesSettings;
 
   /**
-   * Validates the warehouse existance of sale invoice transaction.
+   * Validates the warehouse existence of sale invoice transaction.
    * @param {number} tenantId
    * @param {ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO} saleInvoiceDTO
    */
-  public validateDTOWarehouseExistance = async (
+  public validateDTOWarehouseExistence = async (
     tenantId: number,
     DTO: IWarehouseTransactionDTO
   ) => {
-    // Validates the sale invoice warehouse id existance.
-    this.validateWarehouseExistanceService.validateWarehouseIdExistance(
+    // Validates the sale invoice warehouse id existence.
+    this.validateWarehouseExistenceService.validateWarehouseIdExistence(
       DTO,
       DTO.entries
     );
-    // Validate the sale invoice warehouse existance on the storage.
+    // Validate the sale invoice warehouse existence on the storage.
     if (DTO.warehouseId) {
-      this.validateWarehouseExistanceService.validateWarehouseExistance(
+      this.validateWarehouseExistenceService.validateWarehouseExistence(
         tenantId,
         DTO.warehouseId
       );
     }
-    // Validate the sale invoice entries warehouses existance on the storage.
+    // Validate the sale invoice entries warehouses existence on the storage.
     if (!isEmpty(DTO.entries)) {
-      await this.validateWarehouseExistanceService.validateItemEntriesWarehousesExistance(
+      await this.validateWarehouseExistenceService.validateItemEntriesWarehousesExistence(
         tenantId,
         DTO.entries
       );
@@ -47,7 +47,7 @@ export class WarehousesDTOValidators {
   };
 
   /**
-   * Validate the warehouse existance of
+   * Validate the warehouse existence of
    * @param   {number} tenantId
    * @param   {IWarehouseTransactionDTO} saleInvoiceDTO
    * @returns
@@ -61,6 +61,6 @@ export class WarehousesDTOValidators {
     // Can't continue if the multi-warehouses feature is inactive.
     if (!isActive) return;
 
-    return this.validateDTOWarehouseExistance(tenantId, DTO);
+    return this.validateDTOWarehouseExistence(tenantId, DTO);
   };
 }

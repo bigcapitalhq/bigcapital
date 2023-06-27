@@ -104,7 +104,7 @@ export default {
   },
 
   /**
-   * Markes the metadata to should be deleted.
+   * Marks the metadata to should be deleted.
    * @param {String} key -
    */
   async removeMeta(key) {
@@ -122,7 +122,7 @@ export default {
    * @param {*} group
    */
   removeAllMeta(group = 'default') {
-    this.metdata.map((meta) => ({
+    this.metadata.map((meta) => ({
       ...(meta.group !== group) ? { markAsDeleted: true } : {},
       ...meta,
     }));

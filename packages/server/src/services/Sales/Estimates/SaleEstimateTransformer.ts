@@ -3,7 +3,7 @@ import { ISaleEstimate } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 
-export default class SaleEstimateTransfromer extends Transformer {
+export default class SaleEstimateTransformer extends Transformer {
   /**
    * Include these attributes to sale invoice object.
    * @returns {Array}

@@ -119,7 +119,7 @@ export class WarehouseTransferApplication {
   };
 
   /**
-   * Marks the warehouse transfer order as transfered.
+   * Marks the warehouse transfer order as transferred.
    * @param   {number} tenantId
    * @param   {number} warehouseTransferId
    * @returns {Promise<IWarehouseTransfer>}

@@ -25,7 +25,7 @@ export function ActionsMenu({ payload: { onDelete }, row: { original } }) {
 }
 
 /**
- * Credit note reconcilation with invoices table columns.
+ * Credit note reconciliation with invoices table columns.
  */
 export function useReconcileCreditTransactionsTableColumns() {
   return React.useMemo(
@@ -45,7 +45,7 @@ export function useReconcileCreditTransactionsTableColumns() {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'formtted_amount',
+        accessor: 'formatted_amount',
         width: 100,
         className: 'amount',
         align: 'right',

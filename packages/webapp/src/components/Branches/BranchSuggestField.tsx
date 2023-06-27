@@ -81,7 +81,7 @@ export function BranchSuggestField({
    * @param {*} branch
    * @returns
    */
-  const brnachItemSelect = React.useCallback(
+  const branchItemSelect = React.useCallback(
     (branch) => {
       if (branch.id) {
         setSelectedBranch({ ...branch });
@@ -93,7 +93,7 @@ export function BranchSuggestField({
 
   /**
    *
-   * @param {*} inputVaue
+   * @param {*} inputValue
    * @returns
    */
   const branchInputValueRenderer = (inputValue) => {
@@ -109,7 +109,7 @@ export function BranchSuggestField({
       noResults={<MenuItem disabled={true} text={<T id={'no_accounts'} />} />}
       itemRenderer={branchItemRenderer}
       itemPredicate={branchItemPredicate}
-      onItemSelect={brnachItemSelect}
+      onItemSelect={branchItemSelect}
       selectedItem={selectedBranch}
       inputProps={{ placeholder: defaultSelectText }}
       resetOnClose={true}

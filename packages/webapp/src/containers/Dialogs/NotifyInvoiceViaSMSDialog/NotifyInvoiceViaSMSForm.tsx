@@ -16,7 +16,7 @@ const transformFormValuesToRequest = (values) => {
   return pick(values, ['notification_key']);
 };
 
-// Momerize the notification types.
+// Memorize the notification types.
 const notificationTypes = [
   {
     key: 'details',
@@ -70,7 +70,7 @@ function NotifyInvoiceViaSMSForm({
       }
       setSubmitting(false);
     };
-    // Transformes the form values to request.
+    // Transforms the form values to request.
     const requestValues = transformFormValuesToRequest(values);
 
     // Submits invoice SMS notification.

@@ -50,7 +50,7 @@ export class CustomerWriteGLOpeningBalanceSubscriber {
   };
 
   /**
-   * Handles the deleting opeing balance journal entrise once the customer deleted.
+   * Handles the deleting opening balance journal enterprise once the customer deleted.
    * @param {ICustomerEventDeletedPayload} payload -
    */
   private handleRevertOpeningBalanceEntries = async ({
@@ -66,7 +66,7 @@ export class CustomerWriteGLOpeningBalanceSubscriber {
   };
 
   /**
-   * Handles the rewrite opening balance entries once opening balnace changed.
+   * Handles the rewrite opening balance entries once opening balance changed.
    * @param {ICustomerOpeningBalanceEditedPayload} payload -
    */
   private handleRewriteOpeningEntriesOnChanged = async ({

@@ -9,7 +9,7 @@ const InventoryAdjustmentsContext = createContext();
  * Accounts chart data provider.
  */
 function InventoryAdjustmentsProvider({ query, ...props }) {
-  // Handles the inventory adjustments fethcing of the given query.
+  // Handles the inventory adjustments fetching of the given query.
   const {
     isLoading: isAdjustmentsLoading,
     isFetching: isAdjustmentsFetching,

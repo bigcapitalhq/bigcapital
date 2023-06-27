@@ -11,7 +11,7 @@ const UnlockingPartialTransactionsDialogContent = React.lazy(() =>
 /**
  * UncLocking Partial transactions dialog.
  */
-function UnLockingPartialTransactionsDilaog({
+function UnLockingPartialTransactionsDialog({
   isOpen,
   dialogName,
   payload: { module },
@@ -35,4 +35,4 @@ function UnLockingPartialTransactionsDilaog({
   );
 }
 
-export default compose(withDialogRedux())(UnLockingPartialTransactionsDilaog);
+export default compose(withDialogRedux())(UnLockingPartialTransactionsDialog);

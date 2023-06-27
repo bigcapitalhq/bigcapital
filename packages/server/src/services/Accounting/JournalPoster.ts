@@ -79,7 +79,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Async initialize acccounts dependency graph.
+   * Async initialize accounts dependency graph.
    * @private
    * @returns {Promise<void>}
    */
@@ -93,7 +93,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Detarmines the ledger is empty.
+   * Determines the ledger is empty.
    */
   public isEmpty() {
     return this.entries.length === 0;
@@ -555,7 +555,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve the credit/debit sumation for the given account and date.
+   * Retrieve the credit/debit summation for the given account and date.
    * @param {Number} account -
    * @param {Date|String} closingDate -
    */
@@ -594,7 +594,7 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Number}
    */
 
-  getTrialBalanceWithDepands(
+  getTrialBalanceWithDepends(
     accountId: number,
     closingDate: Date,
     dateType: string
@@ -662,7 +662,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve total balnace of the given customer/vendor contact.
+   * Retrieve total balance of the given customer/vendor contact.
    * @param {Number} accountId
    * @param {Number} contactId
    * @param {String} contactType
@@ -704,10 +704,10 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve account entries with depents accounts.
+   * Retrieve account entries with depends accounts.
    * @param {number} accountId - 
    */
-  getAccountEntriesWithDepents(accountId: number) {
+  getAccountEntriesWithDepends(accountId: number) {
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
     const accountsIds = [accountId, ...depAccountsIds];
 
@@ -717,7 +717,7 @@ export default class JournalPoster implements IJournalPoster {
   }
 
   /**
-   * Retrieve total balnace of the given customer/vendor contact.
+   * Retrieve total balance of the given customer/vendor contact.
    * @param {Number} accountId
    * @param {Number} contactId
    * @param {String} contactType

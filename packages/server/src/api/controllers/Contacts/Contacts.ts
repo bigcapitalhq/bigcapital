@@ -80,7 +80,7 @@ export default class ContactsController extends BaseController {
         contactId
       );
       return res.status(200).send({
-        customer: this.transfromToResponse(contact),
+        customer: this.transformToResponse(contact),
       });
     } catch (error) {
       next(error);

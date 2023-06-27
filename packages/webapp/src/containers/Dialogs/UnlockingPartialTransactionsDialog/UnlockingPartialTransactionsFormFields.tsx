@@ -14,7 +14,7 @@ import {
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { useAutofocus } from '@/hooks';
@@ -47,7 +47,7 @@ export default function UnlockingPartialTransactionsFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('unlock_from_date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,
@@ -78,7 +78,7 @@ export default function UnlockingPartialTransactionsFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('unlock_to_date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,

@@ -22,24 +22,24 @@ export class ManualJournalBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.manualJournals.onCreating,
-      this.validateBranchExistanceOnBillCreating
+      this.validateBranchExistenceOnBillCreating
     );
     bus.subscribe(
       events.manualJournals.onEditing,
-      this.validateBranchExistanceOnBillEditing
+      this.validateBranchExistenceOnBillEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {IManualJournalCreatingPayload} payload
    */
-  private validateBranchExistanceOnBillCreating = async ({
+  private validateBranchExistenceOnBillCreating = async ({
     manualJournalDTO,
     tenantId,
   }: IManualJournalCreatingPayload) => {
-    // Detarmines whether the multi-branches is accessible by tenant.
+    // Determines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
       tenantId,
       Features.BRANCHES
@@ -54,14 +54,14 @@ export class ManualJournalBranchValidateSubscriber {
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnBillEditing = async ({
+  private validateBranchExistenceOnBillEditing = async ({
     tenantId,
     manualJournalDTO,
   }: IManualJournalEditingPayload) => {
-    // Detarmines whether the multi-branches is accessible by tenant.
+    // Determines whether the multi-branches is accessible by tenant.
     const isAccessible = await this.featuresManager.accessible(
       tenantId,
       Features.BRANCHES

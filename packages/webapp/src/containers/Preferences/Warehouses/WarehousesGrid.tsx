@@ -12,14 +12,14 @@ export default function WarehousesGrid() {
   // Retrieve list context.
   const {
     warehouses,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isEmptyStatus,
   } = useWarehousesContext();
 
   return (
     <React.Fragment>
       <WarehousesList>
-        {isWarehouesLoading ? (
+        {isWarehousesLoading ? (
           <WarehousesSkeleton />
         ) : isEmptyStatus ? (
           <WarehousesEmptyStatus />

@@ -85,7 +85,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Mappes the customers objects to report accounts nodes.
+   * Maps the customers objects to report accounts nodes.
    * @param {ICustomer[]} customers
    * @returns {IARAgingSummaryCustomer[]}
    */
@@ -133,7 +133,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Detarmines the customers nodes filter is enabled.
+   * Determines the customers nodes filter is enabled.
    * @returns {boolean}
    */
   private isCustomersFilterEnabled = (): boolean => {

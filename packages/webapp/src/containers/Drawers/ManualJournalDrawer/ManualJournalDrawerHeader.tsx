@@ -37,7 +37,7 @@ export default function ManualJournalDrawerHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem name={'journal-type'} label={<T id={'journal_type'} />}>
               {manualJournal.journal_type}
             </DetailItem>

@@ -51,7 +51,7 @@ export const defaultVendorsCreditNote = {
 };
 
 /**
- * Transformes the credit note to initial values of edit form.
+ * Transforms the credit note to initial values of edit form.
  */
 export const transformToEditForm = (creditNote) => {
   const initialEntries = [
@@ -75,7 +75,7 @@ export const transformToEditForm = (creditNote) => {
 };
 
 /**
- * Transformes credit note entries to submit request.
+ * Transforms credit note entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
   const transformCreditNoteEntry = R.compose(
@@ -89,14 +89,14 @@ export const transformEntriesToSubmit = (entries) => {
 };
 
 /**
- * Filters the givne non-zero entries.
+ * Filters the given non-zero entries.
  */
 export const filterNonZeroEntries = (entries) => {
   return entries.filter((item) => item.item_id && item.quantity);
 };
 
 /**
- * Transformes form values to request body.
+ * Transforms form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
@@ -109,7 +109,7 @@ export const transformFormValuesToRequest = (values) => {
 };
 
 /**
- * Detarmines vendors fast field should update
+ * Determines vendors fast field should update
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -119,7 +119,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -171,7 +171,7 @@ export const useSetPrimaryWarehouseToForm = () => {
   }, [isWarehousesSuccess, setFieldValue, warehouses]);
 };
 
-export const useVendorCrditNoteTotals = () => {
+export const useVendorCreditNoteTotals = () => {
   const {
     values: { entries, currency_code: currencyCode },
   } = useFormikContext();
@@ -198,7 +198,7 @@ export const useVendorCrditNoteTotals = () => {
 };
 
 /**
- * Detarmines whether the vendor note has foreign customer.
+ * Determines whether the vendor note has foreign customer.
  * @returns {boolean}
  */
 export const useVendorNoteIsForeignCustomer = () => {

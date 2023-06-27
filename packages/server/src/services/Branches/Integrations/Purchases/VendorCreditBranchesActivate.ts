@@ -8,7 +8,7 @@ export class VendorCreditActivateBranches {
   tenancy: HasTenancyService;
 
   /**
-   * Updates all vendor credits transcations with the primary branch.
+   * Updates all vendor credits transactions with the primary branch.
    * @param   {number} tenantId
    * @param   {number} primaryBranchId
    * @returns {Promise<void>}

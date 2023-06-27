@@ -50,12 +50,12 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
     );
     // Retrieve the applied invoices that associated to the credit note customer.
     const appliedInvoicesEntries =
-      await this.paymentReceive.validateInvoicesIDsExistance(
+      await this.paymentReceive.validateInvoicesIDsExistence(
         tenantId,
         creditNote.customerId,
         applyCreditToInvoicesDTO.entries
       );
-    // Transformes apply DTO to model.
+    // Transforms apply DTO to model.
     const creditNoteAppliedModel = this.transformApplyDTOToModel(
       applyCreditToInvoicesDTO,
       creditNote
@@ -92,7 +92,7 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
   };
 
   /**
-   * Transformes apply DTO to model.
+   * Transforms apply DTO to model.
    * @param {IApplyCreditToInvoicesDTO} applyDTO
    * @param {ICreditNote} creditNote
    * @returns

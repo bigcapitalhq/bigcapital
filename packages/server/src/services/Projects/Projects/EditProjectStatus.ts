@@ -28,12 +28,12 @@ export default class EditProjectStatusService {
   ) => {
     const { Project } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldProject = await Project.query()
       .findById(projectId)
       .throwIfNotFound();
 
-    // Edits the given project under unit-of-work envirement.
+    // Edits the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Upsert the project object.
       const project = await Project.query(trx).upsertGraph({

@@ -9,7 +9,7 @@ export interface IFeatureAllItem {
   defaultAccessible: boolean;
 }
 
-export interface IFeatureConfiugration {
+export interface IFeatureConfiguration {
   name: string;
   defaultValue?: boolean;
 }

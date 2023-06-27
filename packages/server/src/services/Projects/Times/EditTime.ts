@@ -36,7 +36,7 @@ export class EditTimeService {
   ): Promise<IProjectTimeEditPOJO> => {
     const { Time } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const oldTime = await Time.query().findById(timeId).throwIfNotFound();
 
     // Triggers `onProjectEdit` event.
@@ -46,7 +46,7 @@ export class EditTimeService {
       timeDTO,
     } as IProjectTimeEditEventPayload);
 
-    // Edits the given project under unit-of-work envirement.
+    // Edits the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectEditing` event.
       await this.eventPublisher.emitAsync(events.projectTime.onEditing, {

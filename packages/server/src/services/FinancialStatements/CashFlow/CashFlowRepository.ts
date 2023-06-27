@@ -43,7 +43,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve total of csah at beginning transactions.
+   * Retrieve total of cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
    * @return {Promise<IAccountTransaction[]>}
@@ -101,7 +101,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve the net income tranasctions.
+   * Retrieve the net income transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} query -
    * @return {Promise<IAccountTransaction[]>}
@@ -130,7 +130,7 @@ export default class CashFlowRepository {
   }
 
   /**
-   * Retrieve peridos of cash at beginning transactions.
+   * Retrieve periods of cash at beginning transactions.
    * @param {number} tenantId -
    * @param {ICashFlowStatementQuery} filter -
    * @return {Promise<IAccountTransaction[]>}

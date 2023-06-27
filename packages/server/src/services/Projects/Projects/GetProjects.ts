@@ -28,7 +28,7 @@ export default class GetProjects {
       .modify('totalBillsDetails')
       .modify('totalTasksDetails');
 
-    // Transformes and returns object.
+    // Transforms and returns object.
     return this.transformer.transform(
       tenantId,
       projects,

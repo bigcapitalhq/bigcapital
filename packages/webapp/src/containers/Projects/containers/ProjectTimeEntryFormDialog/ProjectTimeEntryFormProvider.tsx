@@ -9,7 +9,7 @@ import {
 } from '../../hooks';
 import { DialogContent } from '@/components';
 
-const ProjecctTimeEntryFormContext = React.createContext();
+const ProjectTimeEntryFormContext = React.createContext();
 
 /**
  * Project time entry form provider.
@@ -70,12 +70,12 @@ function ProjectTimeEntryFormProvider({
       isLoading={isProjectsLoading || isProjectTimeEntryLoading}
       name={'project-time-entry-form'}
     >
-      <ProjecctTimeEntryFormContext.Provider value={provider} {...props} />
+      <ProjectTimeEntryFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
 const useProjectTimeEntryFormContext = () =>
-  React.useContext(ProjecctTimeEntryFormContext);
+  React.useContext(ProjectTimeEntryFormContext);
 
 export { ProjectTimeEntryFormProvider, useProjectTimeEntryFormContext };

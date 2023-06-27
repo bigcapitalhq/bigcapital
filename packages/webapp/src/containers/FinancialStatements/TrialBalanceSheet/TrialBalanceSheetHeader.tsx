@@ -42,7 +42,7 @@ function TrialBalanceSheetHeader({
       .required()
       .label(intl.get('to_date')),
   });
-  // Detarmines whether the feature is enabled.
+  // Determines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

@@ -28,7 +28,7 @@ import { compose } from '@/utils';
  */
 function AccountTransactionsDataTable({
   // #withSettings
-  cashflowTansactionsTableSize,
+  cashflowTransactionsTableSize,
 
   // #withAlertsActions
   openAlert,
@@ -80,12 +80,12 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
+      vListrowHeight={cashflowTransactionsTableSize == 'small' ? 32 : 40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
-      className="table-constrant"
+      className="table-constraint"
       payload={{
         onViewDetails: handleViewDetailCashflowTransaction,
         onDelete: handleDeleteTransaction,
@@ -96,13 +96,13 @@ function AccountTransactionsDataTable({
 
 export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
-    cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
+    cashflowTransactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withAlertsActions,
   withDrawerActions,
 )(AccountTransactionsDataTable);
 
-const DashboardConstrantTable = styled(DataTable)`
+const DashboardConstraintTable = styled(DataTable)`
   .table {
     .thead {
       .th {
@@ -118,7 +118,7 @@ const DashboardConstrantTable = styled(DataTable)`
   }
 `;
 
-const CashflowTransactionsTable = styled(DashboardConstrantTable)`
+const CashflowTransactionsTable = styled(DashboardConstraintTable)`
   .table .tbody {
     .tbody-inner .tr.no-results {
       .td {

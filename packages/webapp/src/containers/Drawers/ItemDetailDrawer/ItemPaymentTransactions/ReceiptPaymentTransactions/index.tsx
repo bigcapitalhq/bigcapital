@@ -40,7 +40,7 @@ function ReceiptPaymentTransactions({
   });
 
   // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ receipt_id }) => {
+  const handleDeletePaymentTransactions = ({ receipt_id }) => {
     openAlert('receipt-delete', {
       receiptId: receipt_id,
     });
@@ -62,9 +62,9 @@ function ReceiptPaymentTransactions({
       ContextMenu={ActionsMenu}
       payload={{
         onEdit: handleEditPaymentTransactions,
-        onDelete: handleDeletePaymentTransactons,
+        onDelete: handleDeletePaymentTransactions,
       }}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}
       sticky={true}
     />

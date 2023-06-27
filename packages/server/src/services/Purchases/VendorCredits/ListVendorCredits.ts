@@ -51,7 +51,7 @@ export default class ListVendorCredits extends BaseVendorCredit {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the vendor credits models to POJO.
+    // Transforms the vendor credits models to POJO.
     const vendorCredits = await this.transformer.transform(
       tenantId,
       results,

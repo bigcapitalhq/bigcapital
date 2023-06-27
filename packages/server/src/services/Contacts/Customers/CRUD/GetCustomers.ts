@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import CustomerTransfromer from '../CustomerTransformer';
+import CustomerTransformer from '../CustomerTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -33,7 +33,7 @@ export class GetCustomers {
   /**
    * Retrieve customers paginated list.
    * @param {number} tenantId - Tenant id.
-   * @param {ICustomersFilter} filter - Cusotmers filter.
+   * @param {ICustomersFilter} filter - Customers filter.
    */
   public async getCustomersList(
     tenantId: number,
@@ -66,7 +66,7 @@ export class GetCustomers {
     const customers = await this.transformer.transform(
       tenantId,
       results,
-      new CustomerTransfromer()
+      new CustomerTransformer()
     );
     return {
       customers,

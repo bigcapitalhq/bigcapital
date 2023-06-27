@@ -8,7 +8,7 @@ export class PaymentReceiveActivateBranches {
   tenancy: HasTenancyService;
 
   /**
-   * Updates all creidt notes transactions with the primary branch.
+   * Updates all credit notes transactions with the primary branch.
    * @param   {number} tenantId
    * @param   {number} primaryBranchId
    * @returns {Promise<void>}

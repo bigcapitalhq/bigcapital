@@ -3,7 +3,7 @@ import React from 'react';
 import { CurrencyTag } from '@/components';
 
 /**
- * base currecncy.
+ * base currency.
  * @returns
  */
 export function BaseCurrency({ currency }) {

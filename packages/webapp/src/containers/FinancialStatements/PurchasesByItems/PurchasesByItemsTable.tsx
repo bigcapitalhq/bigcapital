@@ -41,7 +41,7 @@ export default function PurchasesByItemsTable({ companyName }) {
         noResults={intl.get(
           'there_were_no_purchases_during_the_selected_date_range',
         )}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </PurchasesByItemsSheet>
   );

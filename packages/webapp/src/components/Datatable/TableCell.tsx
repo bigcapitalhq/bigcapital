@@ -9,7 +9,7 @@ import TableContext from './TableContext';
 import { saveInvoke, ignoreEventFromSelectors } from '@/utils';
 import { isCellLoading } from './utils';
 
-const ROW_CLICK_SELECTORS_INGORED = ['.expand-toggle', '.selection-checkbox'];
+const ROW_CLICK_SELECTORS_IGNORED = ['.expand-toggle', '.selection-checkbox'];
 
 /**
  * Table cell.
@@ -33,7 +33,7 @@ export default function TableCell({ cell, row, index }) {
   // Application intl context.
   const { isRTL } = useAppIntlContext();
 
-  // Detarmines whether the current cell is loading.
+  // Determines whether the current cell is loading.
   const cellLoading = isCellLoading(
     cellsLoading,
     cellsLoadingCoords,
@@ -54,7 +54,7 @@ export default function TableCell({ cell, row, index }) {
   }
   // Handle cell click action.
   const handleCellClick = (event) => {
-    if (ignoreEventFromSelectors(event, ROW_CLICK_SELECTORS_INGORED)) {
+    if (ignoreEventFromSelectors(event, ROW_CLICK_SELECTORS_IGNORED)) {
       return;
     }
     saveInvoke(onCellClick, cell, event);

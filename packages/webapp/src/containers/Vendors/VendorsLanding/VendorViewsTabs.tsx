@@ -7,7 +7,7 @@ import { DashboardViewsTabs } from '@/components';
 import withVendorsActions from './withVendorsActions';
 import withVendors from './withVendors';
 
-import { transfromViewsToTabs, compose } from '@/utils';
+import { transformViewsToTabs, compose } from '@/utils';
 
 /**
  * Vendors views tabs.
@@ -21,8 +21,8 @@ function VendorViewsTabs({
 }) {
   const { vendorsViews } = useVendorsListContext();
 
-  // Transformes the resource views to tabs.
-  const tabs = transfromViewsToTabs(vendorsViews);
+  // Transforms the resource views to tabs.
+  const tabs = transformViewsToTabs(vendorsViews);
 
   // Handle dashboard tabs change.
   const handleTabsChange = (viewSlug) => {

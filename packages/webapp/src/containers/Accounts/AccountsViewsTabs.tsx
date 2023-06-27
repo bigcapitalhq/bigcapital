@@ -9,7 +9,7 @@ import { useAccountsChartContext } from './AccountsChartProvider';
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Accounts views tabs.
@@ -34,8 +34,8 @@ function AccountsViewsTabs({
     [setAccountsTableState],
   );
 
-  // Transfromes the accounts views to tabs.
-  const tabs = transfromViewsToTabs(resourceViews);
+  // Transforms the accounts views to tabs.
+  const tabs = transformViewsToTabs(resourceViews);
 
   return (
     <Navbar className="navbar--dashboard-views">

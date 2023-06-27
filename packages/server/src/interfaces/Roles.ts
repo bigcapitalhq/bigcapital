@@ -66,10 +66,10 @@ export interface IRole {
   slug: string;
   description: string;
   predefined: boolean;
-  permissions?: IRolePremission[];
+  permissions?: IRolePermission[];
 }
 
-export interface IRolePremission {
+export interface IRolePermission {
   id?: number;
   roleId?: number;
   subject: string;

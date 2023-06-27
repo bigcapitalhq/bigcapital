@@ -13,7 +13,7 @@ import { AppToaster } from '@/components';
 import MoneyInFormContent from './MoneyInFormContent';
 import { CreateMoneyInFormSchema } from './MoneyInForm.schema';
 
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInDialogContext } from './MoneyInDialogProvider';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -54,7 +54,7 @@ function MoneyInForm({
     accountType,
     createCashflowTransactionMutate,
     submitPayload,
-  } = useMoneyInDailogContext();
+  } = useMoneyInDialogContext();
 
   // transaction number.
   const transactionNo = transactionNumber(

@@ -5,7 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const QuickCretaeItemDrawerContent = React.lazy(() =>
+const QuickCreateItemDrawerContent = React.lazy(() =>
   import('./QuickCreateItemDrawerContent'),
 );
 
@@ -29,7 +29,7 @@ function QuickCreateItemDrawer({
       payload={payload}
     >
       <DrawerSuspense>
-        <QuickCretaeItemDrawerContent itemName={payload.name} />
+        <QuickCreateItemDrawerContent itemName={payload.name} />
       </DrawerSuspense>
     </Drawer>
   );

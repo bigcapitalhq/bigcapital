@@ -28,7 +28,7 @@ export class WarehousesItemsQuantitySync {
   };
 
   /**
-   * Retrieves the warehouses items changes from the given inventory tranasctions.
+   * Retrieves the warehouses items changes from the given inventory transactions.
    * @param   {IInventoryTransaction[]} inventoryTransactions
    * @returns {IItemWarehouseQuantityChange[]}
    */

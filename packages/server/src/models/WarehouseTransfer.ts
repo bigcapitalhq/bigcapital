@@ -33,15 +33,15 @@ export default class WarehouseTransfer extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the warehouse transfer initiated.
-   * @retruns {boolean}
+   * Determines whether the warehouse transfer initiated.
+   * @returns {boolean}
    */
   get isInitiated() {
     return !!this.transferInitiatedAt;
   }
 
   /**
-   * Detarmines whether the warehouse transfer transferred.
+   * Determines whether the warehouse transfer transferred.
    * @returns {boolean}
    */
   get isTransferred() {

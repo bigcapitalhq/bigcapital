@@ -7,12 +7,12 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
 
 @Service()
-export class LedegrAccountsStorage {
+export class LedgerAccountsStorage {
   @Inject()
   tenancy: HasTenancyService;
 
   /**
-   * Retrieve depepants ids of the give accounts ids.
+   * Retrieve dependents ids of the give accounts ids.
    * @param   {number[]} accountsIds
    * @param   depGraph
    * @returns {number[]}
@@ -108,13 +108,13 @@ export class LedegrAccountsStorage {
     const { Account } = this.tenancy.models(tenantId);
     const account = await Account.query(trx).findById(accountId);
 
-    // Filters the ledger entries by the current acount.
+    // Filters the ledger entries by the current account.
     const accountLedger = ledger.whereAccountId(accountId);
 
     // Retrieves the given tenant metadata.
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    // Detarmines whether the account has foreign currency.
+    // Determines whether the account has foreign currency.
     const isAccountForeign = account.currencyCode !== tenantMeta.baseCurrency;
 
     // Calculates the closing foreign balance by the given currency if account was has

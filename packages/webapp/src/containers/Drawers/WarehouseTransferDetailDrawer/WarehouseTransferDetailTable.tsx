@@ -22,7 +22,7 @@ export default function WarehouseTransferDetailTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={entries}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

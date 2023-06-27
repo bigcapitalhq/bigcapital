@@ -22,7 +22,7 @@ export default function ExpenseDrawerTable() {
     <CommercialDocEntriesTable
       columns={columns}
       data={expense.categories}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
     />
   );
 }

@@ -157,7 +157,7 @@ export default class TransactionsByContact extends FinancialSheet {
   };
 
   /**
-   * Filters customer section has zero closing balnace.
+   * Filters customer section has zero closing balance.
    * @param {ITransactionsByCustomersCustomer} transactionsByCustomer
    * @returns {boolean}
    */
@@ -174,7 +174,7 @@ export default class TransactionsByContact extends FinancialSheet {
   private contactNodeFilter = (node: ITransactionsByContactsContact) => {
     const { noneTransactions, noneZero } = this.filter;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterContactByNoneTransaction],
       [noneZero, this.filterContactNoneZero],

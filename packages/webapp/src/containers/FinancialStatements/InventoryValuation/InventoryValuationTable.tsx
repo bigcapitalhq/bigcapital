@@ -41,7 +41,7 @@ export default function InventoryValuationTable({
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         noResults={intl.get(
           'there_were_no_inventory_transactions_during_the_selected_date_range',
         )}

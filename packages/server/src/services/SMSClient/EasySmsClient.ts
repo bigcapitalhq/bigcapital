@@ -19,7 +19,7 @@ export default class EasySMSClient implements SMSClientInterface {
    * @param {string} phoneNumber
    * @returns {string}
    */
-  normlizePhoneNumber = (phoneNumber: string) => {
+  normalizePhoneNumber = (phoneNumber: string) => {
     let normalized = phoneNumber;
 
     normalized = normalized.replace(/^00/, '');
@@ -36,7 +36,7 @@ export default class EasySMSClient implements SMSClientInterface {
    */
   send = (to: string, message: string) => {
     const API_KEY = this.token;
-    const parsedTo = this.normlizePhoneNumber(to);
+    const parsedTo = this.normalizePhoneNumber(to);
     const encodedMessage = encodeURIComponent(message);
     const encodeTo = encodeURIComponent(parsedTo);
 

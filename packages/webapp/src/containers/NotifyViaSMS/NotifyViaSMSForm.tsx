@@ -6,7 +6,7 @@ import { Formik, Form, useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Callout, Classes, Intent } from '@blueprintjs/core';
 
-import '@/style/pages/NotifyConactViaSMS/NotifyConactViaSMSDialog.scss';
+import '@/style/pages/NotifyContactViaSMS/NotifyContactViaSMSDialog.scss';
 
 import { CreateNotifyViaSMSFormSchema } from './NotifyViaSMSForm.schema';
 import NotifyViaSMSFormFields from './NotifyViaSMSFormFields';
@@ -40,7 +40,7 @@ function SMSMessagePreviewSection() {
       <SMSMessagePreview message={sms_message} />
       <SMSPreviewSectionNote>
         {intl.formatHTMLMessage(
-          { id: 'notiify_via_sms.dialog.sms_note' },
+          { id: 'notify_via_sms.dialog.sms_note' },
           {
             value: messagesUnits,
           },
@@ -121,7 +121,7 @@ function NotifyViaSMSAlerts({ calloutCodes }) {
   return [
     includes(calloutCodes, 100) && (
       <Callout icon={null} intent={Intent.DANGER}>
-        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_eixst')}
+        {intl.get('notify_Via_sms.dialog.customer_phone_number_does_not_exist')}
       </Callout>
     ),
     includes(calloutCodes, 200) && (

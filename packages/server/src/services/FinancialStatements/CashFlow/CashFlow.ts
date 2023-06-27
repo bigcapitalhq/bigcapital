@@ -96,7 +96,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the given display columns by type.
+   * Determines the given display columns by type.
    * @param {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -197,7 +197,7 @@ export default class CashFlowStatement extends compose(
       code: account.code,
       label: account.name,
       accountType: account.accountType,
-      adjusmentType: relation.direction,
+      adjustmentType: relation.direction,
       total: this.getAmountMeta(closingBalance),
       sectionType: ICashFlowStatementSectionType.ACCOUNT,
     };
@@ -278,7 +278,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the schema section type.
+   * Determines the schema section type.
    * @param   {string} type
    * @param   {ICashFlowSchemaSection} section
    * @returns {boolean}
@@ -347,7 +347,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Evauluate equaation string with the given scope table.
+   * Evaluate equation string with the given scope table.
    * @param  {string} equation -
    * @param  {{ [key: string]: number }} scope -
    * @return {number}
@@ -360,16 +360,16 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Retrieve the total section from the eqauation parser.
+   * Retrieve the total section from the equation parser.
    * @param   {ICashFlowSchemaTotalSection} sectionSchema
-   * @param   {ICashFlowSchemaSection[]} accumlatedSections
+   * @param   {ICashFlowSchemaSection[]} accumulatedSections
    * @returns {ICashFlowStatementTotalSection}
    */
   private totalEquationSectionParser = (
-    accumlatedSections: ICashFlowSchemaSection[],
+    accumulatedSections: ICashFlowSchemaSection[],
     sectionSchema: ICashFlowSchemaTotalSection
   ): ICashFlowStatementTotalSection => {
-    const mappedSectionsById = this.transformSectionsToMap(accumlatedSections);
+    const mappedSectionsById = this.transformSectionsToMap(accumulatedSections);
     const nodesTotalById = this.sectionsMapToTotal(mappedSectionsById);
 
     const total = this.evaluateEquation(sectionSchema.equation, nodesTotalById);
@@ -421,7 +421,7 @@ export default class CashFlowStatement extends compose(
       code: account.code,
       label: account.name,
       accountType: account.accountType,
-      adjusmentType: relation.direction,
+      adjustmentType: relation.direction,
       total: this.getAmountMeta(closingBalance),
       sectionType: ICashFlowStatementSectionType.ACCOUNT,
     };
@@ -524,7 +524,7 @@ export default class CashFlowStatement extends compose(
    * @param   {ICashFlowSchemaSection | ICashFlowStatementSection} section
    * @param   {number} key
    * @param   {ICashFlowSchemaSection[]} parentValue
-   * @param   {(ICashFlowSchemaSection | ICashFlowStatementSection)[]} accumlatedSections
+   * @param   {(ICashFlowSchemaSection | ICashFlowStatementSection)[]} accumulatedSections
    * @returns {ICashFlowSchemaSection}
    */
   private schemaSectionTotalParser = (
@@ -532,13 +532,13 @@ export default class CashFlowStatement extends compose(
     key: number,
     parentValue: ICashFlowSchemaSection[],
     context,
-    accumlatedSections: (ICashFlowSchemaSection | ICashFlowStatementSection)[]
+    accumulatedSections: (ICashFlowSchemaSection | ICashFlowStatementSection)[]
   ): ICashFlowSchemaSection | ICashFlowStatementSection => {
     return R.compose(
       // Total equation section.
       R.when(
         this.isSchemaSectionType(ICashFlowStatementSectionType.TOTAL),
-        R.curry(this.totalEquationSectionParser)(accumlatedSections)
+        R.curry(this.totalEquationSectionParser)(accumulatedSections)
       )
     )(section);
   };
@@ -590,7 +590,7 @@ export default class CashFlowStatement extends compose(
   // REPORT FILTERING
   // --------------------------------------------
   /**
-   * Detarmines the given section has children and not empty.
+   * Determines the given section has children and not empty.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -601,7 +601,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines whether the section has no zero amount.
+   * Determines whether the section has no zero amount.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -610,7 +610,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines whether the parent accounts sections has children.
+   * Determines whether the parent accounts sections has children.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */
@@ -625,7 +625,7 @@ export default class CashFlowStatement extends compose(
   };
 
   /**
-   * Detarmines the account section has no zero otherwise returns true.
+   * Determines the account section has no zero otherwise returns true.
    * @param   {ICashFlowStatementSection} section
    * @returns {boolean}
    */

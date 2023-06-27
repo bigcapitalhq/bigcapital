@@ -62,7 +62,7 @@ export const BalanceSheetTableDatePeriods = (Base) =>
         return R.pipe(
           R.concat(this.previousPeriodHorizColumnAccessors(index)),
           R.concat(this.previousYearHorizontalColumnAccessors(index)),
-          R.concat(this.percetangeDatePeriodColumnsAccessor(index)),
+          R.concat(this.percentageDatePeriodColumnsAccessor(index)),
           R.concat([
             {
               key: `date-range-${index}`,

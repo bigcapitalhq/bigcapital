@@ -40,7 +40,7 @@ export class CreateManualJournalService {
 
   /**
    * Transform the new manual journal DTO to upsert graph operation.
-   * @param {IManualJournalDTO} manualJournalDTO - Manual jorunal DTO.
+   * @param {IManualJournalDTO} manualJournalDTO - Manual journal DTO.
    * @param {ISystemUser} authorizedUser
    */
   private transformNewDTOToModel(
@@ -91,20 +91,20 @@ export class CreateManualJournalService {
     baseCurrency: string
   ) => {
     // Validate the total credit should equals debit.
-    this.validator.valdiateCreditDebitTotalEquals(manualJournalDTO);
+    this.validator.validateCreditDebitTotalEquals(manualJournalDTO);
 
-    // Validate the contacts existance.
-    await this.validator.validateContactsExistance(tenantId, manualJournalDTO);
+    // Validate the contacts existence.
+    await this.validator.validateContactsExistence(tenantId, manualJournalDTO);
 
-    // Validate entries accounts existance.
-    await this.validator.validateAccountsExistance(tenantId, manualJournalDTO);
+    // Validate entries accounts existence.
+    await this.validator.validateAccountsExistence(tenantId, manualJournalDTO);
 
     // Validate manual journal number require when auto-increment not enabled.
     this.validator.validateJournalNoRequireWhenAutoNotEnabled(
       tenantId,
       manualJournalDTO.journalNumber
     );
-    // Validate manual journal uniquiness on the storage.
+    // Validate manual journal uniqueness on the storage.
     if (manualJournalDTO.journalNumber) {
       await this.validator.validateManualJournalNoUnique(
         tenantId,
@@ -147,7 +147,7 @@ export class CreateManualJournalService {
       authorizedUser,
       tenantMeta.baseCurrency
     );
-    // Transformes the next DTO to model.
+    // Transforms the next DTO to model.
     const manualJournalObj = this.transformNewDTOToModel(
       tenantId,
       manualJournalDTO,
@@ -155,7 +155,7 @@ export class CreateManualJournalService {
       tenantMeta.baseCurrency
     );
     // Creates a manual journal transactions with associated transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onManualJournalCreating` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onCreating, {

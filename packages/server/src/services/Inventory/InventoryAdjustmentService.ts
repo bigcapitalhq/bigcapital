@@ -60,10 +60,10 @@ export default class InventoryAdjustmentService {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   @Inject()
-  private transfromer: TransformerInjectable;
+  private transformer: TransformerInjectable;
 
   /**
-   * Transformes the quick inventory adjustment DTO to model object.
+   * Transforms the quick inventory adjustment DTO to model object.
    * @param  {IQuickInventoryAdjustmentDTO} adjustmentDTO -
    * @return {IInventoryAdjustment}
    */
@@ -139,7 +139,7 @@ export default class InventoryAdjustmentService {
   /**
    * Creates a quick inventory adjustment for specific item.
    * @param {number} tenantId - Tenant id.
-   * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - qucik adjustment DTO.
+   * @param {IQuickInventoryAdjustmentDTO} quickAdjustmentDTO - quick adjustment DTO.
    */
   public async createQuickAdjustment(
     tenantId: number,
@@ -169,7 +169,7 @@ export default class InventoryAdjustmentService {
       authorizedUser
     );
     // Writes inventory adjustment transaction with associated transactions
-    // under unit-of-work envirment.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onInventoryAdjustmentCreating` event.
       await this.eventPublisher.emitAsync(
@@ -180,7 +180,7 @@ export default class InventoryAdjustmentService {
           quickAdjustmentDTO,
         } as IInventoryAdjustmentCreatingPayload
       );
-      // Saves the inventory adjustment with assocaited entries to the storage.
+      // Saves the inventory adjustment with associated entries to the storage.
       const inventoryAdjustment = await InventoryAdjustment.query(
         trx
       ).upsertGraph({
@@ -276,7 +276,7 @@ export default class InventoryAdjustmentService {
     this.validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment);
 
     // Publishes inventory adjustment with associated inventory transactions
-    // under unit-of-work envirement.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await this.eventPublisher.emitAsync(
         events.inventoryAdjustment.onPublishing,
@@ -351,7 +351,7 @@ export default class InventoryAdjustmentService {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed inventory adjustments.
-    const inventoryAdjustments = await this.transfromer.transform(
+    const inventoryAdjustments = await this.transformer.transform(
       tenantId,
       results,
       new InventoryAdjustmentTransformer()
@@ -435,7 +435,7 @@ export default class InventoryAdjustmentService {
   ) {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
-    // Retrieve inventory adjustment transation with associated models.
+    // Retrieve inventory adjustment transaction with associated models.
     const inventoryAdjustment = await InventoryAdjustment.query()
       .findById(inventoryAdjustmentId)
       .withGraphFetched('entries.item')
@@ -444,7 +444,7 @@ export default class InventoryAdjustmentService {
     // Throw not found if the given adjustment transaction not exists.
     this.throwIfAdjustmentNotFound(inventoryAdjustment);
 
-    return this.transfromer.transform(
+    return this.transformer.transform(
       tenantId,
       inventoryAdjustment,
       new InventoryAdjustmentTransformer()

@@ -59,7 +59,7 @@ function ExpensesActionsBar({
   // Expenses refresh action.
   const { refresh } = useRefreshExpenses();
 
-  // Handles the new expense buttn click.
+  // Handles the new expense button click.
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
@@ -67,7 +67,7 @@ function ExpensesActionsBar({
   // Handle delete button click.
   const handleBulkDelete = () => {};
 
-  // Handles the tab chaning.
+  // Handles the tab changing.
   const handleTabChange = (view) => {
     setExpensesTableState({
       viewSlug: view ? view.slug : null,

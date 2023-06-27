@@ -17,7 +17,7 @@ export class WarehouseTransferInventoryTransactions {
    * @param   {number} tenantId
    * @param   {IWarehouseTransfer} warehouseTransfer
    * @param   {Boolean} override
-   * @param   {Knex.Transaction} trx - Knex transcation.
+   * @param   {Knex.Transaction} trx - Knex transaction.
    * @returns {Promise<void>}
    */
   public writeAllInventoryTransactions = async (
@@ -89,7 +89,7 @@ export class WarehouseTransferInventoryTransactions {
 
   /**
    * Reverts warehouse transfer inventory transactions.
-   * @param   {number} tenatnId
+   * @param   {number} tenantId
    * @param   {number} warehouseTransferId
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}

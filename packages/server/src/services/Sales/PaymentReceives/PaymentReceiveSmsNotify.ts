@@ -35,14 +35,14 @@ export default class PaymentReceiveNotifyBySms {
   /**
    * Notify customer via sms about payment receive details.
    * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
+   * @param {number} paymentReceived - Payment receive id.
    */
-  public async notifyBySms(tenantId: number, paymentReceiveid: number) {
+  public async notifyBySms(tenantId: number, paymentReceived: number) {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Retrieve the payment receive or throw not found service error.
     const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveid)
+      .findById(paymentReceived)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
 
@@ -134,7 +134,7 @@ export default class PaymentReceiveNotifyBySms {
   };
 
   /**
-   * Formattes the payment details sms notification messafge.
+   * Formats the payment details sms notification message.
    * @param {string} smsMessage
    * @param {IPaymentReceive} payment
    * @param {ICustomer} customer
@@ -148,7 +148,7 @@ export default class PaymentReceiveNotifyBySms {
   ): string => {
     const invoiceNumbers = this.stringifyPaymentInvoicesNumber(payment);
 
-    // Formattes the payment number variable.
+    // Formats the payment number variable.
     const formattedPaymentNumber = formatNumber(payment.amount, {
       currencyCode: payment.currencyCode,
     });
@@ -169,26 +169,26 @@ export default class PaymentReceiveNotifyBySms {
    * @returns {string}
    */
   private stringifyPaymentInvoicesNumber(payment: IPaymentReceive) {
-    const invoicesNumberes = payment.entries.map(
+    const invoicesNumbers = payment.entries.map(
       (entry: IPaymentReceiveEntry) => entry.invoice.invoiceNo
     );
-    return invoicesNumberes.join(', ');
+    return invoicesNumbers.join(', ');
   }
 
   /**
    * Retrieve the SMS details of the given invoice.
    * @param {number} tenantId - Tenant id.
-   * @param {number} paymentReceiveid - Payment receive id.
+   * @param {number} paymentReceived - Payment receive id.
    */
   public smsDetails = async (
     tenantId: number,
-    paymentReceiveid: number
+    paymentReceived: number
   ): Promise<IPaymentReceiveSmsDetails> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     // Retrieve the payment receive or throw not found service error.
     const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveid)
+      .findById(paymentReceived)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
 

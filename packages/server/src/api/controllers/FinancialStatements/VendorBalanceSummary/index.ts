@@ -60,7 +60,7 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {IVendorBalanceSummaryStatement} statement -
    */
   private transformToTableRows(
@@ -83,7 +83,7 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
   }
 
   /**
-   * Transformes the report statement to raw json.
+   * Transforms the report statement to raw json.
    * @param {IVendorBalanceSummaryStatement} statement -
    */
   private transformToJsonResponse({
@@ -91,9 +91,9 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
     columns,
   }: IVendorBalanceSummaryStatement) {
     return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
+      data: this.transformToResponse(data),
+      columns: this.transformToResponse(columns),
+      query: this.transformToResponse(query),
     };
   }
 

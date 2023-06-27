@@ -61,7 +61,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Detarmines whether the current vendor has foreign currency.
+ * Determines whether the current vendor has foreign currency.
  * @returns {boolean}
  */
 export const useIsVendorForeignCurrency = () => {
@@ -72,7 +72,7 @@ export const useIsVendorForeignCurrency = () => {
 };
 
 /**
- * Detarmines the exchange opening balance field when should update.
+ * Determines the exchange opening balance field when should update.
  */
 export const openingBalanceFieldShouldUpdate = (newProps, oldProps) => {
   return (

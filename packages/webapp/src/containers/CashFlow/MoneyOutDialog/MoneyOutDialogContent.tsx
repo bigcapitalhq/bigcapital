@@ -4,7 +4,7 @@ import { MoneyOutProvider } from './MoneyOutDialogProvider';
 import MoneyOutForm from './MoneyOutForm';
 
 /**
- * Money out dailog content.
+ * Money out dialog content.
  */
 export default function MoneyOutDialogContent({
   // #ownProps

@@ -4,7 +4,7 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { saveInvoke, compose } from '@/utils';
 
-const PaymentReceiveNumbereDialogContent = lazy(
+const PaymentReceiveNumberDialogContent = lazy(
   () => import('./PaymentReceiveNumberDialogContent'),
 );
 
@@ -26,7 +26,7 @@ function PaymentReceiveNumberDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <PaymentReceiveNumbereDialogContent
+        <PaymentReceiveNumberDialogContent
           initialValues={initialFormValues}
           onConfirm={(values) => saveInvoke(onConfirm, values)}
         />

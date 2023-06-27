@@ -33,7 +33,7 @@ import {
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
   compose,
 } from '@/utils';
@@ -92,7 +92,7 @@ function RefundVendorCreditFormFields({
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('refund_date', formattedDate);
                   })}

@@ -58,7 +58,7 @@ export default class Expense extends mixin(TenantModel, [
   }
 
   /**
-   * Rertieves the local landed cost amount of expense.
+   * Retrieves the local landed cost amount of expense.
    * @returns {number}
    */
   get localLandedCostAmount() {
@@ -90,7 +90,7 @@ export default class Expense extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the expense is published.
+   * Determines whether the expense is published.
    * @returns {boolean}
    */
   get isPublished() {
@@ -205,7 +205,7 @@ export default class Expense extends mixin(TenantModel, [
       },
 
       /**
-       * Expense transction may belongs to a branch.
+       * Expense transaction may belongs to a branch.
        */
       branch: {
         relation: Model.BelongsToOneRelation,

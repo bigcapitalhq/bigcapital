@@ -13,7 +13,7 @@ export function ExpenseFormFooterLeft() {
       >
         <FEditableText
           name={'description'}
-          placeholder={<T id={'expenses.decscrption.placeholder'} />}
+          placeholder={<T id={'expenses.description.placeholder'} />}
         />
       </DescriptionFormGroup>
     </React.Fragment>

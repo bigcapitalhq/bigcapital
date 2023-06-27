@@ -57,10 +57,10 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
         await this.APAgingSummaryService.APAgingSummary(tenantId, filter);
 
       return res.status(200).send({
-        data: this.transfromToResponse(data),
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
+        data: this.transformToResponse(data),
+        columns: this.transformToResponse(columns),
+        query: this.transformToResponse(query),
+        meta: this.transformToResponse(meta),
       });
     } catch (error) {
       next(error);

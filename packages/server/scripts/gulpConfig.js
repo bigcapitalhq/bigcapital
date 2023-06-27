@@ -20,7 +20,7 @@ module.exports = {
   browsersync: {
     files: ['**/*', '!**.map', '!**.css'], // Exclude map files.
     notify: false, //
-    open: true, // Set it to false if you don't like the broser window opening automatically.
+    open: true, // Set it to false if you don't like the browser window opening automatically.
     port: 8080, //
     proxy: 'localhost/customatic', //
     watchOptions: {

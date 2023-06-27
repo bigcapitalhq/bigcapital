@@ -42,7 +42,7 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {
@@ -77,21 +77,21 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
+   * Retrieve the cashflow statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(inventoryDetails) {
     const { data, query, meta } = inventoryDetails;
 
     return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
+      data: this.transformToResponse(data),
+      query: this.transformToResponse(query),
+      meta: this.transformToResponse(meta),
     };
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    */
   private transformToTableRows(inventoryDetails, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
@@ -105,13 +105,13 @@ export default class InventoryDetailsController extends BaseController {
         data: inventoryDetailsTable.tableData(),
         columns: inventoryDetailsTable.tableColumns(),
       },
-      query: this.transfromToResponse(inventoryDetails.query),
-      meta: this.transfromToResponse(inventoryDetails.meta),
+      query: this.transformToResponse(inventoryDetails.query),
+      meta: this.transformToResponse(inventoryDetails.meta),
     };
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

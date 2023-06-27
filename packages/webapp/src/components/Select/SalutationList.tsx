@@ -5,16 +5,16 @@ import intl from 'react-intl-universal';
 import { ListSelect } from './ListSelect';
 
 export function SalutationList({ ...restProps }) {
-  const saluations = [
+  const salutations = [
     intl.get('mr'),
     intl.get('mrs'),
     intl.get('ms'),
     intl.get('miss'),
     intl.get('dr'),
   ];
-  const items = saluations.map((saluation) => ({
-    key: saluation,
-    label: saluation,
+  const items = salutations.map((salutation) => ({
+    key: salutation,
+    label: salutation,
   }));
 
   return (

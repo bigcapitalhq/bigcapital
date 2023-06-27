@@ -11,7 +11,7 @@ import {
   Classes,
 } from '@blueprintjs/core';
 
-import { Can, Icon, Money, If, AvaterCell } from '@/components';
+import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
@@ -121,7 +121,7 @@ export function useCustomersTableColumns() {
       {
         id: 'avatar',
         Header: '',
-        Cell: AvaterCell,
+        Cell: AvatarCell,
         className: 'avatar',
         width: 45,
         disableResizing: true,

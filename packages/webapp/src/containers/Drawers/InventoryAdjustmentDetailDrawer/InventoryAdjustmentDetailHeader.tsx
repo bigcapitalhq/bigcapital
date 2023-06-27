@@ -18,7 +18,7 @@ export default function InventoryAdjustmentDetailHeader() {
 
   return (
     <div className={clsx(InventoryAdjustmentDrawerCls.detail_panel_header)}>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <DetailItem label={intl.get('date')}>
           <FormatDate value={inventoryAdjustment.date} />
         </DetailItem>

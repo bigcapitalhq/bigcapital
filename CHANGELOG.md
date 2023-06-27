@@ -63,7 +63,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 `@bigcapital/webapp`
 
-- fixed: move `packaeg-lock.json` inside docker container.
+- fixed: move `package-lock.json` inside docker container.
 - fixed: remove Sentry from the web client.
 
 ## [0.9.1] - 28-05-2023
@@ -74,9 +74,9 @@ All notable changes to Bigcapital server-side will be in this file.
 - fix: delete invoice transaction issue.
 
 `@bigcapital/webapp`
-- fix: general, accoutant and items preferences.
-- fix: auto-increment sale invoices, estiamtes, credit notes, payments and manual journals.
-- refactor: the setup organization form to use binded Formik components.
+- fix: general, accountant and items preferences.
+- fix: auto-increment sale invoices, estimates, credit notes, payments and manual journals.
+- refactor: the setup organization form to use bound Formik components.
 
 ## [0.9.0] - 06-05-2023
 
@@ -86,7 +86,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [0.8.3] - 06-04-2023
 
-`@bigcaptial/monorepo`
+`@bigcapital/monorepo`
 
 - Switch to AGPL license to protect application's networks. by @abouolia
 
@@ -112,7 +112,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ## [0.8.1] - 26-03-2023
 
-`@bigcaptial/monorepo`
+`@bigcapital/monorepo`
 
 ### Added 
 * add docker compose for development env. by @abouolia
@@ -247,7 +247,7 @@ All notable changes to Bigcapital server-side will be in this file.
 
 ### Fixed
 
-- fix syled components dependency with imported as default components.
+- fix styled components dependency with imported as default components.
 
 ## [0.6.0] - 18-02-2022
 
@@ -258,7 +258,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Balance sheet comparison of previous period (PP).
 - Balance sheet comparison of previous year (PY).
 - Balance sheet percentage analysis columns and rows basis.
-- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous period (PP).
 - Profit & loss sheet comparison of previous year (PY).
 - Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 
@@ -285,7 +285,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Balance sheet comparison of previous period (PP).
 - Balance sheet comparison of previous year (PY).
 - Balance sheet percentage analysis columns and rows basis.
-- Profit & loss sheet comparison of preivous period (PP).
+- Profit & loss sheet comparison of previous period (PP).
 - Profit & loss sheet comparison of previous year (PY).
 - Profit & loss sheet percentage analysis columns, rows, income and expenses basis.
 
@@ -308,7 +308,7 @@ All notable changes to Bigcapital server-side will be in this file.
 - Add vendor credit on purchases module.
 - Optimize landed costs on purchase invoices.
 - Display associated payment transactions on sale invoice drawer.
-- Display associated pamyment transactions on purchase invoice drawer.
+- Display associated payment transactions on purchase invoice drawer.
 - Display item associate invoice, bill, estimate and receipt transactions.
 - Transactions locking on all transactions or individual modules.
 - Roles and permissions access control module.
@@ -383,12 +383,12 @@ straightforward as possible.
 
 ### Fixed
 
-- fix: disable submit buttons in pereferences pages.
+- fix: disable submit buttons in preferences pages.
 - fix: inventory adjustment cost field max/min range to avoid out of range error.
 - fix: transactions by customers/vendors report localization.
 - fix: Datatable head progressbar with right-to-left direction.
 - fix: Submit buttons loading state once payment made/receive form is submitting.
 - fix: Ensure items entries should have one empty line atleast.
 - fix: items entries total calculation.
-- fix: Momerized fields re-rendering conditions.
+- fix: Memorized fields re-rendering conditions.
 - fix: auto-complete item entry with cost price on purchase invoice form.

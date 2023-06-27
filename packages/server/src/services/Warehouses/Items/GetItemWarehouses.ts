@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { GetItemWarehouseTransformer } from './GettItemWarehouseTransformer';
+import { GetItemWarehouseTransformer } from './GetItemWarehouseTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()

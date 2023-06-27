@@ -39,7 +39,7 @@ export default function CustomerFloatingActions({ onCancel }) {
     safeInvoke(onCancel, event);
   };
 
-  // handle clear button clicl.
+  // handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };

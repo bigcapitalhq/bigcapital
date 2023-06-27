@@ -1,6 +1,6 @@
-import ContactTransfromer from '../ContactTransformer';
+import ContactTransformer from '../ContactTransformer';
 
-export default class CustomerTransfromer extends ContactTransfromer {
+export default class CustomerTransformer extends ContactTransformer {
   /**
    * Include these attributes to expense object.
    * @returns {Array}

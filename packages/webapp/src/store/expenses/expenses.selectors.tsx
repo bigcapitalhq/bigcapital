@@ -8,7 +8,7 @@ import { defaultTableQuery } from './expenses.reducer';
 // Items table state selectors.
 const expensesTableStateSelector = (state) => state.expenses.tableState;
 
-// Retrive expenses table query.
+// Retrieve expenses table query.
 export const getExpensesTableStateFactory = () =>
   createDeepEqualSelector(
     paginationLocationQuery,

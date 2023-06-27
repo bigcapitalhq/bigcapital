@@ -1,7 +1,7 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { displayColumnsByOptions } from './constants';
-import { transfromToSnakeCase, flatten } from '@/utils';
+import { transformToSnakeCase, flatten } from '@/utils';
 
 /**
  * Associate display columns by and type properties to query object.
@@ -39,7 +39,7 @@ export const transformAccountsFilter = (form) => {
 export const transformFilterFormToQuery = (form) => {
   return R.compose(
     R.curry(flatten)({ safe: true }),
-    transfromToSnakeCase,
+    transformToSnakeCase,
     transformAccountsFilter,
     transformDisplayColumnsType,
   )(form);

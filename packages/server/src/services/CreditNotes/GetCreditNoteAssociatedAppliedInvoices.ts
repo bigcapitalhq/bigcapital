@@ -21,7 +21,7 @@ export default class GetCreditNoteAssociatedAppliedInvoices extends BaseCreditNo
   ): Promise<ISaleInvoice[]> => {
     const { CreditNoteAppliedInvoice } = this.tenancy.models(tenantId);
 
-    // Retireve credit note or throw not found service error.
+    // Retrieve credit note or throw not found service error.
     const creditNote = await this.getCreditNoteOrThrowError(
       tenantId,
       creditNoteId
@@ -31,7 +31,7 @@ export default class GetCreditNoteAssociatedAppliedInvoices extends BaseCreditNo
       .withGraphFetched('saleInvoice')
       .withGraphFetched('creditNote');
 
-    // Transformes credit note applied to invoices.
+    // Transforms credit note applied to invoices.
     return this.transformer.transform(
       tenantId,
       appliedToInvoices,

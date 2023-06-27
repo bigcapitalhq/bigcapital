@@ -33,7 +33,7 @@ export const getUniversalSearchBind = (resourceType, key) => {
 export const useGetUniversalSearchTypeOptions = () => {
   const abilityFilter = useAbilitiesFilter();
 
-  const momerizedBinds = React.useMemo(() => {
+  const memorizedBinds = React.useMemo(() => {
     const filteredBinds = R.compose(abilityFilter, getUniversalSearchBinds)();
 
     return filteredBinds.map((bind) => ({
@@ -42,7 +42,7 @@ export const useGetUniversalSearchTypeOptions = () => {
     }));
   }, [abilityFilter]);
 
-  return momerizedBinds;
+  return memorizedBinds;
 };
 
 /**

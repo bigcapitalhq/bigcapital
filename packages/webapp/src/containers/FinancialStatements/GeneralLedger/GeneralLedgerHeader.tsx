@@ -20,7 +20,7 @@ import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 
 /**
- * Geenral Ledger (GL) - Header.
+ * General Ledger (GL) - Header.
  */
 function GeneralLedgerHeader({
   // #ownProps
@@ -65,7 +65,7 @@ function GeneralLedgerHeader({
   const handleDrawerClose = () => {
     toggleDisplayFilterDrawer(false);
   };
-  // Detarmines the feature whether is enabled.
+  // Determines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

@@ -111,7 +111,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
   }
 
   /**
-   * Detarmines whether the vendors post filter is active.
+   * Determines whether the vendors post filter is active.
    * @returns {boolean}
    */
   private isVendorsPostFilter = (): boolean => {

@@ -82,7 +82,7 @@ function MakeJournalEntriesForm({
     [manualJournal, base_currency, journalNumber, journalAutoIncrement],
   );
 
-  // Handle the form submiting.
+  // Handle the form submitting.
   const handleSubmit = (values, { setErrors, setSubmitting, resetForm }) => {
     setSubmitting(true);
     const entries = values.entries.filter(
@@ -96,7 +96,7 @@ function MakeJournalEntriesForm({
     const totalCredit = getTotal('credit');
     const totalDebit = getTotal('debit');
 
-    // Validate the total credit should be eqials total debit.
+    // Validate the total credit should be equals total debit.
     if (totalCredit !== totalDebit) {
       AppToaster.show({
         message: intl.get('should_total_of_credit_and_debit_be_equal'),

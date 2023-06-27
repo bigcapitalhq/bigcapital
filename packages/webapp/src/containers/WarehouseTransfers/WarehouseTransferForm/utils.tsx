@@ -93,7 +93,7 @@ export const useObserveTransferNoSettings = (prefix, nextNumber) => {
 };
 
 /**
- * Detarmines warehouse entries field when should update.
+ * Determines warehouse entries field when should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -107,7 +107,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Transformes the form values to request body values.
+ * Transforms the form values to request body values.
  */
 export function transformValueToRequest(values) {
   const entries = values.entries.filter(
@@ -127,7 +127,7 @@ export function transformValueToRequest(values) {
 }
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setErrors }) => {
   if (
@@ -193,7 +193,7 @@ export function useWatchItemsCostSetCostEntries() {
     values: { entries },
   } = useFormikContext();
 
-  // Transformes items cost map by item id.
+  // Transforms items cost map by item id.
   const itemsCostByItemId = React.useMemo(
     () => keyBy(inventoryItemsCost, 'item_id'),
     [inventoryItemsCost],

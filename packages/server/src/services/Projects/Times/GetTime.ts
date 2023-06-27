@@ -31,7 +31,7 @@ export class GetTimeService {
       .withGraphFetched('task')
       .throwIfNotFound();
 
-    // Transformes and returns object.
+    // Transforms and returns object.
     return this.transformer.transform(tenantId, time, new TimeTransformer());
   };
 }

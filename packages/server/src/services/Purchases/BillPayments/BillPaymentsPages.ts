@@ -71,7 +71,7 @@ export default class BillPaymentsPages {
   ): Promise<IBillReceivePageEntry[]> {
     const { Bill } = this.tenancy.models(tenantId);
 
-    // Retrieve all payable bills that assocaited to the payment made transaction.
+    // Retrieve all payable bills that associated to the payment made transaction.
     const payableBills = await Bill.query()
       .modify('opened')
       .modify('dueBills')
@@ -82,7 +82,7 @@ export default class BillPaymentsPages {
   }
 
   /**
-   * Retrive edit page invoices entries from the given sale invoices models.
+   * Retrieve edit page invoices entries from the given sale invoices models.
    * @param  {ISaleInvoice[]} invoices - Invoices.
    * @return {IPaymentReceiveEditPageEntry}
    */

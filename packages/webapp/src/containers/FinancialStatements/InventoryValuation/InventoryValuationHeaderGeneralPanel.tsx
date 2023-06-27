@@ -16,7 +16,7 @@ import { filterInventoryValuationOptions } from '../constants';
 
 import {
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   inputIntent,
   handleDateChange,
 } from '@/utils';
@@ -57,7 +57,7 @@ function InventoryValuationHeaderGeneralPanelContent() {
               >
                 <DateInput
                   {...momentFormatter('YYYY/MM/DD')}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   onChange={handleDateChange((selectedDate) => {
                     form.setFieldValue('asDate', selectedDate);
                   })}

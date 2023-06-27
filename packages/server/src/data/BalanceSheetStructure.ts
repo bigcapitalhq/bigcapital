@@ -61,7 +61,7 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
         type: 'section',
         children: [
           {
-            name: 'Current Liabilties',
+            name: 'Current Liabilities',
             type: 'accounts_section',
             accountsTypes: [
               ACCOUNT_TYPE.ACCOUNTS_PAYABLE,

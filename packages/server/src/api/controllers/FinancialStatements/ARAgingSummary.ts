@@ -62,10 +62,10 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
         await this.ARAgingSummaryService.ARAgingSummary(tenantId, filter);
 
       return res.status(200).send({
-        data: this.transfromToResponse(data),
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
+        data: this.transformToResponse(data),
+        columns: this.transformToResponse(columns),
+        query: this.transformToResponse(query),
+        meta: this.transformToResponse(meta),
       });
     } catch (error) {
       console.log(error);

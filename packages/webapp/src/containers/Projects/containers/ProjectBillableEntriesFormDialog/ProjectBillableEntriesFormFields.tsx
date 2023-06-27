@@ -13,7 +13,7 @@ import {
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import classNames from 'classnames';

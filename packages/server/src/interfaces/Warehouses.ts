@@ -198,7 +198,7 @@ export interface IWarehouseTransferInitiatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IWarehouseTransferTransferingPayload {
+export interface IWarehouseTransferTransferringPayload {
   tenantId: number;
   oldWarehouseTransfer: IWarehouseTransfer;
   trx: Knex.Transaction;

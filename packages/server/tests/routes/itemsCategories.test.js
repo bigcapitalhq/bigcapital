@@ -272,7 +272,7 @@ describe('routes: /item_categories/', () => {
     });
   });
 
-  describe('DELETE: `/items_cateogires`', () => {
+  describe('DELETE: `/items_categories`', () => {
     it('Should response bad request in case one of item categories id not exists in the storage.', async () => {
       const res = await request()
         .delete('/api/item_categories/bulk')

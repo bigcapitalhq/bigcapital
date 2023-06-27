@@ -2,7 +2,7 @@ import { IExpense } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Service, Inject } from 'typedi';
-import { ExpenseTransfromer } from './ExpenseTransformer';
+import { ExpenseTransformer } from './ExpenseTransformer';
 
 @Service()
 export class GetExpense {
@@ -31,11 +31,11 @@ export class GetExpense {
       .withGraphFetched('branch')
       .throwIfNotFound();
 
-    // Transformes expense model to POJO.
+    // Transforms expense model to POJO.
     return this.transformer.transform(
       tenantId,
       expense,
-      new ExpenseTransfromer()
+      new ExpenseTransformer()
     );
   }
 }

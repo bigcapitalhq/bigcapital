@@ -42,7 +42,7 @@ export default class InventoryAdjustment extends mixin(TenantModel, [
   }
 
   /**
-   * Detarmines whether the adjustment is published.
+   * Determines whether the adjustment is published.
    * @return {boolean}
    */
   get isPublished() {

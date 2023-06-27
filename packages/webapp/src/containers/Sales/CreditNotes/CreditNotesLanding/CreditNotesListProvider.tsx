@@ -39,7 +39,7 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
     isLoading: isCreditNotesLoading,
   } = useCreditNotes(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.S
+  // Determines the datatable empty status.S
   const isEmptyStatus =
     isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
 

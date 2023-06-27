@@ -48,7 +48,7 @@ export class EditExpense {
   ) => {
     const { Account } = this.tenancy.models(tenantId);
 
-    // Validate payment account existance on the storage.
+    // Validate payment account existence on the storage.
     const paymentAccount = await Account.query()
       .findById(expenseDTO.paymentAccountId)
       .throwIfNotFound();
@@ -63,7 +63,7 @@ export class EditExpense {
       DTOExpenseAccountsIds
     );
     // Validate expense accounts exist on the storage.
-    this.validator.validateExpensesAccountsExistance(
+    this.validator.validateExpensesAccountsExistence(
       expenseAccounts,
       DTOExpenseAccountsIds
     );
@@ -88,10 +88,10 @@ export class EditExpense {
   };
 
   /**
-   * Precedures.
+   * Procedures.
    * ---------
-   * 1. Validate expense existance.
-   * 2. Validate payment account existance on the storage.
+   * 1. Validate expense existence.
+   * 2. Validate payment account existence on the storage.
    * 3. Validate expense accounts exist on the storage.
    * 4. Validate payment account type.
    * 5. Validate expenses accounts type.
@@ -125,7 +125,7 @@ export class EditExpense {
       tenantId,
       expenseDTO
     );
-    // Edits expense transactions and associated transactions under UOW envirement.
+    // Edits expense transactions and associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onExpenseEditing` event.
       await this.eventPublisher.emitAsync(events.expenses.onEditing, {

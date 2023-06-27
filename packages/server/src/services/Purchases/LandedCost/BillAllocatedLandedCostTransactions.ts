@@ -89,7 +89,7 @@ export default class BillAllocatedLandedCostTransactions {
   };
 
   /**
-   * Retrieve bill landed cost tranaction name based on the given transaction type.
+   * Retrieve bill landed cost transaction name based on the given transaction type.
    * @param transactionType
    * @param transaction
    * @returns
@@ -148,21 +148,21 @@ export default class BillAllocatedLandedCostTransactions {
 
   /**
    * Retrieve the bill landed cost transaction description based on transaction type.
-   * @param {string} tranasctionType
+   * @param {string} transactionType
    * @param transaction
    * @returns
    */
   private condBillLandedTransactionDescription = (
-    tranasctionType: string,
+    transactionType: string,
     transaction
   ) => {
     return R.cond([
       [
-        R.always(R.equals(tranasctionType, 'Bill')),
+        R.always(R.equals(transactionType, 'Bill')),
         this.getLandedBillTransactionDescription,
       ],
       [
-        R.always(R.equals(tranasctionType, 'Expense')),
+        R.always(R.equals(transactionType, 'Expense')),
         this.getLandedExpenseTransactionDescription,
       ],
     ])(transaction);

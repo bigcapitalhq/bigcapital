@@ -54,7 +54,7 @@ export default class CustomerBalanceSummaryRepository {
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await AccountTransaction.query().onBuild(
+    const customersTransactions = await AccountTransaction.query().onBuild(
       (query) => {
         query.whereIn('accountId', receivableAccountsIds);
         query.modify('filterDateRange', null, asDate);
@@ -64,6 +64,6 @@ export default class CustomerBalanceSummaryRepository {
         query.select('contactId');
       }
     );
-    return customersTranasctions;
+    return customersTransactions;
   }
 }

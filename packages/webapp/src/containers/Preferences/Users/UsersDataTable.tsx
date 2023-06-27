@@ -22,7 +22,7 @@ function UsersDataTable({
   // #withAlertActions
   openAlert,
 }) {
-  const { mutateAsync: resendInviation } = useResendInvitation();
+  const { mutateAsync: resendInvitation } = useResendInvitation();
 
   // Users list columns.
   const columns = useUsersListColumns();
@@ -59,7 +59,7 @@ function UsersDataTable({
     [openAlert],
   );
   const handleResendInvitation = useCallback((user) => {
-    resendInviation(user.id)
+    resendInvitation(user.id)
       .then(() => {
         AppToaster.show({
           message: 'User invitation has been re-sent to the user.',

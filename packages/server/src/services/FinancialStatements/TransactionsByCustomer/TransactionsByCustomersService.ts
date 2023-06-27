@@ -140,7 +140,7 @@ export default class TransactionsByCustomersService
       tenantId,
       openingBalanceDate
     );
-    // Retrieve all ledger transactions between opeing and closing period.
+    // Retrieve all ledger transactions between opening and closing period.
     const customersTransactions = await this.getCustomersPeriodsEntries(
       tenantId,
       query.fromDate,

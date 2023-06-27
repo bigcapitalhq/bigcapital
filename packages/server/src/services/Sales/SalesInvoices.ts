@@ -18,7 +18,7 @@ import {
   ISaleInvoiceDeletedPayload,
   ISaleInvoiceEventDeliveredPayload,
   ISaleInvoiceEditedPayload,
-  ISaleInvoiceCreatingPaylaod,
+  ISaleInvoiceCreatingPayload,
   ISaleInvoiceEditingPayload,
   ISaleInvoiceDeliveringPayload,
   ICustomer,
@@ -84,7 +84,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   private transformer: TransformerInjectable;
 
   /**
-   * Validate whether sale invoice number unqiue on the storage.
+   * Validate whether sale invoice number unique on the storage.
    */
   async validateInvoiceNumberUnique(
     tenantId: number,
@@ -185,13 +185,13 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   }
 
   /**
-   * Transformes edit DTO to model.
-   * @param {number} tennatId -
+   * Transforms edit DTO to model.
+   * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
    * @param {ISaleInvoice} oldSaleInvoice
    */
-  private tranformEditDTOToModel = async (
+  private transformEditDTOToModel = async (
     tenantId: number,
     customer: ICustomer,
     saleInvoiceDTO: ISaleInvoiceEditDTO,
@@ -208,7 +208,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   };
 
   /**
-   * Transformes create DTO to model.
+   * Transforms create DTO to model.
    * @param {number} tenantId -
    * @param {ICustomer} customer -
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
@@ -228,7 +228,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   };
 
   /**
-   * Transformes the create DTO to invoice object model.
+   * Transforms the create DTO to invoice object model.
    * @param  {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
    * @param  {ISaleInvoice} oldSaleInvoice - Old sale invoice.
    * @return {ISaleInvoice}
@@ -245,7 +245,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     const balance = sumBy(saleInvoiceDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
     );
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextInvoiceNumber(tenantId);
 
     // Invoice number.
@@ -315,7 +315,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice, Contact } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .modify('customer')
       .findById(saleInvoiceDTO.customerId)
@@ -331,8 +331,8 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       // Validate the sale estimate is not already converted to invoice.
       this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
     }
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleInvoiceDTO.entries
     );
@@ -348,7 +348,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       saleInvoiceDTO,
       authorizedUser
     );
-    // Validate sale invoice number uniquiness.
+    // Validate sale invoice number uniqueness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
@@ -362,7 +362,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
         saleInvoiceDTO,
         tenantId,
         trx,
-      } as ISaleInvoiceCreatingPaylaod);
+      } as ISaleInvoiceCreatingPayload);
 
       // Create sale invoice graph to the storage.
       const saleInvoice = await SaleInvoice.query(trx).upsertGraph(
@@ -406,14 +406,14 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceId
     );
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .findById(saleInvoiceDTO.customerId)
       .modify('customer')
       .throwIfNotFound();
 
-    // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items ids existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleInvoiceDTO.entries
     );
@@ -422,22 +422,22 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       tenantId,
       saleInvoiceDTO.entries
     );
-    // Validate the items entries existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the items entries existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       saleInvoiceId,
       'SaleInvoice',
       saleInvoiceDTO.entries
     );
     // Transform DTO object to model object.
-    const saleInvoiceObj = await this.tranformEditDTOToModel(
+    const saleInvoiceObj = await this.transformEditDTOToModel(
       tenantId,
       customer,
       saleInvoiceDTO,
       oldSaleInvoice,
       authorizedUser
     );
-    // Validate sale invoice number uniquiness.
+    // Validate sale invoice number uniqueness.
     if (saleInvoiceObj.invoiceNo) {
       await this.validateInvoiceNumberUnique(
         tenantId,
@@ -450,7 +450,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
       saleInvoiceObj.balance,
       oldSaleInvoice.paymentAmount
     );
-    // Edit sale invoice transaction in UOW envirment.
+    // Edit sale invoice transaction in UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceEditing` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onEditing, {
@@ -460,7 +460,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
         saleInvoiceDTO,
       } as ISaleInvoiceEditingPayload);
 
-      // Upsert the the invoice graph to the storage.
+      // Upsert the invoice graph to the storage.
       const saleInvoice: ISaleInvoice =
         await SaleInvoice.query().upsertGraphAndFetch({
           id: saleInvoiceId,
@@ -507,8 +507,8 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
     if (oldSaleInvoice.isDelivered) {
       throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
     }
-    // Update sale invoice transaction with assocaite transactions
-    // under unit-of-work envirement.
+    // Update sale invoice transaction with associate transactions
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceDelivering` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDelivering, {
@@ -601,7 +601,7 @@ export default class SaleInvoicesService implements ISalesInvoicesService {
    * @param {boolean} override - Allow to override old transactions.
    * @return {Promise<void>}
    */
-  public async recordInventoryTranscactions(
+  public async recordInventoryTransactions(
     tenantId: number,
     saleInvoice: ISaleInvoice,
     override?: boolean,

@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ExpenseTransfromer } from './ExpenseTransformer';
+import { ExpenseTransformer } from './ExpenseTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
@@ -57,11 +57,11 @@ export class GetExpenses {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the expenses models to POJO.
+    // Transforms the expenses models to POJO.
     const expenses = await this.transformer.transform(
       tenantId,
       results,
-      new ExpenseTransfromer()
+      new ExpenseTransformer()
     );
     return {
       expenses,

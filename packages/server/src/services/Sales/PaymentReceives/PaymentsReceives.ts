@@ -34,7 +34,7 @@ import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import AutoIncrementOrdersService from '../AutoIncrementOrdersService';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
+import { PaymentReceiveTransformer } from './PaymentReceiveTransformer';
 import UnitOfWork from '@/services/UnitOfWork';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { TenantMetadata } from '@/system/models';
@@ -77,11 +77,11 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   transformer: TransformerInjectable;
 
   /**
-   * Validates the payment receive number existance.
+   * Validates the payment receive number existence.
    * @param {number} tenantId -
    * @param {string} paymentReceiveNo -
    */
-  async validatePaymentReceiveNoExistance(
+  async validatePaymentReceiveNoExistence(
     tenantId: number,
     paymentReceiveNo: string,
     notPaymentReceiveId?: number
@@ -101,7 +101,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Validates the payment receive existance.
+   * Validates the payment receive existence.
    * @param {number} tenantId - Tenant id.
    * @param {number} paymentReceiveId - Payment receive id.
    */
@@ -121,7 +121,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Validate the deposit account id existance.
+   * Validate the deposit account id existence.
    * @param {number} tenantId - Tenant id.
    * @param {number} depositAccountId - Deposit account id.
    * @return {Promise<IAccount>}
@@ -138,7 +138,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     if (!depositAccount) {
       throw new ServiceError(ERRORS.DEPOSIT_ACCOUNT_NOT_FOUND);
     }
-    // Detarmines whether the account is cash, bank or other current asset.
+    // Determines whether the account is cash, bank or other current asset.
     if (
       !depositAccount.isAccountType([
         ACCOUNT_TYPE.CASH,
@@ -152,12 +152,12 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Validates the invoices IDs existance.
+   * Validates the invoices IDs existence.
    * @param {number} tenantId -
    * @param {number} customerId -
    * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries -
    */
-  async validateInvoicesIDsExistance(
+  async validateInvoicesIDsExistence(
     tenantId: number,
     customerId: number,
     paymentReceiveEntries: { invoiceId: number }[]
@@ -269,12 +269,12 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Validate the payment receive entries IDs existance.
+   * Validate the payment receive entries IDs existence.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
    * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries
    */
-  private async validateEntriesIdsExistance(
+  private async validateEntriesIdsExistence(
     tenantId: number,
     paymentReceiveId: number,
     paymentReceiveEntries: IPaymentReceiveEntryDTO[]
@@ -322,7 +322,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   }
 
   /**
-   * Validates the payment account currency code. The deposit account curreny
+   * Validates the payment account currency code. The deposit account currency
    * should be equals the customer currency code or the base currency.
    * @param  {string} paymentAccountCurrency
    * @param  {string} customerCurrency
@@ -343,7 +343,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   };
 
   /**
-   * Transformes the create payment receive DTO to model object.
+   * Transforms the create payment receive DTO to model object.
    * @param {number} tenantId
    * @param {IPaymentReceiveCreateDTO|IPaymentReceiveEditDTO} paymentReceiveDTO - Payment receive DTO.
    * @param {IPaymentReceive} oldPaymentReceive -
@@ -357,7 +357,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
   ): Promise<IPaymentReceive> {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextPaymentReceiveNumber(tenantId);
 
     // Retrieve the next payment receive number.
@@ -441,30 +441,30 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    // Validate customer existance.
+    // Validate customer existence.
     const paymentCustomer = await Contact.query()
       .modify('customer')
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 
-    // Transformes the payment receive DTO to model.
+    // Transforms the payment receive DTO to model.
     const paymentReceiveObj = await this.transformCreateDTOToModel(
       tenantId,
       paymentCustomer,
       paymentReceiveDTO
     );
-    // Validate payment receive number uniquiness.
-    await this.validatePaymentReceiveNoExistance(
+    // Validate payment receive number uniqueness.
+    await this.validatePaymentReceiveNoExistence(
       tenantId,
       paymentReceiveObj.paymentReceiveNo
     );
-    // Validate the deposit account existance and type.
+    // Validate the deposit account existence and type.
     const depositAccount = await this.getDepositAccountOrThrowError(
       tenantId,
       paymentReceiveDTO.depositAccountId
     );
-    // Validate payment receive invoices IDs existance.
-    await this.validateInvoicesIDsExistance(
+    // Validate payment receive invoices IDs existence.
+    await this.validateInvoicesIDsExistence(
       tenantId,
       paymentReceiveDTO.customerId,
       paymentReceiveDTO.entries
@@ -480,7 +480,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       paymentCustomer.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Creates a payment receive transaction under UOW envirment.
+    // Creates a payment receive transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onPaymentReceiveCreating` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onCreating, {
@@ -533,18 +533,18 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    // Validate the payment receive existance.
+    // Validate the payment receive existence.
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
       tenantId,
       paymentReceiveId
     );
-    // Validate customer existance.
+    // Validate customer existence.
     const customer = await Contact.query()
       .modify('customer')
       .findById(paymentReceiveDTO.customerId)
       .throwIfNotFound();
 
-    // Transformes the payment receive DTO to model.
+    // Transforms the payment receive DTO to model.
     const paymentReceiveObj = await this.transformEditDTOToModel(
       tenantId,
       customer,
@@ -554,28 +554,28 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     // Validate customer whether modified.
     this.validateCustomerNotModified(paymentReceiveDTO, oldPaymentReceive);
 
-    // Validate payment receive number uniquiness.
+    // Validate payment receive number uniqueness.
     if (paymentReceiveDTO.paymentReceiveNo) {
-      await this.validatePaymentReceiveNoExistance(
+      await this.validatePaymentReceiveNoExistence(
         tenantId,
         paymentReceiveDTO.paymentReceiveNo,
         paymentReceiveId
       );
     }
-    // Validate the deposit account existance and type.
+    // Validate the deposit account existence and type.
     const depositAccount = await this.getDepositAccountOrThrowError(
       tenantId,
       paymentReceiveDTO.depositAccountId
     );
-    // Validate the entries ids existance on payment receive type.
-    await this.validateEntriesIdsExistance(
+    // Validate the entries ids existence on payment receive type.
+    await this.validateEntriesIdsExistence(
       tenantId,
       paymentReceiveId,
       paymentReceiveDTO.entries
     );
-    // Validate payment receive invoices IDs existance and associated
+    // Validate payment receive invoices IDs existence and associated
     // to the given customer id.
-    await this.validateInvoicesIDsExistance(
+    await this.validateInvoicesIDsExistence(
       tenantId,
       oldPaymentReceive.customerId,
       paymentReceiveDTO.entries
@@ -592,7 +592,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
       customer.currencyCode,
       tenantMeta.baseCurrency
     );
-    // Creates payment receive transaction under UOW envirement.
+    // Creates payment receive transaction under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onPaymentReceiveEditing` event.
       await this.eventPublisher.emitAsync(events.paymentReceive.onEditing, {
@@ -645,7 +645,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     const { PaymentReceive, PaymentReceiveEntry } =
       this.tenancy.models(tenantId);
 
-    // Retreive payment receive or throw not found service error.
+    // Retrieve payment receive or throw not found service error.
     const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
       tenantId,
       paymentReceiveId
@@ -704,12 +704,12 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     return this.transformer.transform(
       tenantId,
       paymentReceive,
-      new PaymentReceiveTransfromer()
+      new PaymentReceiveTransformer()
     );
   }
 
   /**
-   * Retrieve sale invoices that assocaited to the given payment receive.
+   * Retrieve sale invoices that associated to the given payment receive.
    * @param {number} tenantId - Tenant id.
    * @param {number} paymentReceiveId - Payment receive id.
    * @return {Promise<ISaleInvoice>}
@@ -779,7 +779,7 @@ export default class PaymentReceiveService implements IPaymentsReceiveService {
     const transformedPayments = await this.transformer.transform(
       tenantId,
       results,
-      new PaymentReceiveTransfromer()
+      new PaymentReceiveTransformer()
     );
     return {
       paymentReceives: transformedPayments,

@@ -42,14 +42,14 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   // Fetch warehouses list.
   const {
     data: warehouses,
-    isFetching: isWarehouesFetching,
-    isLoading: isWarehouesLoading,
+    isFetching: isWarehousesFetching,
+    isLoading: isWarehousesLoading,
   } = useWarehouses({}, { enabled: isWarehouseFeatureCan });
 
   // Inventory items cost query.
   const [itemCostQuery, setItemCostQuery] = React.useState(null);
 
-  // Detarmines whether the inventory items cost query is enabled.
+  // Determines whether the inventory items cost query is enabled.
   const isItemsCostQueryEnabled =
     !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
 
@@ -74,7 +74,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   const { mutateAsync: editWarehouseTransferMutate } =
     useEditWarehouseTransfer();
 
-  // Detarmines whether the form in new mode.
+  // Determines whether the form in new mode.
   const isNewMode = !warehouseTransferId;
 
   // Form submit payload.
@@ -87,7 +87,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     warehouseTransfer,
 
     isItemsFetching,
-    isWarehouesFetching,
+    isWarehousesFetching,
 
     isNewMode,
     submitPayload,
@@ -106,7 +106,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   return (
     <DashboardInsider
       loading={
-        isItemsLoading || isWarehouesLoading || isWarehouseTransferLoading
+        isItemsLoading || isWarehousesLoading || isWarehouseTransferLoading
       }
       name={'warehouse-transfer-form'}
     >

@@ -48,7 +48,7 @@ export default function ProfitLossSheetTable({
         expandable={true}
         expandToggleColumn={1}
         sticky={true}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

@@ -67,7 +67,7 @@ export default class VendorBalanceSummaryTable {
   };
 
   /**
-   * Transformes the vendors to table rows.
+   * Transforms the vendors to table rows.
    * @param   {IVendorBalanceSummaryVendor[]} vendors
    * @returns {ITableRow[]}
    */
@@ -100,7 +100,7 @@ export default class VendorBalanceSummaryTable {
   };
 
   /**
-   * Transformes the total to table row.
+   * Transforms the total to table row.
    * @param   {IVendorBalanceSummaryTotal} total
    * @returns {ITableRow}
    */
@@ -113,7 +113,7 @@ export default class VendorBalanceSummaryTable {
   };
 
   /**
-   * Transformes the vendor balance summary to table rows.
+   * Transforms the vendor balance summary to table rows.
    * @param {IVendorBalanceSummaryData} vendorBalanceSummary
    * @returns {ITableRow[]}
    */

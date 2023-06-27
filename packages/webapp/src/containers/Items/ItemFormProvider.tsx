@@ -53,10 +53,10 @@ function ItemFormProvider({ itemId, ...props }) {
   // Holds data of submit button once clicked to form submit function.
   const [submitPayload, setSubmitPayload] = useState({});
 
-  // Detarmines whether the form new mode.
+  // Determines whether the form new mode.
   const isNewMode = duplicateId || !itemId;
 
-  // Detarmines the form loading state.
+  // Determines the form loading state.
   const isFormLoading =
     isItemsSettingsLoading ||
     isAccountsLoading ||

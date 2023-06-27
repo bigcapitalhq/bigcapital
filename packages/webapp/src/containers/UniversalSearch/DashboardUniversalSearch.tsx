@@ -36,7 +36,7 @@ function DashboardUniversalSearch({
 
   // Default search type.
   const [defaultSearchType, setDefaultSearchType] = React.useState(
-    defaultUniversalResourceType || RESOURCES_TYPES.CUSTOMR,
+    defaultUniversalResourceType || RESOURCES_TYPES.CUSTOMER,
   );
   // Search type.
   const [searchType, setSearchType] = React.useState(defaultSearchType);

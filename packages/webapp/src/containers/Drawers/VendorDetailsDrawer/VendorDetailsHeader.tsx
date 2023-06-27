@@ -34,7 +34,7 @@ export default function VendorDetailsHeader() {
         </DetailItem>
       </DetailsMenu>
 
-      <DetailsMenu direction={'horizantal'} minLabelSize={'175px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'175px'}>
         <DetailItem
           label={<T id={'vendor.drawer.label.vendor'} />}
           name={'name'}

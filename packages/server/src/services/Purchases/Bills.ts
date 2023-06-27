@@ -87,7 +87,7 @@ export default class BillsService
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Validates the given bill existance.
+   * Validates the given bill existence.
    * @async
    * @param {number} tenantId -
    * @param {number} billId -
@@ -106,7 +106,7 @@ export default class BillsService
   }
 
   /**
-   * Validates the bill number existance.
+   * Validates the bill number existence.
    * @async
    * @param {Request} req
    * @param {Response} res
@@ -139,7 +139,7 @@ export default class BillsService
   private async validateBillHasNoEntries(tenantId, billId: number) {
     const { BillPaymentEntry } = this.tenancy.models(tenantId);
 
-    // Retireve the bill associate payment made entries.
+    // Retrieve the bill associate payment made entries.
     const entries = await BillPaymentEntry.query().where('bill_id', billId);
 
     if (entries.length > 0) {
@@ -310,7 +310,7 @@ export default class BillsService
   /**
    * Creates a new bill and stored it to the storage.
    * ----
-   * Precedures.
+   * Procedures.
    * ----
    * - Insert bill transactions to the storage.
    * - Insert bill entries to the storage.
@@ -335,11 +335,11 @@ export default class BillsService
       .findById(billDTO.vendorId)
       .throwIfNotFound();
 
-    // Validate the bill number uniqiness on the storage.
+    // Validate the bill number uniqueness on the storage.
     await this.validateBillNumberExists(tenantId, billDTO.billNumber);
 
-    // Validate items IDs existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       billDTO.entries
     );
@@ -387,7 +387,7 @@ export default class BillsService
   /**
    * Edits details of the given bill id with associated entries.
    *
-   * Precedures:
+   * Procedures:
    * -------
    * - Update the bill transaction on the storage.
    * - Update the bill entries on the storage and insert the not have id and delete
@@ -417,19 +417,19 @@ export default class BillsService
       .modify('vendor')
       .throwIfNotFound();
 
-    // Validate bill number uniqiness on the storage.
+    // Validate bill number uniqueness on the storage.
     if (billDTO.billNumber) {
       await this.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
     }
-    // Validate the entries ids existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
+    // Validate the entries ids existence.
+    await this.itemsEntriesService.validateEntriesIdsExistence(
       tenantId,
       billId,
       'Bill',
       billDTO.entries
     );
-    // Validate the items ids existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate the items ids existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       billDTO.entries
     );
@@ -456,7 +456,7 @@ export default class BillsService
       oldBill.entries,
       billObj.entries
     );
-    // Edits bill transactions and associated transactions under UOW envirement.
+    // Edits bill transactions and associated transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillEditing` event.
       await this.eventPublisher.emitAsync(events.bill.onEditing, {
@@ -495,17 +495,17 @@ export default class BillsService
     // Retrieve the given bill or throw not found error.
     const oldBill = await this.getBillOrThrowError(tenantId, billId);
 
-    // Validate the givne bill has no associated landed cost transactions.
+    // Validate the given bill has no associated landed cost transactions.
     await this.validateBillHasNoLandedCost(tenantId, billId);
 
-    // Validate the purchase bill has no assocaited payments transactions.
+    // Validate the purchase bill has no associated payments transactions.
     await this.validateBillHasNoEntries(tenantId, billId);
 
     // Validate the given bill has no associated reconciled with vendor credits.
     await this.validateBillHasNoAppliedToCredit(tenantId, billId);
 
     // Deletes bill transaction with associated transactions under
-    // unit-of-work envirement.
+    // unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillDeleting` event.
       await this.eventPublisher.emitAsync(events.bill.onDeleting, {
@@ -587,7 +587,7 @@ export default class BillsService
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Tranform the bills to POJO.
+    // Transform the bills to POJO.
     const bills = await this.transformer.transform(
       tenantId,
       results,
@@ -683,7 +683,7 @@ export default class BillsService
   ): Promise<void> {
     const { Bill } = this.tenancy.models(tenantId);
 
-    // Retireve bill with assocaited entries and allocated cost entries.
+    // Retrieve bill with associated entries and allocated cost entries.
     const bill = await Bill.query(trx)
       .findById(billId)
       .withGraphFetched('entries.allocatedCostEntries');

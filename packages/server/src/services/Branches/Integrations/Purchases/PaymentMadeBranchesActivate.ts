@@ -8,7 +8,7 @@ export class BillPaymentsActivateBranches {
   tenancy: HasTenancyService;
 
   /**
-   * Updates all bills payments transcations with the primary branch.
+   * Updates all bills payments transactions with the primary branch.
    * @param   {number} tenantId
    * @param   {number} primaryBranchId
    * @returns {Promise<void>}

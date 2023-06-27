@@ -5,20 +5,20 @@ import { useFormikContext } from 'formik';
 import { transactionNumber } from '@/utils';
 import { isEqual, isNull, first } from 'lodash';
 
-import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInDialogContext } from './MoneyInDialogProvider';
 
 export const useObserveTransactionNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
 
   React.useEffect(() => {
     const TransactionNo = transactionNumber(prefix, nextNumber);
-    setFieldValue('transacttion_numner', TransactionNo);
+    setFieldValue('transaction_number', TransactionNo);
   }, [setFieldValue, prefix, nextNumber]);
 };
 
 export const useSetPrimaryBranchToForm = () => {
   const { setFieldValue } = useFormikContext();
-  const { branches, isBranchesSuccess } = useMoneyInDailogContext();
+  const { branches, isBranchesSuccess } = useMoneyInDialogContext();
 
   React.useEffect(() => {
     if (isBranchesSuccess) {
@@ -33,7 +33,7 @@ export const useSetPrimaryBranchToForm = () => {
 
 export const useForeignAccount = () => {
   const { values } = useFormikContext();
-  const { account } = useMoneyInDailogContext();
+  const { account } = useMoneyInDialogContext();
 
   return (
     !isEqual(account.currency_code, values.currency_code) &&

@@ -78,9 +78,9 @@ function VendorCreditNoteFormSelectBranch() {
 
 function VendorCreditFormSelectWarehouse() {
   // vendor credit note form context.
-  const { warehouses, isWarehouesLoading } = useVendorCreditNoteFormContext();
+  const { warehouses, isWarehousesLoading } = useVendorCreditNoteFormContext();
 
-  return isWarehouesLoading ? (
+  return isWarehousesLoading ? (
     <DetailsBarSkeletonBase className={Classes.SKELETON} />
   ) : (
     <WarehouseSelect

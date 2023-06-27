@@ -30,7 +30,7 @@ import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
@@ -48,7 +48,7 @@ export default function OwnerDrawingsFormFields() {
   // Money out dialog context.
   const { accounts, account, branches } = useMoneyOutDialogContext();
   const { values } = useFormikContext();
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
 
   const amountFieldRef = useAutofocus();
 
@@ -93,7 +93,7 @@ export default function OwnerDrawingsFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,
@@ -140,7 +140,7 @@ export default function OwnerDrawingsFormFields() {
         )}
       </Field>
 
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}
@@ -153,7 +153,7 @@ export default function OwnerDrawingsFormFields() {
       </If>
       <Row>
         <Col xs={5}>
-          {/*------------ equitty account -----------*/}
+          {/*------------ equity account -----------*/}
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup

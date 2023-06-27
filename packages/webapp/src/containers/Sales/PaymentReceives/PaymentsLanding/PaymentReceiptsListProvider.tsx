@@ -34,7 +34,7 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isPaymentReceivesFetching,
   } = usePaymentReceives(query);
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(paymentReceives) && !isPaymentReceivesLoading && !tableStateChanged;
 

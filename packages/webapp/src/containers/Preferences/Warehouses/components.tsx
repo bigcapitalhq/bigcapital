@@ -35,7 +35,7 @@ export function WarehouseContextMenu({
       <If condition={!warehouse.primary}>
         <MenuItem
           icon={<Icon icon={'check'} iconSize={18} />}
-          text={intl.get('warehouses.action.make_as_parimary')}
+          text={intl.get('warehouses.action.make_as_primary')}
           onClick={safeCallback(onMarkPrimary)}
         />
       </If>

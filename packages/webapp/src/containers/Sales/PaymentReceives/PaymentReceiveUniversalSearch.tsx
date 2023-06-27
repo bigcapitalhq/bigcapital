@@ -65,7 +65,7 @@ export function PaymentReceiveUniversalSearchItem(
 }
 
 /**
- * Transformes payment receives to search.
+ * Transforms payment receives to search.
  */
 const paymentReceivesToSearch = (payment) => ({
   id: payment.id,

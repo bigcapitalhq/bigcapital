@@ -138,7 +138,7 @@ export default class RolesController extends BaseController {
 
       return res.status(200).send({
         data: { roleId },
-        message: 'The given role hsa been updated successfully.',
+        message: 'The given role has been updated successfully.',
       });
     } catch (error) {
       next(error);
@@ -204,11 +204,11 @@ export default class RolesController extends BaseController {
     next: NextFunction
   ) => {
     if (error instanceof ServiceError) {
-      if (error.errorType === 'ROLE_PREFINED') {
+      if (error.errorType === 'ROLE_PREDEFINED') {
         return res.status(400).send({
           errors: [
             {
-              type: 'ROLE_PREFINED',
+              type: 'ROLE_PREDEFINED',
               message: 'Role is predefined, you cannot modify predefined roles',
               code: 100,
             },
@@ -237,7 +237,7 @@ export default class RolesController extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'CANNT_DELETE_ROLE_ASSOCIATED_TO_USERS') {
+      if (error.errorType === 'CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS') {
         return res.status(400).send({
           errors: [
             {

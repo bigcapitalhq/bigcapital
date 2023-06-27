@@ -10,7 +10,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
   const notFoundOrganization = () => {
     Logger.info('[tenancy_middleware] organization id not found.');
-    return res.boom.unauthorized('Organization identication not found.', {
+    return res.boom.unauthorized('Organization identification not found.', {
       errors: [{ type: 'ORGANIZATION.ID.NOT.FOUND', code: 100 }],
     });
   };

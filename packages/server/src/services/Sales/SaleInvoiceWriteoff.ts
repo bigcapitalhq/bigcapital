@@ -48,7 +48,7 @@ export default class SaleInvoiceWriteoff {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    // Validate the sale invoice existance.
+    // Validate the sale invoice existence.
     // Retrieve the sale invoice or throw not found service error.
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
@@ -58,7 +58,7 @@ export default class SaleInvoiceWriteoff {
     this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
 
     // Saves the invoice write-off transaction with associated transactions 
-    // under unit-of-work envirmenet.
+    // under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       const eventPayload = {
         tenantId,
@@ -103,7 +103,7 @@ export default class SaleInvoiceWriteoff {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    // Validate the sale invoice existance.
+    // Validate the sale invoice existence.
     // Retrieve the sale invoice or throw not found service error.
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)

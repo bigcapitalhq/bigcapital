@@ -48,7 +48,7 @@ function ProjectTaskTableRoot({
     useMemorizedColumnsWidths(TABLES.PROJECT_TASKS);
 
   return (
-    <ProjectTaksDataTable
+    <ProjectTaskDataTable
       columns={columns}
       data={projectTasks}
       manualSortBy={true}
@@ -77,7 +77,7 @@ export const ProjectTasksTable = compose(
   })),
 )(ProjectTaskTableRoot);
 
-const ProjectTaksDataTable = styled(DataTable)`
+const ProjectTaskDataTable = styled(DataTable)`
   .table {
     .thead .tr .th {
       .resizer {

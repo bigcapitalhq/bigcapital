@@ -42,7 +42,7 @@ function PaymentMadeDetailActionsBar({
 
   // Handle edit payment made.
   const handleEditPaymentMade = () => {
-    history.push(`/payment-mades/${paymentMadeId}/edit`);
+    history.push(`/payments-made/${paymentMadeId}/edit`);
     closeDrawer(DRAWERS.PAYMENT_MADE_DETAILS);
   };
 

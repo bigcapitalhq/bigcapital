@@ -42,12 +42,12 @@ export class AccountTransformer extends Transformer {
   };
 
   /**
-   * Transformes the accounts collection to flat or nested array.
+   * Transforms the accounts collection to flat or nested array.
    * @param {IAccount[]}
    * @returns {IAccount[]}
    */
   protected postCollectionTransform = (accounts: IAccount[]) => {
-    // Transfom the flatten to accounts tree.
+    // Transform the flatten to accounts tree.
     const transformed = flatToNestedArray(accounts, {
       id: 'id',
       parentId: 'parentAccountId',

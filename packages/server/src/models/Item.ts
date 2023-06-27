@@ -68,7 +68,7 @@ export default class Item extends mixin(TenantModel, [
 
     return {
       /**
-       * Item may belongs to cateogory model.
+       * Item may belongs to category model.
        */
       category: {
         relation: Model.BelongsToOneRelation,

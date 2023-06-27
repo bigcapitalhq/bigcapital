@@ -62,7 +62,7 @@ export const ERRORS = {
     'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
 };
 /**
- * Transformes the bill to initial values of edit form.
+ * Transforms the bill to initial values of edit form.
  */
 export const transformToEditForm = (bill) => {
   const initialEntries = [
@@ -87,7 +87,7 @@ export const transformToEditForm = (bill) => {
 };
 
 /**
- * Transformes bill entries to submit request.
+ * Transforms bill entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
   const transformBillEntry = R.compose(
@@ -98,14 +98,14 @@ export const transformEntriesToSubmit = (entries) => {
 };
 
 /**
- * Filters the givne non-zero entries.
+ * Filters the given non-zero entries.
  */
 export const filterNonZeroEntries = (entries) => {
   return entries.filter((item) => item.item_id && item.quantity);
 };
 
 /**
- * Transformes form values to request body.
+ * Transforms form values to request body.
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
@@ -152,7 +152,7 @@ export const handleDeleteErrors = (errors) => {
 };
 
 /**
- * Detarmines vendors fast field should update
+ * Determines vendors fast field should update
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -162,7 +162,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -224,14 +224,14 @@ export const useSetPrimaryWarehouseToForm = () => {
 };
 
 /**
- * Retreives the bill totals.
+ * Retrieves the bill totals.
  */
 export const useBillTotals = () => {
   const {
     values: { entries, currency_code: currencyCode },
   } = useFormikContext();
 
-  // Retrieves the bili entries total.
+  // Retrieves the bill entries total.
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
@@ -247,7 +247,7 @@ export const useBillTotals = () => {
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
 
-  // Retireves the formatted payment total.
+  // Retrieves the formatted payment total.
   const formattedPaymentTotal = React.useMemo(
     () => formattedAmount(paymentTotal, currencyCode),
     [paymentTotal, currencyCode],
@@ -275,7 +275,7 @@ export const useBillTotals = () => {
 };
 
 /**
- * Detarmines whether the bill has foreign customer.
+ * Determines whether the bill has foreign customer.
  * @returns {boolean}
  */
 export const useBillIsForeignCustomer = () => {

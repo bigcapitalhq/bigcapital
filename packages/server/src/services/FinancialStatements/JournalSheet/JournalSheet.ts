@@ -74,7 +74,7 @@ export default class JournalSheet extends FinancialSheet {
   }
 
   /**
-   * Mappes the journal entries.
+   * Maps the journal entries.
    * @param {IJournalEntry[]} entries -
    */
   entriesMapper(entries: IJournalEntry[]) {

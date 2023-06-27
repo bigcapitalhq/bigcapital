@@ -15,7 +15,7 @@ export default class VendorCreditInventoryTransactions {
   /**
    * Creates vendor credit associated inventory transactions.
    * @param {number} tenantId
-   * @param {IVnedorCredit} vendorCredit
+   * @param {IVendorCredit} vendorCredit
    * @param {Knex.Transaction} trx
    */
   public createInventoryTransactions = async (
@@ -41,7 +41,7 @@ export default class VendorCreditInventoryTransactions {
       warehouseId: vendorCredit.warehouseId,
       createdAt: vendorCredit.createdAt,
     };
-    // Writes inventory tranactions.
+    // Writes inventory transactions.
     await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
       transaction,
@@ -51,7 +51,7 @@ export default class VendorCreditInventoryTransactions {
   };
 
   /**
-   * Edits vendor credit assocaited inventory transactions.
+   * Edits vendor credit associated inventory transactions.
    * @param {number} tenantId
    * @param {number} creditNoteId
    * @param {ICreditNote} creditNote

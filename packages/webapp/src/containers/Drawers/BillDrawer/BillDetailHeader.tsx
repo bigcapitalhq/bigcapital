@@ -39,7 +39,7 @@ export default function BillDetailHeader() {
       </CommercialDocTopHeader>
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem label={intl.get('bill_date')}>
               <FormatDate value={bill.bill_date} />
             </DetailItem>
@@ -62,7 +62,7 @@ export default function BillDetailHeader() {
         </Col>
         <Col xs={6}>
           <DetailsMenu
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'140px'}
             textAlign={'right'}
           >

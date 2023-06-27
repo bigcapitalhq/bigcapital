@@ -44,7 +44,7 @@ function ProjectDetailActionsBar({
       case 'project_task':
         openDialog('project-task-form', { projectId });
         break;
-      case 'invoincing':
+      case 'invoicing':
         openDialog('project-invoicing-form');
         break;
       case 'expense':
@@ -88,13 +88,13 @@ function ProjectDetailActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'time-24'} iconSize={16} />}
-          text={<T id={'projcet_details.action.time_entry'} />}
+          text={<T id={'project_details.action.time_entry'} />}
           onClick={handleTimeEntryBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
-          text={<T id={'projcet_details.action.edit_project'} />}
+          text={<T id={'project_details.action.edit_project'} />}
           onClick={handleEditProjectBtnClick}
         />
         <NavbarDivider />

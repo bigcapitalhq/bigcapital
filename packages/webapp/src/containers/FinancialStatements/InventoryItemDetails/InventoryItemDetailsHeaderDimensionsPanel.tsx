@@ -14,7 +14,7 @@ import {
 } from './InventoryItemDetailsHeaderDimensionsPanelProvider';
 
 /**
- * Inventory Item deatil header dismension panel.
+ * Inventory Item detail header dimension panel.
  * @returns {JSX.Element}
  */
 export default function InventoryItemDetailsHeaderDimensionsPanel() {
@@ -26,14 +26,14 @@ export default function InventoryItemDetailsHeaderDimensionsPanel() {
 }
 
 /**
- * Inventory Valuation header dismension panel content.
+ * Inventory Valuation header dimension panel content.
  * @returns {JSX.Element}
  */
 function InventoryItemDetailsHeaderDimensionsPanelContent() {
   const { warehouses, branches } =
     useInventoryItemDetailsHeaderDimensionsPanelContext();
 
-  // Detarmines the given feature whether is enabled.
+  // Determines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
   const isBranchesFeatureCan = featureCan(Features.Branches);

@@ -29,28 +29,28 @@ export class CreateItem {
    */
   async authorize(tenantId: number, itemDTO: IItemDTO) {
     // Validate whether the given item name already exists on the storage.
-    await this.validators.validateItemNameUniquiness(tenantId, itemDTO.name);
+    await this.validators.validateItemNameUniqueness(tenantId, itemDTO.name);
 
     if (itemDTO.categoryId) {
-      await this.validators.validateItemCategoryExistance(
+      await this.validators.validateItemCategoryExistence(
         tenantId,
         itemDTO.categoryId
       );
     }
     if (itemDTO.sellAccountId) {
-      await this.validators.validateItemSellAccountExistance(
+      await this.validators.validateItemSellAccountExistence(
         tenantId,
         itemDTO.sellAccountId
       );
     }
     if (itemDTO.costAccountId) {
-      await this.validators.validateItemCostAccountExistance(
+      await this.validators.validateItemCostAccountExistence(
         tenantId,
         itemDTO.costAccountId
       );
     }
     if (itemDTO.inventoryAccountId) {
-      await this.validators.validateItemInventoryAccountExistance(
+      await this.validators.validateItemInventoryAccountExistence(
         tenantId,
         itemDTO.inventoryAccountId
       );
@@ -82,7 +82,7 @@ export class CreateItem {
     // Authorize the item before creating.
     await this.authorize(tenantId, itemDTO);
 
-    // Creates a new item with associated transactions under unit-of-work envirement.
+    // Creates a new item with associated transactions under unit-of-work environment.
     const item = this.uow.withTransaction(
       tenantId,
       async (trx: Knex.Transaction) => {

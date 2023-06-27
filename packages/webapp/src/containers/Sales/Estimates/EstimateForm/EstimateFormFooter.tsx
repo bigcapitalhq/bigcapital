@@ -11,7 +11,7 @@ import { EstimateFormFooterRight } from './EstimateFormFooterRight';
 /**
  * Estimate form footer.
  */
-export default function EstiamteFormFooter() {
+export default function EstimateFormFooter() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <EstimateFooterPaper>

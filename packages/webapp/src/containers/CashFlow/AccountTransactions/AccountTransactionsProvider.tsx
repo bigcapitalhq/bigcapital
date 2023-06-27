@@ -16,7 +16,7 @@ function flattenInfinityPages(data) {
 }
 
 /**
- * Account transctions provider.
+ * Account transactions provider.
  */
 function AccountTransactionsProvider({ query, ...props }) {
   const { id } = useParams();
@@ -59,7 +59,7 @@ function AccountTransactionsProvider({ query, ...props }) {
     isLoading: isCurrentAccountLoading,
   } = useAccount(accountId, { keepPreviousData: true });
 
-  // Handle the observer ineraction.
+  // Handle the observer interaction.
   const handleObserverInteract = React.useCallback(() => {
     if (!isFetchingNextPage && hasNextPage) {
       fetchNextTransactionsPage();

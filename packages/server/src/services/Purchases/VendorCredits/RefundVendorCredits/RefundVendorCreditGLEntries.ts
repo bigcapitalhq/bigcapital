@@ -119,7 +119,7 @@ export default class RefundVendorCreditGLEntries {
   ): Promise<void> => {
     const { Account, RefundVendorCredit } = this.tenancy.models(tenantId);
 
-    // Retireve refund with associated vendor credit entity.
+    // Retrieve refund with associated vendor credit entity.
     const refundCredit = await RefundVendorCredit.query()
       .findById(refundCreditId)
       .withGraphFetched('vendorCredit');
@@ -133,7 +133,7 @@ export default class RefundVendorCreditGLEntries {
       refundCredit,
       payableAccount.id
     );
-    // Saves the ledegr to the storage.
+    // Saves the ledger to the storage.
     await this.ledgerRepository.saveLedgerEntries(tenantId, entries, trx);
   };
 

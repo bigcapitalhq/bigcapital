@@ -243,7 +243,7 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
   files.forEach((file) => {
     const formData = new FormData();
     formData.append('attachment', file.file);
-    // const oper = new PProgress((resolve, reject, progress) => {
+    // const oper = new Progress((resolve, reject, progress) => {
     //   actionCb(formData, file, (requestProgress) => {
     //     progress(requestProgress);
     //   })
@@ -256,7 +256,7 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
     // });
     // opers.push(oper);
   });
-  // return PProgress.all(opers);
+  // return Progress.all(opers);
 };
 
 export const firstLettersArgs = (...args) => {
@@ -289,7 +289,7 @@ export const transformUpdatedRows = (rows, rowIndex, columnIdOrObj, value) => {
   });
 };
 
-export const tansformDateValue = (date) => {
+export const transformDateValue = (date) => {
   return moment(date).toDate() || new Date();
 };
 
@@ -427,12 +427,12 @@ export function defaultToTransform(
       ? defaultOrTransformedValue
       : defaultValue;
 
-  const _transfromedValue =
+  const _transformedValue =
     typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
   return value == null || value !== value || value === ''
     ? _defaultValue
-    : _transfromedValue;
+    : _transformedValue;
 }
 
 export function isBlank(value) {
@@ -472,12 +472,12 @@ export const transformToCamelCase = (object) => {
   return deepMapKeys(object, (key) => _.camelCase(key));
 };
 
-export const transfromToSnakeCase = (object) => {
+export const transformToSnakeCase = (object) => {
   return deepMapKeys(object, (key) => _.snakeCase(key));
 };
 
 export const transformTableQueryToParams = (object) => {
-  return transfromToSnakeCase(object);
+  return transformToSnakeCase(object);
 };
 
 export function flatObject(obj) {
@@ -539,7 +539,7 @@ export const createDeepEqualSelector = createSelectorCreator(
 );
 
 /**
- * Detarmines whether the table has empty status.
+ * Determines whether the table has empty status.
  */
 export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
   return [
@@ -550,7 +550,7 @@ export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
 };
 
 /**
- * Transformes the pagination meta to table props.
+ * Transforms the pagination meta to table props.
  */
 export function getPagesCountFromPaginationMeta(pagination) {
   const { pageSize, total } = pagination;
@@ -563,7 +563,7 @@ function transformFilterRoles(filterRoles) {
 }
 
 /**
- * Transformes the table state to url query.
+ * Transforms the table state to url query.
  */
 export function transformTableStateToQuery(tableState) {
   const { pageSize, pageIndex, viewSlug, sortBy } = tableState;
@@ -586,11 +586,11 @@ export function transformTableStateToQuery(tableState) {
         }
       : {}),
   };
-  return transfromToSnakeCase(query);
+  return transformToSnakeCase(query);
 }
 
 /**
- * Transformes the global table state to table state.
+ * Transforms the global table state to table state.
  */
 export function globalTableStateToTable(globalState) {
   return {
@@ -599,7 +599,7 @@ export function globalTableStateToTable(globalState) {
 }
 
 /**
- * Transformes the pagination meta repsonse.
+ * Transforms the pagination meta response.
  */
 export function transformPagination(pagination) {
   const transformed = transformResponse(pagination);
@@ -750,11 +750,11 @@ export const ensureEntriesHasEmptyLine = R.curry(
   },
 );
 
-export const transfromViewsToTabs = (views) => {
+export const transformViewsToTabs = (views) => {
   return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));
 };
 
-export function nestedArrayToflatten(
+export function nestedArrayToFlatten(
   collection,
   property = 'children',
   parseItem = (a, level) => a,
@@ -775,7 +775,7 @@ export function nestedArrayToflatten(
     localItems.push(parsedItem);
 
     if (Array.isArray(currentValue[property])) {
-      const flattenArray = nestedArrayToflatten(
+      const flattenArray = nestedArrayToFlatten(
         currentValue[property],
         property,
         parseItem,
@@ -805,7 +805,7 @@ export function getFilterableFieldsFromFields(fields) {
   return fields.filter((field) => field.filterable !== false);
 }
 
-export const RESORUCE_TYPE = {
+export const RESOURCE_TYPE = {
   ACCOUNTS: 'account',
   ITEMS: 'items',
 };
@@ -899,7 +899,7 @@ export function flatten(opts, target) {
 }
 
 /**
- * Ingores the given selectors from event callback.
+ * Ignores the given selectors from event callback.
  */
 export function ignoreEventFromSelectors(event, selectors) {
   return selectors

@@ -15,7 +15,7 @@ export const handleDeleteErrors = (errors) => {
   }
   if (errors.some((e) => e.type === 'BRANCH_HAS_ASSOCIATED_TRANSACTIONS')) {
     AppToaster.show({
-      message: intl.get('branche.error.branch_has_associated_transactions'),
+      message: intl.get('branch.error.branch_has_associated_transactions'),
       intent: Intent.DANGER,
     });
   }

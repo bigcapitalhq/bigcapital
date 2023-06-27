@@ -14,7 +14,7 @@ import AccountantForm from './AccountantForm';
 import { AccountantSchema } from './Accountant.schema';
 import { useAccountantFormContext } from './AccountantFormProvider';
 import { transferObjectOptionsToArray } from './utils';
-import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { compose, transformToForm, transformToSnakeCase } from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
 
@@ -57,7 +57,7 @@ function AccountantFormPage({
   const handleFormSubmit = (values, { setSubmitting }) => {
     const options = R.compose(
       transferObjectOptionsToArray,
-      transfromToSnakeCase,
+      transformToSnakeCase,
     )(values);
     setSubmitting(true);
 

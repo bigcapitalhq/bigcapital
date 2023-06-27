@@ -31,10 +31,10 @@ import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
-import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
+import { useMoneyInDialogContext } from '../MoneyInDialogProvider';
 import {
   useSetPrimaryBranchToForm,
   useForeignAccount,
@@ -48,9 +48,9 @@ import { MoneyInOutTransactionNoField } from '../../_components';
  */
 export default function TransferFromAccountFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyInDailogContext();
+  const { accounts, account, branches } = useMoneyInDialogContext();
 
-  const isForeigAccount = useForeignAccount();
+  const isForeignAccount = useForeignAccount();
   const amountFieldRef = useAutofocus();
 
   const { values } = useFormikContext();
@@ -96,7 +96,7 @@ export default function TransferFromAccountFormFields() {
                   onChange={handleDateChange((formattedDate) => {
                     form.setFieldValue('date', formattedDate);
                   })}
-                  value={tansformDateValue(value)}
+                  value={transformDateValue(value)}
                   popoverProps={{
                     position: Position.BOTTOM,
                     minimal: true,
@@ -142,7 +142,7 @@ export default function TransferFromAccountFormFields() {
           </FormGroup>
         )}
       </FastField>
-      <If condition={isForeigAccount}>
+      <If condition={isForeignAccount}>
         {/*------------ exchange rate -----------*/}
         <ExchangeRateMutedField
           name={'exchange_rate'}

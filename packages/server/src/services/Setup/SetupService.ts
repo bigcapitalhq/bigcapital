@@ -8,7 +8,7 @@ import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 import { ServiceError } from '@/exceptions';
 
 const ERRORS = {
-  TENANT_IS_ALREADY_SETUPED: 'TENANT_IS_ALREADY_SETUPED',
+  TENANT_IS_ALREADY_SET_UP: 'TENANT_IS_ALREADY_SET_UP',
   BASE_CURRENCY_INVALID: 'BASE_CURRENCY_INVALID',
 };
 
@@ -27,7 +27,7 @@ export default class SetupService {
   sysRepositories: any;
 
   /**
-   * Transformes the setup DTO to settings.
+   * Transforms the setup DTO to settings.
    * @param {IOrganizationSetupDTO} setupDTO
    * @returns
    */
@@ -113,7 +113,7 @@ export default class SetupService {
    */
   private validateTenantNotSeeded(tenant: ITenant) {
     if (tenant.seededAt) {
-      throw new ServiceError(ERRORS.TENANT_IS_ALREADY_SETUPED);
+      throw new ServiceError(ERRORS.TENANT_IS_ALREADY_SET_UP);
     }
   }
 }

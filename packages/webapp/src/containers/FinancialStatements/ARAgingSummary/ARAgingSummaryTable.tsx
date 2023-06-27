@@ -37,7 +37,7 @@ export default function ReceivableAgingSummaryTable({
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

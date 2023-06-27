@@ -44,7 +44,7 @@ export default class RefundCreditNoteGLEntries {
   };
 
   /**
-   * Retrieves the refudn credit receivable GL entry.
+   * Retrieves the refund credit receivable GL entry.
    * @param   {IRefundCreditNote} refundCreditNote
    * @param   {number} ARAccountId
    * @returns {ILedgerEntry}

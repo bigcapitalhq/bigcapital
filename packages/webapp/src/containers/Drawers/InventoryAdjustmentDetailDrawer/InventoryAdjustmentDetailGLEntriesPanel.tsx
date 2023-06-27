@@ -11,7 +11,7 @@ import JournalEntriesTable, {
 } from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
- * Inentory adjustmet detail GL entries panel.
+ * Inventory adjustment detail GL entries panel.
  * @returns {React.JSX}
  */
 export default function InventoryAdjustmentDetailGLEntriesPanel() {

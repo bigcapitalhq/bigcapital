@@ -2,7 +2,7 @@ import { keyBy } from 'lodash';
 import { ISubjectAbilitiesSchema } from '@/interfaces';
 
 /**
- * Transformes ability schema to map.
+ * Transforms ability schema to map.
  */
 export function transformAbilitySchemaToMap(schema: ISubjectAbilitiesSchema[]) {
   return keyBy(

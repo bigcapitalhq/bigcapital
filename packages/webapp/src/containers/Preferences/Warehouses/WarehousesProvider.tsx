@@ -20,18 +20,18 @@ function WarehousesProvider({ query, ...props }) {
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
   // Fetch warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
+  const { data: warehouses, isLoading: isWarehousesLoading } = useWarehouses(
     query,
     { enabled: isWarehouseFeatureCan },
   );
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = isEmpty(warehouses) || !isWarehouseFeatureCan;
 
   // Provider state.
   const provider = {
     warehouses,
-    isWarehouesLoading,
+    isWarehousesLoading,
     isEmptyStatus,
   };
 

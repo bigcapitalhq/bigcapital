@@ -268,7 +268,7 @@ export default class UsersController extends BaseController {
         );
       }
       if (error.errorType === 'EMAIL_ALREADY_EXISTS') {
-        return res.boom.badRequest('Exmail is already exists.', {
+        return res.boom.badRequest('Email is already exists.', {
           errors: [{ type: 'EMAIL_ALREADY_EXISTS', code: 500 }],
         });
       }
@@ -278,7 +278,7 @@ export default class UsersController extends BaseController {
         });
       }
       if (error.errorType === 'CANNOT_AUTHORIZED_USER_MUTATE_ROLE') {
-        return res.boom.badRequest('Cannout mutate authorized user role.', {
+        return res.boom.badRequest('Cannot mutate authorized user role.', {
           errors: [{ type: 'CANNOT_AUTHORIZED_USER_MUTATE_ROLE', code: 700 }],
         });
       }

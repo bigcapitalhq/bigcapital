@@ -23,7 +23,7 @@ export class DeleteBranch extends CURDBranch {
   private validator: BranchValidator;
 
   /**
-   * Validates the branch deleteing.
+   * Validates the branch deleting.
    * @param   {number} tenantId
    * @param   {number} branchId
    * @returns {Promise<void>}

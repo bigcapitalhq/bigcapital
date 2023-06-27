@@ -9,7 +9,7 @@ import {
 
 
 describe('Model: AccountType', () => {
-  it('Shoud account type model has many associated accounts.', async () => {
+  it('Should account type model has many associated accounts.', async () => {
     const accountType = await tenantFactory.create('account_type');
     await tenantFactory.create('account', { account_type_id: accountType.id });
     await tenantFactory.create('account', { account_type_id: accountType.id });

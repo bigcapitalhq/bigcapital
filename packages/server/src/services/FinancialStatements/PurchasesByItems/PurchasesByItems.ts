@@ -59,7 +59,7 @@ export default class InventoryValuationReport extends FinancialSheet {
   }
 
   /**
-   * Detarmines whether the purchase node is active.
+   * Determines whether the purchase node is active.
    * @param {} node
    * @returns {boolean}
    */
@@ -118,7 +118,7 @@ export default class InventoryValuationReport extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the items post filter is active.
+   * Determines whether the items post filter is active.
    * @returns {boolean}
    */
   private isItemsPostFilter = (): boolean => {
@@ -135,7 +135,7 @@ export default class InventoryValuationReport extends FinancialSheet {
   };
 
   /**
-   * Mappes purchase by items nodes.
+   * Maps purchase by items nodes.
    * @param items
    * @returns
    */

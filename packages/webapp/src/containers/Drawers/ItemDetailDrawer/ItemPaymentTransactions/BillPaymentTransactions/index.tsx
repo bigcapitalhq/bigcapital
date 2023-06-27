@@ -40,7 +40,7 @@ function BillPaymentTransactions({
   });
 
   // Handles delete payment transactions.
-  const handleDeletePaymentTransactons = ({ bill_id }) => {
+  const handleDeletePaymentTransactions = ({ bill_id }) => {
     openAlert('bill-delete', {
       billId: bill_id,
     });
@@ -61,9 +61,9 @@ function BillPaymentTransactions({
       ContextMenu={ActionsMenu}
       payload={{
         onEdit: handleEditPaymentTransactions,
-        onDelete: handleDeletePaymentTransactons,
+        onDelete: handleDeletePaymentTransactions,
       }}
-      styleName={TableStyle.Constrant}
+      styleName={TableStyle.Constraint}
       TableLoadingRenderer={TableSkeletonRows}
       sticky={true}
     />

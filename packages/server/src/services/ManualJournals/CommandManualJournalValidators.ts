@@ -22,7 +22,7 @@ export class CommandManualJournalValidators {
    * Validate manual journal credit and debit should be equal.
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public valdiateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
+  public validateCreditDebitTotalEquals(manualJournalDTO: IManualJournalDTO) {
     let totalCredit = 0;
     let totalDebit = 0;
 
@@ -43,11 +43,11 @@ export class CommandManualJournalValidators {
   }
 
   /**
-   * Validate manual entries accounts existance on the storage.
+   * Validate manual entries accounts existence on the storage.
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO -
    */
-  public async validateAccountsExistance(
+  public async validateAccountsExistence(
     tenantId: number,
     manualJournalDTO: IManualJournalDTO
   ) {
@@ -59,7 +59,7 @@ export class CommandManualJournalValidators {
     const storedAccountsIds = accounts.map((account) => account.id);
 
     if (difference(manualAccountsIds, storedAccountsIds).length > 0) {
-      throw new ServiceError(ERRORS.ACCCOUNTS_IDS_NOT_FOUND);
+      throw new ServiceError(ERRORS.ACCOUNTS_IDS_NOT_FOUND);
     }
   }
 
@@ -182,11 +182,11 @@ export class CommandManualJournalValidators {
   }
 
   /**
-   * Validate entries contacts existance.
+   * Validate entries contacts existence.
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public async validateContactsExistance(
+  public async validateContactsExistence(
     tenantId: number,
     manualJournalDTO: IManualJournalDTO
   ) {
@@ -247,16 +247,16 @@ export class CommandManualJournalValidators {
     journalNumber: string
   ) => {
     // Retrieve the next manual journal number.
-    const autoIncrmenetEnabled =
+    const autoIncrementEnabled =
       this.autoIncrement.autoIncrementEnabled(tenantId);
 
-    if (!journalNumber || !autoIncrmenetEnabled) {
+    if (!journalNumber || !autoIncrementEnabled) {
       throw new ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED);
     }
   };
 
   /**
-   * Filters the not published manual jorunals.
+   * Filters the not published manual journals.
    * @param {IManualJournal[]} manualJournal - Manual journal.
    * @return {IManualJournal[]}
    */

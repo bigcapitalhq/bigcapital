@@ -8,7 +8,7 @@ import withItems from './withItems';
 import withItemsActions from './withItemsActions';
 
 import { useItemsListContext } from './ItemsListProvider';
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 
 /**
  * Items views tabs.
@@ -23,7 +23,7 @@ function ItemsViewsTabs({
   const { itemsViews } = useItemsListContext();
 
   // Mapped items views.
-  const tabs = transfromViewsToTabs(itemsViews);
+  const tabs = transformViewsToTabs(itemsViews);
 
   // Handles the active tab change.
   const handleTabChange = (viewSlug) => {

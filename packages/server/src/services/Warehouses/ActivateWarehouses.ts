@@ -8,7 +8,7 @@ import { CreateInitialWarehouse } from './CreateInitialWarehouse';
 import { WarehousesSettings } from './WarehousesSettings';
 
 import events from '@/subscribers/events';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class ActivateWarehouses {
@@ -30,7 +30,7 @@ export class ActivateWarehouses {
    */
   private throwIfWarehousesActivated = (isActivated: boolean) => {
     if (isActivated) {
-      throw new ServiceError(ERRORS.MUTLI_WAREHOUSES_ALREADY_ACTIVATED);
+      throw new ServiceError(ERRORS.MULTI_WAREHOUSES_ALREADY_ACTIVATED);
     }
   };
 
@@ -51,7 +51,7 @@ export class ActivateWarehouses {
     // Throw error if the warehouses is already activated.
     this.throwIfWarehousesActivated(isActivated);
 
-    // Activates multi-warehouses on unit-of-work envirement.
+    // Activates multi-warehouses on unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onWarehouseActivate` event.
       await this.eventPublisher.emitAsync(events.warehouse.onActivate, {
@@ -63,7 +63,7 @@ export class ActivateWarehouses {
         await this.createInitialWarehouse.createInitialWarehouse(tenantId);
 
       // Marks the multi-warehouses is activated.
-      this.settings.markMutliwarehoussAsActivated(tenantId);
+      this.settings.markMultiWarehousesAsActivated(,,,,,tenantId);
 
       // Triggers `onWarehouseActivated` event.
       await this.eventPublisher.emitAsync(events.warehouse.onActivated, {

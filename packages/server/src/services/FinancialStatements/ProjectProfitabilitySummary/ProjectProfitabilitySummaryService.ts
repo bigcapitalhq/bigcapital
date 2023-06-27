@@ -7,7 +7,7 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 import { ProfitProfitabilitySummary } from './ProjectProfitabilitySummary';
-import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
+import { ProjectProfitabilitySummaryRepository } from './ProjectProfitabilitySummaryRepository';
 
 @Service()
 export class ProjectProfitabilitySummaryService {
@@ -15,7 +15,7 @@ export class ProjectProfitabilitySummaryService {
   private tenancy: HasTenancyService;
 
   /**
-   * Retrieves the project profitiability summary report.
+   * Retrieves the project profitability summary report.
    * @param {number} tenantId
    * @param {ProjectProfitabilitySummaryQuery} query
    * @returns {Promise<IProjectProfitabilitySummaryPOJO>}
@@ -31,7 +31,7 @@ export class ProjectProfitabilitySummaryService {
       .withGraphFetched('metadata');
 
     // Initialize the report repository.
-    const projectProfitabilityRepo = new ProjectProfitabilitySummaryRespository(
+    const projectProfitabilityRepo = new ProjectProfitabilitySummaryRepository(
       models,
       query
     );

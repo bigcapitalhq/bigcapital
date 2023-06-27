@@ -47,8 +47,8 @@ export default class SaleReceiptNotifyBySms {
       .findById(saleReceiptId)
       .withGraphFetched('customer');
 
-    // Validates the receipt receipt existance.
-    this.validateSaleReceiptExistance(saleReceipt);
+    // Validates the receipt existence.
+    this.validateSaleReceiptExistence(saleReceipt);
 
     // Validate the customer phone number.
     this.saleSmsNotification.validateCustomerPhoneNumber(
@@ -139,7 +139,7 @@ export default class SaleReceiptNotifyBySms {
   };
 
   /**
-   * Formattes the receipt sms notification message.
+   * Formats the receipt sms notification message.
    * @param {string} smsMessage
    * @param {ISaleReceipt} saleReceipt
    * @param {TenantMetadata} tenantMetadata
@@ -180,8 +180,8 @@ export default class SaleReceiptNotifyBySms {
       .findById(saleReceiptId)
       .withGraphFetched('customer');
 
-    // Validates the receipt receipt existance.
-    this.validateSaleReceiptExistance(saleReceipt);
+    // Validates the receipt existence.
+    this.validateSaleReceiptExistence(saleReceipt);
 
     // Current tenant metadata.
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
@@ -200,10 +200,10 @@ export default class SaleReceiptNotifyBySms {
   };
 
   /**
-   * Validates the receipt receipt existance.
+   * Validates the receipt existence.
    * @param {ISaleReceipt|null} saleReceipt
    */
-  private validateSaleReceiptExistance(saleReceipt: ISaleReceipt | null) {
+  private validateSaleReceiptExistence(saleReceipt: ISaleReceipt | null) {
     if (!saleReceipt) {
       throw new ServiceError(ERRORS.SALE_RECEIPT_NOT_FOUND);
     }

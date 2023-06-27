@@ -19,7 +19,7 @@ export default function PaymentReceiveDetailFooter() {
   
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={paymentReceive.statement}>
           <DetailItem label={<T id={'payment_receive.details.statement'} />}>
             {paymentReceive.statement}

@@ -13,7 +13,7 @@ export default {
     sendResetPassword: 'onSendResetPassword',
 
     resetPassword: 'onResetPassword',
-    resetingPassword: 'onResetingPassword'
+    resettingPassword: 'onResettingPassword'
   },
 
   /**
@@ -28,7 +28,7 @@ export default {
   },
 
   /**
-   * Organization managment service.
+   * Organization management service.
    */
   organization: {
     build: 'onOrganizationBuild',
@@ -38,7 +38,7 @@ export default {
   },
 
   /**
-   * Tenants managment service.
+   * Tenants management service.
    */
   tenantManager: {
     databaseCreated: 'onDatabaseCreated',
@@ -254,7 +254,7 @@ export default {
     onBulkDeleted: 'onBulkDeleted',
 
     onOpeningBalanceChanging: 'onCustomerOpeningBalanceChanging',
-    onOpeningBalanceChanged: 'onCustomerOpeingBalanceChanged',
+    onOpeningBalanceChanged: 'onCustomerOpeningBalanceChanged',
 
     onActivating: 'onCustomerActivating',
     onActivated: 'onCustomerActivated',
@@ -273,8 +273,8 @@ export default {
     onDeleted: 'onVendorDeleted',
     onDeleting: 'onVendorDeleting',
 
-    onOpeningBalanceChanging: 'onVendorOpeingBalanceChanging',
-    onOpeningBalanceChanged: 'onVendorOpeingBalanceChanged',
+    onOpeningBalanceChanging: 'onVendorOpeningBalanceChanging',
+    onOpeningBalanceChanged: 'onVendorOpeningBalanceChanged',
 
     onActivating: 'onVendorActivating',
     onActivated: 'onVendorActivated',
@@ -486,7 +486,7 @@ export default {
     onDeleted: 'onWarehouseTransferDeleted',
 
     onInitiate: 'onWarehouseTransferInitiate',
-    onInitiated: 'onWarehouseTransferInitated',
+    onInitiated: 'onWarehouseTransferInitiated',
 
     onTransfer: 'onWarehouseTransferInitiate',
     onTransferred: 'onWarehouseTransferTransferred',

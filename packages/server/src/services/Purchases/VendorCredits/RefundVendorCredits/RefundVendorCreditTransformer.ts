@@ -3,18 +3,18 @@ import { formatNumber } from 'utils';
 
 export class RefundVendorCreditTransformer extends Transformer {
   /**
-   * Includeded attributes.
+   * Included attributes.
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['formttedAmount', 'formattedDate'];
+    return ['formattedAmount', 'formattedDate'];
   };
 
   /**
    * Formatted amount.
    * @returns {string}
    */
-  protected formttedAmount = (item) => {
+  protected formattedAmount = (item) => {
     return formatNumber(item.amount, {
       currencyCode: item.currencyCode,
     });

@@ -69,7 +69,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   }
 
   /**
-   * Detarmines the given display columns type.
+   * Determines the given display columns type.
    * @param   {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -78,7 +78,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the given display columns by type.
+   * Determines the given display columns by type.
    * @param   {string} displayColumnsBy
    * @returns {boolean}
    */
@@ -87,7 +87,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether the columns type is date periods.
+   * Determines whether the columns type is date periods.
    * @returns {boolean}
    */
   public isDatePeriodsColumnsType = (): boolean => {
@@ -95,7 +95,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether the columns type is total.
+   * Determines whether the columns type is total.
    * @returns {boolean}
    */
   public isTotalColumnType = (): boolean => {
@@ -106,7 +106,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   // # Previous Year (PY)
   // --------------------------------------
   /**
-   * Detarmines the report query has previous year enabled.
+   * Determines the report query has previous year enabled.
    * @returns {boolean}
    */
   public isPreviousYearActive = (): boolean => {
@@ -114,7 +114,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous year percentage change active.
+   * Determines the report query has previous year percentage change active.
    * @returns {boolean}
    */
   public isPreviousYearPercentageActive = (): boolean => {
@@ -122,7 +122,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous year change active.
+   * Determines the report query has previous year change active.
    * @returns {boolean}
    */
   public isPreviousYearChangeActive = (): boolean => {
@@ -141,7 +141,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   // # Previous Period (PP)
   // --------------------------------------
   /**
-   * Detarmines the report query has previous period enabled.
+   * Determines the report query has previous period enabled.
    * @returns {boolean}
    */
   public isPreviousPeriodActive = (): boolean => {
@@ -149,7 +149,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous period percentage change active.
+   * Determines the report query has previous period percentage change active.
    * @returns {boolean}
    */
   public isPreviousPeriodPercentageActive = (): boolean => {
@@ -157,7 +157,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines the report query has previous period change active.
+   * Determines the report query has previous period change active.
    * @returns {boolean}
    */
   public isPreviousPeriodChangeActive = (): boolean => {
@@ -176,7 +176,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   // # Percentage vertical/horizontal.
   // --------------------------------------
   /**
-   * Detarmines whether percentage of expenses is active.
+   * Determines whether percentage of expenses is active.
    * @returns {boolean}
    */
   public isExpensesPercentage = (): boolean => {
@@ -184,7 +184,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether percentage of income is active.
+   * Determines whether percentage of income is active.
    * @returns {boolean}
    */
   public isIncomePercentage = (): boolean => {
@@ -192,7 +192,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether percentage of column is active.
+   * Determines whether percentage of column is active.
    * @returns {boolean}
    */
   public isColumnPercentage = (): boolean => {
@@ -200,7 +200,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
   };
 
   /**
-   * Detarmines whether percentage of row is active.
+   * Determines whether percentage of row is active.
    * @returns {boolean}
    */
   public isRowPercentage = (): boolean => {

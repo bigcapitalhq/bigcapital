@@ -11,7 +11,7 @@ export const AccountDialogAction = {
 };
 
 /**
- * Transformes the response API errors.
+ * Transforms the response API errors.
  */
 export const transformApiErrors = (errors) => {
   const fields = {};
@@ -34,7 +34,7 @@ export const transformApiErrors = (errors) => {
 /**
  * Payload transformer in account edit mode.
  */
-function tranformNewChildAccountPayload(account, payload) {
+function transformNewChildAccountPayload(account, payload) {
   return {
     parent_account_id: payload.parentAccountId || '',
     account_type: payload.accountType || '',
@@ -74,13 +74,13 @@ const defaultPayloadTransform = (account, payload) => ({
 function getConditions() {
   return [
     [AccountDialogAction.Edit],
-    [AccountDialogAction.NewChild, tranformNewChildAccountPayload],
+    [AccountDialogAction.NewChild, transformNewChildAccountPayload],
     [AccountDialogAction.NewDefinedType, transformNewDefinedTypePayload],
   ];
 }
 
 /**
- * Transformes the given payload to account form initial values.
+ * Transforms the given payload to account form initial values.
  */
 export const transformAccountToForm = (account, payload) => {
   const conditions = getConditions();
@@ -99,7 +99,7 @@ export const transformAccountToForm = (account, payload) => {
 };
 
 /**
- * Detarmines whether the for fields are disabled.
+ * Determines whether the for fields are disabled.
  */
 export const getDisabledFormFields = (account, payload) => {
   return {
@@ -111,7 +111,7 @@ export const getDisabledFormFields = (account, payload) => {
 };
 
 /**
- * Detarmines whether should update the parent account field.
+ * Determines whether should update the parent account field.
  * @param newProps
  * @param oldProps
  * @returns {boolean}
@@ -124,7 +124,7 @@ export const parentAccountShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Transformes the form values to the request.
+ * Transforms the form values to the request.
  */
 export const transformFormToReq = (form) => {
   return R.compose(

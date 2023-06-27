@@ -34,7 +34,7 @@ export default function PaymentReceiveDetailHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('payment_date')}
               children={<FormatDate value={paymentReceive.payment_date} />}
@@ -63,7 +63,7 @@ export default function PaymentReceiveDetailHeader() {
         <Col xs={6}>
           <DetailsMenu
             textAlign={'right'}
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'180px'}
           >
             <DetailItem

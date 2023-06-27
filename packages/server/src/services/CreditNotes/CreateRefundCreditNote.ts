@@ -51,7 +51,7 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
     this.validateCreditRemainingAmount(creditNote, newCreditNoteDTO.amount);
 
     // Validate the refund withdrawal account type.
-    this.validateRefundWithdrawwalAccountType(fromAccount);
+    this.validateRefundWithdrawalAccountType(fromAccount);
 
     // Creates a refund credit note transaction.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -82,7 +82,7 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
   };
 
   /**
-   * Transformes the refund credit note DTO to model.
+   * Transforms the refund credit note DTO to model.
    * @param {number} creditNoteId
    * @param {ICreditNoteRefundDTO} creditNoteDTO
    * @returns {ICreditNote}

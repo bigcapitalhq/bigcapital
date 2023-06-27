@@ -57,7 +57,7 @@ export class EditOpeningBalanceCustomer {
       const customer = await Customer.query().patchAndFetchById(customerId, {
         ...openingBalanceEditDTO,
       });
-      // Triggers `onCustomerOpeingBalanceChanged` event.
+      // Triggers `onCustomerOpeningBalanceChanged` event.
       await this.eventPublisher.emitAsync(
         events.customers.onOpeningBalanceChanged,
         {

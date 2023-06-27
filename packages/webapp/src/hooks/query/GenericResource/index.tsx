@@ -50,41 +50,41 @@ function getResourceUrlFromType(type) {
 }
 
 /**
- * Transformes invoices to resource data.
+ * Transforms invoices to resource data.
  */
 const transformInvoices = (response) => ({
   items: response.data.sales_invoices,
 });
 
 /**
- * Transformes items to resource data.
+ * Transforms items to resource data.
  */
 const transformItems = (response) => ({
   items: response.data.items,
 });
 
 /**
- * Transformes payment receives to resource data.
+ * Transforms payment receives to resource data.
  */
 const transformPaymentReceives = (response) => ({
   items: response.data.payment_receives,
 });
 
 /**
- * Transformes customers to resoruce data.
+ * Transforms customers to resource data.
  */
 const transformCustomers = (response) => ({
   items: response.data.customers,
 });
 
 /**
- * Transformes customers to resoruce data.
+ * Transforms customers to resource data.
  */
 const transformVendors = (response) => ({
   items: response.data.vendors,
 });
 
-const transformPaymentMades = (response) => ({
+const transformPaymentsMade = (response) => ({
   items: response.data.bill_payments,
 });
 
@@ -117,7 +117,7 @@ const transformVendorCredits = (response) => ({
 });
 
 /**
- * Detarmines the transformer based on the given resource type.
+ * Determines the transformer based on the given resource type.
  * @param {string} type - Resource type.
  */
 const transformResourceData = (type) => (response) => {
@@ -127,7 +127,7 @@ const transformResourceData = (type) => (response) => {
     [RESOURCES_TYPES.RECEIPT]: transformSaleReceipts,
     [RESOURCES_TYPES.ITEM]: transformItems,
     [RESOURCES_TYPES.PAYMENT_RECEIVE]: transformPaymentReceives,
-    [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentMades,
+    [RESOURCES_TYPES.PAYMENT_MADE]: transformPaymentsMade,
     [RESOURCES_TYPES.CUSTOMER]: transformCustomers,
     [RESOURCES_TYPES.VENDOR]: transformVendors,
     [RESOURCES_TYPES.BILL]: transformBills,

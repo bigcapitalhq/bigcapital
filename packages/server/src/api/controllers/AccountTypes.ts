@@ -33,7 +33,7 @@ export default class AccountsTypesController extends BaseController {
       const accountTypes = this.accountsTypesService.getAccountsTypes(tenantId);
 
       return res.status(200).send({
-        account_types: this.transfromToResponse(accountTypes, ['label'], req),
+        account_types: this.transformToResponse(accountTypes, ['label'], req),
       });
     } catch (error) {
       next(error);

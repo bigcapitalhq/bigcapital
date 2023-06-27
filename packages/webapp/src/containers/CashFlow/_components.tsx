@@ -69,7 +69,7 @@ export const MoneyInOutTransactionNoField = R.compose(
   }) => {
     const { values, setFieldValue } = useFormikContext();
 
-    // Handle tranaction number changing.
+    // Handle transaction number changing.
     const handleTransactionNumberChange = () => {
       openDialog('transaction-number-form');
     };

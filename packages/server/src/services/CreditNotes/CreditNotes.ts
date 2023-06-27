@@ -29,7 +29,7 @@ export default class BaseCreditNotes {
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
 
   /**
-   * Transformes the credit/edit DTO to model.
+   * Transforms the credit/edit DTO to model.
    * @param {ICreditNoteNewDTO | ICreditNoteEditDTO} creditNoteDTO
    * @param {string} customerCurrencyCode -
    */
@@ -47,10 +47,10 @@ export default class BaseCreditNotes {
       ...entry,
       referenceType: 'CreditNote',
     }));
-    // Retreive the next credit note number.
+    // Retrieve the next credit note number.
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
-    // Detarmines the credit note number.
+    // Determines the credit note number.
     const creditNoteNumber =
       creditNoteDTO.creditNoteNumber ||
       oldCreditNote?.creditNoteNumber ||

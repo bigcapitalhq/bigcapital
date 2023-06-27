@@ -251,7 +251,7 @@ export default class ManualJournalsController extends BaseController {
           manualJournalId
         );
       return res.status(200).send({
-        manual_journal: this.transfromToResponse(manualJournal),
+        manual_journal: this.transformToResponse(manualJournal),
       });
     } catch (error) {
       next(error);
@@ -341,9 +341,9 @@ export default class ManualJournalsController extends BaseController {
         );
 
       return res.status(200).send({
-        manual_journals: this.transfromToResponse(manualJournals),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
+        manual_journals: this.transformToResponse(manualJournals),
+        pagination: this.transformToResponse(pagination),
+        filter_meta: this.transformToResponse(filterMeta),
       });
     } catch (error) {
       next(error);
@@ -375,7 +375,7 @@ export default class ManualJournalsController extends BaseController {
           {
             errors: [
               {
-                type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+                type: 'CREDIT.DEBIT.SUMMATION.SHOULD.NOT.EQUAL.ZERO',
                 code: 200,
               },
             ],
@@ -387,7 +387,7 @@ export default class ManualJournalsController extends BaseController {
           errors: [{ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 300 }],
         });
       }
-      if (error.errorType === 'acccounts_ids_not_found') {
+      if (error.errorType === 'accounts_ids_not_found') {
         return res.boom.badRequest(
           'Journal entries some of accounts ids not exists.',
           { errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 400 }] }
@@ -404,7 +404,7 @@ export default class ManualJournalsController extends BaseController {
             {
               type: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
               code: 600,
-              meta: this.transfromToResponse(error.payload),
+              meta: this.transformToResponse(error.payload),
             },
           ],
         });
@@ -415,7 +415,7 @@ export default class ManualJournalsController extends BaseController {
             {
               type: 'CONTACTS_SHOULD_ASSIGN_WITH_VALID_ACCOUNT',
               code: 700,
-              meta: this.transfromToResponse(error.payload),
+              meta: this.transformToResponse(error.payload),
             },
           ],
         });

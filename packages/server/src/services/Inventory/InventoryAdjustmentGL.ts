@@ -141,9 +141,9 @@ export default class InventoryAdjustmentsGL {
   );
 
   /**
-   * Writes increment inventroy adjustment GL entries.
+   * Writes increment inventory adjustment GL entries.
    * @param   {InventoryAdjustment} inventoryAdjustment -
-   * @param   {JournalPoster} jorunal -
+   * @param   {JournalPoster} journal -
    * @returns {ILedgerEntry[]}
    */
   public getIncrementAdjustmentGLEntries(
@@ -220,7 +220,7 @@ export default class InventoryAdjustmentsGL {
     // Reverts GL entries of the given inventory adjustment.
     await this.revertAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);
 
-    // Writes GL entries of th egiven inventory adjustment.
+    // Writes GL entries of the given inventory adjustment.
     await this.writeAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);
   };
 }

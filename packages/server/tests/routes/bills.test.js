@@ -81,7 +81,7 @@ describe('route: `/api/purchases/bills`', () => {
           }]
         });
       expect(res.status).equals(422);
-      expecvt(res.body.errors).include.something.deep.equals({
+      expect(res.body.errors).include.something.deep.equals({
         msg: 'Invalid value',
         param: 'entries[0].item_id',
         location: 'body'
@@ -99,7 +99,7 @@ describe('route: `/api/purchases/bills`', () => {
           }]
         });
       expect(res.status).equals(422);
-      expecvt(res.body.errors).include.something.deep.equals({
+      expect(res.body.errors).include.something.deep.equals({
         msg: 'Invalid value',
         param: 'entries[0].rate',
         location: 'body'

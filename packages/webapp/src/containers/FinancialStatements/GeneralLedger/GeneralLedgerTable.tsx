@@ -62,7 +62,7 @@ export default function GeneralLedgerTable({ companyName }) {
         vListrowHeight={28}
         vListOverscanRowCount={0}
         TableCellRenderer={TableFastCell}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
       />
     </FinancialSheet>
   );

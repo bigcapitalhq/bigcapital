@@ -37,8 +37,8 @@ export class AuthSignupService {
     // Validates the signup disable restrictions.
     await this.validateSignupRestrictions(signupDTO.email);
 
-    // Validates the given email uniqiness.
-    await this.validateEmailUniqiness(signupDTO.email);
+    // Validates the given email uniqueness.
+    await this.validateEmailUniqueness(signupDTO.email);
 
     const hashedPassword = await hashPassword(signupDTO.password);
 
@@ -66,11 +66,11 @@ export class AuthSignupService {
   }
 
   /**
-   * Validates email uniqiness on the storage.
+   * Validates email uniqueness on the storage.
    * @throws {ServiceErrors}
    * @param  {string} email - Email address
    */
-  private async validateEmailUniqiness(email: string) {
+  private async validateEmailUniqueness(email: string) {
     const { systemUserRepository } = this.sysRepositories;
     const isEmailExists = await systemUserRepository.findOneByEmail(email);
 

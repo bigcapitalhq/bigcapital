@@ -9,7 +9,7 @@ export class BillPaymentsGLEntriesRewriteSubscriber {
   private billPaymentGLEntriesRewrite: BillPaymentsGLEntriesRewrite;
 
   /**
-   * Attachs events with handles.
+   * Attaches events with handles.
    */
   attach(bus) {
     bus.subscribe(

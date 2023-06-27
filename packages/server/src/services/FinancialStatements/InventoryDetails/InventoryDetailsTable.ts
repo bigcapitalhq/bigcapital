@@ -34,7 +34,7 @@ export default class InventoryDetailsTable {
   }
 
   /**
-   * Mappes the item node to table rows.
+   * Maps the item node to table rows.
    * @param {IInventoryDetailsItem} item
    * @returns {ITableRow}
    */
@@ -47,7 +47,7 @@ export default class InventoryDetailsTable {
   };
 
   /**
-   * Mappes the item inventory transaction to table row.
+   * Maps the item inventory transaction to table row.
    * @param {IInventoryDetailsItemTransaction} transaction
    * @returns {ITableRow}
    */
@@ -124,7 +124,7 @@ export default class InventoryDetailsTable {
   };
 
   /**
-   * Detarmines the ginve inventory details node type.
+   * Determines the given inventory details node type.
    * @param {string} type
    * @param {IInventoryDetailsNode} node
    * @returns {boolean}
@@ -137,7 +137,7 @@ export default class InventoryDetailsTable {
   };
 
   /**
-   * Mappes the given item or transactions node to table rows.
+   * Maps the given item or transactions node to table rows.
    * @param {IInventoryDetailsNode} node -
    * @return {ITableRow}
    */
@@ -160,7 +160,7 @@ export default class InventoryDetailsTable {
   };
 
   /**
-   * Mappes the items nodes to table rows.
+   * Maps the items nodes to table rows.
    * @param {IInventoryDetailsItem[]} items
    * @returns {ITableRow[]}
    */

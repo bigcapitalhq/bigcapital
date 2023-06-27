@@ -2,24 +2,24 @@
 import React from 'react';
 
 const VendorCreditDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/VendorCeditNotes/VendorCreditDeleteAlert'),
+  () => import('@/containers/Alerts/VendorCreditNotes/VendorCreditDeleteAlert'),
 );
 
 const RefundVendorCreditDeleteAlert = React.lazy(
   () =>
     import(
-      '@/containers/Alerts/VendorCeditNotes/RefundVendorCreditDeleteAlert'
+      '@/containers/Alerts/VendorCreditNotes/RefundVendorCreditDeleteAlert'
     ),
 );
 
 const OpenVendorCreditAlert = React.lazy(
-  () => import('@/containers/Alerts/VendorCeditNotes/VendorCreditOpenedAlert'),
+  () => import('@/containers/Alerts/VendorCreditNotes/VendorCreditOpenedAlert'),
 );
 
 const ReconcileVendorCreditDeleteAlert = React.lazy(
   () =>
     import(
-      '@/containers/Alerts/VendorCeditNotes/ReconcileVendorCreditDeleteAlert'
+      '@/containers/Alerts/VendorCreditNotes/ReconcileVendorCreditDeleteAlert'
     ),
 );
 

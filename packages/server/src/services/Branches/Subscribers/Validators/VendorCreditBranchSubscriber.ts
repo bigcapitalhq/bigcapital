@@ -4,12 +4,12 @@ import {
   IVendorCreditCreatingPayload,
   IVendorCreditEditingPayload,
 } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class VendorCreditBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -17,38 +17,38 @@ export class VendorCreditBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.vendorCredit.onCreating,
-      this.validateBranchExistanceOnCreditCreating
+      this.validateBranchExistenceOnCreditCreating
     );
     bus.subscribe(
       events.vendorCredit.onEditing,
-      this.validateBranchExistanceOnCreditEditing
+      this.validateBranchExistenceOnCreditEditing
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on estimate creating.
+   * Validate branch existence on estimate creating.
    * @param {ISaleEstimateCreatedPayload} payload
    */
-  private validateBranchExistanceOnCreditCreating = async ({
+  private validateBranchExistenceOnCreditCreating = async ({
     tenantId,
     vendorCreditCreateDTO,
   }: IVendorCreditCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       vendorCreditCreateDTO.branchId
     );
   };
 
   /**
-   * Validate branch existance once estimate editing.
+   * Validate branch existence once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnCreditEditing = async ({
+  private validateBranchExistenceOnCreditEditing = async ({
     vendorCreditDTO,
     tenantId,
   }: IVendorCreditEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       vendorCreditDTO.branchId
     );

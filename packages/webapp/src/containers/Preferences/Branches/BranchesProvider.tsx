@@ -25,7 +25,7 @@ function BranchesProvider({ query, ...props }) {
     data: branches,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     (isEmpty(branches) && !isBranchesLoading) || !isBranchFeatureCan;
 

@@ -426,7 +426,7 @@ describe('routes: /accounts/', () => {
       expect(res.body.accounts.length).equals(1);
     });
 
-    it('Shoud retrieve filtered accounts according to the given account description filter condition.', async () => {
+    it('Should retrieve filtered accounts according to the given account description filter condition.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const resourceField = await tenantFactory.create('resource_field', {
         key: 'description',
@@ -580,7 +580,7 @@ describe('routes: /accounts/', () => {
       expect(AAccountIndex).above(BAccountIndex);
     });
 
-    it('Should sorting the given `column_sort_order` columnw with relation on another table on asc direction.', async () => {
+    it('Should sorting the given `column_sort_order` column with relation on another table on asc direction.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const resourceField = await tenantFactory.create('resource_field', {
         key: 'type', resource_id: resource.id,

@@ -52,13 +52,13 @@ export default class CreateVendorCredit extends BaseVendorCredit {
       tenantId,
       vendorCreditCreateDTO.entries
     );
-    // Transformes the credit DTO to storage layer.
+    // Transforms the credit DTO to storage layer.
     const vendorCreditModel = this.transformCreateEditDTOToModel(
       tenantId,
       vendorCreditCreateDTO,
       vendor.currencyCode
     );
-    // Saves the vendor credit transactions under UOW envirement.
+    // Saves the vendor credit transactions under UOW environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreditCreating` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onCreating, {

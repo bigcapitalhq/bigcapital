@@ -90,7 +90,7 @@ export default class CurrenciesController extends BaseController {
       const currencies = await this.currenciesService.listCurrencies(tenantId);
 
       return res.status(200).send({
-        currencies: this.transfromToResponse(currencies),
+        currencies: this.transformToResponse(currencies),
       });
     } catch (error) {
       next(error);

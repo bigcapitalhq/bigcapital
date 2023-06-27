@@ -47,7 +47,7 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Balance sheet validation schecma.
+   * Balance sheet validation schema.
    * @returns {ValidationChain[]}
    */
   get validationSchema(): ValidationChain[] {
@@ -70,21 +70,21 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
+   * Retrieve the cashflow statement to json response.
    * @param {ICashFlowStatement} cashFlow -
    */
   private transformJsonResponse(projectProfitabilityPOJO: IProjectProfitabilitySummaryPOJO) {
     const { data, query, meta } = projectProfitabilityPOJO;
 
     return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
+      data: this.transformToResponse(data),
+      query: this.transformToResponse(query),
+      meta: this.transformToResponse(meta),
     };
   }
 
   /**
-   * Transformes the report statement to table rows.
+   * Transforms the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
   private transformToTableRows(
@@ -102,13 +102,13 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
         data: projectProfitabilityTable.tableData(),
         columns: projectProfitabilityTable.tableColumns(),
       },
-      query: this.transfromToResponse(projectProfitabilityPOJO.query),
-      // meta: this.transfromToResponse(cashFlowDOO.meta),
+      query: this.transformToResponse(projectProfitabilityPOJO.query),
+      // meta: this.transformToResponse(cashFlowDOO.meta),
     };
   }
 
   /**
-   * Retrieve the cash flow statment.
+   * Retrieve the cash flow statement.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next

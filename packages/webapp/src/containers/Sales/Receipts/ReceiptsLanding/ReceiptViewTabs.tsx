@@ -6,7 +6,7 @@ import { DashboardViewsTabs } from '@/components';
 import withReceiptActions from './withReceiptsActions';
 import withReceipts from './withReceipts';
 
-import { compose, transfromViewsToTabs } from '@/utils';
+import { compose, transformViewsToTabs } from '@/utils';
 import { useReceiptsListContext } from './ReceiptsListProvider';
 
 /**
@@ -22,9 +22,9 @@ function ReceiptViewTabs({
   // Receipts list context.
   const { receiptsViews } = useReceiptsListContext();
 
-  const tabs = transfromViewsToTabs(receiptsViews);
+  const tabs = transformViewsToTabs(receiptsViews);
 
-  // Handles the active tab chaning.
+  // Handles the active tab changing.
   const handleTabsChange = (viewSlug) => {
     setReceiptsTableState({
       viewSlug: viewSlug || null,

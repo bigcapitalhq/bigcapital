@@ -9,7 +9,7 @@ const NotifyReceiptViaSMSContext = React.createContext();
  * 
  */
 function NotifyReceiptViaSMSFormProvider({ receiptId, dialogName, ...props }) {
-  // Create notfiy receipt via SMS mutations.
+  // Create notify receipt via SMS mutations.
   const { mutateAsync: createNotifyReceiptBySMSMutate } =
     useCreateNotifyReceiptBySMS();
 

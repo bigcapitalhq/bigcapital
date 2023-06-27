@@ -74,7 +74,7 @@ function useAppLoadLocales(currentLocale) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    // Lodas the locales data file.
+    // Loads the locales data file.
     loadLocales(currentLocale)
       .then((results) => {
         return intl.init({
@@ -116,7 +116,7 @@ function useAppYupLoadLocales(currentLocale) {
       .then(() => {});
   }, [currentLocale, stopLoading]);
 
-  // Watches the valiue to start/stop splash screen.
+  // Watches the value to start/stop splash screen.
   useWatchImmediate(
     (value) => (value ? startLoading() : stopLoading()),
     isLoading,
@@ -131,7 +131,7 @@ function AppIntlLoader({ children }) {
   // Retrieve the current locale.
   const currentLocale = getCurrentLocal();
 
-  // Detarmines the document direction based on the given locale.
+  // Determines the document direction based on the given locale.
   const isRTL = rtlDetect.isRtlLang(currentLocale);
 
   // Modifies the html document direction
@@ -144,7 +144,7 @@ function AppIntlLoader({ children }) {
   // Loads application locales of the given locale.
   const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);
 
-  // Detarmines whether the app locales loading.
+  // Determines whether the app locales loading.
   const isLoading = isAppYupLocalesLoading || isAppLocalesLoading;
 
   return (

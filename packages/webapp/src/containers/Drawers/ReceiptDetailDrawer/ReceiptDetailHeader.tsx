@@ -42,7 +42,7 @@ export default function ReceiptDetailHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               label={intl.get('receipt.details.receipt_number')}
               children={defaultTo(receipt.receipt_number, '-')}
@@ -68,7 +68,7 @@ export default function ReceiptDetailHeader() {
         </Col>
         <Col xs={6}>
           <DetailsMenu
-            direction={'horizantal'}
+            direction={'horizontal'}
             minLabelSize={'180px'}
             textAlign={'right'}
           >

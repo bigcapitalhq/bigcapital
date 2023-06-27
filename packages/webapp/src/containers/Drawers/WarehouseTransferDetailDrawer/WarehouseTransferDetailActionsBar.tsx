@@ -33,14 +33,14 @@ function WarehouseTransferDetailActionsBar({
 
   const { warehouseTransferId } = useWarehouseDetailDrawerContext();
 
-  // Handle edit warehosue transfer.
-  const handleEditWarehosueTransfer = () => {
+  // Handle edit warehouse transfer.
+  const handleEditWarehouseTransfer = () => {
     history.push(`/warehouses-transfers/${warehouseTransferId}/edit`);
     closeDrawer(DRAWERS.WAREHOUSE_TRANSFER_DETAILS);
   };
 
   // Handle delete warehouse transfer.
-  const handleDeletetWarehosueTransfer = () => {
+  const handleDeleteWarehouseTransfer = () => {
     openAlert('warehouse-transfer-delete', { warehouseTransferId });
   };
 
@@ -51,7 +51,7 @@ function WarehouseTransferDetailActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="pen-18" />}
           text={<T id={'warehouse_transfer.action.edit_warehouse_transfer'} />}
-          onClick={handleEditWarehosueTransfer}
+          onClick={handleEditWarehouseTransfer}
         />
         <NavbarDivider />
         <Button
@@ -59,7 +59,7 @@ function WarehouseTransferDetailActionsBar({
           icon={<Icon icon={'trash-16'} iconSize={16} />}
           text={<T id={'delete'} />}
           intent={Intent.DANGER}
-          onClick={handleDeletetWarehosueTransfer}
+          onClick={handleDeleteWarehouseTransfer}
         />
       </NavbarGroup>
     </DrawerActionsBar>

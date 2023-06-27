@@ -30,7 +30,7 @@ export default class DashboardService {
     tenantId: number,
     authorizedUser: ISystemUser
   ): Promise<IDashboardBootMeta> => {
-    // Retrieves all orgnaization abilities.
+    // Retrieves all organization abilities.
     const abilities = await this.getBootAbilities(tenantId, authorizedUser.id);
 
     // Retrieves all organization features.
@@ -43,7 +43,7 @@ export default class DashboardService {
   };
 
   /**
-   * Transformes role permissions to abilities.
+   * Transforms role permissions to abilities.
    */
   transformRoleAbility = (permissions) => {
     return permissions

@@ -4,7 +4,7 @@ import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useBillFormContext } from './BillFormProvider';
 
 /**
- * Bill form currnecy tag.
+ * Bill form currency tag.
  * @returns
  */
 export default function BillFormCurrencyTag() {

@@ -13,11 +13,11 @@ export const ProfitLossSheetFilter = (Base) =>
     // # Account.
     // ----------------
     /**
-     * Filter report node detarmine.
+     * Filter report node determine.
      * @param  {IProfitLossSheetNode} node - Balance sheet node.
      * @return {boolean}
      */
-    private accountNoneZeroNodesFilterDetarminer = (
+    private accountNoneZeroNodesFilterDeterminer = (
       node: IProfitLossSheetNode
     ): boolean => {
       return R.ifElse(
@@ -28,11 +28,11 @@ export const ProfitLossSheetFilter = (Base) =>
     };
 
     /**
-     * Detarmines account none-transactions node.
+     * Determines account none-transactions node.
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    private accountNoneTransFilterDetarminer = (
+    private accountNoneTransFilterDeterminer = (
       node: IProfitLossSheetNode
     ): boolean => {
       return R.ifElse(
@@ -52,7 +52,7 @@ export const ProfitLossSheetFilter = (Base) =>
     ): IProfitLossSheetNode[] => {
       return this.filterNodesDeep(
         nodes,
-        this.accountNoneZeroNodesFilterDetarminer
+        this.accountNoneZeroNodesFilterDeterminer
       );
     };
 
@@ -64,28 +64,28 @@ export const ProfitLossSheetFilter = (Base) =>
     private accountsNoneTransactionsNodesFilter = (
       nodes: IProfitLossSheetNode[]
     ) => {
-      return this.filterNodesDeep(nodes, this.accountNoneTransFilterDetarminer);
+      return this.filterNodesDeep(nodes, this.accountNoneTransFilterDeterminer);
     };
 
     // ----------------
     // # Aggregate.
     // ----------------
     /**
-     * Detearmines aggregate none-children filtering.
+     * Determines aggregate none-children filtering.
      * @param   {IProfitLossSheetNode} node
      * @returns {boolean}
      */
-    private aggregateNoneChildrenFilterDetarminer = (
+    private aggregateNoneChildrenFilterDeterminer = (
       node: IProfitLossSheetNode
     ): boolean => {
       const schemaNode = this.getSchemaNodeById(node.id);
 
-      // Detarmines whether the given node is aggregate node.
+      // Determines whether the given node is aggregate node.
       const isAggregateNode = this.isNodeType(
         ProfitLossNodeType.ACCOUNTS,
         node
       );
-      // Detarmines if the schema node is always should show.
+      // Determines if the schema node is always should show.
       const isSchemaAlwaysShow = get(schemaNode, 'alwaysShow', false);
 
       // Should node has children if aggregate node or not always show.
@@ -103,7 +103,7 @@ export const ProfitLossSheetFilter = (Base) =>
       nodes: IProfitLossSheetNode[]
     ): IProfitLossSheetNode[] => {
       return this.filterNodesDeep2(
-        this.aggregateNoneChildrenFilterDetarminer,
+        this.aggregateNoneChildrenFilterDeterminer,
         nodes
       );
     };
@@ -140,11 +140,11 @@ export const ProfitLossSheetFilter = (Base) =>
     };
 
     /**
-     * Supress nodes when total accounts range transactions is empty.
+     * Suppress nodes when total accounts range transactions is empty.
      * @param   {IProfitLossSheetNode[]} nodes
      * @returns {IProfitLossSheetNode[]}
      */
-    private supressNodesWhenRangeTransactionsEmpty = (
+    private suppressNodesWhenRangeTransactionsEmpty = (
       nodes: IProfitLossSheetNode[]
     ) => {
       return this.repository.totalAccountsLedger.isEmpty() ? [] : nodes;
@@ -159,7 +159,7 @@ export const ProfitLossSheetFilter = (Base) =>
       nodes: IProfitLossSheetNode[]
     ): IProfitLossSheetNode[] => {
       return R.compose(
-        this.supressNodesWhenRangeTransactionsEmpty,
+        this.suppressNodesWhenRangeTransactionsEmpty,
         R.when(() => this.query.noneZero, this.filterNoneZeroNodesCompose),
         R.when(
           () => this.query.noneTransactions,

@@ -51,7 +51,7 @@ export default class ViewsController extends BaseController {
         resourceModel
       );
       return res.status(200).send({
-        views: this.transfromToResponse(views, ['name', 'columns.label'], req),
+        views: this.transformToResponse(views, ['name', 'columns.label'], req),
       });
     } catch (error) {
       next(error);

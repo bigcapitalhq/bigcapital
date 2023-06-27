@@ -14,7 +14,7 @@ export function MakeJournalFormFooterRight() {
   const { formattedSubtotal, formattedTotal } = useJournalTotals();
 
   return (
-    <MakeJouranlTotalLines>
+    <MakeJournalTotalLines>
       <TotalLine
         title={<T id={'make_journal.label.subtotal'} />}
         value={formattedSubtotal}
@@ -25,11 +25,11 @@ export function MakeJournalFormFooterRight() {
         value={formattedTotal}
         textStyle={TotalLineTextStyle.Bold}
       />
-    </MakeJouranlTotalLines>
+    </MakeJournalTotalLines>
   );
 }
 
-const MakeJouranlTotalLines =styled(TotalLines)`
+const MakeJournalTotalLines =styled(TotalLines)`
   width: 100%;
   color: #555555;
 `;

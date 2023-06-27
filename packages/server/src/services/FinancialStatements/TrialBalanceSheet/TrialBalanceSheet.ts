@@ -50,7 +50,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private accountTransformer = (
     account: IAccount & { type: IAccountType }
   ): ITrialBalanceAccount => {
-    const trial = this.journalFinancial.getTrialBalanceWithDepands(account.id);
+    const trial = this.journalFinancial.getTrialBalanceWithDepends(account.id);
 
     return {
       id: account.id,
@@ -78,7 +78,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private accountFilter = (accountNode: ITrialBalanceAccount): boolean => {
     const { noneTransactions, noneZero, onlyActive } = this.query;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterNoneTransactions],
       [noneZero, this.filterNoneZero],
@@ -88,7 +88,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Fitlers the accounts nodes.
+   * Filters the accounts nodes.
    * @param {ITrialBalanceAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */
@@ -99,7 +99,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Mappes the given account object to trial balance account node.
+   * Maps the given account object to trial balance account node.
    * @param {IAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */
@@ -110,21 +110,21 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given account node is not none transactions.
+   * Determines whether the given account node is not none transactions.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
   private filterNoneTransactions = (
     accountNode: ITrialBalanceAccount
   ): boolean => {
-    const entries = this.journalFinancial.getAccountEntriesWithDepents(
+    const entries = this.journalFinancial.getAccountEntriesWithDepends(
       accountNode.id
     );
     return entries.length > 0;
   };
 
   /**
-   * Detarmines whether the given account none zero.
+   * Determines whether the given account none zero.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
@@ -133,7 +133,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the given account is active.
+   * Determines whether the given account is active.
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
@@ -142,7 +142,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   };
 
   /**
-   * Transformes the flatten nodes to nested nodes.
+   * Transforms the flatten nodes to nested nodes.
    * @param {ITrialBalanceAccount[]} flattenAccounts
    * @returns {ITrialBalanceAccount[]}
    */
@@ -160,7 +160,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount[]} accountsBalances
    * @return {ITrialBalanceTotal}
    */
-  private tatalSection(
+  private totalSection(
     accountsBalances: ITrialBalanceAccount[]
   ): ITrialBalanceTotal {
     const credit = sumBy(accountsBalances, 'credit');
@@ -194,7 +194,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
 
   /**
    * Retrieve trial balance sheet statement data.
-   * Note: Retruns null in case there is no transactions between the given date periods.
+   * Note: Returns null in case there is no transactions between the given date periods.
    *
    * @return {ITrialBalanceSheetData}
    */
@@ -207,7 +207,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
     const accounts = this.accountsSection(this.accounts);
 
     // Retrieve account node.
-    const total = this.tatalSection(accounts);
+    const total = this.totalSection(accounts);
 
     return { accounts, total };
   }

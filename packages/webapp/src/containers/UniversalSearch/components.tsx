@@ -6,7 +6,7 @@ import { highlightText } from '@/utils';
 import { getUniversalSearchBind } from './utils';
 
 /**
- * Default univesal search item component.
+ * Default universal search item component.
  */
 function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
   return (

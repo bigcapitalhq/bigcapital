@@ -13,7 +13,7 @@ import {
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 
 /**
- * Cashlflow transaction drawer detail Header.
+ * Cashflow transaction drawer detail Header.
  */
 export default function CashflowTransactionDrawerHeader() {
   const { cashflowTransaction } = useCashflowTransactionDrawerContext();
@@ -30,7 +30,7 @@ export default function CashflowTransactionDrawerHeader() {
 
       <Row>
         <Col xs={6}>
-          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+          <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
             <DetailItem
               name={'transaction_type'}
               label={<T id={'cash_flow_drawer.label_transaction_type'} />}

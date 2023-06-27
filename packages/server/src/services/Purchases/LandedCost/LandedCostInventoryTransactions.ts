@@ -26,7 +26,7 @@ export default class LandedCostInventoryTransactions {
       billLandedCost.allocateEntries,
       bill.entries
     );
-    // Mappes the allocate cost entries to inventory transactions.
+    // Maps the allocate cost entries to inventory transactions.
     const inventoryTransactions = allocateEntries.map((allocateEntry) => ({
       date: bill.billDate,
       itemId: allocateEntry.entry.itemId,

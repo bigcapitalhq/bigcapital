@@ -2,7 +2,7 @@ import * as R from 'ramda';
 import { Service, Inject } from 'typedi';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { IGetWarehousesTransfersFilterDTO } from '@/interfaces';
-import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
+import { WarehouseTransferTransformer } from './WarehouseTransferTransformer';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 

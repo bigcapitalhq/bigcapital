@@ -27,7 +27,7 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
     isFetching: isResourceMetaFetching,
   } = useResourceMeta('manual_journals');
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(manualJournals) && !tableStateChanged && !isManualJournalsLoading;
 

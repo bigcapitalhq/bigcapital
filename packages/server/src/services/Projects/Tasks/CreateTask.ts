@@ -37,7 +37,7 @@ export class CreateTaskService {
   ): Promise<IProjectTaskCreatePOJO> => {
     const { Task, Project } = this.tenancy.models(tenantId);
 
-    // Validate project existance.
+    // Validate project existence.
     const project = await Project.query().findById(projectId).throwIfNotFound();
 
     // Triggers `onProjectTaskCreate` event.
@@ -46,7 +46,7 @@ export class CreateTaskService {
       taskDTO,
     } as ITaskCreateEventPayload);
 
-    // Creates a new project under unit-of-work envirement.
+    // Creates a new project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectTaskCreating` event.
       await this.eventPublisher.emitAsync(events.projectTask.onCreating, {

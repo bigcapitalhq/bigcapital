@@ -17,7 +17,7 @@ export default class PurchasesTransactionsLocking {
     tenantId: number,
     transactionDate: Date
   ) => {
-    // Validates the all transcation locking.
+    // Validates the all transaction locking.
     this.transactionLockingValidator.validateTransactionsLocking(
       tenantId,
       transactionDate,

@@ -64,14 +64,14 @@ export const useReceiptTransactionsColumns = () => {
       {
         id: 'receipt_number',
         Header: intl.get('receipt_no'),
-        accessor: 'receip_number',
+        accessor: 'receipt_number',
         width: 120,
         className: 'receipt_number',
         clickable: true,
         textOverview: true,
       },
       {
-        id: 'qunatity',
+        id: 'quantity',
         Header: intl.get('item.drawer_quantity_sold'),
         accessor: 'quantity',
         align: 'right',

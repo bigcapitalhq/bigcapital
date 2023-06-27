@@ -11,7 +11,7 @@ export class CommandAccountValidators {
   private tenancy: TenancyService;
 
   /**
-   * Throws error if the account was prefined.
+   * Throws error if the account was predefined.
    * @param {IAccount} account
    */
   public throwErrorIfAccountPredefined(account: IAccount) {
@@ -104,12 +104,12 @@ export class CommandAccountValidators {
   }
 
   /**
-   * Validates the account name uniquiness.
+   * Validates the account name uniqueness.
    * @param {number} tenantId
    * @param {string} accountName
    * @param {number} notAccountId - Ignore the account id.
    */
-  public async validateAccountNameUniquiness(
+  public async validateAccountNameUniqueness(
     tenantId: number,
     accountName: string,
     notAccountId?: number
@@ -211,7 +211,7 @@ export class CommandAccountValidators {
 
   /**
    * Validates the max depth level of accounts chart.
-   * @param {numebr} tenantId - Tenant id.
+   * @param {number} tenantId - Tenant id.
    * @param {number} parentAccountId - Parent account id.
    */
   public async validateMaxParentAccountDepthLevels(

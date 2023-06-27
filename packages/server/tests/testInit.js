@@ -64,13 +64,13 @@ const login = async (tenantWebsite, givenUser) => {
   return request()
     .post('/api/auth/login')
     .send({
-      crediential: user.email,
+      credential: user.email,
       password: 'admin',
     });
 };
 
 const bindTenantModel = (tenantDb) => {
-  TenantModel.knexBinded = tenantDb;
+  TenantModel.knexBound = tenantDb;
 };
 
 const systemFactory = createSystemFactory();

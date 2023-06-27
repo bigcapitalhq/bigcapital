@@ -4,7 +4,7 @@ import { isEmpty, map } from 'lodash';
 import Project from 'models/Project';
 import Ledger from '@/services/Accounting/Ledger';
 
-export class ProjectProfitabilitySummaryRespository {
+export class ProjectProfitabilitySummaryRepository {
   /**
    * Tenant models.
    */
@@ -73,7 +73,7 @@ export class ProjectProfitabilitySummaryRespository {
   };
 
   /**
-   * Retrieves the sumation of grouped entries by account and project id.
+   * Retrieves the summation of grouped entries by account and project id.
    * @param {number[]} accountsIds
    * @param {string} accountNormal -
    * @returns {}
@@ -124,18 +124,18 @@ export class ProjectProfitabilitySummaryRespository {
   };
 
   /**
-   * Retrieves the sumation of grouped entries by income accounts and projects.
+   * Retrieves the summation of grouped entries by income accounts and projects.
    * @returns {}
    */
   public getIncomeAccountsGroupedEntries = async () => {
     const incomeAccounts = await this.getIncomeAccounts();
-    const incomeAcountssIds = map(incomeAccounts, 'id');
+    const incomeAccountsIds = map(incomeAccounts, 'id');
 
-    return this.getAccountsGroupedEntries(incomeAcountssIds);
+    return this.getAccountsGroupedEntries(incomeAccountsIds);
   };
 
   /**
-   * Retrieves the sumation of grouped entries by expenses accounts and projects.
+   * Retrieves the summation of grouped entries by expenses accounts and projects.
    * @returns {}
    */
   public getExpenseAccountsGroupedEntries = async () => {

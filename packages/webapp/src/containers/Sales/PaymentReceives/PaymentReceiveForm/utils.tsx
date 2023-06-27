@@ -63,7 +63,7 @@ export const defaultRequestPayment = {
 };
 
 /**
- * Transformes the edit payment receive to initial values of the form.
+ * Transforms the edit payment receive to initial values of the form.
  */
 export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
   ...transformToForm(paymentReceive, defaultPaymentReceive),
@@ -77,7 +77,7 @@ export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
 });
 
 /**
- * Transformes the given invoices to the new page receivable entries.
+ * Transforms the given invoices to the new page receivable entries.
  */
 export const transformInvoicesNewPageEntries = (invoices) => [
   ...invoices.map((invoice, index) => ({
@@ -125,7 +125,7 @@ export const fullAmountPaymentEntries = (entries) => {
 };
 
 /**
- * Detarmines the customers fast-field should update.
+ * Determines the customers fast-field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -135,7 +135,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines the accounts fast-field should update.
+ * Determines the accounts fast-field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -145,7 +145,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Tranformes form values to request.
+ * Transformers form values to request.
  */
 export const transformFormToRequest = (form) => {
   // Filters entries that have no `invoice_id` and `payment_amount`.
@@ -182,7 +182,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Transformes the response errors types.
+ * Transforms the response errors types.
  */
 export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);
@@ -210,7 +210,7 @@ export const transformErrors = (errors, { setFieldError }) => {
 };
 
 /**
- * Retreives the payment receive totals.
+ * Retrieves the payment receive totals.
  */
 export const usePaymentReceiveTotals = () => {
   const {
@@ -242,7 +242,7 @@ export const usePaymentReceiveTotals = () => {
 };
 
 /**
- * Detarmines whether the payment has foreign customer.
+ * Determines whether the payment has foreign customer.
  * @returns {boolean}
  */
 export const useEstimateIsForeignCustomer = () => {

@@ -23,7 +23,7 @@ export function BillDetailTableFooter() {
       <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'bill.details.subtotal'} />}
-          value={<FormatNumber value={bill.amont} />}
+          value={<FormatNumber value={bill.amount} />}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine

@@ -14,13 +14,13 @@ import SystemUser from '@/system/models/SystemUser';
 
 describe('routes: /auth/', () => {
   describe('POST `/api/auth/login`', () => {
-    it('Should `crediential` be required.', async () => {
+    it('Should `credential` be required.', async () => {
       const res = await request().post('/api/auth/login').send({});
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
 
       const paramsErrors = res.body.errors.map((error) => error.param);
-      expect(paramsErrors).to.include('crediential');
+      expect(paramsErrors).to.include('credential');
     });
 
     it('Should `password` be required.', async () => {
@@ -34,7 +34,7 @@ describe('routes: /auth/', () => {
 
     it('Should the min length of the `password` be 5 ch.', async () => {
       const res = await request().post('/api/auth/login').send({
-        crediential: 'admin@admin.com',
+        credential: 'admin@admin.com',
         password: 'test',
       });
 
@@ -45,9 +45,9 @@ describe('routes: /auth/', () => {
       expect(paramsErrors).to.include('password');
     });
 
-    it('Should be a valid email format in crediential attribute.', async () => {
+    it('Should be a valid email format in credential attribute.', async () => {
       const res = await request().post('/api/auth/login').send({
-        crediential: 'admin',
+        credential: 'admin',
         password: 'test',
       });
 
@@ -60,7 +60,7 @@ describe('routes: /auth/', () => {
 
     it('Should not authenticate with wrong user email and password.', async () => {
       const res = await request().post('/api/auth/login').send({
-        crediential: 'admin@admin.com',
+        credential: 'admin@admin.com',
         password: 'admin',
       });
       expect(res.body.errors).include.something.that.deep.equals({
@@ -75,7 +75,7 @@ describe('routes: /auth/', () => {
       });
 
       const res = await request().post('/api/auth/login').send({
-        crediential: 'admin@admin.com',
+        credential: 'admin@admin.com',
         password: 'admin',
       });
       expect(res.status).equals(400);
@@ -89,20 +89,20 @@ describe('routes: /auth/', () => {
         email: 'admin@admin.com',
       });
       const res = await request().post('/api/auth/login').send({
-        crediential: user.email,
+        credential: user.email,
         password: 'admin',
       });
       expect(res.status).equals(200);
     });
 
-    it('Should autheticate success with correct phone number and password.', async () => {
+    it('Should authenticate success with correct phone number and password.', async () => {
       const password = await hashPassword('admin');
       const user = await createUser(tenantWebsite, {
         phone_number: '0920000000',
         password,
       });
       const res = await request().post('/api/auth/login').send({
-        crediential: user.email,
+        credential: user.email,
         password: 'admin',
       });
 
@@ -114,7 +114,7 @@ describe('routes: /auth/', () => {
         email: 'admin@admin.com',
       });
       const res = await request().post('/api/auth/login').send({
-        crediential: user.email,
+        credential: user.email,
         password: 'admin',
       });
       const foundUserAfterUpdate = await TenantUser.tenant().query()
@@ -135,7 +135,7 @@ describe('routes: /auth/', () => {
       expect(res.body.code).equals('validation_error');
     });
 
-    it('Should response unproccessable if the email address was invalid.', async () => {
+    it('Should response unprocessable if the email address was invalid.', async () => {
       const res = await request().post('/api/auth/send_reset_password').send({
         email: 'invalid_email',
       });
@@ -144,7 +144,7 @@ describe('routes: /auth/', () => {
       expect(res.body.code).equals('validation_error');
     });
 
-    it('Should response unproccessable if the email address was not exist.', async () => {
+    it('Should response unprocessable if the email address was not exist.', async () => {
       const res = await request().post('/api/auth/send_reset_password').send({
         email: 'admin@admin.com',
       });

@@ -137,14 +137,14 @@ export class WarehousesTransfers extends BaseController {
     next: NextFunction
   ) => {
     const { tenantId } = req;
-    const createWareouseTransfer: ICreateWarehouseTransferDTO =
+    const createWarehouseTransfer: ICreateWarehouseTransferDTO =
       this.matchedBodyData(req);
 
     try {
       const warehouse =
         await this.warehouseTransferApplication.createWarehouseTransfer(
           tenantId,
-          createWareouseTransfer
+          createWarehouseTransfer
         );
       return res.status(200).send({
         id: warehouse.id,

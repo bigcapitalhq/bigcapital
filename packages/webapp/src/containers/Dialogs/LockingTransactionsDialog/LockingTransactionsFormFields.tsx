@@ -10,7 +10,7 @@ import { useAutofocus } from '@/hooks';
 import {
   inputIntent,
   momentFormatter,
-  tansformDateValue,
+  transformDateValue,
   handleDateChange,
 } from '@/utils';
 
@@ -38,7 +38,7 @@ export default function LockingTransactionsFormFields() {
               onChange={handleDateChange((formattedDate) => {
                 form.setFieldValue('lock_to_date', formattedDate);
               })}
-              value={tansformDateValue(value)}
+              value={transformDateValue(value)}
               popoverProps={{
                 position: Position.BOTTOM,
                 minimal: true,

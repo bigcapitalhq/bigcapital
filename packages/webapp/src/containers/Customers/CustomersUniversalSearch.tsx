@@ -27,7 +27,7 @@ const CustomerUniversalSearchSelectAction = withDrawerActions(
 );
 
 /**
- * Transformes customers to search.
+ * Transforms customers to search.
  * @param {*} contact
  * @returns
  */

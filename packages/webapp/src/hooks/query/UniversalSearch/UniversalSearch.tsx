@@ -3,13 +3,13 @@ import { getUniversalSearchBind } from '@/containers/UniversalSearch/utils';
 import { useResourceData } from '../GenericResource';
 
 /**
- * Transformes the resource data to search entries based on
+ * Transforms the resource data to search entries based on
  * the given resource type.
  * @param {string} type
  * @param {any} resource
  * @returns
  */
-function transfromResourceDataToSearch(resource) {
+function transformResourceDataToSearch(resource) {
   const selectItem = getUniversalSearchBind(resource._type, 'itemSelect');
 
   return resource.items
@@ -33,7 +33,7 @@ export function useUniversalSearch(type, searchKeyword, props) {
     },
     props,
   );
-  const searchData = transfromResourceDataToSearch(data);
+  const searchData = transformResourceDataToSearch(data);
 
   return {
     data: searchData,

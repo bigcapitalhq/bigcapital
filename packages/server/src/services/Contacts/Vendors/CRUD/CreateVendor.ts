@@ -39,12 +39,12 @@ export class CreateVendor {
   ) {
     const { Contact } = this.tenancy.models(tenantId);
 
-    // Transformes create DTO to customer object.
+    // Transforms create DTO to customer object.
     const vendorObject = await this.transformDTO.transformCreateDTO(
       tenantId,
       vendorDTO
     );
-    // Creates vendor contact under unit-of-work evnirement.
+    // Creates vendor contact under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreating` event.
       await this.eventPublisher.emitAsync(events.vendors.onCreating, {

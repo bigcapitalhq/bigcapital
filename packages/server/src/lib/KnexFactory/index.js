@@ -16,7 +16,7 @@ export default class KnexFactory {
     const factory = this.factories[factoryName];
 
     if (!factory) {
-      throw `Unkown factory: ${factoryName}`;
+      throw `Unknown factory: ${factoryName}`;
     }
     let { defaultAttributes } = factory;
     const insertData = {};

@@ -20,12 +20,12 @@ export const getConditionalsOptions = () => [
   },
 ];
 
-export const getBooleanCompatators = () => [
+export const getBooleanComparators = () => [
   { value: 'is', label: intl.get('is') },
   { value: 'is_not', label: intl.get('is_not') },
 ];
 
-export const getTextCompatators = () => [
+export const getTextComparators = () => [
   { value: 'contain', label: intl.get('contain') },
   { value: 'not_contain', label: intl.get('not_contain') },
   { value: 'equal', label: intl.get('equals') },
@@ -34,18 +34,18 @@ export const getTextCompatators = () => [
   { value: 'ends_with', label: intl.get('ends_with') },
 ];
 
-export const getDateCompatators = () => [
+export const getDateComparators = () => [
   { value: 'in', label: intl.get('in') },
   { value: 'after', label: intl.get('after') },
   { value: 'before', label: intl.get('before') },
 ];
 
-export const getOptionsCompatators = () => [
+export const getOptionsComparators = () => [
   { value: 'is', label: intl.get('is') },
   { value: 'is_not', label: intl.get('is_not') },
 ];
 
-export const getNumberCampatators = () => [
+export const getNumberComparators = () => [
   { value: 'equal', label: intl.get('equals') },
   { value: 'not_equal', label: intl.get('not_equal') },
   { value: 'bigger_than', label: intl.get('bigger_than') },
@@ -54,27 +54,27 @@ export const getNumberCampatators = () => [
   { value: 'smaller_or_equal', label: intl.get('smaller_or_equals') },
 ];
 
-export const getConditionTypeCompatators = (
+export const getConditionTypeComparators = (
   dataType,
 ) => {
   return [
     ...(dataType === 'enumeration'
-      ? [...getOptionsCompatators()]
+      ? [...getOptionsComparators()]
       : dataType === 'date'
-      ? [...getDateCompatators()]
+      ? [...getDateComparators()]
       : dataType === 'boolean'
-      ? [...getBooleanCompatators()]
+      ? [...getBooleanComparators()]
       : dataType === 'number'
-      ? [...getNumberCampatators()]
-      : [...getTextCompatators()]),
+      ? [...getNumberComparators()]
+      : [...getTextComparators()]),
   ];
 };
 
-export const getConditionDefaultCompatator = (
+export const getConditionDefaultComparator = (
   dataType,
 ) => {
-  const compatators = getConditionTypeCompatators(dataType);
-  return compatators[0];
+  const comparators = getConditionTypeComparators(dataType);
+  return comparators[0];
 };
 
 export const transformFieldsToOptions = (fields) =>
@@ -85,7 +85,7 @@ export const transformFieldsToOptions = (fields) =>
 
 /**
  * Filtered conditions that don't contain atleast on required fields or
- * fileds keys that not exists.
+ * fields keys that not exists.
  * @param {IFilterRole[]} conditions
  * @returns
  */
@@ -102,7 +102,7 @@ export const filterConditionRoles = (
 };
 
 /**
- * Detarmines the value field when should update.
+ * Determines the value field when should update.
  * @returns {boolean}
  */
 export const shouldFilterValueFieldUpdate = (newProps, oldProps) => {

@@ -110,7 +110,7 @@ commander
 
 commander
   .command('system:migrate:latest')
-  .description('Migrate latest mgiration of the system database.')
+  .description('Migrate latest migration of the system database.')
   .action(async () => {
     try {
       const sysKnex = await initSystemKnex();
@@ -274,7 +274,7 @@ commander
         migrateOpers.push(oper);
       }
       Promise.all(migrateOpers).then(() => {
-        success('All tenants are rollbacked.');
+        success('All tenants are rolled back.');
       });
     } catch (error) {
       exit(error);

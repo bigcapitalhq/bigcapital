@@ -27,7 +27,7 @@ export default class EntityRepository {
   }
 
   /**
-   * Retrieve the repository model binded it to knex instance.
+   * Retrieve the repository model bound it to knex instance.
    */
   get model() {
     throw new Error("The repository's model is not defined.");
@@ -219,7 +219,7 @@ export default class EntityRepository {
    * @param options
    */
   upsertGraph(graph, options) {
-    // Keep the input grpah immutable
+    // Keep the input graph immutable
     const graphCloned = cloneDeep(graph);
     return this.model.query().upsertGraph(graphCloned, options);
   }

@@ -59,7 +59,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Mappes the customer model object to customer balance summary section.
+   * Maps the customer model object to customer balance summary section.
    * @param   {ICustomer[]} customers - Customers.
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
@@ -70,7 +70,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
   };
 
   /**
-   * Detarmines whether the customers post filter is active.
+   * Determines whether the customers post filter is active.
    * @returns {boolean}
    */
   private isCustomersPostFilter = () => {
@@ -89,7 +89,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
       R.when(this.isCustomersPostFilter, this.contactsFilter),
       R.when(
         R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
+        this.contactComparisonPercentageOfColumn
       ),
       this.customersMapper
     )(customers);

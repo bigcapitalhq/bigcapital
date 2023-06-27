@@ -8,7 +8,7 @@ import classNames from 'classnames';
  */
 export function Postbox({
   defaultOpen = true,
-  toggable = true,
+  toggleable = true,
   title,
   children,
 }) {
@@ -16,7 +16,7 @@ export function Postbox({
 
   // Handle the title click.
   const handleTitleClick = () => {
-    if (toggable) {
+    if (toggleable) {
       setIsOpen(!isOpen);
     }
   };
@@ -24,7 +24,7 @@ export function Postbox({
   return (
     <div
       class={classNames('postbox', {
-        'is-toggable': toggable,
+        'is-toggleable': toggleable,
       })}
     >
       <div class="postbox__header" onClick={handleTitleClick}>

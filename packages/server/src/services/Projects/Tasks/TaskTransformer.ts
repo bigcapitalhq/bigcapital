@@ -40,7 +40,7 @@ export class TaskTransformer extends Transformer {
   };
 
   /**
-   * Retreives the formatted invoiced hours.
+   * Retrieves the formatted invoiced hours.
    * @returns {string}
    */
   public invoicedHoursFormatted = (task): string => {

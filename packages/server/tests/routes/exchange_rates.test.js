@@ -208,7 +208,7 @@ describe('route: /exchange_rates/', () => {
       })
     });
 
-    it('Should delete the given excahnge rates ids.', async () => {
+    it('Should delete the given exchange rates ids.', async () => {
       const exRate = await tenantFactory.create('exchange_rate');
       const exRate2 = await tenantFactory.create('exchange_rate');
 

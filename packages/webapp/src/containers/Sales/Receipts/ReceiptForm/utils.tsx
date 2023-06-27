@@ -80,7 +80,7 @@ export const transformToEditForm = (receipt) => {
 };
 
 /**
- * Detarmines entries fast field should update.
+ * Determines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -90,7 +90,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines accounts fast field should update.
+ * Determines accounts fast field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -100,7 +100,7 @@ export const accountsFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 /**
- * Detarmines customers fast field should update.
+ * Determines customers fast field should update.
  */
 export const customersFieldShouldUpdate = (newProps, oldProps) => {
   return (
@@ -126,7 +126,7 @@ export const handleErrors = (errors, { setErrors }) => {
 };
 
 /**
- * Transformes the form values to request body.
+ * Transforms the form values to request body.
  * @param {*} values
  * @returns
  */
@@ -177,7 +177,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Retreives the Receipt totals.
+ * Retrieves the Receipt totals.
  */
 export const useReceiptTotals = () => {
   const {
@@ -200,7 +200,7 @@ export const useReceiptTotals = () => {
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
 
-  // Retireves the formatted payment total.
+  // Retrieves the formatted payment total.
   const formattedPaymentTotal = React.useMemo(
     () => formattedAmount(paymentTotal, currencyCode),
     [paymentTotal, currencyCode],
@@ -228,7 +228,7 @@ export const useReceiptTotals = () => {
 };
 
 /**
- * Detarmines whether the receipt has foreign customer.
+ * Determines whether the receipt has foreign customer.
  * @returns {boolean}
  */
 export const useReceiptIsForeignCustomer = () => {

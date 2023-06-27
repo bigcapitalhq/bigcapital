@@ -164,10 +164,10 @@ function CustomerOpeningBalanceExchangeRateField() {
   const { customerId } = useCustomerFormContext();
   const currentOrganization = useCurrentOrganization();
 
-  const isForeignJouranl = useIsCustomerForeignCurrency();
+  const isForeignJournal = useIsCustomerForeignCurrency();
 
   // Can't continue if the customer is not foreign.
-  if (!isForeignJouranl || customerId) {
+  if (!isForeignJournal || customerId) {
     return null;
   }
   return (

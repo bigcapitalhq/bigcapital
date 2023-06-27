@@ -19,7 +19,7 @@ export default function CreditNoteDetailFooter() {
 
   return (
     <CommercialDocFooter>
-      <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
+      <DetailsMenu direction={'horizontal'} minLabelSize={'180px'}>
         <If condition={creditNote.terms_conditions}>
           <DetailItem label={<T id={'note'} />} children={creditNote.note} />
         </If>

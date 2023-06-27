@@ -35,7 +35,7 @@ function RefundVendorCreditTransactionsTable({
         columns={columns}
         data={refundVendorCredit}
         ContextMenu={ActionsMenu}
-        styleName={TableStyle.Constrant}
+        styleName={TableStyle.Constraint}
         payload={{
           onDelete: handleDeleteRefundVendorCredit,
         }}

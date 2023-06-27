@@ -87,7 +87,7 @@ export const handleCashFlowTransactionType = (reference, openDrawer) => {
       });
 
     default:
-      return openDrawer(DRAWERS.CASHFLOW_TRNASACTION_DETAILS, {
+      return openDrawer(DRAWERS.CASHFLOW_TRANSACTION_DETAILS, {
         referenceId: reference.reference_id,
       });
   }

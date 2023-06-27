@@ -21,7 +21,7 @@ export class ItemsValidators {
    * @param  {number} notItemId
    * @return {Promise<void>}
    */
-  public async validateItemNameUniquiness(
+  public async validateItemNameUniqueness(
     tenantId: number,
     itemName: string,
     notItemId?: number
@@ -40,12 +40,12 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item COGS account existance and type.
+   * Validate item COGS account existence and type.
    * @param {number} tenantId
    * @param {number} costAccountId
    * @return {Promise<void>}
    */
-  public async validateItemCostAccountExistance(
+  public async validateItemCostAccountExistence(
     tenantId: number,
     costAccountId: number
   ): Promise<void> {
@@ -54,20 +54,20 @@ export class ItemsValidators {
     const foundAccount = await accountRepository.findOneById(costAccountId);
 
     if (!foundAccount) {
-      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUMD);
+      throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_FOUND);
 
-      // Detarmines the cost of goods sold account.
+      // Determines the cost of goods sold account.
     } else if (!foundAccount.isParentType(ACCOUNT_PARENT_TYPE.EXPENSE)) {
       throw new ServiceError(ERRORS.COST_ACCOUNT_NOT_COGS);
     }
   }
 
   /**
-   * Validate item sell account existance and type.
+   * Validate item sell account existence and type.
    * @param {number} tenantId - Tenant id.
    * @param {number} sellAccountId - Sell account id.
    */
-  public async validateItemSellAccountExistance(
+  public async validateItemSellAccountExistence(
     tenantId: number,
     sellAccountId: number
   ) {
@@ -83,11 +83,11 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item inventory account existance and type.
+   * Validate item inventory account existence and type.
    * @param {number} tenantId
    * @param {number} inventoryAccountId
    */
-  public async validateItemInventoryAccountExistance(
+  public async validateItemInventoryAccountExistence(
     tenantId: number,
     inventoryAccountId: number
   ) {
@@ -105,11 +105,11 @@ export class ItemsValidators {
   }
 
   /**
-   * Validate item category existance.
+   * Validate item category existence.
    * @param {number} tenantId
    * @param {number} itemCategoryId
    */
-  public async validateItemCategoryExistance(
+  public async validateItemCategoryExistence(
     tenantId: number,
     itemCategoryId: number
   ) {
@@ -117,7 +117,7 @@ export class ItemsValidators {
     const foundCategory = await ItemCategory.query().findById(itemCategoryId);
 
     if (!foundCategory) {
-      throw new ServiceError(ERRORS.ITEM_CATEOGRY_NOT_FOUND);
+      throw new ServiceError(ERRORS.ITEM_CATEGORY_NOT_FOUND);
     }
   }
 
@@ -140,7 +140,7 @@ export class ItemsValidators {
       throw new ServiceError(
         ids.length > 1
           ? ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS
-          : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS
+          : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS
       );
     }
   }
@@ -198,13 +198,13 @@ export class ItemsValidators {
 
   /**
    * Validate the item inventory account whether modified and item
-   * has assocaited inventory transactions.
-   * @param {numnber} tenantId
+   * has associated inventory transactions.
+   * @param {number} tenantId
    * @param {IItem} oldItem
    * @param {IItemDTO} newItemDTO
    * @returns
    */
-  async validateItemInvnetoryAccountModified(
+  async validateItemInventoryAccountModified(
     tenantId: number,
     oldItem: IItem,
     newItemDTO: IItemDTO

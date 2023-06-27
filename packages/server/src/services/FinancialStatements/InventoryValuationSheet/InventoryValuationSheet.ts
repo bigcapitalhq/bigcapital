@@ -62,7 +62,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   }
 
   /**
-   * Retrieve the cost and quantity of the givne item from `IN` transactions.
+   * Retrieve the cost and quantity of the given item from `IN` transactions.
    * @param {number} itemId -
    */
   private getItemINTransaction(itemId: number): {
@@ -185,7 +185,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   private itemFilter = (valuationItem: IInventoryValuationItem): boolean => {
     const { noneTransactions, noneZero, onlyActive } = this.query;
 
-    // Conditions pair filter detarminer.
+    // Conditions pair filter determiner.
     const condsPairFilters = [
       [noneTransactions, this.filterNoneTransactions],
       [noneZero, this.filterNoneZero],
@@ -195,7 +195,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   };
 
   /**
-   * Mappes the items to inventory valuation items nodes.
+   * Maps the items to inventory valuation items nodes.
    * @param {IItem[]} items
    * @returns {IInventoryValuationItem[]}
    */
@@ -215,7 +215,7 @@ export default class InventoryValuationSheet extends FinancialSheet {
   };
 
   /**
-   * Detarmines whether the items post filter is active.
+   * Determines whether the items post filter is active.
    */
   private isItemsPostFilter = (): boolean => {
     return isEmpty(this.query.itemsIds);

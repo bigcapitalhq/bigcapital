@@ -37,7 +37,7 @@ export default class CreateProject {
   ): Promise<IProjectCreatePOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
-    // Validate customer existance.
+    // Validate customer existence.
     await this.validator.validateContactExists(tenantId, projectDTO.contactId);
 
     // Triggers `onProjectCreate` event.
@@ -46,7 +46,7 @@ export default class CreateProject {
       projectDTO,
     } as IProjectCreatedEventPayload);
 
-    // Creates a new project under unit-of-work envirement.
+    // Creates a new project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectCreating` event.
       await this.eventPublisher.emitAsync(events.project.onCreating, {

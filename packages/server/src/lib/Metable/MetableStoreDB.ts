@@ -29,17 +29,17 @@ export default class MetableDBStore
     this.extraQuery = (meta) => {
       return {
         key: meta[this.KEY_COLUMN],
-        ...this.transfromMetaExtraColumns(meta),
+        ...this.transformMetaExtraColumns(meta),
       };
     };
     this.config = new MetableConfig(config);
   }
 
   /**
-   * Transformes meta query.
+   * Transforms meta query.
    * @param {IMetadata} meta
    */
-  private transfromMetaExtraColumns(meta: IMetadata) {
+  private transformMetaExtraColumns(meta: IMetadata) {
     return this.extraColumns.reduce((obj, column) => {
       const metaValue = meta[column];
 
@@ -143,7 +143,7 @@ export default class MetableDBStore
       const insertData = {
         [this.KEY_COLUMN]: meta.key,
         [this.VALUE_COLUMN]: meta.value,
-        ...this.transfromMetaExtraColumns(meta),
+        ...this.transformMetaExtraColumns(meta),
       };
       const insertOper = this.repository.create(insertData).then(() => {
         meta._markAsInserted = false;

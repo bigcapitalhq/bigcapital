@@ -23,7 +23,7 @@ export class CreateEditVendorDTO {
   };
 
   /**
-   * Transformes the create vendor DTO.
+   * Transforms the create vendor DTO.
    * @param   {IVendorNewDTO} vendorDTO -
    * @returns {}
    */
@@ -53,7 +53,7 @@ export class CreateEditVendorDTO {
   };
 
   /**
-   * Transformes the edit vendor DTO.
+   * Transforms the edit vendor DTO.
    * @param  {IVendorEditDTO} vendorDTO
    * @returns
    */

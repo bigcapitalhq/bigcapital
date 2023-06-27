@@ -34,7 +34,7 @@ function useSettingsQuery(key, query, props) {
     },
   );
   useEffect(() => {
-    // Sync to Redux state if the reqeust success and is not fetching.
+    // Sync to Redux state if the request success and is not fetching.
     if (!settingsQuery.isFetching && settingsQuery.isSuccess) {
       setSettings(settingsQuery.data);
     }

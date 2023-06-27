@@ -36,7 +36,7 @@ export class ActivateBranches {
    */
   private throwIfMultiBranchesActivated = (isActivated: boolean) => {
     if (isActivated) {
-      throw new ServiceError(ERRORS.MUTLI_BRANCHES_ALREADY_ACTIVATED);
+      throw new ServiceError(ERRORS.MULTI_BRANCHES_ALREADY_ACTIVATED);
     }
   };
 
@@ -62,10 +62,10 @@ export class ActivateBranches {
   public activateBranches = (tenantId: number): Promise<void> => {
     const isActivated = this.branchesSettings.isMultiBranchesActive(tenantId);
 
-    // Throw error if mutli-branches is already activated.
+    // Throw error if multi-branches is already activated.
     this.throwIfMultiBranchesActivated(isActivated);
 
-    // Activate multi-branches under unit-of-work envirement.
+    // Activate multi-branches under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBranchActivate` branch.
       await this.eventPublisher.emitAsync(events.branch.onActivate, {
@@ -76,7 +76,7 @@ export class ActivateBranches {
       // Create a new branch as primary branch.
       const primaryBranch = await this.createInitialBranch(tenantId);
 
-      // Mark the mutli-branches is activated.
+      // Mark the multi-branches is activated.
       await this.branchesSettings.markMultiBranchesAsActivated(tenantId);
 
       // Triggers `onBranchActivated` branch.

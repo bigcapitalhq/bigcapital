@@ -5,7 +5,7 @@ import { Choose } from '@/components';
 
 import ReconcileCreditNoteFormFields from './ReconcileCreditNoteFormFields';
 import ReconcileCreditNoteFormFloatingActions from './ReconcileCreditNoteFormFloatingActions';
-import { EmptyStatuCallout } from './utils';
+import { EmptyStatusCallout } from './utils';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 
 /**
@@ -16,7 +16,7 @@ export default function ReconcileCreditNoteFormContent() {
   return (
     <Choose>
       <Choose.When condition={isEmptyStatus}>
-        <EmptyStatuCallout />
+        <EmptyStatusCallout />
       </Choose.When>
       <Choose.Otherwise>
         <Form>

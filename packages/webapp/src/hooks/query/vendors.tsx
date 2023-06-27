@@ -21,7 +21,7 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
 
-// Transformes vendors response.
+// Transforms vendors response.
 const transformVendorsResponse = (res) => ({
   vendors: res.data.vendors,
   pagination: transformPagination(res.data.pagination),

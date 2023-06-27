@@ -6,7 +6,7 @@ import BillAllocatedCostTransactions from '@/services/Purchases/LandedCost/BillA
 import BaseController from '../BaseController';
 import AllocateLandedCost from '@/services/Purchases/LandedCost/AllocateLandedCost';
 import RevertAllocatedLandedCost from '@/services/Purchases/LandedCost/RevertAllocatedLandedCost';
-import LandedCostTranasctions from '@/services/Purchases/LandedCost/LandedCostTransactions';
+import LandedCostTransactions from '@/services/Purchases/LandedCost/LandedCostTransactions';
 
 @Service()
 export default class BillAllocateLandedCost extends BaseController {
@@ -20,7 +20,7 @@ export default class BillAllocateLandedCost extends BaseController {
   revertAllocatedLandedCost: RevertAllocatedLandedCost;
 
   @Inject()
-  landedCostTranasctions: LandedCostTranasctions;
+  landedCostTransactions: LandedCostTransactions;
 
   /**
    * Router constructor.
@@ -86,7 +86,7 @@ export default class BillAllocateLandedCost extends BaseController {
 
     try {
       const transactions =
-        await this.landedCostTranasctions.getLandedCostTransactions(
+        await this.landedCostTransactions.getLandedCostTransactions(
           tenantId,
           query
         );
@@ -174,7 +174,7 @@ export default class BillAllocateLandedCost extends BaseController {
 
     try {
       const transactions =
-        await this.landedCostTranasctions.getLandedCostTransactions(
+        await this.landedCostTransactions.getLandedCostTransactions(
           tenantId,
           query
         );
@@ -208,7 +208,7 @@ export default class BillAllocateLandedCost extends BaseController {
 
       return res.status(200).send({
         billId,
-        transactions: this.transfromToResponse(transactions),
+        transactions: this.transformToResponse(transactions),
       });
     } catch (error) {
       next(error);
@@ -256,7 +256,7 @@ export default class BillAllocateLandedCost extends BaseController {
           errors: [
             {
               type: 'LANDED_COST_ENTRY_NOT_FOUND',
-              message: 'The given landed cost tranasction entry id not found.',
+              message: 'The given landed cost transaction entry id not found.',
               code: 300,
             },
           ],
@@ -294,9 +294,9 @@ export default class BillAllocateLandedCost extends BaseController {
           ],
         });
       }
-      if (error.errorType === 'COST_TRASNACTION_NOT_FOUND') {
+      if (error.errorType === 'COST_TRANSACTION_NOT_FOUND') {
         return res.status(400).send({
-          errors: [{ type: 'COST_TRASNACTION_NOT_FOUND', code: 500 }],
+          errors: [{ type: 'COST_TRANSACTION_NOT_FOUND', code: 500 }],
         });
       }
     }

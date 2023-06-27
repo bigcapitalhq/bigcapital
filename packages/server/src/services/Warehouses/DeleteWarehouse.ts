@@ -7,7 +7,7 @@ import events from '@/subscribers/events';
 import { IWarehouseDeletedPayload, IWarehouseDeletePayload } from '@/interfaces';
 import { CRUDWarehouse } from './CRUDWarehouse';
 import { WarehouseValidator } from './WarehouseValidator';
-import { ERRORS } from './contants';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeleteWarehouse extends CRUDWarehouse {
@@ -73,7 +73,7 @@ export class DeleteWarehouse extends CRUDWarehouse {
         events.warehouse.onDelete,
         eventPayload
       );
-      // Delets the given warehouse from the storage.
+      // Deletes the given warehouse from the storage.
       await Warehouse.query().findById(warehouseId).delete();
 
       // Triggers `onWarehouseCreated`.

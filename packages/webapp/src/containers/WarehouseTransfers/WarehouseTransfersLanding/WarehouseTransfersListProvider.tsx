@@ -31,7 +31,7 @@ function WarehouseTransfersListProvider({
     isLoading: isWarehouseTransfersLoading,
   } = useWarehousesTransfers(query, { keepPreviousData: true });
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus =
     isEmpty(warehousesTransfers) &&
     !tableStateChanged &&
@@ -77,7 +77,7 @@ function WarehouseTransfersListProvider({
   );
 }
 
-const useWarehouseTranfersListContext = () =>
+const useWarehouseTransfersListContext = () =>
   React.useContext(WarehouseTransfersListContext);
 
-export { WarehouseTransfersListProvider, useWarehouseTranfersListContext };
+export { WarehouseTransfersListProvider, useWarehouseTransfersListContext };

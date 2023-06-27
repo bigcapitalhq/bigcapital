@@ -41,7 +41,7 @@ function EstimateNumberDialogContent({
 
   // Handle the submit form.
   const handleSubmitForm = (values, { setSubmitting }) => {
-    // Transformes the form values to settings to save it.
+    // Transforms the form values to settings to save it.
     const options = transformFormToSettings(values, 'sales_estimates');
 
     const handleSuccess = () => {

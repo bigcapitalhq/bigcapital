@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { IInventoryAdjustmentCreatingPayload } from '@/interfaces';
-import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
+import { ValidateBranchExistence } from '../../Integrations/ValidateBranchExistence';
 
 @Service()
 export class InventoryAdjustmentBranchValidateSubscriber {
   @Inject()
-  private validateBranchExistance: ValidateBranchExistance;
+  private validateBranchExistence: ValidateBranchExistence;
 
   /**
    * Attaches events with handlers.
@@ -14,20 +14,20 @@ export class InventoryAdjustmentBranchValidateSubscriber {
   public attach = (bus) => {
     bus.subscribe(
       events.inventoryAdjustment.onQuickCreating,
-      this.validateBranchExistanceOnInventoryCreating
+      this.validateBranchExistenceOnInventoryCreating
     );
     return bus;
   };
 
   /**
-   * Validate branch existance on invoice creating.
-   * @param {ISaleInvoiceCreatingPaylaod} payload
+   * Validate branch existence on invoice creating.
+   * @param {ISaleInvoiceCreatingPayload} payload
    */
-  private validateBranchExistanceOnInventoryCreating = async ({
+  private validateBranchExistenceOnInventoryCreating = async ({
     tenantId,
     quickAdjustmentDTO,
   }: IInventoryAdjustmentCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
+    await this.validateBranchExistence.validateTransactionBranchWhenActive(
       tenantId,
       quickAdjustmentDTO.branchId
     );

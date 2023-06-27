@@ -9,7 +9,7 @@ import { FormattedMessage as T } from '@/components';
  * Empty status callout.
  * @returns {React.JSX}
  */
-export function EmptyStatuCallout() {
+export function EmptyStatusCallout() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>

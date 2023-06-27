@@ -192,7 +192,7 @@ export default class ContactsService {
   }
 
   /**
-   * Parsees accounts list filter DTO.
+   * Parses accounts list filter DTO.
    * @param filterDTO
    */
   private parseAutocompleteListFilterDTO(filterDTO) {
@@ -305,7 +305,7 @@ export default class ContactsService {
   }
 
   /**
-   * Chanages the opening balance of the given contact.
+   * Changes the opening balance of the given contact.
    * @param {number} tenantId
    * @param {number} contactId
    * @param {ICustomerChangeOpeningBalanceDTO} changeOpeningBalance

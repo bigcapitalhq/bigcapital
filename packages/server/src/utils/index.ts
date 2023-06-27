@@ -274,7 +274,7 @@ const formatNumber = (
   }
 ) => {
   const formattedSymbol = getCurrencySign(currencyCode);
-  const negForamt = getNegativeFormat(negativeFormat);
+  const negFormat = getNegativeFormat(negativeFormat);
   const format = '%s%v';
 
   let formattedBalance = parseFloat(balance);
@@ -290,7 +290,7 @@ const formatNumber = (
     decimal,
     {
       pos: format,
-      neg: negForamt,
+      neg: negFormat,
       zero: excerptZero ? zeroSign : format,
     }
   );
@@ -306,12 +306,12 @@ function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
       ? defaultOrTransformedValue
       : defaultValue;
 
-  const _transfromedValue =
+  const _transformedValue =
     typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
   return value == null || value !== value || value === ''
     ? _defaultValue
-    : _transfromedValue;
+    : _transformedValue;
 }
 
 const transformToMap = (objects, key) => {
@@ -366,7 +366,7 @@ const accumSum = (data, callback) => {
   }, 0);
 };
 
-const mergeObjectsBykey = (object1, object2, key) => {
+const mergeObjectsByKey = (object1, object2, key) => {
   var merged = _.merge(_.keyBy(object1, key), _.keyBy(object2, key));
   return _.values(merged);
 };
@@ -500,7 +500,7 @@ export {
   transformToMapBy,
   dateRangeFromToCollection,
   transformToMapKeyValue,
-  mergeObjectsBykey,
+  mergeObjectsByKey,
   nestedArrayToFlatten,
   assocDepthLevelToObjectTree,
   castCommaListEnvVarToArray

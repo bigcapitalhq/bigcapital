@@ -42,7 +42,7 @@ export class PaymentReceiveGLEntries {
       .findById(paymentReceiveId)
       .withGraphFetched('entries.invoice');
 
-    // Retrives the payment receive ledger.
+    // Retrieves the payment receive ledger.
     const ledger = await this.getPaymentReceiveGLedger(
       tenantId,
       paymentReceive,
@@ -267,7 +267,7 @@ export class PaymentReceiveGLEntries {
    * - Payment account [current asset] -> Credit
    *
    * @param   {number} tenantId
-   * @param   {IPaymentReceive} paymentRecieve - Payment receive model.
+   * @param   {IPaymentReceive} paymentReceive - Payment receive model.
    * @param   {number} ARAccountId - A/R account id.
    * @param   {number} exGainOrLossAccountId - Exchange gain/loss account id.
    * @param   {string} baseCurrency - Base currency code.

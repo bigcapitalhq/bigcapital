@@ -38,12 +38,12 @@ export class CreateAccount {
     accountDTO: IAccountCreateDTO,
     baseCurrency: string
   ) => {
-    // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
+    // Validate account name uniqueness.
+    await this.validator.validateAccountNameUniqueness(
       tenantId,
       accountDTO.name
     );
-    // Validate the account code uniquiness.
+    // Validate the account code uniqueness.
     if (accountDTO.code) {
       await this.validator.isAccountCodeUniqueOrThrowError(
         tenantId,
@@ -53,7 +53,7 @@ export class CreateAccount {
     // Retrieve the account type meta or throw service error if not found.
     this.validator.getAccountTypeOrThrowError(accountDTO.accountType);
 
-    // Ingore the parent account validation if not presented.
+    // Ignore the parent account validation if not presented.
     if (accountDTO.parentAccountId) {
       const parentAccount = await this.validator.getParentAccountOrThrowError(
         tenantId,
@@ -81,7 +81,7 @@ export class CreateAccount {
   };
 
   /**
-   * Transformes the create account DTO to input model.
+   * Transforms the create account DTO to input model.
    * @param   {IAccountCreateDTO} createAccountDTO
    */
   private transformDTOToModel = (
@@ -113,12 +113,12 @@ export class CreateAccount {
     // Authorize the account creation.
     await this.authorize(tenantId, accountDTO, tenantMeta.baseCurrency);
 
-    // Transformes the DTO to model.
+    // Transforms the DTO to model.
     const accountInputModel = this.transformDTOToModel(
       accountDTO,
       tenantMeta.baseCurrency
     );
-    // Creates a new account with associated transactions under unit-of-work envirement.
+    // Creates a new account with associated transactions under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onAccountCreating` event.
       await this.eventPublisher.emitAsync(events.accounts.onCreating, {

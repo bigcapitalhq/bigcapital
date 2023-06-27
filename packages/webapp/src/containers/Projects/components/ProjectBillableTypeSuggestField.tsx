@@ -69,7 +69,7 @@ export function ProjectBillableTypeSuggestField({
   initialBillableTypeId,
   selectedBillableTypeId,
 
-  defautlSelectText = 'Placeholder Type...',
+  defaultSelectText = 'Placeholder Type...',
   onBillableTypeSelected,
   popoverFill = false,
 
@@ -118,7 +118,7 @@ export function ProjectBillableTypeSuggestField({
       items={billableType}
       selectedItem={selectedBillableType}
       onItemSelect={billableTypetemSelect}
-      inputProps={{ placeholder: defautlSelectText }}
+      inputProps={{ placeholder: defaultSelectText }}
       fill={true}
       resetOnClose={true}
       popoverProps={{ minimal: true, boundary: 'window' }}

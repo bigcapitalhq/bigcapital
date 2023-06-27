@@ -18,7 +18,7 @@ const notificationType = {
 };
 
 /**
- * Notify Payment Recive Via SMS Form.
+ * Notify Payment Receive Via SMS Form.
  */
 function NotifyPaymentReceiveViaSMSForm({
   // #withDialogActions
@@ -28,7 +28,7 @@ function NotifyPaymentReceiveViaSMSForm({
     dialogName,
     paymentReceiveId,
     paymentReceiveMSDetail,
-    createNotifyPaymentReceivetBySMSMutate,
+    createNotifyPaymentReceivedBySMSMutate,
   } = useNotifyPaymentReceiveViaSMSContext();
 
   const [calloutCode, setCalloutCode] = React.useState([]);
@@ -57,7 +57,7 @@ function NotifyPaymentReceiveViaSMSForm({
       }
       setSubmitting(false);
     };
-    createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values])
+    createNotifyPaymentReceivedBySMSMutate([paymentReceiveId, values])
       .then(onSuccess)
       .catch(onError);
   };

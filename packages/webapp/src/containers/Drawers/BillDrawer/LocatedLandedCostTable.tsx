@@ -63,10 +63,10 @@ function LocatedLandedCostTable({
           data={transactions}
           ContextMenu={ActionsMenu}
           TableLoadingRenderer={TableSkeletonRows}
-          styleName={TableStyle.Constrant}
+          styleName={TableStyle.Constraint}
           payload={{
             onDelete: handleDeleteTransaction,
-            onFromTranscationClick: handleFromTransactionClick,
+            onFromTransactionClick: handleFromTransactionClick,
           }}
         />
       </Card>

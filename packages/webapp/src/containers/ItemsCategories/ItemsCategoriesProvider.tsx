@@ -10,7 +10,7 @@ const ItemsCategoriesContext = createContext();
  * Items categories provider.
  */
 function ItemsCategoriesProvider({ tableState, ...props }) {
-  // Transformes the table state to query.
+  // Transforms the table state to query.
   const query = transformTableStateToQuery(tableState);
 
   // Items categories list.

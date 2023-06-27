@@ -20,7 +20,7 @@ export const useSetPrimaryBranchToForm = () => {
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-export function transfromVendorToForm(values) {
+export function transformVendorToForm(values) {
   return {
     ...pick(values, [
       'id',

@@ -109,7 +109,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     /**
      * Retrieve the net income of date period.
      * @param {IDateRange} dateRange -
-     * @retrun {ICashFlowDatePeriod}
+     * @return {ICashFlowDatePeriod}
      */
     private getNetIncomeDatePeriod = (dateRange): ICashFlowDatePeriod => {
       const total = this.getNetIncomeDateRange(
@@ -165,7 +165,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
         .whereAccountId(node.id)
         .getClosingBalance();
 
-      return this.amountAdjustment(node.adjusmentType, closingBalance);
+      return this.amountAdjustment(node.adjustmentType, closingBalance);
     };
 
     /**
@@ -301,7 +301,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     };
 
     /**
-     * Associates the total periods of total equation to the ginve total node..
+     * Associates the total periods of total equation to the given total node..
      * @param {ICashFlowSchemaTotalSection} totalSection -
      * @return {ICashFlowStatementTotalSection}
      */
@@ -322,7 +322,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     // Cash at beginning ----------------------
 
     /**
-     * Retrieve the date preioods of the given node and accumlated function.
+     * Retrieve the date periods of the given node and accumulated function.
      * @param {} node
      * @param {}
      * @return {}
@@ -398,7 +398,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     };
 
     /**
-     * Associates `periods` propery to cash at beginning account node.
+     * Associates `periods` property to cash at beginning account node.
      * @param {ICashFlowStatementSection} node -
      * @return {ICashFlowStatementSection}
      */

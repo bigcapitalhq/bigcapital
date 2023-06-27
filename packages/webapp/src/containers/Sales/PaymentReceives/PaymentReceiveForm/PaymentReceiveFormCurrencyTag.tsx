@@ -4,7 +4,7 @@ import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 
 /**
- * Payment reecevie form currnecy tag.
+ * Payment receive form currency tag.
  * @returns
  */
 export default function PaymentReceiveFormCurrencyTag() {

@@ -100,7 +100,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
    * @param {number} tenantId - Tenant id.
    * @param {number} accountId - Account id.
    */
-  async validateReceiptDepositAccountExistance(
+  async validateReceiptDepositAccountExistence(
     tenantId: number,
     accountId: number
   ) {
@@ -116,7 +116,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
   }
 
   /**
-   * Validate sale receipt number uniquiness on the storage.
+   * Validate sale receipt number uniqueness on the storage.
    * @param {number} tenantId -
    * @param {string} receiptNumber -
    * @param {number} notReceiptId -
@@ -189,10 +189,10 @@ export default class SalesReceiptService implements ISalesReceiptsService {
     const amount = sumBy(saleReceiptDTO.entries, (e) =>
       ItemEntry.calcAmount(e)
     );
-    // Retreive the next invoice number.
+    // Retrieve the next invoice number.
     const autoNextNumber = this.getNextReceiptNumber(tenantId);
 
-    // Retreive the receipt number.
+    // Retrieve the receipt number.
     const receiptNumber =
       saleReceiptDTO.receiptNumber ||
       oldSaleReceipt?.receiptNumber ||
@@ -244,7 +244,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
   ): Promise<ISaleReceipt> {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);
 
-    // Retireves the payment customer model.
+    // Retrieves the payment customer model.
     const paymentCustomer = await Contact.query()
       .modify('customer')
       .findById(saleReceiptDTO.customerId)
@@ -256,13 +256,13 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       saleReceiptDTO,
       paymentCustomer
     );
-    // Validate receipt deposit account existance and type.
-    await this.validateReceiptDepositAccountExistance(
+    // Validate receipt deposit account existence and type.
+    await this.validateReceiptDepositAccountExistence(
       tenantId,
       saleReceiptDTO.depositAccountId
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleReceiptDTO.entries
     );
@@ -271,7 +271,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       tenantId,
       saleReceiptDTO.entries
     );
-    // Validate sale receipt number uniuqiness.
+    // Validate sale receipt number uniqueness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validateReceiptNumberUnique(
         tenantId,
@@ -334,13 +334,13 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       paymentCustomer,
       oldSaleReceipt
     );
-    // Validate receipt deposit account existance and type.
-    await this.validateReceiptDepositAccountExistance(
+    // Validate receipt deposit account existence and type.
+    await this.validateReceiptDepositAccountExistence(
       tenantId,
       saleReceiptDTO.depositAccountId
     );
-    // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
+    // Validate items IDs existence on the storage.
+    await this.itemsEntriesService.validateItemsIdsExistence(
       tenantId,
       saleReceiptDTO.entries
     );
@@ -349,7 +349,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       tenantId,
       saleReceiptDTO.entries
     );
-    // Validate sale receipt number uniuqiness.
+    // Validate sale receipt number uniqueness.
     if (saleReceiptDTO.receiptNumber) {
       await this.validateReceiptNumberUnique(
         tenantId,
@@ -357,7 +357,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
         saleReceiptId
       );
     }
-    // Edits the sale receipt tranasctions with associated transactions under UOW env.
+    // Edits the sale receipt transactions with associated transactions under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleReceiptsEditing` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onEditing, {
@@ -491,7 +491,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the estimates models to POJO.
+    // Transforms the estimates models to POJO.
     const salesEstimates = await this.transformer.transform(
       tenantId,
       results,
@@ -526,7 +526,7 @@ export default class SalesReceiptService implements ISalesReceiptsService {
     if (oldSaleReceipt.isClosed) {
       throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);
     }
-    // Updates the sale recept transaction under unit-of-work envirement.
+    // Updates the sale recept transaction under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleReceiptClosing` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onClosing, {

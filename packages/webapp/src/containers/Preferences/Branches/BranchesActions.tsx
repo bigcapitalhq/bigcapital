@@ -11,7 +11,7 @@ function BranchesActions({
   //#ownProps
   openDialog,
 }) {
-  const handleClickNewBranche = () => {
+  const handleClickNewBranch = () => {
     openDialog('branch-form');
   };
 
@@ -20,7 +20,7 @@ function BranchesActions({
       <FeatureCan feature={Features.Branches}>
         <Button
           icon={<Icon icon="plus" iconSize={12} />}
-          onClick={handleClickNewBranche}
+          onClick={handleClickNewBranch}
           intent={Intent.PRIMARY}
         >
           <T id={'branches.label.new_branch'} />

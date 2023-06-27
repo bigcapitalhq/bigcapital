@@ -37,7 +37,7 @@ export class EditTaskService {
   ): Promise<IProjectTaskEditPOJO> => {
     const { Task } = this.tenancy.models(tenantId);
 
-    // Validate task existance.
+    // Validate task existence.
     const oldTask = await Task.query().findById(taskId).throwIfNotFound();
 
     // Triggers `onProjectTaskEdit` event.
@@ -47,7 +47,7 @@ export class EditTaskService {
       taskDTO,
     } as ITaskEditEventPayload);
 
-    // Edits the given project under unit-of-work envirement.
+    // Edits the given project under unit-of-work environment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onProjectTaskEditing` event.
       await this.eventPublisher.emitAsync(events.projectTask.onEditing, {

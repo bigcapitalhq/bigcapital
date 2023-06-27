@@ -45,7 +45,7 @@ const accountRenderer = (item, { handleClick, modifiers, query }) => {
 };
 
 /**
- * Accounts select field binded with Formik form.
+ * Accounts select field bound with Formik form.
  * @returns {JSX.Element}
  */
 function AccountsSelectRoot({

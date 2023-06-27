@@ -190,10 +190,10 @@ export function JournalExchangeRateInputField({ ...props }) {
   const currentOrganization = useCurrentOrganization();
   const { values } = useFormikContext();
 
-  const isForeignJouranl = useJournalIsForeign();
+  const isForeignJournal = useJournalIsForeign();
 
   // Can't continue if the customer is not foreign.
-  if (!isForeignJouranl) {
+  if (!isForeignJournal) {
     return null;
   }
   return (

@@ -28,7 +28,7 @@ export default class BillLandedCostSubscriber {
   public async handleRewriteBillJournalEntries({
     tenantId,
     billId,
-    bilLandedCostId,
+    billLandedCostId,
   }) {
     // Overwrite the journal entries for the given bill transaction.
     this.logger.info('[bill] overwriting bill journal entries.', { tenantId });

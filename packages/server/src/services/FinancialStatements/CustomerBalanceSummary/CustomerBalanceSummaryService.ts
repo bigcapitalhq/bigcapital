@@ -70,7 +70,7 @@ export default class CustomerBalanceSummaryService
   }
 
   /**
-   * Retrieve the statment of customer balance summary report.
+   * Retrieve the statement of customer balance summary report.
    * @param {number} tenantId
    * @param {ICustomerBalanceSummaryQuery} query
    * @return {Promise<ICustomerBalanceSummaryStatement>}

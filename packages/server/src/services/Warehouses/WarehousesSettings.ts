@@ -10,14 +10,14 @@ export class WarehousesSettings {
   /**
    * Marks multi-warehouses as activated.
    */
-  public markMutliwarehoussAsActivated = (tenantId: number) => {
+  public markMultiWarehousesAsActivated = (tenantId: number) => {
     const settings = this.tenancy.settings(tenantId);
 
     settings.set({ group: 'features', key: Features.WAREHOUSES, value: 1 });
   };
 
   /**
-   * Detarmines multi-warehouses is active.
+   * Determines multi-warehouses is active.
    * @param   {number} tenantId
    * @returns {boolean}
    */

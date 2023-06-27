@@ -6,8 +6,8 @@ import { subtract } from 'lodash';
 import { calculateStatus } from '@/utils';
 import { useProjectDetailContext } from './ProjectDetailProvider';
 
-function calculateProject(costEstiate, totalAmount) {
-  return (costEstiate / totalAmount) * 100;
+function calculateProject(costEstimate, totalAmount) {
+  return (costEstimate / totalAmount) * 100;
 }
 
 export const useCalculateProject = () => {

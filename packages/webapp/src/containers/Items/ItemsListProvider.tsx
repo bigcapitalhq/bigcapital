@@ -41,7 +41,7 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
     { keepPreviousData: true },
   );
 
-  // Detarmines the datatable empty status.
+  // Determines the datatable empty status.
   const isEmptyStatus = !tableStateChanged && !isItemsLoading && isEmpty(items);
 
   const state = {
