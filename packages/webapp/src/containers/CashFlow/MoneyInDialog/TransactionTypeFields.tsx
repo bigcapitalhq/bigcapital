@@ -10,6 +10,8 @@ import {
   ListSelect,
   Col,
   Row,
+  FFormGroup,
+  FSelect,
 } from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES, getAddMoneyInOptions } from '@/constants';
@@ -21,7 +23,7 @@ import { useMoneyInDailogContext } from './MoneyInDialogProvider';
  */
 export default function TransactionTypeFields() {
   // Money in dialog context.
-  const { cashflowAccounts } = useMoneyInDailogContext();
+  const { cashflowAccounts, setAccountId } = useMoneyInDailogContext();
 
   // Retrieves the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
@@ -29,6 +31,23 @@ export default function TransactionTypeFields() {
   return (
     <div className="trasnaction-type-fileds">
       <Row>
+        <Col xs={5}>
+          {/*------------ Transaction type -----------*/}
+          <FFormGroup
+            name={'transaction_type'}
+            label={<T id={'transaction_type'} />}
+            labelInfo={<FieldRequiredHint />}
+          >
+            <FSelect
+              name={'transaction_type'}
+              items={addMoneyInOptions}
+              popoverProps={{ minimal: true }}
+              valueAccessor={'value'}
+              textAccessor={'name'}
+            />
+          </FFormGroup>
+        </Col>
+
         <Col xs={5}>
           {/*------------ Current account -----------*/}
           <FastField name={'cashflow_account_id'}>
@@ -46,9 +65,10 @@ export default function TransactionTypeFields() {
               >
                 <AccountsSuggestField
                   accounts={cashflowAccounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('cashflow_account_id', id)
-                  }
+                  onAccountSelected={({ id }) => {
+                    form.setFieldValue('cashflow_account_id', id);
+                    setAccountId(id);
+                  }}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -56,39 +76,6 @@ export default function TransactionTypeFields() {
               </FormGroup>
             )}
           </FastField>
-          {/*------------ Transaction type -----------*/}
-        </Col>
-        <Col xs={5}>
-          <Field name={'transaction_type'}>
-            {({
-              form: { values, setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={<T id={'transaction_type'} />}
-                labelInfo={<FieldRequiredHint />}
-                helperText={<ErrorMessage name="transaction_type" />}
-                intent={inputIntent({ error, touched })}
-                className={classNames(
-                  CLASSES.FILL,
-                  'form-group--transaction_type',
-                )}
-              >
-                <ListSelect
-                  items={addMoneyInOptions}
-                  onItemSelect={(type) => {
-                    setFieldValue('transaction_type', type.value);
-                  }}
-                  filterable={false}
-                  selectedItem={value}
-                  selectedItemProp={'value'}
-                  textProp={'name'}
-                  popoverProps={{ minimal: true }}
-                />
-              </FormGroup>
-            )}
-          </Field>
         </Col>
       </Row>
     </div>

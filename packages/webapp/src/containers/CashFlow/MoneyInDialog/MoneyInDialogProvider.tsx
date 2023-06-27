@@ -1,11 +1,10 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useCreateCashflowTransaction,
-  useAccount,
   useAccounts,
   useBranches,
   useCashflowAccounts,
@@ -18,21 +17,20 @@ const MoneyInDialogContent = React.createContext();
  * Money in dialog provider.
  */
 function MoneyInDialogProvider({
-  accountId,
+  accountId: defaultAccountId,
   accountType,
   dialogName,
   ...props
 }) {
+  // Holds the selected account id.
+  const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
+
+  // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
-
-  // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
-    enabled: !!accountId,
-  });
 
   // Fetches the branches list.
   const {
@@ -41,10 +39,11 @@ function MoneyInDialogProvider({
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
-  // Fetch cash flow list .
+  // Fetch cash flow list.
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
     useCashflowAccounts({}, { keepPreviousData: true });
 
+  // Mutation create cashflow transaction.
   const { mutateAsync: createCashflowTransactionMutate } =
     useCreateCashflowTransaction();
 
@@ -57,9 +56,12 @@ function MoneyInDialogProvider({
   // Provider data.
   const provider = {
     accounts,
-    account,
     branches,
+
     accountId,
+    defaultAccountId,
+    setAccountId,
+
     accountType,
     isAccountsLoading,
     isBranchesSuccess,
@@ -77,8 +79,7 @@ function MoneyInDialogProvider({
     isAccountsLoading ||
     isCashFlowAccountsLoading ||
     isBranchesLoading ||
-    isSettingsLoading ||
-    isAccountLoading;
+    isSettingsLoading;
 
   return (
     <DialogContent isLoading={isLoading}>

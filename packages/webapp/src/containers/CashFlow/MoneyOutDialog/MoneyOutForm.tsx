@@ -92,15 +92,13 @@ function MoneyOutForm({
       });
   };
   return (
-    <div>
-      <Formik
-        validationSchema={CreateMoneyOutSchema}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <MoneyOutFormContent />
-      </Formik>
-    </div>
+    <Formik
+      validationSchema={CreateMoneyOutSchema}
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <MoneyOutFormContent />
+    </Formik>
   );
 }
 

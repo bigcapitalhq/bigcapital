@@ -53,7 +53,6 @@ function MoneyInForm({
     accountId,
     accountType,
     createCashflowTransactionMutate,
-    submitPayload,
   } = useMoneyInDailogContext();
 
   // transaction number.
@@ -61,7 +60,6 @@ function MoneyInForm({
     transactionNumberPrefix,
     transactionNextNumber,
   );
-
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
@@ -95,15 +93,13 @@ function MoneyInForm({
   };
 
   return (
-    <div>
-      <Formik
-        validationSchema={CreateMoneyInFormSchema}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <MoneyInFormContent />
-      </Formik>
-    </div>
+    <Formik
+      validationSchema={CreateMoneyInFormSchema}
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <MoneyInFormContent />
+    </Formik>
   );
 }
 
