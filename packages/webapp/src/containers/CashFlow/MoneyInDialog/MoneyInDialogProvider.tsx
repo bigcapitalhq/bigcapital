@@ -22,7 +22,7 @@ function MoneyInDialogProvider({
   dialogName,
   ...props
 }) {
-  // Holds the selected account id.
+  // Holds the selected account id of the dialog.
   const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
 
   // Detarmines whether the feature is enabled.

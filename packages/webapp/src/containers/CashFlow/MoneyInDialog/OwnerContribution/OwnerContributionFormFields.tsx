@@ -1,19 +1,16 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-
+import { DateInput } from '@blueprintjs/datetime';
 import {
   FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   FieldRequiredHint,
   Col,
   Row,
-  If,
-  ExchangeRateMutedField,
   BranchSelect,
   BranchSelectButton,
   FeatureCan,
@@ -22,7 +19,6 @@ import {
   FTextArea,
   FInputGroup,
 } from '@/components';
-import { DateInput } from '@blueprintjs/datetime';
 import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
 import {
   inputIntent,
@@ -33,11 +29,11 @@ import {
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import {
   useSetPrimaryBranchToForm,
-  useForeignAccount,
   BranchRowDivider,
 } from '../../MoneyInDialog/utils';
 import { MoneyInOutTransactionNoField } from '../../_components';
 import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
+import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
 
 /**
 /**
@@ -47,10 +43,6 @@ export default function OwnerContributionFormFields() {
   // Money in dialog context.
   const { accounts, branches } = useMoneyInDailogContext();
   const { account } = useMoneyInFieldsContext();
-
-  const { values } = useFormikContext();
-
-  const isForeigAccount = useForeignAccount();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -124,17 +116,9 @@ export default function OwnerContributionFormFields() {
         </Col>
       </Row>
 
-      <If condition={isForeigAccount}>
-        {/*------------ exchange rate -----------*/}
-        <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={values.currency_code}
-          toCurrency={account.currency_code}
-          formGroupProps={{ label: '', inline: false }}
-          date={values.date}
-          exchangeRate={values.exchange_rate}
-        />
-      </If>
+      {/*------------ Exchange rate -----------*/}
+      <MoneyInExchangeRateField />
+
       <Row>
         <Col xs={5}>
           {/*------------ equity account -----------*/}
@@ -171,7 +155,7 @@ export default function OwnerContributionFormFields() {
         </Col>
       </Row>
 
-      {/*------------ description -----------*/}
+      {/*------------ Description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
         <FTextArea
           name={'description'}
