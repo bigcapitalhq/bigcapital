@@ -11,6 +11,7 @@ import {
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormBranchSelectButton,
 } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 
@@ -51,18 +52,9 @@ function MakeJournalFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={MakeJournalBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-function MakeJournalBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('make_journal.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }
