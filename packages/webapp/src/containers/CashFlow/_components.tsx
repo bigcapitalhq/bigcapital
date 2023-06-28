@@ -38,11 +38,11 @@ export const MoneyInOutSyncIncrementSettingsToForm = R.compose(
       // Do not update if the invoice auto-increment is disabled.
       if (!transactionAutoIncrement) return null;
 
-      const transactionNumber = transactionNumber(
+      const newTransactionNumber = transactionNumber(
         transactionNumberPrefix,
         transactionNextNumber,
       );
-      setFieldValue('transaction_number', transactionNumber);
+      setFieldValue('transaction_number', newTransactionNumber);
     }, [setFieldValue, transactionNumberPrefix, transactionNextNumber]);
 
     return null;

@@ -12,17 +12,13 @@ import { useMoneyInDailogContext } from './MoneyInDialogProvider';
  * Money in form fields.
  */
 function MoneyInFormFields() {
-  const { values } = useFormikContext();
-
   // Money in dialog context.
-  const { accountId } = useMoneyInDailogContext();
+  const { defaultAccountId } = useMoneyInDailogContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
-      <If condition={!accountId}>
-        <TransactionTypeFields />
-      </If>
-      <MoneyInContentFields accountType={values.transaction_type} />
+      {!defaultAccountId && <TransactionTypeFields />}
+      <MoneyInContentFields />
     </div>
   );
 }

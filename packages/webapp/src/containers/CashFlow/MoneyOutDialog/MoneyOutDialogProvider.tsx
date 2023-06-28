@@ -1,11 +1,10 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
   useAccounts,
-  useAccount,
   useBranches,
   useCreateCashflowTransaction,
   useCashflowAccounts,
@@ -17,18 +16,21 @@ const MoneyInDialogContent = React.createContext();
 /**
  * Money out dialog provider.
  */
-function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
+function MoneyOutProvider({
+  accountId: defaultAccountId,
+  accountType,
+  dialogName,
+  ...props
+}) {
+  // Holds the selected account id of the dialog.
+  const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
+
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Fetches accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
-
-  // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(accountId, {
-    enabled: !!accountId,
-  });
 
   // Fetches the branches list.
   const {
@@ -41,6 +43,7 @@ function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
   const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
     useCashflowAccounts({}, { keepPreviousData: true });
 
+  // Mutation to create a new cashflow account.
   const { mutateAsync: createCashflowTransactionMutate } =
     useCreateCashflowTransaction();
 
@@ -52,9 +55,11 @@ function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
 
   // Provider data.
   const provider = {
-    accounts,
-    account,
     accountId,
+    setAccountId,
+    defaultAccountId,
+
+    accounts,
     accountType,
     branches,
     isAccountsLoading,
@@ -73,8 +78,7 @@ function MoneyOutProvider({ accountId, accountType, dialogName, ...props }) {
     isAccountsLoading ||
     isCashFlowAccountsLoading ||
     isBranchesLoading ||
-    isSettingsLoading ||
-    isAccountLoading;
+    isSettingsLoading;
 
   return (
     <DialogContent isLoading={isLoading}>

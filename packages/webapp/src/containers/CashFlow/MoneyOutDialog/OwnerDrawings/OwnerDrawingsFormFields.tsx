@@ -1,31 +1,24 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
+import { FastField, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   FieldRequiredHint,
-  If,
   Col,
   Row,
   FeatureCan,
   BranchSelect,
   BranchSelectButton,
-  ExchangeRateMutedField,
+  FFormGroup,
+  FTextArea,
+  FInputGroup,
+  FMoneyInputGroup,
 } from '@/components';
-import { useAutofocus } from '@/hooks';
 import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
 import {
   inputIntent,
@@ -36,21 +29,19 @@ import {
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import {
   useSetPrimaryBranchToForm,
-  useForeignAccount,
   BranchRowDivider,
 } from '../../MoneyOutDialog/utils';
 import { MoneyInOutTransactionNoField } from '../../_components';
+import { useMoneyOutFieldsContext } from '../MoneyOutFieldsProvider';
+import { MoneyOutExchangeRateField } from '../MoneyOutExchangeRateField';
 
 /**
  * Owner drawings form fields.
  */
 export default function OwnerDrawingsFormFields() {
   // Money out dialog context.
-  const { accounts, account, branches } = useMoneyOutDialogContext();
-  const { values } = useFormikContext();
-  const isForeigAccount = useForeignAccount();
-
-  const amountFieldRef = useAutofocus();
+  const { accounts, branches } = useMoneyOutDialogContext();
+  const { account } = useMoneyOutFieldsContext();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -60,21 +51,19 @@ export default function OwnerDrawingsFormFields() {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
                 input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
-            </FormGroup>
+            </FFormGroup>
           </Col>
         </Row>
         <BranchRowDivider />
       </FeatureCan>
+
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -109,48 +98,27 @@ export default function OwnerDrawingsFormFields() {
           <MoneyInOutTransactionNoField />
         </Col>
       </Row>
-      {/*------------ amount -----------*/}
-      <Field name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+
+      {/*------------ Amount -----------*/}
+
+      <Row>
+        <Col xs={10}>
           <FormGroup
+            name={'amount'}
             label={<T id={'amount'} />}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-            className={'form-group--amount'}
           >
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
-
-              <MoneyInputGroup
-                value={value}
-                minimal={true}
-                onChange={(amount) => {
-                  setFieldValue('amount', amount);
-                }}
-                inputRef={(ref) => (amountFieldRef.current = ref)}
-                intent={inputIntent({ error, touched })}
-              />
+              <FMoneyInputGroup name={'amount'} minimal={true} />
             </ControlGroup>
           </FormGroup>
-        )}
-      </Field>
+        </Col>
+      </Row>
 
-      <If condition={isForeigAccount}>
-        {/*------------ exchange rate -----------*/}
-        <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={values?.currency_code}
-          toCurrency={account?.currency_code}
-          formGroupProps={{ label: '', inline: false }}
-          date={values.date}
-          exchangeRate={values.exchange_rate}
-        />
-      </If>
+      {/*------------ Exchange rate -----------*/}
+      <MoneyOutExchangeRateField />
+
       <Row>
         <Col xs={5}>
           {/*------------ equitty account -----------*/}
@@ -177,44 +145,24 @@ export default function OwnerDrawingsFormFields() {
             )}
           </FastField>
         </Col>
+
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FastField name={'reference_no'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'reference_no'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="reference_no" />}
-                className={'form-group--reference-no'}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />}>
+            <FInputGroup name={'reference_no'} />
+          </FFormGroup>
         </Col>
       </Row>
 
       {/*------------ description -----------*/}
-      <FastField name={'description'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'description'} />}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+      <FFormGroup name={'description'} label={<T id={'description'} />}>
+        <FTextArea
+          name={'description'}
+          growVertically={true}
+          large={true}
+          fill={true}
+        />
+      </FFormGroup>
     </React.Fragment>
   );
 }

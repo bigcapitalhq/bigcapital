@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-
 import { MoneyInDialogProvider } from './MoneyInDialogProvider';
 import MoneyInForm from './MoneyInForm';
 

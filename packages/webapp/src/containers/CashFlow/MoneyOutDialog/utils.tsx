@@ -6,6 +6,7 @@ import { transactionNumber } from '@/utils';
 import { first, isEqual, isNull } from 'lodash';
 
 import { useMoneyOutDialogContext } from './MoneyOutDialogProvider';
+import { useMoneyOutFieldsContext } from './MoneyOutFieldsProvider';
 
 export const useObserveTransactionNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
@@ -33,7 +34,7 @@ export const useSetPrimaryBranchToForm = () => {
 
 export const useForeignAccount = () => {
   const { values } = useFormikContext();
-  const { account } = useMoneyOutDialogContext();
+  const { account } = useMoneyOutFieldsContext();
 
   return (
     !isEqual(account.currency_code, values.currency_code) &&
