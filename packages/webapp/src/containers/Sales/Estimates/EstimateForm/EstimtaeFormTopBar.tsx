@@ -1,11 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
-  Button,
   Classes,
 } from '@blueprintjs/core';
 import {
@@ -15,12 +13,13 @@ import {
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  Icon,
   BranchSelect,
   FeatureCan,
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormWarehouseSelectButton,
+  FormBranchSelectButton,
 } from '@/components';
 import { useEstimateFormContext } from './EstimateFormProvider';
 
@@ -70,8 +69,9 @@ function EstimateFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={EstimateBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
+      fill={false}
     />
   );
 }
@@ -86,30 +86,9 @@ function EstimateFormSelectWarehouse() {
     <WarehouseSelect
       name={'warehouse_id'}
       warehouses={warehouses}
-      input={EstimateWarehouseSelectButton}
+      input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-
-function EstimateWarehouseSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('estimate.warehouse_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'warehouse-16'} iconSize={16} />}
-    />
-  );
-}
-
-function EstimateBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('estimate.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }

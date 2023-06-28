@@ -16,7 +16,7 @@ export function FSelect({ ...props }) {
       />
     );
   };
-  return <Select input={input} {...props} fill={true} />;
+  return <Select input={input} fill={true} {...props} />;
 }
 
 const SelectButton = styled(Button)`
