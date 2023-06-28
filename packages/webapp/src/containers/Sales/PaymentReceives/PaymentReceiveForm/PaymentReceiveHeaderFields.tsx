@@ -13,10 +13,12 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { toSafeInteger } from 'lodash';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
-import * as R from 'ramda';
 
-import { FInputGroup, FeatureCan, FormattedMessage as T } from '@/components';
-import { useAutofocus } from '@/hooks';
+import {
+  FeatureCan,
+  CustomersSelect,
+  FormattedMessage as T,
+} from '@/components';
 import { CLASSES } from '@/constants/classes';
 import {
   safeSumBy,
@@ -28,10 +30,8 @@ import {
 import {
   FFormGroup,
   AccountsSelect,
-  CustomerSelectField,
   FieldRequiredHint,
   Icon,
-  InputPrependButton,
   MoneyInputGroup,
   InputPrependText,
   CustomerDrawerLink,
@@ -46,9 +46,6 @@ import {
   PaymentReceiveProjectSelectButton,
 } from './components';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withSettings from '@/containers/Settings/withSettings';
-
 import {
   amountPaymentEntries,
   fullAmountPaymentEntries,
@@ -56,103 +53,20 @@ import {
   accountsFieldShouldUpdate,
 } from './utils';
 import { Features } from '@/constants';
-
-/**
- * Payment receive number field.
- */
-const PaymentReceivePaymentNoField = R.compose(
-  withSettings(({ paymentReceiveSettings }) => ({
-    paymentReceiveAutoIncrement: paymentReceiveSettings?.autoIncrement,
-  })),
-  withDialogActions,
-)(
-  ({
-    // #withDialogActions
-    openDialog,
-
-    // #withSettings
-    paymentReceiveAutoIncrement,
-  }) => {
-    const { values, setFieldValue } = useFormikContext();
-
-    // Handle click open payment receive number dialog.
-    const handleClickOpenDialog = () => {
-      openDialog('payment-receive-number-form');
-    };
-    // Handle payment number field blur.
-    const handlePaymentNoBlur = (event) => {
-      const newValue = event.target.value;
-
-      // Show the confirmation dialog if the value has changed and auto-increment
-      // mode is enabled.
-      if (
-        values.payment_receive_no !== newValue &&
-        paymentReceiveAutoIncrement
-      ) {
-        openDialog('payment-receive-number-form', {
-          initialFormValues: {
-            onceManualNumber: newValue,
-            incrementMode: 'manual-transaction',
-          },
-        });
-      }
-      // Setting the payment number to the form will be manually in case
-      // auto-increment is disable.
-      if (!paymentReceiveAutoIncrement) {
-        setFieldValue('payment_receive_no', newValue);
-        setFieldValue('payment_receive_no_manually', newValue);
-      }
-    };
-    return (
-      <FFormGroup
-        name={'payment_receive_no'}
-        label={<T id={'payment_receive_no'} />}
-        inline={true}
-        labelInfo={<FieldRequiredHint />}
-      >
-        <ControlGroup fill={true}>
-          <FInputGroup
-            name={'payment_receive_no'}
-            minimal={true}
-            value={values.payment_receive_no}
-            asyncControl={true}
-            onBlur={handlePaymentNoBlur}
-            onChange={() => {}}
-          />
-          <InputPrependButton
-            buttonProps={{
-              onClick: handleClickOpenDialog,
-              icon: <Icon icon={'settings-18'} />,
-            }}
-            tooltip={true}
-            tooltipProps={{
-              content: (
-                <T id={'setting_your_auto_generated_payment_receive_number'} />
-              ),
-              position: Position.BOTTOM_LEFT,
-            }}
-          />
-        </ControlGroup>
-      </FFormGroup>
-    );
-  },
-);
+import { PaymentReceivePaymentNoField } from './PaymentReceivePaymentNoField';
 
 /**
  * Payment receive header fields.
  */
 export default function PaymentReceiveHeaderFields() {
   // Payment receive form context.
-  const { customers, accounts, projects, isNewMode } =
-    usePaymentReceiveFormContext();
+  const { accounts, projects } = usePaymentReceiveFormContext();
 
   // Formik form context.
   const {
     values: { entries },
     setFieldValue,
   } = useFormikContext();
-
-  const customerFieldRef = useAutofocus();
 
   // Calculates the full-amount received.
   const totalDueAmount = useMemo(
@@ -176,45 +90,7 @@ export default function PaymentReceiveHeaderFields() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
       {/* ------------- Customer name ------------- */}
-      <FastField
-        name={'customer_id'}
-        customers={customers}
-        shouldUpdate={customersFieldShouldUpdate}
-      >
-        {({ form, field: { value }, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'customer_name'} />}
-            inline={true}
-            className={classNames('form-group--select-list', CLASSES.FILL)}
-            labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'customer_id'} />}
-          >
-            <CustomerSelectField
-              contacts={customers}
-              selectedContactId={value}
-              defaultSelectText={<T id={'select_customer_account'} />}
-              onContactSelected={(customer) => {
-                form.setFieldValue('customer_id', customer.id);
-                form.setFieldValue('full_amount', '');
-                form.setFieldValue('currency_code', customer?.currency_code);
-              }}
-              popoverFill={true}
-              disabled={!isNewMode}
-              buttonProps={{
-                elementRef: (ref) => (customerFieldRef.current = ref),
-              }}
-              allowCreate={true}
-            />
-
-            {value && (
-              <CustomerButtonLink customerId={value}>
-                <T id={'view_customer_details'} />
-              </CustomerButtonLink>
-            )}
-          </FormGroup>
-        )}
-      </FastField>
+      <PaymentReceiveCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
       <PaymentReceiveExchangeRateInputField
@@ -361,3 +237,49 @@ const CustomerButtonLink = styled(CustomerDrawerLink)`
   font-size: 11px;
   margin-top: 6px;
 `;
+
+/**
+ * Customer select field of payment receive form.
+ * @returns {React.ReactNode}
+ */
+function PaymentReceiveCustomerSelect() {
+  // Payment receive form context.
+  const { customers, isNewMode } = usePaymentReceiveFormContext();
+
+  // Formik form context.
+  const { values, setFieldValue } = useFormikContext();
+
+  return (
+    <FFormGroup
+      label={<T id={'customer_name'} />}
+      inline={true}
+      labelInfo={<FieldRequiredHint />}
+      name={'customer_id'}
+      fastField={true}
+      shouldUpdate={customersFieldShouldUpdate}
+      shouldUpdateDeps={{ items: customers }}
+    >
+      <CustomersSelect
+        name={'customer_id'}
+        items={customers}
+        placeholder={<T id={'select_customer_account'} />}
+        onItemChange={(customer) => {
+          setFieldValue('customer_id', customer.id);
+          setFieldValue('full_amount', '');
+          setFieldValue('currency_code', customer?.currency_code);
+        }}
+        popoverFill={true}
+        disabled={!isNewMode}
+        allowCreate={true}
+        fastField={true}
+        shouldUpdate={customersFieldShouldUpdate}
+        shouldUpdateDeps={{ items: customers }}
+      />
+      {values.customer_id && (
+        <CustomerButtonLink customerId={values.customer_id}>
+          <T id={'view_customer_details'} />
+        </CustomerButtonLink>
+      )}
+    </FFormGroup>
+  );
+}

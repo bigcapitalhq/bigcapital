@@ -15,6 +15,7 @@ import {
   formattedAmount,
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
+import { PAYMENT_MADE_ERRORS } from '../constants';
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
@@ -74,7 +75,7 @@ export const transformToNewPageEntries = (entries) => {
  */
 export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.vendors !== oldProps.vendors ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -124,10 +125,10 @@ export const useSetPrimaryBranchToForm = () => {
 export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);
 
-  if (getError('PAYMENT_NUMBER_NOT_UNIQUE')) {
+  if (getError(PAYMENT_MADE_ERRORS.PAYMENT_NUMBER_NOT_UNIQUE)) {
     setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
   }
-  if (getError('WITHDRAWAL_ACCOUNT_CURRENCY_INVALID')) {
+  if (getError(PAYMENT_MADE_ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID)) {
     AppToaster.show({
       message: intl.get(
         'payment_made.error.withdrawal_account_currency_invalid',

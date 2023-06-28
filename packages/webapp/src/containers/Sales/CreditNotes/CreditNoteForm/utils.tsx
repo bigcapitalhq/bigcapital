@@ -116,7 +116,7 @@ export const transformFormValuesToRequest = (values) => {
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.customers !== oldProps.customers ||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
