@@ -1452,6 +1452,7 @@
   "cash_flow.setting_your_auto_generated_transaction_number": "Setting your auto-generated transaction number",
   "cash_flow_drawer.label_transaction_type": "Transaction type",
   "cash_flow.drawer.label_transaction_no": "Transaction number",
+  "cash_flow.drawer.label.statement": "Statement",
   "cash_flow.drawer.label_transaction": "Cash flow Transaction {number}",
   "cash_flow.account_transactions.no_results": "There are no deposit/withdrawal transactions on the current account.",
   "cash_flow_balance_in": "Balance in {name}",
