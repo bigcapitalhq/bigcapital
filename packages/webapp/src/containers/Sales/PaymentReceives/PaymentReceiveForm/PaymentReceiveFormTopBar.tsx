@@ -1,22 +1,21 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
-import { Alignment, NavbarGroup, Button, Classes } from '@blueprintjs/core';
+import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  Icon,
   BranchSelect,
   FeatureCan,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormBranchSelectButton,
 } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { Features } from '@/constants';
 
 /**
  * Payment receive from top bar.
- * @returns
+ * @returns {JSX.Element}
  */
 export default function PaymentReceiveFormTopBar() {
   // Features guard.
@@ -29,7 +28,6 @@ export default function PaymentReceiveFormTopBar() {
   if (!featureCan(Features.Branches)) {
     return null;
   }
-
   return (
     <FormTopbar>
       <NavbarGroup align={Alignment.LEFT}>
@@ -41,6 +39,10 @@ export default function PaymentReceiveFormTopBar() {
   );
 }
 
+/**
+ * Branch select of payment receive form.
+ * @returns {JSX.Element}
+ */
 function PaymentReceiveFormSelectBranch() {
   // payment receive form context.
   const { branches, isBranchesLoading } = usePaymentReceiveFormContext();
@@ -51,19 +53,9 @@ function PaymentReceiveFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={PaymentReceiveBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-
-function PaymentReceiveBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('payment_receive.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }

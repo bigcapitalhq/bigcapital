@@ -24,18 +24,16 @@ function MoneyOutFloatingActions({
     useMoneyOutDialogContext();
 
   // handle submit as draft button click.
-  const handleSubmitDraftBtnClick = (event) => {
+  const handleSubmitDraftBtnClick = () => {
     setSubmitPayload({ publish: false });
     submitForm();
   };
-
   // Handle submit  button click.
-  const handleSubmittBtnClick = (event) => {
+  const handleSubmittBtnClick = () => {
     setSubmitPayload({ publish: true });
   };
-
   // Handle close button click.
-  const handleCloseBtnClick = (event) => {
+  const handleCloseBtnClick = () => {
     closeDialog(dialogName);
   };
 
@@ -49,7 +47,7 @@ function MoneyOutFloatingActions({
         >
           <T id={'close'} />
         </Button>
-    
+
         <Button
           intent={Intent.PRIMARY}
           disabled={isSubmitting}

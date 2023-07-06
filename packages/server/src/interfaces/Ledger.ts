@@ -41,6 +41,8 @@ export interface ILedgerEntry {
   index: number;
   indexGroup?: number;
 
+  note?: string;
+
   userId?: number;
   itemId?: number;
   branchId?: number;

@@ -25,8 +25,8 @@ export default class CashflowTransactionJournalEntries {
 
   /**
    * Retrieves the common entry of cashflow transaction.
-   * @param   {ICashflowTransaction} cashflowTransaction
-   * @returns {}
+   * @param {ICashflowTransaction} cashflowTransaction
+   * @returns {Partial<ILedgerEntry>}
    */
   private getCommonEntry = (cashflowTransaction: ICashflowTransaction) => {
     const { entries, ...transaction } = cashflowTransaction;
@@ -41,7 +41,9 @@ export default class CashflowTransactionJournalEntries {
       ),
       transactionId: transaction.id,
       transactionNumber: transaction.transactionNumber,
-      referenceNo: transaction.referenceNo,
+      referenceNumber: transaction.referenceNo,
+
+      note: transaction.description,
 
       branchId: cashflowTransaction.branchId,
       userId: cashflowTransaction.userId,
@@ -76,9 +78,9 @@ export default class CashflowTransactionJournalEntries {
 
   /**
    * Retrieves the cashflow credit GL entry.
-   * @param   {ICashflowTransaction} cashflowTransaction
-   * @param   {ICashflowTransactionLine} entry
-   * @param   {number} index
+   * @param {ICashflowTransaction} cashflowTransaction
+   * @param {ICashflowTransactionLine} entry
+   * @param {number} index
    * @returns {ILedgerEntry}
    */
   private getCashflowCreditGLEntry = (
@@ -102,10 +104,10 @@ export default class CashflowTransactionJournalEntries {
 
   /**
    * Retrieves the cashflow transaction GL entry.
-   * @param   {ICashflowTransaction} cashflowTransaction
-   * @param   {ICashflowTransactionLine} entry
-   * @param   {number} index
-   * @returns
+   * @param {ICashflowTransaction} cashflowTransaction
+   * @param {ICashflowTransactionLine} entry
+   * @param {number} index
+   * @returns {ILedgerEntry[]}
    */
   private getJournalEntries = (
     cashflowTransaction: ICashflowTransaction
@@ -118,7 +120,7 @@ export default class CashflowTransactionJournalEntries {
 
   /**
    * Retrieves the cashflow GL ledger.
-   * @param   {ICashflowTransaction} cashflowTransaction
+   * @param {ICashflowTransaction} cashflowTransaction
    * @returns {Ledger}
    */
   private getCashflowLedger = (cashflowTransaction: ICashflowTransaction) => {
@@ -130,6 +132,7 @@ export default class CashflowTransactionJournalEntries {
    * Write the journal entries of the given cashflow transaction.
    * @param {number} tenantId
    * @param {ICashflowTransaction} cashflowTransaction
+   * @return {Promise<void>}
    */
   public writeJournalEntries = async (
     tenantId: number,
@@ -153,6 +156,7 @@ export default class CashflowTransactionJournalEntries {
    * Delete the journal entries.
    * @param {number} tenantId - Tenant id.
    * @param {number} cashflowTransactionId - Cashflow transaction id.
+   * @return {Promise<void>}
    */
   public revertJournalEntries = async (
     tenantId: number,

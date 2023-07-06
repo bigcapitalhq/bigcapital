@@ -10,7 +10,6 @@ import {
   InputPrependText,
   CurrencySelectList,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   Row,
   Col,
@@ -78,12 +77,10 @@ export default function CustomerFinancialPanel() {
               label={<T id={'customer.label.opening_branch'} />}
               name={'opening_balance_branch_id'}
               inline={true}
-              className={classNames('form-group--select-list', Classes.FILL)}
             >
               <BranchSelect
                 name={'opening_balance_branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

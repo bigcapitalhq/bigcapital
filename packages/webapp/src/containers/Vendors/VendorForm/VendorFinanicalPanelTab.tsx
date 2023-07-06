@@ -9,7 +9,6 @@ import {
   InputPrependText,
   CurrencySelectList,
   BranchSelect,
-  BranchSelectButton,
   FeatureCan,
   Row,
   Col,
@@ -75,12 +74,10 @@ export default function VendorFinanicalPanelTab() {
               label={<T id={'vendor.label.opening_branch'} />}
               name={'opening_balance_branch_id'}
               inline={true}
-              className={classNames('form-group--select-list', Classes.FILL)}
             >
               <BranchSelect
                 name={'opening_balance_branch_id'}
                 branches={branches}
-                input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
             </FFormGroup>

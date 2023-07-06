@@ -13,12 +13,14 @@ export function PaymentMadeFormFooterLeft() {
     <React.Fragment>
       {/* --------- Internal Note--------- */}
       <InternalNoteFormGroup
-        name={'internal_note'}
+        name={'statement'}
         label={<T id={'payment_made.form.internal_note.label'} />}
+        fastField={true}
       >
         <FEditableText
-          name={'internal_note'}
+          name={'statement'}
           placeholder={intl.get('payment_made.form.internal_note.placeholder')}
+          fastField={true}
         />
       </InternalNoteFormGroup>
     </React.Fragment>
