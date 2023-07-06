@@ -18,12 +18,13 @@
     "shared/*"
   ],
   "devDependencies": {
+    "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@commitlint/config-lerna-scopes": "^17.4.2",
+    "@faker-js/faker": "^8.0.2",
+    "@playwright/test": "^1.32.3",
     "husky": "^8.0.3",
-    "lerna": "^6.4.1",
-    "@commitlint/cli": "^17.4.2",
-    "@playwright/test": "^1.32.3"
+    "lerna": "^6.4.1"
   },
   "engines": {
     "node": "14.x"

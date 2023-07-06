@@ -53,7 +53,7 @@ function DashboardTopbar({
   };
 
   return (
-    <div class="dashboard__topbar">
+    <div class="dashboard__topbar" data-testId={'dashboard-topbar'}>
       <div class="dashboard__topbar-left">
         <div class="dashboard__topbar-sidebar-toggle">
           <Tooltip
