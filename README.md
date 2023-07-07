@@ -48,6 +48,16 @@ Bigcapital is a smart and open-source accounting and inventory software, Bigcapi
 
 Please see [Releases](https://github.com/bigcapitalhq/bigcapital/releases) for more information what has changed recently.
 
+# Recognition
+
+<a href="https://news.ycombinator.com/item?id=36118990">
+  <img
+    style="width: 250px; height: 54px;" width="250" height="54"
+    alt="Featured on Hacker News"
+    src="https://hackernews-badge.vercel.app/api?id=36118990"
+  />
+</a>
+
 # Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
