@@ -15,6 +15,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ameir",
+      "name": "Ameir Abdeldayem",
+      "avatar_url": "https://avatars.githubusercontent.com/u/374330?v=4",
+      "profile": "http://ameir.net",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
