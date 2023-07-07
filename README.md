@@ -59,6 +59,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/abouolia"><img src="https://avatars.githubusercontent.com/u/2197422?v=4?s=100" width="100px;" alt="Ahmed Bouhuolia"/><br /><sub><b>Ahmed Bouhuolia</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/commits?author=abouolia" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/elforjani13"><img src="https://avatars.githubusercontent.com/u/39470382?v=4?s=100" width="100px;" alt="ElforJani13"/><br /><sub><b>ElforJani13</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/commits?author=elforjani13" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://ameir.net"><img src="https://avatars.githubusercontent.com/u/374330?v=4?s=100" width="100px;" alt="Ameir Abdeldayem"/><br /><sub><b>Ameir Abdeldayem</b></sub></a><br /><a href="https://github.com/bigcapitalhq/bigcapital/issues?q=author%3Aameir" title="Bug reports">🐛</a></td>
     </tr>
   </tbody>
