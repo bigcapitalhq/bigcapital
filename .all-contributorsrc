@@ -33,6 +33,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "scheibling",
+      "name": "Lars Scheibling",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24367830?v=4",
+      "profile": "https://scheibling.se",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
