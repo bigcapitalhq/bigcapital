@@ -91,7 +91,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "rtl-detect": "^1.0.3",
-    "semver": "6.3.0",
+    "semver": "6.3.1",
     "style-loader": "0.23.1",
     "styled-components": "^5.3.1",
     "stylis-rtlcss": "^2.1.1",
