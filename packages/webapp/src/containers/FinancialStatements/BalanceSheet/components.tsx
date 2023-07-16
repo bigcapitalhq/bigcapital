@@ -21,19 +21,21 @@ export function BalanceSheetAlerts() {
     refetchBalanceSheet();
   };
   // Can't display any error if the report is loading.
-  if (isLoading) return null;
-
+  if (isLoading) {
+    return null;
+  }
+  // Can't continue if the cost compute job is not running.
+  if (!balanceSheet.meta.is_cost_compute_running) {
+    return null;
+  }
   return (
-    <If condition={balanceSheet.meta.is_cost_compute_running}>
-      <FinancialComputeAlert>
-        <Icon icon="info-block" iconSize={12} />{' '}
-        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
-
-        <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'report.compute_running.refresh'} />
-        </Button>
-      </FinancialComputeAlert>
-    </If>
+    <FinancialComputeAlert>
+      <Icon icon="info-block" iconSize={12} />{' '}
+      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+      <Button onClick={handleRecalcReport} minimal={true} small={true}>
+        <T id={'report.compute_running.refresh'} />
+      </Button>
+    </FinancialComputeAlert>
   );
 }
 

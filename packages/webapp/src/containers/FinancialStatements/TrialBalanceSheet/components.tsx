@@ -8,8 +8,8 @@ import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { If, Icon, FormattedMessage as T } from '@/components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
+import { FinancialComputeAlert } from '../FinancialReportPage';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-
 
 /**
  * Retrieves the credit column.
@@ -114,17 +114,19 @@ export function TrialBalanceSheetAlerts() {
   if (isLoading) {
     return null;
   }
+  // Can't continue if the cost compute job is not running.
+  if (!meta.is_cost_compute_running) {
+    return null;
+  }
 
   return (
-    <If condition={meta.is_cost_compute_running}>
-      <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} />
-        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+    <FinancialComputeAlert>
+      <Icon icon="info-block" iconSize={12} />
+      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
 
-        <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'refresh'} />
-        </Button>
-      </div>
-    </If>
+      <Button onClick={handleRecalcReport} minimal={true} small={true}>
+        <T id={'refresh'} />
+      </Button>
+    </FinancialComputeAlert>
   );
 }

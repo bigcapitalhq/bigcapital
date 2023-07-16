@@ -8,6 +8,7 @@ import { getColumnWidth } from '@/utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
+import { FinancialComputeAlert } from '../FinancialReportPage';
 import { Align } from '@/constants';
 
 /**
@@ -116,17 +117,18 @@ export function GeneralLedgerSheetAlerts() {
   if (isLoading) {
     return null;
   }
-
+  // Can't continue if the cost compute job is not running.
+  if (!generalLedger.meta.is_cost_compute_running) {
+    return null;
+  }
   return (
-    <If condition={generalLedger.meta.is_cost_compute_running}>
-      <div class="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} />
-        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
-        <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'refresh'} />
-        </Button>
-      </div>
-    </If>
+    <FinancialComputeAlert>
+      <Icon icon="info-block" iconSize={12} />
+      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+      <Button onClick={handleRecalcReport} minimal={true} small={true}>
+        <T id={'refresh'} />
+      </Button>
+    </FinancialComputeAlert>
   );
 }
 
