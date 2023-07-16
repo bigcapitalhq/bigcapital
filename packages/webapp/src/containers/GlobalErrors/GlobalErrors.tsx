@@ -9,6 +9,7 @@ import { compose } from '@/utils';
 
 let toastKeySessionExpired;
 let toastKeySomethingWrong;
+let toastTooManyRequests;
 
 function GlobalErrors({
   // #withGlobalErrors
@@ -39,6 +40,18 @@ function GlobalErrors({
         },
       },
       toastKeySomethingWrong,
+    );
+  }
+  if (globalErrors.too_many_requests) {
+    toastTooManyRequests = AppToaster.show(
+      {
+        message: intl.get('global_error.too_many_requests'),
+        intent: Intent.DANGER,
+        onDismiss: () => {
+          globalErrorsSet({ too_many_requests: false });
+        },
+      },
+      toastTooManyRequests,
     );
   }
   if (globalErrors.access_denied) {

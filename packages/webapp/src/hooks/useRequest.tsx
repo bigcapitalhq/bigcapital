@@ -60,6 +60,9 @@ export default function useApiRequest() {
         if (status === 403) {
           setGlobalErrors({ access_denied: true });
         }
+        if (status === 429) {
+          setGlobalErrors({ too_many_requests: true });
+        }
         if (status === 400) {
           const lockedError = data.errors.find(
             (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
