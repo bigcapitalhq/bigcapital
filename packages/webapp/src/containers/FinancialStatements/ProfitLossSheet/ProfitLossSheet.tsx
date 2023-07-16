@@ -13,7 +13,7 @@ import withProfitLossActions from './withProfitLossActions';
 
 import { useProfitLossSheetQuery } from './utils';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
-import { ProfitLossSheetLoadingBar } from './components';
+import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossBody } from './ProfitLossBody';
 
 /**
@@ -58,7 +58,7 @@ function ProfitLossSheet({
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <ProfitLossSheetLoadingBar />
-      {/* <ProfitLossSheetAlerts /> */}
+      <ProfitLossSheetAlerts />
 
       <DashboardPageContent>
         <ProfitLossSheetHeader
