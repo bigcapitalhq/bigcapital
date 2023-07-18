@@ -7,6 +7,7 @@ import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { dynamicColumns } from './dynamicColumns';
 import { useCashFlowStatementContext } from './CashFlowStatementProvider';
+import { FinancialComputeAlert } from '../FinancialReportPage';
 
 /**
  * Retrieve cash flow statement columns.
@@ -27,6 +28,7 @@ export const useCashFlowStatementColumns = () => {
  */
 export function CashFlowStatementLoadingBar() {
   const { isCashFlowFetching } = useCashFlowStatementContext();
+
   return (
     <If condition={isCashFlowFetching}>
       <FinancialLoadingBar />
@@ -45,20 +47,21 @@ export function CashFlowStatementAlerts() {
   const handleRecalcReport = () => {
     refetchCashFlow();
   };
-
   // Can't display any error if the report is loading
   if (isCashFlowLoading) {
     return null;
   }
+  // Can't continue if the cost compute is not running.
+  if (!cashFlowStatement.meta.is_cost_compute_running) {
+    return null;
+  }
   return (
-    <If condition={cashFlowStatement.meta.is_cost_compute_running}>
-      <div className="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} />
-        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
-        <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'refresh'} />
-        </Button>
-      </div>
-    </If>
+    <FinancialComputeAlert>
+      <Icon icon="info-block" iconSize={12} />
+      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+      <Button onClick={handleRecalcReport} minimal={true} small={true}>
+        <T id={'refresh'} />
+      </Button>
+    </FinancialComputeAlert>
   );
 }

@@ -6,6 +6,7 @@ import { Icon, If, FormattedMessage as T } from '@/components';
 import { dynamicColumns } from './utils';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
+import { FinancialComputeAlert } from '../FinancialReportPage';
 
 /**
  * Retrieve inventory item details columns.
@@ -53,17 +54,19 @@ export function InventoryItemDetailsAlerts() {
   if (isInventoryItemDetailsLoading) {
     return null;
   }
+  // Can't continue if the cost compute job is running.
+  if (!inventoryItemDetails.meta.is_cost_compute_running) {
+    return null;
+  }
 
   return (
-    <If condition={inventoryItemDetails.meta.is_cost_compute_running}>
-      <div className="alert-compute-running">
-        <Icon icon="info-block" iconSize={12} />
-        <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+    <FinancialComputeAlert>
+      <Icon icon="info-block" iconSize={12} />
+      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
 
-        <Button onClick={handleRecalcReport} minimal={true} small={true}>
-          <T id={'refresh'} />
-        </Button>
-      </div>
-    </If>
+      <Button onClick={handleRecalcReport} minimal={true} small={true}>
+        <T id={'refresh'} />
+      </Button>
+    </FinancialComputeAlert>
   );
 }
