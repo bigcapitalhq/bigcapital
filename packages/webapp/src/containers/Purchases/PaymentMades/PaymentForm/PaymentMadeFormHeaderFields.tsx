@@ -248,7 +248,7 @@ function PaymentFormVendorSelect() {
         name={'vendor_id'}
         items={vendors}
         placeholder={<T id={'select_vender_account'} />}
-        onItemChange={(contact) => {
+        onItemSelect={(contact) => {
           setFieldValue('vendor_id', contact.id);
           setFieldValue('currency_code', contact?.currency_code);
           setPaymentVendorId(contact.id);

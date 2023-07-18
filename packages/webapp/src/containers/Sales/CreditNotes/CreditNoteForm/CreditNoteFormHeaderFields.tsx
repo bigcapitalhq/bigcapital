@@ -110,7 +110,7 @@ function CreditNoteCustomersSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
+        onItemSelect={(customer) => {
           setFieldValue('customer_id', customer.id);
           setFieldValue('currency_code', customer?.currency_code);
         }}

@@ -85,7 +85,6 @@ function VendorCreditNoteFormHeaderFields({
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
-
       {/* ------- Vendor Credit date ------- */}
       <FastField name={'vendor_credit_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -194,7 +193,7 @@ function VendorCreditFormVendorSelect() {
         name={'vendor_id'}
         items={vendors}
         placeholder={<T id={'select_vender_account'} />}
-        onItemChange={(contact) => {
+        onItemSelect={(contact) => {
           setFieldValue('vendor_id', contact.id);
           setFieldValue('currency_code', contact?.currency_code);
         }}
