@@ -20,6 +20,11 @@ services:
       - '3306'
     ports:
       - '3306:3306'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
 
   mongo:
     build: ./docker/mongo
@@ -29,6 +34,11 @@ services:
       - mongo:/var/lib/mongodb
     ports:
       - '27017:27017'
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
 
   redis:
     build:
@@ -37,6 +47,11 @@ services:
       - "6379"
     volumes:
       - redis:/data
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
 
 # Volumes
 volumes:

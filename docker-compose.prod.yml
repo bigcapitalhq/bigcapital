@@ -21,10 +21,20 @@ services:
     depends_on:
       - server
       - webapp
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
 
   webapp:
     container_name: bigcapital-webapp
     image: ghcr.io/bigcapitalhq/webapp:latest
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
 
   server:
     container_name: bigcapital-server
@@ -37,6 +47,11 @@ services:
       - mysql
       - mongo
       - redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -93,6 +108,11 @@ services:
 
   mysql:
     container_name: bigcapital-mysql
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
     build:
       context: ./docker/mariadb
     environment:
@@ -106,7 +126,12 @@ services:
       - '3306'
 
   mongo:
-    container_name: bigcapital-mongo 
+    container_name: bigcapital-mongo
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
     build: ./docker/mongo
     expose:
       - '27017'
@@ -115,6 +140,11 @@ services:
 
   redis:
     container_name: bigcapital-redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        window: 120s
     build:
       context: ./docker/redis
     expose:
