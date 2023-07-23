@@ -2,6 +2,17 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.9.11] - 23-07-2023
+
+* added: Restart policy to docker compose files. by @suhaibaffan in https://github.com/bigcapitalhq/bigcapital/pull/198
+* fix: Expose and expand the rate limit to the env variables by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/195
+
+# [0.9.10] - 18-07-2023
+
+* feat(e2e): E2E onboarding process by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/176
+* fix(webapp): Show loading message of cost computing job on financial reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/196
+* fix(webapp): Change the currency code of sales and purchases transactions with foreign contacts. 
+
 # [0.9.9] - 28-06-2023
 
 * refactor: Customer and vendor select component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/171
