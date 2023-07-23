@@ -22,9 +22,7 @@ services:
       - '3306:3306'
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
 
   mongo:
     build: ./docker/mongo
@@ -36,9 +34,7 @@ services:
       - '27017:27017'
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
 
   redis:
     build:
@@ -49,9 +45,7 @@ services:
       - redis:/data
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
 
 # Volumes
 volumes:

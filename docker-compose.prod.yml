@@ -23,18 +23,14 @@ services:
       - webapp
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
 
   webapp:
     container_name: bigcapital-webapp
     image: ghcr.io/bigcapitalhq/webapp:latest
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
 
   server:
     container_name: bigcapital-server
@@ -49,9 +45,7 @@ services:
       - redis
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -129,9 +123,7 @@ services:
     container_name: bigcapital-mongo
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
     build: ./docker/mongo
     expose:
       - '27017'
@@ -142,9 +134,7 @@ services:
     container_name: bigcapital-redis
     deploy:
       restart_policy:
-        condition: on-failure
-        delay: 5s
-        window: 120s
+        condition: unless-stopped
     build:
       context: ./docker/redis
     expose:
