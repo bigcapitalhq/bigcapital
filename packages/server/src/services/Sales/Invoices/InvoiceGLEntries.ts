@@ -88,8 +88,8 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Retrieves the given invoice ledger.
-   * @param   {ISaleInvoice} saleInvoice
-   * @param   {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
    * @returns {ILedger}
    */
   public getInvoiceGLedger = (
@@ -103,7 +103,7 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Retrieves the invoice GL common entry.
-   * @param   {ISaleInvoice} saleInvoice
+   * @param {ISaleInvoice} saleInvoice
    * @returns {Partial<ILedgerEntry>}
    */
   private getInvoiceGLCommonEntry = (
@@ -131,8 +131,8 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Retrieve receivable entry of the given invoice.
-   * @param   {ISaleInvoice} saleInvoice
-   * @param   {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
    * @returns {ILedgerEntry}
    */
   private getInvoiceReceivableEntry = (
@@ -153,9 +153,9 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Retrieve item income entry of the given invoice.
-   * @param   {ISaleInvoice} saleInvoice -
-   * @param   {IItemEntry} entry -
-   * @param   {number} index -
+   * @param {ISaleInvoice} saleInvoice -
+   * @param {IItemEntry} entry -
+   * @param {number} index -
    * @returns {ILedgerEntry}
    */
   private getInvoiceItemEntry = R.curry(
@@ -183,8 +183,8 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Retrieves the invoice GL entries.
-   * @param   {ISaleInvoice} saleInvoice
-   * @param   {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
    * @returns {ILedgerEntry[]}
    */
   public getInvoiceGLEntries = (

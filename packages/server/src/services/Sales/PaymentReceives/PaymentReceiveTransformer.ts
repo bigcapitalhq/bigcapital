@@ -1,7 +1,7 @@
 import { IPaymentReceive, IPaymentReceiveEntry } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
-import { SaleInvoiceTransformer } from '../SaleInvoiceTransformer';
+import { SaleInvoiceTransformer } from '../Invoices/SaleInvoiceTransformer';
 
 export class PaymentReceiveTransfromer extends Transformer {
   /**

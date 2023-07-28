@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
+import BillPaymentsService from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import {
   IBillPaymentEventCreatedPayload,

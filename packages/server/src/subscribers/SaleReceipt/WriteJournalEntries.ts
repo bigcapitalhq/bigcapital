@@ -7,7 +7,7 @@ import {
   ISaleReceiptEditedPayload,
   ISaleReceiptEventDeletedPayload,
 } from '@/interfaces';
-import { SaleReceiptGLEntries } from '@/services/Sales/SaleReceiptGLEntries';
+import { SaleReceiptGLEntries } from '@/services/Sales/Receipts/SaleReceiptGLEntries';
 
 @Service()
 export default class SaleReceiptWriteGLEntriesSubscriber {

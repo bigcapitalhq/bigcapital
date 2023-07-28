@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import async from 'async';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { PaymentReceiveGLEntries } from '../PaymentReceives/PaymentReceiveGLEntries';
 
 @Service()

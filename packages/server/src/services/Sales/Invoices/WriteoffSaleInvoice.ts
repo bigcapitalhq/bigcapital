@@ -11,7 +11,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { ServiceError } from '@/exceptions';
 
-import JournalPosterService from './JournalPosterService';
+import JournalPosterService from '../JournalPosterService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
@@ -21,7 +21,7 @@ const ERRORS = {
 };
 
 @Service()
-export default class SaleInvoiceWriteoff {
+export class WriteoffSaleInvoice {
   @Inject()
   tenancy: HasTenancyService;
 
@@ -57,7 +57,7 @@ export default class SaleInvoiceWriteoff {
     // Validate the sale invoice whether already written-off.
     this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
 
-    // Saves the invoice write-off transaction with associated transactions 
+    // Saves the invoice write-off transaction with associated transactions
     // under unit-of-work envirmenet.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       const eventPayload = {

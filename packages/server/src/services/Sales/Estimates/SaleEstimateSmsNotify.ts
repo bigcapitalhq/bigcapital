@@ -23,16 +23,16 @@ const ERRORS = {
 @Service()
 export default class SaleEstimateNotifyBySms {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private saleSmsNotification: SaleNotifyBySms;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   /**
    *

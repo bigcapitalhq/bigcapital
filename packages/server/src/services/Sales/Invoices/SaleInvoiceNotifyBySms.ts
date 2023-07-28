@@ -2,8 +2,6 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import SaleInvoicesService from './SalesInvoices';
-import SMSClient from '@/services/SMSClient';
 import {
   ISaleInvoice,
   ISaleInvoiceSmsDetailsDTO,
@@ -15,7 +13,7 @@ import {
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatSmsMessage, formatNumber } from 'utils';
 import { TenantMetadata } from '@/system/models';
-import SaleNotifyBySms from './SaleNotifyBySms';
+import SaleNotifyBySms from '../SaleNotifyBySms';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -23,19 +21,16 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 @Service()
 export default class SaleInvoiceNotifyBySms {
   @Inject()
-  invoiceService: SaleInvoicesService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
-
-  @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private saleSmsNotification: SaleNotifyBySms;
 
   /**
    * Notify customer via sms about sale invoice.

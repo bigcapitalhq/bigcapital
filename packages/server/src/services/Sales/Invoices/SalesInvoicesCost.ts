@@ -3,13 +3,11 @@ import { chain } from 'lodash';
 import moment from 'moment';
 import { Knex } from 'knex';
 import InventoryService from '@/services/Inventory/Inventory';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import {
   IInventoryCostLotsGLEntriesWriteEvent,
   IInventoryTransaction,
 } from '@/interfaces';
 import UnitOfWork from '@/services/UnitOfWork';
-import { SaleInvoiceCostGLEntries } from './Invoices/SaleInvoiceCostGLEntries';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 
@@ -20,9 +18,6 @@ export default class SaleInvoicesCost {
 
   @Inject()
   private uow: UnitOfWork;
-
-  @Inject()
-  private costGLEntries: SaleInvoiceCostGLEntries;
 
   @Inject()
   private eventPublisher: EventPublisher;
@@ -122,8 +117,8 @@ export default class SaleInvoicesCost {
 
   /**
    * Writes cost GL entries from the inventory cost lots.
-   * @param   {number} tenantId -
-   * @param   {Date} startingDate -
+   * @param {number} tenantId -
+   * @param {Date} startingDate -
    * @returns {Promise<void>}
    */
   public writeCostLotsGLEntries = (tenantId: number, startingDate: Date) => {

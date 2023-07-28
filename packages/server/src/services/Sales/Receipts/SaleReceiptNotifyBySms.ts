@@ -1,14 +1,12 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import SMSClient from '@/services/SMSClient';
 import {
   ISaleReceiptSmsDetails,
   ISaleReceipt,
   SMS_NOTIFICATION_KEY,
   ICustomer,
 } from '@/interfaces';
-import SalesReceiptService from './SalesReceipts';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
@@ -20,19 +18,16 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 @Service()
 export default class SaleReceiptNotifyBySms {
   @Inject()
-  receiptsService: SalesReceiptService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
-
-  @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private saleSmsNotification: SaleNotifyBySms;
 
   /**
    * Notify customer via sms about sale receipt.

@@ -4,7 +4,7 @@ import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
+import BillPaymentsService from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import BillPaymentsPages from '@/services/Purchases/BillPayments/BillPaymentsPages';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';

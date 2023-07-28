@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import SaleInvoicesService from '@/services/Sales/SalesInvoices';
+import SaleInvoicesService from '@/services/Sales/Invoices/SalesInvoices';
 import { ISaleInvoiceCreatedPayload } from '@/interfaces';
 
 @Service()

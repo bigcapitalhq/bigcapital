@@ -1,14 +1,12 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import SMSClient from '@/services/SMSClient';
 import {
   IPaymentReceiveSmsDetails,
   SMS_NOTIFICATION_KEY,
   IPaymentReceive,
   IPaymentReceiveEntry,
 } from '@/interfaces';
-import PaymentReceiveService from './PaymentsReceives';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
@@ -18,19 +16,16 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 @Service()
 export default class PaymentReceiveNotifyBySms {
   @Inject()
-  paymentReceiveService: PaymentReceiveService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
-
-  @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private saleSmsNotification: SaleNotifyBySms;
 
   /**
    * Notify customer via sms about payment receive details.

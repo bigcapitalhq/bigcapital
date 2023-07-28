@@ -3,7 +3,7 @@ import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import SaleInvoiceService from '@/services/Sales/SalesInvoices';
+import SaleInvoiceService from '@/services/Sales/Invoices/SalesInvoices';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import {
@@ -13,7 +13,7 @@ import {
   AbilitySubject,
 } from '@/interfaces';
 import SaleInvoicePdf from '@/services/Sales/SaleInvoicePdf';
-import SaleInvoiceWriteoff from '@/services/Sales/SaleInvoiceWriteoff';
+import SaleInvoiceWriteoff from '@/services/Sales/Invoices/WriteoffSaleInvoice';
 import SaleInvoiceNotifyBySms from '@/services/Sales/SaleInvoiceNotifyBySms';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import InvoicePaymentsService from '@/services/Sales/Invoices/InvoicePaymentsService';

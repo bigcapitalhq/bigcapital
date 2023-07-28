@@ -13,7 +13,7 @@ import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsRece
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import VendorCredit from '../BaseVendorCredit';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
+import BillPaymentsService from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from '../constants';
 

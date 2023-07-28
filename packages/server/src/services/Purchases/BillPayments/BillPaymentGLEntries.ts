@@ -99,7 +99,7 @@ export class BillPaymentGLEntries {
 
   /**
    * Retrieves the payment common entry.
-   * @param   {IBillPayment} billPayment
+   * @param {IBillPayment} billPayment
    * @returns {}
    */
   private getPaymentCommonEntry = (billPayment: IBillPayment) => {

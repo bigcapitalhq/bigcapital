@@ -22,7 +22,7 @@ export class SaleReceiptCostGLEntriesSubscriber {
    * Writes the receipts cost GL entries once the inventory cost lots be written.
    * @param {IInventoryCostLotsGLEntriesWriteEvent}
    */
-  writeJournalEntriesOnceWriteoffCreate = async ({
+  private writeJournalEntriesOnceWriteoffCreate = async ({
     trx,
     startingDate,
     tenantId,
