@@ -1,4 +1,5 @@
 import { Service, Inject } from 'typedi';
+import { Knex } from 'knex';
 import {
   ISystemUser,
   ISaleInvoiceDeletePayload,

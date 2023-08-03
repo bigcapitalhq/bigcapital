@@ -12,6 +12,7 @@ import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
+import { TenantMetadata } from '@/system/models';
 
 @Service()
 export class CreatePaymentReceive {
@@ -29,25 +30,6 @@ export class CreatePaymentReceive {
 
   @Inject()
   private transformer: PaymentReceiveDTOTransformer;
-
-  /**
-   * Transform the create payment receive DTO.
-   * @param {number} tenantId
-   * @param {ICustomer} customer
-   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
-   * @returns
-   */
-  private transformCreateDTOToModel = async (
-    tenantId: number,
-    customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO
-  ) => {
-    return this.transformer.transformPaymentReceiveDTOToModel(
-      tenantId,
-      customer,
-      paymentReceiveDTO
-    );
-  };
 
   /**
    * Creates a new payment receive and store it to the storage
@@ -131,4 +113,23 @@ export class CreatePaymentReceive {
       return paymentReceive;
     });
   }
+
+  /**
+   * Transform the create payment receive DTO.
+   * @param {number} tenantId
+   * @param {ICustomer} customer
+   * @param {IPaymentReceiveCreateDTO} paymentReceiveDTO
+   * @returns
+   */
+  private transformCreateDTOToModel = async (
+    tenantId: number,
+    customer: ICustomer,
+    paymentReceiveDTO: IPaymentReceiveCreateDTO
+  ) => {
+    return this.transformer.transformPaymentReceiveDTOToModel(
+      tenantId,
+      customer,
+      paymentReceiveDTO
+    );
+  };
 }

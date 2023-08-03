@@ -41,13 +41,16 @@ export default class AllocateLandedCost extends BaseLandedCostService {
     allocateCostDTO: ILandedCostDTO,
     billId: number
   ): Promise<IBillLandedCost> => {
-    const { BillLandedCost } = this.tenancy.models(tenantId);
+    const { BillLandedCost, Bill } = this.tenancy.models(tenantId);
 
     // Retrieve total cost of allocated items.
     const amount = this.getAllocateItemsCostTotal(allocateCostDTO);
 
     // Retrieve the purchase invoice or throw not found error.
-    const bill = await this.billsService.getBillOrThrowError(tenantId, billId);
+    const bill = await Bill.query()
+      .findById(billId)
+      .withGraphFetched('entries')
+      .throwIfNotFound();
 
     // Retrieve landed cost transaction or throw not found service error.
     const costTransaction = await this.getLandedCostOrThrowError(

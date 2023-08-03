@@ -1,9 +1,16 @@
 import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from '../constants';
-import { ISaleEstimateApprovingEvent } from '@/interfaces';
+import {
+  ISaleEstimateApprovedEvent,
+  ISaleEstimateApprovingEvent,
+} from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
+import { ERRORS } from './constants';
+import { Knex } from 'knex';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import moment from 'moment';
 
 @Service()
 export class ApproveSaleEstimate {
@@ -12,6 +19,9 @@ export class ApproveSaleEstimate {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Mark the sale estimate as approved from the customer.

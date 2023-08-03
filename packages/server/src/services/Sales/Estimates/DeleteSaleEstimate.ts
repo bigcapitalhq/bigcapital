@@ -1,11 +1,27 @@
-import { ServiceError } from "@/exceptions";
-import { ERRORS } from "../constants";
-import { ISaleEstimateDeletingPayload } from "@/interfaces";
-import events from "@/subscribers/events";
-import { Service } from "typedi";
+import { Inject, Service } from 'typedi';
+import { ServiceError } from '@/exceptions';
+import {
+  ISaleEstimateDeletedPayload,
+  ISaleEstimateDeletingPayload,
+} from '@/interfaces';
+import events from '@/subscribers/events';
+import { ERRORS } from './constants';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import UnitOfWork from '@/services/UnitOfWork';
+import { Knex } from 'knex';
 
 @Service()
 export class DeleteSaleEstimate {
+  @Inject()
+  private tenancy: HasTenancyService;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
+
+  @Inject()
+  private uow: UnitOfWork;
+
   /**
    * Deletes the given estimate id with associated entries.
    * @async

@@ -10,8 +10,6 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { ServiceError } from '@/exceptions';
-
-import JournalPosterService from '../JournalPosterService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
@@ -23,16 +21,13 @@ const ERRORS = {
 @Service()
 export class WriteoffSaleInvoice {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  journalService: JournalPosterService;
-
-  @Inject()
-  uow: UnitOfWork;
+  private uow: UnitOfWork;
 
   /**
    * Writes-off the sale invoice on bad debt expense account.

@@ -1,8 +1,9 @@
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { CreateSaleEstimate } from './CreateSaleEstimate';
 import {
   IFilterMeta,
   IPaginationMeta,
+  IPaymentReceiveSmsDetails,
   ISaleEstimate,
   ISaleEstimateDTO,
   ISalesEstimatesFilter,
@@ -11,7 +12,12 @@ import { EditSaleEstimate } from './EditSaleEstimate';
 import { DeleteSaleEstimate } from './DeleteSaleEstimate';
 import { GetSaleEstimate } from './GetSaleEstimate';
 import { GetSaleEstimates } from './GetSaleEstimates';
+import { DeliverSaleEstimate } from './DeliverSaleEstimate';
+import { ApproveSaleEstimate } from './ApproveSaleEstimate';
+import { RejectSaleEstimate } from './RejectSaleEstimate';
+import { SaleEstimateNotifyBySms } from './SaleEstimateSmsNotify';
 
+@Service()
 export class SaleEstimatesApplication {
   @Inject()
   private createSaleEstimateService: CreateSaleEstimate;
@@ -28,9 +34,20 @@ export class SaleEstimatesApplication {
   @Inject()
   private getSaleEstimatesService: GetSaleEstimates;
 
+  @Inject()
+  private deliverSaleEstimateService: DeliverSaleEstimate;
+
+  @Inject()
+  private approveSaleEstimateService: ApproveSaleEstimate;
+
+  @Inject()
+  private rejectSaleEstimateService: RejectSaleEstimate;
+
+  @Inject()
+  private saleEstimateNotifyBySmsService: SaleEstimateNotifyBySms;
+
   /**
    * Create a sale estimate.
-   * @async
    * @param {number} tenantId - The tenant id.
    * @param {EstimateDTO} estimate
    * @return {Promise<ISaleEstimate>}
@@ -43,8 +60,7 @@ export class SaleEstimatesApplication {
   }
 
   /**
-   *
-   * @async
+   * Edit the given sale estimate.
    * @param {number} tenantId - The tenant id.
    * @param {Integer} estimateId
    * @param {EstimateDTO} estimate
@@ -63,7 +79,10 @@ export class SaleEstimatesApplication {
   }
 
   /**
-   *
+   * Deletes the given sale estimate.
+   * @param {number} tenantId -
+   * @param {number} estimateId -
+   * @return {Promise<void>}
    */
   public deleteSaleEstimate(
     tenantId: number,
@@ -73,20 +92,19 @@ export class SaleEstimatesApplication {
   }
 
   /**
-   *
-   * @param tenantId
-   * @param estimateId
-   * @returns
+   * Retrieves the given sale estimate.
+   * @param {number} tenantId
+   * @param {number} estimateId
    */
   public getSaleEstimate(tenantId: number, estimateId: number) {
     return this.getSaleEstimateService.getEstimate(tenantId, estimateId);
   }
 
   /**
-   *
+   * Retrieves the sale estimate.
    * @param {number} tenantId
    * @param {ISalesEstimatesFilter} filterDTO
-   * @returns 
+   * @returns
    */
   public getSaleEstimates(
     tenantId: number,
@@ -96,6 +114,82 @@ export class SaleEstimatesApplication {
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
-    return this.getSaleEstimatesService.estimatesList(tenantId, filterDTO);
+    return this.getSaleEstimatesService.getEstimates(tenantId, filterDTO);
   }
+
+  /**
+   * Deliver the given sale estimate.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<void>}
+   */
+  public deliverSaleEstimate(tenantId: number, saleEstimateId: number) {
+    return this.deliverSaleEstimateService.deliverSaleEstimate(
+      tenantId,
+      saleEstimateId
+    );
+  }
+
+  /**
+   * Approve the given sale estimate.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<void>}
+   */
+  public approveSaleEstimate(
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<void> {
+    return this.approveSaleEstimateService.approveSaleEstimate(
+      tenantId,
+      saleEstimateId
+    );
+  }
+
+  /**
+   * Mark the sale estimate as rejected from the customer.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   */
+  public async rejectSaleEstimate(
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<void> {
+    return this.rejectSaleEstimateService.rejectSaleEstimate(
+      tenantId,
+      saleEstimateId
+    );
+  }
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<ISaleEstimate>}
+   */
+  public notifySaleEstimateBySms = async (
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<ISaleEstimate> => {
+    return this.saleEstimateNotifyBySmsService.notifyBySms(
+      tenantId,
+      saleEstimateId
+    );
+  };
+
+  /**
+   * Retrieve the SMS details of the given payment receive transaction.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<IPaymentReceiveSmsDetails>}
+   */
+  public getSaleEstimateSmsDetails = (
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<IPaymentReceiveSmsDetails> => {
+    return this.saleEstimateNotifyBySmsService.smsDetails(
+      tenantId,
+      saleEstimateId
+    );
+  };
 }

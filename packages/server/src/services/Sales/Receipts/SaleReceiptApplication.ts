@@ -10,6 +10,9 @@ import { EditSaleReceipt } from './EditSaleReceipt';
 import { GetSaleReceipt } from './GetSaleReceipt';
 import { DeleteSaleReceipt } from './DeleteSaleReceipt';
 import { GetSaleReceipts } from './GetSaleReceipts';
+import { CloseSaleReceipt } from './CloseSaleReceipt';
+import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
+import SaleReceiptNotifyBySms from './SaleReceiptNotifyBySms';
 
 @Service()
 export class SaleReceiptApplication {
@@ -28,11 +31,20 @@ export class SaleReceiptApplication {
   @Inject()
   private getSaleReceiptsService: GetSaleReceipts;
 
+  @Inject()
+  private closeSaleReceiptService: CloseSaleReceipt;
+
+  @Inject()
+  private getSaleReceiptPdfService: SaleReceiptsPdf;
+
+  @Inject()
+  private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms;
+
   /**
-   *  Creates a new sale receipt with associated entries.
+   * Creates a new sale receipt with associated entries.
    * @param {number} tenantId
    * @param {} saleReceiptDTO
-   * @returns
+   * @returns {Promise<ISaleReceipt>}
    */
   public async createSaleReceipt(
     tenantId: number,
@@ -46,9 +58,9 @@ export class SaleReceiptApplication {
 
   /**
    *  Edit details sale receipt with associated entries.
-   * @param tenantId
-   * @param saleReceiptId
-   * @param saleReceiptDTO
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @param {} saleReceiptDTO
    * @returns
    */
   public async editSaleReceipt(
@@ -101,5 +113,57 @@ export class SaleReceiptApplication {
     filterMeta: IFilterMeta;
   }> {
     return this.getSaleReceiptsService.getSaleReceipts(tenantId, filterDTO);
+  }
+
+  /**
+   * Closes the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns {Promise<void>}
+   */
+  public async closeSaleReceipt(tenantId: number, saleReceiptId: number) {
+    return this.closeSaleReceiptService.closeSaleReceipt(
+      tenantId,
+      saleReceiptId
+    );
+  }
+
+  /**
+   * Retrieves the given sale receipt pdf.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns
+   */
+  public getSaleReceiptPdf(tenantId: number, saleReceiptId: number) {
+    return this.getSaleReceiptPdfService.saleReceiptPdf(
+      tenantId,
+      saleReceiptId
+    );
+  }
+
+  /**
+   * Notify receipt customer by SMS of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns
+   */
+  public saleReceiptNotifyBySms(tenantId: number, saleReceiptId: number) {
+    return this.saleReceiptNotifyBySmsService.notifyBySms(
+      tenantId,
+      saleReceiptId
+    );
+  }
+
+  /**
+   * Retrieves sms details of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns
+   */
+  public getSaleReceiptSmsDetails(tenantId: number, saleReceiptId: number) {
+    return this.saleReceiptNotifyBySmsService.smsDetails(
+      tenantId,
+      saleReceiptId
+    );
   }
 }

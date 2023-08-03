@@ -1,49 +1,58 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import { ISaleReceipt } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
-export class SaleReceiptInventoryTransactions {
+export class BillInventoryTransactions {
   @Inject()
-  private inventoryService: InventoryService;
+  private tenancy: HasTenancyService;
 
   @Inject()
   private itemsEntriesService: ItemsEntriesService;
 
+  @Inject()
+  private inventoryService: InventoryService;
+
   /**
    * Records the inventory transactions from the given bill input.
-   * @param {Bill} bill - Bill model object.
-   * @param {number} billId - Bill id.
+   * @param  {Bill} bill - Bill model object.
+   * @param  {number} billId - Bill id.
    * @return {Promise<void>}
    */
   public async recordInventoryTransactions(
     tenantId: number,
-    saleReceipt: ISaleReceipt,
+    billId: number,
     override?: boolean,
     trx?: Knex.Transaction
   ): Promise<void> {
+    const { Bill } = this.tenancy.models(tenantId);
+
+    // Retireve bill with assocaited entries and allocated cost entries.
+    const bill = await Bill.query(trx)
+      .findById(billId)
+      .withGraphFetched('entries.allocatedCostEntries');
+
     // Loads the inventory items entries of the given sale invoice.
     const inventoryEntries =
       await this.itemsEntriesService.filterInventoryEntries(
         tenantId,
-        saleReceipt.entries
+        bill.entries
       );
     const transaction = {
-      transactionId: saleReceipt.id,
-      transactionType: 'SaleReceipt',
-      transactionNumber: saleReceipt.receiptNumber,
-      exchangeRate: saleReceipt.exchangeRate,
+      transactionId: bill.id,
+      transactionType: 'Bill',
+      exchangeRate: bill.exchangeRate,
 
-      date: saleReceipt.receiptDate,
-      direction: 'OUT',
+      date: bill.billDate,
+      direction: 'IN',
       entries: inventoryEntries,
-      createdAt: saleReceipt.createdAt,
+      createdAt: bill.createdAt,
 
-      warehouseId: saleReceipt.warehouseId,
+      warehouseId: bill.warehouseId,
     };
-    return this.inventoryService.recordInventoryTransactionsFromItemsEntries(
+    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
       tenantId,
       transaction,
       override,
@@ -59,13 +68,14 @@ export class SaleReceiptInventoryTransactions {
    */
   public async revertInventoryTransactions(
     tenantId: number,
-    receiptId: number,
+    billId: number,
     trx?: Knex.Transaction
   ) {
-    return this.inventoryService.deleteInventoryTransactions(
+    // Deletes the inventory transactions by the given reference id and type.
+    await this.inventoryService.deleteInventoryTransactions(
       tenantId,
-      receiptId,
-      'SaleReceipt',
+      billId,
+      'Bill',
       trx
     );
   }

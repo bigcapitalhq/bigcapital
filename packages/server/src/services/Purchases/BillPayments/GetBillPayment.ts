@@ -44,7 +44,5 @@ export class GetBillPayment {
     );
   }
 
-  private parseListFilterDTO(filterDTO) {
-    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-  }
+  
 }

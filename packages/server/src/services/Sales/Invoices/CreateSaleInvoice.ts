@@ -12,9 +12,9 @@ import events from '@/subscribers/events';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import SaleEstimateService from '@/services/Sales/SalesEstimate';
-import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
 
 @Service()
@@ -52,7 +52,7 @@ export class CreateSaleInvoice {
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
     authorizedUser: ITenantUser
   ) => {
-  return this.transformerDTO.transformDTOToModel(
+    return this.transformerDTO.transformDTOToModel(
       tenantId,
       customer,
       saleInvoiceDTO,

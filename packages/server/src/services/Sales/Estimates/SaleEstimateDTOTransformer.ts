@@ -7,6 +7,8 @@ import { SaleEstimateValidators } from './SaleEstimateValidators';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import moment from 'moment';
+import { SaleEstimateIncrement } from './SaleEstimateIncrement';
 
 @Service()
 export class SaleEstimateDTOTransformer {
@@ -21,6 +23,9 @@ export class SaleEstimateDTOTransformer {
 
   @Inject()
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
+
+  @Inject()
+  private estimateIncrement: SaleEstimateIncrement;
 
   /**
    * Transform create DTO object ot model object.
@@ -39,7 +44,8 @@ export class SaleEstimateDTOTransformer {
     const amount = sumBy(estimateDTO.entries, (e) => ItemEntry.calcAmount(e));
 
     // Retreive the next invoice number.
-    const autoNextNumber = this.getNextEstimateNumber(tenantId);
+    const autoNextNumber =
+      this.estimateIncrement.getNextEstimateNumber(tenantId);
 
     // Retreive the next estimate number.
     const estimateNumber =
@@ -73,5 +79,26 @@ export class SaleEstimateDTOTransformer {
       this.branchDTOTransform.transformDTO<ISaleEstimate>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleEstimate>(tenantId)
     )(initialDTO);
+  }
+
+  /**
+   * Retrieve estimate number to object model.
+   * @param {number} tenantId
+   * @param {ISaleEstimateDTO} saleEstimateDTO
+   * @param {ISaleEstimate} oldSaleEstimate
+   */
+  public transformEstimateNumberToModel(
+    tenantId: number,
+    saleEstimateDTO: ISaleEstimateDTO,
+    oldSaleEstimate?: ISaleEstimate
+  ): string {
+    // Retreive the next invoice number.
+    const autoNextNumber =
+      this.estimateIncrement.getNextEstimateNumber(tenantId);
+
+    if (saleEstimateDTO.estimateNumber) {
+      return saleEstimateDTO.estimateNumber;
+    }
+    return oldSaleEstimate ? oldSaleEstimate.estimateNumber : autoNextNumber;
   }
 }

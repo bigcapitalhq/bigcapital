@@ -21,7 +21,7 @@ const ERRORS = {
 };
 
 @Service()
-export default class SaleEstimateNotifyBySms {
+export class SaleEstimateNotifyBySms {
   @Inject()
   private tenancy: HasTenancyService;
 

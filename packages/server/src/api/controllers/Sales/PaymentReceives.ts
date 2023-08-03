@@ -1,30 +1,25 @@
+import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query, ValidationChain } from 'express-validator';
-import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
   IPaymentReceiveDTO,
   PaymentReceiveAction,
-  SaleInvoiceAction,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
 import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReeceivePdf';
+import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 
-/**
- * Payments receives controller.
- * @service
- */
 @Service()
 export default class PaymentReceivesController extends BaseController {
   @Inject()
-  paymentReceiveService: PaymentReceiveService;
+  private paymentReceiveApplication: PaymentReceivesApplication;
 
   @Inject()
   PaymentReceivesPages: PaymentReceivesPages;
@@ -137,7 +132,7 @@ export default class PaymentReceivesController extends BaseController {
    * Payment receive schema.
    * @return {Array}
    */
-  get paymentReceiveSchema(): ValidationChain[] {
+  private get paymentReceiveSchema(): ValidationChain[] {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
@@ -162,7 +157,7 @@ export default class PaymentReceivesController extends BaseController {
   /**
    * Payment receive list validation schema.
    */
-  get validatePaymentReceiveList(): ValidationChain[] {
+  private get validatePaymentReceiveList(): ValidationChain[] {
     return [
       query('stringified_filter_roles').optional().isJSON(),
 
@@ -181,7 +176,7 @@ export default class PaymentReceivesController extends BaseController {
   /**
    * Validate payment receive parameters.
    */
-  get paymentReceiveValidation() {
+  private get paymentReceiveValidation() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
@@ -189,14 +184,14 @@ export default class PaymentReceivesController extends BaseController {
    * New payment receive validation schema.
    * @return {Array}
    */
-  get newPaymentReceiveValidation() {
+  private get newPaymentReceiveValidation() {
     return [...this.paymentReceiveSchema];
   }
 
   /**
    * Edit payment receive validation.
    */
-  get editPaymentReceiveValidation() {
+  private get editPaymentReceiveValidation() {
     return [
       param('id').exists().isNumeric().toInt(),
       ...this.paymentReceiveSchema,
@@ -209,13 +204,17 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async newPaymentReceive(req: Request, res: Response, next: NextFunction) {
+  private async newPaymentReceive(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
       const storedPaymentReceive =
-        await this.paymentReceiveService.createPaymentReceive(
+        await this.paymentReceiveApplication.createPaymentReceive(
           tenantId,
           paymentReceive,
           user
@@ -235,14 +234,18 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async editPaymentReceive(req: Request, res: Response, next: NextFunction) {
+  private async editPaymentReceive(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
-      await this.paymentReceiveService.editPaymentReceive(
+      await this.paymentReceiveApplication.editPaymentReceive(
         tenantId,
         paymentReceiveId,
         paymentReceive,
@@ -262,17 +265,20 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async deletePaymentReceive(req: Request, res: Response, next: NextFunction) {
+  private async deletePaymentReceive(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      await this.paymentReceiveService.deletePaymentReceive(
+      await this.paymentReceiveApplication.deletePaymentReceive(
         tenantId,
         paymentReceiveId,
         user
       );
-
       return res.status(200).send({
         id: paymentReceiveId,
         message: 'The payment receive has been deleted successfully',
@@ -288,7 +294,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getPaymentReceiveInvoices(
+  private async getPaymentReceiveInvoices(
     req: Request,
     res: Response,
     next: NextFunction
@@ -298,7 +304,7 @@ export default class PaymentReceivesController extends BaseController {
 
     try {
       const saleInvoices =
-        await this.paymentReceiveService.getPaymentReceiveInvoices(
+        await this.paymentReceiveApplication.getPaymentReceiveInvoices(
           tenantId,
           paymentReceiveId
         );
@@ -315,7 +321,11 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async getPaymentReceiveList(req: Request, res: Response, next: NextFunction) {
+  private async getPaymentReceiveList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -327,7 +337,10 @@ export default class PaymentReceivesController extends BaseController {
 
     try {
       const { paymentReceives, pagination, filterMeta } =
-        await this.paymentReceiveService.listPaymentReceives(tenantId, filter);
+        await this.paymentReceiveApplication.getPaymentReceives(
+          tenantId,
+          filter
+        );
 
       return res.status(200).send({
         payment_receives: this.transfromToResponse(paymentReceives),
@@ -344,7 +357,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req - Request.
    * @param {Response} res - Response.
    */
-  async getPaymentReceiveNewPageEntries(
+  private async getPaymentReceiveNewPageEntries(
     req: Request,
     res: Response,
     next: NextFunction
@@ -371,7 +384,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async getPaymentReceiveEditPage(
+  private async getPaymentReceiveEditPage(
     req: Request,
     res: Response,
     next: NextFunction
@@ -402,15 +415,20 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getPaymentReceive(req: Request, res: Response, next: NextFunction) {
+  private async getPaymentReceive(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const paymentReceive = await this.paymentReceiveService.getPaymentReceive(
-        tenantId,
-        paymentReceiveId
-      );
+      const paymentReceive =
+        await this.paymentReceiveApplication.getPaymentReceive(
+          tenantId,
+          paymentReceiveId
+        );
 
       const ACCEPT_TYPE = {
         APPLICATION_PDF: 'application/pdf',

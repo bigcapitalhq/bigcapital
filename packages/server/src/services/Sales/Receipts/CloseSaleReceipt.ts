@@ -29,17 +29,18 @@ export class CloseSaleReceipt {
    * @param {number} saleReceiptId
    * @return {Promise<void>}
    */
-  async closeSaleReceipt(
+  public async closeSaleReceipt(
     tenantId: number,
     saleReceiptId: number
   ): Promise<void> {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Retrieve sale receipt or throw not found service error.
-    const oldSaleReceipt = await this.getSaleReceiptOrThrowError(
-      tenantId,
-      saleReceiptId
-    );
+    const oldSaleReceipt = await SaleReceipt.query()
+      .findById(saleReceiptId)
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
     // Throw service error if the sale receipt already closed.
     if (oldSaleReceipt.isClosed) {
       throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);

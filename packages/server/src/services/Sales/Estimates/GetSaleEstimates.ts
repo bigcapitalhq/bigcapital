@@ -8,8 +8,9 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
+import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
 
 @Service()
 export class GetSaleEstimates {
@@ -35,7 +36,7 @@ export class GetSaleEstimates {
    * @param {number} tenantId -
    * @param {IEstimatesFilter} estimatesFilter -
    */
-  public async estimatesList(
+  public async getEstimates(
     tenantId: number,
     filterDTO: ISalesEstimatesFilter
   ): Promise<{
@@ -65,7 +66,7 @@ export class GetSaleEstimates {
     const transformedEstimates = await this.transformer.transform(
       tenantId,
       results,
-      new SaleEstimateDTOTransformer()
+      new SaleEstimateTransfromer()
     );
     return {
       salesEstimates: transformedEstimates,

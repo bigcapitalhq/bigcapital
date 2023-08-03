@@ -1,4 +1,11 @@
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+
+@Service()
 export class GetPaymentReceiveInvoices {
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Retrieve sale invoices that assocaited to the given payment receive.
    * @param {number} tenantId - Tenant id.

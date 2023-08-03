@@ -26,8 +26,8 @@ export class SaleInvoiceWriteoffGLEntries {
 
   /**
    * Retrieves the invoice write-off receiveable GL entry.
-   * @param   {number} ARAccountId
-   * @param   {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry}
    */
   private getInvoiceWriteoffGLReceivableEntry = (
@@ -50,7 +50,7 @@ export class SaleInvoiceWriteoffGLEntries {
 
   /**
    * Retrieves the invoice write-off expense GL entry.
-   * @param   {ISaleInvoice} saleInvoice
+   * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry}
    */
   private getInvoiceWriteoffGLExpenseEntry = (
@@ -71,8 +71,8 @@ export class SaleInvoiceWriteoffGLEntries {
 
   /**
    * Retrieves the invoice write-off GL entries.
-   * @param   {number} ARAccountId
-   * @param   {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry[]}
    */
   public getInvoiceWriteoffGLEntries = (
@@ -89,8 +89,8 @@ export class SaleInvoiceWriteoffGLEntries {
 
   /**
    * Retrieves the invoice write-off ledger.
-   * @param   {number} ARAccountId
-   * @param   {ISaleInvoice} saleInvoice
+   * @param {number} ARAccountId
+   * @param {ISaleInvoice} saleInvoice
    * @returns {Ledger}
    */
   public getInvoiceWriteoffLedger = (

@@ -10,6 +10,7 @@ import {
   ISaleReceiptEditingPayload,
 } from '@/interfaces';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
+import { SaleReceiptDTOTransformer } from './SaleReceiptDTOTransformer';
 
 @Service()
 export class EditSaleReceipt {
@@ -28,6 +29,9 @@ export class EditSaleReceipt {
   @Inject()
   private validators: SaleReceiptValidators;
 
+  @Inject()
+  private DTOTransformer: SaleReceiptDTOTransformer;
+
   /**
    * Edit details sale receipt with associated entries.
    * @param {Integer} saleReceiptId
@@ -42,10 +46,11 @@ export class EditSaleReceipt {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve sale receipt or throw not found service error.
-    const oldSaleReceipt = await this.getSaleReceiptOrThrowError(
-      tenantId,
-      saleReceiptId
-    );
+    const oldSaleReceipt = await SaleReceipt.query()
+      .findById(saleReceiptId)
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
     // Retrieves the payment customer model.
     const paymentCustomer = await Contact.query()
       .findById(saleReceiptId)
@@ -53,7 +58,7 @@ export class EditSaleReceipt {
       .throwIfNotFound();
 
     // Transform sale receipt DTO to model.
-    const saleReceiptObj = await this.transformDTOToModel(
+    const saleReceiptObj = await this.DTOTransformer.transformDTOToModel(
       tenantId,
       saleReceiptDTO,
       paymentCustomer,

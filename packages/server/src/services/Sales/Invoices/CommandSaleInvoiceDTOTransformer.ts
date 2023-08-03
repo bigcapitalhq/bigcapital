@@ -13,9 +13,10 @@ import {
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import { formatDateFields } from 'utils';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
+import { formatDateFields } from 'utils';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
@@ -33,6 +34,9 @@ export class CommandSaleInvoiceDTOTransformer {
 
   @Inject()
   private validators: CommandSaleInvoiceValidators;
+
+  @Inject()
+  private invoiceIncrement: SaleInvoiceIncrement;
 
   /**
    * Transformes the create DTO to invoice object model.
@@ -53,7 +57,7 @@ export class CommandSaleInvoiceDTOTransformer {
       ItemEntry.calcAmount(e)
     );
     // Retreive the next invoice number.
-    const autoNextNumber = this.getNextInvoiceNumber(tenantId);
+    const autoNextNumber = this.invoiceIncrement.getNextInvoiceNumber(tenantId);
 
     // Invoice number.
     const invoiceNo =

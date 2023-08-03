@@ -1,12 +1,16 @@
-import { ServiceError } from '@/exceptions';
 import { Inject, Service } from 'typedi';
-import { ERRORS } from '../constants';
+import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
+import { ERRORS } from './constants';
 
 @Service()
 export class GetSaleEstimate {
   @Inject()
   private tenancy: HasTenancyService;
+
+  private transformer: TransformerInjectable;
 
   /**
    * Retrieve the estimate details with associated entries.
@@ -30,7 +34,7 @@ export class GetSaleEstimate {
     return this.transformer.transform(
       tenantId,
       estimate,
-      new SaleEstimateTransformer()
+      new SaleEstimateTransfromer()
     );
   }
 }

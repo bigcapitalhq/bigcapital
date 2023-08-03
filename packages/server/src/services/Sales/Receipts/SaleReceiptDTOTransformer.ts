@@ -1,13 +1,16 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
+import { sumBy, omit } from 'lodash';
+import composeAsync from 'async/compose';
+import moment from 'moment';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
-import moment from 'moment';
 import { ICustomer, ISaleReceipt, ISaleReceiptDTO } from '@/interfaces';
 import { formatDateFields } from '@/utils';
-import { omit } from 'lodash';
+import { SaleReceiptIncrement } from './SaleReceiptIncrement';
+import { ItemEntry } from '@/models';
 
 @Service()
 export class SaleReceiptDTOTransformer {
@@ -22,6 +25,9 @@ export class SaleReceiptDTOTransformer {
 
   @Inject()
   private validators: SaleReceiptValidators;
+
+  @Inject()
+  private receiptIncrement: SaleReceiptIncrement;
 
   /**
    * Transform create DTO object to model object.
@@ -39,7 +45,7 @@ export class SaleReceiptDTOTransformer {
       ItemEntry.calcAmount(e)
     );
     // Retreive the next invoice number.
-    const autoNextNumber = this.getNextReceiptNumber(tenantId);
+    const autoNextNumber = this.receiptIncrement.getNextReceiptNumber(tenantId);
 
     // Retreive the receipt number.
     const receiptNumber =

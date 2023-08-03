@@ -27,10 +27,11 @@ export class DeleteSaleReceipt {
   public async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
 
-    const oldSaleReceipt = await this.getSaleReceiptOrThrowError(
-      tenantId,
-      saleReceiptId
-    );
+    const oldSaleReceipt = await SaleReceipt.query()
+      .findById(saleReceiptId)
+      .withGraphFetched('entries')
+      .throwIfNotFound();
+
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers  `onSaleReceiptsDeleting` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onDeleting, {

@@ -1,7 +1,12 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
-import { AbilitySubject, BillAction, IBillDTO, IBillEditDTO } from '@/interfaces';
+import {
+  AbilitySubject,
+  BillAction,
+  IBillDTO,
+  IBillEditDTO,
+} from '@/interfaces';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BillsService from '@/services/Purchases/Bills';
 import BaseController from '@/api/controllers/BaseController';
@@ -9,11 +14,12 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import BillPaymentsService from '@/services/Purchases/BillPaymentsService';
+import { BillsApplication } from '@/services/Purchases/Bills/BillsApplication';
 
 @Service()
 export default class BillsController extends BaseController {
   @Inject()
-  private billsService: BillsService;
+  private billsApplication: BillsApplication;
 
   @Inject()
   private dynamicListService: DynamicListingService;
@@ -97,7 +103,7 @@ export default class BillsController extends BaseController {
   /**
    * Common validation schema.
    */
-  get billValidationSchema() {
+  private get billValidationSchema() {
     return [
       check('bill_number').exists().trim().escape(),
       check('reference_no').optional().trim().escape(),
@@ -142,7 +148,7 @@ export default class BillsController extends BaseController {
   /**
    * Common validation schema.
    */
-  get billEditValidationSchema() {
+  private get billEditValidationSchema() {
     return [
       check('bill_number').optional().trim().escape(),
       check('reference_no').optional().trim().escape(),
@@ -184,14 +190,14 @@ export default class BillsController extends BaseController {
   /**
    * Bill validation schema.
    */
-  get specificBillValidationSchema() {
+  private get specificBillValidationSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Bills list validation schema.
    */
-  get billsListingValidationSchema() {
+  private get billsListingValidationSchema() {
     return [
       query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -203,7 +209,7 @@ export default class BillsController extends BaseController {
     ];
   }
 
-  get dueBillsListingValidationSchema() {
+  private get dueBillsListingValidationSchema() {
     return [
       query('vendor_id').optional().trim().escape(),
       query('payment_made_id').optional().trim().escape(),
@@ -216,12 +222,12 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  async newBill(req: Request, res: Response, next: NextFunction) {
+  private async newBill(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const billDTO: IBillDTO = this.matchedBodyData(req);
 
     try {
-      const storedBill = await this.billsService.createBill(
+      const storedBill = await this.billsApplication.createBill(
         tenantId,
         billDTO,
         user
@@ -241,13 +247,13 @@ export default class BillsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async editBill(req: Request, res: Response, next: NextFunction) {
+  private async editBill(req: Request, res: Response, next: NextFunction) {
     const { id: billId } = req.params;
     const { tenantId, user } = req;
     const billDTO: IBillEditDTO = this.matchedBodyData(req);
 
     try {
-      await this.billsService.editBill(tenantId, billId, billDTO, user);
+      await this.billsApplication.editBill(tenantId, billId, billDTO, user);
 
       return res.status(200).send({
         id: billId,
@@ -263,12 +269,12 @@ export default class BillsController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async openBill(req: Request, res: Response, next: NextFunction) {
+  private async openBill(req: Request, res: Response, next: NextFunction) {
     const { id: billId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.billsService.openBill(tenantId, billId);
+      await this.billsApplication.openBill(tenantId, billId);
 
       return res.status(200).send({
         id: billId,
@@ -285,12 +291,12 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  async getBill(req: Request, res: Response, next: NextFunction) {
+  private async getBill(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: billId } = req.params;
 
     try {
-      const bill = await this.billsService.getBill(tenantId, billId);
+      const bill = await this.billsApplication.getBill(tenantId, billId);
 
       return res.status(200).send(this.transfromToResponse({ bill }));
     } catch (error) {
@@ -304,12 +310,12 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  async deleteBill(req: Request, res: Response, next: NextFunction) {
+  private async deleteBill(req: Request, res: Response, next: NextFunction) {
     const billId = req.params.id;
     const { tenantId } = req;
 
     try {
-      await this.billsService.deleteBill(tenantId, billId);
+      await this.billsApplication.deleteBill(tenantId, billId);
 
       return res.status(200).send({
         id: billId,
@@ -326,7 +332,7 @@ export default class BillsController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  public async billsList(req: Request, res: Response, next: NextFunction) {
+  private async billsList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       page: 1,
@@ -338,7 +344,7 @@ export default class BillsController extends BaseController {
 
     try {
       const { bills, pagination, filterMeta } =
-        await this.billsService.getBills(tenantId, filter);
+        await this.billsApplication.getBills(tenantId, filter);
 
       return res.status(200).send({
         bills: this.transfromToResponse(bills),
@@ -356,12 +362,13 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async getDueBills(req: Request, res: Response, next: NextFunction) {
+  private async getDueBills(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { vendorId } = this.matchedQueryData(req);
 
     try {
-      const bills = await this.billsService.getDueBills(tenantId, vendorId);
+      const bills = await this.billsApplication.getDueBills(tenantId, vendorId);
+
       return res.status(200).send({ bills });
     } catch (error) {
       next(error);
@@ -374,7 +381,7 @@ export default class BillsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public getBillPaymentsTransactions = async (
+  private getBillPaymentsTransactions = async (
     req: Request,
     res: Response,
     next: NextFunction

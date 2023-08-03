@@ -4,7 +4,7 @@ import { InvoicePaymentTransactionTransformer } from './InvoicePaymentTransactio
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
-export default class InvoicePaymentsService {
+export class GetInvoicePaymentsService {
   @Inject()
   private tenancy: HasTenancyService;
 

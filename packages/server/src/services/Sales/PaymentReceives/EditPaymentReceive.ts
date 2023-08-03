@@ -13,6 +13,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { TenantMetadata } from '@/system/models';
 
 @Service()
 export class EditPaymentReceive {

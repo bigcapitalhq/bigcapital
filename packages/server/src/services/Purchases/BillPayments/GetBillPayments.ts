@@ -1,15 +1,33 @@
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
+import * as R from 'ramda';
+import {
+  IBillPayment,
+  IBillPaymentsFilter,
+  IPaginationMeta,
+  IFilterMeta,
+} from '@/interfaces';
 import { BillPaymentTransformer } from './BillPaymentTransformer';
-import { IBillPayment, IFilterMeta, IPaginationMeta } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
-export class BillPayments {
+export class GetBillPayments {
+  @Inject()
+  private tenancy: HasTenancyService;
+
+  @Inject()
+  private dynamicListService: DynamicListingService;
+
+  @Inject()
+  private transformer: TransformerInjectable;
+
   /**
    * Retrieve bill payment paginted and filterable list.
    * @param {number} tenantId
    * @param {IBillPaymentsFilter} billPaymentsFilter
    */
-  public async listBillPayments(
+  public async getBillPayments(
     tenantId: number,
     filterDTO: IBillPaymentsFilter
   ): Promise<{
@@ -48,5 +66,9 @@ export class BillPayments {
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
+  }
+
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

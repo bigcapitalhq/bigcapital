@@ -9,12 +9,11 @@ import {
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import SaleEstimateService from '@/services/Sales/SalesEstimate';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import SaleEstimatesPdfService from '@/services/Sales/Estimates/SaleEstimatesPdf';
-import SaleEstimateNotifyBySms from '@/services/Sales/Estimates/SaleEstimateSmsNotify';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
 
 const ACCEPT_TYPE = {
   APPLICATION_PDF: 'application/pdf',
@@ -23,16 +22,13 @@ const ACCEPT_TYPE = {
 @Service()
 export default class SalesEstimatesController extends BaseController {
   @Inject()
-  saleEstimateService: SaleEstimateService;
+  private saleEstimatesApplication: SaleEstimatesApplication;
 
   @Inject()
-  dynamicListService: DynamicListingService;
+  private dynamicListService: DynamicListingService;
 
   @Inject()
-  saleEstimatesPdf: SaleEstimatesPdfService;
-
-  @Inject()
-  saleEstimateNotifySms: SaleEstimateNotifyBySms;
+  private saleEstimatesPdf: SaleEstimatesPdfService;
 
   /**
    * Router constructor.
@@ -136,7 +132,7 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Estimate validation schema.
    */
-  get estimateValidationSchema() {
+  private get estimateValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('estimate_date').exists().isISO8601().toDate(),
@@ -177,14 +173,14 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Specific sale estimate validation schema.
    */
-  get validateSpecificEstimateSchema() {
+  private get validateSpecificEstimateSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Sales estimates list validation schema.
    */
-  get validateEstimateListSchema() {
+  private get validateEstimateListSchema() {
     return [
       query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -202,15 +198,16 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  async newEstimate(req: Request, res: Response, next: NextFunction) {
+  private async newEstimate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
     try {
-      const storedEstimate = await this.saleEstimateService.createEstimate(
-        tenantId,
-        estimateDTO
-      );
+      const storedEstimate =
+        await this.saleEstimatesApplication.createSaleEstimate(
+          tenantId,
+          estimateDTO
+        );
 
       return res.status(200).send({
         id: storedEstimate.id,
@@ -226,19 +223,18 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async editEstimate(req: Request, res: Response, next: NextFunction) {
+  private async editEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
     const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
     try {
       // Update estimate with associated estimate entries.
-      await this.saleEstimateService.editEstimate(
+      await this.saleEstimatesApplication.editSaleEstimate(
         tenantId,
         estimateId,
         estimateDTO
       );
-
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been created successfully.',
@@ -253,13 +249,19 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async deleteEstimate(req: Request, res: Response, next: NextFunction) {
+  private async deleteEstimate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimateService.deleteEstimate(tenantId, estimateId);
-
+      await this.saleEstimatesApplication.deleteSaleEstimate(
+        tenantId,
+        estimateId
+      );
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been deleted successfully.',
@@ -274,13 +276,19 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async deliverSaleEstimate(req: Request, res: Response, next: NextFunction) {
+  private async deliverSaleEstimate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimateService.deliverSaleEstimate(tenantId, estimateId);
-
+      await this.saleEstimatesApplication.deliverSaleEstimate(
+        tenantId,
+        estimateId
+      );
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been delivered successfully.',
@@ -296,12 +304,19 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async approveSaleEstimate(req: Request, res: Response, next: NextFunction) {
+  private async approveSaleEstimate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimateService.approveSaleEstimate(tenantId, estimateId);
+      await this.saleEstimatesApplication.approveSaleEstimate(
+        tenantId,
+        estimateId
+      );
 
       return res.status(200).send({
         id: estimateId,
@@ -318,12 +333,19 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async rejectSaleEstimate(req: Request, res: Response, next: NextFunction) {
+  private async rejectSaleEstimate(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimateService.rejectSaleEstimate(tenantId, estimateId);
+      await this.saleEstimatesApplication.rejectSaleEstimate(
+        tenantId,
+        estimateId
+      );
 
       return res.status(200).send({
         id: estimateId,
@@ -340,12 +362,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getEstimate(req: Request, res: Response, next: NextFunction) {
+  private async getEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      const estimate = await this.saleEstimateService.getEstimate(
+      const estimate = await this.saleEstimatesApplication.getSaleEstimate(
         tenantId,
         estimateId
       );
@@ -378,7 +400,7 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async getEstimates(req: Request, res: Response, next: NextFunction) {
+  private async getEstimates(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -390,7 +412,7 @@ export default class SalesEstimatesController extends BaseController {
 
     try {
       const { salesEstimates, pagination, filterMeta } =
-        await this.saleEstimateService.estimatesList(tenantId, filter);
+        await this.saleEstimatesApplication.getSaleEstimates(tenantId, filter);
 
       res.format({
         [ACCEPT_TYPE.APPLICATION_JSON]: () => {
@@ -408,7 +430,7 @@ export default class SalesEstimatesController extends BaseController {
     }
   }
 
-  public saleEstimateNotifyBySms = async (
+  private saleEstimateNotifyBySms = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -417,10 +439,11 @@ export default class SalesEstimatesController extends BaseController {
     const { id: estimateId } = req.params;
 
     try {
-      const saleEstimate = await this.saleEstimateNotifySms.notifyBySms(
-        tenantId,
-        estimateId
-      );
+      const saleEstimate =
+        await this.saleEstimatesApplication.notifySaleEstimateBySms(
+          tenantId,
+          estimateId
+        );
       return res.status(200).send({
         id: saleEstimate.id,
         message:
@@ -437,7 +460,7 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public saleEstimateSmsDetails = async (
+  private saleEstimateSmsDetails = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -446,10 +469,11 @@ export default class SalesEstimatesController extends BaseController {
     const { id: estimateId } = req.params;
 
     try {
-      const estimateSmsDetails = await this.saleEstimateNotifySms.smsDetails(
-        tenantId,
-        estimateId
-      );
+      const estimateSmsDetails =
+        await this.saleEstimatesApplication.getSaleEstimateSmsDetails(
+          tenantId,
+          estimateId
+        );
       return res.status(200).send({
         data: estimateSmsDetails,
       });

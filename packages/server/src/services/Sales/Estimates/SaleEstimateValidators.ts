@@ -1,7 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from '../constants';
+import { ISaleEstimate } from '@/interfaces';
+import { ERRORS } from './constants';
 
 @Service()
 export class SaleEstimateValidators {

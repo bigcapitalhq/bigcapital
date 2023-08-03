@@ -1,4 +1,5 @@
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
+import * as R from 'ramda';
 import {
   IFilterMeta,
   IPaginationMeta,
@@ -7,7 +8,10 @@ import {
 } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 
+@Service()
 export class GetSaleInvoices {
   @Inject()
   private tenancy: HasTenancyService;
@@ -19,21 +23,12 @@ export class GetSaleInvoices {
   private transformer: TransformerInjectable;
 
   /**
-   * Parses the sale invoice list filter DTO.
-   * @param filterDTO
-   * @returns
-   */
-  private parseListFilterDTO(filterDTO) {
-    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-  }
-
-  /**
    * Retrieve sales invoices filterable and paginated list.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async salesInvoicesList(
+  public async getSaleInvoices(
     tenantId: number,
     filterDTO: ISalesInvoicesFilter
   ): Promise<{
@@ -72,5 +67,14 @@ export class GetSaleInvoices {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Parses the sale invoice list filter DTO.
+   * @param filterDTO
+   * @returns
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

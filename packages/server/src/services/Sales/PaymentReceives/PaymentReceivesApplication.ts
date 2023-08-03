@@ -13,6 +13,7 @@ import { EditPaymentReceive } from './EditPaymentReceive';
 import { DeletePaymentReceive } from './DeletePaymentReceive';
 import { GetPaymentReceives } from './GetPaymentReceives';
 import { GetPaymentReceive } from './GetPaymentReceive';
+import { GetPaymentReceiveInvoices } from './GetPaymentReceiveInvoices';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -30,6 +31,9 @@ export class PaymentReceivesApplication {
 
   @Inject()
   private getPaymentReceiveService: GetPaymentReceive;
+
+  @Inject()
+  private getPaymentReceiveInvoicesService: GetPaymentReceiveInvoices;
 
   /**
    * Creates a new payment receive.
@@ -73,10 +77,10 @@ export class PaymentReceivesApplication {
   }
 
   /**
-   *
-   * @param tenantId
-   * @param paymentReceiveId
-   * @param authorizedUser
+   * deletes the given payment receive.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @param {ISystemUser} authorizedUser
    * @returns
    */
   public deletePaymentReceive(
@@ -122,6 +126,19 @@ export class PaymentReceivesApplication {
     paymentReceiveId: number
   ): Promise<IPaymentReceive> {
     return this.getPaymentReceiveService.getPaymentReceive(
+      tenantId,
+      paymentReceiveId
+    );
+  }
+
+  /**
+   * Retrieves associated sale invoices of the given payment receive.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @returns
+   */
+  public getPaymentReceiveInvoices(tenantId: number, paymentReceiveId: number) {
+    return this.getPaymentReceiveInvoicesService.getPaymentReceiveInvoices(
       tenantId,
       paymentReceiveId
     );

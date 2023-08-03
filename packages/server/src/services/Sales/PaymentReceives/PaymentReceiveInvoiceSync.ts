@@ -1,7 +1,8 @@
-import { IPaymentReceiveEntryDTO } from "@/interfaces";
-import HasTenancyService from "@/services/Tenancy/TenancyService";
-import { Knex } from "knex";
-import { Service } from "typedi";
+import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
+import { IPaymentReceiveEntryDTO } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { entriesAmountDiff } from '@/utils';
 
 @Service()
 export class PaymentReceiveInvoiceSync {

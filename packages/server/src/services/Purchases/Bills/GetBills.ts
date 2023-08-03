@@ -1,17 +1,17 @@
+import { Inject, Service } from 'typedi';
 import {
+  IBill,
+  IBillsFilter,
   IFilterMeta,
   IPaginationMeta,
-  ISaleReceipt,
-  ISalesReceiptsFilter,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
-import { SaleReceiptTransformer } from './SaleReceiptTransformer';
+import { PurchaseInvoiceTransformer } from '../PurchaseInvoices/PurchaseInvoiceTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 
 @Service()
-export class GetSaleReceipts {
+export class GetBills {
   @Inject()
   private tenancy: HasTenancyService;
 
@@ -22,47 +22,44 @@ export class GetSaleReceipts {
   private dynamicListService: DynamicListingService;
 
   /**
-   * Retrieve sales receipts paginated and filterable list.
-   * @param {number} tenantId
-   * @param {ISaleReceiptFilter} salesReceiptsFilter
+   * Retrieve bills data table list.
+   * @param {number} tenantId -
+   * @param {IBillsFilter} billsFilter -
    */
-  public async getSaleReceipts(
+  public async getBills(
     tenantId: number,
-    filterDTO: ISalesReceiptsFilter
+    filterDTO: IBillsFilter
   ): Promise<{
-    data: ISaleReceipt[];
+    bills: IBill;
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {
-    const { SaleReceipt } = this.tenancy.models(tenantId);
+    const { Bill } = this.tenancy.models(tenantId);
 
-    // Parses the stringified filter roles.
+    // Parses bills list filter DTO.
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
     const dynamicFilter = await this.dynamicListService.dynamicList(
       tenantId,
-      SaleReceipt,
+      Bill,
       filter
     );
-    const { results, pagination } = await SaleReceipt.query()
+    const { results, pagination } = await Bill.query()
       .onBuild((builder) => {
-        builder.withGraphFetched('depositAccount');
-        builder.withGraphFetched('customer');
-        builder.withGraphFetched('entries');
-
+        builder.withGraphFetched('vendor');
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    // Transformes the estimates models to POJO.
-    const salesEstimates = await this.transformer.transform(
+    // Tranform the bills to POJO.
+    const bills = await this.transformer.transform(
       tenantId,
       results,
-      new SaleReceiptTransformer()
+      new PurchaseInvoiceTransformer()
     );
     return {
-      data: salesEstimates,
+      bills,
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };

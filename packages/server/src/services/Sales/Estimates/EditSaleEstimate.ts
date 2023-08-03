@@ -11,6 +11,7 @@ import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import events from '@/subscribers/events';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 
 @Service()
 export class EditSaleEstimate {
@@ -28,6 +29,9 @@ export class EditSaleEstimate {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private transformerDTO: SaleEstimateDTOTransformer;
 
   /**
    * Edit details of the given estimate with associated entries.
@@ -55,7 +59,7 @@ export class EditSaleEstimate {
       .throwIfNotFound();
 
     // Transform DTO object ot model object.
-    const estimateObj = await this.transformDTOToModel(
+    const estimateObj = await this.transformerDTO.transformDTOToModel(
       tenantId,
       estimateDTO,
       oldSaleEstimate,

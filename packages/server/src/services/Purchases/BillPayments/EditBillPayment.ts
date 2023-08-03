@@ -11,6 +11,7 @@ import events from '@/subscribers/events';
 import { Knex } from 'knex';
 import UnitOfWork from '@/services/UnitOfWork';
 import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransformer';
+import { TenantMetadata } from '@/system/models';
 
 @Service()
 export class EditBillPayment {
@@ -61,7 +62,6 @@ export class EditBillPayment {
       tenantId,
       billPaymentId
     );
-
     //
     const vendor = await Contact.query()
       .modify('vendor')

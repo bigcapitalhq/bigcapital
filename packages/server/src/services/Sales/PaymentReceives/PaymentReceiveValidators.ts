@@ -1,5 +1,7 @@
 import { Inject, Service } from 'typedi';
+import { difference, sumBy } from 'lodash';
 import {
+  IAccount,
   IPaymentReceive,
   IPaymentReceiveEditDTO,
   IPaymentReceiveEntry,
@@ -7,8 +9,9 @@ import {
   ISaleInvoice,
 } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ERRORS } from './constants';
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 @Service()
 export class PaymentReceiveValidators {

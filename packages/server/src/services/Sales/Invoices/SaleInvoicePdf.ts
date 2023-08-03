@@ -5,7 +5,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class SaleInvoicePdf {
+export class SaleInvoicePdf {
   @Inject()
   pdfService: PdfService;
 

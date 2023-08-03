@@ -1,7 +1,5 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import BillsService from '@/services/Purchases/Bills';
 import {
   IBillCreatedPayload,
   IBillEditedPayload,
@@ -12,15 +10,12 @@ import { BillGLEntries } from './BillGLEntries';
 @Service()
 export class BillGLEntriesSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  billGLEntries: BillGLEntries;
+  private billGLEntries: BillGLEntries;
 
   /**
    * Attachs events with handles.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.bill.onCreated,
       this.handlerWriteJournalEntriesOnCreate

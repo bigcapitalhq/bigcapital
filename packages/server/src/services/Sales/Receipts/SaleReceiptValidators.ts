@@ -1,8 +1,8 @@
-import { ACCOUNT_PARENT_TYPE } from '@/data/AccountTypes';
+import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { Service } from 'typedi';
-import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ACCOUNT_PARENT_TYPE } from '@/data/AccountTypes';
+import { ERRORS } from './constants';
 
 @Service()
 export class SaleReceiptValidators {

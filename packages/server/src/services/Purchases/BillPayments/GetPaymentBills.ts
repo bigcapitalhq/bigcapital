@@ -1,4 +1,11 @@
+import { Inject, Service } from 'typedi';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+
+@Service()
 export class GetPaymentBills {
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Retrieve payment made associated bills.
    * @param {number} tenantId -

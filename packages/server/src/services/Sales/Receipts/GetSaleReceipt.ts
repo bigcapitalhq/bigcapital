@@ -18,7 +18,7 @@ export class GetSaleReceipt {
    * @param {Integer} saleReceiptId
    * @return {ISaleReceipt}
    */
-  async getSaleReceipt(tenantId: number, saleReceiptId: number) {
+  public async getSaleReceipt(tenantId: number, saleReceiptId: number) {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     const saleReceipt = await SaleReceipt.query()

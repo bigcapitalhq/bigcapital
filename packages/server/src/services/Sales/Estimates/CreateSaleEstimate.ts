@@ -1,8 +1,39 @@
-import { ISaleEstimate, ISaleEstimateDTO } from "@/interfaces";
-import { Service } from "typedi";
+import { Inject, Service } from 'typedi';
+import {
+  ISaleEstimate,
+  ISaleEstimateCreatedPayload,
+  ISaleEstimateCreatingPayload,
+  ISaleEstimateDTO,
+} from '@/interfaces';
+import UnitOfWork from '@/services/UnitOfWork';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
+import { SaleEstimateValidators } from './SaleEstimateValidators';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
 
 @Service()
 export class CreateSaleEstimate {
+  @Inject()
+  private tenancy: HasTenancyService;
+
+  @Inject()
+  private itemsEntriesService: ItemsEntriesService;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
+
+  @Inject()
+  private uow: UnitOfWork;
+
+  @Inject()
+  private transformerDTO: SaleEstimateDTOTransformer;
+
+  @Inject()
+  private validators: SaleEstimateValidators;
+
   /**
    * Creates a new estimate with associated entries.
    * @async
@@ -23,13 +54,13 @@ export class CreateSaleEstimate {
       .throwIfNotFound();
 
     // Transform DTO object ot model object.
-    const estimateObj = await this.transformDTOToModel(
+    const estimateObj = await this.transformerDTO.transformDTOToModel(
       tenantId,
       estimateDTO,
       customer
     );
     // Validate estimate number uniquiness on the storage.
-    await this.validateEstimateNumberExistance(
+    await this.validators.validateEstimateNumberExistance(
       tenantId,
       estimateObj.estimateNumber
     );

@@ -10,10 +10,10 @@ import {
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
-import SaleNotifyBySms from './SaleNotifyBySms';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './Receipts/constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import SaleNotifyBySms from '../SaleNotifyBySms';
+import { ERRORS } from './constants';
 
 @Service()
 export default class SaleReceiptNotifyBySms {

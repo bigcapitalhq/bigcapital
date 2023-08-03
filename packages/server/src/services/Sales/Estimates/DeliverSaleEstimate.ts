@@ -1,10 +1,28 @@
-import { ServiceError } from "@/exceptions";
-import { ISaleEstimateEventDeliveringPayload } from "@/interfaces";
-import events from "@/subscribers/events";
-import { Knex } from "knex";
-import { ERRORS } from "../constants";
+import { ServiceError } from '@/exceptions';
+import {
+  ISaleEstimateEventDeliveredPayload,
+  ISaleEstimateEventDeliveringPayload,
+} from '@/interfaces';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import UnitOfWork from '@/services/UnitOfWork';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ERRORS } from './constants';
+import moment from 'moment';
 
+@Service()
 export class DeliverSaleEstimate {
+  @Inject()
+  private tenancy: HasTenancyService;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
+
+  @Inject()
+  private uow: UnitOfWork;
+
   /**
    * Mark the sale estimate as delivered.
    * @param {number} tenantId - Tenant id.
