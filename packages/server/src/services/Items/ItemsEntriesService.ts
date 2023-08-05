@@ -235,7 +235,7 @@ export default class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  setItemsEntriesDefaultAccounts(tenantId: number) {
+  public setItemsEntriesDefaultAccounts(tenantId: number) {
     return async (entries: IItemEntry[]) => {
       const { Item } = this.tenancy.models(tenantId);
 
@@ -258,10 +258,10 @@ export default class ItemsEntriesService {
 
   /**
    * Retrieve the total items entries.
-   * @param entries 
-   * @returns 
+   * @param entries
+   * @returns
    */
-  getTotalItemsEntries(entries: ItemEntry[]): number {
+  public getTotalItemsEntries(entries: ItemEntry[]): number {
     return sumBy(entries, (e) => ItemEntry.calcAmount(e));
   }
 }

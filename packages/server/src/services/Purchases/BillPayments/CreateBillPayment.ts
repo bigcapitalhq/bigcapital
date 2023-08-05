@@ -12,6 +12,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { BillPaymentValidators } from './BillPaymentValidators';
+import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransformer';
 
 @Service()
 export class CreateBillPayment {
@@ -27,10 +28,13 @@ export class CreateBillPayment {
   @Inject()
   private validators: BillPaymentValidators;
 
+  @Inject()
+  private commandTransformerDTO: CommandBillPaymentDTOTransformer;
+
   /**
    * Creates a new bill payment transcations and store it to the storage
    * with associated bills entries and journal transactions.
-   *
+   * ------
    * Precedures:-
    * ------
    * - Records the bill payment transaction.
@@ -57,7 +61,7 @@ export class CreateBillPayment {
       .throwIfNotFound();
 
     // Transform create DTO to model object.
-    const billPaymentObj = await this.transformDTOToModel(
+    const billPaymentObj = await this.commandTransformerDTO.transformDTOToModel(
       tenantId,
       billPaymentDTO,
       vendor

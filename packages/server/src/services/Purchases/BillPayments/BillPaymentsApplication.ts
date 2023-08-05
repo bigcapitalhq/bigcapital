@@ -3,7 +3,7 @@ import { IBillPaymentDTO, IBillPayment } from '@/interfaces';
 import { CreateBillPayment } from './CreateBillPayment';
 import { DeleteBillPayment } from './DeleteBillPayment';
 import { EditBillPayment } from './EditBillPayment';
-import { BillPayments } from './GetBillPayments';
+import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './GetBillPayment';
 
 /**
@@ -22,7 +22,7 @@ export class BillPaymentsApplication {
   private editBillPaymentService: EditBillPayment;
 
   @Inject()
-  private getBillPaymentsService: BillPayments;
+  private getBillPaymentsService: GetBillPayments;
 
   @Inject()
   private getBillPaymentService: GetBillPayment;

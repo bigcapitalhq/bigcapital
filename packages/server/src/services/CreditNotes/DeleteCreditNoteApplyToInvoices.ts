@@ -1,24 +1,24 @@
 import { Service, Inject } from 'typedi';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { IApplyCreditToInvoicesDeletedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import BaseCreditNotes from './CreditNotes';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
+import HasTenancyService from '../Tenancy/TenancyService';
 
 @Service()
 export default class DeletreCreditNoteApplyToInvoices extends BaseCreditNotes {
-  @Inject('PaymentReceives')
-  paymentReceive: PaymentReceiveService;
+  @Inject()
+  private uow: UnitOfWork;
 
   @Inject()
-  uow: UnitOfWork;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private tenancy: HasTenancyService;
 
   /**
    * Apply credit note to the given invoices.

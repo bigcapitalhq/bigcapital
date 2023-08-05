@@ -176,7 +176,7 @@ export class SaleInvoiceApplication {
   }
 
   /**
-   *
+   * Retrieves the receivable sale invoices of the given customer.
    * @param {number} tenantId
    * @param {number} customerId
    * @returns
