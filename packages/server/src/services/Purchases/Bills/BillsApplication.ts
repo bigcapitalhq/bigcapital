@@ -59,6 +59,28 @@ export class BillsApplication {
   }
 
   /**
+   * Edits the given bill with associated GL entries.
+   * @param {number} tenantId
+   * @param {number} billId
+   * @param {IBillEditDTO} billDTO
+   * @param {ISystemUser} authorizedUser
+   * @returns
+   */
+  public editBill(
+    tenantId: number,
+    billId: number,
+    billDTO: IBillEditDTO,
+    authorizedUser: ISystemUser
+  ): Promise<IBill> {
+    return this.editBillService.editBill(
+      tenantId,
+      billId,
+      billDTO,
+      authorizedUser
+    );
+  }
+
+  /**
    * Deletes the given bill with associated GL entries.
    * @param {number} tenantId
    * @param {number} billId
@@ -92,28 +114,6 @@ export class BillsApplication {
    */
   public getBill(tenantId: number, billId: number): Promise<IBill> {
     return this.getBillService.getBill(tenantId, billId);
-  }
-
-  /**
-   * Edits the given bill with associated GL entries.
-   * @param {number} tenantId
-   * @param {number} billId
-   * @param {IBillEditDTO} billDTO
-   * @param {ISystemUser} authorizedUser
-   * @returns
-   */
-  public editBill(
-    tenantId: number,
-    billId: number,
-    billDTO: IBillEditDTO,
-    authorizedUser: ISystemUser
-  ): Promise<IBill> {
-    return this.editBillService.editBill(
-      tenantId,
-      billId,
-      billDTO,
-      authorizedUser
-    );
   }
 
   /**

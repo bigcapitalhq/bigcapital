@@ -38,29 +38,6 @@ export class EditSaleInvoice {
   private uow: UnitOfWork;
 
   /**
-   * Transformes edit DTO to model.
-   * @param {number} tennatId -
-   * @param {ICustomer} customer -
-   * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
-   * @param {ISaleInvoice} oldSaleInvoice
-   */
-  private tranformEditDTOToModel = async (
-    tenantId: number,
-    customer: ICustomer,
-    saleInvoiceDTO: ISaleInvoiceEditDTO,
-    oldSaleInvoice: ISaleInvoice,
-    authorizedUser: ITenantUser
-  ) => {
-    return this.transformerDTO.transformDTOToModel(
-      tenantId,
-      customer,
-      saleInvoiceDTO,
-      authorizedUser,
-      oldSaleInvoice
-    );
-  };
-
-  /**
    * Edit the given sale invoice.
    * @async
    * @param {number} tenantId - Tenant id.
@@ -159,4 +136,27 @@ export class EditSaleInvoice {
       return saleInvoice;
     });
   }
+
+  /**
+   * Transformes edit DTO to model.
+   * @param {number} tennatId -
+   * @param {ICustomer} customer -
+   * @param {ISaleInvoiceEditDTO} saleInvoiceDTO -
+   * @param {ISaleInvoice} oldSaleInvoice
+   */
+  private tranformEditDTOToModel = async (
+    tenantId: number,
+    customer: ICustomer,
+    saleInvoiceDTO: ISaleInvoiceEditDTO,
+    oldSaleInvoice: ISaleInvoice,
+    authorizedUser: ITenantUser
+  ) => {
+    return this.transformerDTO.transformDTOToModel(
+      tenantId,
+      customer,
+      saleInvoiceDTO,
+      authorizedUser,
+      oldSaleInvoice
+    );
+  };
 }

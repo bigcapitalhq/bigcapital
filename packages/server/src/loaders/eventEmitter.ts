@@ -7,11 +7,11 @@ import PaymentSyncBillBalance from '@/subscribers/PaymentMades/PaymentSyncBillBa
 import SaleReceiptInventoryTransactionsSubscriber from '@/subscribers/SaleReceipt/WriteInventoryTransactions';
 import SaleInvoiceWriteInventoryTransactions from '@/subscribers/SaleInvoices/WriteInventoryTransactions';
 import SaleInvoiceWriteGLEntriesSubscriber from '@/subscribers/SaleInvoices/WriteJournalEntries';
+import SaleReceiptWriteGLEntriesSubscriber from '@/subscribers/SaleReceipt/WriteJournalEntries';
 import PaymentReceiveSyncInvoices from '@/subscribers/PaymentReceive/PaymentReceiveSyncInvoices';
 import CashflowTransactionSubscriber from '@/services/Cashflow/CashflowTransactionSubscriber';
 import PaymentReceivesWriteGLEntriesSubscriber from '@/subscribers/PaymentReceive/WriteGLEntries';
 import InventorySubscriber from '@/subscribers/Inventory/Inventory';
-import SaleReceiptWriteGLEntriesSubscriber from '@/subscribers/SaleReceipt/WriteJournalEntries';
 import { CustomerWriteGLOpeningBalanceSubscriber } from '@/services/Contacts/Customers/Subscribers/CustomerGLEntriesSubscriber';
 import { VendorsWriteGLOpeningSubscriber } from '@/services/Contacts/Vendors/Subscribers/VendorGLEntriesSubscriber';
 import SaleEstimateAutoSerialSubscriber from '@/subscribers/SaleEstimate/AutoIncrementSerial';

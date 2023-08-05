@@ -44,10 +44,11 @@ export class DeletePaymentReceive {
       this.tenancy.models(tenantId);
 
     // Retreive payment receive or throw not found service error.
-    const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
-      tenantId,
-      paymentReceiveId
-    );
+    const oldPaymentReceive = await PaymentReceive.query()
+      .withGraphFetched('entries')
+      .findById(paymentReceiveId)
+      .throwIfNotFound();
+
     // Delete payment receive transaction and associate transactions under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onPaymentReceiveDeleting` event.

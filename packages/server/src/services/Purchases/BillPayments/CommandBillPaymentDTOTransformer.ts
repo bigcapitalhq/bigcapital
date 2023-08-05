@@ -2,7 +2,6 @@ import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
 import { sumBy } from 'lodash';
 import { IBillPayment, IBillPaymentDTO, IVendor } from '@/interfaces';
-import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
 
@@ -18,7 +17,7 @@ export class CommandBillPaymentDTOTransformer {
    * @param {IBillPayment} oldBillPayment - Old bill payment.
    * @return {Promise<IBillPayment>}
    */
-  async transformDTOToModel(
+  public async transformDTOToModel(
     tenantId: number,
     billPaymentDTO: IBillPaymentDTO,
     vendor: IVendor,

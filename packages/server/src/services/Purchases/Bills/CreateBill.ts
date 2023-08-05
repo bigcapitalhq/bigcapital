@@ -68,7 +68,6 @@ export class CreateBill {
       tenantId,
       billDTO.billNumber
     );
-
     // Validate items IDs existance.
     await this.itemsEntriesService.validateItemsIdsExistance(
       tenantId,

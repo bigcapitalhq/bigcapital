@@ -34,28 +34,6 @@ export class EditPaymentReceive {
   private tenancy: HasTenancyService;
 
   /**
-   * Transform the edit payment receive DTO.
-   * @param {number} tenantId
-   * @param {ICustomer} customer
-   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
-   * @param {IPaymentReceive} oldPaymentReceive
-   * @returns
-   */
-  private transformEditDTOToModel = async (
-    tenantId: number,
-    customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveEditDTO,
-    oldPaymentReceive: IPaymentReceive
-  ) => {
-    return this.transformer.transformPaymentReceiveDTOToModel(
-      tenantId,
-      customer,
-      paymentReceiveDTO,
-      oldPaymentReceive
-    );
-  };
-
-  /**
    * Edit details the given payment receive with associated entries.
    * ------
    * - Update the payment receive transactions.
@@ -81,10 +59,11 @@ export class EditPaymentReceive {
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Validate the payment receive existance.
-    const oldPaymentReceive = await this.getPaymentReceiveOrThrowError(
-      tenantId,
-      paymentReceiveId
-    );
+    const oldPaymentReceive = await PaymentReceive.query()
+      .withGraphFetched('entries')
+      .findById(paymentReceiveId)
+      .throwIfNotFound();
+
     // Validate customer existance.
     const customer = await Contact.query()
       .modify('customer')
@@ -103,7 +82,6 @@ export class EditPaymentReceive {
       paymentReceiveDTO,
       oldPaymentReceive
     );
-
     // Validate payment receive number uniquiness.
     if (paymentReceiveDTO.paymentReceiveNo) {
       await this.validators.validatePaymentReceiveNoExistance(
@@ -113,7 +91,7 @@ export class EditPaymentReceive {
       );
     }
     // Validate the deposit account existance and type.
-    const depositAccount = await this.getDepositAccountOrThrowError(
+    const depositAccount = await this.validators.getDepositAccountOrThrowError(
       tenantId,
       paymentReceiveDTO.depositAccountId
     );
@@ -172,4 +150,26 @@ export class EditPaymentReceive {
       return paymentReceive;
     });
   }
+
+  /**
+   * Transform the edit payment receive DTO.
+   * @param {number} tenantId
+   * @param {ICustomer} customer
+   * @param {IPaymentReceiveEditDTO} paymentReceiveDTO
+   * @param {IPaymentReceive} oldPaymentReceive
+   * @returns
+   */
+  private transformEditDTOToModel = async (
+    tenantId: number,
+    customer: ICustomer,
+    paymentReceiveDTO: IPaymentReceiveEditDTO,
+    oldPaymentReceive: IPaymentReceive
+  ) => {
+    return this.transformer.transformPaymentReceiveDTOToModel(
+      tenantId,
+      customer,
+      paymentReceiveDTO,
+      oldPaymentReceive
+    );
+  };
 }

@@ -11,7 +11,6 @@ import {
 import events from '@/subscribers/events';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import SaleEstimateService from '@/services/Sales/SalesEstimate';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
@@ -24,9 +23,6 @@ export class CreateSaleInvoice {
 
   @Inject()
   private itemsEntriesService: ItemsEntriesService;
-
-  @Inject()
-  private saleEstimatesService: SaleEstimateService;
 
   @Inject()
   private validators: CommandSaleInvoiceValidators;
@@ -63,13 +59,13 @@ export class CreateSaleInvoice {
 
     // Validate the from estimate id exists on the storage.
     if (saleInvoiceDTO.fromEstimateId) {
-      const fromEstimate =
-        await this.saleEstimatesService.getSaleEstimateOrThrowError(
-          tenantId,
-          saleInvoiceDTO.fromEstimateId
-        );
-      // Validate the sale estimate is not already converted to invoice.
-      this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
+      // const fromEstimate =
+      //   await this.saleEstimatesService.getSaleEstimateOrThrowError(
+      //     tenantId,
+      //     saleInvoiceDTO.fromEstimateId
+      //   );
+      // // Validate the sale estimate is not already converted to invoice.
+      // this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
     }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(

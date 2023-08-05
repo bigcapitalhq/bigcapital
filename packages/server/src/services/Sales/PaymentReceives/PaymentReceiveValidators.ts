@@ -23,7 +23,7 @@ export class PaymentReceiveValidators {
    * @param {number} tenantId -
    * @param {string} paymentReceiveNo -
    */
-  async validatePaymentReceiveNoExistance(
+  public async validatePaymentReceiveNoExistance(
     tenantId: number,
     paymentReceiveNo: string,
     notPaymentReceiveId?: number

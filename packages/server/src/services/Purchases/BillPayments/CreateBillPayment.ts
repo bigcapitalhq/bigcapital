@@ -67,7 +67,7 @@ export class CreateBillPayment {
       vendor
     );
     // Validate the payment account existance and type.
-    const paymentAccount = await this.getPaymentAccountOrThrowError(
+    const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
     );
@@ -89,7 +89,6 @@ export class CreateBillPayment {
       tenantId,
       billPaymentObj.entries
     );
-
     // Validates the withdrawal account currency code.
     this.validators.validateWithdrawalAccountCurrency(
       paymentAccount.currencyCode,

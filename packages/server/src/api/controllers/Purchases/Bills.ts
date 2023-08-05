@@ -227,7 +227,6 @@ export default class BillsController extends BaseController {
         billDTO,
         user
       );
-
       return res.status(200).send({
         id: storedBill.id,
         message: 'The bill has been created successfully.',

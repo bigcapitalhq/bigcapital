@@ -16,13 +16,14 @@ import { ERRORS } from './constants';
 export class BillPaymentValidators {
   @Inject()
   private tenancy: TenancyService;
+
   /**
    * Validates the bill payment existance.
    * @param {Request} req
    * @param {Response} res
    * @param {Function} next
    */
-  private async getPaymentMadeOrThrowError(
+  public async getPaymentMadeOrThrowError(
     tenantid: number,
     paymentMadeId: number
   ) {
@@ -43,7 +44,7 @@ export class BillPaymentValidators {
    * @param {number} paymentAccountId
    * @return {Promise<IAccountType>}
    */
-  private async getPaymentAccountOrThrowError(
+  public async getPaymentAccountOrThrowError(
     tenantId: number,
     paymentAccountId: number
   ) {
