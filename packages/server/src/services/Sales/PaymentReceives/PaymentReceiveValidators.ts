@@ -143,7 +143,7 @@ export class PaymentReceiveValidators {
    * @param {number} paymentReceiveId
    * @param {IPaymentReceiveEntryDTO[]} paymentReceiveEntries
    */
-  private async validateEntriesIdsExistance(
+  public async validateEntriesIdsExistance(
     tenantId: number,
     paymentReceiveId: number,
     paymentReceiveEntries: IPaymentReceiveEntryDTO[]

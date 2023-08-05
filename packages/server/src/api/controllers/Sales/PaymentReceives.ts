@@ -10,9 +10,9 @@ import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ServiceError } from '@/exceptions';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export default class PaymentReceivesController extends BaseController {

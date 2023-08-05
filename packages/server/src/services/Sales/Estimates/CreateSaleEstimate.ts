@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import {
   ISaleEstimate,
@@ -10,9 +11,8 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
-import { SaleEstimateValidators } from './SaleEstimateValidators';
 import events from '@/subscribers/events';
-import { Knex } from 'knex';
+import { SaleEstimateValidators } from './SaleEstimateValidators';
 
 @Service()
 export class CreateSaleEstimate {

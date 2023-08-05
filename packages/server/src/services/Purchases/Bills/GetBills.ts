@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import * as R from 'ramda';
 import {
   IBill,
   IBillsFilter,
@@ -63,5 +64,13 @@ export class GetBills {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Parses bills list filter DTO.
+   * @param filterDTO -
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

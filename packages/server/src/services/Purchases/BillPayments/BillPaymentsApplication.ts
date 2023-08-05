@@ -5,6 +5,7 @@ import { DeleteBillPayment } from './DeleteBillPayment';
 import { EditBillPayment } from './EditBillPayment';
 import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './GetBillPayment';
+import { GetPaymentBills } from './GetPaymentBills';
 
 /**
  * Bill payments application.
@@ -26,6 +27,9 @@ export class BillPaymentsApplication {
 
   @Inject()
   private getBillPaymentService: GetBillPayment;
+
+  @Inject()
+  private getPaymentBillsService: GetPaymentBills;
 
   /**
    * Creates a bill payment with associated GL entries.
@@ -92,5 +96,14 @@ export class BillPaymentsApplication {
    */
   public getBillPayment(tenantId: number, billPyamentId: number) {
     return this.getBillPaymentService.getBillPayment(tenantId, billPyamentId);
+  }
+
+  /**
+   * Retrieve payment made associated bills.
+   * @param {number} tenantId -
+   * @param {number} billPaymentId -
+   */
+  public getPaymentBills(tenantId: number, billPaymentId: number) {
+    return this.getPaymentBillsService.getPaymentBills(tenantId, billPaymentId);
   }
 }

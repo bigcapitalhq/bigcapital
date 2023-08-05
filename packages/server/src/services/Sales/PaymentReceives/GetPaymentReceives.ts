@@ -23,14 +23,6 @@ export class GetPaymentReceives {
   private transformer: TransformerInjectable;
 
   /**
-   * Parses payments receive list filter DTO.
-   * @param filterDTO
-   */
-  private parseListFilterDTO(filterDTO) {
-    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-  }
-
-  /**
    * Retrieve payment receives paginated and filterable list.
    * @param {number} tenantId
    * @param {IPaymentReceivesFilter} paymentReceivesFilter
@@ -73,5 +65,13 @@ export class GetPaymentReceives {
       pagination,
       filterMeta: dynamicList.getResponseMeta(),
     };
+  }
+
+  /**
+   * Parses payments receive list filter DTO.
+   * @param filterDTO
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

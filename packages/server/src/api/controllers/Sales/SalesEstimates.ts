@@ -28,7 +28,7 @@ export default class SalesEstimatesController extends BaseController {
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(

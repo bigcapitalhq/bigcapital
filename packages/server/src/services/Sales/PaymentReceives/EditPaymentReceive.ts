@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 import {
   ICustomer,
   IPaymentReceive,

@@ -453,10 +453,11 @@ export default class SaleInvoicesController extends BaseController {
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const salesInvoices = await this.saleInvoiceService.getPayableInvoices(
-        tenantId,
-        customerId
-      );
+      const salesInvoices =
+        await this.saleInvoiceApplication.getReceivableSaleInvoices(
+          tenantId,
+          customerId
+        );
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),
       });

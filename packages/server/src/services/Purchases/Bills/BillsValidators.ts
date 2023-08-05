@@ -2,6 +2,8 @@ import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
+import { IItemEntryDTO } from '@/interfaces';
+import { transformToMap } from '@/utils';
 
 @Service()
 export class BillsValidators {
