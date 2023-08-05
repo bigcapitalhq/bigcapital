@@ -19,7 +19,7 @@ import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
-export default class SaleInvoiceNotifyBySms {
+export class SaleInvoiceNotifyBySms {
   @Inject()
   private tenancy: HasTenancyService;
 

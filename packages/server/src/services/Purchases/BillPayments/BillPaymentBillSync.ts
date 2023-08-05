@@ -5,7 +5,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { entriesAmountDiff } from '@/utils';
 
 @Service()
-export class BIllPaymentBillSync {
+export class BillPaymentBillSync {
   @Inject()
   private tenancy: HasTenancyService;
 

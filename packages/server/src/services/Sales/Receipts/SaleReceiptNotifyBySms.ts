@@ -16,7 +16,7 @@ import SaleNotifyBySms from '../SaleNotifyBySms';
 import { ERRORS } from './constants';
 
 @Service()
-export default class SaleReceiptNotifyBySms {
+export class SaleReceiptNotifyBySms {
   @Inject()
   private tenancy: HasTenancyService;
 

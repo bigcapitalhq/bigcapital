@@ -12,10 +12,10 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 @Service()
 export default class SyncSystemSendInvite {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   /**
    * Attaches events with handlers.

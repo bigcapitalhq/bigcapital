@@ -264,7 +264,7 @@ export class SaleInvoiceApplication {
   };
 
   /**
-   * Retrieve the SMS details of the given invoice.
+   * Retrieves the SMS details of the given invoice.
    * @param {number} tenantId - Tenant id.
    * @param {number} saleInvoiceId - Sale invoice id.
    */

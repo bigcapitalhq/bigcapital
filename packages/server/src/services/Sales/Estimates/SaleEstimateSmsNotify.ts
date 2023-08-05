@@ -4,7 +4,6 @@ import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
-import SMSClient from '@/services/SMSClient';
 import {
   ICustomer,
   IPaymentReceiveSmsDetails,

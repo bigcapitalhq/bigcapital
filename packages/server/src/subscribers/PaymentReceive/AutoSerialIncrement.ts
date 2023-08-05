@@ -7,7 +7,7 @@ import { IPaymentReceiveCreatedPayload } from '@/interfaces';
 @Service()
 export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber {
   @Inject()
-  paymentReceivesService: PaymentReceiveService;
+  private paymentReceivesService: PaymentReceiveService;
 
   /**
    * Attaches the events with handles.

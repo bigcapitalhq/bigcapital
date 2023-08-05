@@ -14,7 +14,7 @@ import SaleNotifyBySms from '../SaleNotifyBySms';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
-export default class PaymentReceiveNotifyBySms {
+export class PaymentReceiveNotifyBySms {
   @Inject()
   private tenancy: HasTenancyService;
 

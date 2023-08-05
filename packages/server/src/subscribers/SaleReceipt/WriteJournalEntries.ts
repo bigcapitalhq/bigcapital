@@ -1,7 +1,6 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import SalesReceiptService from '@/services/Sales/SalesReceipts';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptEditedPayload,
@@ -12,10 +11,7 @@ import { SaleReceiptGLEntries } from '@/services/Sales/Receipts/SaleReceiptGLEnt
 @Service()
 export default class SaleReceiptWriteGLEntriesSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  saleReceiptGLEntries: SaleReceiptGLEntries;
+  private saleReceiptGLEntries: SaleReceiptGLEntries;
 
   /**
    * Attaches events with handlers.
