@@ -1,8 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { ISaleInvoice, ISystemUser } from '@/interfaces';
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class GetSaleInvoice {

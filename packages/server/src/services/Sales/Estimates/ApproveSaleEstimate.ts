@@ -35,10 +35,10 @@ export class ApproveSaleEstimate {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(
-      tenantId,
-      saleEstimateId
-    );
+    const oldSaleEstimate = await SaleEstimate.query()
+      .findById(saleEstimateId)
+      .throwIfNotFound();
+
     // Throws error in case the sale estimate still not delivered to customer.
     if (!oldSaleEstimate.isDelivered) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_DELIVERED);

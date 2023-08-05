@@ -1,6 +1,6 @@
+import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
 import {
   AbilitySubject,
   BillAction,
@@ -8,12 +8,10 @@ import {
   IBillEditDTO,
 } from '@/interfaces';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BillsService from '@/services/Purchases/Bills';
 import BaseController from '@/api/controllers/BaseController';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import BillPaymentsService from '@/services/Purchases/BillPaymentsService';
 import { BillsApplication } from '@/services/Purchases/Bills/BillsApplication';
 
 @Service()
@@ -23,9 +21,6 @@ export default class BillsController extends BaseController {
 
   @Inject()
   private dynamicListService: DynamicListingService;
-
-  @Inject()
-  private billPayments: BillPaymentsService;
 
   /**
    * Router constructor.
@@ -390,7 +385,7 @@ export default class BillsController extends BaseController {
     const { id: billId } = req.params;
 
     try {
-      const billPayments = await this.billPayments.getBillPayments(
+      const billPayments = await this.billsApplication.getBillPayments(
         tenantId,
         billId
       );

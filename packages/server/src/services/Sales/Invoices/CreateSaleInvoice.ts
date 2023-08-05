@@ -41,31 +41,11 @@ export class CreateSaleInvoice {
   private uow: UnitOfWork;
 
   /**
-   * Transformes create DTO to model.
-   * @param {number} tenantId -
-   * @param {ICustomer} customer -
-   * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
-   */
-  private transformCreateDTOToModel = async (
-    tenantId: number,
-    customer: ICustomer,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    authorizedUser: ITenantUser
-  ) => {
-    return this.transformerDTO.transformDTOToModel(
-      tenantId,
-      customer,
-      saleInvoiceDTO,
-      authorizedUser
-    );
-  };
-
-  /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
    * @async
-   * @param  {number} tenantId - Tenant id.
-   * @param  {ISaleInvoice} saleInvoiceDTO - Sale invoice object DTO.
+   * @param {number} tenantId - Tenant id.
+   * @param {ISaleInvoice} saleInvoiceDTO - Sale invoice object DTO.
    * @return {Promise<ISaleInvoice>}
    */
   public createSaleInvoice = async (
@@ -143,5 +123,25 @@ export class CreateSaleInvoice {
       );
       return saleInvoice;
     });
+  };
+
+  /**
+   * Transformes create DTO to model.
+   * @param {number} tenantId -
+   * @param {ICustomer} customer -
+   * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO -
+   */
+  private transformCreateDTOToModel = async (
+    tenantId: number,
+    customer: ICustomer,
+    saleInvoiceDTO: ISaleInvoiceCreateDTO,
+    authorizedUser: ITenantUser
+  ) => {
+    return this.transformerDTO.transformDTOToModel(
+      tenantId,
+      customer,
+      saleInvoiceDTO,
+      authorizedUser
+    );
   };
 }

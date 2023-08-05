@@ -48,10 +48,11 @@ export class EditSaleEstimate {
   ): Promise<ISaleEstimate> {
     const { SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
-    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(
-      tenantId,
-      estimateId
-    );
+    // Retrieve details of the given sale estimate id.
+    const oldSaleEstimate = await SaleEstimate.query()
+      .findById(estimateId)
+      .throwIfNotFound();
+
     // Retrieve the given customer or throw not found service error.
     const customer = await Contact.query()
       .modify('customer')

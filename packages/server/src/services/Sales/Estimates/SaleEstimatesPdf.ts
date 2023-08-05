@@ -5,7 +5,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class SaleEstimatesPdf {
+export class SaleEstimatesPdf {
   @Inject()
   private pdfService: PdfService;
 
@@ -16,7 +16,7 @@ export default class SaleEstimatesPdf {
    * Retrieve sale invoice pdf content.
    * @param {} saleInvoice -
    */
-  async saleEstimatePdf(tenantId: number, saleEstimate) {
+  async getSaleEstimatePdf(tenantId: number, saleEstimate) {
     const i18n = this.tenancy.i18n(tenantId);
 
     const organization = await Tenant.query()

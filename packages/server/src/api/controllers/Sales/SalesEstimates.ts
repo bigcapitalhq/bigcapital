@@ -1,17 +1,15 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, matchedData } from 'express-validator';
+import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
   ISaleEstimateDTO,
   SaleEstimateAction,
-  SaleInvoiceAction,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
-import SaleEstimatesPdfService from '@/services/Sales/Estimates/SaleEstimatesPdf';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
 
@@ -26,9 +24,6 @@ export default class SalesEstimatesController extends BaseController {
 
   @Inject()
   private dynamicListService: DynamicListingService;
-
-  @Inject()
-  private saleEstimatesPdf: SaleEstimatesPdfService;
 
   /**
    * Router constructor.
@@ -379,10 +374,11 @@ export default class SalesEstimatesController extends BaseController {
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.saleEstimatesPdf.saleEstimatePdf(
-            tenantId,
-            estimate
-          );
+          const pdfContent =
+            await this.saleEstimatesApplication.getSaleEstimatePdf(
+              tenantId,
+              estimate
+            );
           res.set({
             'Content-Type': 'application/pdf',
             'Content-Length': pdfContent.length,

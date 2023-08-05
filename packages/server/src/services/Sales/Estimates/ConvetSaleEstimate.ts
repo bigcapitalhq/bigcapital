@@ -1,5 +1,7 @@
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 
@@ -8,13 +10,16 @@ export class ConvertSaleEstimate {
   @Inject()
   private eventPublisher: EventPublisher;
 
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Converts estimate to invoice.
    * @param {number} tenantId -
    * @param {number} estimateId -
    * @return {Promise<void>}
    */
-  async convertEstimateToInvoice(
+  public async convertEstimateToInvoice(
     tenantId: number,
     estimateId: number,
     invoiceId: number,
@@ -23,10 +28,10 @@ export class ConvertSaleEstimate {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate.
-    const saleEstimate = await this.getSaleEstimateOrThrowError(
-      tenantId,
-      estimateId
-    );
+    const saleEstimate = await SaleEstimate.query()
+      .findById(estimateId)
+      .throwIfNotFound();
+
     // Marks the estimate as converted from the givne invoice.
     await SaleEstimate.query(trx).where('id', estimateId).patch({
       convertedToInvoiceId: invoiceId,

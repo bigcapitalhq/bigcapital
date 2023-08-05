@@ -1,10 +1,10 @@
 import { Service, Inject } from 'typedi';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import { BillPaymentTransactionTransformer } from './BillPayments/BillPaymentTransactionTransformer';
+import { BillPaymentTransactionTransformer } from '../BillPayments/BillPaymentTransactionTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
-export default class BillPaymentsService {
+export class GetBillPayments {
   @Inject()
   private tenancy: TenancyService;
 

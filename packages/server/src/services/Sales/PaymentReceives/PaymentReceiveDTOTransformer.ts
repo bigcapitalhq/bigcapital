@@ -1,15 +1,16 @@
 import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { omit, sumBy } from 'lodash';
 import {
   ICustomer,
   IPaymentReceive,
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
 } from '@/interfaces';
-import { sumBy } from 'lodash';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { PaymentReceiveValidators } from './PaymentReceiveValidators';
-import { Inject } from 'typedi';
 import { PaymentReceiveIncrement } from './PaymentReceiveIncrement';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { formatDateFields } from '@/utils';
 
 @Service()
 export class PaymentReceiveDTOTransformer {
@@ -18,6 +19,9 @@ export class PaymentReceiveDTOTransformer {
 
   @Inject()
   private increments: PaymentReceiveIncrement;
+
+  @Inject()
+  private branchDTOTransform: BranchTransactionDTOTransform;
 
   /**
    * Transformes the create payment receive DTO to model object.
@@ -35,7 +39,8 @@ export class PaymentReceiveDTOTransformer {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Retreive the next invoice number.
-    const autoNextNumber = this.increments.getNextPaymentReceiveNumber(tenantId);
+    const autoNextNumber =
+      this.increments.getNextPaymentReceiveNumber(tenantId);
 
     // Retrieve the next payment receive number.
     const paymentReceiveNo =

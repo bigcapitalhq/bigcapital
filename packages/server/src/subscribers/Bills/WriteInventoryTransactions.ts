@@ -1,20 +1,16 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import BillsService from '@/services/Purchases/Bills';
 import {
   IBillCreatedPayload,
   IBillEditedPayload,
   IBIllEventDeletedPayload,
 } from '@/interfaces';
+import { BillInventoryTransactions } from '@/services/Purchases/Bills/BillInventoryTransactions';
 
 @Service()
 export default class BillWriteInventoryTransactionsSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  billsService: BillsService;
+  private billsInventory: BillInventoryTransactions;
 
   /**
    * Attaches events with handles.
@@ -42,7 +38,7 @@ export default class BillWriteInventoryTransactionsSubscriber {
     billId,
     trx,
   }: IBillCreatedPayload) => {
-    await this.billsService.recordInventoryTransactions(
+    await this.billsInventory.recordInventoryTransactions(
       tenantId,
       billId,
       false,
@@ -58,7 +54,7 @@ export default class BillWriteInventoryTransactionsSubscriber {
     billId,
     trx,
   }: IBillEditedPayload) => {
-    await this.billsService.recordInventoryTransactions(
+    await this.billsInventory.recordInventoryTransactions(
       tenantId,
       billId,
       true,
@@ -74,6 +70,10 @@ export default class BillWriteInventoryTransactionsSubscriber {
     billId,
     trx,
   }: IBIllEventDeletedPayload) => {
-    await this.billsService.revertInventoryTransactions(tenantId, billId, trx);
+    await this.billsInventory.revertInventoryTransactions(
+      tenantId,
+      billId,
+      trx
+    );
   };
 }

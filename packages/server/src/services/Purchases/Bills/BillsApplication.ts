@@ -15,6 +15,7 @@ import {
 } from '@/interfaces';
 import { GetDueBills } from './GetDueBills';
 import { OpenBill } from './OpenBill';
+import { GetBillPayments } from './GetBillPayments';
 
 @Service()
 export class BillsApplication {
@@ -38,6 +39,9 @@ export class BillsApplication {
 
   @Inject()
   private openBillService: OpenBill;
+
+  @Inject()
+  private getBillPaymentsService: GetBillPayments;
 
   /**
    * Creates a new bill with associated GL entries.
@@ -131,4 +135,13 @@ export class BillsApplication {
   public getDueBills(tenantId: number, vendorId?: number) {
     return this.getDueBillsService.getDueBills(tenantId, vendorId);
   }
+
+  /**
+   * Retrieve the specific bill associated payment transactions.
+   * @param {number} tenantId
+   * @param {number} billId
+   */
+  public getBillPayments = async (tenantId: number, billId: number) => {
+    return this.getBillPaymentsService.getBillPayments(tenantId, billId);
+  };
 }

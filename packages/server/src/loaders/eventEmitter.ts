@@ -35,7 +35,7 @@ import PurgeAuthorizedUserOnceRoleMutate from '@/services/Roles/PurgeAuthorizedU
 import SendSmsNotificationToCustomer from '@/subscribers/SaleInvoices/SendSmsNotificationToCustomer';
 import SendSmsNotificationSaleReceipt from '@/subscribers/SaleReceipt/SendSmsNotificationToCustomer';
 import SendSmsNotificationPaymentReceive from '@/subscribers/PaymentReceive/SendSmsNotificationToCustomer';
-import SaleInvoiceWriteoffSubscriber from '@/services/Sales/SaleInvoiceWriteoffSubscriber';
+import SaleInvoiceWriteoffSubscriber from '@/services/Sales/Invoices/SaleInvoiceWriteoffSubscriber';
 import LandedCostSyncCostTransactionsSubscriber from '@/services/Purchases/LandedCost/LandedCostSyncCostTransactionsSubscriber';
 import LandedCostInventoryTransactionsSubscriber from '@/services/Purchases/LandedCost/LandedCostInventoryTransactionsSubscriber';
 import CreditNoteGLEntriesSubscriber from '@/services/CreditNotes/CreditNoteGLEntriesSubscriber';
@@ -66,7 +66,6 @@ import { ActivateWarehousesSubscriber } from '@/services/Warehouses/ActivateWare
 import { ManualJournalWriteGLSubscriber } from '@/services/ManualJournals/ManualJournalGLEntriesSubscriber';
 import { BillGLEntriesSubscriber } from '@/services/Purchases/Bills/BillGLEntriesSubscriber';
 import { PaymentWriteGLEntriesSubscriber } from '@/services/Purchases/BillPayments/BillPaymentGLEntriesSubscriber';
-
 import BranchesIntegrationsSubscribers from '@/services/Branches/EventsProvider';
 import WarehousesIntegrationsSubscribers from '@/services/Warehouses/EventsProvider';
 import { WarehouseTransferAutoIncrementSubscriber } from '@/services/Warehouses/WarehousesTransfers/WarehouseTransferAutoIncrementSubscriber';

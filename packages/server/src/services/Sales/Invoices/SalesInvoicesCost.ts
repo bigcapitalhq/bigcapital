@@ -12,7 +12,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 
 @Service()
-export default class SaleInvoicesCost {
+export class SaleInvoicesCost {
   @Inject()
   private inventoryService: InventoryService;
 

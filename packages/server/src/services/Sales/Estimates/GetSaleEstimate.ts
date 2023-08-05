@@ -10,6 +10,7 @@ export class GetSaleEstimate {
   @Inject()
   private tenancy: HasTenancyService;
 
+  @Inject()
   private transformer: TransformerInjectable;
 
   /**

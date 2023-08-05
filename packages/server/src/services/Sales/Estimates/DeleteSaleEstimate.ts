@@ -36,10 +36,10 @@ export class DeleteSaleEstimate {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
     // Retrieve sale estimate or throw not found service error.
-    const oldSaleEstimate = await this.getSaleEstimateOrThrowError(
-      tenantId,
-      estimateId
-    );
+    const oldSaleEstimate = await SaleEstimate.query()
+      .findById(estimateId)
+      .throwIfNotFound();
+
     // Throw error if the sale estimate converted to sale invoice.
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);

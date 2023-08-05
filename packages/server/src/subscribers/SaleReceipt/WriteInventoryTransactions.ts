@@ -1,26 +1,22 @@
 import { Inject } from 'typedi';
 import { EventSubscriber } from 'event-dispatch';
 import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import SalesReceiptService from '@/services/Sales/SalesReceipts';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptEditedPayload,
   ISaleReceiptEventDeletedPayload,
 } from '@/interfaces';
+import { SaleReceiptInventoryTransactions } from '@/services/Sales/Receipts/SaleReceiptInventoryTransactions';
 
 @EventSubscriber()
 export default class SaleReceiptInventoryTransactionsSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  saleReceiptsService: SalesReceiptService;
+  private saleReceiptInventory: SaleReceiptInventoryTransactions;
 
   /**
    * Subscribe events to handles.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.saleReceipt.onCreated,
       this.handleWritingInventoryTransactions
@@ -44,7 +40,7 @@ export default class SaleReceiptInventoryTransactionsSubscriber {
     saleReceipt,
     trx,
   }: ISaleReceiptCreatedPayload) => {
-    await this.saleReceiptsService.recordInventoryTransactions(
+    await this.saleReceiptInventory.recordInventoryTransactions(
       tenantId,
       saleReceipt,
       false,
@@ -61,7 +57,7 @@ export default class SaleReceiptInventoryTransactionsSubscriber {
     saleReceipt,
     trx,
   }: ISaleReceiptEditedPayload) => {
-    await this.saleReceiptsService.recordInventoryTransactions(
+    await this.saleReceiptInventory.recordInventoryTransactions(
       tenantId,
       saleReceipt,
       true,
@@ -78,7 +74,7 @@ export default class SaleReceiptInventoryTransactionsSubscriber {
     saleReceiptId,
     trx,
   }: ISaleReceiptEventDeletedPayload) => {
-    await this.saleReceiptsService.revertInventoryTransactions(
+    await this.saleReceiptInventory.revertInventoryTransactions(
       tenantId,
       saleReceiptId,
       trx

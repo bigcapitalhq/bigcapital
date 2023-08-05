@@ -43,6 +43,4 @@ export class GetBillPayment {
       new BillPaymentTransformer()
     );
   }
-
-  
 }
