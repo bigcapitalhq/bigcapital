@@ -6,7 +6,6 @@ import BaseController from '../BaseController';
 import { ISaleReceiptDTO } from '@/interfaces/SaleReceipt';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import SaleReceiptNotifyBySms from '@/services/Sales/SaleReceiptNotifyBySms';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
 import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
@@ -17,10 +16,7 @@ export default class SalesReceiptsController extends BaseController {
   private saleReceiptsApplication: SaleReceiptApplication;
 
   @Inject()
-  dynamicListService: DynamicListingService;
-
-  @Inject()
-  saleReceiptSmsNotify: SaleReceiptNotifyBySms;
+  private dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.

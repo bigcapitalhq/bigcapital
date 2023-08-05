@@ -13,6 +13,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
 import { TenantMetadata } from '@/system/models';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class CreatePaymentReceive {
@@ -20,7 +21,7 @@ export class CreatePaymentReceive {
   private validators: PaymentReceiveValidators;
 
   @Inject()
-  private eventPublisher: any;
+  private eventPublisher: EventPublisher;
 
   @Inject()
   private tenancy: HasTenancyService;

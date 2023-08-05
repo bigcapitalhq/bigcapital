@@ -23,7 +23,7 @@ import { GetSaleInvoicesPayable } from './GetSaleInvoicesPayable';
 import { WriteoffSaleInvoice } from './WriteoffSaleInvoice';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { GetInvoicePaymentsService } from './GetInvoicePaymentsService';
-import SaleInvoiceNotifyBySms from './SaleInvoiceNotifyBySms';
+import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
 
 @Service()
 export class SaleInvoiceApplication {

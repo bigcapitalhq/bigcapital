@@ -9,6 +9,7 @@ import {
 import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 
 @Service()
 export class GetPaymentReceives {

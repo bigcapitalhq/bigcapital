@@ -1,3 +1,5 @@
+import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 import {
   ISaleReceiptDeletingPayload,
   ISaleReceiptEventDeletedPayload,
@@ -5,13 +7,12 @@ import {
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class DeleteSaleReceipt {
   @Inject()
-  private eventPublisher: any;
+  private eventPublisher: EventPublisher;
 
   @Inject()
   private uow: UnitOfWork;
@@ -40,7 +41,6 @@ export class DeleteSaleReceipt {
         tenantId,
       } as ISaleReceiptDeletingPayload);
 
-      //
       await ItemEntry.query(trx)
         .where('reference_id', saleReceiptId)
         .where('reference_type', 'SaleReceipt')

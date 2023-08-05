@@ -16,13 +16,13 @@ import { ERRORS } from './utils';
 @Service()
 export default class TransactionLandedCost {
   @Inject()
-  billLandedCost: BillLandedCost;
+  private billLandedCost: BillLandedCost;
 
   @Inject()
-  expenseLandedCost: ExpenseLandedCost;
+  private expenseLandedCost: ExpenseLandedCost;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve the cost transaction code model.

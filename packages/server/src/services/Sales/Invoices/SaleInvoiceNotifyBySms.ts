@@ -15,8 +15,8 @@ import { formatSmsMessage, formatNumber } from 'utils';
 import { TenantMetadata } from '@/system/models';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { ERRORS } from './constants';
 
 @Service()
 export class SaleInvoiceNotifyBySms {

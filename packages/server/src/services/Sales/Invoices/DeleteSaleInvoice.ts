@@ -6,11 +6,11 @@ import {
   ISaleInvoiceDeletedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
-import SaleEstimateService from '@/services/Sales/SalesEstimate';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from '../constants';
+import { ERRORS } from './constants';
+import { UnlinkConvertedSaleEstimate } from '../Estimates/UnlinkConvertedSaleEstimate';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
@@ -19,7 +19,7 @@ export class DeleteSaleInvoice {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private saleEstimatesService: SaleEstimateService;
+  private unlockEstimateFromInvoice: UnlinkConvertedSaleEstimate;
 
   @Inject()
   private eventPublisher: EventPublisher;
@@ -129,7 +129,7 @@ export class DeleteSaleInvoice {
       } as ISaleInvoiceDeletePayload);
 
       // Unlink the converted sale estimates from the given sale invoice.
-      await this.saleEstimatesService.unlinkConvertedEstimateFromInvoice(
+      await this.unlockEstimateFromInvoice.unlinkConvertedEstimateFromInvoice(
         tenantId,
         saleInvoiceId,
         trx

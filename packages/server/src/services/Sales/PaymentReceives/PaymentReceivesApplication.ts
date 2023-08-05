@@ -4,6 +4,7 @@ import {
   IPaymentReceive,
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
+  IPaymentReceiveSmsDetails,
   IPaymentReceivesFilter,
   ISystemUser,
 } from '@/interfaces';
@@ -14,6 +15,8 @@ import { DeletePaymentReceive } from './DeletePaymentReceive';
 import { GetPaymentReceives } from './GetPaymentReceives';
 import { GetPaymentReceive } from './GetPaymentReceive';
 import { GetPaymentReceiveInvoices } from './GetPaymentReceiveInvoices';
+import { PaymentReceiveNotifyBySms } from './PaymentReceiveSmsNotify';
+import GetPaymentReceivePdf from './GetPaymentReeceivePdf';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -34,6 +37,12 @@ export class PaymentReceivesApplication {
 
   @Inject()
   private getPaymentReceiveInvoicesService: GetPaymentReceiveInvoices;
+
+  @Inject()
+  private paymentSmsNotify: PaymentReceiveNotifyBySms;
+
+  @Inject()
+  private getPaymentReceivePdfService: GetPaymentReceivePdf;
 
   /**
    * Creates a new payment receive.
@@ -143,4 +152,38 @@ export class PaymentReceivesApplication {
       paymentReceiveId
     );
   }
+
+  /**
+   * Notify customer via sms about payment receive details.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveid - Payment receive id.
+   */
+  public notifyPaymentBySms(tenantId: number, paymentReceiveid: number) {
+    return this.paymentSmsNotify.notifyBySms(tenantId, paymentReceiveid);
+  }
+
+  /**
+   * Retrieve the SMS details of the given invoice.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveid - Payment receive id.
+   */
+  public getPaymentSmsDetails = async (
+    tenantId: number,
+    paymentReceiveId: number
+  ): Promise<IPaymentReceiveSmsDetails> => {
+    return this.paymentSmsNotify.smsDetails(tenantId, paymentReceiveId);
+  };
+
+  /**
+   * 
+   * @param tenantId 
+   * @param paymentReceive 
+   * @returns 
+   */
+  public getPaymentReceivePdf = (tenantId: number, paymentReceive) => {
+    return this.getPaymentReceivePdfService.getPaymentReceivePdf(
+      tenantId,
+      paymentReceive
+    );
+  };
 }

@@ -11,9 +11,7 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
-import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import GetPaymentReceivePdf from '@/services/Sales/PaymentReceives/GetPaymentReeceivePdf';
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 
 @Service()
@@ -22,16 +20,10 @@ export default class PaymentReceivesController extends BaseController {
   private paymentReceiveApplication: PaymentReceivesApplication;
 
   @Inject()
-  PaymentReceivesPages: PaymentReceivesPages;
+  private PaymentReceivesPages: PaymentReceivesPages;
 
   @Inject()
-  dynamicListService: DynamicListingService;
-
-  @Inject()
-  paymentReceiveSmsNotify: PaymentReceiveNotifyBySms;
-
-  @Inject()
-  paymentReceivePdf: GetPaymentReceivePdf;
+  private dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
@@ -441,10 +433,11 @@ export default class PaymentReceivesController extends BaseController {
           });
         },
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.paymentReceivePdf.getPaymentReceivePdf(
-            tenantId,
-            paymentReceive
-          );
+          const pdfContent =
+            await this.paymentReceiveApplication.getPaymentReceivePdf(
+              tenantId,
+              paymentReceive
+            );
           res.set({
             'Content-Type': 'application/pdf',
             'Content-Length': pdfContent.length,
@@ -472,10 +465,11 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const paymentReceive = await this.paymentReceiveSmsNotify.notifyBySms(
-        tenantId,
-        paymentReceiveId
-      );
+      const paymentReceive =
+        await this.paymentReceiveApplication.notifyPaymentBySms(
+          tenantId,
+          paymentReceiveId
+        );
       return res.status(200).send({
         id: paymentReceive.id,
         message: 'The payment notification has been sent successfully.',
@@ -500,10 +494,11 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const smsDetails = await this.paymentReceiveSmsNotify.smsDetails(
-        tenantId,
-        paymentReceiveId
-      );
+      const smsDetails =
+        await this.paymentReceiveApplication.getPaymentSmsDetails(
+          tenantId,
+          paymentReceiveId
+        );
       return res.status(200).send({
         data: smsDetails,
       });

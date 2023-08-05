@@ -8,11 +8,12 @@ import {
 import UnitOfWork from '@/services/UnitOfWork';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class DeletePaymentReceive {
   @Inject()
-  private eventPublisher: any;
+  private eventPublisher: EventPublisher;
 
   @Inject()
   private tenancy: HasTenancyService;

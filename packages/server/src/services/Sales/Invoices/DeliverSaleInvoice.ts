@@ -6,7 +6,7 @@ import {
   ISaleInvoiceEventDeliveredPayload,
   ISystemUser,
 } from '@/interfaces';
-import { ERRORS } from '../constants';
+import { ERRORS } from './constants';
 import { Inject, Service } from 'typedi';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';

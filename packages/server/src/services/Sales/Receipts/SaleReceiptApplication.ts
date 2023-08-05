@@ -12,7 +12,7 @@ import { DeleteSaleReceipt } from './DeleteSaleReceipt';
 import { GetSaleReceipts } from './GetSaleReceipts';
 import { CloseSaleReceipt } from './CloseSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
-import SaleReceiptNotifyBySms from './SaleReceiptNotifyBySms';
+import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
 
 @Service()
 export class SaleReceiptApplication {
