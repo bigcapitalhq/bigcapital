@@ -58,6 +58,7 @@ import ItemWarehouseQuantity from 'models/ItemWarehouseQuantity';
 import Project from 'models/Project';
 import Time from 'models/Time';
 import Task from 'models/Task';
+import TaxRate from 'models/TaxRate';
 
 export default (knex) => {
   const models = {
@@ -119,6 +120,7 @@ export default (knex) => {
     Project,
     Time,
     Task,
+    TaxRate,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };

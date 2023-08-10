@@ -1,0 +1,3 @@
+const ERRORS = {
+  TAX_RATE_NOT_FOUND: 'TAX_RATE_NOT_FOUND',
+};
