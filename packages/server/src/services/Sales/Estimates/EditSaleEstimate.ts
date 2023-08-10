@@ -9,9 +9,9 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleEstimateValidators } from './SaleEstimateValidators';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import events from '@/subscribers/events';
-import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 
 @Service()
 export class EditSaleEstimate {
@@ -49,9 +49,10 @@ export class EditSaleEstimate {
     const { SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await SaleEstimate.query()
-      .findById(estimateId)
-      .throwIfNotFound();
+    const oldSaleEstimate = await SaleEstimate.query().findById(estimateId);
+
+    // Validates the given estimate existance.
+    this.validators.validateEstimateExistance(oldSaleEstimate);
 
     // Retrieve the given customer or throw not found service error.
     const customer = await Contact.query()

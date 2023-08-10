@@ -24,7 +24,7 @@ export class BillPaymentTransactionTransformer extends Transformer {
   /**
    * Retrieve formatted bill payment date.
    * @param entry
-   * @returns
+   * @returns {string}
    */
   protected formattedPaymentDate = (entry): string => {
     return this.formatDate(entry.payment.paymentDate);

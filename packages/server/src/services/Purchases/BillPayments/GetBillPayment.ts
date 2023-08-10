@@ -5,6 +5,8 @@ import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
 import { BillPaymentTransformer } from './BillPaymentTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { BillsValidators } from '../Bills/BillsValidators';
+import { BillPaymentValidators } from './BillPaymentValidators';
 
 @Service()
 export class GetBillPayment {
@@ -13,6 +15,9 @@ export class GetBillPayment {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private validators: BillPaymentValidators;
 
   /**
    * Retrieve bill payment.
@@ -34,9 +39,9 @@ export class GetBillPayment {
       .withGraphFetched('branch')
       .findById(billPyamentId);
 
-    if (!billPayment) {
-      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
-    }
+    // Validates the bill payment existance.
+    this.validators.validateBillPaymentExistance(billPayment);
+
     return this.transformer.transform(
       tenantId,
       billPayment,

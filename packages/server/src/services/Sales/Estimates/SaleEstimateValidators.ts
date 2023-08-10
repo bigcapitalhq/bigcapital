@@ -3,11 +3,22 @@ import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ISaleEstimate } from '@/interfaces';
 import { ERRORS } from './constants';
+import { SaleEstimate } from '@/models';
 
 @Service()
 export class SaleEstimateValidators {
   @Inject()
   private tenancy: HasTenancyService;
+
+  /**
+   * Validates the given estimate existance.
+   * @param {SaleEstimate | undefined | null} estimate -
+   */
+  public validateEstimateExistance(estimate: SaleEstimate | undefined | null) {
+    if (!estimate) {
+      throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
+    }
+  }
 
   /**
    * Validate the estimate number unique on the storage.

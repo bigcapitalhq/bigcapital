@@ -28,7 +28,7 @@ export default class BillsPayments extends BaseController {
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -304,7 +304,6 @@ export default class BillsPayments extends BaseController {
         tenantId,
         billPaymentId
       );
-
       return res.status(200).send({
         bill_payment: this.transfromToResponse(billPayment),
       });
@@ -383,7 +382,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handleServiceError(
+  private handleServiceError(
     error: Error,
     req: Request,
     res: Response,

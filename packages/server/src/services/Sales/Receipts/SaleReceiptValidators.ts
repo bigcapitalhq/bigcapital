@@ -3,11 +3,32 @@ import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_PARENT_TYPE } from '@/data/AccountTypes';
 import { ERRORS } from './constants';
+import { SaleEstimate, SaleReceipt } from '@/models';
 
 @Service()
 export class SaleReceiptValidators {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
+
+  /**
+   * Validates the sale receipt existance.
+   * @param {SaleEstimate | undefined | null} estimate
+   */
+  public validateReceiptExistance(receipt: SaleReceipt | undefined | null) {
+    if (!receipt) {
+      throw new ServiceError(ERRORS.SALE_RECEIPT_NOT_FOUND);
+    }
+  }
+
+  /**
+   * Validates the receipt not closed.
+   * @param {SaleReceipt} receipt
+   */
+  public validateReceiptNotClosed(receipt: SaleReceipt) {
+    if (receipt.isClosed) {
+      throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);
+    }
+  }
 
   /**
    * Validate whether sale receipt deposit account exists on the storage.

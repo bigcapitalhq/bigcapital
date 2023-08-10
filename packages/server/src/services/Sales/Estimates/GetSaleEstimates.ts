@@ -24,14 +24,6 @@ export class GetSaleEstimates {
   private transformer: TransformerInjectable;
 
   /**
-   * Parses the sale receipts list filter DTO.
-   * @param filterDTO
-   */
-  private parseListFilterDTO(filterDTO) {
-    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-  }
-
-  /**
    * Retrieves estimates filterable and paginated list.
    * @param {number} tenantId -
    * @param {IEstimatesFilter} estimatesFilter -
@@ -73,5 +65,13 @@ export class GetSaleEstimates {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Parses the sale receipts list filter DTO.
+   * @param filterDTO
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

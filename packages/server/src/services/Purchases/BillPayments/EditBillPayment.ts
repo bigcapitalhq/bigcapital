@@ -57,11 +57,11 @@ export class EditBillPayment {
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    //
-    const oldBillPayment = await this.getPaymentMadeOrThrowError(
-      tenantId,
-      billPaymentId
-    );
+    const oldBillPayment = await BillPayment.query().findById(billPaymentId);
+
+    // Validates the bill payment existance.
+    this.validators.validateBillPaymentExistance(oldBillPayment);
+
     //
     const vendor = await Contact.query()
       .modify('vendor')
@@ -79,7 +79,7 @@ export class EditBillPayment {
     this.validators.validateVendorNotModified(billPaymentDTO, oldBillPayment);
 
     // Validate the payment account existance and type.
-    const paymentAccount = await this.getPaymentAccountOrThrowError(
+    const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
       tenantId,
       billPaymentObj.paymentAccountId
     );

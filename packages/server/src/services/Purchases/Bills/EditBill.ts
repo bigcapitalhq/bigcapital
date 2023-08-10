@@ -67,8 +67,10 @@ export class EditBill {
     // Retrieve the given bill or throw not found error.
     const oldBill = await Bill.query()
       .findById(billId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+      .withGraphFetched('entries');
+
+    // Validate bill existance.
+    this.validators.validateBillExistance(oldBill);
 
     // Retrieve vendor details or throw not found service error.
     const vendor = await Contact.query()

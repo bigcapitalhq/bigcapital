@@ -1,9 +1,8 @@
 import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
-import { ERRORS } from './constants';
+import { SaleEstimateValidators } from './SaleEstimateValidators';
 
 @Service()
 export class GetSaleEstimate {
@@ -12,6 +11,9 @@ export class GetSaleEstimate {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private validators: SaleEstimateValidators;
 
   /**
    * Retrieve the estimate details with associated entries.
@@ -28,9 +30,9 @@ export class GetSaleEstimate {
       .withGraphFetched('customer')
       .withGraphFetched('branch');
 
-    if (!estimate) {
-      throw new ServiceError(ERRORS.SALE_ESTIMATE_NOT_FOUND);
-    }
+    // Validates the estimate existance.
+    this.validators.validateEstimateExistance(estimate);
+
     // Transformes sale estimate model to POJO.
     return this.transformer.transform(
       tenantId,

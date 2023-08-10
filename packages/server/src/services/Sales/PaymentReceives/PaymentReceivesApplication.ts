@@ -17,6 +17,7 @@ import { GetPaymentReceive } from './GetPaymentReceive';
 import { GetPaymentReceiveInvoices } from './GetPaymentReceiveInvoices';
 import { PaymentReceiveNotifyBySms } from './PaymentReceiveSmsNotify';
 import GetPaymentReceivePdf from './GetPaymentReeceivePdf';
+import { PaymentReceive } from '@/models';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -175,12 +176,15 @@ export class PaymentReceivesApplication {
   };
 
   /**
-   * 
-   * @param tenantId 
-   * @param paymentReceive 
-   * @returns 
+   * Retrieve PDF content of the given payment receive.
+   * @param {number} tenantId
+   * @param {PaymentReceive} paymentReceive
+   * @returns
    */
-  public getPaymentReceivePdf = (tenantId: number, paymentReceive) => {
+  public getPaymentReceivePdf = (
+    tenantId: number,
+    paymentReceive: PaymentReceive
+  ) => {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       tenantId,
       paymentReceive

@@ -4,6 +4,7 @@ import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
+import { BillsValidators } from './BillsValidators';
 
 @Service()
 export class OpenBill {
@@ -12,6 +13,9 @@ export class OpenBill {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private validators: BillsValidators;
 
   /**
    * Mark the bill as open.
@@ -24,8 +28,10 @@ export class OpenBill {
     // Retrieve the given bill or throw not found error.
     const oldBill = await Bill.query()
       .findById(billId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+      .withGraphFetched('entries');
+
+    // Validates the bill existance.
+    this.validators.validateBillExistance(oldBill);
 
     if (oldBill.isOpen) {
       throw new ServiceError(ERRORS.BILL_ALREADY_OPEN);

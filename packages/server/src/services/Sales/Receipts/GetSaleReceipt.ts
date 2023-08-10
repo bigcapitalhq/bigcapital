@@ -1,9 +1,8 @@
-import { ServiceError } from '@/exceptions';
 import { Inject, Service } from 'typedi';
 import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-import { ERRORS } from './constants';
+import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
 export class GetSaleReceipt {
@@ -12,6 +11,9 @@ export class GetSaleReceipt {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private validators: SaleReceiptValidators;
 
   /**
    * Retrieve sale receipt with associated entries.
@@ -28,9 +30,9 @@ export class GetSaleReceipt {
       .withGraphFetched('depositAccount')
       .withGraphFetched('branch');
 
-    if (!saleReceipt) {
-      throw new ServiceError(ERRORS.SALE_RECEIPT_NOT_FOUND);
-    }
+    // Valdiates the sale receipt existance.
+    this.validators.validateReceiptExistance(saleReceipt);
+
     return this.transformer.transform(
       tenantId,
       saleReceipt,

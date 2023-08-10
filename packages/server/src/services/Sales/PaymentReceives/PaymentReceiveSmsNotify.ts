@@ -12,6 +12,7 @@ import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { PaymentReceiveValidators } from './PaymentReceiveValidators';
 
 @Service()
 export class PaymentReceiveNotifyBySms {
@@ -27,6 +28,9 @@ export class PaymentReceiveNotifyBySms {
   @Inject()
   private saleSmsNotification: SaleNotifyBySms;
 
+  @Inject()
+  private validators: PaymentReceiveValidators;
+
   /**
    * Notify customer via sms about payment receive details.
    * @param {number} tenantId - Tenant id.
@@ -40,6 +44,9 @@ export class PaymentReceiveNotifyBySms {
       .findById(paymentReceiveid)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
+
+    // Validates the payment existance.
+    this.validators.validatePaymentExistance(paymentReceive);
 
     // Validate the customer phone number.
     this.saleSmsNotification.validateCustomerPhoneNumber(

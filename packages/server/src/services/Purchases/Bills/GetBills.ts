@@ -7,7 +7,7 @@ import {
   IPaginationMeta,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { PurchaseInvoiceTransformer } from '../PurchaseInvoices/PurchaseInvoiceTransformer';
+import { PurchaseInvoiceTransformer } from './PurchaseInvoiceTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 

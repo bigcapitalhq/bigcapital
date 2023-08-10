@@ -186,6 +186,7 @@ export class SaleEstimateNotifyBySms {
       .findById(saleEstimateId)
       .withGraphFetched('customer');
 
+    // Validates the estimate existance.
     this.validateEstimateExistance(saleEstimate);
 
     // Retrieve the current tenant metadata.

@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { omit, sumBy } from 'lodash';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ICustomer, ISaleEstimate, ISaleEstimateDTO } from '@/interfaces';

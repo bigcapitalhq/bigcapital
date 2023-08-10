@@ -1,10 +1,9 @@
 import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { IBill } from '@/interfaces';
-import { PurchaseInvoiceTransformer } from '../PurchaseInvoices/PurchaseInvoiceTransformer';
-import { ERRORS } from './constants';
+import { BillsValidators } from './BillsValidators';
+import { PurchaseInvoiceTransformer } from './PurchaseInvoiceTransformer';
 
 @Service()
 export class GetBill {
@@ -13,6 +12,9 @@ export class GetBill {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private validators: BillsValidators;
 
   /**
    * Retrieve the given bill details with associated items entries.
@@ -28,9 +30,9 @@ export class GetBill {
       .withGraphFetched('entries.item')
       .withGraphFetched('branch');
 
-    if (!bill) {
-      throw new ServiceError(ERRORS.BILL_NOT_FOUND);
-    }
+    // Validates the bill existance.
+    this.validators.validateBillExistance(bill);
+
     return this.transformer.transform(
       tenantId,
       bill,

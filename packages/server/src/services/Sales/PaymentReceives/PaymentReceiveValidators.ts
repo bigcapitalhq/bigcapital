@@ -12,11 +12,22 @@ import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { PaymentReceive } from '@/models';
 
 @Service()
 export class PaymentReceiveValidators {
   @Inject()
   private tenancy: HasTenancyService;
+
+  /**
+   * Validates the payment existance.
+   * @param {PaymentReceive | null | undefined} payment
+   */
+  public validatePaymentExistance(payment: PaymentReceive | null | undefined) {
+    if (!payment) {
+      throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
+    }
+  }
 
   /**
    * Validates the payment receive number existance.

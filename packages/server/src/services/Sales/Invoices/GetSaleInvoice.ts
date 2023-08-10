@@ -3,6 +3,7 @@ import { ISaleInvoice, ISystemUser } from '@/interfaces';
 import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class GetSaleInvoice {
@@ -11,6 +12,9 @@ export class GetSaleInvoice {
 
   @Inject()
   private transformer: TransformerInjectable;
+
+  @Inject()
+  private validators: CommandSaleInvoiceValidators;
 
   /**
    * Retrieve sale invoice with associated entries.
@@ -30,6 +34,9 @@ export class GetSaleInvoice {
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
       .withGraphFetched('branch');
+
+    // Validates the given sale invoice existance.
+    this.validators.validateInvoiceExistance(saleInvoice);
 
     return this.transformer.transform(
       tenantId,

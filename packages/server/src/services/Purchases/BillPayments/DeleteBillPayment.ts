@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import UnitOfWork from '@/services/UnitOfWork';
 import { BillPaymentValidators } from './BillPaymentValidators';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -8,7 +9,6 @@ import {
   IBillPaymentEventDeletedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
-import { Knex } from 'knex';
 
 @Service()
 export class DeleteBillPayment {
@@ -21,6 +21,9 @@ export class DeleteBillPayment {
   @Inject()
   private uow: UnitOfWork;
 
+  @Inject()
+  private validators: BillPaymentValidators;
+
   /**
    * Deletes the bill payment and associated transactions.
    * @param  {number} tenantId - Tenant id.
@@ -31,10 +34,13 @@ export class DeleteBillPayment {
     const { BillPayment, BillPaymentEntry } = this.tenancy.models(tenantId);
 
     // Retrieve the bill payment or throw not found service error.
-    const oldBillPayment = await this.getPaymentMadeOrThrowError(
-      tenantId,
-      billPaymentId
-    );
+    const oldBillPayment = await BillPayment.query()
+      .withGraphFetched('entries')
+      .findById(billPaymentId);
+
+    // Validates the bill payment existance.
+    this.validators.validateBillPaymentExistance(oldBillPayment);
+
     // Deletes the bill transactions with associated transactions under
     // unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

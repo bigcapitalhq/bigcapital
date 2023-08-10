@@ -35,8 +35,10 @@ export class DeleteBill {
     // Retrieve the given bill or throw not found error.
     const oldBill = await Bill.query()
       .findById(billId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+      .withGraphFetched('entries');
+
+    // Validates the bill existance.
+    this.validators.validateBillExistance(oldBill);
 
     // Validate the givne bill has no associated landed cost transactions.
     await this.validators.validateBillHasNoLandedCost(tenantId, billId);

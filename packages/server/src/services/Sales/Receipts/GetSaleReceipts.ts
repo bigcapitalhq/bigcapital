@@ -1,3 +1,4 @@
+import * as R from 'ramda';
 import {
   IFilterMeta,
   IPaginationMeta,
@@ -66,5 +67,14 @@ export class GetSaleReceipts {
       pagination,
       filterMeta: dynamicFilter.getResponseMeta(),
     };
+  }
+
+  /**
+   * Parses the sale invoice list filter DTO.
+   * @param filterDTO
+   * @returns
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
   }
 }

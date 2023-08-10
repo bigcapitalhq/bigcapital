@@ -48,8 +48,10 @@ export class EditSaleReceipt {
     // Retrieve sale receipt or throw not found service error.
     const oldSaleReceipt = await SaleReceipt.query()
       .findById(saleReceiptId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+      .withGraphFetched('entries');
+
+    // Validates the sale receipt existance.
+    this.validators.validateReceiptExistance(oldSaleReceipt);
 
     // Retrieves the payment customer model.
     const paymentCustomer = await Contact.query()

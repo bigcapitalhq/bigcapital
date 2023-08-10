@@ -1,13 +1,23 @@
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ServiceError } from '@/exceptions';
+import { SaleInvoice } from '@/models';
+import { ERRORS } from './constants';
 
 @Service()
 export class CommandSaleInvoiceValidators {
   @Inject()
   private tenancy: HasTenancyService;
 
+  /**
+   * Validates the given invoice is existance.
+   * @param {SaleInvoice | undefined} invoice
+   */
+  public validateInvoiceExistance(invoice: SaleInvoice | undefined) {
+    if (!invoice) {
+      throw new ServiceError(ERRORS.SALE_INVOICE_NOT_FOUND);
+    }
+  }
 
   /**
    * Validate whether sale invoice number unqiue on the storage.

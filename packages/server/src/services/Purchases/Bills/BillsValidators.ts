@@ -4,11 +4,22 @@ import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 import { IItemEntryDTO } from '@/interfaces';
 import { transformToMap } from '@/utils';
+import { Bill } from '@/models';
 
 @Service()
 export class BillsValidators {
   @Inject()
   private tenancy: HasTenancyService;
+
+  /**
+   * Validates the bill existance.
+   * @param {Bill | undefined | null} bill
+   */
+  public validateBillExistance(bill: Bill | undefined | null) {
+    if (!bill) {
+      throw new ServiceError(ERRORS.BILL_NOT_FOUND);
+    }
+  }
 
   /**
    * Validates the bill number existance.

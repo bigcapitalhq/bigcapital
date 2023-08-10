@@ -12,11 +12,8 @@ import events from '@/subscribers/events';
 import { ServiceError } from '@/exceptions';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-
-const ERRORS = {
-  SALE_INVOICE_ALREADY_WRITTEN_OFF: 'SALE_INVOICE_ALREADY_WRITTEN_OFF',
-  SALE_INVOICE_NOT_WRITTEN_OFF: 'SALE_INVOICE_NOT_WRITTEN_OFF',
-};
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { ERRORS } from './constants';
 
 @Service()
 export class WriteoffSaleInvoice {
@@ -28,6 +25,9 @@ export class WriteoffSaleInvoice {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private validators: CommandSaleInvoiceValidators;
 
   /**
    * Writes-off the sale invoice on bad debt expense account.
@@ -43,11 +43,10 @@ export class WriteoffSaleInvoice {
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    // Validate the sale invoice existance.
-    // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .throwIfNotFound();
+    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId);
+
+    // Validates the given invoice existance.
+    this.validators.validateInvoiceExistance(saleInvoice);
 
     // Validate the sale invoice whether already written-off.
     this.validateSaleInvoiceAlreadyWrittenoff(saleInvoice);
@@ -100,15 +99,16 @@ export class WriteoffSaleInvoice {
 
     // Validate the sale invoice existance.
     // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .throwIfNotFound();
+    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId);
+
+    // Validate the sale invoice existance.
+    this.validators.validateInvoiceExistance(saleInvoice);
 
     // Validate the sale invoice whether already written-off.
     this.validateSaleInvoiceNotWrittenoff(saleInvoice);
 
     // Cancels the invoice written-off and removes the associated transactions.
-    return this.uow.withTransaction(tenantId, async (trx) => {
+    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceWrittenoffCancel` event.
       await this.eventPublisher.emitAsync(
         events.saleInvoice.onWrittenoffCancel,

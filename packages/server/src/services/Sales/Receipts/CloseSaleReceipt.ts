@@ -11,6 +11,7 @@ import {
   ISaleReceiptEventClosedPayload,
   ISaleReceiptEventClosingPayload,
 } from '@/interfaces';
+import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
 export class CloseSaleReceipt {
@@ -22,6 +23,9 @@ export class CloseSaleReceipt {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private validators: SaleReceiptValidators;
 
   /**
    * Mark the given sale receipt as closed.
@@ -42,9 +46,8 @@ export class CloseSaleReceipt {
       .throwIfNotFound();
 
     // Throw service error if the sale receipt already closed.
-    if (oldSaleReceipt.isClosed) {
-      throw new ServiceError(ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED);
-    }
+    this.validators.validateReceiptNotClosed(oldSaleReceipt);
+
     // Updates the sale recept transaction under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleReceiptClosing` event.

@@ -8,6 +8,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
 export class DeleteSaleReceipt {
@@ -20,6 +21,9 @@ export class DeleteSaleReceipt {
   @Inject()
   private tenancy: HasTenancyService;
 
+  @Inject()
+  private validators: SaleReceiptValidators;
+
   /**
    * Deletes the sale receipt with associated entries.
    * @param {Integer} saleReceiptId
@@ -30,8 +34,10 @@ export class DeleteSaleReceipt {
 
     const oldSaleReceipt = await SaleReceipt.query()
       .findById(saleReceiptId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+      .withGraphFetched('entries');
+
+    // Validates the sale receipt existance.
+    this.validators.validateReceiptExistance(oldSaleReceipt);
 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers  `onSaleReceiptsDeleting` event.

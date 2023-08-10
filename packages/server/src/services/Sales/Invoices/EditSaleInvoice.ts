@@ -54,10 +54,11 @@ export class EditSaleInvoice {
     const { SaleInvoice, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const oldSaleInvoice = await this.getInvoiceOrThrowError(
-      tenantId,
-      saleInvoiceId
-    );
+    const oldSaleInvoice = await SaleInvoice.query().findById(saleInvoiceId);
+
+    // Validates the given invoice existance.
+    this.validators.validateInvoiceExistance(oldSaleInvoice);
+
     // Validate customer existance.
     const customer = await Contact.query()
       .findById(saleInvoiceDTO.customerId)

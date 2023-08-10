@@ -15,6 +15,7 @@ import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
+import { SaleEstimateValidators } from '../Estimates/SaleEstimateValidators';
 
 @Service()
 export class CreateSaleInvoice {
@@ -36,6 +37,9 @@ export class CreateSaleInvoice {
   @Inject()
   private uow: UnitOfWork;
 
+  @Inject()
+  private commandEstimateValidators: SaleEstimateValidators;
+
   /**
    * Creates a new sale invoices and store it to the storage
    * with associated to entries and journal transactions.
@@ -49,7 +53,8 @@ export class CreateSaleInvoice {
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
     authorizedUser: ITenantUser
   ): Promise<ISaleInvoice> => {
-    const { SaleInvoice, Contact } = this.tenancy.models(tenantId);
+    const { SaleInvoice, SaleEstimate, Contact } =
+      this.tenancy.models(tenantId);
 
     // Validate customer existance.
     const customer = await Contact.query()
@@ -59,13 +64,12 @@ export class CreateSaleInvoice {
 
     // Validate the from estimate id exists on the storage.
     if (saleInvoiceDTO.fromEstimateId) {
-      // const fromEstimate =
-      //   await this.saleEstimatesService.getSaleEstimateOrThrowError(
-      //     tenantId,
-      //     saleInvoiceDTO.fromEstimateId
-      //   );
-      // // Validate the sale estimate is not already converted to invoice.
-      // this.saleEstimatesService.validateEstimateNotConverted(fromEstimate);
+      const fromEstimate = await SaleEstimate.query()
+        .findById(saleInvoiceDTO.fromEstimateId)
+        .throwIfNotFound();
+
+      // Validate the sale estimate is not already converted to invoice.
+      this.commandEstimateValidators.validateEstimateNotConverted(fromEstimate);
     }
     // Validate items ids existance.
     await this.itemsEntriesService.validateItemsIdsExistance(

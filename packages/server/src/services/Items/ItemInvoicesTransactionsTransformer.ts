@@ -27,7 +27,7 @@ export class ItemInvoicesTransactionsTransformer extends Transformer {
   }
 
   /**
-   *
+   * Formatted invoice date.
    * @param item
    * @returns
    */
@@ -36,16 +36,17 @@ export class ItemInvoicesTransactionsTransformer extends Transformer {
   };
 
   /**
-   *
+   * Formatted item quantity.
+   * @returns {string}
    */
   public formattedQuantity = (entry): string => {
     return entry.quantity;
   };
 
   /**
-   *
+   * Formatted date.
    * @param entry
-   * @returns
+   * @returns {string}
    */
   public formattedRate = (entry): string => {
     return formatNumber(entry.rate, {

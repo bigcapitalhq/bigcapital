@@ -17,6 +17,7 @@ import SaleNotifyBySms from '../SaleNotifyBySms';
 import { ServiceError } from '@/exceptions';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { ERRORS } from './constants';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class SaleInvoiceNotifyBySms {
@@ -31,6 +32,9 @@ export class SaleInvoiceNotifyBySms {
 
   @Inject()
   private saleSmsNotification: SaleNotifyBySms;
+
+  @Inject()
+  private validators: CommandSaleInvoiceValidators;
 
   /**
    * Notify customer via sms about sale invoice.
@@ -48,6 +52,9 @@ export class SaleInvoiceNotifyBySms {
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
       .withGraphFetched('customer');
+
+    // Validates the givne invoice existance.
+    this.validators.validateInvoiceExistance(saleInvoice);
 
     // Validate the customer phone number existance and number validation.
     this.saleSmsNotification.validateCustomerPhoneNumber(

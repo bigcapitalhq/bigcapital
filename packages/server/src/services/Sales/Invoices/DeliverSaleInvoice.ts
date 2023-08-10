@@ -12,6 +12,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class DeliverSaleInvoice {
@@ -23,6 +24,9 @@ export class DeliverSaleInvoice {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private validators: CommandSaleInvoiceValidators;
 
   /**
    * Deliver the given sale invoice.
@@ -38,10 +42,11 @@ export class DeliverSaleInvoice {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale invoice id.
-    const oldSaleInvoice = await this.getInvoiceOrThrowError(
-      tenantId,
-      saleInvoiceId
-    );
+    const oldSaleInvoice = await SaleInvoice.query().findById(saleInvoiceId);
+
+    // Validates the given invoice existance.
+    this.validators.validateInvoiceExistance(oldSaleInvoice);
+
     // Throws error in case the sale invoice already published.
     if (oldSaleInvoice.isDelivered) {
       throw new ServiceError(ERRORS.SALE_INVOICE_ALREADY_DELIVERED);
