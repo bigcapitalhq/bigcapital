@@ -55,7 +55,7 @@ export class EditSaleReceipt {
 
     // Retrieves the payment customer model.
     const paymentCustomer = await Contact.query()
-      .findById(saleReceiptId)
+      .findById(saleReceiptDTO.customerId)
       .modify('customer')
       .throwIfNotFound();
 
