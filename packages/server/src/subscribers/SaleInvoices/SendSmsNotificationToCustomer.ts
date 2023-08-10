@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import SaleInvoiceNotifyBySms from '@/services/Sales/SaleInvoiceNotifyBySms';
+import { SaleInvoiceNotifyBySms } from '@/services/Sales/Invoices/SaleInvoiceNotifyBySms';
 import { ISaleInvoiceCreatedPayload } from '@/interfaces';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 
 @Service()
 export default class SendSmsNotificationToCustomer {
   @Inject()
-  saleInvoiceNotifyBySms: SaleInvoiceNotifyBySms;
+  private saleInvoiceNotifyBySms: SaleInvoiceNotifyBySms;
 
   /**
    * Attaches events with handlers.

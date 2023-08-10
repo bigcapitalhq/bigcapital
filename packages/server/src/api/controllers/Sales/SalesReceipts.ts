@@ -2,34 +2,26 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import SaleReceiptService from '@/services/Sales/SalesReceipts';
-import SaleReceiptsPdfService from '@/services/Sales/Receipts/SaleReceiptsPdfService';
 import BaseController from '../BaseController';
 import { ISaleReceiptDTO } from '@/interfaces/SaleReceipt';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import SaleReceiptNotifyBySms from '@/services/Sales/SaleReceiptNotifyBySms';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
+import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
 
 @Service()
 export default class SalesReceiptsController extends BaseController {
   @Inject()
-  saleReceiptService: SaleReceiptService;
+  private saleReceiptsApplication: SaleReceiptApplication;
 
   @Inject()
-  saleReceiptsPdf: SaleReceiptsPdfService;
-
-  @Inject()
-  dynamicListService: DynamicListingService;
-
-  @Inject()
-  saleReceiptSmsNotify: SaleReceiptNotifyBySms;
+  private dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -105,7 +97,7 @@ export default class SalesReceiptsController extends BaseController {
    * Sales receipt validation schema.
    * @return {Array}
    */
-  get salesReceiptsValidationSchema() {
+  private get salesReceiptsValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
@@ -146,14 +138,14 @@ export default class SalesReceiptsController extends BaseController {
   /**
    * Specific sale receipt validation schema.
    */
-  get specificReceiptValidationSchema() {
+  private get specificReceiptValidationSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * List sales receipts validation schema.
    */
-  get listSalesReceiptsValidationSchema() {
+  private get listSalesReceiptsValidationSchema() {
     return [
       query('view_slug').optional().isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -170,16 +162,21 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async newSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  private async newSaleReceipt(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const saleReceiptDTO: ISaleReceiptDTO = this.matchedBodyData(req);
 
     try {
       // Store the given sale receipt details with associated entries.
-      const storedSaleReceipt = await this.saleReceiptService.createSaleReceipt(
-        tenantId,
-        saleReceiptDTO
-      );
+      const storedSaleReceipt =
+        await this.saleReceiptsApplication.createSaleReceipt(
+          tenantId,
+          saleReceiptDTO
+        );
       return res.status(200).send({
         id: storedSaleReceipt.id,
         message: 'Sale receipt has been created successfully.',
@@ -194,13 +191,20 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async deleteSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  private async deleteSaleReceipt(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
     try {
       // Deletes the sale receipt.
-      await this.saleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
+      await this.saleReceiptsApplication.deleteSaleReceipt(
+        tenantId,
+        saleReceiptId
+      );
 
       return res.status(200).send({
         id: saleReceiptId,
@@ -217,14 +221,18 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async editSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  private async editSaleReceipt(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
     const saleReceipt = this.matchedBodyData(req);
 
     try {
       // Update the given sale receipt details.
-      await this.saleReceiptService.editSaleReceipt(
+      await this.saleReceiptsApplication.editSaleReceipt(
         tenantId,
         saleReceiptId,
         saleReceipt
@@ -244,13 +252,20 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async closeSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  private async closeSaleReceipt(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
     try {
       // Update the given sale receipt details.
-      await this.saleReceiptService.closeSaleReceipt(tenantId, saleReceiptId);
+      await this.saleReceiptsApplication.closeSaleReceipt(
+        tenantId,
+        saleReceiptId
+      );
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been closed successfully.',
@@ -265,7 +280,11 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async getSalesReceipts(req: Request, res: Response, next: NextFunction) {
+  private async getSalesReceipts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -274,10 +293,9 @@ export default class SalesReceiptsController extends BaseController {
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-
     try {
       const { data, pagination, filterMeta } =
-        await this.saleReceiptService.salesReceiptsList(tenantId, filter);
+        await this.saleReceiptsApplication.getSaleReceipts(tenantId, filter);
 
       const response = this.transfromToResponse({
         data,
@@ -301,11 +319,10 @@ export default class SalesReceiptsController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const saleReceipt = await this.saleReceiptService.getSaleReceipt(
+      const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
         tenantId,
         saleReceiptId
       );
-
       res.format({
         'application/json': () => {
           return res
@@ -313,10 +330,11 @@ export default class SalesReceiptsController extends BaseController {
             .send(this.transfromToResponse({ saleReceipt }));
         },
         'application/pdf': async () => {
-          const pdfContent = await this.saleReceiptsPdf.saleReceiptPdf(
-            tenantId,
-            saleReceipt
-          );
+          const pdfContent =
+            await this.saleReceiptsApplication.getSaleReceiptPdf(
+              tenantId,
+              saleReceipt
+            );
           res.set({
             'Content-Type': 'application/pdf',
             'Content-Length': pdfContent.length,
@@ -344,10 +362,11 @@ export default class SalesReceiptsController extends BaseController {
     const { id: receiptId } = req.params;
 
     try {
-      const saleReceipt = await this.saleReceiptSmsNotify.notifyBySms(
-        tenantId,
-        receiptId
-      );
+      const saleReceipt =
+        await this.saleReceiptsApplication.saleReceiptNotifyBySms(
+          tenantId,
+          receiptId
+        );
       return res.status(200).send({
         id: saleReceipt.id,
         message:
@@ -373,10 +392,11 @@ export default class SalesReceiptsController extends BaseController {
     const { id: receiptId } = req.params;
 
     try {
-      const smsDetails = await this.saleReceiptSmsNotify.smsDetails(
-        tenantId,
-        receiptId
-      );
+      const smsDetails =
+        await this.saleReceiptsApplication.getSaleReceiptSmsDetails(
+          tenantId,
+          receiptId
+        );
       return res.status(200).send({
         data: smsDetails,
       });

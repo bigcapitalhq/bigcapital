@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
-import SaleEstimateService from '@/services/Sales/SalesEstimate';
+import { ConvertSaleEstimate } from '@/services/Sales/Estimates/ConvetSaleEstimate';
 import { ISaleInvoiceCreatedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
 
 @Service()
 export default class SaleInvoiceConvertFromEstimateSubscriber extends EventSubscriber {
   @Inject()
-  saleEstimatesService: SaleEstimateService;
+  private convertEstimateToInvoiceService: ConvertSaleEstimate;
 
   /**
    * Constructor method.
@@ -30,7 +30,7 @@ export default class SaleInvoiceConvertFromEstimateSubscriber extends EventSubsc
     trx,
   }: ISaleInvoiceCreatedPayload) => {
     if (saleInvoiceDTO.fromEstimateId) {
-      await this.saleEstimatesService.convertEstimateToInvoice(
+      await this.convertEstimateToInvoiceService.convertEstimateToInvoice(
         tenantId,
         saleInvoiceDTO.fromEstimateId,
         saleInvoiceId,

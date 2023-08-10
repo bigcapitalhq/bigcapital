@@ -21,6 +21,11 @@ export class InvoicePaymentTransactionTransformer extends Transformer {
     });
   };
 
+  /**
+   * Formatted payment date.
+   * @param entry 
+   * @returns {string}
+   */
   protected formattedPaymentDate = (entry): string => {
     return this.formatDate(entry.payment.paymentDate);
   };

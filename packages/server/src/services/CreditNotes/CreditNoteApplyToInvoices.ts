@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { sumBy } from 'lodash';
 import {
   ICreditNote,
@@ -8,27 +8,31 @@ import {
   ISaleInvoice,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
 import UnitOfWork from '@/services/UnitOfWork';
-import events from '@/subscribers/events';
+import { PaymentReceiveValidators } from '../Sales/PaymentReceives/PaymentReceiveValidators';
 import BaseCreditNotes from './CreditNotes';
 import {
   IApplyCreditToInvoicesDTO,
   IApplyCreditToInvoicesCreatedPayload,
 } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
+import events from '@/subscribers/events';
 import { ERRORS } from './constants';
+import HasTenancyService from '../Tenancy/TenancyService';
 
 @Service()
 export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
-  @Inject('PaymentReceives')
-  paymentReceive: PaymentReceiveService;
+  @Inject()
+  private tenancy: HasTenancyService;
 
   @Inject()
-  uow: UnitOfWork;
+  private paymentReceiveValidators: PaymentReceiveValidators;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private uow: UnitOfWork;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Apply credit note to the given invoices.
@@ -50,7 +54,7 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
     );
     // Retrieve the applied invoices that associated to the credit note customer.
     const appliedInvoicesEntries =
-      await this.paymentReceive.validateInvoicesIDsExistance(
+      await this.paymentReceiveValidators.validateInvoicesIDsExistance(
         tenantId,
         creditNote.customerId,
         applyCreditToInvoicesDTO.entries

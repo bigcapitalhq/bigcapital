@@ -3,8 +3,8 @@ import { Inject, Service } from 'typedi';
 import { IItemEntry, IItemEntryDTO, IItem } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import TenancyService from '@/services/Tenancy/TenancyService';
+import { ItemEntry } from '@/models';
 import { entriesAmountDiff } from 'utils';
-import { ItemEntry } from 'models';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -16,7 +16,7 @@ const ERRORS = {
 @Service()
 export default class ItemsEntriesService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   /**
    * Retrieve the inventory items entries of the reference id and type.
@@ -235,7 +235,7 @@ export default class ItemsEntriesService {
   /**
    * Sets the cost/sell accounts to the invoice entries.
    */
-  setItemsEntriesDefaultAccounts(tenantId: number) {
+  public setItemsEntriesDefaultAccounts(tenantId: number) {
     return async (entries: IItemEntry[]) => {
       const { Item } = this.tenancy.models(tenantId);
 
@@ -258,10 +258,10 @@ export default class ItemsEntriesService {
 
   /**
    * Retrieve the total items entries.
-   * @param entries 
-   * @returns 
+   * @param entries
+   * @returns
    */
-  getTotalItemsEntries(entries: ItemEntry[]): number {
+  public getTotalItemsEntries(entries: ItemEntry[]): number {
     return sumBy(entries, (e) => ItemEntry.calcAmount(e));
   }
 }

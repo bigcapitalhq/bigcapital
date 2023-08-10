@@ -4,7 +4,6 @@ import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
-import SMSClient from '@/services/SMSClient';
 import {
   ICustomer,
   IPaymentReceiveSmsDetails,
@@ -21,18 +20,18 @@ const ERRORS = {
 };
 
 @Service()
-export default class SaleEstimateNotifyBySms {
+export class SaleEstimateNotifyBySms {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private saleSmsNotification: SaleNotifyBySms;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   /**
    *
@@ -187,6 +186,7 @@ export default class SaleEstimateNotifyBySms {
       .findById(saleEstimateId)
       .withGraphFetched('customer');
 
+    // Validates the estimate existance.
     this.validateEstimateExistance(saleEstimate);
 
     // Retrieve the current tenant metadata.

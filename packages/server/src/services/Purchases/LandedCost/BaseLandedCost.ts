@@ -1,6 +1,5 @@
 import { Inject, Service } from 'typedi';
 import { difference, sumBy } from 'lodash';
-import BillsService from '../Bills';
 import { ServiceError } from '@/exceptions';
 import {
   IItemEntry,
@@ -13,14 +12,10 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import TransactionLandedCost from './TransctionLandedCost';
-import { ERRORS } from './utils';
-import { CONFIG } from './utils';
+import { ERRORS, CONFIG } from './utils';
 
 @Service()
 export default class BaseLandedCostService {
-  @Inject()
-  public billsService: BillsService;
-
   @Inject()
   public tenancy: HasTenancyService;
 

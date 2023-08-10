@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
+import { PaymentReceiveInvoiceSync } from '@/services/Sales/PaymentReceives/PaymentReceiveInvoiceSync';
 import {
   IPaymentReceiveCreatedPayload,
   IPaymentReceiveDeletedPayload,
@@ -8,15 +8,15 @@ import {
 } from '@/interfaces';
 
 @Service()
-export default class PaymentReceiveSyncInvoices {
+export default class PaymentReceiveSyncInvoicesSubscriber {
   @Inject()
-  paymentReceivesService: PaymentReceiveService;
+  private paymentSyncInvoice: PaymentReceiveInvoiceSync;
 
   /**
    * Attaches the events to handles.
    * @param bus
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.paymentReceive.onCreated,
       this.handleInvoiceIncrementPaymentOnceCreated
@@ -41,7 +41,7 @@ export default class PaymentReceiveSyncInvoices {
     paymentReceive,
     trx,
   }: IPaymentReceiveCreatedPayload) => {
-    await this.paymentReceivesService.saveChangeInvoicePaymentAmount(
+    await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       paymentReceive.entries,
       null,
@@ -59,7 +59,7 @@ export default class PaymentReceiveSyncInvoices {
     oldPaymentReceive,
     trx,
   }: IPaymentReceiveEditedPayload) => {
-    await this.paymentReceivesService.saveChangeInvoicePaymentAmount(
+    await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       paymentReceive.entries,
       oldPaymentReceive?.entries || null,
@@ -76,7 +76,7 @@ export default class PaymentReceiveSyncInvoices {
     oldPaymentReceive,
     trx,
   }: IPaymentReceiveDeletedPayload) => {
-    await this.paymentReceivesService.saveChangeInvoicePaymentAmount(
+    await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
       tenantId,
       oldPaymentReceive.entries.map((entry) => ({
         ...entry,

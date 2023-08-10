@@ -8,6 +8,7 @@ import { IBranchDeletedPayload, IBranchDeletePayload } from '@/interfaces';
 import { CURDBranch } from './CRUDBranch';
 import { BranchValidator } from './BranchValidate';
 import { ERRORS } from './constants';
+
 @Service()
 export class DeleteBranch extends CURDBranch {
   @Inject()

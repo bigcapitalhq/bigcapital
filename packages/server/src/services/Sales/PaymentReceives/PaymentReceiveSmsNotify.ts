@@ -1,36 +1,35 @@
 import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import SMSClient from '@/services/SMSClient';
 import {
   IPaymentReceiveSmsDetails,
   SMS_NOTIFICATION_KEY,
   IPaymentReceive,
   IPaymentReceiveEntry,
 } from '@/interfaces';
-import PaymentReceiveService from './PaymentsReceives';
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { PaymentReceiveValidators } from './PaymentReceiveValidators';
 
 @Service()
-export default class PaymentReceiveNotifyBySms {
+export class PaymentReceiveNotifyBySms {
   @Inject()
-  paymentReceiveService: PaymentReceiveService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private smsNotificationsSettings: SmsNotificationsSettingsService;
 
   @Inject()
-  smsNotificationsSettings: SmsNotificationsSettingsService;
+  private saleSmsNotification: SaleNotifyBySms;
 
   @Inject()
-  saleSmsNotification: SaleNotifyBySms;
+  private validators: PaymentReceiveValidators;
 
   /**
    * Notify customer via sms about payment receive details.
@@ -45,6 +44,9 @@ export default class PaymentReceiveNotifyBySms {
       .findById(paymentReceiveid)
       .withGraphFetched('customer')
       .withGraphFetched('entries.invoice');
+
+    // Validates the payment existance.
+    this.validators.validatePaymentExistance(paymentReceive);
 
     // Validate the customer phone number.
     this.saleSmsNotification.validateCustomerPhoneNumber(

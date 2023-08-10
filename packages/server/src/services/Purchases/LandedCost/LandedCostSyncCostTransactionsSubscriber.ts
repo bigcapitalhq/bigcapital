@@ -9,7 +9,7 @@ import LandedCostSyncCostTransactions from './LandedCostSyncCostTransactions';
 @Service()
 export default class LandedCostSyncCostTransactionsSubscriber {
   @Inject()
-  landedCostSyncCostTransaction: LandedCostSyncCostTransactions;
+  private landedCostSyncCostTransaction: LandedCostSyncCostTransactions;
 
   /**
    * Attaches events with handlers.

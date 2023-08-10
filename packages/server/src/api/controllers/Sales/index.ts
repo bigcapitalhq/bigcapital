@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { Container, Service } from 'typedi';
+import SalesInvoices from './SalesInvoices'
 import SalesEstimates from './SalesEstimates';
 import SalesReceipts from './SalesReceipts';
-import SalesInvoices from './SalesInvoices'
-import PaymentReceives from './PaymentReceives';
 import CreditNotes from './CreditNotes';
+import PaymentReceives from './PaymentReceives';
 @Service()
 export default class SalesController {
   /**

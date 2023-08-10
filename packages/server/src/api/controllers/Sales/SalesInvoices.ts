@@ -3,7 +3,6 @@ import { check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import SaleInvoiceService from '@/services/Sales/SalesInvoices';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import {
@@ -12,11 +11,8 @@ import {
   SaleInvoiceAction,
   AbilitySubject,
 } from '@/interfaces';
-import SaleInvoicePdf from '@/services/Sales/SaleInvoicePdf';
-import SaleInvoiceWriteoff from '@/services/Sales/SaleInvoiceWriteoff';
-import SaleInvoiceNotifyBySms from '@/services/Sales/SaleInvoiceNotifyBySms';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import InvoicePaymentsService from '@/services/Sales/Invoices/InvoicePaymentsService';
+import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
 
 const ACCEPT_TYPE = {
   APPLICATION_PDF: 'application/pdf',
@@ -25,27 +21,15 @@ const ACCEPT_TYPE = {
 @Service()
 export default class SaleInvoicesController extends BaseController {
   @Inject()
-  saleInvoiceService: SaleInvoiceService;
+  private saleInvoiceApplication: SaleInvoiceApplication;
 
   @Inject()
-  dynamicListService: DynamicListingService;
-
-  @Inject()
-  saleInvoicePdf: SaleInvoicePdf;
-
-  @Inject()
-  saleInvoiceWriteoff: SaleInvoiceWriteoff;
-
-  @Inject()
-  saleInvoiceSmsNotify: SaleInvoiceNotifyBySms;
-
-  @Inject()
-  invoicePaymentsSerivce: InvoicePaymentsService;
+  private dynamicListService: DynamicListingService;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -167,7 +151,7 @@ export default class SaleInvoicesController extends BaseController {
   /**
    * Sale invoice validation schema.
    */
-  get saleInvoiceValidationSchema() {
+  private get saleInvoiceValidationSchema() {
     return [
       check('customer_id').exists().isNumeric().toInt(),
       check('invoice_date').exists().isISO8601().toDate(),
@@ -227,14 +211,14 @@ export default class SaleInvoicesController extends BaseController {
   /**
    * Specific sale invoice validation schema.
    */
-  get specificSaleInvoiceValidation() {
+  private get specificSaleInvoiceValidation() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Sales invoices list validation schema.
    */
-  get saleInvoiceListValidationSchema() {
+  private get saleInvoiceListValidationSchema() {
     return [
       query('view_slug').optional({ nullable: true }).isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -249,7 +233,7 @@ export default class SaleInvoicesController extends BaseController {
   /**
    * Due sale invoice list validation schema.
    */
-  get dueSalesInvoicesListValidationSchema() {
+  private get dueSalesInvoicesListValidationSchema() {
     return [query('customer_id').optional().isNumeric().toInt()];
   }
 
@@ -259,17 +243,22 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
+  private async newSaleInvoice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const saleInvoiceDTO: ISaleInvoiceCreateDTO = this.matchedBodyData(req);
 
     try {
       // Creates a new sale invoice with associated entries.
-      const storedSaleInvoice = await this.saleInvoiceService.createSaleInvoice(
-        tenantId,
-        saleInvoiceDTO,
-        user
-      );
+      const storedSaleInvoice =
+        await this.saleInvoiceApplication.createSaleInvoice(
+          tenantId,
+          saleInvoiceDTO,
+          user
+        );
       return res.status(200).send({
         id: storedSaleInvoice.id,
         message: 'The sale invoice has been created successfully.',
@@ -285,14 +274,18 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  async editSaleInvoice(req: Request, res: Response, next: NextFunction) {
+  private async editSaleInvoice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
     const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
 
     try {
       // Update the given sale invoice details.
-      await this.saleInvoiceService.editSaleInvoice(
+      await this.saleInvoiceApplication.editSaleInvoice(
         tenantId,
         saleInvoiceId,
         saleInvoiceOTD,
@@ -313,12 +306,16 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async deliverSaleInvoice(req: Request, res: Response, next: NextFunction) {
+  private async deliverSaleInvoice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
 
     try {
-      await this.saleInvoiceService.deliverSaleInvoice(
+      await this.saleInvoiceApplication.deliverSaleInvoice(
         tenantId,
         saleInvoiceId,
         user
@@ -338,13 +335,17 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  async deleteSaleInvoice(req: Request, res: Response, next: NextFunction) {
+  private async deleteSaleInvoice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
     try {
       // Deletes the sale invoice with associated entries and journal transaction.
-      await this.saleInvoiceService.deleteSaleInvoice(
+      await this.saleInvoiceApplication.deleteSaleInvoice(
         tenantId,
         saleInvoiceId,
         user
@@ -364,12 +365,16 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Request} req - Request object.
    * @param {Response} res - Response object.
    */
-  async getSaleInvoice(req: Request, res: Response, next: NextFunction) {
+  private async getSaleInvoice(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
     try {
-      const saleInvoice = await this.saleInvoiceService.getSaleInvoice(
+      const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
         tenantId,
         saleInvoiceId,
         user
@@ -384,7 +389,7 @@ export default class SaleInvoicesController extends BaseController {
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.saleInvoicePdf.saleInvoicePdf(
+          const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
             tenantId,
             saleInvoice
           );
@@ -420,7 +425,7 @@ export default class SaleInvoicesController extends BaseController {
     };
     try {
       const { salesInvoices, filterMeta, pagination } =
-        await this.saleInvoiceService.salesInvoicesList(tenantId, filter);
+        await this.saleInvoiceApplication.getSaleInvoices(tenantId, filter);
 
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),
@@ -448,10 +453,11 @@ export default class SaleInvoicesController extends BaseController {
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const salesInvoices = await this.saleInvoiceService.getPayableInvoices(
-        tenantId,
-        customerId
-      );
+      const salesInvoices =
+        await this.saleInvoiceApplication.getReceivableSaleInvoices(
+          tenantId,
+          customerId
+        );
       return res.status(200).send({
         sales_invoices: this.transfromToResponse(salesInvoices),
       });
@@ -477,7 +483,7 @@ export default class SaleInvoicesController extends BaseController {
     const writeoffDTO = this.matchedBodyData(req);
 
     try {
-      const saleInvoice = await this.saleInvoiceWriteoff.writeOff(
+      const saleInvoice = await this.saleInvoiceApplication.writeOff(
         tenantId,
         invoiceId,
         writeoffDTO
@@ -485,7 +491,7 @@ export default class SaleInvoicesController extends BaseController {
 
       return res.status(200).send({
         id: saleInvoice.id,
-        message: 'The given sale invoice has been writte-off successfully.',
+        message: 'The given sale invoice has been written-off successfully.',
       });
     } catch (error) {
       next(error);
@@ -507,7 +513,7 @@ export default class SaleInvoicesController extends BaseController {
     const { id: invoiceId } = req.params;
 
     try {
-      const saleInvoice = await this.saleInvoiceWriteoff.cancelWrittenoff(
+      const saleInvoice = await this.saleInvoiceApplication.cancelWrittenoff(
         tenantId,
         invoiceId
       );
@@ -538,11 +544,12 @@ export default class SaleInvoicesController extends BaseController {
     const invoiceNotifySmsDTO = this.matchedBodyData(req);
 
     try {
-      const saleInvoice = await this.saleInvoiceSmsNotify.notifyBySms(
-        tenantId,
-        invoiceId,
-        invoiceNotifySmsDTO.notificationKey
-      );
+      const saleInvoice =
+        await this.saleInvoiceApplication.notifySaleInvoiceBySms(
+          tenantId,
+          invoiceId,
+          invoiceNotifySmsDTO.notificationKey
+        );
       return res.status(200).send({
         id: saleInvoice.id,
         message:
@@ -569,11 +576,12 @@ export default class SaleInvoicesController extends BaseController {
     const smsDetailsDTO = this.matchedQueryData(req);
 
     try {
-      const invoiceSmsDetails = await this.saleInvoiceSmsNotify.smsDetails(
-        tenantId,
-        invoiceId,
-        smsDetailsDTO
-      );
+      const invoiceSmsDetails =
+        await this.saleInvoiceApplication.getSaleInvoiceSmsDetails(
+          tenantId,
+          invoiceId,
+          smsDetailsDTO
+        );
       return res.status(200).send({
         data: invoiceSmsDetails,
       });
@@ -599,7 +607,7 @@ export default class SaleInvoicesController extends BaseController {
 
     try {
       const invoicePayments =
-        await this.invoicePaymentsSerivce.getInvoicePayments(
+        await this.saleInvoiceApplication.getInvoicePayments(
           tenantId,
           invoiceId
         );

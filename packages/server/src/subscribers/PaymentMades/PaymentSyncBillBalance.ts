@@ -1,7 +1,6 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import { BillPaymentBillSync } from '@/services/Purchases/BillPayments/BillPaymentBillSync';
 import {
   IBillPaymentEventCreatedPayload,
   IBillPaymentEventDeletedPayload,
@@ -11,16 +10,13 @@ import {
 @Service()
 export default class PaymentSyncBillBalance {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  billPaymentsService: BillPaymentsService;
+  private billPaymentsService: BillPaymentBillSync;
 
   /**
    *
    * @param bus
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.billPayment.onCreated,
       this.handleBillsIncrementPaymentAmount
@@ -34,6 +30,7 @@ export default class PaymentSyncBillBalance {
       this.handleBillDecrementPaymentAmount
     );
   }
+
   /**
    * Handle bill payment amount increment/decrement once bill payment created or edited.
    */

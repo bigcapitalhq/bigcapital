@@ -1,13 +1,13 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
-import PaymentReceiveNotifyBySms from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
+import { PaymentReceiveNotifyBySms } from '@/services/Sales/PaymentReceives/PaymentReceiveSmsNotify';
 import { IPaymentReceiveCreatedPayload } from '@/interfaces';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
 
 @Service()
 export default class SendSmsNotificationPaymentReceive {
   @Inject()
-  paymentReceiveSmsNotify: PaymentReceiveNotifyBySms;
+  private paymentReceiveSmsNotify: PaymentReceiveNotifyBySms;
 
   /**
    * Attach events.
