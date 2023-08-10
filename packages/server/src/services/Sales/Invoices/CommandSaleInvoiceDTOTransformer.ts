@@ -40,8 +40,8 @@ export class CommandSaleInvoiceDTOTransformer {
 
   /**
    * Transformes the create DTO to invoice object model.
-   * @param  {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
-   * @param  {ISaleInvoice} oldSaleInvoice - Old sale invoice.
+   * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
+   * @param {ISaleInvoice} oldSaleInvoice - Old sale invoice.
    * @return {ISaleInvoice}
    */
   public async transformDTOToModel(
