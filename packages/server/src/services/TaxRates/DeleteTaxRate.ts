@@ -22,19 +22,21 @@ export class DeleteTaxRateService {
   private validators: CommandTaxRatesValidators;
 
   /**
-   *
-   * @param tenantId
-   * @param taxRateId
+   * Deletes the given tax rate.
+   * @param {number} tenantId
+   * @param {number} taxRateId
+   * @returns {Promise<void>}
    */
   public deleteTaxRate(tenantId: number, taxRateId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const oldTaxRate = TaxRate.query().findById(taxRateId);
 
+    // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onSaleInvoiceCreating` event.
+      // Triggers `onTaxRateDeleting` event.
       await this.eventPublisher.emitAsync(events.taxRates.onDeleting, {
         oldTaxRate,
         tenantId,
@@ -43,7 +45,7 @@ export class DeleteTaxRateService {
 
       await TaxRate.query(trx).findById(taxRateId).delete();
 
-      //
+      // Triggers `onTaxRateDeleted` event.
       await this.eventPublisher.emitAsync(events.taxRates.onDeleted, {
         oldTaxRate,
         tenantId,

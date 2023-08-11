@@ -11,16 +11,17 @@ export class GetTaxRateService {
   private validators: CommandTaxRatesValidators;
 
   /**
-   *
+   * Retrieves the given tax rate.
    * @param {number} tenantId
    * @param {number} taxRateId
-   * @returns
+   * @returns {Promise<ITaxRate>}
    */
   public async getTaxRate(tenantId: number, taxRateId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const taxRate = await TaxRate.query().findById(taxRateId);
 
+    // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(taxRate);
 
     return taxRate;

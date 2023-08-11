@@ -27,7 +27,7 @@ export class TaxRatesApplication {
    * Creates a new tax rate.
    * @param {number} tenantId
    * @param {ICreateTaxRateDTO} createTaxRateDTO
-   * @returns
+   * @returns {Promise<ITaxRate>}
    */
   public createTaxRate(tenantId: number, createTaxRateDTO: ICreateTaxRateDTO) {
     return this.createTaxRateService.createTaxRate(tenantId, createTaxRateDTO);
@@ -38,6 +38,7 @@ export class TaxRatesApplication {
    * @param {number} tenantId
    * @param {number} taxRateId
    * @param {IEditTaxRateDTO} taxRateEditDTO
+   * @returns {Promise<ITaxRate>}
    */
   public editTaxRate(
     tenantId: number,
@@ -65,7 +66,7 @@ export class TaxRatesApplication {
    * Retrieves the given tax rate.
    * @param {number} tenantId
    * @param {number} taxRateId
-   * @returns
+   * @returns {Promise<ITaxRate>}
    */
   public getTaxRate(tenantId: number, taxRateId: number) {
     return this.getTaxRateService.getTaxRate(tenantId, taxRateId);
@@ -74,7 +75,7 @@ export class TaxRatesApplication {
   /**
    * Retrieves the tax rates list.
    * @param {number} tenantId
-   * @returns
+   * @returns {Promise<ITaxRate[]>}
    */
   public getTaxRates(tenantId: number) {
     return this.getTaxRatesService.getTaxRates(tenantId);

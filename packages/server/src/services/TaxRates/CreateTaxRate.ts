@@ -9,6 +9,7 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
+import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
 
 @Service()
 export class CreateTaxRate {
@@ -21,14 +22,25 @@ export class CreateTaxRate {
   @Inject()
   private uow: UnitOfWork;
 
+  @Inject()
+  private validators: CommandTaxRatesValidators;
+
   /**
    * Creates a new tax rate.
    * @param {number} tenantId
    * @param {ICreateTaxRateDTO} createTaxRateDTO
    */
-  public createTaxRate(tenantId: number, createTaxRateDTO: ICreateTaxRateDTO) {
+  public async createTaxRate(
+    tenantId: number,
+    createTaxRateDTO: ICreateTaxRateDTO
+  ) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
+    // Validates the tax code uniquiness.
+    await this.validators.validateTaxCodeUnique(
+      tenantId,
+      createTaxRateDTO.code
+    );
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTaxRateCreating` event.
       await this.eventPublisher.emitAsync(events.taxRates.onCreating, {

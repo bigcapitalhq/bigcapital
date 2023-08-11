@@ -26,10 +26,11 @@ export class EditTaxRateService {
   private validators: CommandTaxRatesValidators;
 
   /**
-   *
+   * Edits the given tax rate.
    * @param {number} tenantId
    * @param {number} taxRateId
    * @param {IEditTaxRateDTO} taxRateEditDTO
+   * @returns {Promise<ITaxRate>}
    */
   public editTaxRate(
     tenantId: number,
@@ -40,6 +41,7 @@ export class EditTaxRateService {
 
     const oldTaxRate = TaxRate.query().findById(taxRateId);
 
+    // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

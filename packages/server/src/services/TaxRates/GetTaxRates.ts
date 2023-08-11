@@ -7,9 +7,9 @@ export class GetTaxRatesService {
   private tenancy: HasTenancyService;
 
   /**
-   *
+   * Retrieves the tax rates list.
    * @param {number} tenantId
-   * @returns
+   * @returns {Promise<ITaxRate[]>}
    */
   public async getTaxRates(tenantId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);

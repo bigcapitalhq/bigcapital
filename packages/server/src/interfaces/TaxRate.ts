@@ -4,6 +4,7 @@ export interface ITaxRate {}
 
 export interface ICommonTaxRateDTO {
   name: string;
+  code: string;
   rate: number;
   IsNonRecoverable: boolean;
   IsCompound: boolean;
