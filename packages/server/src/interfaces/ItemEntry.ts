@@ -32,6 +32,9 @@ export interface IItemEntry {
   projectRefType?: ProjectLinkRefType;
   projectRefInvoicedAmount?: number;
 
+  taxCode: string;
+  taxRate: number;
+
   item?: IItem;
 
   allocatedCostEntries?: IBillLandedCostEntry[];
@@ -46,6 +49,9 @@ export interface IItemEntryDTO {
   projectRefId?: number;
   projectRefType?: ProjectLinkRefType;
   projectRefInvoicedAmount?: number;
+
+  taxCode: string;
+  taxRate: number;
 }
 
 export enum ProjectLinkRefType {

@@ -44,6 +44,7 @@ export interface ISaleInvoiceDTO {
   exchangeRate?: number;
   invoiceMessage: string;
   termsConditions: string;
+  isTaxExclusive: boolean;
   entries: IItemEntryDTO[];
   delivered: boolean;
 

@@ -80,6 +80,7 @@ import { ProjectBillableTasksSubscriber } from '@/services/Projects/Projects/Pro
 import { ProjectBillableExpensesSubscriber } from '@/services/Projects/Projects/ProjectBillableExpenseSubscriber';
 import { ProjectBillableBillSubscriber } from '@/services/Projects/Projects/ProjectBillableBillSubscriber';
 import { SyncActualTimeTaskSubscriber } from '@/services/Projects/Times/SyncActualTimeTaskSubscriber';
+import { SaleInvoiceTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/SaleInvoiceTaxRateValidateSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -187,5 +188,6 @@ export const susbcribers = () => {
     ProjectBillableTasksSubscriber,
     ProjectBillableExpensesSubscriber,
     ProjectBillableBillSubscriber,
+    SaleInvoiceTaxRateValidateSubscriber
   ];
 };
