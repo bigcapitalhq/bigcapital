@@ -47,3 +47,10 @@ export interface ITaxRateDeletedPayload {
   tenantId: number;
   trx: Knex.Transaction;
 }
+
+
+export interface ITaxTransaction {
+  taxAmount: number;
+  taxName: string;
+  taxCode: string;
+}

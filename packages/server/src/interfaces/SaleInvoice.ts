@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { ISystemUser, IAccount } from '@/interfaces';
+import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
 import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
@@ -33,6 +33,9 @@ export interface ISaleInvoice {
   writtenoffExpenseAccountId?: number;
 
   writtenoffExpenseAccount?: IAccount;
+
+  taxAmountWithheld: number;
+  taxes: ITaxTransaction[]
 }
 
 export interface ISaleInvoiceDTO {

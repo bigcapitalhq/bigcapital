@@ -13,6 +13,11 @@ export default class SaleInvoice extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  taxAmountWithheld: number;
+  balance: number;
+  paymentAmount: number;
+  exchangeRate: number;
+
   /**
    * Table name
    */
@@ -52,11 +57,114 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Invoice total FCY.
+   * @returns {number}
+   */
+  get totalFcy() {
+    return this.amountFcy + this.taxAmountWithheldFcy;
+  }
+
+  /**
+   * Invoice total BCY.
+   * @returns {number}
+   */
+  get totalBcy() {
+    return this.amountBcy + this.taxAmountWithheldBcy;
+  }
+
+  /**
+   * Tax amount withheld FCY.
+   * @returns {number}
+   */
+  get taxAmountWithheldFcy() {
+    return this.taxAmountWithheld;
+  }
+
+  /**
+   * Tax amount withheld BCY.
+   * @returns {number}
+   */
+  get taxAmountWithheldBcy() {
+    return this.taxAmountWithheld;
+  }
+
+  /**
+   * Subtotal FCY.
+   * @returns {number}
+   */
+  get subtotalFcy() {
+    return this.amountFcy;
+  }
+
+  /**
+   * Subtotal BCY.
+   * @returns {number}
+   */
+  get subtotalBcy() {
+    return this.amountBcy;
+  }
+
+  /**
+   * Invoice due amount FCY.
+   * @returns {number}
+   */
+  get dueAmountFcy() {
+    return this.amountFcy - this.paymentAmountFcy;
+  }
+
+  /**
+   * Invoice due amount BCY.
+   * @returns {number}
+   */
+  get dueAmountBcy() {
+    return this.amountBcy - this.paymentAmountBcy;
+  }
+
+  /**
+   * Invoice amount FCY.
+   * @returns {number}
+   */
+  get amountFcy() {
+    return this.balance;
+  }
+
+  /**
+   * Invoice amount BCY.
+   * @returns {number}
+   */
+  get amountBcy() {
+    return this.balance * this.exchangeRate;
+  }
+
+  /**
+   * Invoice payment amount FCY.
+   * @returns {number}
+   */
+  get paymentAmountFcy() {
+    return this.paymentAmount;
+  }
+
+  /**
+   * Invoice payment amount BCY.
+   * @returns {number}
+   */
+  get paymentAmountBcy() {
+    return this.paymentAmount * this.exchangeRate;
+  }
+
+  /**
+   *
+   */
+  get total() {
+    return this.balance + this.taxAmountWithheld;
+  }
+
+  /**
    * Invoice amount in local currency.
    * @returns {number}
    */
   get localAmount() {
-    return this.balance * this.exchangeRate;
+    return this.total * this.exchangeRate;
   }
 
   /**
@@ -333,6 +441,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
     const Branch = require('models/Branch');
     const Account = require('models/Account');
+    const TaxRateTransaction = require('models/TaxRateTransaction');
 
     return {
       /**
@@ -426,6 +535,21 @@ export default class SaleInvoice extends mixin(TenantModel, [
         join: {
           from: 'sales_invoices.writtenoffExpenseAccountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       *
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction.default,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
         },
       },
     };

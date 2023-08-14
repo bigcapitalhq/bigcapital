@@ -1,12 +1,13 @@
 import * as R from 'ramda';
+import { Knex } from 'knex';
 import {
   ISaleInvoice,
   IItemEntry,
   ILedgerEntry,
   AccountNormal,
   ILedger,
+  ITaxTransaction,
 } from '@/interfaces';
-import { Knex } from 'knex';
 import { Service, Inject } from 'typedi';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
@@ -22,8 +23,8 @@ export class SaleInvoiceGLEntries {
 
   /**
    * Writes a sale invoice GL entries.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleInvoiceId - Sale invoice id.
    * @param {Knex.Transaction} trx
    */
   public writeInvoiceGLEntries = async (
@@ -42,9 +43,17 @@ export class SaleInvoiceGLEntries {
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
       saleInvoice.currencyCode
     );
+    // Find or create tax payable account.
+    const taxPayableAccount = await accountRepository.findOrCreateTaxPayable(
+      {},
+      trx
+    );
     // Retrieves the ledger of the invoice.
-    const ledger = this.getInvoiceGLedger(saleInvoice, ARAccount.id);
-
+    const ledger = this.getInvoiceGLedger(
+      saleInvoice,
+      ARAccount.id,
+      taxPayableAccount.id
+    );
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
   };
@@ -94,10 +103,14 @@ export class SaleInvoiceGLEntries {
    */
   public getInvoiceGLedger = (
     saleInvoice: ISaleInvoice,
-    ARAccountId: number
+    ARAccountId: number,
+    taxPayableAccountId: number
   ): ILedger => {
-    const entries = this.getInvoiceGLEntries(saleInvoice, ARAccountId);
-
+    const entries = this.getInvoiceGLEntries(
+      saleInvoice,
+      ARAccountId,
+      taxPayableAccountId
+    );
     return new Ledger(entries);
   };
 
@@ -143,7 +156,7 @@ export class SaleInvoiceGLEntries {
 
     return {
       ...commonEntry,
-      debit: saleInvoice.localAmount,
+      debit: saleInvoice.totalBcy,
       accountId: ARAccountId,
       contactId: saleInvoice.customerId,
       accountNormal: AccountNormal.DEBIT,
@@ -176,7 +189,27 @@ export class SaleInvoiceGLEntries {
         itemId: entry.itemId,
         itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
-        projectId: entry.projectId || saleInvoice.projectId
+        projectId: entry.projectId || saleInvoice.projectId,
+      };
+    }
+  );
+
+  /**
+   * Retreives the GL entry of tax payable.
+   * @param {ISaleInvoice} saleInvoice -
+   * @param {number} taxPayableAccountId -
+   * @returns {ILedgerEntry}
+   */
+  private getInvoiceTaxEntry = R.curry(
+    (saleInvoice: ISaleInvoice, taxPayableAccountId: number): ILedgerEntry => {
+      const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
+
+      return {
+        ...commonEntry,
+        credit: saleInvoice.taxAmountWithheld,
+        accountId: taxPayableAccountId,
+        index: saleInvoice.entries.length + 3,
+        accountNormal: AccountNormal.CREDIT,
       };
     }
   );
@@ -189,15 +222,18 @@ export class SaleInvoiceGLEntries {
    */
   public getInvoiceGLEntries = (
     saleInvoice: ISaleInvoice,
-    ARAccountId: number
+    ARAccountId: number,
+    taxPayableAccountId: number
   ): ILedgerEntry[] => {
     const receivableEntry = this.getInvoiceReceivableEntry(
       saleInvoice,
       ARAccountId
     );
     const transformItemEntry = this.getInvoiceItemEntry(saleInvoice);
-    const creditEntries = saleInvoice.entries.map(transformItemEntry);
 
-    return [receivableEntry, ...creditEntries];
+    const creditEntries = saleInvoice.entries.map(transformItemEntry);
+    const taxEntry = this.getInvoiceTaxEntry(saleInvoice, taxPayableAccountId);
+
+    return [receivableEntry, ...creditEntries, taxEntry];
   };
 }

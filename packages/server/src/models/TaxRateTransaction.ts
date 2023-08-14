@@ -1,0 +1,42 @@
+import { mixin, Model, raw } from 'objection';
+import TenantModel from 'models/TenantModel';
+import ModelSearchable from './ModelSearchable';
+
+export default class TaxRateTransaction extends mixin(TenantModel, [
+  ModelSearchable,
+]) {
+  /**
+   * Table name
+   */
+  static get tableName() {
+    return 'tax_rate_transactions';
+  }
+
+  /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return [];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [];
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {};
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    return {};
+  }
+}

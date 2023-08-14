@@ -2,6 +2,8 @@ import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class ItemEntry extends TenantModel {
+  public taxRate: number;
+
   /**
    * Table name.
    */
@@ -17,7 +19,7 @@ export default class ItemEntry extends TenantModel {
   }
 
   static get virtualAttributes() {
-    return ['amount'];
+    return ['amount', 'taxAmount'];
   }
 
   get amount() {
@@ -29,6 +31,22 @@ export default class ItemEntry extends TenantModel {
     const total = quantity * rate;
 
     return discount ? total - total * discount * 0.01 : total;
+  }
+
+  /**
+   * Tag rate fraction.
+   * @returns {number}
+   */
+  get tagRateFraction() {
+    return this.taxRate / 100;
+  }
+
+  /**
+   * Tax amount withheld.
+   * @returns {number}
+   */
+  get taxAmount() {
+    return this.amount * this.tagRateFraction;
   }
 
   static get relationMappings() {

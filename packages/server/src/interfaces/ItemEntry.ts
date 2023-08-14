@@ -34,6 +34,7 @@ export interface IItemEntry {
 
   taxCode: string;
   taxRate: number;
+  taxAmount: number;
 
   item?: IItem;
 

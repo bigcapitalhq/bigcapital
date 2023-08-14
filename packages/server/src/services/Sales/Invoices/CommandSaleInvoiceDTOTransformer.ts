@@ -17,6 +17,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
 import { formatDateFields } from 'utils';
+import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
@@ -37,6 +38,9 @@ export class CommandSaleInvoiceDTOTransformer {
 
   @Inject()
   private invoiceIncrement: SaleInvoiceIncrement;
+
+  @Inject()
+  private taxDTOTransformer: ItemEntriesTaxTransactions;
 
   /**
    * Transformes the create DTO to invoice object model.
@@ -96,6 +100,7 @@ export class CommandSaleInvoiceDTOTransformer {
     } as ISaleInvoice;
 
     return R.compose(
+      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO<ISaleInvoice>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId)
     )(initialDTO);
