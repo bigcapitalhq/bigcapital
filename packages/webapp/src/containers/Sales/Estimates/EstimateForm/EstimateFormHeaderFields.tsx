@@ -165,7 +165,7 @@ function EstimateFormCustomerSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemSelect={(customer) => {
+        onItemChange={(customer) => {
           setFieldValue('customer_id', customer.id);
           setFieldValue('currency_code', customer?.currency_code);
         }}
