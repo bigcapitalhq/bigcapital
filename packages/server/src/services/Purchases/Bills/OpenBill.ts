@@ -5,6 +5,9 @@ import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { BillsValidators } from './BillsValidators';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import { IBillOpenedPayload, IBillOpeningPayload } from '@/interfaces';
 
 @Service()
 export class OpenBill {
@@ -16,6 +19,9 @@ export class OpenBill {
 
   @Inject()
   private validators: BillsValidators;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Mark the bill as open.
@@ -37,10 +43,24 @@ export class OpenBill {
       throw new ServiceError(ERRORS.BILL_ALREADY_OPEN);
     }
     return this.uow.withTransaction(tenantId, async (trx) => {
+      // Triggers `onBillCreating` event.
+      await this.eventPublisher.emitAsync(events.bill.onOpening, {
+        trx,
+        tenantId,
+        oldBill,
+      } as IBillOpeningPayload);
+
       // Record the bill opened at on the storage.
-      await Bill.query(trx).findById(billId).patch({
+      const bill = await Bill.query(trx).patchAndFetchById(billId, {
         openedAt: moment().toMySqlDateTime(),
       });
+      // Triggers `onBillCreating` event.
+      await this.eventPublisher.emitAsync(events.bill.onOpened, {
+        trx,
+        bill,
+        oldBill,
+        tenantId,
+      } as IBillOpenedPayload);
     });
   }
 }

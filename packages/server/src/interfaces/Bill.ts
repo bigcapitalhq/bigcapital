@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import { IDynamicListFilterDTO } from './DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
-import { IBillLandedCost } from './LandedCost'; 
+import { IBillLandedCost } from './LandedCost';
 export interface IBillDTO {
   vendorId: number;
   billNumber: string;
@@ -99,17 +99,17 @@ export interface IBillCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IBillCreatingPayload{
+export interface IBillCreatingPayload {
   tenantId: number;
   billDTO: IBillDTO;
-  trx: Knex.Transaction; 
+  trx: Knex.Transaction;
 }
 
 export interface IBillEditingPayload {
   tenantId: number;
   oldBill: IBill;
   billDTO: IBillEditDTO;
-  trx: Knex.Transaction; 
+  trx: Knex.Transaction;
 }
 export interface IBillEditedPayload {
   tenantId: number;
@@ -129,7 +129,7 @@ export interface IBIllEventDeletedPayload {
 export interface IBillEventDeletingPayload {
   tenantId: number;
   oldBill: IBill;
-  trx: Knex.Transaction; 
+  trx: Knex.Transaction;
 }
 export enum BillAction {
   Create = 'Create',
@@ -137,4 +137,17 @@ export enum BillAction {
   Delete = 'Delete',
   View = 'View',
   NotifyBySms = 'NotifyBySms',
+}
+
+export interface IBillOpeningPayload {
+  trx: Knex.Transaction;
+  tenantId: number;
+  oldBill: IBill;
+}
+
+export interface IBillOpenedPayload {
+  trx: Knex.Transaction;
+  bill: IBill;
+  oldBill: IBill;
+  tenantId: number;
 }

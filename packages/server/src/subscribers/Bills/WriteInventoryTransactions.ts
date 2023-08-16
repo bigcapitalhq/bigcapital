@@ -36,8 +36,12 @@ export default class BillWriteInventoryTransactionsSubscriber {
   private handleWritingInventoryTransactions = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillCreatedPayload) => {
+    // Can't continue if the bill is not opened yet.
+    if (!bill.openedAt) return null;
+
     await this.billsInventory.recordInventoryTransactions(
       tenantId,
       billId,
@@ -52,8 +56,12 @@ export default class BillWriteInventoryTransactionsSubscriber {
   private handleOverwritingInventoryTransactions = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillEditedPayload) => {
+    // Can't continue if the bill is not opened yet.
+    if (!bill.openedAt) return null;
+
     await this.billsInventory.recordInventoryTransactions(
       tenantId,
       billId,

@@ -38,8 +38,12 @@ export default class BillWriteGLEntriesSubscriber {
   private handlerWriteJournalEntriesOnCreate = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillCreatedPayload) => {
+    // Can't continue if the bill is not opened yet.
+    if (!bill.openedAt) return null;
+
     await this.billsService.recordJournalTransactions(
       tenantId,
       billId,
@@ -55,8 +59,12 @@ export default class BillWriteGLEntriesSubscriber {
   private handleOverwriteJournalEntriesOnEdit = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillEditedPayload) => {
+    // Can't continue if the bill is not opened yet.
+    if (!bill.openedAt) return null;
+
     await this.billsService.recordJournalTransactions(
       tenantId,
       billId,

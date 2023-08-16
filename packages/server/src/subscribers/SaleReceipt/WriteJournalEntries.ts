@@ -22,6 +22,10 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
       this.handleWriteReceiptIncomeJournalEntrieOnCreate
     );
     bus.subscribe(
+      events.saleReceipt.onClosed,
+      this.handleWriteReceiptIncomeJournalEntrieOnCreate
+    );
+    bus.subscribe(
       events.saleReceipt.onEdited,
       this.handleWriteReceiptIncomeJournalEntrieOnEdited
     );
@@ -38,8 +42,12 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   public handleWriteReceiptIncomeJournalEntrieOnCreate = async ({
     tenantId,
     saleReceiptId,
+    saleReceipt,
     trx,
   }: ISaleReceiptCreatedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     // Writes the sale receipt income journal entries.
     await this.saleReceiptGLEntries.writeIncomeGLEntries(
       tenantId,
@@ -71,8 +79,12 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   private handleWriteReceiptIncomeJournalEntrieOnEdited = async ({
     tenantId,
     saleReceiptId,
+    saleReceipt,
     trx,
   }: ISaleReceiptEditedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     // Writes the sale receipt income journal entries.
     await this.saleReceiptGLEntries.rewriteReceiptGLEntries(
       tenantId,

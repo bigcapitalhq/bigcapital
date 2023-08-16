@@ -21,6 +21,10 @@ export class BillGLEntriesSubscriber {
       this.handlerWriteJournalEntriesOnCreate
     );
     bus.subscribe(
+      events.bill.onOpened,
+      this.handlerWriteJournalEntriesOnCreate
+    );
+    bus.subscribe(
       events.bill.onEdited,
       this.handleOverwriteJournalEntriesOnEdit
     );
@@ -34,8 +38,11 @@ export class BillGLEntriesSubscriber {
   private handlerWriteJournalEntriesOnCreate = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillCreatedPayload) => {
+    if (!bill.openedAt) return null;
+
     await this.billGLEntries.writeBillGLEntries(tenantId, billId, trx);
   };
 
@@ -46,8 +53,11 @@ export class BillGLEntriesSubscriber {
   private handleOverwriteJournalEntriesOnEdit = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillEditedPayload) => {
+    if (!bill.openedAt) return null;
+
     await this.billGLEntries.rewriteBillGLEntries(tenantId, billId, trx);
   };
 

@@ -15,9 +15,13 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
   /**
    * Constructor method.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.saleInvoice.onCreated,
+      this.handleWriteJournalEntriesOnInvoiceCreated
+    );
+    bus.subscribe(
+      events.saleInvoice.onDelivered,
       this.handleWriteJournalEntriesOnInvoiceCreated
     );
     bus.subscribe(
@@ -36,8 +40,12 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
   private handleWriteJournalEntriesOnInvoiceCreated = async ({
     tenantId,
     saleInvoiceId,
+    saleInvoice,
     trx,
   }: ISaleInvoiceCreatedPayload) => {
+    // Can't continue if the sale invoice is not delivered yet.
+    if (!saleInvoice.deliveredAt) return null;
+
     await this.saleInvoiceGLEntries.writeInvoiceGLEntries(
       tenantId,
       saleInvoiceId,
@@ -53,6 +61,9 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
     saleInvoice,
     trx,
   }: ISaleInvoiceEditedPayload) => {
+    // Can't continue if the sale invoice is not delivered yet.
+    if (!saleInvoice.deliveredAt) return null;
+
     await this.saleInvoiceGLEntries.rewritesInvoiceGLEntries(
       tenantId,
       saleInvoice.id,
