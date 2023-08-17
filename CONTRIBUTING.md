@@ -7,6 +7,7 @@ Please read through this document before submitting any issues or pull requests 
 ## Sections
 
 - [General Instructions](#general-instructions)
+- [Local Setup Prerequisites](#local-setup-prerequisites)
 - [Contribute to Backend](#contribute-to-backend)
 - [Contribute to Frontend](#contribute-to-frontend)
 - [Other Ways to Contribute](#other-ways-to-contribute)
@@ -31,9 +32,13 @@ Contributions via pull requests are much appreciated. Once the approach is agree
 
 ---
 
+## Local Setup Prerequisites
+ - The application currently supports **Node.js v14.x**. Please ensure that you are using this version of Node.js when developing. (use [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to switch between node versions)
+
 ## Contribute to Backend
 
 - Clone the `bigcapital` repository and `cd` into `bigcapital` directory.
+- Create `.env` file by copying `.env.example` file to `.env`. (The ``.env.example`` file has all the necessary values of variables to start development directly).
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `backend` package. just hit these command on root directory and it will install dependencies of all packages.
 
 ```
