@@ -39,6 +39,11 @@ Contributions via pull requests are much appreciated. Once the approach is agree
 
 - Clone the `bigcapital` repository and `cd` into `bigcapital` directory.
 - Create `.env` file by copying `.env.example` file to `.env`. (The ``.env.example`` file has all the necessary values of variables to start development directly).
+
+```
+cp .env.example .env
+```
+
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `backend` package. just hit these command on root directory and it will install dependencies of all packages.
 
 ```
