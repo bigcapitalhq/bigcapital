@@ -4,6 +4,7 @@ import {
   IBillCreatedPayload,
   IBillEditedPayload,
   IBIllEventDeletedPayload,
+  IBillOpenedPayload,
 } from '@/interfaces';
 import { BillInventoryTransactions } from '@/services/Purchases/Bills/BillInventoryTransactions';
 
@@ -21,6 +22,10 @@ export default class BillWriteInventoryTransactionsSubscriber {
       this.handleWritingInventoryTransactions
     );
     bus.subscribe(
+      events.bill.onOpened,
+      this.handleWritingInventoryTransactions
+    );
+    bus.subscribe(
       events.bill.onEdited,
       this.handleOverwritingInventoryTransactions
     );
@@ -32,19 +37,19 @@ export default class BillWriteInventoryTransactionsSubscriber {
 
   /**
    * Handles writing the inventory transactions once bill created.
+   * @param {IBillCreatedPayload | IBillOpenedPayload} payload -
    */
   private handleWritingInventoryTransactions = async ({
     tenantId,
-    billId,
     bill,
     trx,
-  }: IBillCreatedPayload) => {
+  }: IBillCreatedPayload | IBillOpenedPayload) => {
     // Can't continue if the bill is not opened yet.
     if (!bill.openedAt) return null;
 
     await this.billsInventory.recordInventoryTransactions(
       tenantId,
-      billId,
+      bill.id,
       false,
       trx
     );
@@ -52,6 +57,7 @@ export default class BillWriteInventoryTransactionsSubscriber {
 
   /**
    * Handles the overwriting the inventory transactions once bill edited.
+   * @param {IBillEditedPayload} payload -
    */
   private handleOverwritingInventoryTransactions = async ({
     tenantId,
@@ -72,6 +78,7 @@ export default class BillWriteInventoryTransactionsSubscriber {
 
   /**
    * Handles the reverting the inventory transactions once the bill deleted.
+   * @param {IBIllEventDeletedPayload} payload -
    */
   private handleRevertInventoryTransactions = async ({
     tenantId,

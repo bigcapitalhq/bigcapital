@@ -48,6 +48,7 @@ export class ManualJournalWriteGLSubscriber {
   /**
    * Handle manual journal created event.
    * @param {IManualJournalEventCreatedPayload} payload -
+   * @returns {Promise<void>}
    */
   private handleWriteJournalEntriesOnCreated = async ({
     tenantId,
@@ -55,18 +56,19 @@ export class ManualJournalWriteGLSubscriber {
     trx,
   }: IManualJournalEventCreatedPayload) => {
     // Ingore writing manual journal journal entries in case was not published.
-    if (manualJournal.publishedAt) {
-      await this.manualJournalGLEntries.createManualJournalGLEntries(
-        tenantId,
-        manualJournal.id,
-        trx
-      );
-    }
+    if (!manualJournal.publishedAt) return;
+
+    await this.manualJournalGLEntries.createManualJournalGLEntries(
+      tenantId,
+      manualJournal.id,
+      trx
+    );
   };
 
   /**
    * Handles the manual journal next number increment once the journal be created.
    * @param {IManualJournalEventCreatedPayload} payload -
+   * @return {Promise<void>}
    */
   private handleJournalNumberIncrement = async ({
     tenantId,
@@ -77,6 +79,7 @@ export class ManualJournalWriteGLSubscriber {
   /**
    * Handle manual journal edited event.
    * @param {IManualJournalEventEditedPayload}
+   * @return {Promise<void>}
    */
   private handleRewriteJournalEntriesOnEdited = async ({
     tenantId,
@@ -96,6 +99,7 @@ export class ManualJournalWriteGLSubscriber {
   /**
    * Handles writing journal entries once the manula journal publish.
    * @param {IManualJournalEventPublishedPayload} payload -
+   * @return {Promise<void>}
    */
   private handleWriteJournalEntriesOnPublished = async ({
     tenantId,

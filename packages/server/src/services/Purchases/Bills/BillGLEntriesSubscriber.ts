@@ -4,6 +4,7 @@ import {
   IBillCreatedPayload,
   IBillEditedPayload,
   IBIllEventDeletedPayload,
+  IBillOpenedPayload,
 } from '@/interfaces';
 import { BillGLEntries } from './BillGLEntries';
 
@@ -37,13 +38,12 @@ export class BillGLEntriesSubscriber {
    */
   private handlerWriteJournalEntriesOnCreate = async ({
     tenantId,
-    billId,
     bill,
     trx,
-  }: IBillCreatedPayload) => {
+  }: IBillCreatedPayload | IBillOpenedPayload) => {
     if (!bill.openedAt) return null;
 
-    await this.billGLEntries.writeBillGLEntries(tenantId, billId, trx);
+    await this.billGLEntries.writeBillGLEntries(tenantId, bill.id, trx);
   };
 
   /**

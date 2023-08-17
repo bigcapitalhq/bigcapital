@@ -37,7 +37,6 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
    */
   private handleInvoiceIncrementPaymentOnceCreated = async ({
     tenantId,
-    paymentReceiveId,
     paymentReceive,
     trx,
   }: IPaymentReceiveCreatedPayload) => {

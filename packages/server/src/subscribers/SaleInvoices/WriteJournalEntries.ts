@@ -36,6 +36,8 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
 
   /**
    * Records journal entries of the non-inventory invoice.
+   * @param {ISaleInvoiceCreatedPayload} payload -
+   * @returns {Promise<void>}
    */
   private handleWriteJournalEntriesOnInvoiceCreated = async ({
     tenantId,
@@ -55,6 +57,8 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
 
   /**
    * Records journal entries of the non-inventory invoice.
+   * @param {ISaleInvoiceEditedPayload} payload -
+   * @returns {Promise<void>}
    */
   private handleRewriteJournalEntriesOnceInvoiceEdit = async ({
     tenantId,
@@ -73,6 +77,8 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
 
   /**
    * Handle reverting journal entries once sale invoice delete.
+   * @param {ISaleInvoiceDeletePayload} payload -
+   * @returns {Promise<void>}
    */
   private handleRevertingInvoiceJournalEntriesOnDelete = async ({
     tenantId,

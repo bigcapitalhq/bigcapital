@@ -50,10 +50,13 @@ export class OpenBill {
         oldBill,
       } as IBillOpeningPayload);
 
-      // Record the bill opened at on the storage.
-      const bill = await Bill.query(trx).patchAndFetchById(billId, {
-        openedAt: moment().toMySqlDateTime(),
-      });
+      // Save the bill opened at on the storage.
+      const bill = await Bill.query(trx)
+        .patchAndFetchById(billId, {
+          openedAt: moment().toMySqlDateTime(),
+        })
+        .withGraphFetched('entries');
+
       // Triggers `onBillCreating` event.
       await this.eventPublisher.emitAsync(events.bill.onOpened, {
         trx,

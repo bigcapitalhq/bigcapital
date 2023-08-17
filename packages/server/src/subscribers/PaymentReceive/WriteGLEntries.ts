@@ -36,10 +36,8 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
   private handleWriteJournalEntriesOnceCreated = async ({
     tenantId,
     paymentReceiveId,
-    paymentReceive,
     trx,
   }: IPaymentReceiveCreatedPayload) => {
-    if (paymentReceive)
     await this.paymentReceiveGLEntries.writePaymentGLEntries(
       tenantId,
       paymentReceiveId,

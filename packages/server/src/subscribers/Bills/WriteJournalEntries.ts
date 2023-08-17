@@ -19,7 +19,7 @@ export default class BillWriteGLEntriesSubscriber {
   /**
    * Attachs events with handles.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.bill.onCreated,
       this.handlerWriteJournalEntriesOnCreate
