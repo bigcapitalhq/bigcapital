@@ -2,7 +2,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import moment from 'moment';
 
-
 import ARAgingSummaryHeader from './ARAgingSummaryHeader';
 import ARAgingSummaryActionsBar from './ARAgingSummaryActionsBar';
 
@@ -13,7 +12,7 @@ import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
-import { getDefaultARAgingSummaryQuery } from './common';
+import { useARAgingSummaryQuery } from './common';
 import { compose } from '@/utils';
 
 /**
@@ -23,9 +22,7 @@ function ReceivableAgingSummarySheet({
   // #withARAgingSummaryActions
   toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultARAgingSummaryQuery(),
-  });
+  const { query, setLocationQuery } = useARAgingSummaryQuery();
 
   // Handle filter submit.
   const handleFilterSubmit = useCallback((filter) => {
@@ -33,25 +30,23 @@ function ReceivableAgingSummarySheet({
       ...filter,
       asDate: moment(filter.asDate).format('YYYY-MM-DD'),
     };
-    setFilter(_filter);
+    setLocationQuery(_filter);
   }, []);
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
-    setFilter({ ...filter, numberFormat });
+    setLocationQuery({ ...query, numberFormat });
   };
   // Hide the filter drawer once the page unmount.
   useEffect(
-    () => () => {
-      toggleDisplayFilterDrawer(false);
-    },
+    () => () => toggleDisplayFilterDrawer(false),
     [toggleDisplayFilterDrawer],
   );
 
   return (
-    <ARAgingSummaryProvider filter={filter}>
+    <ARAgingSummaryProvider filter={query}>
       <ARAgingSummaryActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <ARAgingSummarySheetLoadingBar />
@@ -59,7 +54,7 @@ function ReceivableAgingSummarySheet({
       <DashboardPageContent>
         <FinancialStatement>
           <ARAgingSummaryHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <ARAgingSummaryBody />

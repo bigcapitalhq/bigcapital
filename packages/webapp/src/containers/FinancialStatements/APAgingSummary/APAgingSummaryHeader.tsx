@@ -1,7 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import moment from 'moment';
-import * as Yup from 'yup';
 import styled from 'styled-components';
 import { FormattedMessage as T } from '@/components';
 import { Formik, Form } from 'formik';
@@ -17,6 +15,10 @@ import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 import { transformToForm, compose } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import {
+  getAPAgingSummaryQuerySchema,
+  getDefaultAPAgingSummaryQuery,
+} from './common';
 
 /**
  * AP Aging Summary Report - Drawer Header.
@@ -33,39 +35,22 @@ function APAgingSummaryHeader({
   isFilterDrawerOpen,
 }) {
   // Validation schema.
-  const validationSchema = Yup.object({
-    asDate: Yup.date().required().label('asDate'),
-    agingDaysBefore: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('agingBeforeDays'),
-    agingPeriods: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('agingPeriods'),
-  });
+  const validationSchema = getAPAgingSummaryQuerySchema();
 
   // Initial values.
-  const defaultValues = {
-    asDate: moment(pageFilter.asDate).toDate(),
-    agingDaysBefore: 30,
-    agingPeriods: 3,
-    vendorsIds: [],
-    branchesIds: [],
-    filterByOption: 'without-zero-balance',
-  };
-  // Formik initial values.
-  const initialValues = transformToForm({ ...pageFilter }, defaultValues);
+  const defaultValues = getDefaultAPAgingSummaryQuery();
 
+  // Formik initial values.
+  const initialValues = transformToForm(
+    { ...defaultValues, ...pageFilter },
+    defaultValues,
+  );
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     toggleFilterDrawerDisplay(false);
     setSubmitting(false);
   };
-
   // Handle cancel button click.
   const handleCancelClick = () => {
     toggleFilterDrawerDisplay(false);
@@ -76,7 +61,6 @@ function APAgingSummaryHeader({
   };
   // Detarmines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
-
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (

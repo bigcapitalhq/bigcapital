@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
+
 import moment from 'moment';
-import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
@@ -14,11 +13,14 @@ import withVendorsTransaction from './withVendorsTransaction';
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
 import { compose, transformToForm } from '@/utils';
+import {
+  getVendorTransactionsQuerySchema,
+  getVendorsTransactionsDefaultQuery,
+} from './_utils';
 
 /**
  * Vendors transactions header.
  */
-
 function VendorsTransactionsHeader({
   // #ownProps
   onSubmitFilter,
@@ -31,12 +33,7 @@ function VendorsTransactionsHeader({
   toggleVendorsTransactionsFilterDrawer: toggleFilterDrawer,
 }) {
   // Default form values.
-  const defaultValues = {
-    ...pageFilter,
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    vendorsIds: [],
-  };
+  const defaultValues = getVendorsTransactionsDefaultQuery();
 
   // Initial form values.
   const initialValues = transformToForm(
@@ -48,15 +45,8 @@ function VendorsTransactionsHeader({
     },
     defaultValues,
   );
-
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
-  });
+  const validationSchema = getVendorTransactionsQuerySchema();
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
@@ -64,7 +54,6 @@ function VendorsTransactionsHeader({
     toggleFilterDrawer(false);
     setSubmitting(false);
   };
-
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleFilterDrawer(false);

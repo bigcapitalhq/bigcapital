@@ -2,25 +2,33 @@
 import React from 'react';
 import moment from 'moment';
 import { castArray } from 'lodash';
+import * as Yup from 'yup';
 
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
 
 /**
- * Retrieves the inventory valuation sheet default query.
+ * Retrieves the validation schema of inventory valuation query.
  */
-export const getInventoryValuationQuery = () => {
-  return {
-    asDate: moment().endOf('day').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
-
-    branchesIds: [],
-    warehousesIds: [],
-  };
+export const getInventoryValuationQuerySchema = () => {
+  return Yup.object().shape({
+    asDate: Yup.date().required().label('asDate'),
+  });
 };
 
 /**
- * Parses inventory valiation location query to report query.
+ * Retrieves the inventory valuation sheet default query.
+ */
+export const getInventoryValuationQuery = () => ({
+  asDate: moment().endOf('day').format('YYYY-MM-DD'),
+  filterByOption: 'with-transactions',
+  itemsIds: [],
+  branchesIds: [],
+  warehousesIds: [],
+});
+
+/**
+ * Parses inventory valuation location query to report query.
  */
 const parseInventoryValuationQuery = (locationQuery) => {
   const defaultQuery = getInventoryValuationQuery();
@@ -33,6 +41,8 @@ const parseInventoryValuationQuery = (locationQuery) => {
     ...transformed,
 
     // Ensures the branches/warehouses ids is always array.
+    itemsIds: castArray(transformed.itemsIds),
+
     branchesIds: castArray(transformed.branchesIds),
     warehousesIds: castArray(transformed.warehousesIds),
   };
