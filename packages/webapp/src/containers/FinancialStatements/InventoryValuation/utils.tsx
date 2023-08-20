@@ -42,7 +42,6 @@ const parseInventoryValuationQuery = (locationQuery) => {
 
     // Ensures the branches/warehouses ids is always array.
     itemsIds: castArray(transformed.itemsIds),
-
     branchesIds: castArray(transformed.branchesIds),
     warehousesIds: castArray(transformed.warehousesIds),
   };

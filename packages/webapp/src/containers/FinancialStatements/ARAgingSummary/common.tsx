@@ -45,27 +45,22 @@ export const getARAgingSummaryQuerySchema = () => {
 };
 
 /**
- *
- * @param locationQuery
- * @returns
+ * Parses the AR aging summary state.
  */
 const parseARAgingSummaryQuery = (locationQuery) => {
   const defaultQuery = getDefaultARAgingSummaryQuery();
-
   const transformed = {
     ...defaultQuery,
     ...transformToForm(locationQuery, defaultQuery),
   };
   return {
     ...transformed,
-
-    // 
     branchesIds: castArray(transformed.branchesIds),
   };
 };
 
 /**
- *
+ * AR aging summary query state.
  */
 export const useARAgingSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();

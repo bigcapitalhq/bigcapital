@@ -4,13 +4,14 @@ import * as Yup from 'yup';
 import { transformToCamelCase, flatObject, transformToForm } from '@/utils';
 import { useAppQueryString } from '@/hooks';
 import { useMemo } from 'react';
+import { castArray } from 'lodash';
 
 export const transformFilterFormToQuery = (form) => {
   return flatObject(transformToCamelCase(form));
 };
 
 /**
- *
+ * The default query of AP aging summary.
  * @returns
  */
 export const getDefaultAPAgingSummaryQuery = () => {
@@ -45,7 +46,7 @@ export const getAPAgingSummaryQuerySchema = () => {
 };
 
 /**
- * 
+ *  Parses the AP aging summary query state.
  * @param locationQuery 
  * @returns 
  */
@@ -58,12 +59,13 @@ const parseAPAgingSummaryQuery = (locationQuery) => {
   };
   return {
     ...transformed,
+    vendorsIds: castArray(transformed.vendorsIds),
+    branchesIds: castArray(transformed.branchesIds),
   };
 };
 
 /**
- *
- * @returns
+ * AP aging summary query state.
  */
 export const useAPAgingSummaryQuery = () => {
   // Retrieves location query.

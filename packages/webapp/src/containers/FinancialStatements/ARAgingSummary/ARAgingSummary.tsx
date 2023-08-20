@@ -31,7 +31,7 @@ function ReceivableAgingSummarySheet({
       asDate: moment(filter.asDate).format('YYYY-MM-DD'),
     };
     setLocationQuery(_filter);
-  }, []);
+  }, [setLocationQuery]);
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {

@@ -18,8 +18,8 @@ export const getDefaultPurchasesByItemsQuery = () => ({
 });
 
 /**
- *
- * @returns
+ * Retrieves the purchases by items query validation schema.
+ * @returns {Yup}
  */
 export const getPurchasesByItemsQuerySchema = () => {
   return Yup.object().shape({
@@ -32,9 +32,7 @@ export const getPurchasesByItemsQuerySchema = () => {
 };
 
 /**
- *
- * @param locationQuery
- * @returns
+ * Parses the purchases by items query.
  */
 const parsePurchasesByItemsQuery = (locationQuery) => {
   const defaultQuery = getDefaultPurchasesByItemsQuery();
@@ -45,15 +43,12 @@ const parsePurchasesByItemsQuery = (locationQuery) => {
   };
   return {
     ...transformed,
-
-    //
     itemsIds: castArray(transformed.itemsIds),
   };
 };
 
 /**
- *
- * @returns
+ * Purchases by items query state.
  */
 export const usePurchasesByItemsQuery = () => {
   // Retrieves location query.

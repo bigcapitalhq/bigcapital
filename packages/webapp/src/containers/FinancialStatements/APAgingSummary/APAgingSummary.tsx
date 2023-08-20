@@ -39,7 +39,6 @@ function APAgingSummary({
     },
     [setLocationQuery],
   );
-
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setLocationQuery({ ...filter, numberFormat });
