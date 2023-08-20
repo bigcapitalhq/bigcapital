@@ -7,6 +7,9 @@ import { useAppQueryString } from '@/hooks';
 import { getDefaultARAgingSummaryQuery } from '../ARAgingSummary/common';
 import { transformToForm } from '@/utils';
 
+/**
+ * Default query of customers balance summary.
+ */
 export const getDefaultCustomersBalanceQuery = () => {
   return {
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
@@ -27,7 +30,6 @@ export const getCustomersBalanceQuerySchema = () => {
 
 /**
  * Parses the customer balance summary query.
- * @returns
  */
 const parseCustomersBalanceSummaryQuery = (locationQuery) => {
   const defaultQuery = getDefaultARAgingSummaryQuery();
@@ -38,15 +40,12 @@ const parseCustomersBalanceSummaryQuery = (locationQuery) => {
   };
   return {
     ...transformed,
-
-    // 
     customersIds: castArray(transformed.customersIds),
   };
 };
 
 /**
- *
- * @returns
+ * Getter/setter query state of customers balance summary.
  */
 export const useCustomerBalanceSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();

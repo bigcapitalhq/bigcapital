@@ -3,8 +3,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 
 /**
- * 
- * @returns 
+ * The validation schema of vendors transactions.
  */
 export const getVendorTransactionsQuerySchema = () => {
   return Yup.object().shape({
@@ -17,8 +16,7 @@ export const getVendorTransactionsQuerySchema = () => {
 };
 
 /**
- * 
- * @returns {}
+ * Retrieves the default query of vendors transactions.
  */
 export const getVendorsTransactionsDefaultQuery = () => ({
   fromDate: moment().toDate(),

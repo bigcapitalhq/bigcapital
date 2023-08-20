@@ -18,8 +18,8 @@ export const getDefaultARAgingSummaryQuery = () => {
     asDate: moment().endOf('day').format('YYYY-MM-DD'),
     agingDaysBefore: 30,
     agingPeriods: 3,
-    customersIds: [],
     filterByOption: 'without-zero-balance',
+    customersIds: [],
     branchesIds: [],
   };
 };
@@ -56,6 +56,7 @@ const parseARAgingSummaryQuery = (locationQuery) => {
   return {
     ...transformed,
     branchesIds: castArray(transformed.branchesIds),
+    customersIds: castArray(transformed.customersIds),
   };
 };
 
