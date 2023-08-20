@@ -2,8 +2,7 @@
 import React from 'react';
 import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { FormGroup, Position, Classes } from '@blueprintjs/core';
-import classNames from 'classnames';
+import { FormGroup, Position } from '@blueprintjs/core';
 
 import {
   FormattedMessage as T,
@@ -11,9 +10,9 @@ import {
   Row,
   Col,
   FieldHint,
+  FFormGroup,
 } from '@/components';
 import { filterInventoryValuationOptions } from '../constants';
-
 import {
   momentFormatter,
   tansformDateValue,
@@ -83,22 +82,9 @@ function InventoryValuationHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <Field name={'itemsIds'}>
-            {({ form: { setFieldValue } }) => (
-              <FormGroup
-                label={<T id={'Specific items'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ItemsMultiSelect
-                  items={items}
-                  onItemSelect={(items) => {
-                    const itemsIds = items.map((item) => item.id);
-                    setFieldValue('itemsIds', itemsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup name={'itemsIds'} label={<T id={'Specific items'} />}>
+            <ItemsMultiSelect name={'itemsIds'} items={items} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

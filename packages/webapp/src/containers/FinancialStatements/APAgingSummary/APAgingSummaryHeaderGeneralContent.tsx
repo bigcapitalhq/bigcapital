@@ -1,21 +1,15 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, Field } from 'formik';
+import { FastField } from 'formik';
+import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import {
-  Intent,
-  FormGroup,
-  InputGroup,
-  Position,
-  Classes,
-} from '@blueprintjs/core';
-import classNames from 'classnames';
-import {
   FormattedMessage as T,
-  ContactsMultiSelect,
   Row,
   Col,
   FieldHint,
+  FFormGroup,
+  VendorsMultiSelect,
 } from '@/components';
 import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
@@ -104,22 +98,9 @@ export default function APAgingSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <Field name={'vendorsIds'}>
-            {({ form: { setFieldValue }, field: { value } }) => (
-              <FormGroup
-                label={<T id={'specific_vendors'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ContactsMultiSelect
-                  items={vendors}
-                  onItemSelect={(vendors) => {
-                    const vendorsIds = vendors.map((customer) => customer.id);
-                    setFieldValue('vendorsIds', vendorsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup label={<T id={'specific_vendors'} />} name={'vendorsIds'}>
+            <VendorsMultiSelect name={'vendorsIds'} items={vendors} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

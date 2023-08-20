@@ -1,7 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
-import intl from 'react-intl-universal';
 import moment from 'moment';
 import styled from 'styled-components';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
@@ -15,6 +13,10 @@ import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
 import { compose, transformToForm } from '@/utils';
+import {
+  getCustomersTransactionsDefaultQuery,
+  getCustomersTransactionsQuerySchema,
+} from './_utils';
 
 /**
  * Customers transactions header.
@@ -31,12 +33,8 @@ function CustomersTransactionsHeader({
   toggleCustomersTransactionsFilterDrawer: toggleFilterDrawer,
 }) {
   // Default form values.
-  const defaultValues = {
-    ...pageFilter,
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    customersIds: [],
-  };
+  const defaultValues = getCustomersTransactionsDefaultQuery();
+
   // Initial form values.
   const initialValues = transformToForm(
     {
@@ -49,13 +47,7 @@ function CustomersTransactionsHeader({
   );
 
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
-  });
+  const validationSchema = getCustomersTransactionsQuerySchema();
 
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
