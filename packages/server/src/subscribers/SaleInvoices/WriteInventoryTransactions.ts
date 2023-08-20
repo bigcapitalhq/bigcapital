@@ -4,6 +4,7 @@ import {
   ISaleInvoiceCreatedPayload,
   ISaleInvoiceDeletedPayload,
   ISaleInvoiceEditedPayload,
+  ISaleInvoiceEventDeliveredPayload,
 } from '@/interfaces';
 import { InvoiceInventoryTransactions } from '@/services/Sales/Invoices/InvoiceInventoryTransactions';
 
@@ -18,6 +19,10 @@ export default class WriteInventoryTransactions {
   public attach(bus) {
     bus.subscribe(
       events.saleInvoice.onCreated,
+      this.handleWritingInventoryTransactions
+    );
+    bus.subscribe(
+      events.saleInvoice.onDelivered,
       this.handleWritingInventoryTransactions
     );
     bus.subscribe(
@@ -38,7 +43,10 @@ export default class WriteInventoryTransactions {
     tenantId,
     saleInvoice,
     trx,
-  }: ISaleInvoiceCreatedPayload) => {
+  }: ISaleInvoiceCreatedPayload | ISaleInvoiceEventDeliveredPayload) => {
+    // Can't continue if the sale invoice is not delivered yet.
+    if (!saleInvoice.deliveredAt) return null;
+
     await this.saleInvoiceInventory.recordInventoryTranscactions(
       tenantId,
       saleInvoice,

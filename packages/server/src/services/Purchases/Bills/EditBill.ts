@@ -132,7 +132,7 @@ export class EditBill {
       } as IBillEditingPayload);
 
       // Update the bill transaction.
-      const bill = await Bill.query(trx).upsertGraph({
+      const bill = await Bill.query(trx).upsertGraphAndFetch({
         id: billId,
         ...billObj,
       });

@@ -15,7 +15,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
   /**
    * Attaches events with publisher.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.creditNote.onCreated,
       this.writeInventoryTranscationsOnceCreated
@@ -37,6 +37,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
   /**
    * Writes inventory transactions once credit note created.
    * @param {ICreditNoteCreatedPayload} payload -
+   * @returns {Promise<void>}
    */
   public writeInventoryTranscationsOnceCreated = async ({
     tenantId,
@@ -44,9 +45,8 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     trx,
   }: ICreditNoteCreatedPayload) => {
     // Can't continue if the credit note is open yet.
-    if (!creditNote.isOpen) {
-      return;
-    }
+    if (!creditNote.isOpen) return;
+
     await this.inventoryTransactions.createInventoryTransactions(
       tenantId,
       creditNote,
@@ -57,6 +57,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
   /**
    * Rewrites inventory transactions once credit note edited.
    * @param {ICreditNoteEditedPayload} payload -
+   * @returns {Promise<void>}
    */
   public rewriteInventoryTransactionsOnceEdited = async ({
     tenantId,
@@ -65,9 +66,8 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     trx,
   }: ICreditNoteEditedPayload) => {
     // Can't continue if the credit note is open yet.
-    if (!creditNote.isOpen) {
-      return;
-    }
+    if (!creditNote.isOpen) return;
+
     await this.inventoryTransactions.editInventoryTransactions(
       tenantId,
       creditNoteId,
@@ -87,9 +87,8 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     trx,
   }: ICreditNoteDeletedPayload) => {
     // Can't continue if the credit note is open yet.
-    if (!oldCreditNote.isOpen) {
-      return;
-    }
+    if (!oldCreditNote.isOpen) return;
+
     await this.inventoryTransactions.deleteInventoryTransactions(
       tenantId,
       creditNoteId,

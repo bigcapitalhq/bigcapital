@@ -40,6 +40,9 @@ export default class SaleReceiptInventoryTransactionsSubscriber {
     saleReceipt,
     trx,
   }: ISaleReceiptCreatedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     await this.saleReceiptInventory.recordInventoryTransactions(
       tenantId,
       saleReceipt,
@@ -57,6 +60,9 @@ export default class SaleReceiptInventoryTransactionsSubscriber {
     saleReceipt,
     trx,
   }: ISaleReceiptEditedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     await this.saleReceiptInventory.recordInventoryTransactions(
       tenantId,
       saleReceipt,
