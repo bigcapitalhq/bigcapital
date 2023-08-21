@@ -1,6 +1,5 @@
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
-import ItemSubscriber from '@/subscribers/Items/ItemSubscriber';
 import InventoryAdjustmentsSubscriber from '@/subscribers/Inventory/InventoryAdjustment';
 import BillWriteInventoryTransactionsSubscriber from '@/subscribers/Bills/WriteInventoryTransactions';
 import PaymentSyncBillBalance from '@/subscribers/PaymentMades/PaymentSyncBillBalance';
@@ -87,7 +86,6 @@ export default () => {
 
 export const susbcribers = () => {
   return [
-    ItemSubscriber,
     InventoryAdjustmentsSubscriber,
     BillWriteInventoryTransactionsSubscriber,
     PaymentSyncBillBalance,
