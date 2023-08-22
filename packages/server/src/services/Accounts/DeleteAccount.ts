@@ -77,7 +77,7 @@ export class DeleteAccount {
     // Authorize before delete account.
     await this.authorize(tenantId, accountId, oldAccount);
 
-    // Deletes the account and assocaited transactions under UOW envirement.
+    // Deletes the account and associated transactions under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onAccountDelete` event.
       await this.eventPublisher.emitAsync(events.accounts.onDelete, {

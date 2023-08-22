@@ -344,7 +344,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     );
     // Items categories.
     const itemCategories = await ItemCategory.query().onBuild((query) => {
-      // Subquery to calculate sumation of assocaited items to the item category.
+      // Subquery to calculate sumation of associated items to the item category.
       query.select('*', ItemCategory.relatedQuery('items').count().as('count'));
 
       dynamicList.buildQuery()(query);

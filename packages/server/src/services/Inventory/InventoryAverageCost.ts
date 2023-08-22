@@ -49,7 +49,7 @@ export default class InventoryAverageCostMethod
   public async computeItemCost() {
     const { InventoryTransaction } = this.tenantModels;
     const { averageCost, openingQuantity, openingCost } =
-      await this.getOpeningAvaregeCost(this.startingDate, this.itemId);
+      await this.getOpeningAverageCost(this.startingDate, this.itemId);
 
     const afterInvTransactions: IInventoryTransaction[] =
       await InventoryTransaction.query()
@@ -75,12 +75,12 @@ export default class InventoryAverageCostMethod
   }
 
   /**
-   * Get items Avarege cost from specific date from inventory transactions.
+   * Get items Average cost from specific date from inventory transactions.
    * @async
    * @param {Date} closingDate
    * @return {number}
    */
-  public async getOpeningAvaregeCost(closingDate: Date, itemId: number) {
+  public async getOpeningAverageCost(closingDate: Date, itemId: number) {
     const { InventoryCostLotTracker } = this.tenantModels;
 
     const commonBuilder = (builder: any) => {

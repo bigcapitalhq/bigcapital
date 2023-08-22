@@ -180,7 +180,7 @@ export default class InventoryAdjustmentService {
           quickAdjustmentDTO,
         } as IInventoryAdjustmentCreatingPayload
       );
-      // Saves the inventory adjustment with assocaited entries to the storage.
+      // Saves the inventory adjustment with associated entries to the storage.
       const inventoryAdjustment = await InventoryAdjustment.query(
         trx
       ).upsertGraph({

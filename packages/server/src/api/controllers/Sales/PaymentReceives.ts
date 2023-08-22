@@ -372,7 +372,7 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Retrieve the given payment receive details.
-   * @asycn
+   * @async
    * @param {Request} req -
    * @param {Response} res -
    */

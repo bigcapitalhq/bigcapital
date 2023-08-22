@@ -95,7 +95,7 @@ describe('routes: /auth/', () => {
       expect(res.status).equals(200);
     });
 
-    it('Should autheticate success with correct phone number and password.', async () => {
+    it('Should authenticate success with correct phone number and password.', async () => {
       const password = await hashPassword('admin');
       const user = await createUser(tenantWebsite, {
         phone_number: '0920000000',

@@ -36,7 +36,7 @@ export class PaymentWriteGLEntriesSubscriber {
     trx,
   }: IBillPaymentEventCreatedPayload) => {
     // Records the journal transactions after bills payment
-    // and change diff acoount balance.
+    // and change diff account balance.
     await this.billPaymentGLEntries.writePaymentGLEntries(
       tenantId,
       billPayment.id,

@@ -71,7 +71,7 @@ export default class VendorCreditGlEntriesSubscriber {
   };
 
   /**
-   * Edits assocaited GL entries once vendor credit edited.
+   * Edits associated GL entries once vendor credit edited.
    * @param {IVendorCreditEditedPayload} payload
    */
   private editGLEntriesOnceVendorCreditEdited = async ({

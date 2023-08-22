@@ -165,7 +165,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
         .whereAccountId(node.id)
         .getClosingBalance();
 
-      return this.amountAdjustment(node.adjusmentType, closingBalance);
+      return this.amountAdjustment(node.adjustmentType, closingBalance);
     };
 
     /**
@@ -322,7 +322,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     // Cash at beginning ----------------------
 
     /**
-     * Retrieve the date preioods of the given node and accumlated function.
+     * Retrieve the date preioods of the given node and accumulated function.
      * @param {} node
      * @param {}
      * @return {}

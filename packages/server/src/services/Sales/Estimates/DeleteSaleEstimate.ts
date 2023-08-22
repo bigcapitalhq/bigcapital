@@ -44,7 +44,7 @@ export class DeleteSaleEstimate {
     if (oldSaleEstimate.convertedToInvoiceId) {
       throw new ServiceError(ERRORS.SALE_ESTIMATE_CONVERTED_TO_INVOICE);
     }
-    // Deletes the estimate with associated transactions under UOW enivrement.
+    // Updates the estimate with associated transactions under UOW enivrement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimatedDeleting` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDeleting, {

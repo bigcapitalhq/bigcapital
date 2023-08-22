@@ -6,7 +6,7 @@ import {
 } from './constants';
 
 /**
- * Ensures the given transaction type to transformed to properiate format.
+ * Ensures the given transaction type to transformed to appropriate format.
  * @param {string} type 
  * @returns {string}
  */

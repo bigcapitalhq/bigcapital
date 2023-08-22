@@ -1,5 +1,5 @@
 
-export default class DynamicFilterAbstructor {
+export default class DynamicFilterAbstractor {
   /**
    * Extract relation table name from relation.
    * @param {String} column -

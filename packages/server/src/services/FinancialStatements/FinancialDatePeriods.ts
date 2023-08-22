@@ -64,7 +64,7 @@ export const FinancialDatePeriods = (Base) =>
     };
 
     /**
-     * Retrieve the date preioods of the given node and accumlated function.
+     * Retrieve the date preioods of the given node and accumulated function.
      * @param  {IBalanceSheetAccountNode} node
      * @param  {(fromDate: Date, toDate: Date, index: number) => any}
      * @return {}

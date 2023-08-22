@@ -6,7 +6,7 @@ import DynamicFilterQueryParser from './DynamicFilterQueryParser';
 import { Lexer } from '../LogicEvaluation/Lexer';
 import { COMPARATOR_TYPE, FIELD_TYPE } from './constants';
 
-export default abstract class DynamicFilterAbstructor
+export default abstract class DynamicFilterAbstractor
   implements IDynamicFilter
 {
   protected filterRoles: IFilterRole[] = [];

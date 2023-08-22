@@ -387,7 +387,7 @@ export default class ManualJournalsController extends BaseController {
           errors: [{ type: 'CREDIT.DEBIT.NOT.EQUALS', code: 300 }],
         });
       }
-      if (error.errorType === 'acccounts_ids_not_found') {
+      if (error.errorType === 'accounts_ids_not_found') {
         return res.boom.badRequest(
           'Journal entries some of accounts ids not exists.',
           { errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 400 }] }

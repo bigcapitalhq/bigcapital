@@ -23,7 +23,7 @@ export class SyncActualTimeTaskSubscriber {
     );
     bus.subscribe(
       events.projectTime.onDeleted,
-      this.handleDecreaseActaulTimeOnTimeDelete
+      this.handleDecreaseActualTimeOnTimeDelete
     );
     bus.subscribe(
       events.projectTime.onEdited,
@@ -52,7 +52,7 @@ export class SyncActualTimeTaskSubscriber {
    * Handle decreasing the actual time of the tsak once time entry be deleted.
    * @param {IProjectTimeDeletedEventPayload} payload
    */
-  private handleDecreaseActaulTimeOnTimeDelete = async ({
+  private handleDecreaseActualTimeOnTimeDelete = async ({
     tenantId,
     oldTime,
     trx,
