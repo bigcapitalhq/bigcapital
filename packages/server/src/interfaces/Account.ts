@@ -58,6 +58,7 @@ export interface IAccountTransaction {
   date: string | Date;
 
   referenceType: string;
+  referenceTypeFormatted: string;
   referenceId: number;
 
   referenceNumber?: string;
