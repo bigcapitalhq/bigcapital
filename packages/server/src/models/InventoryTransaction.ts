@@ -1,9 +1,13 @@
 import { Model, raw } from 'objection';
-import { castArray, isEmpty } from 'lodash';
+import { castArray } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
+import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export default class InventoryTransaction extends TenantModel {
+  transactionId: number;
+  transactionType: string;
+
   /**
    * Table name
    */
@@ -23,27 +27,7 @@ export default class InventoryTransaction extends TenantModel {
    * @return {string}
    */
   get transcationTypeFormatted() {
-    return InventoryTransaction.getReferenceTypeFormatted(this.transactionType);
-  }
-
-  /**
-   * Reference type formatted.
-   */
-  static getReferenceTypeFormatted(referenceType) {
-    const mapped = {
-      SaleInvoice: 'Sale invoice',
-      SaleReceipt: 'Sale receipt',
-      PaymentReceive: 'Payment receive',
-      Bill: 'Bill',
-      BillPayment: 'Payment made',
-      VendorOpeningBalance: 'Vendor opening balance',
-      CustomerOpeningBalance: 'Customer opening balance',
-      InventoryAdjustment: 'Inventory adjustment',
-      ManualJournal: 'Manual journal',
-      Journal: 'Manual journal',
-      LandedCost: 'transaction_type.landed_cost',
-    };
-    return mapped[referenceType] || '';
+    return getTransactionTypeLabel(this.transactionType);
   }
 
   /**

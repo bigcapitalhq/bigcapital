@@ -46,7 +46,7 @@ export default class AccountTransactionTransformer extends Transformer {
    * @returns {string}
    */
   public transactionTypeFormatted(transaction: IAccountTransaction) {
-    return transaction.referenceTypeFormatted;
+    return this.context.i18n.__(transaction.referenceTypeFormatted);
   }
 
   /**
