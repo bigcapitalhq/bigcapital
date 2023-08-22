@@ -156,6 +156,7 @@ export interface ISaleInvoiceEventDeliveredPayload {
   tenantId: number;
   saleInvoiceId: number;
   saleInvoice: ISaleInvoice;
+  trx: Knex.Transaction;
 }
 
 export interface ISaleInvoiceDeliveringPayload {

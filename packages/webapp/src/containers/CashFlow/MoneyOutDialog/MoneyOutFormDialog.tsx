@@ -17,6 +17,7 @@ export default function MoneyOutFormDialog() {
     setFieldValue('transaction_number', incrementNumber || '');
     setFieldValue('transaction_number_manually', manually);
   };
+
   return (
     <React.Fragment>
       <TransactionNumberDialog

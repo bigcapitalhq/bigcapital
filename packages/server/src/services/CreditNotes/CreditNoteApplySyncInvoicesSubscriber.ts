@@ -1,5 +1,4 @@
 import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import {
   IApplyCreditToInvoicesCreatedPayload,
@@ -10,15 +9,12 @@ import CreditNoteApplySyncInvoicesCreditedAmount from './CreditNoteApplySyncInvo
 @Service()
 export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
   @Inject()
-  tenancy: HasTenancyService;
-
-  @Inject()
-  syncInvoicesWithCreditNote: CreditNoteApplySyncInvoicesCreditedAmount;
+  private syncInvoicesWithCreditNote: CreditNoteApplySyncInvoicesCreditedAmount;
 
   /**
    * Attaches events with handlers.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.creditNote.onApplyToInvoicesCreated,
       this.incrementAppliedInvoicesOnceCreditCreated

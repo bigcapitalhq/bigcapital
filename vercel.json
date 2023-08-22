@@ -3,7 +3,12 @@
   "buildCommand": "CI='' npm run build:webapp",
   "outputDirectory": "packages/webapp/build",
   "rewrites": [{
-    "source": "/(.*)",
-    "destination": "/"
-  }]
+      "source": "/api/:slug*",
+      "destination": "https://dev.bigcapital.ly/api/:slug*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
 }

@@ -14,8 +14,8 @@ export class ValidateBranchExistance {
 
   /**
    * Validate transaction branch id when the feature is active.
-   * @param   {number} tenantId 
-   * @param   {number} branchId 
+   * @param   {number} tenantId
+   * @param   {number} branchId
    * @returns {Promise<void>}
    */
   public validateTransactionBranchWhenActive = async (
@@ -32,18 +32,16 @@ export class ValidateBranchExistance {
 
   /**
    * Validate transaction branch id existance.
-   * @param  {number} tenantId 
-   * @param  {number} branchId 
+   * @param  {number} tenantId
+   * @param  {number} branchId
    * @return {Promise<void>}
    */
   public validateTransactionBranch = async (
     tenantId: number,
     branchId: number | null
   ) => {
-    //
     this.validateBranchIdExistance(branchId);
 
-    //
     await this.validateBranchExistance(tenantId, branchId);
   };
 
@@ -62,7 +60,10 @@ export class ValidateBranchExistance {
    * @param tenantId
    * @param branchId
    */
-  public validateBranchExistance = async (tenantId: number, branchId: number) => {
+  public validateBranchExistance = async (
+    tenantId: number,
+    branchId: number
+  ) => {
     const { Branch } = this.tenancy.models(tenantId);
 
     const branch = await Branch.query().findById(branchId);

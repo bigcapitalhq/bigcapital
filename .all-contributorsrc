@@ -1,0 +1,71 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "abouolia",
+      "name": "Ahmed Bouhuolia",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2197422?v=4",
+      "profile": "https://github.com/abouolia",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ameir",
+      "name": "Ameir Abdeldayem",
+      "avatar_url": "https://avatars.githubusercontent.com/u/374330?v=4",
+      "profile": "http://ameir.net",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "elforjani13",
+      "name": "ElforJani13",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39470382?v=4",
+      "profile": "https://github.com/elforjani13",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "scheibling",
+      "name": "Lars Scheibling",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24367830?v=4",
+      "profile": "https://scheibling.se",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "suhaibaffan",
+      "name": "Suhaib Affan",
+      "avatar_url": "https://avatars.githubusercontent.com/u/18115937?v=4",
+      "profile": "https://github.com/suhaibaffan",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "KalliopiPliogka",
+      "name": "Kalliopi Pliogka",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81677549?v=4",
+      "profile": "https://github.com/KalliopiPliogka",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "bigcapital",
+  "projectOwner": "bigcapitalhq"
+}

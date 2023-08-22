@@ -5,7 +5,7 @@ import TenantModel from 'models/TenantModel';
 import BillSettings from './Bill.Settings';
 import ModelSetting from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Purchases/constants';
+import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
 import ModelSearchable from './ModelSearchable';
 
 export default class Bill extends mixin(TenantModel, [

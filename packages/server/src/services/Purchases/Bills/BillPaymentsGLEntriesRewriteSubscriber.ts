@@ -11,7 +11,7 @@ export class BillPaymentsGLEntriesRewriteSubscriber {
   /**
    * Attaches events with handles.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.bill.onEdited,
       this.handlerRewritePaymentsGLOnBillEdited

@@ -1,12 +1,12 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
-import SalesReceiptService from '@/services/Sales/SalesReceipts';
+import { SaleReceiptIncrement } from '@/services/Sales/Receipts/SaleReceiptIncrement';
 import { ISaleReceiptCreatedPayload } from '@/interfaces';
 
 @Service()
 export default class SaleReceiptAutoSerialSubscriber {
   @Inject()
-  saleReceiptsService: SalesReceiptService;
+  private saleReceiptsService: SaleReceiptIncrement;
 
   /**
    *

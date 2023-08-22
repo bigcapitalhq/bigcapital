@@ -9,20 +9,12 @@ import {
   ILandedCostTransactionEntryDOJO,
 } from '@/interfaces';
 import TransactionLandedCost from './TransctionLandedCost';
-import BillsService from '../Bills';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { formatNumber } from 'utils';
 
 @Service()
 export default class LandedCostTranasctions {
   @Inject()
-  transactionLandedCost: TransactionLandedCost;
-
-  @Inject()
-  billsService: BillsService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private transactionLandedCost: TransactionLandedCost;
 
   /**
    * Retrieve the landed costs based on the given query.

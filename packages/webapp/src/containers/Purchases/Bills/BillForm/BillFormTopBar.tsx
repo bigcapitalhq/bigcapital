@@ -1,11 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
-  Button,
   Classes,
 } from '@blueprintjs/core';
 import {
@@ -14,12 +12,13 @@ import {
 } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  Icon,
   BranchSelect,
   FeatureCan,
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormWarehouseSelectButton,
+  FormBranchSelectButton,
 } from '@/components';
 import { useBillFormContext } from './BillFormProvider';
 import { Features } from '@/constants';
@@ -70,8 +69,9 @@ function BillFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={BillBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
+      fill={false}
     />
   );
 }
@@ -86,30 +86,9 @@ function BillFormSelectWarehouse() {
     <WarehouseSelect
       name={'warehouse_id'}
       warehouses={warehouses}
-      input={BillWarehouseSelectButton}
+      input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-
-function BillWarehouseSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('bill.warehouse_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'warehouse-16'} iconSize={16} />}
-    />
-  );
-}
-
-function BillBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('bill.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }

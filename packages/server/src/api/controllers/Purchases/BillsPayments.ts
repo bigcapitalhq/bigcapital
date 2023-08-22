@@ -4,7 +4,7 @@ import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
+import { BillPaymentsApplication } from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import BillPaymentsPages from '@/services/Purchases/BillPayments/BillPaymentsPages';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
@@ -17,18 +17,18 @@ import { AbilitySubject, IPaymentMadeAction } from '@/interfaces';
 @Service()
 export default class BillsPayments extends BaseController {
   @Inject()
-  billPaymentService: BillPaymentsService;
+  private billPaymentsApplication: BillPaymentsApplication;
 
   @Inject()
-  dynamicListService: DynamicListingService;
+  private dynamicListService: DynamicListingService;
 
   @Inject()
-  billPaymentsPages: BillPaymentsPages;
+  private billPaymentsPages: BillPaymentsPages;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -106,7 +106,7 @@ export default class BillsPayments extends BaseController {
    * Bill payments schema validation.
    * @return {ValidationChain[]}
    */
-  get billPaymentSchemaValidation(): ValidationChain[] {
+  private get billPaymentSchemaValidation(): ValidationChain[] {
     return [
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
@@ -129,7 +129,7 @@ export default class BillsPayments extends BaseController {
    * Specific bill payment schema validation.
    * @returns {ValidationChain[]}
    */
-  get specificBillPaymentValidateSchema(): ValidationChain[] {
+  private get specificBillPaymentValidateSchema(): ValidationChain[] {
     return [param('id').exists().isNumeric().toInt()];
   }
 
@@ -137,7 +137,7 @@ export default class BillsPayments extends BaseController {
    * Bills payment list validation schema.
    * @returns {ValidationChain[]}
    */
-  get listingValidationSchema(): ValidationChain[] {
+  private get listingValidationSchema(): ValidationChain[] {
     return [
       query('custom_view_id').optional().isNumeric().toInt(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -154,7 +154,7 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  async getBillPaymentNewPageEntries(req: Request, res: Response) {
+  private async getBillPaymentNewPageEntries(req: Request, res: Response) {
     const { tenantId } = req;
     const { vendorId } = this.matchedQueryData(req);
 
@@ -174,7 +174,7 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async getBillPaymentEditPage(
+  private async getBillPaymentEditPage(
     req: Request,
     res: Response,
     next: NextFunction
@@ -205,16 +205,19 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {Response} res
    */
-  async createBillPayment(req: Request, res: Response, next: NextFunction) {
+  private async createBillPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const billPaymentDTO = this.matchedBodyData(req);
 
     try {
-      const billPayment = await this.billPaymentService.createBillPayment(
+      const billPayment = await this.billPaymentsApplication.createBillPayment(
         tenantId,
         billPaymentDTO
       );
-
       return res.status(200).send({
         id: billPayment.id,
         message: 'Payment made has been created successfully.',
@@ -229,13 +232,17 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async editBillPayment(req: Request, res: Response, next: NextFunction) {
+  private async editBillPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const billPaymentDTO = this.matchedBodyData(req);
     const { id: billPaymentId } = req.params;
 
     try {
-      const paymentMade = await this.billPaymentService.editBillPayment(
+      const paymentMade = await this.billPaymentsApplication.editBillPayment(
         tenantId,
         billPaymentId,
         billPaymentDTO
@@ -256,12 +263,19 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  async deleteBillPayment(req: Request, res: Response, next: NextFunction) {
+  private async deleteBillPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      await this.billPaymentService.deleteBillPayment(tenantId, billPaymentId);
+      await this.billPaymentsApplication.deleteBillPayment(
+        tenantId,
+        billPaymentId
+      );
 
       return res.status(200).send({
         id: billPaymentId,
@@ -277,16 +291,19 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  async getBillPayment(req: Request, res: Response, next: NextFunction) {
+  private async getBillPayment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      const billPayment = await this.billPaymentService.getBillPayment(
+      const billPayment = await this.billPaymentsApplication.getBillPayment(
         tenantId,
         billPaymentId
       );
-
       return res.status(200).send({
         bill_payment: this.transfromToResponse(billPayment),
       });
@@ -301,12 +318,16 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getPaymentBills(req: Request, res: Response, next: NextFunction) {
+  private async getPaymentBills(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      const bills = await this.billPaymentService.getPaymentBills(
+      const bills = await this.billPaymentsApplication.getPaymentBills(
         tenantId,
         billPaymentId
       );
@@ -322,7 +343,11 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  async getBillsPayments(req: Request, res: Response, next: NextFunction) {
+  private async getBillsPayments(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const billPaymentsFilter = {
       page: 1,
@@ -335,7 +360,7 @@ export default class BillsPayments extends BaseController {
 
     try {
       const { billPayments, pagination, filterMeta } =
-        await this.billPaymentService.listBillPayments(
+        await this.billPaymentsApplication.getBillPayments(
           tenantId,
           billPaymentsFilter
         );
@@ -357,7 +382,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handleServiceError(
+  private handleServiceError(
     error: Error,
     req: Request,
     res: Response,

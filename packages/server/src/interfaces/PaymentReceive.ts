@@ -1,6 +1,5 @@
-import { ISystemUser } from '@/interfaces';
 import { Knex } from 'knex';
-import { pick } from 'lodash';
+import { ISystemUser } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { ISaleInvoice } from './SaleInvoice';
 

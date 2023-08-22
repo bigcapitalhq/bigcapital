@@ -7,10 +7,10 @@ import { Tenant } from '@/system/models';
 @Service()
 export default class GetPaymentReceivePdf {
   @Inject()
-  pdfService: PdfService;
+  private pdfService: PdfService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve sale invoice pdf content.

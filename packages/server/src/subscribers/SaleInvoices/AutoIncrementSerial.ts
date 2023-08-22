@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import SaleInvoicesService from '@/services/Sales/SalesInvoices';
+import { SaleInvoiceIncrement } from '@/services/Sales/Invoices/SaleInvoiceIncrement';
 import { ISaleInvoiceCreatedPayload } from '@/interfaces';
 
 @Service()
 export default class SaleInvoiceAutoIncrementSubscriber extends EventSubscriber {
   @Inject()
-  saleInvoicesService: SaleInvoicesService;
+  private saleInvoicesService: SaleInvoiceIncrement;
 
   /**
    * Constructor method.

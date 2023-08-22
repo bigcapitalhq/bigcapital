@@ -85,7 +85,6 @@ function VendorCreditNoteFormHeaderFields({
         name={'exchange_rate'}
         formGroupProps={{ label: ' ', inline: true }}
       />
-
       {/* ------- Vendor Credit date ------- */}
       <FastField name={'vendor_credit_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (

@@ -1,17 +1,16 @@
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
-import ItemSubscriber from '@/subscribers/Items/ItemSubscriber';
 import InventoryAdjustmentsSubscriber from '@/subscribers/Inventory/InventoryAdjustment';
 import BillWriteInventoryTransactionsSubscriber from '@/subscribers/Bills/WriteInventoryTransactions';
 import PaymentSyncBillBalance from '@/subscribers/PaymentMades/PaymentSyncBillBalance';
 import SaleReceiptInventoryTransactionsSubscriber from '@/subscribers/SaleReceipt/WriteInventoryTransactions';
 import SaleInvoiceWriteInventoryTransactions from '@/subscribers/SaleInvoices/WriteInventoryTransactions';
 import SaleInvoiceWriteGLEntriesSubscriber from '@/subscribers/SaleInvoices/WriteJournalEntries';
+import SaleReceiptWriteGLEntriesSubscriber from '@/subscribers/SaleReceipt/WriteJournalEntries';
 import PaymentReceiveSyncInvoices from '@/subscribers/PaymentReceive/PaymentReceiveSyncInvoices';
 import CashflowTransactionSubscriber from '@/services/Cashflow/CashflowTransactionSubscriber';
 import PaymentReceivesWriteGLEntriesSubscriber from '@/subscribers/PaymentReceive/WriteGLEntries';
 import InventorySubscriber from '@/subscribers/Inventory/Inventory';
-import SaleReceiptWriteGLEntriesSubscriber from '@/subscribers/SaleReceipt/WriteJournalEntries';
 import { CustomerWriteGLOpeningBalanceSubscriber } from '@/services/Contacts/Customers/Subscribers/CustomerGLEntriesSubscriber';
 import { VendorsWriteGLOpeningSubscriber } from '@/services/Contacts/Vendors/Subscribers/VendorGLEntriesSubscriber';
 import SaleEstimateAutoSerialSubscriber from '@/subscribers/SaleEstimate/AutoIncrementSerial';
@@ -35,7 +34,7 @@ import PurgeAuthorizedUserOnceRoleMutate from '@/services/Roles/PurgeAuthorizedU
 import SendSmsNotificationToCustomer from '@/subscribers/SaleInvoices/SendSmsNotificationToCustomer';
 import SendSmsNotificationSaleReceipt from '@/subscribers/SaleReceipt/SendSmsNotificationToCustomer';
 import SendSmsNotificationPaymentReceive from '@/subscribers/PaymentReceive/SendSmsNotificationToCustomer';
-import SaleInvoiceWriteoffSubscriber from '@/services/Sales/SaleInvoiceWriteoffSubscriber';
+import SaleInvoiceWriteoffSubscriber from '@/services/Sales/Invoices/SaleInvoiceWriteoffSubscriber';
 import LandedCostSyncCostTransactionsSubscriber from '@/services/Purchases/LandedCost/LandedCostSyncCostTransactionsSubscriber';
 import LandedCostInventoryTransactionsSubscriber from '@/services/Purchases/LandedCost/LandedCostInventoryTransactionsSubscriber';
 import CreditNoteGLEntriesSubscriber from '@/services/CreditNotes/CreditNoteGLEntriesSubscriber';
@@ -66,7 +65,6 @@ import { ActivateWarehousesSubscriber } from '@/services/Warehouses/ActivateWare
 import { ManualJournalWriteGLSubscriber } from '@/services/ManualJournals/ManualJournalGLEntriesSubscriber';
 import { BillGLEntriesSubscriber } from '@/services/Purchases/Bills/BillGLEntriesSubscriber';
 import { PaymentWriteGLEntriesSubscriber } from '@/services/Purchases/BillPayments/BillPaymentGLEntriesSubscriber';
-
 import BranchesIntegrationsSubscribers from '@/services/Branches/EventsProvider';
 import WarehousesIntegrationsSubscribers from '@/services/Warehouses/EventsProvider';
 import { WarehouseTransferAutoIncrementSubscriber } from '@/services/Warehouses/WarehousesTransfers/WarehouseTransferAutoIncrementSubscriber';
@@ -88,7 +86,6 @@ export default () => {
 
 export const susbcribers = () => {
   return [
-    ItemSubscriber,
     InventoryAdjustmentsSubscriber,
     BillWriteInventoryTransactionsSubscriber,
     PaymentSyncBillBalance,

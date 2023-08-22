@@ -1,10 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
+
 import moment from 'moment';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
-import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { FormattedMessage as T } from '@/components';
@@ -16,7 +15,10 @@ import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHea
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
-import { getInventoryItemDetailsDefaultQuery } from './utils2';
+import {
+  getInventoryItemDetailsDefaultQuery,
+  getInventoryItemDetailsQuerySchema,
+} from './utils2';
 import { compose, transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
@@ -28,6 +30,7 @@ function InventoryItemDetailsHeader({
   // #ownProps
   onSubmitFilter,
   pageFilter,
+
   // #withInventoryItemDetails
   isFilterDrawerOpen,
 
@@ -40,30 +43,29 @@ function InventoryItemDetailsHeader({
   // Filter form initial values.
   const initialValues = transformToForm(
     {
+      ...defaultValues,
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
     },
     defaultValues,
   );
+
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
-  });
+  const validationSchema = getInventoryItemDetailsQuerySchema();
+
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     toggleFilterDrawer(false);
     setSubmitting(false);
   };
+
   // Handle drawer close action.
   const handleDrawerClose = () => {
     toggleFilterDrawer(false);
   };
+
   // Detarmines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
 

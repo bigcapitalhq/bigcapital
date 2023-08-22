@@ -1,13 +1,15 @@
 // @ts-nocheck
 import React from 'react';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { Field } from 'formik';
-import classNames from 'classnames';
-
-import { filterItemsOptions } from '../constants';
-import { Row, Col, ItemsMultiSelect, FormattedMessage as T } from '@/components';
+import {
+  Row,
+  Col,
+  ItemsMultiSelect,
+  FormattedMessage as T,
+  FFormGroup,
+} from '@/components';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
+import { filterItemsOptions } from '../constants';
 import {
   SalesByItemGeneralPanelProvider,
   useSalesByItemsGeneralPanelContext,
@@ -46,22 +48,9 @@ function SalesByItemsHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <Field name={'itemsIds'}>
-            {({ form: { setFieldValue }, field: { value } }) => (
-              <FormGroup
-                label={<T id={'Specific items'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ItemsMultiSelect
-                  items={items}
-                  onItemSelect={(items) => {
-                    const itemsIds = items.map((item) => item.id);
-                    setFieldValue('itemsIds', itemsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup label={<T id={'Specific items'} />} name={'itemsIds'}>
+            <ItemsMultiSelect name={'itemsIds'} items={items} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

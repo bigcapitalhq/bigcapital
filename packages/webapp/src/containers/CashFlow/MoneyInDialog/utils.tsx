@@ -6,6 +6,7 @@ import { transactionNumber } from '@/utils';
 import { isEqual, isNull, first } from 'lodash';
 
 import { useMoneyInDailogContext } from './MoneyInDialogProvider';
+import { useMoneyInFieldsContext } from './MoneyInFieldsProvider';
 
 export const useObserveTransactionNoSettings = (prefix, nextNumber) => {
   const { setFieldValue } = useFormikContext();
@@ -33,7 +34,7 @@ export const useSetPrimaryBranchToForm = () => {
 
 export const useForeignAccount = () => {
   const { values } = useFormikContext();
-  const { account } = useMoneyInDailogContext();
+  const { account } = useMoneyInFieldsContext();
 
   return (
     !isEqual(account.currency_code, values.currency_code) &&

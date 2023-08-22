@@ -5,59 +5,20 @@ import { MenuItem, Button } from '@blueprintjs/core';
 import { FSelect } from '../Forms';
 
 /**
- *
- * @param {*} query
- * @param {*} branch
- * @param {*} _index
- * @param {*} exactMatch
- * @returns
- */
-const branchItemPredicate = (query, branch, _index, exactMatch) => {
-  const normalizedTitle = branch.name.toLowerCase();
-  const normalizedQuery = query.toLowerCase();
-
-  if (exactMatch) {
-    return normalizedTitle === normalizedQuery;
-  } else {
-    return `${branch.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
-  }
-};
-
-/**
- *
- * @param {*} film
- * @param {*} param1
- * @returns
- */
-const branchItemRenderer = (branch, { handleClick, modifiers, query }) => {
-  const text = `${branch.name}`;
-
-  return (
-    <MenuItem
-      active={modifiers.active}
-      disabled={modifiers.disabled}
-      label={branch.code}
-      key={branch.id}
-      onClick={handleClick}
-      text={text}
-    />
-  );
-};
-
-const branchSelectProps = {
-  itemPredicate: branchItemPredicate,
-  itemRenderer: branchItemRenderer,
-  valueAccessor: 'id',
-  labelAccessor: 'name',
-};
-
-/**
- *
+ * Branch select field.
  * @param {*} param0
- * @returns
+ * @returns {JSX.Element}
  */
 export function BranchSelect({ branches, ...rest }) {
-  return <FSelect {...branchSelectProps} {...rest} items={branches} />;
+  return (
+    <FSelect
+      valueAccessor={'id'}
+      textAccessor={'name'}
+      labelAccessor={'code'}
+      {...rest}
+      items={branches}
+    />
+  );
 }
 
 /**

@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { toInteger } from 'lodash';
 import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
 
 dotenv.config();
+
+const API_RATE_LIMIT = process.env.API_RATE_LIMIT?.split(',') || [];
 
 module.exports = {
   /**
@@ -97,7 +100,7 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
 
   /**
-   * 
+   *
    */
   resetPasswordSeconds: 600,
 
@@ -130,9 +133,9 @@ module.exports = {
       blockDuration: 60 * 15,
     },
     requests: {
-      points: 60,
-      duration: 60,
-      blockDuration: 60 * 10,
+      points: API_RATE_LIMIT[0] ? toInteger(API_RATE_LIMIT[0]) : 120,
+      duration: API_RATE_LIMIT[1] ? toInteger(API_RATE_LIMIT[1]) : 60,
+      blockDuration: API_RATE_LIMIT[2] ? toInteger(API_RATE_LIMIT[2]) : 60 * 10,
     },
   },
 

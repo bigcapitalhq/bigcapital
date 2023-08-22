@@ -1,11 +1,10 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
+
 import {
   Alignment,
   NavbarGroup,
   NavbarDivider,
-  Button,
   Classes,
 } from '@blueprintjs/core';
 import {
@@ -15,12 +14,13 @@ import {
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
-  Icon,
   BranchSelect,
   FeatureCan,
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormWarehouseSelectButton,
+  FormBranchSelectButton,
 } from '@/components';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
@@ -70,8 +70,9 @@ function CreditNoteFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={CreditNoteBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
+      fill={false}
     />
   );
 }
@@ -86,30 +87,9 @@ function CreditFormSelectWarehouse() {
     <WarehouseSelect
       name={'warehouse_id'}
       warehouses={warehouses}
-      input={CreditNoteWarehouseSelectButton}
+      input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-
-function CreditNoteWarehouseSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('credit_note.warehouse_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'warehouse-16'} iconSize={16} />}
-    />
-  );
-}
-
-function CreditNoteBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('credit_note.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }

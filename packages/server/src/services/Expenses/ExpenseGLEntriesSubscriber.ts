@@ -21,7 +21,7 @@ export class ExpensesWriteGLSubscriber {
    * Attaches events with handlers.
    * @param bus
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.expenses.onCreated,
       this.handleWriteGLEntriesOnceCreated

@@ -1,21 +1,17 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import SalesReceiptService from '@/services/Sales/SalesReceipts';
 import {
   ISaleReceiptCreatedPayload,
   ISaleReceiptEditedPayload,
   ISaleReceiptEventDeletedPayload,
 } from '@/interfaces';
-import { SaleReceiptGLEntries } from '@/services/Sales/SaleReceiptGLEntries';
+import { SaleReceiptGLEntries } from '@/services/Sales/Receipts/SaleReceiptGLEntries';
 
 @Service()
 export default class SaleReceiptWriteGLEntriesSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  saleReceiptGLEntries: SaleReceiptGLEntries;
+  private saleReceiptGLEntries: SaleReceiptGLEntries;
 
   /**
    * Attaches events with handlers.
@@ -23,6 +19,10 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.saleReceipt.onCreated,
+      this.handleWriteReceiptIncomeJournalEntrieOnCreate
+    );
+    bus.subscribe(
+      events.saleReceipt.onClosed,
       this.handleWriteReceiptIncomeJournalEntrieOnCreate
     );
     bus.subscribe(
@@ -42,8 +42,12 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   public handleWriteReceiptIncomeJournalEntrieOnCreate = async ({
     tenantId,
     saleReceiptId,
+    saleReceipt,
     trx,
   }: ISaleReceiptCreatedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     // Writes the sale receipt income journal entries.
     await this.saleReceiptGLEntries.writeIncomeGLEntries(
       tenantId,
@@ -75,8 +79,12 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
   private handleWriteReceiptIncomeJournalEntrieOnEdited = async ({
     tenantId,
     saleReceiptId,
+    saleReceipt,
     trx,
   }: ISaleReceiptEditedPayload) => {
+    // Can't continue if the sale receipt is not closed yet.
+    if (!saleReceipt.closedAt) return null;
+
     // Writes the sale receipt income journal entries.
     await this.saleReceiptGLEntries.rewriteReceiptGLEntries(
       tenantId,

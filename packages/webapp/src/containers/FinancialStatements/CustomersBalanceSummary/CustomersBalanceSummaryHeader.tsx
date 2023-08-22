@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
+
 import styled from 'styled-components';
 import moment from 'moment';
 import { Formik, Form } from 'formik';
@@ -13,6 +13,7 @@ import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryAct
 import CustomersBalanceSummaryGeneralPanel from './CustomersBalanceSummaryGeneralPanel';
 
 import { compose, transformToForm } from '@/utils';
+import { getCustomersBalanceQuerySchema } from './utils';
 
 /**
  * Customers balance summary.
@@ -29,9 +30,8 @@ function CustomersBalanceSummaryHeader({
   toggleCustomerBalanceFilterDrawer,
 }) {
   // validation schema.
-  const validationSchema = Yup.object().shape({
-    asDate: Yup.date().required().label('asDate'),
-  });
+  const validationSchema = getCustomersBalanceQuerySchema();
+
   // Default form values.
   const defaultValues = {
     ...pageFilter,

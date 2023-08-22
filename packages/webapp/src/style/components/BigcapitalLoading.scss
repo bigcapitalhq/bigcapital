@@ -1,10 +1,12 @@
+@import '@/style/variables.scss';
+
 .bigcapital-loading {
   height: 100%;
   width: 100%;
   position: fixed;
   display: flex;
   background: #fff;
-  z-index: 999999;
+  z-index: $zindex-dashboard-splash-screen;
 
   .center {
     width: auto;

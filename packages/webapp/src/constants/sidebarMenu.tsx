@@ -25,6 +25,7 @@ import {
   CashflowAction,
   PreferencesAbility,
 } from '@/constants/abilityOption';
+import { DialogsName } from './dialogs';
 
 export const SidebarMenu = [
   // ---------------
@@ -114,7 +115,7 @@ export const SidebarMenu = [
                 text: <T id={'sidebar.new_item_category'} />,
                 href: '/items/categories/new',
                 type: ISidebarMenuItemType.Dialog,
-                dialogName: 'item-category-form',
+                dialogName: DialogsName.ItemCategoryForm,
                 permission: {
                   subject: AbilitySubject.Item,
                   ability: ItemAction.Create,
@@ -458,7 +459,7 @@ export const SidebarMenu = [
             text: <T id={'sidebar.add_money_in'} />,
             href: '/cashflow-accounts',
             type: ISidebarMenuItemType.Dialog,
-            dialogName: 'money-in',
+            dialogName: DialogsName.MoneyInForm,
             permission: {
               subject: AbilitySubject.Cashflow,
               ability: CashflowAction.Create,
@@ -468,6 +469,7 @@ export const SidebarMenu = [
             text: <T id={'sidebar.add_money_out'} />,
             href: '/cashflow-accounts',
             type: ISidebarMenuItemType.Dialog,
+            dialogName: DialogsName.MoneyOutForm,
             permission: {
               subject: AbilitySubject.Cashflow,
               ability: CashflowAction.Create,
@@ -477,6 +479,7 @@ export const SidebarMenu = [
             text: <T id={'sidebar.add_cash_account'} />,
             href: '/cashflow-accounts',
             type: ISidebarMenuItemType.Dialog,
+            dialogName: DialogsName.AccountForm,
             permission: {
               subject: AbilitySubject.Cashflow,
               ability: CashflowAction.Create,
@@ -486,6 +489,7 @@ export const SidebarMenu = [
             text: <T id={'sidebar.add_bank_account'} />,
             href: '/cashflow-accounts',
             type: ISidebarMenuItemType.Dialog,
+            dialogName: DialogsName.AccountForm,
             permission: {
               subject: AbilitySubject.Cashflow,
               ability: CashflowAction.Create,

@@ -5,7 +5,7 @@ import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
 import SaleInvoiceMeta from './SaleInvoice.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/constants';
+import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
 import ModelSearchable from './ModelSearchable';
 
 export default class SaleInvoice extends mixin(TenantModel, [

@@ -64,7 +64,7 @@ export class SaleInvoiceCostGLEntries {
 
   /**
    *
-   * @param   {IInventoryLotCost} inventoryCostLot
+   * @param {IInventoryLotCost} inventoryCostLot
    * @returns {}
    */
   private getInvoiceCostGLCommonEntry = (
@@ -91,7 +91,7 @@ export class SaleInvoiceCostGLEntries {
 
   /**
    * Retrieves the inventory cost GL entry.
-   * @param   {IInventoryLotCost} inventoryLotCost
+   * @param {IInventoryLotCost} inventoryLotCost
    * @returns {ILedgerEntry[]}
    */
   private getInventoryCostGLEntry = R.curry(
@@ -127,10 +127,10 @@ export class SaleInvoiceCostGLEntries {
 
   /**
    * Writes journal entries for given sale invoice.
-   * -------
+   * -----
    * - Cost of goods sold -> Debit -> YYYY
    *    - Inventory assets -> Credit -> YYYY
-   * --------
+    *----- 
    * @param {ISaleInvoice} saleInvoice
    * @param {JournalPoster} journal
    */

@@ -1,65 +1,46 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, Field, ErrorMessage, useFormikContext } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { FastField, ErrorMessage } from 'formik';
+import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
   AccountsSuggestField,
   InputPrependText,
-  MoneyInputGroup,
   FieldRequiredHint,
-  Icon,
   Col,
   Row,
-  If,
-  InputPrependButton,
   FeatureCan,
   BranchSelect,
   BranchSelectButton,
-  ExchangeRateMutedField,
+  FFormGroup,
+  FTextArea,
+  FMoneyInputGroup,
+  FInputGroup,
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
-import { useAutofocus } from '@/hooks';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-
 import {
   inputIntent,
   momentFormatter,
   tansformDateValue,
   handleDateChange,
-  compose,
 } from '@/utils';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
-import {
-  useObserveTransactionNoSettings,
-  useSetPrimaryBranchToForm,
-  useForeignAccount,
-  BranchRowDivider,
-} from '../utils';
-import withSettings from '@/containers/Settings/withSettings';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
 import { MoneyInOutTransactionNoField } from '../../_components';
+import { MoneyOutExchangeRateField } from '../MoneyOutExchangeRateField';
+import { useMoneyOutFieldsContext } from '../MoneyOutFieldsProvider';
 
 /**
  * Transfer to account form fields.
  */
 export default function TransferToAccountFormFields() {
   // Money in dialog context.
-  const { accounts, account, branches } = useMoneyOutDialogContext();
-  const { values } = useFormikContext();
-  const isForeigAccount = useForeignAccount();
-
-  const accountRef = useAutofocus();
+  const { accounts, branches } = useMoneyOutDialogContext();
+  const { account } = useMoneyOutFieldsContext();
 
   // Sets the primary branch to form.
   useSetPrimaryBranchToForm();
@@ -69,21 +50,19 @@ export default function TransferToAccountFormFields() {
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FFormGroup label={<T id={'branch'} />} name={'branch_id'}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
                 input={BranchSelectButton}
                 popoverProps={{ minimal: true }}
               />
-            </FormGroup>
+            </FFormGroup>
           </Col>
         </Row>
         <BranchRowDivider />
       </FeatureCan>
+
       <Row>
         <Col xs={5}>
           {/*------------ Date -----------*/}
@@ -113,52 +92,32 @@ export default function TransferToAccountFormFields() {
             )}
           </FastField>
         </Col>
+
         <Col xs={5}>
           {/*------------ Transaction number -----------*/}
           <MoneyInOutTransactionNoField />
         </Col>
       </Row>
-      {/*------------ amount -----------*/}
-      <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
+
+      {/*------------ Amount -----------*/}
+      <Row>
+        <Col xs={10}>
+          <FFormGroup
+            name={'amount'}
             label={<T id={'amount'} />}
             labelInfo={<FieldRequiredHint />}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="amount" />}
-            className={'form-group--amount'}
           >
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
-
-              <MoneyInputGroup
-                value={value}
-                minimal={true}
-                onChange={(amount) => {
-                  setFieldValue('amount', amount);
-                }}
-                inputRef={accountRef}
-                intent={inputIntent({ error, touched })}
-              />
+              <FMoneyInputGroup name={'amount'} minimal={true} />
             </ControlGroup>
-          </FormGroup>
-        )}
-      </FastField>
-      <If condition={isForeigAccount}>
-        {/*------------ exchange rate -----------*/}
-        <ExchangeRateMutedField
-          name={'exchange_rate'}
-          fromCurrency={values?.currency_code}
-          toCurrency={account?.currency_code}
-          formGroupProps={{ label: '', inline: false }}
-          date={values.date}
-          exchangeRate={values.exchange_rate}
-        />
-      </If>
+          </FFormGroup>
+        </Col>
+      </Row>
+
+      {/*------------ Exchange rate -----------*/}
+      <MoneyOutExchangeRateField />
+
       <Row>
         <Col xs={5}>
           {/*------------ transfer from account -----------*/}
@@ -191,43 +150,24 @@ export default function TransferToAccountFormFields() {
             )}
           </FastField>
         </Col>
+
         <Col xs={5}>
           {/*------------ Reference -----------*/}
-          <FastField name={'reference_no'}>
-            {({ form, field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'reference_no'} />}
-                intent={inputIntent({ error, touched })}
-                helperText={<ErrorMessage name="reference_no" />}
-                className={'form-group--reference-no'}
-              >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup name={'reference_no'} label={<T id={'reference_no'} />}>
+            <FInputGroup name={'reference_no'} />
+          </FFormGroup>
         </Col>
       </Row>
-      {/*------------ description -----------*/}
-      <FastField name={'description'}>
-        {({ field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'description'} />}
-            className={'form-group--description'}
-            intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name={'description'} />}
-          >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
-          </FormGroup>
-        )}
-      </FastField>
+
+      {/*------------ Description -----------*/}
+      <FFormGroup name={'description'} label={<T id={'description'} />}>
+        <FTextArea
+          name={'description'}
+          growVertically={true}
+          large={true}
+          fill={true}
+        />
+      </FFormGroup>
     </React.Fragment>
   );
 }

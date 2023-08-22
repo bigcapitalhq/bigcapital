@@ -5,13 +5,10 @@ import { IBill, IBillPayment, IBillReceivePageEntry } from '@/interfaces';
 import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
 
-/**
- * Bill payments edit and create pages services.
- */
 @Service()
 export default class BillPaymentsPages {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   /**
    * Retrieve bill payment with associated metadata.

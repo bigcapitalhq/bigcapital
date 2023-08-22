@@ -1,28 +1,28 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import BillsService from '@/services/Purchases/Bills';
 import {
   IBillCreatedPayload,
   IBillEditedPayload,
   IBIllEventDeletedPayload,
+  IBillOpenedPayload,
 } from '@/interfaces';
 import { BillGLEntries } from './BillGLEntries';
 
 @Service()
 export class BillGLEntriesSubscriber {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  billGLEntries: BillGLEntries;
+  private billGLEntries: BillGLEntries;
 
   /**
    * Attaches events with handles.
    */
-  attach(bus) {
+  public attach(bus) {
     bus.subscribe(
       events.bill.onCreated,
+      this.handlerWriteJournalEntriesOnCreate
+    );
+    bus.subscribe(
+      events.bill.onOpened,
       this.handlerWriteJournalEntriesOnCreate
     );
     bus.subscribe(
@@ -38,10 +38,12 @@ export class BillGLEntriesSubscriber {
    */
   private handlerWriteJournalEntriesOnCreate = async ({
     tenantId,
-    billId,
+    bill,
     trx,
-  }: IBillCreatedPayload) => {
-    await this.billGLEntries.writeBillGLEntries(tenantId, billId, trx);
+  }: IBillCreatedPayload | IBillOpenedPayload) => {
+    if (!bill.openedAt) return null;
+
+    await this.billGLEntries.writeBillGLEntries(tenantId, bill.id, trx);
   };
 
   /**
@@ -51,8 +53,11 @@ export class BillGLEntriesSubscriber {
   private handleOverwriteJournalEntriesOnEdit = async ({
     tenantId,
     billId,
+    bill,
     trx,
   }: IBillEditedPayload) => {
+    if (!bill.openedAt) return null;
+
     await this.billGLEntries.rewriteBillGLEntries(tenantId, billId, trx);
   };
 

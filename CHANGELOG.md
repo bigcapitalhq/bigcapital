@@ -2,6 +2,29 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.9.11] - 23-07-2023
+
+* added: Restart policy to docker compose files. by @suhaibaffan in https://github.com/bigcapitalhq/bigcapital/pull/198
+* fix: Expose and expand the rate limit to the env variables by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/195
+
+# [0.9.10] - 18-07-2023
+
+* feat(e2e): E2E onboarding process by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/176
+* fix(webapp): Show loading message of cost computing job on financial reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/196
+* fix(webapp): Change the currency code of sales and purchases transactions with foreign contacts. 
+
+# [0.9.9] - 28-06-2023
+
+* refactor: Customer and vendor select component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/171
+* chore: Move auto-increment components in separate files by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/170
+* fix: Style of quick item drawer by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/173
+* fix: Should not show the form before loading account by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/172
+* fix: Payment made form does not handle not unique number an e… by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/177
+* fix: Internal note of invoice/bill payment does not saving by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/181
+* fix: Storing cash flow transaction description by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/180
+* fix: No currency in amount field on money in/out dialogs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/179
+* fix: No default branch for customer/vendor opening balance branch by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/182
+
 # [0.9.8] - 19-06-2023
 
 `bigcapitalhq/webapp`

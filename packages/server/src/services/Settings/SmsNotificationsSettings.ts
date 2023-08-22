@@ -9,7 +9,6 @@ import {
 import TenancyService from '@/services/Tenancy/TenancyService';
 import SMSNotificationsConfig from 'config/smsNotifications';
 import { ServiceError } from '@/exceptions';
-import I18nService from '@/services/I18n/I18nService';
 
 const ERRORS = {
   SMS_NOTIFICATION_KEY_NOT_FOUND: 'SMS_NOTIFICATION_KEY_NOT_FOUND',
@@ -19,13 +18,7 @@ const ERRORS = {
 @Service()
 export default class SmsNotificationsSettingsService {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
-
-  @Inject()
-  i18nService: I18nService;
+  private tenancy: TenancyService;
 
   /**
    * Retrieve sms notification meta from the given notification key.

@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { sumBy } from 'lodash';
 import {
   IVendorCredit,
@@ -9,27 +9,27 @@ import {
   IBill,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import VendorCredit from '../BaseVendorCredit';
-import BillPaymentsService from '@/services/Purchases/BillPayments/BillPayments';
 import { ServiceError } from '@/exceptions';
+import { BillPaymentValidators } from '../../BillPayments/BillPaymentValidators';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from '../constants';
 
 @Service()
 export default class ApplyVendorCreditToBills extends VendorCredit {
-  @Inject('PaymentReceives')
-  paymentReceive: PaymentReceiveService;
+  @Inject()
+  private tenancy: HasTenancyService;
 
   @Inject()
-  uow: UnitOfWork;
+  private uow: UnitOfWork;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  billPayment: BillPaymentsService;
+  private billPaymentValidators: BillPaymentValidators;
 
   /**
    * Apply credit note to the given invoices.
@@ -55,11 +55,12 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
       vendorCredit
     );
     // Validate bills entries existance.
-    const appliedBills = await this.billPayment.validateBillsExistance(
-      tenantId,
-      vendorCreditAppliedModel.entries,
-      vendorCredit.vendorId
-    );
+    const appliedBills =
+      await this.billPaymentValidators.validateBillsExistance(
+        tenantId,
+        vendorCreditAppliedModel.entries,
+        vendorCredit.vendorId
+      );
     // Validate bills has remaining amount to apply.
     this.validateBillsRemainingAmount(
       appliedBills,

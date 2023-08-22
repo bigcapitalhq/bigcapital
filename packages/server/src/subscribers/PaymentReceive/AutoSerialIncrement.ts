@@ -1,13 +1,13 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
-import PaymentReceiveService from '@/services/Sales/PaymentReceives/PaymentsReceives';
+import { PaymentReceiveIncrement } from '@/services/Sales/PaymentReceives/PaymentReceiveIncrement';
 import { IPaymentReceiveCreatedPayload } from '@/interfaces';
 
 @Service()
 export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber {
   @Inject()
-  paymentReceivesService: PaymentReceiveService;
+  private paymentIncrement: PaymentReceiveIncrement;
 
   /**
    * Attaches the events with handles.
@@ -29,8 +29,6 @@ export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber 
     paymentReceiveId,
     trx,
   }: IPaymentReceiveCreatedPayload) => {
-    await this.paymentReceivesService.incrementNextPaymentReceiveNumber(
-      tenantId
-    );
+    await this.paymentIncrement.incrementNextPaymentReceiveNumber(tenantId);
   };
 }

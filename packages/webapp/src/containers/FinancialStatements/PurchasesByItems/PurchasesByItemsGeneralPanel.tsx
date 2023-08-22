@@ -1,14 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import { FormGroup, Classes } from '@blueprintjs/core';
-import { Field } from 'formik';
 import {
   Row,
   Col,
   FormattedMessage as T,
   ItemsMultiSelect,
+  FFormGroup,
 } from '@/components';
-import classNames from 'classnames';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterItemsOptions } from '../constants';
@@ -51,22 +49,9 @@ function PurchasesByItemsGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <Field name={'itemsIds'}>
-            {({ form: { setFieldValue } }) => (
-              <FormGroup
-                label={<T id={'Specific items'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ItemsMultiSelect
-                  items={items}
-                  onItemSelect={(items) => {
-                    const itemsIds = items.map((item) => item.id);
-                    setFieldValue('itemsIds', itemsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup name={'itemsIds'} label={<T id={'Specific items'} />}>
+            <ItemsMultiSelect name={'itemsIds'} items={items} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

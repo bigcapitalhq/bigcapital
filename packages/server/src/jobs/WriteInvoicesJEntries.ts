@@ -1,7 +1,7 @@
 import { Container } from 'typedi';
 import events from '@/subscribers/events';
-import SalesInvoicesCost from '@/services/Sales/SalesInvoicesCost';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { SaleInvoicesCost } from '@/services/Sales/Invoices/SalesInvoicesCost';
 
 export default class WriteInvoicesJournalEntries {
   eventPublisher: EventPublisher;
@@ -26,7 +26,7 @@ export default class WriteInvoicesJournalEntries {
    */
   public async handler(job, done: Function): Promise<void> {
     const { startingDate, tenantId } = job.attrs.data;
-    const salesInvoicesCost = Container.get(SalesInvoicesCost);
+    const salesInvoicesCost = Container.get(SaleInvoicesCost);
 
     try {
       await salesInvoicesCost.writeCostLotsGLEntries(tenantId, startingDate);

@@ -3,9 +3,9 @@
   "version": "0.9.6",
   "private": true,
   "dependencies": {
-    "@blueprintjs-formik/core": "^0.3.3",
+    "@blueprintjs-formik/core": "^0.3.4",
     "@blueprintjs-formik/datetime": "^0.3.4",
-    "@blueprintjs-formik/select": "^0.2.4",
+    "@blueprintjs-formik/select": "^0.3.1",
     "@blueprintjs/core": "^3.50.2",
     "@blueprintjs/datetime": "^3.23.12",
     "@blueprintjs/popover2": "^0.11.1",

@@ -2,12 +2,14 @@
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import { FormattedMessage as T } from '@/components';
-import { getDefaultGeneralLedgerQuery } from './common';
+import {
+  getDefaultGeneralLedgerQuery,
+  getGeneralLedgerQuerySchema,
+} from './common';
 import { compose, transformToForm, saveInvoke } from '@/utils';
 
 import FinancialStatementHeader from '../FinancialStatementHeader';
@@ -39,6 +41,7 @@ function GeneralLedgerHeader({
   // Initial values.
   const initialValues = transformToForm(
     {
+      ...defaultValues,
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
@@ -46,11 +49,8 @@ function GeneralLedgerHeader({
     defaultValues,
   );
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    dateRange: Yup.string().optional(),
-    fromDate: Yup.date().required(),
-    toDate: Yup.date().min(Yup.ref('fromDate')).required(),
-  });
+  const validationSchema = getGeneralLedgerQuerySchema();
+
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     saveInvoke(onSubmitFilter, values);
@@ -68,6 +68,7 @@ function GeneralLedgerHeader({
   // Detarmines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
 
+  // Detarmine if the feature is enabled.
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (

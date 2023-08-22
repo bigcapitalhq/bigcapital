@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
 import {
   Alignment,
   NavbarGroup,
@@ -20,6 +19,8 @@ import {
   WarehouseSelect,
   FormTopbar,
   DetailsBarSkeletonBase,
+  FormWarehouseSelectButton,
+  FormBranchSelectButton,
 } from '@/components';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { Features } from '@/constants';
@@ -70,8 +71,9 @@ function VendorCreditNoteFormSelectBranch() {
     <BranchSelect
       name={'branch_id'}
       branches={branches}
-      input={VendorCreditNoteBranchSelectButton}
+      input={FormBranchSelectButton}
       popoverProps={{ minimal: true }}
+      fill={false}
     />
   );
 }
@@ -86,30 +88,9 @@ function VendorCreditFormSelectWarehouse() {
     <WarehouseSelect
       name={'warehouse_id'}
       warehouses={warehouses}
-      input={VendorCreditNoteWarehouseSelectButton}
+      input={FormWarehouseSelectButton}
       popoverProps={{ minimal: true }}
-    />
-  );
-}
-
-function VendorCreditNoteWarehouseSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('vendor_credit.warehouse_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'warehouse-16'} iconSize={16} />}
-    />
-  );
-}
-
-function VendorCreditNoteBranchSelectButton({ label }) {
-  return (
-    <Button
-      text={intl.get('vendor_credit.branch_button.label', { label })}
-      minimal={true}
-      small={true}
-      icon={<Icon icon={'branch-16'} iconSize={16} />}
+      fill={false}
     />
   );
 }

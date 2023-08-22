@@ -1,9 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { map, head } from 'lodash';
-
 import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import SaleInvoicesCost from '@/services/Sales/SalesInvoicesCost';
 import InventoryItemsQuantitySync from '@/services/Inventory/InventoryItemsQuantitySync';
 import InventoryService from '@/services/Inventory/Inventory';
 import {
@@ -12,23 +9,21 @@ import {
   IInventoryTransactionsDeletedPayload,
 } from '@/interfaces';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+import { SaleInvoicesCost } from '@/services/Sales/Invoices/SalesInvoicesCost';
 
 @Service()
 export default class InventorySubscriber {
   @Inject()
-  saleInvoicesCost: SaleInvoicesCost;
+  private saleInvoicesCost: SaleInvoicesCost;
 
   @Inject()
-  tenancy: TenancyService;
+  private itemsQuantitySync: InventoryItemsQuantitySync;
 
   @Inject()
-  itemsQuantitySync: InventoryItemsQuantitySync;
-
-  @Inject()
-  inventoryService: InventoryService;
+  private inventoryService: InventoryService;
 
   @Inject('agenda')
-  agenda: any;
+  private agenda: any;
 
   /**
    * Attaches events with handlers.

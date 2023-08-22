@@ -17,7 +17,6 @@ export default class SaleNotifyBySms {
     if (!personalPhone) {
       throw new ServiceError(ERRORS.CUSTOMER_HAS_NO_PHONE_NUMBER);
     }
-
     this.validateCustomerPhoneNumberLocally(personalPhone);
   };
 
