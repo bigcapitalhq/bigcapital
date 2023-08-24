@@ -5,6 +5,7 @@ import { IARAgingSummaryQuery, IARAgingSummaryMeta } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
 import { Tenant } from '@/system/models';
+import ARAgingSummaryTable from './ARAgingSummaryTable';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -89,12 +90,12 @@ export default class ARAgingSummaryService {
     };
     // Retrieve all overdue sale invoices.
     const overdueSaleInvoices = await SaleInvoice.query()
-      .modify('dueInvoicesFromDate', filter.asDate)
+      .modify('overdueInvoicesFromDate', filter.asDate)
       .onBuild(commonQuery);
 
     // Retrieve all due sale invoices.
     const currentInvoices = await SaleInvoice.query()
-      .modify('overdueInvoicesFromDate', filter.asDate)
+      .modify('dueInvoicesFromDate', filter.asDate)
       .onBuild(commonQuery);
 
     // AR aging summary report instance.
@@ -115,6 +116,24 @@ export default class ARAgingSummaryService {
       columns,
       query: filter,
       meta: this.reportMetadata(tenantId),
+    };
+  }
+
+  /**
+   *
+   * @param tenantId
+   * @param query
+   * @returns
+   */
+  async ARAgingSummaryTable(tenantId: number, query: IARAgingSummaryQuery) {
+    const report = await this.ARAgingSummary(tenantId, query);
+    const table = new ARAgingSummaryTable(report.data, query, {});
+
+    return {
+      columns: table.tableColumns(),
+      rows: table.tableRows(),
+      meta: report.meta,
+      query,
     };
   }
 }

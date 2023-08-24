@@ -5,6 +5,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
 import { Tenant } from '@/system/models';
 import { isEmpty } from 'lodash';
+import APAgingSummaryTable from './APAgingSummaryTable';
 
 @Service()
 export default class PayableAgingSummaryService {
@@ -84,7 +85,7 @@ export default class PayableAgingSummaryService {
 
     // Common query.
     const commonQuery = (query) => {
-      if (isEmpty(filter.branchesIds)) {
+      if (!isEmpty(filter.branchesIds)) {
         query.modify('filterByBranches', filter.branchesIds);
       }
     };
@@ -116,6 +117,24 @@ export default class PayableAgingSummaryService {
       columns,
       query: filter,
       meta: this.reportMetadata(tenantId),
+    };
+  }
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {IAPAgingSummaryQuery} query
+   * @returns
+   */
+  async APAgingSummaryTable(tenantId: number, query: IAPAgingSummaryQuery) {
+    const report = await this.APAgingSummary(tenantId, query);
+    const table = new APAgingSummaryTable(report.data, query, {});
+
+    return {
+      columns: table.tableColumns(),
+      rows: table.tableRows(),
+      meta: report.meta,
+      query: report.query,
     };
   }
 }
