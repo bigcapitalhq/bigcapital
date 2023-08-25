@@ -138,26 +138,12 @@ export function useARAgingSummaryReport(query, props) {
       method: 'get',
       url: '/financial_statements/receivable_aging_summary',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        columns: res.data.columns,
-        data: res.data.data,
-        query: res.data.query,
-        tableRows: ARAgingSummaryTableRowsMapper({
-          customers: res.data.data.customers,
-          total: res.data.data.total,
-          columns: res.data.columns,
-        }),
-      }),
-      defaultData: {
-        data: {
-          customers: [],
-          total: {},
-        },
-        columns: [],
-        tableRows: [],
-      },
+      select: (res) => res.data,
       ...props,
     },
   );
@@ -173,26 +159,12 @@ export function useAPAgingSummaryReport(query, props) {
       method: 'get',
       url: '/financial_statements/payable_aging_summary',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        columns: res.data.columns,
-        data: res.data.data,
-        query: res.data.query,
-        tableRows: APAgingSummaryTableRowsMapper({
-          vendors: res.data.data.vendors,
-          total: res.data.data.total,
-          columns: res.data.columns,
-        }),
-      }),
-      defaultData: {
-        data: {
-          vendors: [],
-          total: {},
-        },
-        columns: [],
-        tableRows: [],
-      },
+      select: (res) => res.data,
       ...props,
     },
   );

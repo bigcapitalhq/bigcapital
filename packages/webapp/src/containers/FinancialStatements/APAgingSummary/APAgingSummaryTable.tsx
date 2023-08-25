@@ -20,7 +20,7 @@ export default function APAgingSummaryTable({
 }) {
   // AP aging summary report content.
   const {
-    APAgingSummary: { tableRows },
+    APAgingSummary: { table },
     isAPAgingLoading,
   } = useAPAgingSummaryContext();
 
@@ -36,7 +36,7 @@ export default function APAgingSummaryTable({
     >
       <APAgingSummaryDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}
@@ -53,6 +53,24 @@ const APAgingSummaryDataTable = styled(ReportDataTable)`
         border-bottom: 0;
         padding-top: 0.32rem;
         padding-bottom: 0.32rem;
+      }
+      &:not(.no-results) {
+        .td {
+          border-bottom: 0;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+        &:not(:first-child) .td {
+          border-top: 1px solid transparent;
+        }
+        &.row_type--total {
+          font-weight: 500;
+
+          .td {
+            border-top: 1px solid #bbb;
+            border-bottom: 3px double #333;
+          }
+        }
       }
     }
   }

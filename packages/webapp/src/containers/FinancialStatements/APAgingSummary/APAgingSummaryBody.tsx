@@ -18,11 +18,11 @@ function APAgingSummaryBodyJSX({
   // #withCurrentOrganization
   organizationName,
 }) {
-  const { isLoading } = useAPAgingSummaryContext();
+  const { isAPAgingLoading } = useAPAgingSummaryContext();
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
+      {isAPAgingLoading ? (
         <FinancialSheetSkeleton />
       ) : (
         <APAgingSummaryTable organizationName={organizationName} />

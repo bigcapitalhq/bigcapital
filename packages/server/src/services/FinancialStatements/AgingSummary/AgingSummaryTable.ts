@@ -12,8 +12,13 @@ import {
 import { tableRowMapper } from '@/utils';
 import AgingReport from './AgingReport';
 import { AgingSummaryRowType } from './_constants';
+import { FinancialTable } from '../FinancialTable';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
 
-export default abstract class AgingSummaryTable extends AgingReport {
+export default abstract class AgingSummaryTable extends R.compose(
+  FinancialSheetStructure,
+  FinancialTable
+)(AgingReport) {
   protected readonly report: IAgingSummaryData;
   protected readonly query: IAgingSummaryQuery;
   protected readonly agingPeriods: IAgingPeriod[];
@@ -193,11 +198,11 @@ export default abstract class AgingSummaryTable extends AgingReport {
    * @returns {ITableColumn}
    */
   public tableColumns = (): ITableColumn[] => {
-    return [
+    return R.compose(this.tableColumnsCellIndexing)([
       this.contactNameTableColumn(),
       { label: 'Current', key: 'current' },
       ...this.agingTableColumns(),
       { label: 'Total', key: 'total' },
-    ];
+    ]);
   };
 }
