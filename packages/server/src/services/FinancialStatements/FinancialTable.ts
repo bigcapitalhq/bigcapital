@@ -12,7 +12,7 @@ export const FinancialTable = (Base) =>
      * @param   {ITableColumn[]} columns
      * @returns {ITableColumn[]}
      */
-    protected tableColumnsCellIndexing = (
+    public tableColumnsCellIndexing = (
       columns: ITableColumn[]
     ): ITableColumn[] => {
       const cellIndex = increment(-1);

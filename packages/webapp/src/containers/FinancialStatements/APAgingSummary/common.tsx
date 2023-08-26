@@ -36,19 +36,23 @@ export const getAPAgingSummaryQuerySchema = () => {
       .required()
       .integer()
       .positive()
-      .label('agingBeforeDays'),
+      .label('Aging days before')
+      .min(1)
+      .max(500),
     agingPeriods: Yup.number()
       .required()
       .integer()
       .positive()
-      .label('agingPeriods'),
+      .max(12)
+      .min(1)
+      .label('Aging periods'),
   });
 };
 
 /**
  *  Parses the AP aging summary query state.
- * @param locationQuery 
- * @returns 
+ * @param locationQuery
+ * @returns
  */
 const parseAPAgingSummaryQuery = (locationQuery) => {
   const defaultQuery = getDefaultAPAgingSummaryQuery();

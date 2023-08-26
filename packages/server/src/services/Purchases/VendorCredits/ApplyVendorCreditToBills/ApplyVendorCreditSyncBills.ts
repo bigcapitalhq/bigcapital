@@ -1,13 +1,13 @@
 import { Service, Inject } from 'typedi';
-import Knex from 'knex';
+import { Knex } from 'knex';
+import Bluebird from 'bluebird';
 import { IVendorCreditAppliedBill } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import Bluebird from 'bluebird';
 
 @Service()
 export default class ApplyVendorCreditSyncBills {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Increment bills credited amount.

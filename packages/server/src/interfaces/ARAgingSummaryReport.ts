@@ -1,37 +1,28 @@
-import { IAgingPeriod, IAgingPeriodTotal, IAgingAmount } from './AgingReport';
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IAgingPeriod,
+  IAgingSummaryQuery,
+  IAgingSummaryTotal,
+  IAgingSummaryContact,
+  IAgingSummaryData,
+} from './AgingReport';
 
-export interface IARAgingSummaryQuery {
-  asDate: Date | string;
-  agingDaysBefore: number;
-  agingPeriods: number;
-  numberFormat: INumberFormatQuery;
+export interface IARAgingSummaryQuery extends IAgingSummaryQuery {
   customersIds: number[];
-  branchesIds: number[];
-  noneZero: boolean;
 }
 
-export interface IARAgingSummaryCustomer {
+export interface IARAgingSummaryCustomer extends IAgingSummaryContact {
   customerName: string;
-  current: IAgingAmount;
-  aging: IAgingPeriodTotal[];
-  total: IAgingAmount;
 }
 
-export interface IARAgingSummaryTotal {
-  current: IAgingAmount;
-  aging: IAgingPeriodTotal[];
-  total: IAgingAmount;
-}
+export interface IARAgingSummaryTotal extends IAgingSummaryTotal {}
 
-export interface IARAgingSummaryData {
+export interface IARAgingSummaryData extends IAgingSummaryData {
   customers: IARAgingSummaryCustomer[];
-  total: IARAgingSummaryTotal;
 }
 
 export type IARAgingSummaryColumns = IAgingPeriod[];
 
 export interface IARAgingSummaryMeta {
-  organizationName: string,
-  baseCurrency: string,
+  organizationName: string;
+  baseCurrency: string;
 }

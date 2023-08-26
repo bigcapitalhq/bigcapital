@@ -1,4 +1,4 @@
-import { groupBy, isEmpty, sum } from 'lodash';
+import { Dictionary, groupBy, isEmpty, sum } from 'lodash';
 import * as R from 'ramda';
 import {
   ICustomer,
@@ -54,7 +54,6 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
       currentSaleInvoices,
       'customerId'
     );
-
     // Initializes the aging periods.
     this.agingPeriods = this.agingRangePeriods(
       this.query.asDate,
@@ -189,7 +188,7 @@ export default class ARAgingSummarySheet extends AgingSummaryReport {
   };
 
   /**
-   * Retrieve AR aging summary report columns.
+   * Retrieve A/R aging summary report columns.
    * @return {IARAgingSummaryColumns}
    */
   public reportColumns(): IARAgingSummaryColumns {

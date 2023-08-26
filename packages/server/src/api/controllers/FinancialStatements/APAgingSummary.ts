@@ -33,10 +33,13 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('as_date').optional().isISO8601(),
-      query('aging_days_before').optional().isNumeric().toInt(),
-      query('aging_periods').optional().isNumeric().toInt(),
+
+      query('aging_days_before').default(30).isInt({ max: 500 }).toInt(),
+      query('aging_periods').default(3).isInt({ max: 12 }).toInt(),
+
       query('vendors_ids').optional().isArray({ min: 1 }),
       query('vendors_ids.*').isInt({ min: 1 }).toInt(),
+
       query('none_zero').default(true).isBoolean().toBoolean(),
 
       // Filtering by branches.
@@ -53,15 +56,36 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
     const filter = this.matchedQueryData(req);
 
     try {
-      const { data, columns, query, meta } =
-        await this.APAgingSummaryService.APAgingSummary(tenantId, filter);
+      const accept = this.accepts(req);
+      const acceptType = accept.types(['json', 'application/json+table']);
 
-      return res.status(200).send({
-        data: this.transfromToResponse(data),
-        columns: this.transfromToResponse(columns),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
-      });
+      switch (acceptType) {
+        case 'application/json+table':
+          const table = await this.APAgingSummaryService.APAgingSummaryTable(
+            tenantId,
+            filter
+          );
+          return res.status(200).send({
+            table: {
+              rows: table.rows,
+              columns: table.columns,
+            },
+            meta: table.meta,
+            query: table.query,
+          });
+          break;
+        default:
+          const { data, columns, query, meta } =
+            await this.APAgingSummaryService.APAgingSummary(tenantId, filter);
+
+          return res.status(200).send({
+            data: this.transfromToResponse(data),
+            columns: this.transfromToResponse(columns),
+            query: this.transfromToResponse(query),
+            meta: this.transfromToResponse(meta),
+          });
+          break;
+      }
     } catch (error) {
       next(error);
     }

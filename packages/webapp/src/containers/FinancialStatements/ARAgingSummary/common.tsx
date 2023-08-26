@@ -35,12 +35,16 @@ export const getARAgingSummaryQuerySchema = () => {
       .required()
       .integer()
       .positive()
-      .label('agingDaysBefore'),
+      .label('Aging days before')
+      .min(1)
+      .max(500),
     agingPeriods: Yup.number()
       .required()
       .integer()
       .positive()
-      .label('agingPeriods'),
+      .max(12)
+      .min(1)
+      .label('Aging periods'),
   });
 };
 

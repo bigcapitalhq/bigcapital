@@ -91,7 +91,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
 
     return {
       vendorName: vendor.displayName,
-      current: this.formatTotalAmount(currentTotal),
+      current: this.formatAmount(currentTotal),
       aging: agingPeriods,
       total: this.formatTotalAmount(amount),
     };
