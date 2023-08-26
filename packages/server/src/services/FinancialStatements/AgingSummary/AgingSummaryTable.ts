@@ -164,7 +164,10 @@ export default abstract class AgingSummaryTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(R.concat(this.contactsRows), R.prepend(this.totalRow))([]);
+    return R.compose(
+      R.unless(R.isEmpty, R.append(this.totalRow)),
+      R.concat(this.contactsRows)
+    )([]);
   };
 
   // -------------------------
