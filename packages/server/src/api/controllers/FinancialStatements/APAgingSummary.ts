@@ -34,8 +34,8 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
       ...this.sheetNumberFormatValidationSchema,
       query('as_date').optional().isISO8601(),
 
-      query('aging_days_before').default(30).isNumeric().toInt(),
-      query('aging_periods').default(3).isNumeric().toInt(),
+      query('aging_days_before').default(30).isInt({ max: 500 }).toInt(),
+      query('aging_periods').default(3).isInt({ max: 12 }).toInt(),
 
       query('vendors_ids').optional().isArray({ min: 1 }),
       query('vendors_ids.*').isInt({ min: 1 }).toInt(),

@@ -121,10 +121,9 @@ export default class PayableAgingSummaryService {
   }
 
   /**
-   *
+   * Retrieves A/P aging summary in table format.
    * @param {number} tenantId
    * @param {IAPAgingSummaryQuery} query
-   * @returns
    */
   async APAgingSummaryTable(tenantId: number, query: IAPAgingSummaryQuery) {
     const report = await this.APAgingSummary(tenantId, query);

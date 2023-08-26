@@ -120,10 +120,9 @@ export default class ARAgingSummaryService {
   }
 
   /**
-   *
-   * @param tenantId
-   * @param query
-   * @returns
+   * Retrieves A/R aging summary in table format.
+   * @param {number} tenantId
+   * @param {IARAgingSummaryQuery} query
    */
   async ARAgingSummaryTable(tenantId: number, query: IARAgingSummaryQuery) {
     const report = await this.ARAgingSummary(tenantId, query);
