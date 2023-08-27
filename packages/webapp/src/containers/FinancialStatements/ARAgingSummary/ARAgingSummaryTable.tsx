@@ -20,7 +20,7 @@ export default function ReceivableAgingSummaryTable({
 }) {
   // AR aging summary report context.
   const {
-    ARAgingSummary: { table },
+    ARAgingSummary: { table, query },
     isARAgingLoading,
   } = useARAgingSummaryContext();
 
@@ -31,7 +31,7 @@ export default function ReceivableAgingSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       sheetType={intl.get('receivable_aging_summary')}
-      asDate={new Date()}
+      asDate={query.as_date}
       loading={isARAgingLoading}
     >
       <ARAgingSummaryDataTable

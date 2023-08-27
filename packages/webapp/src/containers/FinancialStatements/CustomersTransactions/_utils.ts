@@ -13,7 +13,7 @@ export const getCustomersTransactionsQuerySchema = () => {
 };
 
 export const getCustomersTransactionsDefaultQuery = () => ({
-  fromDate: moment().toDate(),
+  fromDate: moment().startOf('month').toDate(),
   toDate: moment().toDate(),
   customersIds: [],
 });

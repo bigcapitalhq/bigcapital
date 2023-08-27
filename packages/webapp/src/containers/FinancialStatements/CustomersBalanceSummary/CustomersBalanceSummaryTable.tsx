@@ -18,7 +18,7 @@ export default function CustomersBalanceSummaryTable({
   companyName,
 }) {
   const {
-    CustomerBalanceSummary: { table },
+    CustomerBalanceSummary: { table, query },
   } = useCustomersBalanceSummaryContext();
 
   // Retrieves the customers summary columns.
@@ -28,7 +28,7 @@ export default function CustomersBalanceSummaryTable({
     <FinancialSheet
       companyName={companyName}
       sheetType={intl.get('customers_balance_summary')}
-      asDate={new Date()}
+      asDate={query.as_date}
     >
       <CustomerBalanceDataTable
         columns={columns}

@@ -16,7 +16,7 @@ import { castArray } from 'lodash';
 export const getDefaultProfitLossQuery = () => ({
   basis: 'cash',
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
   displayColumnsType: 'total',
   filterByOption: 'with-transactions',
 
