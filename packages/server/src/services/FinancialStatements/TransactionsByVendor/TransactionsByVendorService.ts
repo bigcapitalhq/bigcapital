@@ -32,7 +32,7 @@ export default class TransactionsByVendorsService
    */
   get defaultQuery(): ITransactionsByVendorsFilter {
     return {
-      fromDate: moment().format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
         precision: 2,

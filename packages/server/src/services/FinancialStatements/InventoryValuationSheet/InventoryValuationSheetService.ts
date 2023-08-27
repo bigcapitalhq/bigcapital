@@ -27,7 +27,7 @@ export default class InventoryValuationSheetService {
    */
   get defaultQuery(): IInventoryValuationReportQuery {
     return {
-      asDate: moment().endOf('year').format('YYYY-MM-DD'),
+      asDate: moment().format('YYYY-MM-DD'),
       itemsIds: [],
       numberFormat: {
         precision: 2,

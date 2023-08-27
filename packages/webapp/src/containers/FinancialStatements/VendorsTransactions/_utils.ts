@@ -19,7 +19,7 @@ export const getVendorTransactionsQuerySchema = () => {
  * Retrieves the default query of vendors transactions.
  */
 export const getVendorsTransactionsDefaultQuery = () => ({
-  fromDate: moment().toDate(),
+  fromDate: moment().startOf('month').toDate(),
   toDate: moment().toDate(),
   vendorsIds: [],
 });

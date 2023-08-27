@@ -23,8 +23,8 @@ export default class SalesByItemsReportService {
    */
   get defaultQuery(): ISalesByItemsReportQuery {
     return {
-      fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       itemsIds: [],
       numberFormat: {
         precision: 2,
