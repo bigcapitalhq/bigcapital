@@ -20,7 +20,7 @@ export default function APAgingSummaryTable({
 }) {
   // AP aging summary report content.
   const {
-    APAgingSummary: { table },
+    APAgingSummary: { table, query },
     isAPAgingLoading,
   } = useAPAgingSummaryContext();
 
@@ -31,7 +31,7 @@ export default function APAgingSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       sheetType={intl.get('payable_aging_summary')}
-      asDate={new Date()}
+      asDate={query.as_date}
       loading={isAPAgingLoading}
     >
       <APAgingSummaryDataTable

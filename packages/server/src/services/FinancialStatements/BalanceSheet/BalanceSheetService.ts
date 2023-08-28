@@ -37,7 +37,7 @@ export default class BalanceSheetStatementService
       displayColumnsBy: 'month',
 
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
 
       numberFormat: {
         precision: 2,

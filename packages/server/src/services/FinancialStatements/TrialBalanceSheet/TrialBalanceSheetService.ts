@@ -27,7 +27,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
   get defaultQuery(): ITrialBalanceSheetQuery {
     return {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
         divideOn1000: false,
         negativeFormat: 'mines',

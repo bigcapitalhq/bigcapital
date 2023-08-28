@@ -25,8 +25,8 @@ export const getSalesByItemsQueryShema = () => {
  * Retrieves the default query.
  */
 export const getDefaultSalesByItemsQuery = () => ({
-  fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [],
 });

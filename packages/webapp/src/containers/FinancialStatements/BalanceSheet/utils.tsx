@@ -15,7 +15,7 @@ import { useAppQueryString } from '@/hooks';
  */
 export const getDefaultBalanceSheetQuery = () => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
   basis: 'cash',
   displayColumnsType: 'total',
   filterByOption: 'without-zero-balance',

@@ -12,10 +12,7 @@ import { Tenant } from '@/system/models';
 @Service()
 export default class InventoryValuationReportService {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   /**
    * Defaults balance sheet filter query.
@@ -23,8 +20,8 @@ export default class InventoryValuationReportService {
    */
   get defaultQuery(): IInventoryValuationReportQuery {
     return {
-      fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       itemsIds: [],
       numberFormat: {
         precision: 2,
@@ -73,9 +70,9 @@ export default class InventoryValuationReportService {
     tenantId: number,
     query: IInventoryValuationReportQuery
   ): Promise<{
-    data: IInventoryValuationStatement,
-    query: IInventoryValuationReportQuery,
-    meta: IInventoryValuationSheetMeta,
+    data: IInventoryValuationStatement;
+    query: IInventoryValuationReportQuery;
+    meta: IInventoryValuationSheetMeta;
   }> {
     const { Item, InventoryTransaction } = this.tenancy.models(tenantId);
 
@@ -87,7 +84,7 @@ export default class InventoryValuationReportService {
       ...this.defaultQuery,
       ...query,
     };
-    const inventoryItems = await Item.query().onBuild(q => {
+    const inventoryItems = await Item.query().onBuild((q) => {
       q.where('type', 'inventory');
 
       if (filter.itemsIds.length > 0) {
@@ -106,7 +103,7 @@ export default class InventoryValuationReportService {
         builder.whereIn('itemId', inventoryItemsIds);
 
         // Filter the date range of the sheet.
-        builder.modify('filterDateRange', filter.fromDate, filter.toDate)
+        builder.modify('filterDateRange', filter.fromDate, filter.toDate);
       }
     );
 

@@ -13,6 +13,7 @@ import { CustomersTransactionsBody } from './CustomersTransactionsBody';
 import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
 import { compose } from '@/utils';
+import { useCustomersTransactionsQuery } from './_utils';
 
 /**
  * Customers transactions.
@@ -22,11 +23,7 @@ function CustomersTransactions({
   toggleCustomersTransactionsFilterDrawer,
 }) {
   // filter
-  const [filter, setFilter] = useState({
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    filterByOption: 'with-transactions',
-  });
+  const [filter, setFilter] = useCustomersTransactionsQuery();
 
   const handleFilterSubmit = (filter) => {
     const _filter = {
