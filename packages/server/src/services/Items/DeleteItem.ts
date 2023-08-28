@@ -9,13 +9,9 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import { ERRORS } from './constants';
-import { ItemsValidators } from './ItemValidators';
 
 @Service()
 export class DeleteItem {
-  @Inject()
-  private validators: ItemsValidators;
-
   @Inject()
   private tenancy: HasTenancyService;
 
