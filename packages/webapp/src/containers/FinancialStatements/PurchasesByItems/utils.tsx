@@ -11,8 +11,8 @@ import { castArray } from 'lodash';
  * Retrieves the purchases by items query.
  */
 export const getDefaultPurchasesByItemsQuery = () => ({
-  fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [],
 });

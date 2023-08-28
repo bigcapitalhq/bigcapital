@@ -35,8 +35,8 @@ export function InventoryItemDetailsTable({
       companyName={companyName}
       sheetType={intl.get('inventory_item_details')}
       loading={isInventoryItemDetailsLoading}
-      fromDate={query.from_date}
-      toDate={query.to_date}
+      fromDate={query.fromDate}
+      toDate={query.toDate}
       fullWidth={true}
     >
       <InventoryItemDetailsDataTable

@@ -20,7 +20,7 @@ export const getInventoryValuationQuerySchema = () => {
  * Retrieves the inventory valuation sheet default query.
  */
 export const getInventoryValuationQuery = () => ({
-  asDate: moment().endOf('day').format('YYYY-MM-DD'),
+  asDate: moment().format('YYYY-MM-DD'),
   filterByOption: 'with-transactions',
   itemsIds: [],
   branchesIds: [],

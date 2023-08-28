@@ -16,13 +16,13 @@ import { Tenant } from '@/system/models';
 @Service()
 export default class InventoryDetailsService extends FinancialSheet {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  reportRepo: InventoryDetailsRepository;
+  private reportRepo: InventoryDetailsRepository;
 
   @Inject()
-  inventoryService: InventoryService;
+  private inventoryService: InventoryService;
 
   /**
    * Defaults balance sheet filter query.
@@ -30,8 +30,8 @@ export default class InventoryDetailsService extends FinancialSheet {
    */
   private get defaultQuery(): IInventoryDetailsQuery {
     return {
-      fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       itemsIds: [],
       numberFormat: {
         precision: 2,

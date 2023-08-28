@@ -23,7 +23,7 @@ export default function ProfitLossSheetTable({
   } = useProfitLossSheetContext();
 
   // Retrieves the profit/loss table columns.
-  const tableColumns = useProfitLossSheetColumns();
+  const columns = useProfitLossSheetColumns();
 
   // Retrieve default expanded rows of balance sheet.
   const expandedRows = React.useMemo(
@@ -40,7 +40,7 @@ export default function ProfitLossSheetTable({
       basis={query.basis}
     >
       <ProfitLossDataTable
-        columns={tableColumns}
+        columns={columns}
         data={table.rows}
         noInitialFetch={true}
         expanded={expandedRows}

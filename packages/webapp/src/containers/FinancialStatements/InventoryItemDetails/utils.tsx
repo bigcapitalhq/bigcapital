@@ -31,9 +31,6 @@ const numericColumn = R.curry((data, index, column) => ({
   align: Align.Right,
 }));
 
-/**
- *  columns mapper.
- */
 const columnsMapper = R.curry((data, index, column) => ({
   id: column.key,
   key: column.key,

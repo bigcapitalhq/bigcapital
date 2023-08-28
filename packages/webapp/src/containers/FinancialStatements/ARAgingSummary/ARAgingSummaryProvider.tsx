@@ -11,7 +11,10 @@ const ARAgingSummaryContext = createContext();
  */
 function ARAgingSummaryProvider({ filter, ...props }) {
   // Transformes the filter from to the url query.
-  const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
+  const requestQuery = useMemo(
+    () => transformFilterFormToQuery(filter),
+    [filter],
+  );
 
   // A/R aging summary sheet context.
   const {
@@ -19,11 +22,10 @@ function ARAgingSummaryProvider({ filter, ...props }) {
     isLoading: isARAgingLoading,
     isFetching: isARAgingFetching,
     refetch,
-  } = useARAgingSummaryReport(query, { keepPreviousData: true });
+  } = useARAgingSummaryReport(requestQuery, { keepPreviousData: true });
 
   const provider = {
     ARAgingSummary,
-
     isARAgingLoading,
     isARAgingFetching,
     refetch,

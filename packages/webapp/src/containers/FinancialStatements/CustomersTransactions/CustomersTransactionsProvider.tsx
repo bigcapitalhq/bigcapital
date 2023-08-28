@@ -14,7 +14,7 @@ function CustomersTransactionsProvider({ filter, ...props }) {
     filter,
   ]);
 
-  // fetches the customers transactions.
+  // Fetches the customers transactions.
   const {
     data: customersTransactions,
     isFetching: isCustomersTransactionsFetching,
