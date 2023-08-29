@@ -92,7 +92,7 @@ export default [
     index: 1,
     active: 1,
     description:
-      'An account that holds valuation of products or goods that availiable for sale.',
+      'An account that holds valuation of products or goods that available for sale.',
   },
 
   // Libilities

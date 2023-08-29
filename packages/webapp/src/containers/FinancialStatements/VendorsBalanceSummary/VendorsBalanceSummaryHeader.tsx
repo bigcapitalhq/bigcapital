@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
+
 import moment from 'moment';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
@@ -13,6 +13,7 @@ import FinancialStatementHeader from '../FinancialStatementHeader';
 import VendorsBalanceSummaryHeaderGeneral from './VendorsBalanceSummaryHeaderGeneral';
 import withVendorsBalanceSummary from './withVendorsBalanceSummary';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
+import { getVendorsBalanceQuerySchema } from './utils';
 
 /**
  * Vendors balance summary drawer header.
@@ -28,10 +29,8 @@ function VendorsBalanceSummaryHeader({
   //#withVendorsBalanceSummaryActions
   toggleVendorSummaryFilterDrawer,
 }) {
-  // validation schema.
-  const validationSchema = Yup.object().shape({
-    asDate: Yup.date().required().label('asDate'),
-  });
+  // Validation schema.
+  const validationSchema = getVendorsBalanceQuerySchema();
 
   // filter form initial values.
   const defaultValues = {
@@ -80,6 +79,7 @@ function VendorsBalanceSummaryHeader({
               panel={<VendorsBalanceSummaryHeaderGeneral />}
             />
           </Tabs>
+
           <div className={'financial-header-drawer__footer'}>
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />

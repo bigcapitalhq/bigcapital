@@ -41,7 +41,7 @@ export interface ICashFlowStatementAccountMeta {
   code: string;
   total: ICashFlowStatementTotal;
   accountType: string;
-  adjusmentType: string;
+  adjustmentType: string;
   sectionType: ICashFlowStatementSectionType.ACCOUNT;
 }
 

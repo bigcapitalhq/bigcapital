@@ -31,8 +31,8 @@ export default class TransactionsByCustomersService
    */
   get defaultQuery(): ITransactionsByCustomersFilter {
     return {
-      fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
         precision: 2,
         divideOn1000: false,

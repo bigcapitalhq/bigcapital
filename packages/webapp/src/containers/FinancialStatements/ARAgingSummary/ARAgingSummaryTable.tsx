@@ -19,7 +19,10 @@ export default function ReceivableAgingSummaryTable({
   organizationName,
 }) {
   // AR aging summary report context.
-  const { ARAgingSummary, isARAgingLoading } = useARAgingSummaryContext();
+  const {
+    ARAgingSummary: { table, query },
+    isARAgingLoading,
+  } = useARAgingSummaryContext();
 
   // AR aging summary columns.
   const columns = useARAgingSummaryColumns();
@@ -28,12 +31,12 @@ export default function ReceivableAgingSummaryTable({
     <FinancialSheet
       companyName={organizationName}
       sheetType={intl.get('receivable_aging_summary')}
-      asDate={new Date()}
+      asDate={query.as_date}
       loading={isARAgingLoading}
     >
       <ARAgingSummaryDataTable
         columns={columns}
-        data={ARAgingSummary.tableRows}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}

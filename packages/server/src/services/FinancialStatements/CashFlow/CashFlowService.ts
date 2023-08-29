@@ -40,7 +40,7 @@ export default class CashFlowStatementService
       displayColumnsType: 'total',
       displayColumnsBy: 'day',
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
         precision: 2,
         divideOn1000: false,

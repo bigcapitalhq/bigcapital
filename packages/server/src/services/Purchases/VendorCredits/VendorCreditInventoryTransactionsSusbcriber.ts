@@ -10,7 +10,7 @@ import VendorCreditInventoryTransactions from './VendorCreditInventoryTransactio
 @Service()
 export default class VendorCreditInventoryTransactionsSubscriber {
   @Inject()
-  inventoryTransactions: VendorCreditInventoryTransactions;
+  private inventoryTransactions: VendorCreditInventoryTransactions;
 
   /**
    * Attaches events with handlers.
@@ -19,6 +19,10 @@ export default class VendorCreditInventoryTransactionsSubscriber {
   attach(bus) {
     bus.subscribe(
       events.vendorCredit.onCreated,
+      this.writeInventoryTransactionsOnceCreated
+    );
+    bus.subscribe(
+      events.vendorCredit.onOpened,
       this.writeInventoryTransactionsOnceCreated
     );
     bus.subscribe(
@@ -40,6 +44,9 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     vendorCredit,
     trx,
   }: IVendorCreditCreatedPayload) => {
+    // Can't continue if vendor credit is not opened.
+    if (!vendorCredit.openedAt) return null;
+
     await this.inventoryTransactions.createInventoryTransactions(
       tenantId,
       vendorCredit,
@@ -57,6 +64,9 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     vendorCredit,
     trx,
   }: IVendorCreditEditedPayload) => {
+    // Can't continue if vendor credit is not opened.
+    if (!vendorCredit.openedAt) return null;
+
     await this.inventoryTransactions.editInventoryTransactions(
       tenantId,
       vendorCreditId,

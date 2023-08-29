@@ -2,7 +2,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import * as Yup from 'yup';
 import { FormattedMessage as T } from '@/components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
@@ -17,6 +16,10 @@ import withARAgingSummaryActions from './withARAgingSummaryActions';
 import { compose, transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import {
+  getARAgingSummaryQuerySchema,
+  getDefaultARAgingSummaryQuery,
+} from './common';
 
 /**
  * AR Aging Summary Report - Drawer Header.
@@ -33,32 +36,15 @@ function ARAgingSummaryHeader({
   isFilterDrawerOpen,
 }) {
   // Validation schema.
-  const validationSchema = Yup.object().shape({
-    asDate: Yup.date().required().label('asDate'),
-    agingDaysBefore: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('agingDaysBefore'),
-    agingPeriods: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('agingPeriods'),
-  });
+  const validationSchema = getARAgingSummaryQuerySchema();
+
   // Initial values.
-  const defaultValues = {
-    asDate: moment().toDate(),
-    agingDaysBefore: 30,
-    agingPeriods: 3,
-    customersIds: [],
-    branchesIds: [],
-    filterByOption: 'without-zero-balance',
-  };
+  const defaultValues = getDefaultARAgingSummaryQuery();
 
   // Initial values.
   const initialValues = transformToForm(
     {
+      ...defaultValues,
       ...pageFilter,
       asDate: moment(pageFilter.asDate).toDate(),
     },
@@ -80,7 +66,6 @@ function ARAgingSummaryHeader({
   };
   // Detarmines the feature whether is enabled.
   const { featureCan } = useFeatureCan();
-
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (

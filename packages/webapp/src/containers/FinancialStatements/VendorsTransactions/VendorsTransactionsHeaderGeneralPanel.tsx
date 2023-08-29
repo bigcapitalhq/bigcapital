@@ -1,8 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import { Field } from 'formik';
-import { Classes, FormGroup } from '@blueprintjs/core';
-import classNames from 'classnames';
 
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
@@ -10,8 +7,9 @@ import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   Row,
   Col,
-  ContactsMultiSelect,
   FormattedMessage as T,
+  FFormGroup,
+  VendorsMultiSelect,
 } from '@/components';
 import { filterVendorsOptions } from '../constants';
 
@@ -53,22 +51,9 @@ function VendorsTransactionsHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <Field name={'vendorsIds'}>
-            {({ form: { setFieldValue }, field: { value } }) => (
-              <FormGroup
-                label={<T id={'specific_vendors'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ContactsMultiSelect
-                  items={vendors}
-                  onItemSelect={(vendors) => {
-                    const vendorsIds = vendors.map((customer) => customer.id);
-                    setFieldValue('vendorsIds', vendorsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup label={<T id={'specific_vendors'} />} name={'vendorsIds'}>
+            <VendorsMultiSelect name={'vendorsIds'} items={vendors} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

@@ -35,7 +35,7 @@ export default class LedgerStorageService {
       // Saves the ledger entries.
       this.ledgerEntriesService.saveEntries(tenantId, ledger, trx),
 
-      // Mutates the assocaited accounts balances.
+      // Mutates the associated accounts balances.
       this.ledgerAccountsBalance.saveAccountsBalance(tenantId, ledger, trx),
 
       // Mutates the associated contacts balances.
@@ -60,7 +60,7 @@ export default class LedgerStorageService {
       // Deletes the ledger entries.
       this.ledgerEntriesService.deleteEntries(tenantId, ledger, trx),
 
-      // Mutates the assocaited accounts balances.
+      // Mutates the associated accounts balances.
       this.ledgerAccountsBalance.saveAccountsBalance(tenantId, ledger, trx),
 
       // Mutates the associated contacts balances.

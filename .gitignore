@@ -1,4 +1,9 @@
 node_modules/
-data
+
+# Docker volumes data directory
+/data
+
+# Production env file 
 .env
+
 test-results/

@@ -24,15 +24,6 @@ export class GetAccounts {
   private transformer: TransformerInjectable;
 
   /**
-   * Parsees accounts list filter DTO.
-   * @param filterDTO
-   * @returns
-   */
-  private parseListFilterDTO(filterDTO) {
-    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
-  }
-
-  /**
    * Retrieve accounts datatable list.
    * @param {number} tenantId
    * @param {IAccountsFilter} accountsFilter
@@ -75,4 +66,13 @@ export class GetAccounts {
       filterMeta: dynamicList.getResponseMeta(),
     };
   };
+
+  /**
+   * Parsees accounts list filter DTO.
+   * @param filterDTO
+   * @returns
+   */
+  private parseListFilterDTO(filterDTO) {
+    return R.compose(this.dynamicListService.parseStringifiedFilter)(filterDTO);
+  }
 }

@@ -128,10 +128,10 @@ export function ProjectSuggestField({
 }
 
 const AvatarSelect = ({ text }) => {
-  return <AvaterContent>{firstLettersArgs(text?.name)}</AvaterContent>;
+  return <AvatarContent>{firstLettersArgs(text?.name)}</AvatarContent>;
 };
 
-const AvaterContent = styled.div`
+const AvatarContent = styled.div`
   display: inline-block;
   background: #adbcc9;
   text-align: center;

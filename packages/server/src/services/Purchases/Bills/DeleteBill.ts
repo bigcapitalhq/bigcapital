@@ -43,7 +43,7 @@ export class DeleteBill {
     // Validate the givne bill has no associated landed cost transactions.
     await this.validators.validateBillHasNoLandedCost(tenantId, billId);
 
-    // Validate the purchase bill has no assocaited payments transactions.
+    // Validate the purchase bill has no associated payments transactions.
     await this.validators.validateBillHasNoEntries(tenantId, billId);
 
     // Validate the given bill has no associated reconciled with vendor credits.

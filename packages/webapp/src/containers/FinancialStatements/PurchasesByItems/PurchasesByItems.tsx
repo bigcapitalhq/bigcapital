@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import moment from 'moment';
 
 import PurchasesByItemsActionsBar from './PurchasesByItemsActionsBar';
@@ -9,7 +9,7 @@ import { FinancialStatement, DashboardPageContent } from '@/components';
 import { PurchasesByItemsLoadingBar } from './components';
 import { PurchasesByItemsProvider } from './PurchasesByItemsProvider';
 import { PurchasesByItemsBody } from './PurchasesByItemsBody';
-import { getDefaultPurchasesByItemsQuery } from './utils';
+import { usePurchasesByItemsQuery } from './utils';
 import { compose } from '@/utils';
 
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
@@ -21,9 +21,7 @@ function PurchasesByItems({
   // #withPurchasesByItemsActions
   togglePurchasesByItemsFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultPurchasesByItemsQuery(),
-  });
+  const { query, setLocationQuery } = usePurchasesByItemsQuery();
 
   // Handle filter form submit.
   const handleFilterSubmit = useCallback(
@@ -33,11 +31,10 @@ function PurchasesByItems({
         fromDate: moment(filter.fromDate).format('YYYY-MM-DD'),
         toDate: moment(filter.toDate).format('YYYY-MM-DD'),
       };
-      setFilter(parsedFilter);
+      setLocationQuery(parsedFilter);
     },
-    [setFilter],
+    [setLocationQuery],
   );
-
   // Handle number format form submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     setFilter({
@@ -45,7 +42,6 @@ function PurchasesByItems({
       numberFormat,
     });
   };
-
   // Hide the filter drawer once the page unmount.
   useEffect(
     () => () => {
@@ -55,9 +51,9 @@ function PurchasesByItems({
   );
 
   return (
-    <PurchasesByItemsProvider query={filter}>
+    <PurchasesByItemsProvider query={query}>
       <PurchasesByItemsActionsBar
-        numberFormat={filter.numberFormat}
+        numberFormat={query.numberFormat}
         onNumberFormatSubmit={handleNumberFormatSubmit}
       />
       <PurchasesByItemsLoadingBar />
@@ -65,7 +61,7 @@ function PurchasesByItems({
       <DashboardPageContent>
         <FinancialStatement>
           <PurchasesByItemsHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <PurchasesByItemsBody />

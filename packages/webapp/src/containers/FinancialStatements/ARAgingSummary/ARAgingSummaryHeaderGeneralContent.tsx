@@ -2,22 +2,16 @@
 import React from 'react';
 import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import {
-  Intent,
-  FormGroup,
-  InputGroup,
-  Position,
-  Classes,
-} from '@blueprintjs/core';
-import classNames from 'classnames';
-
+import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import {
   FormattedMessage as T,
-  ContactsMultiSelect,
   Row,
   Col,
   FieldHint,
+  FInputGroup,
+  FFormGroup,
+  CustomersMultiSelect,
 } from '@/components';
 import { momentFormatter } from '@/utils';
 import { useARAgingSummaryGeneralContext } from './ARAgingSummaryGeneralProvider';
@@ -81,22 +75,13 @@ export default function ARAgingSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <FastField name={'agingPeriods'}>
-            {({ field, meta: { error, touched } }) => (
-              <FormGroup
-                label={<T id={'aging_periods'} />}
-                labelInfo={<FieldHint />}
-                className={'form-group--aging-periods'}
-                intent={error && Intent.DANGER}
-              >
-                <InputGroup
-                  medium={true}
-                  intent={error && Intent.DANGER}
-                  {...field}
-                />
-              </FormGroup>
-            )}
-          </FastField>
+          <FFormGroup
+            name={'agingPeriods'}
+            label={<T id={'aging_periods'} />}
+            labelInfo={<FieldHint />}
+          >
+            <FInputGroup name={'agingPeriods'} medium={true} />
+          </FFormGroup>
         </Col>
       </Row>
 
@@ -111,24 +96,12 @@ export default function ARAgingSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <Field name="customersIds">
-            {({ form: { setFieldValue }, field: { value } }) => (
-              <FormGroup
-                label={<T id={'specific_customers'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ContactsMultiSelect
-                  items={customers}
-                  onItemSelect={(customers) => {
-                    const customersIds = customers.map(
-                      (customer) => customer.id,
-                    );
-                    setFieldValue('customersIds', customersIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup
+            name="customersIds"
+            label={<T id={'specific_customers'} />}
+          >
+            <CustomersMultiSelect name="customersIds" items={customers} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

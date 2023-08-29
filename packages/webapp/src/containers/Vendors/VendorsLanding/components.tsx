@@ -13,7 +13,7 @@ import {
   Classes,
 } from '@blueprintjs/core';
 
-import { Can, Icon, Money, If, AvaterCell } from '@/components';
+import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
@@ -144,7 +144,7 @@ export function useVendorsTableColumns() {
       {
         id: 'avatar',
         Header: '',
-        Cell: AvaterCell,
+        Cell: AvatarCell,
         className: 'avatar',
         width: 45,
         disableResizing: true,

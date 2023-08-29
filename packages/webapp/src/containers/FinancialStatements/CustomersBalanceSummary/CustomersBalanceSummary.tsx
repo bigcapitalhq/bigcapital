@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';
 
@@ -10,10 +10,9 @@ import CustomersBalanceSummaryHeader from './CustomersBalanceSummaryHeader';
 
 import { CustomerBalanceSummaryBody } from './CustomerBalanceSummaryBody';
 import { CustomersBalanceSummaryProvider } from './CustomersBalanceSummaryProvider';
-import { getDefaultCustomersBalanceQuery } from './utils';
+import { useCustomerBalanceSummaryQuery } from './utils';
 import { CustomersBalanceLoadingBar } from './components';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
-
 
 /**
  * Customers Balance summary.
@@ -22,36 +21,33 @@ function CustomersBalanceSummary({
   // #withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
 }) {
-  const [filter, setFilter] = useState({
-    ...getDefaultCustomersBalanceQuery(),
-  });
+  const { query, setLocationQuery } = useCustomerBalanceSummaryQuery();
+
   // Handle re-fetch customers balance summary after filter change.
   const handleFilterSubmit = (filter) => {
     const _filter = {
       ...filter,
       asDate: moment(filter.asDate).format('YYYY-MM-DD'),
     };
-    setFilter({ ..._filter });
+    setLocationQuery({ ..._filter });
   };
   // Handle number format.
   const handleNumberFormat = (values) => {
-    setFilter({
+    setLocationQuery({
       ...filter,
       numberFormat: values,
     });
   };
 
   useEffect(
-    () => () => {
-      toggleCustomerBalanceFilterDrawer(false);
-    },
+    () => () => toggleCustomerBalanceFilterDrawer(false),
     [toggleCustomerBalanceFilterDrawer],
   );
 
   return (
-    <CustomersBalanceSummaryProvider filter={filter}>
+    <CustomersBalanceSummaryProvider filter={query}>
       <CustomersBalanceSummaryActionsBar
-        numberFormat={filter?.numberFormat}
+        numberFormat={query?.numberFormat}
         onNumberFormatSubmit={handleNumberFormat}
       />
       <CustomersBalanceLoadingBar />
@@ -59,7 +55,7 @@ function CustomersBalanceSummary({
       <DashboardPageContent>
         <FinancialStatement>
           <CustomersBalanceSummaryHeader
-            pageFilter={filter}
+            pageFilter={query}
             onSubmitFilter={handleFilterSubmit}
           />
           <CustomerBalanceSummaryBody />

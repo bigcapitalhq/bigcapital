@@ -1,17 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { includes, difference, camelCase, upperFirst } from 'lodash';
-import { ACCOUNT_TYPE } from '@/data/AccountTypes';
-import { IAccount, ICashflowTransactionLine } from '@/interfaces';
+import { Service } from 'typedi';
+import { includes, camelCase, upperFirst } from 'lodash';
+import { IAccount } from '@/interfaces';
 import { getCashflowTransactionType } from './utils';
 import { ServiceError } from '@/exceptions';
 import { CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class CommandCashflowValidator {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   /**
    * Validates the lines accounts type should be cash or bank account.
    * @param {IAccount} accounts -

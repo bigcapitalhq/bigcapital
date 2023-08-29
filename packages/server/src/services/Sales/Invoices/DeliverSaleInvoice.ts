@@ -63,14 +63,17 @@ export class DeliverSaleInvoice {
 
       // Record the delivered at on the storage.
       const saleInvoice = await SaleInvoice.query(trx)
-        .where({ id: saleInvoiceId })
-        .update({ deliveredAt: moment().toMySqlDateTime() });
+        .patchAndFetchById(saleInvoiceId, {
+          deliveredAt: moment().toMySqlDateTime(),
+        })
+        .withGraphFetched('entries');
 
       // Triggers `onSaleInvoiceDelivered` event.
       await this.eventPublisher.emitAsync(events.saleInvoice.onDelivered, {
         tenantId,
         saleInvoiceId,
         saleInvoice,
+        trx,
       } as ISaleInvoiceEventDeliveredPayload);
     });
   }

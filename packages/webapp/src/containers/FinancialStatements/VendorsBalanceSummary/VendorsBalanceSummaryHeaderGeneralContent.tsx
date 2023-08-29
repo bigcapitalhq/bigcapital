@@ -1,19 +1,18 @@
 // @ts-nocheck
 import React from 'react';
-import { Field, FastField } from 'formik';
+import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import classNames from 'classnames';
-import { FormGroup, Position, Classes, Checkbox } from '@blueprintjs/core';
+import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
 
 import {
-  ContactsMultiSelect,
   Row,
   Col,
   FieldHint,
   FormattedMessage as T,
+  FFormGroup,
+  VendorsMultiSelect,
 } from '@/components';
 import { filterVendorsOptions } from '../constants';
-
 import {
   momentFormatter,
   tansformDateValue,
@@ -87,22 +86,9 @@ export default function VendorsBalanceSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <Field name={'vendorsIds'}>
-            {({ form: { setFieldValue } }) => (
-              <FormGroup
-                label={<T id={'specific_vendors'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ContactsMultiSelect
-                  items={vendors}
-                  onItemSelect={(contacts) => {
-                    const vendorsIds = contacts.map((contact) => contact.id);
-                    setFieldValue('vendorsIds', vendorsIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup label={<T id={'specific_vendors'} />} name={'vendorsIds'}>
+            <VendorsMultiSelect name={'vendorsIds'} items={vendors} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

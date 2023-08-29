@@ -1,14 +1,11 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
 import moment from 'moment';
-import intl from 'react-intl-universal';
-import styled from 'styled-components'; 
+import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import { FormattedMessage as T } from '@/components';
-
 import FinancialStatementHeader from '@/containers/FinancialStatements/FinancialStatementHeader';
 import PurchasesByItemsGeneralPanel from './PurchasesByItemsGeneralPanel';
 
@@ -16,6 +13,10 @@ import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
 import { compose, transformToForm } from '@/utils';
+import {
+  getDefaultPurchasesByItemsQuery,
+  getPurchasesByItemsQuerySchema,
+} from './utils';
 
 /**
  * Purchases by items header.
@@ -32,38 +33,26 @@ function PurchasesByItemsHeader({
   togglePurchasesByItemsFilterDrawer,
 }) {
   // Form validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
-  });
-  // Default form values.
-  const defaultValues = {
-    ...pageFilter,
-    fromDate: moment().toDate(),
-    toDate: moment().toDate(),
-    itemsIds: [],
-  };
+  const validationSchema = getPurchasesByItemsQuerySchema();
+
+  const defaultQuery = getDefaultPurchasesByItemsQuery();
+
   // Initial form values.
   const initialValues = transformToForm(
     {
-      ...defaultValues,
+      ...defaultQuery,
       ...pageFilter,
       fromDate: moment(pageFilter.fromDate).toDate(),
       toDate: moment(pageFilter.toDate).toDate(),
     },
-    defaultValues,
+    defaultQuery,
   );
-
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);
     togglePurchasesByItemsFilterDrawer(false);
   };
-
   // Handle drawer close & cancel action.
   const handleDrawerClose = () => {
     togglePurchasesByItemsFilterDrawer(false);

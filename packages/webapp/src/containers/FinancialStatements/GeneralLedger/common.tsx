@@ -2,6 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import * as Yup from 'yup';
 import { castArray } from 'lodash';
 
 import { useAppQueryString } from '@/hooks';
@@ -26,15 +27,25 @@ export const filterAccountsOptions = [
 /**
  * Retrieves the default general ledger query.
  */
-export const getDefaultGeneralLedgerQuery = () => {
-  return {
-    fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-    toDate: moment().endOf('year').format('YYYY-MM-DD'),
-    basis: 'accrual',
-    filterByOption: 'with-transactions',
-    branchesIds: [],
-    accountsIds: [],
-  };
+export const getDefaultGeneralLedgerQuery = () => ({
+  fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
+  basis: 'accrual',
+  filterByOption: 'with-transactions',
+  branchesIds: [],
+  accountsIds: [],
+});
+
+/**
+ * Retrieves the validation schema of general ledger.
+ * @returns {Yup}
+ */
+export const getGeneralLedgerQuerySchema = () => {
+  return Yup.object().shape({
+    dateRange: Yup.string().optional(),
+    fromDate: Yup.date().required(),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required(),
+  });
 };
 
 /**

@@ -86,7 +86,7 @@ export function useApplicationBoot() {
   const [startLoading, stopLoading] = useSplashLoading();
 
   // Splash loading when organization request loading and
-  // applicaiton still not booted.
+  // application still not booted.
   useWatchImmediate((value) => {
     value && !isBooted.current && startLoading();
   }, isOrgLoading);

@@ -121,7 +121,7 @@ export default class CashflowTransaction extends TenantModel {
       },
 
       /**
-       * Cashflow transaction may has assocaited cashflow account.
+       * Cashflow transaction may has associated cashflow account.
        */
       cashflowAccount: {
         relation: Model.BelongsToOneRelation,

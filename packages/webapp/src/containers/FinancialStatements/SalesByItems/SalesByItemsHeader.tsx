@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import * as Yup from 'yup';
 import moment from 'moment';
-import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
@@ -14,7 +12,11 @@ import SalesByItemsHeaderGeneralPanel from './SalesByItemsHeaderGeneralPanel';
 import withSalesByItems from './withSalesByItems';
 import withSalesByItemsActions from './withSalesByItemsActions';
 
-import { compose } from '@/utils';
+import { compose, transformToForm } from '@/utils';
+import {
+  getDefaultSalesByItemsQuery,
+  getSalesByItemsQueryShema,
+} from './utils';
 
 /**
  * Sales by items header.
@@ -31,21 +33,22 @@ function SalesByItemsHeader({
   toggleSalesByItemsFilterDrawer,
 }) {
   // Form validation schema.
-  const validationSchema = Yup.object().shape({
-    fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
-  });
+  const validationSchema = getSalesByItemsQueryShema();
+
+  const defaultQuery = getDefaultSalesByItemsQuery();
 
   // Initial values.
-  const initialValues = {
-    ...pageFilter,
-    fromDate: moment(pageFilter.fromDate).toDate(),
-    toDate: moment(pageFilter.toDate).toDate(),
-  };
+  const initialValues = transformToForm(
+    {
+      ...defaultQuery,
+      ...pageFilter,
+      fromDate: moment(pageFilter.fromDate).toDate(),
+      toDate: moment(pageFilter.toDate).toDate(),
+    },
+    defaultQuery,
+  );
 
+  // Handle the form submitting.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
     setSubmitting(false);

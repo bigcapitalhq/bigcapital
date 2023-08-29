@@ -84,7 +84,7 @@ export default class Warehouse extends TenantModel {
       },
 
       /**
-       * Warehouse may belongs to assocaited bills.
+       * Warehouse may belongs to associated bills.
        */
       bills: {
         relation: Model.HasManyRelation,

@@ -1,8 +1,8 @@
 import { omit } from 'lodash';
 import { IView, IViewRole } from '@/interfaces';
-import DynamicFilterRoleAbstructor from './DynamicFilterRoleAbstructor';
+import DynamicFilterRoleAbstractor from './DynamicFilterRoleAbstractor';
 
-export default class DynamicFilterViews extends DynamicFilterRoleAbstructor {
+export default class DynamicFilterViews extends DynamicFilterRoleAbstractor {
   private viewSlug: string;
   private logicExpression: string;
   private filterRoles: IViewRole[];

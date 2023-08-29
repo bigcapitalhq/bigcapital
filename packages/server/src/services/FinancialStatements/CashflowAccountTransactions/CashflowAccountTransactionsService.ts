@@ -41,7 +41,7 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
   }
 
   /**
-   * Retrieve the cashflow accouynt transactions report data.
+   * Retrieve the cashflow account transactions report data.
    * @param {number} tenantId -
    * @param {ICashflowAccountTransactionsQuery} query -
    * @return {Promise<IInvetoryItemDetailDOO>}

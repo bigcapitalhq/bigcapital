@@ -2,13 +2,13 @@ import { Service } from 'typedi';
 import * as R from 'ramda';
 import validator from 'is-my-json-valid';
 import { IFilterRole, IModel } from '@/interfaces';
-import DynamicListAbstruct from './DynamicListAbstruct';
+import DynamicListAbstract from './DynamicListAbstract';
 import DynamicFilterAdvancedFilter from '@/lib/DynamicFilter/DynamicFilterAdvancedFilter';
 import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
 
 @Service()
-export default class DynamicListFilterRoles extends DynamicListAbstruct {
+export default class DynamicListFilterRoles extends DynamicListAbstract {
   /**
    * Validates filter roles schema.
    * @param {IFilterRole[]} filterRoles - Filter roles.

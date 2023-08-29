@@ -58,12 +58,12 @@ export class CloseSaleReceipt {
       } as ISaleReceiptEventClosingPayload);
 
       // Mark the sale receipt as closed on the storage.
-      const saleReceipt = await SaleReceipt.query(trx)
-        .findById(saleReceiptId)
-        .patch({
+      const saleReceipt = await SaleReceipt.query(trx).patchAndFetchById(
+        saleReceiptId,
+        {
           closedAt: moment().toMySqlDateTime(),
-        });
-
+        }
+      );
       // Triggers `onSaleReceiptClosed` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onClosed, {
         saleReceiptId,

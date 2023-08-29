@@ -1,49 +1,48 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
-import { MenuItem } from '@blueprintjs/core';
-import { MultiSelect } from '@/components';
+import React from 'react';
+import * as R from 'ramda';
+import { FMultiSelect } from '@/components/Forms';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Items multi-select.
  */
-export function ItemsMultiSelect({ ...multiSelectProps }) {
-  // Filters accounts items.
-  const filterItemsPredicater = useCallback(
-    (query, item, _index, exactMatch) => {
-      const normalizedTitle = item.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
+function ItemsMultiSelectRoot({
+  // #withDialogAction
+  openDialog,
+  closeDialog,
 
-      if (exactMatch) {
-        return normalizedTitle === normalizedQuery;
-      } else {
-        return `${normalizedTitle} ${item.code}`.indexOf(normalizedQuery) >= 0;
-      }
-    },
-    [],
-  );
+  // #props
+  allowCreate,
+  ...multiSelectProps
+}) {
+  // Maybe inject new item props to select component.
+  const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
+  const maybeCreateNewItemFromQuery = allowCreate
+    ? createNewItemFromQuery
+    : null;
+
+  // Handles the create item click.
+  const handleCreateItemClick = () => {
+    openDialog(DialogsName.AccountForm);
+  };
 
   return (
-    <MultiSelect
-      itemRenderer={(item, { selected, handleClick, active }) => (
-        <MenuItem
-          active={active}
-          icon={selected ? 'tick' : 'blank'}
-          text={item.name}
-          label={item.code}
-          key={item.id}
-          onClick={handleClick}
-        />
-      )}
-      popoverProps={{ minimal: true, usePortal: false, targetTagName: 'div ' }}
+    <FMultiSelect
+      valueAccessor={'id'}
+      textAccessor={'name'}
+      labelAccessor={'code'}
+      tagAccessor={'name'}
       fill={true}
-      itemPredicate={filterItemsPredicater}
-      tagRenderer={(item) => item.name}
+      popoverProps={{ minimal: true }}
       resetOnSelect={true}
+      createNewItemRenderer={maybeCreateNewItemRenderer}
+      createNewItemFromQuery={maybeCreateNewItemFromQuery}
+      onCreateItemSelect={handleCreateItemClick}
       {...multiSelectProps}
     />
   );
 }
 
-ItemsMultiSelect.defaultProps = {
-  initialSelectedItems: [],
-};
+export const ItemsMultiSelect =
+  R.compose(withDialogActions)(ItemsMultiSelectRoot);

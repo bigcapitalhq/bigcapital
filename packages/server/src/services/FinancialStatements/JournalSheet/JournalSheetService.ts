@@ -25,8 +25,8 @@ export default class JournalSheetService {
    */
   get defaultQuery() {
     return {
-      fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-      toDate: moment().endOf('year').format('YYYY-MM-DD'),
+      fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+      toDate: moment().format('YYYY-MM-DD'),
       fromRange: null,
       toRange: null,
       accountsIds: [],

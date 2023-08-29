@@ -1,4 +1,4 @@
-export * from './CashflowBranchesActviateSubscriber';
+export * from './CashflowBranchesActivateSubscriber';
 export * from './CreditNoteBranchesActivateSubscriber';
 export * from './PaymentMadeBranchesActivateSubscriber';
 export * from './PaymentReceiveBranchesActivateSubscriber';

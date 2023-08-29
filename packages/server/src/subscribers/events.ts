@@ -220,6 +220,9 @@ export default {
 
     onPublishing: 'onBillPublishing',
     onPublished: 'onBillPublished',
+
+    onOpening: 'onBillOpening',
+    onOpened: 'onBillOpened',
   },
 
   /**

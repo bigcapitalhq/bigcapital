@@ -9,7 +9,6 @@ import { tableRowTypesToClassnames } from '@/utils';
 import { useVendorsBalanceColumns } from './components';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
-
 /**
  * Vendors balance summary table.
  */
@@ -18,7 +17,7 @@ export default function VendorsBalanceSummaryTable({
   organizationName,
 }) {
   const {
-    VendorBalanceSummary: { table },
+    VendorBalanceSummary: { table, query },
   } = useVendorsBalanceSummaryContext();
 
   // vendors balance summary columns.
@@ -28,7 +27,7 @@ export default function VendorsBalanceSummaryTable({
     <VendorBalanceFinancialSheet
       companyName={organizationName}
       sheetType={intl.get('vendors_balance_summary')}
-      asDate={new Date()}
+      asDate={query.as_date}
     >
       <VendorBalanceDataTable
         columns={columns}

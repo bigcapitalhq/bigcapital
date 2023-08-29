@@ -97,7 +97,7 @@ export default class Branch extends TenantModel {
       },
 
       /**
-       * Branch may belongs to assocaited bills.
+       * Branch may belongs to associated bills.
        */
       bills: {
         relation: Model.HasManyRelation,

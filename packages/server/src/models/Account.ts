@@ -127,7 +127,7 @@ export default class Account extends mixin(TenantModel, [
       },
       filterAccountTypes(query, typesIds) {
         if (typesIds.length > 0) {
-          query.whereIn('account_types.accoun_type_id', typesIds);
+          query.whereIn('account_types.account_type_id', typesIds);
         }
       },
       viewRolesBuilder(query, conditionals, expression) {

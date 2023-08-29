@@ -32,7 +32,7 @@ export class TransferredWarehouseTransfer extends CommandWarehouseTransfer {
     warehouseTransfer: IWarehouseTransfer
   ) => {
     if (warehouseTransfer.transferDeliveredAt) {
-      throw new ServiceError(ERRORS.WAREHOUSE_TRANSFER_ALREAD_TRANSFERRED);
+      throw new ServiceError(ERRORS.WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED);
     }
   };
 

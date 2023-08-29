@@ -16,16 +16,16 @@ import BaseCreditNotes from './CreditNotes';
 @Service()
 export default class CreateCreditNote extends BaseCreditNotes {
   @Inject()
-  uow: UnitOfWork;
+  private uow: UnitOfWork;
 
   @Inject()
-  itemsEntriesService: ItemsEntriesService;
+  private itemsEntriesService: ItemsEntriesService;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   /**
    * Creates a new credit note.

@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
-import { InventoryTransactionsWarehouses } from './AcountsTransactionsWarehouses';
+import { InventoryTransactionsWarehouses } from './AccountsTransactionsWarehouses';
 import { IBranchesActivatedPayload } from '@/interfaces';
 
 @Service()

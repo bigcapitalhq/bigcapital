@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import GeneralLedgerHeader from './GeneralLedgerHeader';
@@ -41,10 +41,8 @@ function GeneralLedger({
   );
 
   // Hide the filter drawer once the page unmount.
-  React.useEffect(
-    () => () => {
-      toggleGeneralLedgerFilterDrawer(false);
-    },
+  useEffect(
+    () => () => toggleGeneralLedgerFilterDrawer(false),
     [toggleGeneralLedgerFilterDrawer],
   );
 

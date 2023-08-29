@@ -33,7 +33,7 @@ export class FeaturesSettingsDriver {
   }
 
   /**
-   * Detarmines the given feature name is accessiable.
+   * Detarmines the given feature name is accessible.
    * @param   {number} tenantId
    * @param   {string} feature
    * @returns {Promise<boolean|null|undefined>}

@@ -8,7 +8,7 @@ import { IProfitLossSheetQuery } from '@/interfaces';
  */
 export const getDefaultPLQuery = (): IProfitLossSheetQuery => ({
   fromDate: moment().startOf('year').format('YYYY-MM-DD'),
-  toDate: moment().endOf('year').format('YYYY-MM-DD'),
+  toDate: moment().format('YYYY-MM-DD'),
 
   numberFormat: {
     divideOn1000: false,

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import MODIFIER from './modifiers';
 import ContextMenu from './ContextMenu';
-import AvaterCell from './AvaterCell';
+import AvatarCell from './AvatarCell';
 
 export * from './Money/Money';
 export * from './Dialog';
@@ -65,4 +65,4 @@ export * from './Postbox';
 export * from './AppToaster';
 export * from './Layout';
 
-export { MODIFIER, ContextMenu, AvaterCell };
+export { MODIFIER, ContextMenu, AvatarCell };

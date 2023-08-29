@@ -1,17 +1,16 @@
 // @ts-nocheck
 import React from 'react';
-import { FastField, Field } from 'formik';
+import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import { Classes, FormGroup, Position, Checkbox } from '@blueprintjs/core';
+import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
 import {
-  ContactsMultiSelect,
   FormattedMessage as T,
   Row,
   Col,
   FieldHint,
+  CustomersMultiSelect,
+  FFormGroup,
 } from '@/components';
-import classNames from 'classnames';
-
 import {
   momentFormatter,
   tansformDateValue,
@@ -86,26 +85,12 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
 
       <Row>
         <Col xs={5}>
-          <Field name={'customersIds'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
-              <FormGroup
-                label={<T id={'specific_customers'} />}
-                className={classNames('form-group--select-list', Classes.FILL)}
-              >
-                <ContactsMultiSelect
-                  items={customers}
-                  onItemSelect={(contacts) => {
-                    const customersIds = contacts.map((contact) => contact.id);
-                    setFieldValue('customersIds', customersIds);
-                  }}
-                />
-              </FormGroup>
-            )}
-          </Field>
+          <FFormGroup
+            name={'customersIds'}
+            label={<T id={'specific_customers'} />}
+          >
+            <CustomersMultiSelect name={'customersIds'} items={customers} />
+          </FFormGroup>
         </Col>
       </Row>
     </div>

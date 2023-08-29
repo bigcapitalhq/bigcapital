@@ -29,7 +29,7 @@ export default class DeleteCustomerLinkedCreditSubscriber {
   };
 
   /**
-   * Validate vendor has no assocaited credit transaction once the vendor deleting.
+   * Validate vendor has no associated credit transaction once the vendor deleting.
    * @param {IVendorEventDeletingPayload} payload -
    */
   public validateCustomerHasNoLinkedCreditsOnDeleting = async ({
