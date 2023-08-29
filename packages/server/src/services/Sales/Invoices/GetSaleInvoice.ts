@@ -33,7 +33,8 @@ export class GetSaleInvoice {
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('taxes.taxRate');
 
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);

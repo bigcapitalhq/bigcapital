@@ -764,6 +764,11 @@ export default class SaleInvoicesController extends BaseController {
           errors: [{ type: 'ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND', code: 5000 }],
         });
       }
+      if (error.errorType === 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND', code: 5100 }],
+        });
+      }
     }
     next(error);
   }

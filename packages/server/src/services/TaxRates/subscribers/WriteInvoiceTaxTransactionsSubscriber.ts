@@ -20,7 +20,7 @@ export class WriteInvoiceTaxTransactionsSubscriber {
       this.writeInvoiceTaxTransactionsOnCreated
     );
     bus.subscribe(
-      events.saleInvoice.onDeleted,
+      events.saleInvoice.onDelete,
       this.removeInvoiceTaxTransactionsOnDeleted
     );
     return bus;
@@ -50,7 +50,8 @@ export class WriteInvoiceTaxTransactionsSubscriber {
   }: ISaleInvoiceDeletedPayload) => {
     await this.writeTaxTransactions.removeTaxTransactionsFromItemEntries(
       tenantId,
-      oldSaleInvoice.entries
+      oldSaleInvoice.id,
+      'SaleInvoice'
     );
   };
 }

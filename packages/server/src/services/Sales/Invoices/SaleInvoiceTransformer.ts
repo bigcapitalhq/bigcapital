@@ -1,5 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**
@@ -15,6 +16,7 @@ export class SaleInvoiceTransformer extends Transformer {
       'formattedPaymentAmount',
       'formattedBalanceAmount',
       'formattedExchangeRate',
+      'taxes',
     ];
   };
 
@@ -87,5 +89,13 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected formattedExchangeRate = (invoice): string => {
     return formatNumber(invoice.exchangeRate, { money: false });
+  };
+
+  /**
+   * Retrieve the taxes lines of sale invoice.
+   * @param {ISaleInvoice} invoice
+   */
+  protected taxes = (invoice) => {
+    return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer());
   };
 }

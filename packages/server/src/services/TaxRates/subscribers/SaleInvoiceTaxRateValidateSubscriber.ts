@@ -20,6 +20,10 @@ export class SaleInvoiceTaxRateValidateSubscriber {
       this.validateSaleInvoiceEntriesTaxCodeExistanceOnCreating
     );
     bus.subscribe(
+      events.saleInvoice.onCreating,
+      this.validateSaleInvoiceEntriesTaxIdExistanceOnCreating
+    );
+    bus.subscribe(
       events.saleInvoice.onEditing,
       this.validateSaleInvoiceEntriesTaxCodeExistanceOnEditing
     );
@@ -27,7 +31,7 @@ export class SaleInvoiceTaxRateValidateSubscriber {
   }
 
   /**
-   * Validate invoice entries tax rate code existance.
+   * Validate invoice entries tax rate code existance when creating.
    * @param {ISaleInvoiceCreatingPaylaod}
    */
   private validateSaleInvoiceEntriesTaxCodeExistanceOnCreating = async ({
@@ -41,7 +45,21 @@ export class SaleInvoiceTaxRateValidateSubscriber {
   };
 
   /**
-   *
+   * Validate the tax rate id existance when creating.
+   * @param {ISaleInvoiceCreatingPaylaod}
+   */
+  private validateSaleInvoiceEntriesTaxIdExistanceOnCreating = async ({
+    saleInvoiceDTO,
+    tenantId,
+  }: ISaleInvoiceCreatingPaylaod) => {
+    await this.taxRateDTOValidator.validateItemEntriesTaxCodeId(
+      tenantId,
+      saleInvoiceDTO.entries
+    );
+  };
+
+  /**
+   * Validate invoice entries tax rate code existance when editing.
    * @param {ISaleInvoiceEditingPayload}
    */
   private validateSaleInvoiceEntriesTaxCodeExistanceOnEditing = async ({

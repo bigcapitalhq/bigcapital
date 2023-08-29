@@ -12,6 +12,11 @@ exports.up = (knex) => {
     })
     .table('items_entries', (table) => {
       table.boolean('is_tax_exclusive');
+      table
+        .integer('tax_rate_id')
+        .unsigned()
+        .references('id')
+        .inTable('tax_rates');
       table.string('tax_code');
       table.decimal('tax_rate');
     })
@@ -21,13 +26,13 @@ exports.up = (knex) => {
     })
     .createTable('tax_rate_transactions', (table) => {
       table.increments('id');
-
-      table.string('tax_name');
-      table.string('tax_code');
-
+      table
+        .integer('tax_rate_id')
+        .unsigned()
+        .references('id')
+        .inTable('tax_rates');
       table.string('reference_type');
       table.integer('reference_id');
-
       table.decimal('tax_amount');
       table.integer('tax_account_id').unsigned();
     });

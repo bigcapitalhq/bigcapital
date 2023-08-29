@@ -37,6 +37,20 @@ export default class TaxRateTransaction extends mixin(TenantModel, [
    * Relationship mapping.
    */
   static get relationMappings() {
-    return {};
+    const TaxRate = require('models/TaxRate');
+
+    return {
+      /**
+       * Belongs to the tax rate.
+       */
+      taxRate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: TaxRate.default,
+        join: {
+          from: 'tax_rate_transactions.taxRateId',
+          to: 'tax_rates.id',
+        },
+      },
+    };
   }
 }
