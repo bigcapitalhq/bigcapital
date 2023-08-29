@@ -176,7 +176,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
        * Filters the invoices between the given date range.
        */
       filterDateRange(query, startDate, endDate, type = 'day') {
-        const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+        const dateFormat = 'YYYY-MM-DD';
         const fromDate = moment(startDate).startOf(type).format(dateFormat);
         const toDate = moment(endDate).endOf(type).format(dateFormat);
 

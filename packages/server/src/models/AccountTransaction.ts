@@ -59,15 +59,9 @@ export default class AccountTransaction extends TenantModel {
         }
       },
       filterDateRange(query, startDate, endDate, type = 'day') {
-        const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-        const fromDate = moment(startDate)
-          .utcOffset(0)
-          .startOf(type)
-          .format(dateFormat);
-        const toDate = moment(endDate)
-          .utcOffset(0)
-          .endOf(type)
-          .format(dateFormat);
+        const dateFormat = 'YYYY-MM-DD';
+        const fromDate = moment(startDate).startOf(type).format(dateFormat);
+        const toDate = moment(endDate).endOf(type).format(dateFormat);
 
         if (startDate) {
           query.where('date', '>=', fromDate);
@@ -111,7 +105,6 @@ export default class AccountTransaction extends TenantModel {
         query.modify('filterDateRange', null, toDate);
         query.modify('sumationCreditDebit');
       },
-
       contactsOpeningBalance(
         query,
         openingDate,
