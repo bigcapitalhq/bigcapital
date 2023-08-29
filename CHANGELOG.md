@@ -2,6 +2,20 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.9.12] - 29-08-2023
+
+* Refactor: split the services to multiple service classes. (by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/202)
+* Fix: create quick customer/vendor by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/206
+* Fix: typo in bill success message without bill number by @KalliopiPliogka in https://github.com/bigcapitalhq/bigcapital/pull/219
+* Fix: AP/AR aging summary issue by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/229
+* Fix: shouldn't write GL entries when save transaction as draft. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/221
+* Fix: Transaction type of credit note and vendor credit are not defined on account transactions by @abouolia in 
+* Fix: date format of filtering transactions by date range by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/231
+* Fix: change the default from/date date value of reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/230
+* Fix: typos in words start with `A` letter by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/227
+* Fix: filter by customers, vendors and items in reports do not work by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/224
+https://github.com/bigcapitalhq/bigcapital/pull/225
+
 # [0.9.11] - 23-07-2023
 
 * added: Restart policy to docker compose files. by @suhaibaffan in https://github.com/bigcapitalhq/bigcapital/pull/198
