@@ -169,6 +169,7 @@ export const ReportsAction = {
   READ_INVENTORY_VALUATION_SUMMARY: 'read-inventory-valuation-summary',
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
+  READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
 };
 
 export const PreferencesAbility = {

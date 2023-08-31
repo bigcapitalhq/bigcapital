@@ -85,6 +85,13 @@ export const financialReportMenus = [
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_PROFIT_LOSS,
       },
+      {
+        title: 'Sales Tax Liability Summary',
+        desc: 'Reports the total amount of sales tax collected from customers',
+        link: '/financial-reports/sales-tax-liability-summary',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+      }
     ],
   },
 ];

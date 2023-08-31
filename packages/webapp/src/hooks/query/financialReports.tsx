@@ -444,3 +444,25 @@ export function useTransactionsByReference(query, props) {
     },
   );
 }
+
+
+/**
+ * 
+ */
+export function useSalesTaxLiabilitySummary(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.BALANCE_SHEET, query],
+    {
+      method: 'get',
+      url: '/financial_statements/sales-tax-liability-summary',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => res.data,
+      ...props,
+    },
+  );
+}
