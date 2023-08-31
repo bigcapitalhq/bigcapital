@@ -20,6 +20,7 @@ import InventoryDetailsController from './FinancialStatements/InventoryDetails';
 import TransactionsByReferenceController from './FinancialStatements/TransactionsByReference';
 import CashflowAccountTransactions from './FinancialStatements/CashflowAccountTransactions';
 import ProjectProfitabilityController from './FinancialStatements/ProjectProfitabilitySummary';
+import SalesTaxLiabilitySummary from './FinancialStatements/SalesTaxLiabilitySummary';
 
 @Service()
 export default class FinancialStatementsService {
@@ -68,40 +69,44 @@ export default class FinancialStatementsService {
     );
     router.use(
       '/customer-balance-summary',
-      Container.get(CustomerBalanceSummaryController).router(),
+      Container.get(CustomerBalanceSummaryController).router()
     );
     router.use(
       '/vendor-balance-summary',
-      Container.get(VendorBalanceSummaryController).router(),
+      Container.get(VendorBalanceSummaryController).router()
     );
     router.use(
       '/transactions-by-customers',
-      Container.get(TransactionsByCustomers).router(),
+      Container.get(TransactionsByCustomers).router()
     );
     router.use(
       '/transactions-by-vendors',
-      Container.get(TransactionsByVendors).router(),
+      Container.get(TransactionsByVendors).router()
     );
     router.use(
       '/cash-flow',
-      Container.get(CashFlowStatementController).router(),
+      Container.get(CashFlowStatementController).router()
     );
     router.use(
       '/inventory-item-details',
-      Container.get(InventoryDetailsController).router(),
+      Container.get(InventoryDetailsController).router()
     );
     router.use(
       '/transactions-by-reference',
-      Container.get(TransactionsByReferenceController).router(),
+      Container.get(TransactionsByReferenceController).router()
     );
     router.use(
       '/cashflow-account-transactions',
-      Container.get(CashflowAccountTransactions).router(),
+      Container.get(CashflowAccountTransactions).router()
     );
     router.use(
       '/project-profitability-summary',
-      Container.get(ProjectProfitabilityController).router(),
-    )
+      Container.get(ProjectProfitabilityController).router()
+    );
+    router.use(
+      '/sales-tax-liability-summary',
+      Container.get(SalesTaxLiabilitySummary).router()
+    );
     return router;
   }
 }

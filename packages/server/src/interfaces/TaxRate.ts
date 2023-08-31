@@ -1,6 +1,10 @@
 import { Knex } from 'knex';
 
-export interface ITaxRate {}
+export interface ITaxRate {
+  name: string;
+  code: string;
+  rate: number;
+}
 
 export interface ICommonTaxRateDTO {
   name: string;

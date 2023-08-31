@@ -11,7 +11,7 @@ exports.up = (knex) => {
       table.timestamps();
     })
     .table('items_entries', (table) => {
-      table.boolean('is_tax_exclusive');
+      table.boolean('is_inclusive_tax').defaultTo(false);
       table
         .integer('tax_rate_id')
         .unsigned()
@@ -21,7 +21,7 @@ exports.up = (knex) => {
       table.decimal('tax_rate');
     })
     .table('sales_invoices', (table) => {
-      table.boolean('is_tax_exclusive');
+      table.boolean('is_inclusive_tax').defaultTo(false);
       table.decimal('tax_amount_withheld');
     })
     .createTable('tax_rate_transactions', (table) => {
@@ -35,6 +35,13 @@ exports.up = (knex) => {
       table.integer('reference_id');
       table.decimal('tax_amount');
       table.integer('tax_account_id').unsigned();
+    })
+    .table('accounts_transactions', (table) => {
+      table
+        .integer('tax_rate_id')
+        .unsigned()
+        .references('id')
+        .inTable('tax_rates');
     });
 };
 
