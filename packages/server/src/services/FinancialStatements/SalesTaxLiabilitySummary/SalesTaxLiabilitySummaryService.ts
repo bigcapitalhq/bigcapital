@@ -10,9 +10,9 @@ export class SalesTaxLiabilitySummaryService {
   private repostiory: SalesTaxLiabilitySummaryRepository;
 
   /**
-   *
-   * @param tenantId
-   * @param query
+   * Retrieve sales tax liability summary.
+   * @param {number} tenantId
+   * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns
    */
   public async salesTaxLiability(
@@ -41,9 +41,9 @@ export class SalesTaxLiabilitySummaryService {
   }
 
   /**
-   *
-   * @param tenantId
-   * @param query
+   * Retrieve sales tax liability summary table.
+   * @param {number} tenantId
+   * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns
    */
   public async salesTaxLiabilitySummaryTable(
@@ -52,6 +52,7 @@ export class SalesTaxLiabilitySummaryService {
   ) {
     const report = await this.salesTaxLiability(tenantId, query);
 
+    // Creates the sales tax liability summary table.
     const table = new SalesTaxLiabilitySummaryTable(report.data, query);
 
     return {

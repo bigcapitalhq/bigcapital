@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 
 export interface ITaxRate {
+  id?: number;
   name: string;
   code: string;
   rate: number;

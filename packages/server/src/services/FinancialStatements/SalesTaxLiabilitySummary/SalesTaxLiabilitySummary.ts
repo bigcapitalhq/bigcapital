@@ -1,37 +1,33 @@
 import { ITaxRate } from '@/interfaces';
 import {
+  SalesTaxLiabilitySummaryPayableById,
   SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummaryRate,
   SalesTaxLiabilitySummaryReportData,
+  SalesTaxLiabilitySummarySalesById,
   SalesTaxLiabilitySummaryTotal,
 } from '@/interfaces/SalesTaxLiabilitySummary';
 import { sumBy } from 'lodash';
 import FinancialSheet from '../FinancialSheet';
 
 export class SalesTaxLiabilitySummary extends FinancialSheet {
-  query: SalesTaxLiabilitySummaryQuery;
-  taxRates: ITaxRate[];
-  payableTaxesById: any;
-  salesTaxesById: any;
+  private query: SalesTaxLiabilitySummaryQuery;
+  private taxRates: ITaxRate[];
+  private payableTaxesById: SalesTaxLiabilitySummaryPayableById;
+  private salesTaxesById: SalesTaxLiabilitySummarySalesById;
 
   /**
    * Sales tax liability summary constructor.
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @param {ITaxRate[]} taxRates
-   * @param payableTaxesById
-   * @param salesTaxesById
+   * @param {SalesTaxLiabilitySummaryPayableById} payableTaxesById
+   * @param {SalesTaxLiabilitySummarySalesById} salesTaxesById
    */
   constructor(
     query: SalesTaxLiabilitySummaryQuery,
     taxRates: ITaxRate[],
-    payableTaxesById: Record<
-      string,
-      { taxRateId: number; credit: number; debit: number }
-    >,
-    salesTaxesById: Record<
-      string,
-      { taxRateId: number; credit: number; debit: number }
-    >
+    payableTaxesById: SalesTaxLiabilitySummaryPayableById,
+    salesTaxesById: SalesTaxLiabilitySummarySalesById
   ) {
     super();
 
@@ -49,11 +45,19 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
   private taxRateLiability = (
     taxRate: ITaxRate
   ): SalesTaxLiabilitySummaryRate => {
+    const payableTax = this.payableTaxesById[taxRate.id];
+    const salesTax = this.salesTaxesById[taxRate.id];
+
+    const payableTaxAmount = payableTax
+      ? payableTax.credit - payableTax.debit
+      : 0;
+    const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
+
     return {
       taxName: taxRate.name,
       taxCode: taxRate.code,
-      taxableAmount: this.getAmountMeta(0),
-      taxAmount: this.getAmountMeta(0),
+      taxableAmount: this.getAmountMeta(salesTaxAmount),
+      taxAmount: this.getAmountMeta(payableTaxAmount),
     };
   };
 
@@ -73,8 +77,8 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
   private taxRatesTotal = (
     nodes: SalesTaxLiabilitySummaryRate[]
   ): SalesTaxLiabilitySummaryTotal => {
-    const taxableAmount = sumBy(nodes, 'taxableAmount.total');
-    const taxAmount = sumBy(nodes, 'taxAmount.total');
+    const taxableAmount = sumBy(nodes, 'taxableAmount.amount');
+    const taxAmount = sumBy(nodes, 'taxAmount.amount');
 
     return {
       taxableAmount: this.getTotalAmountMeta(taxableAmount),

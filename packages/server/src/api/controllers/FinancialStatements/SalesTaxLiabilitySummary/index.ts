@@ -70,7 +70,7 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
             );
 
           return res.status(200).send({
-            data: salesTaxLiabilityTable
+            table: salesTaxLiabilityTable.table,
           });
         case 'json':
         default:

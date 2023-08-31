@@ -31,3 +31,13 @@ export interface SalesTaxLiabilitySummaryReportData {
   taxRates: SalesTaxLiabilitySummaryRate[];
   total: SalesTaxLiabilitySummaryTotal;
 }
+
+export type SalesTaxLiabilitySummaryPayableById = Record<
+  string,
+  { taxRateId: number; credit: number; debit: number }
+>;
+
+export type SalesTaxLiabilitySummarySalesById = Record<
+  string,
+  { taxRateId: number; credit: number; debit: number }
+>;

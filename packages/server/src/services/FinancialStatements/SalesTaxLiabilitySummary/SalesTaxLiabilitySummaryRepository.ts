@@ -1,4 +1,8 @@
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import {
+  SalesTaxLiabilitySummaryPayableById,
+  SalesTaxLiabilitySummarySalesById,
+} from '@/interfaces/SalesTaxLiabilitySummary';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { keyBy } from 'lodash';
 import { Inject, Service } from 'typedi';
@@ -10,8 +14,8 @@ export class SalesTaxLiabilitySummaryRepository {
 
   /**
    * Retrieve tax rates.
-   * @param tenantId
-   * @returns
+   * @param {number} tenantId
+   * @returns {Promise<TaxRate[]>}
    */
   public taxRates = (tenantId: number) => {
     const { TaxRate } = this.tenancy.models(tenantId);
@@ -22,21 +26,19 @@ export class SalesTaxLiabilitySummaryRepository {
   /**
    * Retrieve taxes payable sum grouped by tax rate id.
    * @param {number} tenantId
-   * @returns
+   * @returns {Promise<SalesTaxLiabilitySummaryPayableById>}
    */
   public async taxesPayableSumGroupedByRateId(
     tenantId: number
-  ): Promise<
-    Record<string, { taxRateId: number; credit: number; debit: number }>
-  > {
+  ): Promise<SalesTaxLiabilitySummaryPayableById> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const receivableAccount =
-      await accountRepository.findOrCreateAccountReceivable();
+    // Finds or creates tax payable account.
+    const payableTaxAccount = await accountRepository.findOrCreateTaxPayable();
 
     const groupedTaxesById = await AccountTransaction.query()
-      .where('account_id', receivableAccount.id)
+      .where('account_id', payableTaxAccount.id)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
@@ -48,9 +50,11 @@ export class SalesTaxLiabilitySummaryRepository {
   /**
    * Retrieve taxes sales sum grouped by tax rate id.
    * @param {number} tenantId
-   * @returns
+   * @returns {Promise<SalesTaxLiabilitySummarySalesById>}
    */
-  public taxesSalesSumGroupedByRateId = async (tenantId: number) => {
+  public taxesSalesSumGroupedByRateId = async (
+    tenantId: number
+  ): Promise<SalesTaxLiabilitySummarySalesById> => {
     const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
     const incomeAccounts = await Account.query().whereIn('accountType', [
