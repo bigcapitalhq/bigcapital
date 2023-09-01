@@ -87,7 +87,7 @@ export const projectProfitabilitySummaryFilterDrawerSelector = (state) => {
 };
 
 export const salesTaxLiabilitySummaryFilterDrawerSelector = (state) => {
-  return filterDrawerByTypeSelector('projectProfitabilitySummary')(state);
+  return filterDrawerByTypeSelector('salesTaxLiabilitySummary')(state);
 };
 
 /**

@@ -244,3 +244,16 @@ export function toggleProjectProfitabilitySummaryFilterDrawer(toggle) {
     },
   };
 }
+
+/**
+ * Toggles display of the sales tax liablilty summary filter drawer.
+ * @param {boolean} toggle
+ */
+export function toggleSalesTaxLiabilitySummaryFilterDrawer(toggle) {
+  return {
+    type: `${t.SALES_TAX_LIABILITY_SUMMARY}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`,
+    payload: {
+      toggle,
+    },
+  };
+}

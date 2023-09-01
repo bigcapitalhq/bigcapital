@@ -5,7 +5,7 @@ import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBo
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 /**
- * Balance sheet loading bar.
+ * Sales tax liability summary loading bar.
  */
 export function SalesTaxLiabilitySummaryLoadingBar() {
   const { isFetching } = useSalesTaxLiabilitySummaryContext();

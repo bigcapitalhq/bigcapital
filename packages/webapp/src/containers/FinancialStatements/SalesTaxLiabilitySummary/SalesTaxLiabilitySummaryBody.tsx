@@ -5,18 +5,13 @@ import { FinancialReportBody } from '../FinancialReportPage';
 import { FinancialSheetSkeleton } from '@/components';
 import { SalesTaxLiabilitySummaryTable } from './SalesTaxLiabilitySummaryTable';
 
-import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
-import { compose } from '@/utils';
 
 /**
  * Sales tax liability summary body.
  * @returns {React.JSX}
  */
-function SalesTaxLiabilitySummaryBodyRoot({
-  // #withCurrentOrganization
-  organizationName,
-}) {
+export function SalesTaxLiabilitySummaryBody() {
   const { isLoading } = useSalesTaxLiabilitySummaryContext();
 
   return (
@@ -29,9 +24,3 @@ function SalesTaxLiabilitySummaryBodyRoot({
     </FinancialReportBody>
   );
 }
-
-export const SalesTaxLiabilitySummaryBody = compose(
-  withCurrentOrganization(({ organization }) => ({
-    organizationName: organization.name,
-  })),
-)(SalesTaxLiabilitySummaryBodyRoot);

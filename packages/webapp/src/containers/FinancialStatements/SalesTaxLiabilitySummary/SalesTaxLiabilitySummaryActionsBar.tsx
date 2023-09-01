@@ -27,7 +27,7 @@ function SalesTaxLiabilitySummaryActionsBar({
   salesTaxLiabilitySummaryFilter,
 
   // #withSalesTaxLiabilitySummaryActions
-  toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
+  toggleSalesTaxLiabilitySummaryFilterDrawer: toggleFilterDrawer,
 
   // #ownProps
   numberFormat,

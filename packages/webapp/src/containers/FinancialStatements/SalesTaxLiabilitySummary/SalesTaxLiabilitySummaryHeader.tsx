@@ -2,14 +2,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Tab, Tabs } from '@blueprintjs/core';
 import { Formik, Form } from 'formik';
 
 import { FormattedMessage as T } from '@/components';
 import { useFeatureCan } from '@/hooks/state';
-import { Features } from '@/constants';
-
-import BalanceSheetHeaderGeneralPanal from './BalanceSheetHeaderGeneralPanal';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from '@/utils';
@@ -19,6 +16,7 @@ import {
 } from './utils';
 import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
 import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
+import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
 
 /**
  * Sales tax liability summary header.
@@ -65,10 +63,9 @@ function SalesTaxLiabilitySummaryHeader({
   };
   // Detarmines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
-  const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
-    <BalanceSheetFinancialHeader
+    <SalesTaxSummaryFinancialHeader
       isOpen={salesTaxLiabilitySummaryFilter}
       drawerProps={{
         onClose: handleDrawerClose,
@@ -80,13 +77,13 @@ function SalesTaxLiabilitySummaryHeader({
         onSubmit={handleSubmit}
       >
         <Form>
-          {/* <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
+          <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
             <Tab
               id="general"
               title={<T id={'general'} />}
-              panel={<BalanceSheetHeaderGeneralPanal />}
+              panel={<SalesTaxLiabilitySummaryHeaderGeneral />}
             />
-          </Tabs> */}
+          </Tabs>
 
           <div class="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
@@ -98,7 +95,7 @@ function SalesTaxLiabilitySummaryHeader({
           </div>
         </Form>
       </Formik>
-    </BalanceSheetFinancialHeader>
+    </SalesTaxSummaryFinancialHeader>
   );
 }
 
@@ -109,7 +106,7 @@ export default compose(
   withSalesTaxLiabilitySummaryActions,
 )(SalesTaxLiabilitySummaryHeader);
 
-const BalanceSheetFinancialHeader = styled(FinancialStatementHeader)`
+const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
   .bp3-drawer {
     max-height: 520px;
   }
