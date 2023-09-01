@@ -5,13 +5,9 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SalesTaxLiabilitySummaryService } from '@/services/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummaryService';
 
 export default class SalesTaxLiabilitySummary extends BaseFinancialReportController {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private salesTaxLiabilitySummaryService: SalesTaxLiabilitySummaryService;
 

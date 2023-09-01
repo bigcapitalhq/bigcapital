@@ -13,13 +13,15 @@ export interface SalesTaxLiabilitySummaryAmount {
 export interface SalesTaxLiabilitySummaryTotal {
   taxableAmount: SalesTaxLiabilitySummaryAmount;
   taxAmount: SalesTaxLiabilitySummaryAmount;
+  collectedTaxAmount: SalesTaxLiabilitySummaryAmount;
 }
 
 export interface SalesTaxLiabilitySummaryRate {
   taxName: string;
-  taxCode: string;
   taxableAmount: SalesTaxLiabilitySummaryAmount;
   taxAmount: SalesTaxLiabilitySummaryAmount;
+  taxPercentage: any;
+  collectedTaxAmount: SalesTaxLiabilitySummaryAmount;
 }
 
 export enum SalesTaxLiabilitySummaryTableRowType {

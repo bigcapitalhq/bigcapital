@@ -44,9 +44,10 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    */
   private get taxRateRowAccessor() {
     return [
-      { key: 'taxName', value: 'taxName' },
-      { key: 'taxCode', accessor: 'taxCode' },
+      { key: 'taxName', accessor: 'taxName' },
+      { key: 'taxPercentage', accessor: 'taxPercentage.formattedAmount' },
       { key: 'taxableAmount', accessor: 'taxableAmount.formattedAmount' },
+      { key: 'collectedTax', accessor: 'collectedTaxAmount.formattedAmount' },
       { key: 'taxAmount', accessor: 'taxAmount.formattedAmount' },
     ];
   }
@@ -57,9 +58,10 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    */
   private get taxRateTotalRowAccessors() {
     return [
-      { key: 'taxName', value: '' },
-      { key: 'taxCode', accessor: 'taxCode' },
+      { key: 'taxName', value: 'Total' },
+      { key: 'taxPercentage', value: '' },
       { key: 'taxableAmount', accessor: 'taxableAmount.formattedAmount' },
+      { key: 'collectedTax', accessor: 'collectedTaxAmount.formattedAmount' },
       { key: 'taxAmount', accessor: 'taxAmount.formattedAmount' },
     ];
   }
@@ -122,7 +124,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
   }
 
   /**
-   * Retrieve the table rows.
+   * Retrieves the table rows.
    * @returns {ITableRow[]}
    */
   public tableRows(): ITableRow[] {
@@ -133,7 +135,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
   }
 
   /**
-   * Retrieve the table columns.
+   * Retrieves the table columns.
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
@@ -143,12 +145,16 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
         key: 'taxName',
       },
       {
-        label: 'Tax Code',
-        key: 'taxCode',
+        label: 'Tax Percentage',
+        key: 'taxPercentage',
       },
       {
         label: 'Taxable Amount',
         key: 'taxableAmount',
+      },
+      {
+        label: 'Collected Tax',
+        key: 'collectedTax',
       },
       {
         label: 'Tax Rate',
