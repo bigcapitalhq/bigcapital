@@ -11,16 +11,7 @@ const taxNameAccessor = R.curry((data, column) => ({
   Header: column.label,
   accessor: getTableCellValueAccessor(column.cell_index),
   sticky: 'left',
-  width: 240,
-  textOverview: true,
-}));
-
-const taxCodeAccessor = R.curry((data, column) => ({
-  key: column.key,
-  Header: column.label,
-  accessor: getTableCellValueAccessor(column.cell_index),
-  sticky: 'left',
-  width: 240,
+  width: 300,
   textOverview: true,
 }));
 
@@ -39,14 +30,14 @@ const taxableAmountAccessor = R.curry((data, column) => {
 
 const dynamicColumnMapper = R.curry((data, column) => {
   const taxNameAccessorColumn = taxNameAccessor(data);
-  const taxCodeAccessorColumn = taxCodeAccessor(data);
   const taxableAmountColumn = taxableAmountAccessor(data);
 
   return R.compose(
     R.when(R.pathEq(['key'], 'taxName'), taxNameAccessorColumn),
-    R.when(R.pathEq(['key'], 'taxCode'), taxCodeAccessorColumn),
     R.when(R.pathEq(['key'], 'taxableAmount'), taxableAmountColumn),
     R.when(R.pathEq(['key'], 'taxRate'), taxableAmountColumn),
+    R.when(R.pathEq(['key'], 'taxPercentage'), taxableAmountColumn),
+    R.when(R.pathEq(['key'], 'collectedTax'), taxableAmountColumn),
   )(column);
 });
 

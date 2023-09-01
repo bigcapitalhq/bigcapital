@@ -81,6 +81,16 @@ const SalesTaxLiabilitySummaryDataTable = styled(ReportDataTable)`
             border-bottom: 3px double #333;
           }
         }
+        &.row_type--TaxRate {
+          .td {
+            &.td-taxPercentage,
+            &.td-taxableAmount,
+            &.td-collectedTax,
+            &.td-taxRate {
+              color: #444;
+            }
+          }
+        }
       }
     }
   }
