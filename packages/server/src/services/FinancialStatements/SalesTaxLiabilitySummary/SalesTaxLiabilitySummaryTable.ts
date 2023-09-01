@@ -7,15 +7,21 @@ import {
 } from '@/interfaces/SalesTaxLiabilitySummary';
 import { tableRowMapper } from '@/utils';
 import { ITableColumn, ITableColumnAccessor, ITableRow } from '@/interfaces';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
+import AgingReport from '../AgingSummary/AgingReport';
 
 enum IROW_TYPE {
   TaxRate = 'TaxRate',
   Total = 'Total',
 }
 
-export class SalesTaxLiabilitySummaryTable {
-  data: SalesTaxLiabilitySummaryReportData;
-  query: SalesTaxLiabilitySummaryQuery;
+export class SalesTaxLiabilitySummaryTable extends R.compose(
+  FinancialSheetStructure,
+  FinancialTable
+)(AgingReport) {
+  private data: SalesTaxLiabilitySummaryReportData;
+  private query: SalesTaxLiabilitySummaryQuery;
 
   /**
    * Sales tax liability summary table constructor.
@@ -26,6 +32,8 @@ export class SalesTaxLiabilitySummaryTable {
     data: SalesTaxLiabilitySummaryReportData,
     query: SalesTaxLiabilitySummaryQuery
   ) {
+    super();
+
     this.data = data;
     this.query = query;
   }
@@ -119,8 +127,8 @@ export class SalesTaxLiabilitySummaryTable {
    */
   public tableRows(): ITableRow[] {
     return R.compose(
-      R.concat(this.taxRatesRows),
-      R.prepend(this.taxRateTotalRow)
+      R.unless(R.isEmpty, R.append(this.taxRateTotalRow)),
+      R.concat(this.taxRatesRows)
     )([]);
   }
 
@@ -129,7 +137,7 @@ export class SalesTaxLiabilitySummaryTable {
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
-    return [
+    return R.compose(this.tableColumnsCellIndexing)([
       {
         label: 'Tax Name',
         key: 'taxName',
@@ -146,6 +154,6 @@ export class SalesTaxLiabilitySummaryTable {
         label: 'Tax Rate',
         key: 'taxRate',
       },
-    ];
+    ]);
   }
 }
