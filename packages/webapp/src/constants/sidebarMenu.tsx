@@ -742,6 +742,21 @@ export const SidebarMenu = [
         ],
       },
       {
+        text: 'Taxes',
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: 'Sales Tax Liability Summary',
+            href: '/financial-reports/sales-tax-liability-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
+            },
+          },
+        ],
+      },
+      {
         text: <T id={'sidebar.inventory'} />,
         type: ISidebarMenuItemType.Group,
         children: [

@@ -3,11 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { For, DashboardInsider } from '@/components';
 import useFilterFinancialReports from './FilterFinancialReports';
-
-import {
-  financialReportMenus,
-  SalesAndPurchasesReportMenus,
-} from '@/constants/financialReportsMenu';
+import { financialReportMenus } from '@/constants/financialReportsMenu';
 
 import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 
@@ -39,18 +35,11 @@ function FinancialReportsSection({ sectionTitle, reports }) {
  */
 export default function FinancialReports() {
   const financialReportMenu = useFilterFinancialReports(financialReportMenus);
-  const SalesAndPurchasesReportMenu = useFilterFinancialReports(
-    SalesAndPurchasesReportMenus,
-  );
 
   return (
     <DashboardInsider name={'financial-reports'}>
       <div class="financial-reports">
         <For render={FinancialReportsSection} of={financialReportMenu} />
-        <For
-          render={FinancialReportsSection}
-          of={SalesAndPurchasesReportMenu}
-        />
       </div>
     </DashboardInsider>
   );
