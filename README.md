@@ -58,6 +58,12 @@ Please see [Releases](https://github.com/bigcapitalhq/bigcapital/releases) for m
   />
 </a>
 
+# Contact us
+
+Meet our sales team for any commercial inquiries.
+
+<a href="https://cal.com/ahmed-bouhuolia-ekk3ph/30min"><img src="https://cal.com/book-with-cal-dark.svg" alt="Book us with Cal.com"></a>
+
 # Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
