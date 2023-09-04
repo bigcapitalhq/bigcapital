@@ -42,6 +42,7 @@ exports.up = (knex) => {
         .unsigned()
         .references('id')
         .inTable('tax_rates');
+      table.decimal('tax_rate').unsigned();
     });
 };
 

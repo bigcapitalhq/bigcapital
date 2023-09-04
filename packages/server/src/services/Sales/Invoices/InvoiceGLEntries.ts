@@ -53,7 +53,7 @@ export class SaleInvoiceGLEntries {
       saleInvoice,
       ARAccount.id,
       taxPayableAccount.id
-    );
+    );  
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
   };
@@ -190,6 +190,8 @@ export class SaleInvoiceGLEntries {
         itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
         projectId: entry.projectId || saleInvoice.projectId,
+        taxRateId: entry.taxRateId,
+        taxRate: entry.taxRate,
       };
     }
   );
@@ -201,15 +203,22 @@ export class SaleInvoiceGLEntries {
    * @returns {ILedgerEntry}
    */
   private getInvoiceTaxEntry = R.curry(
-    (saleInvoice: ISaleInvoice, taxPayableAccountId: number): ILedgerEntry => {
+    (
+      saleInvoice: ISaleInvoice,
+      taxPayableAccountId: number,
+      entry: IItemEntry,
+      index: number
+    ): ILedgerEntry => {
       const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
 
       return {
         ...commonEntry,
-        credit: saleInvoice.taxAmountWithheld,
+        credit: entry.taxAmount,
         accountId: taxPayableAccountId,
-        index: saleInvoice.entries.length + 3,
+        index: index + 3,
         accountNormal: AccountNormal.CREDIT,
+        taxRateId: entry.taxRateId,
+        taxRate : entry.taxRate,
       };
     }
   );
@@ -230,10 +239,13 @@ export class SaleInvoiceGLEntries {
       ARAccountId
     );
     const transformItemEntry = this.getInvoiceItemEntry(saleInvoice);
-
+    const transformTaxEntry = this.getInvoiceTaxEntry(
+      saleInvoice,
+      taxPayableAccountId
+    );
     const creditEntries = saleInvoice.entries.map(transformItemEntry);
-    const taxEntry = this.getInvoiceTaxEntry(saleInvoice, taxPayableAccountId);
+    const taxEntries = saleInvoice.entries.map(transformTaxEntry);
 
-    return [receivableEntry, ...creditEntries, taxEntry];
+    return [receivableEntry, ...creditEntries, ...taxEntries];
   };
 }

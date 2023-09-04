@@ -6,6 +6,10 @@ import { getTransactionTypeLabel } from '@/utils/transactions-types';
 
 export default class AccountTransaction extends TenantModel {
   referenceType: string;
+  credit: number;
+  debit: number;
+  exchangeRate: number;
+  taxRate: number;
 
   /**
    * Table name
@@ -26,6 +30,54 @@ export default class AccountTransaction extends TenantModel {
    */
   static get virtualAttributes() {
     return ['referenceTypeFormatted'];
+  }
+
+  /**
+   * Retrieves the credit amount in foreign currency.
+   * @return {number}
+   */
+  get creditFcy() {
+    return this.credit;
+  }
+
+  /**
+   * Retrieves the debit amount in foreign currency.
+   * @return {number}
+   */
+  get debitFcy() {
+    return this.debit;
+  }
+
+  /**
+   * Retrieves the credit amount in base currency.
+   * @return {number}
+   */
+  get creditBcy() {
+    return this.credit * this.exchangeRate;
+  }
+
+  /**
+   * Retrieves the debit amount in base currency.
+   * @return {number}
+   */
+  get debitBcy() {
+    return this.debit * this.exchangeRate;
+  }
+
+  /**
+   * Retrieves the tax amount in foreign currency.
+   * @return {number}
+   */
+  get taxAmountFcy() {
+    return (this.creditFcy - this.debitFcy) * this.taxRate;
+  }
+
+  /**
+   * Retrieves the tax amount in base currency.
+   * @return {number}
+   */
+  get taxAmountBcy() {
+    return (this.creditBcy - this.debitBcy) * this.taxRate;
   }
 
   /**

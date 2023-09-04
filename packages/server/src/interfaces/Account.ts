@@ -77,6 +77,9 @@ export interface IAccountTransaction {
   projectId?: number;
 
   account?: IAccount;
+
+  taxRateId?: number;
+  taxRate?: number;
 }
 export interface IAccountResponse extends IAccount {}
 

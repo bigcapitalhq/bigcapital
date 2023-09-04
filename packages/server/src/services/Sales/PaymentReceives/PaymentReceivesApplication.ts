@@ -87,7 +87,7 @@ export class PaymentReceivesApplication {
   }
 
   /**
-   * deletes the given payment receive.
+   * Deletes the given payment receive.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
    * @param {ISystemUser} authorizedUser
@@ -126,7 +126,7 @@ export class PaymentReceivesApplication {
   }
 
   /**
-   *
+   * Retrieves the given payment receive.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
    * @returns  {Promise<IPaymentReceive>}
