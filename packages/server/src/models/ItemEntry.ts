@@ -1,11 +1,17 @@
 import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
 
 export default class ItemEntry extends TenantModel {
   public taxRate: number;
+  public discount: number;
+  public quantity: number;
+  public rate: number;
+  public isInclusiveTax: number;
 
   /**
    * Table name.
+   * @returns {string}
    */
   static get tableName() {
     return 'items_entries';
@@ -13,24 +19,66 @@ export default class ItemEntry extends TenantModel {
 
   /**
    * Timestamps columns.
+   * @returns {string[]}
    */
   get timestamps() {
     return ['created_at', 'updated_at'];
   }
 
+  /**
+   * Virtual attributes.
+   * @returns {string[]}
+   */
   static get virtualAttributes() {
-    return ['amount', 'taxAmount'];
+    return [
+      'amount',
+      'taxAmount',
+      'amountExludingTax',
+      'amountInclusingTax',
+      'total',
+    ];
   }
 
+  /**
+   * Item entry total.
+   * Amount of item entry includes tax and subtracted discount amount.
+   * @returns {number}
+   */
+  get total() {
+    return this.amountInclusingTax;
+  }
+
+  /**
+   * Item entry amount.
+   * Amount of item entry that may include or exclude tax.
+   * @returns {number}
+   */
   get amount() {
-    return ItemEntry.calcAmount(this);
+    return this.quantity * this.rate;
   }
 
-  static calcAmount(itemEntry) {
-    const { discount, quantity, rate } = itemEntry;
-    const total = quantity * rate;
+  /**
+   * Item entry amount including tax.
+   * @returns {number}
+   */
+  get amountInclusingTax() {
+    return this.isInclusiveTax ? this.amount : this.amount + this.taxAmount;
+  }
 
-    return discount ? total - total * discount * 0.01 : total;
+  /**
+   * Item entry amount excluding tax.
+   * @returns {number}
+   */
+  get amountExludingTax() {
+    return this.isInclusiveTax ? this.amount - this.taxAmount : this.amount;
+  }
+
+  /**
+   * Discount amount.
+   * @returns {number}
+   */
+  get discountAmount() {
+    return this.amount * (this.discount / 100);
   }
 
   /**
@@ -46,9 +94,14 @@ export default class ItemEntry extends TenantModel {
    * @returns {number}
    */
   get taxAmount() {
-    return this.amount * this.tagRateFraction;
+    return this.isInclusiveTax
+      ? getInclusiveTaxAmount(this.amount, this.taxRate)
+      : getExlusiveTaxAmount(this.amount, this.taxRate);
   }
 
+  /**
+   * Item entry relations.
+   */
   static get relationMappings() {
     const Item = require('models/Item');
     const BillLandedCostEntry = require('models/BillLandedCostEntry');
@@ -104,6 +157,9 @@ export default class ItemEntry extends TenantModel {
         },
       },
 
+      /**
+       * Sale receipt reference.
+       */
       receipt: {
         relation: Model.BelongsToOneRelation,
         modelClass: SaleReceipt.default,
@@ -114,7 +170,7 @@ export default class ItemEntry extends TenantModel {
       },
 
       /**
-       *
+       * Project task reference.
        */
       projectTaskRef: {
         relation: Model.HasManyRelation,
@@ -126,7 +182,7 @@ export default class ItemEntry extends TenantModel {
       },
 
       /**
-       *
+       * Project expense reference.
        */
       projectExpenseRef: {
         relation: Model.HasManyRelation,
@@ -138,7 +194,7 @@ export default class ItemEntry extends TenantModel {
       },
 
       /**
-       *
+       * Project bill reference.
        */
       projectBillRef: {
         relation: Model.HasManyRelation,

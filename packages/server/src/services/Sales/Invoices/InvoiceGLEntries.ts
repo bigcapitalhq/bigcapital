@@ -93,7 +93,7 @@ export class SaleInvoiceGLEntries {
       'SaleInvoice',
       trx
     );
-  };
+};
 
   /**
    * Retrieves the given invoice ledger.
@@ -156,7 +156,7 @@ export class SaleInvoiceGLEntries {
 
     return {
       ...commonEntry,
-      debit: saleInvoice.totalBcy,
+      debit: saleInvoice.totalLocal,
       accountId: ARAccountId,
       contactId: saleInvoice.customerId,
       accountNormal: AccountNormal.DEBIT,

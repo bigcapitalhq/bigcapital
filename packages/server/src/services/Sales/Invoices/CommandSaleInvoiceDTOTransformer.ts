@@ -13,17 +13,14 @@ import {
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
 import { formatDateFields } from 'utils';
 import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import { ItemEntry } from '@/models';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private branchDTOTransform: BranchTransactionDTOTransform;
 
@@ -55,11 +52,9 @@ export class CommandSaleInvoiceDTOTransformer {
     authorizedUser: ITenantUser,
     oldSaleInvoice?: ISaleInvoice
   ): Promise<ISaleInvoice> {
-    const { ItemEntry } = this.tenancy.models(tenantId);
+    const entriesModels = this.transformDTOEntriesToModels(saleInvoiceDTO);
+    const amount = this.getDueBalanceItemEntries(entriesModels);
 
-    const balance = sumBy(saleInvoiceDTO.entries, (e) =>
-      ItemEntry.calcAmount(e)
-    );
     // Retreive the next invoice number.
     const autoNextNumber = this.invoiceIncrement.getNextInvoiceNumber(tenantId);
 
@@ -72,6 +67,7 @@ export class CommandSaleInvoiceDTOTransformer {
 
     const initialEntries = saleInvoiceDTO.entries.map((entry) => ({
       referenceType: 'SaleInvoice',
+      isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
       ...entry,
     }));
     const entries = await composeAsync(
@@ -87,7 +83,7 @@ export class CommandSaleInvoiceDTOTransformer {
         ['invoiceDate', 'dueDate']
       ),
       // Avoid rewrite the deliver date in edit mode when already published.
-      balance,
+      amount,
       currencyCode: customer.currencyCode,
       exchangeRate: saleInvoiceDTO.exchangeRate || 1,
       ...(saleInvoiceDTO.delivered &&
@@ -107,4 +103,29 @@ export class CommandSaleInvoiceDTOTransformer {
       this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId)
     )(initialDTO);
   }
+
+  /**
+   * Transforms the DTO entries to invoice entries models.
+   * @param {ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO} entries
+   * @returns {IItemEntry[]}
+   */
+  private transformDTOEntriesToModels = (
+    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO
+  ): ItemEntry[] => {
+    return saleInvoiceDTO.entries.map((entry) => {
+      return ItemEntry.fromJson({
+        ...entry,
+        isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
+      });
+    });
+  };
+
+  /**
+   * Gets the due balance from the invoice entries.
+   * @param {IItemEntry[]} entries
+   * @returns {number}
+   */
+  private getDueBalanceItemEntries = (entries: ItemEntry[]) => {
+    return sumBy(entries, (e) => e.amount);
+  };
 }

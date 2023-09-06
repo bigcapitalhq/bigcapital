@@ -1,8 +1,7 @@
 import moment from 'moment';
 import * as R from 'ramda';
 import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
-import { formatNumber } from 'utils';
-import { isArrayLikeObject } from 'lodash/fp';
+import { formatNumber, sortObjectKeysAlphabetically } from 'utils';
 
 export class Transformer {
   public context: any;
@@ -82,6 +81,7 @@ export class Transformer {
     const normlizedItem = this.normalizeModelItem(item);
 
     return R.compose(
+      sortObjectKeysAlphabetically,
       this.transform,
       R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
       this.includeAttributesTransformed

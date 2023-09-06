@@ -1,6 +1,5 @@
 import { Inject, Service } from 'typedi';
 import { keyBy, sumBy } from 'lodash';
-import * as R from 'ramda';
 import { ItemEntry } from '@/models';
 import HasTenancyService from '../Tenancy/TenancyService';
 

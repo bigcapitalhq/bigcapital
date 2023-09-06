@@ -1,5 +1,5 @@
 import { mixin, Model, raw } from 'objection';
-import { castArray } from 'lodash';
+import { castArray, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
@@ -13,10 +13,16 @@ export default class SaleInvoice extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
-  taxAmountWithheld: number;
-  balance: number;
-  paymentAmount: number;
-  exchangeRate: number;
+  public taxAmountWithheld: number;
+  public amount: number;
+  public paymentAmount: number;
+  public exchangeRate: number;
+  public writtenoffAmount: number;
+  public creditedAmount: number;
+  public isInclusiveTax: boolean;
+  public writtenoffAt: Date;
+  public dueDate: Date;
+  public deliveredAt: Date;
 
   /**
    * Table name
@@ -32,6 +38,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
     return ['created_at', 'updated_at'];
   }
 
+  /**
+   *
+   */
   get pluralName() {
     return 'asdfsdf';
   }
@@ -41,138 +50,80 @@ export default class SaleInvoice extends mixin(TenantModel, [
    */
   static get virtualAttributes() {
     return [
-      'localAmount',
-      'dueAmount',
-      'balanceAmount',
       'isDelivered',
       'isOverdue',
       'isPartiallyPaid',
       'isFullyPaid',
-      'isPaid',
       'isWrittenoff',
+      'isPaid',
+
+      'dueAmount',
+      'balanceAmount',
       'remainingDays',
       'overdueDays',
-      'filterByBranches',
+
+      'subtotal',
+      'subtotalLocal',
+      'subtotalExludingTax',
+
+      'taxAmountWithheldLocal',
+      'total',
+      'totalLocal',
+
+      'writtenoffAmountLocal',
     ];
   }
 
   /**
-   * Invoice total FCY.
+   * Subtotal. (Tax inclusive) if the tax inclusive is enabled.
    * @returns {number}
    */
-  get totalFcy() {
-    return this.amountFcy + this.taxAmountWithheldFcy;
+  get subtotal() {
+    return this.amount;
   }
 
   /**
-   * Invoice total BCY.
+   * Subtotal in base currency. (Tax inclusive) if the tax inclusive is enabled.
    * @returns {number}
    */
-  get totalBcy() {
-    return this.amountBcy + this.taxAmountWithheldBcy;
+  get subtotalLocal() {
+    return this.amount * this.exchangeRate;
   }
 
   /**
-   * Tax amount withheld FCY.
+   * Sale invoice amount excluding tax.
    * @returns {number}
    */
-  get taxAmountWithheldFcy() {
-    return this.taxAmountWithheld;
+  get subtotalExludingTax() {
+    return this.isInclusiveTax
+      ? this.subtotal - this.taxAmountWithheld
+      : this.subtotal;
   }
 
   /**
-   * Tax amount withheld BCY.
+   * Tax amount withheld in base currency.
    * @returns {number}
    */
-  get taxAmountWithheldBcy() {
-    return this.taxAmountWithheld;
+  get taxAmountWithheldLocal() {
+    return this.taxAmountWithheld * this.exchangeRate;
   }
 
   /**
-   * Subtotal FCY.
+   * Invoice total. (Tax included)
    * @returns {number}
-   */
-  get subtotalFcy() {
-    return this.amountFcy;
-  }
-
-  /**
-   * Subtotal BCY.
-   * @returns {number}
-   */
-  get subtotalBcy() {
-    return this.amountBcy;
-  }
-
-  /**
-   * Invoice due amount FCY.
-   * @returns {number}
-   */
-  get dueAmountFcy() {
-    return this.amountFcy - this.paymentAmountFcy;
-  }
-
-  /**
-   * Invoice due amount BCY.
-   * @returns {number}
-   */
-  get dueAmountBcy() {
-    return this.amountBcy - this.paymentAmountBcy;
-  }
-
-  /**
-   * Invoice amount FCY.
-   * @returns {number}
-   */
-  get amountFcy() {
-    return this.balance;
-  }
-
-  /**
-   * Invoice amount BCY.
-   * @returns {number}
-   */
-  get amountBcy() {
-    return this.balance * this.exchangeRate;
-  }
-
-  /**
-   * Invoice payment amount FCY.
-   * @returns {number}
-   */
-  get paymentAmountFcy() {
-    return this.paymentAmount;
-  }
-
-  /**
-   * Invoice payment amount BCY.
-   * @returns {number}
-   */
-  get paymentAmountBcy() {
-    return this.paymentAmount * this.exchangeRate;
-  }
-
-  /**
-   *
    */
   get total() {
-    return this.balance + this.taxAmountWithheld;
+    return this.isInclusiveTax
+      ? this.subtotal
+      : this.subtotal + this.taxAmountWithheld;
   }
 
   /**
-   * Invoice amount in local currency.
+   * Invoice total in local currency. (Tax included)
    * @returns {number}
    */
-  get localAmount() {
+  get totalLocal() {
     return this.total * this.exchangeRate;
-  }
-
-  /**
-   * Invoice local written-off amount.
-   * @returns {number}
-   */
-  get localWrittenoffAmount() {
-    return this.writtenoffAmount * this.exchangeRate;
   }
 
   /**
@@ -205,7 +156,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @return {boolean}
    */
   get dueAmount() {
-    return Math.max(this.balance - this.balanceAmount, 0);
+    return Math.max(this.total - this.balanceAmount, 0);
   }
 
   /**
@@ -213,7 +164,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @return {boolean}
    */
   get isPartiallyPaid() {
-    return this.dueAmount !== this.balance && this.dueAmount > 0;
+    return this.dueAmount !== this.total && this.dueAmount > 0;
   }
 
   /**
@@ -491,7 +442,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       *
+       * Invoice may has associated cost transactions.
        */
       costTransactions: {
         relation: Model.HasManyRelation,
@@ -506,7 +457,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       *
+       * Invoice may has associated payment entries.
        */
       paymentEntries: {
         relation: Model.HasManyRelation,
@@ -529,6 +480,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
         },
       },
 
+      /**
+       * Invoice may has associated written-off expense account.
+       */
       writtenoffExpenseAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
@@ -539,7 +493,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       *
+       * Invoice may has associated tax rate transactions.
        */
       taxes: {
         relation: Model.HasManyRelation,

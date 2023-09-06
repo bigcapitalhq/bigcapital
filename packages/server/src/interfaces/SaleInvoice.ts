@@ -5,7 +5,8 @@ import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
 export interface ISaleInvoice {
   id: number;
-  balance: number;
+  amount: number;
+  amountLocal?: number;
   paymentAmount: number;
   currencyCode: string;
   exchangeRate?: number;
@@ -27,15 +28,21 @@ export interface ISaleInvoice {
   branchId?: number;
   projectId?: number;
 
-  localAmount?: number;
-
-  localWrittenoffAmount?: number;
+  writtenoffAmount?: number;
+  writtenoffAmountLocal?: number;
   writtenoffExpenseAccountId?: number;
-
   writtenoffExpenseAccount?: IAccount;
 
   taxAmountWithheld: number;
-  taxes: ITaxTransaction[]
+  taxAmountWithheldLocal: number;
+  taxes: ITaxTransaction[];
+
+  total: number;
+  totalLocal: number;
+
+  subtotal: number;
+  subtotalLocal: number;
+  subtotalExludingTax: number;
 }
 
 export interface ISaleInvoiceDTO {
@@ -54,6 +61,8 @@ export interface ISaleInvoiceDTO {
   warehouseId?: number | null;
   projectId?: number;
   branchId?: number | null;
+
+  isInclusiveTax?: boolean;
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {

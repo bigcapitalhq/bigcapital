@@ -169,7 +169,7 @@ export default class SaleInvoicesController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('project_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('is_tax_exclusive').optional().isBoolean().toBoolean(),
+      check('is_inclusive_tax').optional().isBoolean().toBoolean(),
 
       check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').exists().isNumeric().toInt(),

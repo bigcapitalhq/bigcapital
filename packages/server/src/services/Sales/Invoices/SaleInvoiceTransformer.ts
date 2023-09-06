@@ -9,13 +9,19 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
-      'formattedInvoiceDate',
-      'formattedDueDate',
-      'formattedAmount',
-      'formattedDueAmount',
-      'formattedPaymentAmount',
-      'formattedBalanceAmount',
-      'formattedExchangeRate',
+      'invoiceDateFormatted',
+      'dueDateFormatted',
+      'dueAmountFormatted',
+      'paymentAmountFormatted',
+      'balanceAmountFormatted',
+      'exchangeRateFormatted',
+      'subtotalFormatted',
+      'subtotalLocalFormatted',
+      'subtotalExludingTaxFormatted',
+      'taxAmountWithheldFormatted',
+      'taxAmountWithheldLocalFormatted',
+      'totalFormatted',
+      'totalLocalFormatted',
       'taxes',
     ];
   };
@@ -25,7 +31,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {String}
    */
-  protected formattedInvoiceDate = (invoice): string => {
+  protected invoiceDateFormatted = (invoice): string => {
     return this.formatDate(invoice.invoiceDate);
   };
 
@@ -34,19 +40,8 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedDueDate = (invoice): string => {
+  protected dueDateFormatted = (invoice): string => {
     return this.formatDate(invoice.dueDate);
-  };
-
-  /**
-   * Retrieve formatted invoice amount.
-   * @param {ISaleInvoice} invoice
-   * @returns {string}
-   */
-  protected formattedAmount = (invoice): string => {
-    return formatNumber(invoice.balance, {
-      currencyCode: invoice.currencyCode,
-    });
   };
 
   /**
@@ -54,7 +49,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedDueAmount = (invoice): string => {
+  protected dueAmountFormatted = (invoice): string => {
     return formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
     });
@@ -65,7 +60,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedPaymentAmount = (invoice): string => {
+  protected paymentAmountFormatted = (invoice): string => {
     return formatNumber(invoice.paymentAmount, {
       currencyCode: invoice.currencyCode,
     });
@@ -76,7 +71,7 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedBalanceAmount = (invoice): string => {
+  protected balanceAmountFormatted = (invoice): string => {
     return formatNumber(invoice.balanceAmount, {
       currencyCode: invoice.currencyCode,
     });
@@ -87,8 +82,87 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    * @returns {string}
    */
-  protected formattedExchangeRate = (invoice): string => {
+  protected exchangeRateFormatted = (invoice): string => {
     return formatNumber(invoice.exchangeRate, { money: false });
+  };
+
+  /**
+   * Retrieves formatted subtotal in base currency.
+   * (Tax inclusive if the tax inclusive is enabled)
+   * @param invoice
+   * @returns {string}
+   */
+  protected subtotalFormatted = (invoice): string => {
+    return formatNumber(invoice.subtotal, {
+      currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves formatted subtotal in foreign currency.
+   * (Tax inclusive if the tax inclusive is enabled)
+   * @param invoice
+   * @returns {string}
+   */
+  protected subtotalLocalFormatted = (invoice): string => {
+    return formatNumber(invoice.subtotalLocal, {
+      currencyCode: invoice.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted subtotal excluding tax in foreign currency.
+   * @param invoice
+   * @returns {string}
+   */
+  protected subtotalExludingTaxFormatted = (invoice): string => {
+    return formatNumber(invoice.subtotalExludingTax, {
+      currencyCode: invoice.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted tax amount withheld in foreign currency.
+   * @param invoice
+   * @returns {string}
+   */
+  protected taxAmountWithheldFormatted = (invoice): string => {
+    return formatNumber(invoice.taxAmountWithheld, {
+      currencyCode: invoice.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted tax amount withheld in base currency.
+   * @param invoice
+   * @returns {string}
+   */
+  protected taxAmountWithheldLocalFormatted = (invoice): string => {
+    return formatNumber(invoice.taxAmountWithheldLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+    });
+  };
+
+  /**
+   * Retrieves formatted total in foreign currency.
+   * @param invoice
+   * @returns {string}
+   */
+  protected totalFormatted = (invoice): string => {
+    return formatNumber(invoice.total, {
+      currencyCode: invoice.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves formatted total in base currency.
+   * @param invoice
+   * @returns {string}
+   */
+  protected totalLocalFormatted = (invoice): string => {
+    return formatNumber(invoice.totalLocal, {
+      currencyCode: this.context.organization.baseCurrency,
+    });
   };
 
   /**
@@ -96,6 +170,10 @@ export class SaleInvoiceTransformer extends Transformer {
    * @param {ISaleInvoice} invoice
    */
   protected taxes = (invoice) => {
-    return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer());
+    return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer(), {
+      amount: invoice.amount,
+      isInclusiveTax: invoice.isInclusiveTax,
+      currencyCode: invoice.currencyCode,
+    });
   };
 }

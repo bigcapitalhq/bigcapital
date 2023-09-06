@@ -1,4 +1,7 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { formatNumber } from '@/utils';
+import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
+import { format } from 'mathjs';
 
 export class SaleInvoiceTaxEntryTransformer extends Transformer {
   /**
@@ -6,7 +9,14 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['name', 'taxRateCode', 'raxRate', 'taxRateId'];
+    return [
+      'name',
+      'taxRateCode',
+      'taxRate',
+      'taxRateId',
+      'taxRateAmount',
+      'taxRateAmountFormatted',
+    ];
   };
 
   /**
@@ -31,7 +41,7 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    * @param taxEntry
    * @returns {number}
    */
-  protected raxRate = (taxEntry) => {
+  protected taxRate = (taxEntry) => {
     return taxEntry.taxAmount || taxEntry.taxRate.rate;
   };
 
@@ -42,5 +52,27 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    */
   protected name = (taxEntry) => {
     return taxEntry.taxRate.name;
+  };
+
+  /**
+   * Retrieve tax rate amount.
+   * @param taxEntry
+   */
+  protected taxRateAmount = (taxEntry) => {
+    const taxRate = this.taxRate(taxEntry);
+
+    return this.options.isInclusiveTax
+      ? getInclusiveTaxAmount(this.options.amount, taxRate)
+      : getExlusiveTaxAmount(this.options.amount, taxRate);
+  };
+
+  /**
+   * Retrieve formatted tax rate amount.
+   * @returns {string}
+   */
+  protected taxRateAmountFormatted = (taxEntry) => {
+    return formatNumber(this.taxRateAmount(taxEntry), {
+      currencyCode: this.options.currencyCode,
+    });
   };
 }

@@ -43,6 +43,9 @@ exports.up = (knex) => {
         .references('id')
         .inTable('tax_rates');
       table.decimal('tax_rate').unsigned();
+    })
+    .table('sales_invoices', (table) => {
+      table.rename('balance', 'amount');
     });
 };
 

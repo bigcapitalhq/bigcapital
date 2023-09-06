@@ -18,6 +18,11 @@ export interface IItemEntry {
   rate: number;
   amount: number;
 
+  total: number;
+  amountInclusingTax: number;
+  amountExludingTax: number;
+  discountAmount: number;
+
   landedCost: number;
   allocatedCostAmount: number;
   unallocatedCostAmount: number;
