@@ -26,6 +26,7 @@ function SalesTaxLiabilitySummaryBoot({ filter, ...props }) {
 
   const provider = {
     salesTaxLiabilitySummary,
+    refetchSalesTaxLiabilitySummary: refetch,
     isFetching,
     isLoading,
     query,

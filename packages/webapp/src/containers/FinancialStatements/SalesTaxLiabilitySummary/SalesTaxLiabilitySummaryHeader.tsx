@@ -34,6 +34,9 @@ function SalesTaxLiabilitySummaryHeader({
 }) {
   const defaultValues = getDefaultSalesTaxLiablitySummaryQuery();
 
+  // Validation schema.
+  const validationSchema = getSalesTaxLiabilitySummaryQueryValidation();
+
   // Filter form initial values.
   const initialValues = transformToForm(
     {
@@ -44,8 +47,6 @@ function SalesTaxLiabilitySummaryHeader({
     },
     defaultValues,
   );
-  // Validation schema.
-  const validationSchema = getSalesTaxLiabilitySummaryQueryValidation();
 
   // Handle form submit.
   const handleSubmit = (values, actions) => {
@@ -108,6 +109,6 @@ export default compose(
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
   .bp3-drawer {
-    max-height: 520px;
+    max-height: 320px;
   }
 `;

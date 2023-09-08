@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import intl from 'react-intl-universal';
+import { compose } from 'ramda';
 
 import { TableStyle } from '@/constants';
 import { ReportDataTable, FinancialSheet } from '@/components';
@@ -9,7 +9,6 @@ import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { useSalesTaxLiabilitySummaryColumns } from './utils';
-import { compose } from 'ramda';
 
 /**
  * Balance sheet table.
@@ -20,7 +19,7 @@ function SalesTaxLiabilitySummaryTableRoot({
 }) {
   // Balance sheet context.
   const {
-    salesTaxLiabilitySummary: { table },
+    salesTaxLiabilitySummary: { table, query },
   } = useSalesTaxLiabilitySummaryContext();
 
   // Retrieve the database columns.
@@ -36,7 +35,8 @@ function SalesTaxLiabilitySummaryTableRoot({
     <FinancialSheet
       companyName={organizationName}
       sheetType={'Sales Tax Liability Summary'}
-      asDate={new Date()}
+      fromDate={query.from_date}
+      toDate={query.to_date}
       basis={''}
     >
       <SalesTaxLiabilitySummaryDataTable

@@ -33,19 +33,17 @@ function SalesTaxLiabilitySummaryActionsBar({
   numberFormat,
   onNumberFormatSubmit,
 }) {
-  const { isLoading, refetchBalanceSheet } =
+  const { isLoading, refetchSalesTaxLiabilitySummary } =
     useSalesTaxLiabilitySummaryContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleFilterDrawer();
   };
-
-  // Handle recalculate the report button.
+  // Handle re-calculate the report button.
   const handleRecalcReport = () => {
-    refetchBalanceSheet();
+    refetchSalesTaxLiabilitySummary();
   };
-
   // Handle number format form submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
