@@ -23,22 +23,30 @@ export function InvoiceDetailTableFooter() {
       <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'invoice.details.subtotal'} />}
-          value={<FormatNumber value={invoice.balance} />}
+          value={<FormatNumber value={invoice.subtotal_formatted} />}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
+        {invoice.taxes.map((taxRate) => (
+          <TotalLine
+            key={taxRate.id}
+            title={`${taxRate.name} (${taxRate.tax_rate}%)`}
+            value={taxRate.tax_rate_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        ))}
         <TotalLine
           title={<T id={'invoice.details.total'} />}
-          value={invoice.formatted_amount}
+          value={invoice.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
         <TotalLine
           title={<T id={'invoice.details.payment_amount'} />}
-          value={invoice.formatted_payment_amount}
+          value={invoice.payment_amount_formatted}
         />
         <TotalLine
           title={<T id={'invoice.details.due_amount'} />}
-          value={invoice.formatted_due_amount}
+          value={invoice.due_amount_formatted}
           textStyle={TotalLineTextStyle.Bold}
         />
       </InvoiceTotalLines>

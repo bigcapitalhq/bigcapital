@@ -8,7 +8,7 @@ import InvoiceFormHeaderFields from './InvoiceFormHeaderFields';
 
 import { CLASSES } from '@/constants/classes';
 import { PageFormBigNumber } from '@/components';
-import { useInvoiceTotal } from './utils';
+import { useInvoiceSubtotal } from './utils';
 
 /**
  * Invoice form header section.
@@ -32,7 +32,7 @@ function InvoiceFormBigTotal() {
   } = useFormikContext();
 
   // Calculate the total due amount of invoice entries.
-  const totalDueAmount = useInvoiceTotal();
+  const totalDueAmount = useInvoiceSubtotal();
 
   return (
     <PageFormBigNumber

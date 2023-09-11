@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
@@ -7,97 +7,98 @@ import { DataTableEditable } from '@/components';
 
 import { useEditableItemsEntriesColumns } from './components';
 import {
-  saveInvoke,
-  compose,
-  updateMinEntriesLines,
-  updateRemoveLineByIndex,
-} from '@/utils';
-import {
   useFetchItemRow,
   composeRowsOnNewRow,
-  composeRowsOnEditCell,
+  useComposeRowsOnEditTableCell,
+  useComposeRowsOnRemoveTableRow,
 } from './utils';
+import {
+  ItemEntriesTableProvider,
+  useItemEntriesTableContext,
+} from './ItemEntriesTableProvider';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
 
 /**
  * Items entries table.
  */
-function ItemsEntriesTable({
-  // #ownProps
-  items,
-  entries,
-  initialEntries,
-  defaultEntry,
-  errors,
-  onUpdateData,
-  currencyCode,
-  itemType, // sellable or purchasable
-  landedCost = false,
-  minLinesNumber
-}) {
-  const [rows, setRows] = React.useState(initialEntries);
+function ItemsEntriesTable(props) {
+  const { value, initialValue, onChange } = props;
 
-  // Allows to observes `entries` to make table rows outside controlled.
-  useEffect(() => {
-    if (entries && entries !== rows) {
-      setRows(entries);
-    }
-  }, [entries, rows]);
+  const [localValue, handleChange] = useUncontrolled({
+    value,
+    initialValue,
+    finalValue: [],
+    onChange,
+  });
+  return (
+    <ItemEntriesTableProvider value={{ ...props, localValue, handleChange }}>
+      <ItemEntriesTableRoot />
+    </ItemEntriesTableProvider>
+  );
+}
+
+/**
+ * Items entries table logic.
+ * @returns {JSX.Element}
+ */
+function ItemEntriesTableRoot() {
+  const {
+    localValue,
+    defaultEntry,
+    handleChange,
+    items,
+    errors,
+    currencyCode,
+    landedCost,
+    taxRates,
+  } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
-  const columns = useEditableItemsEntriesColumns({ landedCost });
+  const columns = useEditableItemsEntriesColumns();
+
+  const composeRowsOnEditCell = useComposeRowsOnEditTableCell();
+  const composeRowsOnDeleteRow = useComposeRowsOnRemoveTableRow();
 
   // Handle the fetch item row details.
   const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({
     landedCost,
-    itemType,
+    itemType: null,
     notifyNewRow: (newRow, rowIndex) => {
       // Update the rate, description and quantity data of the row.
-      const newRows = composeRowsOnNewRow(rowIndex, newRow, rows);
-
-      setRows(newRows);
-      onUpdateData(newRows);
+      const newRows = composeRowsOnNewRow(rowIndex, newRow, localValue);
+      handleChange(newRows);
     },
   });
-
   // Handles the editor data update.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
       if (columnId === 'item_id') {
         setItemRow({ rowIndex, columnId, itemId: value });
       }
-      const composeEditCell = composeRowsOnEditCell(rowIndex, columnId);
-      const newRows = composeEditCell(value, defaultEntry, rows);
-
-      setRows(newRows);
-      onUpdateData(newRows);
+      const newRows = composeRowsOnEditCell(rowIndex, columnId, value);
+      handleChange(newRows);
     },
-    [rows, defaultEntry, onUpdateData, setItemRow],
+    [localValue, defaultEntry, handleChange],
   );
 
   // Handle table rows removing by index.
   const handleRemoveRow = (rowIndex) => {
-    const newRows = compose(
-      // Ensure minimum lines count.
-      updateMinEntriesLines(minLinesNumber, defaultEntry),
-      // Remove the line by the given index.
-      updateRemoveLineByIndex(rowIndex),
-    )(rows);
-
-    setRows(newRows);
-    saveInvoke(onUpdateData, newRows);
+    const newRows = composeRowsOnDeleteRow(rowIndex);
+    handleChange(newRows);
   };
 
   return (
     <DataTableEditable
       className={classNames(CLASSES.DATATABLE_EDITOR_ITEMS_ENTRIES)}
       columns={columns}
-      data={rows}
+      data={localValue}
       sticky={true}
       progressBarLoading={isItemFetching}
       cellsLoading={isItemFetching}
       cellsLoadingCoords={cellsLoading}
       payload={{
         items,
+        taxRates,
         errors: errors || [],
         updateData: handleUpdateData,
         removeRow: handleRemoveRow,

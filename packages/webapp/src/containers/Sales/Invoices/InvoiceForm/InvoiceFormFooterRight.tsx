@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { useFormikContext } from 'formik';
 
 import {
   T,
@@ -9,7 +10,7 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useInvoiceTotals } from './utils';
+import { useInvoiceAggregatedTaxRates, useInvoiceTotals } from './utils';
 
 export function InvoiceFormFooterRight() {
   // Calculate the total due amount of invoice entries.
@@ -20,15 +21,34 @@ export function InvoiceFormFooterRight() {
     formattedPaymentTotal,
   } = useInvoiceTotals();
 
+  const {
+    values: { inclusive_exclusive_tax },
+  } = useFormikContext();
+
+  const taxEntries = useInvoiceAggregatedTaxRates();
+
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'invoice_form.label.subtotal'} />}
+        title={
+          <>
+            {inclusive_exclusive_tax === 'inclusive'
+              ? 'Subtotal (Tax Inclusive)'
+              : 'Subtotal'}
+          </>
+        }
         value={formattedSubtotal}
-        borderStyle={TotalLineBorderStyle.None}
       />
+      {taxEntries.map((tax, index) => (
+        <TotalLine
+          key={index}
+          title={tax.label}
+          value={tax.taxAmountFormatted}
+          borderStyle={TotalLineBorderStyle.None}
+        />
+      ))}
       <TotalLine
-        title={<T id={'invoice_form.label.total'} />}
+        title={'Total (USD)'}
         value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}

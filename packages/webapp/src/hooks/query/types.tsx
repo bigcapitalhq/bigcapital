@@ -224,6 +224,10 @@ const ORGANIZATION = {
   ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES: 'ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES',
 };
 
+export const TAX_RATES = {
+  TAX_RATES: 'TAX_RATES',
+}
+
 export default {
   ...Authentication,
   ...ACCOUNTS,
@@ -257,4 +261,5 @@ export default {
   ...BRANCHES,
   ...DASHBOARD,
   ...ORGANIZATION,
+  ...TAX_RATES
 };

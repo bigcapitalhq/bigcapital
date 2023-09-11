@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import classNames from 'classnames';
 import { FastField } from 'formik';
-import { CLASSES } from '@/constants/classes';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
@@ -11,32 +9,33 @@ import { entriesFieldShouldUpdate } from './utils';
  * Invoice items entries editor field.
  */
 export default function InvoiceItemsEntriesEditorField() {
-  const { items } = useInvoiceFormContext();
+  const { items, taxRates } = useInvoiceFormContext();
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField
-        name={'entries'}
-        items={items}
-        shouldUpdate={entriesFieldShouldUpdate}
-      >
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <ItemsEntriesTable
-            entries={value}
-            onUpdateData={(entries) => {
-              setFieldValue('entries', entries);
-            }}
-            items={items}
-            errors={error}
-            linesNumber={4}
-            currencyCode={values.currency_code}
-          />
-        )}
-      </FastField>
-    </div>
+    <FastField
+      name={'entries'}
+      items={items}
+      taxRates={taxRates}
+      shouldUpdate={entriesFieldShouldUpdate}
+    >
+      {({
+        form: { values, setFieldValue },
+        field: { value },
+        meta: { error, touched },
+      }) => (
+        <ItemsEntriesTable
+          value={value}
+          onChange={(entries) => {
+            setFieldValue('entries', entries);
+          }}
+          items={items}
+          taxRates={taxRates}
+          errors={error}
+          linesNumber={4}
+          currencyCode={values.currency_code}
+          isInclusiveTax={values.inclusive_exclusive_tax === 'inclusive'}
+        />
+      )}
+    </FastField>
   );
 }

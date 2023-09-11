@@ -17,6 +17,8 @@ import {
   ProjectBillableEntriesCell,
 } from '@/components/DataTableCells';
 import { useFeatureCan } from '@/hooks/state';
+import { TaxRatesSuggestInputCell } from '@/components/TaxRates/TaxRatesSuggestInputCell';
+import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 
 /**
  * Item header cell.
@@ -43,7 +45,6 @@ export function ActionsCellRenderer({
   const onRemoveRole = () => {
     removeRow(index);
   };
-
   const exampleMenu = (
     <Menu>
       <MenuItem
@@ -89,15 +90,17 @@ const LandedCostHeaderCell = () => {
 /**
  * Retrieve editable items entries columns.
  */
-export function useEditableItemsEntriesColumns({ landedCost }) {
+export function useEditableItemsEntriesColumns() {
   const { featureCan } = useFeatureCan();
+  const { landedCost } = useItemEntriesTableContext();
+
   const isProjectsFeatureEnabled = featureCan(Features.Projects);
 
   return React.useMemo(
     () => [
       {
-        Header: ItemHeaderCell,
         id: 'item_id',
+        Header: ItemHeaderCell,
         accessor: 'item_id',
         Cell: ItemsListCell,
         disableSortBy: true,
@@ -128,6 +131,13 @@ export function useEditableItemsEntriesColumns({ landedCost }) {
         disableSortBy: true,
         width: 70,
         align: Align.Right,
+      },
+      {
+        Header: 'Tax rate',
+        accessor: 'tax_rate_id',
+        Cell: TaxRatesSuggestInputCell,
+        disableSortBy: true,
+        width: 110,
       },
       {
         Header: intl.get('discount'),

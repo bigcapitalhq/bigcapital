@@ -1,27 +1,27 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
+import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { omit, first } from 'lodash';
-import {
-  compose,
-  transformToForm,
-  repeatValue,
-  transactionNumber,
-} from '@/utils';
+import { omit, first, keyBy, sumBy, groupBy } from 'lodash';
+import { compose, transformToForm, repeatValue } from '@/utils';
 import { useFormikContext } from 'formik';
 
 import { formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  assignEntriesTaxAmount,
+  getEntriesTotal,
+} from '@/containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
+import { TaxType } from '@/interfaces/TaxRates';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -34,6 +34,9 @@ export const defaultInvoiceEntry = {
   quantity: '',
   description: '',
   amount: '',
+  tax_rate_id: '',
+  tax_rate: '',
+  tax_amount: '',
 };
 
 // Default invoice object.
@@ -43,6 +46,7 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
+  inclusive_exclusive_tax: 'inclusive',
   // Holds the invoice number that entered manually only.
   invoice_no_manually: '',
   reference_no: '',
@@ -114,7 +118,7 @@ export const transformErrors = (errors, { setErrors }) => {
  */
 export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items||
+    newProps.shouldUpdateDeps.items !== oldProps.shouldUpdateDeps.items ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -125,6 +129,7 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.items !== oldProps.items ||
+    newProps.taxRates !== oldProps.taxRates ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };
@@ -154,12 +159,17 @@ export function transformValueToRequest(values) {
     (item) => item.item_id && item.quantity,
   );
   return {
-    ...omit(values, ['invoice_no', 'invoice_no_manually']),
+    ...omit(values, [
+      'invoice_no',
+      'invoice_no_manually',
+      'inclusive_exclusive_tax',
+    ]),
     // The `invoice_no_manually` will be presented just if the auto-increment
     // is disable, always both attributes hold the same value in manual mode.
     ...(values.invoice_no_manually && {
       invoice_no: values.invoice_no,
     }),
+    is_inclusive_tax: values.inclusive_exclusive_tax === 'inclusive',
     entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
     delivered: false,
   };
@@ -196,7 +206,11 @@ export const useSetPrimaryBranchToForm = () => {
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
 
-export const useInvoiceTotal = () => {
+/**
+ * Retrieves the invoice subtotal.
+ * @returns {number}
+ */
+export const useInvoiceSubtotal = () => {
   const {
     values: { entries },
   } = useFormikContext();
@@ -216,10 +230,12 @@ export const useInvoiceTotals = () => {
   // Retrieves the invoice entries total.
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
+  const total_ = useInvoiceTotal();
+
   // Retrieves the formatted total money.
   const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
+    () => formattedAmount(total_, currencyCode),
+    [total_, currencyCode],
   );
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
@@ -271,6 +287,9 @@ export const useInvoiceIsForeignCustomer = () => {
   return isForeignCustomer;
 };
 
+/**
+ * Resets the form state to initial values
+ */
 export const resetFormState = ({ initialValues, values, resetForm }) => {
   resetForm({
     values: {
@@ -280,4 +299,106 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
       brand_id: values.brand_id,
     },
   });
+};
+
+/**
+ * Re-calcualte the entries tax amount when editing.
+ * @returns {string}
+ */
+export const composeEntriesOnEditInclusiveTax = (
+  inclusiveExclusiveTax: string,
+  entries,
+) => {
+  return R.compose(
+    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+  )(entries);
+};
+
+/**
+ * Retreives the invoice aggregated tax rates.
+ * @returns {Array}
+ */
+export const useInvoiceAggregatedTaxRates = () => {
+  const { values } = useFormikContext();
+  const { taxRates } = useInvoiceFormContext();
+
+  const taxRatesById = useMemo(() => keyBy(taxRates, 'id'), [taxRates]);
+
+  // Calculate the total tax amount of invoice entries.
+  return React.useMemo(() => {
+    const filteredEntries = values.entries.filter((e) => e.tax_rate_id);
+    const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
+
+    return Object.keys(groupedTaxRates).map((taxRateId) => {
+      const taxRate = taxRatesById[taxRateId];
+      const taxRates = groupedTaxRates[taxRateId];
+      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
+      const taxAmountFormatted = formattedAmount(totalTaxAmount, 'USD');
+
+      return {
+        taxRateId,
+        taxRate: taxRate.rate,
+        label: `${taxRate.name} [${taxRate.rate}%]`,
+        taxAmount: totalTaxAmount,
+        taxAmountFormatted,
+      };
+    });
+  }, [values.entries]);
+};
+
+/**
+ * Retreives the invoice total tax amount.
+ * @returns {number}
+ */
+export const useInvoiceTotalTaxAmount = () => {
+  const { values } = useFormikContext();
+
+  return React.useMemo(() => {
+    const filteredEntries = values.entries.filter((entry) => entry.tax_amount);
+    return sumBy(filteredEntries, 'tax_amount');
+  }, [values.entries]);
+};
+
+/**
+ * Retreives the invoice total.
+ * @returns {number}
+ */
+export const useInvoiceTotal = () => {
+  const subtotal = useInvoiceSubtotal();
+  const totalTaxAmount = useInvoiceTotalTaxAmount();
+  const isExclusiveTax = useIsInvoiceTaxExclusive();
+
+  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
+    subtotal,
+  );
+};
+
+/**
+ * Retreives the invoice due amount.
+ * @returns {number}
+ */
+export const useInvoiceDueAmount = () => {
+  const total = useInvoiceTotal();
+
+  return total;
+};
+
+/**
+ * Detrmines whether the tax is inclusive.
+ * @returns {boolean}
+ */
+export const useIsInvoiceTaxInclusive = () => {
+  const { values } = useFormikContext();
+
+  return values.inclusive_exclusive_tax === TaxType.Inclusive;
+};
+
+/**
+ * Detrmines whether the tax is exclusive.
+ * @returns {boolean}
+ */
+export const useIsInvoiceTaxExclusive = () => {
+  const { values } = useFormikContext();
+
+  return values.inclusive_exclusive_tax === TaxType.Exclusive;
 };
