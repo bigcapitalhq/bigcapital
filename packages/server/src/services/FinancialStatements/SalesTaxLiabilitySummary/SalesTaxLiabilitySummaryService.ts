@@ -1,13 +1,20 @@
 import { Inject, Service } from 'typedi';
 import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
-import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
+import {
+  SalesTaxLiabilitySummaryMeta,
+  SalesTaxLiabilitySummaryQuery,
+} from '@/interfaces/SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummary } from './SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummaryTable } from './SalesTaxLiabilitySummaryTable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class SalesTaxLiabilitySummaryService {
   @Inject()
   private repostiory: SalesTaxLiabilitySummaryRepository;
+
+  @Inject()
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve sales tax liability summary.
@@ -36,7 +43,7 @@ export class SalesTaxLiabilitySummaryService {
     return {
       data: taxLiabilitySummary.reportData(),
       query,
-      meta: {},
+      meta: this.reportMetadata(tenantId),
     };
   }
 
@@ -60,6 +67,32 @@ export class SalesTaxLiabilitySummaryService {
         rows: table.tableRows(),
         columns: table.tableColumns(),
       },
+      data: report.data,
+      query: report.query,
+      meta: report.meta,
+    };
+  }
+
+  /**
+   * Retrieve the report meta.
+   * @param {number} tenantId -
+   * @returns {IBalanceSheetMeta}
+   */
+  private reportMetadata(tenantId: number): SalesTaxLiabilitySummaryMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      organizationName,
+      baseCurrency,
     };
   }
 }

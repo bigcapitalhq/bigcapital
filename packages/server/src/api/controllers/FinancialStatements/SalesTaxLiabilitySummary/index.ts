@@ -67,6 +67,8 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
 
           return res.status(200).send({
             table: salesTaxLiabilityTable.table,
+            query: salesTaxLiabilityTable.query,
+            meta: salesTaxLiabilityTable.meta,
           });
         case 'json':
         default:
@@ -76,7 +78,9 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
               filter
             );
           return res.status(200).send({
-            data: salesTaxLiability,
+            data: salesTaxLiability.data,
+            query: salesTaxLiability.query,
+            meta: salesTaxLiability.meta,
           });
       }
     } catch (error) {

@@ -32,6 +32,7 @@ export class GetSaleInvoice {
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
       .withGraphFetched('entries.item')
+      .withGraphFetched('entries.tax')
       .withGraphFetched('customer')
       .withGraphFetched('branch')
       .withGraphFetched('taxes.taxRate');

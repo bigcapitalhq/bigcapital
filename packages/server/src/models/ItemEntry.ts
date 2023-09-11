@@ -111,6 +111,7 @@ export default class ItemEntry extends TenantModel {
     const SaleEstimate = require('models/SaleEstimate');
     const ProjectTask = require('models/Task');
     const Expense = require('models/Expense');
+    const TaxRate = require('models/TaxRate');
 
     return {
       item: {
@@ -202,6 +203,18 @@ export default class ItemEntry extends TenantModel {
         join: {
           from: 'items_entries.projectRefId',
           to: 'bills.id',
+        },
+      },
+
+      /**
+       * Tax rate reference.
+       */
+      tax: {
+        relation: Model.HasOneRelation,
+        modelClass: TaxRate.default,
+        join: {
+          from: 'items_entries.taxRateId',
+          to: 'tax_rates.id',
         },
       },
     };

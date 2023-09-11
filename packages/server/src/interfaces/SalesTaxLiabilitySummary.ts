@@ -43,3 +43,8 @@ export type SalesTaxLiabilitySummarySalesById = Record<
   string,
   { taxRateId: number; credit: number; debit: number }
 >;
+
+export interface SalesTaxLiabilitySummaryMeta  {
+  organizationName: string;
+  baseCurrency: string;
+}
