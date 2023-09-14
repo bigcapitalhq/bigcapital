@@ -47,6 +47,7 @@ import ProjectExpenseForm from '@/containers/Projects/containers/ProjectExpenseF
 import EstimatedExpenseFormDialog from '@/containers/Projects/containers/EstimatedExpenseFormDialog';
 import ProjectInvoicingFormDialog from '@/containers/Projects/containers/ProjectInvoicingFormDialog';
 import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
+import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
 
 /**
@@ -134,7 +135,10 @@ export default function DialogsContainer() {
       <ProjectInvoicingFormDialog
         dialogName={DialogsName.ProjectInvoicingForm}
       />
-      <ProjectBillableEntriesFormDialog dialogName={DialogsName.ProjectBillableEntriesForm}/>
+      <ProjectBillableEntriesFormDialog
+        dialogName={DialogsName.ProjectBillableEntriesForm}
+      />
+      <TaxRateFormDialog dialogName={DialogsName.TaxRateForm} />
     </div>
   );
 }

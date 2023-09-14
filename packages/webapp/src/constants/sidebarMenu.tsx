@@ -406,6 +406,11 @@ export const SidebarMenu = [
                 href: '/transactions-locking',
                 type: ISidebarMenuItemType.Link,
               },
+              {
+                text: 'Tax Rates',
+                href: '/tax-rates',
+                type: ISidebarMenuItemType.Link,
+              },
             ],
           },
           {

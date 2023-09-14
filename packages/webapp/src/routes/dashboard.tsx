@@ -1069,6 +1069,14 @@ export const getDashboardRoutes = () => [
     ),
     pageTitle: intl.get('sidebar.projects'),
   },
+  {
+    path: '/tax-rates',
+    component: lazy(
+      () =>
+        import('@/containers/TaxRates/pages/TaxRatesLanding'),
+    ),
+    pageTitle: 'Tax Rates',
+  },
   // Homepage
   {
     path: `/`,

@@ -25,14 +25,12 @@ import { InvoiceDetailsStatus } from './utils';
 export default function InvoiceDetailHeader() {
   const { invoice } = useInvoiceDetailDrawerContext();
 
-  const handleCustomerLinkClick = () => {};
-
   return (
     <CommercialDocHeader>
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountDetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{invoice.formatted_amount}</h3>
+            <h3 class="big-number">{invoice.total_formatted}</h3>
           </AmountDetailItem>
 
           <StatusDetailItem label={''}>
@@ -75,11 +73,11 @@ export default function InvoiceDetailHeader() {
             textAlign={'right'}
           >
             <DetailItem label={intl.get('due_amount')}>
-              <strong>{invoice.formatted_due_amount}</strong>
+              <strong>{invoice.due_amount_formatted}</strong>
             </DetailItem>
 
             <DetailItem label={intl.get('invoice.details.payment_amount')}>
-              <strong>{invoice.formatted_payment_amount}</strong>
+              <strong>{invoice.payment_amount_formatted}</strong>
             </DetailItem>
 
             <DetailItem

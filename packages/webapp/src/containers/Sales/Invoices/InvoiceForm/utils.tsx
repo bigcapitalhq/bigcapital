@@ -80,6 +80,9 @@ export function transformToEditForm(invoice) {
 
   return {
     ...transformToForm(invoice, defaultInvoice),
+    inclusive_exclusive_tax: invoice.is_inclusive_tax
+      ? TaxType.Inclusive
+      : TaxType.Exclusive,
     entries,
   };
 }
