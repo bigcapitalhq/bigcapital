@@ -6,7 +6,16 @@ export class TaxRateTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['nameFormatted'];
+    return ['nameFormatted', 'rateFormatted'];
+  };
+
+  /**
+   * Retrieve the formatted rate.
+   * @param taxRate
+   * @returns {string}
+   */
+  public rateFormatted = (taxRate): string => {
+    return `${taxRate.rate}%`;
   };
 
   /**
