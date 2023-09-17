@@ -5,9 +5,11 @@ exports.up = (knex) => {
       table.string('name');
       table.string('code');
       table.decimal('rate');
+      table.string('description');
       table.boolean('is_non_recoverable');
       table.boolean('is_compound');
-      table.integer('status');
+      table.boolean('active').defaultTo(false);
+      table.date('deleted_at');
       table.timestamps();
     })
     .table('items_entries', (table) => {
@@ -43,9 +45,6 @@ exports.up = (knex) => {
         .references('id')
         .inTable('tax_rates');
       table.decimal('tax_rate').unsigned();
-    })
-    .table('sales_invoices', (table) => {
-      table.rename('balance', 'amount');
     });
 };
 

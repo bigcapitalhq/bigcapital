@@ -570,5 +570,11 @@ export default {
 
     onDeleting: 'onTaxRateDeleting',
     onDeleted: 'onTaxRateDeleted',
+
+    onActivating: 'onTaxRateActivating',
+    onActivated: 'onTaxRateActivated',
+
+    onInactivating: 'onTaxRateInactivating',
+    onInactivated: 'onTaxRateInactivated'
   },
 };

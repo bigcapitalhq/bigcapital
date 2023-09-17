@@ -21,6 +21,26 @@ export class CommandTaxRatesValidators {
   }
 
   /**
+   * Validates the given tax rate active.
+   * @param {ITaxRate} taxRate
+   */
+  public validateTaxRateNotActive(taxRate: ITaxRate) {
+    if (taxRate.active) {
+      throw new ServiceError(ERRORS.TAX_RATE_ALREADY_ACTIVE);
+    }
+  }
+
+  /**
+   * Validates the given tax rate inactive.
+   * @param {ITaxRate} taxRate
+   */
+  public validateTaxRateNotInactive(taxRate: ITaxRate) {
+    if (!taxRate.active) {
+      throw new ServiceError(ERRORS.TAX_RATE_ALREADY_INACTIVE);
+    }
+  }
+
+  /**
    * Validates the tax code uniquiness.
    * @param {number} tenantId
    * @param {string} taxCode

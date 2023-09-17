@@ -33,6 +33,20 @@ export class TaxRatesController extends BaseController {
       asyncMiddleware(this.editTaxRate.bind(this)),
       this.handleServiceErrors
     );
+    router.post(
+      '/:id/active',
+      [param('id').exists().toInt()],
+      this.validationResult,
+      asyncMiddleware(this.activateTaxRate.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/inactive',
+      [param('id').exists().toInt()],
+      this.validationResult,
+      asyncMiddleware(this.inactivateTaxRate.bind(this)),
+      this.handleServiceErrors
+    );
     router.delete(
       '/:id',
       [param('id').exists().toInt()],
@@ -64,7 +78,9 @@ export class TaxRatesController extends BaseController {
       body('name').exists(),
       body('code').exists().isString(),
       body('rate').exists().isNumeric().toFloat(),
+      body('description').optional().trim().isString(),
       body('is_non_recoverable').optional().isBoolean().default(false),
+      body('is_compound').optional().isBoolean().default(false),
       body('status').optional().toUpperCase().isIn(['ARCHIVED', 'ACTIVE']),
     ];
   }
@@ -174,6 +190,52 @@ export class TaxRatesController extends BaseController {
   }
 
   /**
+   * Inactivates the given tax rate.
+   * @param req
+   * @param res
+   * @param next
+   * @returns
+   */
+  public async inactivateTaxRate(req: Request, res: Response, next) {
+    const { tenantId } = req;
+    const { id: taxRateId } = req.params;
+
+    try {
+      await this.taxRatesApplication.inactivateTaxRate(tenantId, taxRateId);
+
+      return res.status(200).send({
+        id: taxRateId,
+        message: 'The given tax rate has been inactivated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Inactivates the given tax rate.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns
+   */
+  public async activateTaxRate(req: Request, res: Response, next) {
+    const { tenantId } = req;
+    const { id: taxRateId } = req.params;
+
+    try {
+      await this.taxRatesApplication.activateTaxRate(tenantId, taxRateId);
+
+      return res.status(200).send({
+        id: taxRateId,
+        message: 'The given tax rate has been activated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Handles service errors.
    * @param {Error} error
    * @param {Request} req
@@ -195,6 +257,16 @@ export class TaxRatesController extends BaseController {
       if (error.errorType === ERRORS.TAX_RATE_NOT_FOUND) {
         return res.boom.badRequest(null, {
           errors: [{ type: ERRORS.TAX_RATE_NOT_FOUND, code: 200 }],
+        });
+      }
+      if (error.errorType === ERRORS.TAX_RATE_ALREADY_INACTIVE) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: ERRORS.TAX_RATE_ALREADY_INACTIVE, code: 300 }],
+        });
+      }
+      if (error.errorType === ERRORS.TAX_RATE_ALREADY_ACTIVE) {
+        return res.boom.badRequest(null, {
+          errors: [{ type: ERRORS.TAX_RATE_ALREADY_ACTIVE, code: 400 }],
         });
       }
     }

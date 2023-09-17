@@ -5,14 +5,20 @@ export interface ITaxRate {
   name: string;
   code: string;
   rate: number;
+  description: string;
+  IsNonRecoverable: boolean;
+  IsCompound: boolean;
+  active: boolean;
 }
 
 export interface ICommonTaxRateDTO {
   name: string;
   code: string;
   rate: number;
+  description: string;
   IsNonRecoverable: boolean;
   IsCompound: boolean;
+  active: boolean;
 }
 export interface ICreateTaxRateDTO extends ICommonTaxRateDTO {}
 export interface IEditTaxRateDTO extends ICommonTaxRateDTO {}
@@ -47,6 +53,18 @@ export interface ITaxRateDeletingPayload {
   tenantId: number;
   trx: Knex.Transaction;
 }
+
+export interface ITaxRateActivatingPayload {
+  taxRateId: number;
+  tenantId: number;
+  trx: Knex.Transaction;
+}
+export interface ITaxRateActivatedPayload {
+  taxRateId: number;
+  tenantId: number;
+  trx: Knex.Transaction;
+}
+
 export interface ITaxRateDeletedPayload {
   oldTaxRate: ITaxRate;
   tenantId: number;
