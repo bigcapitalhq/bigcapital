@@ -10,7 +10,7 @@ import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
  * @returns {JSX.Element}
  */
 export function TaxRatesTableActionsMenu({
-  payload: { onEdit, onDelete, onViewDetails },
+  payload: { onEdit, onDelete, onViewDetails, onActivate, onInactivate },
   row: { original },
 }) {
   return (
@@ -28,6 +28,21 @@ export function TaxRatesTableActionsMenu({
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
+      <MenuDivider />
+      {!original.active && (
+        <MenuItem
+          icon={<Icon icon="play-16" iconSize={16} />}
+          text={'Activate Tax Rate'}
+          onClick={safeCallback(onActivate, original)}
+        />
+      )}
+      {original.active && (
+        <MenuItem
+          icon={<Icon icon="pause-16" iconSize={16} />}
+          text={'Inactivate Tax Rate'}
+          onClick={safeCallback(onInactivate, original)}
+        />
+      )}
       <Can I={TaxRateAction.Delete} a={AbilitySubject.TaxRate}>
         <MenuDivider />
         <MenuItem

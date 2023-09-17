@@ -3,12 +3,20 @@ import React from 'react';
 import TaxRateFormDialogForm from './TaxRateFormDialogForm';
 import { TaxRateFormDialogBoot } from './TaxRateFormDialogBoot';
 
+interface TaxRateFormDialogContentProps {
+  dialogName: string;
+  taxRateId: number;
+}
+
 /**
  * Account dialog content.
  */
-export default function TaxRateFormDialogContent({ dialogName, payload }) {
+export default function TaxRateFormDialogContent({
+  dialogName,
+  taxRateId,
+}: TaxRateFormDialogContentProps) {
   return (
-    <TaxRateFormDialogBoot dialogName={dialogName} payload={payload}>
+    <TaxRateFormDialogBoot dialogName={dialogName} taxRateId={taxRateId}>
       <TaxRateFormDialogForm />
     </TaxRateFormDialogBoot>
   );

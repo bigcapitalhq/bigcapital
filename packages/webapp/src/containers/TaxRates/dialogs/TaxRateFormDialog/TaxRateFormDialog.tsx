@@ -24,13 +24,16 @@ function TaxRateFormDialog({
   return (
     <TaxRateDialog
       name={dialogName}
-      title={payload.action === 'edit' ? 'Edit Tax Rate' : 'Create Tax Rate'}
+      title={payload.id ? 'Edit Tax Rate' : 'Create Tax Rate'}
       autoFocus={true}
       canEscapeKeyClose={true}
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <TaxRateFormDialogContent dialogName={dialogName} payload={payload} />
+        <TaxRateFormDialogContent
+          dialogName={dialogName}
+          taxRateId={payload.id}
+        />
       </DialogSuspense>
     </TaxRateDialog>
   );

@@ -1,11 +1,12 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
+import { Intent } from '@blueprintjs/core';
 import {
   DataTable,
   DashboardContentTable,
   TableSkeletonHeader,
   TableSkeletonRows,
+  AppToaster,
 } from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -13,10 +14,6 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
-
-// import { useMemorizedColumnsWidths } from '@/hooks';
-// import { ActionsMenu } from './components';
-// import { useInvoicesListContext } from './InvoicesListProvider';
 
 import { useTaxRatesTableColumns } from './_utils';
 import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
@@ -26,6 +23,10 @@ import { TaxRatesTableActionsMenu } from './_components';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
+import {
+  useActivateTaxRate,
+  useInactivateTaxRate,
+} from '@/hooks/query/taxRates';
 
 /**
  * Invoices datatable.
@@ -47,6 +48,9 @@ function TaxRatesDataTable({
   // Invoices table columns.
   const columns = useTaxRatesTableColumns();
 
+  const { mutateAsync: activateTaxRateMutate } = useActivateTaxRate();
+  const { mutateAsync: inactivateTaxRateMutate } = useInactivateTaxRate();
+
   // Handle delete tax rate.
   const handleDeleteTaxRate = ({ id }) => {
     openAlert('tax-rate-delete', { taxRateId: id });
@@ -62,6 +66,38 @@ function TaxRatesDataTable({
   // Handle table cell click.
   const handleCellClick = (cell, event) => {
     openDrawer(DRAWERS.TAX_RATE_DETAILS, { taxRateId: cell.row.original.id });
+  };
+  // Handles activating the given tax rate.
+  const handleActivateTaxRate = (taxRate) => {
+    activateTaxRateMutate(taxRate.id)
+      .then(() => {
+        AppToaster.show({
+          message: 'The tax rate has been activated successfully.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+  // Handles inactivating the given tax rate.
+  const handleInactivateTaxRate = (taxRate) => {
+    inactivateTaxRateMutate(taxRate.id)
+      .then(() => {
+        AppToaster.show({
+          message: 'The tax rate has been inactivated successfully.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
   };
   // Display invoice empty status instead of the table.
   if (isEmptyStatus) {
@@ -93,6 +129,8 @@ function TaxRatesDataTable({
           onViewDetails: handleViewDetails,
           onDelete: handleDeleteTaxRate,
           onEdit: handleEditTaxRate,
+          onActivate: handleActivateTaxRate,
+          onInactivate: handleInactivateTaxRate,
         }}
       />
     </DashboardContentTable>

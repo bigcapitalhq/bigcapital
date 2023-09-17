@@ -1,12 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 
 import { useDeleteTaxRate } from '@/hooks/query/taxRates';
 
@@ -40,7 +35,6 @@ function TaxRateDeleteAlert({
   const handleCancelItemDelete = () => {
     closeAlert(name);
   };
-
   // Handle confirm delete item.
   const handleConfirmDeleteItem = () => {
     deleteTaxRate(taxRateId)

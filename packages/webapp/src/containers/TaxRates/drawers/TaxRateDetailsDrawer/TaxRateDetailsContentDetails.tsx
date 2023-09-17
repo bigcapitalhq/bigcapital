@@ -27,17 +27,29 @@ export default function TaxRateDetailsContentDetails() {
           <DetailItem
             label={'Non Recoverable'}
             children={
-              <Tag round={false} intent={Intent.SUCCESS} minimal>
-                Enabled
-              </Tag>
+              taxRate.is_non_recoverable ? (
+                <Tag round={false} intent={Intent.SUCCESS} minimal>
+                  Enabled
+                </Tag>
+              ) : (
+                <Tag round={false} intent={Intent.NONE} minimal>
+                  Disabled
+                </Tag>
+              )
             }
           />
           <DetailItem
             label={'Compound'}
             children={
-              <Tag round={false} intent={Intent.SUCCESS} minimal>
-                Enabled
-              </Tag>
+              taxRate.is_compound ? (
+                <Tag round={false} intent={Intent.SUCCESS} minimal>
+                  Enabled
+                </Tag>
+              ) : (
+                <Tag round={false} intent={Intent.NONE} minimal>
+                  Disabled
+                </Tag>
+              )
             }
           />
         </DetailsMenu>

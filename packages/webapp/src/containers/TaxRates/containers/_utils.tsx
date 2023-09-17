@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { Button, Intent, Tag, Icon } from '@blueprintjs/core';
+import { Intent, Tag } from '@blueprintjs/core';
 import { Align } from '@/constants';
-import { FormatDateCell } from '@/components';
 
 const codeAccessor = (taxRate) => {
   return (
@@ -13,19 +12,26 @@ const codeAccessor = (taxRate) => {
 };
 
 const statusAccessor = (taxRate) => {
-  return (
+  return taxRate.active ? (
     <Tag round={false} intent={Intent.SUCCESS}>
       Active
+    </Tag>
+  ) : (
+    <Tag round={false} intent={Intent.NONE}>
+      Inactive
     </Tag>
   );
 };
 
+/**
+ * Retrieves the tax rates table columns.
+ */
 export const useTaxRatesTableColumns = () => {
   return [
     {
       Header: 'Name',
       accessor: 'name',
-      width: 40,
+      width: 50,
     },
     {
       Header: 'Code',
@@ -40,8 +46,8 @@ export const useTaxRatesTableColumns = () => {
     },
     {
       Header: 'Description',
-      accessor: () => <span>Specital tax for certain goods and services.</span>,
-      width: 120,
+      accessor: 'description',
+      width: 110,
     },
     {
       Header: 'Status',

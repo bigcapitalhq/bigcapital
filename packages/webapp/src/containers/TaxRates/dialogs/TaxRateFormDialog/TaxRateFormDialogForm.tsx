@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Classes, Intent } from '@blueprintjs/core';
 import { Form, Formik } from 'formik';
 import { AppToaster } from '@/components';
@@ -11,21 +11,12 @@ import {
   CreateTaxRateFormSchema,
   EditTaxRateFormSchema,
 } from './TaxRateForm.schema';
-import { transformApiErrors, transformFormToReq } from './utils';
+import { transformApiErrors, transformFormToReq, transformTaxRateToForm } from './utils';
 import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
 import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
 import { compose, transformToForm } from '@/utils';
 
-// Default initial form values.
-const defaultInitialValues = {
-  name: '',
-  code: '',
-  rate: '',
-  description: '',
-  is_compound: false,
-  is_non_recoverable: false,
-};
 
 /**
  * Tax rate form dialog content.
@@ -35,13 +26,8 @@ function TaxRateFormDialogForm({
   closeDialog,
 }) {
   // Account form context.
-  const {
-    account,
-
-    payload,
-    isNewMode,
-    dialogName,
-  } = useTaxRateFormDialogContext();
+  const { taxRate, taxRateId, isNewMode, dialogName } =
+    useTaxRateFormDialogContext();
 
   // Form validation schema in create and edit mode.
   const validationSchema = isNewMode
@@ -76,30 +62,18 @@ function TaxRateFormDialogForm({
       setErrors({ ...errorsTransformed });
       setSubmitting(false);
     };
-    if (payload.accountId) {
-      editTaxRateMutate([payload.accountId, form])
+    if (isNewMode) {
+      createTaxRateMutate({ ...form })
         .then(handleSuccess)
         .catch(handleError);
     } else {
-      createTaxRateMutate({ ...form })
+      editTaxRateMutate([taxRateId, { ...form }])
         .then(handleSuccess)
         .catch(handleError);
     }
   };
   // Form initial values in create and edit mode.
-  const initialValues = {
-    ...defaultInitialValues,
-    /**
-     * We only care about the fields in the form. Previously unfilled optional
-     * values such as `notes` come back from the API as null, so remove those
-     * as well.
-     */
-    ...transformToForm(account, defaultInitialValues),
-  };
-  // Handles dialog close.
-  const handleClose = () => {
-    closeDialog(dialogName);
-  };
+  const initialValues = transformTaxRateToForm(taxRate);
 
   return (
     <Formik
@@ -109,11 +83,7 @@ function TaxRateFormDialogForm({
     >
       <Form>
         <div className={Classes.DIALOG_BODY}>
-          <TaxRateFormDialogFormContent
-            dialogName={dialogName}
-            action={payload?.action}
-            onClose={handleClose}
-          />
+          <TaxRateFormDialogFormContent />
         </div>
         <TaxRateFormDialogFormFooter />
       </Form>

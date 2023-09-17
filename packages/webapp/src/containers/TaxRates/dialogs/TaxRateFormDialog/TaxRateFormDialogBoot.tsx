@@ -1,28 +1,51 @@
 // @ts-nocheck
-import React, { useState } from 'react';
+import React from 'react';
 import { DialogContent } from '@/components';
-import { useTaxRates } from '@/hooks/query/taxRates';
+import { useTaxRate, useTaxRates } from '@/hooks/query/taxRates';
+import { DialogsName } from '@/constants/dialogs';
 
 const TaxRateFormDialogContext = React.createContext();
+
+interface TaxRateFormDialogBootProps {
+  taxRateId: number;
+  children?: JSX.Element;
+}
+
+interface TaxRateFormDialogBootContext {
+  taxRateId: number;
+  taxRate: any;
+  isTaxRateLoading: boolean;
+  isTaxRateSuccess: boolean;
+  isNewMode: boolean;
+}
 
 /**
  * Money in dialog provider.
  */
-function TaxRateFormDialogBoot({ ...props }) {
+function TaxRateFormDialogBoot({
+  taxRateId,
+  ...props
+}: TaxRateFormDialogBootProps) {
   const {
-    data: taxRates,
-    isLoading: isTaxRatesLoading,
-    isSuccess: isTaxRatesSuccess,
-  } = useTaxRates({});
+    data: taxRate,
+    isLoading: isTaxRateLoading,
+    isSuccess: isTaxRateSuccess,
+  } = useTaxRate(taxRateId, {
+    enabled: !!taxRateId,
+  });
+
+  const isNewMode = !taxRateId;
 
   // Provider data.
   const provider = {
-    taxRates,
-    isTaxRatesLoading,
-    isTaxRatesSuccess,
+    taxRateId,
+    taxRate,
+    isTaxRateLoading,
+    isTaxRateSuccess,
+    isNewMode,
+    dialogName: DialogsName.TaxRateForm,
   };
-
-  const isLoading = isTaxRatesLoading;
+  const isLoading = isTaxRateLoading;
 
   return (
     <DialogContent isLoading={isLoading}>
@@ -32,6 +55,6 @@ function TaxRateFormDialogBoot({ ...props }) {
 }
 
 const useTaxRateFormDialogContext = () =>
-  React.useContext(TaxRateFormDialogContext);
+  React.useContext<TaxRateFormDialogBootContext>(TaxRateFormDialogContext);
 
 export { TaxRateFormDialogBoot, useTaxRateFormDialogContext };
