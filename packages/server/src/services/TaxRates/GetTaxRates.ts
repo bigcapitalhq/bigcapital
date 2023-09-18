@@ -19,7 +19,8 @@ export class GetTaxRatesService {
   public async getTaxRates(tenantId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
-    const taxRates = await TaxRate.query();
+    // Retrieves the tax rates.
+    const taxRates = await TaxRate.query().orderBy('name', 'ASC');
 
     // Transforms the tax rates.
     return this.transformer.transform(

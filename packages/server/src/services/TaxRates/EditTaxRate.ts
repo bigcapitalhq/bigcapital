@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import { omit } from 'lodash';
 import {
   IEditTaxRateDTO,
   ITaxRate,
@@ -54,7 +55,7 @@ export class EditTaxRateService {
   private async editTaxRateOrCreate(
     tenantId: number,
     oldTaxRate: ITaxRate,
-    editTaxRateDTO: any,
+    editTaxRateDTO: IEditTaxRateDTO,
     trx?: Knex.Transaction
   ) {
     const { TaxRate } = this.tenancy.models(tenantId);
@@ -68,6 +69,7 @@ export class EditTaxRateService {
 
       // Create a new tax rate with new edited data.
       return TaxRate.query(trx).insertAndFetch({
+        ...omit(oldTaxRate, ['id']),
         ...editTaxRateDTO,
       });
     } else {
