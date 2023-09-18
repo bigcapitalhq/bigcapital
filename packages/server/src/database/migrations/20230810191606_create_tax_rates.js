@@ -6,8 +6,8 @@ exports.up = (knex) => {
       table.string('code');
       table.decimal('rate');
       table.string('description');
-      table.boolean('is_non_recoverable');
-      table.boolean('is_compound');
+      table.boolean('is_non_recoverable').defaultTo(false);
+      table.boolean('is_compound').defaultTo(false);
       table.boolean('active').defaultTo(false);
       table.date('deleted_at');
       table.timestamps();

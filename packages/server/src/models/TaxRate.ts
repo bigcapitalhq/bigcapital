@@ -1,6 +1,7 @@
 import { mixin, Model, raw } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSearchable from './ModelSearchable';
+import SoftDeleteQueryBuilder from '@/collection/SoftDeleteQueryBuilder';
 
 export default class TaxRate extends mixin(TenantModel, [ModelSearchable]) {
   /**
@@ -8,6 +9,13 @@ export default class TaxRate extends mixin(TenantModel, [ModelSearchable]) {
    */
   static get tableName() {
     return 'tax_rates';
+  }
+
+  /**
+   * Soft delete query builder.
+   */
+  static get QueryBuilder() {
+    return SoftDeleteQueryBuilder;
   }
 
   /**
