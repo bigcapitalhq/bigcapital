@@ -1,19 +1,23 @@
 // @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
+import * as R from 'ramda';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
-export function TaxRatesLandingEmptyState() {
-  const history = useHistory();
-
+function TaxRatesLandingEmptyStateRoot({
+  // #withDialogAction
+  openDialog,
+}) {
   return (
     <EmptyStatus
-      title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
+      title={"The organization doesn't have taxes, yet!"}
       description={
         <p>
-          <T id={'invoices_empty_status_description'} />
+          Setup the organization taxes to start tracking taxes on sales
+          transactions.
         </p>
       }
       action={
@@ -23,10 +27,10 @@ export function TaxRatesLandingEmptyState() {
               intent={Intent.PRIMARY}
               large={true}
               onClick={() => {
-                history.push('/invoices/new');
+                openDialog(DialogsName.TaxRateForm);
               }}
             >
-              <T id={'new_sale_invoice'} />
+              New tax rate
             </Button>
             <Button intent={Intent.NONE} large={true}>
               <T id={'learn_more'} />
@@ -37,3 +41,7 @@ export function TaxRatesLandingEmptyState() {
     />
   );
 }
+
+export const TaxRatesLandingEmptyState = R.compose(withDialogActions)(
+  TaxRatesLandingEmptyStateRoot,
+);

@@ -8,7 +8,6 @@ import {
   Icon,
 } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
-import { useTaxRatesLandingContext } from './TaxRatesLandingProvider';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -22,9 +21,6 @@ function TaxRatesActionsBar({
   // #withDialogActions
   openDialog,
 }) {
-  // Items list context.
-  const {} = useTaxRatesLandingContext();
-
   // Handle `new item` button click.
   const onClickNewItem = () => {
     openDialog(DialogsName.TaxRateForm);
