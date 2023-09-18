@@ -108,7 +108,7 @@ function ConfirmEditingTaxRate() {
   return (
     <EditWarningWrap>
       <Text color={'#766f58'}>Please Note:</Text>
-      <ConfirmEditFormGroup name={'confirm_edit'}>
+      <ConfirmEditFormGroup name={'confirm_edit'} helperText={''}>
         <FCheckbox
           name={'confirm_edit'}
           label={`I understand that updating the

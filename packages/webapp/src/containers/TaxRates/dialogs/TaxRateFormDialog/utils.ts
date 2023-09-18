@@ -15,18 +15,44 @@ export const defaultInitialValues = {
   confirm_edit: false,
 };
 
-export const transformApiErrors = () => {
-  return {};
+/**
+ * Transformers response errors to form errors.
+ * @returns {Record<string, string>}
+ */
+export const transformApiErrors = (errors) => {
+  const fields = {};
+
+  if (errors.find((e) => e.type === 'TAX_CODE_NOT_UNIQUE')) {
+    fields.code = 'The tax rate is not unique.';
+  }
+  return fields;
 };
 
+/**
+ * Tranformes form values to request values.
+ */
 export const transformFormToReq = (form) => {
   return omit({ ...form }, ['confirm_edit']);
 };
 
+/**
+ * Detarmines whether the tax rate changed.
+ * @param initialValues 
+ * @param formValues 
+ * @returns {boolean}
+ */
+export const isTaxRateChange = (initialValues, formValues) => {
+  return initialValues.rate !== formValues.rate;
+};
+
+/**
+ * Detarmines whether the tax rate changed.
+ * @returns {boolean}
+ */
 export const useIsTaxRateChanged = () => {
   const { initialValues, values } = useFormikContext();
 
-  return initialValues.rate !== values.rate;
+  return isTaxRateChange(initialValues, values);
 };
 
 const convertFormAttrsToBoolean = (form) => {

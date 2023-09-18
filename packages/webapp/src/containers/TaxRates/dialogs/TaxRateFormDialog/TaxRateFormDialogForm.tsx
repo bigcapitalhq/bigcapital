@@ -6,17 +6,24 @@ import { AppToaster } from '@/components';
 
 import TaxRateFormDialogFormContent from './TaxRateFormDialogFormContent';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   CreateTaxRateFormSchema,
   EditTaxRateFormSchema,
 } from './TaxRateForm.schema';
-import { transformApiErrors, transformFormToReq, transformTaxRateToForm } from './utils';
+import {
+  isTaxRateChange,
+  transformApiErrors,
+  transformFormToReq,
+  transformTaxRateToForm,
+} from './utils';
 import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
 import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
-import { compose, transformToForm } from '@/utils';
-
+import { TaxRateFormDialogFormErrors } from './TaxRateFormDialogFormErrors';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DRAWERS } from '@/constants/drawers';
+import { compose } from '@/utils';
 
 /**
  * Tax rate form dialog content.
@@ -24,6 +31,9 @@ import { compose, transformToForm } from '@/utils';
 function TaxRateFormDialogForm({
   // #withDialogActions
   closeDialog,
+
+  // #withDrawerActions
+  closeDrawer,
 }) {
   // Account form context.
   const { taxRate, taxRateId, isNewMode, dialogName } =
@@ -37,14 +47,34 @@ function TaxRateFormDialogForm({
   const { mutateAsync: createTaxRateMutate } = useCreateTaxRate();
   const { mutateAsync: editTaxRateMutate } = useEditTaxRate();
 
+  // Form initial values in create and edit mode.
+  const initialValues = transformTaxRateToForm(taxRate);
+
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    const isTaxChanged = isTaxRateChange(initialValues, values);
+
+    // Detarmines whether in edit mode and tax rate has been changed
+    // and confirm box is not checked.
+    if (!isNewMode && isTaxChanged && !values.confirm_edit) {
+      setErrors({
+        confirm_edit:
+          'Please review the terms and conditions below before proceeding',
+      });
+      setSubmitting(false);
+      return;
+    }
     const form = transformFormToReq(values);
 
+    // Handle request success on edit.
+    const handleSuccessOnEdit = (response) => {
+      if (response?.data?.data?.id !== taxRateId) {
+        closeDrawer(DRAWERS.TAX_RATE_DETAILS);
+      }
+    };
     // Handle request success.
     const handleSuccess = () => {
       closeDialog(dialogName);
-
       AppToaster.show({
         message: 'The tax rate has been created successfully.',
         intent: Intent.SUCCESS,
@@ -68,12 +98,11 @@ function TaxRateFormDialogForm({
         .catch(handleError);
     } else {
       editTaxRateMutate([taxRateId, { ...form }])
+        .then(handleSuccessOnEdit)
         .then(handleSuccess)
         .catch(handleError);
     }
   };
-  // Form initial values in create and edit mode.
-  const initialValues = transformTaxRateToForm(taxRate);
 
   return (
     <Formik
@@ -83,6 +112,7 @@ function TaxRateFormDialogForm({
     >
       <Form>
         <div className={Classes.DIALOG_BODY}>
+          <TaxRateFormDialogFormErrors />
           <TaxRateFormDialogFormContent />
         </div>
         <TaxRateFormDialogFormFooter />
@@ -91,4 +121,7 @@ function TaxRateFormDialogForm({
   );
 }
 
-export default compose(withDialogActions)(TaxRateFormDialogForm);
+export default compose(
+  withDialogActions,
+  withDrawerActions,
+)(TaxRateFormDialogForm);
