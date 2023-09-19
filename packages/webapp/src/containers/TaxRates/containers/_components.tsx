@@ -36,7 +36,7 @@ export function TaxRatesTableActionsMenu({
           onClick={safeCallback(onActivate, original)}
         />
       )}
-      {original.active && (
+      {!!original.active && (
         <MenuItem
           icon={<Icon icon="pause-16" iconSize={16} />}
           text={'Inactivate Tax Rate'}

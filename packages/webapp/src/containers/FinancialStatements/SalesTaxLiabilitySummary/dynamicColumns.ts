@@ -13,6 +13,7 @@ const taxNameAccessor = R.curry((data, column) => ({
   sticky: 'left',
   width: 300,
   textOverview: true,
+  disableSortBy: true,
 }));
 
 const taxableAmountAccessor = R.curry((data, column) => {
@@ -25,6 +26,7 @@ const taxableAmountAccessor = R.curry((data, column) => {
     className: column.key,
     width: getColumnWidth(data, accessor, { minWidth: 120 }),
     align: Align.Right,
+    disableSortBy: true,
   };
 });
 

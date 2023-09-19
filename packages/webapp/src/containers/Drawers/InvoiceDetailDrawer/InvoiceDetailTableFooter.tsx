@@ -29,7 +29,7 @@ export function InvoiceDetailTableFooter() {
         {invoice.taxes.map((taxRate) => (
           <TotalLine
             key={taxRate.id}
-            title={`${taxRate.name} (${taxRate.tax_rate}%)`}
+            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
             value={taxRate.tax_rate_amount_formatted}
             textStyle={TotalLineTextStyle.Regular}
           />

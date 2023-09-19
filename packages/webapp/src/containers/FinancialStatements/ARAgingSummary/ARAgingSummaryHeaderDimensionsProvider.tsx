@@ -9,7 +9,7 @@ const ARAgingSummaryHeaderDimensonsContext = React.createContext();
 
 /**
  * ARAging summary header dismensions provider.
- * @returns
+ * @returns {JSX.Element}
  */
 function ARAgingSummaryHeaderDimensionsProvider({ query, ...props }) {
   // Features guard.
