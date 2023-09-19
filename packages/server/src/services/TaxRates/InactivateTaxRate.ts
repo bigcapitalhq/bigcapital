@@ -31,15 +31,15 @@ export class InactivateTaxRateService {
    * @param {IEditTaxRateDTO} taxRateEditDTO
    * @returns {Promise<ITaxRate>}
    */
-  public inactivateTaxRate(tenantId: number, taxRateId: number) {
+  public async inactivateTaxRate(tenantId: number, taxRateId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
-    const oldTaxRate = TaxRate.query().findById(taxRateId);
+    const oldTaxRate = await TaxRate.query().findById(taxRateId);
 
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
 
-    //
+    // Validates the tax rate active.
     this.validators.validateTaxRateNotInactive(oldTaxRate);
 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

@@ -17,6 +17,7 @@ export interface SalesTaxLiabilitySummaryTotal {
 }
 
 export interface SalesTaxLiabilitySummaryRate {
+  id: number;
   taxName: string;
   taxableAmount: SalesTaxLiabilitySummaryAmount;
   taxAmount: SalesTaxLiabilitySummaryAmount;

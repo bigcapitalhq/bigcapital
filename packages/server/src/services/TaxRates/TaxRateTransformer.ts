@@ -24,6 +24,6 @@ export class TaxRateTransformer extends Transformer {
    * @returns {string}
    */
   protected nameFormatted = (taxRate): string => {
-    return `${taxRate.name} (${taxRate.rate}%)`;
+    return `${taxRate.name} [${taxRate.rate}%]`;
   };
 }

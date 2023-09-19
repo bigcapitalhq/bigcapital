@@ -39,6 +39,9 @@ export class ActivateTaxRateService {
     // Validates the tax rate existance.
     this.validators.validateTaxRateExistance(oldTaxRate);
 
+    // Validates the tax rate inactive.
+    this.validators.validateTaxRateNotActive(oldTaxRate);
+
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTaxRateActivating` event.
       await this.eventPublisher.emitAsync(events.taxRates.onActivating, {
