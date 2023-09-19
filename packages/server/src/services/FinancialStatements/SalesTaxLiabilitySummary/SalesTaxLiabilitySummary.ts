@@ -1,3 +1,5 @@
+import * as R from 'ramda';
+import { isEmpty, sumBy } from 'lodash';
 import { ITaxRate } from '@/interfaces';
 import {
   SalesTaxLiabilitySummaryPayableById,
@@ -7,7 +9,6 @@ import {
   SalesTaxLiabilitySummarySalesById,
   SalesTaxLiabilitySummaryTotal,
 } from '@/interfaces/SalesTaxLiabilitySummary';
-import { sumBy } from 'lodash';
 import FinancialSheet from '../FinancialSheet';
 
 export class SalesTaxLiabilitySummary extends FinancialSheet {
@@ -61,6 +62,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
 
     return {
+      id: taxRate.id,
       taxName: `${taxRate.name} (${taxRate.rate}%)`,
       taxableAmount: this.getAmountMeta(salesTaxAmount),
       taxAmount: this.getAmountMeta(payableTaxAmount),
@@ -70,11 +72,30 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
   };
 
   /**
+   * Filters the non-transactions tax rates.
+   * @param {SalesTaxLiabilitySummaryRate[]} nodes
+   * @returns {SalesTaxLiabilitySummaryRate[]}
+   */
+  private filterNonTransactionsTaxRates = (
+    nodes: SalesTaxLiabilitySummaryRate[]
+  ): SalesTaxLiabilitySummaryRate[] => {
+    return nodes.filter((node) => {
+      const salesTrxs = this.salesTaxesById[node.id];
+      const payableTrxs = this.payableTaxesById[node.id];
+
+      return !isEmpty(salesTrxs) || !isEmpty(payableTrxs);
+    });
+  };
+
+  /**
    * Retrieves the tax rates liability nodes.
    * @returns {SalesTaxLiabilitySummaryRate[]}
    */
   private taxRatesLiability = (): SalesTaxLiabilitySummaryRate[] => {
-    return this.taxRates.map(this.taxRateLiability);
+    return R.compose(
+      this.filterNonTransactionsTaxRates,
+      R.map(this.taxRateLiability)
+    )(this.taxRates);
   };
 
   /**
