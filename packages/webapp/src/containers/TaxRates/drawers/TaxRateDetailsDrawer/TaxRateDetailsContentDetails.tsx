@@ -13,9 +13,15 @@ export default function TaxRateDetailsContentDetails() {
       <div>
         <TaxRateHeader>
           <TaxRateAmount>{taxRate.rate}%</TaxRateAmount>
-          <TaxRateActiveTag round={false} intent={Intent.SUCCESS} minimal>
-            Active
-          </TaxRateActiveTag>
+          {taxRate.active ? (
+            <TaxRateActiveTag round={false} intent={Intent.SUCCESS} minimal>
+              Active
+            </TaxRateActiveTag>
+          ) : (
+            <TaxRateActiveTag round={false} intent={Intent.NONE} minimal>
+              Inactive
+            </TaxRateActiveTag>
+          )}
         </TaxRateHeader>
         <DetailsMenu direction={'horizantal'} minLabelSize={200}>
           <DetailItem label={'Tax Rate Name'} children={taxRate.name} />
