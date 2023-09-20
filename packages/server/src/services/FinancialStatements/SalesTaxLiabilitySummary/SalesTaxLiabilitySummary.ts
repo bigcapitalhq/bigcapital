@@ -55,8 +55,9 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
 
     // Calculates the tax percentage.
-    const taxPercentage = salesTaxAmount / payableTaxAmount;
-    const taxPercentageRate = taxPercentage / 100;
+    const taxPercentage = R.compose(
+      R.unless(R.equals(0), R.divide(R.__, salesTaxAmount))
+    )(payableTaxAmount);
 
     // Calculates the payable tax amount.
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
@@ -66,7 +67,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
       taxName: `${taxRate.name} (${taxRate.rate}%)`,
       taxableAmount: this.getAmountMeta(salesTaxAmount),
       taxAmount: this.getAmountMeta(payableTaxAmount),
-      taxPercentage: this.getPercentageAmountMeta(taxPercentageRate),
+      taxPercentage: this.getPercentageTotalAmountMeta(taxPercentage),
       collectedTaxAmount: this.getAmountMeta(collectedTaxAmount),
     };
   };
