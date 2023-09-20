@@ -8,7 +8,7 @@ const getSchema = () =>
     active: Yup.boolean().optional().label('Active'),
     describtion: Yup.string().optional().label('Description'),
     rate: Yup.number()
-      .min(0.01, 'Enter a rate percentage of at least 0.01%')
+      .min(0, 'Enter a rate percentage of at least 0%')
       .max(100, 'Enter a rate percentage of at most 100%')
       .required()
       .label('Rate'),
