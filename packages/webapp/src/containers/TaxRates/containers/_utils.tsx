@@ -2,6 +2,7 @@
 import React from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
 import { Align } from '@/constants';
+import styled from 'styled-components';
 
 const codeAccessor = (taxRate) => {
   return (
@@ -23,6 +24,19 @@ const statusAccessor = (taxRate) => {
   );
 };
 
+const nameAccessor = (taxRate) => {
+  return (
+    <>
+      <span>{taxRate.name}</span>
+      {!!taxRate.is_compound && <CompoundText>(Compound tax)</CompoundText>}
+    </>
+  );
+};
+
+const DescriptionAccessor = (taxRate) => {
+  return <DescriptionText>{taxRate.description}</DescriptionText>;
+};
+
 /**
  * Retrieves the tax rates table columns.
  */
@@ -30,8 +44,8 @@ export const useTaxRatesTableColumns = () => {
   return [
     {
       Header: 'Name',
-      accessor: 'name',
-      width: 50,
+      accessor: nameAccessor,
+      width: 60,
     },
     {
       Header: 'Code',
@@ -46,8 +60,8 @@ export const useTaxRatesTableColumns = () => {
     },
     {
       Header: 'Description',
-      accessor: 'description',
-      width: 110,
+      accessor: DescriptionAccessor,
+      width: 100,
     },
     {
       Header: 'Status',
@@ -57,3 +71,12 @@ export const useTaxRatesTableColumns = () => {
     },
   ];
 };
+
+const CompoundText = styled('span')`
+  color: #738091;
+  margin-left: 5px;
+`;
+
+const DescriptionText = styled('span')`
+  color: #5f6b7c;
+`;
