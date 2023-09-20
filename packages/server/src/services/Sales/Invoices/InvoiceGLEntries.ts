@@ -6,12 +6,12 @@ import {
   ILedgerEntry,
   AccountNormal,
   ILedger,
-  ITaxTransaction,
 } from '@/interfaces';
 import { Service, Inject } from 'typedi';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 
 @Service()
 export class SaleInvoiceGLEntries {
@@ -20,6 +20,9 @@ export class SaleInvoiceGLEntries {
 
   @Inject()
   private ledegrRepository: LedgerStorageService;
+
+  @Inject()
+  private itemsEntriesService: ItemsEntriesService;
 
   /**
    * Writes a sale invoice GL entries.
@@ -53,7 +56,7 @@ export class SaleInvoiceGLEntries {
       saleInvoice,
       ARAccount.id,
       taxPayableAccount.id
-    );  
+    );
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
   };
@@ -93,7 +96,7 @@ export class SaleInvoiceGLEntries {
       'SaleInvoice',
       trx
     );
-};
+  };
 
   /**
    * Retrieves the given invoice ledger.
@@ -218,10 +221,32 @@ export class SaleInvoiceGLEntries {
         index: index + 3,
         accountNormal: AccountNormal.CREDIT,
         taxRateId: entry.taxRateId,
-        taxRate : entry.taxRate,
+        taxRate: entry.taxRate,
       };
     }
   );
+
+  /**
+   * Retrieves the invoice tax GL entries.
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} taxPayableAccountId
+   * @returns {ILedgerEntry[]}
+   */
+  private getInvoiceTaxEntries = (
+    saleInvoice: ISaleInvoice,
+    taxPayableAccountId: number
+  ): ILedgerEntry[] => {
+    // Retrieves the non-zero tax entries.
+    const nonZeroTaxEntries = this.itemsEntriesService.getNonZeroEntries(
+      saleInvoice.entries
+    );
+    const transformTaxEntry = this.getInvoiceTaxEntry(
+      saleInvoice,
+      taxPayableAccountId
+    );
+    // Transforms the non-zero tax entries to GL entries.
+    return nonZeroTaxEntries.map(transformTaxEntry);
+  };
 
   /**
    * Retrieves the invoice GL entries.
@@ -239,13 +264,12 @@ export class SaleInvoiceGLEntries {
       ARAccountId
     );
     const transformItemEntry = this.getInvoiceItemEntry(saleInvoice);
-    const transformTaxEntry = this.getInvoiceTaxEntry(
+    const creditEntries = saleInvoice.entries.map(transformItemEntry);
+
+    const taxEntries = this.getInvoiceTaxEntries(
       saleInvoice,
       taxPayableAccountId
     );
-    const creditEntries = saleInvoice.entries.map(transformItemEntry);
-    const taxEntries = saleInvoice.entries.map(transformTaxEntry);
-
     return [receivableEntry, ...creditEntries, ...taxEntries];
   };
 }
