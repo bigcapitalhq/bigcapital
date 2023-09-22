@@ -49,7 +49,9 @@ export class CreateTaxRate {
         trx,
       } as ITaxRateCreatingPayload);
 
-      const taxRate = await TaxRate.query(trx).insert({ ...createTaxRateDTO });
+      const taxRate = await TaxRate.query(trx).insertAndFetch({
+        ...createTaxRateDTO,
+      });
 
       // Triggers `onTaxRateCreated` event.
       await this.eventPublisher.emitAsync(events.taxRates.onCreated, {

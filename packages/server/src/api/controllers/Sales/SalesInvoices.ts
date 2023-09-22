@@ -184,8 +184,15 @@ export default class SaleInvoicesController extends BaseController {
         .optional({ nullable: true })
         .trim()
         .escape(),
-      check('entries.*.tax_code').optional({ nullable: true }).trim().escape(),
-      check('entries.*.tax_rate').optional().isNumeric().toFloat(),
+      check('entries.*.tax_code')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isString(),
+      check('entries.*.tax_rate_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()

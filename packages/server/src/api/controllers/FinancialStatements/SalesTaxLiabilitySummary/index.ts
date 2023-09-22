@@ -40,7 +40,7 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
   }
 
   /*
-   *
+   * Retrieves the sales tax liability summary.
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
@@ -50,7 +50,7 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
     res: Response,
     next: NextFunction
   ) {
-    const { tenantId, settings } = req;
+    const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
     try {

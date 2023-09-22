@@ -59,6 +59,7 @@ export class CommandTaxRatesValidators {
    * Validates the tax codes of the given item entries DTO.
    * @param {number} tenantId
    * @param {IItemEntryDTO[]} itemEntriesDTO
+   * @throws {ServiceError}
    */
   public async validateItemEntriesTaxCode(
     tenantId: number,
@@ -92,17 +93,17 @@ export class CommandTaxRatesValidators {
     tenantId: number,
     itemEntriesDTO: IItemEntryDTO[]
   ) {
-    const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCodeId);
-    const taxCodes = filteredTaxEntries.map((e) => e.taxCodeId);
+    const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
+    const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
 
     // Can't validate if there is no tax codes.
-    if (taxCodes.length === 0) return;
+    if (taxRatesIds.length === 0) return;
 
     const { TaxRate } = this.tenancy.models(tenantId);
-    const foundTaxCodes = await TaxRate.query().whereIn('id', taxCodes);
-    const foundCodes = foundTaxCodes.map((tax) => tax.id);
+    const foundTaxCodes = await TaxRate.query().whereIn('id', taxRatesIds);
+    const foundTaxRatesIds = foundTaxCodes.map((tax) => tax.id);
 
-    const notFoundTaxCodes = difference(taxCodes, foundCodes);
+    const notFoundTaxCodes = difference(taxRatesIds, foundTaxRatesIds);
 
     if (notFoundTaxCodes.length > 0) {
       throw new ServiceError(ERRORS.ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND);

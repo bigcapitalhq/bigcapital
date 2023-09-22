@@ -76,6 +76,13 @@ export interface ITaxTransaction {
   taxRateId: number;
   referenceType: string;
   referenceId: number;
-  taxAmount: number;
+  rate: number;
   taxAccountId: number;
+}
+
+export enum TaxRateAction {
+  CREATE = 'Create',
+  EDIT = 'Edit',
+  DELETE = 'Delete',
+  VIEW = 'View',
 }

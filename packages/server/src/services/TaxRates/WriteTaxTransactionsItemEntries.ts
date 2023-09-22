@@ -2,6 +2,7 @@ import { sumBy, chain, keyBy } from 'lodash';
 import { IItemEntry, ITaxTransaction } from '@/interfaces';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 
 @Service()
 export class WriteTaxTransactionsItemEntries {
@@ -15,24 +16,51 @@ export class WriteTaxTransactionsItemEntries {
    */
   public async writeTaxTransactionsFromItemEntries(
     tenantId: number,
-    itemEntries: IItemEntry[]
+    itemEntries: IItemEntry[],
+    trx?: Knex.Transaction
   ) {
     const { TaxRateTransaction, TaxRate } = this.tenancy.models(tenantId);
     const aggregatedEntries = this.aggregateItemEntriesByTaxCode(itemEntries);
 
     const entriesTaxRateIds = aggregatedEntries.map((entry) => entry.taxRateId);
 
-    const taxRates = await TaxRate.query().whereIn('id', entriesTaxRateIds);
+    const taxRates = await TaxRate.query(trx).whereIn('id', entriesTaxRateIds);
     const taxRatesById = keyBy(taxRates, 'id');
 
     const taxTransactions = aggregatedEntries.map((entry) => ({
       taxRateId: entry.taxRateId,
       referenceType: entry.referenceType,
       referenceId: entry.referenceId,
-      taxAmount: entry.taxRate || taxRatesById[entry.taxRateId]?.rate,
+      rate: entry.taxRate || taxRatesById[entry.taxRateId]?.rate,
     })) as ITaxTransaction[];
 
-    await TaxRateTransaction.query().upsertGraph(taxTransactions);
+    await TaxRateTransaction.query(trx).upsertGraph(taxTransactions);
+  }
+
+  /**
+   * Rewrites the tax rate transactions from the given item entries.
+   * @param {number} tenantId
+   * @param {IItemEntry[]} itemEntries
+   * @param {string} referenceType
+   * @param {number} referenceId
+   * @param {Knex.Transaction} trx
+   */
+  public async rewriteTaxRateTransactionsFromItemEntries(
+    tenantId: number,
+    itemEntries: IItemEntry[],
+    referenceType: string,
+    referenceId: number,
+    trx?: Knex.Transaction
+  ) {
+    await Promise.all([
+      this.removeTaxTransactionsFromItemEntries(
+        tenantId,
+        referenceId,
+        referenceType,
+        trx
+      ),
+      this.writeTaxTransactionsFromItemEntries(tenantId, itemEntries, trx),
+    ]);
   }
 
   /**
@@ -59,11 +87,12 @@ export class WriteTaxTransactionsItemEntries {
   public async removeTaxTransactionsFromItemEntries(
     tenantId: number,
     referenceId: number,
-    referenceType: string
+    referenceType: string,
+    trx?: Knex.Transaction
   ) {
     const { TaxRateTransaction } = this.tenancy.models(tenantId);
 
-    await TaxRateTransaction.query()
+    await TaxRateTransaction.query(trx)
       .where({ referenceType, referenceId })
       .delete();
   }

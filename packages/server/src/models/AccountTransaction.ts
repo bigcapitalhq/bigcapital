@@ -29,30 +29,14 @@ export default class AccountTransaction extends TenantModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['referenceTypeFormatted'];
-  }
-
-  /**
-   * Retrieves the credit amount in foreign currency.
-   * @return {number}
-   */
-  get creditFcy() {
-    return this.credit;
-  }
-
-  /**
-   * Retrieves the debit amount in foreign currency.
-   * @return {number}
-   */
-  get debitFcy() {
-    return this.debit;
+    return ['referenceTypeFormatted', 'creditLocal', 'debitLocal'];
   }
 
   /**
    * Retrieves the credit amount in base currency.
    * @return {number}
    */
-  get creditBcy() {
+  get creditLocal() {
     return this.credit * this.exchangeRate;
   }
 
@@ -60,24 +44,8 @@ export default class AccountTransaction extends TenantModel {
    * Retrieves the debit amount in base currency.
    * @return {number}
    */
-  get debitBcy() {
+  get debitLocal() {
     return this.debit * this.exchangeRate;
-  }
-
-  /**
-   * Retrieves the tax amount in foreign currency.
-   * @return {number}
-   */
-  get taxAmountFcy() {
-    return (this.creditFcy - this.debitFcy) * this.taxRate;
-  }
-
-  /**
-   * Retrieves the tax amount in base currency.
-   * @return {number}
-   */
-  get taxAmountBcy() {
-    return (this.creditBcy - this.debitBcy) * this.taxRate;
   }
 
   /**

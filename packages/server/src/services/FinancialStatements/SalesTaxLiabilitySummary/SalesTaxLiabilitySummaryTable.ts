@@ -6,15 +6,11 @@ import {
   SalesTaxLiabilitySummaryTotal,
 } from '@/interfaces/SalesTaxLiabilitySummary';
 import { tableRowMapper } from '@/utils';
-import { ITableColumn, ITableColumnAccessor, ITableRow } from '@/interfaces';
+import { ITableColumn, ITableRow } from '@/interfaces';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
 import AgingReport from '../AgingSummary/AgingReport';
-
-enum IROW_TYPE {
-  TaxRate = 'TaxRate',
-  Total = 'Total',
-}
+import { IROW_TYPE } from './_constants';
 
 export class SalesTaxLiabilitySummaryTable extends R.compose(
   FinancialSheetStructure,

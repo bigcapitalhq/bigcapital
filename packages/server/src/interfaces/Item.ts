@@ -54,14 +54,6 @@ export interface IItemDTO {
   sellDescription: string;
   purchaseDescription: string;
 
-  // Used as an override if the default Tax Code for the selected `costAccountId` is not correct
-  purchaseTaxCode: string;
-  purchaseTaxId: string;
-
-  // Used as an override if the default Tax Code for the selected `sellAccountId` is not correct
-  saleTaxCode: string;
-  saleTaxId: string;
-
   quantityOnHand: number;
 
   note: string;

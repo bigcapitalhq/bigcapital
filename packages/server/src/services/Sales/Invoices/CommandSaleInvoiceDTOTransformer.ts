@@ -70,12 +70,17 @@ export class CommandSaleInvoiceDTOTransformer {
       isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
       ...entry,
     }));
-    const entries = await composeAsync(
+    const asyncEntries = await composeAsync(
       // Associate tax rate id from tax code to entries.
       this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(tenantId),
       // Sets default cost and sell account to invoice items entries.
       this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId)
     )(initialEntries);
+
+    const entries = R.compose(
+      // Remove tax code from entries.
+      R.map(R.omit(['taxCode']))
+    )(asyncEntries);
 
     const initialDTO = {
       ...formatDateFields(
@@ -83,7 +88,7 @@ export class CommandSaleInvoiceDTOTransformer {
         ['invoiceDate', 'dueDate']
       ),
       // Avoid rewrite the deliver date in edit mode when already published.
-      amount,
+      balance: amount,
       currencyCode: customer.currencyCode,
       exchangeRate: saleInvoiceDTO.exchangeRate || 1,
       ...(saleInvoiceDTO.delivered &&

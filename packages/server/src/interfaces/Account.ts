@@ -153,3 +153,11 @@ export enum AccountAction {
   VIEW = 'View',
   TransactionsLocking = 'TransactionsLocking',
 }
+
+
+export enum TaxRateAction {
+  CREATE = 'Create',
+  EDIT = 'Edit',
+  DELETE = 'Delete',
+  VIEW = 'View',
+}

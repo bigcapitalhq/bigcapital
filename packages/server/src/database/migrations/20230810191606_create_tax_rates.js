@@ -19,8 +19,6 @@ exports.up = (knex) => {
         .unsigned()
         .references('id')
         .inTable('tax_rates');
-      table.string('tax_code');
-      table.decimal('tax_rate');
     })
     .table('sales_invoices', (table) => {
       table.boolean('is_inclusive_tax').defaultTo(false);
@@ -35,7 +33,7 @@ exports.up = (knex) => {
         .inTable('tax_rates');
       table.string('reference_type');
       table.integer('reference_id');
-      table.decimal('tax_amount');
+      table.decimal('rate').unsigned();
       table.integer('tax_account_id').unsigned();
     })
     .table('accounts_transactions', (table) => {

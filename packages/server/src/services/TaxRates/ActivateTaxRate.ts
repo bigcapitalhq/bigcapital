@@ -1,12 +1,12 @@
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import {
   ITaxRateActivatedPayload,
   ITaxRateActivatingPayload,
 } from '@/interfaces';
-import { Inject, Service } from 'typedi';
 import UnitOfWork from '../UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { Knex } from 'knex';
 import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
 import events from '@/subscribers/events';
 
@@ -25,7 +25,7 @@ export class ActivateTaxRateService {
   private validators: CommandTaxRatesValidators;
 
   /**
-   * Edits the given tax rate.
+   * Activates the given tax rate.
    * @param {number} tenantId
    * @param {number} taxRateId
    * @param {IEditTaxRateDTO} taxRateEditDTO

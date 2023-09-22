@@ -4,9 +4,10 @@ import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { TaxRatesApplication } from '@/services/TaxRates/TaxRatesApplication';
-import { HookNextFunction } from 'mongoose';
+import CheckAbilities from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from '@/services/TaxRates/constants';
+import { AbilitySubject, TaxRateAction } from '@/interfaces';
 
 @Service()
 export class TaxRatesController extends BaseController {
@@ -21,6 +22,7 @@ export class TaxRatesController extends BaseController {
 
     router.post(
       '/',
+      CheckAbilities(TaxRateAction.CREATE, AbilitySubject.TaxRate),
       this.taxRateValidationSchema,
       this.validationResult,
       asyncMiddleware(this.createTaxRate.bind(this)),
@@ -28,6 +30,7 @@ export class TaxRatesController extends BaseController {
     );
     router.post(
       '/:id',
+      CheckAbilities(TaxRateAction.EDIT, AbilitySubject.TaxRate),
       [param('id').exists().toInt(), ...this.taxRateValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editTaxRate.bind(this)),
@@ -35,6 +38,7 @@ export class TaxRatesController extends BaseController {
     );
     router.post(
       '/:id/active',
+      CheckAbilities(TaxRateAction.EDIT, AbilitySubject.TaxRate),
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.activateTaxRate.bind(this)),
@@ -42,6 +46,7 @@ export class TaxRatesController extends BaseController {
     );
     router.post(
       '/:id/inactive',
+      CheckAbilities(TaxRateAction.EDIT, AbilitySubject.TaxRate),
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.inactivateTaxRate.bind(this)),
@@ -49,6 +54,7 @@ export class TaxRatesController extends BaseController {
     );
     router.delete(
       '/:id',
+      CheckAbilities(TaxRateAction.DELETE, AbilitySubject.TaxRate),
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.deleteTaxRate.bind(this)),
@@ -56,6 +62,7 @@ export class TaxRatesController extends BaseController {
     );
     router.get(
       '/:id',
+      CheckAbilities(TaxRateAction.VIEW, AbilitySubject.TaxRate),
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTaxRate.bind(this)),
@@ -63,6 +70,7 @@ export class TaxRatesController extends BaseController {
     );
     router.get(
       '/',
+      CheckAbilities(TaxRateAction.VIEW, AbilitySubject.TaxRate),
       this.validationResult,
       asyncMiddleware(this.getTaxRates.bind(this)),
       this.handleServiceErrors
@@ -81,7 +89,7 @@ export class TaxRatesController extends BaseController {
       body('description').optional().trim().isString(),
       body('is_non_recoverable').optional().isBoolean().default(false),
       body('is_compound').optional().isBoolean().default(false),
-      body('status').optional().toUpperCase().isIn(['ARCHIVED', 'ACTIVE']),
+      body('active').optional().isBoolean().default(false),
     ];
   }
 
@@ -242,12 +250,7 @@ export class TaxRatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: HookNextFunction
-  ) {
+  private handleServiceErrors(error: Error, req: Request, res: Response, next) {
     if (error instanceof ServiceError) {
       if (error.errorType === ERRORS.TAX_CODE_NOT_UNIQUE) {
         return res.boom.badRequest(null, {
