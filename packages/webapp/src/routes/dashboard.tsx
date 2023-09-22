@@ -1076,6 +1076,7 @@ export const getDashboardRoutes = () => [
         import('@/containers/TaxRates/pages/TaxRatesLanding'),
     ),
     pageTitle: 'Tax Rates',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Homepage
   {

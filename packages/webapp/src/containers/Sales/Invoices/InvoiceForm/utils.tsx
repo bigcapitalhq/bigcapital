@@ -46,7 +46,7 @@ export const defaultInvoice = {
   due_date: moment().format('YYYY-MM-DD'),
   delivered: '',
   invoice_no: '',
-  inclusive_exclusive_tax: 'inclusive',
+  inclusive_exclusive_tax: TaxType.Inclusive,
   // Holds the invoice number that entered manually only.
   invoice_no_manually: '',
   reference_no: '',
@@ -172,8 +172,10 @@ export function transformValueToRequest(values) {
     ...(values.invoice_no_manually && {
       invoice_no: values.invoice_no,
     }),
-    is_inclusive_tax: values.inclusive_exclusive_tax === 'inclusive',
-    entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
+    is_inclusive_tax: values.inclusive_exclusive_tax === TaxType.Inclusive,
+    entries: entries.map((entry) => ({
+      ...omit(entry, ['amount', 'tax_amount', 'tax_rate']),
+    })),
     delivered: false,
   };
 }

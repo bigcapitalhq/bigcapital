@@ -9,7 +9,7 @@ interface TaxRateFormDialogContentProps {
 }
 
 /**
- * Account dialog content.
+ * Tax rate form dialog content.
  */
 export default function TaxRateFormDialogContent({
   dialogName,

@@ -1,6 +1,6 @@
-
+import { TaxType } from '@/interfaces/TaxRates';
 
 export const InclusiveButtonOptions = [
-  { key: 'inclusive', label: 'Inclusive of Tax' },
-  { key: 'exclusive', label: 'Exclusive of Tax' },
+  { key: TaxType.Inclusive, label: 'Inclusive of Tax' },
+  { key: TaxType.Exclusive, label: 'Exclusive of Tax' },
 ];

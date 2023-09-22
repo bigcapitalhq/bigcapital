@@ -4,6 +4,7 @@ import { FastField } from 'formik';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { entriesFieldShouldUpdate } from './utils';
+import { TaxType } from '@/interfaces/TaxRates';
 
 /**
  * Invoice items entries editor field.
@@ -33,7 +34,7 @@ export default function InvoiceItemsEntriesEditorField() {
           errors={error}
           linesNumber={4}
           currencyCode={values.currency_code}
-          isInclusiveTax={values.inclusive_exclusive_tax === 'inclusive'}
+          isInclusiveTax={values.inclusive_exclusive_tax === TaxType.Inclusive}
         />
       )}
     </FastField>

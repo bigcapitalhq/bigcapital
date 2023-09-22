@@ -29,7 +29,7 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
   };
 
   return (
-    <DashboardInsider name={'cashflow-accounts'}>
+    <DashboardInsider name={'tax-rate-form'}>
       <TaxRatesLandingContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

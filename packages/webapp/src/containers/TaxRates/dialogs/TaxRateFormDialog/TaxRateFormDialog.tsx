@@ -9,12 +9,8 @@ const TaxRateFormDialogContent = lazy(
   () => import('./TaxRateFormDialogContent'),
 );
 
-const TaxRateDialog = styled(Dialog)`
-  max-width: 450px;
-`;
-
 /**
- * Account form dialog.
+ * Tax rate form dialog.
  */
 function TaxRateFormDialog({
   dialogName,
@@ -38,5 +34,9 @@ function TaxRateFormDialog({
     </TaxRateDialog>
   );
 }
+
+const TaxRateDialog = styled(Dialog)`
+  max-width: 450px;
+`;
 
 export default compose(withDialogRedux())(TaxRateFormDialog);

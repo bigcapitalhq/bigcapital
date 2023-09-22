@@ -7,7 +7,6 @@ import { useDeleteTaxRate } from '@/hooks/query/taxRates';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
-import withItemsActions from '@/containers/Items/withItemsActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
@@ -51,7 +50,10 @@ function TaxRateDeleteAlert({
             data: { errors },
           },
         }) => {
-          // handleDeleteErrors(errors);
+          AppToaster.show({
+            message: 'Something went wrong.',
+            intent: Intent.DANGER,
+          });
         },
       )
       .finally(() => {
@@ -86,6 +88,5 @@ function TaxRateDeleteAlert({
 export default compose(
   withAlertStoreConnect(),
   withAlertActions,
-  withItemsActions,
   withDrawerActions,
 )(TaxRateDeleteAlert);

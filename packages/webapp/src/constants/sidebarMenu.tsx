@@ -24,6 +24,7 @@ import {
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
+  TaxRateAction,
 } from '@/constants/abilityOption';
 import { DialogsName } from './dialogs';
 
@@ -410,6 +411,10 @@ export const SidebarMenu = [
                 text: 'Tax Rates',
                 href: '/tax-rates',
                 type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.TaxRate,
+                  ability: TaxRateAction.View,
+                },
               },
             ],
           },
