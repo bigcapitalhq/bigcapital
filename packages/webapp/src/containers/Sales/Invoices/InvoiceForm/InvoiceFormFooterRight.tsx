@@ -22,7 +22,7 @@ export function InvoiceFormFooterRight() {
   } = useInvoiceTotals();
 
   const {
-    values: { inclusive_exclusive_tax },
+    values: { inclusive_exclusive_tax, currency_code },
   } = useFormikContext();
 
   const taxEntries = useInvoiceAggregatedTaxRates();
@@ -48,7 +48,7 @@ export function InvoiceFormFooterRight() {
         />
       ))}
       <TotalLine
-        title={'Total (USD)'}
+        title={`Total (${currency_code})`}
         value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
