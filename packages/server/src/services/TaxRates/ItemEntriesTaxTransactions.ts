@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { keyBy, sumBy } from 'lodash';
 import { ItemEntry } from '@/models';
 import HasTenancyService from '../Tenancy/TenancyService';
+import { IItem, IItemEntry, IItemEntryDTO } from '@/interfaces';
 
 @Service()
 export class ItemEntriesTaxTransactions {
@@ -41,6 +42,29 @@ export class ItemEntriesTaxTransactions {
       return entries.map((entry) => {
         if (entry.taxCode) {
           entry.taxRateId = taxCodesMap[entry.taxCode]?.id;
+        }
+        return entry;
+      });
+    };
+
+  /**
+   * Associates tax rate from tax id to entries.
+   * @param {number} tenantId
+   * @returns {Promise<IItemEntry[]>}
+   */
+  public assocTaxRateFromTaxIdToEntries =
+    (tenantId: number) => async (entries: IItemEntry[]) => {
+      const entriesWithId = entries.filter((e) => e.taxRateId);
+      const taxRateIds = entriesWithId.map((e) => e.taxRateId);
+
+      const { TaxRate } = this.tenancy.models(tenantId);
+      const foundTaxes = await TaxRate.query().whereIn('id', taxRateIds);
+
+      const taxRatesMap = keyBy(foundTaxes, 'id');
+
+      return entries.map((entry) => {
+        if (entry.taxRateId) {
+          entry.taxRate = taxRatesMap[entry.taxRateId]?.rate;
         }
         return entry;
       });

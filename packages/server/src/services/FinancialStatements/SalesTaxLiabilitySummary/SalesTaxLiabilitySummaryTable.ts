@@ -153,7 +153,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
         key: 'collectedTax',
       },
       {
-        label: 'Tax Rate',
+        label: 'Tax Amount',
         key: 'taxRate',
       },
     ]);

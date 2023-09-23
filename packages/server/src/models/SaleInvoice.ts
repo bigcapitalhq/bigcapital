@@ -14,7 +14,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   ModelSearchable,
 ]) {
   public taxAmountWithheld: number;
-  public amount: number;
+  public balance: number;
   public paymentAmount: number;
   public exchangeRate: number;
   public writtenoffAmount: number;
@@ -75,6 +75,23 @@ export default class SaleInvoice extends mixin(TenantModel, [
   }
 
   /**
+   * Invoice amount.
+   * @todo Sugger attribute to balance, we need to rename the balance to amount.
+   * @returns {number}
+   */
+  get amount() {
+    return this.balance;
+  }
+
+  /**
+   * Invoice amount in base currency.
+   * @returns {number}
+   */
+  get amountLocal() {
+    return this.amount * this.exchangeRate;
+  }
+
+  /**
    * Subtotal. (Tax inclusive) if the tax inclusive is enabled.
    * @returns {number}
    */
@@ -87,7 +104,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number}
    */
   get subtotalLocal() {
-    return this.amount * this.exchangeRate;
+    return this.amountLocal;
   }
 
   /**
