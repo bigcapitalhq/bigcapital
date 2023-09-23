@@ -1,7 +1,7 @@
 export const TaxPayableAccount = {
   name: 'Tax Payable',
   slug: 'tax-payable',
-  account_type: 'other-current-liability',
+  account_type: 'tax-payable',
   code: '20006',
   description: '',
   active: 1,

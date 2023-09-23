@@ -31,14 +31,17 @@ export class SalesTaxLiabilitySummaryRepository {
   public async taxesPayableSumGroupedByRateId(
     tenantId: number
   ): Promise<SalesTaxLiabilitySummaryPayableById> {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
-    const { accountRepository } = this.tenancy.repositories(tenantId);
+    const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
-    // Finds or creates tax payable account.
-    const payableTaxAccount = await accountRepository.findOrCreateTaxPayable();
+    // Retrieves tax payable accounts.
+    const taxPayableAccounts = await Account.query().whereIn('accountType', [
+      ACCOUNT_TYPE.TAX_PAYABLE,
+    ]);
+    const payableAccountsIds = taxPayableAccounts.map((account) => account.id);
 
     const groupedTaxesById = await AccountTransaction.query()
-      .where('account_id', payableTaxAccount.id)
+      .whereIn('account_id', payableAccountsIds)
+      .whereNot('tax_rate_id', null)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
@@ -65,6 +68,7 @@ export class SalesTaxLiabilitySummaryRepository {
 
     const groupedTaxesById = await AccountTransaction.query()
       .whereIn('account_id', incomeAccountsIds)
+      .whereNot('tax_rate_id', null)
       .groupBy('tax_rate_id')
       .select(['tax_rate_id'])
       .sum('credit as credit')
