@@ -264,4 +264,13 @@ export default class ItemsEntriesService {
   public getTotalItemsEntries(entries: ItemEntry[]): number {
     return sumBy(entries, (e) => ItemEntry.calcAmount(e));
   }
+
+  /**
+   * Retrieve the non-zero tax items entries.
+   * @param {IItemEntry[]} entries -
+   * @returns {IItemEntry[]}
+   */
+  public getNonZeroEntries(entries: IItemEntry[]): IItemEntry[] {
+    return entries.filter((e) => e.taxRate > 0);
+  }
 }

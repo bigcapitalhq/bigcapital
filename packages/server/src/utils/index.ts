@@ -471,6 +471,15 @@ const castCommaListEnvVarToArray = (envVar: string): Array<string> => {
   return envVar ? envVar?.split(',')?.map(_.trim) : [];
 };
 
+export const sortObjectKeysAlphabetically = (object) => {
+  return Object.keys(object)
+    .sort()
+    .reduce((objEntries, key) => {
+      objEntries[key] = object[key];
+      return objEntries;
+    }, {});
+};
+
 export {
   templateRender,
   accumSum,
@@ -503,5 +512,5 @@ export {
   mergeObjectsBykey,
   nestedArrayToFlatten,
   assocDepthLevelToObjectTree,
-  castCommaListEnvVarToArray
+  castCommaListEnvVarToArray,
 };

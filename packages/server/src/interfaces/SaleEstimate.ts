@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { IItemEntry } from './ItemEntry';
+import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
 
 export interface ISaleEstimate {
@@ -29,7 +29,7 @@ export interface ISaleEstimateDTO {
   estimateDate?: Date;
   reference?: string;
   estimateNumber?: string;
-  entries: IItemEntry[];
+  entries: IItemEntryDTO[];
   note: string;
   termsConditions: string;
   sendToEmail: string;

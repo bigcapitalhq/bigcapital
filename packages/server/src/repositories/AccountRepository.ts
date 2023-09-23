@@ -2,6 +2,7 @@ import { Account } from 'models';
 import TenantRepository from '@/repositories/TenantRepository';
 import { IAccount } from '@/interfaces';
 import { Knex } from 'knex';
+import { TaxPayableAccount } from '@/database/seeds/data/accounts';
 
 export default class AccountRepository extends TenantRepository {
   /**
@@ -116,7 +117,7 @@ export default class AccountRepository extends TenantRepository {
     if (!result) {
       result = await this.model.query(trx).insertAndFetch({
         name: this.i18n.__('account.accounts_receivable.currency', {
-          currency: currencyCode
+          currency: currencyCode,
         }),
         accountType: 'accounts-receivable',
         currencyCode,
@@ -126,6 +127,29 @@ export default class AccountRepository extends TenantRepository {
     }
     return result;
   };
+
+  /**
+   * Find or create tax payable account.
+   * @param {Record<string, string>}extraAttrs
+   * @param {Knex.Transaction} trx
+   * @returns
+   */
+  async findOrCreateTaxPayable(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction
+  ) {
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: TaxPayableAccount.slug, ...extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...TaxPayableAccount,
+        ...extraAttrs,
+      });
+    }
+    return result;
+  }
 
   findOrCreateAccountsPayable = async (
     currencyCode: string = '',

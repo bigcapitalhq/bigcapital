@@ -32,5 +32,8 @@ export const transformLedgerEntryToTransaction = (
     projectId: entry.projectId,
 
     costable: entry.costable,
+
+    taxRateId: entry.taxRateId,
+    taxRate: entry.taxRate,
   };
 };

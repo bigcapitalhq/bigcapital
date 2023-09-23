@@ -225,8 +225,8 @@ export function useInvoicesTableColumns() {
       },
       {
         id: 'amount',
-        Header: intl.get('balance'),
-        accessor: 'formatted_amount',
+        Header: intl.get('amount'),
+        accessor: 'total_formatted',
         width: 120,
         align: 'right',
         clickable: true,

@@ -22,6 +22,7 @@ import VendorCreditDetailDrawer from '@/containers/Drawers/VendorCreditDetailDra
 import RefundCreditNoteDetailDrawer from '@/containers/Drawers/RefundCreditNoteDetailDrawer';
 import RefundVendorCreditDetailDrawer from '@/containers/Drawers/RefundVendorCreditDetailDrawer';
 import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransferDetailDrawer';
+import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
 
@@ -43,16 +44,25 @@ export default function DrawersContainer() {
       <ItemDetailDrawer name={DRAWERS.ITEM_DETAILS} />
       <CustomerDetailsDrawer name={DRAWERS.CUSTOMER_DETAILS} />
       <VendorDetailsDrawer name={DRAWERS.VENDOR_DETAILS} />
-      <InventoryAdjustmentDetailDrawer name={DRAWERS.INVENTORY_ADJUSTMENT_DETAILS} />
-      <CashflowTransactionDetailDrawer name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS} />
+      <InventoryAdjustmentDetailDrawer
+        name={DRAWERS.INVENTORY_ADJUSTMENT_DETAILS}
+      />
+      <CashflowTransactionDetailDrawer
+        name={DRAWERS.CASHFLOW_TRNASACTION_DETAILS}
+      />
       <QuickCreateCustomerDrawer name={DRAWERS.QUICK_CREATE_CUSTOMER} />
       <QuickCreateItemDrawer name={DRAWERS.QUICK_CREATE_ITEM} />
       <QuickWriteVendorDrawer name={DRAWERS.QUICK_WRITE_VENDOR} />
       <CreditNoteDetailDrawer name={DRAWERS.CREDIT_NOTE_DETAILS} />
       <VendorCreditDetailDrawer name={DRAWERS.VENDOR_CREDIT_DETAILS} />
       <RefundCreditNoteDetailDrawer name={DRAWERS.REFUND_CREDIT_NOTE_DETAILS} />
-      <RefundVendorCreditDetailDrawer name={DRAWERS.REFUND_VENDOR_CREDIT_DETAILS} />
-      <WarehouseTransferDetailDrawer name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS} />
+      <RefundVendorCreditDetailDrawer
+        name={DRAWERS.REFUND_VENDOR_CREDIT_DETAILS}
+      />
+      <WarehouseTransferDetailDrawer
+        name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS}
+      />
+      <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
     </div>
   );
 }

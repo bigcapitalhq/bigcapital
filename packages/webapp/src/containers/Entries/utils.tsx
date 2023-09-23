@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useCallback } from 'react';
 import * as R from 'ramda';
-import { sumBy, isEmpty, last } from 'lodash';
+import { sumBy, isEmpty, last, keyBy } from 'lodash';
 
 import { useItem } from '@/hooks/query';
 import {
@@ -13,6 +13,12 @@ import {
   orderingLinesIndexes,
   updateTableRow,
 } from '@/utils';
+import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
+
+export const ITEM_TYPE = {
+  SELLABLE: 'SELLABLE',
+  PURCHASABLE: 'PURCHASABLE',
+};
 
 /**
  * Retrieve item entry total from the given rate, quantity and discount.
@@ -38,11 +44,6 @@ export function updateItemsEntriesTotal(rows) {
     amount: calcItemEntryTotal(row.discount, row.quantity, row.rate),
   }));
 }
-
-export const ITEM_TYPE = {
-  SELLABLE: 'SELLABLE',
-  PURCHASABLE: 'PURCHASABLE',
-};
 
 /**
  * Retrieve total of the given items entries.
@@ -150,12 +151,7 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
  */
 export const composeRowsOnEditCell = R.curry(
   (rowIndex, columnId, value, defaultEntry, rows) => {
-    return compose(
-      orderingLinesIndexes,
-      updateAutoAddNewLine(defaultEntry, ['item_id']),
-      updateItemsEntriesTotal,
-      updateTableCell(rowIndex, columnId, value),
-    )(rows);
+    return compose()(rows);
   },
 );
 
@@ -171,10 +167,102 @@ export const composeRowsOnNewRow = R.curry((rowIndex, newRow, rows) => {
 });
 
 /**
- *
- * @param {*} entries
+ * Associate tax rate to entries.
+ */
+export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
+  const taxRatesById = keyBy(taxRates, 'id');
+
+  return entries.map((entry) => {
+    const taxRate = taxRatesById[entry.tax_rate_id];
+
+    return {
+      ...entry,
+      tax_rate: taxRate?.rate || 0,
+    };
+  });
+});
+
+/**
+ * Assign tax amount to entries.
+ * @param {boolean} isInclusiveTax
+ * @param entries
  * @returns
  */
-export const composeControlledEntries = (entries) => {
-  return R.compose(orderingLinesIndexes, updateItemsEntriesTotal)(entries);
+export const assignEntriesTaxAmount = R.curry(
+  (isInclusiveTax: boolean, entries) => {
+    return entries.map((entry) => {
+      const taxAmount = isInclusiveTax
+        ? getInclusiveTaxAmount(entry.amount, entry.tax_rate)
+        : getExlusiveTaxAmount(entry.amount, entry.tax_rate);
+
+      return {
+        ...entry,
+        tax_amount: taxAmount,
+      };
+    });
+  },
+);
+
+/**
+ * Get inclusive tax amount.
+ * @param {number} amount
+ * @param {number} taxRate
+ * @returns {number}
+ */
+export const getInclusiveTaxAmount = (amount: number, taxRate: number) => {
+  return (amount * taxRate) / (100 + taxRate);
+};
+
+/**
+ * Get exclusive tax amount.
+ * @param {number} amount
+ * @param {number} taxRate
+ * @returns {number}
+ */
+export const getExlusiveTaxAmount = (amount: number, taxRate: number) => {
+  return (amount * taxRate) / 100;
+};
+
+/**
+ * Compose rows when edit a table cell.
+ * @returns {Function}
+ */
+export const useComposeRowsOnEditTableCell = () => {
+  const { taxRates, isInclusiveTax, localValue, defaultEntry } =
+    useItemEntriesTableContext();
+
+  return useCallback(
+    (rowIndex, columnId, value) => {
+      return R.compose(
+        assignEntriesTaxAmount(isInclusiveTax),
+        assignEntriesTaxRate(taxRates),
+        orderingLinesIndexes,
+        updateAutoAddNewLine(defaultEntry, ['item_id']),
+        updateItemsEntriesTotal,
+        updateTableCell(rowIndex, columnId, value),
+      )(localValue);
+    },
+    [taxRates, isInclusiveTax, localValue, defaultEntry],
+  );
+};
+
+/**
+ * Compose rows when remove a table row.
+ * @returns {Function}
+ */
+export const useComposeRowsOnRemoveTableRow = () => {
+  const { minLinesNumber, defaultEntry, localValue } =
+    useItemEntriesTableContext();
+
+  return useCallback(
+    (rowIndex) => {
+      return compose(
+        // Ensure minimum lines count.
+        updateMinEntriesLines(minLinesNumber, defaultEntry),
+        // Remove the line by the given index.
+        updateRemoveLineByIndex(rowIndex),
+      )(localValue);
+    },
+    [minLinesNumber, defaultEntry, localValue],
+  );
 };

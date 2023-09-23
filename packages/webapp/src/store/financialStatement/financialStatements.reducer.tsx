@@ -61,6 +61,9 @@ const initialState = {
   projectProfitabilitySummary: {
     dispalyFilterDrawer: false,
   },
+  salesTaxLiabilitySummary: {
+    displayFilterDrawer: false,
+  }
 };
 
 /**
@@ -124,4 +127,8 @@ export default createReducer(initialState, {
     t.PROJECT_PROFITABILITY_SUMMARY,
     'projectProfitabilitySummary',
   ),
+  ...financialStatementFilterToggle(
+    t.SALES_TAX_LIABILITY_SUMMARY,
+    'salesTaxLiabilitySummary',
+  )
 });

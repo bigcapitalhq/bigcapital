@@ -13,16 +13,14 @@ import {
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
 import { formatDateFields } from 'utils';
+import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import { ItemEntry } from '@/models';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private branchDTOTransform: BranchTransactionDTOTransform;
 
@@ -38,6 +36,9 @@ export class CommandSaleInvoiceDTOTransformer {
   @Inject()
   private invoiceIncrement: SaleInvoiceIncrement;
 
+  @Inject()
+  private taxDTOTransformer: ItemEntriesTaxTransactions;
+
   /**
    * Transformes the create DTO to invoice object model.
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO - Sale invoice DTO.
@@ -51,11 +52,9 @@ export class CommandSaleInvoiceDTOTransformer {
     authorizedUser: ITenantUser,
     oldSaleInvoice?: ISaleInvoice
   ): Promise<ISaleInvoice> {
-    const { ItemEntry } = this.tenancy.models(tenantId);
+    const entriesModels = this.transformDTOEntriesToModels(saleInvoiceDTO);
+    const amount = this.getDueBalanceItemEntries(entriesModels);
 
-    const balance = sumBy(saleInvoiceDTO.entries, (e) =>
-      ItemEntry.calcAmount(e)
-    );
     // Retreive the next invoice number.
     const autoNextNumber = this.invoiceIncrement.getNextInvoiceNumber(tenantId);
 
@@ -68,12 +67,22 @@ export class CommandSaleInvoiceDTOTransformer {
 
     const initialEntries = saleInvoiceDTO.entries.map((entry) => ({
       referenceType: 'SaleInvoice',
+      isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
       ...entry,
     }));
-    const entries = await composeAsync(
+    const asyncEntries = await composeAsync(
+      // Associate tax rate from tax id to entries.
+      this.taxDTOTransformer.assocTaxRateFromTaxIdToEntries(tenantId),
+      // Associate tax rate id from tax code to entries.
+      this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(tenantId),
       // Sets default cost and sell account to invoice items entries.
       this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId)
     )(initialEntries);
+
+    const entries = R.compose(
+      // Remove tax code from entries.
+      R.map(R.omit(['taxCode']))
+    )(asyncEntries);
 
     const initialDTO = {
       ...formatDateFields(
@@ -81,7 +90,7 @@ export class CommandSaleInvoiceDTOTransformer {
         ['invoiceDate', 'dueDate']
       ),
       // Avoid rewrite the deliver date in edit mode when already published.
-      balance,
+      balance: amount,
       currencyCode: customer.currencyCode,
       exchangeRate: saleInvoiceDTO.exchangeRate || 1,
       ...(saleInvoiceDTO.delivered &&
@@ -96,8 +105,34 @@ export class CommandSaleInvoiceDTOTransformer {
     } as ISaleInvoice;
 
     return R.compose(
+      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO<ISaleInvoice>(tenantId),
       this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId)
     )(initialDTO);
   }
+
+  /**
+   * Transforms the DTO entries to invoice entries models.
+   * @param {ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO} entries
+   * @returns {IItemEntry[]}
+   */
+  private transformDTOEntriesToModels = (
+    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO
+  ): ItemEntry[] => {
+    return saleInvoiceDTO.entries.map((entry) => {
+      return ItemEntry.fromJson({
+        ...entry,
+        isInclusiveTax: saleInvoiceDTO.isInclusiveTax,
+      });
+    });
+  };
+
+  /**
+   * Gets the due balance from the invoice entries.
+   * @param {IItemEntry[]} entries
+   * @returns {number}
+   */
+  private getDueBalanceItemEntries = (entries: ItemEntry[]) => {
+    return sumBy(entries, (e) => e.amount);
+  };
 }

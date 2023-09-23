@@ -20,7 +20,8 @@ export const AbilitySubject = {
   SubscriptionBilling: 'SubscriptionBilling',
   CreditNote: 'CreditNote',
   VendorCredit: 'VendorCredit',
-  Project:'Project'
+  Project:'Project',
+  TaxRate: 'TaxRate',
 };
 
 export const ItemAction = {
@@ -169,6 +170,7 @@ export const ReportsAction = {
   READ_INVENTORY_VALUATION_SUMMARY: 'read-inventory-valuation-summary',
   READ_INVENTORY_ITEM_DETAILS: 'read-inventory-item-details',
   READ_CASHFLOW_ACCOUNT_TRANSACTION: 'read-cashflow-account-transactions',
+  READ_SALES_TAX_LIABILITY_SUMMARY: 'read-sales-tax-liability-summary',
 };
 
 export const PreferencesAbility = {
@@ -184,4 +186,12 @@ export const ExchangeRateAbility = {
 export const SubscriptionBillingAbility = {
   View: 'view',
   Payment: 'payment',
+};
+
+
+export const TaxRateAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
 };

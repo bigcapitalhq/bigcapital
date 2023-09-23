@@ -1,5 +1,5 @@
 import { mixin, Model, raw } from 'objection';
-import { castArray } from 'lodash';
+import { castArray, takeWhile } from 'lodash';
 import moment from 'moment';
 import TenantModel from 'models/TenantModel';
 import ModelSetting from './ModelSetting';
@@ -13,6 +13,17 @@ export default class SaleInvoice extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public taxAmountWithheld: number;
+  public balance: number;
+  public paymentAmount: number;
+  public exchangeRate: number;
+  public writtenoffAmount: number;
+  public creditedAmount: number;
+  public isInclusiveTax: boolean;
+  public writtenoffAt: Date;
+  public dueDate: Date;
+  public deliveredAt: Date;
+
   /**
    * Table name
    */
@@ -27,6 +38,9 @@ export default class SaleInvoice extends mixin(TenantModel, [
     return ['created_at', 'updated_at'];
   }
 
+  /**
+   *
+   */
   get pluralName() {
     return 'asdfsdf';
   }
@@ -36,35 +50,97 @@ export default class SaleInvoice extends mixin(TenantModel, [
    */
   static get virtualAttributes() {
     return [
-      'localAmount',
-      'dueAmount',
-      'balanceAmount',
       'isDelivered',
       'isOverdue',
       'isPartiallyPaid',
       'isFullyPaid',
-      'isPaid',
       'isWrittenoff',
+      'isPaid',
+
+      'dueAmount',
+      'balanceAmount',
       'remainingDays',
       'overdueDays',
-      'filterByBranches',
+
+      'subtotal',
+      'subtotalLocal',
+      'subtotalExludingTax',
+
+      'taxAmountWithheldLocal',
+      'total',
+      'totalLocal',
+
+      'writtenoffAmountLocal',
     ];
   }
 
   /**
-   * Invoice amount in local currency.
+   * Invoice amount.
+   * @todo Sugger attribute to balance, we need to rename the balance to amount.
    * @returns {number}
    */
-  get localAmount() {
-    return this.balance * this.exchangeRate;
+  get amount() {
+    return this.balance;
   }
 
   /**
-   * Invoice local written-off amount.
+   * Invoice amount in base currency.
    * @returns {number}
    */
-  get localWrittenoffAmount() {
-    return this.writtenoffAmount * this.exchangeRate;
+  get amountLocal() {
+    return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Subtotal. (Tax inclusive) if the tax inclusive is enabled.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Subtotal in base currency. (Tax inclusive) if the tax inclusive is enabled.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.amountLocal;
+  }
+
+  /**
+   * Sale invoice amount excluding tax.
+   * @returns {number}
+   */
+  get subtotalExludingTax() {
+    return this.isInclusiveTax
+      ? this.subtotal - this.taxAmountWithheld
+      : this.subtotal;
+  }
+
+  /**
+   * Tax amount withheld in base currency.
+   * @returns {number}
+   */
+  get taxAmountWithheldLocal() {
+    return this.taxAmountWithheld * this.exchangeRate;
+  }
+
+  /**
+   * Invoice total. (Tax included)
+   * @returns {number}
+   */
+  get total() {
+    return this.isInclusiveTax
+      ? this.subtotal
+      : this.subtotal + this.taxAmountWithheld;
+  }
+
+  /**
+   * Invoice total in local currency. (Tax included)
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
   }
 
   /**
@@ -97,7 +173,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @return {boolean}
    */
   get dueAmount() {
-    return Math.max(this.balance - this.balanceAmount, 0);
+    return Math.max(this.total - this.balanceAmount, 0);
   }
 
   /**
@@ -105,7 +181,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @return {boolean}
    */
   get isPartiallyPaid() {
-    return this.dueAmount !== this.balance && this.dueAmount > 0;
+    return this.dueAmount !== this.total && this.dueAmount > 0;
   }
 
   /**
@@ -333,6 +409,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const PaymentReceiveEntry = require('models/PaymentReceiveEntry');
     const Branch = require('models/Branch');
     const Account = require('models/Account');
+    const TaxRateTransaction = require('models/TaxRateTransaction');
 
     return {
       /**
@@ -382,7 +459,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       *
+       * Invoice may has associated cost transactions.
        */
       costTransactions: {
         relation: Model.HasManyRelation,
@@ -397,7 +474,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       *
+       * Invoice may has associated payment entries.
        */
       paymentEntries: {
         relation: Model.HasManyRelation,
@@ -420,12 +497,30 @@ export default class SaleInvoice extends mixin(TenantModel, [
         },
       },
 
+      /**
+       * Invoice may has associated written-off expense account.
+       */
       writtenoffExpenseAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
           from: 'sales_invoices.writtenoffExpenseAccountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Invoice may has associated tax rate transactions.
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction.default,
+        join: {
+          from: 'sales_invoices.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'SaleInvoice');
         },
       },
     };

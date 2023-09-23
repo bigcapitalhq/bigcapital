@@ -444,3 +444,24 @@ export function useTransactionsByReference(query, props) {
     },
   );
 }
+
+/**
+ * Retrieves the sales tax liability summary report.
+ */
+export function useSalesTaxLiabilitySummary(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.SALES_TAX_LIABILITY_SUMMARY, query],
+    {
+      method: 'get',
+      url: '/financial_statements/sales-tax-liability-summary',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => res.data,
+      ...props,
+    },
+  );
+}

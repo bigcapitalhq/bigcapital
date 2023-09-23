@@ -1,10 +1,6 @@
-import moment from 'moment';
-import { castArray, sumBy, toArray } from 'lodash';
-import { IBill, ISystemUser, IAccount } from '@/interfaces';
+import { castArray } from 'lodash';
 import JournalPoster from './JournalPoster';
-import JournalEntry from './JournalEntry';
-import { IExpense, IExpenseCategory } from '@/interfaces';
-import { increment } from 'utils';
+
 export default class JournalCommands {
   journal: JournalPoster;
   models: any;
@@ -16,7 +12,6 @@ export default class JournalCommands {
    */
   constructor(journal: JournalPoster) {
     this.journal = journal;
-
     this.repositories = this.journal.repositories;
     this.models = this.journal.models;
   }

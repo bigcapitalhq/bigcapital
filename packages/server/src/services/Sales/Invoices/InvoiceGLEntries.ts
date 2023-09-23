@@ -1,4 +1,5 @@
 import * as R from 'ramda';
+import { Knex } from 'knex';
 import {
   ISaleInvoice,
   IItemEntry,
@@ -6,11 +7,11 @@ import {
   AccountNormal,
   ILedger,
 } from '@/interfaces';
-import { Knex } from 'knex';
 import { Service, Inject } from 'typedi';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 
 @Service()
 export class SaleInvoiceGLEntries {
@@ -20,10 +21,13 @@ export class SaleInvoiceGLEntries {
   @Inject()
   private ledegrRepository: LedgerStorageService;
 
+  @Inject()
+  private itemsEntriesService: ItemsEntriesService;
+
   /**
    * Writes a sale invoice GL entries.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleInvoiceId - Sale invoice id.
    * @param {Knex.Transaction} trx
    */
   public writeInvoiceGLEntries = async (
@@ -42,9 +46,17 @@ export class SaleInvoiceGLEntries {
     const ARAccount = await accountRepository.findOrCreateAccountReceivable(
       saleInvoice.currencyCode
     );
+    // Find or create tax payable account.
+    const taxPayableAccount = await accountRepository.findOrCreateTaxPayable(
+      {},
+      trx
+    );
     // Retrieves the ledger of the invoice.
-    const ledger = this.getInvoiceGLedger(saleInvoice, ARAccount.id);
-
+    const ledger = this.getInvoiceGLedger(
+      saleInvoice,
+      ARAccount.id,
+      taxPayableAccount.id
+    );
     // Commits the ledger entries to the storage as UOW.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
   };
@@ -94,10 +106,14 @@ export class SaleInvoiceGLEntries {
    */
   public getInvoiceGLedger = (
     saleInvoice: ISaleInvoice,
-    ARAccountId: number
+    ARAccountId: number,
+    taxPayableAccountId: number
   ): ILedger => {
-    const entries = this.getInvoiceGLEntries(saleInvoice, ARAccountId);
-
+    const entries = this.getInvoiceGLEntries(
+      saleInvoice,
+      ARAccountId,
+      taxPayableAccountId
+    );
     return new Ledger(entries);
   };
 
@@ -143,7 +159,7 @@ export class SaleInvoiceGLEntries {
 
     return {
       ...commonEntry,
-      debit: saleInvoice.localAmount,
+      debit: saleInvoice.totalLocal,
       accountId: ARAccountId,
       contactId: saleInvoice.customerId,
       accountNormal: AccountNormal.DEBIT,
@@ -165,7 +181,7 @@ export class SaleInvoiceGLEntries {
       index: number
     ): ILedgerEntry => {
       const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
-      const localAmount = entry.amount * saleInvoice.exchangeRate;
+      const localAmount = entry.amountExludingTax * saleInvoice.exchangeRate;
 
       return {
         ...commonEntry,
@@ -176,10 +192,61 @@ export class SaleInvoiceGLEntries {
         itemId: entry.itemId,
         itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
-        projectId: entry.projectId || saleInvoice.projectId
+        projectId: entry.projectId || saleInvoice.projectId,
+        taxRateId: entry.taxRateId,
+        taxRate: entry.taxRate,
       };
     }
   );
+
+  /**
+   * Retreives the GL entry of tax payable.
+   * @param {ISaleInvoice} saleInvoice -
+   * @param {number} taxPayableAccountId -
+   * @returns {ILedgerEntry}
+   */
+  private getInvoiceTaxEntry = R.curry(
+    (
+      saleInvoice: ISaleInvoice,
+      taxPayableAccountId: number,
+      entry: IItemEntry,
+      index: number
+    ): ILedgerEntry => {
+      const commonEntry = this.getInvoiceGLCommonEntry(saleInvoice);
+
+      return {
+        ...commonEntry,
+        credit: entry.taxAmount,
+        accountId: taxPayableAccountId,
+        index: index + 3,
+        accountNormal: AccountNormal.CREDIT,
+        taxRateId: entry.taxRateId,
+        taxRate: entry.taxRate,
+      };
+    }
+  );
+
+  /**
+   * Retrieves the invoice tax GL entries.
+   * @param {ISaleInvoice} saleInvoice
+   * @param {number} taxPayableAccountId
+   * @returns {ILedgerEntry[]}
+   */
+  private getInvoiceTaxEntries = (
+    saleInvoice: ISaleInvoice,
+    taxPayableAccountId: number
+  ): ILedgerEntry[] => {
+    // Retrieves the non-zero tax entries.
+    const nonZeroTaxEntries = this.itemsEntriesService.getNonZeroEntries(
+      saleInvoice.entries
+    );
+    const transformTaxEntry = this.getInvoiceTaxEntry(
+      saleInvoice,
+      taxPayableAccountId
+    );
+    // Transforms the non-zero tax entries to GL entries.
+    return nonZeroTaxEntries.map(transformTaxEntry);
+  };
 
   /**
    * Retrieves the invoice GL entries.
@@ -189,7 +256,8 @@ export class SaleInvoiceGLEntries {
    */
   public getInvoiceGLEntries = (
     saleInvoice: ISaleInvoice,
-    ARAccountId: number
+    ARAccountId: number,
+    taxPayableAccountId: number
   ): ILedgerEntry[] => {
     const receivableEntry = this.getInvoiceReceivableEntry(
       saleInvoice,
@@ -198,6 +266,10 @@ export class SaleInvoiceGLEntries {
     const transformItemEntry = this.getInvoiceItemEntry(saleInvoice);
     const creditEntries = saleInvoice.entries.map(transformItemEntry);
 
-    return [receivableEntry, ...creditEntries];
+    const taxEntries = this.getInvoiceTaxEntries(
+      saleInvoice,
+      taxPayableAccountId
+    );
+    return [receivableEntry, ...creditEntries, ...taxEntries];
   };
 }

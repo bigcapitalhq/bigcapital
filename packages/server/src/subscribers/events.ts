@@ -13,7 +13,7 @@ export default {
     sendResetPassword: 'onSendResetPassword',
 
     resetPassword: 'onResetPassword',
-    resetingPassword: 'onResetingPassword'
+    resetingPassword: 'onResetingPassword',
   },
 
   /**
@@ -559,5 +559,22 @@ export default {
     onDelete: 'onProjectTimeDelete',
     onDeleting: 'onProjectTimeDeleting',
     onDeleted: 'onProjectTimeDeleted',
+  },
+
+  taxRates: {
+    onCreating: 'onTaxRateCreating',
+    onCreated: 'onTaxRateCreated',
+
+    onEditing: 'onTaxRateEditing',
+    onEdited: 'onTaxRateEdited',
+
+    onDeleting: 'onTaxRateDeleting',
+    onDeleted: 'onTaxRateDeleted',
+
+    onActivating: 'onTaxRateActivating',
+    onActivated: 'onTaxRateActivated',
+
+    onInactivating: 'onTaxRateInactivating',
+    onInactivated: 'onTaxRateInactivated'
   },
 };

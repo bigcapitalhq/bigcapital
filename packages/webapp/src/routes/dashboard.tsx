@@ -440,10 +440,26 @@ export const getDashboardRoutes = () => [
     path: `/financial-reports/project-profitability-summary`,
     component: lazy(
       () =>
-        import('@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'),
+        import(
+          '@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'
+        ),
     ),
     breadcrumb: intl.get('project_profitability_summary'),
     pageTitle: intl.get('project_profitability_summary'),
+    backLink: true,
+    sidebarExpand: false,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
+    path: '/financial-reports/sales-tax-liability-summary',
+    component: lazy(
+      () =>
+        import(
+          '@/containers/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummary'
+        ),
+    ),
+    breadcrumb: 'Sales Tax Liability Summary',
+    pageTitle: 'Sales Tax Liability Summary',
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -1052,6 +1068,15 @@ export const getDashboardRoutes = () => [
         import('@/containers/Projects/containers/ProjectsLanding/ProjectsList'),
     ),
     pageTitle: intl.get('sidebar.projects'),
+  },
+  {
+    path: '/tax-rates',
+    component: lazy(
+      () =>
+        import('@/containers/TaxRates/pages/TaxRatesLanding'),
+    ),
+    pageTitle: 'Tax Rates',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Homepage
   {

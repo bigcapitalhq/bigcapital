@@ -1,11 +1,12 @@
 import { Knex } from 'knex';
-import { ISystemUser, IAccount } from '@/interfaces';
+import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
 import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
 export interface ISaleInvoice {
   id: number;
-  balance: number;
+  amount: number;
+  amountLocal?: number;
   paymentAmount: number;
   currencyCode: string;
   exchangeRate?: number;
@@ -27,12 +28,21 @@ export interface ISaleInvoice {
   branchId?: number;
   projectId?: number;
 
-  localAmount?: number;
-
-  localWrittenoffAmount?: number;
+  writtenoffAmount?: number;
+  writtenoffAmountLocal?: number;
   writtenoffExpenseAccountId?: number;
-
   writtenoffExpenseAccount?: IAccount;
+
+  taxAmountWithheld: number;
+  taxAmountWithheldLocal: number;
+  taxes: ITaxTransaction[];
+
+  total: number;
+  totalLocal: number;
+
+  subtotal: number;
+  subtotalLocal: number;
+  subtotalExludingTax: number;
 }
 
 export interface ISaleInvoiceDTO {
@@ -44,12 +54,15 @@ export interface ISaleInvoiceDTO {
   exchangeRate?: number;
   invoiceMessage: string;
   termsConditions: string;
+  isTaxExclusive: boolean;
   entries: IItemEntryDTO[];
   delivered: boolean;
 
   warehouseId?: number | null;
   projectId?: number;
   branchId?: number | null;
+
+  isInclusiveTax?: boolean;
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {

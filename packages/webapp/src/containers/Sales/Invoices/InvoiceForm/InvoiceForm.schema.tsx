@@ -4,6 +4,7 @@ import moment from 'moment';
 import intl from 'react-intl-universal';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { isBlank } from '@/utils';
+import { TaxType } from '@/interfaces/TaxRates';
 
 const getSchema = () =>
   Yup.object().shape({
@@ -35,6 +36,10 @@ const getSchema = () =>
       .max(DATATYPES_LENGTH.TEXT)
       .label(intl.get('note')),
     exchange_rate: Yup.number(),
+    inclusive_exclusive_tax: Yup.string().oneOf([
+      TaxType.Inclusive,
+      TaxType.Exclusive,
+    ]),
     branch_id: Yup.string(),
     warehouse_id: Yup.string(),
     project_id: Yup.string(),

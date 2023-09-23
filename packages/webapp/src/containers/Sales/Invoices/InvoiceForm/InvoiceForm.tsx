@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
@@ -26,6 +26,7 @@ import withCurrentOrganization from '@/containers/Organization/withCurrentOrgani
 import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
+import { InvoiceFormActions } from './InvoiceFormActions';
 import {
   transformToEditForm,
   defaultInvoice,
@@ -71,7 +72,7 @@ function InvoiceForm({
       ? { ...transformToEditForm(invoice) }
       : {
           ...defaultInvoice,
-          // If the auto-increment mode is enabled, take the next invoice 
+          // If the auto-increment mode is enabled, take the next invoice
           // number from the settings.
           ...(invoiceAutoIncrementMode && {
             invoice_no: invoiceNumber,
@@ -166,7 +167,11 @@ function InvoiceForm({
         <Form>
           <InvoiceFormTopBar />
           <InvoiceFormHeader />
-          <InvoiceItemsEntriesEditorField />
+
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <InvoiceFormActions />
+            <InvoiceItemsEntriesEditorField />
+          </div>
           <InvoiceFormFooter />
           <InvoiceFloatingActions />
 

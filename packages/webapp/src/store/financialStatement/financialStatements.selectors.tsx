@@ -86,6 +86,10 @@ export const projectProfitabilitySummaryFilterDrawerSelector = (state) => {
   return filterDrawerByTypeSelector('projectProfitabilitySummary')(state);
 };
 
+export const salesTaxLiabilitySummaryFilterDrawerSelector = (state) => {
+  return filterDrawerByTypeSelector('salesTaxLiabilitySummary')(state);
+};
+
 /**
  * Retrieve balance sheet filter drawer.
  */
@@ -277,4 +281,12 @@ export const getProjectProfitabilitySummaryFilterDrawer = createSelector(
   (isOpen) => {
     return isOpen;
   },
+);
+
+/**
+ * Retrieve sales tax liability summary filter drawer.
+ */
+export const getSalesTaxLiabilitySummaryFilterDrawer = createSelector(
+  salesTaxLiabilitySummaryFilterDrawerSelector,
+  (isOpen) => isOpen,
 );

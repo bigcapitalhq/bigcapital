@@ -234,6 +234,9 @@ export default class Ledger implements ILedger {
       entryId: entry.id,
       branchId: entry.branchId,
       projectId: entry.projectId,
+
+      taxRateId: entry.taxRateId,
+      taxRate: entry.taxRate,
     };
   }
 

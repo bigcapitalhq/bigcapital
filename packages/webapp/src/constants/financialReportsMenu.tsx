@@ -87,9 +87,6 @@ export const financialReportMenus = [
       },
     ],
   },
-];
-
-export const SalesAndPurchasesReportMenus = [
   {
     sectionTitle: <T id={'sales_purchases_reports'} />,
     reports: [
@@ -118,19 +115,6 @@ export const SalesAndPurchasesReportMenus = [
         link: '/financial-reports/sales-by-items',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_SALES_BY_ITEMS,
-      },
-      {
-        title: <T id={'inventory_valuation'} />,
-        desc: (
-          <T
-            id={
-              'summarize_the_business_s_purchase_items_quantity_cost_and_average'
-            }
-          />
-        ),
-        link: '/financial-reports/inventory-valuation',
-        subject: AbilitySubject.Report,
-        ability: ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
       },
       {
         title: <T id={'customers_balance_summary'} />,
@@ -186,6 +170,18 @@ export const SalesAndPurchasesReportMenus = [
         link: '/financial-reports/inventory-item-details',
         subject: AbilitySubject.Report,
         ability: ReportsAction.READ_INVENTORY_ITEM_DETAILS,
+      },
+    ],
+  },
+  {
+    sectionTitle: 'Taxes',
+    reports: [
+      {
+        title: 'Sales Tax Liability Summary',
+        desc: 'Reports the total amount of sales tax collected from customers',
+        link: '/financial-reports/sales-tax-liability-summary',
+        subject: AbilitySubject.Report,
+        ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
       },
     ],
   },

@@ -24,6 +24,7 @@ import {
   ExpenseAction,
   CashflowAction,
   PreferencesAbility,
+  TaxRateAction,
 } from '@/constants/abilityOption';
 import { DialogsName } from './dialogs';
 
@@ -406,6 +407,15 @@ export const SidebarMenu = [
                 href: '/transactions-locking',
                 type: ISidebarMenuItemType.Link,
               },
+              {
+                text: 'Tax Rates',
+                href: '/tax-rates',
+                type: ISidebarMenuItemType.Link,
+                permission: {
+                  subject: AbilitySubject.TaxRate,
+                  ability: TaxRateAction.View,
+                },
+              },
             ],
           },
           {
@@ -737,6 +747,21 @@ export const SidebarMenu = [
             permission: {
               subject: AbilitySubject.Report,
               ability: ReportsAction.READ_VENDORS_SUMMARY_BALANCE,
+            },
+          },
+        ],
+      },
+      {
+        text: 'Taxes',
+        type: ISidebarMenuItemType.Group,
+        children: [
+          {
+            text: 'Sales Tax Liability Summary',
+            href: '/financial-reports/sales-tax-liability-summary',
+            type: ISidebarMenuItemType.Link,
+            permission: {
+              subject: AbilitySubject.Report,
+              ability: ReportsAction.READ_SALES_TAX_LIABILITY_SUMMARY,
             },
           },
         ],

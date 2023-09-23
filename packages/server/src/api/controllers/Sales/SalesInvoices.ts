@@ -169,8 +169,9 @@ export default class SaleInvoicesController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('project_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('entries').exists().isArray({ min: 1 }),
+      check('is_inclusive_tax').optional().isBoolean().toBoolean(),
 
+      check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
@@ -183,6 +184,15 @@ export default class SaleInvoicesController extends BaseController {
         .optional({ nullable: true })
         .trim()
         .escape(),
+      check('entries.*.tax_code')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isString(),
+      check('entries.*.tax_rate_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
@@ -754,6 +764,16 @@ export default class SaleInvoicesController extends BaseController {
               data: { ...error.payload },
             },
           ],
+        });
+      }
+      if (error.errorType === 'ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND', code: 5000 }],
+        });
+      }
+      if (error.errorType === 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND', code: 5100 }],
         });
       }
     }

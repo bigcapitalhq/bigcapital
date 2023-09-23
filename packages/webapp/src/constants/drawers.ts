@@ -22,4 +22,5 @@ export enum DRAWERS {
   REFUND_CREDIT_NOTE_DETAILS = 'refund-credit-detail-drawer',
   REFUND_VENDOR_CREDIT_DETAILS = 'refund-vendor-detail-drawer',
   WAREHOUSE_TRANSFER_DETAILS = 'warehouse-transfer-detail-drawer',
+  TAX_RATE_DETAILS = 'tax-rate-detail-drawer',
 }

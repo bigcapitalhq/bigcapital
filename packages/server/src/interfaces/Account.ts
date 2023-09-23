@@ -77,6 +77,9 @@ export interface IAccountTransaction {
   projectId?: number;
 
   account?: IAccount;
+
+  taxRateId?: number;
+  taxRate?: number;
 }
 export interface IAccountResponse extends IAccount {}
 
@@ -149,4 +152,12 @@ export enum AccountAction {
   DELETE = 'Delete',
   VIEW = 'View',
   TransactionsLocking = 'TransactionsLocking',
+}
+
+
+export enum TaxRateAction {
+  CREATE = 'Create',
+  EDIT = 'Edit',
+  DELETE = 'Delete',
+  VIEW = 'View',
 }

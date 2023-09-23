@@ -48,6 +48,9 @@ export interface ILedgerEntry {
   branchId?: number;
   projectId?: number;
 
+  taxRateId?: number;
+  taxRate?: number;
+
   entryId?: number;
   createdAt?: Date;
 

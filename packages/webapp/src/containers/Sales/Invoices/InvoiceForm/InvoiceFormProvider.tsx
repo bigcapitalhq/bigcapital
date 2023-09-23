@@ -18,6 +18,7 @@ import {
   useEstimate,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
+import { useTaxRates } from '@/hooks/query/taxRates';
 
 const InvoiceFormContext = createContext();
 
@@ -34,9 +35,13 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
   const isProjectsFeatureCan = featureCan(Features.Projects);
 
+  // Fetch invoice data.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
   });
+
+  // Fetch tax rates.
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
 
   // Fetch project list.
   const {
@@ -113,6 +118,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     branches,
     warehouses,
     projects,
+    taxRates,
 
     isInvoiceLoading,
     isItemsLoading,
@@ -123,6 +129,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isTaxRatesLoading,
 
     createInvoiceMutate,
     editInvoiceMutate,
