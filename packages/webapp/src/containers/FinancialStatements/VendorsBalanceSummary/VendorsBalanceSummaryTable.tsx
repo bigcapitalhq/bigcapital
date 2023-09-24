@@ -34,6 +34,7 @@ export default function VendorsBalanceSummaryTable({
         data={table.data}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
+        sticky={true}
         styleName={TableStyle.Constrant}
       />
     </VendorBalanceFinancialSheet>

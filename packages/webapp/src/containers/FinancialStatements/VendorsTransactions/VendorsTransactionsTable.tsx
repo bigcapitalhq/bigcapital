@@ -53,6 +53,7 @@ export default function VendorsTransactionsTable({
         expanded={expandedRows}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
+        sticky={true}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>
