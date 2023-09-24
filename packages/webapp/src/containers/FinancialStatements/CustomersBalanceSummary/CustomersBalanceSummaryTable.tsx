@@ -35,6 +35,7 @@ export default function CustomersBalanceSummaryTable({
         data={table.data}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
+        sticky={true}
         styleName={TableStyle.Constrant}
       />
     </FinancialSheet>

@@ -44,6 +44,7 @@ export default function CashFlowStatementTable({
         expandable={true}
         expanded={expandedRows}
         expandToggleColumn={1}
+        sticky={true}
         expandColumnSpace={0.8}
         styleName={TableStyle.Constrant}
       />

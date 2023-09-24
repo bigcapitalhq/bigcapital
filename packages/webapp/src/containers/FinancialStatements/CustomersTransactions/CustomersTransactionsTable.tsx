@@ -47,6 +47,7 @@ export default function CustomersTransactionsTable({
         noInitialFetch={true}
         expandable={true}
         expanded={expandedRows}
+        sticky={true}
         expandToggleColumn={1}
         expandColumnSpace={0.8}
         styleName={TableStyle.Constrant}
