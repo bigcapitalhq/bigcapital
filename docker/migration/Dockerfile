@@ -34,5 +34,7 @@ WORKDIR /app/packages/server
 
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
-# Once we listen the mysql port run the migration task.
-CMD ["./wait-for-it/wait-for-it.sh", "mysql:3306", "--", "node", "./build/commands.js", "system:migrate:latest"]
+ADD docker/migration/start.sh /
+RUN chmod +x /start.sh
+
+CMD ["/start.sh"]
