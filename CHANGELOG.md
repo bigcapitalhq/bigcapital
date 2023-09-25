@@ -2,6 +2,20 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+# [0.10.1] - 25-09-2023
+
+* Fix: Running tenants migration on Docker migration container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/242
+
+# [0.10.0] - 24-09-2023
+
+* Added: Tax rates service by @abouolia @elforjani13  in https://github.com/bigcapitalhq/bigcapital/pull/204
+* Added: Sales Tax Liability Summary report by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/204
+* Added: Tax rates tracking with sale invoices by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/204
+* fix(webapp): Table headers sticky for all reports. by @elforjani13 in https://github.com/bigcapitalhq/bigcapital/pull/240
+* chore(deps): bump word-wrap from 1.2.3 to 1.2.4 by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/200
+* chore(deps): bump word-wrap from 1.2.3 to 1.2.4 in /packages/webapp by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/199
+* chore(deps): bump mongoose from 5.13.15 to 5.13.20 by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/197
+
 # [0.9.12] - 29-08-2023
 
 * Refactor: split the services to multiple service classes. (by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/202)
