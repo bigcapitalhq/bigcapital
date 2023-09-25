@@ -15,8 +15,8 @@ services:
       - ./data/logs/nginx/:/var/log/nginx
       - ./docker/certbot/certs/:/var/certs
     ports:
-      - "${PUBLIC_PROXY_PORT:-80}:80"
-      - "${PUBLIC_PROXY_SSL_PORT:-443}:443"
+      - '${PUBLIC_PROXY_PORT:-80}:80'
+      - '${PUBLIC_PROXY_SSL_PORT:-443}:443'
     tty: true
     depends_on:
       - server
@@ -71,7 +71,7 @@ services:
       # Authentication
       - JWT_SECRET=${JWT_SECRET}
 
-      # MongoDB 
+      # MongoDB
       - MONGODB_DATABASE_URL=mongodb://mongo/bigcapital
 
       # Application
@@ -92,11 +92,14 @@ services:
       context: ./
       dockerfile: docker/migration/Dockerfile
     environment:
+      # Database
       - DB_HOST=mysql
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_CHARSET=${DB_CHARSET}
       - SYSTEM_DB_NAME=${SYSTEM_DB_NAME}
+      # Tenants databases
+      - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
     depends_on:
       - mysql
 
@@ -136,7 +139,7 @@ services:
     build:
       context: ./docker/redis
     expose:
-      - "6379"
+      - '6379'
     volumes:
       - redis:/data
 
