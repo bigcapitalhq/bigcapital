@@ -62,7 +62,7 @@
     "is-my-json-valid": "^2.20.5",
     "js-money": "^0.6.3",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.95.15",
+    "knex": "^2.4.0",
     "knex-cleaner": "^1.3.0",
     "knex-db-manager": "^0.6.1",
     "libphonenumber-js": "^1.9.6",
