@@ -78,7 +78,7 @@
     "mysql2": "^1.6.5",
     "node-cache": "^4.2.1",
     "nodemailer": "^6.3.0",
-    "nodemon": "^1.19.1",
+    "nodemon": "^3.0.1",
     "object-hash": "^2.0.3",
     "objection": "^3.0.0",
     "objection-filter": "^4.0.1",
