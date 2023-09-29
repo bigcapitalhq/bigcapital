@@ -14,12 +14,11 @@ import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
-import { safeInvoke } from '@blueprintjs/core/lib/esm/common/utils';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 import withARAgingSummary from './withARAgingSummary';
 
-import { compose } from '@/utils';
+import { compose, safeInvoke } from '@/utils';
 
 /**
  * A/R Aging summary sheet - Actions bar.
