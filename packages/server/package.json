@@ -1,6 +1,6 @@
 {
   "name": "@bigcapital/server",
-  "version": "0.10.0",
+  "version": "0.10.2",
   "description": "",
   "main": "src/server.ts",
   "scripts": {
