@@ -22,14 +22,15 @@ export default function VendorCreditNoteItemsEntriesEditor() {
           meta: { error, touched },
         }) => (
           <ItemsEntriesTable
-            entries={value}
-            onUpdateData={(entries) => {
+            value={value}
+            onChange={(entries) => {
               setFieldValue('entries', entries);
             }}
             items={items}
             errors={error}
             linesNumber={4}
             currencyCode={values.currency_code}
+            enableTaxRates={false}
           />
         )}
       </FastField>

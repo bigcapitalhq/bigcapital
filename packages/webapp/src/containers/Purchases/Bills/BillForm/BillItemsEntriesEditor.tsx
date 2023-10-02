@@ -27,8 +27,8 @@ export default function BillFormBody({ defaultBill }) {
           meta: { error, touched },
         }) => (
           <ItemsEntriesTable
-            entries={value}
-            onUpdateData={(entries) => {
+            value={value}
+            onChange={(entries) => {
               setFieldValue('entries', entries);
             }}
             items={items}
@@ -37,6 +37,7 @@ export default function BillFormBody({ defaultBill }) {
             currencyCode={values.currency_code}
             itemType={ITEM_TYPE.PURCHASABLE}
             landedCost={true}
+            enableTaxRates={false}
           />
         )}
       </FastField>

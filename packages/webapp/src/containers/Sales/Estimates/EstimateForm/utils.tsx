@@ -31,6 +31,15 @@ export const defaultEstimateEntry = {
   amount: '',
 };
 
+const defaultEstimateEntryReq = {
+  index: 0,
+  item_id: '',
+  rate: '',
+  discount: '',
+  quantity: '',
+  description: '',
+};
+
 export const defaultEstimate = {
   customer_id: '',
   estimate_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -148,7 +157,9 @@ export const transfromsFormValuesToRequest = (values) => {
     ...(values.estimate_number_manually && {
       estimate_number: values.estimate_number,
     }),
-    entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
+    entries: entries.map((entry) => ({
+      ...transformToForm(entry, defaultEstimateEntryReq),
+    })),
   };
 };
 

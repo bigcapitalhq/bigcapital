@@ -92,7 +92,7 @@ const LandedCostHeaderCell = () => {
  */
 export function useEditableItemsEntriesColumns() {
   const { featureCan } = useFeatureCan();
-  const { landedCost } = useItemEntriesTableContext();
+  const { landedCost, enableTaxRates } = useItemEntriesTableContext();
 
   const isProjectsFeatureEnabled = featureCan(Features.Projects);
 
@@ -132,13 +132,17 @@ export function useEditableItemsEntriesColumns() {
         width: 70,
         align: Align.Right,
       },
-      {
-        Header: 'Tax rate',
-        accessor: 'tax_rate_id',
-        Cell: TaxRatesSuggestInputCell,
-        disableSortBy: true,
-        width: 110,
-      },
+      ...(enableTaxRates
+        ? [
+            {
+              Header: 'Tax rate',
+              accessor: 'tax_rate_id',
+              Cell: TaxRatesSuggestInputCell,
+              disableSortBy: true,
+              width: 110,
+            },
+          ]
+        : []),
       {
         Header: intl.get('discount'),
         accessor: 'discount',
