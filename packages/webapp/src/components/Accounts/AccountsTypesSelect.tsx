@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { FSelect } from '@/components/Forms';
 
 export function AccountsTypesSelect({ ...props }) {

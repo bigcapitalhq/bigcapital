@@ -2,7 +2,7 @@
   "name": "bigcapital-monorepo",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna exec npm install",
+    "bootstrap": "lerna exec pnpm install",
     "dev": "lerna run dev",
     "build": "lerna run build",
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
@@ -13,10 +13,6 @@
     "test:e2e": "playwright test",
     "prepare": "husky install"
   },
-  "workspaces": [
-    "packages/*",
-    "shared/*"
-  ],
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
