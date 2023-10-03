@@ -1,5 +1,6 @@
 {
   "name": "bigcapital-monorepo",
+  "version": "0.10.2",
   "private": true,
   "scripts": {
     "bootstrap": "lerna exec pnpm install",
