@@ -1,6 +1,6 @@
 {
   "name": "@bigcapital/webapp",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "private": true,
   "dependencies": {
     "@blueprintjs-formik/core": "^0.3.6",
@@ -117,7 +117,6 @@
   "resolutions": {
     "react-error-overlay": "6.0.9"
   },
-  
   "browserslist": {
     "production": [
       ">0.2%",
