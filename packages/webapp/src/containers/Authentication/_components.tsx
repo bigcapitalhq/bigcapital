@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Spinner } from '@blueprintjs/core';
@@ -39,7 +40,7 @@ export const AuthInsiderCopyright = styled.div`
   color: #666;
   margin-top: 1.2rem;
 
-  .bp3-icon-bigcapital {
+  .bp4-icon-bigcapital {
     svg {
       path {
         fill: #a3a3a3;
@@ -65,11 +66,11 @@ export const AuthFooterLink = styled.p`
 export const AuthSubmitButton = styled(Button)`
   margin-top: 20px;
 
-  &.bp3-intent-primary {
+  &.bp4-intent-primary {
     background-color: #0052cc;
 
     &:disabled,
-    &.bp3-disabled {
+    &.bp4-disabled {
       background-color: rgba(0, 82, 204, 0.4);
     }
   }

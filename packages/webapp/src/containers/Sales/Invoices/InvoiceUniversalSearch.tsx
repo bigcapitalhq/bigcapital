@@ -80,7 +80,7 @@ export function InvoiceUniversalSearchItem(
       text={
         <div>
           <div>{highlightText(item.text, query)}</div>
-          <span class="bp3-text-muted">
+          <span class="bp4-text-muted">
             {highlightText(item.reference.invoice_no, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_invoice_date}

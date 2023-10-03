@@ -16,16 +16,16 @@
   }
 
   #{$self}__body {
-    .bp3-form-group {
+    .bp4-form-group {
       max-width: 500px;
       margin-bottom: 14px;
 
-      &.bp3-inline {
-        .bp3-label {
+      &.bp4-inline {
+        .bp4-label {
           min-width: 140px;
         }
       }
-      .bp3-form-content {
+      .bp4-form-content {
         width: 100%;
       }
     }
@@ -36,7 +36,7 @@
       margin-bottom: 1.4rem;
     }
 
-    .bp3-control {
+    .bp4-control {
       h3 {
         display: inline;
         margin-bottom: 0;
@@ -61,7 +61,7 @@
     max-width: 850px;
     margin-bottom: 1rem;
 
-    .bp3-form-group {
+    .bp4-form-group {
       max-width: 400px;
     }
 
@@ -83,7 +83,7 @@
     }
   }
 
-  .bp3-tooltip-indicator {
+  .bp4-tooltip-indicator {
     border-bottom: 1px dashed #d0d0d0;
   }
 }

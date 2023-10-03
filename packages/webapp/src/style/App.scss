@@ -1,6 +1,17 @@
 @import './normalize.scss';
-
 @import './Base.scss';
+
+$svg-icon-map: (
+  '16px/small-minus.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M11 7H5c-.55 0-1 .45-1 1s.45 1 1 1h6c.55 0 1-.45 1-1s-.45-1-1-1z' fill='%23fff'/",
+  '16px/small-tick.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 0 0-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0 0 12 5z' fill='%23fff'/",
+  '16px/chevron-right.svg': "path fill-rule='evenodd' clip-rule='evenodd' d='M10.71 7.29l-4-4a1.003 1.003 0 0 0-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 0 0 1.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z' fill='%235C7080'/",
+  '16px/more.svg': "g fill='%235C7080'%3E%3Ccircle cx='2' cy='8.03' r='2'/%3E%3Ccircle cx='14' cy='8.03' r='2'/%3E%3Ccircle cx='8' cy='8.03' r='2'/%3E%3C/g",
+);
+
+@function svg-icon($inline-svg, $fill-color) {
+  @return url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3C"+ map-get($svg-icon-map, $inline-svg) + "%3E%3C/svg%3E")
+}
+
 
 // Blueprint framework.
 @import '@blueprintjs/core/src/blueprint.scss';
@@ -51,56 +62,56 @@ body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp3-fill {
+.bp4-fill {
 
-  .bp3-popover-wrapper,
-  .bp3-popover-target {
+  .bp4-popover-wrapper,
+  .bp4-popover-target {
     display: block;
     width: 100%;
   }
 
-  .bp3-button {
+  .bp4-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-.bp3-datepicker-caption .bp3-html-select::after {
+.bp4-datepicker-caption .bp4-html-select::after {
   margin-right: 6px;
 }
 
-.bp3-select-popover .bp3-menu,
-.bp3-multi-select-popover .bp3-menu {
+.bp4-select-popover .bp4-menu,
+.bp4-multi-select-popover .bp4-menu {
   max-height: 300px;
   overflow: auto;
 }
 
-.bp3-form-group .bp3-label {
+.bp4-form-group .bp4-label {
   .hint {
-    .bp3-popover-wrapper {
+    .bp4-popover-wrapper {
       display: inline;
     }
   }
 
-  &:not(.bp3-inline) .hint .bp3-popover-target {
+  &:not(.bp4-inline) .hint .bp4-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp3-popover.bp3-tooltip {
+.bp4-popover.bp4-tooltip {
   max-width: 300px;
 }
 
-.bp3-timezone-picker {
-  .bp3-button {
+.bp4-timezone-picker {
+  .bp4-button {
     [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp3-progress-bar.bp3-intent-primary .bp3-progress-meter {
+.bp4-progress-bar.bp4-intent-primary .bp4-progress-meter {
   background-color: #0066ff;
 }
 
@@ -183,7 +194,7 @@ body.hide-scrollbar .Pane2 {
 
 .ReactVirtualized__List {}
 
-.bp3-drawer {
+.bp4-drawer {
   box-shadow: 0 0 0;
   background-color: #fbfbfb;
 
@@ -194,7 +205,7 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir='rtl'] {
-  .bp3-icon-caret-right {
+  .bp4-icon-caret-right {
     transform: scaleX(-1);
   }
 }
@@ -205,12 +216,12 @@ html[lang^='ar'] {
   }
 }
 
-.bp3-popover2 {
+.bp4-popover2 {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
-.bp3-tooltip2 .bp3-popover2-arrow:before {
+.bp4-tooltip2 .bp4-popover2-arrow:before {
   box-shadow: 0 0 0;
 }
 
@@ -230,38 +241,38 @@ html[lang^='ar'] {
     z-index: 9999999;
     margin: 6px;
 
-    .bp3-button {
+    .bp4-button {
       border-color: rgba(0, 0, 0, 0.25);
       color: rgb(25, 32, 37);
       min-height: 30px;
       padding-left: 14px;
       padding-right: 14px;
 
-      &+.bp3-button {
+      &+.bp4-button {
         margin-left: 8px;
       }
     }
   }
 
-  .bp3-dialog {
+  .bp4-dialog {
     &-body {
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp3-spinner {
+      >.bp4-spinner {
         margin: 20px 0;
       }
     }
   }
 }
 
-.bp3-drawer {
+.bp4-drawer {
   border-left: 1px solid #00115e;
 }
 
 .drawer-portal {
-  .bp3-overlay-backdrop {
+  .bp4-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }

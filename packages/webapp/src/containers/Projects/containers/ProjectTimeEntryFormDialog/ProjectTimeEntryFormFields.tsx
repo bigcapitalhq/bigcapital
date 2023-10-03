@@ -113,7 +113,7 @@ function ProjectTimeEntryFormFields() {
 export default ProjectTimeEntryFormFields;
 
 const DurationInputGroup = styled(FInputGroup)`
-  .bp3-input {
+  .bp4-input {
     width: 150px;
   }
 `;

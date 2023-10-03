@@ -41,18 +41,18 @@ function ProjectBillableEntriesFormDialog({
 export default compose(withDialogRedux())(ProjectBillableEntriesFormDialog);
 
 const ProjectBillableEntriesFormDialogRoot = styled(Dialog)`
-  .bp3-dialog-body {
-    .bp3-form-group {
+  .bp4-dialog-body {
+    .bp4-form-group {
       margin-bottom: 15px;
 
-      label.bp3-label {
+      label.bp4-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
   }
-  .bp3-dialog-footer {
-    .bp3-dialog-footer-actions {
+  .bp4-dialog-footer {
+    .bp4-dialog-footer-actions {
       display: flex;
       justify-content: flex-start;
     }

@@ -15,20 +15,20 @@
     max-width: 1000px;
   }
 
-  .bp3-form-group {
+  .bp4-form-group {
     max-width: 500px;
 
-    .bp3-control {
+    .bp4-control {
       margin-top: 8px;
       margin-bottom: 8px;
     }
 
-    &.bp3-inline {
-      .bp3-label {
+    &.bp4-inline {
+      .bp4-label {
         min-width: 150px;
       }
     }
-    .bp3-form-content {
+    .bp4-form-content {
       width: 100%;
     }
   }
@@ -36,7 +36,7 @@
   .form-group--contact_name {
     max-width: 600px;
 
-    .bp3-control-group > * {
+    .bp4-control-group > * {
       flex-shrink: unset;
 
       &:not(:last-child) {
@@ -52,16 +52,16 @@
     }
   }
 
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 14px;
   }
 
-  .bp3-tab-panel {
+  .bp4-tab-panel {
     margin-top: 26px;
   }
 
   .form-group--phone-number {
-    .bp3-control-group > * {
+    .bp4-control-group > * {
       flex-shrink: unset;
       padding-right: 5px;
       padding-left: 5px;
@@ -88,20 +88,20 @@
     // Tab panels.
     .tab-panel {
       &--address {
-        .bp3-form-group {
+        .bp4-form-group {
           max-width: 440px;
 
-          &.bp3-inline {
-            .bp3-label {
+          &.bp4-inline {
+            .bp4-label {
               min-width: 145px;
             }
           }
 
-          .bp3-form-content {
+          .bp4-form-content {
             width: 100%;
           }
 
-          textarea.bp3-input {
+          textarea.bp4-input {
             max-width: 100%;
             width: 100%;
             min-height: 50px;
@@ -110,7 +110,7 @@
       }
       &--note {
         .form-group--note {
-          .bp3-form-group {
+          .bp4-form-group {
             max-width: 600px;
           }
           textarea {
@@ -126,8 +126,8 @@
     }
   }
 
-  .bp3-tabs {
-    .bp3-tab-list {
+  .bp4-tabs {
+    .bp4-tab-list {
       position: relative;
 
       &:before {
@@ -142,7 +142,7 @@
       > *:not(:last-child) {
         margin-right: 25px;
       }
-      &.bp3-large > .bp3-tab {
+      &.bp4-large > .bp4-tab {
         font-size: 15px;
       }
     }

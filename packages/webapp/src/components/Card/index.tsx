@@ -18,10 +18,10 @@ export const CardFooterActions = styled.div`
   border-top: 1px solid #e0e7ea;
   margin-top: 30px;
 
-  .bp3-button {
+  .bp4-button {
     min-width: 70px;
 
-    + .bp3-button {
+    + .bp4-button {
       margin-left: 10px;
     }
   }

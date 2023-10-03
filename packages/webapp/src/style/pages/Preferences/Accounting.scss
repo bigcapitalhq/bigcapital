@@ -9,10 +9,10 @@
       border-top: 1px solid #e0e7ea;
       margin-top: 30px;
 
-      .bp3-button {
+      .bp4-button {
         min-width: 65px;
 
-        + .bp3-button {
+        + .bp4-button {
           margin-left: 10px;
         }
       }
@@ -24,20 +24,20 @@
       min-width: 250px;
     }
   }
-  .bp3-form-group {
-    .bp3-form-helper-text {
+  .bp4-form-group {
+    .bp4-form-helper-text {
       margin-top: 7px;
     }
 
-    label.bp3-label {
+    label.bp4-label {
       margin-bottom: 7px;
     }
   }
-  .bp3-form-group.accounts-checkbox {
-    .bp3-form-group.bp3-inline {
+  .bp4-form-group.accounts-checkbox {
+    .bp4-form-group.bp4-inline {
       margin-bottom: 7px;
     }
-    .bp3-control.bp3-inline {
+    .bp4-control.bp4-inline {
       margin-bottom: 0;
     }
   }

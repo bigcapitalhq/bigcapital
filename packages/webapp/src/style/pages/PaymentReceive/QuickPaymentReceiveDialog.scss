@@ -1,8 +1,8 @@
 .dialog--quick-payment-receive {
-    .bp3-form-group {
+    .bp4-form-group {
       margin-bottom: 15px;
 
-      label.bp3-label {
+      label.bp4-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
@@ -10,7 +10,7 @@
 
     .form-group {
       &--statement {
-        .bp3-form-content {
+        .bp4-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -21,6 +21,6 @@
     }
   }
 
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
 }

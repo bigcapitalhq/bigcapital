@@ -66,18 +66,18 @@
         outline: 0;
         font-size: 15px;
 
-        &:not([class*="bp3-intent-"]):not(.bp3-minimal) {
+        &:not([class*="bp4-intent-"]):not(.bp4-minimal) {
           color: rgb(255, 255, 255);
         }
 
         &:hover,
         &:focus,
         &:active,
-        &.bp3-active {
+        &.bp4-active {
           background: transparent;
         }
 
-        .bp3-button-text {
+        .bp4-button-text {
           margin-right: 4px;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -90,8 +90,8 @@
         }
       }
 
-      .bp3-popover-wrapper,
-      .bp3-popover-target {
+      .bp4-popover-wrapper,
+      .bp4-popover-target {
         max-width: 100%;
         display: inline-block;
       }
@@ -145,7 +145,7 @@
       font-weight: 400;
 
       &:hover,
-      &.bp3-active {
+      &.bp4-active {
         background: $sidebar-submenu-item-bg-color;
         color: $sidebar-menu-item-color-active;
       }
@@ -183,7 +183,7 @@
         }
       }
 
-      &:hover .bp3-button.menu-item__add-btn {
+      &:hover .bp4-button.menu-item__add-btn {
         display: inline-block;
       }
     }
@@ -202,12 +202,12 @@
           color: $sidebar-submenu-item-color;
 
           &:hover,
-          &.bp3-active {
+          &.bp4-active {
             background: transparent;
             color: $sidebar-submenu-item-hover-color;
           }
 
-          &.bp3-active {
+          &.bp4-active {
             font-weight: 500;
           }
         }
@@ -296,7 +296,7 @@
     }
   }
 
-  .bp3-button.menu-item__add-btn {
+  .bp4-button.menu-item__add-btn {
     width: auto;
     padding: 2px;
     margin-right: 0px;
@@ -306,8 +306,8 @@
     display: none;
     vertical-align: top;
 
-    &:not([class*='bp3-intent-']):not(.bp3-minimal):not(:disabled) {
-      .bp3-icon {
+    &:not([class*='bp4-intent-']):not(.bp4-minimal):not(:disabled) {
+      .bp4-icon {
         color: rgba(255, 255, 255, 0.4);
       }
 
@@ -322,13 +322,13 @@
       &:hover {
         background-color: rgba(255, 255, 255, 0.12);
 
-        .bp3-icon {
+        .bp4-icon {
           color: rgba(255, 255, 255, 0.6);
         }
       }
     }
 
-    .bp3-icon {
+    .bp4-icon {
       margin: 0;
       display: block;
     }

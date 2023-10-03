@@ -47,7 +47,7 @@ export default function FinancialStatementsFilter({
       {({ form: { setFieldValue }, field: { value } }) => (
         <FormGroup
           label={label}
-          className="form-group--select-list bp3-fill"
+          className="form-group--select-list bp4-fill"
           inline={false}
         >
           <ListSelect

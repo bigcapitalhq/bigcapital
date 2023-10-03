@@ -1,16 +1,16 @@
 .dialog--warehouse-form {
   width: 650px;
 
-  .bp3-dialog-body {
-    .bp3-form-group.bp3-inline {
-      .bp3-label {
+  .bp4-dialog-body {
+    .bp4-form-group.bp4-inline {
+      .bp4-label {
         font-size: 13px;
         min-width: 140px;
       }
-      .bp3-form-content {
+      .bp4-form-content {
         width: 388px;
       }
-      .bp3-control-group > * {
+      .bp4-control-group > * {
         flex-shrink: unset;
         padding-right: 5px;
         padding-left: 5px;
@@ -24,13 +24,13 @@
       }
       &.form-group--warehouse_name,
       &.form-group--phone_number {
-        .bp3-form-content {
+        .bp4-form-content {
           width: 278px;
         }
       }
     }
   }
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
   }
 }

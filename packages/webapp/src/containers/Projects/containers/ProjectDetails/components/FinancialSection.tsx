@@ -76,10 +76,10 @@ export const FinancialCardText = styled.div`
   color: #7b8195;
 `;
 export const FinancialCardProgressBar = styled(ProgressBar)`
-  &.bp3-progress-bar {
+  &.bp4-progress-bar {
     height: 3px;
     &,
-    .bp3-progress-meter {
+    .bp4-progress-meter {
       border-radius: 0;
     }
   }

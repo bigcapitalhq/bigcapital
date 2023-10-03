@@ -11,26 +11,26 @@
       border-top: 1px solid #e0e7ea;
       margin-top: 30px;
 
-      .bp3-button {
+      .bp4-button {
         min-width: 65px;
 
-        + .bp3-button {
+        + .bp4-button {
           margin-left: 10px;
         }
       }
     }
   }
 
-  .bp3-form-group {
+  .bp4-form-group {
     max-width: 600px;
     margin-bottom: 14px;
 
-    &.bp3-inline {
-      .bp3-label {
+    &.bp4-inline {
+      .bp4-label {
         min-width: 150px;
       }
     }
-    .bp3-form-content {
+    .bp4-form-content {
       width: 100%;
     }
 

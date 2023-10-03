@@ -195,13 +195,13 @@ const ProjectStatusTaskAmount = styled.div`
 `;
 
 const ProjectProgressBar = styled(ProgressBar)`
-  &.bp3-progress-bar {
+  &.bp4-progress-bar {
     display: block;
     flex-shrink: 0;
     height: 3px;
     max-width: 110px;
     &,
-    .bp3-progress-meter {
+    .bp4-progress-meter {
       border-radius: 0;
     }
   }

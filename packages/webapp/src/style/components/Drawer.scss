@@ -1,16 +1,16 @@
 @import '../Base.scss';
 
-.bp3-drawer {
-  .bp3-drawer-header {
+.bp4-drawer {
+  .bp4-drawer-header {
     margin-bottom: 2px;
     background-color: #FFF;
 
-    .bp3-heading {
+    .bp4-heading {
       font-weight: 500;
     }
 
-    .bp3-heading,
-    .bp3-icon {
+    .bp4-heading,
+    .bp4-icon {
       color: #354152;
     }
   }
@@ -25,8 +25,8 @@
   }
 
   &__main-tabs{
-    .bp3-tabs {
-      .bp3-tab-list {
+    .bp4-tabs {
+      .bp4-tab-list {
         position: relative;
         background-color: #fff;
   
@@ -43,7 +43,7 @@
           margin-right: 25px;
         }
   
-        &.bp3-large > .bp3-tab {
+        &.bp4-large > .bp4-tab {
           font-size: 15px;
           color: #555;
           margin: 0 0.8rem;
@@ -55,7 +55,7 @@
         }
       }
   
-      .bp3-tab-panel {
+      .bp4-tab-panel {
         margin-top: 0;
   
         .card {

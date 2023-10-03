@@ -20,18 +20,18 @@ body.page-bill-edit{
     &-fields{
       flex: 1 0 0;
     }
-    .bp3-form-group{
+    .bp4-form-group{
       margin-bottom: 18px;
     }
-    .bp3-label{
+    .bp4-label{
       min-width: 140px;
     }
-    .bp3-form-content{
+    .bp4-form-content{
       width: 100%;
     }
 
-    .bp3-form-group{
-      &.bp3-inline{
+    .bp4-form-group{
+      &.bp4-inline{
         max-width: 440px; 
       }
 
@@ -40,7 +40,7 @@ body.page-bill-edit{
         &--expiration-date{
           max-width: 340px;
 
-          .bp3-label{
+          .bp4-label{
             min-width: 120px;
           }
         }

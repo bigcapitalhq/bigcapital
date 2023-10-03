@@ -108,7 +108,7 @@ export default compose(
 )(SalesTaxLiabilitySummaryHeader);
 
 const SalesTaxSummaryFinancialHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 320px;
   }
 `;

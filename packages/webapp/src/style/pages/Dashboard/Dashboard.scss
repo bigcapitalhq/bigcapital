@@ -59,16 +59,16 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp3-navbar-divider {
+      .bp4-navbar-divider {
         margin: 0 8px;
       }
 
       .form-group-quick-new-downDrop {
-        .bp3-popover-target .bp3-button {
+        .bp4-popover-target .bp4-button {
           color: #1552c8;
         }
 
-        .bp3-button::after {
+        .bp4-button::after {
           content: none;
         }
       }
@@ -79,7 +79,7 @@ $dashboard-views-bar-height: 44px;
       align-items: center;
       margin-right: 14px;
 
-      .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
         padding: 0;
         background-size: contain;
         border-radius: 50%;
@@ -157,7 +157,7 @@ $dashboard-views-bar-height: 44px;
   &__actions-bar {
     border-bottom: 2px solid #e1e2e8;
 
-    .bp3-navbar-divider {
+    .bp4-navbar-divider {
       border-left-color: rgb(199, 214, 219);
     }
 
@@ -185,8 +185,8 @@ $dashboard-views-bar-height: 44px;
           color: #32304a;
         }
 
-        &.bp3-minimal:active,
-        &.bp3-minimal.bp3-active {
+        &.bp4-minimal:active,
+        &.bp4-minimal.bp4-active {
           background: #a7b6c21f;
           color: #32304a;
         }
@@ -194,7 +194,7 @@ $dashboard-views-bar-height: 44px;
         &.has-active-filters {
 
           &,
-          &.bp3-active,
+          &.bp4-active,
           &:active {
             background: #eafbe4;
           }
@@ -241,25 +241,25 @@ $dashboard-views-bar-height: 44px;
         }
       }
 
-      .bp3-control.bp3-switch {
+      .bp4-control.bp4-switch {
         margin-bottom: 0;
         margin-left: 8px;
         color: #3d3b53;
 
-        .bp3-control-indicator {
+        .bp4-control-indicator {
           height: 16px;
           min-width: 1.8em;
         }
 
-        .bp3-control-indicator::before {
+        .bp4-control-indicator::before {
           box-shadow: 0 0 0;
         }
 
-        input~.bp3-control-indicator {
+        input~.bp4-control-indicator {
           background: rgba(167, 182, 194, 0.55);
         }
 
-        input:checked~.bp3-control-indicator {
+        input:checked~.bp4-control-indicator {
           background: #0069ff;
         }
       }
@@ -361,7 +361,7 @@ $dashboard-views-bar-height: 44px;
     height: 100%;
     background-color: #fbfbfb;
 
-    .bp3-spinner {
+    .bp4-spinner {
       margin: auto;
     }
   }
@@ -485,7 +485,7 @@ $dashboard-views-bar-height: 44px;
       opacity: 0.8;
     }
 
-    .bp3-icon {
+    .bp4-icon {
       margin-top: 6px;
 
       path {
@@ -549,15 +549,15 @@ $dashboard-views-bar-height: 44px;
   height: $dashboard-views-bar-height;
   padding: 0 20px;
 
-  .bp3-navbar-group {
+  .bp4-navbar-group {
     height: $dashboard-views-bar-height;
   }
 
-  .bp3-tab[aria-selected='true'] {
+  .bp4-tab[aria-selected='true'] {
     box-shadow: inset 0 -2px 0 #0052cc;
   }
 
-  .bp3-button {
+  .bp4-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;
@@ -578,7 +578,7 @@ $dashboard-views-bar-height: 44px;
   background-color: #fff;
   width: 600px;
 
-  .bp3-input {
+  .bp4-input {
     padding-left: 40px !important;
   }
 }

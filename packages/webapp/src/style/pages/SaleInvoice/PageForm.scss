@@ -19,16 +19,16 @@ body.page-invoice-edit {
       flex: 1 0 0;
     }
 
-    .bp3-label {
+    .bp4-label {
       min-width: 150px;
     }
 
-    .bp3-form-content {
+    .bp4-form-content {
       width: 100%;
     }
 
-    .bp3-form-group {
-      &.bp3-inline {
+    .bp4-form-group {
+      &.bp4-inline {
         max-width: 450px;
       }
     }
@@ -41,10 +41,10 @@ body.page-invoice-edit {
         max-width: 470px;
 
         &--due-date {
-          .bp3-form-group {
+          .bp4-form-group {
             margin: 0px 15px 15px;
 
-            .bp3-label {
+            .bp4-label {
               min-width: 100px;
             }
           }
@@ -89,7 +89,7 @@ body.page-invoice-edit {
     color: #ffffff;
   }
 
-  .bp3-progress-bar {
+  .bp4-progress-bar {
     background: rgba(92, 112, 128, 0.2);
     border-radius: 40px;
     display: block;

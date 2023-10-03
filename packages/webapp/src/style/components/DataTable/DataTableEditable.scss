@@ -1,6 +1,6 @@
 .datatable-editor {
   
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 0;
   }
   .table {
@@ -58,11 +58,11 @@
 
         &.landed-cost{
           
-          .bp3-control{
+          .bp4-control{
             margin-top: 0;
             margin-left: 34px;
           }
-          .bp3-control-indicator{
+          .bp4-control-indicator{
             height: 18px;
             width: 18px;
             border-color: #dbdbdb;
@@ -70,13 +70,13 @@
         }
       }
       .tr {
-        .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
-        .form-group--select-list .bp3-button {
+        .bp4-form-group:not(.bp4-intent-danger) .bp4-input,
+        .form-group--select-list .bp4-button {
           border-color: #ffffff;
           color: #222;
           border-radius: 3px;
         }
-        .bp3-form-group:not(.bp3-intent-danger) .bp3-input {
+        .bp4-form-group:not(.bp4-intent-danger) .bp4-input {
           border-radius: 2px;
           padding-left: 4px;
           padding-right: 4px;
@@ -85,7 +85,7 @@
             box-shadow: 0 0 0 2px #116cd0;
           }
         }
-        .form-group--select-list .bp3-button {
+        .form-group--select-list .bp4-button {
           padding-left: 6px;
           padding-right: 6px;
 
@@ -94,10 +94,10 @@
           }
         }
         .form-group--select-list,
-        .bp3-form-group {
-          &.bp3-intent-danger {
-            .bp3-button:not(.bp3-minimal),
-            .bp3-input {
+        .bp4-form-group {
+          &.bp4-intent-danger {
+            .bp4-button:not(.bp4-minimal),
+            .bp4-input {
               border-color: #f7b6b6;
             }
           }
@@ -110,7 +110,7 @@
         }
 
         .td.actions {
-          .bp3-button {
+          .bp4-button {
             background-color: transparent;
             color: #e66d6d;
 
@@ -135,7 +135,7 @@
         }
         .td {
           &.note {
-            .bp3-form-group {
+            .bp4-form-group {
               width: 100%;
             }
           }
@@ -159,7 +159,7 @@
     }
 
     .actions.td {
-      .bp3-button {
+      .bp4-button {
         background: transparent;
         margin: 0;
       }
@@ -186,7 +186,7 @@
 
   .table {
     .tbody {
-      .tr .td.actions .bp3-button {
+      .tr .td.actions .bp4-button {
         background-color: transparent;
         color: #e66d6d;
 
@@ -200,13 +200,13 @@
   &__actions {
     margin-top: 12px;
 
-    .bp3-button {
+    .bp4-button {
       padding-left: 10px;
       padding-right: 10px;
     }
 
     .button--clear-lines {
-      &.bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+      &.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
         background-color: #fcefef;
 
         &:hover{
