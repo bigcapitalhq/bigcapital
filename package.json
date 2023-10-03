@@ -3,7 +3,6 @@
   "version": "0.10.2",
   "private": true,
   "scripts": {
-    "bootstrap": "lerna exec pnpm install",
     "dev": "lerna run dev",
     "build": "lerna run build",
     "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
@@ -24,7 +23,7 @@
     "lerna": "^6.4.1"
   },
   "engines": {
-    "node": "18.x"
+    "node": "16.x || 17.x || 18.x"
   },
   "husky": {
     "hooks": {
