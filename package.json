@@ -24,7 +24,7 @@
     "lerna": "^6.4.1"
   },
   "engines": {
-    "node": "14.x"
+    "node": "18.x"
   },
   "husky": {
     "hooks": {
