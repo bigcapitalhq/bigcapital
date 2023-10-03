@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
