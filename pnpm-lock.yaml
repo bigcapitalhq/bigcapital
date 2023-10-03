@@ -525,9 +525,6 @@ importers:
       cross-env:
         specifier: ^7.0.2
         version: 7.0.3
-      deep-map-keys:
-        specifier: ^2.0.1
-        version: 2.0.1
       deepdash:
         specifier: ^5.3.9
         version: 5.3.9
@@ -10347,14 +10344,6 @@ packages:
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
-
-  /deep-map-keys@2.0.1:
-    resolution: {integrity: sha512-hvsUEzDow++fTMwM2f2S7ttG39Y20mprBGwsydPpgmHwPQGwG10KJW44JgYVImJtXlDY983jIiqU9W2+DS2yzg==}
-    engines: {node: '>=6'}
-    dependencies:
-      es6-weak-map: 2.0.3
-      lodash: 4.17.21
-    dev: false
 
   /deep-map@2.0.0:
     resolution: {integrity: sha512-guIurpeZi1wiclCEEHpJmFx7Tr4gkmSBNcUpY67maP4BJeEa1JPVf9KXURcCI/cAHsvGtqVwQKI/X39rY735Rg==}
