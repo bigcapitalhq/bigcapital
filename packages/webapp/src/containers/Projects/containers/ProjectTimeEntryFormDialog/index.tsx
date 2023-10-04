@@ -47,18 +47,18 @@ function ProjectTimeEntryFormDialog({
 export default compose(withDialogRedux())(ProjectTimeEntryFormDialog);
 
 const ProjectTimeEntryFormDialogRoot = styled(Dialog)`
-  .bp3-dialog-body {
-    .bp3-form-group {
+  .bp4-dialog-body {
+    .bp4-form-group {
       margin-bottom: 0;
 
-      label.bp3-label {
+      label.bp4-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
     .form-group {
       &--description {
-        .bp3-form-content {
+        .bp4-form-content {
           textarea {
             width: 100%;
             min-width: 100%;
@@ -68,7 +68,7 @@ const ProjectTimeEntryFormDialogRoot = styled(Dialog)`
       }
     }
   }
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
   }
 `;

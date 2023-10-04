@@ -191,7 +191,7 @@ export default function ProfitLossSheetHeaderComparisonPanel() {
 }
 
 const ProfitLossSheetComparisonWrap = styled.div`
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 3px;
   }
 `;

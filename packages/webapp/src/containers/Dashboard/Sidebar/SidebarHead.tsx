@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 
 import { Icon } from '@/components';

@@ -1,32 +1,32 @@
 .dialog--user-form {
   width: 450px;
 
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 15px;
   }
-  .bp3-dialog-body {
+  .bp4-dialog-body {
     margin-bottom: 30px;
 
-    .bp3-form-group.bp3-inline {
-      .bp3-label {
+    .bp4-form-group.bp4-inline {
+      .bp4-label {
         min-width: 140px;
       }
-      .bp3-form-content {
+      .bp4-form-content {
         width: 250px;
       }
     }
-    .bp3-dialog-header {
+    .bp4-dialog-header {
       height: 170px;
     }
   }
 
-  .bp3-callout {
+  .bp4-callout {
     font-size: 13px;
     margin-bottom: 20px;
   }
 
-  .bp3-dialog-footer {
-    .bp3-button {
+  .bp4-dialog-footer {
+    .bp4-button {
       min-width: 75px;
     }
   }

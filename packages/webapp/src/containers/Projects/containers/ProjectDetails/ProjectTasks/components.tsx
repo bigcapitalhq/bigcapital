@@ -109,13 +109,13 @@ const TaskTimeFull = styled.div`
 `;
 
 const TaskProgressBar = styled(ProgressBar)`
-  &.bp3-progress-bar {
+  &.bp4-progress-bar {
     display: block;
     flex-shrink: 0;
     height: 4px;
     max-width: 150px;
     &,
-    .bp3-progress-meter {
+    .bp4-progress-meter {
       border-radius: 4px;
     }
   }

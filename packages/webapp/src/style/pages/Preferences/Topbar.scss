@@ -1,4 +1,4 @@
-@import '../../Base.scss';
+@import '../../_base.scss';
 
 // Preferences topbar.
 // -----------------------------
@@ -27,7 +27,7 @@
     align-items: center;
     margin-right: 14px;
 
-    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+    .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
       padding: 0;
       background-size: contain;
       background-color: #eed1f2;
@@ -55,7 +55,7 @@
     margin-right: 15px;
     border-right: 1px solid #e5e5e5;
 
-    .bp3-button + .bp3-button {
+    .bp4-button + .bp4-button {
       margin-left: 10px;
     }
   }

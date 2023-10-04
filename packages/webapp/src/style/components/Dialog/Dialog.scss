@@ -1,4 +1,4 @@
-@import '../../Base.scss';
+@import '../../_base.scss';
 
 // Dialog
 .#{$ns}-dialog{
@@ -10,7 +10,7 @@
 
   &-body{
     &.is-loading{
-      .bp3-spinner{
+      .bp4-spinner{
         padding-top: 10px;
         margin-bottom: -10px;
       } 

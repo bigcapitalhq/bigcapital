@@ -119,7 +119,7 @@ export default compose(
 )(InventoryItemDetailsHeader);
 
 const InventoryItemDetailsDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 400px;
   }
 `;

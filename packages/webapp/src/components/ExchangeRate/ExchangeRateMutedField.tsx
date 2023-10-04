@@ -60,8 +60,8 @@ export function ExchangeRateMutedField({
 }
 
 const ExchangeRateFormGroup = styled(FormGroup)`
-  &.bp3-form-group {
-    label.bp3-label {
+  &.bp4-form-group {
+    label.bp4-label {
       font-size: 12px;
       opacity: 0.7;
       line-height: 1;
@@ -79,7 +79,7 @@ const ExchangeRateButton = styled.div`
   position: relative;
   padding-right: 28px;
 
-  .bp3-button {
+  .bp4-button {
     position: absolute;
     right: 0;
   }
@@ -88,7 +88,7 @@ const ExchangeRateButton = styled.div`
 const ExchangeRateFormGroupContent = styled.div`
   padding: 5px 0;
 
-  .bp3-form-group {
+  .bp4-form-group {
     padding: 2px;
     margin: 2px 4px !important;
   }

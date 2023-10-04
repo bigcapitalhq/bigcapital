@@ -2,25 +2,25 @@
 .dialog--allocate-landed-cost-form {
   width: 700px;
 
-  .bp3-dialog-body {
-    .bp3-form-group{
+  .bp4-dialog-body {
+    .bp4-form-group{
       margin-bottom: 18px;
     }
-    .bp3-form-group.bp3-inline {
-      .bp3-label {
+    .bp4-form-group.bp4-inline {
+      .bp4-label {
         min-width: 165px;
       }
-      .bp3-form-content {
+      .bp4-form-content {
         width: 300px;
       }
 
-      &:not(.dialog--loading) .bp3-dialog-body {
+      &:not(.dialog--loading) .bp4-dialog-body {
         margin-bottom: 30px;
       }
     }
   }
 
-  .bp3-dialog-footer{
+  .bp4-dialog-footer{
     padding-top: 10px;
   }
 
@@ -45,10 +45,10 @@
           border-left: 1px solid #ececec;
         }
 
-        .bp3-form-group{
+        .bp4-form-group{
           margin-bottom: 0;
 
-          &:not(.bp3-intent-danger) .bp3-input{
+          &:not(.bp4-intent-danger) .bp4-input{
             border: 1px solid #d0dfe2;
 
             &:focus{

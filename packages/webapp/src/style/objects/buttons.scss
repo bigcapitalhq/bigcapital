@@ -1,35 +1,35 @@
 
 
-.bp3-button {
+.bp4-button {
   min-width: 32px;
   min-height: 32px;
   padding-left: 12px;
   padding-right: 12px;
 }
 
-.bp3-button:not([class*='bp3-intent-']) {
+.bp4-button:not([class*='bp4-intent-']) {
   color: #33304a;
 }
 
-.bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
   color: #555555;
   box-shadow: 0 0 0 transparent;
 
-  &.bp3-small {
+  &.bp4-small {
     font-size: 13px;
     min-height: 29px;
   }
 }
 
-.bp3-button-group.bp3-minimal .bp3-button {
+.bp4-button-group.bp4-minimal .bp4-button {
   background-color: transparent;
 }
 
-.bp3-button {
-  &.bp3-intent-primary,
-  &.bp3-intent-success,
-  &.bp3-intent-danger,
-  &.bp3-intent-warning {
+.bp4-button {
+  &.bp4-intent-primary,
+  &.bp4-intent-success,
+  &.bp4-intent-danger,
+  &.bp4-intent-warning {
     &,
     &:hover {
       box-shadow: 0 0 0 transparent;

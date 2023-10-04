@@ -18,7 +18,7 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
           <div>{highlightText(item.text, query)}</div>
 
           {item.subText && (
-            <span class="bp3-text-muted">
+            <span class="bp4-text-muted">
               {highlightText(item.subText, query)}
             </span>
           )}

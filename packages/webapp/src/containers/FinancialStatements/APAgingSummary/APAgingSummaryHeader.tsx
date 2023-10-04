@@ -110,7 +110,7 @@ export default compose(
 )(APAgingSummaryHeader);
 
 const APAgingDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 520px;
   }
 `;

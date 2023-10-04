@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 

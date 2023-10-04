@@ -13,7 +13,7 @@
   &.is-hidden {
     visibility: hidden;
   }
-  .bp3-drawer {
+  .bp4-drawer {
     box-shadow: 0 0 0 transparent;
     max-height: 550px;
     height: 100%;
@@ -26,26 +26,26 @@
       flex: 1 0 0;
       height: 100%;
     }
-    .bp3-drawer-backdrop {
+    .bp4-drawer-backdrop {
       background-color: rgba(2, 9, 19, 0.65);
     }
   }
 
-  .bp3-button.button--submit-filter {
+  .bp4-button.button--submit-filter {
     min-height: 34px;
     padding-left: 16px;
     padding-right: 16px;
   }
   .radio-group---accounting-basis {
-    .bp3-label {
+    .bp4-label {
       margin-bottom: 12px;
     }
   }
 
-  .bp3-tabs {
+  .bp4-tabs {
     height: 100%;
 
-    &.bp3-vertical > .bp3-tab-panel {
+    &.bp4-vertical > .bp4-tab-panel {
       flex: 1 0 0;
       border-top: 24px solid transparent;
       padding-left: 20px;
@@ -55,10 +55,10 @@
     }
   }
 
-  .bp3-tabs.bp3-vertical {
+  .bp4-tabs.bp4-vertical {
     flex: 1 0 0;
 
-    .bp3-tab-list {
+    .bp4-tab-list {
       width: 220px;
       border-right: 1px solid #c3cdd5;
       padding-top: 10px;
@@ -66,17 +66,17 @@
       > *:not(:last-child) {
         margin-right: 0;
       }
-      .bp3-tab-indicator-wrapper {
+      .bp4-tab-indicator-wrapper {
         width: 100%;
 
-        .bp3-tab-indicator {
+        .bp4-tab-indicator {
           border-left: 3px solid #0350f8;
           background-color: #edf5ff;
           border-radius: 0;
         }
       }
 
-      .bp3-tab {
+      .bp4-tab {
         color: #333;
         line-height: 45px;
         border-radius: 0;
@@ -105,8 +105,8 @@
       padding-right: 0.85rem;
     }
   }
-  .bp3-popover-target {
-    .bp3-tag-input {
+  .bp4-popover-target {
+    .bp4-tag-input {
       height: auto;
     }
   }

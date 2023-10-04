@@ -1,13 +1,9 @@
 @import './normalize.scss';
+@import './_base.scss';
 
-@import './Base.scss';
-
-// Blueprint framework.
 @import '@blueprintjs/core/src/blueprint.scss';
 @import '@blueprintjs/datetime/src/blueprint-datetime.scss';
 @import '@blueprintjs/popover2/src/blueprint-popover2.scss';
-
-@import 'basscss';
 
 // Objects
 @import 'objects/form';
@@ -51,56 +47,56 @@ body.hide-scrollbar .Pane2 {
   overflow: hidden;
 }
 
-.bp3-fill {
+.bp4-fill {
 
-  .bp3-popover-wrapper,
-  .bp3-popover-target {
+  .bp4-popover-wrapper,
+  .bp4-popover-target {
     display: block;
     width: 100%;
   }
 
-  .bp3-button {
+  .bp4-button {
     width: 100%;
     justify-content: start;
   }
 }
 
-.bp3-datepicker-caption .bp3-html-select::after {
+.bp4-datepicker-caption .bp4-html-select::after {
   margin-right: 6px;
 }
 
-.bp3-select-popover .bp3-menu,
-.bp3-multi-select-popover .bp3-menu {
+.bp4-select-popover .bp4-menu,
+.bp4-multi-select-popover .bp4-menu {
   max-height: 300px;
   overflow: auto;
 }
 
-.bp3-form-group .bp3-label {
+.bp4-form-group .bp4-label {
   .hint {
-    .bp3-popover-wrapper {
+    .bp4-popover-wrapper {
       display: inline;
     }
   }
 
-  &:not(.bp3-inline) .hint .bp3-popover-target {
+  &:not(.bp4-inline) .hint .bp4-popover-target {
     display: inline;
     margin-left: 0;
   }
 }
 
-.bp3-popover.bp3-tooltip {
+.bp4-popover.bp4-tooltip {
   max-width: 300px;
 }
 
-.bp3-timezone-picker {
-  .bp3-button {
+.bp4-timezone-picker {
+  .bp4-button {
     [icon='caret-down'] {
       display: none;
     }
   }
 }
 
-.bp3-progress-bar.bp3-intent-primary .bp3-progress-meter {
+.bp4-progress-bar.bp4-intent-primary .bp4-progress-meter {
   background-color: #0066ff;
 }
 
@@ -183,7 +179,7 @@ body.hide-scrollbar .Pane2 {
 
 .ReactVirtualized__List {}
 
-.bp3-drawer {
+.bp4-drawer {
   box-shadow: 0 0 0;
   background-color: #fbfbfb;
 
@@ -194,7 +190,7 @@ body.hide-scrollbar .Pane2 {
 
 // RTL Icons.
 html[dir='rtl'] {
-  .bp3-icon-caret-right {
+  .bp4-icon-caret-right {
     transform: scaleX(-1);
   }
 }
@@ -205,12 +201,12 @@ html[lang^='ar'] {
   }
 }
 
-.bp3-popover2 {
+.bp4-popover2 {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02), 0 2px 4px rgba(16, 22, 26, 0.1),
     0 8px 24px rgba(16, 22, 26, 0.1);
 }
 
-.bp3-tooltip2 .bp3-popover2-arrow:before {
+.bp4-tooltip2 .bp4-popover2-arrow:before {
   box-shadow: 0 0 0;
 }
 
@@ -230,38 +226,38 @@ html[lang^='ar'] {
     z-index: 9999999;
     margin: 6px;
 
-    .bp3-button {
+    .bp4-button {
       border-color: rgba(0, 0, 0, 0.25);
       color: rgb(25, 32, 37);
       min-height: 30px;
       padding-left: 14px;
       padding-right: 14px;
 
-      &+.bp3-button {
+      &+.bp4-button {
         margin-left: 8px;
       }
     }
   }
 
-  .bp3-dialog {
+  .bp4-dialog {
     &-body {
       &:not(.loading) {
         margin: 0;
       }
 
-      >.bp3-spinner {
+      >.bp4-spinner {
         margin: 20px 0;
       }
     }
   }
 }
 
-.bp3-drawer {
+.bp4-drawer {
   border-left: 1px solid #00115e;
 }
 
 .drawer-portal {
-  .bp3-overlay-backdrop {
+  .bp4-overlay-backdrop {
     background: rgba(0, 10, 30, 0.05);
   }
 }

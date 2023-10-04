@@ -374,7 +374,7 @@ export const RolesPermissionList = () => {
 };
 
 const PermissionCheckbox = styled(Checkbox)`
-  &.bp3-control.bp3-checkbox .bp3-control-indicator {
+  &.bp4-control.bp4-checkbox .bp4-control-indicator {
     border-radius: 2px;
     border-color: #555;
 
@@ -454,7 +454,7 @@ const ModulePermissionsTableRoot = styled.table`
     }
 
     tr td {
-      .bp3-control.bp3-inline {
+      .bp4-control.bp4-inline {
         margin: 0;
       }
 

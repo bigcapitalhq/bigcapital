@@ -178,7 +178,7 @@ const AccountSwitchItemUpdatedAt = styled.div`
 `;
 
 const AccountSwitchButtonBase = styled(Button)`
-  .bp3-button-text {
+  .bp4-button-text {
     margin-right: 5px;
   }
 `;

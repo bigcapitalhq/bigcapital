@@ -19,43 +19,43 @@
     display: flex;
     padding: 6px 12px;
 
-    .bp3-input{
+    .bp4-input{
       padding: 0 6px;
     }
-    .form-group--select-list .bp3-popover-target .bp3-button{
+    .form-group--select-list .bp4-popover-target .bp4-button{
       padding-left: 6px;
     } 
 
-    .bp3-html-select::after,
-    .form-group--select-list .bp3-button::after{
+    .bp4-html-select::after,
+    .form-group--select-list .bp4-button::after{
       margin-right: 6px;
       border-top-color: #c5c5c5;
     }
-    .bp3-html-select,
-    .bp3-input,
-    .form-group--select-list .bp3-button{
+    .bp4-html-select,
+    .bp4-input,
+    .form-group--select-list .bp4-button{
       
       &:not(:focus){
         border-color: #d3d9de;
       }
     }
 
-    .form-group--select-list .bp3-button{
+    .form-group--select-list .bp4-button{
       padding-right: 20px;
     }
-    .bp3-form-group{
+    .bp4-form-group{
       margin-bottom: 0;
       padding-right: 10px;
 
-      .bp3-control.bp3-checkbox{
+      .bp4-control.bp4-checkbox{
         margin-left: 20px;
       }
 
-      .bp3-popover-wrapper{
+      .bp4-popover-wrapper{
         width: 100%;
       }
 
-      .bp3-button{
+      .bp4-button{
         text-overflow: ellipsis;
         overflow: visible;
         white-space: nowrap;
@@ -84,7 +84,7 @@
     .button--remove{
       margin-left: -6px;
 
-      .bp3-icon{
+      .bp4-icon{
         color: #929aa0;
       }
     }
@@ -96,15 +96,15 @@
   }
 }
 
-.bp3-popover{
+.bp4-popover{
 
   &,
-  & .bp3-popover-content{
+  & .bp4-popover-content{
     border-radius: 5px;
   }
 }
 
-.bp3-menu-item{
+.bp4-menu-item{
   .text-hint{
     font-size: 11px;
     line-height: 1.3;

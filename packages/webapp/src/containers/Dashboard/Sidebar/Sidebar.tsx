@@ -34,10 +34,10 @@ export function Sidebar() {
  * @returns {React.JSX}
  */
 function SidebarFooterVersion() {
-  const { MONOREPO_VERSION } = process.env;
+  const { REACT_APP_VERSION } = process.env;
 
-  if (!MONOREPO_VERSION) {
+  if (!REACT_APP_VERSION) {
     return null;
   }
-  return <div class="sidebar__version">v{MONOREPO_VERSION}</div>;
+  return <div class="sidebar__version">v{REACT_APP_VERSION}</div>;
 }
