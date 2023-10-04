@@ -17,11 +17,21 @@ import {
   useItemEntriesTableContext,
 } from './ItemEntriesTableProvider';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { ItemEntry } from '@/interfaces/ItemEntries';
+
+interface ItemsEntriesTableProps {
+  initialValue?: ItemEntry;
+  value?: ItemEntry[];
+  onChange?: (entries: ItemEntry[]) => void;
+  taxRates?: any[];
+  minLinesNumber?: number;
+  enableTaxRates?: boolean;
+}
 
 /**
  * Items entries table.
  */
-function ItemsEntriesTable(props) {
+function ItemsEntriesTable(props: ItemsEntriesTableProps) {
   const { value, initialValue, onChange } = props;
 
   const [localValue, handleChange] = useUncontrolled({
@@ -119,8 +129,11 @@ ItemsEntriesTable.defaultProps = {
     discount: '',
   },
   initialEntries: [],
+  taxRates: [],
+  items: [],
   linesNumber: 1,
   minLinesNumber: 1,
+  enableTaxRates: true,
 };
 
 export default ItemsEntriesTable;

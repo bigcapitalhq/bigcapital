@@ -99,6 +99,13 @@ export default class ItemEntry extends TenantModel {
       : getExlusiveTaxAmount(this.amount, this.taxRate);
   }
 
+  static calcAmount(itemEntry) {
+    const { discount, quantity, rate } = itemEntry;
+    const total = quantity * rate;
+
+    return discount ? total - total * discount * 0.01 : total;
+  }
+
   /**
    * Item entry relations.
    */

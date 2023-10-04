@@ -32,6 +32,15 @@ export const defaultReceiptEntry = {
   amount: '',
 };
 
+const defaultReceiptEntryReq = {
+  index: 0,
+  item_id: '',
+  rate: '',
+  discount: '',
+  quantity: '',
+  description: '',
+};
+
 export const defaultReceipt = {
   customer_id: '',
   deposit_account_id: '',
@@ -140,7 +149,9 @@ export const transformFormValuesToRequest = (values) => {
     ...(values.receipt_number_manually && {
       receipt_number: values.receipt_number,
     }),
-    entries: entries.map((entry) => ({ ...omit(entry, ['amount']) })),
+    entries: entries.map((entry) => ({
+      ...transformToForm(entry, defaultReceiptEntryReq),
+    })),
     closed: false,
   };
 };
