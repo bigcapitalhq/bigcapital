@@ -115,6 +115,8 @@ export default class BillsController extends BaseController {
       check('note').optional().trim().escape(),
       check('open').default(false).isBoolean().toBoolean(),
 
+      check('is_inclusive_tax').optional().isBoolean().toBoolean(),
+
       check('entries').isArray({ min: 1 }),
 
       check('entries.*.index').exists().isNumeric().toInt(),
@@ -134,6 +136,15 @@ export default class BillsController extends BaseController {
         .isBoolean()
         .toBoolean(),
       check('entries.*.warehouse_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
+      check('entries.*.tax_code')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isString(),
+      check('entries.*.tax_rate_id')
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),

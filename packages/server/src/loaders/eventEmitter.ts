@@ -81,6 +81,8 @@ import { ProjectBillableBillSubscriber } from '@/services/Projects/Projects/Proj
 import { SyncActualTimeTaskSubscriber } from '@/services/Projects/Times/SyncActualTimeTaskSubscriber';
 import { SaleInvoiceTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/SaleInvoiceTaxRateValidateSubscriber';
 import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteInvoiceTaxTransactionsSubscriber';
+import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
+import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -190,6 +192,8 @@ export const susbcribers = () => {
 
     // Tax Rates
     SaleInvoiceTaxRateValidateSubscriber,
+    BillTaxRateValidateSubscriber,
     WriteInvoiceTaxTransactionsSubscriber,
+    WriteBillTaxTransactionsSubscriber
   ];
 };
