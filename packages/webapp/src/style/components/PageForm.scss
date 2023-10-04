@@ -15,15 +15,15 @@
     border-top: 1px solid rgb(210, 221, 226);
     box-shadow: 0px -1px 4px 0px rgba(0, 0, 0, 0.05);
 
-    .bp3-button-group{
+    .bp4-button-group{
       
-      .bp3-button{
+      .bp4-button{
         &:not(:last-child),
-        &.bp3-popover-wrapper:not(:last-child) {
+        &.bp4-popover-wrapper:not(:last-child) {
           border-right: 1px solid rgba(92, 112, 127, 0.3);
           margin-right: 0;
 
-          &.bp3-intent-primary{
+          &.bp4-intent-primary{
             border-right: 1px solid rgba(255, 255, 255, 0.3);
           }
         }
@@ -34,11 +34,11 @@
     #{$self}__header-fields {
       width: 85%;
 
-      .bp3-form-group{
+      .bp4-form-group{
         margin-bottom: 16px;
       }
 
-      > .bp3-form-group:last-of-type{
+      > .bp4-form-group:last-of-type{
         margin-bottom: 0;
       }
     }
@@ -47,7 +47,7 @@
       padding: 25px 32px;
       border-bottom: 1px solid #d2dce2;
 
-      .bp3-form-group.bp3-inline label.bp3-label {
+      .bp4-form-group.bp4-inline label.bp4-label {
         font-weight: 500;
       }
     }
@@ -61,7 +61,7 @@
       padding-left: 32px;
       padding-right: 32px;
 
-      label.bp3-label{
+      label.bp4-label{
         font-weight: 500;
       }
     }

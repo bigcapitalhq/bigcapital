@@ -35,7 +35,7 @@ const DialogFooterActionsRoot = styled.div`
   ${(props) =>
     props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;'};
 
-  .bp3-button {
+  .bp4-button {
     margin-left: 5px;
     margin-left: 5px;
   }

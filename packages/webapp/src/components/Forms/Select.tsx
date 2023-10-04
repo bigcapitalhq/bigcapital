@@ -26,7 +26,7 @@ const SelectButton = styled(Button)`
   position: relative;
   padding-right: 30px;
 
-  &:not(.is-selected):not([class*='bp3-intent-']):not(.bp3-minimal) {
+  &:not(.is-selected):not([class*='bp4-intent-']):not(.bp4-minimal) {
     color: #5c7080;
   }
   &:after {
@@ -46,13 +46,13 @@ const SelectButton = styled(Button)`
     margin-right: 12px;
     border-radius: 1px;
   }
-  &:not([class*='bp3-intent-']):not(.bp3-disabled) {
+  &:not([class*='bp4-intent-']):not(.bp4-disabled) {
     &,
     &:hover {
       background: #fff;
     }
   }
-  .bp3-intent-danger & {
+  .bp4-intent-danger & {
     border-color: #db3737;
   }
 `;

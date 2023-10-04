@@ -28,10 +28,10 @@
   &_actions {
     margin-top: 26px;
 
-    :global .bp3-button {
+    :global .bp4-button {
       min-height: 36px;
 
-      & + .bp3-button {
+      & + .bp4-button {
         margin-left: 10px;
       }
     }

@@ -98,7 +98,7 @@ export default compose(
 )(JournalHeader);
 
 const JournalDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 350px;
   }
 `;

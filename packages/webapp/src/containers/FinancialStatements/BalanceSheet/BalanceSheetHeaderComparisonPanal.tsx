@@ -159,7 +159,7 @@ export default function BalanceSheetHeaderComparisonPanal() {
 }
 
 const BalanceSheetComparisonWrap = styled.div`
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 3px;
   }
 `;

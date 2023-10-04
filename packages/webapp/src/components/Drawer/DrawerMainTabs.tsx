@@ -17,8 +17,8 @@ export function DrawerMainTabs({ children, ...restProps }) {
 }
 
 const DrawerMainTabsRoot = styled.div`
-  .bp3-tabs {
-    .bp3-tab-list {
+  .bp4-tabs {
+    .bp4-tab-list {
       position: relative;
       background-color: #fff;
       padding: 0 15px;
@@ -28,7 +28,7 @@ const DrawerMainTabsRoot = styled.div`
         margin-right: 25px;
       }
 
-      &.bp3-large > .bp3-tab {
+      &.bp4-large > .bp4-tab {
         font-size: 15px;
         color: #7f8596;
         margin: 0 1rem;
@@ -38,13 +38,13 @@ const DrawerMainTabsRoot = styled.div`
           color: #0052cc;
         }
       }
-      .bp3-tab-indicator-wrapper .bp3-tab-indicator {
+      .bp4-tab-indicator-wrapper .bp4-tab-indicator {
         height: 2px;
         bottom: -2px;
       }
     }
 
-    .bp3-tab-panel {
+    .bp4-tab-panel {
       margin-top: 0;
 
       .card {

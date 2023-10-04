@@ -372,7 +372,7 @@ const TransLockingIcon = styled.div`
   border-radius: 8px;
   color: #93a1ba;
 
-  .bp3-icon {
+  .bp4-icon {
     position: relative;
     top: 1px;
   }
@@ -381,7 +381,7 @@ const TransLockingIcon = styled.div`
 export const TransLockingActions = styled.div`
   display: flex;
 
-  .bp3-divider {
+  .bp4-divider {
     margin: 2px;
   }
 `;

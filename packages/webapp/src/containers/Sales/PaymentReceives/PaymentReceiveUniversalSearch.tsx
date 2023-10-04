@@ -50,7 +50,7 @@ export function PaymentReceiveUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          <span class="bp3-text-muted">
+          <span class="bp4-text-muted">
             {highlightText(item.reference.payment_receive_no, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {highlightText(item.reference.formatted_payment_date, query)}

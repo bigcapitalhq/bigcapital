@@ -120,7 +120,7 @@ export default compose(
 )(GeneralLedgerHeader);
 
 const GeneralLedgerDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 520px;
   }
 `;

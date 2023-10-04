@@ -14,7 +14,7 @@
     z-index: 999;
   }
 
-  .bp3-spinner{
+  .bp4-spinner{
     position: absolute;
     z-index: 999999;
     left: 50%;
@@ -22,7 +22,7 @@
     margin-top: -20px;
     margin-left: -20px;
   }
-  &:not(.is-loading) .bp3-spinner{
+  &:not(.is-loading) .bp4-spinner{
     display: none;
   }
 }

@@ -60,7 +60,7 @@ const InclusiveFormGroup = styled(FFormGroup)`
   margin-bottom: 0;
   margin-left: auto;
 
-  &.bp3-form-group.bp3-inline label.bp3-label {
+  &.bp4-form-group.bp4-inline label.bp4-label {
     line-height: 1.25;
     opacity: 0.6;
     margin-right: 8px;
@@ -68,7 +68,7 @@ const InclusiveFormGroup = styled(FFormGroup)`
 `;
 
 const InclusiveSelect = styled(FSelect)`
-  .bp3-button {
+  .bp4-button {
     padding-right: 24px;
   }
 `;

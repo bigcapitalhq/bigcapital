@@ -48,8 +48,8 @@ export default function ProjectDetailTabs() {
 }
 
 const ProjectTabsContent = styled.div`
-  .bp3-tabs {
-    .bp3-tab-list {
+  .bp4-tabs {
+    .bp4-tab-list {
       padding: 0 20px;
       background-color: #fff;
       border-bottom: 1px solid #d2dce2;
@@ -58,7 +58,7 @@ const ProjectTabsContent = styled.div`
         margin-right: 0;
       }
 
-      &.bp3-large > .bp3-tab {
+      &.bp4-large > .bp4-tab {
         font-size: 15px;
         font-weight: 400;
         color: #7f8596;
@@ -69,12 +69,12 @@ const ProjectTabsContent = styled.div`
           color: #0052cc;
         }
       }
-      .bp3-tab-indicator-wrapper .bp3-tab-indicator {
+      .bp4-tab-indicator-wrapper .bp4-tab-indicator {
         height: 2px;
         bottom: -2px;
       }
     }
-    .bp3-tab-panel {
+    .bp4-tab-panel {
       /* margin: 20px 32px; */
       /* margin: 20px; */
       /* margin-top: 20px;

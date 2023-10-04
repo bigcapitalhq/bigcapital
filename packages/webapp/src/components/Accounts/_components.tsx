@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 
 // Filters accounts items.
 export const accountPredicate = (query, account, _index, exactMatch) => {

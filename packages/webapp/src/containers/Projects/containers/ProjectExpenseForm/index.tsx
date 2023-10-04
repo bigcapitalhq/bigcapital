@@ -40,17 +40,17 @@ function ProjectExpenseFormDialog({
 export default compose(withDialogRedux())(ProjectExpenseFormDialog);
 
 const ProjectExpenseFormDialogRoot = styled(Dialog)`
-  .bp3-dialog-body {
-    .bp3-form-group {
+  .bp4-dialog-body {
+    .bp4-form-group {
       margin-bottom: 15px;
 
-      label.bp3-label {
+      label.bp4-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
   }
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
   }
 `;

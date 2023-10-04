@@ -114,7 +114,7 @@ export default R.compose(
 )(ProfitLossHeader);
 
 const ProfitLossSheetHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 520px;
   }
 `;

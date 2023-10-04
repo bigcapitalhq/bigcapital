@@ -4,7 +4,7 @@
   padding: 20px 14px;
   font-size: 13px;
 
-  .bp3-button{
+  .bp4-button{
     background: transparent;
     padding: 5px;
   }
@@ -13,7 +13,7 @@
     min-width: 24px;
     min-height: 24px;
 
-    &:not([class*="bp3-intent-"]){
+    &:not([class*="bp4-intent-"]){
       color: #666666; 
       border-radius: 5px;
 
@@ -22,22 +22,22 @@
       }
     }
 
-    .bp3-icon{
+    .bp4-icon{
       margin-right: 4px;
       color: #666666;
     }
 
-    .pagination .pagination__buttons-group .bp3-button-group &{
+    .pagination .pagination__buttons-group .bp4-button-group &{
       border-radius: 5px;
     }
     &--next,
     &--previous{
 
-      &.bp3-button{
+      &.bp4-button{
         padding-left: 10px;
         padding-right: 10px;
 
-        .bp3-icon {
+        .bp4-icon {
 
           [dir="rtl"] & {
             transform: scale(-1);
@@ -48,21 +48,21 @@
     }
 
     &.is-active{
-      &.bp3-intent-primary:disabled,
-      &.bp3-intent-primary.bp3-disabled{
+      &.bp4-intent-primary:disabled,
+      &.bp4-intent-primary.bp4-disabled{
         background-color: #E6EFFB;
       }
 
-      &:not([class*="bp3-intent-"]) {
+      &:not([class*="bp4-intent-"]) {
       }
-      .bp3-button-text{        
+      .bp4-button-text{        
         color: #000;
       }
     }
 
     &--next{
 
-      .bp3-icon{
+      .bp4-icon{
         order: 1;
         margin-right: 0;
         margin-left: 4px;
@@ -82,7 +82,7 @@
     align-items: center;
     margin-left: auto;
 
-    .bp3-html-select{
+    .bp4-html-select{
       margin-left: 6px;
 
       select{

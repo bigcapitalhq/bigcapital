@@ -150,7 +150,7 @@ export const WarehouseTitle = styled.div`
   font-weight: 500;
   line-height: 1;
 
-  .bp3-icon {
+  .bp4-icon {
     margin: 0;
     margin-left: 2px;
     vertical-align: top;

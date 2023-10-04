@@ -1,23 +1,23 @@
-@import '../../Base.scss';
+@import '../../_base.scss';
 
 // Account Form Dialog.
 // ----------------------------
 .dialog--account-form {
-  &:not(.dialog--loading) .bp3-dialog-body {
+  &:not(.dialog--loading) .bp4-dialog-body {
     margin-bottom: 30px;
   }
 
-  .bp3-dialog-body {
-    .bp3-form-group.bp3-inline {
-      .bp3-label {
+  .bp4-dialog-body {
+    .bp4-form-group.bp4-inline {
+      .bp4-label {
         min-width: 140px;
       }
-      .bp3-form-content {
+      .bp4-form-content {
         width: 250px;
       }
 
       &.form-group--description {
-        .bp3-form-content {
+        .bp4-form-content {
           width: 280px;
         }
         textarea {
@@ -35,7 +35,7 @@
     .form-group--subaccount {
       margin-bottom: 16px;
 
-      .bp3-icon-info-circle {
+      .bp4-icon-info-circle {
         color: #a1b2c5;
         position: relative;
         top: -2px;

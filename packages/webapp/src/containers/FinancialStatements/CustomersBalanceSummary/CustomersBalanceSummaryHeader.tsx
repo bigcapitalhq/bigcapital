@@ -100,7 +100,7 @@ export default compose(
 )(CustomersBalanceSummaryHeader);
 
 const CustomerBalanceDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 450px;
   }
 `;

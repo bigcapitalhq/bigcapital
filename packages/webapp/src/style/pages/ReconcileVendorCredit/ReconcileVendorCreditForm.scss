@@ -17,10 +17,10 @@
       }
 
       .tbody {
-        .bp3-form-group {
+        .bp4-form-group {
           margin-bottom: 0;
 
-          &:not(.bp3-intent-danger) .bp3-input {
+          &:not(.bp4-intent-danger) .bp4-input {
             border: 1px solid #d0dfe2;
 
             &:focus {
@@ -33,11 +33,11 @@
     }
   }
 
-  .bp3-callout {
+  .bp4-callout {
     font-size: 14px;
   }
 
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     display: flex;
     justify-content: flex-start;
     padding-top: 10px;

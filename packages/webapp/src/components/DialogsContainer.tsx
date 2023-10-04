@@ -1,5 +1,3 @@
-import React from 'react';
-
 import AccountDialog from '@/containers/Dialogs/AccountDialog';
 import InviteUserDialog from '@/containers/Dialogs/InviteUserDialog';
 import UserFormDialog from '@/containers/Dialogs/UserFormDialog';

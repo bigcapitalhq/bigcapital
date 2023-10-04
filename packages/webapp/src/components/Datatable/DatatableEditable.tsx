@@ -21,7 +21,7 @@ export function DataTableEditable({
 }
 
 const DatatableEditableRoot = styled.div`
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 0;
   }
   .table {
@@ -69,17 +69,17 @@ const DatatableEditableRoot = styled.div`
       }
       .tr {
         &:hover .td,
-        .bp3-input {
+        .bp4-input {
           background-color: transparent;
         }
-        .bp3-form-group:not(.bp3-intent-danger) .bp3-input,
-        .form-group--select-list .bp3-button {
+        .bp4-form-group:not(.bp4-intent-danger) .bp4-input,
+        .form-group--select-list .bp4-button {
           border-color: #ffffff;
           color: #222;
           border-radius: 3px;
           text-align: inherit;
         }
-        .bp3-form-group:not(.bp3-intent-danger) .bp3-input {
+        .bp4-form-group:not(.bp4-intent-danger) .bp4-input {
           border-radius: 2px;
           padding-left: 14px;
           padding-right: 14px;
@@ -88,7 +88,7 @@ const DatatableEditableRoot = styled.div`
             box-shadow: 0 0 0 2px #116cd0;
           }
         }
-        .form-group--select-list .bp3-button {
+        .form-group--select-list .bp4-button {
           padding-left: 6px;
           padding-right: 6px;
 
@@ -97,16 +97,16 @@ const DatatableEditableRoot = styled.div`
           }
         }
         .form-group--select-list,
-        .bp3-form-group {
-          &.bp3-intent-danger {
-            .bp3-button:not(.bp3-minimal),
-            .bp3-input {
+        .bp4-form-group {
+          &.bp4-intent-danger {
+            .bp4-button:not(.bp4-minimal),
+            .bp4-input {
               border-color: #f7b6b6;
             }
           }
         }
         .td.actions {
-          .bp3-button {
+          .bp4-button {
             color: #80858f;
           }
         }

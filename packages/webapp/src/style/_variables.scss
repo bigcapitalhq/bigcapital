@@ -1,6 +1,7 @@
-@import '@blueprintjs/core/src/common/_variables.scss';
+@import "@blueprintjs/colors/lib/scss/colors";
+@import '@blueprintjs/core/src/common/variables';
 
-$ns: bp3;
+$ns: bp4;
 
 $pt-popover-box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.02),
   0 2px 4px rgba(16, 22, 26, 0.1), 0 8px 24px rgba(16, 22, 26, 0.1);

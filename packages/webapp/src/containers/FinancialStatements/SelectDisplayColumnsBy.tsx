@@ -18,7 +18,7 @@ export default function SelectsListColumnsBy(props) {
           {({ form, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'display_report_columns'} />}
-              className="form-group-display-columns-by form-group--select-list bp3-fill"
+              className="form-group-display-columns-by form-group--select-list bp4-fill"
               inline={false}
               {...formGroupProps}
             >

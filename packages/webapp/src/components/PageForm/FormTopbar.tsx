@@ -18,16 +18,16 @@ const FormTopBarRoot = styled(Navbar)`
   height: 35px;
   padding: 0 20px;
 
-  .bp3-navbar-group {
+  .bp4-navbar-group {
     height: 35px;
   }
-  .bp3-navbar-divider {
+  .bp4-navbar-divider {
     border-left-color: #d2dce2;
   }
-  .bp3-skeleton {
+  .bp4-skeleton {
     max-height: 10px;
   }
-  .bp3-button {
+  .bp4-button {
     &:hover {
       background: rgba(167, 182, 194, 0.12);
       color: #32304a;

@@ -1,6 +1,4 @@
 // @ts-nocheck
-import React from 'react';
-
 import { Row, Col } from '@/components';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
