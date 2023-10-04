@@ -1,6 +1,5 @@
 {
   "name": "bigcapital-monorepo",
-  "version": "0.10.2",
   "private": true,
   "scripts": {
     "dev": "lerna run dev",
