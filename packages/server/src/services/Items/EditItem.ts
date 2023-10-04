@@ -76,6 +76,20 @@ export class EditItem {
         itemDTO.inventoryAccountId
       );
     }
+    // Validate the purchase tax rate id existance.
+    if (itemDTO.purchaseTaxRateId) {
+      await this.validators.validatePurchaseTaxRateExistance(
+        tenantId,
+        itemDTO.purchaseTaxRateId
+      );
+    }
+    // Validate the sell tax rate id existance.
+    if (itemDTO.sellTaxRateId) {
+      await this.validators.validateSellTaxRateExistance(
+        tenantId,
+        itemDTO.sellTaxRateId
+      );
+    }
     // Validate inventory account should be modified in inventory item
     // has inventory transactions.
     await this.validators.validateItemInvnetoryAccountModified(

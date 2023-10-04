@@ -241,4 +241,40 @@ export class ItemsValidators {
       throw new ServiceError(ERRORS.ITEM_CANNOT_CHANGE_INVENTORY_TYPE);
     }
   }
+
+  /**
+   * Validate the purchase tax rate id existance.
+   * @param {number} tenantId -
+   * @param {number} taxRateId -
+   */
+  public async validatePurchaseTaxRateExistance(
+    tenantId: number,
+    taxRateId: number
+  ) {
+    const { TaxRate } = this.tenancy.models(tenantId);
+
+    const foundTaxRate = await TaxRate.query().findById(taxRateId);
+
+    if (!foundTaxRate) {
+      throw new ServiceError(ERRORS.PURCHASE_TAX_RATE_NOT_FOUND);
+    }
+  }
+
+  /**
+   * Validate the sell tax rate id existance.
+   * @param {number} tenantId
+   * @param {number} taxRateId
+   */
+  public async validateSellTaxRateExistance(
+    tenantId: number,
+    taxRateId: number
+  ) {
+    const { TaxRate } = this.tenancy.models(tenantId);
+
+    const foundTaxRate = await TaxRate.query().findById(taxRateId);
+
+    if (!foundTaxRate) {
+      throw new ServiceError(ERRORS.SELL_TAX_RATE_NOT_FOUND);
+    }
+  }
 }
