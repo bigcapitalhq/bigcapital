@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { Router, Switch, Route } from 'react-router';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';

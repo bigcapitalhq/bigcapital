@@ -2,19 +2,19 @@
 
 .dialog--category-form{
 
-  .bp3-dialog-body{    
-    .bp3-form-group.bp3-inline{
+  .bp4-dialog-body{    
+    .bp4-form-group.bp4-inline{
 
-      .bp3-label{
+      .bp4-label{
         min-width: 140px;
       }
-      .bp3-form-content{
+      .bp4-form-content{
         width: 250px;
       }
 
       &.form-group--description{
 
-        .bp3-form-content{
+        .bp4-form-content{
           width: 280px;
 
           textarea{
@@ -27,10 +27,10 @@
       }
     }
   }
-  .bp3-dialog-footer{
+  .bp4-dialog-footer{
     margin-top: 30px;
 
-    .bp3-button{
+    .bp4-button{
       min-width: 75px;
     }
   }

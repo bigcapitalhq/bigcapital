@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm install && npm run bootstrap",
-  "buildCommand": "CI='' npm run build:webapp",
+  "installCommand": "pnpm install",
+  "buildCommand": "CI='' pnpm run build:webapp",
   "outputDirectory": "packages/webapp/build",
   "rewrites": [{
       "source": "/api/:slug*",

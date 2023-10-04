@@ -109,7 +109,7 @@ export default compose(
 )(ProjectProfitabilitySummaryHeader);
 
 const ProjectProfitabilityDrawerHeader = styled(FinancialStatementHeader)`
-  .bp3-drawer {
+  .bp4-drawer {
     max-height: 520px;
   }
 `;

@@ -53,7 +53,7 @@ export const ItemManuTransaction = ({ onChange }) => {
 };
 
 const ItemSwitchButton = styled(Button)`
-  .bp3-button-text {
+  .bp4-button-text {
     display: flex;
     color: #727983;
   }

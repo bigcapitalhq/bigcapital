@@ -49,7 +49,7 @@ const RoleFormFloatingActionsRoot = styled.div`
   border-top: 1px solid #d2dde2;
   box-shadow: 0px -1px 4px 0px rgb(0 0 0 / 5%);
 
-  .bp3-button {
+  .bp4-button {
     margin-right: 10px;
   }
 `;

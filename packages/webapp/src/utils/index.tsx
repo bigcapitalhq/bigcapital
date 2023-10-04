@@ -1,21 +1,18 @@
 // @ts-nocheck
-import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import * as R from 'ramda';
 import Currencies from 'js-money/lib/currency';
 import clsx from 'classnames';
-
 import { Intent } from '@blueprintjs/core';
 import Currency from 'js-money/lib/currency';
 import accounting from 'accounting';
-import deepMapKeys from 'deep-map-keys';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 import { isEqual, castArray, isEmpty, includes, pickBy } from 'lodash';
-
 import jsCookie from 'js-cookie';
-
+import { deepMapKeys } from './map-key-deep';
 export * from './deep';
+
 
 export const getCookie = (name, defaultValue) =>
   _.defaultTo(jsCookie.get(name), defaultValue);

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position, Checkbox } from '@blueprintjs/core';

@@ -1,15 +1,15 @@
 .dialog--adjustment-item {
-  .bp3-form-group {
+  .bp4-form-group {
     margin-bottom: 15px;
 
-    label.bp3-label {
+    label.bp4-label {
       font-size: 13px;
       margin-bottom: 3px;
     }
   }
   .form-group {
     &--adjustment-reasons {
-      .bp3-form-content {
+      .bp4-form-content {
         textarea {
           width: 100%;
           min-width: 100%;
@@ -29,9 +29,9 @@
     padding-bottom: 12px;
     border-bottom: 2px solid #e9e9e9;
     
-    .bp3-input-group{
+    .bp4-input-group{
 
-      .bp3-input{
+      .bp4-input{
         padding-left: 8px;
         padding-right: 8px;
       }
@@ -47,7 +47,7 @@
         padding-left: 0.3rem;
         padding-right: 0.3rem;
 
-        .bp3-form-group {
+        .bp4-form-group {
           margin-bottom: 0;
         }
         &--quantity-on-hand,
@@ -73,7 +73,7 @@
     }
   }
 
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
   }
 }

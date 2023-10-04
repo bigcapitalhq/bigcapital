@@ -34,22 +34,22 @@ function ProjectInvoicingFormDialog({ dialogName, payload: {}, isOpen }) {
 export default compose(withDialogRedux())(ProjectInvoicingFormDialog);
 
 const ProjectInvoicingFormDialogRoot = styled(Dialog)`
-  .bp3-dialog-body {
-    .bp3-form-group {
+  .bp4-dialog-body {
+    .bp4-form-group {
       margin-bottom: 15px;
       margin-top: 15px;
 
-      label.bp3-label {
+      label.bp4-label {
         margin-bottom: 3px;
         font-size: 13px;
       }
     }
 
-    label.bp3-control.bp3-checkbox {
+    label.bp4-control.bp4-checkbox {
       margin-top: 15px;
     }
   }
-  .bp3-dialog-footer {
+  .bp4-dialog-footer {
     padding-top: 10px;
   }
 `;

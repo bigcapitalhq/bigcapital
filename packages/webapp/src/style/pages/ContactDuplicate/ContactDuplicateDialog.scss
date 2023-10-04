@@ -1,22 +1,22 @@
 .dialog--contact-duplicate {
-  .bp3-dialog-body {
+  .bp4-dialog-body {
     > .paragraph {
       margin-bottom: 1rem;
     }
-    .bp3-form-group {
+    .bp4-form-group {
       margin-bottom: 1.4rem;
 
-      .bp3-label {
+      .bp4-label {
         font-size: 13px;
       }
     }
-    .bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal) {
+    .bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal) {
       width: 260px;
     }
   }
 
-  .bp3-dialog-footer {
-    .bp3-dialog-footer-actions .bp3-button {
+  .bp4-dialog-footer {
+    .bp4-dialog-footer-actions .bp4-button {
       margin-left: 8px;
       min-width: 65px;
     }

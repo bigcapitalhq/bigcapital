@@ -102,8 +102,8 @@ const BillableEntryFooter = styled.div`
 `;
 
 const BillableEntryButton = styled(Button)`
-  &.bp3-button.bp3-small,
-  &.bp3-button:not([class*='bp3-intent-']):not(.bp3-minimal).bp3-small {
+  &.bp4-button.bp4-small,
+  &.bp4-button:not([class*='bp4-intent-']):not(.bp4-minimal).bp4-small {
     font-size: 12px;
     color: #2172ed;
     background: transparent;
