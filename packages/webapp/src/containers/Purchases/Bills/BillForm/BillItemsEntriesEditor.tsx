@@ -9,7 +9,7 @@ import { ITEM_TYPE } from '@/containers/Entries/utils';
  * Bill form body.
  */
 export default function BillFormBody({ defaultBill }) {
-  const { items } = useBillFormContext();
+  const { items, taxRates } = useBillFormContext();
 
   return (
     <FastField
@@ -32,6 +32,7 @@ export default function BillFormBody({ defaultBill }) {
           linesNumber={4}
           currencyCode={values.currency_code}
           itemType={ITEM_TYPE.PURCHASABLE}
+          taxRates={taxRates}
           landedCost={true}
         />
       )}

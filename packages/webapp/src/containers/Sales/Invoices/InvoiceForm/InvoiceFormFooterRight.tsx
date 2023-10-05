@@ -11,6 +11,7 @@ import {
   TotalLineTextStyle,
 } from '@/components';
 import { useInvoiceAggregatedTaxRates, useInvoiceTotals } from './utils';
+import { TaxType } from '@/interfaces/TaxRates';
 
 export function InvoiceFormFooterRight() {
   // Calculate the total due amount of invoice entries.
@@ -32,7 +33,7 @@ export function InvoiceFormFooterRight() {
       <TotalLine
         title={
           <>
-            {inclusive_exclusive_tax === 'inclusive'
+            {inclusive_exclusive_tax === TaxType.Inclusive
               ? 'Subtotal (Tax Inclusive)'
               : 'Subtotal'}
           </>

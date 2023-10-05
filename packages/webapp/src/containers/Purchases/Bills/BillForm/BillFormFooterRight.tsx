@@ -1,15 +1,14 @@
 // @ts-nocheck
-import React from 'react';
 import styled from 'styled-components';
-
 import {
-  T,
   TotalLines,
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useBillTotals } from './utils';
+import { useBillAggregatedTaxRates, useBillTotals } from './utils';
+import { useFormikContext } from 'formik';
+import { TaxType } from '@/interfaces/TaxRates';
 
 export function BillFormFooterRight() {
   const {
@@ -19,26 +18,46 @@ export function BillFormFooterRight() {
     formattedPaymentTotal,
   } = useBillTotals();
 
+  const {
+    values: { inclusive_exclusive_tax, currency_code },
+  } = useFormikContext();
+
+  const taxEntries = useBillAggregatedTaxRates();
+
   return (
     <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={<T id={'bill_form.label.subtotal'} />}
+        title={
+          <>
+            {inclusive_exclusive_tax === TaxType.Inclusive
+              ? 'Subtotal (Tax Inclusive)'
+              : 'Subtotal'}
+          </>
+        }
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
+      {taxEntries.map((tax, index) => (
+        <TotalLine
+          key={index}
+          title={tax.label}
+          value={tax.taxAmountFormatted}
+          borderStyle={TotalLineBorderStyle.None}
+        />
+      ))}
       <TotalLine
-        title={<T id={'bill_form.label.total'} />}
+        title={`Total (${currency_code})`}
         value={formattedTotal}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
-        title={<T id={'bill_form.label.total'} />}
+        title={'Paid Amount'}
         value={formattedPaymentTotal}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
-        title={<T id={'bill_form.label.total'} />}
+        title={'Due Amount'}
         value={formattedDueTotal}
         textStyle={TotalLineTextStyle.Bold}
       />

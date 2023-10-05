@@ -1,18 +1,23 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
+import { useFormikContext } from 'formik';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { omit, first, keyBy, sumBy, groupBy } from 'lodash';
-import { compose, transformToForm, repeatValue } from '@/utils';
-import { useFormikContext } from 'formik';
-
-import { formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
+import { omit, first, sumBy } from 'lodash';
+import {
+  compose,
+  transformToForm,
+  repeatValue,
+  formattedAmount,
+  defaultFastFieldShouldUpdate,
+} from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
 import {
+  aggregateItemEntriesTaxRates,
   assignEntriesTaxAmount,
   getEntriesTotal,
 } from '@/containers/Entries/utils';
@@ -327,28 +332,14 @@ export const useInvoiceAggregatedTaxRates = () => {
   const { values } = useFormikContext();
   const { taxRates } = useInvoiceFormContext();
 
-  const taxRatesById = useMemo(() => keyBy(taxRates, 'id'), [taxRates]);
-
+  const aggregateTaxRates = React.useMemo(
+    () => aggregateItemEntriesTaxRates(taxRates),
+    [taxRates],
+  );
   // Calculate the total tax amount of invoice entries.
   return React.useMemo(() => {
-    const filteredEntries = values.entries.filter((e) => e.tax_rate_id);
-    const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
-
-    return Object.keys(groupedTaxRates).map((taxRateId) => {
-      const taxRate = taxRatesById[taxRateId];
-      const taxRates = groupedTaxRates[taxRateId];
-      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
-      const taxAmountFormatted = formattedAmount(totalTaxAmount, 'USD');
-
-      return {
-        taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
-        taxAmount: totalTaxAmount,
-        taxAmountFormatted,
-      };
-    });
-  }, [values.entries]);
+    return aggregateTaxRates(values.entries);
+  }, [aggregateTaxRates, values.entries]);
 };
 
 /**
