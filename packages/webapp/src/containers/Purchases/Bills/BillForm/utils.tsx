@@ -17,6 +17,7 @@ import {
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  assignEntriesTaxAmount,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import {
@@ -24,6 +25,7 @@ import {
   getEntriesTotal,
 } from '@/containers/Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
+import { TaxType } from '@/interfaces/TaxRates';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -46,6 +48,7 @@ export const defaultBill = {
   bill_date: moment(new Date()).format('YYYY-MM-DD'),
   due_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
+  inclusive_exclusive_tax: TaxType.Inclusive,
   note: '',
   open: '',
   branch_id: '',
@@ -82,6 +85,9 @@ export const transformToEditForm = (bill) => {
 
   return {
     ...transformToForm(bill, defaultBill),
+    inclusive_exclusive_tax: invoice.is_inclusive_tax
+      ? TaxType.Inclusive
+      : TaxType.Exclusive,
     entries,
   };
 };
@@ -287,4 +293,17 @@ export const useBillIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+/**
+ * Re-calcualte the entries tax amount when editing.
+ * @returns {string}
+ */
+export const composeEntriesOnEditInclusiveTax = (
+  inclusiveExclusiveTax: string,
+  entries,
+) => {
+  return R.compose(
+    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+  )(entries);
 };

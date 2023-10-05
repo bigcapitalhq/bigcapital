@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as R from 'ramda';
