@@ -77,7 +77,8 @@ export class BillDTOTransformer {
     const billNumber = billDTO.billNumber || oldBill?.billNumber;
 
     const initialEntries = billDTO.entries.map((entry) => ({
-      reference_type: 'Bill',
+      referenceType: 'Bill',
+      isInclusiveTax: billDTO.isInclusiveTax,
       ...omit(entry, ['amount']),
     }));
     const asyncEntries = await composeAsync(
