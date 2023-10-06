@@ -9,20 +9,18 @@ import {
   Tag,
   ProgressBar,
 } from '@blueprintjs/core';
-
+import clsx from 'classnames';
 import {
   FormatDateCell,
   FormattedMessage as T,
   Icon,
   If,
   Choose,
-  Money,
   Can,
 } from '@/components';
 import {
   formattedAmount,
   safeCallback,
-  isBlank,
   calculateStatus,
 } from '@/utils';
 import {
@@ -30,6 +28,7 @@ import {
   PaymentMadeAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+import { CLASSES } from '@/constants';
 
 /**
  * Actions menu.
@@ -98,17 +97,6 @@ export function ActionsMenu({
         />
       </Can>
     </Menu>
-  );
-}
-
-/**
- * Amount accessor.
- */
-export function AmountAccessor(bill) {
-  return !isBlank(bill.amount) ? (
-    <Money amount={bill.amount} currency={bill.currency_code} />
-  ) : (
-    ''
   );
 }
 
@@ -198,11 +186,11 @@ export function useBillsTableColumns() {
       {
         id: 'amount',
         Header: intl.get('amount'),
-        accessor: AmountAccessor,
+        accessor: 'total_formatted',
         width: 120,
-        className: 'amount',
         align: 'right',
         clickable: true,
+        className: clsx(CLASSES.FONT_BOLD),
       },
       {
         id: 'status',

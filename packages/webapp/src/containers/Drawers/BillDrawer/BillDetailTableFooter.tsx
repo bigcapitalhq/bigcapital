@@ -1,11 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import styled from 'styled-components';
-
 import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FormatNumber,
   T,
   TotalLines,
   TotalLine,
@@ -23,12 +20,20 @@ export function BillDetailTableFooter() {
       <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'bill.details.subtotal'} />}
-          value={<FormatNumber value={bill.amount} />}
+          value={bill.subtotal_formatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
+        {bill.taxes.map((taxRate) => (
+          <TotalLine
+            key={taxRate.id}
+            title={`${taxRate.name} [${taxRate.tax_rate}%]`}
+            value={taxRate.tax_rate_amount_formatted}
+            textStyle={TotalLineTextStyle.Regular}
+          />
+        ))}
         <TotalLine
           title={<T id={'bill.details.total'} />}
-          value={bill.formatted_amount}
+          value={bill.total_formatted}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />

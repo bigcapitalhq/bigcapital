@@ -40,6 +40,7 @@ export const defaultBillEntry = {
   description: '',
   amount: '',
   landed_cost: false,
+  tax_rate_id: '',
 };
 
 // Default bill.
