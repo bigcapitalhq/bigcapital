@@ -12,7 +12,6 @@ export class PurchaseInvoiceTransformer extends Transformer {
     return [
       'formattedBillDate',
       'formattedDueDate',
-      'formattedAmount',
       'formattedPaymentAmount',
       'formattedBalance',
       'formattedDueAmount',
@@ -25,6 +24,14 @@ export class PurchaseInvoiceTransformer extends Transformer {
       'totalLocalFormatted',
       'taxes',
     ];
+  };
+
+  /**
+   * Excluded attributes.
+   * @returns {string[]}
+   */
+  public excludeAttributes = (): string[] => {
+    return ['amount', 'amountLocal', 'localAmount'];
   };
 
   /**

@@ -44,6 +44,7 @@ export function BillDetailTableFooter() {
         <TotalLine
           title={<T id={'bill.details.due_amount'} />}
           value={bill.formatted_due_amount}
+          textStyle={TotalLineTextStyle.Bold}
         />
       </BillTotalLines>
     </BillDetailsFooterRoot>

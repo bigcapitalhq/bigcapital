@@ -46,7 +46,6 @@ export default class Bill extends mixin(TenantModel, [
       'localAmount',
       'localAllocatedCostAmount',
       'billableAmount',
-
       'amountLocal',
       'subtotal',
       'subtotalLocal',
@@ -264,10 +263,11 @@ export default class Bill extends mixin(TenantModel, [
 
   /**
    * Invoice amount in organization base currency.
+   * @deprecated
    * @returns {number}
    */
   get localAmount() {
-    return this.amount * this.exchangeRate;
+    return this.amountLocal;
   }
 
   /**
@@ -307,7 +307,7 @@ export default class Bill extends mixin(TenantModel, [
    * @return {number}
    */
   get dueAmount() {
-    return Math.max(this.amount - this.balance, 0);
+    return Math.max(this.total - this.balance, 0);
   }
 
   /**
@@ -323,7 +323,7 @@ export default class Bill extends mixin(TenantModel, [
    * @return {boolean}
    */
   get isPartiallyPaid() {
-    return this.dueAmount !== this.amount && this.dueAmount > 0;
+    return this.dueAmount !== this.total && this.dueAmount > 0;
   }
 
   /**
@@ -384,7 +384,7 @@ export default class Bill extends mixin(TenantModel, [
    * Retrieves the calculated amount which have not been invoiced.
    */
   get billableAmount() {
-    return Math.max(this.amount - this.invoicedAmount, 0);
+    return Math.max(this.total - this.invoicedAmount, 0);
   }
 
   /**

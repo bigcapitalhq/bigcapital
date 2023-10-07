@@ -185,7 +185,7 @@ export class BillGLEntries {
 
     return {
       ...commonJournalMeta,
-      credit: bill.localAmount,
+      credit: bill.totalLocal,
       accountId: payableAccountId,
       contactId: bill.vendorId,
       accountNormal: AccountNormal.CREDIT,
