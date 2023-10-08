@@ -23,12 +23,14 @@ const defaultInitialValues = {
   sell_price: '',
   cost_account_id: '',
   sell_account_id: '',
+  sell_tax_rate_id: '',
   inventory_account_id: '',
   category_id: '',
   sellable: 1,
   purchasable: true,
   sell_description: '',
   purchase_description: '',
+  purchase_tax_rate_id: '',
 };
 
 /**
@@ -183,6 +185,13 @@ export const costPriceFieldShouldUpdate = (newProps, oldProps) => {
 export const purchaseDescFieldShouldUpdate = (newProps, oldProps) => {
   return (
     newProps.purchasable !== oldProps.purchasable ||
+    defaultFastFieldShouldUpdate(newProps, oldProps)
+  );
+};
+
+export const taxRateFieldShouldUpdate = (newProps, oldProps) => {
+  return (
+    newProps.shouldUpdateDeps.taxRates !== oldProps.shouldUpdateDeps.taxRates ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

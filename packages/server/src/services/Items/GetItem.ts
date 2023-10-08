@@ -27,6 +27,8 @@ export class GetItem {
       .withGraphFetched('category')
       .withGraphFetched('costAccount')
       .withGraphFetched('itemWarehouses.warehouse')
+      .withGraphFetched('sellTaxRate')
+      .withGraphFetched('purchaseTaxRate')
       .throwIfNotFound();
 
     return this.transformer.transform(tenantId, item, new ItemTransformer());

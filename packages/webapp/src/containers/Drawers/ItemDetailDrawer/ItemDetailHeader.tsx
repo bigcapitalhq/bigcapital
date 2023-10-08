@@ -67,6 +67,14 @@ export default function ItemDetailHeader() {
             label={intl.get('cost_account_id')}
             children={defaultTo(item.cost_account?.name, '-')}
           />
+          <DetailItem
+            label={intl.get('item.details.sell_tax_rate')}
+            children={item?.sell_tax_rate?.name}
+          />
+          <DetailItem
+            label={intl.get('item.details.purchase_tax_rate')}
+            children={item?.purchase_tax_rate?.name}
+          />
           <If condition={item.type === 'inventory'}>
             <DetailItem
               label={intl.get('inventory_account')}

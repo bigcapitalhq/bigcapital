@@ -8,9 +8,9 @@ import { DataTableEditable } from '@/components';
 import { useEditableItemsEntriesColumns } from './components';
 import {
   useFetchItemRow,
-  composeRowsOnNewRow,
   useComposeRowsOnEditTableCell,
   useComposeRowsOnRemoveTableRow,
+  useComposeRowsOnNewRow,
 } from './utils';
 import {
   ItemEntriesTableProvider,
@@ -68,6 +68,7 @@ function ItemEntriesTableRoot() {
 
   const composeRowsOnEditCell = useComposeRowsOnEditTableCell();
   const composeRowsOnDeleteRow = useComposeRowsOnRemoveTableRow();
+  const composeRowsOnNewRow = useComposeRowsOnNewRow();
 
   // Handle the fetch item row details.
   const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({

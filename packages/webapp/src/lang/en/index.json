@@ -334,6 +334,8 @@
   "currency_name_": "Currency name",
   "cost_account_id": "Cost account",
   "sell_account_id": "Sell account",
+  "item.details.sell_tax_rate": "Sell Tax Rate",
+  "item.details.purchase_tax_rate": "Purchase Tax Rate",
   "item_type_": "Item type",
   "item_name_": "Item name",
   "organization_industry_": "Organization industry",

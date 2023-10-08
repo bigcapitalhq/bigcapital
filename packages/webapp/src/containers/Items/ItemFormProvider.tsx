@@ -10,6 +10,7 @@ import {
   useAccounts,
 } from '@/hooks/query';
 import { useWatchItemError } from './utils';
+import { useTaxRates } from '@/hooks/query/taxRates';
 
 const ItemFormContext = createContext();
 
@@ -29,6 +30,8 @@ function ItemFormProvider({ itemId, ...props }) {
     isLoading: isItemsCategoriesLoading,
     data: { itemsCategories },
   } = useItemsCategories();
+
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
 
   // Fetches the given item details.
   const itemQuery = useItem(itemId || duplicateId, {
@@ -69,6 +72,7 @@ function ItemFormProvider({ itemId, ...props }) {
     accounts,
     item,
     itemsCategories,
+    taxRates,
     submitPayload,
     isNewMode,
 
@@ -76,6 +80,7 @@ function ItemFormProvider({ itemId, ...props }) {
     isAccountsLoading,
     isItemsCategoriesLoading,
     isItemLoading,
+    isTaxRatesLoading,
 
     createItemMutate,
     editItemMutate,
