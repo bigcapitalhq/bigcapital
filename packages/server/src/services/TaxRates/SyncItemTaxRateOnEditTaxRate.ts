@@ -1,6 +1,6 @@
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { Knex } from 'knex';
 
 @Service()
 export class SyncItemTaxRateOnEditTaxRate {
@@ -21,6 +21,9 @@ export class SyncItemTaxRateOnEditTaxRate {
   ) => {
     const { Item } = this.tenancy.models(tenantId);
 
+    // Can't continue if the old and new sell tax rate id are equal.
+    if (oldSellTaxRateId === sellTaxRateId) return;
+
     await Item.query().where('sellTaxRateId', oldSellTaxRateId).update({
       sellTaxRateId,
     });
@@ -40,6 +43,7 @@ export class SyncItemTaxRateOnEditTaxRate {
   ) => {
     const { Item } = this.tenancy.models(tenantId);
 
+    // Can't continue if the old and new sell tax rate id are equal.
     if (oldPurchaseTaxRateId === purchaseTaxRateId) return;
 
     await Item.query(trx)
