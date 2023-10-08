@@ -214,7 +214,8 @@ export class BillGLEntries {
       return {
         ...commonJournalMeta,
         debit: entry.taxAmount,
-        index: index + 4,
+        index,
+        indexGroup: 30,
         accountId: taxPayableAccountId,
         accountNormal: AccountNormal.CREDIT,
         taxRateId: entry.taxRateId,

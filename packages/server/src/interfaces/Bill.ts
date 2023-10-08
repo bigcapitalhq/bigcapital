@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IDynamicListFilterDTO } from './DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IBillLandedCost } from './LandedCost';
+
 export interface IBillDTO {
   vendorId: number;
   billNumber: string;
@@ -15,7 +16,6 @@ export interface IBillDTO {
   exchangeRate?: number;
   open: boolean;
   entries: IItemEntryDTO[];
-
   branchId?: number;
   warehouseId?: number;
   projectId?: number;
@@ -86,6 +86,7 @@ export interface IBill {
   subtotal: number;
   subtotalLocal: number;
   subtotalExcludingTax: number;
+  taxAmountWithheld: number;
   taxAmountWithheldLocal: number;
   total: number;
   totalLocal: number;

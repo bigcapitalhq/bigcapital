@@ -190,10 +190,12 @@ export const susbcribers = () => {
     ProjectBillableExpensesSubscriber,
     ProjectBillableBillSubscriber,
 
-    // Tax Rates
+    // Tax Rates - Sale Invoice
     SaleInvoiceTaxRateValidateSubscriber,
-    BillTaxRateValidateSubscriber,
     WriteInvoiceTaxTransactionsSubscriber,
-    WriteBillTaxTransactionsSubscriber
+
+    // Tax Rates - Bills
+    BillTaxRateValidateSubscriber,
+    WriteBillTaxTransactionsSubscriber,
   ];
 };

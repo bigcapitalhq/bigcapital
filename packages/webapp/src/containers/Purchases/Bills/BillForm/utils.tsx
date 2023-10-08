@@ -41,6 +41,8 @@ export const defaultBillEntry = {
   amount: '',
   landed_cost: false,
   tax_rate_id: '',
+  tax_rate: '',
+  tax_amount: '',
 };
 
 // Default bill.
@@ -299,7 +301,7 @@ export const useBillIsForeignCustomer = () => {
 };
 
 /**
- * Re-calcualte the entries tax amount when editing.
+ * Re-calculates the entries tax amount when editing.
  * @returns {string}
  */
 export const composeEntriesOnEditInclusiveTax = (
