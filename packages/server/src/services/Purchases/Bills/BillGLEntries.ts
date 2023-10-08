@@ -7,6 +7,7 @@ import { AccountNormal, IBill, IItemEntry, ILedgerEntry } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 
 @Service()
 export class BillGLEntries {
@@ -15,6 +16,9 @@ export class BillGLEntries {
 
   @Inject()
   private ledgerStorage: LedgerStorageService;
+
+  @Inject()
+  private itemsEntriesService: ItemsEntriesService;
 
   /**
    * Creates bill GL entries.
@@ -43,8 +47,16 @@ export class BillGLEntries {
       {},
       trx
     );
-    const billLedger = this.getBillLedger(bill, APAccount.id);
-
+    // Find or create tax payable account.
+    const taxPayableAccount = await accountRepository.findOrCreateTaxPayable(
+      {},
+      trx
+    );
+    const billLedger = this.getBillLedger(
+      bill,
+      APAccount.id,
+      taxPayableAccount.id
+    );
     // Commit the GL enties on the storage.
     await this.ledgerStorage.commit(tenantId, billLedger, trx);
   };
@@ -83,7 +95,7 @@ export class BillGLEntries {
 
   /**
    * Retrieves the bill common entry.
-   * @param   {IBill} bill
+   * @param {IBill} bill
    * @returns {ILedgerEntry}
    */
   private getBillCommonEntry = (bill: IBill) => {
@@ -119,7 +131,7 @@ export class BillGLEntries {
     (bill: IBill, entry: IItemEntry, index: number): ILedgerEntry => {
       const commonJournalMeta = this.getBillCommonEntry(bill);
 
-      const localAmount = bill.exchangeRate * entry.amount;
+      const localAmount = bill.exchangeRate * entry.amountExludingTax;
       const landedCostAmount = sumBy(entry.allocatedCostEntries, 'cost');
 
       return {
@@ -173,7 +185,7 @@ export class BillGLEntries {
 
     return {
       ...commonJournalMeta,
-      credit: bill.localAmount,
+      credit: bill.totalLocal,
       accountId: payableAccountId,
       contactId: bill.vendorId,
       accountNormal: AccountNormal.CREDIT,
@@ -183,14 +195,61 @@ export class BillGLEntries {
   };
 
   /**
+   * Retrieves the bill tax GL entry.
+   * @param {IBill} bill -
+   * @param {number} taxPayableAccountId -
+   * @param {IItemEntry} entry -
+   * @param {number} index -
+   * @returns {ILedgerEntry}
+   */
+  private getBillTaxEntry = R.curry(
+    (
+      bill: IBill,
+      taxPayableAccountId: number,
+      entry: IItemEntry,
+      index: number
+    ): ILedgerEntry => {
+      const commonJournalMeta = this.getBillCommonEntry(bill);
+
+      return {
+        ...commonJournalMeta,
+        debit: entry.taxAmount,
+        index,
+        indexGroup: 30,
+        accountId: taxPayableAccountId,
+        accountNormal: AccountNormal.CREDIT,
+        taxRateId: entry.taxRateId,
+        taxRate: entry.taxRate,
+      };
+    }
+  );
+
+  /**
+   * Retrieves the bill tax GL entries.
+   * @param {IBill} bill
+   * @param {number} taxPayableAccountId
+   * @returns {ILedgerEntry[]}
+   */
+  private getBillTaxEntries = (bill: IBill, taxPayableAccountId: number) => {
+    // Retrieves the non-zero tax entries.
+    const nonZeroTaxEntries = this.itemsEntriesService.getNonZeroEntries(
+      bill.entries
+    );
+    const transformTaxEntry = this.getBillTaxEntry(bill, taxPayableAccountId);
+
+    return nonZeroTaxEntries.map(transformTaxEntry);
+  };
+
+  /**
    * Retrieves the given bill GL entries.
-   * @param   {IBill} bill
-   * @param   {number} payableAccountId
+   * @param {IBill} bill
+   * @param {number} payableAccountId
    * @returns {ILedgerEntry[]}
    */
   private getBillGLEntries = (
     bill: IBill,
-    payableAccountId: number
+    payableAccountId: number,
+    taxPayableAccountId: number
   ): ILedgerEntry[] => {
     const payableEntry = this.getBillPayableEntry(payableAccountId, bill);
 
@@ -201,18 +260,28 @@ export class BillGLEntries {
     const landedCostEntries = bill.locatedLandedCosts.map(
       landedCostTransformer
     );
+    const taxEntries = this.getBillTaxEntries(bill, taxPayableAccountId);
+
     // Allocate cost entries journal entries.
-    return [payableEntry, ...itemsEntries, ...landedCostEntries];
+    return [payableEntry, ...itemsEntries, ...landedCostEntries, ...taxEntries];
   };
 
   /**
    * Retrieves the given bill ledger.
-   * @param   {IBill} bill
-   * @param   {number} payableAccountId
+   * @param {IBill} bill
+   * @param {number} payableAccountId
    * @returns {Ledger}
    */
-  private getBillLedger = (bill: IBill, payableAccountId: number) => {
-    const entries = this.getBillGLEntries(bill, payableAccountId);
+  private getBillLedger = (
+    bill: IBill,
+    payableAccountId: number,
+    taxPayableAccountId: number
+  ) => {
+    const entries = this.getBillGLEntries(
+      bill,
+      payableAccountId,
+      taxPayableAccountId
+    );
 
     return new Ledger(entries);
   };

@@ -21,12 +21,9 @@ label.bp4-label {
   .required {
     color: red;
   }
-
   .bp4-form-group.bp4-inline & {
     margin: 0 10px 0 0;
-    line-height: 1.6;
-    padding-top: calc(0.3rem + 1px);
-    padding-bottom: calc(0.3rem + 1px);
+    line-height: 30px;
   }
 }
 

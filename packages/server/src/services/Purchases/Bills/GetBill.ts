@@ -28,7 +28,8 @@ export class GetBill {
       .findById(billId)
       .withGraphFetched('vendor')
       .withGraphFetched('entries.item')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('taxes.taxRate');
 
     // Validates the bill existance.
     this.validators.validateBillExistance(bill);

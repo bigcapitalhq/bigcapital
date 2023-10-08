@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React, { useCallback, useMemo } from 'react';
 import * as R from 'ramda';
-import { sumBy, isEmpty, last, keyBy } from 'lodash';
-
+import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';
 import { useItem } from '@/hooks/query';
 import {
   toSafeNumber,
@@ -12,6 +11,7 @@ import {
   updateAutoAddNewLine,
   orderingLinesIndexes,
   updateTableRow,
+  formattedAmount,
 } from '@/utils';
 import { useItemEntriesTableContext } from './ItemEntriesTableProvider';
 
@@ -116,6 +116,11 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_description
           : item.sell_description;
 
+      const taxRateId =
+        itemType === ITEM_TYPE.PURCHASABLE
+          ? item.purchase_tax_rate_id
+          : item.sell_tax_rate_id;
+
       // Detarmines whether the landed cost checkbox should be disabled.
       const landedCostDisabled = isLandedCostDisabled(item);
 
@@ -136,6 +141,7 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
               landed_cost_disabled: landedCostDisabled,
             }
           : {}),
+        taxRateId,
       };
       setItemRow(null);
       saveInvoke(notifyNewRow, newRow, rowIndex);
@@ -280,3 +286,29 @@ export const useComposeRowsOnRemoveTableRow = () => {
     [minLinesNumber, defaultEntry, localValue],
   );
 };
+
+/**
+ * Retrieves the aggregate tax rates from the given item entries.
+ */
+export const aggregateItemEntriesTaxRates = R.curry((taxRates, entries) => {
+  const taxRatesById = keyBy(taxRates, 'id');
+
+  // Calculate the total tax amount of invoice entries.
+  const filteredEntries = entries.filter((e) => e.tax_rate_id);
+  const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
+
+  return Object.keys(groupedTaxRates).map((taxRateId) => {
+    const taxRate = taxRatesById[taxRateId];
+    const taxRates = groupedTaxRates[taxRateId];
+    const totalTaxAmount = sumBy(taxRates, 'tax_amount');
+    const taxAmountFormatted = formattedAmount(totalTaxAmount, 'USD');
+
+    return {
+      taxRateId,
+      taxRate: taxRate.rate,
+      label: `${taxRate.name} [${taxRate.rate}%]`,
+      taxAmount: totalTaxAmount,
+      taxAmountFormatted,
+    };
+  });
+});

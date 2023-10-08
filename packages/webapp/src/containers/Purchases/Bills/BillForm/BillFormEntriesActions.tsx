@@ -1,29 +1,25 @@
 // @ts-nocheck
-import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import { InclusiveButtonOptions } from './constants';
 import { FFormGroup, FSelect } from '@/components';
-import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
-import { composeEntriesOnEditInclusiveTax } from './utils';
+import { InclusiveTaxOptions } from '@/constants/InclusiveTaxOptions';
 
-/**
- * Invoice form actions.
- * @returns {React.ReactNode}
- */
-export function InvoiceFormActions() {
+import { composeEntriesOnEditInclusiveTax } from './utils';
+import { EntriesActionsBar } from '@/containers/Entries/EntriesActionBar';
+
+export function BillFormEntriesActions() {
   return (
     <EntriesActionsBar>
-      <InvoiceExclusiveInclusiveSelect />
+      <BillExclusiveInclusiveSelect />
     </EntriesActionsBar>
   );
 }
 
 /**
- * Invoice exclusive/inclusive select.
+ * Bill exclusive/inclusive select.
  * @returns {React.ReactNode}
  */
-export function InvoiceExclusiveInclusiveSelect(props) {
+export function BillExclusiveInclusiveSelect(props) {
   const { values, setFieldValue } = useFormikContext();
 
   const handleItemSelect = (item) => {
@@ -43,7 +39,7 @@ export function InvoiceExclusiveInclusiveSelect(props) {
     >
       <FSelect
         name={'inclusive_exclusive_tax'}
-        items={InclusiveButtonOptions}
+        items={InclusiveTaxOptions}
         textAccessor={'label'}
         labelAccessor={() => ''}
         valueAccessor={'key'}

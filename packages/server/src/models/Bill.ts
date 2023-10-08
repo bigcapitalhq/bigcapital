@@ -13,6 +13,109 @@ export default class Bill extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  public amount: number;
+  public paymentAmount: number;
+  public landedCostAmount: number;
+  public allocatedCostAmount: number;
+  public isInclusiveTax: boolean;
+  public taxAmountWithheld: number;
+  public exchangeRate: number;
+
+  /**
+   * Timestamps columns.
+   */
+  get timestamps() {
+    return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [
+      'balance',
+      'dueAmount',
+      'isOpen',
+      'isPartiallyPaid',
+      'isFullyPaid',
+      'isPaid',
+      'remainingDays',
+      'overdueDays',
+      'isOverdue',
+      'unallocatedCostAmount',
+      'localAmount',
+      'localAllocatedCostAmount',
+      'billableAmount',
+      'amountLocal',
+      'subtotal',
+      'subtotalLocal',
+      'subtotalExludingTax',
+      'taxAmountWithheldLocal',
+      'total',
+      'totalLocal',
+    ];
+  }
+
+  /**
+   * Invoice amount in base currency.
+   * @returns {number}
+   */
+  get amountLocal() {
+    return this.amount * this.exchangeRate;
+  }
+
+  /**
+   * Subtotal. (Tax inclusive) if the tax inclusive is enabled.
+   * @returns {number}
+   */
+  get subtotal() {
+    return this.amount;
+  }
+
+  /**
+   * Subtotal in base currency. (Tax inclusive) if the tax inclusive is enabled.
+   * @returns {number}
+   */
+  get subtotalLocal() {
+    return this.amountLocal;
+  }
+
+  /**
+   * Sale invoice amount excluding tax.
+   * @returns {number}
+   */
+  get subtotalExcludingTax() {
+    return this.isInclusiveTax
+      ? this.subtotal - this.taxAmountWithheld
+      : this.subtotal;
+  }
+
+  /**
+   * Tax amount withheld in base currency.
+   * @returns {number}
+   */
+  get taxAmountWithheldLocal() {
+    return this.taxAmountWithheld * this.exchangeRate;
+  }
+
+  /**
+   * Invoice total. (Tax included)
+   * @returns {number}
+   */
+  get total() {
+    return this.isInclusiveTax
+      ? this.subtotal
+      : this.subtotal + this.taxAmountWithheld;
+  }
+
+  /**
+   * Invoice total in local currency. (Tax included)
+   * @returns {number}
+   */
+  get totalLocal() {
+    return this.total * this.exchangeRate;
+  }
+
   /**
    * Table name
    */
@@ -159,39 +262,12 @@ export default class Bill extends mixin(TenantModel, [
   }
 
   /**
-   * Timestamps columns.
-   */
-  get timestamps() {
-    return ['createdAt', 'updatedAt'];
-  }
-
-  /**
-   * Virtual attributes.
-   */
-  static get virtualAttributes() {
-    return [
-      'balance',
-      'dueAmount',
-      'isOpen',
-      'isPartiallyPaid',
-      'isFullyPaid',
-      'isPaid',
-      'remainingDays',
-      'overdueDays',
-      'isOverdue',
-      'unallocatedCostAmount',
-      'localAmount',
-      'localAllocatedCostAmount',
-      'billableAmount',
-    ];
-  }
-
-  /**
    * Invoice amount in organization base currency.
+   * @deprecated
    * @returns {number}
    */
   get localAmount() {
-    return this.amount * this.exchangeRate;
+    return this.amountLocal;
   }
 
   /**
@@ -231,7 +307,7 @@ export default class Bill extends mixin(TenantModel, [
    * @return {number}
    */
   get dueAmount() {
-    return Math.max(this.amount - this.balance, 0);
+    return Math.max(this.total - this.balance, 0);
   }
 
   /**
@@ -247,7 +323,7 @@ export default class Bill extends mixin(TenantModel, [
    * @return {boolean}
    */
   get isPartiallyPaid() {
-    return this.dueAmount !== this.amount && this.dueAmount > 0;
+    return this.dueAmount !== this.total && this.dueAmount > 0;
   }
 
   /**
@@ -308,7 +384,7 @@ export default class Bill extends mixin(TenantModel, [
    * Retrieves the calculated amount which have not been invoiced.
    */
   get billableAmount() {
-    return Math.max(this.amount - this.invoicedAmount, 0);
+    return Math.max(this.total - this.invoicedAmount, 0);
   }
 
   /**
@@ -326,6 +402,7 @@ export default class Bill extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const BillLandedCost = require('models/BillLandedCost');
     const Branch = require('models/Branch');
+    const TaxRateTransaction = require('models/TaxRateTransaction');
 
     return {
       vendor: {
@@ -371,6 +448,21 @@ export default class Bill extends mixin(TenantModel, [
         join: {
           from: 'bills.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Bill may has associated tax rate transactions.
+       */
+      taxes: {
+        relation: Model.HasManyRelation,
+        modelClass: TaxRateTransaction.default,
+        join: {
+          from: 'bills.id',
+          to: 'tax_rate_transactions.referenceId',
+        },
+        filter(builder) {
+          builder.where('reference_type', 'Bill');
         },
       },
     };

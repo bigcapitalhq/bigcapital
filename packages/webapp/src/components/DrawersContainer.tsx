@@ -1,5 +1,3 @@
-import React from 'react';
-
 import AccountDrawer from '@/containers/Drawers/AccountDrawer';
 import ManualJournalDrawer from '@/containers/Drawers/ManualJournalDrawer';
 import ExpenseDrawer from '@/containers/Drawers/ExpenseDrawer';

@@ -115,6 +115,8 @@ export default class BillsController extends BaseController {
       check('note').optional().trim().escape(),
       check('open').default(false).isBoolean().toBoolean(),
 
+      check('is_inclusive_tax').default(false).isBoolean().toBoolean(),
+
       check('entries').isArray({ min: 1 }),
 
       check('entries.*.index').exists().isNumeric().toInt(),
@@ -134,6 +136,15 @@ export default class BillsController extends BaseController {
         .isBoolean()
         .toBoolean(),
       check('entries.*.warehouse_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
+      check('entries.*.tax_code')
+        .optional({ nullable: true })
+        .trim()
+        .escape()
+        .isString(),
+      check('entries.*.tax_rate_id')
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
@@ -540,6 +551,16 @@ export default class BillsController extends BaseController {
               data: { ...error.payload },
             },
           ],
+        });
+      }
+      if (error.errorType === 'ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEM_ENTRY_TAX_RATE_CODE_NOT_FOUND', code: 1800 }],
+        });
+      }
+      if (error.errorType === 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND') {
+        return res.boom.badRequest(null, {
+          errors: [{ type: 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND', code: 1900 }],
         });
       }
     }
