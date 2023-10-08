@@ -61,6 +61,7 @@ function ItemEntriesTableRoot() {
     currencyCode,
     landedCost,
     taxRates,
+    itemType,
   } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
@@ -73,7 +74,7 @@ function ItemEntriesTableRoot() {
   // Handle the fetch item row details.
   const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({
     landedCost,
-    itemType: null,
+    itemType,
     notifyNewRow: (newRow, rowIndex) => {
       // Update the rate, description and quantity data of the row.
       const newRows = composeRowsOnNewRow(rowIndex, newRow, localValue);

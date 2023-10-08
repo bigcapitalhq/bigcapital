@@ -116,11 +116,6 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_description
           : item.sell_description;
 
-      const taxRateId =
-        itemType === ITEM_TYPE.PURCHASABLE
-          ? item.purchase_tax_rate_id
-          : item.sell_tax_rate_id;
-
       // Detarmines whether the landed cost checkbox should be disabled.
       const landedCostDisabled = isLandedCostDisabled(item);
 
