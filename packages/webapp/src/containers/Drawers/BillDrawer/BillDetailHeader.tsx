@@ -30,7 +30,7 @@ export default function BillDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountDetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{bill.formatted_amount}</h3>
+            <h3 class="big-number">{bill.total_formatted}</h3>
           </AmountDetailItem>
           <StatusDetailItem>
             <BillDetailsStatus bill={bill} />

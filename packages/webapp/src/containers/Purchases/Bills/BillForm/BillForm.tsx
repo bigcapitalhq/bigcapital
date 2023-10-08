@@ -26,6 +26,7 @@ import {
   handleErrors,
 } from './utils';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import { BillFormEntriesActions } from './BillFormEntriesActions';
 
 /**
  * Bill form.
@@ -126,7 +127,10 @@ function BillForm({
         <Form>
           <BillFormTopBar />
           <BillFormHeader />
-          <BillItemsEntriesEditor />
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
+            <BillFormEntriesActions />
+            <BillItemsEntriesEditor />
+          </div>
           <BillFormFooter />
           <BillFloatingActions />
         </Form>

@@ -14,6 +14,7 @@ import {
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
 
 @Service()
 export class BillDTOTransformer {
@@ -22,6 +23,9 @@ export class BillDTOTransformer {
 
   @Inject()
   private warehouseDTOTransform: WarehouseTransactionDTOTransform;
+
+  @Inject()
+  private taxDTOTransformer: ItemEntriesTaxTransactions;
 
   @Inject()
   private tenancy: HasTenancyService;
@@ -73,13 +77,23 @@ export class BillDTOTransformer {
     const billNumber = billDTO.billNumber || oldBill?.billNumber;
 
     const initialEntries = billDTO.entries.map((entry) => ({
-      reference_type: 'Bill',
+      referenceType: 'Bill',
+      isInclusiveTax: billDTO.isInclusiveTax,
       ...omit(entry, ['amount']),
     }));
-    const entries = await composeAsync(
+    const asyncEntries = await composeAsync(
+      // Associate tax rate from tax id to entries.
+      this.taxDTOTransformer.assocTaxRateFromTaxIdToEntries(tenantId),
+      // Associate tax rate id from tax code to entries.
+      this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(tenantId),
       // Sets the default cost account to the bill entries.
       this.setBillEntriesDefaultAccounts(tenantId)
     )(initialEntries);
+
+    const entries = R.compose(
+      // Remove tax code from entries.
+      R.map(R.omit(['taxCode']))
+    )(asyncEntries);
 
     const initialDTO = {
       ...formatDateFields(omit(billDTO, ['open', 'entries']), [
@@ -100,6 +114,8 @@ export class BillDTOTransformer {
       userId: authorizedUser.id,
     };
     return R.compose(
+      // Associates tax amount withheld to the model.
+      this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO(tenantId),
       this.warehouseDTOTransform.transformDTO(tenantId)
     )(initialDTO);

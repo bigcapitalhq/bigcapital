@@ -203,8 +203,8 @@ export class BillPaymentGLEntries {
 
   /**
    * Retrieves the payment GL payable entry.
-   * @param   {IBillPayment} billPayment
-   * @param   {number} APAccountId
+   * @param {IBillPayment} billPayment
+   * @param {number} APAccountId
    * @returns {ILedgerEntry}
    */
   private getPaymentGLPayableEntry = (

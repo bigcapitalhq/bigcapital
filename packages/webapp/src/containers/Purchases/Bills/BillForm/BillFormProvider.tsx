@@ -15,6 +15,7 @@ import {
   useCreateBill,
   useEditBill,
 } from '@/hooks/query';
+import { useTaxRates } from '@/hooks/query/taxRates';
 
 const BillFormContext = createContext();
 
@@ -83,6 +84,9 @@ function BillFormProvider({ billId, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
+  // Fetch tax rates.
+  const { data: taxRates, isLoading: isTaxRatesLoading } = useTaxRates();
+
   // Fetches the projects list.
   const {
     data: { projects },
@@ -103,7 +107,10 @@ function BillFormProvider({ billId, ...props }) {
 
   // Determines whether the warehouse and branches are loading.
   const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+    isWarehouesLoading ||
+    isBranchesLoading ||
+    isProjectsLoading ||
+    isTaxRatesLoading;
 
   const provider = {
     accounts,
@@ -113,6 +120,7 @@ function BillFormProvider({ billId, ...props }) {
     warehouses,
     branches,
     projects,
+    taxRates,
     submitPayload,
     isNewMode,
 
@@ -124,6 +132,7 @@ function BillFormProvider({ billId, ...props }) {
     isFeatureLoading,
     isBranchesSuccess,
     isWarehousesSuccess,
+    isTaxRatesLoading,
 
     createBillMutate,
     editBillMutate,

@@ -62,8 +62,8 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
     const taxRate = this.taxRate(taxEntry);
 
     return this.options.isInclusiveTax
-      ? getInclusiveTaxAmount(this.options.amount, taxRate)
-      : getExlusiveTaxAmount(this.options.amount, taxRate);
+      ? getInclusiveTaxAmount(this.options.subtotal, taxRate)
+      : getExlusiveTaxAmount(this.options.subtotal, taxRate);
   };
 
   /**

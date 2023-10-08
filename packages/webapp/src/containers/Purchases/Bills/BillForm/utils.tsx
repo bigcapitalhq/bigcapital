@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
-import { first } from 'lodash';
+import { first, chain } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import { AppToaster } from '@/components';
@@ -17,6 +17,8 @@ import {
 import {
   updateItemsEntriesTotal,
   ensureEntriesHaveEmptyLine,
+  assignEntriesTaxAmount,
+  aggregateItemEntriesTaxRates,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import {
@@ -24,6 +26,7 @@ import {
   getEntriesTotal,
 } from '@/containers/Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
+import { TaxType } from '@/interfaces/TaxRates';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -37,6 +40,9 @@ export const defaultBillEntry = {
   description: '',
   amount: '',
   landed_cost: false,
+  tax_rate_id: '',
+  tax_rate: '',
+  tax_amount: '',
 };
 
 // Default bill.
@@ -46,6 +52,7 @@ export const defaultBill = {
   bill_date: moment(new Date()).format('YYYY-MM-DD'),
   due_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
+  inclusive_exclusive_tax: TaxType.Inclusive,
   note: '',
   open: '',
   branch_id: '',
@@ -82,6 +89,9 @@ export const transformToEditForm = (bill) => {
 
   return {
     ...transformToForm(bill, defaultBill),
+    inclusive_exclusive_tax: bill.is_inclusive_tax
+      ? TaxType.Inclusive
+      : TaxType.Exclusive,
     entries,
   };
 };
@@ -228,11 +238,12 @@ export const useSetPrimaryWarehouseToForm = () => {
  */
 export const useBillTotals = () => {
   const {
-    values: { entries, currency_code: currencyCode },
+    values: { currency_code: currencyCode },
   } = useFormikContext();
 
-  // Retrieves the bili entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
+  // Retrieves the bill subtotal.
+  const subtotal = useBillSubtotal();
+  const total = useBillTotal();
 
   // Retrieves the formatted total money.
   const formattedTotal = React.useMemo(
@@ -241,8 +252,8 @@ export const useBillTotals = () => {
   );
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
+    () => formattedAmount(subtotal, currencyCode, { money: false }),
+    [subtotal, currencyCode],
   );
   // Retrieves the payment total.
   const paymentTotal = React.useMemo(() => 0, []);
@@ -287,4 +298,87 @@ export const useBillIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+/**
+ * Re-calculates the entries tax amount when editing.
+ * @returns {string}
+ */
+export const composeEntriesOnEditInclusiveTax = (
+  inclusiveExclusiveTax: string,
+  entries,
+) => {
+  return R.compose(
+    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
+  )(entries);
+};
+
+/**
+ * Retreives the bill aggregated tax rates.
+ * @returns {Array}
+ */
+export const useBillAggregatedTaxRates = () => {
+  const { values } = useFormikContext();
+  const { taxRates } = useBillFormContext();
+
+  const aggregateTaxRates = React.useMemo(
+    () => aggregateItemEntriesTaxRates(taxRates),
+    [taxRates],
+  );
+  // Calculate the total tax amount of bill entries.
+  return React.useMemo(() => {
+    return aggregateTaxRates(values.entries);
+  }, [aggregateTaxRates, values.entries]);
+};
+
+/**
+ * Retrieves the bill subtotal.
+ * @returns {number}
+ */
+export const useBillSubtotal = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Calculate the total due amount of bill entries.
+  return React.useMemo(() => getEntriesTotal(entries), [entries]);
+};
+
+/**
+ * Retreives the bill total tax amount.
+ * @returns {number}
+ */
+export const useBillTotalTaxAmount = () => {
+  const { values } = useFormikContext();
+
+  return React.useMemo(() => {
+    return chain(values.entries)
+      .filter((entry) => entry.tax_amount)
+      .sumBy('tax_amount')
+      .value();
+  }, [values.entries]);
+};
+
+/**
+ * Detarmines whether the tax is exclusive.
+ * @returns {boolean}
+ */
+export const useIsBillTaxExclusive = () => {
+  const { values } = useFormikContext();
+
+  return values.inclusive_exclusive_tax === TaxType.Exclusive;
+};
+
+/**
+ * Retreives the bill total.
+ * @returns {number}
+ */
+export const useBillTotal = () => {
+  const subtotal = useBillSubtotal();
+  const totalTaxAmount = useBillTotalTaxAmount();
+  const isExclusiveTax = useIsBillTaxExclusive();
+
+  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
+    subtotal,
+  );
 };
