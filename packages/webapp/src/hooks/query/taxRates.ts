@@ -59,6 +59,8 @@ export function useEditTaxRate(props) {
       onSuccess: (res, id) => {
         commonInvalidateQueries(queryClient);
         queryClient.invalidateQueries([QUERY_TYPES.TAX_RATES, id]);
+        queryClient.invalidateQueries(QUERY_TYPES.ITEM);
+        queryClient.invalidateQueries(QUERY_TYPES.ITEMS);
       },
       ...props,
     },

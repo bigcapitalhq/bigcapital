@@ -115,6 +115,7 @@ export class EditTaxRateService {
       // Triggers `onTaxRateEdited` event.
       await this.eventPublisher.emitAsync(events.taxRates.onEdited, {
         editTaxRateDTO,
+        oldTaxRate,
         taxRate,
         tenantId,
         trx,
