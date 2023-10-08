@@ -55,6 +55,18 @@ export class CreateItem {
         itemDTO.inventoryAccountId
       );
     }
+    if (itemDTO.purchaseTaxRateId) {
+      await this.validators.validatePurchaseTaxRateExistance(
+        tenantId,
+        itemDTO.purchaseTaxRateId
+      );
+    }
+    if (itemDTO.sellTaxRateId) {
+      await this.validators.validateSellTaxRateExistance(
+        tenantId,
+        itemDTO.sellTaxRateId
+      );
+    }
   }
 
   /**

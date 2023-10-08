@@ -22,6 +22,9 @@ export interface IItem {
   sellDescription: string;
   purchaseDescription: string;
 
+  sellTaxRateId: number;
+  purchaseTaxRateId: number;
+
   quantityOnHand: number;
 
   note: string;
@@ -53,6 +56,9 @@ export interface IItemDTO {
 
   sellDescription: string;
   purchaseDescription: string;
+
+  sellTaxRateId: number;
+  purchaseTaxRateId: number;
 
   quantityOnHand: number;
 

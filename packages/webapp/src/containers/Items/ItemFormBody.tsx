@@ -29,14 +29,16 @@ import {
   costPriceFieldShouldUpdate,
   costAccountFieldShouldUpdate,
   purchaseDescFieldShouldUpdate,
+  taxRateFieldShouldUpdate,
 } from './utils';
 import { compose, inputIntent } from '@/utils';
+import { TaxRatesSelect } from '@/components/TaxRates/TaxRatesSelect';
 
 /**
  * Item form body.
  */
 function ItemFormBody({ organization: { base_currency } }) {
-  const { accounts } = useItemFormContext();
+  const { accounts, taxRates } = useItemFormContext();
   const { values } = useFormikContext();
 
   return (
@@ -111,7 +113,20 @@ function ItemFormBody({ organization: { base_currency } }) {
               filterByParentTypes={[ACCOUNT_PARENT_TYPE.INCOME]}
               fill={true}
               allowCreate={true}
-              fastField={true}  
+              fastField={true}
+            />
+          </FFormGroup>
+
+          {/*------------- Sell Tax Rate ------------- */}
+          <FFormGroup
+            name={'sell_tax_rate_id'}
+            label={'Tax Rate'}
+            inline={true}
+          >
+            <TaxRatesSelect
+              name={'sell_tax_rate_id'}
+              items={taxRates}
+              allowCreate
             />
           </FFormGroup>
 
@@ -210,6 +225,24 @@ function ItemFormBody({ organization: { base_currency } }) {
               disabled={!values.purchasable}
               purchasable={values.purchasable}
               shouldUpdate={costAccountFieldShouldUpdate}
+            />
+          </FFormGroup>
+
+          {/*------------- Purchase Tax Rate ------------- */}
+          <FFormGroup
+            name={'purchase_tax_rate_id'}
+            label={'Tax Rate'}
+            inline={true}
+            fastField={true}
+            shouldUpdateDeps={{ taxRates }}
+            shouldUpdate={taxRateFieldShouldUpdate}
+          >
+            <TaxRatesSelect
+              name={'purchase_tax_rate_id'}
+              items={taxRates}
+              allowCreate={true}
+              fastField={true}
+              shouldUpdateDeps={{ taxRates }}
             />
           </FFormGroup>
 

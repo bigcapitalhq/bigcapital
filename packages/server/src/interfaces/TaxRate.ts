@@ -36,6 +36,7 @@ export interface ITaxRateCreatedPayload {
 }
 
 export interface ITaxRateEditingPayload {
+  oldTaxRate: ITaxRate;
   editTaxRateDTO: IEditTaxRateDTO;
   tenantId: number;
   trx: Knex.Transaction;

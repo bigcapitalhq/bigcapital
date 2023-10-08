@@ -83,6 +83,7 @@ import { SaleInvoiceTaxRateValidateSubscriber } from '@/services/TaxRates/subscr
 import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteInvoiceTaxTransactionsSubscriber';
 import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
+import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -197,5 +198,7 @@ export const susbcribers = () => {
     // Tax Rates - Bills
     BillTaxRateValidateSubscriber,
     WriteBillTaxTransactionsSubscriber,
+
+    SyncItemTaxRateOnEditTaxSubscriber
   ];
 };

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import * as R from 'ramda';
 import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';
 import { useItem } from '@/hooks/query';
@@ -116,19 +116,20 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
           ? item.purchase_description
           : item.sell_description;
 
+      // Detarmines whether the landed cost checkbox should be disabled.
+      const landedCostDisabled = isLandedCostDisabled(item);
+
       const taxRateId =
         itemType === ITEM_TYPE.PURCHASABLE
           ? item.purchase_tax_rate_id
           : item.sell_tax_rate_id;
-
-      // Detarmines whether the landed cost checkbox should be disabled.
-      const landedCostDisabled = isLandedCostDisabled(item);
 
       // The new row.
       const newRow = {
         rate: price,
         description,
         quantity: 1,
+        tax_rate_id: taxRateId,
         ...(landedCost
           ? {
               landed_cost: false,
@@ -164,13 +165,21 @@ export const composeRowsOnEditCell = R.curry(
 /**
  * Compose table rows when insert a new row to table rows.
  */
-export const composeRowsOnNewRow = R.curry((rowIndex, newRow, rows) => {
-  return compose(
-    orderingLinesIndexes,
-    updateItemsEntriesTotal,
-    updateTableRow(rowIndex, newRow),
-  )(rows);
-});
+export const useComposeRowsOnNewRow = () => {
+  const { taxRates, isInclusiveTax } = useItemEntriesTableContext();
+
+  return React.useMemo(() => {
+    return R.curry((rowIndex, newRow, rows) => {
+      return compose(
+        assignEntriesTaxAmount(isInclusiveTax),
+        assignEntriesTaxRate(taxRates),
+        orderingLinesIndexes,
+        updateItemsEntriesTotal,
+        updateTableRow(rowIndex, newRow),
+      )(rows);
+    });
+  }, [isInclusiveTax, taxRates]);
+};
 
 /**
  * Associate tax rate to entries.

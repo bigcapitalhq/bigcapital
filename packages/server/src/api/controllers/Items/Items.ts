@@ -149,6 +149,11 @@ export default class ItemsController extends BaseController {
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('sell_tax_rate_id').optional({ nullable: true }).isInt().toInt(),
+      check('purchase_tax_rate_id')
+        .optional({ nullable: true })
+        .isInt()
+        .toInt(),
       check('category_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
@@ -504,6 +509,28 @@ export default class ItemsController extends BaseController {
               code: 370,
               message:
                 'Could not delete item that has associated transactions.',
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'PURCHASE_TAX_RATE_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'PURCHASE_TAX_RATE_NOT_FOUND',
+              message: 'Purchase tax rate has not found.',
+              code: 410,
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'SELL_TAX_RATE_NOT_FOUND') {
+        return res.status(400).send({
+          errors: [
+            {
+              type: 'SELL_TAX_RATE_NOT_FOUND',
+              message: 'Sell tax rate is not found.',
+              code: 420,
             },
           ],
         });

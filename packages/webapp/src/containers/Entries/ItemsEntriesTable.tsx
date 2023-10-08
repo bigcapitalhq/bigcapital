@@ -8,9 +8,9 @@ import { DataTableEditable } from '@/components';
 import { useEditableItemsEntriesColumns } from './components';
 import {
   useFetchItemRow,
-  composeRowsOnNewRow,
   useComposeRowsOnEditTableCell,
   useComposeRowsOnRemoveTableRow,
+  useComposeRowsOnNewRow,
 } from './utils';
 import {
   ItemEntriesTableProvider,
@@ -61,6 +61,7 @@ function ItemEntriesTableRoot() {
     currencyCode,
     landedCost,
     taxRates,
+    itemType,
   } = useItemEntriesTableContext();
 
   // Editiable items entries columns.
@@ -68,11 +69,12 @@ function ItemEntriesTableRoot() {
 
   const composeRowsOnEditCell = useComposeRowsOnEditTableCell();
   const composeRowsOnDeleteRow = useComposeRowsOnRemoveTableRow();
+  const composeRowsOnNewRow = useComposeRowsOnNewRow();
 
   // Handle the fetch item row details.
   const { setItemRow, cellsLoading, isItemFetching } = useFetchItemRow({
     landedCost,
-    itemType: null,
+    itemType,
     notifyNewRow: (newRow, rowIndex) => {
       // Update the rate, description and quantity data of the row.
       const newRows = composeRowsOnNewRow(rowIndex, newRow, localValue);

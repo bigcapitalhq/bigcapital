@@ -65,6 +65,7 @@ export default class Item extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const WarehouseTransferEntry = require('models/WarehouseTransferEntry');
     const InventoryAdjustmentEntry = require('models/InventoryAdjustmentEntry');
+    const TaxRate = require('models/TaxRate');
 
     return {
       /**
@@ -178,11 +179,35 @@ export default class Item extends mixin(TenantModel, [
           to: 'media.id',
         },
       },
+
+      /**
+       * Item may has sell tax rate.
+       */
+      sellTaxRate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: TaxRate.default,
+        join: {
+          from: 'items.sellTaxRateId',
+          to: 'tax_rates.id',
+        },
+      },
+
+      /**
+       * Item may has purchase tax rate.
+       */
+      purchaseTaxRate: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: TaxRate.default,
+        join: {
+          from: 'items.purchaseTaxRateId',
+          to: 'tax_rates.id',
+        },
+      },
     };
   }
 
   /**
-   * 
+   *
    */
   static get secureDeleteRelations() {
     return [
