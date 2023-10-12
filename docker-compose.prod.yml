@@ -27,14 +27,19 @@ services:
 
   webapp:
     container_name: bigcapital-webapp
-    image: ghcr.io/bigcapitalhq/webapp:latest
+    build:
+      context: ./
+      dockerfile: packages/webapp/Dockerfile
     deploy:
       restart_policy:
         condition: unless-stopped
 
   server:
     container_name: bigcapital-server
-    image: ghcr.io/bigcapitalhq/server:latest
+    # image: ghcr.io/bigcapitalhq/server:latest
+    build:
+      context: ./
+      dockerfile: packages/server/Dockerfile
     links:
       - mysql
       - mongo
