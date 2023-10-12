@@ -419,6 +419,7 @@
   "customer.field.status.inactive": "Inactive",
   "customer.field.status.overdue": "Overdue",
   "customer.field.status.unpaid": "Unpaid",
+  "customer.filed.tax_number": "Tax Number",
   "vendor.field.first_name": "First name",
   "vendor.field.last_name": "Last name",
   "vendor.field.display_name": "Display name",
@@ -438,6 +439,7 @@
   "vendor.field.status.inactive": "Inactive",
   "vendor.field.status.overdue": "Overdue",
   "vendor.field.status.unpaid": "Unpaid",
+  "vendor.filed.tax_number": "Tax Number",
   "Invoice write-off": "Invoice write-off",
 
   

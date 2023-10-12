@@ -257,6 +257,13 @@ export default class ContactsController extends BaseController {
         .trim()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
+
+      check('tax_number')
+        .optional({ nullable: true })
+        .isString()
+        .trim()
+        .escape()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
     ];
   }
 
