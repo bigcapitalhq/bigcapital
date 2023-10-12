@@ -6,6 +6,7 @@ export interface IOrganizationSetupDTO {
   fiscalYear: string;
   industry: string;
   timeZone: string;
+  taxNumber: string;
 }
 
 export interface IOrganizationBuildDTO {
@@ -16,6 +17,7 @@ export interface IOrganizationBuildDTO {
   timezone: string;
   fiscalYear: string;
   dateFormat?: string;
+  taxNumber: string;
 }
 
 export interface IOrganizationUpdateDTO {
@@ -25,6 +27,7 @@ export interface IOrganizationUpdateDTO {
   timezone: string;
   fiscalYear: string;
   industry: string;
+  taxNumber: string;
 }
 
 export interface IOrganizationBuildEventPayload {
