@@ -31,7 +31,7 @@ export class GetSaleInvoice {
     tenantId: number,
     saleInvoiceId: number
   ): Promise<ISaleInvoice> {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const { SaleInvoice, Currency } = this.tenancy.models(tenantId);
 
     const saleInvoice = await SaleInvoice.query()
       .findById(saleInvoiceId)
@@ -40,8 +40,18 @@ export class GetSaleInvoice {
       .withGraphFetched('customer')
       .withGraphFetched('branch')
       .withGraphFetched('taxes.taxRate')
+
+    const organization = await Tenant.query()
+      .findById(tenantId)
       .withGraphFetched('attachments')
+      .withGraphFetched('metadata')
       .withGraphFetched('paymentMethods');
+    const foundCurrency = await Currency.query().findOne(
+      'currency_code',
+      organization.metadata.baseCurrency
+    );
+
+    // console.log("foundCurrency", foundCurrency)
 
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);
@@ -49,7 +59,8 @@ export class GetSaleInvoice {
     const transformed = await this.transformer.transform(
       tenantId,
       saleInvoice,
-      new SaleInvoiceTransformer()
+      new SaleInvoiceTransformer(),
+      {baseCurrencySymbol: foundCurrency.currencySign}
     );
     const eventPayload = {
       tenantId,

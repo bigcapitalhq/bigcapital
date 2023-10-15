@@ -24,6 +24,7 @@ import Vendor from './Vendor';
 import ExpenseCategory from './ExpenseCategory';
 import Expense from './Expense';
 import ManualJournal from './ManualJournal';
+import Currency from './Currency';
 
 export {
   SaleEstimate,
@@ -51,5 +52,6 @@ export {
   ManualJournal,
   Customer,
   Vendor,
-  Setting
+  Setting,
+  Currency
 };

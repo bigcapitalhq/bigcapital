@@ -96,6 +96,9 @@ COPY --chown=node:node ./ ./
 RUN apk update
 RUN apk add python3 build-base chromium
 
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 # Set PYHTON env
 ENV PYTHON=/usr/bin/python3
 

@@ -2,6 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
+import { SaleInvoiceEntryTransformer } from './SaleInvoiceEntryTransformer';
 import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 import { DiscountType } from '@/interfaces';
 
@@ -68,8 +69,17 @@ export class SaleInvoiceTransformer extends Transformer {
    * @returns {string}
    */
   protected dueAmountFormatted = (invoice): string => {
+    // const dueAmount = formatNumber(invoice.dueAmount, {
+    //   currencyCode: invoice.currencyCode,
+    // });
+    // console.log('dueAmountFormatted', invoice.dueAmount, dueAmount)
+    // console.log("OPTIONS", this.options)
+
     return formatNumber(invoice.dueAmount, {
-      currencyCode: invoice.currencyCode,
+      // currencyCode: "USD",
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -79,8 +89,10 @@ export class SaleInvoiceTransformer extends Transformer {
    * @returns {string}
    */
   protected paymentAmountFormatted = (invoice): string => {
-    return formatNumber(invoice.paymentAmount, {
-      currencyCode: invoice.currencyCode,
+    return formatNumber(-invoice.paymentAmount, {
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -91,7 +103,9 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected balanceAmountFormatted = (invoice): string => {
     return formatNumber(invoice.balanceAmount, {
-      currencyCode: invoice.currencyCode,
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -114,6 +128,7 @@ export class SaleInvoiceTransformer extends Transformer {
     return formatNumber(invoice.subtotal, {
       currencyCode: this.context.organization.baseCurrency,
       money: false,
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -125,7 +140,9 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected subtotalLocalFormatted = (invoice): string => {
     return formatNumber(invoice.subtotalLocal, {
-      currencyCode: invoice.currencyCode,
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -136,7 +153,9 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected subtotalExludingTaxFormatted = (invoice): string => {
     return formatNumber(invoice.subtotalExludingTax, {
-      currencyCode: invoice.currencyCode,
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -147,7 +166,9 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected taxAmountWithheldFormatted = (invoice): string => {
     return formatNumber(invoice.taxAmountWithheld, {
-      currencyCode: invoice.currencyCode,
+      currencyCode: this.context.organization.baseCurrency,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -205,6 +226,8 @@ export class SaleInvoiceTransformer extends Transformer {
   protected totalFormatted = (invoice): string => {
     return formatNumber(invoice.total, {
       currencyCode: invoice.currencyCode,
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 
@@ -216,7 +239,8 @@ export class SaleInvoiceTransformer extends Transformer {
   protected totalLocalFormatted = (invoice): string => {
     return formatNumber(invoice.totalLocal, {
       currencyCode: this.context.organization.baseCurrency,
-    });
+      money: false, 
+      symbol: this.options?.baseCurrencySymbol ?? ""    });
   };
 
   /**
@@ -239,6 +263,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected entries = (invoice) => {
     return this.item(invoice.entries, new ItemEntryTransformer(), {
       currencyCode: invoice.currencyCode,
+      baseCurrencySymbol: this.options?.baseCurrencySymbol ?? ""
     });
   };
 

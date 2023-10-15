@@ -167,6 +167,7 @@
   "Opening Balance": "Opening balance",
   "Total {{accountName}}": "Total {{accountName}}",
   "invoice.paper.invoice": "Invoice",
+  "invoice.paper.tax_invoice": "Tax Invoice",
   "invoice.paper.invoice_amount": "Invoice amount",
   "invoice.paper.due_amount": "Due amount",
   "invoice.paper.billed_to": "Billed to",
@@ -179,6 +180,9 @@
   "invoice.paper.subtotal": "Subtotal", 
   "invoice.paper.payment_amount": "Payment Amount",
   "invoice.paper.balance_due": "Balance Due",
+  "invoice.paper.sub_total": "Sub Total",
+  "invoice.paper.tax_number": "ABN",
+  "invoice.paper.tax": "Total GST",
 
   "item_entry.paper.item_name": "Item name",
   "item_entry.paper.rate": "Rate",

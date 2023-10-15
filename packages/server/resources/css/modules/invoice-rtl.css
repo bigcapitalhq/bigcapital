@@ -412,8 +412,30 @@ html[lang^=en] body {
   justify-content: space-between;
   margin: 0 0 30px;
 }
-.invoice__header .organization .title {
-  margin: 0 0 4px;
+.invoice__header .organization {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+.invoice__header .organization .vertical-bar {
+  height: 50px; /* Adjust to desired height */
+  width: 1px; /* Adjust to desired width */
+  background-color: black; /* Adjust to desired color */
+}
+.invoice__header .organization .stack {
+  display: flex;
+  flex-direction: column;
+}
+.invoice__header .organization .stack .title {
+  margin: 0;
+}
+.invoice__header .organization .stack .email {
+  font-size: 10px;
+  margin: 0;
+}
+.invoice__header .organization .stack .tax-number {
+  font-size: 10px;
+  margin: 0;
 }
 .invoice__header .organization .invoiceNo {
   font-size: 12px;
@@ -437,6 +459,16 @@ html[lang^=en] body {
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
+}
+.invoice__meta-item .display_name {
+  display: flex;
+  flex-direction: column;
+}
+.invoice__meta-item .display_name .under {
+  font-size: 9px;
+}
+.invoice__meta-item .display_name .value {
+  color: #000;
 }
 .invoice__meta-item .value {
   color: #000;
@@ -519,8 +551,14 @@ html[lang^=en] body {
 .invoice__table-total table tbody tr:first-child td {
   border-top: 0;
 }
+.invoice__table-total table tbody tr.tax td {
+  border-top: 3px solid #666;
+}
+.invoice__table-total table tbody tr.total td {
+  font-weight: bold;
+}
 .invoice__table-total table tbody tr.payment-amount td:last-child {
-  color: red;
+  color: #666;
 }
 .invoice__table-total table tbody tr.blanace-due td {
   border-top: 3px double #666;

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
-import { FormGroup, ControlGroup, Position, Classes } from '@blueprintjs/core';
+import { FormGroup, ControlGroup, Position, Classes, InputGroup } from '@blueprintjs/core';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { Features } from '@/constants';
 import {
@@ -24,6 +24,7 @@ import {
 } from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
+import { inputIntent } from '@/utils';
 
 /**
  * Vendor Finaniceal Panel Tab.
@@ -38,6 +39,20 @@ export default function VendorFinanicalPanelTab() {
     <div className={'tab-panel--financial'}>
       <Row>
         <Col xs={6}>
+          {/*-------------- Tax number --------------*/}
+          <FastField name={'tax_number'}>
+            {({ field, meta: { error, touched } }) => (
+              <FormGroup
+                intent={inputIntent({ error, touched })}
+                helperText={<ErrorMessage name={'tax_number'} />}
+                className={'form-group--tax_number'}
+                label={<T id={'tax_number'} />}
+                inline={true}
+              >
+                <InputGroup {...field} />
+              </FormGroup>
+            )}
+          </FastField>
           {/*------------ Currency  -----------*/}
           <FastField name={'currency_code'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
