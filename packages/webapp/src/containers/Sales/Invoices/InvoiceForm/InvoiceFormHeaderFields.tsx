@@ -23,7 +23,10 @@ import {
   handleDateChange,
 } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import { customerNameFieldShouldUpdate } from './utils';
+import {
+  customerNameFieldShouldUpdate,
+  useInvoiceEntriesOnExchangeRateChange,
+} from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import {
@@ -36,6 +39,7 @@ import {
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
 import { Features } from '@/constants';
+import { useCurrentOrganization } from '@/hooks/state';
 
 /**
  * Invoice form header fields.
@@ -161,8 +165,29 @@ export default function InvoiceFormHeaderFields() {
  * @returns {React.ReactNode}
  */
 function InvoiceFormCustomerSelect() {
-  const { customers } = useInvoiceFormContext();
   const { values, setFieldValue } = useFormikContext();
+  const { customers, setAutoExRateCurrency } = useInvoiceFormContext();
+  const currentComapny = useCurrentOrganization();
+  const composeEntriesOnExChange = useInvoiceEntriesOnExchangeRateChange();
+
+  // Handles the customer item change.
+  const handleItemChange = (customer) => {
+    setAutoExRateCurrency(null);
+
+    // If the customer id has changed change the customer id and currency code.
+    if (values.customer_id !== customer.id) {
+      setFieldValue('customer_id', customer.id);
+      setFieldValue('currency_code', customer?.currency_code);
+    }
+    // If the customer's currency code is the same the base currency.
+    if (customer?.currency_code === currentComapny.base_currency) {
+      setFieldValue('exchange_rate', '1');
+      setFieldValue('entries', composeEntriesOnExChange(values.exchange_rate, 1));
+    } else {
+      // Sets the currency code to fetch auto-exchange rate.
+      setAutoExRateCurrency(customer?.currency_code);
+    }
+  };
 
   return (
     <FFormGroup
@@ -178,10 +203,7 @@ function InvoiceFormCustomerSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
+        onItemChange={handleItemChange}
         allowCreate={true}
         fastField={true}
         shouldUpdate={customerNameFieldShouldUpdate}
