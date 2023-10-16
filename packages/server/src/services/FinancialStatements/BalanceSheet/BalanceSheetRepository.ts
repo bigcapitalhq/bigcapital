@@ -11,6 +11,7 @@ import { transformToMapBy } from 'utils';
 import Ledger from '@/services/Accounting/Ledger';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 @Service()
 export default class BalanceSheetRepository extends R.compose(
@@ -65,7 +66,21 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public readonly PPFromDate: Date;
 
+  /**
+   * Total closing accounts ledger.
+   * @param {Ledger}
+   */
   public totalAccountsLedger: Ledger;
+
+  /**
+   * Total income accounts ledger.
+   */
+  public incomeLedger: Ledger;
+
+  /**
+   * Total expense accounts ledger.
+   */
+  public expensesLedger: Ledger;
 
   /**
    * Transactions group type.
@@ -147,6 +162,9 @@ export default class BalanceSheetRepository extends R.compose(
     await this.initAccounts();
     await this.initAccountsTotalLedger();
 
+    this.initIncomeTotalLedger();
+    this.initExpensesTotalLedger();
+
     // Date periods.
     if (this.query.isDatePeriodsColumnsType()) {
       await this.initTotalDatePeriods();
@@ -181,6 +199,7 @@ export default class BalanceSheetRepository extends R.compose(
 
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
+    this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
   };
 
   // ----------------------------
@@ -295,6 +314,38 @@ export default class BalanceSheetRepository extends R.compose(
   };
 
   // ----------------------------
+  // # Net Income
+  // ----------------------------
+  /**
+   * Initialize the income total ledger.
+   */
+  private initIncomeTotalLedger = (): void => {
+    const incomeAccounts = this.accountsByParentType.get(
+      ACCOUNT_PARENT_TYPE.INCOME
+    );
+    const incomeAccountsIds = incomeAccounts.map((a) => a.id);
+
+    // Inject to the repository.
+    this.incomeLedger = this.totalAccountsLedger.filter(
+      (e) => incomeAccountsIds.indexOf(e.accountId) !== -1
+    );
+  };
+
+  /**
+   * Initialize the expenses total ledger.
+   */
+  private initExpensesTotalLedger = (): void => {
+    const expensesAccounts = this.accountsByParentType.get(
+      ACCOUNT_PARENT_TYPE.EXPENSE
+    );
+    const expensesAccountsIds = expensesAccounts.map((a) => a.id);
+
+    this.expensesLedger = this.totalAccountsLedger.filter(
+      (e) => expensesAccountsIds.indexOf(e.accountId) !== -1
+    );
+  };
+
+  // ----------------------------
   // # Utils
   // ----------------------------
   /**
@@ -309,14 +360,15 @@ export default class BalanceSheetRepository extends R.compose(
 
   /**
    * Closing accounts date periods.
-   * @param openingDate
-   * @param datePeriodsType
+   * @param {Date} fromDate
+   * @param {Date} toDate
+   * @param {string} datePeriodsType
    * @returns
    */
   public accountsDatePeriods = async (
     fromDate: Date,
     toDate: Date,
-    datePeriodsType
+    datePeriodsType: string
   ) => {
     const { AccountTransaction } = this.models;
 
@@ -336,6 +388,7 @@ export default class BalanceSheetRepository extends R.compose(
 
   /**
    * Retrieve the opening balance transactions of the report.
+   * @param {Date|string} openingDate -
    */
   public closingAccountsTotal = async (openingDate: Date | string) => {
     const { AccountTransaction } = this.models;

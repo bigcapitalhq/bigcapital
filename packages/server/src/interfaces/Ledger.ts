@@ -13,12 +13,16 @@ export interface ILedger {
   whereCurrencyCode(currencyCode: string): ILedger;
   whereBranch(branchId: number): ILedger;
   whereItem(itemId: number): ILedger;
+  whereProject(projectId: number): ILedger;
 
   getClosingBalance(): number;
   getForeignClosingBalance(): number;
 
   getContactsIds(): number[];
   getAccountsIds(): number[];
+
+  reverse(): ILedger;
+  isEmpty(): boolean;
 }
 
 export interface ILedgerEntry {

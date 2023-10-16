@@ -24,8 +24,10 @@ import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import BalanceSheetRepository from './BalanceSheetRepository';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetFiltering } from './BalanceSheetFiltering';
+import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
 
 export default class BalanceSheet extends R.compose(
+  BalanceSheetNetIncome,
   BalanceSheetFiltering,
   BalanceSheetDatePeriods,
   BalanceSheetComparsionPreviousPeriod,
@@ -250,6 +252,10 @@ export default class BalanceSheet extends R.compose(
       R.when(
         this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
         this.reportSchemaAccountsNodeComposer
+      )
+      R.when(
+        this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
+        this.schemaNetIncomeNodeCompose
       )
     )(schemaNode);
   };

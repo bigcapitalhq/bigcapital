@@ -9,6 +9,7 @@ export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
   AGGREGATE = 'AGGREGATE',
   ACCOUNTS = 'ACCOUNTS',
   ACCOUNT = 'ACCOUNT',
+  NET_INCOME = 'NET_INCOME',
 }
 
 export enum BALANCE_SHEET_NODE_TYPE {
@@ -33,6 +34,7 @@ export enum BALANCE_SHEET_SCHEMA_NODE_ID {
   LOGN_TERM_LIABILITY = 'LOGN_TERM_LIABILITY',
   NON_CURRENT_LIABILITY = 'NON_CURRENT_LIABILITY',
   EQUITY = 'EQUITY',
+  NET_INCOME = 'NET_INCOME',
 }
 
 // Balance sheet query.
@@ -87,7 +89,6 @@ export interface IBalanceSheetDOO {
   meta: IBalanceSheetMeta;
 }
 
-
 export interface IBalanceSheetCommonNode {
   total: IBalanceSheetTotal;
   horizontalTotals?: IBalanceSheetTotal[];
@@ -108,7 +109,11 @@ export interface IBalanceSheetAggregateNode extends IBalanceSheetCommonNode {
   id: string;
   name: string;
   nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE;
-  children?: (IBalanceSheetAggregateNode | IBalanceSheetAccountNode)[];
+  children?: (
+    | IBalanceSheetAggregateNode
+    | IBalanceSheetAccountNode
+    | IBalanceSheetNetIncomeNode
+  )[];
 }
 
 export interface IBalanceSheetTotal {
@@ -126,6 +131,12 @@ export interface IBalanceSheetAccountNode extends IBalanceSheetCommonNode {
   parentAccountId?: number;
   nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNT;
   children?: IBalanceSheetAccountNode[];
+}
+
+export interface IBalanceSheetNetIncomeNode extends IBalanceSheetCommonNode {
+  id: number;
+  name: string;
+  nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME;
 }
 
 export type IBalanceSheetDataNode = IBalanceSheetAggregateNode;
@@ -150,9 +161,16 @@ export interface IBalanceSheetSchemaAccountNode {
   accountsTypes: string[];
 }
 
+export interface IBalanceSheetSchemaNetIncomeNode {
+  id: string;
+  name: string;
+  type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
+}
+
 export type IBalanceSheetSchemaNode =
   | IBalanceSheetSchemaAccountNode
-  | IBalanceSheetSchemaAggregateNode;
+  | IBalanceSheetSchemaAggregateNode
+  | IBalanceSheetSchemaNetIncomeNode;
 
 export interface IBalanceSheetDatePeriods {
   assocAccountNodeDatePeriods(node): any;
