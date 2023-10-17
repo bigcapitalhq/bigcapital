@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import {
+  IAccount,
   IAccountTransactionsGroupBy,
   IBalanceSheetQuery,
   ILedger,
@@ -138,6 +139,20 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public PPPeriodsOpeningAccountLedger: ILedger;
 
+  // -----------------------
+  // # Net Income
+  // -----------------------
+  public incomeAccounts: IAccount[];
+  public incomeAccountsIds: number[];
+
+  public expenseAccounts: IAccount[];
+  public expenseAccountsIds: number[];
+
+  public incomePeriodsAccountsLedger: ILedger;
+  public incomePeriodsOpeningAccountsLedger: ILedger;
+  public expensesPeriodsAccountsLedger: ILedger;
+  public expensesOpeningAccountLedger: ILedger;
+
   /**
    * Constructor method.
    * @param {number} tenantId
@@ -161,6 +176,10 @@ export default class BalanceSheetRepository extends R.compose(
   public asyncInitialize = async () => {
     await this.initAccounts();
     await this.initAccountsTotalLedger();
+
+    // Net Income
+    this.initIncomeAccounts();
+    this.initExpenseAccounts();
 
     this.initIncomeTotalLedger();
     this.initExpensesTotalLedger();
@@ -188,6 +207,10 @@ export default class BalanceSheetRepository extends R.compose(
       this.query.isDatePeriodsColumnsType()
     ) {
       await this.initPeriodsPreviousPeriod();
+    }
+
+    if (this.query.isDatePeriodsColumnsType()) {
+      this.initNetIncomeDatePeriods();
     }
   };
 
@@ -317,17 +340,38 @@ export default class BalanceSheetRepository extends R.compose(
   // # Net Income
   // ----------------------------
   /**
-   * Initialize the income total ledger.
+   * Initialize income accounts.
    */
-  private initIncomeTotalLedger = (): void => {
+  private initIncomeAccounts = () => {
     const incomeAccounts = this.accountsByParentType.get(
       ACCOUNT_PARENT_TYPE.INCOME
     );
     const incomeAccountsIds = incomeAccounts.map((a) => a.id);
 
+    this.incomeAccounts = incomeAccounts;
+    this.incomeAccountsIds = incomeAccountsIds;
+  };
+
+  /**
+   * Initialize expense accounts.
+   */
+  private initExpenseAccounts = () => {
+    const expensesAccounts = this.accountsByParentType.get(
+      ACCOUNT_PARENT_TYPE.EXPENSE
+    );
+    const expensesAccountsIds = expensesAccounts.map((a) => a.id);
+
+    this.expenseAccounts = expensesAccounts;
+    this.expenseAccountsIds = expensesAccountsIds;
+  };
+
+  /**
+   * Initialize the income total ledger.
+   */
+  private initIncomeTotalLedger = (): void => {
     // Inject to the repository.
-    this.incomeLedger = this.totalAccountsLedger.filter(
-      (e) => incomeAccountsIds.indexOf(e.accountId) !== -1
+    this.incomeLedger = this.totalAccountsLedger.whereAccountsIds(
+      this.incomeAccountsIds
     );
   };
 
@@ -335,14 +379,28 @@ export default class BalanceSheetRepository extends R.compose(
    * Initialize the expenses total ledger.
    */
   private initExpensesTotalLedger = (): void => {
-    const expensesAccounts = this.accountsByParentType.get(
-      ACCOUNT_PARENT_TYPE.EXPENSE
+    this.expensesLedger = this.totalAccountsLedger.whereAccountsIds(
+      this.expenseAccountsIds
     );
-    const expensesAccountsIds = expensesAccounts.map((a) => a.id);
+  };
 
-    this.expensesLedger = this.totalAccountsLedger.filter(
-      (e) => expensesAccountsIds.indexOf(e.accountId) !== -1
-    );
+  /**
+   * Initialize the net income date periods.
+   */
+  public initNetIncomeDatePeriods = () => {
+    this.incomePeriodsAccountsLedger =
+      this.periodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+
+    this.incomePeriodsOpeningAccountsLedger =
+      this.periodsOpeningAccountLedger.whereAccountsIds(this.incomeAccountsIds);
+
+    this.expensesPeriodsAccountsLedger =
+      this.periodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+
+    this.expensesOpeningAccountLedger =
+      this.periodsOpeningAccountLedger.whereAccountsIds(
+        this.expenseAccountsIds
+      );
   };
 
   // ----------------------------

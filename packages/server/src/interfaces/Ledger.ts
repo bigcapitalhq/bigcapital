@@ -7,6 +7,7 @@ export interface ILedger {
   filter(cb: (entry: ILedgerEntry) => boolean): ILedger;
 
   whereAccountId(accountId: number): ILedger;
+  whereAccountsIds(accountsIds: number[]): ILedger;
   whereContactId(contactId: number): ILedger;
   whereFromDate(fromDate: Date | string): ILedger;
   whereToDate(toDate: Date | string): ILedger;

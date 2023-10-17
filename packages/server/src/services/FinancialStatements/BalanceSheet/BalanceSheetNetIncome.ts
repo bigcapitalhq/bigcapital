@@ -3,8 +3,8 @@ import { sumBy, isEmpty } from 'lodash';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetAccountNode,
-  IBalanceSheetAggregateNode,
-  IBalanceSheetSchemaAggregateNode,
+  IBalanceSheetNetIncomeNode,
+  IBalanceSheetSchemaNetIncomeNode,
   IBalanceSheetTotalPeriod,
 } from '@/interfaces';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
@@ -12,7 +12,6 @@ import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPr
 import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
 import BalanceSheetRepository from './BalanceSheetRepository';
-import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 export const BalanceSheetNetIncome = (Base: any) =>
   class extends R.compose(
@@ -56,12 +55,12 @@ export const BalanceSheetNetIncome = (Base: any) =>
 
     /**
      * Mappes the aggregate schema node type.
-     * @param  {IBalanceSheetSchemaAggregateNode} node - Schema node.
+     * @param  {IBalanceSheetSchemaNetIncomeNode} node - Schema node.
      * @return {IBalanceSheetAggregateNode}
      */
     protected schemaNetIncomeNodeMapper = (
-      node: IBalanceSheetSchemaAggregateNode
-    ): IBalanceSheetAggregateNode => {
+      node: IBalanceSheetSchemaNetIncomeNode
+    ): IBalanceSheetNetIncomeNode => {
       const total = this.getNetIncomeTotal();
 
       return {
@@ -75,12 +74,12 @@ export const BalanceSheetNetIncome = (Base: any) =>
 
     /**
      * Mapps the net income shcema node to report node.
-     * @param {IBalanceSheetSchemaAggregateNode} node
-     * @returns
+     * @param {IBalanceSheetSchemaNetIncomeNode} node
+     * @returns {IBalanceSheetNetIncomeNode}
      */
     protected schemaNetIncomeNodeCompose = (
-      node: IBalanceSheetSchemaAggregateNode
-    ) => {
+      node: IBalanceSheetSchemaNetIncomeNode
+    ): IBalanceSheetNetIncomeNode => {
       return R.compose(
         R.when(
           this.query.isPreviousYearActive,
@@ -120,8 +119,8 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @returns {IBalanceSheetAccountNode}
      */
     protected previousYearNetIncomeNodeCompose = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+      node: IBalanceSheetNetIncomeNode
+    ): IBalanceSheetNetIncomeNode => {
       return R.compose(
         R.when(
           this.query.isPreviousYearPercentageActive,
@@ -142,15 +141,14 @@ export const BalanceSheetNetIncome = (Base: any) =>
     // -------------------------------
     // # Previous Period (PP)
     // -------------------------------
-
     /**
      * Previous period account node composer.
-     * @param   {IBalanceSheetAccountNode} node
-     * @returns {IBalanceSheetAccountNode}
+     * @param {IBalanceSheetNetIncomeNode} node
+     * @returns {IBalanceSheetNetIncomeNode}
      */
     protected previousPeriodNetIncomeNodeCompose = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+      node: IBalanceSheetNetIncomeNode
+    ): IBalanceSheetNetIncomeNode => {
       return R.compose(
         // R.when(
         //   this.isNodeHasHorizTotals,
@@ -175,51 +173,76 @@ export const BalanceSheetNetIncome = (Base: any) =>
     // # Date Periods
     // --------------------------------
     /**
-     * Retrieve the given net income date period total.
-     * @param {number} accountId
-     * @param {Date} toDate
+     * Retreives total income of the given date period.
+     * @param {number} accountId -
+     * @param {Date} toDate -
      * @returns {number}
      */
-    private getNetIncomeDatePeriodTotal = (
-      accountId: number,
-      toDate: Date
-    ): number => {
-      const periodTotalBetween = this.repository.periodsAccountsLedger
-        .whereAccountId(accountId)
+    private getIncomeDatePeriodTotal = (toDate: Date): number => {
+      const periodTotalBetween = this.repository.incomePeriodsAccountsLedger
         .whereToDate(toDate)
         .getClosingBalance();
 
-      const periodOpening = this.repository.periodsOpeningAccountLedger
-        .whereAccountId(accountId)
-        .getClosingBalance();
+      const periodOpening =
+        this.repository.incomePeriodsOpeningAccountsLedger.getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
 
     /**
-     *
-     * @param   {IBalanceSheetAccountNode} node
-     * @param   {Date} fromDate
-     * @param   {Date} toDate
-     * @returns {IBalanceSheetAccountNode}
+     * Retrieves total expense of the given date period.
+     * @param {number} accountId -
+     * @param {Date} toDate -
+     * @returns {number}
+     */
+    private getExpensesDatePeriodTotal = (toDate: Date): number => {
+      const periodTotalBetween = this.repository.expensesPeriodsAccountsLedger
+        .whereToDate(toDate)
+        .getClosingBalance();
+
+      const periodOpening =
+        this.repository.expensesOpeningAccountLedger.getClosingBalance();
+
+      return periodOpening + periodTotalBetween;
+    };
+
+    /**
+     * Retrieve the given net income date period total.
+     * @param {number} accountId
+     * @param {Date} toDate
+     * @returns {number}
+     */
+    private getNetIncomeDatePeriodTotal = (toDate: Date): number => {
+      const income = this.getIncomeDatePeriodTotal(toDate);
+      const expense = this.getExpensesDatePeriodTotal(toDate);
+
+      return income - expense;
+    };
+
+    /**
+     * Retrieves the net income date period node.
+     * @param {IBalanceSheetNetIncomeNode} node
+     * @param {Date} fromDate
+     * @param {Date} toDate
+     * @returns {IBalanceSheetNetIncomeNode}
      */
     private getNetIncomeDatePeriodNode = (
-      node: IBalanceSheetAccountNode,
+      node: IBalanceSheetNetIncomeNode,
       fromDate: Date,
       toDate: Date
     ): IBalanceSheetTotalPeriod => {
-      const periodTotal = this.getNetIncomeDatePeriodTotal(node.id, toDate);
+      const periodTotal = this.getNetIncomeDatePeriodTotal(toDate);
 
       return this.getDatePeriodTotalMeta(periodTotal, fromDate, toDate);
     };
 
     /**
      * Retrieve total date periods of the given net income node.
-     * @param   {IBalanceSheetAccountNode} node
-     * @returns {IBalanceSheetAccountNode}
+     * @param {IBalanceSheetNetIncomeNode} node
+     * @returns {IBalanceSheetNetIncomeNode}
      */
     private getNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetAccountNode
+      node: IBalanceSheetNetIncomeNode
     ): IBalanceSheetTotalPeriod[] => {
       return this.getReportNodeDatePeriods(
         node,
@@ -229,12 +252,12 @@ export const BalanceSheetNetIncome = (Base: any) =>
 
     /**
      * Assoc total date periods to net income node.
-     * @param   {IBalanceSheetAccountNode} node
-     * @returns {IBalanceSheetAccountNode}
+     * @param {IBalanceSheetNetIncomeNode} node
+     * @returns {IBalanceSheetNetIncomeNode}
      */
     public assocNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+      node: IBalanceSheetNetIncomeNode
+    ): IBalanceSheetNetIncomeNode => {
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
       return R.assoc('horizontalTotals', datePeriods, node);
