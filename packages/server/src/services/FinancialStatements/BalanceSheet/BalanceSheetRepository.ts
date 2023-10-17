@@ -153,6 +153,22 @@ export default class BalanceSheetRepository extends R.compose(
   public expensesPeriodsAccountsLedger: ILedger;
   public expensesOpeningAccountLedger: ILedger;
 
+  public incomePPAccountsLedger: ILedger;
+  public expensePPAccountsLedger: ILedger;
+
+  public incomePPPeriodsAccountsLedger: ILedger;
+  public incomePPPeriodsOpeningAccountLedger: ILedger;
+  public expensePPPeriodsAccountsLedger: ILedger;
+  public expensePPPeriodsOpeningAccountLedger: ILedger;
+
+  public incomePYTotalAccountsLedger: ILedger;
+  public expensePYTotalAccountsLedger: ILedger;
+
+  public incomePYPeriodsAccountsLedger: ILedger;
+  public incomePYPeriodsOpeningAccountLedger: ILedger;
+  public expensePYPeriodsAccountsLedger: ILedger;
+  public expensePYPeriodsOpeningAccountLedger: ILedger;
+
   /**
    * Constructor method.
    * @param {number} tenantId
@@ -209,8 +225,31 @@ export default class BalanceSheetRepository extends R.compose(
       await this.initPeriodsPreviousPeriod();
     }
 
+    // Date periods
     if (this.query.isDatePeriodsColumnsType()) {
       this.initNetIncomeDatePeriods();
+    }
+    // Previous Year (PY).
+    if (this.query.isPreviousYearActive()) {
+      this.initNetIncomePreviousYear();
+    }
+    // Previous Period (PP).
+    if (this.query.isPreviousPeriodActive()) {
+      this.initNetIncomePreviousPeriod();
+    }
+    // Previous Year (PY) / Date Periods.
+    if (
+      this.query.isPreviousYearActive() &&
+      this.query.isDatePeriodsColumnsType()
+    ) {
+      this.initNetIncomePeriodsPreviewYear();
+    }
+    // Previous Period (PP) / Date Periods.
+    if (
+      this.query.isPreviousPeriodActive() &&
+      this.query.isDatePeriodsColumnsType()
+    ) {
+      this.initNetIncomePeriodsPreviousPeriod();
     }
   };
 
@@ -384,6 +423,9 @@ export default class BalanceSheetRepository extends R.compose(
     );
   };
 
+  // ----------------------------
+  // # Net Income - Date Periods
+  // ----------------------------
   /**
    * Initialize the net income date periods.
    */
@@ -399,6 +441,77 @@ export default class BalanceSheetRepository extends R.compose(
 
     this.expensesOpeningAccountLedger =
       this.periodsOpeningAccountLedger.whereAccountsIds(
+        this.expenseAccountsIds
+      );
+  };
+
+  // ----------------------------
+  // # Net Income - Previous Period
+  // ----------------------------
+  /**
+   * Initialize the total net income PP.
+   */
+  public initNetIncomePreviousPeriod = () => {
+    this.incomePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(
+      this.incomeAccountsIds
+    );
+    this.expensePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(
+      this.expenseAccountsIds
+    );
+  };
+
+  /**
+   * Initialize the net income periods of previous period.
+   */
+  public initNetIncomePeriodsPreviousPeriod = () => {
+    this.incomePPPeriodsAccountsLedger =
+      this.PPPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+
+    this.incomePPPeriodsOpeningAccountLedger =
+      this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.incomeAccountsIds
+      );
+
+    this.expensePPPeriodsAccountsLedger =
+      this.PPPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+
+    this.expensePPPeriodsOpeningAccountLedger =
+      this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.expenseAccountsIds
+      );
+  };
+
+  // ----------------------------
+  // # Net Income - Previous Year
+  // ----------------------------
+  /**
+   * Initialize the net income PY total.
+   */
+  public initNetIncomePreviousYear = () => {
+    this.incomePYTotalAccountsLedger =
+      this.PYTotalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+
+    this.expensePYTotalAccountsLedger =
+      this.PYTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+  };
+
+  /**
+   * Initialize the net income PY periods.
+   */
+  public initNetIncomePeriodsPreviewYear = () => {
+    this.incomePYPeriodsAccountsLedger =
+      this.PYPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+
+    this.incomePYPeriodsOpeningAccountLedger =
+      this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.incomeAccountsIds
+      );
+
+    this.expensePYPeriodsAccountsLedger =
+      this.PYPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+
+    this.expensePYPeriodsOpeningAccountLedger =
+      this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
         this.expenseAccountsIds
       );
   };

@@ -1,14 +1,7 @@
 import * as R from 'ramda';
-import { sumBy, isEmpty } from 'lodash';
 import {
-  BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetAccountNode,
-  IBalanceSheetDataNode,
   IBalanceSheetNetIncomeNode,
-  IBalanceSheetQuery,
-  IBalanceSheetSchemaNetIncomeNode,
   IBalanceSheetTotalPeriod,
-  IFinancialNodeWithPreviousYear,
 } from '@/interfaces';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
@@ -19,7 +12,7 @@ import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetNetIncomePP } from './BalanceSheetNetIncomePP';
 import { BalanceSheetNetIncomePY } from './BalanceSheetNetIncomePY';
 
-export const BalanceSheetNetIncome = (Base: any) =>
+export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
   class extends R.compose(
     BalanceSheetNetIncomePP,
     BalanceSheetNetIncomePY,
@@ -30,79 +23,6 @@ export const BalanceSheetNetIncome = (Base: any) =>
   )(Base) {
     private repository: BalanceSheetRepository;
     private query: BalanceSheetQuery;
-
-    /**
-     * Retrieves the closing balance of income accounts.
-     * @returns {number}
-     */
-    private getIncomeTotal = () => {
-      const closeingBalance = this.repository.incomeLedger.getClosingBalance();
-      return closeingBalance;
-    };
-
-    /**
-     * Retrieves the closing balance of expenses accounts.
-     * @returns {number}
-     */
-    private getExpensesTotal = () => {
-      const closingBalance = this.repository.expensesLedger.getClosingBalance();
-      return closingBalance;
-    };
-
-    /**
-     * Retrieves the total net income.
-     * @returns {number}
-     */
-    protected getNetIncomeTotal = () => {
-      const income = this.getIncomeTotal();
-      const expenses = this.getExpensesTotal();
-
-      return income - expenses;
-    };
-
-    /**
-     * Mappes the aggregate schema node type.
-     * @param  {IBalanceSheetSchemaNetIncomeNode} node - Schema node.
-     * @return {IBalanceSheetAggregateNode}
-     */
-    protected schemaNetIncomeNodeMapper = (
-      node: IBalanceSheetSchemaNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
-      const total = this.getNetIncomeTotal();
-
-      return {
-        name: this.i18n.__(node.name),
-        id: node.id,
-        nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME,
-        total: this.getTotalAmountMeta(total),
-        children: node.children,
-      };
-    };
-
-    /**
-     * Mapps the net income shcema node to report node.
-     * @param {IBalanceSheetSchemaNetIncomeNode} node
-     * @returns {IBalanceSheetNetIncomeNode}
-     */
-    protected schemaNetIncomeNodeCompose = (
-      node: IBalanceSheetSchemaNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
-      return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearNetIncomeNodeCompose
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodNetIncomeNodeCompose
-        ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocNetIncomeDatePeriodsNode
-        ),
-        this.schemaNetIncomeNodeMapper
-      )(node);
-    };
 
     // --------------------------------
     // # Date Periods

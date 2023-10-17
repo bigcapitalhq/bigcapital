@@ -156,13 +156,14 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetCommonNode} node
      * @returns {IBalanceSheetCommonNode}
      */
-    private assocPreviousYearAggregateHorizNode = (
+    public assocPreviousYearAggregateHorizNode = (
       node: IBalanceSheetCommonNode
-    ) => {
+    ): IBalanceSheetCommonNode => {
       const horizontalTotals = R.addIndex(R.map)(
         this.previousYearAggregateHorizNodeComposer(node),
         node.horizontalTotals
-      );
+      ) as IBalanceSheetTotal[];
+
       return R.assoc('horizontalTotals', horizontalTotals, node);
     };
 
@@ -264,6 +265,6 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetCommonNode} node
      * @returns {boolean}
      */
-    private isNodeHasHorizontalTotals = (node: IBalanceSheetCommonNode) =>
+    public isNodeHasHorizontalTotals = (node: IBalanceSheetCommonNode) =>
       !isEmpty(node.horizontalTotals);
   };
