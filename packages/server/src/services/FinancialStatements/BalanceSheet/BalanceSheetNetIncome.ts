@@ -1,14 +1,9 @@
 import * as R from 'ramda';
-import { sumBy, isEmpty } from 'lodash';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetAccountNode,
-  IBalanceSheetDataNode,
   IBalanceSheetNetIncomeNode,
-  IBalanceSheetQuery,
   IBalanceSheetSchemaNetIncomeNode,
   IBalanceSheetTotalPeriod,
-  IFinancialNodeWithPreviousYear,
 } from '@/interfaces';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';

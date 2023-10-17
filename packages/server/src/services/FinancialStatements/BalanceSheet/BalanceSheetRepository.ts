@@ -13,9 +13,11 @@ import Ledger from '@/services/Accounting/Ledger';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 
 @Service()
 export default class BalanceSheetRepository extends R.compose(
+  BalanceSheetRepositoryNetIncome,
   FinancialDatePeriods
 )(class {}) {
   /**
@@ -193,13 +195,6 @@ export default class BalanceSheetRepository extends R.compose(
     await this.initAccounts();
     await this.initAccountsTotalLedger();
 
-    // Net Income
-    this.initIncomeAccounts();
-    this.initExpenseAccounts();
-
-    this.initIncomeTotalLedger();
-    this.initExpensesTotalLedger();
-
     // Date periods.
     if (this.query.isDatePeriodsColumnsType()) {
       await this.initTotalDatePeriods();
@@ -224,33 +219,8 @@ export default class BalanceSheetRepository extends R.compose(
     ) {
       await this.initPeriodsPreviousPeriod();
     }
-
-    // Date periods
-    if (this.query.isDatePeriodsColumnsType()) {
-      this.initNetIncomeDatePeriods();
-    }
-    // Previous Year (PY).
-    if (this.query.isPreviousYearActive()) {
-      this.initNetIncomePreviousYear();
-    }
-    // Previous Period (PP).
-    if (this.query.isPreviousPeriodActive()) {
-      this.initNetIncomePreviousPeriod();
-    }
-    // Previous Year (PY) / Date Periods.
-    if (
-      this.query.isPreviousYearActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
-      this.initNetIncomePeriodsPreviewYear();
-    }
-    // Previous Period (PP) / Date Periods.
-    if (
-      this.query.isPreviousPeriodActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
-      this.initNetIncomePeriodsPreviousPeriod();
-    }
+    // 
+    await this.asyncInitializeNetIncome();
   };
 
   // ----------------------------
@@ -373,147 +343,6 @@ export default class BalanceSheetRepository extends R.compose(
     this.PPPeriodsOpeningAccountLedger = Ledger.fromTransactions(
       periodsOpeningByAccount
     );
-  };
-
-  // ----------------------------
-  // # Net Income
-  // ----------------------------
-  /**
-   * Initialize income accounts.
-   */
-  private initIncomeAccounts = () => {
-    const incomeAccounts = this.accountsByParentType.get(
-      ACCOUNT_PARENT_TYPE.INCOME
-    );
-    const incomeAccountsIds = incomeAccounts.map((a) => a.id);
-
-    this.incomeAccounts = incomeAccounts;
-    this.incomeAccountsIds = incomeAccountsIds;
-  };
-
-  /**
-   * Initialize expense accounts.
-   */
-  private initExpenseAccounts = () => {
-    const expensesAccounts = this.accountsByParentType.get(
-      ACCOUNT_PARENT_TYPE.EXPENSE
-    );
-    const expensesAccountsIds = expensesAccounts.map((a) => a.id);
-
-    this.expenseAccounts = expensesAccounts;
-    this.expenseAccountsIds = expensesAccountsIds;
-  };
-
-  /**
-   * Initialize the income total ledger.
-   */
-  private initIncomeTotalLedger = (): void => {
-    // Inject to the repository.
-    this.incomeLedger = this.totalAccountsLedger.whereAccountsIds(
-      this.incomeAccountsIds
-    );
-  };
-
-  /**
-   * Initialize the expenses total ledger.
-   */
-  private initExpensesTotalLedger = (): void => {
-    this.expensesLedger = this.totalAccountsLedger.whereAccountsIds(
-      this.expenseAccountsIds
-    );
-  };
-
-  // ----------------------------
-  // # Net Income - Date Periods
-  // ----------------------------
-  /**
-   * Initialize the net income date periods.
-   */
-  public initNetIncomeDatePeriods = () => {
-    this.incomePeriodsAccountsLedger =
-      this.periodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
-
-    this.incomePeriodsOpeningAccountsLedger =
-      this.periodsOpeningAccountLedger.whereAccountsIds(this.incomeAccountsIds);
-
-    this.expensesPeriodsAccountsLedger =
-      this.periodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
-
-    this.expensesOpeningAccountLedger =
-      this.periodsOpeningAccountLedger.whereAccountsIds(
-        this.expenseAccountsIds
-      );
-  };
-
-  // ----------------------------
-  // # Net Income - Previous Period
-  // ----------------------------
-  /**
-   * Initialize the total net income PP.
-   */
-  public initNetIncomePreviousPeriod = () => {
-    this.incomePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(
-      this.incomeAccountsIds
-    );
-    this.expensePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(
-      this.expenseAccountsIds
-    );
-  };
-
-  /**
-   * Initialize the net income periods of previous period.
-   */
-  public initNetIncomePeriodsPreviousPeriod = () => {
-    this.incomePPPeriodsAccountsLedger =
-      this.PPPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
-
-    this.incomePPPeriodsOpeningAccountLedger =
-      this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
-        this.incomeAccountsIds
-      );
-
-    this.expensePPPeriodsAccountsLedger =
-      this.PPPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
-
-    this.expensePPPeriodsOpeningAccountLedger =
-      this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
-        this.expenseAccountsIds
-      );
-  };
-
-  // ----------------------------
-  // # Net Income - Previous Year
-  // ----------------------------
-  /**
-   * Initialize the net income PY total.
-   */
-  public initNetIncomePreviousYear = () => {
-    this.incomePYTotalAccountsLedger =
-      this.PYTotalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
-
-    this.expensePYTotalAccountsLedger =
-      this.PYTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
-  };
-
-  /**
-   * Initialize the net income PY periods.
-   */
-  public initNetIncomePeriodsPreviewYear = () => {
-    this.incomePYPeriodsAccountsLedger =
-      this.PYPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
-
-    this.incomePYPeriodsOpeningAccountLedger =
-      this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
-        this.incomeAccountsIds
-      );
-
-    this.expensePYPeriodsAccountsLedger =
-      this.PYPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
-
-    this.expensePYPeriodsOpeningAccountLedger =
-      this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
-        this.expenseAccountsIds
-      );
   };
 
   // ----------------------------
