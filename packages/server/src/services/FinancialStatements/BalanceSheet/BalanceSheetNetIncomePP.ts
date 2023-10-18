@@ -3,16 +3,16 @@ import {
   IBalanceSheetDataNode,
   IBalanceSheetNetIncomeNode,
 } from '@/interfaces';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
 import BalanceSheetRepository from './BalanceSheetRepository';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetNetIncomeDatePeriodsPP } from './BalanceSheetNetIncomeDatePeriodsPP';
 
 export const BalanceSheetNetIncomePP = (Base: any) =>
   class extends R.compose(
-    BalanceSheetComparsionPreviousYear,
+    BalanceSheetNetIncomeDatePeriodsPP,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
     FinancialHorizTotals
@@ -59,7 +59,7 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
       return R.compose(
         R.when(
           this.isNodeHasHorizTotals,
-          this.assocPreivousPeriodAccountHorizNodeComposer
+          this.assocPreviousPeriodNetIncomeHorizNode
         ),
         R.when(
           this.query.isPreviousPeriodPercentageActive,
@@ -72,4 +72,3 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
         this.assocPreviousPeriodNetIncomeNode
       )(node);
     };
-  };

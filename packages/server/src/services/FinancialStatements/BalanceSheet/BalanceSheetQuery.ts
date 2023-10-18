@@ -12,26 +12,31 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
    * @param {IBalanceSheetQuery}
    */
   public readonly query: IBalanceSheetQuery;
+
   /**
    * Previous year to date.
    * @param {Date}
    */
   public readonly PYToDate: Date;
+
   /**
    * Previous year from date.
    * @param {Date}
    */
   public readonly PYFromDate: Date;
+
   /**
    * Previous period to date.
    * @param {Date}
    */
   public readonly PPToDate: Date;
+
   /**
    * Previous period from date.
    * @param {Date}
    */
   public readonly PPFromDate: Date;
+
   /**
    * Constructor method
    * @param {IBalanceSheetQuery} query

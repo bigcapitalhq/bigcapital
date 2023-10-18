@@ -141,36 +141,6 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public PPPeriodsOpeningAccountLedger: ILedger;
 
-  // -----------------------
-  // # Net Income
-  // -----------------------
-  public incomeAccounts: IAccount[];
-  public incomeAccountsIds: number[];
-
-  public expenseAccounts: IAccount[];
-  public expenseAccountsIds: number[];
-
-  public incomePeriodsAccountsLedger: ILedger;
-  public incomePeriodsOpeningAccountsLedger: ILedger;
-  public expensesPeriodsAccountsLedger: ILedger;
-  public expensesOpeningAccountLedger: ILedger;
-
-  public incomePPAccountsLedger: ILedger;
-  public expensePPAccountsLedger: ILedger;
-
-  public incomePPPeriodsAccountsLedger: ILedger;
-  public incomePPPeriodsOpeningAccountLedger: ILedger;
-  public expensePPPeriodsAccountsLedger: ILedger;
-  public expensePPPeriodsOpeningAccountLedger: ILedger;
-
-  public incomePYTotalAccountsLedger: ILedger;
-  public expensePYTotalAccountsLedger: ILedger;
-
-  public incomePYPeriodsAccountsLedger: ILedger;
-  public incomePYPeriodsOpeningAccountLedger: ILedger;
-  public expensePYPeriodsAccountsLedger: ILedger;
-  public expensePYPeriodsOpeningAccountLedger: ILedger;
-
   /**
    * Constructor method.
    * @param {number} tenantId
@@ -219,7 +189,7 @@ export default class BalanceSheetRepository extends R.compose(
     ) {
       await this.initPeriodsPreviousPeriod();
     }
-    // 
+    //
     await this.asyncInitializeNetIncome();
   };
 

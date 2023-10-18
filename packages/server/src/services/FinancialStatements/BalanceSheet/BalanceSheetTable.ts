@@ -151,6 +151,19 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
+   * 
+   * @returns {ITableRow}
+   */
+  private netIncomeNodeTableRowsMapper = (node): ITableRow => {
+    const columns = this.commonColumnsAccessors();
+    const meta = {
+      rowTypes: [IROW_TYPE.NET_INCOME],
+      id: node.id,
+    };
+    return tableRowMapper(node, columns, meta);
+  };
+
+  /**
    * Mappes the given report node to table rows.
    * @param   {IBalanceSheetDataNode} node -
    * @returns {ITableRow}
@@ -168,6 +181,10 @@ export default class BalanceSheetTable extends R.compose(
       [
         this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNT),
         this.accountNodeTableRowsMapper,
+      ],
+      [
+        this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
+        this.netIncomeNodeTableRowsMapper,
       ],
     ])(node);
   };

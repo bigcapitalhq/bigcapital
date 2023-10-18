@@ -9,9 +9,11 @@ import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
 import BalanceSheetRepository from './BalanceSheetRepository';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetNetIncomeDatePeriodsPY } from './BalanceSheetNetIncomeDatePeriodsPY';
 
 export const BalanceSheetNetIncomePY = (Base: any) =>
   class extends R.compose(
+    BalanceSheetNetIncomeDatePeriodsPY,
     BalanceSheetComparsionPreviousYear,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
@@ -66,9 +68,10 @@ export const BalanceSheetNetIncomePY = (Base: any) =>
           this.query.isPreviousYearChangeActive,
           this.assocPreviousYearTotalChangeNode
         ),
+        // Associate the PY to date periods horizontal nodes.
         R.when(
           this.isNodeHasHorizontalTotals,
-          this.assocPreviousYearAggregateHorizNode
+          this.assocPreviousYearNetIncomeHorizNode
         ),
         this.assocPreviousYearNetIncomeNode
       )(node);
