@@ -13,8 +13,22 @@ import { allPassedConditionsPass, flatToNestedArray } from 'utils';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 
 export default class TrialBalanceSheet extends FinancialSheet {
+  /**
+   * Trial balance sheet query.
+   * @param {ITrialBalanceSheetQuery} query
+   */
   private query: ITrialBalanceSheetQuery;
+
+  /**
+   * Trial balance sheet repository.
+   * @param {TrialBalanceSheetRepository}
+   */
   private repository: TrialBalanceSheetRepository;
+
+  /**
+   * Organization base currency.
+   * @param {string}
+   */
   private baseCurrency: string;
 
   /**
@@ -89,6 +103,9 @@ export default class TrialBalanceSheet extends FinancialSheet {
       id: account.id,
       parentAccountId: account.parentAccountId,
       name: account.name,
+      formattedName: account.code
+        ? `${account.name} - ${account.code}`
+        : `${account.name}`,
       code: account.code,
       accountNormal: account.accountNormal,
 

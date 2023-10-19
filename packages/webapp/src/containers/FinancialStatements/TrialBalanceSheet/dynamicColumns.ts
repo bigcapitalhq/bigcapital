@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
@@ -12,7 +13,7 @@ const accountNameAccessor = R.curry((data, column) => {
     id: column.key,
     accessor,
     className: column.key,
-    width: getColumnWidth(data, accessor, { minWidth: 120 }),
+    width: 350,
   };
 });
 

@@ -46,14 +46,14 @@ export class TrialBalanceSheetTable extends R.compose(
     this.query = query;
     this.i18n = i18n;
   }
-
+  
   /**
    * Retrieve the common columns for all report nodes.
    * @param {ITableColumnAccessor[]}
    */
   private commonColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'account', accessor: 'name' },
+      { key: 'account', accessor: 'formattedName' },
       { key: 'debit', accessor: 'formattedDebit' },
       { key: 'credit', accessor: 'formattedCredit' },
       { key: 'total', accessor: 'formattedBalance' },
