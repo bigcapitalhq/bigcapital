@@ -15,7 +15,6 @@ import {
 } from './components';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
-
 import { compose } from '@/utils';
 
 /**
