@@ -16,6 +16,8 @@ export interface ILedger {
 
   getClosingBalance(): number;
   getForeignClosingBalance(): number;
+  getClosingDebit(): number;
+  getClosingCredit(): number;
 
   getContactsIds(): number[];
   getAccountsIds(): number[];

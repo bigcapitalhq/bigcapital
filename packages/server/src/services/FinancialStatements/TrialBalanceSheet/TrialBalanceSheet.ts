@@ -10,13 +10,12 @@ import {
 } from '@/interfaces';
 import FinancialSheet from '../FinancialSheet';
 import { allPassedConditionsPass, flatToNestedArray } from 'utils';
+import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 
 export default class TrialBalanceSheet extends FinancialSheet {
-  tenantId: number;
-  query: ITrialBalanceSheetQuery;
-  accounts: IAccount & { type: IAccountType }[];
-  journalFinancial: any;
-  baseCurrency: string;
+  private query: ITrialBalanceSheetQuery;
+  private repository: TrialBalanceSheetRepository;
+  private baseCurrency: string;
 
   /**
    * Constructor method.
@@ -28,18 +27,50 @@ export default class TrialBalanceSheet extends FinancialSheet {
   constructor(
     tenantId: number,
     query: ITrialBalanceSheetQuery,
-    accounts: IAccount & { type: IAccountType }[],
-    journalFinancial: any,
+    repository: TrialBalanceSheetRepository,
     baseCurrency: string
   ) {
     super();
 
     this.tenantId = tenantId;
     this.query = query;
-    this.accounts = accounts;
-    this.journalFinancial = journalFinancial;
+    this.repository = repository;
     this.numberFormat = this.query.numberFormat;
     this.baseCurrency = baseCurrency;
+  }
+
+  /**
+   * Retrieves the closing credit of the given account.
+   * @param {number} accountId
+   * @returns {number}
+   */
+  public getClosingAccountCredit(accountId: number) {
+    return this.repository.totalAccountsLedger
+      .whereAccountId(accountId)
+      .getClosingCredit();
+  }
+
+  /**
+   * Retrieves the closing debit of the given account.
+   * @param {number} accountId
+   * @returns {number}
+   */
+  public getClosingAccountDebit(accountId: number) {
+    return this.repository.totalAccountsLedger
+      .whereAccountId(accountId)
+      .getClosingDebit();
+  }
+
+  /**
+   * Retrieves the closing total of the given account.
+   * @param {number} accountId
+   * @returns {number}
+   */
+  public getClosingAccountTotal(accountId: number) {
+    const credit = this.getClosingAccountCredit(accountId);
+    const debit = this.getClosingAccountDebit(accountId);
+
+    return debit - credit;
   }
 
   /**
@@ -50,7 +81,9 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private accountTransformer = (
     account: IAccount & { type: IAccountType }
   ): ITrialBalanceAccount => {
-    const trial = this.journalFinancial.getTrialBalanceWithDepands(account.id);
+    const debit = this.getClosingAccountDebit(account.id);
+    const credit = this.getClosingAccountCredit(account.id);
+    const balance = this.getClosingAccountTotal(account.id);
 
     return {
       id: account.id,
@@ -59,14 +92,14 @@ export default class TrialBalanceSheet extends FinancialSheet {
       code: account.code,
       accountNormal: account.accountNormal,
 
-      credit: trial.credit,
-      debit: trial.debit,
-      balance: trial.balance,
+      credit,
+      debit,
+      balance,
       currencyCode: this.baseCurrency,
 
-      formattedCredit: this.formatNumber(trial.credit),
-      formattedDebit: this.formatNumber(trial.debit),
-      formattedBalance: this.formatNumber(trial.balance),
+      formattedCredit: this.formatNumber(credit),
+      formattedDebit: this.formatNumber(debit),
+      formattedBalance: this.formatNumber(balance),
     };
   };
 
@@ -117,10 +150,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
   private filterNoneTransactions = (
     accountNode: ITrialBalanceAccount
   ): boolean => {
-    const entries = this.journalFinancial.getAccountEntriesWithDepents(
-      accountNode.id
-    );
-    return entries.length > 0;
+    return false === this.repository.totalAccountsLedger.isEmpty();
   };
 
   /**
@@ -200,11 +230,11 @@ export default class TrialBalanceSheet extends FinancialSheet {
    */
   public reportData(): ITrialBalanceSheetData {
     // Don't return noting if the journal has no transactions.
-    if (this.journalFinancial.isEmpty()) {
+    if (this.repository.totalAccountsLedger.isEmpty()) {
       return null;
     }
     // Retrieve accounts nodes.
-    const accounts = this.accountsSection(this.accounts);
+    const accounts = this.accountsSection(this.repository.accounts);
 
     // Retrieve account node.
     const total = this.tatalSection(accounts);
