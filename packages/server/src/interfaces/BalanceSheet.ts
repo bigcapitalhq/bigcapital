@@ -109,11 +109,7 @@ export interface IBalanceSheetAggregateNode extends IBalanceSheetCommonNode {
   id: string;
   name: string;
   nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE;
-  children?: (
-    | IBalanceSheetAggregateNode
-    | IBalanceSheetAccountNode
-    | IBalanceSheetNetIncomeNode
-  )[];
+  children?: IBalanceSheetDataNode[];
 }
 
 export interface IBalanceSheetTotal {
@@ -121,6 +117,13 @@ export interface IBalanceSheetTotal {
   formattedAmount: string;
   currencyCode: string;
   date?: string | Date;
+}
+
+export interface IBalanceSheetAccountsNode extends IBalanceSheetCommonNode {
+  id: number | string;
+  name: string;
+  nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS;
+  children: IBalanceSheetAccountNode[];
 }
 
 export interface IBalanceSheetAccountNode extends IBalanceSheetCommonNode {
@@ -139,7 +142,11 @@ export interface IBalanceSheetNetIncomeNode extends IBalanceSheetCommonNode {
   nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME;
 }
 
-export type IBalanceSheetDataNode = IBalanceSheetAggregateNode;
+export type IBalanceSheetDataNode =
+  | IBalanceSheetAggregateNode
+  | IBalanceSheetAccountNode
+  | IBalanceSheetAccountsNode
+  | IBalanceSheetNetIncomeNode;
 
 export interface IBalanceSheetPercentageAmount {
   amount: number;

@@ -41,10 +41,10 @@ const mapValuesDeepReverse = (nodes, callback, config?) => {
     );
     const mappedNode = callback(node, children);
 
-    _.set(clonedNodes, pathString, {
-      ...mappedNode,
-      ...(!_.isEmpty(children) ? { children } : {}),
-    });
+    if (!mappedNode.children && children) {
+      mappedNode.children = children;
+    }
+    _.set(clonedNodes, pathString, mappedNode);
   });
   return clonedNodes;
 };

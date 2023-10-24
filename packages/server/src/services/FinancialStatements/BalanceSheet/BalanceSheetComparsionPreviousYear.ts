@@ -259,7 +259,6 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
     // ------------------------------
     // # Horizontal Nodes - Aggregate.
     // ------------------------------
-
     /**
      * Detarmines whether the given node has horizontal totals.
      * @param   {IBalanceSheetCommonNode} node

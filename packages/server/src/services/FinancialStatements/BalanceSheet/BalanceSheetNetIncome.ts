@@ -1,8 +1,10 @@
 import * as R from 'ramda';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
+  IBalanceSheetDataNode,
   IBalanceSheetNetIncomeNode,
   IBalanceSheetSchemaNetIncomeNode,
+  IBalanceSheetSchemaNode,
   IBalanceSheetTotalPeriod,
 } from '@/interfaces';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
@@ -191,5 +193,35 @@ export const BalanceSheetNetIncome = (Base: any) =>
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
       return R.assoc('horizontalTotals', datePeriods, node);
+    };
+
+    // -----------------------------
+    // - Net Income Nodes Praser
+    // -----------------------------
+    /**
+     * Mappes the given report schema node.
+     * @param  {IBalanceSheetSchemaNode} node - Schema node.
+     * @return {IBalanceSheetDataNode}
+     */
+    private reportNetIncomeNodeSchemaParser = (
+      schemaNode: IBalanceSheetSchemaNode
+    ): IBalanceSheetDataNode => {
+      return R.compose(
+        R.when(
+          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
+          this.schemaNetIncomeNodeCompose
+        )
+      )(schemaNode);
+    };
+
+    /**
+     * Parses the report net income schema nodes.
+     * @param {(IBalanceSheetSchemaNode | IBalanceSheetDataNode)[]} nodes -
+     * @return {IBalanceSheetDataNode[]}
+     */
+    public netIncomeSchemaParser = (
+      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[]
+    ): IBalanceSheetDataNode[] => {
+      return this.mapNodesDeep(nodes, this.reportNetIncomeNodeSchemaParser);
     };
   };

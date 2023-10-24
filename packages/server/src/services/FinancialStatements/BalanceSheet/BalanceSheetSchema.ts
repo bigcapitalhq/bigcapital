@@ -112,12 +112,9 @@ export const getBalanceSheetSchema = () => [
       {
         name: 'balance_sheet.equity',
         id: BALANCE_SHEET_SCHEMA_NODE_ID.EQUITY,
-        type: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE,
+        type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
+        accountsTypes: [ACCOUNT_TYPE.EQUITY],
         children: [
-          {
-            type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
-            accountsTypes: [ACCOUNT_TYPE.EQUITY],
-          },
           {
             name: 'balance_sheet.net_income',
             id: BALANCE_SHEET_SCHEMA_NODE_ID.NET_INCOME,
