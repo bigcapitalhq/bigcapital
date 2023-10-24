@@ -59,8 +59,11 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @returns {number}
    */
   public getClosingAccountCredit(accountId: number) {
+    const depsAccountsIds =
+      this.repository.accountsDepGraph.dependenciesOf(accountId);
+
     return this.repository.totalAccountsLedger
-      .whereAccountId(accountId)
+      .whereAccountsIds([accountId, ...depsAccountsIds])
       .getClosingCredit();
   }
 
@@ -70,8 +73,11 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @returns {number}
    */
   public getClosingAccountDebit(accountId: number) {
+    const depsAccountsIds =
+      this.repository.accountsDepGraph.dependenciesOf(accountId);
+
     return this.repository.totalAccountsLedger
-      .whereAccountId(accountId)
+      .whereAccountsIds([accountId, ...depsAccountsIds])
       .getClosingDebit();
   }
 

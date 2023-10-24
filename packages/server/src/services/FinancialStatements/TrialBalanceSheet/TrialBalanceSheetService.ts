@@ -95,9 +95,11 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       .withGraphFetched('metadata');
 
     const models = this.tenancy.models(tenantId);
+    const repos = this.tenancy.repositories(tenantId);
 
     const trialBalanceSheetRepos = new TrialBalanceSheetRepository(
       models,
+      repos,
       filter
     );
     await trialBalanceSheetRepos.asyncInitialize();

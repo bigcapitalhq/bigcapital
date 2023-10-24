@@ -8,11 +8,8 @@ import { Service } from 'typedi';
 export class TrialBalanceSheetRepository {
   private query: ITrialBalanceSheetQuery;
   private models: any;
-
-  /**
-   *
-   */
   public accounts: any;
+  public accountsDepGraph;
 
   /**
    * Total closing accounts ledger.
@@ -25,8 +22,9 @@ export class TrialBalanceSheetRepository {
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
    */
-  constructor(models: any, query: ITrialBalanceSheetQuery) {
+  constructor(models: any, repos: any, query: ITrialBalanceSheetQuery) {
     this.query = query;
+    this.repos = repos;
     this.models = models;
   }
 
@@ -48,7 +46,10 @@ export class TrialBalanceSheetRepository {
    */
   public initAccounts = async () => {
     const accounts = await this.getAccounts();
+    const accountsDepGraph =
+      await this.repos.accountRepository.getDependencyGraph();
 
+    this.accountsDepGraph = accountsDepGraph;
     this.accounts = accounts;
   };
 

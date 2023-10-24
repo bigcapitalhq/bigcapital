@@ -1,7 +1,11 @@
 // @ts-nocheck
+import * as R from 'ramda';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
-import * as R from 'ramda';
+
+const ACCOUNT_NAME_COLUMN_WIDTH = 320;
+const AMOUNT_COLUMNS_MIN_WIDTH = 120;
+const AMOUNT_COLUMNS_MAGIC_SPACING = 10;
 
 const getTableCellValueAccessor = (index: number) => `cells[${index}].value`;
 
@@ -13,7 +17,7 @@ const accountNameAccessor = R.curry((data, column) => {
     id: column.key,
     accessor,
     className: column.key,
-    width: 350,
+    width: ACCOUNT_NAME_COLUMN_WIDTH,
   };
 });
 
@@ -25,7 +29,10 @@ const amountAccessor = R.curry((data, column) => {
     id: column.key,
     accessor,
     className: column.key,
-    width: getColumnWidth(data, accessor, { minWidth: 120 }),
+    width: getColumnWidth(data, accessor, {
+      magicSpacing: AMOUNT_COLUMNS_MAGIC_SPACING,
+      minWidth: AMOUNT_COLUMNS_MIN_WIDTH,
+    }),
     align: Align.Right,
   };
 });

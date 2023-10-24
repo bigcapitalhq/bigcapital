@@ -50,6 +50,15 @@ export default class Ledger implements ILedger {
   }
 
   /**
+   * Filters entries by the given accounts ids then returns a new ledger.
+   * @param {number[]} accountsIds - Accounts ids.
+   * @returns {ILedger}
+   */
+  public whereAccountsIds(accountsIds: number[]): ILedger {
+    return this.filter((entry) => accountsIds.indexOf(entry.accountId) !== -1);
+  }
+
+  /**
    * Filters entries that before or same the given date and returns a new ledger.
    * @param   {Date|string} fromDate
    * @returns {ILedger}
