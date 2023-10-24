@@ -61,6 +61,7 @@ const ProfitLossDataTable = styled(ReportDataTable)`
         border-bottom: 0;
         padding-top: 0.32rem;
         padding-bottom: 0.32rem;
+        color: #252A31;
       }
       &.is-expanded {
         .td:not(.name) .cell-inner {
@@ -71,6 +72,7 @@ const ProfitLossDataTable = styled(ReportDataTable)`
         .td {
           font-weight: 500;
           border-top: 1px solid #bbb;
+          color: #000;
         }
       }
       &:last-of-type .td {
