@@ -31,14 +31,14 @@ export default class OrganizationController extends BaseController {
 
     router.post(
       '/build',
-      this.organizationValidationSchema,
+      this.buildOrganizationValidationSchema,
       this.validationResult,
       asyncMiddleware(this.build.bind(this)),
       this.handleServiceErrors.bind(this)
     );
     router.put(
       '/',
-      this.organizationValidationSchema,
+      this.updateOrganizationValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.updateOrganization.bind(this)),
       this.handleServiceErrors.bind(this)
@@ -55,7 +55,7 @@ export default class OrganizationController extends BaseController {
    * Organization setup schema.
    * @return {ValidationChain[]}
    */
-  private get organizationValidationSchema(): ValidationChain[] {
+  private get commonOrganizationValidationSchema(): ValidationChain[] {
     return [
       check('name').exists().trim(),
       check('industry').optional({ nullable: true }).isString().trim().escape(),
@@ -65,6 +65,24 @@ export default class OrganizationController extends BaseController {
       check('fiscal_year').exists().isIn(MONTHS),
       check('language').exists().isString().isIn(ACCEPTED_LOCALES),
       check('date_format').optional().isIn(DATE_FORMATS),
+    ];
+  }
+
+  /**
+   * Build organization validation schema.
+   * @returns {ValidationChain[]}
+   */
+  private get buildOrganizationValidationSchema(): ValidationChain[] {
+    return [...this.commonOrganizationValidationSchema];
+  }
+
+  /**
+   * Update organization validation schema.
+   * @returns {ValidationChain[]}
+   */
+  private get updateOrganizationValidationSchema(): ValidationChain[] {
+    return [
+      ...this.commonOrganizationValidationSchema,
       check('tax_number')
         .optional({ nullable: true })
         .isString()
