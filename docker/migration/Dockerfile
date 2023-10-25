@@ -1,4 +1,4 @@
-FROM kochie/bigcapital-server:latest as build
+FROM ghcr.io/bigcapitalhq/server:latest as build
 
 ARG DB_HOST= \
   DB_USER= \

@@ -120,7 +120,6 @@ module.exports = {
    * Redis storage configuration.
    */
   redis: {
-    url: process.env.REDIS_URL,
     port: 6379,
   },
 
