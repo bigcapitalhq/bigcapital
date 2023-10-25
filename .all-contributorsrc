@@ -60,6 +60,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "kochie",
+      "name": "Robert Koch",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10809884?v=4",
+      "profile": "https://me.kochie.io",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
