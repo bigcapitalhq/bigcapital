@@ -16,7 +16,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -36,7 +36,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
    * Validation schema.
    * @return {ValidationChain[]}
    */
-  get trialBalanceSheetValidationSchema(): ValidationChain[] {
+  private get trialBalanceSheetValidationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('basis').optional(),
@@ -59,28 +59,37 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
   /**
    * Retrieve the trial balance sheet.
    */
-  public async trialBalanceSheet(
+  private async trialBalanceSheet(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    const { tenantId, settings } = req;
+    const { tenantId } = req;
     let filter = this.matchedQueryData(req);
 
     filter = {
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-
     try {
-      const { data, query, meta } =
-        await this.trialBalanceSheetService.trialBalanceSheet(tenantId, filter);
+      const accept = this.accepts(req);
+      const acceptType = accept.types(['json', 'application/json+table']);
 
-      return res.status(200).send({
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
-      });
+      if (acceptType === 'application/json+table') {
+        const { table, meta, query } =
+          await this.trialBalanceSheetService.trialBalanceSheetTable(
+            tenantId,
+            filter
+          );
+        return res.status(200).send({ table, meta, query });
+      } else {
+        const { data, query, meta } =
+          await this.trialBalanceSheetService.trialBalanceSheet(
+            tenantId,
+            filter
+          );
+        return res.status(200).send({ data, query, meta });
+      }
     } catch (error) {
       next(error);
     }

@@ -33,6 +33,7 @@ export interface ITrialBalanceAccount extends ITrialBalanceTotal {
   id: number;
   parentAccountId: number;
   name: string;
+  formattedName: string;
   code: string;
   accountNormal: string;
 }
