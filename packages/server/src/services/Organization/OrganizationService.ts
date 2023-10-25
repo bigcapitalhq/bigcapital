@@ -189,7 +189,6 @@ export default class OrganizationService {
       tenant.metadata?.baseCurrency
     );
     await tenant.saveMetadata(organizationDTO);
-    // console.log('organizationDTO', organizationDTO);
 
     if (organizationDTO.baseCurrency !== tenant.metadata?.baseCurrency) {
       // Triggers `onOrganizationBaseCurrencyUpdated` event.
