@@ -25,6 +25,7 @@ export interface IOrganizationUpdateDTO {
   timezone: string;
   fiscalYear: string;
   industry: string;
+  taxNumber: string;
 }
 
 export interface IOrganizationBuildEventPayload {
