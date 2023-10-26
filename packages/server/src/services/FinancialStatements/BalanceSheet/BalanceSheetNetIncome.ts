@@ -68,11 +68,10 @@ export const BalanceSheetNetIncome = (Base: any) =>
       const total = this.getNetIncomeTotal();
 
       return {
-        name: this.i18n.__(node.name),
         id: node.id,
+        name: this.i18n.__(node.name),
         nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME,
         total: this.getTotalAmountMeta(total),
-        children: node.children,
       };
     };
 

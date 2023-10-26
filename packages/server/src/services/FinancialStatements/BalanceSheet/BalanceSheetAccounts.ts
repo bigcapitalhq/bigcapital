@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { defaultTo } from 'lodash';
+import { defaultTo, toArray } from 'lodash';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
@@ -141,7 +141,7 @@ export const BalanceSheetAccounts = (Base: any) =>
       node: IBalanceSheetSchemaAccountNode
     ): IBalanceSheetAccountsNode => {
       const accounts = this.getAccountsNodesByAccountTypes(node.accountsTypes);
-      const children = node?.children || [];
+      const children = toArray(node?.children);
 
       return {
         id: node.id,

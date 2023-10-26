@@ -8,6 +8,10 @@ import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetDataNode,
   IBalanceSheetSchemaNode,
+  IBalanceSheetNetIncomeNode,
+  IBalanceSheetAccountNode,
+  IBalanceSheetAccountsNode,
+  IBalanceSheetAggregateNode,
 } from '@/interfaces';
 import { tableRowMapper } from 'utils';
 import FinancialSheet from '../FinancialSheet';
@@ -108,11 +112,13 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   *
-   * @param node
+   * Retrieves the table row from the given report aggregate node.
+   * @param {IBalanceSheetAggregateNode} node
    * @returns {ITableRow}
    */
-  private aggregateNodeTableRowsMapper = (node): ITableRow => {
+  private aggregateNodeTableRowsMapper = (
+    node: IBalanceSheetAggregateNode
+  ): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.AGGREGATE],
@@ -122,11 +128,13 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   *
-   * @param node
+   * Retrieves the table row from the given report accounts node.
+   * @param {IBalanceSheetAccountsNode} node
    * @returns {ITableRow}
    */
-  private accountsNodeTableRowsMapper = (node): ITableRow => {
+  private accountsNodeTableRowsMapper = (
+    node: IBalanceSheetAccountsNode
+  ): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.ACCOUNTS],
@@ -136,11 +144,13 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   *
-   * @param {} node
+   * Retrieves the table row from the given report account node.
+   * @param {IBalanceSheetAccountNode} node
    * @returns {ITableRow}
    */
-  private accountNodeTableRowsMapper = (node): ITableRow => {
+  private accountNodeTableRowsMapper = (
+    node: IBalanceSheetAccountNode
+  ): ITableRow => {
     const columns = this.commonColumnsAccessors();
 
     const meta = {
@@ -151,10 +161,13 @@ export default class BalanceSheetTable extends R.compose(
   };
 
   /**
-   * 
+   * Retrieves the table row from the given report net income node.
+   * @param {IBalanceSheetNetIncomeNode} node
    * @returns {ITableRow}
    */
-  private netIncomeNodeTableRowsMapper = (node): ITableRow => {
+  private netIncomeNodeTableRowsMapper = (
+    node: IBalanceSheetNetIncomeNode
+  ): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.NET_INCOME],
