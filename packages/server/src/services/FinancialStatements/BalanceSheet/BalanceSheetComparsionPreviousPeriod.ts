@@ -6,6 +6,7 @@ import {
   IBalanceSheetAggregateNode,
   IBalanceSheetTotal,
   IBalanceSheetCommonNode,
+  IBalanceSheetComparsions,
 } from '@/interfaces';
 import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';

@@ -51,11 +51,11 @@ export default class Ledger implements ILedger {
 
   /**
    * Filters entries by the given accounts ids then returns a new ledger.
-   * @param {number[]} accountsIds - Accounts ids.
+   * @param {number[]} accountIds 
    * @returns {ILedger}
    */
-  public whereAccountsIds(accountsIds: number[]): ILedger {
-    return this.filter((entry) => accountsIds.indexOf(entry.accountId) !== -1);
+  public whereAccountsIds(accountIds: number[]): ILedger {
+    return this.filter((entry) => accountIds.indexOf(entry.accountId) !== -1);
   }
 
   /**

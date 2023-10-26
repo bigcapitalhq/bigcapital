@@ -102,7 +102,7 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0
       deepdash:
-        specifier: ^5.3.7
+        specifier: ^5.3.9
         version: 5.3.9
       dotenv:
         specifier: ^8.1.0
@@ -257,6 +257,9 @@ importers:
       rtl-detect:
         specifier: ^1.0.4
         version: 1.0.4
+      source-map-loader:
+        specifier: ^4.0.1
+        version: 4.0.1(webpack@5.76.0)
       ts-transformer-keys:
         specifier: ^0.4.2
         version: 0.4.4(typescript@3.9.10)
@@ -22104,6 +22107,18 @@ packages:
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
+    dependencies:
+      abab: 2.0.6
+      iconv-lite: 0.6.3
+      source-map-js: 1.0.2
+      webpack: 5.76.0(webpack-cli@4.10.0)
+    dev: false
+
+  /source-map-loader@4.0.1(webpack@5.76.0):
+    resolution: {integrity: sha512-oqXpzDIByKONVY8g1NUPOTQhe0UTU5bWUl32GSkqK2LjJj0HmwTMVKxcUip0RgAYhY1mqgOxjbQM48a0mmeNfA==}
+    engines: {node: '>= 14.15.0'}
+    peerDependencies:
+      webpack: ^5.72.1
     dependencies:
       abab: 2.0.6
       iconv-lite: 0.6.3

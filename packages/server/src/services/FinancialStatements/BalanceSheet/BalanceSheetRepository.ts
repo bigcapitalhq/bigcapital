@@ -3,6 +3,7 @@ import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import {
+  IAccount,
   IAccountTransactionsGroupBy,
   IBalanceSheetQuery,
   ILedger,
@@ -11,9 +12,12 @@ import { transformToMapBy } from 'utils';
 import Ledger from '@/services/Accounting/Ledger';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 
 @Service()
 export default class BalanceSheetRepository extends R.compose(
+  BalanceSheetRepositoryNetIncome,
   FinancialDatePeriods
 )(class {}) {
   /**
@@ -65,7 +69,21 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public readonly PPFromDate: Date;
 
+  /**
+   * Total closing accounts ledger.
+   * @param {Ledger}
+   */
   public totalAccountsLedger: Ledger;
+
+  /**
+   * Total income accounts ledger.
+   */
+  public incomeLedger: Ledger;
+
+  /**
+   * Total expense accounts ledger.
+   */
+  public expensesLedger: Ledger;
 
   /**
    * Transactions group type.
@@ -171,6 +189,8 @@ export default class BalanceSheetRepository extends R.compose(
     ) {
       await this.initPeriodsPreviousPeriod();
     }
+    //
+    await this.asyncInitializeNetIncome();
   };
 
   // ----------------------------
@@ -181,6 +201,7 @@ export default class BalanceSheetRepository extends R.compose(
 
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
+    this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
   };
 
   // ----------------------------
@@ -309,14 +330,15 @@ export default class BalanceSheetRepository extends R.compose(
 
   /**
    * Closing accounts date periods.
-   * @param openingDate
-   * @param datePeriodsType
+   * @param {Date} fromDate
+   * @param {Date} toDate
+   * @param {string} datePeriodsType
    * @returns
    */
   public accountsDatePeriods = async (
     fromDate: Date,
     toDate: Date,
-    datePeriodsType
+    datePeriodsType: string
   ) => {
     const { AccountTransaction } = this.models;
 
@@ -336,6 +358,7 @@ export default class BalanceSheetRepository extends R.compose(
 
   /**
    * Retrieve the opening balance transactions of the report.
+   * @param {Date|string} openingDate -
    */
   public closingAccountsTotal = async (openingDate: Date | string) => {
     const { AccountTransaction } = this.models;
