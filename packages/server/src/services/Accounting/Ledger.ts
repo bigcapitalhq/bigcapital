@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { defaultTo, uniqBy } from 'lodash';
+import { defaultTo, sumBy, uniqBy } from 'lodash';
 import { IAccountTransaction, ILedger, ILedgerEntry } from '@/interfaces';
 
 export default class Ledger implements ILedger {
@@ -137,6 +137,22 @@ export default class Ledger implements ILedger {
       }
     });
     return closingBalance;
+  }
+
+  /**
+   * Retrieves the closing credit of the entries.
+   * @returns {number}
+   */
+  public getClosingCredit(): number {
+    return sumBy(this.entries, 'credit');
+  }
+
+  /**
+   * Retrieves the closing debit of the entries.
+   * @returns {number}
+   */
+  public getClosingDebit(): number {
+    return sumBy(this.entries, 'debit');
   }
 
   /**

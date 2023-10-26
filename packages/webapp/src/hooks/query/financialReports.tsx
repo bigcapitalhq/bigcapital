@@ -43,17 +43,12 @@ export function useTrialBalanceSheet(query, props) {
       method: 'get',
       url: '/financial_statements/trial_balance_sheet',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        tableRows: trialBalanceSheetReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-        query: {},
-      },
+      select: (res) => res.data,
       ...props,
     },
   );

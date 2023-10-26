@@ -59,6 +59,17 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         <FInputGroup medium={'true'} name={'name'} fastField={true} />
       </FFormGroup>
 
+      {/* ---------- Organization Tax Number ----------  */}
+      <FFormGroup
+        name={'tax_number'}
+        label={<T id={'organization_tax_number'} />}
+        inline={true}
+        helperText={<T id={'shown_on_sales_forms_and_purchase_orders'} />}
+        fastField={true}
+      >
+        <FInputGroup medium={'true'} name={'tax_number'} fastField={true} />
+      </FFormGroup>
+
       {/* ---------- Industry ----------  */}
       <FFormGroup
         name={'industry'}

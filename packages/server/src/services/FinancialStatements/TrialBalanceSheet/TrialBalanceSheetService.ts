@@ -2,12 +2,18 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
-import { ITrialBalanceSheetMeta, ITrialBalanceSheetQuery, ITrialBalanceStatement } from '@/interfaces';
+import {
+  ITrialBalanceSheetMeta,
+  ITrialBalanceSheetQuery,
+  ITrialBalanceStatement,
+} from '@/interfaces';
 import TrialBalanceSheet from './TrialBalanceSheet';
 import FinancialSheet from '../FinancialSheet';
 import InventoryService from '@/services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
+import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
+import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
@@ -51,9 +57,8 @@ export default class TrialBalanceSheetService extends FinancialSheet {
   reportMetadata(tenantId: number): ITrialBalanceSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
-    const isCostComputeRunning = this.inventoryService.isItemsCostComputeRunning(
-      tenantId
-    );
+    const isCostComputeRunning =
+      this.inventoryService.isItemsCostComputeRunning(tenantId);
     const organizationName = settings.get({
       group: 'organization',
       key: 'name',
@@ -72,10 +77,8 @@ export default class TrialBalanceSheetService extends FinancialSheet {
 
   /**
    * Retrieve trial balance sheet statement.
-   * -------------
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
-   *
    * @return {IBalanceSheetStatement}
    */
   public async trialBalanceSheet(
@@ -86,43 +89,27 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       ...this.defaultQuery,
       ...query,
     };
-    const {
-      accountRepository,
-      transactionsRepository,
-    } = this.tenancy.repositories(tenantId);
 
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
 
-    this.logger.info('[trial_balance_sheet] trying to calcualte the report.', {
-      tenantId,
-      filter,
-    });
-    // Retrieve all accounts on the storage.
-    const accounts = await accountRepository.all();
-    const accountsGraph = await accountRepository.getDependencyGraph();
+    const models = this.tenancy.models(tenantId);
+    const repos = this.tenancy.repositories(tenantId);
 
-    // Retrieve all journal transactions based on the given query.
-    const transactions = await transactionsRepository.journal({
-      fromDate: query.fromDate,
-      toDate: query.toDate,
-      sumationCreditDebit: true,
-      branchesIds: query.branchesIds
-    });
-    // Transform transactions array to journal collection.
-    const transactionsJournal = Journal.fromTransactions(
-      transactions,
-      tenantId,
-      accountsGraph
+    const trialBalanceSheetRepos = new TrialBalanceSheetRepository(
+      models,
+      repos,
+      filter
     );
+    await trialBalanceSheetRepos.asyncInitialize();
+
     // Trial balance report instance.
     const trialBalanceInstance = new TrialBalanceSheet(
       tenantId,
       filter,
-      accounts,
-      transactionsJournal,
-      tenant.metadata.baseCurrency,
+      trialBalanceSheetRepos,
+      tenant.metadata.baseCurrency
     );
     // Trial balance sheet data.
     const trialBalanceSheetData = trialBalanceInstance.reportData();
@@ -131,6 +118,29 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       data: trialBalanceSheetData,
       query: filter,
       meta: this.reportMetadata(tenantId),
+    };
+  }
+
+  /**
+   * Retrieves the trial balance sheet table.
+   * @param {number} tenantId
+   * @param {ITrialBalanceSheetQuery} query
+   * @returns {Promise<any>}
+   */
+  public async trialBalanceSheetTable(
+    tenantId: number,
+    query: ITrialBalanceSheetQuery
+  ) {
+    const trialBalance = await this.trialBalanceSheet(tenantId, query);
+    const table = new TrialBalanceSheetTable(trialBalance.data, query, {});
+
+    return {
+      table: {
+        columns: table.tableColumns(),
+        rows: table.tableRows(),
+      },
+      meta: trialBalance.meta,
+      query: trialBalance.query,
     };
   }
 }
