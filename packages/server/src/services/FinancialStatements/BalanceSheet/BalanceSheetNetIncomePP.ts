@@ -72,3 +72,4 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
         this.assocPreviousPeriodNetIncomeNode
       )(node);
     };
+  };
