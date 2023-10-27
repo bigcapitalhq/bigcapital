@@ -1,4 +1,4 @@
-FROM node:14.15.0 as build
+FROM node:16-alpine as build
 
 USER root
 
@@ -7,11 +7,18 @@ WORKDIR /app
 # Install dependencies
 COPY package*.json ./
 COPY lerna.json ./
+COPY pnpm-lock.yaml ./
+COPY pnpm-workspace.yaml ./
 
 COPY ./packages/webapp/package*.json /app/packages/webapp/
 
-RUN npm install
-RUN npm run bootstrap
+RUN apk update 
+RUN apk add python3 build-base chromium
+ENV PYTHON=/usr/bin/python3
+
+RUN npm install -g pnpm
+RUN pnpm install
+# RUN npm run bootstrap
 
 # Build webapp package
 COPY ./packages/webapp /app/packages/webapp
