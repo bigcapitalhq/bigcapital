@@ -93,14 +93,14 @@ COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./lerna.json ./lerna.json
 COPY ./packages/server/package*.json ./packages/server/
 
-# 
+# Install application dependencies
 RUN apk update
 RUN apk add python3 build-base chromium
 
 # Set PYHTON env
 ENV PYTHON=/usr/bin/python3
 
-# Install app dependencies for production.
+# Install packages dependencies for production.
 RUN pnpm install
 
 COPY --chown=node:node ./packages/server ./packages/server
