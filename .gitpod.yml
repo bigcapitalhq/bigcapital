@@ -2,8 +2,8 @@ tasks:
   - name: Init
     init: |
       pnpm install &&
-      docker-compose pull &&
       cp .env.example .env &&
+      docker-compose up -d &&
       pnpm run build:server &&
       node packages/server/build/commands.js system:migrate:latest
     command: | 
