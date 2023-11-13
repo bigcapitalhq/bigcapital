@@ -1,5 +1,5 @@
 import FormData from 'form-data';
-import fetch from 'node-fetch';
+import Axios from 'axios';
 
 export class GotenbergUtils {
   public static assert(condition: boolean, message: string): asserts condition {
@@ -9,17 +9,16 @@ export class GotenbergUtils {
   }
 
   public static async fetch(endpoint: string, data: FormData): Promise<Buffer> {
-    const response = await fetch(endpoint, {
-      method: 'post',
-      body: data,
-      headers: {
-        ...data.getHeaders(),
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+    try {
+      const response = await Axios.post(endpoint, data, {
+        headers: {
+          ...data.getHeaders(),
+        },
+        responseType: 'arraybuffer', // This ensures you get a Buffer bac
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
     }
-    return response.buffer();
   }
 }

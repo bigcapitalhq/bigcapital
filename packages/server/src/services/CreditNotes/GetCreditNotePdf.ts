@@ -1,37 +1,29 @@
 import { Inject, Service } from 'typedi';
-import PdfService from '@/services/PDF/PdfService';
-import { templateRender } from 'utils';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Tenant } from '@/system/models';
+import { ChromiumlyTenancy } from '../ChromiumlyTenancy/ChromiumlyTenancy';
+import { TemplateInjectable } from '../TemplateInjectable/TemplateInjectable';
 
 @Service()
 export default class GetCreditNotePdf {
   @Inject()
-  pdfService: PdfService;
+  private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private templateInjectable: TemplateInjectable;
 
   /**
    * Retrieve sale invoice pdf content.
    * @param {} saleInvoice -
    */
-  async getCreditNotePdf(tenantId: number, creditNote) {
-    const i18n = this.tenancy.i18n(tenantId);
-
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
-
-    const htmlContent = templateRender('modules/credit-note-standard', {
-      organization,
-      organizationName: organization.metadata.name,
-      organizationEmail: organization.metadata.email,
-      creditNote,
-      ...i18n,
+  public async getCreditNotePdf(tenantId: number, creditNote) {
+    const htmlContent = await this.templateInjectable.render(
+      tenantId,
+      'modules/credit-note-standard',
+      {
+        creditNote,
+      }
+    );
+    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
     });
-    const pdfContent = await this.pdfService.pdfDocument(htmlContent);
-
-    return pdfContent;
   }
 }

@@ -1,4 +1,5 @@
-import { Chromiumly, ChromiumRoute } from '../../main.config';
+import { Chromiumly } from './Chromiumly';
+import { ChromiumRoute } from './_types';
 
 export abstract class Converter {
   readonly endpoint: string;
