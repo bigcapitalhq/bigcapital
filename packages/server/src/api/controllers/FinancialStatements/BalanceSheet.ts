@@ -3,25 +3,22 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { castArray } from 'lodash';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BalanceSheetStatementService from '@/services/FinancialStatements/BalanceSheet/BalanceSheetService';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import BalanceSheetTable from '@/services/FinancialStatements/BalanceSheet/BalanceSheetTable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { BalanceSheetApplication } from '@/services/FinancialStatements/BalanceSheet/BalanceSheetApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class BalanceSheetStatementController extends BaseFinancialReportController {
   @Inject()
-  balanceSheetService: BalanceSheetStatementService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private balanceSheetApp: BalanceSheetApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -38,7 +35,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
    * Balance sheet validation schecma.
    * @returns {ValidationChain[]}
    */
-  get balanceSheetValidationSchema(): ValidationChain[] {
+  private get balanceSheetValidationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('accounting_method').optional().isIn(['cash', 'accrual']),
@@ -85,9 +82,8 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
   /**
    * Retrieve the balance sheet.
    */
-  async balanceSheet(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
-    const i18n = this.tenancy.i18n(tenantId);
+  private async balanceSheet(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
 
     let filter = this.matchedQueryData(req);
 
@@ -97,27 +93,44 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
     };
 
     try {
-      const { data, columns, query, meta } =
-        await this.balanceSheetService.balanceSheet(tenantId, filter);
-
       const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
 
-      const table = new BalanceSheetTable(data, query, i18n);
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_CSV,
+      ]);
+      // Retrieves the json table format.
+      if (ACCEPT_TYPE.APPLICATION_JSON_TABLE == acceptType) {
+        const table = await this.balanceSheetApp.table(tenantId, filter);
 
-      switch (acceptType) {
-        case 'application/json+table':
-          return res.status(200).send({
-            table: {
-              rows: table.tableRows(),
-              columns: table.tableColumns(),
-            },
-            query,
-            meta,
-          });
-        case 'json':
-        default:
-          return res.status(200).send({ data, columns, query, meta });
+        return res.status(200).send(table);
+        // Retrieves the csv format.
+      } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+        const buffer = await this.balanceSheetApp.csv(tenantId, filter);
+
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
+
+        return res.send(buffer);
+        // Retrieves the xlsx format.
+      } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+        const buffer = await this.balanceSheetApp.xlsx(tenantId, filter);
+
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+      } else {
+        const sheet = await this.balanceSheetApp.sheet(tenantId, filter);
+
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

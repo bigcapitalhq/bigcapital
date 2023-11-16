@@ -3,6 +3,7 @@ import {
   IFormatNumberSettings,
   IFinancialSheetBranchesQuery,
 } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
@@ -214,4 +215,9 @@ export enum IAccountTransactionsGroupBy {
   Day = 'day',
   Month = 'month',
   Week = 'week',
+}
+
+export interface IBalanceSheetTable extends IFinancialTable {
+  meta: IBalanceSheetMeta;
+  query: IBalanceSheetQuery;
 }

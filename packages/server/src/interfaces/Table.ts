@@ -10,7 +10,7 @@ export interface ITableCell {
 }
 
 export type ITableRow = {
-  rows: ITableCell[];
+  cells: ITableCell[];
 };
 
 export interface ITableColumn {
@@ -28,4 +28,13 @@ export interface ITable {
 export interface ITableColumnAccessor {
   key: string;
   accessor: string;
+}
+
+export interface ITableData {
+  columns: ITableColumn[];
+  rows: ITableRow[];
+}
+
+export interface IFinancialTable {
+  table: ITableData;
 }
