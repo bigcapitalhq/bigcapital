@@ -5,6 +5,7 @@ import {
   IAgingSummaryContact,
   IAgingSummaryData,
 } from './AgingReport';
+import { IFinancialTable } from './Table';
 
 export interface IARAgingSummaryQuery extends IAgingSummaryQuery {
   customersIds: number[];
@@ -25,4 +26,9 @@ export type IARAgingSummaryColumns = IAgingPeriod[];
 export interface IARAgingSummaryMeta {
   organizationName: string;
   baseCurrency: string;
+}
+
+export interface IARAgingSummaryTable extends IFinancialTable {
+  meta: IARAgingSummaryMeta;
+  query: IARAgingSummaryQuery;
 }
