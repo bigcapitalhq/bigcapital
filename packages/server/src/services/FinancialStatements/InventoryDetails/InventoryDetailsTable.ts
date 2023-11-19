@@ -20,13 +20,13 @@ enum IROW_TYPE {
 
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
-export default class InventoryDetailsTable {
+export class InventoryDetailsTable {
   i18n: any;
   report: any;
 
   /**
    * Constructor method.
-   * @param {ICashFlowStatement} reportStatement - Report statement.
+   * @param {ICashFlowStatement} report - Report statement.
    */
   constructor(reportStatement, i18n) {
     this.report = reportStatement;
@@ -172,7 +172,7 @@ export default class InventoryDetailsTable {
    * Retrieve the table rows of the inventory item details.
    * @returns {ITableRow[]}
    */
-  public tableData = (): ITableRow[] => {
+  public tableRows = (): ITableRow[] => {
     return this.itemsMapper(this.report.data);
   };
 
