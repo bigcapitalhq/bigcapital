@@ -1,7 +1,5 @@
 import { Inject } from 'typedi';
 import moment from 'moment';
-import { isEmpty, map } from 'lodash';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import * as R from 'ramda';
 import {
   ICustomerBalanceSummaryService,
@@ -11,28 +9,21 @@ import {
   ILedgerEntry,
 } from '@/interfaces';
 import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
-
 import Ledger from '@/services/Accounting/Ledger';
 import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
 
-export default class CustomerBalanceSummaryService
+export class CustomerBalanceSummaryService
   implements ICustomerBalanceSummaryService
 {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
-
-  @Inject()
-  reportRepository: CustomerBalanceSummaryRepository;
+  private reportRepository: CustomerBalanceSummaryRepository;
 
   /**
    * Defaults balance sheet filter query.
    * @return {ICustomerBalanceSummaryQuery}
    */
-  get defaultQuery(): ICustomerBalanceSummaryQuery {
+  private get defaultQuery(): ICustomerBalanceSummaryQuery {
     return {
       asDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
@@ -43,12 +34,11 @@ export default class CustomerBalanceSummaryService
         negativeFormat: 'mines',
       },
       percentageColumn: false,
-      
+
       noneZero: false,
       noneTransactions: true,
     };
   }
-
 
   /**
    * Retrieve the customers ledger entries mapped from accounts transactions.
@@ -75,7 +65,7 @@ export default class CustomerBalanceSummaryService
    * @param {ICustomerBalanceSummaryQuery} query
    * @return {Promise<ICustomerBalanceSummaryStatement>}
    */
-  async customerBalanceSummary(
+  public async customerBalanceSummary(
     tenantId: number,
     query: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryStatement> {
@@ -86,13 +76,6 @@ export default class CustomerBalanceSummaryService
     // Merges the default query and request query.
     const filter = { ...this.defaultQuery, ...query };
 
-    this.logger.info(
-      '[customer_balance_summary] trying to calculate the report.',
-      {
-        filter,
-        tenantId,
-      }
-    );
     // Retrieve the customers list ordered by the display name.
     const customers = await this.reportRepository.getCustomers(
       tenantId,
@@ -111,7 +94,7 @@ export default class CustomerBalanceSummaryService
       ledger,
       customers,
       filter,
-      tenant.metadata.baseCurrency,
+      tenant.metadata.baseCurrency
     );
 
     return {

@@ -1,8 +1,9 @@
 import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface IVendorBalanceSummaryQuery {
   asDate: Date;
-  vendorsIds: number[],
+  vendorsIds: number[];
   numberFormat: INumberFormatQuery;
   percentageColumn: boolean;
   noneTransactions: boolean;
@@ -45,6 +46,10 @@ export interface IVendorBalanceSummaryStatement {
 export interface IVendorBalanceSummaryService {
   vendorBalanceSummary(
     tenantId: number,
-    query: IVendorBalanceSummaryQuery,
+    query: IVendorBalanceSummaryQuery
   ): Promise<IVendorBalanceSummaryStatement>;
+}
+
+export interface IVendorBalanceSummaryTable extends IFinancialTable {
+  query: IVendorBalanceSummaryQuery;
 }
