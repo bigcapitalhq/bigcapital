@@ -1,6 +1,6 @@
 import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
-import { ITransactionsByVendorsVendor, ITableRow } from '@/interfaces';
+import { ITransactionsByVendorsVendor, ITableRow, ITableColumn } from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -10,16 +10,13 @@ enum ROW_TYPE {
   VENDOR = 'VENDOR',
 }
 
-export default class TransactionsByVendorsTableRows extends TransactionsByContactsTableRows {
-  vendorsTransactions: ITransactionsByVendorsVendor[];
+export class TransactionsByVendorsTable extends TransactionsByContactsTableRows {
+  private vendorsTransactions: ITransactionsByVendorsVendor[];
 
   /**
    * Constructor method.
    */
-  constructor(
-    vendorsTransactions: ITransactionsByVendorsVendor[],
-    i18n
-  ) {
+  constructor(vendorsTransactions: ITransactionsByVendorsVendor[], i18n) {
     super();
 
     this.vendorsTransactions = vendorsTransactions;
@@ -73,4 +70,8 @@ export default class TransactionsByVendorsTableRows extends TransactionsByContac
   public tableRows = (): ITableRow[] => {
     return R.map(this.vendorRowsMapper)(this.vendorsTransactions);
   };
+
+  public tableColumns = (): ITableColumn[] => {
+    return [];
+  }
 }

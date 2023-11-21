@@ -1,3 +1,4 @@
+import { IFinancialTable, ITableData } from './Table';
 import {
   ITransactionsByContactsAmount,
   ITransactionsByContactsTransaction,
@@ -26,6 +27,11 @@ export type ITransactionsByCustomersData = ITransactionsByCustomersCustomer[];
 
 export interface ITransactionsByCustomersStatement {
   data: ITransactionsByCustomersData;
+  query: ITransactionsByCustomersFilter;
+}
+
+export interface ITransactionsByCustomersTable extends IFinancialTable {
+  query: ITransactionsByCustomersFilter;
 }
 
 export interface ITransactionsByCustomersService {
