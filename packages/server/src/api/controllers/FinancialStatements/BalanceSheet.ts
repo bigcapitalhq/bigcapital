@@ -6,7 +6,6 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { BalanceSheetApplication } from '@/services/FinancialStatements/BalanceSheet/BalanceSheetApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 
@@ -81,6 +80,9 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
 
   /**
    * Retrieve the balance sheet.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   private async balanceSheet(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;

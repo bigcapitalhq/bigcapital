@@ -1,13 +1,12 @@
-import {
-  INumberFormatQuery,
-} from './FinancialStatements';
+import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface IInventoryDetailsQuery {
   fromDate: Date | string;
   toDate: Date | string;
   numberFormat: INumberFormatQuery;
   noneTransactions: boolean;
-  itemsIds: number[]
+  itemsIds: number[];
 
   warehousesIds?: number[];
   branchesIds?: number[];
@@ -66,7 +65,7 @@ export interface IInventoryDetailsItemTransaction {
   cost: IInventoryDetailsNumber;
   value: IInventoryDetailsNumber;
   profitMargin: IInventoryDetailsNumber;
-  
+
   rate: IInventoryDetailsNumber;
 
   runningQuantity: IInventoryDetailsNumber;
@@ -80,7 +79,6 @@ export type IInventoryDetailsNode =
   | IInventoryDetailsItemTransaction;
 export type IInventoryDetailsData = IInventoryDetailsItem[];
 
-
 export interface IInventoryItemDetailMeta {
   isCostComputeRunning: boolean;
   organizationName: string;
@@ -89,6 +87,11 @@ export interface IInventoryItemDetailMeta {
 
 export interface IInvetoryItemDetailDOO {
   data: IInventoryDetailsData;
+  query: IInventoryDetailsQuery;
+  meta: IInventoryItemDetailMeta;
+}
+
+export interface IInvetoryItemDetailsTable extends IFinancialTable {
   query: IInventoryDetailsQuery;
   meta: IInventoryItemDetailMeta;
 }

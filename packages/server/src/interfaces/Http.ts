@@ -1,5 +1,3 @@
-
-
 export const ACCEPT_TYPE = {
   APPLICATION_PDF: 'application/pdf',
   APPLICATION_JSON: 'application/json',

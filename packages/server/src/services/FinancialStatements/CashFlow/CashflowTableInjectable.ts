@@ -4,7 +4,7 @@ import HasTenancyService from "@/services/Tenancy/TenancyService";
 import CashFlowTable from "./CashFlowTable";
 import CashFlowStatementService from "./CashFlowService";
 
-@Service();
+@Service()
 export class CashflowTableInjectable {
   @Inject()
   private tenancy: HasTenancyService;

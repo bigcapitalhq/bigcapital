@@ -97,34 +97,41 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
     ]);
-    // Retrieves the csv format.
-    if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
-      const sheet = await this.profitLossSheetApp.csv(tenantId, filter);
+    try {
+      // Retrieves the csv format.
+      if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
+        const sheet = await this.profitLossSheetApp.csv(tenantId, filter);
 
-      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
-      res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
 
-      return res.send(sheet);
-      // Retrieves the json table format.
-    } else if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
-      const table = await this.profitLossSheetApp.table(tenantId, filter);
+        return res.send(sheet);
+        // Retrieves the json table format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
+        const table = await this.profitLossSheetApp.table(tenantId, filter);
 
-      return res.status(200).send(table);
-      // Retrieves the xlsx format.
-    } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
-      const sheet = await this.profitLossSheetApp.xlsx(tenantId, filter);
+        return res.status(200).send(table);
+        // Retrieves the xlsx format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
+        const sheet = await this.profitLossSheetApp.xlsx(tenantId, filter);
 
-      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
-      return res.send(sheet);
-      // Retrieves the json format.
-    } else {
-      const sheet = await this.profitLossSheetApp.sheet(tenantId, filter);
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(sheet);
+        // Retrieves the json format.
+      } else {
+        const sheet = await this.profitLossSheetApp.sheet(tenantId, filter);
 
-      return res.status(200).send(sheet);
+        return res.status(200).send(sheet);
+      }
+    } catch (error) {
+      next(error);
     }
   }
 }
