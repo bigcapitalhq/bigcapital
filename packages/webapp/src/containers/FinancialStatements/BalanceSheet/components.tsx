@@ -1,13 +1,32 @@
 // @ts-nocheck
-import React from 'react';
-import { Button } from '@blueprintjs/core';
+import React, { useRef } from 'react';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import classNames from 'classnames';
 
-import { FormattedMessage as T, Icon, If } from '@/components';
+import {
+  FormattedMessage as T,
+  Icon,
+  If,
+  Stack,
+  AppToaster,
+} from '@/components';
 
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import { dynamicColumns } from './dynamicColumns';
+import {
+  useBalanceSheetCsvExport,
+  useBalanceSheetXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Balance sheet alerts.
@@ -64,5 +83,89 @@ export const useBalanceSheetColumns = () => {
   return React.useMemo(
     () => dynamicColumns(table.columns, table.rows),
     [table],
+  );
+};
+
+/**
+ *
+ * @returns
+ */
+export const BalanceSheetExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useBalanceSheetCsvExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+
+  const handleCsvExportBtnClick = () => {
+    csvExport().then(() => {});
+  };
+
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport().then(() => {});
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
   );
 };

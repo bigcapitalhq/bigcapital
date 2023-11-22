@@ -1,16 +1,14 @@
 // @ts-nocheck
 import { useRequestQuery } from '../useQueryRequest';
 import {
-  trialBalanceSheetReducer,
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
-  ARAgingSummaryTableRowsMapper,
-  APAgingSummaryTableRowsMapper,
   inventoryValuationReducer,
   purchasesByItemsReducer,
   salesByItemsReducer,
 } from '@/containers/FinancialStatements/reducers';
 import t from './types';
+import { useDownloadFile } from '../useDownloadFile';
 
 /**
  * Retrieve balance sheet.
@@ -32,6 +30,32 @@ export function useBalanceSheet(query, props) {
     },
   );
 }
+
+export const useBalanceSheetXlsxExport = (args) => {
+  return useDownloadFile({
+    url: '/financial_statements/balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+    },
+    filename: 'balance_sheet.xlsx',
+    ...args
+  });
+};
+
+export const useBalanceSheetCsvExport = (args) => {
+  return useDownloadFile({
+    url: '/financial_statements/balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+    },
+    filename: 'balance_sheet.csv',
+    ...args
+  });
+};
 
 /**
  * Retrieve trial balance sheet.
