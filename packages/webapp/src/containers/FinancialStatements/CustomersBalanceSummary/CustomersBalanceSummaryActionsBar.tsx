@@ -17,6 +17,7 @@ import withCustomersBalanceSummary from './withCustomersBalanceSummary';
 import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryActions';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { compose, saveInvoke } from '@/utils';
+import { CustomerBalanceSummaryExportMenu } from './components';
 
 /**
  * customer balance summary action bar.
@@ -35,7 +36,7 @@ function CustomersBalanceSummaryActionsBar({
   const { refetch, isCustomersBalanceLoading } =
     useCustomersBalanceSummaryContext();
 
-  // handle filter toggle click.
+  // Handle filter toggle click.
   const handleFilterToggleClick = () => {
     toggleCustomerBalanceFilterDrawer();
   };
@@ -112,11 +113,18 @@ function CustomersBalanceSummaryActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<CustomerBalanceSummaryExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

@@ -96,7 +96,6 @@ export const BalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -150,11 +149,11 @@ export const BalanceSheetExportMenu = () => {
       }
     },
   });
-
+  // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
     csvExport().then(() => {});
   };
-
+  // Handle xlsx export button click.
   const handleXlsxExportBtnClick = () => {
     xlsxExport().then(() => {});
   };

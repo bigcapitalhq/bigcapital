@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React from 'react';
-import { Button } from '@blueprintjs/core';
+import { Button, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 
-import { Icon, If, FormattedMessage as T } from '@/components';
+import { Icon, If, Stack, FormattedMessage as T } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { dynamicColumns } from './dynamicColumns';
@@ -63,5 +63,88 @@ export function CashFlowStatementAlerts() {
         <T id={'refresh'} />
       </Button>
     </FinancialComputeAlert>
+  );
+}
+
+/**
+ * Cashflow sheet export menu.
+ * @returns {JSX.Element}
+ */
+export function CashflowSheetExportMenu() {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useBalanceSheetCsvExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport().then(() => {});
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport().then(() => {});
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
   );
 }
