@@ -1,8 +1,27 @@
 // @ts-nocheck
-import React from 'react';
-import { Button, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import React, { useRef } from 'react';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import classNames from 'classnames';
 
-import { Icon, If, Stack, FormattedMessage as T } from '@/components';
+import {
+  AppToaster,
+  Icon,
+  If,
+  Stack,
+  FormattedMessage as T,
+} from '@/components';
+import {
+  useTrialBalanceSheetCsvExport,
+  useTrialBalanceSheetXlsxExport,
+} from '@/hooks/query';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { dynamicColumns } from './dynamicColumns';
@@ -92,7 +111,7 @@ export function CashflowSheetExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport({
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -111,7 +130,7 @@ export function CashflowSheetExportMenu() {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useBalanceSheetCsvExport({
+  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport({
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -131,11 +150,11 @@ export function CashflowSheetExportMenu() {
   });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
-    csvExport().then(() => {});
+    csvExport();
   };
   // Handle xlsx export button click.
   const handleXlsxExportBtnClick = () => {
-    xlsxExport().then(() => {});
+    xlsxExport();
   };
 
   return (

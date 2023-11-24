@@ -618,7 +618,7 @@ export function useCashFlowStatementReport(query, props) {
         columns: res.data.table.columns,
         query: res.data.query,
         meta: res.data.meta,
-        tableRows: res.data.table.data,
+        tableRows: res.data.table.rows,
       }),
       defaultData: {
         tableRows: [],
