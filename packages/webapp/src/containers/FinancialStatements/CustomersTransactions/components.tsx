@@ -115,6 +115,8 @@ export function CustomersTransactionsExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useCustomersTransactionsContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -131,26 +133,29 @@ export function CustomersTransactionsExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useCustomersTransactionsXlsxExport({
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
+  const { mutateAsync: xlsxExport } = useCustomersTransactionsXlsxExport(
+    query,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
     },
-  });
+  );
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useCustomersTransactionsCsvExport({
+  const { mutateAsync: csvExport } = useCustomersTransactionsCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

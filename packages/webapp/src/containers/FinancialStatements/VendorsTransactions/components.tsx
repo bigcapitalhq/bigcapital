@@ -111,6 +111,8 @@ export function VendorTransactionsExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useVendorsTransactionsContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -126,7 +128,7 @@ export function VendorTransactionsExportMenu() {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useVendorsTransactionsXlsxExport({
+  const { mutateAsync: xlsxExport } = useVendorsTransactionsXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

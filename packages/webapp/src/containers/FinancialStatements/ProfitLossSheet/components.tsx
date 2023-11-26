@@ -78,6 +78,8 @@ export const ProfitLossSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useProfitLossSheetContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -94,7 +96,7 @@ export const ProfitLossSheetExportMenu = () => {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useProfitLossSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useProfitLossSheetXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -113,7 +115,7 @@ export const ProfitLossSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useProfitLossSheetCsvExport({
+  const { mutateAsync: csvExport } = useProfitLossSheetCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

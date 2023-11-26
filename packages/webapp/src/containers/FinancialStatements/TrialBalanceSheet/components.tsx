@@ -24,6 +24,7 @@ import {
   useTrialBalanceSheetCsvExport,
   useTrialBalanceSheetXlsxExport,
 } from '@/hooks/query';
+import { useTrialBalanceSheetQuery } from './utils';
 
 /**
  * Trial balance sheet progress loading bar.
@@ -79,6 +80,8 @@ export const TrialBalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useTrialBalanceSheetQuery();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -94,7 +97,7 @@ export const TrialBalanceSheetExportMenu = () => {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -113,7 +116,7 @@ export const TrialBalanceSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport({
+  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -133,11 +136,11 @@ export const TrialBalanceSheetExportMenu = () => {
   });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
-    csvExport().then(() => {});
+    csvExport();
   };
   // Handle xlsx export button click.
   const handleXlsxExportBtnClick = () => {
-    xlsxExport().then(() => {});
+    xlsxExport();
   };
 
   return (

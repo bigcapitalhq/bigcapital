@@ -16,6 +16,7 @@ import {
   useSalesTaxLiabilitySummaryCsvExport,
   useSalesTaxLiabilitySummaryXlsxExport,
 } from '@/hooks/query';
+import { useSalesByItemsContext } from '../SalesByItems/SalesByItemProvider';
 
 /**
  * Sales tax liability summary loading bar.
@@ -39,6 +40,8 @@ export function SalesTaxLiabilityExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useSalesTaxLiabilitySummaryContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -55,43 +58,49 @@ export function SalesTaxLiabilityExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useSalesTaxLiabilitySummaryXlsxExport({
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
+  const { mutateAsync: xlsxExport } = useSalesTaxLiabilitySummaryXlsxExport(
+    query,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
     },
-  });
+  );
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useSalesTaxLiabilitySummaryCsvExport({
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
+  const { mutateAsync: csvExport } = useSalesTaxLiabilitySummaryCsvExport(
+    query,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
     },
-  });
+  );
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
     csvExport();

@@ -19,8 +19,8 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import {
-  useTrialBalanceSheetCsvExport,
-  useTrialBalanceSheetXlsxExport,
+  useCashFlowStatementCsvExport,
+  useCashFlowStatementXlsxExport,
 } from '@/hooks/query';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
@@ -95,6 +95,8 @@ export function CashflowSheetExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useCashFlowStatementContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -111,7 +113,7 @@ export function CashflowSheetExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -130,7 +132,7 @@ export function CashflowSheetExportMenu() {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport({
+  const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

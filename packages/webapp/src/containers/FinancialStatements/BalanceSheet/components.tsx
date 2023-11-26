@@ -27,6 +27,7 @@ import {
   useBalanceSheetCsvExport,
   useBalanceSheetXlsxExport,
 } from '@/hooks/query';
+import { useBalanceSheetQuery } from './utils';
 
 /**
  * Balance sheet alerts.
@@ -96,6 +97,8 @@ export const BalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useBalanceSheetQuery();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -112,7 +115,7 @@ export const BalanceSheetExportMenu = () => {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -131,7 +134,7 @@ export const BalanceSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useBalanceSheetCsvExport({
+  const { mutateAsync: csvExport } = useBalanceSheetCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

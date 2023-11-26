@@ -53,6 +53,8 @@ export function APAgingSummaryExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
+  const { query } = useAPAgingSummaryContext();
+
   const openProgressToast = (amount: number) => {
     return (
       <Stack spacing={8}>
@@ -68,7 +70,7 @@ export function APAgingSummaryExportMenu() {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useAPAgingSheetXlsxExport({
+  const { mutateAsync: xlsxExport } = useAPAgingSheetXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -87,7 +89,7 @@ export function APAgingSummaryExportMenu() {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useAPAgingSheetCsvExport({
+  const { mutateAsync: csvExport } = useAPAgingSheetCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
