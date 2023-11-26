@@ -1,13 +1,14 @@
-import { IFinancialTable, ITableData } from '@/interfaces';
 import xlsx, { WorkBook } from 'xlsx';
+import { IFinancialTable, ITableData } from '@/interfaces';
+import { FinancialTableStructure } from '@/services/FinancialStatements/FinancialTableStructure';
 
 interface ITableSheet {
-  convertToXLSX(): ITableData;
-  convertToCSV(): string;
-  convertToBuffer(table: IFinancialTable, fileType: string): Buffer;
+  convertToXLSX(): WorkBook;
+  convertToCSV(): Buffer;
+  convertToBuffer(workbook: WorkBook, fileType: string): Buffer;
 }
 
-export class TableSheet {
+export class TableSheet implements ITableSheet {
   private table: ITableData;
 
   constructor(table: ITableData) {
@@ -37,7 +38,10 @@ export class TableSheet {
    * @returns {Record<string, string>}
    */
   private get rows() {
-    return this.table.rows.map((row) => {
+    const computedRows = FinancialTableStructure.flatNestedTree(
+      this.table.rows
+    );
+    return computedRows.map((row) => {
       const entries = row.cells.map((cell, index) => {
         return [`${index}`, cell.value];
       });
@@ -49,7 +53,7 @@ export class TableSheet {
    * Converts the table to a CSV string.
    * @returns {string}
    */
-  public convertToCSV() {
+  public convertToCSV(): Buffer {
     // Define custom headers
     const headers = this.columns;
 
@@ -80,8 +84,8 @@ export class TableSheet {
     xlsx.utils.sheet_add_aoa(worksheet, [this.columns], {
       origin: 'A1',
     });
-    // Adjust column width (optional)
-    worksheet['!cols'] = [{ wch: 15 }, { wch: 20 }];
+    // Adjust column width.
+    worksheet['!cols'] = this.computeXlsxColumnsWidths(this.rows);
 
     // Append the worksheet to the workbook
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -95,7 +99,36 @@ export class TableSheet {
    * @param {string} fileType
    * @returns {Promise<Buffer>}
    */
-  public convertToBuffer(workbook: WorkBook, fileType: 'xlsx' | 'csv') {
-    return xlsx.write(workbook, { type: 'buffer', bookType: fileType });
+  public convertToBuffer(workbook: WorkBook, fileType: 'xlsx' | 'csv'): Buffer {
+    return xlsx.write(workbook, {
+      type: 'buffer',
+      bookType: fileType,
+      cellStyles: true,
+    });
   }
+
+  /**
+   * Adjusts and computes the columns width.
+   * @param {} rows
+   * @returns {{wch: number}[]}
+   */
+  private computeXlsxColumnsWidths = (rows): { wch: number }[] => {
+    const cols = [{ wch: 60 }];
+
+    this.columns.map((column) => {
+      cols.push({ wch: column.length });
+    });
+    rows.forEach((row) => {
+      const entries = Object.entries(row);
+
+      entries.forEach(([key, value]) => {
+        if (cols[key]) {
+          cols[key].wch = Math.max(cols[key].wch, String(value).length);
+        } else {
+          cols[key] = { wch: String(value).length };
+        }
+      });
+    });
+    return cols;
+  };
 }
