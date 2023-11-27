@@ -794,7 +794,7 @@ export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {
       },
       params: query,
     },
-    filename: 'vendor_balance_summary.xlsx',
+    filename: 'sales_tax_liability_summary.xlsx',
     ...args,
   });
 };
@@ -808,7 +808,7 @@ export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
       },
       params: query,
     },
-    filename: 'vendor_balance_summary.csv',
+    filename: 'sales_tax_liability_summary.csv',
     ...args,
   });
 };
