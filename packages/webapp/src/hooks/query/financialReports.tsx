@@ -591,7 +591,7 @@ export const useVendorsTransactionsXlsxExport = (query, args) => {
     },
     params: query,
   };
-  const filename = 'vendor_balance_summary.xlsx';
+  const filename = 'transactions_by_vendor.xlsx';
 
   return useDownloadFile({
     url,
@@ -610,7 +610,7 @@ export const useVendorsTransactionsCsvExport = (query, args) => {
       },
       params: query,
     },
-    filename: 'vendor_balance_summary.csv',
+    filename: 'transactions_by_vendor.csv',
     ...args,
   });
 };
