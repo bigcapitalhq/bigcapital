@@ -22,7 +22,9 @@ export function tableRowMapper(
 ): ITableRow {
   const cells = columns.map((column) => ({
     key: column.key,
-    value: column.value ? column.value : getAccessor(object, column.accessor),
+    value: column.value
+      ? column.value
+      : getAccessor(object, column.accessor) || '',
   }));
 
   return {

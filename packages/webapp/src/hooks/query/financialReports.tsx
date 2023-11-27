@@ -702,7 +702,7 @@ export function useInventoryItemDetailsReport(query, props) {
         columns: res.data.table.columns,
         query: res.data.query,
         meta: res.data.meta,
-        tableRows: res.data.table.data,
+        tableRows: res.data.table.rows,
       }),
       defaultData: {
         tableRows: [],
@@ -714,6 +714,34 @@ export function useInventoryItemDetailsReport(query, props) {
     },
   );
 }
+
+export const useInventoryItemDetailsXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-item-details',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'inventory_item_details.xlsx',
+    ...args,
+  });
+};
+
+export const useInventoryItemDetailsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-item-details',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'inventory_item_details.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve transactions by reference report.

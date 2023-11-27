@@ -7,6 +7,7 @@ import intl from 'react-intl-universal';
 
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
+import { transformFilterFormToQuery } from '../common';
 
 /**
  * Retrieves inventory item details default query.
@@ -72,4 +73,14 @@ export const useInventoryValuationQuery = () => {
     locationQuery,
     setLocationQuery,
   };
+};
+
+/**
+ * Retrieves the inventory valuation http query.
+ * @returns {Object}
+ */
+export const useInventoryValuationHttpQuery = () => {
+  const { query } = useInventoryValuationQuery();
+
+  return React.useMemo(() => transformFilterFormToQuery(query), [query]);
 };
