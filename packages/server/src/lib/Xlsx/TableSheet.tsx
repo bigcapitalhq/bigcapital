@@ -4,7 +4,7 @@ import { FinancialTableStructure } from '@/services/FinancialStatements/Financia
 
 interface ITableSheet {
   convertToXLSX(): WorkBook;
-  convertToCSV(): Buffer;
+  convertToCSV(): string;
   convertToBuffer(workbook: WorkBook, fileType: string): Buffer;
 }
 
@@ -53,7 +53,7 @@ export class TableSheet implements ITableSheet {
    * Converts the table to a CSV string.
    * @returns {string}
    */
-  public convertToCSV(): Buffer {
+  public convertToCSV(): string {
     // Define custom headers
     const headers = this.columns;
 
