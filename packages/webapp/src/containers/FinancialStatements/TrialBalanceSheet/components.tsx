@@ -24,7 +24,7 @@ import {
   useTrialBalanceSheetCsvExport,
   useTrialBalanceSheetXlsxExport,
 } from '@/hooks/query';
-import { useTrialBalanceSheetQuery } from './utils';
+import { useTrialBalanceSheetHttpQuery } from './utils';
 
 /**
  * Trial balance sheet progress loading bar.
@@ -80,7 +80,7 @@ export const TrialBalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useTrialBalanceSheetQuery();
+  const httpQuery = useTrialBalanceSheetHttpQuery();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -97,26 +97,29 @@ export const TrialBalanceSheetExportMenu = () => {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
+  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(
+    httpQuery,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
     },
-  });
+  );
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport(query, {
+  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

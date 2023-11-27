@@ -27,7 +27,6 @@ import {
   useBalanceSheetCsvExport,
   useBalanceSheetXlsxExport,
 } from '@/hooks/query';
-import { useBalanceSheetQuery } from './utils';
 
 /**
  * Balance sheet alerts.
@@ -97,7 +96,7 @@ export const BalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useBalanceSheetQuery();
+  const { query } = useBalanceSheetContext();
 
   const openProgressToast = (amount: number) => {
     return (

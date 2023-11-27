@@ -14,7 +14,10 @@ export class CashflowExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(tenantId: number, query: ICashFlowStatementQuery) {
+  public async xlsx(
+    tenantId: number,
+    query: ICashFlowStatementQuery
+  ): Promise<Buffer> {
     const table = await this.cashflowSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

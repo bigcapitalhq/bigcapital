@@ -93,7 +93,6 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-
     try {
       const accept = this.accepts(req);
 

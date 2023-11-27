@@ -78,7 +78,7 @@ export default class CashFlowController extends BaseFinancialReportController {
         ACCEPT_TYPE.APPLICATION_JSON,
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
-        ACCEPT_TYPE.APPLICATION_PDF,
+        ACCEPT_TYPE.APPLICATION_XLSX,
       ]);
       // Retrieves the json table format.
       if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
@@ -105,7 +105,7 @@ export default class CashFlowController extends BaseFinancialReportController {
           'Content-Type',
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         );
-        return res.status(200).send(buffer);
+        return res.send(buffer);
         // Retrieves the json format.
       } else {
         const cashflow = await this.cashflowSheetApp.sheet(tenantId, filter);
