@@ -1,6 +1,10 @@
 import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
-import { ITransactionsByVendorsVendor, ITableRow, ITableColumn } from '@/interfaces';
+import {
+  ITransactionsByVendorsVendor,
+  ITableRow,
+  ITableColumn,
+} from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -15,6 +19,8 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
 
   /**
    * Constructor method.
+   * @param {ITransactionsByVendorsVendor[]} vendorsTransactions -
+   * @param {any} i18n
    */
   constructor(vendorsTransactions: ITransactionsByVendorsVendor[], i18n) {
     super();
@@ -71,7 +77,11 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
     return R.map(this.vendorRowsMapper)(this.vendorsTransactions);
   };
 
+  /**
+   * Retrieve the table columns of transactions by vendors report.
+   * @returns {ITableColumn[]}
+   */
   public tableColumns = (): ITableColumn[] => {
     return [];
-  }
+  };
 }

@@ -27,7 +27,6 @@ export class SalesTaxLiabilitySummaryTableInjectable {
         rows: table.tableRows(),
         columns: table.tableColumns(),
       },
-      data: report.data,
       query: report.query,
       meta: report.meta,
     };

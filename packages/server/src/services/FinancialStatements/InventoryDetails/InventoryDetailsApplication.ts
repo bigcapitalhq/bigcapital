@@ -1,4 +1,7 @@
-import { IInventoryDetailsQuery } from '@/interfaces';
+import {
+  IInventoryDetailsQuery,
+  IInvetoryItemDetailsTable,
+} from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { InventoryDetailsExportInjectable } from './InventoryDetailsExportInjectable';
 import { InventoryDetailsTableInjectable } from './InventoryDetailsTableInjectable';
@@ -17,8 +20,8 @@ export class InventortyDetailsApplication {
 
   /**
    * Retrieves the inventory details report in sheet format.
-   * @param {number} tenantId 
-   * @param {IInventoryDetailsQuery} query 
+   * @param {number} tenantId
+   * @param {IInventoryDetailsQuery} query
    * @returns {Promise<IInvetoryItemDetailDOO>}
    */
   public sheet(tenantId: number, query: IInventoryDetailsQuery) {
@@ -31,7 +34,10 @@ export class InventortyDetailsApplication {
    * @param {IInventoryDetailsQuery} query
    * @returns
    */
-  public table(tenantId: number, query: IInventoryDetailsQuery) {
+  public table(
+    tenantId: number,
+    query: IInventoryDetailsQuery
+  ): Promise<IInvetoryItemDetailsTable> {
     return this.inventoryDetailsTable.table(tenantId, query);
   }
 
@@ -41,7 +47,10 @@ export class InventortyDetailsApplication {
    * @param {IInventoryDetailsQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(tenantId: number, query: IInventoryDetailsQuery) {
+  public xlsx(
+    tenantId: number,
+    query: IInventoryDetailsQuery
+  ): Promise<Buffer> {
     return this.inventoryDetailsExport.xlsx(tenantId, query);
   }
 
@@ -49,9 +58,9 @@ export class InventortyDetailsApplication {
    * Retrieves the inventory details report in CSV format.
    * @param {number} tenantId
    * @param {IInventoryDetailsQuery} query
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
-  public csv(tenantId: number, query: IInventoryDetailsQuery) {
+  public csv(tenantId: number, query: IInventoryDetailsQuery): Promise<string> {
     return this.inventoryDetailsExport.csv(tenantId, query);
   }
 }

@@ -1,6 +1,6 @@
-import { ITransactionsByReferenceQuery, ITransactionsByVendorsFilter } from '@/interfaces';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { Inject, Service } from 'typedi';
+import { ITransactionsByVendorsFilter } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
 
 @Service()
@@ -14,7 +14,10 @@ export class TransactionsByVendorExportInjectable {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(tenantId: number, query: ITransactionsByVendorsFilter) {
+  public async xlsx(
+    tenantId: number,
+    query: ITransactionsByVendorsFilter
+  ): Promise<Buffer> {
     const table = await this.transactionsByVendorTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

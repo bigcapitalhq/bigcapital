@@ -40,7 +40,10 @@ export class VendorBalanceSummaryApplication {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(tenantId: number, query: IVendorBalanceSummaryQuery) {
+  public xlsx(
+    tenantId: number,
+    query: IVendorBalanceSummaryQuery
+  ): Promise<Buffer> {
     return this.vendorBalanceSummaryExport.xlsx(tenantId, query);
   }
 
@@ -50,7 +53,10 @@ export class VendorBalanceSummaryApplication {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public csv(tenantId: number, query: IVendorBalanceSummaryQuery) {
+  public csv(
+    tenantId: number,
+    query: IVendorBalanceSummaryQuery
+  ): Promise<string> {
     return this.vendorBalanceSummaryExport.csv(tenantId, query);
   }
 }

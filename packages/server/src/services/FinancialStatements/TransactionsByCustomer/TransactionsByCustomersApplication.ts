@@ -38,7 +38,7 @@ export class TransactionsByCustomerApplication {
    * Retrieves the transactions by vendors sheet in table format.
    * @param {number} tenantId
    * @param {ITransactionsByCustomersFilter} query
-   * @returns {}
+   * @returns {Promise<ITransactionsByCustomersTable>}
    */
   public table(tenantId: number, query: ITransactionsByCustomersFilter) {
     return this.transactionsByCustomersTable.table(tenantId, query);
@@ -48,8 +48,12 @@ export class TransactionsByCustomerApplication {
    * Retrieves the transactions by vendors sheet in CSV format.
    * @param {number} tenantId
    * @param {ITransactionsByCustomersFilter} query
+   * @returns {Promise<string>}
    */
-  public csv(tenantId: number, query: ITransactionsByCustomersFilter) {
+  public csv(
+    tenantId: number,
+    query: ITransactionsByCustomersFilter
+  ): Promise<string> {
     return this.transactionsByCustomersExport.csv(tenantId, query);
   }
 
@@ -57,8 +61,12 @@ export class TransactionsByCustomerApplication {
    * Retrieves the transactions by vendors sheet in XLSX format.
    * @param {number} tenantId
    * @param {ITransactionsByCustomersFilter} query
+   * @returns {Promise<Buffer>}
    */
-  public xlsx(tenantId: number, query: ITransactionsByCustomersFilter) {
+  public xlsx(
+    tenantId: number,
+    query: ITransactionsByCustomersFilter
+  ): Promise<Buffer> {
     return this.transactionsByCustomersExport.xlsx(tenantId, query);
   }
 }

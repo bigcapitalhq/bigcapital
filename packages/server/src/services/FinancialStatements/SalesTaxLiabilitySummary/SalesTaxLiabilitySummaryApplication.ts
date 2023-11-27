@@ -41,7 +41,10 @@ export class SalesTaxLiabilitySummaryApplication {
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(tenantId: number, query: SalesTaxLiabilitySummaryQuery) {
+  public xlsx(
+    tenantId: number,
+    query: SalesTaxLiabilitySummaryQuery
+  ): Promise<Buffer> {
     return this.salesTaxLiabilityExport.xlsx(tenantId, query);
   }
 
@@ -49,9 +52,12 @@ export class SalesTaxLiabilitySummaryApplication {
    * Retrieves the sales tax liability summary in CSV format.
    * @param {number} tenantId
    * @param {SalesTaxLiabilitySummaryQuery} query
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
-  public csv(tenantId: number, query: SalesTaxLiabilitySummaryQuery) {
+  public csv(
+    tenantId: number,
+    query: SalesTaxLiabilitySummaryQuery
+  ): Promise<string> {
     return this.salesTaxLiabilityExport.csv(tenantId, query);
   }
 }

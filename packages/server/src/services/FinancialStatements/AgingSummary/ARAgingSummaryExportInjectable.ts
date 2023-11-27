@@ -9,12 +9,15 @@ export class ARAgingSummaryExportInjectable {
   private ARAgingSummaryTable: ARAgingSummaryTableInjectable;
 
   /**
-   * Retrieves the AR aging summary sheet in XLSX format.
+   * Retrieves the A/R aging summary sheet in XLSX format.
    * @param {number} tenantId
    * @param {IARAgingSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(tenantId: number, query: IARAgingSummaryQuery) {
+  public async xlsx(
+    tenantId: number,
+    query: IARAgingSummaryQuery
+  ): Promise<Buffer> {
     const table = await this.ARAgingSummaryTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -24,7 +27,7 @@ export class ARAgingSummaryExportInjectable {
   }
 
   /**
-   * Retrieves the AR aging summary sheet in CSV format.
+   * Retrieves the A/R aging summary sheet in CSV format.
    * @param {number} tenantId
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}

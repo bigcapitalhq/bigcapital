@@ -14,7 +14,10 @@ export class TransactionsByCustomersExportInjectable {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(tenantId: number, query: ITransactionsByCustomersFilter) {
+  public async xlsx(
+    tenantId: number,
+    query: ITransactionsByCustomersFilter
+  ): Promise<Buffer> {
     const table = await this.transactionsByCustomerTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -27,7 +30,7 @@ export class TransactionsByCustomersExportInjectable {
    * Retrieves the cashflow sheet in CSV format.
    * @param {number} tenantId
    * @param {ITransactionsByCustomersFilter} query
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
   public async csv(
     tenantId: number,
