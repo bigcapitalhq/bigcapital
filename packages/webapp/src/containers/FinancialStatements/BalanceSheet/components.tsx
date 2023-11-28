@@ -87,8 +87,8 @@ export const useBalanceSheetColumns = () => {
 };
 
 /**
- *
- * @returns
+ * Retrieves the balance sheet export menu.
+ * @returns {JSX.Element}
  */
 export const BalanceSheetExportMenu = () => {
   const toastKey = useRef(null);
