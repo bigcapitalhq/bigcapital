@@ -30,7 +30,7 @@ export class ARAgingSummaryExportInjectable {
    * Retrieves the A/R aging summary sheet in CSV format.
    * @param {number} tenantId
    * @param {ICashFlowStatementQuery} query
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
   public async csv(
     tenantId: number,

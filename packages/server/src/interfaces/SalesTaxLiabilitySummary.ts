@@ -1,3 +1,5 @@
+import { IFinancialTable } from "./Table";
+
 export interface SalesTaxLiabilitySummaryQuery {
   fromDate: Date;
   toDate: Date;
@@ -48,4 +50,9 @@ export type SalesTaxLiabilitySummarySalesById = Record<
 export interface SalesTaxLiabilitySummaryMeta  {
   organizationName: string;
   baseCurrency: string;
+}
+
+export interface ISalesTaxLiabilitySummaryTable extends IFinancialTable {
+  query: SalesTaxLiabilitySummaryQuery;
+  meta: SalesTaxLiabilitySummaryMeta;
 }

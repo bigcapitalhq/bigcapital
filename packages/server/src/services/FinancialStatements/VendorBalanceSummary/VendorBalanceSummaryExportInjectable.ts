@@ -1,7 +1,7 @@
+import { Inject, Service } from 'typedi';
 import { IVendorBalanceSummaryQuery } from '@/interfaces';
 import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class VendorBalanceSummaryExportInjectable {
@@ -27,7 +27,7 @@ export class VendorBalanceSummaryExportInjectable {
    * Retrieves the vendor balance summary sheet in CSV format.
    * @param {number} tenantId
    * @param {IVendorBalanceSummaryQuery} query
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
   public async csv(
     tenantId: number,

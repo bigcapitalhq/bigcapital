@@ -1,5 +1,8 @@
 import { Inject, Service } from 'typedi';
-import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
+import {
+  ISalesTaxLiabilitySummaryTable,
+  SalesTaxLiabilitySummaryQuery,
+} from '@/interfaces/SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummaryTable } from './SalesTaxLiabilitySummaryTable';
 import { SalesTaxLiabilitySummaryService } from './SalesTaxLiabilitySummaryService';
 
@@ -12,9 +15,12 @@ export class SalesTaxLiabilitySummaryTableInjectable {
    * Retrieve sales tax liability summary table.
    * @param {number} tenantId
    * @param {SalesTaxLiabilitySummaryQuery} query
-   * @returns
+   * @returns {Promise<ISalesTaxLiabilitySummaryTable>}
    */
-  public async table(tenantId: number, query: SalesTaxLiabilitySummaryQuery) {
+  public async table(
+    tenantId: number,
+    query: SalesTaxLiabilitySummaryQuery
+  ): Promise<ISalesTaxLiabilitySummaryTable> {
     const report = await this.salesTaxLiability.salesTaxLiability(
       tenantId,
       query
