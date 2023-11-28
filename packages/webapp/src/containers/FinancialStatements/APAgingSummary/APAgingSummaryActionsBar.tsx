@@ -15,6 +15,7 @@ import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { APAgingSummaryExportMenu } from './components';
 
 import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
@@ -106,11 +107,18 @@ function APAgingSummaryActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<APAgingSummaryExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

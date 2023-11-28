@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import {
   NavbarGroup,
   Button,
@@ -13,11 +12,12 @@ import classNames from 'classnames';
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { BalanceSheetExportMenu } from './components';
 
-import { compose, saveInvoke } from '@/utils';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
+import { compose, saveInvoke } from '@/utils';
 
 /**
  * Balance sheet - actions bar.
@@ -114,11 +114,18 @@ function BalanceSheetActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<BalanceSheetExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

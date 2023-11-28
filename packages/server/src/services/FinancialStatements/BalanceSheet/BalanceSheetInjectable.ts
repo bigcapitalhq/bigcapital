@@ -19,13 +19,10 @@ export default class BalanceSheetStatementService
   implements IBalanceSheetStatementService
 {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
+  private inventoryService: InventoryService;
 
   /**
    * Defaults balance sheet filter query.
@@ -94,10 +91,8 @@ export default class BalanceSheetStatementService
 
   /**
    * Retrieve balance sheet statement.
-   * -------------
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
-   *
    * @return {IBalanceSheetStatement}
    */
   public async balanceSheet(

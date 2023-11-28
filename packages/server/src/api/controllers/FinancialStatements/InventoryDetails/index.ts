@@ -8,24 +8,20 @@ import {
   ValidationChain,
 } from 'express';
 import BaseController from '@/api/controllers/BaseController';
-import InventoryDetailsService from '@/services/FinancialStatements/InventoryDetails/InventoryDetailsService';
-import InventoryDetailsTable from '@/services/FinancialStatements/InventoryDetails/InventoryDetailsTable';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
+import { InventortyDetailsApplication } from '@/services/FinancialStatements/InventoryDetails/InventoryDetailsApplication';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class InventoryDetailsController extends BaseController {
   @Inject()
-  inventoryDetailsService: InventoryDetailsService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private inventoryItemDetailsApp: InventortyDetailsApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -45,7 +41,7 @@ export default class InventoryDetailsController extends BaseController {
    * Balance sheet validation schecma.
    * @returns {ValidationChain[]}
    */
-  get validationSchema(): ValidationChain[] {
+  private get validationSchema(): ValidationChain[] {
     return [
       query('number_format.precision')
         .optional()
@@ -77,69 +73,66 @@ export default class InventoryDetailsController extends BaseController {
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
-   * @param {ICashFlowStatement} cashFlow -
-   */
-  private transformJsonResponse(inventoryDetails) {
-    const { data, query, meta } = inventoryDetails;
-
-    return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
-    };
-  }
-
-  /**
-   * Transformes the report statement to table rows.
-   */
-  private transformToTableRows(inventoryDetails, tenantId: number) {
-    const i18n = this.tenancy.i18n(tenantId);
-    const inventoryDetailsTable = new InventoryDetailsTable(
-      inventoryDetails,
-      i18n
-    );
-
-    return {
-      table: {
-        data: inventoryDetailsTable.tableData(),
-        columns: inventoryDetailsTable.tableColumns(),
-      },
-      query: this.transfromToResponse(inventoryDetails.query),
-      meta: this.transfromToResponse(inventoryDetails.meta),
-    };
-  }
-
-  /**
-   * Retrieve the cash flow statment.
+   * Retrieve the inventory item details sheet.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
    * @returns {Response}
    */
-  async inventoryDetails(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
+  private async inventoryDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
     const filter = {
       ...this.matchedQueryData(req),
     };
 
     try {
-      const inventoryDetails =
-        await this.inventoryDetailsService.inventoryDetails(tenantId, filter);
-
       const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
+      // Retrieves the csv format.
+      if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
+        const buffer = await this.inventoryItemDetailsApp.csv(tenantId, filter);
 
-      switch (acceptType) {
-        case 'application/json+table':
-          return res
-            .status(200)
-            .send(this.transformToTableRows(inventoryDetails, tenantId));
-        case 'json':
-        default:
-          return res
-            .status(200)
-            .send(this.transformJsonResponse(inventoryDetails));
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
+
+        return res.send(buffer);
+        // Retrieves the xlsx format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
+        const buffer = await this.inventoryItemDetailsApp.xlsx(
+          tenantId,
+          filter
+        );
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieves the json table format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
+        const table = await this.inventoryItemDetailsApp.table(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(table);
+      } else {
+        const sheet = await this.inventoryItemDetailsApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

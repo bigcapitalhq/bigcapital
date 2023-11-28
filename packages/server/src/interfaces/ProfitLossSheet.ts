@@ -2,6 +2,7 @@ import {
   IFinancialSheetBranchesQuery,
   INumberFormatQuery,
 } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export enum ProfitLossAggregateNodeId {
   INCOME = 'INCOME',
@@ -176,4 +177,10 @@ export enum ProfitLossSheetRowType {
   ACCOUNTS = 'ACCOUNTS',
   ACCOUNT = 'ACCOUNT',
   TOTAL = 'TOTAL',
+}
+
+
+export interface IProfitLossSheetTable extends IFinancialTable{
+  meta: IProfitLossSheetMeta;
+  query: IProfitLossSheetQuery;
 }

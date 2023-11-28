@@ -13,6 +13,7 @@ import { DashboardActionsBar, Icon, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
+import { InventoryItemDetailsExportMenu } from './components';
 
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import withInventoryItemDetails from './withInventoryItemDetails';
@@ -112,11 +113,18 @@ function InventoryItemDetailsActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<InventoryItemDetailsExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

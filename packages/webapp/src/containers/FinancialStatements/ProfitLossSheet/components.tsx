@@ -1,11 +1,29 @@
 // @ts-nocheck
-import React from 'react';
-import { Button } from '@blueprintjs/core';
-import { Icon, If, FormattedMessage as T } from '@/components';
-
+import React, { useRef } from 'react';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import {
+  AppToaster,
+  Icon,
+  If,
+  Stack,
+  FormattedMessage as T,
+} from '@/components';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+import {
+  useProfitLossSheetCsvExport,
+  useProfitLossSheetXlsxExport,
+} from '@/hooks/query';
+import classNames from 'classnames';
 
 /**
  * Profit/loss sheet loading bar.
@@ -50,3 +68,87 @@ export function ProfitLossSheetAlerts() {
     </FinancialComputeAlert>
   );
 }
+
+/**
+ * Profit/loss sheet export menu.
+ */
+export const ProfitLossSheetExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const { query } = useProfitLossSheetContext();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useProfitLossSheetXlsxExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useProfitLossSheetCsvExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

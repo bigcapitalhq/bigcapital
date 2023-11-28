@@ -5,6 +5,7 @@ import { castArray } from 'lodash';
 
 import { useAppQueryString } from '@/hooks';
 import { transformToForm } from '@/utils';
+import { transformFilterFormToQuery } from '../common';
 
 /**
  * Retrieves the default trial balance query.
@@ -55,4 +56,14 @@ export const useTrialBalanceSheetQuery = () => {
     locationQuery,
     setLocationQuery,
   };
+};
+
+/**
+ * Retrieves the trial balance sheet http query.
+ * @returns {object}
+ */
+export const useTrialBalanceSheetHttpQuery = () => {
+  const { query } = useTrialBalanceSheetQuery();
+
+  return React.useMemo(() => transformFilterFormToQuery(query), [query]);
 };

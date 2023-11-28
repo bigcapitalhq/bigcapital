@@ -1,30 +1,22 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
-import {
-  AbilitySubject,
-  ITransactionsByCustomersStatement,
-  ReportsAction,
-} from '@/interfaces';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
-import TransactionsByCustomersService from '@/services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersService';
-import TransactionsByCustomersTableRows from '@/services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersTableRows';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { TransactionsByCustomerApplication } from '@/services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class TransactionsByCustomersReportController extends BaseFinancialReportController {
   @Inject()
-  transactionsByCustomersService: TransactionsByCustomersService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private transactionsByCustomersApp: TransactionsByCustomerApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -59,44 +51,12 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
   }
 
   /**
-   * Transformes the statement to table rows response.
-   * @param {ITransactionsByCustomersStatement} statement -
-   */
-  private transformToTableResponse(customersTransactions, tenantId) {
-    const i18n = this.tenancy.i18n(tenantId);
-    const table = new TransactionsByCustomersTableRows(
-      customersTransactions,
-      i18n
-    );
-    return {
-      table: {
-        rows: table.tableRows(),
-      },
-    };
-  }
-
-  /**
-   * Transformes the statement to json response.
-   * @param {ITransactionsByCustomersStatement} statement -
-   */
-  private transfromToJsonResponse(
-    data,
-    columns
-  ): ITransactionsByCustomersStatement {
-    return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
-    };
-  }
-
-  /**
    * Retrieve payable aging summary report.
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async transactionsByCustomers(
+  private async transactionsByCustomers(
     req: Request,
     res: Response,
     next: NextFunction
@@ -104,25 +64,51 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
+    const accept = this.accepts(req);
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+    ]);
     try {
-      const report =
-        await this.transactionsByCustomersService.transactionsByCustomers(
+      // Retrieves the json table format.
+      if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+        const table = await this.transactionsByCustomersApp.table(
           tenantId,
           filter
         );
-      const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
+        return res.status(200).send(table);
+        // Retrieve the csv format.
+      } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+        const csv = await this.transactionsByCustomersApp.csv(tenantId, filter);
 
-      switch (acceptType) {
-        case 'json':
-          return res
-            .status(200)
-            .send(this.transfromToJsonResponse(report.data, report.columns));
-        case 'application/json+table':
-        default:
-          return res
-            .status(200)
-            .send(this.transformToTableResponse(report.data, tenantId));
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
+
+        return res.send(csv);
+        // Retrieve the xlsx format.
+      } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+        const buffer = await this.transactionsByCustomersApp.xlsx(
+          tenantId,
+          filter
+        );
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieve the json format.
+      } else {
+        const sheet = await this.transactionsByCustomersApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

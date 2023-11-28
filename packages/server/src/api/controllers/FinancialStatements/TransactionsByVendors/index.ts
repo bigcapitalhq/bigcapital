@@ -3,27 +3,19 @@ import { query, ValidationChain } from 'express-validator';
 import { Inject } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
-import TransactionsByVendorsTableRows from '@/services/FinancialStatements/TransactionsByVendor/TransactionsByVendorTableRows';
-import TransactionsByVendorsService from '@/services/FinancialStatements/TransactionsByVendor/TransactionsByVendorService';
-import {
-  AbilitySubject,
-  ITransactionsByVendorsStatement,
-  ReportsAction,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { TransactionsByVendorApplication } from '@/services/FinancialStatements/TransactionsByVendor/TransactionsByVendorApplication';
 
 export default class TransactionsByVendorsReportController extends BaseFinancialReportController {
   @Inject()
-  transactionsByVendorsService: TransactionsByVendorsService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private transactionsByVendorsApp: TransactionsByVendorApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -42,7 +34,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
   /**
    * Validation schema.
    */
-  get validationSchema(): ValidationChain[] {
+  private get validationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
 
@@ -59,63 +51,63 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
   }
 
   /**
-   * Transformes the report statement to table rows.
-   * @param {ITransactionsByVendorsStatement} statement -
-   */
-  private transformToTableRows(tenantId: number, transactions: any[]) {
-    const i18n = this.tenancy.i18n(tenantId);
-    const table = new TransactionsByVendorsTableRows(transactions, i18n);
-
-    return {
-      table: {
-        data: table.tableRows(),
-      },
-    };
-  }
-
-  /**
-   * Transformes the report statement to json response.
-   * @param {ITransactionsByVendorsStatement} statement -
-   */
-  private transformToJsonResponse({
-    data,
-    columns,
-    query,
-  }: ITransactionsByVendorsStatement) {
-    return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
-    };
-  }
-
-  /**
    * Retrieve payable aging summary report.
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async transactionsByVendors(req: Request, res: Response, next: NextFunction) {
+  private async transactionsByVendors(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
     try {
-      const report =
-        await this.transactionsByVendorsService.transactionsByVendors(
+      const accept = this.accepts(req);
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
+
+      // Retrieves the xlsx format.
+      if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+        const buffer = await this.transactionsByVendorsApp.xlsx(
           tenantId,
           filter
         );
-      const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
-
-      switch (acceptType) {
-        case 'application/json+table':
-          return res
-            .status(200)
-            .send(this.transformToTableRows(tenantId, report.data));
-        case 'json':
-        default:
-          return res.status(200).send(this.transformToJsonResponse(report));
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=report.xlsx'
+        );
+        return res.send(buffer);
+        // Retrieves the csv format.
+      } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+        const buffer = await this.transactionsByVendorsApp.csv(
+          tenantId,
+          filter
+        );
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=report.csv');
+        return res.send(buffer);
+        // Retrieves the json table format.
+      } else if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+        const table = await this.transactionsByVendorsApp.table(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(table);
+        // Retrieves the json format.
+      } else {
+        const sheet = await this.transactionsByVendorsApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

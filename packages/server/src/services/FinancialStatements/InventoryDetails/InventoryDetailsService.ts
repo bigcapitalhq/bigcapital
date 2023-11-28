@@ -6,7 +6,7 @@ import {
   IInventoryItemDetailMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import InventoryDetails from './InventoryDetails';
+import { InventoryDetails } from './InventoryDetails';
 import FinancialSheet from '../FinancialSheet';
 import InventoryDetailsRepository from './InventoryDetailsRepository';
 import InventoryService from '@/services/Inventory/Inventory';
@@ -14,7 +14,7 @@ import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class InventoryDetailsService extends FinancialSheet {
+export class InventoryDetailsService extends FinancialSheet {
   @Inject()
   private tenancy: TenancyService;
 

@@ -16,15 +16,12 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_SALES_BY_ITEMS,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_SALES_BY_ITEMS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
       asyncMiddleware(this.purchasesByItems.bind(this))
@@ -35,7 +32,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
   /**
    * Validation schema.
    */
-  get validationSchema(): ValidationChain[] {
+  private get validationSchema(): ValidationChain[] {
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
@@ -63,7 +60,11 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
    * @param {Request} req -
    * @param {Response} res -
    */
-  async purchasesByItems(req: Request, res: Response, next: NextFunction) {
+  private async purchasesByItems(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 

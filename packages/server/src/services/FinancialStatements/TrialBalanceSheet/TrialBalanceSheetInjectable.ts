@@ -1,7 +1,6 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import Journal from '@/services/Accounting/JournalPoster';
 import {
   ITrialBalanceSheetMeta,
   ITrialBalanceSheetQuery,
@@ -13,7 +12,6 @@ import InventoryService from '@/services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
-import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
@@ -30,7 +28,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
    * Defaults trial balance sheet filter query.
    * @return {IBalanceSheetQuery}
    */
-  get defaultQuery(): ITrialBalanceSheetQuery {
+  private get defaultQuery(): ITrialBalanceSheetQuery {
     return {
       fromDate: moment().startOf('year').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -54,7 +52,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
    * @param {number} tenantId - Tenant id.
    * @returns {ITrialBalanceSheetMeta}
    */
-  reportMetadata(tenantId: number): ITrialBalanceSheetMeta {
+  private reportMetadata(tenantId: number): ITrialBalanceSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
     const isCostComputeRunning =
@@ -89,7 +87,6 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       ...this.defaultQuery,
       ...query,
     };
-
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
@@ -118,29 +115,6 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       data: trialBalanceSheetData,
       query: filter,
       meta: this.reportMetadata(tenantId),
-    };
-  }
-
-  /**
-   * Retrieves the trial balance sheet table.
-   * @param {number} tenantId
-   * @param {ITrialBalanceSheetQuery} query
-   * @returns {Promise<any>}
-   */
-  public async trialBalanceSheetTable(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ) {
-    const trialBalance = await this.trialBalanceSheet(tenantId, query);
-    const table = new TrialBalanceSheetTable(trialBalance.data, query, {});
-
-    return {
-      table: {
-        columns: table.tableColumns(),
-        rows: table.tableRows(),
-      },
-      meta: trialBalance.meta,
-      query: trialBalance.query,
     };
   }
 }

@@ -1,13 +1,18 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
+import classNames from 'classnames';
 
-import { If } from '@/components';
-import { Align } from '@/constants';
+import { AppToaster, If, Stack } from '@/components';
+import { Align, CLASSES } from '@/constants';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-
+import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import {
+  useVendorBalanceSummaryCsvExport,
+  useVendorBalanceSummaryXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Retrieve vendors balance summary columns.
@@ -83,5 +88,88 @@ export function VendorsSummarySheetLoadingBar() {
     <If condition={isVendorsBalanceFetching}>
       <FinancialLoadingBar />
     </If>
+  );
+}
+
+/**
+ * Vendor summary sheet export menu.
+ * @returns {JSX.Element}
+ */
+export function VendorSummarySheetExportMenu() {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [CLASSES.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useVendorBalanceSummaryXlsxExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useVendorBalanceSummaryCsvExport({
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport().then(() => {});
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport().then(() => {});
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
   );
 }

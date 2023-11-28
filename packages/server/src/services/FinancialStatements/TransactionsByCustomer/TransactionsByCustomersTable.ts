@@ -1,6 +1,6 @@
 import * as R from 'ramda';
-import { tableRowMapper, tableMapper } from 'utils';
-import { ITransactionsByCustomersCustomer, ITableRow } from '@/interfaces';
+import { tableRowMapper } from 'utils';
+import { ITransactionsByCustomersCustomer, ITableRow, ITableColumn } from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -10,17 +10,14 @@ enum ROW_TYPE {
   CUSTOMER = 'CUSTOMER',
 }
 
-export default class TransactionsByCustomersTableRows extends TransactionsByContactsTableRows {
+export class TransactionsByCustomersTable extends TransactionsByContactsTableRows {
   private customersTransactions: ITransactionsByCustomersCustomer[];
 
   /**
    * Constructor method.
    * @param {ITransactionsByCustomersCustomer[]} customersTransactions - Customers transactions.
    */
-  constructor(
-    customersTransactions: ITransactionsByCustomersCustomer[],
-    i18n
-  ) {
+  constructor(customersTransactions: ITransactionsByCustomersCustomer[], i18n) {
     super();
     this.customersTransactions = customersTransactions;
     this.i18n = i18n;
@@ -75,4 +72,12 @@ export default class TransactionsByCustomersTableRows extends TransactionsByCont
       this.customersTransactions
     );
   };
+
+  /**
+   * Retrieve the table columns of transactions by customers report.
+   * @returns {ITableColumn[]}
+   */
+  public tableColumns = (): ITableColumn[] => {
+    return [];
+  }
 }

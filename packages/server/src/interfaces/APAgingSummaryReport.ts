@@ -8,6 +8,7 @@ import {
   IAgingSummaryData,
 } from './AgingReport';
 import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface IAPAgingSummaryQuery extends IAgingSummaryQuery {
   vendorsIds: number[];
@@ -33,4 +34,9 @@ export interface IARAgingSummaryMeta {
 export interface IAPAgingSummaryMeta {
   baseCurrency: string;
   organizationName: string;
+}
+
+export interface IAPAgingSummaryTable extends IFinancialTable {
+  query: IAPAgingSummaryQuery;
+  meta: IAPAgingSummaryMeta;
 }

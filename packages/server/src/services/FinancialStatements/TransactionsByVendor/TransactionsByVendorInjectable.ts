@@ -1,7 +1,6 @@
 import { Inject } from 'typedi';
 import moment from 'moment';
 import * as R from 'ramda';
-import { map } from 'lodash';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import {
   ITransactionsByVendorsService,
@@ -14,17 +13,14 @@ import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByVendorRepository from './TransactionsByVendorRepository';
 import { Tenant } from '@/system/models';
 
-export default class TransactionsByVendorsService
+export class TransactionsByVendorsInjectable
   implements ITransactionsByVendorsService
 {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   @Inject()
-  reportRepository: TransactionsByVendorRepository;
+  private reportRepository: TransactionsByVendorRepository;
 
   /**
    * Defaults balance sheet filter query.
@@ -136,7 +132,7 @@ export default class TransactionsByVendorsService
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const i18n = this.tenancy.i18n(tenantId);
- 
+
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
@@ -171,7 +167,6 @@ export default class TransactionsByVendorsService
     );
     return {
       data: reportInstance.reportData(),
-      columns: reportInstance.reportColumns(),
       query: filter,
     };
   }

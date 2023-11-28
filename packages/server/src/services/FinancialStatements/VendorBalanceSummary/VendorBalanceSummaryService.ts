@@ -1,10 +1,8 @@
 import { Inject } from 'typedi';
 import moment from 'moment';
-import { map } from 'lodash';
 import * as R from 'ramda';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import {
-  IVendor,
   IVendorBalanceSummaryService,
   IVendorBalanceSummaryQuery,
   IVendorBalanceSummaryStatement,
@@ -15,14 +13,11 @@ import Ledger from '@/services/Accounting/Ledger';
 import VendorBalanceSummaryRepository from './VendorBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
 
-export default class VendorBalanceSummaryService
+export class VendorBalanceSummaryService
   implements IVendorBalanceSummaryService
 {
   @Inject()
   tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
 
   @Inject()
   reportRepo: VendorBalanceSummaryRepository;
@@ -31,7 +26,7 @@ export default class VendorBalanceSummaryService
    * Defaults balance sheet filter query.
    * @return {IVendorBalanceSummaryQuery}
    */
-  get defaultQuery(): IVendorBalanceSummaryQuery {
+  private get defaultQuery(): IVendorBalanceSummaryQuery {
     return {
       asDate: moment().format('YYYY-MM-DD'),
       numberFormat: {
@@ -72,7 +67,7 @@ export default class VendorBalanceSummaryService
    * @param {IVendorBalanceSummaryQuery} query -
    * @return {Promise<IVendorBalanceSummaryStatement>}
    */
-  async vendorBalanceSummary(
+  public async vendorBalanceSummary(
     tenantId: number,
     query: IVendorBalanceSummaryQuery
   ): Promise<IVendorBalanceSummaryStatement> {
@@ -81,13 +76,7 @@ export default class VendorBalanceSummaryService
       .withGraphFetched('metadata');
 
     const filter = { ...this.defaultQuery, ...query };
-    this.logger.info(
-      '[customer_balance_summary] trying to calculate the report.',
-      {
-        filter,
-        tenantId,
-      }
-    );
+
     // Retrieve the vendors transactions.
     const vendorsEntries = await this.getReportVendorsEntries(
       tenantId,
@@ -111,7 +100,6 @@ export default class VendorBalanceSummaryService
 
     return {
       data: reportInstance.reportData(),
-      columns: reportInstance.reportColumns(),
       query: filter,
     };
   }

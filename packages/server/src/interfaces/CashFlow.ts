@@ -1,7 +1,7 @@
 import { INumberFormatQuery } from './FinancialStatements';
 import { IAccount } from './Account';
 import { ILedger } from './Ledger';
-import { ITableRow } from './Table';
+import { IFinancialTable, ITableRow } from './Table';
 
 export interface ICashFlowStatementQuery {
   fromDate: Date | string;
@@ -97,6 +97,11 @@ export interface ICashFlowStatementMeta {
 
 export interface ICashFlowStatementDOO {
   data: ICashFlowStatementData;
+  meta: ICashFlowStatementMeta;
+  query: ICashFlowStatementQuery;
+}
+
+export interface ICashFlowStatementTable extends IFinancialTable {
   meta: ICashFlowStatementMeta;
   query: ICashFlowStatementQuery;
 }

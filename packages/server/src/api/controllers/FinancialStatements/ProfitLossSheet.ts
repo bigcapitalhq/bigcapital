@@ -1,24 +1,20 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
-import ProfitLossSheetService from '@/services/FinancialStatements/ProfitLossSheet/ProfitLossSheetService';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
-import { ProfitLossSheetTable } from '@/services/FinancialStatements/ProfitLossSheet/ProfitLossSheetTable';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { ProfitLossSheetApplication } from '@/services/FinancialStatements/ProfitLossSheet/ProfitLossSheetApplication';
 @Service()
 export default class ProfitLossSheetController extends BaseFinancialReportController {
   @Inject()
-  profitLossSheetService: ProfitLossSheetService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private profitLossSheetApp: ProfitLossSheetApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -34,7 +30,7 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
   /**
    * Validation schema.
    */
-  get validationSchema(): ValidationChain[] {
+  private get validationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('basis').optional(),
@@ -85,37 +81,54 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
    * @param {Request} req -
    * @param {Response} res -
    */
-  async profitLossSheet(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
-    const i18n = this.tenancy.i18n(tenantId);
+  private async profitLossSheet(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+    ]);
     try {
-      const { data, query, meta } =
-        await this.profitLossSheetService.profitLossSheet(tenantId, filter);
+      // Retrieves the csv format.
+      if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
+        const sheet = await this.profitLossSheetApp.csv(tenantId, filter);
 
-      const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
 
-      switch (acceptType) {
-        case 'application/json+table':
-          const table = new ProfitLossSheetTable(data, query, i18n);
+        return res.send(sheet);
+        // Retrieves the json table format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
+        const table = await this.profitLossSheetApp.table(tenantId, filter);
 
-          return res.status(200).send({
-            table: {
-              rows: table.tableRows(),
-              columns: table.tableColumns(),
-            },
-            query,
-            meta,
-          });
-        case 'json':
-        default:
-          return res.status(200).send({
-            data,
-            query,
-            meta,
-          });
+        return res.status(200).send(table);
+        // Retrieves the xlsx format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
+        const sheet = await this.profitLossSheetApp.xlsx(tenantId, filter);
+
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(sheet);
+        // Retrieves the json format.
+      } else {
+        const sheet = await this.profitLossSheetApp.sheet(tenantId, filter);
+
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

@@ -19,6 +19,7 @@ import withVendorsTransaction from './withVendorsTransaction';
 import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
 import { compose, saveInvoke } from '@/utils';
+import { VendorTransactionsExportMenu } from './components';
 
 /**
  * vendors transactions actions bar.
@@ -114,11 +115,18 @@ function VendorsTransactionsActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<VendorTransactionsExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

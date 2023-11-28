@@ -100,7 +100,8 @@
     "tsyringe": "^4.3.0",
     "typedi": "^0.8.0",
     "uniqid": "^5.2.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.158",

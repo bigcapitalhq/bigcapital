@@ -1,4 +1,5 @@
 import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
@@ -47,4 +48,9 @@ export interface ITrialBalanceStatement {
   data: ITrialBalanceSheetData;
   query: ITrialBalanceSheetQuery;
   meta: ITrialBalanceSheetMeta;
+}
+
+export interface ITrialBalanceSheetTable extends IFinancialTable {
+  meta: ITrialBalanceSheetMeta;
+  query: ITrialBalanceSheetQuery;
 }

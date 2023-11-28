@@ -5,7 +5,6 @@ import {
   SalesTaxLiabilitySummaryQuery,
 } from '@/interfaces/SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummary } from './SalesTaxLiabilitySummary';
-import { SalesTaxLiabilitySummaryTable } from './SalesTaxLiabilitySummaryTable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
@@ -44,32 +43,6 @@ export class SalesTaxLiabilitySummaryService {
       data: taxLiabilitySummary.reportData(),
       query,
       meta: this.reportMetadata(tenantId),
-    };
-  }
-
-  /**
-   * Retrieve sales tax liability summary table.
-   * @param {number} tenantId
-   * @param {SalesTaxLiabilitySummaryQuery} query
-   * @returns
-   */
-  public async salesTaxLiabilitySummaryTable(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ) {
-    const report = await this.salesTaxLiability(tenantId, query);
-
-    // Creates the sales tax liability summary table.
-    const table = new SalesTaxLiabilitySummaryTable(report.data, query);
-
-    return {
-      table: {
-        rows: table.tableRows(),
-        columns: table.tableColumns(),
-      },
-      data: report.data,
-      query: report.query,
-      meta: report.meta,
     };
   }
 
