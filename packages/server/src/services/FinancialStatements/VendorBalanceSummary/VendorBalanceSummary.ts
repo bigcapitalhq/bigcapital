@@ -101,8 +101,4 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
 
     return { vendors, total };
   }
-
-  reportColumns() {
-    return [];
-  }
 }

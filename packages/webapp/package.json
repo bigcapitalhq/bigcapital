@@ -37,7 +37,7 @@
     "@typescript-eslint/parser": "^2.10.0",
     "@welldone-software/why-did-you-render": "^6.0.0-rc.1",
     "accounting": "^0.4.1",
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "basscss": "^8.0.2",
     "camelcase": "^5.3.1",
     "classnames": "^2.3.2",

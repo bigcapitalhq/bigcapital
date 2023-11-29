@@ -19,6 +19,7 @@ import withARAgingSummaryActions from './withARAgingSummaryActions';
 import withARAgingSummary from './withARAgingSummary';
 
 import { compose, safeInvoke } from '@/utils';
+import { ARAgingSummaryExportMenu } from './components';
 
 /**
  * A/R Aging summary sheet - Actions bar.
@@ -107,11 +108,18 @@ function ARAgingSummaryActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<ARAgingSummaryExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

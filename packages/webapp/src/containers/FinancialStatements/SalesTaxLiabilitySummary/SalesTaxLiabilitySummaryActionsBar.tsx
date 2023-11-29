@@ -18,6 +18,7 @@ import { compose, saveInvoke } from '@/utils';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
 import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
+import { SalesTaxLiabilityExportMenu } from './components';
 
 /**
  * Sales tax liability summary - actions bar.
@@ -113,11 +114,18 @@ function SalesTaxLiabilitySummaryActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<SalesTaxLiabilityExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

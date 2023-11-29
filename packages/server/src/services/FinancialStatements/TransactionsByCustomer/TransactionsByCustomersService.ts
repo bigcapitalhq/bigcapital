@@ -13,23 +13,20 @@ import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
 import { Tenant } from '@/system/models';
 
-export default class TransactionsByCustomersService
+export class TransactionsByCustomersSheet
   implements ITransactionsByCustomersService
 {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   @Inject()
-  reportRepository: TransactionsByCustomersRepository;
+  private reportRepository: TransactionsByCustomersRepository;
 
   /**
    * Defaults balance sheet filter query.
    * @return {ICustomerBalanceSummaryQuery}
    */
-  get defaultQuery(): ITransactionsByCustomersFilter {
+  private get defaultQuery(): ITransactionsByCustomersFilter {
     return {
       fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -165,7 +162,6 @@ export default class TransactionsByCustomersService
 
     return {
       data: reportInstance.reportData(),
-      columns: reportInstance.reportColumns(),
       query: filter,
     };
   }

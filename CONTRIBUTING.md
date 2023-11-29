@@ -33,7 +33,8 @@ Contributions via pull requests are much appreciated. Once the approach is agree
 ---
 
 ## Local Setup Prerequisites
- - The application currently supports **Node.js v14.x**. Please ensure that you are using this version of Node.js when developing. (use [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) to switch between node versions)
+  - The application currently supports **Node.js v18.x**.
+  - `pnpm` packages manager, (from pnpm [guide](https://pnpm.io/installation) pick any installation method).
 
 ## Contribute to Backend
 
@@ -44,11 +45,10 @@ Contributions via pull requests are much appreciated. Once the approach is agree
 cp .env.example .env
 ```
 
-- Install all npm dependencies of the monorepo, you don't have to change directory to the `backend` package. just hit these command on root directory and it will install dependencies of all packages.
+- Install all npm dependencies of the monorepo, you don't have to change directory to the `backend` package. just hit the command on root directory and it will install dependencies of all packages.
 
 ```
-npm install
-npm run bootstrap
+pnpm install
 ```
 
 - Run all required docker containers in the development, we already configured all containers under `docker-compose.yml`.
@@ -69,7 +69,7 @@ cefa73fe2881   bigcapital-redis   "docker-entrypoint.s…"   7 seconds ago   Up 
 - There're some CLI commands we should run before running the server like databaase migration, so we need to build the `server` app first.
 
 ```
-npm run build:server
+pnpm run build:server
 ```
 
 - Run the database migration for system database.
@@ -87,7 +87,7 @@ Batch 1 run: 6 migrations
 - Next, start the webapp application.
 
 ```
-npm run dev:server
+pnpm run dev:server
 ```
 
 **[`^top^`](#)**
@@ -105,14 +105,13 @@ git clone https://github.com/bigcapital/bigcapital.git && cd bigcaptial
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `frontend` package. just hit that command and will install all packages across all application.
 
 ```
-npm install
-npm run bootstrap
+pnpm install
 ```
 
 - Next, start the webapp application.
 
 ```
-npm run dev:webapp
+pnpm run dev:webapp
 ```
 
 **[`^top^`](#)**

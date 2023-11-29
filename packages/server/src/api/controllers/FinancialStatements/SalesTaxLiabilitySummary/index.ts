@@ -1,20 +1,21 @@
+import { Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
-import { Inject } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from '../BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { SalesTaxLiabilitySummaryService } from '@/services/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummaryService';
+import { SalesTaxLiabilitySummaryApplication } from '@/services/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummaryApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 export default class SalesTaxLiabilitySummary extends BaseFinancialReportController {
   @Inject()
-  private salesTaxLiabilitySummaryService: SalesTaxLiabilitySummaryService;
+  private salesTaxLiabilitySummaryApp: SalesTaxLiabilitySummaryApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -31,8 +32,9 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
 
   /**
    * Validation schema.
+   * @returns {ValidationChain[]}
    */
-  get validationSchema() {
+  private get validationSchema() {
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
@@ -45,7 +47,7 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async salesTaxLiabilitySummary(
+  private async salesTaxLiabilitySummary(
     req: Request,
     res: Response,
     next: NextFunction
@@ -55,33 +57,52 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
 
     try {
       const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
 
-      switch (acceptType) {
-        case 'application/json+table':
-          const salesTaxLiabilityTable =
-            await this.salesTaxLiabilitySummaryService.salesTaxLiabilitySummaryTable(
-              tenantId,
-              filter
-            );
+      // Retrieves the json table format.
+      if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
+        const table = await this.salesTaxLiabilitySummaryApp.table(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(table);
+        // Retrieves the xlsx format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
+        const buffer = await this.salesTaxLiabilitySummaryApp.xlsx(
+          tenantId,
+          filter
+        );
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieves the csv format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
+        const buffer = await this.salesTaxLiabilitySummaryApp.csv(
+          tenantId,
+          filter
+        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
 
-          return res.status(200).send({
-            table: salesTaxLiabilityTable.table,
-            query: salesTaxLiabilityTable.query,
-            meta: salesTaxLiabilityTable.meta,
-          });
-        case 'json':
-        default:
-          const salesTaxLiability =
-            await this.salesTaxLiabilitySummaryService.salesTaxLiability(
-              tenantId,
-              filter
-            );
-          return res.status(200).send({
-            data: salesTaxLiability.data,
-            query: salesTaxLiability.query,
-            meta: salesTaxLiability.meta,
-          });
+        return res.send(buffer);
+        // Retrieves the json format.
+      } else {
+        const sheet = await this.salesTaxLiabilitySummaryApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

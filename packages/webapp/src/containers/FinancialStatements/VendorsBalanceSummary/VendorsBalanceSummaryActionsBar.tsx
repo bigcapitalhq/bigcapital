@@ -19,6 +19,7 @@ import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 
 import { saveInvoke, compose } from '@/utils';
+import { VendorSummarySheetExportMenu } from './components';
 
 /**
  * Vendors balance summary action bar.
@@ -106,11 +107,18 @@ function VendorsBalanceSummaryActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<VendorSummarySheetExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

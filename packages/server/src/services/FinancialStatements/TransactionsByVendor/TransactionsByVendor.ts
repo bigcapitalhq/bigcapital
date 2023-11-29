@@ -137,11 +137,4 @@ export default class TransactionsByVendors extends TransactionsByContact {
   public reportData(): ITransactionsByVendorsData {
     return this.vendorsMapper(this.contacts);
   }
-
-  /**
-   * Retrieve the report columns.
-   */
-  public reportColumns() {
-    return [];
-  }
 }

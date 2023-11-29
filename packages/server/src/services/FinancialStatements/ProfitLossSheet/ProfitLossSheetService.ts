@@ -16,39 +16,10 @@ import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 @Service()
 export default class ProfitLossSheetService {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject('logger')
-  logger: any;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  /**
-   * Retrieve the trial balance sheet meta.
-   * @param {number} tenantId - Tenant id.
-   * @returns {ITrialBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IProfitLossSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
-    };
-  }
+  private inventoryService: InventoryService;
 
   /**
    * Retrieve profit/loss sheet statement.
@@ -56,7 +27,7 @@ export default class ProfitLossSheetService {
    * @param {IProfitLossSheetQuery} query
    * @return { }
    */
-  profitLossSheet = async (
+  public profitLossSheet = async (
     tenantId: number,
     query: IProfitLossSheetQuery
   ): Promise<{
@@ -70,13 +41,6 @@ export default class ProfitLossSheetService {
     // Merges the given query with default filter query.
     const filter = mergeQueryWithDefaults(query);
 
-    // Get the given accounts or throw not found service error.
-    // if (filter.accountsIds.length > 0) {
-    //   await this.accountsService.getAccountsOrThrowError(
-    //     tenantId,
-    //     filter.accountsIds
-    //   );
-    // }
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
@@ -101,4 +65,30 @@ export default class ProfitLossSheetService {
       meta: this.reportMetadata(tenantId),
     };
   };
+
+  /**
+   * Retrieve the trial balance sheet meta.
+   * @param {number} tenantId - Tenant id.
+   * @returns {ITrialBalanceSheetMeta}
+   */
+  private reportMetadata(tenantId: number): IProfitLossSheetMeta {
+    const settings = this.tenancy.settings(tenantId);
+
+    const isCostComputeRunning =
+      this.inventoryService.isItemsCostComputeRunning(tenantId);
+    const organizationName = settings.get({
+      group: 'organization',
+      key: 'name',
+    });
+    const baseCurrency = settings.get({
+      group: 'organization',
+      key: 'base_currency',
+    });
+
+    return {
+      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
+      organizationName,
+      baseCurrency,
+    };
+  }
 }

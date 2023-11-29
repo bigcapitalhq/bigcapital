@@ -7,7 +7,7 @@ import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 @Service()
 export default class VendorBalanceSummaryRepository {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve the report vendors.

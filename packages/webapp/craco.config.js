@@ -11,4 +11,7 @@ module.exports = {
       },
     },
   },
+  devServer: {
+    allowedHosts: process.env.GITPOD_HOST ? 'all' : 'auto'
+  },
 };

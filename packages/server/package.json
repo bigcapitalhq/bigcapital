@@ -31,7 +31,7 @@
     "agendash": "^3.1.0",
     "app-root-path": "^3.0.0",
     "async": "^3.2.0",
-    "axios": "^0.20.0",
+    "axios": "^1.6.0",
     "babel-loader": "^9.1.2",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
@@ -102,7 +102,8 @@
     "tsyringe": "^4.3.0",
     "typedi": "^0.8.0",
     "uniqid": "^5.2.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.158",

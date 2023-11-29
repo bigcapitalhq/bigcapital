@@ -1,16 +1,14 @@
 // @ts-nocheck
 import { useRequestQuery } from '../useQueryRequest';
 import {
-  trialBalanceSheetReducer,
   generalLedgerTableRowsReducer,
   journalTableRowsReducer,
-  ARAgingSummaryTableRowsMapper,
-  APAgingSummaryTableRowsMapper,
   inventoryValuationReducer,
   purchasesByItemsReducer,
   salesByItemsReducer,
 } from '@/containers/FinancialStatements/reducers';
 import t from './types';
+import { useDownloadFile } from '../useDownloadFile';
 
 /**
  * Retrieve balance sheet.
@@ -33,6 +31,34 @@ export function useBalanceSheet(query, props) {
   );
 }
 
+export const useBalanceSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'balance_sheet.xlsx',
+    ...args,
+  });
+};
+
+export const useBalanceSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'balance_sheet.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve trial balance sheet.
  */
@@ -54,6 +80,34 @@ export function useTrialBalanceSheet(query, props) {
   );
 }
 
+export const useTrialBalanceSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/trial_balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'trial_balance_sheet.xlsx',
+    ...args,
+  });
+};
+
+export const useTrialBalanceSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/trial_balance_sheet',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'trial_balance_sheet.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve profit/loss (P&L) sheet.
  */
@@ -74,6 +128,34 @@ export function useProfitLossSheet(query, props) {
     },
   );
 }
+
+export const useProfitLossSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/profit_loss_sheet',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'profit_loss_sheet.xlsx',
+    ...args,
+  });
+};
+
+export const useProfitLossSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/profit_loss_sheet',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'profit_loss_sheet.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve general ledger (GL) sheet.
@@ -144,6 +226,34 @@ export function useARAgingSummaryReport(query, props) {
   );
 }
 
+export const useARAgingSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/receivable_aging_summary',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'receivable_aging_summary.xlsx',
+    ...args,
+  });
+};
+
+export const useARAgingSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/receivable_aging_summary',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'receivable_aging_summary.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve A/P aging summary report.
  */
@@ -164,6 +274,34 @@ export function useAPAgingSummaryReport(query, props) {
     },
   );
 }
+
+export const useAPAgingSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/payable_aging_summary',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'payable_aging_summary.xlsx',
+    ...args,
+  });
+};
+
+export const useAPAgingSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/payable_aging_summary',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'payable_aging_summary.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve inventory valuation.
@@ -270,6 +408,34 @@ export function useCustomerBalanceSummaryReport(query, props) {
   );
 }
 
+export const useCustomerBalanceSummaryXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/customer-balance-summary',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'customer_balance_summary.xlsx',
+    ...args,
+  });
+};
+
+export const useCustomerBalanceSummaryCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/customer-balance-summary',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'customer_balance_summary.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve vendors balance summary report.
  */
@@ -299,6 +465,36 @@ export function useVendorsBalanceSummaryReport(query, props) {
   );
 }
 
+export const useVendorBalanceSummaryXlsxExport = (args) => {
+  const url = '/financial_statements/vendor-balance-summary';
+  const config = {
+    headers: {
+      accept: 'application/xlsx',
+    },
+  };
+  const filename = 'vendor_balance_summary.xlsx';
+
+  return useDownloadFile({
+    url,
+    config,
+    filename,
+    ...args,
+  });
+};
+
+export const useVendorBalanceSummaryCsvExport = (args) => {
+  return useDownloadFile({
+    url: '/financial_statements/vendor-balance-summary',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+    },
+    filename: 'vendor_balance_summary.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve customers transactions report.
  */
@@ -327,6 +523,38 @@ export function useCustomersTransactionsReport(query, props) {
   );
 }
 
+export const useCustomersTransactionsXlsxExport = (query, args) => {
+  const url = '/financial_statements/transactions-by-customers';
+  const config = {
+    headers: {
+      accept: 'application/xlsx',
+    },
+    params: query,
+  };
+  const filename = 'customers_transactions.xlsx';
+
+  return useDownloadFile({
+    url,
+    config,
+    filename,
+    ...args,
+  });
+};
+
+export const useCustomersTransactionsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/transactions-by-customers',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'customers_transactions.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve vendors transactions report.
  */
@@ -344,7 +572,7 @@ export function useVendorsTransactionsReport(query, props) {
     {
       select: (res) => ({
         data: res.data.table,
-        tableRows: res.data.table.data,
+        tableRows: res.data.table.rows,
       }),
       defaultData: {
         tableRows: [],
@@ -354,6 +582,38 @@ export function useVendorsTransactionsReport(query, props) {
     },
   );
 }
+
+export const useVendorsTransactionsXlsxExport = (query, args) => {
+  const url = '/financial_statements/transactions-by-vendors';
+  const config = {
+    headers: {
+      accept: 'application/xlsx',
+    },
+    params: query,
+  };
+  const filename = 'transactions_by_vendor.xlsx';
+
+  return useDownloadFile({
+    url,
+    config,
+    filename,
+    ...args,
+  });
+};
+
+export const useVendorsTransactionsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/transactions-by-vendors',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'transactions_by_vendor.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve cash flow statement report.
@@ -374,7 +634,7 @@ export function useCashFlowStatementReport(query, props) {
         columns: res.data.table.columns,
         query: res.data.query,
         meta: res.data.meta,
-        tableRows: res.data.table.data,
+        tableRows: res.data.table.rows,
       }),
       defaultData: {
         tableRows: [],
@@ -386,6 +646,42 @@ export function useCashFlowStatementReport(query, props) {
     },
   );
 }
+
+export const useCashFlowStatementXlsxExport = (query, args) => {
+  const url = '/financial_statements/cash-flow';
+  const config = {
+    headers: {
+      accept: 'application/xlsx',
+    },
+    params: query,
+  };
+  const filename = 'cashflow_statement.xlsx';
+
+  return useDownloadFile({
+    url,
+    config,
+    filename,
+    ...args,
+  });
+};
+
+export const useCashFlowStatementCsvExport = (query, args) => {
+  const url = '/financial_statements/cash-flow';
+  const config = {
+    headers: {
+      accept: 'application/csv',
+    },
+    params: query,
+  };
+  const filename = 'cashflow_statement.csv';
+
+  return useDownloadFile({
+    url,
+    config,
+    filename,
+    ...args,
+  });
+};
 
 /**
  * Retrieve inventory item detail report.
@@ -406,7 +702,7 @@ export function useInventoryItemDetailsReport(query, props) {
         columns: res.data.table.columns,
         query: res.data.query,
         meta: res.data.meta,
-        tableRows: res.data.table.data,
+        tableRows: res.data.table.rows,
       }),
       defaultData: {
         tableRows: [],
@@ -418,6 +714,34 @@ export function useInventoryItemDetailsReport(query, props) {
     },
   );
 }
+
+export const useInventoryItemDetailsXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-item-details',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'inventory_item_details.xlsx',
+    ...args,
+  });
+};
+
+export const useInventoryItemDetailsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-item-details',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'inventory_item_details.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve transactions by reference report.
@@ -460,3 +784,31 @@ export function useSalesTaxLiabilitySummary(query, props) {
     },
   );
 }
+
+export const useSalesTaxLiabilitySummaryXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/sales-tax-liability-summary',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'sales_tax_liability_summary.xlsx',
+    ...args,
+  });
+};
+
+export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/sales-tax-liability-summary',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'sales_tax_liability_summary.csv',
+    ...args,
+  });
+};

@@ -19,6 +19,7 @@ import withProfitLoss from './withProfitLoss';
 
 import { compose, saveInvoke } from '@/utils';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
+import { ProfitLossSheetExportMenu } from './components';
 
 /**
  * Profit/Loss sheet actions bar.
@@ -110,11 +111,18 @@ function ProfitLossActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<ProfitLossSheetExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

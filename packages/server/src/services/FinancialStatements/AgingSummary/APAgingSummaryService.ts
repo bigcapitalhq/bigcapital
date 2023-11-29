@@ -1,14 +1,13 @@
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
+import { isEmpty } from 'lodash';
 import { IAPAgingSummaryQuery, IARAgingSummaryMeta } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
 import { Tenant } from '@/system/models';
-import { isEmpty } from 'lodash';
-import APAgingSummaryTable from './APAgingSummaryTable';
 
 @Service()
-export default class PayableAgingSummaryService {
+export class APAgingSummaryService {
   @Inject()
   tenancy: TenancyService;
 
@@ -18,7 +17,7 @@ export default class PayableAgingSummaryService {
   /**
    * Default report query.
    */
-  get defaultQuery(): IAPAgingSummaryQuery {
+  private get defaultQuery(): IAPAgingSummaryQuery {
     return {
       asDate: moment().format('YYYY-MM-DD'),
       agingDaysBefore: 30,
@@ -117,23 +116,6 @@ export default class PayableAgingSummaryService {
       columns,
       query: filter,
       meta: this.reportMetadata(tenantId),
-    };
-  }
-
-  /**
-   * Retrieves A/P aging summary in table format.
-   * @param {number} tenantId
-   * @param {IAPAgingSummaryQuery} query
-   */
-  async APAgingSummaryTable(tenantId: number, query: IAPAgingSummaryQuery) {
-    const report = await this.APAgingSummary(tenantId, query);
-    const table = new APAgingSummaryTable(report.data, query, {});
-
-    return {
-      columns: table.tableColumns(),
-      rows: table.tableRows(),
-      meta: report.meta,
-      query: report.query,
     };
   }
 }
