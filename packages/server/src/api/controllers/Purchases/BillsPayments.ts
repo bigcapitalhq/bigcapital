@@ -121,7 +121,7 @@ export default class BillsPayments extends BaseController {
       check('entries').exists().isArray({ min: 1 }),
       check('entries.*.index').optional().isNumeric().toInt(),
       check('entries.*.bill_id').exists().isNumeric().toInt(),
-      check('entries.*.payment_amount').exists().isNumeric().toInt(),
+      check('entries.*.payment_amount').exists().isNumeric().toFloat(),
     ];
   }
 
