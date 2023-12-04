@@ -64,24 +64,22 @@ export const useInvoiceReadonlyEntriesColumns = () => {
       },
       {
         Header: intl.get('rate'),
-        accessor: 'rate',
-        Cell: FormatNumberCell,
+        accessor: 'rate_formatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'rate', {
+        width: getColumnWidth(entries, 'rate_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
       },
       {
         Header: intl.get('amount'),
-        accessor: 'amount',
-        Cell: FormatNumberCell,
+        accessor: 'total_formatted',
         align: 'right',
         disableSortBy: true,
         textOverview: true,
-        width: getColumnWidth(entries, 'amount', {
+        width: getColumnWidth(entries, 'total_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

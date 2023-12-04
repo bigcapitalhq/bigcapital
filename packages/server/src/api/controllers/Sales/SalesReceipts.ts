@@ -117,7 +117,7 @@ export default class SalesReceiptsController extends BaseController {
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.rate').exists().isNumeric().toInt(),
+      check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()

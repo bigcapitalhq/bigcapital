@@ -173,7 +173,7 @@ export default class VendorCreditController extends BaseController {
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.quantity').exists().isNumeric().toFloat(),
+      check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
@@ -211,12 +211,11 @@ export default class VendorCreditController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
 
       check('entries').isArray({ min: 1 }),
-
       check('entries.*.id').optional().isNumeric().toInt(),
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.quantity').exists().isNumeric().toFloat(),
+      check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()

@@ -23,7 +23,7 @@ export function InvoiceDetailTableFooter() {
       <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'invoice.details.subtotal'} />}
-          value={<FormatNumber value={invoice.subtotal_formatted} />}
+          value={invoice.subtotal_formatted}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         {invoice.taxes.map((taxRate) => (
