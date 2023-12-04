@@ -63,10 +63,9 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'invoice.payment_amount',
-        Cell: FormatNumberCell,
+        accessor: 'payment_amount_formatted',
         align: 'right',
-        width: getColumnWidth(entries, 'invoice.payment_amount', {
+        width: getColumnWidth(entries, 'payment_amount_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

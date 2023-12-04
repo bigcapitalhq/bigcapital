@@ -18,12 +18,9 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
   const { featureCan } = useFeatureCan();
 
   // Fetch sale receipt details.
-  const { data: receipt, isFetching: isReceiptLoading } = useReceipt(
-    receiptId,
-    {
-      enabled: !!receiptId,
-    },
-  );
+  const { data: receipt, isLoading: isReceiptLoading } = useReceipt(receiptId, {
+    enabled: !!receiptId,
+  });
 
   // Provider.
   const provider = {
