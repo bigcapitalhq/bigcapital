@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { ISaleReceipt } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
 
 @Service()
 export class SaleReceiptTransformer extends Transformer {
@@ -10,7 +11,12 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount', 'formattedReceiptDate', 'formattedClosedAtDate'];
+    return [
+      'formattedAmount',
+      'formattedReceiptDate',
+      'formattedClosedAtDate',
+      'entries',
+    ];
   };
 
   /**
@@ -38,6 +44,17 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected formattedAmount = (receipt: ISaleReceipt): string => {
     return formatNumber(receipt.amount, {
+      currencyCode: receipt.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the credit note.
+   * @param {ISaleReceipt} credit
+   * @returns {}
+   */
+  protected entries = (receipt) => {
+    return this.item(receipt.entries, new ItemEntryTransformer(), {
       currencyCode: receipt.currencyCode,
     });
   };

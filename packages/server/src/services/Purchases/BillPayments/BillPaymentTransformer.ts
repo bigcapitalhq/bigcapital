@@ -1,6 +1,7 @@
 import { IBillPayment } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { BillPaymentEntryTransformer } from './BillPaymentEntryTransformer';
 
 export class BillPaymentTransformer extends Transformer {
   /**
@@ -8,7 +9,7 @@ export class BillPaymentTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedPaymentDate', 'formattedAmount'];
+    return ['formattedPaymentDate', 'formattedAmount', 'entries'];
   };
 
   /**
@@ -29,5 +30,12 @@ export class BillPaymentTransformer extends Transformer {
     return formatNumber(billPayment.amount, {
       currencyCode: billPayment.currencyCode,
     });
+  };
+
+  /**
+   * Retreives the bill payment entries.
+   */
+  protected entries = (billPayment) => {
+    return this.item(billPayment.entries, new BillPaymentEntryTransformer());
   };
 }
