@@ -137,8 +137,12 @@
       tbody tr.payment-amount td:last-child {
         color: red
       }
-      tbody tr.blanace-due td {
+      tbody tr.blanace-due td{
         border-top: 3px double #666;
+        font-weight: bold;
+      }
+      tbody tr.total td {
+        border-top: 1px solid #666;
         font-weight: bold;
       }
     }

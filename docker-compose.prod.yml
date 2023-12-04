@@ -35,6 +35,8 @@ services:
   server:
     container_name: bigcapital-server
     image: ghcr.io/bigcapitalhq/server:latest
+    expose:
+      - '3000'
     links:
       - mysql
       - mongo
@@ -85,6 +87,10 @@ services:
       - SIGNUP_DISABLED=${SIGNUP_DISABLED}
       - SIGNUP_ALLOWED_DOMAINS=${SIGNUP_ALLOWED_DOMAINS}
       - SIGNUP_ALLOWED_EMAILS=${SIGNUP_ALLOWED_EMAILS}
+
+      # Gotenberg (Pdf generator)
+      - GOTENBERG_URL=${GOTENBERG_URL}
+      - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
 
   database_migration:
     container_name: bigcapital-database-migration
@@ -142,6 +148,11 @@ services:
       - '6379'
     volumes:
       - redis:/data
+
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    expose:
+      - '9000'
 
 # Volumes
 volumes:

@@ -45,9 +45,9 @@ block content
       each entry in paymentReceive.entries
        tr
         td.item=entry.invoice.invoiceNo
-        td.date=entry.invoice.formattedInvoiceDate
-        td.invoiceAmount=entry.invoice.formattedAmount
-        td.paymentAmount=entry.invoice.formattedPaymentAmount
+        td.date=entry.invoice.invoiceDateFormatted
+        td.invoiceAmount=entry.invoice.totalFormatted
+        td.paymentAmount=entry.invoice.paymentAmountFormatted
 
   div.payment__table-after
     div.payment__table-total
