@@ -17,6 +17,7 @@ import { ApproveSaleEstimate } from './ApproveSaleEstimate';
 import { RejectSaleEstimate } from './RejectSaleEstimate';
 import { SaleEstimateNotifyBySms } from './SaleEstimateSmsNotify';
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
+import { SendSaleEstimateMail } from './SendSaleEstimateMail';
 
 @Service()
 export class SaleEstimatesApplication {
@@ -49,6 +50,9 @@ export class SaleEstimatesApplication {
 
   @Inject()
   private saleEstimatesPdfService: SaleEstimatesPdf;
+
+  @Inject()
+  private sendEstimateMailService: SendSaleEstimateMail;
 
   /**
    * Create a sale estimate.
@@ -208,5 +212,15 @@ export class SaleEstimatesApplication {
       tenantId,
       saleEstimate
     );
+  }
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns
+   */
+  public sendSaleEstimateMail(tenantId: number, saleEstimateId: number) {
+    return this.sendEstimateMailService.sendMail(tenantId, saleEstimateId);
   }
 }

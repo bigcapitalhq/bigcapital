@@ -11,6 +11,7 @@ import {
   ISystemUser,
   ITenantUser,
   InvoiceNotificationType,
+  SendInvoiceMailDTO,
 } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreateSaleInvoice } from './CreateSaleInvoice';
@@ -24,6 +25,9 @@ import { WriteoffSaleInvoice } from './WriteoffSaleInvoice';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { GetInvoicePaymentsService } from './GetInvoicePaymentsService';
 import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
+import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
+import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
+import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
 
 @Service()
 export class SaleInvoiceApplication {
@@ -59,6 +63,15 @@ export class SaleInvoiceApplication {
 
   @Inject()
   private invoiceSms: SaleInvoiceNotifyBySms;
+
+  @Inject()
+  private sendInvoiceReminderService: SendInvoiceMailReminder;
+
+  @Inject()
+  private sendSaleInvoiceMailService: SendSaleInvoiceMail;
+
+  @Inject()
+  private getSaleInvoiceReminderService: GetSaleInvoiceMailReminder;
 
   /**
    * Creates a new sale invoice with associated GL entries.
@@ -279,4 +292,49 @@ export class SaleInvoiceApplication {
       invoiceSmsDetailsDTO
     );
   };
+
+  /**
+   * Retrieves the metadata of invoice mail reminder.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns {}
+   */
+  public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
+    return this.getSaleInvoiceReminderService.getInvoiceMailReminder(
+      tenantId,
+      saleInvoiceId
+    );
+  }
+
+  /**
+   * Sends reminder of the given invoice to the invoice's customer.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns {}
+   */
+  public sendSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
+    return this.sendInvoiceReminderService.sendInvoiceMailReminder(
+      tenantId,
+      saleInvoiceId
+    );
+  }
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @param {SendInvoiceMailDTO} messageDTO
+   * @returns
+   */
+  public sendSaleInvoiceMail(
+    tenantId: number,
+    saleInvoiceId: number,
+    messageDTO: SendInvoiceMailDTO
+  ) {
+    return this.sendSaleInvoiceMailService.sendSaleInvoiceMail(
+      tenantId,
+      saleInvoiceId,
+      messageDTO
+    );
+  }
 }

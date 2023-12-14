@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { body, check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -144,6 +144,39 @@ export default class SaleInvoicesController extends BaseController {
       asyncMiddleware(this.getSalesInvoices.bind(this)),
       this.handleServiceErrors,
       this.dynamicListService.handlerErrorsToResponse
+    );
+    router.get(
+      '/:id/mail-reminder',
+      this.specificSaleInvoiceValidation,
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail-reminder',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('from').isString().exists(),
+        body('to').isString().exists(),
+        body('body').isString().exists(),
+        body('attach_invoice').exists().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('from').isString().exists(),
+        body('to').isString().exists(),
+        body('body').isString().exists(),
+        body('attach_invoice').exists().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
     );
     return router;
   }
@@ -629,6 +662,81 @@ export default class SaleInvoicesController extends BaseController {
       next(error);
     }
   };
+
+  /**
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({});
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({});
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   *
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({});
+    } catch (error) {
+      next(error);
+    }
+  }
 
   /**
    * Handles service errors.

@@ -186,3 +186,11 @@ export enum SaleInvoiceAction {
   Writeoff = 'Writeoff',
   NotifyBySms = 'NotifyBySms',
 }
+
+export interface SendInvoiceMailDTO {
+  to: string;
+  from: string;
+  subject: string;
+  body: string;
+  attachInvoice?: boolean;
+}
