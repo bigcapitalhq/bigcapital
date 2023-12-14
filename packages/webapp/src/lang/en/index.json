@@ -2290,5 +2290,8 @@
   "sidebar.new_project": "New Project",
   "sidebar.new_time_entry": "New Time Entry",
   "sidebar.project_profitability_summary": "Project Profitability Summary",
-  "global_error.too_many_requests": "Too many requests"
+  "global_error.too_many_requests": "Too many requests",
+
+  "pref.invoices.termsConditions.field": "Terms & Conditions",
+  "pref.invoices.customerNotes.field": "Customer Notes"
 }

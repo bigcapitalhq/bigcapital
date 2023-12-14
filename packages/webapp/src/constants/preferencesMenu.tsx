@@ -13,6 +13,10 @@ export default [
     href: '/preferences/users',
   },
   {
+    text: 'Invoices',
+    href: '/preferences/invoices',
+  },
+  {
     text: <T id={'currencies'} />,
     href: '/preferences/currencies',
   },

@@ -9,6 +9,8 @@ import SMSIntegration from '../containers/Preferences/SMSIntegration';
 import DefaultRoute from '../containers/Preferences/DefaultRoute';
 import Warehouses from '../containers/Preferences/Warehouses';
 import Branches from '../containers/Preferences/Branches';
+import Invoices from '../containers/Preferences/Invoices/PreferencesInvoices';
+
 
 const BASE_URL = '/preferences';
 
@@ -21,6 +23,16 @@ export default [
   {
     path: `${BASE_URL}/users`,
     component: Users,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/invoices`,
+    component: Invoices,
+    exact: true,
+  },
+  {
+    path: `${BASE_URL}/credit-notes`,
+    component: CreditNotes,
     exact: true,
   },
   {
