@@ -7,7 +7,7 @@ import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
 import { usePreferencesInvoiceFormContext } from './PreferencesInvoiceFormBoot';
-import { PreferencesGeneralForm } from './PreferencesInvoicesForm';
+import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { compose, transformToForm } from '@/utils';
@@ -59,7 +59,7 @@ function PreferencesInvoiceFormPage({
       initialValues={initialValues}
       validationSchema={PreferencesInvoiceFormSchema}
       onSubmit={handleFormSubmit}
-      component={PreferencesGeneralForm}
+      component={PreferencesInvoicesForm}
     />
   );
 }

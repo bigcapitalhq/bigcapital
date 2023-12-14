@@ -5,17 +5,15 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import {
-  FieldRequiredHint,
   FormattedMessage as T,
   FFormGroup,
-  FInputGroup,
   FTextArea,
 } from '@/components';
 
 /**
  * Preferences general form.
  */
-export function PreferencesGeneralForm({ isSubmitting }) {
+export function PreferencesInvoicesForm({ isSubmitting }) {
   const history = useHistory();
 
   // Handle close click.
@@ -29,7 +27,6 @@ export function PreferencesGeneralForm({ isSubmitting }) {
       <FFormGroup
         name={'termsConditions'}
         label={<T id={'pref.invoices.termsConditions.field'} />}
-        labelInfo={<FieldRequiredHint />}
         fastField={true}
       >
         <FTextArea

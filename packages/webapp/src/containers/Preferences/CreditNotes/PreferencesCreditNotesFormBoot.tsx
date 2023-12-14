@@ -1,9 +1,11 @@
 // @ts-nocheck
 import React from 'react';
+import styled from 'styled-components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { useSettings } from '@/hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
+import { Card } from '@/components';
 
 const PreferencesCreditNotesFormContext = React.createContext();
 
@@ -15,7 +17,6 @@ function PreferencesCreditNotesBoot({ ...props }) {
   const provider = {
     organization: {},
   };
-
   // Detarmines whether if any query is loading.
   const isLoading = isSettingsLoading;
 
@@ -26,14 +27,27 @@ function PreferencesCreditNotesBoot({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
       )}
     >
-      {isLoading ? (
-        <PreferencesPageLoader />
-      ) : (
-        <PreferencesCreditNotesFormContext.Provider value={provider} {...props} />
-      )}
+      <PreferencesCreditNotesCard>
+        {isLoading ? (
+          <PreferencesPageLoader />
+        ) : (
+          <PreferencesCreditNotesFormContext.Provider
+            value={provider}
+            {...props}
+          />
+        )}
+      </PreferencesCreditNotesCard>
     </div>
   );
 }
+
+const PreferencesCreditNotesCard = styled(Card)`
+  padding: 25px;
+
+  .bp4-form-group {
+    max-width: 600px;
+  }
+`;
 
 const usePreferencesCreditNotesFormContext = () =>
   React.useContext(PreferencesCreditNotesFormContext);

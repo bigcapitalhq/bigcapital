@@ -7,9 +7,9 @@ import { useSettings } from '@/hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
 import { Card } from '@/components';
 
-const PreferencesInvoiceFormContext = React.createContext();
+const PreferencesReceiptsFormContext = React.createContext();
 
-function PreferencesInvoicesBoot({ ...props }) {
+function PreferencesReceiptsBoot({ ...props }) {
   // Fetches organization settings.
   const { isLoading: isSettingsLoading } = useSettings();
 
@@ -28,26 +28,29 @@ function PreferencesInvoicesBoot({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
       )}
     >
-      <PreferencesInvoicesCard>
+      <PreferencesReceiptsCard>
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesInvoiceFormContext.Provider value={provider} {...props} />
+          <PreferencesReceiptsFormContext.Provider
+            value={provider}
+            {...props}
+          />
         )}
-      </PreferencesInvoicesCard>
+      </PreferencesReceiptsCard>
     </div>
   );
 }
 
-const PreferencesInvoicesCard = styled(Card)`
+const PreferencesReceiptsCard = styled(Card)`
   padding: 25px;
 
-  .bp4-form-group{
+  .bp4-form-group {
     max-width: 600px;
   }
 `;
 
-const usePreferencesInvoiceFormContext = () =>
-  React.useContext(PreferencesInvoiceFormContext);
+const usePreferencesReceiptsFormContext = () =>
+  React.useContext(PreferencesReceiptsFormContext);
 
-export { PreferencesInvoicesBoot, usePreferencesInvoiceFormContext };
+export { PreferencesReceiptsBoot, usePreferencesReceiptsFormContext };

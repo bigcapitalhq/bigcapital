@@ -6,7 +6,7 @@ import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
 import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
-import { usePreferencesInvoiceFormContext } from './PreferencesEstimatesFormBoot';
+import { usePreferencesEstimatesFormContext } from './PreferencesEstimatesFormBoot';
 import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
@@ -24,7 +24,7 @@ function PreferencesEstimatesFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { organization } = usePreferencesInvoiceFormContext();
+  const { organization } = usePreferencesEstimatesFormContext();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('preferences.estimates'));

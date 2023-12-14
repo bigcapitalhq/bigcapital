@@ -6,4 +6,4 @@ const Schema = Yup.object().shape({
   customerNotes: Yup.string().optional(),
 });
 
-export const PreferencesCreditNotesFormSchema = Schema;
+export const PreferencesReceiptsFormSchema = Schema;

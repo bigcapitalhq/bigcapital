@@ -5,16 +5,15 @@ import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import {
-  FieldRequiredHint,
   FormattedMessage as T,
   FFormGroup,
   FTextArea,
 } from '@/components';
 
 /**
- * Preferences estimates form.
+ * Preferences general form.
  */
-export function PreferencesCreditNotesForm({ isSubmitting }) {
+export function PreferencesReceiptsForm({ isSubmitting }) {
   const history = useHistory();
 
   // Handle close click.
@@ -27,8 +26,7 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
       {/* ---------- Terms & Conditions ----------  */}
       <FFormGroup
         name={'termsConditions'}
-        label={<T id={'pref.creditNotes.termsConditions.field'} />}
-        labelInfo={<FieldRequiredHint />}
+        label={<T id={'pref.receipts.termsConditions.field'} />}
         fastField={true}
       >
         <FTextArea
@@ -42,7 +40,7 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
       {/* ---------- Customer Notes ----------  */}
       <FFormGroup
         name={'customerNotes'}
-        label={<T id={'pref.creditNotes.customerNotes.field'} />}
+        label={<T id={'pref.receipts.customerNotes.field'} />}
         fastField={true}
       >
         <FTextArea

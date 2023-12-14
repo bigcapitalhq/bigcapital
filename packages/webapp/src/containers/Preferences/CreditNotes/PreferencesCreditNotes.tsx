@@ -1,14 +1,14 @@
 // @ts-nocheck
 import { PreferencesCreditNotesBoot } from './PreferencesCreditNotesFormBoot';
-import PreferencesInvoiceFormPage from './PreferencesCreditNotesFormPage';
+import { PreferencesCreditNotesFormPage } from './PreferencesCreditNotesFormPage';
 
 /**
  * items preferences.
  */
-export default function PreferencesCreditNotes() {
+export function PreferencesCreditNotes() {
   return (
     <PreferencesCreditNotesBoot>
-      <PreferencesInvoiceFormPage />
+      <PreferencesCreditNotesFormPage />
     </PreferencesCreditNotesBoot>
   );
 }

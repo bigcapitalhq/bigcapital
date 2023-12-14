@@ -5,9 +5,9 @@ import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
-import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.schema';
-import { usePreferencesCreditNotesFormContext } from './PreferencesCreditNotesFormBoot';
-import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
+import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
+import { usePreferencesReceiptsFormContext } from './PreferencesReceiptsFormBoot';
+import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { compose, transformToForm } from '@/utils';
@@ -18,16 +18,16 @@ const defaultValues = {
 };
 
 /**
- * Preferences - Credit Notes.
+ * Preferences - Receipts.
  */
-function PreferencesCreditNotesFormPageRoot({
+function PreferencesReceiptsFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
 }) {
-  const { organization } = usePreferencesCreditNotesFormContext();
+  const { organization } = usePreferencesReceiptsFormContext();
 
   useEffect(() => {
-    changePreferencesPageTitle(intl.get('preferences.creditNotes'));
+    changePreferencesPageTitle(intl.get('preferences.receipts'));
   }, [changePreferencesPageTitle]);
 
   // Initial values.
@@ -40,7 +40,7 @@ function PreferencesCreditNotesFormPageRoot({
     // Handle request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get('preferences.estimates.success_message'),
+        message: intl.get('preferences.receipts.success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -57,13 +57,13 @@ function PreferencesCreditNotesFormPageRoot({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={PreferencesCreditNotesFormSchema}
+      validationSchema={PreferencesReceiptsFormSchema}
       onSubmit={handleFormSubmit}
-      component={PreferencesCreditNotesForm}
+      component={PreferencesReceiptsForm}
     />
   );
 }
 
-export const PreferencesCreditNotesFormPage = compose(withDashboardActions)(
-  PreferencesCreditNotesFormPageRoot,
+export const PreferencesReceiptsFormPage = compose(withDashboardActions)(
+  PreferencesReceiptsFormPageRoot,
 );

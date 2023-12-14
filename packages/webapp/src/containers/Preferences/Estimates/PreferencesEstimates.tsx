@@ -1,14 +1,14 @@
 // @ts-nocheck
 import { PreferencesEstimatesBoot } from './PreferencesEstimatesFormBoot';
-import PreferencesInvoiceFormPage from './PreferencesEstimatesFormPage';
+import { PreferencesEstimatesFormPage } from './PreferencesEstimatesFormPage';
 
 /**
- * items preferences.
+ * Estimates preferences.
  */
-export default function PreferencesEstimates() {
+export function PreferencesEstimates() {
   return (
     <PreferencesEstimatesBoot>
-      <PreferencesInvoiceFormPage />
+      <PreferencesEstimatesFormPage />
     </PreferencesEstimatesBoot>
   );
 }

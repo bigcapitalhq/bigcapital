@@ -2070,7 +2070,7 @@
   "project_task.dialog.edit_success_message": "The task has been edited successfully.",
   "project_task.action.edit_task": "Edit Task",
   "project_task.action.delete_task": "Delete Task",
-"project_task.rate": "{rate} / hour",
+  "project_task.rate": "{rate} / hour",
   "project_task.fixed_price": "Fixed price",
   "project_task.non_chargable": "Non-chargeable",
   "project_task.estimate_hours": "• {estimate_hours}h 0m estimated",
@@ -2293,5 +2293,19 @@
   "global_error.too_many_requests": "Too many requests",
 
   "pref.invoices.termsConditions.field": "Terms & Conditions",
-  "pref.invoices.customerNotes.field": "Customer Notes"
+  "pref.invoices.customerNotes.field": "Customer Notes",
+
+  "pref.creditNotes.termsConditions.field": "Terms & Conditions",
+  "pref.creditNotes.customerNotes.field": "Customer Notes",
+
+  "pref.estimates.termsConditions.field": "Terms & Conditions",
+  "pref.estimates.customerNotes.field": "Customer Notes",
+
+  "pref.receipts.termsConditions.field": "Terms & Conditions",
+  "pref.receipts.customerNotes.field": "Customer Notes",
+
+  "preferences.invoices": "Invoices",
+  "preferences.estimates": "Estimates",
+  "preferences.creditNotes": "Credit Notes",
+  "preferences.receipts": "Receipts"
 }
