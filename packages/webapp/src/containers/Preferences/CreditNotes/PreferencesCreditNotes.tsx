@@ -3,7 +3,7 @@ import { PreferencesCreditNotesBoot } from './PreferencesCreditNotesFormBoot';
 import { PreferencesCreditNotesFormPage } from './PreferencesCreditNotesFormPage';
 
 /**
- * items preferences.
+ * Credit notes preferences.
  */
 export function PreferencesCreditNotes() {
   return (

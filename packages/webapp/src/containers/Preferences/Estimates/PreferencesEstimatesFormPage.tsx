@@ -21,7 +21,7 @@ const defaultValues = {
 };
 
 /**
- * Preferences - .
+ * Preferences estimates form.
  */
 function PreferencesEstimatesFormPageRoot({
   // #withDashboardActions

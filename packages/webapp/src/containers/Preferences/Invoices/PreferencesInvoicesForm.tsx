@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
 
 /**
- * Preferences general form.
+ * Invoices preferences form.
  */
 export function PreferencesInvoicesForm({ isSubmitting }) {
   const history = useHistory();
