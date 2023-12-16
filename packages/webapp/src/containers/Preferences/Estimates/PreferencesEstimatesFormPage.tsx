@@ -9,6 +9,7 @@ import { AppToaster } from '@/components';
 import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
 import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
+import withSettings from '@/containers/Settings/withSettings';
 
 import { transferObjectOptionsToArray } from '../Accountant/utils';
 import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
