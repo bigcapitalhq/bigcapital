@@ -1,16 +1,19 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
+import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster } from '@/components';
 import { PreferencesCreditNotesFormSchema } from './PreferencesCreditNotesForm.schema';
-import { usePreferencesCreditNotesFormContext } from './PreferencesCreditNotesFormBoot';
 import { PreferencesCreditNotesForm } from './PreferencesCreditNotesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm } from '@/utils';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import withSettings from '@/containers/Settings/withSettings';
+import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { useSaveSettings } from '@/hooks/query';
 
 const defaultValues = {
   termsConditions: '',
@@ -23,8 +26,12 @@ const defaultValues = {
 function PreferencesCreditNotesFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
+
+  // #withSettings
+  creditNoteSettings,
 }) {
-  const { organization } = usePreferencesCreditNotesFormContext();
+  // Save settings.
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('preferences.creditNotes'));
@@ -33,14 +40,19 @@ function PreferencesCreditNotesFormPageRoot({
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    ...transformToForm(organization.metadata, defaultValues),
+    ...transformToForm(creditNoteSettings, defaultValues),
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
+    const options = R.compose(
+      transferObjectOptionsToArray,
+      transfromToSnakeCase,
+    )({ creditNote: { ...values } });
+
     // Handle request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
-        message: intl.get('preferences.estimates.success_message'),
+        message: intl.get('preferences.credit_notes.success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -49,9 +61,7 @@ function PreferencesCreditNotesFormPageRoot({
     const onError = () => {
       setSubmitting(false);
     };
-    // updateOrganization({ ...values })
-    //   .then(onSuccess)
-    //   .catch(onError);
+    saveSettingMutate({ options }).then(onSuccess).catch(onError);
   };
 
   return (
@@ -64,6 +74,9 @@ function PreferencesCreditNotesFormPageRoot({
   );
 }
 
-export const PreferencesCreditNotesFormPage = compose(withDashboardActions)(
-  PreferencesCreditNotesFormPageRoot,
-);
+export const PreferencesCreditNotesFormPage = compose(
+  withDashboardActions,
+  withSettings(({ creditNoteSettings }) => ({
+    creditNoteSettings: creditNoteSettings,
+  })),
+)(PreferencesCreditNotesFormPageRoot);

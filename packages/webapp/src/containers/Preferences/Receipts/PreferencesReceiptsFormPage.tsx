@@ -3,18 +3,21 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import * as R from 'ramda';
 
 import { AppToaster } from '@/components';
 import { PreferencesReceiptsFormSchema } from './PreferencesReceiptsForm.schema';
-import { usePreferencesReceiptsFormContext } from './PreferencesReceiptsFormBoot';
 import { PreferencesReceiptsForm } from './PreferencesReceiptsForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm } from '@/utils';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import withSettings from '@/containers/Settings/withSettings';
+import { useSaveSettings } from '@/hooks/query';
+import { transferObjectOptionsToArray } from '../Accountant/utils';
 
 const defaultValues = {
   termsConditions: '',
-  customerNotes: '',
+  receiptMessage: '',
 };
 
 /**
@@ -23,8 +26,12 @@ const defaultValues = {
 function PreferencesReceiptsFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
+
+  // #withSettings
+  receiptSettings,
 }) {
-  const { organization } = usePreferencesReceiptsFormContext();
+  // Save settings.
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('preferences.receipts'));
@@ -33,12 +40,17 @@ function PreferencesReceiptsFormPageRoot({
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    ...transformToForm(organization.metadata, defaultValues),
+    ...transformToForm(receiptSettings, defaultValues),
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
+    const options = R.compose(
+      transferObjectOptionsToArray,
+      transfromToSnakeCase,
+    )({ salesReceipts: { ...values } });
+
     // Handle request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('preferences.receipts.success_message'),
         intent: Intent.SUCCESS,
@@ -49,9 +61,7 @@ function PreferencesReceiptsFormPageRoot({
     const onError = () => {
       setSubmitting(false);
     };
-    // updateOrganization({ ...values })
-    //   .then(onSuccess)
-    //   .catch(onError);
+    saveSettingMutate({ options }).then(onSuccess).catch(onError);
   };
 
   return (
@@ -64,6 +74,9 @@ function PreferencesReceiptsFormPageRoot({
   );
 }
 
-export const PreferencesReceiptsFormPage = compose(withDashboardActions)(
-  PreferencesReceiptsFormPageRoot,
-);
+export const PreferencesReceiptsFormPage = compose(
+  withDashboardActions,
+  withSettings(({ receiptSettings }) => ({
+    receiptSettings: receiptSettings,
+  })),
+)(PreferencesReceiptsFormPageRoot);

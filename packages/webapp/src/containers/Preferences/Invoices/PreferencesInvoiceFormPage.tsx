@@ -3,14 +3,17 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import * as R from 'ramda';
 
 import { AppToaster } from '@/components';
 import { PreferencesInvoiceFormSchema } from './PreferencesInvoiceForm.schema';
-import { usePreferencesInvoiceFormContext } from './PreferencesInvoiceFormBoot';
 import { PreferencesInvoicesForm } from './PreferencesInvoicesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm } from '@/utils';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import withSettings from '@/containers/Settings/withSettings';
+import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { useSaveSettings } from '@/hooks/query';
 
 const defaultValues = {
   termsConditions: '',
@@ -23,8 +26,12 @@ const defaultValues = {
 function PreferencesInvoiceFormPage({
   // #withDashboardActions
   changePreferencesPageTitle,
+
+  // #withSettings
+  invoiceSettings,
 }) {
-  const { organization } = usePreferencesInvoiceFormContext();
+  // Save settings.
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('preferences.invoices'));
@@ -33,12 +40,17 @@ function PreferencesInvoiceFormPage({
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    ...transformToForm(organization.metadata, defaultValues),
+    ...transformToForm(invoiceSettings, defaultValues),
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
+    const options = R.compose(
+      transferObjectOptionsToArray,
+      transfromToSnakeCase,
+    )({ salesInvoices: { ...values } });
+
     // Handle request success.
-    const onSuccess = (response) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get('preferences.invoices.success_message'),
         intent: Intent.SUCCESS,
@@ -49,9 +61,7 @@ function PreferencesInvoiceFormPage({
     const onError = () => {
       setSubmitting(false);
     };
-    // updateOrganization({ ...values })
-    //   .then(onSuccess)
-    //   .catch(onError);
+    saveSettingMutate({ options }).then(onSuccess).catch(onError);
   };
 
   return (
@@ -64,4 +74,9 @@ function PreferencesInvoiceFormPage({
   );
 }
 
-export default compose(withDashboardActions)(PreferencesInvoiceFormPage);
+export default compose(
+  withDashboardActions,
+  withSettings(({ invoiceSettings }) => ({
+    invoiceSettings: invoiceSettings,
+  })),
+)(PreferencesInvoiceFormPage);

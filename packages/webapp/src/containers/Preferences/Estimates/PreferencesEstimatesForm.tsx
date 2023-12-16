@@ -4,12 +4,7 @@ import { Form } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
-import {
-  FieldRequiredHint,
-  FormattedMessage as T,
-  FFormGroup,
-  FTextArea,
-} from '@/components';
+import { FormattedMessage as T, FFormGroup, FTextArea } from '@/components';
 
 /**
  * Preferences estimates form.
@@ -24,21 +19,6 @@ export function PreferencesEstimatesForm({ isSubmitting }) {
 
   return (
     <Form>
-      {/* ---------- Terms & Conditions ----------  */}
-      <FFormGroup
-        name={'termsConditions'}
-        label={<T id={'pref.estimates.termsConditions.field'} />}
-        labelInfo={<FieldRequiredHint />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'termsConditions'}
-          fastField={true}
-          fill={true}
-        />
-      </FFormGroup>
-
       {/* ---------- Customer Notes ----------  */}
       <FFormGroup
         name={'customerNotes'}
@@ -47,7 +27,21 @@ export function PreferencesEstimatesForm({ isSubmitting }) {
       >
         <FTextArea
           medium={'true'}
-          name={'tax_number'}
+          name={'customerNotes'}
+          fastField={true}
+          fill={true}
+        />
+      </FFormGroup>
+
+      {/* ---------- Terms & Conditions ----------  */}
+      <FFormGroup
+        name={'termsConditions'}
+        label={<T id={'pref.estimates.termsConditions.field'} />}
+        fastField={true}
+      >
+        <FTextArea
+          medium={'true'}
+          name={'termsConditions'}
           fastField={true}
           fill={true}
         />

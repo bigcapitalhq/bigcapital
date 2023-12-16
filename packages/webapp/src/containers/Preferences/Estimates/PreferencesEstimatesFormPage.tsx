@@ -3,14 +3,16 @@ import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
+import * as R from 'ramda';
 
 import { AppToaster } from '@/components';
 import { PreferencesEstimatesFormSchema } from './PreferencesEstimatesForm.schema';
-import { usePreferencesEstimatesFormContext } from './PreferencesEstimatesFormBoot';
 import { PreferencesEstimatesForm } from './PreferencesEstimatesForm';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-import { compose, transformToForm } from '@/utils';
+import { transferObjectOptionsToArray } from '../Accountant/utils';
+import { compose, transformToForm, transfromToSnakeCase } from '@/utils';
+import { useSaveSettings } from '@/hooks/query';
 
 const defaultValues = {
   termsConditions: '',
@@ -23,8 +25,12 @@ const defaultValues = {
 function PreferencesEstimatesFormPageRoot({
   // #withDashboardActions
   changePreferencesPageTitle,
+
+  // #withSettings
+  estimatesSettings,
 }) {
-  const { organization } = usePreferencesEstimatesFormContext();
+  // Save Organization Settings.
+  const { mutateAsync: saveSettingMutate } = useSaveSettings();
 
   useEffect(() => {
     changePreferencesPageTitle(intl.get('preferences.estimates'));
@@ -33,10 +39,15 @@ function PreferencesEstimatesFormPageRoot({
   // Initial values.
   const initialValues = {
     ...defaultValues,
-    ...transformToForm(organization.metadata, defaultValues),
+    ...transformToForm(estimatesSettings, defaultValues),
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
+    const options = R.compose(
+      transferObjectOptionsToArray,
+      transfromToSnakeCase,
+    )({ salesEstimates: { ...values } });
+
     // Handle request success.
     const onSuccess = (response) => {
       AppToaster.show({
@@ -49,9 +60,7 @@ function PreferencesEstimatesFormPageRoot({
     const onError = () => {
       setSubmitting(false);
     };
-    // updateOrganization({ ...values })
-    //   .then(onSuccess)
-    //   .catch(onError);
+    saveSettingMutate({ options }).then(onSuccess).catch(onError);
   };
 
   return (
@@ -64,6 +73,9 @@ function PreferencesEstimatesFormPageRoot({
   );
 }
 
-export const PreferencesEstimatesFormPage = compose(withDashboardActions)(
-  PreferencesEstimatesFormPageRoot,
-);
+export const PreferencesEstimatesFormPage = compose(
+  withDashboardActions,
+  withSettings(({ estimatesSettings }) => ({
+    estimatesSettings: estimatesSettings,
+  })),
+)(PreferencesEstimatesFormPageRoot);

@@ -2302,10 +2302,15 @@
   "pref.estimates.customerNotes.field": "Customer Notes",
 
   "pref.receipts.termsConditions.field": "Terms & Conditions",
-  "pref.receipts.customerNotes.field": "Customer Notes",
+  "pref.receipts.receiptMessage.field": "Receipt Message",
 
   "preferences.invoices": "Invoices",
   "preferences.estimates": "Estimates",
   "preferences.creditNotes": "Credit Notes",
-  "preferences.receipts": "Receipts"
+  "preferences.receipts": "Receipts",
+
+  "preferences.estimates.success_message": "The preferences have been saved successfully.",
+  "preferences.credit_notes.success_message": "The preferences have been saved successfully.",
+  "preferences.receipts.success_message": "The preferences have been saved successfully.",
+  "preferences.invoices.success_message": "The preferences have been saved successfully."
 }

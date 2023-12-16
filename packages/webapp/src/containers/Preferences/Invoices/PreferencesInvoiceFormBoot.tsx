@@ -15,7 +15,7 @@ function PreferencesInvoicesBoot({ ...props }) {
 
   // Provider state.
   const provider = {
-    organization: {},
+    isSettingsLoading
   };
 
   // Detarmines whether if any query is loading.

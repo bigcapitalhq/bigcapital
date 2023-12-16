@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { useSettings } from '@/hooks/query';
 import PreferencesPageLoader from '../PreferencesPageLoader';
+import styled from 'styled-components';
+import { Card } from '@/components';
 
 const PreferencesEstimatesFormContext = React.createContext();
 
@@ -13,9 +15,8 @@ function PreferencesEstimatesBoot({ ...props }) {
 
   // Provider state.
   const provider = {
-    organization: {},
+    isSettingsLoading,
   };
-
   // Detarmines whether if any query is loading.
   const isLoading = isSettingsLoading;
 
@@ -26,16 +27,29 @@ function PreferencesEstimatesBoot({ ...props }) {
         CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT,
       )}
     >
-      {isLoading ? (
-        <PreferencesPageLoader />
-      ) : (
-        <PreferencesEstimatesFormContext.Provider value={provider} {...props} />
-      )}
+      <PreferencesEstimatesCard>
+        {isLoading ? (
+          <PreferencesPageLoader />
+        ) : (
+          <PreferencesEstimatesFormContext.Provider
+            value={provider}
+            {...props}
+          />
+        )}
+      </PreferencesEstimatesCard>
     </div>
   );
 }
 
 const usePreferencesEstimatesFormContext = () =>
   React.useContext(PreferencesEstimatesFormContext);
+
+const PreferencesEstimatesCard = styled(Card)`
+  padding: 25px;
+
+  .bp4-form-group {
+    max-width: 600px;
+  }
+`;
 
 export { PreferencesEstimatesBoot, usePreferencesEstimatesFormContext };
