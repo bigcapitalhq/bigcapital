@@ -7,7 +7,6 @@ import { omit, first } from 'lodash';
 import { useFormikContext } from 'formik';
 import {
   defaultFastFieldShouldUpdate,
-  transactionNumber,
   repeatValue,
   transformToForm,
   formattedAmount,
@@ -50,7 +49,7 @@ export const defaultReceipt = {
   receipt_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   receipt_message: '',
-  statement: '',
+  terms_conditions: '',
   closed: '',
   branch_id: '',
   warehouse_id: '',
