@@ -284,26 +284,31 @@ export const useComposeRowsOnRemoveTableRow = () => {
 
 /**
  * Retrieves the aggregate tax rates from the given item entries.
+ * @param {string} currencyCode - 
+ * @param {any} taxRates - 
+ * @param {any} entries - 
  */
-export const aggregateItemEntriesTaxRates = R.curry((taxRates, entries) => {
-  const taxRatesById = keyBy(taxRates, 'id');
+export const aggregateItemEntriesTaxRates = R.curry(
+  (currencyCode, taxRates, entries) => {
+    const taxRatesById = keyBy(taxRates, 'id');
 
-  // Calculate the total tax amount of invoice entries.
-  const filteredEntries = entries.filter((e) => e.tax_rate_id);
-  const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
+    // Calculate the total tax amount of invoice entries.
+    const filteredEntries = entries.filter((e) => e.tax_rate_id);
+    const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
 
-  return Object.keys(groupedTaxRates).map((taxRateId) => {
-    const taxRate = taxRatesById[taxRateId];
-    const taxRates = groupedTaxRates[taxRateId];
-    const totalTaxAmount = sumBy(taxRates, 'tax_amount');
-    const taxAmountFormatted = formattedAmount(totalTaxAmount, 'USD');
+    return Object.keys(groupedTaxRates).map((taxRateId) => {
+      const taxRate = taxRatesById[taxRateId];
+      const taxRates = groupedTaxRates[taxRateId];
+      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
+      const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
 
-    return {
-      taxRateId,
-      taxRate: taxRate.rate,
-      label: `${taxRate.name} [${taxRate.rate}%]`,
-      taxAmount: totalTaxAmount,
-      taxAmountFormatted,
-    };
-  });
-});
+      return {
+        taxRateId,
+        taxRate: taxRate.rate,
+        label: `${taxRate.name} [${taxRate.rate}%]`,
+        taxAmount: totalTaxAmount,
+        taxAmountFormatted,
+      };
+    });
+  },
+);

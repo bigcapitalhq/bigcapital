@@ -322,8 +322,8 @@ export const useBillAggregatedTaxRates = () => {
   const { taxRates } = useBillFormContext();
 
   const aggregateTaxRates = React.useMemo(
-    () => aggregateItemEntriesTaxRates(taxRates),
-    [taxRates],
+    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
+    [values.currency_code, taxRates],
   );
   // Calculate the total tax amount of bill entries.
   return React.useMemo(() => {
