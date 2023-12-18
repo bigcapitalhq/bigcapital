@@ -129,6 +129,9 @@ export default {
 
     onNotifySms: 'onSaleInvoiceNotifySms',
     onNotifiedSms: 'onSaleInvoiceNotifiedSms',
+
+    onNotifyMail: 'onSaleInvoiceNotifyMail',
+    onNotifyReminderMail: 'onSaleInvoiceNotifyReminderMail'
   },
 
   /**
@@ -160,6 +163,8 @@ export default {
 
     onRejecting: 'onSaleEstimateRejecting',
     onRejected: 'onSaleEstimateRejected',
+
+    onNotifyMail: 'onSaleEstimateNotifyMail'
   },
 
   /**

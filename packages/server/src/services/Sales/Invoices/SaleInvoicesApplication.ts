@@ -312,15 +312,20 @@ export class SaleInvoiceApplication {
    * @param {number} saleInvoiceId
    * @returns {}
    */
-  public sendSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
-    return this.sendInvoiceReminderService.sendInvoiceMailReminder(
+  public sendSaleInvoiceMailReminder(
+    tenantId: number,
+    saleInvoiceId: number,
+    messageDTO: SendInvoiceMailDTO
+  ) {
+    return this.sendInvoiceReminderService.triggerMail(
       tenantId,
-      saleInvoiceId
+      saleInvoiceId,
+      messageDTO
     );
   }
 
   /**
-   *
+   * Sends the invoice mail of the given sale invoice.
    * @param {number} tenantId
    * @param {number} saleInvoiceId
    * @param {SendInvoiceMailDTO} messageDTO
@@ -331,7 +336,7 @@ export class SaleInvoiceApplication {
     saleInvoiceId: number,
     messageDTO: SendInvoiceMailDTO
   ) {
-    return this.sendSaleInvoiceMailService.sendSaleInvoiceMail(
+    return this.sendSaleInvoiceMailService.sendMail(
       tenantId,
       saleInvoiceId,
       messageDTO

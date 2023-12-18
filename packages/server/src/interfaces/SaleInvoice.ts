@@ -194,3 +194,9 @@ export interface SendInvoiceMailDTO {
   body: string;
   attachInvoice?: boolean;
 }
+
+export interface ISaleInvoiceNotifyPayload {
+  tenantId: number;
+  saleInvoiceId: number;
+  messageDTO: SendInvoiceMailDTO;
+}

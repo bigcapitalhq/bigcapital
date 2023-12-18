@@ -10,6 +10,7 @@ import {
   ISaleInvoiceCreateDTO,
   SaleInvoiceAction,
   AbilitySubject,
+  SendInvoiceMailDTO,
 } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
@@ -169,10 +170,10 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail',
       [
         ...this.specificSaleInvoiceValidation,
-        body('from').isString().exists(),
-        body('to').isString().exists(),
-        body('body').isString().exists(),
-        body('attach_invoice').exists().isBoolean().toBoolean(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
@@ -664,7 +665,7 @@ export default class SaleInvoicesController extends BaseController {
   };
 
   /**
-   *
+   * Sends mail invoice of the given sale invoice.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -676,11 +677,13 @@ export default class SaleInvoicesController extends BaseController {
   ) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req);
 
     try {
       await this.saleInvoiceApplication.sendSaleInvoiceMail(
         tenantId,
-        invoiceId
+        invoiceId,
+        invoiceMailDTO
       );
       return res.status(200).send({});
     } catch (error) {
@@ -726,11 +729,13 @@ export default class SaleInvoicesController extends BaseController {
   ) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req);
 
     try {
       await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
         tenantId,
-        invoiceId
+        invoiceId,
+        invoiceMailDTO
       );
       return res.status(200).send({});
     } catch (error) {
