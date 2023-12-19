@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { isEmpty } from 'lodash';
+import { defaultTo, isEmpty } from 'lodash';
 import { CLASSES } from '@/constants/classes';
 import {
   CreateCreditNoteFormSchema,
@@ -48,6 +48,8 @@ function CreditNoteForm({
   creditAutoIncrement,
   creditNumberPrefix,
   creditNextNumber,
+  creditCustomerNotes,
+  creditTermsConditions,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -68,22 +70,21 @@ function CreditNoteForm({
   const creditNumber = transactionNumber(creditNumberPrefix, creditNextNumber);
 
   // Initial values.
-  const initialValues = React.useMemo(
-    () => ({
-      ...(!isEmpty(creditNote)
-        ? { ...transformToEditForm(creditNote) }
-        : {
-            ...defaultCreditNote,
-            ...(creditAutoIncrement && {
-              credit_note_number: creditNumber,
-            }),
-            entries: orderingLinesIndexes(defaultCreditNote.entries),
-            currency_code: base_currency,
-            ...newCreditNote,
+  const initialValues = {
+    ...(!isEmpty(creditNote)
+      ? { ...transformToEditForm(creditNote) }
+      : {
+          ...defaultCreditNote,
+          ...(creditAutoIncrement && {
+            credit_note_number: creditNumber,
           }),
-    }),
-    [],
-  );
+          entries: orderingLinesIndexes(defaultCreditNote.entries),
+          currency_code: base_currency,
+          terms_conditions: defaultTo(creditTermsConditions, ''),
+          note: defaultTo(creditCustomerNotes, ''),
+          ...newCreditNote,
+        }),
+  };
 
   // Handles form submit.
   const handleFormSubmit = (
@@ -178,6 +179,8 @@ export default compose(
     creditAutoIncrement: creditNoteSettings?.autoIncrement,
     creditNextNumber: creditNoteSettings?.nextNumber,
     creditNumberPrefix: creditNoteSettings?.numberPrefix,
+    creditCustomerNotes: creditNoteSettings?.customerNotes,
+    creditTermsConditions: creditNoteSettings?.termsConditions,
   })),
   withCurrentOrganization(),
 )(CreditNoteForm);

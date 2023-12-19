@@ -13,6 +13,22 @@ export default [
     href: '/preferences/users',
   },
   {
+    text: <T id={'preferences.estimates'} />,
+    href: '/preferences/estimates',
+  },
+  {
+    text: <T id={'preferences.invoices'} />,
+    href: '/preferences/invoices',
+  },
+  {
+    text: <T id={'preferences.receipts'} />,
+    href: '/preferences/receipts',
+  },
+  {
+    text: <T id={'preferences.creditNotes'} />,
+    href: '/preferences/credit-notes',
+  },
+  {
     text: <T id={'currencies'} />,
     href: '/preferences/currencies',
   },

@@ -2,11 +2,43 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
-# [0.10.1] - 25-09-2023
+## [0.12.1] - 17-11-2023
+
+* feat: Add default customer message and terms conditions to the transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/291
+* fix: The currency code of transaction tax rate entry by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/293
+
+## [0.12.0] - 04-11-2023
+
+* feat: Export reports via CSV and XLSX by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/286
+* fix: Axios upgrade by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/288
+* fix(server): Allow decimal amount in sale/purchase transactions. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/289
+* feat: Optimize invoice documents printing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/280
+* chore(deps): bump axios from 0.20.0 to 1.6.0 in /packages/server by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/284
+* chore(deps): bump axios from 0.20.0 to 1.6.0 by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/283
+
+## [0.11.0] - 28-10-2023
+
+* feat: Migrate to pnpm by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/253
+* feat: Integrate tax rates to bills by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/260
+* feat: Assign default sell/purchase tax rates to items by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/261
+* chore(deps-dev): bump @babel/traverse from 7.23.0 to 7.23.2 in /packages/server by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/272
+* feat: Improve financial statements rows color by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/276
+* fix: Trial balance sheet adjusted balance by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/273
+* feat: Adds tax numbers to organization and customers by @kochie in https://github.com/bigcapitalhq/bigcapital/pull/269
+* docs: Add kochie as a contributor for code by @allcontributors in https://github.com/bigcapitalhq/bigcapital/pull/277
+* feat: Computed Net Income under Equity in Balance Sheet report. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/271
+* fix: Change Dockerfile files with new pnpm by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/278
+
+## [0.10.2] - 02-10-2023
+
+fix(webapp): Disable tax rates from item entries editor table services do not support tax rates (https://github.com/bigcapitalhq/bigcapital/commit/69afa07e3ba45495a4cab3490c15f2b0c40c4790) by @abouolia 
+fix(server): Add missing method in ItemEntry model (https://github.com/bigcapitalhq/bigcapital/commit/07628ddc37f46c98959ced0323f28752e0a98944) by @abouolia
+
+## [0.10.1] - 25-09-2023
 
 * Fix: Running tenants migration on Docker migration container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/242
 
-# [0.10.0] - 24-09-2023
+## [0.10.0] - 24-09-2023
 
 * Added: Tax rates service by @abouolia @elforjani13  in https://github.com/bigcapitalhq/bigcapital/pull/204
 * Added: Sales Tax Liability Summary report by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/204
@@ -16,7 +48,7 @@ All notable changes to Bigcapital server-side will be in this file.
 * chore(deps): bump word-wrap from 1.2.3 to 1.2.4 in /packages/webapp by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/199
 * chore(deps): bump mongoose from 5.13.15 to 5.13.20 by @dependabot in https://github.com/bigcapitalhq/bigcapital/pull/197
 
-# [0.9.12] - 29-08-2023
+## [0.9.12] - 29-08-2023
 
 * Refactor: split the services to multiple service classes. (by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/202)
 * Fix: create quick customer/vendor by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/206
@@ -30,18 +62,18 @@ All notable changes to Bigcapital server-side will be in this file.
 * Fix: filter by customers, vendors and items in reports do not work by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/224
 https://github.com/bigcapitalhq/bigcapital/pull/225
 
-# [0.9.11] - 23-07-2023
+## [0.9.11] - 23-07-2023
 
 * added: Restart policy to docker compose files. by @suhaibaffan in https://github.com/bigcapitalhq/bigcapital/pull/198
 * fix: Expose and expand the rate limit to the env variables by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/195
 
-# [0.9.10] - 18-07-2023
+## [0.9.10] - 18-07-2023
 
 * feat(e2e): E2E onboarding process by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/176
 * fix(webapp): Show loading message of cost computing job on financial reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/196
 * fix(webapp): Change the currency code of sales and purchases transactions with foreign contacts. 
 
-# [0.9.9] - 28-06-2023
+## [0.9.9] - 28-06-2023
 
 * refactor: Customer and vendor select component by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/171
 * chore: Move auto-increment components in separate files by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/170
@@ -53,7 +85,7 @@ https://github.com/bigcapitalhq/bigcapital/pull/225
 * fix: No currency in amount field on money in/out dialogs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/179
 * fix: No default branch for customer/vendor opening balance branch by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/182
 
-# [0.9.8] - 19-06-2023
+## [0.9.8] - 19-06-2023
 
 `bigcapitalhq/webapp`
 
