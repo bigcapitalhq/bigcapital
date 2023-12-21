@@ -249,13 +249,13 @@ export class SaleInvoiceApplication {
   };
 
   /**
-   *
-   * @param {number} tenantId ]
-   * @param saleInvoice
-   * @returns
+   * Retrieves the pdf buffer of the given sale invoice.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleInvoice
+   * @returns {Promise<Buffer>}
    */
-  public saleInvoicePdf(tenantId: number, saleInvoice) {
-    return this.pdfSaleInvoiceService.saleInvoicePdf(tenantId, saleInvoice);
+  public saleInvoicePdf(tenantId: number, saleInvoiceId: number) {
+    return this.pdfSaleInvoiceService.saleInvoicePdf(tenantId, saleInvoiceId);
   }
 
   /**
@@ -336,7 +336,7 @@ export class SaleInvoiceApplication {
     saleInvoiceId: number,
     messageDTO: SendInvoiceMailDTO
   ) {
-    return this.sendSaleInvoiceMailService.sendMail(
+    return this.sendSaleInvoiceMailService.triggerMail(
       tenantId,
       saleInvoiceId,
       messageDTO

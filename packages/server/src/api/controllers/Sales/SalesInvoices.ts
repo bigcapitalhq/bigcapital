@@ -157,10 +157,11 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail-reminder',
       [
         ...this.specificSaleInvoiceValidation,
-        body('from').isString().exists(),
-        body('to').isString().exists(),
-        body('body').isString().exists(),
-        body('attach_invoice').exists().isBoolean().toBoolean(),
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleInvoiceMailReminder.bind(this)),
@@ -170,6 +171,7 @@ export default class SaleInvoicesController extends BaseController {
       '/:id/mail',
       [
         ...this.specificSaleInvoiceValidation,
+        body('subject').isString().optional(),
         body('from').isString().optional(),
         body('to').isString().optional(),
         body('body').isString().optional(),
@@ -677,7 +679,9 @@ export default class SaleInvoicesController extends BaseController {
   ) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
-    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req);
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
 
     try {
       await this.saleInvoiceApplication.sendSaleInvoiceMail(
@@ -692,7 +696,7 @@ export default class SaleInvoicesController extends BaseController {
   }
 
   /**
-   *
+   * Retreivers the sale invoice reminder options.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -729,8 +733,9 @@ export default class SaleInvoicesController extends BaseController {
   ) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
-    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req);
-
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
     try {
       await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
         tenantId,

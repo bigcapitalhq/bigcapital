@@ -1,3 +1,25 @@
+export const DEFAULT_INVOICE_MAIL_SUBJECT =
+  'Invoice {InvoiceNumber} from {CompanyName}';
+export const DEFAULT_INVOICE_MAIL_CONTENT = `
+<p>Dear {CustomerName}</p>
+<p>Thank you for your business, You can view or print your invoice from attachements.</p>
+<p>
+Invoice <strong>#{InvoiceNumber}</strong><br />
+Due Date : <strong>{InvoiceDueDate}</strong><br />
+Amount   : <strong>{InvoiceAmount}</strong></br />
+</p>
+`;
+
+export const DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT =
+  'Invoice {InvoiceNumber} reminder from {CompanyName}';
+export const DEFAULT_INVOICE_REMINDER_MAIL_CONTENT = `
+<p>Dear {CustomerName}</p>
+<p>You might have missed the payment date and the invoice is now overdue by {OverdueDays} days.</p>
+<p>Invoice <strong>#{InvoiceNumber}</strong><br />
+Due Date : <strong>{InvoiceDueDate}</strong><br />
+Amount   : <strong>{InvoiceAmount}</strong></p>
+`;
+
 export const ERRORS = {
   INVOICE_NUMBER_NOT_UNIQUE: 'INVOICE_NUMBER_NOT_UNIQUE',
   SALE_INVOICE_NOT_FOUND: 'SALE_INVOICE_NOT_FOUND',
@@ -16,6 +38,7 @@ export const ERRORS = {
   PAYMENT_ACCOUNT_CURRENCY_INVALID: 'PAYMENT_ACCOUNT_CURRENCY_INVALID',
   SALE_INVOICE_ALREADY_WRITTEN_OFF: 'SALE_INVOICE_ALREADY_WRITTEN_OFF',
   SALE_INVOICE_NOT_WRITTEN_OFF: 'SALE_INVOICE_NOT_WRITTEN_OFF',
+  NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];

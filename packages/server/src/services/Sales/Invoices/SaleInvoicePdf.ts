@@ -1,7 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
-import { ISaleInvoice } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class SaleInvoicePdf {
@@ -11,16 +12,34 @@ export class SaleInvoicePdf {
   @Inject()
   private templateInjectable: TemplateInjectable;
 
+  @Inject()
+  private validators: CommandSaleInvoiceValidators;
+
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId - Tenant Id.
    * @param {ISaleInvoice} saleInvoice -
    * @returns {Promise<Buffer>}
    */
-  async saleInvoicePdf(
+  public async saleInvoicePdf(
     tenantId: number,
-    saleInvoice: ISaleInvoice
+    invoiceId: number
   ): Promise<Buffer> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    const saleInvoice = await SaleInvoice.query()
+      .findById(invoiceId)
+      .withGraphFetched('entries.item')
+      .withGraphFetched('entries.tax')
+      .withGraphFetched('customer')
+      .withGraphFetched('taxes.taxRate');
+
+    // Validates the given sale invoice existance.
+    this.validators.validateInvoiceExistance(saleInvoice);
+
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/invoice-regular',

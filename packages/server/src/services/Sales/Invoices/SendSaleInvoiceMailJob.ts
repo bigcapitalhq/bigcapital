@@ -10,7 +10,7 @@ export class SendSaleInvoiceMailJob {
   constructor(agenda) {
     agenda.define(
       'sale-invoice-mail-send',
-      { priority: 'high', concurrency: 1 },
+      { priority: 'high', concurrency: 2 },
       this.handler
     );
   }
@@ -23,7 +23,7 @@ export class SendSaleInvoiceMailJob {
     const sendInvoiceMail = Container.get(SendSaleInvoiceMail);
 
     try {
-      await sendInvoiceMail.triggerMail(tenantId, saleInvoiceId, messageDTO);
+      await sendInvoiceMail.sendMail(tenantId, saleInvoiceId, messageDTO);
       done();
     } catch (error) {
       console.log(error);
