@@ -1,3 +1,12 @@
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
+  'Invoice {InvoiceNumber} reminder from {CompanyName}';
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `
+<p>Dear {CustomerName}</p>
+<p>You might have missed the payment date and the invoice is now overdue by {OverdueDays} days.</p>
+<p>Invoice <strong>#{InvoiceNumber}</strong><br />
+Due Date : <strong>{InvoiceDueDate}</strong><br />
+Amount   : <strong>{InvoiceAmount}</strong></p>
+`;
 
 export const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
@@ -8,7 +17,7 @@ export const ERRORS = {
   CUSTOMER_HAS_SALES_ESTIMATES: 'CUSTOMER_HAS_SALES_ESTIMATES',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
   SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
-  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED'
+  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];

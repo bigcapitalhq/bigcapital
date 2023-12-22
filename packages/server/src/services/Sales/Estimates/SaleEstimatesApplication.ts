@@ -7,6 +7,7 @@ import {
   ISaleEstimate,
   ISaleEstimateDTO,
   ISalesEstimatesFilter,
+  SaleEstimateMailOptions,
 } from '@/interfaces';
 import { EditSaleEstimate } from './EditSaleEstimate';
 import { DeleteSaleEstimate } from './DeleteSaleEstimate';
@@ -202,25 +203,33 @@ export class SaleEstimatesApplication {
   };
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {} saleEstimate
-   * @returns
-   */
-  public getSaleEstimatePdf(tenantId: number, saleEstimate) {
-    return this.saleEstimatesPdfService.getSaleEstimatePdf(
-      tenantId,
-      saleEstimate
-    );
-  }
-
-  /**
-   *
+   * Retrieve the PDF content of the given sale estimate.
    * @param {number} tenantId
    * @param {number} saleEstimateId
    * @returns
    */
-  public sendSaleEstimateMail(tenantId: number, saleEstimateId: number) {
-    return this.sendEstimateMailService.sendMail(tenantId, saleEstimateId);
+  public getSaleEstimatePdf(tenantId: number, saleEstimateId: number) {
+    return this.saleEstimatesPdfService.getSaleEstimatePdf(
+      tenantId,
+      saleEstimateId
+    );
+  }
+
+  /**
+   * Send the reminder mail of the given sale estimate.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<void>}
+   */
+  public sendSaleEstimateMail(
+    tenantId: number,
+    saleEstimateId: number,
+    saleEstimateMailOpts: SaleEstimateMailOptions
+  ) {
+    return this.sendEstimateMailService.triggerMail(
+      tenantId,
+      saleEstimateId,
+      saleEstimateMailOpts
+    );
   }
 }
