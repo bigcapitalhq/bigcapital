@@ -4,31 +4,29 @@ import { SendInvoiceMailDTO } from '@/interfaces';
 import Mail from '@/lib/Mail';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
-import { SaleInvoiceMailFormatter } from './SaleInvoiceMailFormatter';
 import {
   DEFAULT_INVOICE_MAIL_CONTENT,
   DEFAULT_INVOICE_MAIL_SUBJECT,
   ERRORS,
 } from './constants';
-import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { ServiceError } from '@/exceptions';
+import { formatSmsMessage } from '@/utils';
+import { GetSaleInvoice } from './GetSaleInvoice';
+import { Tenant } from '@/system/models';
 
 @Service()
 export class SendSaleInvoiceMail {
   @Inject()
   private tenancy: HasTenancyService;
 
-  @Inject('agenda')
-  private agenda: any;
-
+  @Inject()
+  private getSaleInvoiceService: GetSaleInvoice;
+  
   @Inject()
   private invoicePdf: SaleInvoicePdf;
 
-  @Inject()
-  private invoiceFormatter: SaleInvoiceMailFormatter;
-
-  @Inject()
-  private commandInvoiceValidator: CommandSaleInvoiceValidators;
+  @Inject('agenda')
+  private agenda: any;
 
   /**
    * Sends the invoice mail of the given sale invoice.
@@ -50,6 +48,58 @@ export class SendSaleInvoiceMail {
   }
 
   /**
+   * Retrieves the default invoice mail options.
+   * @param {number} tenantId
+   * @param {number} invoiceId
+   * @returns {Promise<SendInvoiceMailDTO>}
+   */
+  public getDefaultMailOpts = async (tenantId: number, invoiceId: number) => {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+    const saleInvoice = await SaleInvoice.query()
+      .findById(invoiceId)
+      .withGraphFetched('customer')
+      .throwIfNotFound();
+
+    return {
+      attachInvoice: true,
+      subject: DEFAULT_INVOICE_MAIL_SUBJECT,
+      body: DEFAULT_INVOICE_MAIL_CONTENT,
+      to: saleInvoice.customer.email,
+    };
+  };
+
+  /**
+   * Retrieves the formatted text of the given sale invoice.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} invoiceId - Sale invoice id.
+   * @param {string} text - The given text.
+   * @returns {Promise<string>}
+   */
+  public textFormatter = async (
+    tenantId: number,
+    invoiceId: number,
+    text: string
+  ): Promise<string> => {
+    const invoice = await this.getSaleInvoiceService.getSaleInvoice(
+      tenantId,
+      invoiceId
+    );
+    const organization = await Tenant.query()
+      .findById(tenantId)
+      .withGraphFetched('metadata');
+
+    return formatSmsMessage(text, {
+      CompanyName: organization.metadata.name,
+      CustomerName: invoice.customer.displayName,
+      InvoiceNumber: invoice.invoiceNo,
+      InvoiceDueAmount: invoice.dueAmountFormatted,
+      InvoiceDueDate: invoice.dueDateFormatted,
+      InvoiceDate: invoice.invoiceDateFormatted,
+      InvoiceAmount: invoice.totalFormatted,
+    });
+  };
+
+  /**
    * Triggers the mail invoice.
    * @param {number} tenantId
    * @param {number} saleInvoiceId
@@ -61,31 +111,20 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageDTO: SendInvoiceMailDTO
   ) {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('customer');
-
-    this.commandInvoiceValidator.validateInvoiceExistance(saleInvoice);
-
+    const defaultMessageOpts = await this.getDefaultMailOpts(
+      tenantId,
+      saleInvoiceId
+    );
     // Parsed message opts with default options.
     const parsedMessageOpts = {
-      attachInvoice: true,
-      subject: DEFAULT_INVOICE_MAIL_SUBJECT,
-      body: DEFAULT_INVOICE_MAIL_CONTENT,
-      to: saleInvoice.customer.email,
+      ...defaultMessageOpts,
       ...messageDTO,
     };
     // In case there is no email address from the customer or from options, throw an error.
     if (!parsedMessageOpts.to) {
       throw new ServiceError(ERRORS.NO_INVOICE_CUSTOMER_EMAIL_ADDR);
     }
-    const formatter = R.curry(this.invoiceFormatter.formatText)(
-      tenantId,
-      saleInvoiceId
-    );
-    const toEmail = parsedMessageOpts.to;
+    const formatter = R.curry(this.textFormatter)(tenantId, saleInvoiceId);
     const subject = await formatter(parsedMessageOpts.subject);
     const body = await formatter(parsedMessageOpts.body);
     const attachments = [];
@@ -96,17 +135,13 @@ export class SendSaleInvoiceMail {
         tenantId,
         saleInvoiceId
       );
-      attachments.push({
-        filename: 'invoice.pdf',
-        content: invoicePdfBuffer,
-      });
+      attachments.push({ filename: 'invoice.pdf', content: invoicePdfBuffer });
     }
-    const mail = new Mail()
+    await new Mail()
       .setSubject(subject)
-      .setTo(toEmail)
+      .setTo(parsedMessageOpts.to)
       .setContent(body)
-      .setAttachments(attachments);
-
-    await mail.send();
+      .setAttachments(attachments)
+      .send();
   }
 }
