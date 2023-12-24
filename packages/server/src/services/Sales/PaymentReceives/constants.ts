@@ -1,3 +1,15 @@
+export const DEFAULT_PAYMENT_MAIL_SUBJECT =
+  'Invoice {InvoiceNumber} from {CompanyName}';
+export const DEFAULT_PAYMENT_MAIL_CONTENT = `
+<p>Dear {CustomerName}</p>
+<p>Thank you for your business, You can view or print your invoice from attachements.</p>
+<p>
+Invoice <strong>#{InvoiceNumber}</strong><br />
+Due Date : <strong>{InvoiceDueDate}</strong><br />
+Amount   : <strong>{InvoiceAmount}</strong></br />
+</p>
+`;
+
 export const ERRORS = {
   PAYMENT_RECEIVE_NO_EXISTS: 'PAYMENT_RECEIVE_NO_EXISTS',
   PAYMENT_RECEIVE_NOT_EXISTS: 'PAYMENT_RECEIVE_NOT_EXISTS',
@@ -12,6 +24,7 @@ export const ERRORS = {
   PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE',
   CUSTOMER_HAS_PAYMENT_RECEIVES: 'CUSTOMER_HAS_PAYMENT_RECEIVES',
   PAYMENT_ACCOUNT_CURRENCY_INVALID: 'PAYMENT_ACCOUNT_CURRENCY_INVALID',
+  NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR'
 };
 
 export const DEFAULT_VIEWS = [];

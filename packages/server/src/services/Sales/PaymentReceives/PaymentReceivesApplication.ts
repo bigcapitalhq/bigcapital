@@ -4,6 +4,7 @@ import {
   IPaymentReceive,
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
+  IPaymentReceiveMailOpts,
   IPaymentReceiveSmsDetails,
   IPaymentReceivesFilter,
   ISystemUser,
@@ -17,7 +18,7 @@ import { GetPaymentReceive } from './GetPaymentReceive';
 import { GetPaymentReceiveInvoices } from './GetPaymentReceiveInvoices';
 import { PaymentReceiveNotifyBySms } from './PaymentReceiveSmsNotify';
 import GetPaymentReceivePdf from './GetPaymentReeceivePdf';
-import { PaymentReceive } from '@/models';
+import { SendPaymentReceiveMailNotification } from './PaymentReceiveMailNotification';
 
 @Service()
 export class PaymentReceivesApplication {
@@ -41,6 +42,9 @@ export class PaymentReceivesApplication {
 
   @Inject()
   private paymentSmsNotify: PaymentReceiveNotifyBySms;
+
+  @Inject()
+  private paymentMailNotify: SendPaymentReceiveMailNotification;
 
   @Inject()
   private getPaymentReceivePdfService: GetPaymentReceivePdf;
@@ -176,18 +180,37 @@ export class PaymentReceivesApplication {
   };
 
   /**
-   * Retrieve PDF content of the given payment receive.
+   * Notify customer via mail about payment receive details.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @param {IPaymentReceiveMailOpts} messageOpts
+   * @returns {Promise<void>}
+   */
+  public notifyPaymentByMail(
+    tenantId: number,
+    paymentReceiveId: number,
+    messageOpts: IPaymentReceiveMailOpts
+  ) {
+    return this.paymentMailNotify.triggerMail(
+      tenantId,
+      paymentReceiveId,
+      messageOpts
+    );
+  }
+
+  /**
+   * Retrieve pdf content of the given payment receive.
    * @param {number} tenantId
    * @param {PaymentReceive} paymentReceive
    * @returns
    */
   public getPaymentReceivePdf = (
     tenantId: number,
-    paymentReceive: PaymentReceive
+    paymentReceiveId: number
   ) => {
     return this.getPaymentReceivePdfService.getPaymentReceivePdf(
       tenantId,
-      paymentReceive
+      paymentReceiveId
     );
   };
 }
