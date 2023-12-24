@@ -5,6 +5,7 @@ import {
   IPaginationMeta,
   ISaleReceipt,
   ISalesReceiptsFilter,
+  SaleReceiptMailOpts,
 } from '@/interfaces';
 import { EditSaleReceipt } from './EditSaleReceipt';
 import { GetSaleReceipt } from './GetSaleReceipt';
@@ -13,6 +14,7 @@ import { GetSaleReceipts } from './GetSaleReceipts';
 import { CloseSaleReceipt } from './CloseSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
+import { SaleReceiptMailNotification } from './SaleReceiptMailNotification';
 
 @Service()
 export class SaleReceiptApplication {
@@ -39,6 +41,9 @@ export class SaleReceiptApplication {
 
   @Inject()
   private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms;
+
+  @Inject()
+  private saleReceiptNotifyByMailService: SaleReceiptMailNotification;
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -164,6 +169,23 @@ export class SaleReceiptApplication {
     return this.saleReceiptNotifyBySmsService.smsDetails(
       tenantId,
       saleReceiptId
+    );
+  }
+
+  /**
+   * Sends the receipt mail of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   */
+  public sendSaleReceiptMail(
+    tenantId: number,
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOpts
+  ) {
+    return this.saleReceiptNotifyByMailService.triggerMail(
+      tenantId,
+      saleReceiptId,
+      messageOpts
     );
   }
 }

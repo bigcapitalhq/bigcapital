@@ -1,3 +1,15 @@
+export const DEFAULT_RECEIPT_MAIL_SUBJECT =
+  'Invoice {InvoiceNumber} from {CompanyName}';
+export const DEFAULT_RECEIPT_MAIL_CONTENT = `
+<p>Dear {CustomerName}</p>
+<p>Thank you for your business, You can view or print your invoice from attachements.</p>
+<p>
+Invoice <strong>#{InvoiceNumber}</strong><br />
+Due Date : <strong>{InvoiceDueDate}</strong><br />
+Amount   : <strong>{InvoiceAmount}</strong></br />
+</p>
+`;
+
 export const ERRORS = {
   SALE_RECEIPT_NOT_FOUND: 'SALE_RECEIPT_NOT_FOUND',
   DEPOSIT_ACCOUNT_NOT_FOUND: 'DEPOSIT_ACCOUNT_NOT_FOUND',
@@ -6,6 +18,7 @@ export const ERRORS = {
   SALE_RECEIPT_IS_ALREADY_CLOSED: 'SALE_RECEIPT_IS_ALREADY_CLOSED',
   SALE_RECEIPT_NO_IS_REQUIRED: 'SALE_RECEIPT_NO_IS_REQUIRED',
   CUSTOMER_HAS_SALES_INVOICES: 'CUSTOMER_HAS_SALES_INVOICES',
+  NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR'
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
