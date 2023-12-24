@@ -165,3 +165,7 @@ export type IPaymentReceiveGLCommonEntry = Pick<
   | 'createdAt'
   | 'branchId'
 >;
+
+export interface IPaymentReceiveMailOpts {
+  
+}

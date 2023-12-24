@@ -29,12 +29,12 @@ export class SendSaleEstimateMail {
    * Triggers the reminder mail of the given sale estimate.
    * @param {number} tenantId
    * @param {number} saleEstimateId
-   * @param messageOptions
+   * @param {SaleEstimateMailOptions} messageOptions
    */
   public async triggerMail(
     tenantId: number,
     saleEstimateId: number,
-    messageOptions: any
+    messageOptions: SaleEstimateMailOptions
   ) {
     const payload = {
       tenantId,
@@ -114,7 +114,6 @@ export class SendSaleEstimateMail {
       ...messageOptions,
     };
     const formatter = R.curry(this.formatText)(tenantId, saleEstimateId);
-    const toEmail = parsedMessageOpts.to;
     const subject = await formatter(parsedMessageOpts.subject);
     const body = await formatter(parsedMessageOpts.body);
     const attachments = [];
@@ -131,7 +130,7 @@ export class SendSaleEstimateMail {
     }
     await new Mail()
       .setSubject(subject)
-      .setTo(toEmail)
+      .setTo(parsedMessageOpts.to)
       .setContent(body)
       .setAttachments(attachments)
       .send();

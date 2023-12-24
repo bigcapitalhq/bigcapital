@@ -134,3 +134,7 @@ export interface ISaleReceiptDeletingPayload {
   oldSaleReceipt: ISaleReceipt;
   trx: Knex.Transaction;
 }
+
+export interface SaleReceiptMailOpts {
+  
+}

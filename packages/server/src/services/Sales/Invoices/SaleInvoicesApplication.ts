@@ -329,7 +329,7 @@ export class SaleInvoiceApplication {
    * @param {number} tenantId
    * @param {number} saleInvoiceId
    * @param {SendInvoiceMailDTO} messageDTO
-   * @returns
+   * @returns {Promise<void>}
    */
   public sendSaleInvoiceMail(
     tenantId: number,

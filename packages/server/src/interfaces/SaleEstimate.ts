@@ -124,3 +124,11 @@ export interface ISaleEstimateApprovedEvent {
   saleEstimate: ISaleEstimate;
   trx: Knex.Transaction;
 }
+
+export interface SaleEstimateMailOptions {
+  to: string;
+  from: string;
+  subject: string;
+  body: string;
+  attachInvoice?: boolean;
+}
