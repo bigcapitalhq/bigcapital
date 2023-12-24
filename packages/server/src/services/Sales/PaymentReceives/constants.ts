@@ -1,12 +1,15 @@
-export const DEFAULT_PAYMENT_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} from {CompanyName}';
+export const DEFAULT_PAYMENT_MAIL_SUBJECT = 'Payment Received by {CompanyName}';
 export const DEFAULT_PAYMENT_MAIL_CONTENT = `
 <p>Dear {CustomerName}</p>
-<p>Thank you for your business, You can view or print your invoice from attachements.</p>
+<p>Thank you for your payment. It was a pleasure doing business with you. We look forward to work together again!</p>
 <p>
-Invoice <strong>#{InvoiceNumber}</strong><br />
-Due Date : <strong>{InvoiceDueDate}</strong><br />
-Amount   : <strong>{InvoiceAmount}</strong></br />
+Payment Date : <strong>{PaymentDate}</strong><br />
+Amount   : <strong>{PaymentAmount}</strong></br />
+</p>
+
+<p>
+<i>Regards</i><br />
+<i>{CompanyName}</i>
 </p>
 `;
 
@@ -24,7 +27,7 @@ export const ERRORS = {
   PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE: 'PAYMENT_CUSTOMER_SHOULD_NOT_UPDATE',
   CUSTOMER_HAS_PAYMENT_RECEIVES: 'CUSTOMER_HAS_PAYMENT_RECEIVES',
   PAYMENT_ACCOUNT_CURRENCY_INVALID: 'PAYMENT_ACCOUNT_CURRENCY_INVALID',
-  NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR'
+  NO_INVOICE_CUSTOMER_EMAIL_ADDR: 'NO_INVOICE_CUSTOMER_EMAIL_ADDR',
 };
 
 export const DEFAULT_VIEWS = [];

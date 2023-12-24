@@ -87,9 +87,9 @@ export class SendPaymentReceiveMailNotification {
     return formatSmsMessage(text, {
       CompanyName: organization.metadata.name,
       CustomerName: payment.customer.displayName,
-      PaymentNumber: payment.invoiceNo,
-      PaymentDate: payment.dueAmountFormatted,
-      PaymentAmount: payment.dueAmountFormatted,
+      PaymentNumber: payment.payment_receive_no,
+      PaymentDate: payment.formattedPaymentDate,
+      PaymentAmount: payment.formattedAmount,
     });
   };
 

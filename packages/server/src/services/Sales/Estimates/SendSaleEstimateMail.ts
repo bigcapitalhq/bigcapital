@@ -61,11 +61,10 @@ export class SendSaleEstimateMail {
     );
     return formatSmsMessage(text, {
       CustomerName: estimate.customer.displayName,
-      EstimateNumber: estimate.estimateNo,
-      EstimateDate: estimate.estimateDateFormatted,
-      EstimateAmount: estimate.totalFormatted,
-      EstimateDueDate: estimate.dueDateFormatted,
-      EstimateDueAmount: estimate.dueAmountFormatted,
+      EstimateNumber: estimate.estimateNumber,
+      EstimateDate: estimate.formattedEstimateDate,
+      EstimateAmount: estimate.formattedAmount,
+      EstimateExpirationDate: estimate.formattedExpirationDate,
     });
   };
 

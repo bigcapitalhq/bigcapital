@@ -8,9 +8,9 @@ import Mail from '@/lib/Mail';
 import { GetSaleReceipt } from './GetSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 import {
-  DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
-  DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
-} from '../Estimates/constants';
+  DEFAULT_RECEIPT_MAIL_CONTENT,
+  DEFAULT_RECEIPT_MAIL_SUBJECT,
+} from './constants';
 import { ERRORS } from './constants';
 import { SaleReceiptMailOpts } from '@/interfaces';
 
@@ -62,8 +62,8 @@ export class SaleReceiptMailNotification {
 
     return {
       attachInvoice: true,
-      subject: DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
-      body: DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
+      subject: DEFAULT_RECEIPT_MAIL_SUBJECT,
+      body: DEFAULT_RECEIPT_MAIL_CONTENT,
       to: saleReceipt.customer.email,
     };
   };
@@ -91,11 +91,9 @@ export class SaleReceiptMailNotification {
     return formatSmsMessage(text, {
       CompanyName: organization.metadata.name,
       CustomerName: invoice.customer.displayName,
-      InvoiceNumber: invoice.invoiceNo,
-      InvoiceDueAmount: invoice.dueAmountFormatted,
-      InvoiceDueDate: invoice.dueDateFormatted,
-      InvoiceDate: invoice.invoiceDateFormatted,
-      InvoiceAmount: invoice.totalFormatted,
+      ReceiptNumber: invoice.receiptNumber,
+      ReceiptDate: invoice.formattedReceiptDate,
+      ReceiptAmount: invoice.formattedAmount,
     });
   };
 

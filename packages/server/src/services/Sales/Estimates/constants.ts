@@ -1,11 +1,17 @@
 export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} reminder from {CompanyName}';
-export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `
-<p>Dear {CustomerName}</p>
-<p>You might have missed the payment date and the invoice is now overdue by {OverdueDays} days.</p>
-<p>Invoice <strong>#{InvoiceNumber}</strong><br />
-Due Date : <strong>{InvoiceDueDate}</strong><br />
-Amount   : <strong>{InvoiceAmount}</strong></p>
+  'Estimate {EstimateNumber} is awaiting your approval';
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {CustomerName}</p>
+<p>Thank you for your business, You can view or print your estimate from attachements.</p>
+<p>
+Estimate <strong>#{EstimateNumber}</strong><br />
+Expiration Date : <strong>{EstimateExpirationDate}</strong><br />
+Amount   : <strong>{EstimateAmount}</strong></br />
+</p>
+
+<p>
+<i>Regards</i><br />
+<i>{CompanyName}</i>
+</p>
 `;
 
 export const ERRORS = {
