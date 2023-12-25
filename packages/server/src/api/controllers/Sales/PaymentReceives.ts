@@ -132,6 +132,12 @@ export default class PaymentReceivesController extends BaseController {
       this.sendPaymentReceiveByMail.bind(this),
       this.handleServiceErrors
     );
+    router.get(
+      '/:id/mail',
+      [...this.paymentReceiveValidation],
+      asyncMiddleware(this.getPaymentDefaultMail.bind(this)),
+      this.handleServiceErrors
+    );
     return router;
   }
 
@@ -548,6 +554,31 @@ export default class PaymentReceivesController extends BaseController {
         code: 200,
         message: 'The payment notification has been sent successfully.',
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given payment transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getPaymentDefaultMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const data = await this.paymentReceiveApplication.getPaymentDefaultMail(
+        tenantId,
+        paymentReceiveId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

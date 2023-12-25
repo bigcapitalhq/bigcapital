@@ -60,6 +60,15 @@ export default class SalesReceiptsController extends BaseController {
       asyncMiddleware(this.sendSaleReceiptMail.bind(this)),
       this.handleServiceErrors
     );
+    router.get(
+      '/:id/mail',
+      [
+        ...this.specificReceiptValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getSaleReceiptMail.bind(this)),
+      this.handleServiceErrors
+    );
     router.post(
       '/:id',
       CheckPolicies(SaleReceiptAction.Edit, AbilitySubject.SaleReceipt),
@@ -445,6 +454,31 @@ export default class SalesReceiptsController extends BaseController {
         message:
           'The sale receipt notification via sms has been sent successfully.',
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given sale receipt.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getSaleReceiptMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: receiptId } = req.params;
+
+    try {
+      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
+        tenantId,
+        receiptId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

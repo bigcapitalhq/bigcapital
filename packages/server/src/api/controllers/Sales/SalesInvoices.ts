@@ -181,6 +181,13 @@ export default class SaleInvoicesController extends BaseController {
       asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
       this.handleServiceErrors
     );
+    router.get(
+      '/:id/mail',
+      [...this.specificSaleInvoiceValidation],
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
+    );
     return router;
   }
 
@@ -743,6 +750,31 @@ export default class SaleInvoicesController extends BaseController {
         invoiceMailDTO
       );
       return res.status(200).send({});
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the default mail options of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

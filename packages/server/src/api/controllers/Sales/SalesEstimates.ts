@@ -136,6 +136,13 @@ export default class SalesEstimatesController extends BaseController {
       asyncMiddleware(this.sendSaleEstimateMail.bind(this)),
       this.handleServiceErrors
     );
+    router.get(
+      '/:id/mail',
+      [...this.validateSpecificEstimateSchema],
+      this.validationResult,
+      asyncMiddleware(this.getSaleEstimateMail.bind(this)),
+      this.handleServiceErrors
+    );
     return router;
   }
 
@@ -520,6 +527,31 @@ export default class SalesEstimatesController extends BaseController {
         code: 200,
         message: 'The sale estimate mail has been sent successfully.',
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given sale estimate.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private getSaleEstimateMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleEstimatesApplication.getSaleEstimateMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

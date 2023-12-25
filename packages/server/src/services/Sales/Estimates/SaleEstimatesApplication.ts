@@ -232,4 +232,17 @@ export class SaleEstimatesApplication {
       saleEstimateMailOpts
     );
   }
+
+  /**
+   * Retrieves the default mail options of the given sale estimate.
+   * @param {number} tenantId 
+   * @param {number} saleEstimateId 
+   * @returns {}
+   */
+  public getSaleEstimateMail(tenantId: number, saleEstimateId: number) {
+    return this.sendEstimateMailService.getDefaultMailOpts(
+      tenantId,
+      saleEstimateId
+    );
+  }
 }

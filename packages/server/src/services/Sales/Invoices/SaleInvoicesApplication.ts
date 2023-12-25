@@ -342,4 +342,17 @@ export class SaleInvoiceApplication {
       messageDTO
     );
   }
+
+  /**
+   * Retrieves the default mail options of the given sale invoice.
+   * @param {number} tenantId 
+   * @param {number} saleInvoiceid 
+   * @returns {Promise<SendInvoiceMailDTO>}
+   */
+  public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
+    return this.sendInvoiceReminderService.getDefaultMailOpts(
+      tenantId,
+      saleInvoiceid
+    );
+  }
 }

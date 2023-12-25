@@ -199,6 +199,19 @@ export class PaymentReceivesApplication {
   }
 
   /**
+   * Retrieves the default mail options of the given payment transaction.
+   * @param {number} tenantId
+   * @param {number} paymentReceiveId
+   * @returns {Promise<void>}
+   */
+  public getPaymentDefaultMail(tenantId: number, paymentReceiveId: number) {
+    return this.paymentMailNotify.getDefaultMailOpts(
+      tenantId,
+      paymentReceiveId
+    );
+  }
+
+  /**
    * Retrieve pdf content of the given payment receive.
    * @param {number} tenantId
    * @param {PaymentReceive} paymentReceive
