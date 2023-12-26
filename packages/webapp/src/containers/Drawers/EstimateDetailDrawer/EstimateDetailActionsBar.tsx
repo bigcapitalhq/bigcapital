@@ -86,17 +86,15 @@ function EstimateDetailActionsBar({
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
+            icon={<Icon icon="envelope" />}
+            text={'Send Mail'}
+            onClick={handleMailEstimate}
+          />
+          <Button
+            className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintEstimate}
-          />
-        </Can>
-
-        <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
-          <Button
-            className={Classes.MINIMAL}
-            text={'Mail'}
-            onClick={handleMailEstimate}
           />
           <NavbarDivider />
         </Can>

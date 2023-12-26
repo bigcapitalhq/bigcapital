@@ -24,6 +24,7 @@ import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useReceiptsTableColumns, ActionsMenu } from './components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Sale receipts datatable.
@@ -86,6 +87,11 @@ function ReceiptsDataTable({
     openDialog('receipt-pdf-preview', { receiptId: id });
   };
 
+  // Handle send mail receipt.
+  const handleSendMailReceipt = ({ id }) => {
+    openDialog(DialogsName.ReceiptMail, { receiptId: id });
+  };
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.RECEIPTS);
@@ -141,6 +147,7 @@ function ReceiptsDataTable({
           onClose: handleCloseReceipt,
           onViewDetails: handleViewDetailReceipt,
           onPrint: handlePrintInvoice,
+          onSendMail: handleSendMailReceipt,
         }}
       />
     </DashboardContentTable>

@@ -23,6 +23,7 @@ function ReceiptMailDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
+      style={{ width: 600 }}
     >
       <DialogSuspense>
         <ReceiptMailDialogContent

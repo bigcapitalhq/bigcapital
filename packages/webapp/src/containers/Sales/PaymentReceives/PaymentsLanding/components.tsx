@@ -15,14 +15,17 @@ import {
 import { FormatDateCell, Money, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '@/constants/abilityOption';
 
 /**
  * Table actions menu.
  */
 export function ActionsMenu({
   row: { original: paymentReceive },
-  payload: { onEdit, onDelete, onViewDetails },
+  payload: { onEdit, onDelete, onViewDetails, onSendMail },
 }) {
   return (
     <Menu>
@@ -30,6 +33,11 @@ export function ActionsMenu({
         icon={<Icon icon="reader-18" />}
         text={intl.get('view_details')}
         onClick={safeCallback(onViewDetails, paymentReceive)}
+      />
+      <MenuItem
+        icon={<Icon icon={'envelope'} iconSize={16} />}
+        text={'Send Mail'}
+        onClick={safeCallback(onSendMail, paymentReceive)}
       />
       <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>
         <MenuDivider />

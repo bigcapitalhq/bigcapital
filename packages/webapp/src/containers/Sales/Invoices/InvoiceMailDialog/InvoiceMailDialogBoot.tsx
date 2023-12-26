@@ -26,6 +26,7 @@ function InvoiceMailDialogBoot({
     useSaleInvoiceDefaultOptions(invoiceId);
 
   const provider = {
+    saleInvoiceId: invoiceId,
     mailOptions,
     isMailOptionsLoading,
   };

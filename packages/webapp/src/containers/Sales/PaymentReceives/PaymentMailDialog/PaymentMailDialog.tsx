@@ -23,6 +23,7 @@ function PaymentMailDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
+      style={{ width: 600 }}
     >
       <DialogSuspense>
         <PaymentMailDialogContent

@@ -23,6 +23,7 @@ function EstimateMailDialog({
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}
+      style={{ width: 600 }}
     >
       <DialogSuspense>
         <EstimateMailDialogContent
@@ -33,4 +34,5 @@ function EstimateMailDialog({
     </Dialog>
   );
 }
+
 export default compose(withDialogRedux())(EstimateMailDialog);

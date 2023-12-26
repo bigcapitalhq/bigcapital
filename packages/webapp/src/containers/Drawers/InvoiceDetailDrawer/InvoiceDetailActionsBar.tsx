@@ -123,18 +123,18 @@ function InvoiceDetailActionsBar({
         </Can>
         <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button
-            text={'Mail'}
+            text={'Send Mail'}
+            icon={<Icon icon="envelope" />}
             onClick={handleMailInvoice}
             className={Classes.MINIMAL}
           />
-        </Can>
-        <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintInvoice}
           />
+          <NavbarDivider />
         </Can>
         <Can I={SaleInvoiceAction.Delete} a={AbilitySubject.Invoice}>
           <Button

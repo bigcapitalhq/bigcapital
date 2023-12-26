@@ -26,6 +26,7 @@ function EstimateMailDialogBoot({
     useSaleEstimateDefaultOptions(estimateId);
 
   const provider = {
+    saleEstimateId: estimateId,
     mailOptions,
     isMailOptionsLoading,
   };

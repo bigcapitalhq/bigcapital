@@ -88,17 +88,17 @@ function PaymentReceiveActionsBar({
         <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}>
           <Button
             className={Classes.MINIMAL}
+            text={'Send Mail'}
+            icon={<Icon icon="envelope" />}
+            onClick={handleMailPaymentReceive}
+          />
+          <Button
+            className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintPaymentReceive}
           />
-        </Can>
-        <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}>
-          <Button
-            className={Classes.MINIMAL}
-            text={'Mail'}
-            onClick={handleMailPaymentReceive}
-          />
+          <NavbarDivider />
         </Can>
         <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>
           <Button

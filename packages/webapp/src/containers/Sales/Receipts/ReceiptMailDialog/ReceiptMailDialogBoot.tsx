@@ -27,6 +27,7 @@ function ReceiptMailDialogBoot({
     useSaleReceiptDefaultOptions(receiptId);
 
   const provider = {
+    saleReceiptId: receiptId,
     mailOptions,
     isMailOptionsLoading,
   };
