@@ -28,6 +28,7 @@ import {
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment receive actions bar.
@@ -68,6 +69,10 @@ function PaymentReceiveActionsBar({
     openDialog('payment-pdf-preview', { paymentReceiveId });
   };
 
+  const handleMailPaymentReceive = () => {
+    openDialog(DialogsName.PaymentMail, { paymentReceiveId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -86,6 +91,13 @@ function PaymentReceiveActionsBar({
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintPaymentReceive}
+          />
+        </Can>
+        <Can I={PaymentReceiveAction.View} a={AbilitySubject.PaymentReceive}>
+          <Button
+            className={Classes.MINIMAL}
+            text={'Mail'}
+            onClick={handleMailPaymentReceive}
           />
         </Can>
         <Can I={PaymentReceiveAction.Delete} a={AbilitySubject.PaymentReceive}>

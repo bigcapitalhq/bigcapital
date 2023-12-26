@@ -207,3 +207,36 @@ export function useReceiptSMSDetail(receiptId, props, requestProps) {
     },
   );
 }
+
+/**
+ *
+ */
+export function useSendSaleReceiptMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id, values) => apiRequest.post(`sales/receipts/${id}/mail`, values),
+    {
+      onSuccess: () => {
+        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useSaleReceiptDefaultOptions(invoiceId, props) {
+  return useRequestQuery(
+    [t.SALE_RECEIPT_MAIL_OPTIONS, invoiceId],
+    {
+      method: 'get',
+      url: `sales/receipts/${invoiceId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
+      ...props,
+    },
+  );
+}

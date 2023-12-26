@@ -31,6 +31,7 @@ import {
 import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Invoice details action bar.
@@ -93,6 +94,10 @@ function InvoiceDetailActionsBar({
     openAlert('cancel-bad-debt', { invoiceId });
   };
 
+  const handleMailInvoice = () => {
+    openDialog(DialogsName.InvoiceMail, { invoiceId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -115,6 +120,13 @@ function InvoiceDetailActionsBar({
             />
           </If>
           <NavbarDivider />
+        </Can>
+        <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
+          <Button
+            text={'Mail'}
+            onClick={handleMailInvoice}
+            className={Classes.MINIMAL}
+          />
         </Can>
         <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button

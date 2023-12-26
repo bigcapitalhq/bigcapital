@@ -26,6 +26,7 @@ import {
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -65,6 +66,10 @@ function EstimateDetailActionsBar({
   const handleNotifyViaSMS = () => {
     openDialog('notify-estimate-via-sms', { estimateId });
   };
+  // Handles the estimate mail dialog.
+  const handleMailEstimate = () => {
+    openDialog(DialogsName.EstimateMail, { estimateId });
+  };
 
   return (
     <DrawerActionsBar>
@@ -85,6 +90,15 @@ function EstimateDetailActionsBar({
             text={<T id={'print'} />}
             onClick={handlePrintEstimate}
           />
+        </Can>
+
+        <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            text={'Mail'}
+            onClick={handleMailEstimate}
+          />
+          <NavbarDivider />
         </Can>
         <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
           <Button

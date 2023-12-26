@@ -24,6 +24,7 @@ import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Receipt details actions bar.
@@ -60,6 +61,9 @@ function ReceiptDetailActionBar({
   const handleNotifyViaSMS = () => {
     openDialog('notify-receipt-via-sms', { receiptId });
   };
+  const handleReceiptMail = () => {
+    openDialog(DialogsName.ReceiptMail, { receiptId });
+  }
 
   return (
     <DrawerActionsBar>
@@ -79,6 +83,13 @@ function ReceiptDetailActionBar({
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={safeCallback(onPrintReceipt)}
+          />
+        </Can>
+        <Can I={SaleReceiptAction.View} a={AbilitySubject.Receipt}>
+          <Button
+            className={Classes.MINIMAL}
+            text={'Mail'}
+            onClick={handleReceiptMail}
           />
         </Can>
         <Can I={SaleReceiptAction.Delete} a={AbilitySubject.Receipt}>
