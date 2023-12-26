@@ -69,6 +69,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "cschuijt",
+      "name": "Casper Schuijt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5460015?v=4",
+      "profile": "http://cschuijt.nl",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
