@@ -19,7 +19,7 @@ function EstimateMailDialog({
   return (
     <Dialog
       name={dialogName}
-      title={'Estiomate Mail'}
+      title={'Estimate Mail'}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

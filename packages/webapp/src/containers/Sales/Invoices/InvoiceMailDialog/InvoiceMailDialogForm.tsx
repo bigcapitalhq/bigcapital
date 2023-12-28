@@ -2,25 +2,27 @@
 import { Formik } from 'formik';
 import { castArray } from 'lodash';
 import * as R from 'ramda';
-import { SendMailNotificationForm } from '@/containers/SendMailNotification';
 import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
 import { transformToForm } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendSaleInvoiceMail } from '@/hooks/query';
+import { InvoiceMailDialogFormContent } from './InvoiceMailDialogFormContent';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { InvoiceMailFormSchema } from './InvoiceMailDialogForm.schema';
 
 const initialFormValues = {
   from: [],
   to: [],
   subject: '',
-  message: '',
+  body: '',
+  attachInvoice: true,
 };
 
 interface InvoiceMailFormValues {
   from: string[];
   to: string[];
   subject: string;
-  message: string;
+  body: string;
   attachInvoice: boolean;
 }
 
@@ -54,8 +56,12 @@ function InvoiceMailDialogFormRoot({
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <SendMailNotificationForm onClose={handleClose} />
+    <Formik
+      initialValues={initialValues}
+      validationSchema={InvoiceMailFormSchema}
+      onSubmit={handleSubmit}
+    >
+      <InvoiceMailDialogFormContent onClose={handleClose} />
     </Formik>
   );
 }

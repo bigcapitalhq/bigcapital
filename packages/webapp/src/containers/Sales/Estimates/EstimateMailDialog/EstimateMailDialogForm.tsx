@@ -4,30 +4,31 @@ import * as R from 'ramda';
 import { castArray } from 'lodash';
 import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { transformToForm } from '@/utils';
-import { SendMailNotificationForm } from '@/containers/SendMailNotification';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useSendSaleEstimateMail } from '@/hooks/query';
+import { EstimateMailDialogFormContent } from './EstimateMailDialogFormContent';
 
 const initialFormValues = {
   from: [],
   to: [],
   subject: '',
-  message: '',
+  body: '',
+  attachEstimate: true,
 };
 
 interface EstimateMailFormValues {
   from: string[];
   to: string[];
   subject: string;
-  message: string;
+  body: string;
   attachEstimate: boolean;
 }
 
-function EstimateMailDialogFormRoot(
+function EstimateMailDialogFormRoot({
   // #withDialogClose
   closeDialog,
-) {
+}) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
   const { mailOptions, saleEstimateId } = useEstimateMailDialogBoot();
 
@@ -55,7 +56,7 @@ function EstimateMailDialogFormRoot(
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <SendMailNotificationForm onClose={handleClose} />
+      <EstimateMailDialogFormContent onClose={handleClose} />
     </Formik>
   );
 }

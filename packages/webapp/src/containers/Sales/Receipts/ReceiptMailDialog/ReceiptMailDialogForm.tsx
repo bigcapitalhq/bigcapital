@@ -2,24 +2,26 @@
 import { Formik, FormikBag } from 'formik';
 import { castArray } from 'lodash';
 import * as R from 'ramda';
-import { SendMailNotificationForm } from '@/containers/SendMailNotification';
 import { useReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import { transformToForm } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendSaleReceiptMail } from '@/hooks/query';
+import { ReceiptMailDialogFormContent } from './ReceiptMailDialogFormContent';
 
 const initialFormValues = {
   from: [],
   to: [],
   subject: '',
-  message: '',
+  body: '',
+  attachReceipt: true,
 };
 interface ReceiptMailFormValues {
   from: string[];
   to: string[];
   subject: string;
-  message: string;
+  body: string;
+  attachReceipt: boolean;
 }
 
 function ReceiptMailDialogFormRoot({ closeDialog }) {
@@ -52,7 +54,7 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <SendMailNotificationForm onClose={handleClose} />
+      <ReceiptMailDialogFormContent onClose={handleClose} />
     </Formik>
   );
 }

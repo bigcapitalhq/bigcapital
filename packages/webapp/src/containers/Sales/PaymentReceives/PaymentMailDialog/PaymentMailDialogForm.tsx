@@ -2,25 +2,27 @@
 import { Formik, FormikBag } from 'formik';
 import { castArray } from 'lodash';
 import * as R from 'ramda';
-import { SendMailNotificationForm } from '@/containers/SendMailNotification';
 import { usePaymentMailDialogBoot } from './PaymentMailDialogBoot';
-import { transformToForm } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendPaymentReceiveMail } from '@/hooks/query';
+import { PaymentMailDialogFormContent } from './PaymentMailDialogFormContent';
+import { transformToForm } from '@/utils';
 
 const initialFormValues = {
   from: [],
   to: [],
   subject: '',
-  message: '',
+  body: '',
+  attachPayment: true,
 };
 
 interface PaymentMailFormValue {
   from: string[];
   to: string[];
   subject: string;
-  message: string;
+  body: string;
+  attachPayment: boolean;
 }
 
 export function PaymentMailDialogFormRoot({
@@ -57,7 +59,7 @@ export function PaymentMailDialogFormRoot({
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-      <SendMailNotificationForm onClose={handleClose} />
+      <PaymentMailDialogFormContent onClose={handleClose} />
     </Formik>
   );
 }

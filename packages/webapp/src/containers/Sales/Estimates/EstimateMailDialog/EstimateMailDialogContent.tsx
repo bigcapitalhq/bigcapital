@@ -1,4 +1,3 @@
-import React from 'react';
 import { EstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { EstimateMailDialogForm } from './EstimateMailDialogForm';
 
