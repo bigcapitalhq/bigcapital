@@ -1,5 +1,4 @@
 import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
 import Mail from '@/lib/Mail';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import {
@@ -8,16 +7,13 @@ import {
 } from './constants';
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
 import { GetSaleEstimate } from './GetSaleEstimate';
-import { formatSmsMessage } from '@/utils';
 import { SaleEstimateMailOptions } from '@/interfaces';
+import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 
 @Service()
 export class SendSaleEstimateMail {
   @Inject()
   private tenancy: HasTenancyService;
-
-  @Inject('agenda')
-  private agenda: any;
 
   @Inject()
   private estimatePdf: SaleEstimatesPdf;
@@ -25,11 +21,17 @@ export class SendSaleEstimateMail {
   @Inject()
   private getSaleEstimateService: GetSaleEstimate;
 
+  @Inject()
+  private contactMailNotification: ContactMailNotification;
+
+  @Inject('agenda')
+  private agenda: any;
+
   /**
    * Triggers the reminder mail of the given sale estimate.
-   * @param {number} tenantId
-   * @param {number} saleEstimateId
-   * @param {SaleEstimateMailOptions} messageOptions
+   * @param {number} tenantId -
+   * @param {number} saleEstimateId -
+   * @param {SaleEstimateMailOptions} messageOptions -
    */
   public async triggerMail(
     tenantId: number,
@@ -50,51 +52,50 @@ export class SendSaleEstimateMail {
    * @param {number} estimateId
    * @param {string} text
    */
-  public formatText = async (
-    tenantId: number,
-    estimateId: number,
-    text: string
-  ) => {
+  public formatterData = async (tenantId: number, estimateId: number) => {
     const estimate = await this.getSaleEstimateService.getEstimate(
       tenantId,
       estimateId
     );
-    return formatSmsMessage(text, {
+    return {
       CustomerName: estimate.customer.displayName,
       EstimateNumber: estimate.estimateNumber,
       EstimateDate: estimate.formattedEstimateDate,
       EstimateAmount: estimate.formattedAmount,
       EstimateExpirationDate: estimate.formattedExpirationDate,
-    });
-  };
-
-  /**
-   * Retrieves the default mail options.
-   * @param {number} tenantId
-   * @param {number} saleEstimateId
-   * @returns {Promise<any>}
-   */
-  public getDefaultMailOpts = async (
-    tenantId: number,
-    saleEstimateId: number
-  ) => {
-    const { SaleEstimate } = this.tenancy.models(tenantId);
-
-    const saleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .withGraphFetched('customer')
-      .throwIfNotFound();
-
-    return {
-      attachPdf: true,
-      subject: DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
-      body: DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
-      to: saleEstimate.customer.email,
     };
   };
 
   /**
-   * Sends the mail.
+   * Retrieves the mail options.
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns
+   */
+  public getMailOptions = async (tenantId: number, saleEstimateId: number) => {
+    const { SaleEstimate } = this.tenancy.models(tenantId);
+
+    const saleEstimate = await SaleEstimate.query()
+      .findById(saleEstimateId)
+      .throwIfNotFound();
+
+    const formatterData = await this.formatterData(tenantId, saleEstimateId);
+
+    const mailOptions = await this.contactMailNotification.getMailOptions(
+      tenantId,
+      saleEstimate.customerId,
+      DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT,
+      DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT,
+      formatterData
+    );
+    return {
+      ...mailOptions,
+      data: formatterData,
+    };
+  };
+
+  /**
+   * Sends the mail notification of the given sale estimate.
    * @param {number} tenantId
    * @param {number} saleEstimateId
    * @param {SaleEstimateMailOptions} messageOptions
@@ -104,34 +105,31 @@ export class SendSaleEstimateMail {
     saleEstimateId: number,
     messageOptions: SaleEstimateMailOptions
   ) {
-    const defaultMessageOpts = await this.getDefaultMailOpts(
+    const localMessageOpts = await this.getMailOptions(
       tenantId,
       saleEstimateId
     );
-    const parsedMessageOpts = {
-      ...defaultMessageOpts,
+    const messageOpts = {
+      ...localMessageOpts,
       ...messageOptions,
     };
-    const formatter = R.curry(this.formatText)(tenantId, saleEstimateId);
-    const subject = await formatter(parsedMessageOpts.subject);
-    const body = await formatter(parsedMessageOpts.body);
-    const attachments = [];
+    const mail = new Mail()
+      .setSubject(messageOpts.subject)
+      .setTo(messageOpts.to)
+      .setContent(messageOpts.body);
 
-    if (parsedMessageOpts.to) {
+    if (messageOpts.to) {
       const estimatePdfBuffer = await this.estimatePdf.getSaleEstimatePdf(
         tenantId,
         saleEstimateId
       );
-      attachments.push({
-        filename: 'estimate.pdf',
-        content: estimatePdfBuffer,
-      });
+      mail.setAttachments([
+        {
+          filename: messageOpts.data?.EstimateNumber || 'estimate.pdf',
+          content: estimatePdfBuffer,
+        },
+      ]);
     }
-    await new Mail()
-      .setSubject(subject)
-      .setTo(parsedMessageOpts.to)
-      .setContent(body)
-      .setAttachments(attachments)
-      .send();
+    await mail.send();
   }
 }

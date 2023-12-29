@@ -300,10 +300,7 @@ export class SaleInvoiceApplication {
    * @returns {}
    */
   public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
-    return this.getSaleInvoiceReminderService.getInvoiceMailReminder(
-      tenantId,
-      saleInvoiceId
-    );
+    return this.sendInvoiceReminderService.getMailOpts(tenantId, saleInvoiceId);
   }
 
   /**
@@ -345,14 +342,11 @@ export class SaleInvoiceApplication {
 
   /**
    * Retrieves the default mail options of the given sale invoice.
-   * @param {number} tenantId 
-   * @param {number} saleInvoiceid 
+   * @param {number} tenantId
+   * @param {number} saleInvoiceid
    * @returns {Promise<SendInvoiceMailDTO>}
    */
   public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
-    return this.sendInvoiceReminderService.getDefaultMailOpts(
-      tenantId,
-      saleInvoiceid
-    );
+    return this.sendSaleInvoiceMailService.getMailOpts(tenantId, saleInvoiceid);
   }
 }

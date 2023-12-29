@@ -8,6 +8,11 @@ Invoice <strong>#{InvoiceNumber}</strong><br />
 Due Date : <strong>{InvoiceDueDate}</strong><br />
 Amount   : <strong>{InvoiceAmount}</strong></br />
 </p>
+
+<p>
+<i>Regards</i><br />
+<i>{CompanyName}</i>
+</p>
 `;
 
 export const DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT =
@@ -18,6 +23,11 @@ export const DEFAULT_INVOICE_REMINDER_MAIL_CONTENT = `
 <p>Invoice <strong>#{InvoiceNumber}</strong><br />
 Due Date : <strong>{InvoiceDueDate}</strong><br />
 Amount   : <strong>{InvoiceAmount}</strong></p>
+
+<p>
+<i>Regards</i><br />
+<i>{CompanyName}</i>
+</p>
 `;
 
 export const ERRORS = {

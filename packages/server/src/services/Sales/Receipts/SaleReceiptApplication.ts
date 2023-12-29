@@ -191,12 +191,12 @@ export class SaleReceiptApplication {
 
   /**
    * Retrieves the default mail options of the given sale receipt.
-   * @param {number} tenantId 
-   * @param {number} saleReceiptId 
-   * @returns 
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns
    */
   public getSaleReceiptMail(tenantId: number, saleReceiptId: number) {
-    return this.saleReceiptNotifyByMailService.getDefaultMailOpts(
+    return this.saleReceiptNotifyByMailService.getMailOptions(
       tenantId,
       saleReceiptId
     );

@@ -205,10 +205,7 @@ export class PaymentReceivesApplication {
    * @returns {Promise<void>}
    */
   public getPaymentDefaultMail(tenantId: number, paymentReceiveId: number) {
-    return this.paymentMailNotify.getDefaultMailOpts(
-      tenantId,
-      paymentReceiveId
-    );
+    return this.paymentMailNotify.getMailOptions(tenantId, paymentReceiveId);
   }
 
   /**

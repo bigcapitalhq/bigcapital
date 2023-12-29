@@ -24,6 +24,9 @@ export default class Customer extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  email: string;
+  displayName: string;
+
   /**
    * Query builder.
    */
@@ -74,6 +77,19 @@ export default class Customer extends mixin(TenantModel, [
    */
   get contactNormal() {
     return 'debit';
+  }
+
+  /**
+   *
+   */
+  get contactAddresses() {
+    return [
+      {
+        mail: this.email,
+        label: this.displayName,
+        primary: true
+      },
+    ].filter((c) => c.mail);
   }
 
   /**

@@ -240,7 +240,7 @@ export class SaleEstimatesApplication {
    * @returns {}
    */
   public getSaleEstimateMail(tenantId: number, saleEstimateId: number) {
-    return this.sendEstimateMailService.getDefaultMailOpts(
+    return this.sendEstimateMailService.getMailOptions(
       tenantId,
       saleEstimateId
     );

@@ -696,7 +696,10 @@ export default class SaleInvoicesController extends BaseController {
         invoiceId,
         invoiceMailDTO
       );
-      return res.status(200).send({});
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail has been sent successfully.',
+      });
     } catch (error) {
       next(error);
     }
@@ -717,18 +720,18 @@ export default class SaleInvoicesController extends BaseController {
     const { id: invoiceId } = req.params;
 
     try {
-      await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
         tenantId,
         invoiceId
       );
-      return res.status(200).send({});
+      return res.status(200).send(data);
     } catch (error) {
       next(error);
     }
   }
 
   /**
-   *
+   * Sends mail invoice of the given sale invoice.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -749,7 +752,10 @@ export default class SaleInvoicesController extends BaseController {
         invoiceId,
         invoiceMailDTO
       );
-      return res.status(200).send({});
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail reminder has been sent successfully.',
+      });
     } catch (error) {
       next(error);
     }

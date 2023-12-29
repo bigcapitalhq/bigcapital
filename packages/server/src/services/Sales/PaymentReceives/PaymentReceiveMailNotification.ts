@@ -1,17 +1,14 @@
 import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
 import { IPaymentReceiveMailOpts, SendInvoiceMailDTO } from '@/interfaces';
 import Mail from '@/lib/Mail';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import {
   DEFAULT_PAYMENT_MAIL_CONTENT,
   DEFAULT_PAYMENT_MAIL_SUBJECT,
-  ERRORS,
 } from './constants';
-import { ServiceError } from '@/exceptions';
-import { formatSmsMessage } from '@/utils';
 import { Tenant } from '@/system/models';
 import { GetPaymentReceive } from './GetPaymentReceive';
+import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 
 @Service()
 export class SendPaymentReceiveMailNotification {
@@ -20,6 +17,9 @@ export class SendPaymentReceiveMailNotification {
 
   @Inject()
   private getPaymentService: GetPaymentReceive;
+
+  @Inject()
+  private contactMailNotification: ContactMailNotification;
 
   @Inject('agenda')
   private agenda: any;
@@ -49,19 +49,22 @@ export class SendPaymentReceiveMailNotification {
    * @param {number} invoiceId
    * @returns {Promise<SendInvoiceMailDTO>}
    */
-  public getDefaultMailOpts = async (tenantId: number, invoiceId: number) => {
+  public getMailOptions = async (tenantId: number, invoiceId: number) => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
+
     const paymentReceive = await PaymentReceive.query()
       .findById(invoiceId)
-      .withGraphFetched('customer')
       .throwIfNotFound();
 
-    return {
-      attachInvoice: true,
-      subject: DEFAULT_PAYMENT_MAIL_SUBJECT,
-      body: DEFAULT_PAYMENT_MAIL_CONTENT,
-      to: paymentReceive.customer.email,
-    };
+    const formatterData = await this.textFormatter(tenantId, invoiceId);
+
+    return this.contactMailNotification.getMailOptions(
+      tenantId,
+      paymentReceive.customerId,
+      DEFAULT_PAYMENT_MAIL_SUBJECT,
+      DEFAULT_PAYMENT_MAIL_CONTENT,
+      formatterData
+    );
   };
 
   /**
@@ -73,9 +76,8 @@ export class SendPaymentReceiveMailNotification {
    */
   public textFormatter = async (
     tenantId: number,
-    invoiceId: number,
-    text: string
-  ): Promise<string> => {
+    invoiceId: number
+  ): Promise<Record<string, string>> => {
     const payment = await this.getPaymentService.getPaymentReceive(
       tenantId,
       invoiceId
@@ -84,13 +86,13 @@ export class SendPaymentReceiveMailNotification {
       .findById(tenantId)
       .withGraphFetched('metadata');
 
-    return formatSmsMessage(text, {
+    return {
       CompanyName: organization.metadata.name,
       CustomerName: payment.customer.displayName,
       PaymentNumber: payment.payment_receive_no,
       PaymentDate: payment.formattedPaymentDate,
       PaymentAmount: payment.formattedAmount,
-    });
+    };
   };
 
   /**
@@ -105,7 +107,7 @@ export class SendPaymentReceiveMailNotification {
     paymentReceiveId: number,
     messageDTO: SendInvoiceMailDTO
   ): Promise<void> {
-    const defaultMessageOpts = await this.getDefaultMailOpts(
+    const defaultMessageOpts = await this.getMailOptions(
       tenantId,
       paymentReceiveId
     );
@@ -114,18 +116,10 @@ export class SendPaymentReceiveMailNotification {
       ...defaultMessageOpts,
       ...messageDTO,
     };
-    // In case there is no email address from the customer or from options, throw an error.
-    if (!parsedMessageOpts.to) {
-      throw new ServiceError(ERRORS.NO_INVOICE_CUSTOMER_EMAIL_ADDR);
-    }
-    const formatter = R.curry(this.textFormatter)(tenantId, paymentReceiveId);
-    const subject = await formatter(parsedMessageOpts.subject);
-    const body = await formatter(parsedMessageOpts.body);
-
     await new Mail()
-      .setSubject(subject)
+      .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
-      .setContent(body)
+      .setContent(parsedMessageOpts.body)
       .send();
   }
 }
