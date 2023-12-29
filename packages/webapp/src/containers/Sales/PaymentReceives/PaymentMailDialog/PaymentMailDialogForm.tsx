@@ -1,27 +1,26 @@
 // @ts-nocheck
 import { Formik, FormikBag } from 'formik';
-import { castArray } from 'lodash';
 import * as R from 'ramda';
+import { Intent } from '@blueprintjs/core';
 import { usePaymentMailDialogBoot } from './PaymentMailDialogBoot';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendPaymentReceiveMail } from '@/hooks/query';
 import { PaymentMailDialogFormContent } from './PaymentMailDialogFormContent';
-import { transformToForm } from '@/utils';
+import {
+  MailNotificationFormValues,
+  initialMailNotificationValues,
+  transformMailFormToRequest,
+  transformMailFormToInitialValues,
+} from '@/containers/SendMailNotification/utils';
+import { AppToaster } from '@/components';
 
 const initialFormValues = {
-  from: [],
-  to: [],
-  subject: '',
-  body: '',
+  ...initialMailNotificationValues,
   attachPayment: true,
 };
 
-interface PaymentMailFormValue {
-  from: string[];
-  to: string[];
-  subject: string;
-  body: string;
+interface PaymentMailFormValue extends MailNotificationFormValues {
   attachPayment: boolean;
 }
 
@@ -32,24 +31,34 @@ export function PaymentMailDialogFormRoot({
   const { mailOptions, paymentId } = usePaymentMailDialogBoot();
   const { mutateAsync: sendPaymentMail } = useSendPaymentReceiveMail();
 
-  const initialValues = {
-    ...initialFormValues,
-    ...transformToForm(mailOptions, initialFormValues),
-    from: mailOptions.from ? castArray(mailOptions.from) : [],
-    to: mailOptions.to ? castArray(mailOptions.to) : [],
-  };
+  const initialValues = transformMailFormToInitialValues(
+    mailOptions,
+    initialFormValues,
+  );
   // Handles the form submitting.
   const handleSubmit = (
     values: PaymentMailFormValue,
     { setSubmitting }: FormikBag<PaymentMailFormValue>,
   ) => {
+    const reqValues = transformMailFormToRequest(values);
+
     setSubmitting(true);
-    sendPaymentMail([paymentId, values])
+    sendPaymentMail([paymentId, reqValues])
       .then(() => {
+        AppToaster.show({
+          message: 'The mail notification has been sent successfully.',
+          intent: Intent.SUCCESS,
+        });
         setSubmitting(false);
+        closeDialog(DialogsName.PaymentMail);
       })
-      .catch((error) => {
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
         setSubmitting(false);
+        closeDialog(DialogsName.PaymentMail);
       });
   };
 

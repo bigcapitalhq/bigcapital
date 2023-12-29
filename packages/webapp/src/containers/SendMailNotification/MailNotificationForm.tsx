@@ -16,6 +16,14 @@ interface MailNotificationFormProps {
   toAddresses: SelectOptionProps[];
 }
 
+const commonAddressSelect = {
+  placeholder: '',
+  labelAccessor: '',
+  valueAccessor: 'mail',
+  tagAccessor: (item) => `<${item.label}> (${item.mail})`,
+  textAccessor: (item) => `<${item.label}> (${item.mail})`,
+};
+
 export function MailNotificationForm({
   fromAddresses,
   toAddresses,
@@ -38,12 +46,12 @@ export function MailNotificationForm({
           <FMultiSelect
             items={fromAddresses}
             name={'from'}
-            placeholder=""
             popoverProps={{ minimal: true, fill: true }}
             tagInputProps={{
               tagProps: { round: true, minimal: true, large: true },
             }}
             fill={true}
+            {...commonAddressSelect}
           />
         </FFormGroup>
 
@@ -57,6 +65,7 @@ export function MailNotificationForm({
               tagProps: { round: true, minimal: true, large: true },
             }}
             fill={true}
+            {...commonAddressSelect}
           />
         </FFormGroup>
 

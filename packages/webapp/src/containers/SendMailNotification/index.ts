@@ -1,1 +1,1 @@
-export * from './SendMailNotificationForm';
+export * from './MailNotificationForm';

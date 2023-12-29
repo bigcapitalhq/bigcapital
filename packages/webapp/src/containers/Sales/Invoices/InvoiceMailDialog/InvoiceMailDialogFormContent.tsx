@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FFormGroup, FSwitch } from '@/components';
 import { MailNotificationForm } from '@/containers/SendMailNotification';
 import { saveInvoke } from '@/utils';
+import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
 
 interface SendMailNotificationFormProps {
   onClose?: () => void;
@@ -14,6 +15,7 @@ export function InvoiceMailDialogFormContent({
   onClose,
 }: SendMailNotificationFormProps) {
   const { isSubmitting } = useFormikContext();
+  const { mailOptions } = useInvoiceMailDialogBoot();
 
   const handleClose = () => {
     saveInvoke(onClose);
@@ -22,8 +24,10 @@ export function InvoiceMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm fromAddresses={[]} toAddresses={[]} />
-
+        <MailNotificationForm
+          fromAddresses={mailOptions.from_addresses}
+          toAddresses={mailOptions.to_addresses}
+        />
         <AttachFormGroup name={'attachInvoice'} inline>
           <FSwitch name={'attachInvoice'} label={'Attach Invoice'} />
         </AttachFormGroup>

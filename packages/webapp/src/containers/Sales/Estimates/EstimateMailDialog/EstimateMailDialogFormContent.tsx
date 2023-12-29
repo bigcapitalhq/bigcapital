@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { FFormGroup, FSwitch } from '@/components';
 import { MailNotificationForm } from '@/containers/SendMailNotification';
 import { saveInvoke } from '@/utils';
+import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
 
 interface EstimateMailDialogFormContentProps {
   onClose?: () => void;
@@ -14,6 +15,7 @@ export function EstimateMailDialogFormContent({
   onClose,
 }: EstimateMailDialogFormContentProps) {
   const { isSubmitting } = useFormikContext();
+  const { mailOptions } = useEstimateMailDialogBoot();
 
   const handleClose = () => {
     saveInvoke(onClose);
@@ -22,8 +24,10 @@ export function EstimateMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm fromAddresses={[]} toAddresses={[]} />
-
+        <MailNotificationForm
+          fromAddresses={mailOptions.from_addresses}
+          toAddresses={mailOptions.to_addresses}
+        />
         <AttachFormGroup name={'attachEstimate'} inline>
           <FSwitch name={'attachEstimate'} label={'Attach Estimate'} />
         </AttachFormGroup>

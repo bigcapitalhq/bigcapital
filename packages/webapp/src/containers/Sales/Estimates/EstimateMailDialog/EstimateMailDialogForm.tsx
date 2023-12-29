@@ -1,27 +1,26 @@
 // @ts-nocheck
 import { Formik } from 'formik';
 import * as R from 'ramda';
-import { castArray } from 'lodash';
 import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
-import { transformToForm } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useSendSaleEstimateMail } from '@/hooks/query';
 import { EstimateMailDialogFormContent } from './EstimateMailDialogFormContent';
+import {
+  initialMailNotificationValues,
+  MailNotificationFormValues,
+  transformMailFormToInitialValues,
+  transformMailFormToRequest,
+} from '@/containers/SendMailNotification/utils';
+import { Intent } from '@blueprintjs/core';
+import { AppToaster } from '@/components';
 
 const initialFormValues = {
-  from: [],
-  to: [],
-  subject: '',
-  body: '',
+  ...initialMailNotificationValues,
   attachEstimate: true,
 };
 
-interface EstimateMailFormValues {
-  from: string[];
-  to: string[];
-  subject: string;
-  body: string;
+interface EstimateMailFormValues extends MailNotificationFormValues {
   attachEstimate: boolean;
 }
 
@@ -32,21 +31,31 @@ function EstimateMailDialogFormRoot({
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
   const { mailOptions, saleEstimateId } = useEstimateMailDialogBoot();
 
-  const initialValues = {
-    ...initialFormValues,
-    ...transformToForm(mailOptions, initialFormValues),
-    from: mailOptions.from ? castArray(mailOptions.from) : [],
-    to: mailOptions.to ? castArray(mailOptions.to) : [],
-  };
+  const initialValues = transformMailFormToInitialValues(
+    mailOptions,
+    initialFormValues,
+  );
   // Handle the form submitting.
   const handleSubmit = (values: EstimateMailFormValues, { setSubmitting }) => {
+    const reqValues = transformMailFormToRequest(values);
+
     setSubmitting(true);
-    sendEstimateMail([saleEstimateId, values])
+    sendEstimateMail([saleEstimateId, reqValues])
       .then(() => {
+        AppToaster.show({
+          message: 'The mail notification has been sent successfully.',
+          intent: Intent.SUCCESS,
+        });
+        closeDialog(DialogsName.EstimateMail);
         setSubmitting(false);
       })
       .catch((error) => {
         setSubmitting(false);
+        closeDialog(DialogsName.EstimateMail);
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
       });
   };
 

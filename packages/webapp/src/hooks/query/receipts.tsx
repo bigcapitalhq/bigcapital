@@ -216,7 +216,7 @@ export function useSendSaleReceiptMail(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (id, values) => apiRequest.post(`sales/receipts/${id}/mail`, values),
+    ([id, values]) => apiRequest.post(`sales/receipts/${id}/mail`, values),
     {
       onSuccess: () => {
         // Invalidate queries.

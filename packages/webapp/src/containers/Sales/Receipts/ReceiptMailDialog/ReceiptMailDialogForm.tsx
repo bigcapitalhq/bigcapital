@@ -1,26 +1,25 @@
 // @ts-nocheck
 import { Formik, FormikBag } from 'formik';
-import { castArray } from 'lodash';
 import * as R from 'ramda';
+import { Intent } from '@blueprintjs/core';
 import { useReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
-import { transformToForm } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendSaleReceiptMail } from '@/hooks/query';
 import { ReceiptMailDialogFormContent } from './ReceiptMailDialogFormContent';
+import {
+  initialMailNotificationValues,
+  MailNotificationFormValues,
+  transformMailFormToInitialValues,
+  transformMailFormToRequest,
+} from '@/containers/SendMailNotification/utils';
+import { AppToaster } from '@/components';
 
 const initialFormValues = {
-  from: [],
-  to: [],
-  subject: '',
-  body: '',
+  ...initialMailNotificationValues,
   attachReceipt: true,
 };
-interface ReceiptMailFormValues {
-  from: string[];
-  to: string[];
-  subject: string;
-  body: string;
+interface ReceiptMailFormValues extends MailNotificationFormValues {
   attachReceipt: boolean;
 }
 
@@ -28,26 +27,37 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
   const { mailOptions, saleReceiptId } = useReceiptMailDialogBoot();
   const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
 
-  const initialValues = {
-    ...initialFormValues,
-    ...transformToForm(mailOptions, initialFormValues),
-    from: mailOptions.from ? castArray(mailOptions.from) : [],
-    to: mailOptions.to ? castArray(mailOptions.to) : [],
-  };
+  // Transformes mail options to initial form values.
+  const initialValues = transformMailFormToInitialValues(
+    mailOptions,
+    initialFormValues,
+  );
+  // Handle the form submitting.
   const handleSubmit = (
     values: ReceiptMailFormValues,
     { setSubmitting }: FormikBag<ReceiptMailFormValues>,
   ) => {
+    const reqValues = transformMailFormToRequest(values);
+
     setSubmitting(true);
-    sendReceiptMail([saleReceiptId, values])
+    sendReceiptMail([saleReceiptId, reqValues])
       .then(() => {
+        AppToaster.show({
+          message: 'The mail notification has been sent successfully.',
+          intent: Intent.SUCCESS,
+        });
+        closeDialog(DialogsName.ReceiptMail);
         setSubmitting(false);
       })
-      .catch((error) => {
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
         setSubmitting(false);
       });
   };
-
+  // Handle the close button click.
   const handleClose = () => {
     closeDialog(DialogsName.ReceiptMail);
   };

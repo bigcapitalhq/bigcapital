@@ -1,28 +1,27 @@
 // @ts-nocheck
 import { Formik } from 'formik';
-import { castArray } from 'lodash';
 import * as R from 'ramda';
+import { Intent } from '@blueprintjs/core';
 import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
-import { transformToForm } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { AppToaster } from '@/components';
 import { useSendSaleInvoiceMail } from '@/hooks/query';
-import { InvoiceMailDialogFormContent } from './InvoiceMailDialogFormContent';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { InvoiceMailDialogFormContent } from './InvoiceMailDialogFormContent';
 import { InvoiceMailFormSchema } from './InvoiceMailDialogForm.schema';
+import {
+  MailNotificationFormValues,
+  initialMailNotificationValues,
+  transformMailFormToRequest,
+  transformMailFormToInitialValues,
+} from '@/containers/SendMailNotification/utils';
 
 const initialFormValues = {
-  from: [],
-  to: [],
-  subject: '',
-  body: '',
+  ...initialMailNotificationValues,
   attachInvoice: true,
 };
 
-interface InvoiceMailFormValues {
-  from: string[];
-  to: string[];
-  subject: string;
-  body: string;
+interface InvoiceMailFormValues extends MailNotificationFormValues {
   attachInvoice: boolean;
 }
 
@@ -33,20 +32,29 @@ function InvoiceMailDialogFormRoot({
   const { mailOptions, saleInvoiceId } = useInvoiceMailDialogBoot();
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
 
-  const initialValues = {
-    ...initialFormValues,
-    ...transformToForm(mailOptions, initialFormValues),
-    from: mailOptions.from ? castArray(mailOptions.from) : [],
-    to: mailOptions.to ? castArray(mailOptions.to) : [],
-  };
+  const initialValues = transformMailFormToInitialValues(
+    mailOptions,
+    initialFormValues,
+  );
   // Handle the form submitting.
   const handleSubmit = (values: InvoiceMailFormValues, { setSubmitting }) => {
+    const reqValues = transformMailFormToRequest(values);
+
     setSubmitting(true);
-    sendInvoiceMail([saleInvoiceId, values])
+    sendInvoiceMail([saleInvoiceId, reqValues])
       .then(() => {
+        AppToaster.show({
+          message: 'The mail notification has been sent successfully.',
+          intent: Intent.SUCCESS,
+        });
+        closeDialog(DialogsName.InvoiceMail);
         setSubmitting(false);
       })
       .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
         setSubmitting(false);
       });
   };

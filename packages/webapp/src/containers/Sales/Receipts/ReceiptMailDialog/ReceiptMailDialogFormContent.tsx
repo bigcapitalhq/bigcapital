@@ -4,6 +4,7 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { FFormGroup, FSwitch } from '@/components';
 import { MailNotificationForm } from '@/containers/SendMailNotification';
+import { useReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import { saveInvoke } from '@/utils';
 
 interface SendMailNotificationFormProps {
@@ -13,6 +14,7 @@ interface SendMailNotificationFormProps {
 export function ReceiptMailDialogFormContent({
   onClose,
 }: SendMailNotificationFormProps) {
+  const { mailOptions } = useReceiptMailDialogBoot();
   const { isSubmitting } = useFormikContext();
 
   const handleClose = () => {
@@ -22,8 +24,10 @@ export function ReceiptMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm fromAddresses={[]} toAddresses={[]} />
-
+        <MailNotificationForm
+          fromAddresses={mailOptions.from_addresses}
+          toAddresses={mailOptions.to_addresses}
+        />
         <AttachFormGroup name={'attachReceipt:'} inline>
           <FSwitch name={'attachReceipt:'} label={'Attach Receipt'} />
         </AttachFormGroup>
