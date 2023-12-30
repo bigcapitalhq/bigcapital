@@ -1,10 +1,11 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
+import { body, check, param, query, ValidationChain } from 'express-validator';
 import {
   AbilitySubject,
   IPaymentReceiveDTO,
   PaymentReceiveAction,
+  PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -115,6 +116,25 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.deletePaymentReceive.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.paymentReceiveValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.sendPaymentReceiveByMail.bind(this),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [...this.paymentReceiveValidation],
+      asyncMiddleware(this.getPaymentDefaultMail.bind(this)),
       this.handleServiceErrors
     );
     return router;
@@ -416,27 +436,26 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const paymentReceive =
-        await this.paymentReceiveApplication.getPaymentReceive(
-          tenantId,
-          paymentReceiveId
-        );
-
       const ACCEPT_TYPE = {
         APPLICATION_PDF: 'application/pdf',
         APPLICATION_JSON: 'application/json',
       };
       res.format({
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
+        [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
+          const paymentReceive =
+            await this.paymentReceiveApplication.getPaymentReceive(
+              tenantId,
+              paymentReceiveId
+            );
           return res.status(200).send({
-            payment_receive: this.transfromToResponse(paymentReceive),
+            payment_receive: paymentReceive,
           });
         },
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
           const pdfContent =
             await this.paymentReceiveApplication.getPaymentReceivePdf(
               tenantId,
-              paymentReceive
+              paymentReceiveId
             );
           res.set({
             'Content-Type': 'application/pdf',
@@ -508,13 +527,73 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns
+   */
+  public sendPaymentReceiveByMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+    const paymentMailDTO: PaymentReceiveMailOptsDTO = this.matchedBodyData(
+      req,
+      {
+        includeOptionals: false,
+      }
+    );
+    try {
+      await this.paymentReceiveApplication.notifyPaymentByMail(
+        tenantId,
+        paymentReceiveId,
+        paymentMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The payment notification has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given payment transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getPaymentDefaultMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const data = await this.paymentReceiveApplication.getPaymentMailOptions(
+        tenantId,
+        paymentReceiveId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
    * Handles service errors.
    * @param error
    * @param req
    * @param res
    * @param next
    */
-  handleServiceErrors(
+  private handleServiceErrors(
     error: Error,
     req: Request,
     res: Response,

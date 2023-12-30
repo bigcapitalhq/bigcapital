@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { body, check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -10,6 +10,7 @@ import {
   ISaleInvoiceCreateDTO,
   SaleInvoiceAction,
   AbilitySubject,
+  SendInvoiceMailDTO,
 } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
@@ -144,6 +145,48 @@ export default class SaleInvoicesController extends BaseController {
       asyncMiddleware(this.getSalesInvoices.bind(this)),
       this.handleServiceErrors,
       this.dynamicListService.handlerErrorsToResponse
+    );
+    router.get(
+      '/:id/mail-reminder',
+      this.specificSaleInvoiceValidation,
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail-reminder',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [...this.specificSaleInvoiceValidation],
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
     );
     return router;
   }
@@ -629,6 +672,119 @@ export default class SaleInvoicesController extends BaseController {
       next(error);
     }
   };
+
+  /**
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
+
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMail(
+        tenantId,
+        invoiceId,
+        invoiceMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retreivers the sale invoice reminder options.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId,
+        invoiceMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail reminder has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the default mail options of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   /**
    * Handles service errors.

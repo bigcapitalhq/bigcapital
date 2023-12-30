@@ -24,7 +24,7 @@ import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
  * @returns {React.JSX}
  */
 export function ActionsMenu({
-  payload: { onEdit, onDelete, onClose, onDrawer, onViewDetails, onPrint },
+  payload: { onEdit, onDelete, onClose, onSendMail, onViewDetails, onPrint },
   row: { original: receipt },
 }) {
   return (
@@ -51,6 +51,11 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={SaleReceiptAction.View} a={AbilitySubject.Receipt}>
+        <MenuItem
+          icon={<Icon icon={'envelope'} iconSize={16} />}
+          text={'Send Mail'}
+          onClick={safeCallback(onSendMail, receipt)}
+        />
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}

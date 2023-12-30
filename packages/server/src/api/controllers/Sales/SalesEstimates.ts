@@ -1,10 +1,11 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import {
   AbilitySubject,
   ISaleEstimateDTO,
   SaleEstimateAction,
+  SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -120,6 +121,27 @@ export default class SalesEstimatesController extends BaseController {
       asyncMiddleware(this.getEstimates.bind(this)),
       this.handleServiceErrors,
       this.dynamicListService.handlerErrorsToResponse
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.validateSpecificEstimateSchema,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleEstimateMail.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [...this.validateSpecificEstimateSchema],
+      this.validationResult,
+      asyncMiddleware(this.getSaleEstimateMail.bind(this)),
+      this.handleServiceErrors
     );
     return router;
   }
@@ -362,22 +384,22 @@ export default class SalesEstimatesController extends BaseController {
     const { tenantId } = req;
 
     try {
-      const estimate = await this.saleEstimatesApplication.getSaleEstimate(
-        tenantId,
-        estimateId
-      );
       // Response formatter.
       res.format({
         // JSON content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send(this.transfromToResponse({ estimate }));
+        [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
+          const estimate = await this.saleEstimatesApplication.getSaleEstimate(
+            tenantId,
+            estimateId
+          );
+          return res.status(200).send({ estimate });
         },
         // PDF content type.
         [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
           const pdfContent =
             await this.saleEstimatesApplication.getSaleEstimatePdf(
               tenantId,
-              estimate
+              estimateId
             );
           res.set({
             'Content-Type': 'application/pdf',
@@ -473,6 +495,65 @@ export default class SalesEstimatesController extends BaseController {
       return res.status(200).send({
         data: estimateSmsDetails,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Send the sale estimate mail.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private sendSaleEstimateMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+    const saleEstimateDTO: SaleEstimateMailOptionsDTO = this.matchedBodyData(
+      req,
+      {
+        includeOptionals: false,
+      }
+    );
+    try {
+      await this.saleEstimatesApplication.sendSaleEstimateMail(
+        tenantId,
+        invoiceId,
+        saleEstimateDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale estimate mail has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given sale estimate.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private getSaleEstimateMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleEstimatesApplication.getSaleEstimateMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

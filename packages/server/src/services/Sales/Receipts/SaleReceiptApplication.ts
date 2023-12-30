@@ -5,6 +5,8 @@ import {
   IPaginationMeta,
   ISaleReceipt,
   ISalesReceiptsFilter,
+  SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
 } from '@/interfaces';
 import { EditSaleReceipt } from './EditSaleReceipt';
 import { GetSaleReceipt } from './GetSaleReceipt';
@@ -13,6 +15,7 @@ import { GetSaleReceipts } from './GetSaleReceipts';
 import { CloseSaleReceipt } from './CloseSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
+import { SaleReceiptMailNotification } from './SaleReceiptMailNotification';
 
 @Service()
 export class SaleReceiptApplication {
@@ -39,6 +42,9 @@ export class SaleReceiptApplication {
 
   @Inject()
   private saleReceiptNotifyBySmsService: SaleReceiptNotifyBySms;
+
+  @Inject()
+  private saleReceiptNotifyByMailService: SaleReceiptMailNotification;
 
   /**
    * Creates a new sale receipt with associated entries.
@@ -162,6 +168,40 @@ export class SaleReceiptApplication {
    */
   public getSaleReceiptSmsDetails(tenantId: number, saleReceiptId: number) {
     return this.saleReceiptNotifyBySmsService.smsDetails(
+      tenantId,
+      saleReceiptId
+    );
+  }
+
+  /**
+   * Sends the receipt mail of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns {Promise<void>}
+   */
+  public sendSaleReceiptMail(
+    tenantId: number,
+    saleReceiptId: number,
+    messageOpts: SaleReceiptMailOptsDTO
+  ): Promise<void> {
+    return this.saleReceiptNotifyByMailService.triggerMail(
+      tenantId,
+      saleReceiptId,
+      messageOpts
+    );
+  }
+
+  /**
+   * Retrieves the default mail options of the given sale receipt.
+   * @param {number} tenantId
+   * @param {number} saleReceiptId
+   * @returns {Promise<SaleReceiptMailOpts>}
+   */
+  public getSaleReceiptMail(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<SaleReceiptMailOpts> {
+    return this.saleReceiptNotifyByMailService.getMailOptions(
       tenantId,
       saleReceiptId
     );

@@ -17,12 +17,14 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { usePaymentReceivesColumns, ActionsMenu } from './components';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment receives datatable.
@@ -31,14 +33,14 @@ function PaymentReceivesDataTable({
   // #withPaymentReceivesActions
   setPaymentReceivesTableState,
 
-  // #withPaymentReceives
-  paymentReceivesTableState,
-
   // #withAlertsActions
   openAlert,
 
   // #withDrawerActions
   openDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #withSettings
   paymentReceivesTableSize,
@@ -71,6 +73,11 @@ function PaymentReceivesDataTable({
   // Handle view detail  payment receive..
   const handleViewDetailPaymentReceive = ({ id }) => {
     openDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS, { paymentReceiveId: id });
+  };
+
+  // Handle mail send payment receive.
+  const handleSendMailPayment = ({ id }) => {
+    openDialog(DialogsName.PaymentMail, { paymentReceiveId: id });
   };
 
   // Handle cell click.
@@ -129,6 +136,7 @@ function PaymentReceivesDataTable({
           onDelete: handleDeletePaymentReceive,
           onEdit: handleEditPaymentReceive,
           onViewDetails: handleViewDetailPaymentReceive,
+          onSendMail: handleSendMailPayment,
         }}
       />
     </DashboardContentTable>
@@ -139,6 +147,7 @@ export default compose(
   withPaymentReceivesActions,
   withAlertsActions,
   withDrawerActions,
+  withDialogActions,
   withPaymentReceives(({ paymentReceivesTableState }) => ({
     paymentReceivesTableState,
   })),

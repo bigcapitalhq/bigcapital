@@ -11,6 +11,7 @@ import {
   ISystemUser,
   ITenantUser,
   InvoiceNotificationType,
+  SendInvoiceMailDTO,
 } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreateSaleInvoice } from './CreateSaleInvoice';
@@ -24,6 +25,9 @@ import { WriteoffSaleInvoice } from './WriteoffSaleInvoice';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { GetInvoicePaymentsService } from './GetInvoicePaymentsService';
 import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
+import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
+import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
+import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
 
 @Service()
 export class SaleInvoiceApplication {
@@ -59,6 +63,15 @@ export class SaleInvoiceApplication {
 
   @Inject()
   private invoiceSms: SaleInvoiceNotifyBySms;
+
+  @Inject()
+  private sendInvoiceReminderService: SendInvoiceMailReminder;
+
+  @Inject()
+  private sendSaleInvoiceMailService: SendSaleInvoiceMail;
+
+  @Inject()
+  private getSaleInvoiceReminderService: GetSaleInvoiceMailReminder;
 
   /**
    * Creates a new sale invoice with associated GL entries.
@@ -236,13 +249,13 @@ export class SaleInvoiceApplication {
   };
 
   /**
-   *
-   * @param {number} tenantId ]
-   * @param saleInvoice
-   * @returns
+   * Retrieves the pdf buffer of the given sale invoice.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleInvoice
+   * @returns {Promise<Buffer>}
    */
-  public saleInvoicePdf(tenantId: number, saleInvoice) {
-    return this.pdfSaleInvoiceService.saleInvoicePdf(tenantId, saleInvoice);
+  public saleInvoicePdf(tenantId: number, saleInvoiceId: number) {
+    return this.pdfSaleInvoiceService.saleInvoicePdf(tenantId, saleInvoiceId);
   }
 
   /**
@@ -279,4 +292,67 @@ export class SaleInvoiceApplication {
       invoiceSmsDetailsDTO
     );
   };
+
+  /**
+   * Retrieves the metadata of invoice mail reminder.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns {}
+   */
+  public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
+    return this.sendInvoiceReminderService.getMailOption(
+      tenantId,
+      saleInvoiceId
+    );
+  }
+
+  /**
+   * Sends reminder of the given invoice to the invoice's customer.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @returns {}
+   */
+  public sendSaleInvoiceMailReminder(
+    tenantId: number,
+    saleInvoiceId: number,
+    messageDTO: SendInvoiceMailDTO
+  ) {
+    return this.sendInvoiceReminderService.triggerMail(
+      tenantId,
+      saleInvoiceId,
+      messageDTO
+    );
+  }
+
+  /**
+   * Sends the invoice mail of the given sale invoice.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceId
+   * @param {SendInvoiceMailDTO} messageDTO
+   * @returns {Promise<void>}
+   */
+  public sendSaleInvoiceMail(
+    tenantId: number,
+    saleInvoiceId: number,
+    messageDTO: SendInvoiceMailDTO
+  ) {
+    return this.sendSaleInvoiceMailService.triggerMail(
+      tenantId,
+      saleInvoiceId,
+      messageDTO
+    );
+  }
+
+  /**
+   * Retrieves the default mail options of the given sale invoice.
+   * @param {number} tenantId
+   * @param {number} saleInvoiceid
+   * @returns {Promise<SendInvoiceMailDTO>}
+   */
+  public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
+    return this.sendSaleInvoiceMailService.getMailOption(
+      tenantId,
+      saleInvoiceid
+    );
+  }
 }
