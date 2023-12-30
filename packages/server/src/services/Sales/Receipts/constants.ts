@@ -1,5 +1,5 @@
 export const DEFAULT_RECEIPT_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} from {CompanyName}';
+  'Receipt {ReceiptNumber} from {CompanyName}';
 export const DEFAULT_RECEIPT_MAIL_CONTENT = `
 <p>Dear {CustomerName}</p>
 <p>Thank you for your business, You can view or print your receipt from attachements.</p>

@@ -3,7 +3,7 @@ import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '../BaseController';
-import { ISaleReceiptDTO, SaleReceiptMailOpts } from '@/interfaces/SaleReceipt';
+import { ISaleReceiptDTO, SaleReceiptMailOpts, SaleReceiptMailOptsDTO } from '@/interfaces/SaleReceipt';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
@@ -54,7 +54,7 @@ export default class SalesReceiptsController extends BaseController {
         body('from').isString().optional(),
         body('to').isString().optional(),
         body('body').isString().optional(),
-        body('attach_invoice').optional().isBoolean().toBoolean(),
+        body('attach_receipt').optional().isBoolean().toBoolean(),
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleReceiptMail.bind(this)),
@@ -439,7 +439,7 @@ export default class SalesReceiptsController extends BaseController {
   ) => {
     const { tenantId } = req;
     const { id: receiptId } = req.params;
-    const receiptMailDTO: SaleReceiptMailOpts = this.matchedBodyData(req, {
+    const receiptMailDTO: SaleReceiptMailOptsDTO = this.matchedBodyData(req, {
       includeOptionals: false,
     });
 

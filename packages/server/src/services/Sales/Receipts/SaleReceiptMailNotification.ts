@@ -1,7 +1,5 @@
-import * as R from 'ramda';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { Tenant } from '@/system/models';
 import Mail from '@/lib/Mail';
 import { GetSaleReceipt } from './GetSaleReceipt';
 import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
@@ -9,8 +7,9 @@ import {
   DEFAULT_RECEIPT_MAIL_CONTENT,
   DEFAULT_RECEIPT_MAIL_SUBJECT,
 } from './constants';
-import { SaleReceiptMailOpts } from '@/interfaces';
+import { SaleReceiptMailOpts, SaleReceiptMailOptsDTO } from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 
 @Service()
 export class SaleReceiptMailNotification {
@@ -32,13 +31,13 @@ export class SaleReceiptMailNotification {
   /**
    * Sends the receipt mail of the given sale receipt.
    * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @param {SendInvoiceMailDTO} messageDTO
+   * @param {number} saleReceiptId
+   * @param {SaleReceiptMailOptsDTO} messageDTO
    */
   public async triggerMail(
     tenantId: number,
     saleReceiptId: number,
-    messageOpts: SaleReceiptMailOpts
+    messageOpts: SaleReceiptMailOptsDTO
   ) {
     const payload = {
       tenantId,
@@ -52,9 +51,12 @@ export class SaleReceiptMailNotification {
    * Retrieves the mail options of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId
-   * @returns
+   * @returns {Promise<SaleReceiptMailOptsDTO>}
    */
-  public async getMailOptions(tenantId: number, saleReceiptId: number) {
+  public async getMailOptions(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<SaleReceiptMailOpts> {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     const saleReceipt = await SaleReceipt.query()
@@ -63,17 +65,21 @@ export class SaleReceiptMailNotification {
 
     const formattedData = await this.textFormatter(tenantId, saleReceiptId);
 
-    return this.contactMailNotification.getMailOptions(
+    const mailOpts = await this.contactMailNotification.getMailOptions(
       tenantId,
       saleReceipt.customerId,
       DEFAULT_RECEIPT_MAIL_SUBJECT,
       DEFAULT_RECEIPT_MAIL_CONTENT,
       formattedData
     );
+    return {
+      ...mailOpts,
+      attachReceipt: true,
+    };
   }
 
   /**
-   * Retrieves the formatted text of the given sale invoice.
+   * Retrieves the formatted text of the given sale receipt.
    * @param {number} tenantId - Tenant id.
    * @param {number} receiptId - Sale receipt id.
    * @param {string} text - The given text.
@@ -83,58 +89,52 @@ export class SaleReceiptMailNotification {
     tenantId: number,
     receiptId: number
   ): Promise<Record<string, string>> => {
-    const invoice = await this.getSaleReceiptService.getSaleReceipt(
+    const receipt = await this.getSaleReceiptService.getSaleReceipt(
       tenantId,
       receiptId
     );
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
-
     return {
-      CompanyName: organization.metadata.name,
-      CustomerName: invoice.customer.displayName,
-      ReceiptNumber: invoice.receiptNumber,
-      ReceiptDate: invoice.formattedReceiptDate,
-      ReceiptAmount: invoice.formattedAmount,
+      CustomerName: receipt.customer.displayName,
+      ReceiptNumber: receipt.receiptNumber,
+      ReceiptDate: receipt.formattedReceiptDate,
+      ReceiptAmount: receipt.formattedAmount,
     };
   };
 
   /**
-   * Triggers the mail invoice.
-   * @param {number} tenantId
-   * @param {number} saleInvoiceId
-   * @param {SendInvoiceMailDTO} messageDTO
+   * Triggers the mail notification of the given sale receipt.
+   * @param {number} tenantId - Tenant id.
+   * @param {number} saleReceiptId - Sale receipt id.
+   * @param {SaleReceiptMailOpts} messageDTO - Overrided message options.
    * @returns {Promise<void>}
    */
   public async sendMail(
     tenantId: number,
     saleReceiptId: number,
-    messageOpts: SaleReceiptMailOpts
+    messageOpts: SaleReceiptMailOptsDTO
   ) {
     const defaultMessageOpts = await this.getMailOptions(
       tenantId,
       saleReceiptId
     );
-    // Parsed message opts with default options.
-    const parsedMessageOpts = {
-      ...defaultMessageOpts,
-      ...messageOpts,
-    };
-
+    // Merges message opts with default options.
+    const parsedMessageOpts = parseAndValidateMailOptions(
+      defaultMessageOpts,
+      messageOpts
+    );
     const mail = new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)
       .setContent(parsedMessageOpts.body);
 
-    if (parsedMessageOpts.attachInvoice) {
-      // Retrieves document buffer of the invoice pdf document.
+    if (parsedMessageOpts.attachReceipt) {
+      // Retrieves document buffer of the receipt pdf document.
       const receiptPdfBuffer = await this.receiptPdfService.saleReceiptPdf(
         tenantId,
         saleReceiptId
       );
       mail.setAttachments([
-        { filename: 'invoice.pdf', content: receiptPdfBuffer },
+        { filename: 'receipt.pdf', content: receiptPdfBuffer },
       ]);
     }
     await mail.send();

@@ -7,6 +7,7 @@ import {
   DEFAULT_INVOICE_MAIL_CONTENT,
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 
 @Service()
 export class SendSaleInvoiceMail {
@@ -44,8 +45,8 @@ export class SendSaleInvoiceMail {
    * @param {number} saleInvoiceId
    * @returns {Promise<SaleInvoiceMailOptions>}
    */
-  public async getMailOpts(tenantId: number, saleInvoiceId: number) {
-    return this.invoiceMail.getMailOpts(
+  public async getMailOption(tenantId: number, saleInvoiceId: number) {
+    return this.invoiceMail.getMailOption(
       tenantId,
       saleInvoiceId,
       DEFAULT_INVOICE_MAIL_SUBJECT,
@@ -65,15 +66,15 @@ export class SendSaleInvoiceMail {
     saleInvoiceId: number,
     messageDTO: SendInvoiceMailDTO
   ) {
-    const defaultMessageOpts = await this.getMailOpts(tenantId, saleInvoiceId);
-
-    // Parsed message opts with default options.
-    const messageOpts = {
-      ...defaultMessageOpts,
-      ...messageDTO,
-    };
-    this.invoiceMail.validateMailNotification(messageOpts);
-
+    const defaultMessageOpts = await this.getMailOption(
+      tenantId,
+      saleInvoiceId
+    );
+    // Merge message opts with default options and validate the incoming options.
+    const messageOpts = parseAndValidateMailOptions(
+      defaultMessageOpts,
+      messageDTO
+    );
     const mail = new Mail()
       .setSubject(messageOpts.subject)
       .setTo(messageOpts.to)

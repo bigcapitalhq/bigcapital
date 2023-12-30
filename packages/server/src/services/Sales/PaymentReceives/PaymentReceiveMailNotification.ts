@@ -1,14 +1,18 @@
 import { Inject, Service } from 'typedi';
-import { IPaymentReceiveMailOpts, SendInvoiceMailDTO } from '@/interfaces';
+import {
+  PaymentReceiveMailOpts,
+  PaymentReceiveMailOptsDTO,
+  SendInvoiceMailDTO,
+} from '@/interfaces';
 import Mail from '@/lib/Mail';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import {
   DEFAULT_PAYMENT_MAIL_CONTENT,
   DEFAULT_PAYMENT_MAIL_SUBJECT,
 } from './constants';
-import { Tenant } from '@/system/models';
 import { GetPaymentReceive } from './GetPaymentReceive';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 
 @Service()
 export class SendPaymentReceiveMailNotification {
@@ -28,13 +32,14 @@ export class SendPaymentReceiveMailNotification {
    * Sends the mail of the given payment receive.
    * @param {number} tenantId
    * @param {number} paymentReceiveId
-   * @param {SendInvoiceMailDTO} messageDTO
+   * @param {PaymentReceiveMailOptsDTO} messageDTO
+   * @returns {Promise<void>}
    */
   public async triggerMail(
     tenantId: number,
     paymentReceiveId: number,
-    messageDTO: IPaymentReceiveMailOpts
-  ) {
+    messageDTO: PaymentReceiveMailOptsDTO
+  ): Promise<void> {
     const payload = {
       tenantId,
       paymentReceiveId,
@@ -45,18 +50,21 @@ export class SendPaymentReceiveMailNotification {
 
   /**
    * Retrieves the default payment mail options.
-   * @param {number} tenantId
-   * @param {number} invoiceId
-   * @returns {Promise<SendInvoiceMailDTO>}
+   * @param {number} tenantId - Tenant id.
+   * @param {number} paymentReceiveId - Payment receive id.
+   * @returns {Promise<PaymentReceiveMailOpts>}
    */
-  public getMailOptions = async (tenantId: number, invoiceId: number) => {
+  public getMailOptions = async (
+    tenantId: number,
+    paymentId: number
+  ): Promise<PaymentReceiveMailOpts> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     const paymentReceive = await PaymentReceive.query()
-      .findById(invoiceId)
+      .findById(paymentId)
       .throwIfNotFound();
 
-    const formatterData = await this.textFormatter(tenantId, invoiceId);
+    const formatterData = await this.textFormatter(tenantId, paymentId);
 
     return this.contactMailNotification.getMailOptions(
       tenantId,
@@ -82,12 +90,7 @@ export class SendPaymentReceiveMailNotification {
       tenantId,
       invoiceId
     );
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
-
     return {
-      CompanyName: organization.metadata.name,
       CustomerName: payment.customer.displayName,
       PaymentNumber: payment.payment_receive_no,
       PaymentDate: payment.formattedPaymentDate,
@@ -112,10 +115,10 @@ export class SendPaymentReceiveMailNotification {
       paymentReceiveId
     );
     // Parsed message opts with default options.
-    const parsedMessageOpts = {
-      ...defaultMessageOpts,
-      ...messageDTO,
-    };
+    const parsedMessageOpts = parseAndValidateMailOptions(
+      defaultMessageOpts,
+      messageDTO
+    );
     await new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)

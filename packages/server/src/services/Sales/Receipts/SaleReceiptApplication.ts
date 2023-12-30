@@ -6,6 +6,7 @@ import {
   ISaleReceipt,
   ISalesReceiptsFilter,
   SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
 } from '@/interfaces';
 import { EditSaleReceipt } from './EditSaleReceipt';
 import { GetSaleReceipt } from './GetSaleReceipt';
@@ -176,12 +177,13 @@ export class SaleReceiptApplication {
    * Sends the receipt mail of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId
+   * @returns {Promise<void>}
    */
   public sendSaleReceiptMail(
     tenantId: number,
     saleReceiptId: number,
-    messageOpts: SaleReceiptMailOpts
-  ) {
+    messageOpts: SaleReceiptMailOptsDTO
+  ): Promise<void> {
     return this.saleReceiptNotifyByMailService.triggerMail(
       tenantId,
       saleReceiptId,
@@ -193,9 +195,12 @@ export class SaleReceiptApplication {
    * Retrieves the default mail options of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId
-   * @returns
+   * @returns {Promise<SaleReceiptMailOpts>}
    */
-  public getSaleReceiptMail(tenantId: number, saleReceiptId: number) {
+  public getSaleReceiptMail(
+    tenantId: number,
+    saleReceiptId: number
+  ): Promise<SaleReceiptMailOpts> {
     return this.saleReceiptNotifyByMailService.getMailOptions(
       tenantId,
       saleReceiptId

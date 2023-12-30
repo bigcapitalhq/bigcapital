@@ -28,7 +28,7 @@ export function PaymentMailDialogFormRoot({
   // #withDialogActions
   closeDialog,
 }) {
-  const { mailOptions, paymentId } = usePaymentMailDialogBoot();
+  const { mailOptions, paymentReceiveId } = usePaymentMailDialogBoot();
   const { mutateAsync: sendPaymentMail } = useSendPaymentReceiveMail();
 
   const initialValues = transformMailFormToInitialValues(
@@ -43,7 +43,7 @@ export function PaymentMailDialogFormRoot({
     const reqValues = transformMailFormToRequest(values);
 
     setSubmitting(true);
-    sendPaymentMail([paymentId, reqValues])
+    sendPaymentMail([paymentReceiveId, reqValues])
       .then(() => {
         AppToaster.show({
           message: 'The mail notification has been sent successfully.',

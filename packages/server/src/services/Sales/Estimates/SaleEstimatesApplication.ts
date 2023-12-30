@@ -8,6 +8,7 @@ import {
   ISaleEstimateDTO,
   ISalesEstimatesFilter,
   SaleEstimateMailOptions,
+  SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
 import { EditSaleEstimate } from './EditSaleEstimate';
 import { DeleteSaleEstimate } from './DeleteSaleEstimate';
@@ -224,8 +225,8 @@ export class SaleEstimatesApplication {
   public sendSaleEstimateMail(
     tenantId: number,
     saleEstimateId: number,
-    saleEstimateMailOpts: SaleEstimateMailOptions
-  ) {
+    saleEstimateMailOpts: SaleEstimateMailOptionsDTO
+  ): Promise<void> {
     return this.sendEstimateMailService.triggerMail(
       tenantId,
       saleEstimateId,
@@ -235,11 +236,14 @@ export class SaleEstimatesApplication {
 
   /**
    * Retrieves the default mail options of the given sale estimate.
-   * @param {number} tenantId 
-   * @param {number} saleEstimateId 
-   * @returns {}
+   * @param {number} tenantId
+   * @param {number} saleEstimateId
+   * @returns {Promise<SaleEstimateMailOptions>}
    */
-  public getSaleEstimateMail(tenantId: number, saleEstimateId: number) {
+  public getSaleEstimateMail(
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<SaleEstimateMailOptions> {
     return this.sendEstimateMailService.getMailOptions(
       tenantId,
       saleEstimateId

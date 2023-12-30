@@ -7,8 +7,12 @@ import {
 } from './constants';
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
 import { GetSaleEstimate } from './GetSaleEstimate';
-import { SaleEstimateMailOptions } from '@/interfaces';
+import {
+  SaleEstimateMailOptions,
+  SaleEstimateMailOptionsDTO,
+} from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 
 @Service()
 export class SendSaleEstimateMail {
@@ -31,13 +35,14 @@ export class SendSaleEstimateMail {
    * Triggers the reminder mail of the given sale estimate.
    * @param {number} tenantId -
    * @param {number} saleEstimateId -
-   * @param {SaleEstimateMailOptions} messageOptions -
+   * @param {SaleEstimateMailOptionsDTO} messageOptions -
+   * @returns {Promise<void>}
    */
   public async triggerMail(
     tenantId: number,
     saleEstimateId: number,
-    messageOptions: SaleEstimateMailOptions
-  ) {
+    messageOptions: SaleEstimateMailOptionsDTO
+  ): Promise<void> {
     const payload = {
       tenantId,
       saleEstimateId,
@@ -48,9 +53,9 @@ export class SendSaleEstimateMail {
 
   /**
    * Formates the text of the mail.
-   * @param {number} tenantId
-   * @param {number} estimateId
-   * @param {string} text
+   * @param {number} tenantId - Tenant id.
+   * @param {number} estimateId - Estimate id.
+   * @returns {Promise<Record<string, any>>}
    */
   public formatterData = async (tenantId: number, estimateId: number) => {
     const estimate = await this.getSaleEstimateService.getEstimate(
@@ -70,9 +75,12 @@ export class SendSaleEstimateMail {
    * Retrieves the mail options.
    * @param {number} tenantId
    * @param {number} saleEstimateId
-   * @returns
+   * @returns {Promise<SaleEstimateMailOptions>}
    */
-  public getMailOptions = async (tenantId: number, saleEstimateId: number) => {
+  public getMailOptions = async (
+    tenantId: number,
+    saleEstimateId: number
+  ): Promise<SaleEstimateMailOptions> => {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     const saleEstimate = await SaleEstimate.query()
@@ -91,6 +99,7 @@ export class SendSaleEstimateMail {
     return {
       ...mailOptions,
       data: formatterData,
+      attachEstimate: true
     };
   };
 
@@ -99,26 +108,28 @@ export class SendSaleEstimateMail {
    * @param {number} tenantId
    * @param {number} saleEstimateId
    * @param {SaleEstimateMailOptions} messageOptions
+   * @returns {Promise<void>}
    */
   public async sendMail(
     tenantId: number,
     saleEstimateId: number,
-    messageOptions: SaleEstimateMailOptions
-  ) {
+    messageOptions: SaleEstimateMailOptionsDTO
+  ): Promise<void> {
     const localMessageOpts = await this.getMailOptions(
       tenantId,
       saleEstimateId
     );
-    const messageOpts = {
-      ...localMessageOpts,
-      ...messageOptions,
-    };
+    // Overrides and validates the given mail options.
+    const messageOpts = parseAndValidateMailOptions(
+      localMessageOpts,
+      messageOptions
+    );
     const mail = new Mail()
       .setSubject(messageOpts.subject)
       .setTo(messageOpts.to)
       .setContent(messageOpts.body);
 
-    if (messageOpts.to) {
+    if (messageOpts.attachEstimate) {
       const estimatePdfBuffer = await this.estimatePdf.getSaleEstimatePdf(
         tenantId,
         saleEstimateId

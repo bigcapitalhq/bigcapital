@@ -300,7 +300,10 @@ export class SaleInvoiceApplication {
    * @returns {}
    */
   public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
-    return this.sendInvoiceReminderService.getMailOpts(tenantId, saleInvoiceId);
+    return this.sendInvoiceReminderService.getMailOption(
+      tenantId,
+      saleInvoiceId
+    );
   }
 
   /**
@@ -347,6 +350,9 @@ export class SaleInvoiceApplication {
    * @returns {Promise<SendInvoiceMailDTO>}
    */
   public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
-    return this.sendSaleInvoiceMailService.getMailOpts(tenantId, saleInvoiceid);
+    return this.sendSaleInvoiceMailService.getMailOption(
+      tenantId,
+      saleInvoiceid
+    );
   }
 }

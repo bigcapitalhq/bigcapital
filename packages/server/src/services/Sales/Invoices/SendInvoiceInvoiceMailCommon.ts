@@ -1,15 +1,12 @@
 import { Inject, Service } from 'typedi';
-import { isEmpty } from 'lodash';
 import { SaleInvoiceMailOptions } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { GetSaleInvoice } from './GetSaleInvoice';
+import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import {
   DEFAULT_INVOICE_MAIL_CONTENT,
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
-import { GetSaleInvoice } from './GetSaleInvoice';
-import { Tenant } from '@/system/models';
-import { ServiceError } from '@/exceptions';
-import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 
 @Service()
 export class SendSaleInvoiceMailCommon {
@@ -28,9 +25,9 @@ export class SendSaleInvoiceMailCommon {
    * @param {number} invoiceId - Invoice id.
    * @param {string} defaultSubject - Subject text.
    * @param {string} defaultBody - Subject body.
-   * @returns {}
+   * @returns {Promise<SaleInvoiceMailOptions>}
    */
-  public async getMailOpts(
+  public async getMailOption(
     tenantId: number,
     invoiceId: number,
     defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
@@ -44,13 +41,17 @@ export class SendSaleInvoiceMailCommon {
 
     const formatterData = await this.formatText(tenantId, invoiceId);
 
-    return this.contactMailNotification.getMailOptions(
+    const mailOptions = await this.contactMailNotification.getMailOptions(
       tenantId,
       saleInvoice.customerId,
       defaultSubject,
       defaultBody,
       formatterData
     );
+    return {
+      ...mailOptions,
+      attachInvoice: true,
+    };
   }
 
   /**
@@ -68,12 +69,8 @@ export class SendSaleInvoiceMailCommon {
       tenantId,
       invoiceId
     );
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
 
     return {
-      CompanyName: organization.metadata.name,
       CustomerName: invoice.customer.displayName,
       InvoiceNumber: invoice.invoiceNo,
       InvoiceDueAmount: invoice.dueAmountFormatted,
@@ -83,33 +80,4 @@ export class SendSaleInvoiceMailCommon {
       OverdueDays: invoice.overdueDays,
     };
   };
-
-  /**
-   * Validates the mail notification options before sending it.
-   * @param {Partial<SaleInvoiceMailOptions>} mailNotificationOpts
-   * @throws {ServiceError}
-   */
-  public validateMailNotification(
-    mailNotificationOpts: Partial<SaleInvoiceMailOptions>
-  ) {
-    if (isEmpty(mailNotificationOpts.from)) {
-      throw new ServiceError(ERRORS.MAIL_FROM_NOT_FOUND);
-    }
-    if (isEmpty(mailNotificationOpts.to)) {
-      throw new ServiceError(ERRORS.MAIL_TO_NOT_FOUND);
-    }
-    if (isEmpty(mailNotificationOpts.subject)) {
-      throw new ServiceError(ERRORS.MAIL_SUBJECT_NOT_FOUND);
-    }
-    if (isEmpty(mailNotificationOpts.body)) {
-      throw new ServiceError(ERRORS.MAIL_BODY_NOT_FOUND);
-    }
-  }
 }
-
-const ERRORS = {
-  MAIL_FROM_NOT_FOUND: 'Mail from address not found',
-  MAIL_TO_NOT_FOUND: 'Mail to address not found',
-  MAIL_SUBJECT_NOT_FOUND: 'Mail subject not found',
-  MAIL_BODY_NOT_FOUND: 'Mail body not found',
-};

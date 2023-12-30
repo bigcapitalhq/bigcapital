@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
-import { ISystemUser, IAccount, ITaxTransaction, AddressItem } from '@/interfaces';
+import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
+import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
@@ -187,21 +188,11 @@ export enum SaleInvoiceAction {
   NotifyBySms = 'NotifyBySms',
 }
 
-export interface SaleInvoiceMailOptions {
-  toAddresses: AddressItem[];
-  fromAddresses: AddressItem[];
-  from: string;
-  to: string | string[];
-  subject: string;
-  body: string;
+export interface SaleInvoiceMailOptions extends CommonMailOptions {
   attachInvoice: boolean;
 }
 
-export interface SendInvoiceMailDTO {
-  to: string | string[];
-  from: string;
-  subject: string;
-  body: string;
+export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
   attachInvoice?: boolean;
 }
 

@@ -43,8 +43,8 @@ export class SendInvoiceMailReminder {
    * @param {number} saleInvoiceId
    * @returns {Promise<SaleInvoiceMailOptions>}
    */
-  public async getMailOpts(tenantId: number, saleInvoiceId: number) {
-    return this.invoiceCommonMail.getMailOpts(
+  public async getMailOption(tenantId: number, saleInvoiceId: number) {
+    return this.invoiceCommonMail.getMailOption(
       tenantId,
       saleInvoiceId,
       DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT,
@@ -64,7 +64,7 @@ export class SendInvoiceMailReminder {
     saleInvoiceId: number,
     messageOptions: SendInvoiceMailDTO
   ) {
-    const localMessageOpts = await this.getMailOpts(tenantId, saleInvoiceId);
+    const localMessageOpts = await this.getMailOption(tenantId, saleInvoiceId);
 
     const messageOpts = {
       ...localMessageOpts,

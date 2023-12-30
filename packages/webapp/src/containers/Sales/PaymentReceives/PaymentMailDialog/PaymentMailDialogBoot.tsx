@@ -29,6 +29,7 @@ function PaymentMailDialogBoot({
   const provider = {
     mailOptions,
     isMailOptionsLoading,
+    paymentReceiveId
   };
 
   return (

@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { IItemEntry } from './ItemEntry';
+import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 
 export interface ISaleReceipt {
   id?: number;
@@ -135,6 +136,10 @@ export interface ISaleReceiptDeletingPayload {
   trx: Knex.Transaction;
 }
 
-export interface SaleReceiptMailOpts {
-  
+export interface SaleReceiptMailOpts extends CommonMailOptions {
+  attachReceipt: boolean;
+}
+
+export interface SaleReceiptMailOptsDTO extends CommonMailOptionsDTO {
+  attachReceipt?: boolean;
 }

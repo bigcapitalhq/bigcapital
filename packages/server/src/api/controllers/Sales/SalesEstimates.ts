@@ -5,7 +5,7 @@ import {
   AbilitySubject,
   ISaleEstimateDTO,
   SaleEstimateAction,
-  SaleEstimateMailOptions,
+  SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -513,10 +513,12 @@ export default class SalesEstimatesController extends BaseController {
   ) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
-    const saleEstimateDTO: SaleEstimateMailOptions = this.matchedBodyData(req, {
-      includeOptionals: false,
-    });
-
+    const saleEstimateDTO: SaleEstimateMailOptionsDTO = this.matchedBodyData(
+      req,
+      {
+        includeOptionals: false,
+      }
+    );
     try {
       await this.saleEstimatesApplication.sendSaleEstimateMail(
         tenantId,

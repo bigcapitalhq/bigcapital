@@ -4,9 +4,8 @@ import { body, check, param, query, ValidationChain } from 'express-validator';
 import {
   AbilitySubject,
   IPaymentReceiveDTO,
-  IPaymentReceiveMailOpts,
-  // IPaymentReceiveMailOpts,
   PaymentReceiveAction,
+  PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -541,9 +540,12 @@ export default class PaymentReceivesController extends BaseController {
   ) => {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
-    const paymentMailDTO: IPaymentReceiveMailOpts = this.matchedBodyData(req, {
-      includeOptionals: false,
-    });
+    const paymentMailDTO: PaymentReceiveMailOptsDTO = this.matchedBodyData(
+      req,
+      {
+        includeOptionals: false,
+      }
+    );
     try {
       await this.paymentReceiveApplication.notifyPaymentByMail(
         tenantId,
@@ -574,7 +576,7 @@ export default class PaymentReceivesController extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const data = await this.paymentReceiveApplication.getPaymentDefaultMail(
+      const data = await this.paymentReceiveApplication.getPaymentMailOptions(
         tenantId,
         paymentReceiveId
       );

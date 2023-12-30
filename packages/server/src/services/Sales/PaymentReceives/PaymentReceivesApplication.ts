@@ -4,10 +4,10 @@ import {
   IPaymentReceive,
   IPaymentReceiveCreateDTO,
   IPaymentReceiveEditDTO,
-  IPaymentReceiveMailOpts,
   IPaymentReceiveSmsDetails,
   IPaymentReceivesFilter,
   ISystemUser,
+  PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreatePaymentReceive } from './CreatePaymentReceive';
@@ -189,8 +189,8 @@ export class PaymentReceivesApplication {
   public notifyPaymentByMail(
     tenantId: number,
     paymentReceiveId: number,
-    messageOpts: IPaymentReceiveMailOpts
-  ) {
+    messageOpts: PaymentReceiveMailOptsDTO
+  ): Promise<void> {
     return this.paymentMailNotify.triggerMail(
       tenantId,
       paymentReceiveId,
@@ -204,7 +204,7 @@ export class PaymentReceivesApplication {
    * @param {number} paymentReceiveId
    * @returns {Promise<void>}
    */
-  public getPaymentDefaultMail(tenantId: number, paymentReceiveId: number) {
+  public getPaymentMailOptions(tenantId: number, paymentReceiveId: number) {
     return this.paymentMailNotify.getMailOptions(tenantId, paymentReceiveId);
   }
 
