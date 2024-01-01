@@ -2,6 +2,12 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.13.0] - 31-12-2023
+
+* feat: Send an invoice mail the customer email by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/292
+* fix: Allow non-numeric postal codes by @cschuijt in https://github.com/bigcapitalhq/bigcapital/pull/294
+* docs: add cschuijt as a contributor for bug by @allcontributors in https://github.com/bigcapitalhq/bigcapital/pull/295
+
 ## [0.12.1] - 17-11-2023
 
 * feat: Add default customer message and terms conditions to the transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/291
