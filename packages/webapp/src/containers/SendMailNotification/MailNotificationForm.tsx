@@ -5,10 +5,8 @@ import {
   FInputGroup,
   FMultiSelect,
   FRichEditor,
-  Hint,
 } from '@/components';
 import styled from 'styled-components';
-import { Position } from '@blueprintjs/core';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
 
 interface MailNotificationFormProps {
@@ -31,18 +29,7 @@ export function MailNotificationForm({
   return (
     <Box>
       <HeaderBox>
-        <FFormGroup
-          label={'From'}
-          labelInfo={
-            <Hint
-              content={'asdasd asdasd asdsad'}
-              position={Position.BOTTOM_LEFT}
-            />
-          }
-          name={'from'}
-          inline={true}
-          fastField={true}
-        >
+        <FFormGroup label={'From'} name={'from'} inline={true} fastField={true}>
           <FMultiSelect
             items={fromAddresses}
             name={'from'}
