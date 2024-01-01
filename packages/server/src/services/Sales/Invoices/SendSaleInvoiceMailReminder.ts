@@ -7,6 +7,7 @@ import {
   DEFAULT_INVOICE_REMINDER_MAIL_CONTENT,
   DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT,
 } from './constants';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
 
 @Service()
 export class SendInvoiceMailReminder {
@@ -66,10 +67,10 @@ export class SendInvoiceMailReminder {
   ) {
     const localMessageOpts = await this.getMailOption(tenantId, saleInvoiceId);
 
-    const messageOpts = {
-      ...localMessageOpts,
-      ...messageOptions,
-    };
+    const messageOpts = parseAndValidateMailOptions(
+      localMessageOpts,
+      messageOptions
+    );
     const mail = new Mail()
       .setSubject(messageOpts.subject)
       .setTo(messageOpts.to)

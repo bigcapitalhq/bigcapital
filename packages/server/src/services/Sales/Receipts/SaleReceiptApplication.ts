@@ -177,6 +177,7 @@ export class SaleReceiptApplication {
    * Sends the receipt mail of the given sale receipt.
    * @param {number} tenantId
    * @param {number} saleReceiptId
+   * @param {SaleReceiptMailOptsDTO} messageOpts
    * @returns {Promise<void>}
    */
   public sendSaleReceiptMail(

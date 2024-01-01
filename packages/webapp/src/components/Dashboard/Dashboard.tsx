@@ -51,8 +51,8 @@ export default function Dashboard() {
       </Switch>
 
       <DashboardUniversalSearch />
-      <DialogsContainer />
       <GlobalHotkeys />
+      <DialogsContainer />
       <DrawersContainer />
       <AlertsContainer />
     </DashboardProvider>

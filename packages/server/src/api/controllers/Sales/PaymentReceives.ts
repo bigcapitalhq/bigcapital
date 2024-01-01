@@ -531,7 +531,6 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
    */
   public sendPaymentReceiveByMail = async (
     req: Request,
@@ -546,6 +545,8 @@ export default class PaymentReceivesController extends BaseController {
         includeOptionals: false,
       }
     );
+    console.log(req.params);
+
     try {
       await this.paymentReceiveApplication.notifyPaymentByMail(
         tenantId,
