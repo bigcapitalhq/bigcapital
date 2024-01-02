@@ -15,7 +15,7 @@ const ERRORS = {
 };
 
 @Service()
-export default class GeneralLedgerService {
+export class GeneralLedgerService {
   @Inject()
   tenancy: TenancyService;
 

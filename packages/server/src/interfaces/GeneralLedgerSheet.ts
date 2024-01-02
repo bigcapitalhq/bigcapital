@@ -1,3 +1,4 @@
+import { IFinancialTable } from "./Table";
 
 
 export interface IGeneralLedgerSheetQuery {
@@ -56,6 +57,8 @@ export interface IGeneralLedgerSheetAccount {
   closingBalance: IGeneralLedgerSheetAccountBalance,
 }
 
+export type IGeneralLedgerSheetData = IGeneralLedgerSheetAccount[];
+
 export interface IAccountTransaction {
   id: number,
   index: number,
@@ -79,3 +82,8 @@ export interface IGeneralLedgerMeta {
   organizationName: string,
   baseCurrency: string,
 };
+
+export interface IGeneralLedgerTableData extends IFinancialTable {
+  meta: IGeneralLedgerMeta;
+  query: IGeneralLedgerSheetQuery;
+}

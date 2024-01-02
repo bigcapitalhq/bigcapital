@@ -2,15 +2,16 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import GeneralLedgerService from '@/services/FinancialStatements/GeneralLedger/GeneralLedgerService';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { GeneralLedgerApplication } from '@/services/FinancialStatements/GeneralLedger/GeneralLedgerApplication';
 
 @Service()
 export default class GeneralLedgerReportController extends BaseFinancialReportController {
   @Inject()
-  generalLedgetService: GeneralLedgerService;
+  private generalLedgerApplication: GeneralLedgerApplication;
 
   /**
    * Router constructor.
@@ -61,20 +62,43 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
    * @param {Response} res -
    */
   async generalLedger(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
+    const { tenantId } = req;
     const filter = this.matchedQueryData(req);
+    const accept = this.accepts(req);
 
-    try {
-      const { data, query, meta } =
-        await this.generalLedgetService.generalLedger(tenantId, filter);
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_CSV,
+    ]);
+    // Retrieves the table format.
+    if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+      const table = await this.generalLedgerApplication.table(tenantId, filter);
 
-      return res.status(200).send({
-        meta: this.transfromToResponse(meta),
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-      });
-    } catch (error) {
-      next(error);
+      return res.status(200).send(table);
+      // Retrieves the csv format.
+    } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+      const buffer = await this.generalLedgerApplication.csv(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the xlsx format.
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+      const buffer = this.generalLedgerApplication.xlsx(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+      return res.send(buffer);
+      // Retrieves the json format.
+    } else {
+      const sheet = await this.generalLedgerApplication.sheet(tenantId, filter);
+      return res.status(200).send(sheet);
     }
   }
 }
