@@ -1,16 +1,15 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import { IJournalReportQuery, IJournalSheetMeta } from '@/interfaces';
-
 import JournalSheet from './JournalSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
 import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean, transformToMap } from 'utils';
 import { Tenant } from '@/system/models';
+import { parseBoolean, transformToMap } from 'utils';
 
 @Service()
-export default class JournalSheetService {
+export class JournalSheetService {
   @Inject()
   tenancy: TenancyService;
 
@@ -80,11 +79,6 @@ export default class JournalSheetService {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[journal] trying to calculate the report.', {
-      tenantId,
-      filter,
-    });
-
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
