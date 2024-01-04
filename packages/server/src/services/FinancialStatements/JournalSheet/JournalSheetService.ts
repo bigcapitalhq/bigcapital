@@ -1,6 +1,11 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { IJournalReportQuery, IJournalSheetMeta } from '@/interfaces';
+import {
+  IJournalReportQuery,
+  IJournalSheet,
+  IJournalSheetMeta,
+  IJournalTableData,
+} from '@/interfaces';
 import JournalSheet from './JournalSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
@@ -11,13 +16,10 @@ import { parseBoolean, transformToMap } from 'utils';
 @Service()
 export class JournalSheetService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  @Inject('logger')
-  logger: any;
+  private inventoryService: InventoryService;
 
   /**
    * Default journal sheet filter queyr.
@@ -66,9 +68,13 @@ export class JournalSheetService {
   /**
    * Journal sheet.
    * @param {number} tenantId
-   * @param {IJournalSheetFilterQuery} query
+   * @param {IJournalReportQuery} query
+   * @returns {Promise<IJournalSheet>}
    */
-  async journalSheet(tenantId: number, query: IJournalReportQuery) {
+  async journalSheet(
+    tenantId: number,
+    query: IJournalReportQuery
+  ): Promise<IJournalSheet> {
     const i18n = this.tenancy.i18n(tenantId);
     const { accountRepository, transactionsRepository, contactRepository } =
       this.tenancy.repositories(tenantId);

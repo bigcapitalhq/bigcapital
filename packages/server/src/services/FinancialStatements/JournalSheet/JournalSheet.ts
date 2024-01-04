@@ -6,8 +6,10 @@ import {
   IJournalReportQuery,
   IJournalReport,
   IContact,
+  IJournalTableData,
 } from '@/interfaces';
 import FinancialSheet from '../FinancialSheet';
+import moment from 'moment';
 
 export default class JournalSheet extends FinancialSheet {
   readonly tenantId: number;
@@ -96,6 +98,8 @@ export default class JournalSheet extends FinancialSheet {
 
     return {
       date: groupEntry.date,
+      dateFormatted: moment(groupEntry.date).format('YYYY/MM/DD'),
+
       referenceType: groupEntry.referenceType,
       referenceId: groupEntry.referenceId,
       referenceTypeFormatted: this.i18n.__(groupEntry.referenceTypeFormatted),
@@ -131,7 +135,7 @@ export default class JournalSheet extends FinancialSheet {
    * Retrieve journal report.
    * @return {IJournalReport}
    */
-  reportData(): IJournalReport {
+  reportData(): IJournalTableData {
     return this.entriesWalker(this.journal.entries);
   }
 }

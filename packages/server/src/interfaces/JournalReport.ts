@@ -18,6 +18,7 @@ export interface IJournalReportQuery {
 
 export interface IJournalReportEntriesGroup {
   id: string;
+  dateFormatted: string;
   entries: IJournalEntry[];
   currencyCode: string;
   credit: number;
@@ -41,5 +42,10 @@ export interface IJournalTable extends IFinancialTable {
   meta: IJournalSheetMeta;
 }
 
-
 export type IJournalTableData = IJournalReportEntriesGroup[];
+
+export interface IJournalSheet {
+  data: IJournalTableData;
+  query: IJournalReportQuery;
+  meta: IJournalSheetMeta;
+}

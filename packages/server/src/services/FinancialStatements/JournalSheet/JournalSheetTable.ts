@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import {
+  IJournalEntry,
   IJournalReport,
   IJournalReportEntriesGroup,
   IJournalReportQuery,
@@ -12,6 +13,7 @@ import { tableRowMapper } from '@/utils';
 import { FinancialTable } from '../FinancialTable';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import FinancialSheet from '../FinancialSheet';
+import { first } from 'lodash';
 
 export class JournalSheetTable extends R.compose(
   FinancialTable,
@@ -21,6 +23,12 @@ export class JournalSheetTable extends R.compose(
   private query: IJournalReportQuery;
   private i18n: any;
 
+  /**
+   * Constructor method.
+   * @param {IJournalTableData} data
+   * @param {IJournalReportQuery} query
+   * @param i18n
+   */
   constructor(data: IJournalTableData, query: IJournalReportQuery, i18n: any) {
     super();
     this.data = data;
@@ -32,47 +40,141 @@ export class JournalSheetTable extends R.compose(
    * Retrieves the common table accessors.
    * @returns {ITableColumnAccessor[]}
    */
-  private commonColumnsAccessors = (): ITableColumnAccessor[] => {
+  private groupColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
       { key: 'date', accessor: 'date' },
-      { key: 'reference_type', accessor: 'referenceTypeFormatted' },
-      { key: 'reference_number', accessor: 'reference_number' },
-      { key: 'currency_code', accessor: 'currencyCode' },
+      { key: 'transaction_type', accessor: 'referenceTypeFormatted' },
+      { key: 'transaction_number', accessor: 'referenceNumber' },
+      { key: 'description', accessor: 'entry.description' },
+      { key: 'account_code', accessor: 'entry.accountCode' },
+      { key: 'account_name', accessor: 'entry.accountName' },
+      { key: 'credit', accessor: 'entry.formattedCredit' },
+      { key: 'debit', accessor: 'entry.formattedDebit' },
+    ];
+  };
+
+  /**
+   * Retrieves the group entry accessors.
+   * @returns {ITableColumnAccessor[]}
+   */
+  private entryColumnsAccessors = (): ITableColumnAccessor[] => {
+    return [
+      { key: 'date', accessor: '_empty_' },
+      { key: 'transaction_type', accessor: '_empty_' },
+      { key: 'transaction_number', accessor: '_empty_' },
+      { key: 'description', accessor: 'description' },
+      { key: 'account_code', accessor: 'accountCode' },
+      { key: 'account_name', accessor: 'accountName' },
       { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
     ];
   };
 
+  private totalEntryColumnAccessors = (): ITableColumnAccessor[] => {
+    return [
+      { key: 'date', accessor: '_empty_' },
+      { key: 'transaction_type', accessor: '_empty_' },
+      { key: 'transaction_number', accessor: '_empty_' },
+      { key: 'description', accessor: '_empty_' },
+      { key: 'account_code', accessor: '_empty_' },
+      { key: 'account_name', accessor: '_empty_' },
+      { key: 'credit', accessor: 'formattedCredit' },
+      { key: 'debit', accessor: 'formattedDebit' },
+    ];
+  };
+
+  /**
+   * Retrieves the common columns.
+   * @returns {ITableColumn[]}
+   */
   private commonColumns(): ITableColumn[] {
     return [
       { key: 'date', label: 'Date' },
-      { key: 'reference_type', label: 'Reference Type' },
-      { key: 'reference_type', label: 'Reference Number' },
-      { key: 'currency_code', label: 'Currency Code' },
+      { key: 'transaction_type', label: 'Transaction Type' },
+      { key: 'transaction_number', label: 'Num.' },
+      { key: 'description', label: 'Description' },
+      { key: 'account_code', label: 'Acc. Code' },
+      { key: 'account_name', label: 'Account' },
       { key: 'credit', label: 'Credit' },
       { key: 'debit', label: 'Debit' },
     ];
   }
 
   /**
-   *
+   * Maps the group and first entry to table row.
+   * @param {IJournalReportEntriesGroup} group
+   * @returns {ITableRow}
    */
-  private entryGroupMapper = (group: IJournalReportEntriesGroup) => {
-    const columns = this.commonColumnsAccessors();
-
-    return tableRowMapper(group, columns, {});
+  private firstEntryGroupMapper = (
+    group: IJournalReportEntriesGroup
+  ): ITableRow => {
+    const meta = {
+      rowTypes: [ROW_TYPE.ENTRY],
+    };
+    const computedGroup = { ...group, entry: first(group.entries) };
+    const columns = this.groupColumnsAccessors();
+    return tableRowMapper(computedGroup, columns, meta);
   };
 
   /**
-   *
+   * Maps the given group entry to table rows.
+   * @param {IJournalEntry} entry
+   * @returns {ITableRow}
    */
-  private entryMapper = () => {};
+  private entryMapper = (entry: IJournalEntry): ITableRow => {
+    const columns = this.entryColumnsAccessors();
+    const meta = {
+      rowTypes: [ROW_TYPE.ENTRY],
+    };
+    return tableRowMapper(entry, columns, meta);
+  };
 
   /**
-   *
+   * Maps the given group entries to table rows.
+   * @param {IJournalReportEntriesGroup} group
+   * @returns {ITableRow[]}
    */
-  private entriesGroupsMapper = (entries: IJournalReportEntriesGroup[]) => {
-    return R.compose(R.map(this.entryGroupMapper))(entries);
+  private entriesMapper = (group: IJournalReportEntriesGroup): ITableRow[] => {
+    const entries = R.remove(0, 1, group.entries);
+
+    return R.map(this.entryMapper, entries);
+  };
+
+  /**
+   * Maps the given group entry to total table row.
+   * @param {IJournalReportEntriesGroup} group
+   * @returns {ITableRow}
+   */
+  public totalEntryMapper = (group: IJournalReportEntriesGroup): ITableRow => {
+    const total = this.totalEntryColumnAccessors();
+    const meta = {
+      rowTypes: [ROW_TYPE.TOTAL],
+    };
+    return tableRowMapper(group, total, meta);
+  };
+
+  /**
+   * Maps the entry group to table rows.
+   * @param {IJournalReportEntriesGroup} group -
+   * @returns {ITableRow}
+   */
+  private groupMapper = (group: IJournalReportEntriesGroup): ITableRow[] => {
+    const firstRow = this.firstEntryGroupMapper(group);
+    const lastRows = this.entriesMapper(group);
+    const totalRow = this.totalEntryMapper(group);
+
+    return [firstRow, ...lastRows, totalRow];
+  };
+
+  /**
+   * Maps the given group entries to table rows.
+   * @param {IJournalReportEntriesGroup[]} entries -
+   * @returns {ITableRow[]}
+   */
+  private groupsMapper = (
+    entries: IJournalReportEntriesGroup[]
+  ): ITableRow[] => {
+    return R.compose(R.flatten, R.map(this.groupMapper))(entries);
   };
 
   /**
@@ -80,7 +182,7 @@ export class JournalSheetTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableData(): ITableRow[] {
-    return R.compose(this.entriesGroupsMapper)(this.data);
+    return R.compose(this.groupsMapper)(this.data);
   }
 
   /**

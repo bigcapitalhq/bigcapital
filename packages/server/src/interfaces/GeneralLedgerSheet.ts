@@ -37,6 +37,7 @@ export interface IGeneralLedgerSheetAccountTransaction {
   referenceType?: string,
 
   date: Date|string,
+  dateFormatted: string;
 };
 
 export interface IGeneralLedgerSheetAccountBalance {

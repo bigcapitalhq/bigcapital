@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import {
   IGeneralLedgerSheetAccount,
+  IGeneralLedgerSheetAccountTransaction,
   IGeneralLedgerSheetData,
   IGeneralLedgerSheetQuery,
   ITableColumn,
@@ -35,15 +36,34 @@ export class GeneralLedgerTable extends R.compose(
    * Retrieves the common table accessors.
    * @returns {ITableColumnAccessor[]}
    */
-  private commonColumnsAccessors(): ITableColumnAccessor[] {
+  private accountColumnsAccessors(): ITableColumnAccessor[] {
+    return [
+      { key: 'date', accessor: 'name' },
+      { key: 'account_name', accessor: '_empty_' },
+      { key: 'reference_type', accessor: '_empty_' },
+      { key: 'reference_number', accessor: '_empty_' },
+      { key: 'description', accessor: 'description' },
+      { key: 'credit', accessor: '_empty_' },
+      { key: 'debit', accessor: '_empty_' },
+      { key: 'amount', accessor: 'amount.formattedAmount' },
+      { key: 'running_balance', accessor: 'openingBalance.formattedAmount' },
+    ];
+  }
+
+  /**
+   * Retrieves the transaction column accessors.
+   * @returns {ITableColumnAccessor[]}
+   */
+  private transactionColumnAccessors(): ITableColumnAccessor[] {
     return [
       { key: 'date', accessor: 'date' },
+      { key: 'account_name', accessor: 'name' },
       { key: 'reference_type', accessor: 'referenceTypeFormatted' },
-      { key: 'reference_number', accessor: 'reference_number' },
+      { key: 'reference_number', accessor: 'referenceNumber' },
       { key: 'currency_code', accessor: 'currencyCode' },
       { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
-      { key: 'running_balance', accessor: 'formattedRunningBalance' },
+      { key: 'running_balance', accessor: 'runningBalance.formattedAmount' },
     ];
   }
 
@@ -54,14 +74,40 @@ export class GeneralLedgerTable extends R.compose(
   private commonColumns(): ITableColumn[] {
     return [
       { key: 'date', label: 'Date' },
-      { key: 'reference_type', label: 'Reference Type' },
-      { key: 'reference_number', label: 'Reference Number' },
-      { key: 'currency_code', label: 'Currency Code' },
+      { key: 'account_name', label: 'Account Name' },
+      { key: 'reference_type', label: 'Transaction Type' },
+      { key: 'reference_number', label: 'Transaction Number' },
+      { key: 'description', label: 'Description' },
       { key: 'credit', label: 'Credit' },
       { key: 'debit', label: 'Debit' },
+      { key: 'amount', label: 'Amount' },
       { key: 'running_balance', label: 'Running Balance' },
     ];
   }
+
+  /**
+   * Maps the given transaction node to table row.
+   * @param {IGeneralLedgerSheetAccountTransaction} transaction
+   * @returns {ITableRow}
+   */
+  private transactionMapper = (
+    transaction: IGeneralLedgerSheetAccountTransaction
+  ): ITableRow => {
+    const columns = this.transactionColumnAccessors();
+
+    return tableRowMapper(transaction, columns, {});
+  };
+
+  /**
+   * Maps the given transactions nodes to table rows.
+   * @param {IGeneralLedgerSheetAccountTransaction[]} transactions
+   * @returns {ITableRow[]}
+   */
+  private transactionsMapper = (
+    transactions: IGeneralLedgerSheetAccountTransaction[]
+  ): ITableRow[] => {
+    return R.map(this.transactionMapper)(transactions);
+  };
 
   /**
    * Maps the given account node to the table rows.
@@ -69,9 +115,11 @@ export class GeneralLedgerTable extends R.compose(
    * @returns {ITableRow}
    */
   private accountMapper = (account: IGeneralLedgerSheetAccount): ITableRow => {
-    const columns = this.commonColumnsAccessors();
+    const columns = this.accountColumnsAccessors();
+    const row = tableRowMapper(account, columns, {});
+    const transactions = this.transactionsMapper(account.transactions);
 
-    return tableRowMapper(account, columns, {});
+    return R.assoc('children', transactions)(row);
   };
 
   /**
@@ -82,7 +130,7 @@ export class GeneralLedgerTable extends R.compose(
   private accountsMapper = (
     accounts: IGeneralLedgerSheetAccount[]
   ): ITableRow[] => {
-    return R.compose(R.map(this.accountMapper))(accounts);
+    return this.mapNodesDeep(accounts, this.accountMapper)l
   };
 
   /**

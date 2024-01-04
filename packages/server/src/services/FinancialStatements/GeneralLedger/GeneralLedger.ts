@@ -10,6 +10,7 @@ import {
   IContact,
 } from '@/interfaces';
 import FinancialSheet from '../FinancialSheet';
+import moment from 'moment';
 
 /**
  * General ledger sheet.
@@ -88,6 +89,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
     const newEntry = {
       date: entry.date,
+      dateFromatted: moment(entry.date).format('YYYY/MM/DD'),
       entryId: entry.id,
 
       referenceType: entry.referenceType,
