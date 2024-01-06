@@ -13,6 +13,7 @@ import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
 import { tableRowMapper } from '@/utils';
+import { ROW_TYPE } from './utils';
 
 export class GeneralLedgerTable extends R.compose(
   FinancialTable,
@@ -135,8 +136,10 @@ export class GeneralLedgerTable extends R.compose(
     ): ITableRow => {
       const columns = this.transactionColumnAccessors();
       const data = { ...transaction, account };
-
-      return tableRowMapper(data, columns, {});
+      const meta = {
+        rowTypes: [ROW_TYPE.TRANSACTION],
+      };
+      return tableRowMapper(data, columns, meta);
     }
   );
 
@@ -162,8 +165,10 @@ export class GeneralLedgerTable extends R.compose(
     account: IGeneralLedgerSheetAccount
   ): ITableRow => {
     const columns = this.openingBalanceColumnsAccessors();
-
-    return tableRowMapper(account, columns, {});
+    const meta = {
+      rowTypes: [ROW_TYPE.OPENING_BALANCE],
+    };
+    return tableRowMapper(account, columns, meta);
   };
 
   /**
@@ -173,8 +178,10 @@ export class GeneralLedgerTable extends R.compose(
    */
   private closingBalanceMapper = (account: IGeneralLedgerSheetAccount) => {
     const columns = this.closingBalanceColumnAccessors();
-
-    return tableRowMapper(account, columns, {});
+    const meta = {
+      rowTypes: [ROW_TYPE.CLOSING_BALANCE],
+    };
+    return tableRowMapper(account, columns, meta);
   };
 
   /**
@@ -199,8 +206,11 @@ export class GeneralLedgerTable extends R.compose(
    */
   private accountMapper = (account: IGeneralLedgerSheetAccount): ITableRow => {
     const columns = this.accountColumnsAccessors();
-    const row = tableRowMapper(account, columns, {});
     const transactions = this.transactionsNode(account);
+    const meta = {
+      rowTypes: [ROW_TYPE.ACCOUNT],
+    };
+    const row = tableRowMapper(account, columns, meta);
 
     return R.assoc('children', transactions)(row);
   };

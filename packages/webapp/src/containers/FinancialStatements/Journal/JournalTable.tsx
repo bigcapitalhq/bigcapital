@@ -83,10 +83,9 @@ const JournalDataTable = styled(ReportDataTable)`
           border-bottom: 1px solid #dbdbdb;
         }
       }
-      .tr.row_type--TOTAL_ENTRIES {
+      .tr.row_type--TOTAL{
         font-weight: 600;
       }
-
       .tr:not(.no-results) {
         height: 28px;
       }
