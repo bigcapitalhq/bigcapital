@@ -28,6 +28,7 @@ function JournalSheetProvider({ query, ...props }) {
     isLoading,
     isFetching,
     refetchSheet: refetch,
+    httpQuery: requestQuery
   };
 
   return (

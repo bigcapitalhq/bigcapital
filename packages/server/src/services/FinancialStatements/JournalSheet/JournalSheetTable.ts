@@ -1,7 +1,8 @@
 import * as R from 'ramda';
+import { first } from 'lodash';
 import {
+  IColumnMapperMeta,
   IJournalEntry,
-  IJournalReport,
   IJournalReportEntriesGroup,
   IJournalReportQuery,
   IJournalTableData,
@@ -13,7 +14,7 @@ import { tableRowMapper } from '@/utils';
 import { FinancialTable } from '../FinancialTable';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import FinancialSheet from '../FinancialSheet';
-import { first } from 'lodash';
+import { ROW_TYPE } from './types';
 
 export class JournalSheetTable extends R.compose(
   FinancialTable,
@@ -70,6 +71,10 @@ export class JournalSheetTable extends R.compose(
     ];
   };
 
+  /**
+   * Retrieves the total entry column accessors.
+   * @returns {ITableColumnAccessor[]}
+   */
   private totalEntryColumnAccessors = (): ITableColumnAccessor[] => {
     return [
       { key: 'date', accessor: '_empty_' },
@@ -80,6 +85,23 @@ export class JournalSheetTable extends R.compose(
       { key: 'account_name', accessor: '_empty_' },
       { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
+    ];
+  };
+
+  /**
+   * Retrieves the total entry column accessors.
+   * @returns {IColumnMapperMeta[]}
+   */
+  private blankEnrtyColumnAccessors = (): IColumnMapperMeta[] => {
+    return [
+      { key: 'date', value: '' },
+      { key: 'transaction_type', value: '' },
+      { key: 'transaction_number', value: '' },
+      { key: 'description', value: '' },
+      { key: 'account_code', value: '' },
+      { key: 'account_name', value: '' },
+      { key: 'credit', value: '' },
+      { key: 'debit', value: '' },
     ];
   };
 
@@ -113,6 +135,7 @@ export class JournalSheetTable extends R.compose(
     };
     const computedGroup = { ...group, entry: first(group.entries) };
     const columns = this.groupColumnsAccessors();
+
     return tableRowMapper(computedGroup, columns, meta);
   };
 
@@ -154,6 +177,16 @@ export class JournalSheetTable extends R.compose(
   };
 
   /**
+   * Retrieves the blank entry row.
+   * @returns {ITableRow}
+   */
+  private blankEntryMapper = (): ITableRow => {
+    const columns = this.blankEnrtyColumnAccessors();
+    const meta = {};
+    return tableRowMapper({} as IJournalEntry, columns, meta);
+  };
+
+  /**
    * Maps the entry group to table rows.
    * @param {IJournalReportEntriesGroup} group -
    * @returns {ITableRow}
@@ -162,8 +195,9 @@ export class JournalSheetTable extends R.compose(
     const firstRow = this.firstEntryGroupMapper(group);
     const lastRows = this.entriesMapper(group);
     const totalRow = this.totalEntryMapper(group);
+    const blankRow = this.blankEntryMapper();
 
-    return [firstRow, ...lastRows, totalRow];
+    return [firstRow, ...lastRows, totalRow, blankRow];
   };
 
   /**

@@ -1,77 +1,31 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import moment from 'moment';
-import { Button } from '@blueprintjs/core';
+import React, { useRef } from 'react';
+import classNames from 'classnames';
+import {
+  Button,
+  Classes,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+  Intent,
+} from '@blueprintjs/core';
 
-import { Icon, If, FormattedMessage as T } from '@/components';
+import {
+  AppToaster,
+  Icon,
+  If,
+  Stack,
+  FormattedMessage as T,
+} from '@/components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 
-import { Align } from '@/constants';
-
-/**
- * Retrieve the journal table columns.
- */
-export const useJournalTableColumns = () => {
-  return React.useMemo(
-    () => [
-      {
-        Header: intl.get('date'),
-        accessor: (row) =>
-          row.date ? moment(row.date).format('YYYY MMM DD') : '',
-        className: 'date',
-        width: 100,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('transaction_type'),
-        accessor: 'reference_type_formatted',
-        className: 'reference_type_formatted',
-        width: 120,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('num'),
-        accessor: 'transaction_number',
-        className: 'reference_id',
-        width: 70,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('description'),
-        accessor: 'note',
-        className: 'note',
-        textOverview: true,
-      },
-      {
-        Header: intl.get('acc_code'),
-        accessor: 'account_code',
-        width: 95,
-        className: 'account_code',
-        textOverview: true,
-      },
-      {
-        Header: intl.get('account'),
-        accessor: 'account_name',
-        className: 'account_name',
-        textOverview: true,
-      },
-      {
-        Header: intl.get('credit'),
-        accessor: 'formatted_credit',
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('debit'),
-        accessor: 'formatted_debit',
-        align: Align.Right,
-      },
-    ],
-    [],
-  );
-};
+import {
+  useJournalSheetCsvExport,
+  useJournalSheetXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Journal sheet loading bar.
@@ -115,3 +69,87 @@ export function JournalSheetAlerts() {
     </FinancialComputeAlert>
   );
 }
+
+/**
+ * Retrieves the journal sheet export menu.
+ * @returns {JSX.Element}
+ */
+export const JournalSheetExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const { httpQuery } = useJournalSheetContext();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+  // Exports the report to xlsx.
+  const { mutateAsync: xlsxExport } = useJournalSheetXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Exports the report to csv.
+  const { mutateAsync: csvExport } = useJournalSheetCsvExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

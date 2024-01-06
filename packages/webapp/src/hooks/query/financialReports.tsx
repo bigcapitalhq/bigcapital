@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { useRequestQuery } from '../useQueryRequest';
 import {
-  generalLedgerTableRowsReducer,
-  journalTableRowsReducer,
   inventoryValuationReducer,
   purchasesByItemsReducer,
   salesByItemsReducer,
@@ -167,21 +165,44 @@ export function useGeneralLedgerSheet(query, props) {
       method: 'get',
       url: '/financial_statements/general_ledger',
       params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
     },
     {
-      select: (res) => ({
-        tableRows: generalLedgerTableRowsReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: {},
-        query: {},
-      },
+      select: (res) => res.data,
       ...props,
     },
   );
 }
+export const useGeneralLedgerSheetXlsxExport = (query, args) => {
+return useDownloadFile({
+  url: '/financial_statements/general_ledger',
+  config: {
+    headers: {
+      accept: 'application/xlsx',
+    },
+    params: query,
+  },
+  filename: 'general_ledger.xlsx',
+  ...args,
+});
+};
+
+export const useGeneralLedgerSheetCsvExport = (query, args) => {
+return useDownloadFile({
+  url: '/financial_statements/general_ledger',
+  config: {
+    headers: {
+      accept: 'application/csv',
+    },
+    params: query,
+  },
+  filename: 'general_ledger.csv',
+  ...args,
+});
+};
+
 
 /**
  * Retrieve journal sheet.
@@ -189,21 +210,48 @@ export function useGeneralLedgerSheet(query, props) {
 export function useJournalSheet(query, props) {
   return useRequestQuery(
     [t.FINANCIAL_REPORT, t.JOURNAL, query],
-    { method: 'get', url: '/financial_statements/journal', params: query },
     {
-      select: (res) => ({
-        tableRows: journalTableRowsReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        data: {},
-        tableRows: [],
-        query: {},
+      method: 'get',
+      url: '/financial_statements/journal',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
       },
+    },
+    {
+      select: (res) => res.data,
       ...props,
     },
   );
 }
+
+export const useJournalSheetXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/journal',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'journal.xlsx',
+    ...args,
+  });
+};
+
+export const useJournalSheetCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/journal',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'journal.csv',
+    ...args,
+  });
+};
 
 /**
  * Retrieve A/R aging summary report.
