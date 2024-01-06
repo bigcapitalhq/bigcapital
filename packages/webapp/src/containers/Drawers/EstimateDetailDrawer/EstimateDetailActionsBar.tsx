@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -22,6 +21,7 @@ import {
   Icon,
   FormattedMessage as T,
   Can,
+  Choose,
 } from '@/components';
 
 import { compose } from '@/utils';
@@ -42,7 +42,7 @@ function EstimateDetailActionsBar({
   closeDrawer,
 }) {
   // Estimate details drawer context.
-  const { estimateId } = useEstimateDetailDrawerContext();
+  const { estimateId, estimate } = useEstimateDetailDrawerContext();
 
   // History.
   const history = useHistory();
@@ -51,6 +51,16 @@ function EstimateDetailActionsBar({
   const handleEditEstimate = () => {
     history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
+  };
+
+  // Handle cancel/confirm estimate approve.
+  const handleApproveEstimate = () => {
+    openAlert('estimate-Approve', { estimateId });
+  };
+
+  // Handle cancel/confirm estimate reject.
+  const handleRejectEstimate = () => {
+    openAlert('estimate-reject', { estimateId });
   };
 
   // Handle delete sale estimate.
@@ -83,6 +93,50 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
+        <Choose>
+          <Choose.When
+            condition={estimate.is_delivered && estimate.is_rejected}
+          >
+            <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon="check" />}
+                text={<T id={'mark_as_approved'} />}
+                onClick={handleApproveEstimate}
+              />
+            </Can>
+          </Choose.When>
+          <Choose.When
+            condition={estimate.is_delivered && estimate.is_approved}
+          >
+            <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon="close-black" />}
+                text={<T id={'mark_as_rejected'} />}
+                onClick={handleRejectEstimate}
+              />
+            </Can>
+          </Choose.When>
+          <Choose.When condition={estimate.is_delivered}>
+            <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon="check" />}
+                text={<T id={'mark_as_approved'} />}
+                onClick={handleApproveEstimate}
+              />
+            </Can>
+            <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
+              <Button
+                className={Classes.MINIMAL}
+                icon={<Icon icon="close-black" />}
+                text={<T id={'mark_as_rejected'} />}
+                onClick={handleRejectEstimate}
+              />
+            </Can>
+          </Choose.When>
+        </Choose>
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
