@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import {
   IColumnMapperMeta,
+  IGeneralLedgerMeta,
   IGeneralLedgerSheetAccount,
   IGeneralLedgerSheetAccountTransaction,
   IGeneralLedgerSheetData,
@@ -21,17 +22,23 @@ export class GeneralLedgerTable extends R.compose(
 )(FinancialSheet) {
   private data: IGeneralLedgerSheetData;
   private query: IGeneralLedgerSheetQuery;
+  private meta: IGeneralLedgerMeta;
 
   /**
    * Creates an instance of `GeneralLedgerTable`.
    * @param {IGeneralLedgerSheetData} data
    * @param {IGeneralLedgerSheetQuery} query
    */
-  constructor(data: IGeneralLedgerSheetData, query: IGeneralLedgerSheetQuery) {
+  constructor(
+    data: IGeneralLedgerSheetData,
+    query: IGeneralLedgerSheetQuery,
+    meta: IGeneralLedgerMeta
+  ) {
     super();
 
     this.data = data;
     this.query = query;
+    this.meta = meta;
   }
 
   /**
@@ -61,8 +68,8 @@ export class GeneralLedgerTable extends R.compose(
       { key: 'date', accessor: 'dateFormatted' },
       { key: 'account_name', accessor: 'account.name' },
       { key: 'reference_type', accessor: 'referenceTypeFormatted' },
-      { key: 'reference_number', accessor: 'referenceNumber' },
-      { key: 'description', accessor: 'description' },
+      { key: 'reference_number', accessor: 'transactionNumber' },
+      { key: 'description', accessor: 'note' },
       { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
       { key: 'amount', accessor: 'formattedAmount' },
@@ -76,7 +83,7 @@ export class GeneralLedgerTable extends R.compose(
    */
   private openingBalanceColumnsAccessors(): IColumnMapperMeta[] {
     return [
-      { key: 'date', accessor: 'dateFormatted' },
+      { key: 'date', value: this.meta.fromDate },
       { key: 'account_name', value: 'Opening Balance' },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
@@ -84,7 +91,7 @@ export class GeneralLedgerTable extends R.compose(
       { key: 'credit', accessor: '_empty_' },
       { key: 'debit', accessor: '_empty_' },
       { key: 'amount', accessor: 'openingBalance.formattedAmount' },
-      { key: 'running_balance', accessor: '_empty' },
+      { key: 'running_balance', accessor: 'openingBalance.formattedAmount' },
     ];
   }
 
@@ -94,7 +101,7 @@ export class GeneralLedgerTable extends R.compose(
    */
   private closingBalanceColumnAccessors(): IColumnMapperMeta[] {
     return [
-      { key: 'date', accessor: 'dateFormatted' },
+      { key: 'date', value: this.meta.toDate },
       { key: 'account_name', value: 'Closing Balance' },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
@@ -102,7 +109,7 @@ export class GeneralLedgerTable extends R.compose(
       { key: 'credit', accessor: '_empty_' },
       { key: 'debit', accessor: '_empty_' },
       { key: 'amount', accessor: 'closingBalance.formattedAmount' },
-      { key: 'running_balance', accessor: '_empty_' },
+      { key: 'running_balance', accessor: 'closingBalance.formattedAmount' },
     ];
   }
 
@@ -115,7 +122,7 @@ export class GeneralLedgerTable extends R.compose(
       { key: 'date', label: 'Date' },
       { key: 'account_name', label: 'Account Name' },
       { key: 'reference_type', label: 'Transaction Type' },
-      { key: 'reference_number', label: 'Transaction Number' },
+      { key: 'reference_number', label: 'Transaction #' },
       { key: 'description', label: 'Description' },
       { key: 'credit', label: 'Credit' },
       { key: 'debit', label: 'Debit' },
@@ -196,7 +203,10 @@ export class GeneralLedgerTable extends R.compose(
     const transactions = this.transactionsMapper(account);
     const closingBalance = this.closingBalanceMapper(account);
 
-    return [openingBalance, ...transactions, closingBalance];
+    return R.when(
+      R.always(R.not(R.isEmpty(transactions))),
+      R.prepend(openingBalance)
+    )([...transactions, closingBalance]) as ITableRow[];
   };
 
   /**

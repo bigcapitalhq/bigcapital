@@ -82,6 +82,8 @@ export interface IGeneralLedgerMeta {
   isCostComputeRunning: boolean,
   organizationName: string,
   baseCurrency: string,
+  fromDate: string;
+  toDate: string;
 };
 
 export interface IGeneralLedgerTableData extends IFinancialTable {

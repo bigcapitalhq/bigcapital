@@ -32,6 +32,7 @@ export class JournalSheetTable extends R.compose(
    */
   constructor(data: IJournalTableData, query: IJournalReportQuery, i18n: any) {
     super();
+
     this.data = data;
     this.query = query;
     this.i18n = i18n;
@@ -43,10 +44,10 @@ export class JournalSheetTable extends R.compose(
    */
   private groupColumnsAccessors = (): ITableColumnAccessor[] => {
     return [
-      { key: 'date', accessor: 'date' },
+      { key: 'date', accessor: 'dateFormatted' },
       { key: 'transaction_type', accessor: 'referenceTypeFormatted' },
-      { key: 'transaction_number', accessor: 'referenceNumber' },
-      { key: 'description', accessor: 'entry.description' },
+      { key: 'transaction_number', accessor: 'entry.transactionNumber' },
+      { key: 'description', accessor: 'entry.note' },
       { key: 'account_code', accessor: 'entry.accountCode' },
       { key: 'account_name', accessor: 'entry.accountName' },
       { key: 'credit', accessor: 'entry.formattedCredit' },
@@ -62,8 +63,8 @@ export class JournalSheetTable extends R.compose(
     return [
       { key: 'date', accessor: '_empty_' },
       { key: 'transaction_type', accessor: '_empty_' },
-      { key: 'transaction_number', accessor: '_empty_' },
-      { key: 'description', accessor: 'description' },
+      { key: 'transaction_number', accessor: 'transactionNumber' },
+      { key: 'description', accessor: 'note' },
       { key: 'account_code', accessor: 'accountCode' },
       { key: 'account_name', accessor: 'accountName' },
       { key: 'credit', accessor: 'formattedCredit' },

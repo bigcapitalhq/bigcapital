@@ -31,7 +31,7 @@ export class GeneralLedgerTableInjectable {
       meta: sheetMeta,
     } = await this.GLSheet.generalLedger(tenantId, query);
 
-    const table = new GeneralLedgerTable(sheetData, sheetQuery);
+    const table = new GeneralLedgerTable(sheetData, sheetQuery, sheetMeta);
 
     return {
       table: {

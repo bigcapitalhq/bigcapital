@@ -64,7 +64,7 @@ export class GeneralLedgerService {
    * @param {number} tenantId - 
    * @returns {IGeneralLedgerMeta}
    */
-   reportMetadata(tenantId: number): IGeneralLedgerMeta {
+   reportMetadata(tenantId: number, filter): IGeneralLedgerMeta {
     const settings = this.tenancy.settings(tenantId);
 
     const isCostComputeRunning = this.inventoryService
@@ -78,11 +78,15 @@ export class GeneralLedgerService {
       group: 'organization',
       key: 'base_currency',
     });
+    const fromDate = moment(filter.fromDate).format('YYYY MMM DD');
+    const toDate = moment(filter.toDate).format('YYYY MMM DD');
 
     return {
       isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
       organizationName,
-      baseCurrency
+      baseCurrency,
+      fromDate,
+      toDate
     };
   }
 
@@ -166,7 +170,7 @@ export class GeneralLedgerService {
     return {
       data: reportData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta: this.reportMetadata(tenantId, filter),
     };
   }
 }

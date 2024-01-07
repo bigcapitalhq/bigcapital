@@ -87,7 +87,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
       return res.send(buffer);
       // Retrieves the xlsx format.
     } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
-      const buffer = this.generalLedgerApplication.xlsx(tenantId, filter);
+      const buffer = await this.generalLedgerApplication.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
       res.setHeader(

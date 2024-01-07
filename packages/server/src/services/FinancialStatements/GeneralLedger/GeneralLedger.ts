@@ -89,9 +89,10 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
     const newEntry = {
       date: entry.date,
-      dateFormatted: moment(entry.date).format('YYYY/MM/DD'),
+      dateFormatted: moment(entry.date).format('YYYY MMM DD'),
       entryId: entry.id,
 
+      transactionNumber: entry.transactionNumber,
       referenceType: entry.referenceType,
       referenceId: entry.referenceId,
       referenceTypeFormatted: this.i18n.__(entry.referenceTypeFormatted),

@@ -98,7 +98,7 @@ export default class JournalSheet extends FinancialSheet {
 
     return {
       date: groupEntry.date,
-      dateFormatted: moment(groupEntry.date).format('YYYY/MM/DD'),
+      dateFormatted: moment(groupEntry.date).format('YYYY MMM DD'),
 
       referenceType: groupEntry.referenceType,
       referenceId: groupEntry.referenceId,
