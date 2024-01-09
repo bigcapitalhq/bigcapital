@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -22,6 +21,7 @@ import {
   Icon,
   FormattedMessage as T,
   Can,
+  Choose,
 } from '@/components';
 
 import { compose } from '@/utils';
@@ -52,7 +52,6 @@ function EstimateDetailActionsBar({
     history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
-
   // Handle delete sale estimate.
   const handleDeleteEstimate = () => {
     openAlert('estimate-delete', { estimateId });
@@ -83,6 +82,7 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
+
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
