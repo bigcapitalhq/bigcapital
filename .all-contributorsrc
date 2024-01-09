@@ -78,6 +78,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "ANasouf",
+      "name": "ANasouf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19536487?v=4",
+      "profile": "https://github.com/ANasouf",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
