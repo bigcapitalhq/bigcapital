@@ -141,11 +141,11 @@ export const GeneralLedgerSheetExportMenu = () => {
   );
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
-    csvExport().then(() => {});
+    csvExport();
   };
   // Handle xlsx export button click.
   const handleXlsxExportBtnClick = () => {
-    xlsxExport().then(() => {});
+    xlsxExport();
   };
 
   return (

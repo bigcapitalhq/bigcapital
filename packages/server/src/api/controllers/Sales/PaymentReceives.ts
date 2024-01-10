@@ -545,7 +545,6 @@ export default class PaymentReceivesController extends BaseController {
         includeOptionals: false,
       }
     );
-    console.log(req.params);
 
     try {
       await this.paymentReceiveApplication.notifyPaymentByMail(

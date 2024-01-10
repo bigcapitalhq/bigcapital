@@ -18,6 +18,7 @@ export interface IJournalReportQuery {
 
 export interface IJournalReportEntriesGroup {
   id: string;
+  date: Date;
   dateFormatted: string;
   entries: IJournalEntry[];
   currencyCode: string;
