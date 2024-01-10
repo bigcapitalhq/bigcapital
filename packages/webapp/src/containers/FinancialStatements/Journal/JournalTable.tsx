@@ -11,10 +11,10 @@ import {
   TableVirtualizedListRows,
 } from '@/components';
 
-import { useJournalTableColumns } from './components';
 import { useJournalSheetContext } from './JournalProvider';
 
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
+import { useJournalSheetColumns } from './dynamicColumns';
 
 /**
  * Journal sheet table.
@@ -23,12 +23,12 @@ import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 export function JournalTable({ companyName }) {
   // Journal sheet context.
   const {
-    journalSheet: { tableRows, query },
+    journalSheet: { table, query },
     isLoading,
   } = useJournalSheetContext();
 
-  // Retreive the journal table columns.
-  const columns = useJournalTableColumns();
+  // Retrieves the journal table columns.
+  const columns = useJournalSheetColumns();
 
   // Default expanded rows of general journal table.
   const expandedRows = useMemo(() => defaultExpanderReducer([], 1), []);
@@ -39,13 +39,13 @@ export function JournalTable({ companyName }) {
       sheetType={intl.get('journal_sheet')}
       fromDate={query.from_date}
       toDate={query.to_date}
-      name="journal"
       loading={isLoading}
       fullWidth={true}
+      name="journal"
     >
       <JournalDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noResults={intl.get(
           'this_report_does_not_contain_any_data_between_date_period',
@@ -83,10 +83,9 @@ const JournalDataTable = styled(ReportDataTable)`
           border-bottom: 1px solid #dbdbdb;
         }
       }
-      .tr.row_type--TOTAL_ENTRIES {
+      .tr.row_type--TOTAL{
         font-weight: 600;
       }
-
       .tr:not(.no-results) {
         height: 28px;
       }

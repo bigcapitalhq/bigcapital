@@ -32,7 +32,7 @@ function AccountsDataTable({
   // #withAlertsDialog
   openAlert,
 
-  // #withDial
+  // #withDialog
   openDialog,
 
   // #withDrawerActions

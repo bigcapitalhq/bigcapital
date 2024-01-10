@@ -2,6 +2,9 @@ import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class Contact extends TenantModel {
+  email: string;
+  displayName: string;
+
   /**
    * Table name
    */
