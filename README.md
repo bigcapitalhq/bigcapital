@@ -62,6 +62,12 @@ To get started locally, we have a [guide to help you](https://github.com/bigcapi
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/new/#https://github.com/bigcapitalhq/bigcapital)
 
+# Headless Accounting
+
+You can integrate Bigcapital API with your system to organize your transactions in double-entry system to get the best financial reports.
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.postman.com/bigcapital/workspace/bigcapital-api)
+
 # Resources
 
 - [Documentation](https://docs.bigcapital.ly/) - Learn how to use.
