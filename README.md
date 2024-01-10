@@ -62,7 +62,7 @@ To get started locally, we have a [guide to help you](https://github.com/bigcapi
 
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/new/#https://github.com/bigcapitalhq/bigcapital)
 
-# Headless Accounting
+## Headless Accounting
 
 You can integrate Bigcapital API with your system to organize your transactions in double-entry system to get the best financial reports.
 
