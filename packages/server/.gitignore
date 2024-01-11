@@ -1,6 +1,5 @@
 /node_modules/
 /.env
-/storage
 stdout.log
 /dist
 /build

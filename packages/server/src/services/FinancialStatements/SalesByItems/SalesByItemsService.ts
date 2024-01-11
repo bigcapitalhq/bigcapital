@@ -87,10 +87,6 @@ export default class SalesByItemsReportService {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[sales_by_items] trying to calculate the report.', {
-      filter,
-      tenantId,
-    });
     // Inventory items for sales report.
     const inventoryItems = await Item.query().onBuild((q) => {
       q.where('type', 'inventory');

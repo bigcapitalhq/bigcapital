@@ -5,7 +5,6 @@ import { IARAgingSummaryQuery, IARAgingSummaryMeta } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
 import { Tenant } from '@/system/models';
-import ARAgingSummaryTable from './ARAgingSummaryTable';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -116,23 +115,6 @@ export default class ARAgingSummaryService {
       columns,
       query: filter,
       meta: this.reportMetadata(tenantId),
-    };
-  }
-
-  /**
-   * Retrieves A/R aging summary in table format.
-   * @param {number} tenantId
-   * @param {IARAgingSummaryQuery} query
-   */
-  async ARAgingSummaryTable(tenantId: number, query: IARAgingSummaryQuery) {
-    const report = await this.ARAgingSummary(tenantId, query);
-    const table = new ARAgingSummaryTable(report.data, query, {});
-
-    return {
-      columns: table.tableColumns(),
-      rows: table.tableRows(),
-      meta: report.meta,
-      query,
     };
   }
 }

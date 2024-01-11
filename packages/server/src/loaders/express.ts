@@ -1,4 +1,5 @@
 import { json, Request, Response, NextFunction } from 'express';
+import express from 'express';
 import helmet from 'helmet';
 import boom from 'express-boom';
 import errorHandler from 'errorhandler';
@@ -41,6 +42,8 @@ export default ({ app }) => {
 
   // Middleware for intercepting and transforming json responses.
   app.use(JSONResponseTransformer(snakecaseResponseTransformer));
+
+  app.use('/public', express.static(path.join(global.__storage_dir)));
 
   // Handle multi-media requests.
   app.use(

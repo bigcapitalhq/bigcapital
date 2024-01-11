@@ -1,17 +1,26 @@
-FROM node:14.15.0 as build
+FROM node:18.16.0-alpine as build
 
 USER root
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-COPY lerna.json ./
+# Copy application dependency manifests to the container image.
+COPY ./package*.json ./
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY ./lerna.json ./lerna.json
+COPY ./packages/webapp/package*.json ./packages/webapp/
 
-COPY ./packages/webapp/package*.json /app/packages/webapp/
+# Install application dependencies
+RUN apk update
+RUN apk add python3 build-base chromium
 
-RUN npm install
-RUN npm run bootstrap
+# Set PYHTON env
+ENV PYTHON=/usr/bin/python3
+
+# Install pnpm packages dependencies
+RUN npm install -g pnpm
+RUN pnpm install
 
 # Build webapp package
 COPY ./packages/webapp /app/packages/webapp

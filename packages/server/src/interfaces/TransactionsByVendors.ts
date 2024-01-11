@@ -1,3 +1,4 @@
+import { IFinancialTable } from './Table';
 import {
   ITransactionsByContactsAmount,
   ITransactionsByContactsTransaction,
@@ -33,4 +34,8 @@ export interface ITransactionsByVendorsService {
     tenantId: number,
     filter: ITransactionsByVendorsFilter
   ): Promise<ITransactionsByVendorsStatement>;
+}
+
+export interface ITransactionsByVendorTable extends IFinancialTable {
+  query: ITransactionsByVendorsFilter;
 }

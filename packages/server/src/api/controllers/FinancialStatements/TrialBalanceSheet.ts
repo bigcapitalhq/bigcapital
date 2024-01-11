@@ -3,20 +3,22 @@ import { Request, Response, Router, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { castArray } from 'lodash';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import TrialBalanceSheetService from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetService';
+import TrialBalanceSheetService from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetInjectable';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { TrialBalanceSheetApplication } from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class TrialBalanceSheetController extends BaseFinancialReportController {
   @Inject()
-  trialBalanceSheetService: TrialBalanceSheetService;
+  private trialBalanceSheetApp: TrialBalanceSheetApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -36,7 +38,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
    * Validation schema.
    * @return {ValidationChain[]}
    */
-  get trialBalanceSheetValidationSchema(): ValidationChain[] {
+  private get trialBalanceSheetValidationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('basis').optional(),
@@ -59,28 +61,62 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
   /**
    * Retrieve the trial balance sheet.
    */
-  public async trialBalanceSheet(
+  private async trialBalanceSheet(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    const { tenantId, settings } = req;
+    const { tenantId } = req;
     let filter = this.matchedQueryData(req);
 
     filter = {
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
-
     try {
-      const { data, query, meta } =
-        await this.trialBalanceSheetService.trialBalanceSheet(tenantId, filter);
+      const accept = this.accepts(req);
 
-      return res.status(200).send({
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
-      });
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
+      // Retrieves in json table format.
+      if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
+        const { table, meta, query } = await this.trialBalanceSheetApp.table(
+          tenantId,
+          filter
+        );
+        return res.status(200).send({ table, meta, query });
+        // Retrieves in xlsx format
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
+        const buffer = await this.trialBalanceSheetApp.xlsx(tenantId, filter);
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieves in csv format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
+        const buffer = await this.trialBalanceSheetApp.csv(tenantId, filter);
+
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
+
+        return res.send(buffer);
+        // Retrieves in json format.
+      } else {
+        const { data, query, meta } = await this.trialBalanceSheetApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send({ data, query, meta });
+      }
     } catch (error) {
       next(error);
     }

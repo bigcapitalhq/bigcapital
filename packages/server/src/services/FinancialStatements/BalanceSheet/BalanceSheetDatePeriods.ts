@@ -107,9 +107,9 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
 
     /**
      *
-     * @param   {IBalanceSheetAccountNode} node
-     * @param   {Date} fromDate
-     * @param   {Date} toDate
+     * @param {IBalanceSheetAccountNode} node
+     * @param {Date} fromDate
+     * @param {Date} toDate
      * @returns {IBalanceSheetAccountNode}
      */
     private getAccountNodeDatePeriod = (
@@ -201,7 +201,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
     };
 
     /**
-     *
+     * 
      * @param node
      * @returns
      */

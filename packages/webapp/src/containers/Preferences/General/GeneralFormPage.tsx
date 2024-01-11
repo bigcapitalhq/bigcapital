@@ -23,6 +23,7 @@ const defaultValues = {
   fiscal_year: '',
   date_format: '',
   timezone: '',
+  tax_number: '',
 };
 
 /**

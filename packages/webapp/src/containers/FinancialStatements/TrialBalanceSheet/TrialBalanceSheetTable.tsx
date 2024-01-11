@@ -8,8 +8,7 @@ import { tableRowTypesToClassnames } from '@/utils';
 import { ReportDataTable, FinancialSheet } from '@/components';
 
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
-import { useTrialBalanceTableColumns } from './components';
-
+import { useTrialBalanceSheetTableColumns } from './hooks';
 
 /**
  * Trial Balance sheet data table.
@@ -17,12 +16,12 @@ import { useTrialBalanceTableColumns } from './components';
 export default function TrialBalanceSheetTable({ companyName }) {
   // Trial balance sheet context.
   const {
-    trialBalanceSheet: { tableRows, query },
+    trialBalanceSheet: { table, query },
     isLoading,
   } = useTrialBalanceSheetContext();
 
   // Trial balance sheet table columns.
-  const columns = useTrialBalanceTableColumns();
+  const columns = useTrialBalanceSheetTableColumns();
 
   return (
     <FinancialSheet
@@ -36,7 +35,7 @@ export default function TrialBalanceSheetTable({ companyName }) {
     >
       <TrialBalanceDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
@@ -59,7 +58,7 @@ const TrialBalanceDataTable = styled(ReportDataTable)`
       .balance.td {
         border-top-color: #000;
       }
-      .tr.row_type--total .td {
+      .tr.row_type--TOTAL .td {
         border-top: 1px solid #bbb;
         font-weight: 500;
         border-bottom: 3px double #000;

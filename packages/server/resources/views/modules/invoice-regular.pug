@@ -22,12 +22,12 @@ block content
 
   div.invoice__due-amount
     div.label #{__('invoice.paper.invoice_amount')}
-    div.amount #{saleInvoice.formattedAmount}
+    div.amount #{saleInvoice.totalFormatted}
 
   div.invoice__meta
    div.invoice__meta-item.invoice__meta-item--amount
     span.label #{__('invoice.paper.due_amount')}
-    span.value #{saleInvoice.formattedDueAmount}
+    span.value #{saleInvoice.dueAmountFormatted}
 
    div.invoice__meta-item.invoice__meta-item--billed-to
     span.label #{__("invoice.paper.billed_to")}
@@ -35,11 +35,11 @@ block content
 
    div.invoice__meta-item.invoice__meta-item--invoice-date
     span.label #{__("invoice.paper.invoice_date")}
-    span.value #{saleInvoice.formattedInvoiceDate}
+    span.value #{saleInvoice.invoiceDateFormatted}
 
    div.invoice__meta-item.invoice__meta-item--due-date
     span.label #{__("invoice.paper.due_date")}
-    span.value #{saleInvoice.formattedDueDate}
+    span.value #{saleInvoice.dueDateFormatted}
 
   div.invoice__table
    table 
@@ -63,15 +63,22 @@ block content
     div.invoice__table-total
       table 
         tbody
+          tr.subtotal
+            td #{__('invoice.paper.subtotal')}
+            td #{saleInvoice.subtotalFormatted}
+          each tax in saleInvoice.taxes
+            tr.tax_line 
+              td #{tax.name} [#{tax.taxRate}%]
+              td #{tax.taxRateAmountFormatted}
           tr.total
             td #{__('invoice.paper.total')}
-            td #{saleInvoice.formattedAmount}
+            td #{saleInvoice.totalFormatted}
           tr.payment-amount
             td #{__('invoice.paper.payment_amount')}
-            td #{saleInvoice.formattedPaymentAmount}
+            td #{saleInvoice.paymentAmountFormatted}
           tr.blanace-due
             td #{__('invoice.paper.balance_due')}
-            td #{saleInvoice.formattedDueAmount}
+            td #{saleInvoice.dueAmountFormatted}
 
   div.invoice__footer        
     if saleInvoice.termsConditions

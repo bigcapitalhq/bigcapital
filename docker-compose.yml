@@ -47,6 +47,11 @@ services:
       restart_policy:
         condition: unless-stopped
 
+  gotenberg:
+    image: gotenberg/gotenberg:7
+    ports:
+      - "9000:3000"
+
 # Volumes
 volumes:
   mysql:

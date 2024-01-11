@@ -306,3 +306,34 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
     },
   );
 }
+
+export function useSendSaleInvoiceMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useSaleInvoiceDefaultOptions(invoiceId, props) {
+  return useRequestQuery(
+    [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
+    {
+      method: 'get',
+      url: `sales/invoices/${invoiceId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
+      ...props,
+    },
+  );
+}
+

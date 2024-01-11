@@ -139,11 +139,4 @@ export default class TransactionsByCustomers extends TransactionsByContact {
   public reportData(): ITransactionsByCustomersData {
     return this.customersMapper(this.customers);
   }
-
-  /**
-   * Retrieve the report columns.
-   */
-  public reportColumns() {
-    return [];
-  }
 }

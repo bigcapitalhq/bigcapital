@@ -1,4 +1,5 @@
 import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface ITrialBalanceSheetQuery {
   fromDate: Date | string;
@@ -33,6 +34,7 @@ export interface ITrialBalanceAccount extends ITrialBalanceTotal {
   id: number;
   parentAccountId: number;
   name: string;
+  formattedName: string;
   code: string;
   accountNormal: string;
 }
@@ -46,4 +48,9 @@ export interface ITrialBalanceStatement {
   data: ITrialBalanceSheetData;
   query: ITrialBalanceSheetQuery;
   meta: ITrialBalanceSheetMeta;
+}
+
+export interface ITrialBalanceSheetTable extends IFinancialTable {
+  meta: ITrialBalanceSheetMeta;
+  query: ITrialBalanceSheetQuery;
 }

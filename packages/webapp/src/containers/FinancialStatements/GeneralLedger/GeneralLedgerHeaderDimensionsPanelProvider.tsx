@@ -10,7 +10,7 @@ const GeneralLedgerHeaderDimensionsPanelContext = React.createContext();
 
 /**
  * General Ledger Header Dimensions Panel provider.
- * @returns
+ * @returns {JSX.Element}
  */
 function GeneralLedgerHeaderDimensionsPanelProvider({ query, ...props }) {
   // Features guard.

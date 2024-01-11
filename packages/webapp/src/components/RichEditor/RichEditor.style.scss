@@ -1,0 +1,66 @@
+/* Basic editor styles */
+.tiptap {
+  color: #222;
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  >*+* {
+    margin-top: 0.75em;
+  }
+
+  ul,
+  ol {
+    padding: 0 1rem;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    line-height: 1.1;
+  }
+
+  code {
+    background: rgba(#ffffff, 0.1);
+    color: rgba(#ffffff, 0.6);
+    border: 1px solid rgba(#ffffff, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.2rem;
+  }
+
+  pre {
+    background: rgba(#ffffff, 0.1);
+    font-family: "JetBrainsMono", monospace;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+
+    code {
+      color: inherit;
+      padding: 0;
+      background: none;
+      font-size: 0.8rem;
+      border: none;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  blockquote {
+    margin-left: 0;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(#ffffff, 0.4);
+
+    hr {
+      border: none;
+      border-top: 2px solid rgba(#ffffff, 0.1);
+      margin: 2rem 0;
+    }
+  }
+}

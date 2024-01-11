@@ -1,5 +1,5 @@
+import { Knex } from 'knex';
 import { Ability, RawRuleOf, ForcedSubject } from '@casl/ability';
-import Knex from 'knex';
 
 export const actions = [
   'manage',
@@ -96,7 +96,8 @@ export enum AbilitySubject {
   Preferences = 'Preferences',
   CreditNote = 'CreditNode',
   VendorCredit = 'VendorCredit',
-  Project = 'Project'
+  Project = 'Project',
+  TaxRate = 'TaxRate'
 }
 
 export interface IRoleCreatedPayload {

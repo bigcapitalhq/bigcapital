@@ -30,13 +30,13 @@ export default function useApiRequest() {
         const locale = currentLocale;
 
         if (token) {
-          request.headers.common['X-Access-Token'] = token;
+          request.headers['X-Access-Token'] = token;
         }
         if (organizationId) {
-          request.headers.common['organization-id'] = organizationId;
+          request.headers['organization-id'] = organizationId;
         }
         if (locale) {
-          request.headers.common['Accept-Language'] = locale;
+          request.headers['Accept-Language'] = locale;
         }
         return request;
       },

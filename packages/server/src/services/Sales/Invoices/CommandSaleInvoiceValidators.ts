@@ -21,6 +21,9 @@ export class CommandSaleInvoiceValidators {
 
   /**
    * Validate whether sale invoice number unqiue on the storage.
+   * @param {number} tenantId -
+   * @param {string} invoiceNumber -
+   * @param {number} notInvoiceId -
    */
   public async validateInvoiceNumberUnique(
     tenantId: number,

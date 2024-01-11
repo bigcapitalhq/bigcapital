@@ -176,6 +176,7 @@
   "invoice.paper.conditions_title": "Conditions & terms",
   "invoice.paper.notes_title": "Notes",
   "invoice.paper.total": "Total",
+  "invoice.paper.subtotal": "Subtotal", 
   "invoice.paper.payment_amount": "Payment Amount",
   "invoice.paper.balance_due": "Balance Due",
 
@@ -587,6 +588,7 @@
   "balance_sheet.long_term_liabilities": "Long-Term Liabilities",
   "balance_sheet.non_current_liabilities": "Non-Current Liabilities",
   "balance_sheet.equity": "Equity",
+  "balance_sheet.net_income": "Net Income",
 
   "balance_sheet.account_name": "Account name",
   "balance_sheet.total": "Total",

@@ -1,7 +1,7 @@
-import { Service } from 'typedi';
 import { ISaleEstimate } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
 
 export class SaleEstimateTransfromer extends Transformer {
   /**
@@ -16,6 +16,7 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedDeliveredAtDate',
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
+      'entries',
     ];
   };
 
@@ -71,6 +72,17 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   protected formattedAmount = (estimate: ISaleEstimate): string => {
     return formatNumber(estimate.amount, {
+      currencyCode: estimate.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the sale estimate.
+   * @param {ISaleEstimate} estimate
+   * @returns {}
+   */
+  protected entries = (estimate) => {
+    return this.item(estimate.entries, new ItemEntryTransformer(), {
       currencyCode: estimate.currencyCode,
     });
   };

@@ -31,7 +31,7 @@ export default function VendorsBalanceSummaryTable({
     >
       <VendorBalanceDataTable
         columns={columns}
-        data={table.data}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}

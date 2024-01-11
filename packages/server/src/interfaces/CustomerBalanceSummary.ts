@@ -1,11 +1,10 @@
-import { INumberFormatQuery } from './FinancialStatements';
-
 import {
   IContactBalanceSummaryQuery,
   IContactBalanceSummaryAmount,
   IContactBalanceSummaryPercentage,
   IContactBalanceSummaryTotal,
 } from './ContactBalanceSummary';
+import { IFinancialTable } from './Table';
 
 export interface ICustomerBalanceSummaryQuery
   extends IContactBalanceSummaryQuery {
@@ -19,7 +18,7 @@ export interface ICustomerBalanceSummaryPercentage
   extends IContactBalanceSummaryPercentage {}
 
 export interface ICustomerBalanceSummaryCustomer {
-  id: number,
+  id: number;
   customerName: string;
   total: ICustomerBalanceSummaryAmount;
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
@@ -46,4 +45,8 @@ export interface ICustomerBalanceSummaryService {
     tenantId: number,
     query: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryStatement>;
+}
+
+export interface ICustomerBalanceSummaryTable extends IFinancialTable {
+  query: ICustomerBalanceSummaryQuery;
 }

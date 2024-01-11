@@ -58,6 +58,7 @@ module.exports = {
     secure: !!parseInt(process.env.MAIL_SECURE, 10),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
+    from: process.env.MAIL_FROM_ADDRESS,
   },
 
   /**

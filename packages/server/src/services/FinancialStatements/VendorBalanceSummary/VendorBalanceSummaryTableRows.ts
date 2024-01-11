@@ -15,7 +15,7 @@ enum TABLE_ROWS_TYPES {
   TOTAL = 'TOTAL',
 }
 
-export default class VendorBalanceSummaryTable {
+export class VendorBalanceSummaryTable {
   i18n: any;
   report: IVendorBalanceSummaryData;
   query: IVendorBalanceSummaryQuery;

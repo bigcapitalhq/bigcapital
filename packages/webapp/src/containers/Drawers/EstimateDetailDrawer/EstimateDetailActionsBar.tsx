@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -22,10 +21,12 @@ import {
   Icon,
   FormattedMessage as T,
   Can,
+  Choose,
 } from '@/components';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -51,7 +52,6 @@ function EstimateDetailActionsBar({
     history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
-
   // Handle delete sale estimate.
   const handleDeleteEstimate = () => {
     openAlert('estimate-delete', { estimateId });
@@ -64,6 +64,10 @@ function EstimateDetailActionsBar({
   // Handle notify via SMS.
   const handleNotifyViaSMS = () => {
     openDialog('notify-estimate-via-sms', { estimateId });
+  };
+  // Handles the estimate mail dialog.
+  const handleMailEstimate = () => {
+    openDialog(DialogsName.EstimateMail, { estimateId });
   };
 
   return (
@@ -78,13 +82,21 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
+
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="envelope" />}
+            text={'Send Mail'}
+            onClick={handleMailEstimate}
+          />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintEstimate}
           />
+          <NavbarDivider />
         </Can>
         <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
           <Button

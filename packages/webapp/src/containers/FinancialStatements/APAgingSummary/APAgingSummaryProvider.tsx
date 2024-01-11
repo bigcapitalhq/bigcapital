@@ -27,6 +27,7 @@ function APAgingSummaryProvider({ filter, ...props }) {
     isAPAgingLoading,
     isAPAgingFetching,
     refetch,
+    query,
   };
 
   return (

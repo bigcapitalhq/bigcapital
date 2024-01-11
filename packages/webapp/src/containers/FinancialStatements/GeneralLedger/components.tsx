@@ -1,107 +1,31 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
-import { FormattedMessage as T, Icon, If } from '@/components';
+import React, { useRef } from 'react';
+import classNames from 'classnames';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import {
+  FormattedMessage as T,
+  Icon,
+  If,
+  Stack,
+  AppToaster,
+} from '@/components';
 
-import { getColumnWidth } from '@/utils';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { FinancialComputeAlert } from '../FinancialReportPage';
-import { Align } from '@/constants';
-
-/**
- * Retrieve the general ledger table columns.
- */
-export function useGeneralLedgerTableColumns() {
-  // General ledger context.
-  const {
-    generalLedger: { tableRows },
-  } = useGeneralLedgerContext();
-
-  return React.useMemo(
-    () => [
-      {
-        Header: intl.get('date'),
-        accessor: 'date',
-        className: 'date',
-        width: 120,
-      },
-      {
-        Header: intl.get('account_name'),
-        accessor: 'name',
-        className: 'name',
-        textOverview: true,
-      },
-      {
-        Header: intl.get('transaction_type'),
-        accessor: 'reference_type_formatted',
-        className: 'transaction_type',
-        width: 125,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('transaction_number'),
-        accessor: 'reference_id',
-        className: 'transaction_number',
-        width: 100,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('description'),
-        accessor: 'note',
-        className: 'description',
-        textOverview: true,
-      },
-      {
-        Header: intl.get('credit'),
-        accessor: 'formatted_credit',
-        className: 'credit',
-        width: getColumnWidth(tableRows, 'formatted_credit', {
-          minWidth: 100,
-          magicSpacing: 10,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('debit'),
-        accessor: 'formatted_debit',
-        className: 'debit',
-        width: getColumnWidth(tableRows, 'formatted_debit', {
-          minWidth: 100,
-          magicSpacing: 10,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('amount'),
-        accessor: 'formatted_amount',
-        className: 'amount',
-        width: getColumnWidth(tableRows, 'formatted_amount', {
-          minWidth: 100,
-          magicSpacing: 10,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('running_balance'),
-        accessor: 'formatted_running_balance',
-        className: 'running_balance',
-        width: getColumnWidth(tableRows, 'formatted_running_balance', {
-          minWidth: 100,
-          magicSpacing: 10,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-    ],
-    [tableRows],
-  );
-}
+import {
+  useGeneralLedgerSheetCsvExport,
+  useGeneralLedgerSheetXlsxExport,
+} from '@/hooks/query';
 
 /**
  * General ledger sheet alerts.
@@ -144,3 +68,93 @@ export function GeneralLedgerSheetLoadingBar() {
     </If>
   );
 }
+
+/**
+ * Renders the G/L sheet export menu.
+ * @returns {JSX.Element}
+ */
+export const GeneralLedgerSheetExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const { httpRequest } = useGeneralLedgerContext();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useGeneralLedgerSheetXlsxExport(
+    httpRequest,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
+    },
+  );
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useGeneralLedgerSheetCsvExport(
+    httpRequest,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
+    },
+  );
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

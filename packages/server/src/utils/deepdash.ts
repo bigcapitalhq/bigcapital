@@ -41,10 +41,10 @@ const mapValuesDeepReverse = (nodes, callback, config?) => {
     );
     const mappedNode = callback(node, children);
 
-    _.set(clonedNodes, pathString, {
-      ...mappedNode,
-      ...(!_.isEmpty(children) ? { children } : {}),
-    });
+    if (!mappedNode.children && children) {
+      mappedNode.children = children;
+    }
+    _.set(clonedNodes, pathString, mappedNode);
   });
   return clonedNodes;
 };
@@ -78,6 +78,27 @@ const filterNodesDeep = (predicate, nodes) => {
   );
 };
 
+const flatNestedTree = (obj, mapper, options) => {
+  return reduceDeep(
+    obj,
+    (accumulator, value, key, parentValue, context) => {
+      const computedValue = _.omit(value, ['children']);
+      const mappedValue = mapper
+        ? mapper(computedValue, key, context)
+        : computedValue;
+
+      accumulator.push(mappedValue);
+      return accumulator;
+    },
+    [],
+    {
+      childrenPath: 'children',
+      pathFormat: 'array',
+      ...options,
+    }
+  );
+};
+
 export {
   iteratee,
   condense,
@@ -103,4 +124,5 @@ export {
   someDeep,
   mapValuesDeepReverse,
   filterNodesDeep,
+  flatNestedTree,
 };

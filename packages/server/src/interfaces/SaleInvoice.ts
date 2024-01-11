@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
+import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 
@@ -185,4 +186,18 @@ export enum SaleInvoiceAction {
   View = 'View',
   Writeoff = 'Writeoff',
   NotifyBySms = 'NotifyBySms',
+}
+
+export interface SaleInvoiceMailOptions extends CommonMailOptions {
+  attachInvoice: boolean;
+}
+
+export interface SendInvoiceMailDTO extends CommonMailOptionsDTO {
+  attachInvoice?: boolean;
+}
+
+export interface ISaleInvoiceNotifyPayload {
+  tenantId: number;
+  saleInvoiceId: number;
+  messageDTO: SendInvoiceMailDTO;
 }

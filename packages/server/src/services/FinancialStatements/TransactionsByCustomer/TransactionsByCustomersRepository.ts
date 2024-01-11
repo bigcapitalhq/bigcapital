@@ -1,16 +1,16 @@
+import { Inject } from 'typedi';
 import { isEmpty, map } from 'lodash';
 import { IAccount, IAccountTransaction } from '@/interfaces';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject } from 'typedi';
 
 export default class TransactionsByCustomersRepository {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Retrieve the report customers.
-   * @param {number} tenantId 
+   * @param {number} tenantId
    * @returns {Promise<ICustomer[]>}
    */
   public async getCustomers(tenantId: number, customersIds?: number[]) {

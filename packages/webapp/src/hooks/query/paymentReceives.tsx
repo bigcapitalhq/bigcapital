@@ -234,3 +234,34 @@ export function usePaymentReceiveSMSDetail(
 export function usePdfPaymentReceive(paymentReceiveId) {
   return useRequestPdf(`sales/payment_receives/${paymentReceiveId}`);
 }
+
+export function useSendPaymentReceiveMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/payment_receives/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {
+  return useRequestQuery(
+    [t.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
+    {
+      method: 'get',
+      url: `sales/payment_receives/${paymentReceiveId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
+      ...props,
+    },
+  );
+}

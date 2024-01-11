@@ -333,8 +333,8 @@ export const useInvoiceAggregatedTaxRates = () => {
   const { taxRates } = useInvoiceFormContext();
 
   const aggregateTaxRates = React.useMemo(
-    () => aggregateItemEntriesTaxRates(taxRates),
-    [taxRates],
+    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
+    [values.currency_code, taxRates],
   );
   // Calculate the total tax amount of invoice entries.
   return React.useMemo(() => {

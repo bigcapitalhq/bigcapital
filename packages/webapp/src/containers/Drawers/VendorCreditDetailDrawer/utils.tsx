@@ -61,9 +61,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('rate'),
-        accessor: 'rate',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'rate', {
+        accessor: 'rate_formatted',
+        width: getColumnWidth(entries, 'rate_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -73,9 +72,8 @@ export const useVendorCreditReadonlyEntriesTableColumns = () => {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'amount',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'amount', {
+        accessor: 'total_formatted',
+        width: getColumnWidth(entries, 'total_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

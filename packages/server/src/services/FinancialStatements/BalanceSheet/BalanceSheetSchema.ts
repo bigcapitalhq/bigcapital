@@ -7,12 +7,11 @@ import {
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { FinancialSchema } from '../FinancialSchema';
 
-
 export const BalanceSheetSchema = (Base) =>
   class extends R.compose(FinancialSchema)(Base) {
     /**
      * Retrieves the balance sheet schema.
-     * @returns 
+     * @returns
      */
     getSchema = () => {
       return getBalanceSheetSchema();
@@ -115,6 +114,13 @@ export const getBalanceSheetSchema = () => [
         id: BALANCE_SHEET_SCHEMA_NODE_ID.EQUITY,
         type: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS,
         accountsTypes: [ACCOUNT_TYPE.EQUITY],
+        children: [
+          {
+            name: 'balance_sheet.net_income',
+            id: BALANCE_SHEET_SCHEMA_NODE_ID.NET_INCOME,
+            type: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME,
+          },
+        ],
       },
     ],
     alwaysShow: true,

@@ -7,18 +7,25 @@ export interface ILedger {
   filter(cb: (entry: ILedgerEntry) => boolean): ILedger;
 
   whereAccountId(accountId: number): ILedger;
+  whereAccountsIds(accountsIds: number[]): ILedger;
   whereContactId(contactId: number): ILedger;
   whereFromDate(fromDate: Date | string): ILedger;
   whereToDate(toDate: Date | string): ILedger;
   whereCurrencyCode(currencyCode: string): ILedger;
   whereBranch(branchId: number): ILedger;
   whereItem(itemId: number): ILedger;
+  whereProject(projectId: number): ILedger;
 
   getClosingBalance(): number;
   getForeignClosingBalance(): number;
+  getClosingDebit(): number;
+  getClosingCredit(): number;
 
   getContactsIds(): number[];
   getAccountsIds(): number[];
+
+  reverse(): ILedger;
+  isEmpty(): boolean;
 }
 
 export interface ILedgerEntry {

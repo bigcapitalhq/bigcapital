@@ -1,29 +1,21 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query } from 'express-validator';
 import { Inject } from 'typedi';
-import {
-  AbilitySubject,
-  ICustomerBalanceSummaryStatement,
-  ReportsAction,
-} from '@/interfaces';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import CustomerBalanceSummary from '@/services/FinancialStatements/CustomerBalanceSummary/CustomerBalanceSummaryService';
 import BaseFinancialReportController from '../BaseFinancialReportController';
-import CustomerBalanceSummaryTableRows from '@/services/FinancialStatements/CustomerBalanceSummary/CustomerBalanceSummaryTableRows';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { CustomerBalanceSummaryApplication } from '@/services/FinancialStatements/CustomerBalanceSummary/CustomerBalanceSummaryApplication';
 
 export default class CustomerBalanceSummaryReportController extends BaseFinancialReportController {
   @Inject()
-  customerBalanceSummaryService: CustomerBalanceSummary;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private customerBalanceSummaryApp: CustomerBalanceSummaryApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -42,7 +34,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   /**
    * Validation schema.
    */
-  get validationSchema() {
+  private get validationSchema() {
     return [
       ...this.sheetNumberFormatValidationSchema,
 
@@ -63,74 +55,66 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
   }
 
   /**
-   * Transformes the balance summary statement to table rows.
-   * @param {ICustomerBalanceSummaryStatement} statement -
-   */
-  private transformToTableRows(
-    tenantId,
-    { data, query }: ICustomerBalanceSummaryStatement
-  ) {
-    const i18n = this.tenancy.i18n(tenantId);
-    const tableRows = new CustomerBalanceSummaryTableRows(data, query, i18n);
-
-    return {
-      table: {
-        columns: tableRows.tableColumns(),
-        data: tableRows.tableRows(),
-      },
-      query: this.transfromToResponse(query),
-    };
-  }
-
-  /**
-   * Transformes the balance summary statement to raw json.
-   * @param {ICustomerBalanceSummaryStatement} customerBalance -
-   */
-  private transformToJsonResponse({
-    data,
-    columns,
-    query,
-  }: ICustomerBalanceSummaryStatement) {
-    return {
-      data: this.transfromToResponse(data),
-      columns: this.transfromToResponse(columns),
-      query: this.transfromToResponse(query),
-    };
-  }
-
-  /**
    * Retrieve payable aging summary report.
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async customerBalanceSummary(
+  private async customerBalanceSummary(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
-    const { tenantId, settings } = req;
+    const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
     try {
-      const customerBalanceSummary =
-        await this.customerBalanceSummaryService.customerBalanceSummary(
+      const accept = this.accepts(req);
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
+
+      // Retrieves the xlsx format.
+      if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+        const buffer = await this.customerBalanceSummaryApp.xlsx(
           tenantId,
           filter
         );
-      const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieves the csv format.
+      } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+        const buffer = await this.customerBalanceSummaryApp.csv(
+          tenantId,
+          filter
+        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
 
-      switch (acceptType) {
-        case 'application/json+table':
-          return res
-            .status(200)
-            .send(this.transformToTableRows(tenantId, customerBalanceSummary));
-        case 'application/json':
-        default:
-          return res
-            .status(200)
-            .send(this.transformToJsonResponse(customerBalanceSummary));
+        return res.send(buffer);
+        // Retrieves the json table format.
+      } else if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+        const table = await this.customerBalanceSummaryApp.table(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(table);
+      } else {
+        const sheet = await this.customerBalanceSummaryApp.sheet(
+          tenantId,
+          filter
+        );
+        return res.status(200).send(sheet);
       }
     } catch (error) {
       next(error);

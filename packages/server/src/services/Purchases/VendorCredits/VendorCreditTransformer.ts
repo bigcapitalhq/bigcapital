@@ -1,4 +1,6 @@
+import { IVendorCredit } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { formatNumber } from 'utils';
 
 export class VendorCreditTransformer extends Transformer {
@@ -8,9 +10,10 @@ export class VendorCreditTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
-      'formattedVendorCreditDate',
       'formattedAmount',
+      'formattedVendorCreditDate',
       'formattedCreditsRemaining',
+      'entries',
     ];
   };
 
@@ -42,6 +45,17 @@ export class VendorCreditTransformer extends Transformer {
   protected formattedCreditsRemaining = (credit) => {
     return formatNumber(credit.creditsRemaining, {
       currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the bill.
+   * @param {IVendorCredit} vendorCredit
+   * @returns {}
+   */
+  protected entries = (vendorCredit) => {
+    return this.item(vendorCredit.entries, new ItemEntryTransformer(), {
+      currencyCode: vendorCredit.currencyCode,
     });
   };
 }

@@ -1,3 +1,4 @@
+import { IFinancialTable } from "./Table";
 
 
 export interface IGeneralLedgerSheetQuery {
@@ -36,6 +37,7 @@ export interface IGeneralLedgerSheetAccountTransaction {
   referenceType?: string,
 
   date: Date|string,
+  dateFormatted: string;
 };
 
 export interface IGeneralLedgerSheetAccountBalance {
@@ -55,6 +57,8 @@ export interface IGeneralLedgerSheetAccount {
   openingBalance: IGeneralLedgerSheetAccountBalance,
   closingBalance: IGeneralLedgerSheetAccountBalance,
 }
+
+export type IGeneralLedgerSheetData = IGeneralLedgerSheetAccount[];
 
 export interface IAccountTransaction {
   id: number,
@@ -78,4 +82,11 @@ export interface IGeneralLedgerMeta {
   isCostComputeRunning: boolean,
   organizationName: string,
   baseCurrency: string,
+  fromDate: string;
+  toDate: string;
 };
+
+export interface IGeneralLedgerTableData extends IFinancialTable {
+  meta: IGeneralLedgerMeta;
+  query: IGeneralLedgerSheetQuery;
+}

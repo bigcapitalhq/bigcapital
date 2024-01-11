@@ -60,6 +60,33 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "kochie",
+      "name": "Robert Koch",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10809884?v=4",
+      "profile": "https://me.kochie.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "cschuijt",
+      "name": "Casper Schuijt",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5460015?v=4",
+      "profile": "http://cschuijt.nl",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "ANasouf",
+      "name": "ANasouf",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19536487?v=4",
+      "profile": "https://github.com/ANasouf",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

@@ -1,5 +1,7 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { ItemEntryTransformer } from '../Sales/Invoices/ItemEntryTransformer';
+import { ICreditNote } from '@/interfaces';
 
 export class CreditNoteTransformer extends Transformer {
   /**
@@ -11,7 +13,8 @@ export class CreditNoteTransformer extends Transformer {
       'formattedCreditsRemaining',
       'formattedCreditNoteDate',
       'formattedAmount',
-      'formattedCreditsUsed'
+      'formattedCreditsUsed',
+      'entries',
     ];
   };
 
@@ -51,8 +54,19 @@ export class CreditNoteTransformer extends Transformer {
    * @param {ICreditNote} credit
    * @returns {string}
    */
-   protected formattedCreditsUsed = (credit) => {
+  protected formattedCreditsUsed = (credit) => {
     return formatNumber(credit.creditsUsed, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the credit note.
+   * @param {ICreditNote} credit
+   * @returns {}
+   */
+  protected entries = (credit) => {
+    return this.item(credit.entries, new ItemEntryTransformer(), {
       currencyCode: credit.currencyCode,
     });
   };

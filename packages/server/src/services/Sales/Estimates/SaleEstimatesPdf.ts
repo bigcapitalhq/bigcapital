@@ -1,36 +1,38 @@
 import { Inject, Service } from 'typedi';
-import PdfService from '@/services/PDF/PdfService';
-import { templateRender } from 'utils';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Tenant } from '@/system/models';
+import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
+import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
+import { GetSaleEstimate } from './GetSaleEstimate';
 
 @Service()
 export class SaleEstimatesPdf {
   @Inject()
-  private pdfService: PdfService;
+  private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  private tenancy: HasTenancyService;
+  private templateInjectable: TemplateInjectable;
+
+  @Inject()
+  private getSaleEstimate: GetSaleEstimate;
 
   /**
    * Retrieve sale invoice pdf content.
-   * @param {} saleInvoice -
+   * @param {number} tenantId -
+   * @param {ISaleInvoice} saleInvoice -
    */
-  async getSaleEstimatePdf(tenantId: number, saleEstimate) {
-    const i18n = this.tenancy.i18n(tenantId);
-
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
-
-    const htmlContent = templateRender('modules/estimate-regular', {
-      saleEstimate,
-      organizationName: organization.metadata.name,
-      organizationEmail: organization.metadata.email,
-      ...i18n,
+  public async getSaleEstimatePdf(tenantId: number, saleEstimateId: number) {
+    const saleEstimate = await this.getSaleEstimate.getEstimate(
+      tenantId,
+      saleEstimateId
+    );
+    const htmlContent = await this.templateInjectable.render(
+      tenantId,
+      'modules/estimate-regular',
+      {
+        saleEstimate,
+      }
+    );
+    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
     });
-    const pdfContent = await this.pdfService.pdfDocument(htmlContent);
-
-    return pdfContent;
   }
 }

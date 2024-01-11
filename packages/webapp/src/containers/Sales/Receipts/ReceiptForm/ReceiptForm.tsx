@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
@@ -45,6 +44,8 @@ function ReceiptForm({
   receiptNextNumber,
   receiptNumberPrefix,
   receiptAutoIncrement,
+  receiptTermsConditions,
+  receiptMessage,
   preferredDepositAccount,
 
   // #withCurrentOrganization
@@ -67,23 +68,21 @@ function ReceiptForm({
     receiptNextNumber,
   );
   // Initial values in create and edit mode.
-  const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(receipt)
-        ? { ...transformToEditForm(receipt) }
-        : {
-            ...defaultReceipt,
-            ...(receiptAutoIncrement && {
-              receipt_number: nextReceiptNumber,
-            }),
-            deposit_account_id: parseInt(preferredDepositAccount),
-            entries: orderingLinesIndexes(defaultReceipt.entries),
-            currency_code: base_currency,
+  const initialValues = {
+    ...(!isEmpty(receipt)
+      ? { ...transformToEditForm(receipt) }
+      : {
+          ...defaultReceipt,
+          ...(receiptAutoIncrement && {
+            receipt_number: nextReceiptNumber,
           }),
-    }),
-    [receipt, preferredDepositAccount, nextReceiptNumber, receiptAutoIncrement],
-  );
-
+          deposit_account_id: parseInt(preferredDepositAccount),
+          entries: orderingLinesIndexes(defaultReceipt.entries),
+          currency_code: base_currency,
+          receipt_message: receiptMessage,
+          terms_conditions: receiptTermsConditions,
+        }),
+  };
   // Handle the form submit.
   const handleFormSubmit = (
     values,
@@ -184,6 +183,8 @@ export default compose(
     receiptNextNumber: receiptSettings?.nextNumber,
     receiptNumberPrefix: receiptSettings?.numberPrefix,
     receiptAutoIncrement: receiptSettings?.autoIncrement,
+    receiptMessage: receiptSettings?.receiptMessage,
+    receiptTermsConditions: receiptSettings?.termsConditions,
     preferredDepositAccount: receiptSettings?.preferredDepositAccount,
   })),
   withCurrentOrganization(),

@@ -60,9 +60,8 @@ const CashflowStatementDataTable = styled(DataTable)`
           border-bottom: 0;
           padding-top: 0.32rem;
           padding-bottom: 0.32rem;
+          color: #252a31;
         }
-
-        // &.row-type--AGGREGATE,
         &.row_type--ACCOUNTS {
           border-top: 1px solid #bbb;
         }
@@ -72,6 +71,9 @@ const CashflowStatementDataTable = styled(DataTable)`
         &.row_type--TOTAL {
           font-weight: 500;
 
+          .td {
+            color: #000;
+          }
           &:not(:first-child) .td {
             border-top: 1px solid #bbb;
           }

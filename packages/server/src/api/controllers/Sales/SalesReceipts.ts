@@ -1,9 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '../BaseController';
-import { ISaleReceiptDTO } from '@/interfaces/SaleReceipt';
+import { ISaleReceiptDTO, SaleReceiptMailOpts, SaleReceiptMailOptsDTO } from '@/interfaces/SaleReceipt';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
@@ -44,6 +44,29 @@ export default class SalesReceiptsController extends BaseController {
       CheckPolicies(SaleReceiptAction.NotifyBySms, AbilitySubject.SaleReceipt),
       [param('id').exists().isInt().toInt()],
       this.saleReceiptSmsDetails,
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.specificReceiptValidationSchema,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_receipt').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleReceiptMail.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [
+        ...this.specificReceiptValidationSchema,
+      ],
+      this.validationResult,
+      asyncMiddleware(this.getSaleReceiptMail.bind(this)),
       this.handleServiceErrors
     );
     router.post(
@@ -117,7 +140,7 @@ export default class SalesReceiptsController extends BaseController {
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.rate').exists().isNumeric().toInt(),
+      check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
@@ -314,26 +337,24 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  public async getSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { id: saleReceiptId } = req.params;
     const { tenantId } = req;
 
     try {
-      const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
-        tenantId,
-        saleReceiptId
-      );
       res.format({
-        'application/json': () => {
-          return res
-            .status(200)
-            .send(this.transfromToResponse({ saleReceipt }));
+        'application/json': async () => {
+          const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
+            tenantId,
+            saleReceiptId
+          );
+          return res.status(200).send({ saleReceipt });
         },
         'application/pdf': async () => {
           const pdfContent =
             await this.saleReceiptsApplication.getSaleReceiptPdf(
               tenantId,
-              saleReceipt
+              saleReceiptId
             );
           res.set({
             'Content-Type': 'application/pdf',
@@ -400,6 +421,64 @@ export default class SalesReceiptsController extends BaseController {
       return res.status(200).send({
         data: smsDetails,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Sends mail notification of the given sale receipt.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public sendSaleReceiptMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: receiptId } = req.params;
+    const receiptMailDTO: SaleReceiptMailOptsDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
+
+    try {
+      await this.saleReceiptsApplication.sendSaleReceiptMail(
+        tenantId,
+        receiptId,
+        receiptMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message:
+          'The sale receipt notification via sms has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given sale receipt.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getSaleReceiptMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: receiptId } = req.params;
+
+    try {
+      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
+        tenantId,
+        receiptId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

@@ -29,7 +29,7 @@ enum INodeTypes {
   CLOSING_ENTRY = 'CLOSING_ENTRY',
 }
 
-export default class InventoryDetails extends FinancialSheet {
+export class InventoryDetails extends FinancialSheet {
   readonly inventoryTransactionsByItemId: Map<number, IInventoryTransaction[]>;
   readonly openingBalanceTransactions: Map<number, IInventoryTransaction>;
   readonly query: IInventoryDetailsQuery;

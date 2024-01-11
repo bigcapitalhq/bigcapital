@@ -1,5 +1,9 @@
 import { Knex } from 'knex';
-import { ISystemUser } from '@/interfaces';
+import {
+  CommonMailOptions,
+  CommonMailOptionsDTO,
+  ISystemUser,
+} from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { ISaleInvoice } from './SaleInvoice';
 
@@ -19,7 +23,7 @@ export interface IPaymentReceive {
   createdAt: Date;
   updatedAt: Date;
   localAmount?: number;
-  branchId?: number
+  branchId?: number;
 }
 export interface IPaymentReceiveCreateDTO {
   customerId: number;
@@ -165,3 +169,7 @@ export type IPaymentReceiveGLCommonEntry = Pick<
   | 'createdAt'
   | 'branchId'
 >;
+
+export interface PaymentReceiveMailOpts extends CommonMailOptions {}
+
+export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}

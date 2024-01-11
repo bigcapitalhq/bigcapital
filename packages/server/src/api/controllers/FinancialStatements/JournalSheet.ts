@@ -3,14 +3,15 @@ import { Request, Response, Router, NextFunction } from 'express';
 import { castArray } from 'lodash';
 import { query, oneOf } from 'express-validator';
 import BaseFinancialReportController from './BaseFinancialReportController';
-import JournalSheetService from '@/services/FinancialStatements/JournalSheet/JournalSheetService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { JournalSheetApplication } from '@/services/FinancialStatements/JournalSheet/JournalSheetApplication';
 
 @Service()
 export default class JournalSheetController extends BaseFinancialReportController {
   @Inject()
-  journalService: JournalSheetService;
+  private journalSheetApp: JournalSheetApplication;
 
   /**
    * Router constructor.
@@ -57,28 +58,49 @@ export default class JournalSheetController extends BaseFinancialReportControlle
    * @param {Request} req -
    * @param {Response} res -
    */
-  async journal(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
+  private async journal(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
     let filter = this.matchedQueryData(req);
 
     filter = {
       ...filter,
       accountsIds: castArray(filter.accountsIds),
     };
+    const accept = this.accepts(req);
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_CSV,
+    ]);
 
-    try {
-      const { data, query, meta } = await this.journalService.journalSheet(
-        tenantId,
-        filter
+    // Retrieves the json table format.
+    if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+      const table = await this.journalSheetApp.table(tenantId, filter);
+      return res.status(200).send(table);
+      // Retrieves the csv format.
+    } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+      const buffer = await this.journalSheetApp.csv(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the xlsx format.
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+      const buffer = await this.journalSheetApp.xlsx(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
+      return res.send(buffer);
+      // Retrieves the json format.
+    } else {
+      const sheet = await this.journalSheetApp.sheet(tenantId, filter);
 
-      return res.status(200).send({
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-        meta: this.transfromToResponse(meta),
-      });
-    } catch (error) {
-      next(error);
+      return res.status(200).send(sheet);
     }
   }
 }

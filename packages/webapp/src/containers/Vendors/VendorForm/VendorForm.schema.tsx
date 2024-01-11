@@ -22,7 +22,7 @@ const Schema = Yup.object().shape({
   billing_address_2: Yup.string().trim(),
   billing_address_city: Yup.string().trim(),
   billing_address_state: Yup.string().trim(),
-  billing_address_postcode: Yup.number().nullable(),
+  billing_address_postcode: Yup.string().nullable(),
   billing_address_phone: Yup.number(),
 
   shipping_address_country: Yup.string().trim(),
@@ -30,7 +30,7 @@ const Schema = Yup.object().shape({
   shipping_address_2: Yup.string().trim(),
   shipping_address_city: Yup.string().trim(),
   shipping_address_state: Yup.string().trim(),
-  shipping_address_postcode: Yup.number().nullable(),
+  shipping_address_postcode: Yup.string().nullable(),
   shipping_address_phone: Yup.number(),
 
   opening_balance: Yup.number().nullable(),

@@ -1,24 +1,25 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { IJournalReportQuery, IJournalSheetMeta } from '@/interfaces';
-
+import {
+  IJournalReportQuery,
+  IJournalSheet,
+  IJournalSheetMeta,
+  IJournalTableData,
+} from '@/interfaces';
 import JournalSheet from './JournalSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
 import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean, transformToMap } from 'utils';
 import { Tenant } from '@/system/models';
+import { parseBoolean, transformToMap } from 'utils';
 
 @Service()
-export default class JournalSheetService {
+export class JournalSheetService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  @Inject('logger')
-  logger: any;
+  private inventoryService: InventoryService;
 
   /**
    * Default journal sheet filter queyr.
@@ -67,9 +68,13 @@ export default class JournalSheetService {
   /**
    * Journal sheet.
    * @param {number} tenantId
-   * @param {IJournalSheetFilterQuery} query
+   * @param {IJournalReportQuery} query
+   * @returns {Promise<IJournalSheet>}
    */
-  async journalSheet(tenantId: number, query: IJournalReportQuery) {
+  async journalSheet(
+    tenantId: number,
+    query: IJournalReportQuery
+  ): Promise<IJournalSheet> {
     const i18n = this.tenancy.i18n(tenantId);
     const { accountRepository, transactionsRepository, contactRepository } =
       this.tenancy.repositories(tenantId);
@@ -80,11 +85,6 @@ export default class JournalSheetService {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[journal] trying to calculate the report.', {
-      tenantId,
-      filter,
-    });
-
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');

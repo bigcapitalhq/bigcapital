@@ -52,9 +52,8 @@ export const usePaymentMadeEntriesColumns = () => {
       },
       {
         Header: intl.get('payment_amount'),
-        accessor: 'payment_amount',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'payment_amount', {
+        accessor: 'payment_amount_formatted',
+        width: getColumnWidth(entries, 'payment_amount_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),

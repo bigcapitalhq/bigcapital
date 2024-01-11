@@ -64,6 +64,7 @@ export function ActionsMenu({
     onConvert,
     onViewDetails,
     onPrint,
+    onSendMail
   },
 }) {
   return (
@@ -129,6 +130,11 @@ export function ActionsMenu({
         </Choose>
       </Can>
       <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
+        <MenuItem
+          icon={<Icon icon={'envelope'} iconSize={16} />}
+          text={'Send Mail'}
+          onClick={safeCallback(onSendMail, original)}
+        />
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}

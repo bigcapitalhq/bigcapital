@@ -1,5 +1,6 @@
 import { IBill } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { SaleInvoiceTaxEntryTransformer } from '@/services/Sales/Invoices/SaleInvoiceTaxEntryTransformer';
 import { formatNumber } from 'utils';
 
@@ -23,6 +24,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
+      'entries',
     ];
   };
 
@@ -175,6 +177,17 @@ export class PurchaseInvoiceTransformer extends Transformer {
     return this.item(bill.taxes, new SaleInvoiceTaxEntryTransformer(), {
       subtotal: bill.subtotal,
       isInclusiveTax: bill.isInclusiveTax,
+      currencyCode: bill.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the bill.
+   * @param {Bill} credit
+   * @returns {}
+   */
+  protected entries = (bill) => {
+    return this.item(bill.entries, new ItemEntryTransformer(), {
       currencyCode: bill.currencyCode,
     });
   };

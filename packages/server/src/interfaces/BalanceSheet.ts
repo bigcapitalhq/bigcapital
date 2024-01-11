@@ -3,12 +3,14 @@ import {
   IFormatNumberSettings,
   IFinancialSheetBranchesQuery,
 } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
   AGGREGATE = 'AGGREGATE',
   ACCOUNTS = 'ACCOUNTS',
   ACCOUNT = 'ACCOUNT',
+  NET_INCOME = 'NET_INCOME',
 }
 
 export enum BALANCE_SHEET_NODE_TYPE {
@@ -33,6 +35,7 @@ export enum BALANCE_SHEET_SCHEMA_NODE_ID {
   LOGN_TERM_LIABILITY = 'LOGN_TERM_LIABILITY',
   NON_CURRENT_LIABILITY = 'NON_CURRENT_LIABILITY',
   EQUITY = 'EQUITY',
+  NET_INCOME = 'NET_INCOME',
 }
 
 // Balance sheet query.
@@ -87,7 +90,6 @@ export interface IBalanceSheetDOO {
   meta: IBalanceSheetMeta;
 }
 
-
 export interface IBalanceSheetCommonNode {
   total: IBalanceSheetTotal;
   horizontalTotals?: IBalanceSheetTotal[];
@@ -108,7 +110,7 @@ export interface IBalanceSheetAggregateNode extends IBalanceSheetCommonNode {
   id: string;
   name: string;
   nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE;
-  children?: (IBalanceSheetAggregateNode | IBalanceSheetAccountNode)[];
+  children?: IBalanceSheetDataNode[];
 }
 
 export interface IBalanceSheetTotal {
@@ -116,6 +118,13 @@ export interface IBalanceSheetTotal {
   formattedAmount: string;
   currencyCode: string;
   date?: string | Date;
+}
+
+export interface IBalanceSheetAccountsNode extends IBalanceSheetCommonNode {
+  id: number | string;
+  name: string;
+  nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS;
+  children: IBalanceSheetAccountNode[];
 }
 
 export interface IBalanceSheetAccountNode extends IBalanceSheetCommonNode {
@@ -128,7 +137,17 @@ export interface IBalanceSheetAccountNode extends IBalanceSheetCommonNode {
   children?: IBalanceSheetAccountNode[];
 }
 
-export type IBalanceSheetDataNode = IBalanceSheetAggregateNode;
+export interface IBalanceSheetNetIncomeNode extends IBalanceSheetCommonNode {
+  id: number;
+  name: string;
+  nodeType: BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME;
+}
+
+export type IBalanceSheetDataNode =
+  | IBalanceSheetAggregateNode
+  | IBalanceSheetAccountNode
+  | IBalanceSheetAccountsNode
+  | IBalanceSheetNetIncomeNode;
 
 export interface IBalanceSheetPercentageAmount {
   amount: number;
@@ -150,9 +169,16 @@ export interface IBalanceSheetSchemaAccountNode {
   accountsTypes: string[];
 }
 
+export interface IBalanceSheetSchemaNetIncomeNode {
+  id: string;
+  name: string;
+  type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
+}
+
 export type IBalanceSheetSchemaNode =
   | IBalanceSheetSchemaAccountNode
-  | IBalanceSheetSchemaAggregateNode;
+  | IBalanceSheetSchemaAggregateNode
+  | IBalanceSheetSchemaNetIncomeNode;
 
 export interface IBalanceSheetDatePeriods {
   assocAccountNodeDatePeriods(node): any;
@@ -189,4 +215,9 @@ export enum IAccountTransactionsGroupBy {
   Day = 'day',
   Month = 'month',
   Week = 'week',
+}
+
+export interface IBalanceSheetTable extends IFinancialTable {
+  meta: IBalanceSheetMeta;
+  query: IBalanceSheetQuery;
 }

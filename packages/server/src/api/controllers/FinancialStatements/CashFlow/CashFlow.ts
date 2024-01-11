@@ -8,29 +8,20 @@ import {
   ValidationChain,
 } from 'express';
 import BaseFinancialReportController from '../BaseFinancialReportController';
-import CashFlowStatementService from '@/services/FinancialStatements/CashFlow/CashFlowService';
-import {
-  ICashFlowStatementDOO,
-  ICashFlowStatement,
-  AbilitySubject,
-  ReportsAction,
-} from '@/interfaces';
-import CashFlowTable from '@/services/FinancialStatements/CashFlow/CashFlowTable';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { CashflowSheetApplication } from '@/services/FinancialStatements/CashFlow/CashflowSheetApplication';
 
 @Service()
 export default class CashFlowController extends BaseFinancialReportController {
   @Inject()
-  cashFlowService: CashFlowStatementService;
-
-  @Inject()
-  tenancy: HasTenancyService;
+  private cashflowSheetApp: CashflowSheetApplication;
 
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -47,7 +38,7 @@ export default class CashFlowController extends BaseFinancialReportController {
    * Balance sheet validation schecma.
    * @returns {ValidationChain[]}
    */
-  get cashflowValidationSchema(): ValidationChain[] {
+  private get cashflowValidationSchema(): ValidationChain[] {
     return [
       ...this.sheetNumberFormatValidationSchema,
       query('from_date').optional(),
@@ -68,67 +59,58 @@ export default class CashFlowController extends BaseFinancialReportController {
   }
 
   /**
-   * Retrieve the cashflow statment to json response.
-   * @param {ICashFlowStatement} cashFlow -
-   */
-  private transformJsonResponse(cashFlowDOO: ICashFlowStatementDOO) {
-    const { data, query, meta } = cashFlowDOO;
-
-    return {
-      data: this.transfromToResponse(data),
-      query: this.transfromToResponse(query),
-      meta: this.transfromToResponse(meta),
-    };
-  }
-
-  /**
-   * Transformes the report statement to table rows.
-   * @param {ITransactionsByVendorsStatement} statement -
-   */
-  private transformToTableRows(
-    cashFlowDOO: ICashFlowStatementDOO,
-    tenantId: number
-  ) {
-    const i18n = this.tenancy.i18n(tenantId);
-    const cashFlowTable = new CashFlowTable(cashFlowDOO, i18n);
-
-    return {
-      table: {
-        data: cashFlowTable.tableRows(),
-        columns: cashFlowTable.tableColumns(),
-      },
-      query: this.transfromToResponse(cashFlowDOO.query),
-      meta: this.transfromToResponse(cashFlowDOO.meta),
-    };
-  }
-
-  /**
    * Retrieve the cash flow statment.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
    * @returns {Response}
    */
-  async cashFlow(req: Request, res: Response, next: NextFunction) {
-    const { tenantId, settings } = req;
+  public async cashFlow(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
     const filter = {
       ...this.matchedQueryData(req),
     };
 
     try {
-      const cashFlow = await this.cashFlowService.cashFlow(tenantId, filter);
-
       const accept = this.accepts(req);
-      const acceptType = accept.types(['json', 'application/json+table']);
 
-      switch (acceptType) {
-        case 'application/json+table':
-          return res
-            .status(200)
-            .send(this.transformToTableRows(cashFlow, tenantId));
-        case 'json':
-        default:
-          return res.status(200).send(this.transformJsonResponse(cashFlow));
+      const acceptType = accept.types([
+        ACCEPT_TYPE.APPLICATION_JSON,
+        ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+        ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_XLSX,
+      ]);
+      // Retrieves the json table format.
+      if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+        const table = await this.cashflowSheetApp.table(tenantId, filter);
+
+        return res.status(200).send(table);
+        // Retrieves the csv format.
+      } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+        const buffer = await this.cashflowSheetApp.csv(tenantId, filter);
+
+        res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+        res.setHeader('Content-Type', 'text/csv');
+
+        return res.status(200).send(buffer);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+        const buffer = await this.cashflowSheetApp.xlsx(tenantId, filter);
+
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=output.xlsx'
+        );
+        res.setHeader(
+          'Content-Type',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        );
+        return res.send(buffer);
+        // Retrieves the json format.
+      } else {
+        const cashflow = await this.cashflowSheetApp.sheet(tenantId, filter);
+
+        return res.status(200).send(cashflow);
       }
     } catch (error) {
       next(error);

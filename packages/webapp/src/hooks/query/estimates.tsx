@@ -239,3 +239,33 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
     },
   );
 }
+
+export function useSendSaleEstimateMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useSaleEstimateDefaultOptions(estimateId, props) {
+  return useRequestQuery(
+    [t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
+    {
+      method: 'get',
+      url: `sales/estimates/${estimateId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
+      ...props,
+    },
+  );
+}

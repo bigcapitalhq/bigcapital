@@ -1,0 +1,22 @@
+tasks:
+  - name: Init
+    init: |
+      pnpm install &&
+      cp .env.example .env &&
+      docker-compose up -d &&
+      pnpm run build:server &&
+      node packages/server/build/commands.js system:migrate:latest
+    command: | 
+      docker-compose up -d &&
+      pnpm run dev
+
+ports:
+  - port: 4000
+    visibility: public
+    onOpen: open-preview
+  - port: 3000
+    visibility: public
+    onOpen: ignore
+  - port: 3306
+    visibility: public
+    onOpen: ignore

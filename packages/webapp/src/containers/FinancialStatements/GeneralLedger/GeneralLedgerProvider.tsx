@@ -29,6 +29,7 @@ function GeneralLedgerProvider({ query, ...props }) {
     sheetRefresh: refetch,
     isFetching,
     isLoading,
+    httpRequest: requestQuery
   };
   return (
     <FinancialReportPage name={'general-ledger-sheet'}>

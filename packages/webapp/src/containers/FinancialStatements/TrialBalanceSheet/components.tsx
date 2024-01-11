@@ -1,87 +1,30 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
-import { Button } from '@blueprintjs/core';
-
-import { Align } from '@/constants';
-import { getColumnWidth } from '@/utils';
-import { CellTextSpan } from '@/components/Datatable/Cells';
-import { If, Icon, FormattedMessage as T } from '@/components';
+import { useRef } from 'react';
+import {
+  Button,
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import classNames from 'classnames';
+import {
+  If,
+  Icon,
+  FormattedMessage as T,
+  Stack,
+  AppToaster,
+} from '@/components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-
-/**
- * Retrieves the credit column.
- */
-const getCreditColumn = (data) => {
-  const width = getColumnWidth(data, `credit`, { minWidth: 140 });
-
-  return {
-    Header: intl.get('credit'),
-    Cell: CellTextSpan,
-    accessor: 'formatted_credit',
-    className: 'credit',
-    width,
-    textOverview: true,
-    align: Align.Right,
-  };
-};
-
-/**
- * Retrieves the debit column.
- */
-const getDebitColumn = (data) => {
-  return {
-    Header: intl.get('debit'),
-    Cell: CellTextSpan,
-    accessor: 'formatted_debit',
-    width: getColumnWidth(data, `debit`, { minWidth: 140 }),
-    textOverview: true,
-    align: Align.Right,
-  };
-};
-
-/**
- * Retrieves the balance column.
- */
-const getBalanceColumn = (data) => {
-  return {
-    Header: intl.get('balance'),
-    Cell: CellTextSpan,
-    accessor: 'formatted_balance',
-    className: 'balance',
-    width: getColumnWidth(data, `balance`, { minWidth: 140 }),
-    textOverview: true,
-    align: Align.Right,
-  };
-};
-
-/**
- * Retrieve trial balance sheet table columns.
- */
-export const useTrialBalanceTableColumns = () => {
-  // Trial balance sheet context.
-  const {
-    trialBalanceSheet: { tableRows },
-  } = useTrialBalanceSheetContext();
-
-  return React.useMemo(
-    () => [
-      {
-        Header: intl.get('account_name'),
-        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
-        className: 'name',
-        width: 350,
-        textOverview: true,
-      },
-      getCreditColumn(tableRows),
-      getDebitColumn(tableRows),
-      getBalanceColumn(tableRows),
-    ],
-    [tableRows],
-  );
-};
+import {
+  useTrialBalanceSheetCsvExport,
+  useTrialBalanceSheetXlsxExport,
+} from '@/hooks/query';
+import { useTrialBalanceSheetHttpQuery } from './utils';
 
 /**
  * Trial balance sheet progress loading bar.
@@ -100,11 +43,8 @@ export function TrialBalanceSheetLoadingBar() {
  * Trial balance sheet alerts.
  */
 export function TrialBalanceSheetAlerts() {
-  const {
-    trialBalanceSheet: { meta },
-    isLoading,
-    refetchSheet,
-  } = useTrialBalanceSheetContext();
+  const { trialBalanceSheet, isLoading, refetchSheet } =
+    useTrialBalanceSheetContext();
 
   // Handle refetch the sheet.
   const handleRecalcReport = () => {
@@ -115,7 +55,7 @@ export function TrialBalanceSheetAlerts() {
     return null;
   }
   // Can't continue if the cost compute job is not running.
-  if (!meta.is_cost_compute_running) {
+  if (!trialBalanceSheet?.meta.is_cost_compute_running) {
     return null;
   }
 
@@ -130,3 +70,89 @@ export function TrialBalanceSheetAlerts() {
     </FinancialComputeAlert>
   );
 }
+
+/**
+ * Trial balance sheet export menu.
+ */
+export const TrialBalanceSheetExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const httpQuery = useTrialBalanceSheetHttpQuery();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(
+    httpQuery,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
+    },
+  );
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

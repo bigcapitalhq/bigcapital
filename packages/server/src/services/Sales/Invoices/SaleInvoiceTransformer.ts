@@ -1,6 +1,7 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
+import { ItemEntryTransformer } from './ItemEntryTransformer';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**
@@ -23,6 +24,7 @@ export class SaleInvoiceTransformer extends Transformer {
       'totalFormatted',
       'totalLocalFormatted',
       'taxes',
+      'entries',
     ];
   };
 
@@ -95,6 +97,7 @@ export class SaleInvoiceTransformer extends Transformer {
   protected subtotalFormatted = (invoice): string => {
     return formatNumber(invoice.subtotal, {
       currencyCode: this.context.organization.baseCurrency,
+      money: false,
     });
   };
 
@@ -173,6 +176,17 @@ export class SaleInvoiceTransformer extends Transformer {
     return this.item(invoice.taxes, new SaleInvoiceTaxEntryTransformer(), {
       subtotal: invoice.subtotal,
       isInclusiveTax: invoice.isInclusiveTax,
+      currencyCode: invoice.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the entries of the sale invoice.
+   * @param {ISaleInvoice} invoice
+   * @returns {}
+   */
+  protected entries = (invoice) => {
+    return this.item(invoice.entries, new ItemEntryTransformer(), {
       currencyCode: invoice.currencyCode,
     });
   };

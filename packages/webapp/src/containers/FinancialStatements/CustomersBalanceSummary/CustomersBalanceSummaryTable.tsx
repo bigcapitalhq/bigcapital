@@ -32,7 +32,7 @@ export default function CustomersBalanceSummaryTable({
     >
       <CustomerBalanceDataTable
         columns={columns}
-        data={table.data}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         sticky={true}

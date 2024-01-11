@@ -1,36 +1,39 @@
 import { Inject, Service } from 'typedi';
-import PdfService from '@/services/PDF/PdfService';
-import { templateRender } from 'utils';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Tenant } from '@/system/models';
+import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
+import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
+import { GetSaleReceipt } from './GetSaleReceipt';
 
 @Service()
 export class SaleReceiptsPdf {
   @Inject()
-  pdfService: PdfService;
+  private chromiumlyTenancy: ChromiumlyTenancy;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private templateInjectable: TemplateInjectable;
+
+  @Inject()
+  private getSaleReceiptService: GetSaleReceipt;
 
   /**
-   * Retrieve sale invoice pdf content.
-   * @param {} saleInvoice -
+   * Retrieves sale invoice pdf content.
+   * @param {number} tenantId - 
+   * @param {number} saleInvoiceId -
+   * @returns {Promise<Buffer>}
    */
-  async saleReceiptPdf(tenantId: number, saleReceipt) {
-    const i18n = this.tenancy.i18n(tenantId);
-
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
-
-    const htmlContent = templateRender('modules/receipt-regular', {
-      saleReceipt,
-      organizationName: organization.metadata.name,
-      organizationEmail: organization.metadata.email,
-      ...i18n,
+  public async saleReceiptPdf(tenantId: number, saleReceiptId: number) {
+    const saleReceipt = await this.getSaleReceiptService.getSaleReceipt(
+      tenantId,
+      saleReceiptId
+    );
+    const htmlContent = await this.templateInjectable.render(
+      tenantId,
+      'modules/receipt-regular',
+      {
+        saleReceipt,
+      }
+    );
+    return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
     });
-    const pdfContent = await this.pdfService.pdfDocument(htmlContent);
-
-    return pdfContent;
   }
 }
