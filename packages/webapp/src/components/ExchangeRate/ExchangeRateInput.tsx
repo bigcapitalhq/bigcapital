@@ -8,6 +8,7 @@ import {
   ControlGroup,
   Intent,
   Popover,
+  Position,
   Spinner,
 } from '@blueprintjs/core';
 import { FlagIcon } from '../Tags';
@@ -106,15 +107,22 @@ export function ExchangeRateInputGroup({
   const popoverConfirmContent = (
     <PopoverContent>
       <p>
-        Are you want to re-calculate item prices based on this exchange rate
+        Are you want to re-calculate item prices based on this exchange rate.
       </p>
       <div
         style={{
           display: 'flex',
-          justifyContent: 'flex-end',
           marginTop: 15,
         }}
       >
+        <Button
+          intent={Intent.WARNING}
+          className={Classes.POPOVER_DISMISS}
+          onClick={handleRecalcConfirmBtn}
+          small
+        >
+          Calculate
+        </Button>
         <Button
           className={Classes.POPOVER_DISMISS}
           style={{ marginRight: 10 }}
@@ -123,14 +131,6 @@ export function ExchangeRateInputGroup({
           minimal
         >
           Cancel
-        </Button>
-        <Button
-          intent={Intent.WARNING}
-          className={Classes.POPOVER_DISMISS}
-          onClick={handleRecalcConfirmBtn}
-          small
-        >
-          Re-calculate
         </Button>
       </div>
     </PopoverContent>
@@ -144,7 +144,11 @@ export function ExchangeRateInputGroup({
         </ExchangeRatePrepend>
 
         {withPopoverRecalcConfirm ? (
-          <Popover isOpen={isOpen} content={popoverConfirmContent}>
+          <Popover
+            isOpen={isOpen}
+            content={popoverConfirmContent}
+            position={Position.RIGHT}
+          >
             {exchangeRateField}
           </Popover>
         ) : (

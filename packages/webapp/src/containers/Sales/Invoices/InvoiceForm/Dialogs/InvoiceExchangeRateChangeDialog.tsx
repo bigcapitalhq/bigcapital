@@ -10,9 +10,7 @@ import { Button, Classes, Intent } from '@blueprintjs/core';
  */
 function InvoiceExchangeRateChangeDialog({
   dialogName,
-  payload: { initialFormValues },
   isOpen,
-  onConfirm,
   // #withDialogActions
   closeDialog,
 }) {
@@ -23,6 +21,7 @@ function InvoiceExchangeRateChangeDialog({
   return (
     <Dialog
       name={dialogName}
+      title={'Kindly take care of new rates'}
       autoFocus={true}
       canEscapeKeyClose={true}
       isOpen={isOpen}
@@ -31,18 +30,13 @@ function InvoiceExchangeRateChangeDialog({
       <DialogSuspense>
         <div className={Classes.DIALOG_BODY}>
           <p>
-            You have changed customer's currency after adding items to the
-            Invoice.
-          </p>
-
-          <p>
-            The item rates have been adjusted to the new currency using exchange
-            rate feeds.
+            The item rates have been <strong>adjusted</strong> to the new
+            currency using realtime exchange rate.
           </p>
 
           <p style={{ marginBottom: '30px' }}>
-            Before saving the transaction, ensure that the item rates align with
-            the current exchange rate of the newly selected currency.
+            Make sure to check that the item rates match the current exchange
+            rate of the newly selected currency before saving the transaction.
           </p>
         </div>
 
