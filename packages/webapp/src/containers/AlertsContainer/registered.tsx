@@ -12,7 +12,6 @@ import PaymentMadesAlerts from '@/containers/Purchases/PaymentMades/PaymentMades
 import CustomersAlerts from '@/containers/Customers/CustomersAlerts';
 import VendorsAlerts from '@/containers/Vendors/VendorsAlerts';
 import ManualJournalsAlerts from '@/containers/Accounting/JournalsLanding/ManualJournalsAlerts';
-import ExchangeRatesAlerts from '@/containers/ExchangeRates/ExchangeRatesAlerts';
 import ExpensesAlerts from '@/containers/Expenses/ExpensesAlerts';
 import AccountTransactionsAlerts from '@/containers/CashFlow/AccountTransactions/AccountTransactionsAlerts';
 import UsersAlerts from '@/containers/Preferences/Users/UsersAlerts';
@@ -41,7 +40,6 @@ export default [
   ...CustomersAlerts,
   ...VendorsAlerts,
   ...ManualJournalsAlerts,
-  ...ExchangeRatesAlerts,
   ...ExpensesAlerts,
   ...AccountTransactionsAlerts,
   ...UsersAlerts,
@@ -54,5 +52,5 @@ export default [
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
   ...ProjectAlerts,
-  ...TaxRatesAlerts
+  ...TaxRatesAlerts,
 ];

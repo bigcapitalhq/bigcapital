@@ -34,7 +34,7 @@ import {
   transformValueToRequest,
   resetFormState,
 } from './utils';
-import { InvoiceNoSyncSettingsToForm } from './components';
+import { InvoiceExchangeRateSync, InvoiceNoSyncSettingsToForm } from './components';
 
 /**
  * Invoice form.
@@ -184,6 +184,7 @@ function InvoiceForm({
 
           {/*---------- Effects ----------*/}
           <InvoiceNoSyncSettingsToForm />
+          <InvoiceExchangeRateSync />
         </Form>
       </Formik>
     </div>

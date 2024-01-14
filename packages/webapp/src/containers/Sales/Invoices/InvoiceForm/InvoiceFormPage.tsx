@@ -6,6 +6,7 @@ import '@/style/pages/SaleInvoice/PageForm.scss';
 
 import InvoiceForm from './InvoiceForm';
 import { InvoiceFormProvider } from './InvoiceFormProvider';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Invoice form page.
@@ -16,7 +17,9 @@ export default function InvoiceFormPage() {
 
   return (
     <InvoiceFormProvider invoiceId={idAsInteger}>
-      <InvoiceForm />
+      <AutoExchangeRateProvider>
+        <InvoiceForm />
+      </AutoExchangeRateProvider>
     </InvoiceFormProvider>
   );
 }

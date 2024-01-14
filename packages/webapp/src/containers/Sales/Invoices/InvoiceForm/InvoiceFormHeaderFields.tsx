@@ -36,6 +36,7 @@ import {
   ProjectBillableEntriesLink,
 } from '@/containers/Projects/components';
 import { Features } from '@/constants';
+import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 /**
  * Invoice form header fields.
@@ -51,10 +52,8 @@ export default function InvoiceFormHeaderFields() {
       <InvoiceFormCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <InvoiceExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <InvoiceExchangeRateInputField />
+
       <Row>
         <Col xs={6}>
           {/* ----------- Invoice date ----------- */}
@@ -161,8 +160,20 @@ export default function InvoiceFormHeaderFields() {
  * @returns {React.ReactNode}
  */
 function InvoiceFormCustomerSelect() {
-  const { customers } = useInvoiceFormContext();
   const { values, setFieldValue } = useFormikContext();
+  const { customers } = useInvoiceFormContext();
+
+  const updateEntries = useCustomerUpdateExRate();
+
+  // Handles the customer item change.
+  const handleItemChange = (customer) => {
+    // If the customer id has changed change the customer id and currency code.
+    if (values.customer_id !== customer.id) {
+      setFieldValue('customer_id', customer.id);
+      setFieldValue('currency_code', customer?.currency_code);
+    }
+    updateEntries(customer);
+  };
 
   return (
     <FFormGroup
@@ -178,10 +189,7 @@ function InvoiceFormCustomerSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
+        onItemChange={handleItemChange}
         allowCreate={true}
         fastField={true}
         shouldUpdate={customerNameFieldShouldUpdate}

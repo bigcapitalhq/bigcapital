@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { omit, first, sumBy } from 'lodash';
+import { omit, first, sumBy, round } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -57,7 +57,7 @@ export const defaultInvoice = {
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
-  exchange_rate: 1,
+  exchange_rate: '1',
   currency_code: '',
   branch_id: '',
   warehouse_id: '',

@@ -38,7 +38,10 @@ import {
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import { CreditNoteSyncIncrementSettingsToForm } from './components';
+import {
+  CreditNoteExchangeRateSync,
+  CreditNoteSyncIncrementSettingsToForm,
+} from './components';
 
 /**
  * Credit note form.
@@ -169,6 +172,7 @@ function CreditNoteForm({
 
           {/*-------- Effects --------*/}
           <CreditNoteSyncIncrementSettingsToForm />
+          <CreditNoteExchangeRateSync />
         </Form>
       </Formik>
     </div>

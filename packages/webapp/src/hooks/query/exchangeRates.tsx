@@ -1,102 +1,34 @@
 // @ts-nocheck
-import { useMutation, useQueryClient } from 'react-query';
-import { defaultTo } from 'lodash';
-import { useQueryTenant } from '../useQueryRequest';
-import { transformPagination } from '@/utils';
-import useApiRequest from '../useRequest';
+import { useQuery } from 'react-query';
+import QUERY_TYPES from './types';
 
-const defaultPagination = {
-  pageSize: 20,
-  page: 0,
-  pagesCount: 0,
-};
-/**
- * Creates a new exchange rate.
- */
-export function useCreateExchangeRate(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((values) => apiRequest.post('exchange_rates', values), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('EXCHANGES_RATES');
-    },
-    ...props,
-  });
+function getRandomItemFromArray(arr) {
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
 }
-
+function delay(t, val) {
+  return new Promise((resolve) => setTimeout(resolve, t, val));
+}
 /**
- * Edits the exchange rate.
+ * Retrieves tax rates.
+ * @param {number} customerId - Customer id.
  */
-export function useEdiExchangeRate(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
+export function useExchangeRate(
+  fromCurrency: string,
+  toCurrency: string,
+  props,
+) {
+  return useQuery(
+    [QUERY_TYPES.EXCHANGE_RATE, fromCurrency, toCurrency],
+    async () => {
+      await delay(100);
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`exchange_rates/${id}`, values),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('EXCHANGES_RATES');
-      },
-      ...props,
+      return {
+        from_currency: fromCurrency,
+        to_currency: toCurrency,
+        exchange_rate: 1.00,
+      };
     },
+    props,
   );
-}
-
-/**
- * Deletes the exchange rate.
- */
-export function useDeleteExchangeRate(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation((id) => apiRequest.delete(`exchange_rates/${id}`), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('EXCHANGES_RATES');
-    },
-    ...props,
-  });
-}
-
-/**
- * Retrieve the exchange rate list.
- */
-export function useExchangeRates(query, props) {
-  const apiRequest = useApiRequest();
-
-  const states = useQueryTenant(
-    ['EXCHANGES_RATES', query],
-    () => apiRequest.get('exchange_rates', { params: query }),
-    {
-      select: (res) => ({
-        exchangesRates: res.data.exchange_rates.results,
-        pagination: transformPagination(res.data.exchange_rates.pagination),
-        filterMeta: res.data.filter_meta,
-      }),
-      ...props,
-    },
-  );
-
-  return {
-    ...states,
-    data: defaultTo(states.data, {
-      exchangesRates: [],
-      pagination: {
-        page: 1,
-        pageSize: 20,
-        total: 0,
-      },
-      filterMeta: {},
-    }),
-  };
-}
-
-export function useRefreshExchangeRate() {
-  const queryClient = useQueryClient();
-
-  return {
-    refresh: () => {
-      queryClient.invalidateQueries('EXCHANGES_RATES');
-    },
-  };
 }

@@ -34,7 +34,7 @@ import {
   transformFormValuesToRequest,
   resetFormState,
 } from './utils';
-import { ReceiptSyncIncrementSettingsToForm } from './components';
+import { ReceiptSyncAutoExRateToForm, ReceiptSyncIncrementSettingsToForm } from './components';
 
 /**
  * Receipt form.
@@ -171,6 +171,7 @@ function ReceiptForm({
 
           {/*---------- Effects ---------*/}
           <ReceiptSyncIncrementSettingsToForm />
+          <ReceiptSyncAutoExRateToForm />
         </Form>
       </Formik>
     </div>

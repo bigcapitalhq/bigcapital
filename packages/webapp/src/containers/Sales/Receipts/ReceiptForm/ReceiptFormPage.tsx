@@ -6,6 +6,7 @@ import '@/style/pages/SaleReceipt/PageForm.scss';
 
 import ReceiptFrom from './ReceiptForm';
 import { ReceiptFormProvider } from './ReceiptFormProvider';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Receipt form page.
@@ -16,7 +17,9 @@ export default function ReceiptFormPage() {
 
   return (
     <ReceiptFormProvider receiptId={idInt}>
-      <ReceiptFrom />
+      <AutoExchangeRateProvider>
+        <ReceiptFrom />
+      </AutoExchangeRateProvider>
     </ReceiptFormProvider>
   );
 }

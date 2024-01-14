@@ -33,6 +33,7 @@ import {
   ReceiptProjectSelectButton,
 } from './components';
 import { ReceiptFormReceiptNumberField } from './ReceiptFormReceiptNumberField';
+import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 /**
  * Receipt form header fields.
@@ -46,10 +47,7 @@ export default function ReceiptFormHeader() {
       <ReceiptFormCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <ReceiptExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <ReceiptExchangeRateInputField />
 
       {/* ----------- Deposit account ----------- */}
       <FFormGroup
@@ -148,6 +146,16 @@ function ReceiptFormCustomerSelect() {
   const { setFieldValue, values } = useFormikContext();
   const { customers } = useReceiptFormContext();
 
+  const updateEntries = useCustomerUpdateExRate();
+
+  // Handles the customer item change.
+  const handleItemChange = (customer) => {
+    setFieldValue('customer_id', customer.id);
+    setFieldValue('currency_code', customer?.currency_code);
+
+    updateEntries(customer);
+  };
+
   return (
     <FFormGroup
       name={'customer_id'}
@@ -162,10 +170,7 @@ function ReceiptFormCustomerSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
+        onItemChange={handleItemChange}
         popoverFill={true}
         allowCreate={true}
         fastField={true}
