@@ -2,6 +2,13 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.13.1] - 15-01-2024
+
+* feat(webapp): add approve/reject to action bar of estimate details dr… by @ANasouf in https://github.com/bigcapitalhq/bigcapital/pull/304
+* docs: add ANasouf as a contributor for code by @allcontributors in https://github.com/bigcapitalhq/bigcapital/pull/305
+* feat: Export general ledger & Journal to CSV and XLSX by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/303
+* feat: Auto re-calculate the items rate once changing the invoice exchange rate. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/270
+
 ## [0.13.0] - 31-12-2023
 
 * feat: Send an invoice mail the customer email by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/292
