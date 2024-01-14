@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
 import { Features } from '@/constants';
-import { useCurrentOrganization, useFeatureCan } from '@/hooks/state';
+import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components/Dashboard';
 import { transformToEditForm, ITEMS_FILTER_ROLES_QUERY } from './utils';
 import {
@@ -16,7 +16,6 @@ import {
   useEditInvoice,
   useSettingsInvoices,
   useEstimate,
-  useExchangeRate,
 } from '@/hooks/query';
 import { useProjects } from '@/containers/Projects/hooks';
 import { useTaxRates } from '@/hooks/query/taxRates';
@@ -94,18 +93,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingsInvoices();
 
-  const [autoExRateCurrency, setAutoExRateCurrency] = useState<string>('');
-  const currentOrganization = useCurrentOrganization();
-
-  // Retrieves the exchange rate.
-  const { data: autoExchangeRate, isLoading: isAutoExchangeRateLoading } =
-    useExchangeRate(autoExRateCurrency, currentOrganization.base_currency, {
-      enabled: Boolean(currentOrganization.base_currency && autoExRateCurrency),
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      cacheTime: Infinity,
-    });
-
   // Create and edit invoice mutations.
   const { mutateAsync: createInvoiceMutate } = useCreateInvoice();
   const { mutateAsync: editInvoiceMutate } = useEditInvoice();
@@ -132,7 +119,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     warehouses,
     projects,
     taxRates,
-    autoExchangeRate,
 
     isInvoiceLoading,
     isItemsLoading,
@@ -149,10 +135,6 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
     editInvoiceMutate,
     setSubmitPayload,
     isNewMode,
-
-    autoExRateCurrency,
-    setAutoExRateCurrency,
-    isAutoExchangeRateLoading,
   };
 
   return (

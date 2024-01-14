@@ -22,7 +22,6 @@ function InvoiceExchangeRateChangeDialog({
 
   return (
     <Dialog
-      title={'Please take care of the following'}
       name={dialogName}
       autoFocus={true}
       canEscapeKeyClose={true}
@@ -32,7 +31,7 @@ function InvoiceExchangeRateChangeDialog({
       <DialogSuspense>
         <div className={Classes.DIALOG_BODY}>
           <p>
-            You have changed customers's currency after adding items to the
+            You have changed customer's currency after adding items to the
             Invoice.
           </p>
 
@@ -41,14 +40,14 @@ function InvoiceExchangeRateChangeDialog({
             rate feeds.
           </p>
 
-          <p>
+          <p style={{ marginBottom: '30px' }}>
             Before saving the transaction, ensure that the item rates align with
             the current exchange rate of the newly selected currency.
           </p>
         </div>
 
         <div className={Classes.DIALOG_FOOTER}>
-          <Button onClick={handleConfirm} intent={Intent.PRIMARY}>
+          <Button onClick={handleConfirm} intent={Intent.PRIMARY} fill>
             Ok
           </Button>
         </div>

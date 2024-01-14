@@ -6,7 +6,9 @@ function getRandomItemFromArray(arr) {
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 }
-
+function delay(t, val) {
+  return new Promise((resolve) => setTimeout(resolve, t, val));
+}
 /**
  * Retrieves tax rates.
  * @param {number} customerId - Customer id.
@@ -18,12 +20,15 @@ export function useExchangeRate(
 ) {
   return useQuery(
     [QUERY_TYPES.EXCHANGE_RATE, fromCurrency, toCurrency],
-    () =>
-      Promise.resolve({
+    async () => {
+      await delay(100);
+
+      return {
         from_currency: fromCurrency,
         to_currency: toCurrency,
-        exchange_rate: getRandomItemFromArray([4.231, 2.231]),
-      }),
+        exchange_rate: 1.00,
+      };
+    },
     props,
   );
 }

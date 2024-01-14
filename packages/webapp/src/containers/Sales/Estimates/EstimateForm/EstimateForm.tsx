@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
@@ -19,7 +18,10 @@ import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 import EstimtaeFormTopBar from './EstimtaeFormTopBar';
-import { EstimateIncrementSyncSettingsToForm } from './components';
+import {
+  EstimateIncrementSyncSettingsToForm,
+  EstimateSyncAutoExRateToForm,
+} from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -170,6 +172,7 @@ function EstimateForm({
 
           {/*------- Effects -------*/}
           <EstimateIncrementSyncSettingsToForm />
+          <EstimateSyncAutoExRateToForm />
         </Form>
       </Formik>
     </div>

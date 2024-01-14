@@ -1,21 +1,27 @@
 // @ts-nocheck
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 import { ExchangeRateInputGroup } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useCreditNoteIsForeignCustomer } from './utils';
+import { useCreditNoteIsForeignCustomer, useCreditNoteTotals } from './utils';
 import withSettings from '@/containers/Settings/withSettings';
 import { transactionNumber } from '@/utils';
+import {
+  useSyncExRateToForm,
+  withExchangeRateFetchingLoading,
+  withExchangeRateItemEntriesPriceRecalc,
+} from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
- * credit exchange rate input field.
+ * Credit note exchange rate input field.
  * @returns {JSX.Element}
  */
-export function CreditNoteExchangeRateInputField({ ...props }) {
+function CreditNoteExchangeRateInputFieldRoot({ ...props }) {
   const currentOrganization = useCurrentOrganization();
   const { values } = useFormikContext();
-
   const isForeignCustomer = useCreditNoteIsForeignCustomer();
 
   // Can't continue if the customer is not foreign.
@@ -24,12 +30,20 @@ export function CreditNoteExchangeRateInputField({ ...props }) {
   }
   return (
     <ExchangeRateInputGroup
+      name={'exchange_rate'}
       fromCurrency={values.currency_code}
       toCurrency={currentOrganization.base_currency}
+      formGroupProps={{ label: ' ', inline: true }}
+      withPopoverRecalcConfirm
       {...props}
     />
   );
 }
+
+export const CreditNoteExchangeRateInputField = R.compose(
+  withExchangeRateFetchingLoading,
+  withExchangeRateItemEntriesPriceRecalc,
+)(CreditNoteExchangeRateInputFieldRoot);
 
 /**
  * Syncs credit note auto-increment settings to form.
@@ -56,3 +70,28 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
 
   return null;
 });
+
+/**
+ * Syncs the realtime exchange rate to the credit note form and shows up popup to the user
+ * as an indication the entries rates have been re-calculated.
+ * @returns {React.ReactNode}
+ */
+export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(
+  ({ openDialog }) => {
+    const { total } = useCreditNoteTotals();
+    const timeout = useRef();
+
+    useSyncExRateToForm({
+      onSynced: () => {
+        // If the total bigger then zero show alert to the user after adjusting entries.
+        if (total > 0) {
+          clearTimeout(timeout.current);
+          timeout.current = setTimeout(() => {
+            openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
+          }, 500);
+        }
+      },
+    });
+    return null;
+  },
+);

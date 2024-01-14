@@ -26,6 +26,7 @@ import {
   inputIntent,
   handleDateChange,
 } from '@/utils';
+import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 /**
  * Credit note form header fields.
@@ -37,10 +38,8 @@ export default function CreditNoteFormHeaderFields({}) {
       <CreditNoteCustomersSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <CreditNoteExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <CreditNoteExchangeRateInputField />
+
       {/* ----------- Credit note date ----------- */}
       <FastField name={'credit_note_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -93,8 +92,18 @@ export default function CreditNoteFormHeaderFields({}) {
  */
 function CreditNoteCustomersSelect() {
   // Credit note form context.
-  const { customers } = useCreditNoteFormContext();
   const { setFieldValue, values } = useFormikContext();
+  const { customers } = useCreditNoteFormContext();
+
+  const updateEntries = useCustomerUpdateExRate();
+
+  // Handles item change.
+  const handleItemChange = (customer) => {
+    setFieldValue('customer_id', customer.id);
+    setFieldValue('currency_code', customer?.currency_code);
+
+    updateEntries(customer);
+  };
 
   return (
     <FFormGroup
@@ -110,10 +119,7 @@ function CreditNoteCustomersSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
+        onItemChange={handleItemChange}
         popoverFill={true}
         allowCreate={true}
         fastField={true}

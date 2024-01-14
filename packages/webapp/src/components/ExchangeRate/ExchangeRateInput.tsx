@@ -28,7 +28,7 @@ interface ExchangeRateInputGroupProps {
   inputGroupProps?: any;
   formGroupProps?: any;
 
-  popoverRecalcConfirm?: boolean;
+  withPopoverRecalcConfirm?: boolean;
 
   onRecalcConfirm: (bag: ExchangeRateValuesBag) => void;
   onCancel: (bag: ExchangeRateValuesBag) => void;
@@ -47,7 +47,7 @@ export function ExchangeRateInputGroup({
   inputGroupProps,
   formGroupProps,
 
-  popoverRecalcConfirm = false,
+  withPopoverRecalcConfirm = false,
 
   onRecalcConfirm,
   onCancel,
@@ -97,6 +97,7 @@ export function ExchangeRateInputGroup({
       onChange={() => null}
       onBlur={handleExchangeRateFieldBlur}
       rightElement={isLoading && <Spinner size={16} />}
+      decimalsLimit={5}
       {...inputGroupProps}
       name={name}
     />
@@ -142,7 +143,7 @@ export function ExchangeRateInputGroup({
           <ExchangeFlagIcon currencyCode={fromCurrency} /> 1 {fromCurrency} =
         </ExchangeRatePrepend>
 
-        {popoverRecalcConfirm ? (
+        {withPopoverRecalcConfirm ? (
           <Popover isOpen={isOpen} content={popoverConfirmContent}>
             {exchangeRateField}
           </Popover>

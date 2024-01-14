@@ -6,6 +6,7 @@ import '@/style/pages/SaleEstimate/PageForm.scss';
 
 import EstimateForm from './EstimateForm';
 import { EstimateFormProvider } from './EstimateFormProvider';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Estimate form page.
@@ -16,7 +17,9 @@ export default function EstimateFormPage() {
 
   return (
     <EstimateFormProvider estimateId={idInteger}>
-      <EstimateForm />
+      <AutoExchangeRateProvider>
+        <EstimateForm />
+      </AutoExchangeRateProvider>
     </EstimateFormProvider>
   );
 }

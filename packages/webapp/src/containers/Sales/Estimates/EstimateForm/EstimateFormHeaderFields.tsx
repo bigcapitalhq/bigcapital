@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';
@@ -24,7 +23,6 @@ import {
 import { customersFieldShouldUpdate } from './utils';
 import { CLASSES } from '@/constants/classes';
 import { Features } from '@/constants';
-
 import { ProjectsSelect } from '@/containers/Projects/components';
 import {
   EstimateExchangeRateInputField,
@@ -32,12 +30,13 @@ import {
 } from './components';
 import { EstimateFormEstimateNumberField } from './EstimateFormEstimateNumberField';
 import { useEstimateFormContext } from './EstimateFormProvider';
+import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 /**
  * Estimate form header.
  */
 export default function EstimateFormHeader() {
-  const { customers, projects } = useEstimateFormContext();
+  const { projects } = useEstimateFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -45,10 +44,8 @@ export default function EstimateFormHeader() {
       <EstimateFormCustomerSelect />
 
       {/* ----------- Exchange Rate ----------- */}
-      <EstimateExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <EstimateExchangeRateInputField />
+
       {/* ----------- Estimate Date ----------- */}
       <FastField name={'estimate_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -151,6 +148,16 @@ function EstimateFormCustomerSelect() {
   const { setFieldValue, values } = useFormikContext();
   const { customers } = useEstimateFormContext();
 
+  const updateEntries = useCustomerUpdateExRate();
+
+  // Handles the customer item change.
+  const handleItemChange = (customer) => {
+    setFieldValue('customer_id', customer.id);
+    setFieldValue('currency_code', customer?.currency_code);
+
+    updateEntries(customer);
+  };
+
   return (
     <FFormGroup
       label={<T id={'customer_name'} />}
@@ -165,10 +172,7 @@ function EstimateFormCustomerSelect() {
         name={'customer_id'}
         items={customers}
         placeholder={<T id={'select_customer_account'} />}
-        onItemChange={(customer) => {
-          setFieldValue('customer_id', customer.id);
-          setFieldValue('currency_code', customer?.currency_code);
-        }}
+        onItemChange={handleItemChange}
         popoverFill={true}
         allowCreate={true}
         fastField={true}
