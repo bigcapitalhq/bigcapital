@@ -39,9 +39,8 @@ export interface IInventoryValuationTotal {
   quantityFormatted: string;
 }
 
-export type IInventoryValuationStatement =
-  | {
-      items: IInventoryValuationItem[];
-      total: IInventoryValuationTotal;
-    }
-  | {};
+export type IInventoryValuationStatement = {
+  items: IInventoryValuationItem[];
+  total: IInventoryValuationTotal;
+};
+export type IInventoryValuationSheetData = IInventoryValuationStatement;

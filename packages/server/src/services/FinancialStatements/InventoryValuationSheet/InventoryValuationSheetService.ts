@@ -11,7 +11,7 @@ import InventoryService from '@/services/Inventory/Inventory';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class InventoryValuationSheetService {
+export class InventoryValuationSheetService {
   @Inject()
   tenancy: TenancyService;
 
