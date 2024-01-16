@@ -41,5 +41,5 @@ export interface ISalesByItemsTotal {
 export type ISalesByItemsSheetStatement = {
   items: ISalesByItemsItem[],
   total: ISalesByItemsTotal
-} | {};
+};
 

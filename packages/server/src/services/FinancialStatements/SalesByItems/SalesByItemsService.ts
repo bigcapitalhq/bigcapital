@@ -10,7 +10,7 @@ import SalesByItems from './SalesByItems';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class SalesByItemsReportService {
+export class SalesByItemsReportService {
   @Inject()
   tenancy: TenancyService;
 

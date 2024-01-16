@@ -7,6 +7,7 @@ import BaseFinancialReportController from './BaseFinancialReportController';
 import SalesByItemsReportService from '@/services/FinancialStatements/SalesByItems/SalesByItemsService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class SalesByItemsReportController extends BaseFinancialReportController {
@@ -68,18 +69,21 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
-    try {
-      const { data, query, meta } = await this.salesByItemsService.salesByItems(
-        tenantId,
-        filter
-      );
-      return res.status(200).send({
-        meta: this.transfromToResponse(meta),
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-      });
-    } catch (error) {
-      next(error);
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+    ]);
+
+    if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+    } else {
+      await this.salesByItemsService.salesByItems(tenantId, filter);
+      return res.status(200).send({ meta, data, query });
     }
   }
 }
