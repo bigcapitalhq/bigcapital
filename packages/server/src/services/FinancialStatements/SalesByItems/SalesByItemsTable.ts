@@ -1,47 +1,72 @@
 import * as R from 'ramda';
-import { ISalesByItemsSheetStatement, ITableColumn, ITableData, ITableRow } from '@/interfaces';
+import {
+  ISalesByItemsItem,
+  ISalesByItemsSheetStatement,
+  ISalesByItemsTotal,
+  ITableColumn,
+  ITableRow,
+} from '@/interfaces';
 import { tableRowMapper } from '@/utils';
 
 export class SalesByItemsTable {
   private readonly data: ISalesByItemsSheetStatement;
 
+  /**
+   * Constructor method.
+   * @param {ISalesByItemsSheetStatement} data
+   */
   constructor(data: ISalesByItemsSheetStatement) {
     this.data = data;
   }
 
+  /**
+   * Retrieves the common table accessors.
+   * @returns {ITableColumn[]}
+   */
   private commonTableAccessors() {
     return [
       { key: 'item_name', accessor: 'name' },
-      { key: 'quantity', accessor: 'quantitySoldFormatted' },
-      { key: 'sold', accessor: 'soldCostFormatted' },
+      { key: 'sold_quantity', accessor: 'quantitySoldFormatted' },
+      { key: 'sold_amount', accessor: 'soldCostFormatted' },
+      { key: 'average_price', accessor: 'averageSellPriceFormatted' },
     ];
   }
 
-  private itemMap(item: any) {
+  /**
+   * Maps the given item node to table row.
+   * @param {ISalesByItemsItem} item
+   * @returns {ITableRow}
+   */
+  private itemMap = (item: ISalesByItemsItem): ITableRow => {
     const columns = this.commonTableAccessors();
     const meta = {};
 
     return tableRowMapper(item, columns, meta);
-  }
-
-  private itemsMap(items: any[]) {
-    return R.map(this.itemMap, items);
-  }
+  };
 
   /**
-   * 
-   * @param total 
-   * @returns 
+   * Maps the given items nodes to table rows.
+   * @param {ISalesByItemsItem[]} items
+   * @returns {ITableRow[]}
    */
-  private totalMap(total: any) {
+  private itemsMap = (items: ISalesByItemsItem[]): ITableRow[] => {
+    return R.map(this.itemMap, items);
+  };
+
+  /**
+   * Maps the given total node to table row.
+   * @param {ISalesByItemsTotal} total
+   * @returns {ITableRow[]}
+   */
+  private totalMap = (total: ISalesByItemsTotal) => {
     const columns = this.commonTableAccessors();
     const meta = {};
 
     return tableRowMapper(total, columns, meta);
-  }
+  };
 
   /**
-   * 
+   * Retrieves the table rows.
    * @returns {ITableRow[]}
    */
   public tableData(): ITableRow[] {
@@ -57,9 +82,10 @@ export class SalesByItemsTable {
    */
   public tableColumns(): ITableColumn[] {
     return [
-      { key: 'item_name', label: 'Item Name' },
-      { key: 'quantity', label: 'Quantity' },
-      { key: 'sold_cost', label: 'Sold Cost' },
+      { key: 'item_name', label: 'Item name' },
+      { key: 'sold_quantity', label: 'Sold quantity' },
+      { key: 'sold_amount', label: 'Sold amount' },
+      { key: 'average_price', label: 'Average price' },
     ];
   }
 }

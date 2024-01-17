@@ -24,6 +24,7 @@ export class SalesByItemsApplication {
   public sheet(tenantId: number, filter: ISalesByItemsReportQuery) {
     return this.salesByItemsSheet.salesByItems(tenantId, filter);
   }
+
   /**
    * Retrieves the sales by items report in table format.
    * @param {number} tenantId
@@ -33,6 +34,7 @@ export class SalesByItemsApplication {
   public table(tenantId: number, filter: ISalesByItemsReportQuery) {
     return this.salesByItemsTable.table(tenantId, filter);
   }
+
   /**
    * Retrieves the sales by items report in csv format.
    * @param {number} tenantId
@@ -42,6 +44,7 @@ export class SalesByItemsApplication {
   public csv(tenantId: number, filter: ISalesByItemsReportQuery) {
     return this.salesByItemsExport.csv(tenantId, filter);
   }
+
   /**
    * Retrieves the sales by items report in xlsx format.
    * @param {number} tenantId

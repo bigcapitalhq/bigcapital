@@ -1,18 +1,17 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import moment from 'moment';
+import { query, ValidationChain, ValidationSchema } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from './BaseFinancialReportController';
-import SalesByItemsReportService from '@/services/FinancialStatements/SalesByItems/SalesByItemsService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { SalesByItemsApplication } from '@/services/FinancialStatements/SalesByItems/SalesByItemsApplication';
 
 @Service()
 export default class SalesByItemsReportController extends BaseFinancialReportController {
   @Inject()
-  salesByItemsService: SalesByItemsReportService;
+  salesByItemsApp: SalesByItemsApplication;
 
   /**
    * Router constructor.
@@ -32,6 +31,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
 
   /**
    * Validation schema.
+   * @returns {ValidationChain[]}
    */
   private get validationSchema(): ValidationChain[] {
     return [
@@ -68,7 +68,6 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
   ) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
-
     const accept = this.accepts(req);
 
     const acceptType = accept.types([
@@ -77,13 +76,33 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
     ]);
-
+    // Retrieves the csv format.
     if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+      const buffer = await this.salesByItemsApp.csv(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the json table format.
+    } else if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+      const table = await this.salesByItemsApp.table(tenantId, filter);
+
+      return res.status(200).send(table);
+      // Retrieves the xlsx format.
     } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
-    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+      const buffer = this.salesByItemsApp.xlsx(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+      return res.send(buffer);
+      // Retrieves the json format.
     } else {
-      await this.salesByItemsService.salesByItems(tenantId, filter);
-      return res.status(200).send({ meta, data, query });
+      const sheet = await this.salesByItemsApp.sheet(tenantId, filter);
+      return res.status(200).send(sheet);
     }
   }
 }
