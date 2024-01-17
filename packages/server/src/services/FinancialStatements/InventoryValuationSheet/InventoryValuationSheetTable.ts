@@ -38,33 +38,33 @@ export class InventoryValuationSheetTable {
    * @param {IInventoryValuationTotal} total
    * @returns {ITableRow}
    */
-  private totalRowMapper(total: IInventoryValuationTotal): ITableRow {
+  private totalRowMapper = (total: IInventoryValuationTotal): ITableRow => {
     const accessors = this.commonColumnsAccessors();
     const meta = {};
 
     return tableRowMapper(total, accessors, meta);
-  }
+  };
 
   /**
    * Maps the given item node to table row.
    * @param {IInventoryValuationItem} item
    * @returns {ITableRow}
    */
-  private itemRowMapper(item: IInventoryValuationItem): ITableRow {
+  private itemRowMapper = (item: IInventoryValuationItem): ITableRow => {
     const accessors = this.commonColumnsAccessors();
     const meta = {};
 
     return tableRowMapper(item, accessors, meta);
-  }
+  };
 
   /**
    * Maps the given items nodes to table rowes.
    * @param {IInventoryValuationItem[]} items
    * @returns {ITableRow[]}
    */
-  private itemsRowsMapper(items: IInventoryValuationItem[]): ITableRow[] {
+  private itemsRowsMapper = (items: IInventoryValuationItem[]): ITableRow[] => {
     return R.map(this.itemRowMapper)(items);
-  }
+  };
 
   /**
    * Retrieves the table rows.

@@ -1,4 +1,4 @@
-import { IInventoryValuationReportQuery } from '@/interfaces';
+import { IInventoryValuationReportQuery, IInventoryValuationTable } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { InventoryValuationSheetService } from './InventoryValuationSheetService';
 import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
@@ -7,13 +7,13 @@ import { InventoryValuationSheetExportable } from './InventoryValuationSheetExpo
 @Service()
 export class InventoryValuationSheetApplication {
   @Inject()
-  inventoryValuationSheet: InventoryValuationSheetService;
+  private inventoryValuationSheet: InventoryValuationSheetService;
 
   @Inject()
-  inventoryValuationTable: InventoryValuationSheetTableInjectable;
+  private inventoryValuationTable: InventoryValuationSheetTableInjectable;
 
   @Inject()
-  inventoryValuationExport: InventoryValuationSheetExportable;
+  private inventoryValuationExport: InventoryValuationSheetExportable;
 
   /**
    * Retrieves the inventory valuation json format.
@@ -32,9 +32,12 @@ export class InventoryValuationSheetApplication {
    * Retrieves the inventory valuation json table format.
    * @param {number} tenantId
    * @param {IInventoryValuationReportQuery} query
-   * @returns
+   * @returns {Promise<IInventoryValuationTable>}
    */
-  public table(tenantId: number, query: IInventoryValuationReportQuery) {
+  public table(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<IInventoryValuationTable> {
     return this.inventoryValuationTable.table(tenantId, query);
   }
 

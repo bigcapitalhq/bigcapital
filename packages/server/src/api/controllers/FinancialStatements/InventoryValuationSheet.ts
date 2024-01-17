@@ -11,7 +11,7 @@ import { ACCEPT_TYPE } from '@/interfaces/Http';
 @Service()
 export default class InventoryValuationReportController extends BaseFinancialReportController {
   @Inject()
-  inventoryValuationApp: InventoryValuationSheetApplication;
+  private inventoryValuationApp: InventoryValuationSheetApplication;
 
   /**
    * Router constructor.
@@ -83,7 +83,7 @@ export default class InventoryValuationReportController extends BaseFinancialRep
 
     // Retrieves the json table format.
     if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
-      const table = this.inventoryValuationApp.table(tenantId, filter);
+      const table = await this.inventoryValuationApp.table(tenantId, filter);
 
       return res.status(200).send(table);
       // Retrieves the csv format.

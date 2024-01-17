@@ -1,4 +1,5 @@
 import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface IInventoryValuationReportQuery {
   asDate: Date | string;
@@ -44,3 +45,8 @@ export type IInventoryValuationStatement = {
   total: IInventoryValuationTotal;
 };
 export type IInventoryValuationSheetData = IInventoryValuationStatement;
+
+export interface IInventoryValuationTable extends IFinancialTable {
+  meta: IInventoryValuationSheetMeta;
+  query: IInventoryValuationReportQuery;
+}

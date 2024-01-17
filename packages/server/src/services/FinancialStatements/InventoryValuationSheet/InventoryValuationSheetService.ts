@@ -6,7 +6,7 @@ import {
   IInventoryValuationSheetMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import InventoryValuationSheet from './InventoryValuationSheet';
+import { InventoryValuationSheet } from './InventoryValuationSheet';
 import InventoryService from '@/services/Inventory/Inventory';
 import { Tenant } from '@/system/models';
 
