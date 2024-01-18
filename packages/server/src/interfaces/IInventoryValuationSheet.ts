@@ -46,6 +46,12 @@ export type IInventoryValuationStatement = {
 };
 export type IInventoryValuationSheetData = IInventoryValuationStatement;
 
+export interface IInventoryValuationSheet {
+  data: IInventoryValuationStatement;
+  meta: IInventoryValuationSheetMeta;
+  query: IInventoryValuationReportQuery;
+}
+
 export interface IInventoryValuationTable extends IFinancialTable {
   meta: IInventoryValuationSheetMeta;
   query: IInventoryValuationReportQuery;

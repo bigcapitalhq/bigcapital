@@ -3,6 +3,7 @@ import moment from 'moment';
 import { isEmpty } from 'lodash';
 import {
   IInventoryValuationReportQuery,
+  IInventoryValuationSheet,
   IInventoryValuationSheetMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
@@ -80,7 +81,7 @@ export class InventoryValuationSheetService {
   public async inventoryValuationSheet(
     tenantId: number,
     query: IInventoryValuationReportQuery
-  ) {
+  ): Promise<IInventoryValuationSheet> {
     const { Item, InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
     const tenant = await Tenant.query()

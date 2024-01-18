@@ -14,7 +14,10 @@ export class InventoryValuationSheetExportable {
    * @param {IInventoryValuationReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(tenantId: number, query: IInventoryValuationReportQuery) {
+  public async xlsx(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<Buffer> {
     const table = await this.inventoryValuationTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

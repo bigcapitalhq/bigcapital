@@ -1,4 +1,8 @@
-import { IInventoryValuationReportQuery, IInventoryValuationTable } from '@/interfaces';
+import {
+  IInventoryValuationReportQuery,
+  IInventoryValuationSheet,
+  IInventoryValuationTable,
+} from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { InventoryValuationSheetService } from './InventoryValuationSheetService';
 import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
@@ -21,7 +25,10 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public sheet(tenantId: number, query: IInventoryValuationReportQuery) {
+  public sheet(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<IInventoryValuationSheet> {
     return this.inventoryValuationSheet.inventoryValuationSheet(
       tenantId,
       query
@@ -47,7 +54,10 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public xlsx(tenantId: number, query: IInventoryValuationReportQuery) {
+  public xlsx(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<Buffer> {
     return this.inventoryValuationExport.xlsx(tenantId, query);
   }
 
@@ -57,7 +67,10 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public csv(tenantId: number, query: IInventoryValuationReportQuery) {
+  public csv(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<string> {
     return this.inventoryValuationExport.csv(tenantId, query);
   }
 }

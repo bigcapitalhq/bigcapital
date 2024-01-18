@@ -80,7 +80,7 @@ export class InventoryValuationSheetTable extends R.compose(
    * Retrieves the table rows.
    * @returns {ITableRow[]}
    */
-  public tableRows() {
+  public tableRows(): ITableRow[] {
     const itemsRows = this.itemsRowsMapper(this.data.items);
     const totalRow = this.totalRowMapper(this.data.total);
 
@@ -88,7 +88,7 @@ export class InventoryValuationSheetTable extends R.compose(
   }
 
   /**
-   *
+   * Retrieves the table columns.
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
