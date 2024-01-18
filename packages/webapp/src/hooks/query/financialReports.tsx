@@ -176,33 +176,32 @@ export function useGeneralLedgerSheet(query, props) {
   );
 }
 export const useGeneralLedgerSheetXlsxExport = (query, args) => {
-return useDownloadFile({
-  url: '/financial_statements/general_ledger',
-  config: {
-    headers: {
-      accept: 'application/xlsx',
+  return useDownloadFile({
+    url: '/financial_statements/general_ledger',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
     },
-    params: query,
-  },
-  filename: 'general_ledger.xlsx',
-  ...args,
-});
+    filename: 'general_ledger.xlsx',
+    ...args,
+  });
 };
 
 export const useGeneralLedgerSheetCsvExport = (query, args) => {
-return useDownloadFile({
-  url: '/financial_statements/general_ledger',
-  config: {
-    headers: {
-      accept: 'application/csv',
+  return useDownloadFile({
+    url: '/financial_statements/general_ledger',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
     },
-    params: query,
-  },
-  filename: 'general_ledger.csv',
-  ...args,
-});
+    filename: 'general_ledger.csv',
+    ...args,
+  });
 };
-
 
 /**
  * Retrieve journal sheet.
@@ -376,6 +375,56 @@ export function useInventoryValuation(query, props) {
     },
   );
 }
+
+/**
+ * Retrieve inventory valuation.
+ */
+export function useInventoryValuationTable(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.INVENTORY_VALUATION, query],
+    {
+      method: 'get',
+      url: '/financial_statements/inventory-valuation',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => res.data,
+      ...props,
+    },
+  );
+}
+
+export const useInventoryValuationXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-valuation',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'inventory_valuation.xlsx',
+    ...args,
+  });
+};
+
+export const useInventoryValuationCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/inventory-valuation',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'inventory_valuation.csv',
+    ...args,
+  });
+};
+
 /**
  * Retrieve purchases by items.
  */

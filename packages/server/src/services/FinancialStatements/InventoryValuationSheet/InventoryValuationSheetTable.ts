@@ -8,8 +8,15 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import FinancialSheet from '../FinancialSheet';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
+import { ROW_TYPE } from './_constants';
 
-export class InventoryValuationSheetTable {
+export class InventoryValuationSheetTable extends R.compose(
+  FinancialTable,
+  FinancialSheetStructure
+)(FinancialSheet) {
   private readonly data: IInventoryValuationSheetData;
 
   /**
@@ -17,6 +24,7 @@ export class InventoryValuationSheetTable {
    * @param {IInventoryValuationSheetData} data
    */
   constructor(data: IInventoryValuationSheetData) {
+    super();
     this.data = data;
   }
 
@@ -40,8 +48,9 @@ export class InventoryValuationSheetTable {
    */
   private totalRowMapper = (total: IInventoryValuationTotal): ITableRow => {
     const accessors = this.commonColumnsAccessors();
-    const meta = {};
-
+    const meta = {
+      rowTypes: [ROW_TYPE.TOTAL],
+    };
     return tableRowMapper(total, accessors, meta);
   };
 
@@ -52,8 +61,9 @@ export class InventoryValuationSheetTable {
    */
   private itemRowMapper = (item: IInventoryValuationItem): ITableRow => {
     const accessors = this.commonColumnsAccessors();
-    const meta = {};
-
+    const meta = {
+      rowTypes: [ROW_TYPE.ITEM],
+    };
     return tableRowMapper(item, accessors, meta);
   };
 
@@ -82,11 +92,12 @@ export class InventoryValuationSheetTable {
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
-    return [
+    const columns = [
       { key: 'item_name', label: 'Item Name' },
       { key: 'quantity', label: 'Quantity' },
       { key: 'valuation', label: 'Valuation' },
       { key: 'average', label: 'Average' },
     ];
+    return R.compose(this.tableColumnsCellIndexing)(columns);
   }
 }

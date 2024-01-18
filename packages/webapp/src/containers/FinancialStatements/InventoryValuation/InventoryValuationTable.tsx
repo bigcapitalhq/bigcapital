@@ -8,23 +8,23 @@ import { ReportDataTable, FinancialSheet } from '@/components';
 import { tableRowTypesToClassnames } from '@/utils';
 
 import { useInventoryValuationContext } from './InventoryValuationProvider';
-import { useInventoryValuationTableColumns } from './components';
+import { useInventoryValuationColumns } from './dynamicColumns';
 
 /**
- * inventory valuation data table.
+ * Inventory valuation data table.
  */
 export default function InventoryValuationTable({
-  //#ownProps
+  // #ownProps
   companyName,
 }) {
-  // inventory valuation context.
+  // Inventory valuation context.
   const {
-    inventoryValuation: { tableRows, query },
+    inventoryValuation: { table, query },
     isLoading,
   } = useInventoryValuationContext();
 
-  // inventory valuation table columns.
-  const columns = useInventoryValuationTableColumns();
+  // Inventory valuation table columns.
+  const columns = useInventoryValuationColumns();
 
   return (
     <InventoryValuationSheet
@@ -35,7 +35,7 @@ export default function InventoryValuationTable({
     >
       <InventoryValuationDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}

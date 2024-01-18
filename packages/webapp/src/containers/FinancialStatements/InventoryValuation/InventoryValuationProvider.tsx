@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useInventoryValuation } from '@/hooks/query';
+import { useInventoryValuationTable } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const InventoryValuationContext = React.createContext();
@@ -21,7 +21,7 @@ function InventoryValuationProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useInventoryValuation(requestQuery, {
+  } = useInventoryValuationTable(requestQuery, {
     keepPreviousData: true,
   });
 
