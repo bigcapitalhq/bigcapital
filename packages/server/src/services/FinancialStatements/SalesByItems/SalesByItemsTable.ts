@@ -7,8 +7,15 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import FinancialSheet from '../FinancialSheet';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
+import { ROW_TYPE } from './constants';
 
-export class SalesByItemsTable {
+export class SalesByItemsTable extends R.compose(
+  FinancialTable,
+  FinancialSheetStructure
+)(FinancialSheet) {
   private readonly data: ISalesByItemsSheetStatement;
 
   /**
@@ -16,6 +23,7 @@ export class SalesByItemsTable {
    * @param {ISalesByItemsSheetStatement} data
    */
   constructor(data: ISalesByItemsSheetStatement) {
+    super();
     this.data = data;
   }
 
@@ -39,8 +47,9 @@ export class SalesByItemsTable {
    */
   private itemMap = (item: ISalesByItemsItem): ITableRow => {
     const columns = this.commonTableAccessors();
-    const meta = {};
-
+    const meta = {
+      rowTypes: [ROW_TYPE.ITEM],
+    };
     return tableRowMapper(item, columns, meta);
   };
 
@@ -60,8 +69,9 @@ export class SalesByItemsTable {
    */
   private totalMap = (total: ISalesByItemsTotal) => {
     const columns = this.commonTableAccessors();
-    const meta = {};
-
+    const meta = {
+      rowTypes: [ROW_TYPE.TOTAL],
+    };
     return tableRowMapper(total, columns, meta);
   };
 
@@ -81,11 +91,12 @@ export class SalesByItemsTable {
    * @returns {ITableColumn[]}
    */
   public tableColumns(): ITableColumn[] {
-    return [
+    const columns = [
       { key: 'item_name', label: 'Item name' },
       { key: 'sold_quantity', label: 'Sold quantity' },
       { key: 'sold_amount', label: 'Sold amount' },
       { key: 'average_price', label: 'Average price' },
     ];
+    return R.compose(this.tableColumnsCellIndexing)(columns);
   }
 }

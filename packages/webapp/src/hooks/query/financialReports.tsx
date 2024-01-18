@@ -176,33 +176,32 @@ export function useGeneralLedgerSheet(query, props) {
   );
 }
 export const useGeneralLedgerSheetXlsxExport = (query, args) => {
-return useDownloadFile({
-  url: '/financial_statements/general_ledger',
-  config: {
-    headers: {
-      accept: 'application/xlsx',
+  return useDownloadFile({
+    url: '/financial_statements/general_ledger',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
     },
-    params: query,
-  },
-  filename: 'general_ledger.xlsx',
-  ...args,
-});
+    filename: 'general_ledger.xlsx',
+    ...args,
+  });
 };
 
 export const useGeneralLedgerSheetCsvExport = (query, args) => {
-return useDownloadFile({
-  url: '/financial_statements/general_ledger',
-  config: {
-    headers: {
-      accept: 'application/csv',
+  return useDownloadFile({
+    url: '/financial_statements/general_ledger',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
     },
-    params: query,
-  },
-  filename: 'general_ledger.csv',
-  ...args,
-});
+    filename: 'general_ledger.csv',
+    ...args,
+  });
 };
-
 
 /**
  * Retrieve journal sheet.
@@ -414,19 +413,59 @@ export function useSalesByItems(query, props) {
       params: query,
     },
     {
-      select: (res) => ({
-        tableRows: salesByItemsReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-        query: {},
-      },
       ...props,
     },
   );
 }
+
+/**
+ * Retrieves sales by items table format.
+ */
+export function useSalesByItemsTable(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.SALES_BY_ITEMS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/sales-by-items',
+      params: query,
+      headers: {
+        Accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => res.data,
+      ...props,
+    },
+  );
+}
+
+export const useSalesByItemsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/sales-by-items',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'sales_by_items.csv',
+    ...args,
+  });
+};
+
+export const useSalesByItemsXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/sales-by-items',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'sales_by_items.xlsx',
+    ...args,
+  });
+};
 
 /**
  * Retrieve customers balance summary report.

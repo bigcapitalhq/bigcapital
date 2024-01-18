@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { ReportDataTable, FinancialSheet } from '@/components';
 import { useSalesByItemsContext } from './SalesByItemProvider';
-import { useSalesByItemsTableColumns } from './components';
+import { useSalesByItemsTableColumns } from './dynamicColumns';
 import { tableRowTypesToClassnames } from '@/utils';
 import { TableStyle } from '@/constants';
 
@@ -15,7 +15,7 @@ import { TableStyle } from '@/constants';
 export default function SalesByItemsTable({ companyName }) {
   // Sales by items context.
   const {
-    salesByItems: { tableRows, query },
+    salesByItems: { table, query },
     isLoading,
   } = useSalesByItemsContext();
 
@@ -32,7 +32,7 @@ export default function SalesByItemsTable({ companyName }) {
     >
       <SalesByItemsDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
@@ -59,7 +59,7 @@ const SalesByItemsDataTable = styled(ReportDataTable)`
         padding-top: 0.4rem;
         padding-bottom: 0.4rem;
       }
-      .tr.row_type--total .td {
+      .tr.row_type--TOTAL .td {
         border-top: 1px solid #bbb;
         font-weight: 500;
         border-bottom: 3px double #000;

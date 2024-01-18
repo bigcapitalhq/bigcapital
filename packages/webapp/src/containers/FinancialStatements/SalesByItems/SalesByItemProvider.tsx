@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { useSalesByItems } from '@/hooks/query';
+import { useSalesByItemsTable } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const SalesByItemsContext = createContext();
@@ -12,7 +12,7 @@ function SalesByItemProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useSalesByItems(
+  } = useSalesByItemsTable(
     {
       ...transformFilterFormToQuery(query),
     },
