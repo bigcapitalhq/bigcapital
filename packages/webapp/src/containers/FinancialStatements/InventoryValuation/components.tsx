@@ -1,13 +1,25 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import intl from 'react-intl-universal';
-
-import { If } from '@/components';
+import classNames from 'classnames';
+import { AppToaster, If, Stack } from '@/components';
 import { Align } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
+import {
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
+import {
+  useInventoryValuationCsvExport,
+  useInventoryValuationXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Retrieve inventory valuation table columns.
@@ -77,3 +89,87 @@ export function InventoryValuationLoadingBar() {
     </If>
   );
 }
+
+/**
+ * Retrieves the inventory valuation sheet export menu.
+ * @returns {JSX.Element}
+ */
+export const InventoryValuationExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = {
+    isCloseButtonShown: true,
+    timeout: 2000,
+  };
+  const { query } = useInventoryValuationContext();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = useInventoryValuationXlsxExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = useInventoryValuationCsvExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

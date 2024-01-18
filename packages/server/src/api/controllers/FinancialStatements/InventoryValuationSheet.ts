@@ -3,14 +3,15 @@ import { query, ValidationChain } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from './BaseFinancialReportController';
-import InventoryValuationService from '@/services/FinancialStatements/InventoryValuationSheet/InventoryValuationSheetService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { InventoryValuationSheetApplication } from '@/services/FinancialStatements/InventoryValuationSheet/InventoryValuationSheetApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class InventoryValuationReportController extends BaseFinancialReportController {
   @Inject()
-  inventoryValuationService: InventoryValuationService;
+  private inventoryValuationApp: InventoryValuationSheetApplication;
 
   /**
    * Router constructor.
@@ -71,19 +72,45 @@ export default class InventoryValuationReportController extends BaseFinancialRep
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
-    try {
-      const { data, query, meta } =
-        await this.inventoryValuationService.inventoryValuationSheet(
-          tenantId,
-          filter
-        );
-      return res.status(200).send({
-        meta: this.transfromToResponse(meta),
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
-      });
-    } catch (error) {
-      next(error);
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_CSV,
+    ]);
+
+    // Retrieves the json table format.
+    if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+      const table = await this.inventoryValuationApp.table(tenantId, filter);
+
+      return res.status(200).send(table);
+      // Retrieves the csv format.
+    } else if (ACCEPT_TYPE.APPLICATION_CSV == acceptType) {
+      const buffer = await this.inventoryValuationApp.csv(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the xslx buffer format.
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+      const buffer = await this.inventoryValuationApp.xlsx(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      );
+      return res.send(buffer);
+      // Retrieves the json format.
+    } else {
+      const { data, query, meta } = await this.inventoryValuationApp.sheet(
+        tenantId,
+        filter
+      );
+      return res.status(200).send({ meta, data, query });
     }
   }
 }
