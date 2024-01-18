@@ -46,6 +46,16 @@ const numericColumnAccessor = R.curry((data, column) => {
 });
 
 /**
+ * Item name column accessor.
+ */
+const itemNameColumnAccessor = R.curry((data, column) => {
+  return {
+    ...column,
+    width: 240,
+  }
+});
+
+/**
  * Dynamic column mapper.
  * @param {} data -
  * @param {} column -
@@ -53,8 +63,10 @@ const numericColumnAccessor = R.curry((data, column) => {
 const dynamicColumnMapper = R.curry((data, column) => {
   const _commonAccessor = commonAccessor(data);
   const _numericColumnAccessor = numericColumnAccessor(data);
+  const _itemNameColumnAccessor = itemNameColumnAccessor(data);
 
   return R.compose(
+    R.when(R.pathEq(['key'], 'item_name'), _itemNameColumnAccessor),
     R.when(R.pathEq(['key'], 'quantity'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'valuation'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'average'), _numericColumnAccessor),

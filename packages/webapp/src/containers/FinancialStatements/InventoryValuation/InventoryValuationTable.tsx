@@ -62,7 +62,7 @@ const InventoryValuationDataTable = styled(ReportDataTable)`
         padding-top: 0.4rem;
         padding-bottom: 0.4rem;
       }
-      .tr.row_type--total .td {
+      .tr.row_type--TOTAL .td {
         border-top: 1px solid #bbb;
         font-weight: 500;
         border-bottom: 3px double #000;
