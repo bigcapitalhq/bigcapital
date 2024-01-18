@@ -35,7 +35,7 @@ function VendorsSelectRoot({
     <FSelect
       items={items}
       textAccessor={'display_name'}
-      labelAccessor={'code'}
+      labelAccessor={'balance'}
       valueAccessor={'id'}
       popoverProps={{ minimal: true, usePortal: true, inline: false }}
       createNewItemRenderer={maybeCreateNewItemRenderer}
