@@ -24,7 +24,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       CheckPolicies(ReportsAction.READ_SALES_BY_ITEMS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.purchasesByItems.bind(this))
+      asyncMiddleware(this.salesByItems.bind(this))
     );
     return router;
   }
@@ -61,11 +61,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
    * @param {Request} req -
    * @param {Response} res -
    */
-  private async purchasesByItems(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async salesByItems(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
     const accept = this.accepts(req);

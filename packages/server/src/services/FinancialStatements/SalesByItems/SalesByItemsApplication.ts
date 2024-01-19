@@ -1,8 +1,13 @@
-import { ISalesByItemsReportQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import {
+  ISalesByItemsReportQuery,
+  ISalesByItemsSheet,
+  ISalesByItemsSheetData,
+  ISalesByItemsTable,
+} from '@/interfaces';
 import { SalesByItemsReportService } from './SalesByItemsService';
 import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
 import { SalesByItemsExport } from './SalesByItemsExport';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class SalesByItemsApplication {
@@ -19,9 +24,12 @@ export class SalesByItemsApplication {
    * Retrieves the sales by items report in json format.
    * @param {number} tenantId
    * @param {ISalesByItemsReportQuery} filter
-   * @returns {Promise<ISalesByItemsTable>}
+   * @returns {Promise<ISalesByItemsSheetData>}
    */
-  public sheet(tenantId: number, filter: ISalesByItemsReportQuery) {
+  public sheet(
+    tenantId: number,
+    filter: ISalesByItemsReportQuery
+  ): Promise<ISalesByItemsSheet> {
     return this.salesByItemsSheet.salesByItems(tenantId, filter);
   }
 
@@ -31,7 +39,10 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter
    * @returns {Promise<ISalesByItemsTable>}
    */
-  public table(tenantId: number, filter: ISalesByItemsReportQuery) {
+  public table(
+    tenantId: number,
+    filter: ISalesByItemsReportQuery
+  ): Promise<ISalesByItemsTable> {
     return this.salesByItemsTable.table(tenantId, filter);
   }
 
@@ -39,9 +50,12 @@ export class SalesByItemsApplication {
    * Retrieves the sales by items report in csv format.
    * @param {number} tenantId
    * @param {ISalesByItemsReportQuery} filter
-   * @returns {Promise<Buffer>}
+   * @returns {Promise<string>}
    */
-  public csv(tenantId: number, filter: ISalesByItemsReportQuery) {
+  public csv(
+    tenantId: number,
+    filter: ISalesByItemsReportQuery
+  ): Promise<string> {
     return this.salesByItemsExport.csv(tenantId, filter);
   }
 
@@ -51,7 +65,10 @@ export class SalesByItemsApplication {
    * @param {ISalesByItemsReportQuery} filter
    * @returns {Promise<Buffer>}
    */
-  public xlsx(tenantId: number, filter: ISalesByItemsReportQuery) {
+  public xlsx(
+    tenantId: number,
+    filter: ISalesByItemsReportQuery
+  ): Promise<Buffer> {
     return this.salesByItemsExport.xlsx(tenantId, filter);
   }
 }

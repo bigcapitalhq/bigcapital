@@ -1,12 +1,12 @@
-import { ISalesByItemsReportQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
+import { ISalesByItemsReportQuery } from '@/interfaces';
 import { SalesByItemsReportService } from './SalesByItemsService';
 import { SalesByItemsTable } from './SalesByItemsTable';
 
 @Service()
 export class SalesByItemsTableInjectable {
   @Inject()
-  salesByItemSheet: SalesByItemsReportService;
+  private salesByItemSheet: SalesByItemsReportService;
 
   /**
    * Retrieves the sales by items report in table format.
