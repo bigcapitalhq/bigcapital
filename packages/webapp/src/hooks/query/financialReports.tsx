@@ -1,12 +1,8 @@
 // @ts-nocheck
 import { useRequestQuery } from '../useQueryRequest';
-import {
-  inventoryValuationReducer,
-  purchasesByItemsReducer,
-  salesByItemsReducer,
-} from '@/containers/FinancialStatements/reducers';
-import t from './types';
+import { purchasesByItemsReducer } from '@/containers/FinancialStatements/reducers';
 import { useDownloadFile } from '../useDownloadFile';
+import t from './types';
 
 /**
  * Retrieve balance sheet.
@@ -362,15 +358,8 @@ export function useInventoryValuation(query, props) {
       params: query,
     },
     {
-      select: (res) => ({
-        tableRows: inventoryValuationReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-        query: {},
-      },
+      select: (res) => res.data,
+
       ...props,
     },
   );
