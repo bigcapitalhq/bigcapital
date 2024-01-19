@@ -2,15 +2,15 @@ import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import {
   ISalesByItemsReportQuery,
-  ISalesByItemsSheetStatement,
-  ISalesByItemsSheetMeta
+  ISalesByItemsSheetMeta,
+  ISalesByItemsSheet,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import SalesByItems from './SalesByItems';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class SalesByItemsReportService {
+export class SalesByItemsReportService {
   @Inject()
   tenancy: TenancyService;
 
@@ -63,20 +63,14 @@ export default class SalesByItemsReportService {
 
   /**
    * Retrieve balance sheet statement.
-   * -------------
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
-   *
-   * @return {IBalanceSheetStatement}
+   * @return {Promise<ISalesByItemsSheet>}
    */
   public async salesByItems(
     tenantId: number,
     query: ISalesByItemsReportQuery
-  ): Promise<{
-    data: ISalesByItemsSheetStatement,
-    query: ISalesByItemsReportQuery,
-    meta: ISalesByItemsSheetMeta,
-  }> {
+  ): Promise<ISalesByItemsSheet> {
     const { Item, InventoryTransaction } = this.tenancy.models(tenantId);
 
     const tenant = await Tenant.query()
@@ -107,20 +101,19 @@ export default class SalesByItemsReportService {
         builder.whereIn('itemId', inventoryItemsIds);
 
         // Filter the date range of the sheet.
-        builder.modify('filterDateRange', filter.fromDate, filter.toDate)
+        builder.modify('filterDateRange', filter.fromDate, filter.toDate);
       }
     );
-
-    const purchasesByItemsInstance = new SalesByItems(
+    const sheet = new SalesByItems(
       filter,
       inventoryItems,
       inventoryTransactions,
-      tenant.metadata.baseCurrency,
+      tenant.metadata.baseCurrency
     );
-    const purchasesByItemsData = purchasesByItemsInstance.reportData();
+    const salesByItemsData = sheet.reportData();
 
     return {
-      data: purchasesByItemsData,
+      data: salesByItemsData,
       query: filter,
       meta: this.reportMetadata(tenantId),
     };
