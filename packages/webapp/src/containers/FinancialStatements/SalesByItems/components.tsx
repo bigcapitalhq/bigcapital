@@ -1,71 +1,20 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import intl from 'react-intl-universal';
+import classNames from 'classnames';
+import { Classes } from '@blueprintjs/core';
 
 import { getColumnWidth } from '@/utils';
-import { If, Stack } from '@/components';
+import { AppToaster, If, Stack } from '@/components';
 import { Align } from '@/constants';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import { Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
-import { useBalanceSheetXlsxExport } from '@/hooks/query';
-
-/**
- * Retrieve sales by items table columns.
- */
-export const useSalesByItemsTableColumns = () => {
-  //sales by items context.
-  const {
-    salesByItems: { tableRows },
-  } = useSalesByItemsContext();
-
-  return useMemo(
-    () => [
-      {
-        Header: intl.get('item_name'),
-        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
-        className: 'name',
-        width: 180,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('sold_quantity'),
-        accessor: 'quantity_sold_formatted',
-        Cell: CellTextSpan,
-        className: 'quantity_sold',
-        width: getColumnWidth(tableRows, `quantity_sold_formatted`, {
-          minWidth: 150,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('sold_amount'),
-        accessor: 'sold_cost_formatted',
-        Cell: CellTextSpan,
-        className: 'sold_cost',
-        width: getColumnWidth(tableRows, `sold_cost_formatted`, {
-          minWidth: 150,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('average_price'),
-        accessor: 'average_sell_price_formatted',
-        Cell: CellTextSpan,
-        className: 'average_sell_price',
-        width: getColumnWidth(tableRows, `average_sell_price_formatted`, {
-          minWidth: 150,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-    ],
-    [tableRows],
-  );
-};
+import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import {
+  useSalesByItemsCsvExport,
+  useSalesByItemsXlsxExport,
+} from '@/hooks/query';
 
 /**
  * sales by items progress loading bar.
@@ -89,7 +38,7 @@ export const SalesByItemsSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useBalanceSheetContext();
+  const { query } = useSalesByItemsContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -107,7 +56,7 @@ export const SalesByItemsSheetExportMenu = () => {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport(query, {
+  const { mutateAsync: xlsxExport } = useSalesByItemsXlsxExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -126,7 +75,7 @@ export const SalesByItemsSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useBalanceSheetCsvExport(query, {
+  const { mutateAsync: csvExport } = useSalesByItemsCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -146,11 +95,11 @@ export const SalesByItemsSheetExportMenu = () => {
   });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
-    csvExport().then(() => {});
+    csvExport();
   };
   // Handle xlsx export button click.
   const handleXlsxExportBtnClick = () => {
-    xlsxExport().then(() => {});
+    xlsxExport();
   };
 
   return (
