@@ -418,44 +418,34 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Request} req - Request object.
    * @param {Response} res - Response object.
    */
-  private async getSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getSaleInvoice(req: Request, res: Response) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
-    try {
-      const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
-        tenantId,
-        saleInvoiceId,
-        user
-      );
-      // Response formatter.
-      res.format({
-        // JSON content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res
-            .status(200)
-            .send(this.transfromToResponse({ saleInvoice }));
-        },
-        // PDF content type.
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
-            tenantId,
-            saleInvoice
-          );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
-      });
-    } catch (error) {
-      next(error);
-    }
+    // Response formatter.
+    return res.format({
+      // JSON content type.
+      [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
+        const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
+          tenantId,
+          saleInvoiceId,
+          user
+        );
+        return res.status(200).send(this.transfromToResponse({ saleInvoice }));
+      },
+      // PDF content type.
+      [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
+        const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
+          tenantId,
+          saleInvoiceId
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        res.send(pdfContent);
+      },
+    });
   }
   /**
    * Retrieve paginated sales invoices with custom view metadata.
