@@ -12,11 +12,13 @@ import { TableStyle } from '@/constants';
  * Expense details table.
  */
 export default function ExpenseDrawerTable() {
-  // Expense readonly entries columns.
-  const columns = useExpenseReadEntriesColumns();
-
   // Expense drawer context.
   const { expense } = useExpenseDrawerContext();
+
+  // Expense readonly entries columns.
+  const columns = useExpenseReadEntriesColumns({
+    currency: expense.currency_code,
+  });
 
   return (
     <CommercialDocEntriesTable
