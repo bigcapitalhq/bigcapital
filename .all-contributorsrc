@@ -87,6 +87,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "xprnio",
+      "name": "Ragnar Laud",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3042904?v=4",
+      "profile": "https://ragnarlaud.dev",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
