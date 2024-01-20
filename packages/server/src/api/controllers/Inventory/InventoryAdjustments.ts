@@ -113,8 +113,8 @@ export default class InventoryAdjustmentsController extends BaseController {
       check('quantity')
         .if(check('type').exists().isIn(['increment', 'decrement']))
         .exists()
-        .isInt()
-        .toInt(),
+        .isDecimal()
+        .toFloat(),
       check('cost')
         .if(check('type').exists().isIn(['increment']))
         .exists()
