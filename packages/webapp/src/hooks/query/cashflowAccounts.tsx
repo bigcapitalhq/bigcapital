@@ -5,6 +5,9 @@ import useApiRequest from '../useRequest';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
+  // Invalidate settings.
+  queryClient.invalidateQueries([t.SETTING, t.SETTING_CASHFLOW]);
+
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);

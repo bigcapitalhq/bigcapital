@@ -51,7 +51,6 @@ function MoneyOutForm({
     accountId,
     accountType,
     createCashflowTransactionMutate,
-    submitPayload,
   } = useMoneyOutDialogContext();
 
   // transaction number.
