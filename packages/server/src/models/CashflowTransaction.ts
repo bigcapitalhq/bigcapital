@@ -7,8 +7,12 @@ import {
 } from '@/services/Cashflow/utils';
 import AccountTransaction from './AccountTransaction';
 import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
-
+import { getTransactionTypeLabel } from '@/utils/transactions-types';
 export default class CashflowTransaction extends TenantModel {
+  transactionType: string;
+  amount: number;
+  exchangeRate: number;
+
   /**
    * Table name.
    */
@@ -55,9 +59,10 @@ export default class CashflowTransaction extends TenantModel {
 
   /**
    * Transaction type formatted.
+   * @returns {string}
    */
   get transactionTypeFormatted() {
-    return AccountTransaction.getReferenceTypeFormatted(this.transactionType);
+    return getTransactionTypeLabel(this.transactionType);
   }
 
   get typeMeta() {
