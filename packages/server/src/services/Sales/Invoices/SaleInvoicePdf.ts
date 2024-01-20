@@ -1,8 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { GetSaleInvoice } from './GetSaleInvoice';
 
 @Service()
 export class SaleInvoicePdf {
@@ -13,10 +12,7 @@ export class SaleInvoicePdf {
   private templateInjectable: TemplateInjectable;
 
   @Inject()
-  private validators: CommandSaleInvoiceValidators;
-
-  @Inject()
-  private tenancy: HasTenancyService;
+  private getInvoiceService: GetSaleInvoice;
 
   /**
    * Retrieve sale invoice pdf content.
@@ -28,18 +24,10 @@ export class SaleInvoicePdf {
     tenantId: number,
     invoiceId: number
   ): Promise<Buffer> {
-    const { SaleInvoice } = this.tenancy.models(tenantId);
-
-    const saleInvoice = await SaleInvoice.query()
-      .findById(invoiceId)
-      .withGraphFetched('entries.item')
-      .withGraphFetched('entries.tax')
-      .withGraphFetched('customer')
-      .withGraphFetched('taxes.taxRate');
-
-    // Validates the given sale invoice existance.
-    this.validators.validateInvoiceExistance(saleInvoice);
-
+    const saleInvoice = await this.getInvoiceService.getSaleInvoice(
+      tenantId,
+      invoiceId
+    );
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/invoice-regular',
