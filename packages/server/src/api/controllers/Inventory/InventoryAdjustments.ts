@@ -115,6 +115,7 @@ export default class InventoryAdjustmentsController extends BaseController {
         .exists()
         .isDecimal()
         .toFloat(),
+      // TODO: Is the cost supposed to be an integer here if it's a float everywhere else?
       check('cost')
         .if(check('type').exists().isIn(['increment']))
         .exists()
