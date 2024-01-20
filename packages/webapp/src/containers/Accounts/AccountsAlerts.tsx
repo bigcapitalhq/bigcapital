@@ -8,7 +8,7 @@ const AccountInactivateAlert = React.lazy(
   () => import('@/containers/Alerts/Accounts/AccountInactivateAlert'),
 );
 const AccountActivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Accounts/AccountDeleteAlert'),
+  () => import('@/containers/Alerts/Accounts/AccountActivateAlert'),
 );
 
 export default [
