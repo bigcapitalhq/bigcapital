@@ -6,11 +6,11 @@ import {
   IInventoryValuationSheetMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import PurchasesByItems from './PurchasesByItems';
+import { PurchasesByItems } from './PurchasesByItems';
 import { Tenant } from '@/system/models';
 
 @Service()
-export default class InventoryValuationReportService {
+export class PurchasesByItemsService {
   @Inject()
   private tenancy: TenancyService;
 
@@ -63,7 +63,6 @@ export default class InventoryValuationReportService {
    * -------------
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
-   *
    * @return {IBalanceSheetStatement}
    */
   public async purchasesByItems(
@@ -106,7 +105,6 @@ export default class InventoryValuationReportService {
         builder.modify('filterDateRange', filter.fromDate, filter.toDate);
       }
     );
-
     const purchasesByItemsInstance = new PurchasesByItems(
       filter,
       inventoryItems,

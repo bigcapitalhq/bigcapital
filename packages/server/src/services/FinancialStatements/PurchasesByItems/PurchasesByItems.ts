@@ -11,7 +11,7 @@ import {
   IItem,
 } from '@/interfaces';
 
-export default class InventoryValuationReport extends FinancialSheet {
+export class PurchasesByItems extends FinancialSheet {
   readonly baseCurrency: string;
   readonly items: IItem[];
   readonly itemsTransactions: Map<number, IAccountTransaction>;
@@ -159,7 +159,7 @@ export default class InventoryValuationReport extends FinancialSheet {
    * @param {IInventoryValuationItem[]} items
    * @returns {IInventoryValuationTotal}
    */
-  totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
+  private totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
     const quantityPurchased = sumBy(items, (item) => item.quantityPurchased);
     const purchaseCost = sumBy(items, (item) => item.purchaseCost);
 
@@ -176,12 +176,12 @@ export default class InventoryValuationReport extends FinancialSheet {
 
   /**
    * Retrieve the sheet data.
-   * @returns
+   * @returns {IInventoryValuationStatement}
    */
-  reportData(): IInventoryValuationStatement {
+  public reportData(): IInventoryValuationStatement {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return items.length > 0 ? { items, total } : {};
+    return { items, total };
   }
 }
