@@ -84,7 +84,9 @@ export class InventoryValuationSheetTable extends R.compose(
     const itemsRows = this.itemsRowsMapper(this.data.items);
     const totalRow = this.totalRowMapper(this.data.total);
 
-    return [...itemsRows, totalRow];
+    return R.compose(
+      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
+    )([...itemsRows]) as ITableRow[];
   }
 
   /**

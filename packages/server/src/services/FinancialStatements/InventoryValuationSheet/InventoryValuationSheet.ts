@@ -259,6 +259,6 @@ export class InventoryValuationSheet extends FinancialSheet {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return items.length > 0 ? { items, total } : {};
+    return { items, total };
   }
 }
