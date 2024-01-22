@@ -158,15 +158,11 @@ export default class BillsPayments extends BaseController {
     const { tenantId } = req;
     const { vendorId } = this.matchedQueryData(req);
 
-    try {
-      const entries = await this.billPaymentsPages.getNewPageEntries(
-        tenantId,
-        vendorId
-      );
-      return res.status(200).send({
-        entries: this.transfromToResponse(entries),
-      });
-    } catch (error) {}
+    const entries = await this.billPaymentsPages.getNewPageEntries(
+      tenantId,
+      vendorId
+    );
+    return res.status(200).send({ entries });
   }
 
   /**
@@ -183,16 +179,12 @@ export default class BillsPayments extends BaseController {
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const { billPayment, entries } =
+      const billPaymentsWithEditEntries =
         await this.billPaymentsPages.getBillPaymentEditPage(
           tenantId,
           paymentReceiveId
         );
-
-      return res.status(200).send({
-        bill_payment: this.transfromToResponse(billPayment),
-        entries: this.transfromToResponse(entries),
-      });
+      return res.status(200).send(billPaymentsWithEditEntries);
     } catch (error) {
       next(error);
     }
@@ -304,9 +296,7 @@ export default class BillsPayments extends BaseController {
         tenantId,
         billPaymentId
       );
-      return res.status(200).send({
-        bill_payment: this.transfromToResponse(billPayment),
-      });
+      return res.status(200).send({ billPayment });
     } catch (error) {
       next(error);
     }
@@ -359,17 +349,12 @@ export default class BillsPayments extends BaseController {
     };
 
     try {
-      const { billPayments, pagination, filterMeta } =
+      const billPaymentsWithPagination =
         await this.billPaymentsApplication.getBillPayments(
           tenantId,
           billPaymentsFilter
         );
-
-      return res.status(200).send({
-        bill_payments: this.transfromToResponse(billPayments),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      return res.status(200).send(billPaymentsWithPagination);
     } catch (error) {
       next(error);
     }

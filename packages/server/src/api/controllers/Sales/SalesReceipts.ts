@@ -3,12 +3,17 @@ import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '../BaseController';
-import { ISaleReceiptDTO, SaleReceiptMailOpts, SaleReceiptMailOptsDTO } from '@/interfaces/SaleReceipt';
+import {
+  ISaleReceiptDTO,
+  SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
+} from '@/interfaces/SaleReceipt';
 import { ServiceError } from '@/exceptions';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
 import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class SalesReceiptsController extends BaseController {
@@ -62,9 +67,7 @@ export default class SalesReceiptsController extends BaseController {
     );
     router.get(
       '/:id/mail',
-      [
-        ...this.specificReceiptValidationSchema,
-      ],
+      [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getSaleReceiptMail.bind(this)),
       this.handleServiceErrors
@@ -228,7 +231,6 @@ export default class SalesReceiptsController extends BaseController {
         tenantId,
         saleReceiptId
       );
-
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been deleted successfully.',
@@ -317,15 +319,10 @@ export default class SalesReceiptsController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const { data, pagination, filterMeta } =
+      const salesReceiptsWithPagination =
         await this.saleReceiptsApplication.getSaleReceipts(tenantId, filter);
 
-      const response = this.transfromToResponse({
-        data,
-        pagination,
-        filterMeta,
-      });
-      return res.status(200).send(response);
+      return res.status(200).send(salesReceiptsWithPagination);
     } catch (error) {
       next(error);
     }
@@ -337,34 +334,34 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async getSaleReceipt(req: Request, res: Response, next: NextFunction) {
+  public async getSaleReceipt(req: Request, res: Response) {
     const { id: saleReceiptId } = req.params;
     const { tenantId } = req;
 
-    try {
-      res.format({
-        'application/json': async () => {
-          const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
-            tenantId,
-            saleReceiptId
-          );
-          return res.status(200).send({ saleReceipt });
-        },
-        'application/pdf': async () => {
-          const pdfContent =
-            await this.saleReceiptsApplication.getSaleReceiptPdf(
-              tenantId,
-              saleReceiptId
-            );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Retrieves receipt in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
+      const pdfContent = await this.saleReceiptsApplication.getSaleReceiptPdf(
+        tenantId,
+        saleReceiptId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
       });
-    } catch (error) {
-      next(error);
+      res.send(pdfContent);
+      // Retrieves receipt in json format.
+    } else {
+      const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
+        tenantId,
+        saleReceiptId
+      );
+      return res.status(200).send({ saleReceipt });
     }
   }
 

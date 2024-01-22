@@ -26,6 +26,7 @@ import GetCreditNoteAssociatedInvoicesToApply from '@/services/CreditNotes/GetCr
 import GetCreditNoteAssociatedAppliedInvoices from '@/services/CreditNotes/GetCreditNoteAssociatedAppliedInvoices';
 import GetRefundCreditTransaction from '@/services/CreditNotes/GetRefundCreditNoteTransaction';
 import GetCreditNotePdf from '../../../services/CreditNotes/GetCreditNotePdf';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 /**
  * Credit notes controller.
  * @service
@@ -293,7 +294,7 @@ export default class PaymentReceivesController extends BaseController {
     return [
       check('from_account_id').exists().isNumeric().toInt(),
       check('description').optional(),
-      
+
       check('amount').exists().isNumeric().toFloat(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
@@ -438,7 +439,7 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
-   * Retrieve the payment receive details.
+   * Retrieve the credit note details.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -451,38 +452,28 @@ export default class PaymentReceivesController extends BaseController {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
 
-    try {
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.creditNotePdf.getCreditNotePdf(
+        tenantId,
+        creditNoteId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+    } else {
       const creditNote = await this.getCreditNoteService.getCreditNote(
         tenantId,
         creditNoteId
       );
-      const ACCEPT_TYPE = {
-        APPLICATION_PDF: 'application/pdf',
-        APPLICATION_JSON: 'application/json',
-      };
-      // Response formatter.
-      res.format({
-        // Json content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res
-            .status(200)
-            .send({ credit_note: this.transfromToResponse(creditNote) });
-        },
-        // Pdf content type.
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.creditNotePdf.getCreditNotePdf(
-            tenantId,
-            creditNote
-          );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
-      });
-    } catch (error) {
-      next(error);
+      return res.status(200).send({ creditNote });
     }
   };
 

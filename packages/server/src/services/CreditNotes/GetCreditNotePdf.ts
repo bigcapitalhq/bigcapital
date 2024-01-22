@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '../ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '../TemplateInjectable/TemplateInjectable';
+import GetCreditNote from './GetCreditNote';
 
 @Service()
 export default class GetCreditNotePdf {
@@ -10,11 +11,19 @@ export default class GetCreditNotePdf {
   @Inject()
   private templateInjectable: TemplateInjectable;
 
+  @Inject()
+  private getCreditNoteService: GetCreditNote;
+
   /**
    * Retrieve sale invoice pdf content.
-   * @param {} saleInvoice -
+   * @param {number} tenantId - Tenant id.
+   * @param {number} creditNoteId - Credit note id.
    */
-  public async getCreditNotePdf(tenantId: number, creditNote) {
+  public async getCreditNotePdf(tenantId: number, creditNoteId: number) {
+    const creditNote = await this.getCreditNoteService.getCreditNote(
+      tenantId,
+      creditNoteId
+    );
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/credit-note-standard',

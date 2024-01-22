@@ -14,6 +14,7 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class PaymentReceivesController extends BaseController {
@@ -348,17 +349,12 @@ export default class PaymentReceivesController extends BaseController {
     };
 
     try {
-      const { paymentReceives, pagination, filterMeta } =
+      const paymentsReceivedWithPagination =
         await this.paymentReceiveApplication.getPaymentReceives(
           tenantId,
           filter
         );
-
-      return res.status(200).send({
-        payment_receives: this.transfromToResponse(paymentReceives),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      return res.status(200).send(paymentsReceivedWithPagination);
     } catch (error) {
       next(error);
     }
@@ -435,37 +431,34 @@ export default class PaymentReceivesController extends BaseController {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
-    try {
-      const ACCEPT_TYPE = {
-        APPLICATION_PDF: 'application/pdf',
-        APPLICATION_JSON: 'application/json',
-      };
-      res.format({
-        [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
-          const paymentReceive =
-            await this.paymentReceiveApplication.getPaymentReceive(
-              tenantId,
-              paymentReceiveId
-            );
-          return res.status(200).send({
-            payment_receive: paymentReceive,
-          });
-        },
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent =
-            await this.paymentReceiveApplication.getPaymentReceivePdf(
-              tenantId,
-              paymentReceiveId
-            );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Response in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent =
+        await this.paymentReceiveApplication.getPaymentReceivePdf(
+          tenantId,
+          paymentReceiveId
+        );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
       });
-    } catch (error) {
-      next(error);
+      res.send(pdfContent);
+      // Response in json format.
+    } else {
+      const paymentReceive =
+        await this.paymentReceiveApplication.getPaymentReceive(
+          tenantId,
+          paymentReceiveId
+        );
+      return res.status(200).send({
+        payment_receive: paymentReceive,
+      });
     }
   }
 
@@ -499,7 +492,7 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
-   *
+   * Retrieves the sms details of the given payment receive.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -588,10 +581,10 @@ export default class PaymentReceivesController extends BaseController {
 
   /**
    * Handles service errors.
-   * @param error
-   * @param req
-   * @param res
-   * @param next
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   private handleServiceErrors(
     error: Error,
