@@ -1,6 +1,7 @@
 import { Service, Inject } from 'typedi';
 import { PurchasesByItemsExport } from './PurchasesByItemsExport';
 import { IPurchasesByItemsReportQuery } from '@/interfaces/PurchasesByItemsSheet';
+import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 
 @Service()
 export class PurcahsesByItemsApplication {
@@ -8,14 +9,22 @@ export class PurcahsesByItemsApplication {
   private purchasesByItemsSheet: any;
 
   @Inject()
-  private purchasesByItemsTable: any;
+  private purchasesByItemsTable: PurchasesByItemsTableInjectable;
 
   @Inject()
   private purchasesByItemsExport: PurchasesByItemsExport;
 
   public sheet(tenantId: number, query: any) {}
 
-  public table(tenantId: number, query: any) {}
+  /**
+   * 
+   * @param {number} tenantId 
+   * @param {} query 
+   * @returns 
+   */
+  public table(tenantId: number, query: IPurchasesByItemsReportQuery) {
+    return this.purchasesByItemsTable.table(tenantId, query);
+  }
 
   /**
    * Retrieves the purchases by items in csv format.

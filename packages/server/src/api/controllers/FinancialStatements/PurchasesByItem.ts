@@ -1,17 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
-import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from './BaseFinancialReportController';
-import PurchasesByItemsService from '@/services/FinancialStatements/PurchasesByItems/PurchasesByItemsService';
+import { PurchasesByItemsService } from '@/services/FinancialStatements/PurchasesByItems/PurchasesByItemsService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 
 @Service()
-export default class PurchasesByItemReportController extends BaseFinancialReportController {
+export class PurchasesByItemReportController extends BaseFinancialReportController {
   @Inject()
-  purchasesByItemsService: PurchasesByItemsService;
+  private purchasesByItemsService: PurchasesByItemsService;
 
   /**
    * Router constructor.
