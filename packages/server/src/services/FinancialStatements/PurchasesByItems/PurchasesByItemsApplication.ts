@@ -1,12 +1,16 @@
 import { Service, Inject } from 'typedi';
 import { PurchasesByItemsExport } from './PurchasesByItemsExport';
-import { IPurchasesByItemsReportQuery } from '@/interfaces/PurchasesByItemsSheet';
+import {
+  IPurchasesByItemsReportQuery,
+  IPurchasesByItemsTable,
+} from '@/interfaces/PurchasesByItemsSheet';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
+import { PurchasesByItemsService } from './PurchasesByItemsService';
 
 @Service()
 export class PurcahsesByItemsApplication {
   @Inject()
-  private purchasesByItemsSheet: any;
+  private purchasesByItemsSheet: PurchasesByItemsService;
 
   @Inject()
   private purchasesByItemsTable: PurchasesByItemsTableInjectable;
@@ -14,15 +18,26 @@ export class PurcahsesByItemsApplication {
   @Inject()
   private purchasesByItemsExport: PurchasesByItemsExport;
 
-  public sheet(tenantId: number, query: any) {}
+  /**
+   * Retrieves the purchases by items in json format.
+   * @param {number} tenantId
+   * @param {IPurchasesByItemsReportQuery} query
+   * @returns
+   */
+  public sheet(tenantId: number, query: any) {
+    return this.purchasesByItemsSheet.purchasesByItems(tenantId, query);
+  }
 
   /**
-   * 
-   * @param {number} tenantId 
-   * @param {} query 
-   * @returns 
+   * Retrieves the purchases by items in table format.
+   * @param {number} tenantId
+   * @param {IPurchasesByItemsReportQuery} query
+   * @returns {Promise<IPurchasesByItemsTable>}
    */
-  public table(tenantId: number, query: IPurchasesByItemsReportQuery) {
+  public table(
+    tenantId: number,
+    query: IPurchasesByItemsReportQuery
+  ): Promise<IPurchasesByItemsTable> {
     return this.purchasesByItemsTable.table(tenantId, query);
   }
 

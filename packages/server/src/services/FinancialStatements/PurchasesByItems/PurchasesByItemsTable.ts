@@ -7,6 +7,7 @@ import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import FinancialSheet from '../FinancialSheet';
 import {
   IPurchasesByItemsItem,
+  IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from '@/interfaces/PurchasesByItemsSheet';
 
@@ -14,7 +15,7 @@ export class PurchasesByItemsTable extends R.compose(
   FinancialTable,
   FinancialSheetStructure
 )(FinancialSheet) {
-  private data: any;
+  private data: IPurchasesByItemsSheetData;
 
   /**
    * Constructor method.
@@ -81,7 +82,7 @@ export class PurchasesByItemsTable extends R.compose(
   private totalNodeMap = (total: IPurchasesByItemsTotal): ITableRow => {
     const columns = this.commonTableAccessors();
     const meta = {
-      rowTypes: [ROW_TYPE.ITEM],
+      rowTypes: [ROW_TYPE.TOTAL],
     };
     return tableRowMapper(total, columns, meta);
   };
