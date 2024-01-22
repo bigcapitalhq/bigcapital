@@ -334,7 +334,6 @@ export default class SalesEstimatesController extends BaseController {
         tenantId,
         estimateId
       );
-
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been approved successfully.',
@@ -363,7 +362,6 @@ export default class SalesEstimatesController extends BaseController {
         tenantId,
         estimateId
       );
-
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been rejected successfully.',
@@ -383,33 +381,30 @@ export default class SalesEstimatesController extends BaseController {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
-    try {
-      // Response formatter.
-      res.format({
-        // JSON content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
-          const estimate = await this.saleEstimatesApplication.getSaleEstimate(
-            tenantId,
-            estimateId
-          );
-          return res.status(200).send({ estimate });
-        },
-        // PDF content type.
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent =
-            await this.saleEstimatesApplication.getSaleEstimatePdf(
-              tenantId,
-              estimateId
-            );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Retrieves estimate in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
+      const pdfContent = await this.saleEstimatesApplication.getSaleEstimatePdf(
+        tenantId,
+        estimateId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
       });
-    } catch (error) {
-      next(error);
+      res.send(pdfContent);
+      // Retrieves estimates in json format.
+    } else {
+      const estimate = await this.saleEstimatesApplication.getSaleEstimate(
+        tenantId,
+        estimateId
+      );
+      return res.status(200).send({ estimate });
     }
   }
 
@@ -427,22 +422,11 @@ export default class SalesEstimatesController extends BaseController {
       pageSize: 12,
       ...this.matchedQueryData(req),
     };
-
     try {
-      const { salesEstimates, pagination, filterMeta } =
+      const salesEstimatesWithPagination =
         await this.saleEstimatesApplication.getSaleEstimates(tenantId, filter);
 
-      res.format({
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send(
-            this.transfromToResponse({
-              salesEstimates,
-              pagination,
-              filterMeta,
-            })
-          );
-        },
-      });
+      return res.status(200).send(salesEstimatesWithPagination);
     } catch (error) {
       next(error);
     }

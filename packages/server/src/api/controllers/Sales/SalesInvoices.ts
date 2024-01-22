@@ -14,11 +14,8 @@ import {
 } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
-const ACCEPT_TYPE = {
-  APPLICATION_PDF: 'application/pdf',
-  APPLICATION_JSON: 'application/json',
-};
 @Service()
 export default class SaleInvoicesController extends BaseController {
   @Inject()
@@ -403,7 +400,6 @@ export default class SaleInvoicesController extends BaseController {
         saleInvoiceId,
         user
       );
-
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The sale invoice has been deleted successfully.',
@@ -422,30 +418,32 @@ export default class SaleInvoicesController extends BaseController {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
-    // Response formatter.
-    return res.format({
-      // JSON content type.
-      [ACCEPT_TYPE.APPLICATION_JSON]: async () => {
-        const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
-          tenantId,
-          saleInvoiceId,
-          user
-        );
-        return res.status(200).send(this.transfromToResponse({ saleInvoice }));
-      },
-      // PDF content type.
-      [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-        const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
-          tenantId,
-          saleInvoiceId
-        );
-        res.set({
-          'Content-Type': 'application/pdf',
-          'Content-Length': pdfContent.length,
-        });
-        res.send(pdfContent);
-      },
-    });
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Retrieves invoice in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
+      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
+        tenantId,
+        saleInvoiceId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+      // Retrieves invoice in json format.
+    } else {
+      const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
+        tenantId,
+        saleInvoiceId,
+        user
+      );
+      return res.status(200).send({ saleInvoice });
+    }
   }
   /**
    * Retrieve paginated sales invoices with custom view metadata.
@@ -467,14 +465,10 @@ export default class SaleInvoicesController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const { salesInvoices, filterMeta, pagination } =
+      const salesInvoicesWithPagination =
         await this.saleInvoiceApplication.getSaleInvoices(tenantId, filter);
 
-      return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      return res.status(200).send(salesInvoicesWithPagination);
     } catch (error) {
       next(error);
     }
@@ -501,9 +495,7 @@ export default class SaleInvoicesController extends BaseController {
           tenantId,
           customerId
         );
-      return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
-      });
+      return res.status(200).send({ salesInvoices });
     } catch (error) {
       next(error);
     }
@@ -531,7 +523,6 @@ export default class SaleInvoicesController extends BaseController {
         invoiceId,
         writeoffDTO
       );
-
       return res.status(200).send({
         id: saleInvoice.id,
         message: 'The given sale invoice has been written-off successfully.',
