@@ -2,6 +2,19 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.13.3] - 22-01-2024
+
+* hotfix(server): Unhandled thrown errors of services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/329
+
+## [0.13.2] - 21-01-2024
+
+* feat: show customer / vendor balance. by @asenawritescode in https://github.com/bigcapitalhq/bigcapital/pull/311
+* feat: inventory valuation csv and xlsx export by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/308
+* feat: sales by items export csv & xlsx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/310
+* fix(server): the invoice and payment receipt printing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/315
+* fix: get cashflow transaction broken cause transaction type by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/318
+* fix: `AccountActivateAlert` import by @xprnio in https://github.com/bigcapitalhq/bigcapital/pull/322
+
 ## [0.13.1] - 15-01-2024
 
 * feat(webapp): add approve/reject to action bar of estimate details dr… by @ANasouf in https://github.com/bigcapitalhq/bigcapital/pull/304
