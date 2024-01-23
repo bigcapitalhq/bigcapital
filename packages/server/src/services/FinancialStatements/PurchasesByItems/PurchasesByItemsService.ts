@@ -1,24 +1,24 @@
-import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import {
-  IInventoryValuationReportQuery,
-  IInventoryValuationStatement,
-  IInventoryValuationSheetMeta,
-} from '@/interfaces';
+import { Service, Inject } from 'typedi';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import PurchasesByItems from './PurchasesByItems';
+import { PurchasesByItems } from './PurchasesByItems';
 import { Tenant } from '@/system/models';
+import {
+  IPurchasesByItemsReportQuery,
+  IPurchasesByItemsSheet,
+  IPurchasesByItemsSheetMeta,
+} from '@/interfaces/PurchasesByItemsSheet';
 
 @Service()
-export default class InventoryValuationReportService {
+export class PurchasesByItemsService {
   @Inject()
   private tenancy: TenancyService;
 
   /**
-   * Defaults balance sheet filter query.
-   * @return {IBalanceSheetQuery}
+   * Defaults purchases by items filter query.
+   * @return {IPurchasesByItemsReportQuery}
    */
-  get defaultQuery(): IInventoryValuationReportQuery {
+  get defaultQuery(): IPurchasesByItemsReportQuery {
     return {
       fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -40,7 +40,7 @@ export default class InventoryValuationReportService {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  reportMetadata(tenantId: number): IInventoryValuationSheetMeta {
+  reportMetadata(tenantId: number): IPurchasesByItemsSheetMeta {
     const settings = this.tenancy.settings(tenantId);
 
     const organizationName = settings.get({
@@ -62,18 +62,13 @@ export default class InventoryValuationReportService {
    * Retrieve balance sheet statement.
    * -------------
    * @param {number} tenantId
-   * @param {IBalanceSheetQuery} query
-   *
-   * @return {IBalanceSheetStatement}
+   * @param {IPurchasesByItemsReportQuery} query
+   * @return {Promise<IPurchasesByItemsSheet>}
    */
   public async purchasesByItems(
     tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<{
-    data: IInventoryValuationStatement;
-    query: IInventoryValuationReportQuery;
-    meta: IInventoryValuationSheetMeta;
-  }> {
+    query: IPurchasesByItemsReportQuery
+  ): Promise<IPurchasesByItemsSheet> {
     const { Item, InventoryTransaction } = this.tenancy.models(tenantId);
 
     const tenant = await Tenant.query()
@@ -106,7 +101,6 @@ export default class InventoryValuationReportService {
         builder.modify('filterDateRange', filter.fromDate, filter.toDate);
       }
     );
-
     const purchasesByItemsInstance = new PurchasesByItems(
       filter,
       inventoryItems,

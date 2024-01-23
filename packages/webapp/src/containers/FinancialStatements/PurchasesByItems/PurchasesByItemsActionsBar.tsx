@@ -18,6 +18,7 @@ import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 import { compose, saveInvoke } from '@/utils';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import { PurchasesByItemsExportMenu } from './components';
 
 function PurchasesByItemsActionsBar({
   // #withPurchasesByItems
@@ -106,11 +107,18 @@ function PurchasesByItemsActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<PurchasesByItemsExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );

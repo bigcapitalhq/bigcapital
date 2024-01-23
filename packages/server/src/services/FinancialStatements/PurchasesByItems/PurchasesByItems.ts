@@ -2,36 +2,34 @@ import { get, isEmpty, sumBy } from 'lodash';
 import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { allPassedConditionsPass, transformToMap } from 'utils';
+import { IAccountTransaction, IItem } from '@/interfaces';
 import {
-  IAccountTransaction,
-  IInventoryValuationTotal,
-  IInventoryValuationItem,
-  IInventoryValuationReportQuery,
-  IInventoryValuationStatement,
-  IItem,
-} from '@/interfaces';
+  IPurchasesByItemsItem,
+  IPurchasesByItemsReportQuery,
+  IPurchasesByItemsSheetData,
+  IPurchasesByItemsTotal,
+} from '@/interfaces/PurchasesByItemsSheet';
 
-export default class InventoryValuationReport extends FinancialSheet {
+export class PurchasesByItems extends FinancialSheet {
   readonly baseCurrency: string;
   readonly items: IItem[];
   readonly itemsTransactions: Map<number, IAccountTransaction>;
-  readonly query: IInventoryValuationReportQuery;
+  readonly query: IPurchasesByItemsReportQuery;
 
   /**
    * Constructor method.
-   * @param {IInventoryValuationReportQuery} query
+   * @param {IPurchasesByItemsReportQuery} query
    * @param {IItem[]} items
    * @param {IAccountTransaction[]} itemsTransactions
    * @param {string} baseCurrency
    */
   constructor(
-    query: IInventoryValuationReportQuery,
+    query: IPurchasesByItemsReportQuery,
     items: IItem[],
     itemsTransactions: IAccountTransaction[],
     baseCurrency: string
   ) {
     super();
-
     this.baseCurrency = baseCurrency;
     this.items = items;
     this.itemsTransactions = transformToMap(itemsTransactions, 'itemId');
@@ -98,7 +96,7 @@ export default class InventoryValuationReport extends FinancialSheet {
    * @param {IInventoryValuationItem} item
    * @returns
    */
-  private itemSectionMapper = (item: IItem): IInventoryValuationItem => {
+  private itemSectionMapper = (item: IItem): IPurchasesByItemsItem => {
     const meta = this.getItemTransaction(item.id);
 
     return {
@@ -145,9 +143,9 @@ export default class InventoryValuationReport extends FinancialSheet {
 
   /**
    * Retrieve the items sections.
-   * @returns {IInventoryValuationItem[]}
+   * @returns {IPurchasesByItemsItem[]}
    */
-  private itemsSection = (): IInventoryValuationItem[] => {
+  private itemsSection = (): IPurchasesByItemsItem[] => {
     return R.compose(
       R.when(this.isItemsPostFilter, this.itemsFilter),
       this.itemsMapper
@@ -156,10 +154,10 @@ export default class InventoryValuationReport extends FinancialSheet {
 
   /**
    * Retrieve the total section of the sheet.
-   * @param {IInventoryValuationItem[]} items
-   * @returns {IInventoryValuationTotal}
+   * @param {IPurchasesByItemsItem[]} items
+   * @returns {IPurchasesByItemsTotal}
    */
-  totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
+  private totalSection(items: IPurchasesByItemsItem[]): IPurchasesByItemsTotal {
     const quantityPurchased = sumBy(items, (item) => item.quantityPurchased);
     const purchaseCost = sumBy(items, (item) => item.purchaseCost);
 
@@ -176,12 +174,12 @@ export default class InventoryValuationReport extends FinancialSheet {
 
   /**
    * Retrieve the sheet data.
-   * @returns
+   * @returns {IInventoryValuationStatement}
    */
-  reportData(): IInventoryValuationStatement {
+  public reportData(): IPurchasesByItemsSheetData {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return items.length > 0 ? { items, total } : {};
+    return { items, total };
   }
 }

@@ -1,13 +1,10 @@
 import {
   IAgingPeriod,
-  IAgingPeriodTotal,
-  IAgingAmount,
   IAgingSummaryQuery,
   IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
 } from './AgingReport';
-import { INumberFormatQuery } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IAPAgingSummaryQuery extends IAgingSummaryQuery {

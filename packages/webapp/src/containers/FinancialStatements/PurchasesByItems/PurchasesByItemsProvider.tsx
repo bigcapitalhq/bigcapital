@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { usePurchasesByItems } from '@/hooks/query';
+import { usePurchasesByItemsTable } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const PurchasesByItemsContext = createContext();
@@ -13,7 +13,7 @@ function PurchasesByItemsProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = usePurchasesByItems(
+  } = usePurchasesByItemsTable(
     {
       ...transformFilterFormToQuery(query),
     },
@@ -26,7 +26,6 @@ function PurchasesByItemsProvider({ query, ...props }) {
     purchaseByItems,
     isFetching,
     isLoading,
-
     refetchSheet: refetch,
   };
   return (
