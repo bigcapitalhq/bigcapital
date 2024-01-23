@@ -131,7 +131,14 @@ export default {
     onNotifiedSms: 'onSaleInvoiceNotifiedSms',
 
     onNotifyMail: 'onSaleInvoiceNotifyMail',
-    onNotifyReminderMail: 'onSaleInvoiceNotifyReminderMail'
+    onNotifyReminderMail: 'onSaleInvoiceNotifyReminderMail',
+
+    onPreMailSend: 'onSaleInvoicePreMailSend',
+    onMailSend: 'onSaleInvoiceMailSend',
+    onMailSent: 'onSaleInvoiceMailSent',
+
+    onMailReminderSend: 'onSaleInvoiceMailReminderSend',
+    onMailReminderSent: 'onSaleInvoiceMailReminderSent',
   },
 
   /**
@@ -164,7 +171,7 @@ export default {
     onRejecting: 'onSaleEstimateRejecting',
     onRejected: 'onSaleEstimateRejected',
 
-    onNotifyMail: 'onSaleEstimateNotifyMail'
+    onNotifyMail: 'onSaleEstimateNotifyMail',
   },
 
   /**
@@ -580,6 +587,6 @@ export default {
     onActivated: 'onTaxRateActivated',
 
     onInactivating: 'onTaxRateInactivating',
-    onInactivated: 'onTaxRateInactivated'
+    onInactivated: 'onTaxRateInactivated',
   },
 };

@@ -84,6 +84,7 @@ import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subsc
 import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
+import { InvoiceChangeStatusOnMailSentSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceChangeStatusOnMailSentSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -152,6 +153,7 @@ export const susbcribers = () => {
     // #Invoices
     InvoicePaymentGLRewriteSubscriber,
     InvoiceCostGLEntriesSubscriber,
+    InvoiceChangeStatusOnMailSentSubscriber,
 
     BillPaymentsGLEntriesRewriteSubscriber,
 
