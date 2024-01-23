@@ -32,7 +32,7 @@ export class PurchasesByItemsTable extends R.compose(
    */
   private commonTableAccessors(): ITableColumnAccessor[] {
     return [
-      { key: 'item_name', accessor: 'itemName' },
+      { key: 'item_name', accessor: 'name' },
       { key: 'quantity_purchases', accessor: 'quantityPurchasedFormatted' },
       { key: 'purchase_amount', accessor: 'purchaseCostFormatted' },
       { key: 'average_cost', accessor: 'averageCostPriceFormatted' },

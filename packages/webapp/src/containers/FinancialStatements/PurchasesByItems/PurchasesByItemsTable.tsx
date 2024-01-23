@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { ReportDataTable, FinancialSheet } from '@/components';
 
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-import { usePurchasesByItemsTableColumns } from './components';
 
 import { tableRowTypesToClassnames } from '@/utils';
 import { TableStyle } from '@/constants';
+import { usePurchasesByItemsTableColumns } from './dynamicColumns';
 
 /**
  * Purchases by items data table.
@@ -17,7 +17,7 @@ import { TableStyle } from '@/constants';
 export default function PurchasesByItemsTable({ companyName }) {
   // Purchases by items context.
   const {
-    purchaseByItems: { tableRows, query },
+    purchaseByItems: { table, query },
   } = usePurchaseByItemsContext();
 
   // Purchases by items table columns.
@@ -32,7 +32,7 @@ export default function PurchasesByItemsTable({ companyName }) {
     >
       <PurchasesByItemsDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         expandable={true}
         expandToggleColumn={1}
         expandColumnSpace={1}
@@ -58,7 +58,7 @@ const PurchasesByItemsDataTable = styled(ReportDataTable)`
         padding-top: 0.36rem;
         padding-bottom: 0.36rem;
       }
-      .tr.row_type--total .td {
+      .tr.row_type--TOTAL .td {
         border-top: 1px solid #bbb;
         font-weight: 500;
         border-bottom: 3px double #000;

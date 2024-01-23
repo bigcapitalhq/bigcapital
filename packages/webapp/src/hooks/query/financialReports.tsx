@@ -426,19 +426,57 @@ export function usePurchasesByItems(query, props) {
       params: query,
     },
     {
-      select: (res) => ({
-        tableRows: purchasesByItemsReducer(res.data.data),
-        ...res.data,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-        query: {},
-      },
+      select: (res) => res.data,
       ...props,
     },
   );
 }
+
+export function usePurchasesByItemsTable(query, props) {
+  return useRequestQuery(
+    [t.FINANCIAL_REPORT, t.PURCHASES_BY_ITEMS, query],
+    {
+      method: 'get',
+      url: '/financial_statements/purchases-by-items',
+      params: query,
+      headers: {
+        accept: 'application/json+table',
+      },
+    },
+    {
+      select: (res) => res.data,
+      ...props,
+    },
+  );
+}
+
+export const usePurchasesByItemsCsvExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/purchases-by-items',
+    config: {
+      headers: {
+        accept: 'application/csv',
+      },
+      params: query,
+    },
+    filename: 'purchases_by_items.csv',
+    ...args,
+  });
+};
+
+export const usePurchasesByItemsXlsxExport = (query, args) => {
+  return useDownloadFile({
+    url: '/financial_statements/purchases-by-items',
+    config: {
+      headers: {
+        accept: 'application/xlsx',
+      },
+      params: query,
+    },
+    filename: 'purchases_by_items.xlsx',
+    ...args,
+  });
+};
 
 /**
  * Retrieve sales by items.
