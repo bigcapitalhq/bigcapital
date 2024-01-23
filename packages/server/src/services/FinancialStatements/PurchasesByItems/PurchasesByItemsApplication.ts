@@ -2,6 +2,7 @@ import { Service, Inject } from 'typedi';
 import { PurchasesByItemsExport } from './PurchasesByItemsExport';
 import {
   IPurchasesByItemsReportQuery,
+  IPurchasesByItemsSheet,
   IPurchasesByItemsTable,
 } from '@/interfaces/PurchasesByItemsSheet';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
@@ -24,7 +25,10 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns
    */
-  public sheet(tenantId: number, query: any) {
+  public sheet(
+    tenantId: number,
+    query: IPurchasesByItemsReportQuery
+  ): Promise<IPurchasesByItemsSheet> {
     return this.purchasesByItemsSheet.purchasesByItems(tenantId, query);
   }
 

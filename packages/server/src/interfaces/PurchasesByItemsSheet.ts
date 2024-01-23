@@ -42,7 +42,7 @@ export type IPurchasesByItemsSheetData = {
   total: IPurchasesByItemsTotal;
 };
 
-export interface ISalesByItemsSheet {
+export interface IPurchasesByItemsSheet {
   data: IPurchasesByItemsSheetData;
   query: IPurchasesByItemsReportQuery;
   meta: IPurchasesByItemsSheetMeta;
