@@ -46,9 +46,9 @@ export class PurchasesByItemsTable extends R.compose(
   private commonTableColumns(): ITableColumn[] {
     return [
       { label: 'Item name', key: 'item_name' },
-      { label: 'Quantity Purchases', key: 'quantity_purchases' },
+      { label: 'Quantity Purchased', key: 'quantity_purchases' },
       { label: 'Purchase Amount', key: 'purchase_amount' },
-      { label: 'Average Cost', key: 'average_cost' },
+      { label: 'Average Price', key: 'average_cost' },
     ];
   }
 
