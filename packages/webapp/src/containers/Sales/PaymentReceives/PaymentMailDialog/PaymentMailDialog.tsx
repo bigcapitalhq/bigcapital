@@ -13,7 +13,12 @@ const PaymentMailDialogContent = React.lazy(
  */
 function PaymentMailDialog({
   dialogName,
-  payload: { paymentReceiveId = null },
+  payload: {
+    paymentReceiveId = null,
+
+    // Redirects to the payments list on mail submitting.
+    redirectToPaymentsList = false,
+  },
   isOpen,
 }) {
   return (
@@ -29,6 +34,7 @@ function PaymentMailDialog({
         <PaymentMailDialogContent
           dialogName={dialogName}
           paymentReceiveId={paymentReceiveId}
+          redirectToPaymentsList={redirectToPaymentsList}
         />
       </DialogSuspense>
     </Dialog>

@@ -13,7 +13,12 @@ const EstimateMailDialogContent = React.lazy(
  */
 function EstimateMailDialog({
   dialogName,
-  payload: { estimateId = null },
+  payload: {
+    estimateId = null,
+
+    // Redirect to the estimates list after mail submitting.
+    redirectToEstimatesList = false,
+  },
   isOpen,
 }) {
   return (
@@ -29,6 +34,7 @@ function EstimateMailDialog({
         <EstimateMailDialogContent
           dialogName={dialogName}
           estimateId={estimateId}
+          redirectToEstimatesList={redirectToEstimatesList}
         />
       </DialogSuspense>
     </Dialog>

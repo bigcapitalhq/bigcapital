@@ -1,6 +1,8 @@
 // @ts-nocheck
 import { Formik } from 'formik';
 import * as R from 'ramda';
+import { Intent } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
 import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { DialogsName } from '@/constants/dialogs';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -12,7 +14,6 @@ import {
   transformMailFormToInitialValues,
   transformMailFormToRequest,
 } from '@/containers/SendMailNotification/utils';
-import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
 const initialFormValues = {
@@ -29,7 +30,10 @@ function EstimateMailDialogFormRoot({
   closeDialog,
 }) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
-  const { mailOptions, saleEstimateId } = useEstimateMailDialogBoot();
+  const { mailOptions, saleEstimateId, redirectToEstimatesList } =
+    useEstimateMailDialogBoot();
+
+  const history = useHistory();
 
   const initialValues = transformMailFormToInitialValues(
     mailOptions,
@@ -48,8 +52,12 @@ function EstimateMailDialogFormRoot({
         });
         closeDialog(DialogsName.EstimateMail);
         setSubmitting(false);
+
+        if (redirectToEstimatesList) {
+          history.push('/estimates');
+        }
       })
-      .catch((error) => {
+      .catch(() => {
         setSubmitting(false);
         closeDialog(DialogsName.EstimateMail);
         AppToaster.show({

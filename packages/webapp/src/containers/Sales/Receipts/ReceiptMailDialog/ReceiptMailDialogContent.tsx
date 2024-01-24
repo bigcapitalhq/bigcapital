@@ -3,15 +3,20 @@ import { ReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import { ReceiptMailDialogForm } from './ReceiptMailDialogForm';
 
 interface ReceiptMailDialogContentProps {
-  dialogName: string
+  dialogName: string;
   receiptId: number;
+  redirectToReceiptsList?: boolean;
 }
 export default function ReceiptMailDialogContent({
   dialogName,
   receiptId,
+  redirectToReceiptsList = false,
 }: ReceiptMailDialogContentProps) {
   return (
-    <ReceiptMailDialogBoot receiptId={receiptId}>
+    <ReceiptMailDialogBoot
+      receiptId={receiptId}
+      redirectToReceiptsList={redirectToReceiptsList}
+    >
       <ReceiptMailDialogForm />
     </ReceiptMailDialogBoot>
   );

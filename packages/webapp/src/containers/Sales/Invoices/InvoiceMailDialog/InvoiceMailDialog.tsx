@@ -13,7 +13,12 @@ const InvoiceMailDialogContent = React.lazy(
  */
 function InvoiceMailDialog({
   dialogName,
-  payload: { invoiceId = null },
+  payload: {
+    invoiceId = null,
+
+    // Redirects to the invoices list.
+    redirectToInvoicesList = false,
+  },
   isOpen,
 }) {
   return (
@@ -29,6 +34,7 @@ function InvoiceMailDialog({
         <InvoiceMailDialogContent
           dialogName={dialogName}
           invoiceId={invoiceId}
+          redirectToInvoicesList={redirectToInvoicesList}
         />
       </DialogSuspense>
     </Dialog>

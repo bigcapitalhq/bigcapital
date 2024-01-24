@@ -13,7 +13,12 @@ const ReceiptMailDialogContent = React.lazy(
  */
 function ReceiptMailDialog({
   dialogName,
-  payload: { receiptId = null },
+  payload: {
+    receiptId = null,
+
+    // Redirects to receipts list after mail submitting.
+    redirectToReceiptsList = false,
+  },
   isOpen,
 }) {
   return (
@@ -29,6 +34,7 @@ function ReceiptMailDialog({
         <ReceiptMailDialogContent
           dialogName={dialogName}
           receiptId={receiptId}
+          redirectToReceiptsList={redirectToReceiptsList}
         />
       </DialogSuspense>
     </Dialog>

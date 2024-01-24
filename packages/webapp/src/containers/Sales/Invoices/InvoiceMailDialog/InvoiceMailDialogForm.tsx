@@ -15,6 +15,7 @@ import {
   transformMailFormToRequest,
   transformMailFormToInitialValues,
 } from '@/containers/SendMailNotification/utils';
+import { useHistory } from 'react-router-dom';
 
 const initialFormValues = {
   ...initialMailNotificationValues,
@@ -29,7 +30,9 @@ function InvoiceMailDialogFormRoot({
   // #withDialogActions
   closeDialog,
 }) {
-  const { mailOptions, saleInvoiceId } = useInvoiceMailDialogBoot();
+  const history = useHistory();
+  const { mailOptions, saleInvoiceId, redirectToInvoicesList } =
+    useInvoiceMailDialogBoot();
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
 
   const initialValues = transformMailFormToInitialValues(
@@ -49,6 +52,11 @@ function InvoiceMailDialogFormRoot({
         });
         closeDialog(DialogsName.InvoiceMail);
         setSubmitting(false);
+
+        // Redirect to the dashboard if the option was enabled.
+        if (redirectToInvoicesList) {
+          history.push('/invoices');
+        }
       })
       .catch(() => {
         AppToaster.show({

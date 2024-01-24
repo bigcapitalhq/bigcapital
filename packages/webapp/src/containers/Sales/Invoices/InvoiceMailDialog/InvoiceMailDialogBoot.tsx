@@ -6,12 +6,14 @@ import { DialogContent } from '@/components';
 interface InvoiceMailDialogBootValues {
   invoiceId: number;
   mailOptions: any;
+  redirectToInvoicesList: boolean;
 }
 
 const InvoiceMailDialagBoot = createContext<InvoiceMailDialogBootValues>();
 
 interface InvoiceMailDialogBootProps {
   invoiceId: number;
+  redirectToInvoicesList?: boolean;
   children: React.ReactNode;
 }
 
@@ -20,6 +22,7 @@ interface InvoiceMailDialogBootProps {
  */
 function InvoiceMailDialogBoot({
   invoiceId,
+  redirectToInvoicesList,
   ...props
 }: InvoiceMailDialogBootProps) {
   const { data: mailOptions, isLoading: isMailOptionsLoading } =
@@ -29,6 +32,7 @@ function InvoiceMailDialogBoot({
     saleInvoiceId: invoiceId,
     mailOptions,
     isMailOptionsLoading,
+    redirectToInvoicesList,
   };
 
   return (

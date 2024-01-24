@@ -2,6 +2,7 @@
 import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
 import { useReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
@@ -24,8 +25,11 @@ interface ReceiptMailFormValues extends MailNotificationFormValues {
 }
 
 function ReceiptMailDialogFormRoot({ closeDialog }) {
-  const { mailOptions, saleReceiptId } = useReceiptMailDialogBoot();
+  const { mailOptions, saleReceiptId, redirectToReceiptsList } =
+    useReceiptMailDialogBoot();
   const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
+
+  const history = useHistory();
 
   // Transformes mail options to initial form values.
   const initialValues = transformMailFormToInitialValues(
@@ -48,6 +52,10 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
         });
         closeDialog(DialogsName.ReceiptMail);
         setSubmitting(false);
+
+        if (redirectToReceiptsList) {
+          history.push('/receipts');
+        }
       })
       .catch(() => {
         AppToaster.show({
