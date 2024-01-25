@@ -9,7 +9,7 @@ import { getColumnWidth } from '@/utils';
 /**
  * Retrieve expense readonly details entries table columns.
  */
-export const useExpenseReadEntriesColumns = () => {
+export const useExpenseReadEntriesColumns = ({ currency }) => {
   // Expense drawer context.
   const {
     expense: { categories },
@@ -38,6 +38,7 @@ export const useExpenseReadEntriesColumns = () => {
         Header: intl.get('amount'),
         accessor: 'amount',
         Cell: FormatNumberCell,
+        formatNumber: { currency },
         width: getColumnWidth(categories, 'amount', {
           minWidth: 60,
           magicSpacing: 5,
@@ -47,6 +48,6 @@ export const useExpenseReadEntriesColumns = () => {
         align: 'right',
       },
     ],
-    [],
+    [currency],
   );
 };

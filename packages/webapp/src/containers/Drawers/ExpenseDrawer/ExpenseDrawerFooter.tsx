@@ -22,12 +22,22 @@ export default function ExpenseDrawerFooter() {
       <ExpenseTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'expense.details.subtotal'} />}
-          value={<FormatNumber value={expense.total_amount} />}
+          value={
+            <FormatNumber
+              value={expense.total_amount}
+              currency={expense.currency_code}
+            />
+          }
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'expense.details.total'} />}
-          value={<FormatNumber value={expense.formatted_amount} />}
+          value={
+            <FormatNumber
+              value={expense.formatted_amount}
+              currency={expense.currency_code}
+            />
+          }
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
