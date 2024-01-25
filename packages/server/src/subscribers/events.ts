@@ -172,6 +172,10 @@ export default {
     onRejected: 'onSaleEstimateRejected',
 
     onNotifyMail: 'onSaleEstimateNotifyMail',
+
+    onPreMailSend: 'onSaleEstimatePreMailSend',
+    onMailSend: 'onSaleEstimateMailSend',
+    onMailSent: 'onSaleEstimateMailSend',
   },
 
   /**
@@ -195,6 +199,10 @@ export default {
 
     onNotifySms: 'onSaleReceiptNotifySms',
     onNotifiedSms: 'onSaleReceiptNotifiedSms',
+
+    onPreMailSend: 'onSaleReceiptPreMailSend',
+    onMailSend: 'onSaleReceiptMailSend',
+    onMailSent: 'onSaleReceiptMailSent', 
   },
 
   /**
@@ -215,6 +223,10 @@ export default {
 
     onNotifySms: 'onPaymentReceiveNotifySms',
     onNotifiedSms: 'onPaymentReceiveNotifiedSms',
+
+    onPreMailSend: 'onPaymentReceivePreMailSend',
+    onMailSend: 'onPaymentReceiveMailSend',
+    onMailSent: 'onPaymentReceiveMailSent', 
   },
 
   /**

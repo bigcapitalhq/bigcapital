@@ -133,3 +133,9 @@ export interface SaleEstimateMailOptions extends CommonMailOptions {
 export interface SaleEstimateMailOptionsDTO extends CommonMailOptionsDTO {
   attachEstimate?: boolean;
 }
+
+export interface ISaleEstimateMailPresendEvent {
+  tenantId: number;
+  saleEstimateId: number;
+  messageOptions: SaleEstimateMailOptionsDTO;
+}

@@ -7,9 +7,15 @@ import {
   DEFAULT_RECEIPT_MAIL_CONTENT,
   DEFAULT_RECEIPT_MAIL_SUBJECT,
 } from './constants';
-import { SaleReceiptMailOpts, SaleReceiptMailOptsDTO } from '@/interfaces';
+import {
+  ISaleReceiptMailPresend,
+  SaleReceiptMailOpts,
+  SaleReceiptMailOptsDTO,
+} from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SaleReceiptMailNotification {
@@ -25,6 +31,9 @@ export class SaleReceiptMailNotification {
   @Inject()
   private contactMailNotification: ContactMailNotification;
 
+  @Inject()
+  private eventPublisher: EventPublisher;
+
   @Inject('agenda')
   private agenda: any;
 
@@ -37,14 +46,21 @@ export class SaleReceiptMailNotification {
   public async triggerMail(
     tenantId: number,
     saleReceiptId: number,
-    messageOpts: SaleReceiptMailOptsDTO
+    messageOptions: SaleReceiptMailOptsDTO
   ) {
     const payload = {
       tenantId,
       saleReceiptId,
-      messageOpts,
+      messageOpts: messageOptions,
     };
     await this.agenda.now('sale-receipt-mail-send', payload);
+
+    // Triggers the event `onSaleReceiptPreMailSend`.
+    await this.eventPublisher.emitAsync(events.saleReceipt.onPreMailSend, {
+      tenantId,
+      saleReceiptId,
+      messageOptions,
+    } as ISaleReceiptMailPresend);
   }
 
   /**

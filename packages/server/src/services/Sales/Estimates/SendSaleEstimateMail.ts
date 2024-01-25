@@ -8,11 +8,14 @@ import {
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
 import { GetSaleEstimate } from './GetSaleEstimate';
 import {
+  ISaleEstimateMailPresendEvent,
   SaleEstimateMailOptions,
   SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SendSaleEstimateMail {
@@ -30,6 +33,9 @@ export class SendSaleEstimateMail {
 
   @Inject('agenda')
   private agenda: any;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Triggers the reminder mail of the given sale estimate.
@@ -49,6 +55,13 @@ export class SendSaleEstimateMail {
       messageOptions,
     };
     await this.agenda.now('sale-estimate-mail-send', payload);
+
+    // Triggers `onSaleEstimatePreMailSend` event.
+    await this.eventPublisher.emitAsync(events.saleEstimate.onPreMailSend, {
+      tenantId,
+      saleEstimateId,
+      messageOptions,
+    } as ISaleEstimateMailPresendEvent);
   }
 
   /**
@@ -99,7 +112,7 @@ export class SendSaleEstimateMail {
     return {
       ...mailOptions,
       data: formatterData,
-      attachEstimate: true
+      attachEstimate: true,
     };
   };
 
