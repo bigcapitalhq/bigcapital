@@ -36,11 +36,16 @@ import {
   handleErrors,
   resetFormState,
 } from './utils';
+import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Estimate form.
  */
 function EstimateForm({
+  // #withDialogActions
+  openDialog,
+
   // #withSettings
   estimateNextNumber,
   estimateNumberPrefix,
@@ -108,7 +113,7 @@ function EstimateForm({
       delivered: submitPayload.deliver,
     };
     // Handle the request success.
-    const onSuccess = (response) => {
+    const onSuccess = (res) => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -125,6 +130,11 @@ function EstimateForm({
       }
       if (submitPayload.resetForm) {
         resetFormState({ resetForm, initialValues, values });
+      }
+      if (submitPayload.deliverViaMail) {
+        openDialog(DialogsName.EstimateFormMailDeliver, {
+          estimateId: res.data.id,
+        });
       }
     };
     // Handle the request error.
@@ -180,6 +190,7 @@ function EstimateForm({
 }
 
 export default compose(
+  withDialogActions,
   withSettings(({ estimatesSettings }) => ({
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,

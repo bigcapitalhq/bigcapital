@@ -2,22 +2,22 @@ import React from 'react';
 import { ReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import { ReceiptMailDialogForm } from './ReceiptMailDialogForm';
 
-interface ReceiptMailDialogContentProps {
-  dialogName: string;
+export interface ReceiptMailDialogContentProps {
   receiptId: number;
-  redirectToReceiptsList?: boolean;
+  onFormSubmit?: () => void;
+  onCancelClick?: () => void;
 }
 export default function ReceiptMailDialogContent({
-  dialogName,
   receiptId,
-  redirectToReceiptsList = false,
+  onFormSubmit,
+  onCancelClick
 }: ReceiptMailDialogContentProps) {
   return (
-    <ReceiptMailDialogBoot
-      receiptId={receiptId}
-      redirectToReceiptsList={redirectToReceiptsList}
-    >
-      <ReceiptMailDialogForm />
+    <ReceiptMailDialogBoot receiptId={receiptId}>
+      <ReceiptMailDialogForm
+        onFormSubmit={onFormSubmit}
+        onCancelClick={onCancelClick}
+      />
     </ReceiptMailDialogBoot>
   );
 }

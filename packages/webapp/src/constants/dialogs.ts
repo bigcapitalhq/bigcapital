@@ -53,4 +53,8 @@ export enum DialogsName {
   EstimateMail = 'estimate-mail',
   ReceiptMail = 'receipt-mail',
   PaymentMail = 'payment-mail',
+
+  InvoiceFormMailDeliver = 'InvoiceFormMailDeliver',
+  EstimateFormMailDeliver = 'EstimateFormMailDeliver',
+  ReceiptFormMailDeliver = 'ReceiptFormMailDeliver',
 }

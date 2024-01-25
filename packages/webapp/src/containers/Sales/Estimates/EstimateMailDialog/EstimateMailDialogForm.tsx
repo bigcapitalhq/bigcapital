@@ -2,7 +2,6 @@
 import { Formik } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { DialogsName } from '@/constants/dialogs';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -26,14 +25,15 @@ interface EstimateMailFormValues extends MailNotificationFormValues {
 }
 
 function EstimateMailDialogFormRoot({
+  onFormSubmit,
+  onCancelClick,
+
   // #withDialogClose
   closeDialog,
 }) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
   const { mailOptions, saleEstimateId, redirectToEstimatesList } =
     useEstimateMailDialogBoot();
-
-  const history = useHistory();
 
   const initialValues = transformMailFormToInitialValues(
     mailOptions,
@@ -52,10 +52,7 @@ function EstimateMailDialogFormRoot({
         });
         closeDialog(DialogsName.EstimateMail);
         setSubmitting(false);
-
-        if (redirectToEstimatesList) {
-          history.push('/estimates');
-        }
+        onFormSubmit && onFormSubmit();
       })
       .catch(() => {
         setSubmitting(false);
@@ -64,6 +61,7 @@ function EstimateMailDialogFormRoot({
           message: 'Something went wrong.',
           intent: Intent.DANGER,
         });
+        onCancelClick && onCancelClick();
       });
   };
 

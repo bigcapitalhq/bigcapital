@@ -2,7 +2,6 @@
 import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { useHistory } from 'react-router-dom';
 import { useReceiptMailDialogBoot } from './ReceiptMailDialogBoot';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
@@ -24,12 +23,18 @@ interface ReceiptMailFormValues extends MailNotificationFormValues {
   attachReceipt: boolean;
 }
 
-function ReceiptMailDialogFormRoot({ closeDialog }) {
-  const { mailOptions, saleReceiptId, redirectToReceiptsList } =
-    useReceiptMailDialogBoot();
-  const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
+interface ReceiptMailDialogFormProps {
+  onFormSubmit?: () => void;
+  onCancelClick?: () => void;
+}
 
-  const history = useHistory();
+export function ReceiptMailDialogForm({
+  // #props
+  onFormSubmit,
+  onCancelClick,
+}: ReceiptMailDialogFormProps) {
+  const { mailOptions, saleReceiptId } = useReceiptMailDialogBoot();
+  const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
 
   // Transformes mail options to initial form values.
   const initialValues = transformMailFormToInitialValues(
@@ -50,12 +55,8 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
           message: 'The mail notification has been sent successfully.',
           intent: Intent.SUCCESS,
         });
-        closeDialog(DialogsName.ReceiptMail);
         setSubmitting(false);
-
-        if (redirectToReceiptsList) {
-          history.push('/receipts');
-        }
+        onFormSubmit && onFormSubmit(values);
       })
       .catch(() => {
         AppToaster.show({
@@ -67,7 +68,7 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
   };
   // Handle the close button click.
   const handleClose = () => {
-    closeDialog(DialogsName.ReceiptMail);
+    onCancelClick && onCancelClick();
   };
 
   return (
@@ -76,7 +77,3 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
     </Formik>
   );
 }
-
-export const ReceiptMailDialogForm = R.compose(withDialogActions)(
-  ReceiptMailDialogFormRoot,
-);

@@ -1,12 +1,9 @@
 // @ts-nocheck
 import { Formik } from 'formik';
-import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
-import { DialogsName } from '@/constants/dialogs';
 import { AppToaster } from '@/components';
 import { useSendSaleInvoiceMail } from '@/hooks/query';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { InvoiceMailDialogFormContent } from './InvoiceMailDialogFormContent';
 import { InvoiceMailFormSchema } from './InvoiceMailDialogForm.schema';
 import {
@@ -15,7 +12,6 @@ import {
   transformMailFormToRequest,
   transformMailFormToInitialValues,
 } from '@/containers/SendMailNotification/utils';
-import { useHistory } from 'react-router-dom';
 
 const initialFormValues = {
   ...initialMailNotificationValues,
@@ -26,13 +22,8 @@ interface InvoiceMailFormValues extends MailNotificationFormValues {
   attachInvoice: boolean;
 }
 
-function InvoiceMailDialogFormRoot({
-  // #withDialogActions
-  closeDialog,
-}) {
-  const history = useHistory();
-  const { mailOptions, saleInvoiceId, redirectToInvoicesList } =
-    useInvoiceMailDialogBoot();
+export function InvoiceMailDialogForm({ onFormSubmit, onCancelClick }) {
+  const { mailOptions, saleInvoiceId } = useInvoiceMailDialogBoot();
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
 
   const initialValues = transformMailFormToInitialValues(
@@ -50,13 +41,8 @@ function InvoiceMailDialogFormRoot({
           message: 'The mail notification has been sent successfully.',
           intent: Intent.SUCCESS,
         });
-        closeDialog(DialogsName.InvoiceMail);
         setSubmitting(false);
-
-        // Redirect to the dashboard if the option was enabled.
-        if (redirectToInvoicesList) {
-          history.push('/invoices');
-        }
+        onFormSubmit && onFormSubmit(values);
       })
       .catch(() => {
         AppToaster.show({
@@ -68,7 +54,7 @@ function InvoiceMailDialogFormRoot({
   };
   // Handle the close button click.
   const handleClose = () => {
-    closeDialog(DialogsName.InvoiceMail);
+    onCancelClick && onCancelClick();
   };
 
   return (
@@ -81,7 +67,3 @@ function InvoiceMailDialogFormRoot({
     </Formik>
   );
 }
-
-export const InvoiceMailDialogForm = R.compose(withDialogActions)(
-  InvoiceMailDialogFormRoot,
-);
