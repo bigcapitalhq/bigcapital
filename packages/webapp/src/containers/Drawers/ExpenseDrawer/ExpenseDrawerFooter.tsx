@@ -9,7 +9,7 @@ import {
   TotalLineTextStyle,
 } from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
-import { FormatNumber, TotalLine } from '@/components';
+import { TotalLine } from '@/components';
 
 /**
  * Footer details of expense readonly details.
@@ -22,12 +22,12 @@ export default function ExpenseDrawerFooter() {
       <ExpenseTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'expense.details.subtotal'} />}
-          value={<FormatNumber value={expense.total_amount} />}
+          value={expense.formatted_amount}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine
           title={<T id={'expense.details.total'} />}
-          value={<FormatNumber value={expense.formatted_amount} />}
+          value={expense.formatted_amount}
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
