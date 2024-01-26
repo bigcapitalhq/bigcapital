@@ -83,7 +83,7 @@ export function VendorCreditUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">${item.reference.amount}</div>
+          <div class="amount">${item.reference.formatted_amount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }
