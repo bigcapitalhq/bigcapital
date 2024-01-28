@@ -18,6 +18,9 @@ export class OpenExchangeRate implements IExchangeRateService {
     baseCurrency: string,
     toCurrency: string
   ): Promise<number> {
+    // Vaclidates the Open Exchange Rate api id early.
+    this.validateApiIdExistance();
+
     try {
       const result = await Axios.get(OPEN_EXCHANGE_RATE_LATEST_URL, {
         params: {
@@ -33,8 +36,24 @@ export class OpenExchangeRate implements IExchangeRateService {
   }
 
   /**
+   * Validates the Open Exchange Rate api id.
+   * @throws {ServiceError}
+   */
+  private validateApiIdExistance() {
+    const apiId = config.exchangeRate.openExchangeRate.appId;
+
+    if (!apiId) {
+      throw new ServiceError(
+        EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED,
+        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.'
+      );
+    }
+  }
+
+  /**
    * Handles the latest errors.
    * @param {any} error
+   * @throws {ServiceError}
    */
   private handleLatestErrors(error: any) {
     if (error.response.data?.message === 'missing_app_id') {

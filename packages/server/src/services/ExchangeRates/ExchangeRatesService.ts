@@ -1,16 +1,7 @@
-import { Service, Inject } from 'typedi';
-import { IExchangeRatesService } from '@/interfaces';
+import { Service } from 'typedi';
 import { ExchangeRate } from '@/lib/ExchangeRate/ExchangeRate';
 import { ExchangeRateServiceType } from '@/lib/ExchangeRate/types';
-interface ExchangeRateLatestDTO {
-  toCurrency: string;
-}
-
-interface EchangeRateLatestPOJO {
-  baseCurrency: string;
-  toCurrency: string;
-  exchangeRate: number;
-}
+import { EchangeRateLatestPOJO, ExchangeRateLatestDTO } from '@/interfaces';
 
 @Service()
 export class ExchangeRatesService {

@@ -1,16 +1,16 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { query } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from './BaseController';
 import { ServiceError } from '@/exceptions';
-import { ExchangeRatesService } from '@/services/ExchangeRates/ExchangeRatesService';
 import { EchangeRateErrors } from '@/lib/ExchangeRate/types';
+import { ExchangeRateApplication } from '@/services/ExchangeRates/ExchangeRateApplication';
 
 @Service()
 export default class ExchangeRatesController extends BaseController {
   @Inject()
-  private exchangeRatesService: ExchangeRatesService;
+  private exchangeRatesApp: ExchangeRateApplication;
 
   /**
    * Constructor method.
@@ -43,7 +43,7 @@ export default class ExchangeRatesController extends BaseController {
     const exchangeRateQuery = this.matchedQueryData(req);
 
     try {
-      const exchangeRate = await this.exchangeRatesService.latest(
+      const exchangeRate = await this.exchangeRatesApp.latest(
         tenantId,
         exchangeRateQuery
       );
