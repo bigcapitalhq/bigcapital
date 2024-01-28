@@ -1,34 +1,27 @@
 // @ts-nocheck
 import { useQuery } from 'react-query';
 import QUERY_TYPES from './types';
+import useApiRequest from '../useRequest';
 
-function getRandomItemFromArray(arr) {
-  const randomIndex = Math.floor(Math.random() * arr.length);
-  return arr[randomIndex];
-}
-function delay(t, val) {
-  return new Promise((resolve) => setTimeout(resolve, t, val));
-}
 /**
- * Retrieves tax rates.
+ * Retrieves latest exchange rate.
  * @param {number} customerId - Customer id.
  */
-export function useExchangeRate(
-  fromCurrency: string,
-  toCurrency: string,
-  props,
-) {
-  return useQuery(
-    [QUERY_TYPES.EXCHANGE_RATE, fromCurrency, toCurrency],
-    async () => {
-      await delay(100);
+export function useLatestExchangeRate(toCurrency: string, props) {
+  const apiRequest = useApiRequest();
 
-      return {
-        from_currency: fromCurrency,
-        to_currency: toCurrency,
-        exchange_rate: 1.00,
-      };
-    },
+  return useQuery(
+    [QUERY_TYPES.EXCHANGE_RATE, toCurrency],
+    () =>
+      apiRequest
+        .http({
+          url: `/api/exchange_rates/latest`,
+          method: 'get',
+          params: {
+            to_currency: toCurrency,
+          },
+        })
+        .then((res) => res.data),
     props,
   );
 }
