@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { query } from 'express-validator';
+import { query, oneOf } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from './BaseController';
 import { ServiceError } from '@/exceptions';
@@ -20,7 +20,12 @@ export default class ExchangeRatesController extends BaseController {
 
     router.get(
       '/latest',
-      [query('to_currency').exists().isString()],
+      [
+        oneOf([
+          query('to_currency').exists().isString().isISO4217(),
+          query('from_currency').exists().isString().isISO4217(),
+        ]),
+      ],
       this.validationResult,
       asyncMiddleware(this.latestExchangeRate.bind(this)),
       this.handleServiceError

@@ -20,13 +20,16 @@ function AutoExchangeRateProvider({ children }: AutoExchangeRateProviderProps) {
 
   // Retrieves the exchange rate.
   const { data: autoExchangeRate, isLoading: isAutoExchangeRateLoading } =
-    useLatestExchangeRate(autoExRateCurrency, {
-      enabled: Boolean(autoExRateCurrency),
-      refetchOnWindowFocus: false,
-      staleTime: 0,
-      cacheTime: 0,
-      retry: 0,
-    });
+    useLatestExchangeRate(
+      { fromCurrency: autoExRateCurrency },
+      {
+        enabled: Boolean(autoExRateCurrency),
+        refetchOnWindowFocus: false,
+        staleTime: 0,
+        cacheTime: 0,
+        retry: 0,
+      },
+    );
 
   const value = {
     autoExRateCurrency,
