@@ -43,6 +43,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate the transactions by reference.
+  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate mutate base currency abilities.
   queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };

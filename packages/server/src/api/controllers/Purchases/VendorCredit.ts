@@ -320,20 +320,19 @@ export default class VendorCreditController extends BaseController {
     res: Response,
     next: NextFunction
   ) => {
-    const { id: billId } = req.params;
+    const { id: vendorCreditId } = req.params;
     const { tenantId, user } = req;
     const vendorCreditEditDTO: IVendorCreditEditDTO = this.matchedBodyData(req);
 
     try {
       await this.editVendorCreditService.editVendorCredit(
         tenantId,
-        billId,
-        vendorCreditEditDTO,
-        user
+        vendorCreditId,
+        vendorCreditEditDTO
       );
 
       return res.status(200).send({
-        id: billId,
+        id: vendorCreditId,
         message: 'The vendor credit has been edited successfully.',
       });
     } catch (error) {
