@@ -136,7 +136,7 @@ export class EditExpense {
       } as IExpenseEventEditingPayload);
 
       // Upsert the expense object with expense entries.
-      const expense: IExpense = await Expense.query(trx).upsertGraph({
+      const expense: IExpense = await Expense.query(trx).upsertGraphAndFetch({
         id: expenseId,
         ...expenseObj,
       });

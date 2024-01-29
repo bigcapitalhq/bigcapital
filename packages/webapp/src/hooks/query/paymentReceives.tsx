@@ -24,6 +24,9 @@ const commonInvalidateQueries = (client) => {
   // Invalidate financial reports.
   client.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate transactions by reference.
+  client.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate customers.
   client.invalidateQueries(t.CUSTOMERS);
   client.invalidateQueries(t.CUSTOMER);

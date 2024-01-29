@@ -24,6 +24,9 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
+  
+  // Invalidate transactions by reference.
+  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
 
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
