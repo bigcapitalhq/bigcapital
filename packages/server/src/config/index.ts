@@ -169,4 +169,14 @@ module.exports = {
    * to application detarmines to upgrade.
    */
   databaseBatch: 4,
+
+  /**
+   * Exchange rate.
+   */
+  exchangeRate: {
+    service: 'open-exchange-rate',
+    openExchangeRate: {
+      appId: process.env.OPEN_EXCHANGE_RATE_APP_ID,
+    }
+  }
 };

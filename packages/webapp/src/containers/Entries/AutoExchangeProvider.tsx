@@ -1,6 +1,5 @@
-import { useExchangeRate } from '@/hooks/query';
-import { useCurrentOrganization } from '@/hooks/state';
 import React from 'react';
+import { useLatestExchangeRate } from '@/hooks/query';
 
 interface AutoExchangeRateProviderProps {
   children: React.ReactNode;
@@ -18,16 +17,19 @@ const AutoExchangeRateContext = React.createContext(
 function AutoExchangeRateProvider({ children }: AutoExchangeRateProviderProps) {
   const [autoExRateCurrency, setAutoExRateCurrency] =
     React.useState<string>('');
-  const currentOrganization = useCurrentOrganization();
 
   // Retrieves the exchange rate.
   const { data: autoExchangeRate, isLoading: isAutoExchangeRateLoading } =
-    useExchangeRate(autoExRateCurrency, currentOrganization.base_currency, {
-      enabled: Boolean(currentOrganization.base_currency && autoExRateCurrency),
-      refetchOnWindowFocus: false,
-      staleTime: 0,
-      cacheTime: 0,
-    });
+    useLatestExchangeRate(
+      { fromCurrency: autoExRateCurrency },
+      {
+        enabled: Boolean(autoExRateCurrency),
+        refetchOnWindowFocus: false,
+        staleTime: 0,
+        cacheTime: 0,
+        retry: 0,
+      },
+    );
 
   const value = {
     autoExRateCurrency,
