@@ -34,7 +34,7 @@ const VendorUniversalSearchSelectAction = withDrawerActions(
 const vendorToSearch = (contact) => ({
   id: contact.id,
   text: contact.display_name,
-  label: contact.balance > 0 ? contact.formatted_balance + '' : '',
+  label: contact.formatted_balance,
   reference: contact,
 });
 

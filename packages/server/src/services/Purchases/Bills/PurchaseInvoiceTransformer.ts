@@ -13,6 +13,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
     return [
       'formattedBillDate',
       'formattedDueDate',
+      'formattedAmount',
       'formattedPaymentAmount',
       'formattedBalance',
       'formattedDueAmount',

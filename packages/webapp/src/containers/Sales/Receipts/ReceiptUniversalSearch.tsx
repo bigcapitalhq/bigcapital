@@ -75,7 +75,7 @@ export function ReceiptUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">${item.reference.amount}</div>
+          <div class="amount">{item.reference.formatted_amount}</div>
           <ReceiptStatus receipt={item.reference} />
         </>
       }
