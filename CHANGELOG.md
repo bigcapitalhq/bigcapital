@@ -2,6 +2,14 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.14.0] - 30-01-2024
+
+* feat: purchases by items exporting by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/327
+* fix: expense amounts should not be rounded by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/339
+* feat: get latest exchange rate from third party services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/340
+* fix(webapp): inconsistency in currency of universal search items by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/335
+* hotfix: editing sales and expense transactions don't reflect GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/342
+
 ## [0.13.3] - 22-01-2024
 
 * hotfix(server): Unhandled thrown errors of services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/329
