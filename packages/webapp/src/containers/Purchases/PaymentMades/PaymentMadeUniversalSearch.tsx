@@ -7,6 +7,7 @@ import { Icon } from '@/components';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { highlightText } from '@/utils';
 import { AbilitySubject, PaymentMadeAction } from '@/constants/abilityOption';
+import { DRAWERS } from '@/constants/drawers';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 /**

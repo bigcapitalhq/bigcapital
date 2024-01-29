@@ -89,7 +89,7 @@ export function InvoiceUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">${item.reference.total_formatted}</div>
+          <div class="amount">{item.reference.total_formatted}</div>
           <InvoiceStatus customer={item.reference} />
         </>
       }
