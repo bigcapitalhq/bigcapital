@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   NavbarGroup,
@@ -14,7 +14,10 @@ import {
   Icon,
   FormattedMessage as T,
 } from '@/components';
-import { useRefreshCashflowAccounts } from '@/hooks/query';
+import {
+  useGetPlaidLinkToken,
+  useRefreshCashflowAccounts,
+} from '@/hooks/query';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -26,6 +29,7 @@ import { ACCOUNT_TYPE } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
 
 import { compose } from '@/utils';
+import { LaunchLink } from '@/containers/Banking/Plaid/PlaidLanchLink';
 
 /**
  * Cash Flow accounts actions bar.
@@ -63,8 +67,20 @@ function CashFlowAccountsActionsBar({
     setCashflowAccountsTableState({ inactiveMode: checked });
   };
 
+  const { mutateAsync: getPlaidLinkToken } = useGetPlaidLinkToken();
+  const [linkToken, setLinkToken] = useState<string>('');
+
+  const handleConnectToBank = () => {
+    getPlaidLinkToken()
+      .then((res) => {
+        setLinkToken(res.data.link_token);
+      })
+      .catch(() => {});
+  };
+
   return (
     <DashboardActionsBar>
+      <LaunchLink userId={3} token={linkToken} />
       <NavbarGroup>
         <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
           <Button
@@ -104,6 +120,12 @@ function CashFlowAccountsActionsBar({
             onChange={handleInactiveSwitchChange}
           />
         </Can>
+
+        <Button
+          className={Classes.MINIMAL}
+          text={'Connect to Bank'}
+          onClick={handleConnectToBank}
+        />
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
