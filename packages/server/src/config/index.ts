@@ -177,6 +177,18 @@ module.exports = {
     service: 'open-exchange-rate',
     openExchangeRate: {
       appId: process.env.OPEN_EXCHANGE_RATE_APP_ID,
-    }
-  }
+    },
+  },
+
+  /**
+   * Plaid.
+   */
+  plaid: {
+    env: process.env.PLAID_ENV || 'sandbox',
+    clientId: process.env.PLAID_CLIENT_ID,
+    secretDevelopment: process.env.PLAID_SECRET_DEVELOPMENT,
+    secretSandbox: process.env.PLAID_SECRET_SANDBOX,
+    redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
+    redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
+  },
 };

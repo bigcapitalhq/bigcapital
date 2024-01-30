@@ -56,6 +56,7 @@ import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
+import { BankingController } from './controllers/Banking/BankingController';
 
 export default () => {
   const app = Router();
@@ -118,6 +119,7 @@ export default () => {
     Container.get(InventoryItemsCostController).router()
   );
   dashboard.use('/cashflow', Container.get(CashflowController).router());
+  dashboard.use('/banking', Container.get(BankingController).router());
   dashboard.use('/roles', Container.get(RolesController).router());
   dashboard.use(
     '/transactions-locking',
