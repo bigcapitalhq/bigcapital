@@ -86,6 +86,7 @@ export default class NewCashflowTransactionService {
       'cashflowAccountId',
       'creditAccountId',
       'branchId',
+      'plaidAccountId'
     ]);
     // Retreive the next invoice number.
     const autoNextNumber =
@@ -124,7 +125,7 @@ export default class NewCashflowTransactionService {
   public newCashflowTransaction = async (
     tenantId: number,
     newTransactionDTO: ICashflowNewCommandDTO,
-    userId: number
+    userId?: number 
   ): Promise<{ cashflowTransaction: ICashflowTransaction }> => {
     const { CashflowTransaction, Account } = this.tenancy.models(tenantId);
 

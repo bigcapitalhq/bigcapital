@@ -6,12 +6,13 @@ export interface IAccountDTO {
   code: string;
   description: string;
   accountType: string;
-  parentAccountId: number;
+  parentAccountId?: number;
   active: boolean;
 }
 
 export interface IAccountCreateDTO extends IAccountDTO {
   currencyCode?: string;
+  plaidAccountId?: string;
 }
 
 export interface IAccountEditDTO extends IAccountDTO {}
