@@ -2,6 +2,11 @@ import * as R from 'ramda';
 import { IAccountCreateDTO, ICashflowNewCommandDTO } from '@/interfaces';
 import { PlaidAccount, PlaidTransaction } from './_types';
 
+/**
+ * Transformes the Plaid account to create cashflow account DTO.
+ * @param {PlaidAccount} plaidAccount
+ * @returns {IAccountCreateDTO}
+ */
 export const transformPlaidAccountToCreateAccount = (
   plaidAccount: PlaidAccount
 ): IAccountCreateDTO => {
@@ -16,17 +21,24 @@ export const transformPlaidAccountToCreateAccount = (
   };
 };
 
+/**
+ * Transformes the plaid transaction to cashflow create DTO.
+ * @param {number} cashflowAccountId - Cashflow account ID.
+ * @param {number} creditAccountId - Credit account ID.
+ * @param {PlaidTransaction} plaidTranasction - Plaid transaction.
+ * @returns {ICashflowNewCommandDTO}
+ */
 export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
     creditAccountId: number,
-    plaidTranasction: PlaidTransaction,
+    plaidTranasction: PlaidTransaction
   ): ICashflowNewCommandDTO => {
     return {
-      date: plaidTranasction.authorized_data,
+      date: plaidTranasction.date,
 
-      transactionType: '',
-      description: '',
+      transactionType: 'OwnerContribution',
+      description: plaidTranasction.name,
 
       amount: plaidTranasction.amount,
       exchangeRate: 1,
@@ -36,6 +48,7 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
 
       // transactionNumber: string;
       // referenceNo: string;
+      publish: true,
     };
   }
 );

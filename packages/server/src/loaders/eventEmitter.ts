@@ -84,6 +84,7 @@ import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subsc
 import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
+import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from '@/services/Banking/Plaid/subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
 
 export default () => {
   return new EventPublisher();
@@ -199,6 +200,9 @@ export const susbcribers = () => {
     BillTaxRateValidateSubscriber,
     WriteBillTaxTransactionsSubscriber,
 
-    SyncItemTaxRateOnEditTaxSubscriber
+    SyncItemTaxRateOnEditTaxSubscriber,
+
+    // Plaid
+    PlaidUpdateTransactionsOnItemCreatedSubscriber
   ];
 };

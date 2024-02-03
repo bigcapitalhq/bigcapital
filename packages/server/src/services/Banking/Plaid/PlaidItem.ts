@@ -1,8 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { PlaidClientWrapper } from '@/lib/Plaid';
-import { PlaidItemDTO } from './_types';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { PlaidUpdateTransactions } from '@/lib/Plaid/PlaidUpdateTransactions';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import {
+  IPlaidItemCreatedEventPayload,
+  PlaidItemDTO,
+} from '@/interfaces/Plaid';
 
 @Service()
 export class PlaidItemService {
@@ -10,12 +14,14 @@ export class PlaidItemService {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private plaidUpdateTranasctions: PlaidUpdateTransactions;
+  private eventPublisher: EventPublisher;
 
   /**
-   * 
-   * @param {number} tenantId 
-   * @param {PlaidItemDTO} itemDTO 
+   * Exchanges the public token to get access token and item id and then creates
+   * a new Plaid item.
+   * @param {number} tenantId
+   * @param {PlaidItemDTO} itemDTO
+   * @returns {Promise<void>}
    */
   public async item(tenantId: number, itemDTO: PlaidItemDTO) {
     const { PlaidItem } = this.tenancy.models(tenantId);
@@ -36,7 +42,12 @@ export class PlaidItemService {
       plaidItemId,
       plaidInstitutionId: institutionId,
     });
-    
-    this.plaidUpdateTranasctions.updateTransactions(tenantId, plaidItemId);
+    // Triggers `onPlaidItemCreated` event.
+    await this.eventPublisher.emitAsync(events.plaid.onItemCreated, {
+      tenantId,
+      plaidAccessToken,
+      plaidItemId,
+      plaidInstitutionId: institutionId,
+    } as IPlaidItemCreatedEventPayload);
   }
 }

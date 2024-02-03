@@ -1,3 +1,15 @@
+export interface IPlaidItemCreatedEventPayload {
+  tenantId: number;
+  plaidAccessToken: string;
+  plaidItemId: string;
+  plaidInstitutionId: string;
+}
+
+export interface PlaidItemDTO {
+  publicToken: string;
+  institutionId: string;
+}
+
 export interface PlaidAccount {
   account_id: string;
   balances: {
@@ -16,9 +28,11 @@ export interface PlaidAccount {
 }
 
 export interface PlaidTransaction {
+  date: string;
   account_id: string;
   amount: number;
-  authorized_data: string;
+  authorized_date: string;
+  name: string;
   category: string[];
   check_number: number | null;
   iso_currency_code: string;

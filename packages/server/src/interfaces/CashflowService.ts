@@ -47,7 +47,9 @@ export interface ICashflowCommandDTO {
   branchId?: number;
 }
 
-export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {}
+export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {
+  plaidAccountId?: string;
+}
 
 export interface ICashflowTransaction {
   id?: number;

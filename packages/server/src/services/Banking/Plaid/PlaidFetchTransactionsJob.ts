@@ -1,4 +1,6 @@
 import Container, { Service } from 'typedi';
+import { PlaidUpdateTransactions } from './PlaidUpdateTransactions';
+import { IPlaidItemCreatedEventPayload } from '@/interfaces';
 
 @Service()
 export class PlaidFetchTransactionsJob {
@@ -17,9 +19,17 @@ export class PlaidFetchTransactionsJob {
    * Triggers the function.
    */
   private handler = async (job, done: Function) => {
-    const {} = job.attrs.data;
+    const { tenantId, plaidItemId } = job.attrs
+      .data as IPlaidItemCreatedEventPayload;
 
+    const plaidFetchTransactionsService = Container.get(
+      PlaidUpdateTransactions
+    );
     try {
+      await plaidFetchTransactionsService.updateTransactions(
+        tenantId,
+        plaidItemId
+      );
       done();
     } catch (error) {
       console.log(error);

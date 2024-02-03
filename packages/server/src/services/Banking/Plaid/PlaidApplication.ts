@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { PlaidLinkTokenService } from './PlaidLinkToken';
 import { PlaidItemService } from './PlaidItem';
-import { PlaidItemDTO } from './_types';
+import { PlaidItemDTO } from '@/interfaces';
 
 @Service()
 export class PlaidApplication {

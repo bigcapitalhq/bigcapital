@@ -1,8 +1,8 @@
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { PlaidClientWrapper } from './Plaid';
+import { PlaidClientWrapper } from '@/lib/Plaid/Plaid';
 import { PlaidSyncDb } from './PlaidSyncDB';
-import { PlaidFetchedTransactionsUpdates } from './_types';
+import { PlaidFetchedTransactionsUpdates } from '@/interfaces';
 
 @Service()
 export class PlaidUpdateTransactions {
@@ -49,7 +49,7 @@ export class PlaidUpdateTransactions {
    * @param {string} plaidItemId - The Plaid ID for the item.
    * @returns {Promise<PlaidFetchedTransactionsUpdates>}
    */
-  public async fetchTransactionUpdates(
+  private async fetchTransactionUpdates(
     tenantId: number,
     plaidItemId: string
   ): Promise<PlaidFetchedTransactionsUpdates> {

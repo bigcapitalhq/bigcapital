@@ -23,7 +23,7 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
   // );
   // await createPlaidApiEvent(1, 1, clientMethod, clientMethodArgs, response);
 
-  console.log(response);
+  // console.log(response);
 };
 
 /**
@@ -39,7 +39,7 @@ const noAccessTokenLogger = async (
   clientMethodArgs,
   response
 ) => {
-  console.log(response);
+  // console.log(response);
 
   // await createPlaidApiEvent(
   //   undefined,

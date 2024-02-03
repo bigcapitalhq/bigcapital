@@ -1,20 +1,15 @@
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import async from 'async';
-import { forOwn, groupBy } from 'lodash';
+import bluebird from 'bluebird';
+import { entries, groupBy } from 'lodash';
 import { CreateAccount } from '@/services/Accounts/CreateAccount';
-import {
-  PlaidAccount,
-  PlaidTransaction,
-  SyncAccountsTransactionsTask,
-} from './_types';
+import { PlaidAccount, PlaidTransaction } from '@/interfaces';
 import {
   transformPlaidAccountToCreateAccount,
   transformPlaidTrxsToCashflowCreate,
 } from './utils';
 import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ICashflowNewCommandDTO } from '@/interfaces';
 
 @Service()
 export class PlaidSyncDb {
@@ -31,14 +26,21 @@ export class PlaidSyncDb {
    * Syncs the plaid accounts to the system accounts.
    * @param {number} tenantId Tenant ID.
    * @param {PlaidAccount[]} plaidAccounts
+   * @returns {Promise<void>}
    */
-  public syncBankAccounts(tenantId: number, plaidAccounts: PlaidAccount[]) {
+  public async syncBankAccounts(
+    tenantId: number,
+    plaidAccounts: PlaidAccount[]
+  ): Promise<void> {
     const accountCreateDTOs = R.map(transformPlaidAccountToCreateAccount)(
       plaidAccounts
     );
-    accountCreateDTOs.map((createDTO) => {
-      return this.createAccountService.createAccount(tenantId, createDTO);
-    });
+    await bluebird.map(
+      accountCreateDTOs,
+      (createAccountDTO: any) =>
+        this.createAccountService.createAccount(tenantId, createAccountDTO),
+      { concurrency: 10 }
+    );
   }
 
   /**
@@ -52,10 +54,10 @@ export class PlaidSyncDb {
     plaidAccountId: number,
     plaidTranasctions: PlaidTransaction[]
   ): Promise<void> {
-    const { Account } = await this.tenancy.models(tenantId);
+    const { Account } = this.tenancy.models(tenantId);
 
     const cashflowAccount = await Account.query()
-      .findOne('plaidAccountId', plaidAccountId)
+      .findOne({ plaidAccountId })
       .throwIfNotFound();
 
     const openingEquityBalance = await Account.query().findOne(
@@ -70,18 +72,15 @@ export class PlaidSyncDb {
     const accountsCashflowDTO = R.map(transformTransaction)(plaidTranasctions);
 
     // Creating account transaction queue.
-    const createAccountTransactionsQueue = async.queue(
-      (cashflowDTO: ICashflowNewCommandDTO) =>
+    await bluebird.map(
+      accountsCashflowDTO,
+      (cashflowDTO) =>
         this.createCashflowTransactionService.newCashflowTransaction(
           tenantId,
           cashflowDTO
         ),
-      10
+      { concurrency: 10 }
     );
-    accountsCashflowDTO.forEach((cashflowDTO) => {
-      createAccountTransactionsQueue.push(cashflowDTO);
-    });
-    await createAccountTransactionsQueue.drain();
   }
 
   /**
@@ -93,35 +92,27 @@ export class PlaidSyncDb {
     tenantId: number,
     plaidAccountsTransactions: PlaidTransaction[]
   ): Promise<void> {
-    const groupedTrnsxByAccountId = groupBy(
-      plaidAccountsTransactions,
-      'account_id'
+    const groupedTrnsxByAccountId = entries(
+      groupBy(plaidAccountsTransactions, 'account_id')
     );
-    const syncAccountsTrnsx = async.queue(
-      ({
-        tenantId,
-        plaidAccountId,
-        plaidTransactions,
-      }: SyncAccountsTransactionsTask) => {
+    await bluebird.map(
+      groupedTrnsxByAccountId,
+      ([plaidAccountId, plaidTransactions]: [number, PlaidTransaction[]]) => {
         return this.syncAccountTranactions(
           tenantId,
           plaidAccountId,
           plaidTransactions
         );
       },
-      2
+      { concurrency: 10 }
     );
-    forOwn(groupedTrnsxByAccountId, (plaidTransactions, plaidAccountId) => {
-      syncAccountsTrnsx.push({ tenantId, plaidAccountId, plaidTransactions });
-    });
-    await syncAccountsTrnsx.drain();
   }
 
   /**
    * Syncs the Plaid item last transaction cursor.
-   * @param {number} tenantId -
-   * @param {string} itemId -
-   * @param {string} lastCursor -
+   * @param {number} tenantId - Tenant ID.
+   * @param {string} itemId - Plaid item ID.
+   * @param {string} lastCursor - Last transaction cursor.
    */
   public async syncTransactionsCursor(
     tenantId: number,
