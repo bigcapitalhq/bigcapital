@@ -23,7 +23,7 @@ export class PlaidItemService {
    * @param {PlaidItemDTO} itemDTO
    * @returns {Promise<void>}
    */
-  public async item(tenantId: number, itemDTO: PlaidItemDTO) {
+  public async item(tenantId: number, itemDTO: PlaidItemDTO): Promise<void> {
     const { PlaidItem } = this.tenancy.models(tenantId);
     const { publicToken, institutionId } = itemDTO;
 

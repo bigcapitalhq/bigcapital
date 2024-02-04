@@ -34,6 +34,7 @@ export class PlaidUpdateTransactions {
       tenantId,
       added.concat(modified)
     );
+    await this.plaidSync.syncRemoveTransactions(tenantId, removed);
     await this.plaidSync.syncTransactionsCursor(tenantId, plaidItemId, cursor);
 
     return {

@@ -9,7 +9,10 @@ import {
   transformPlaidTrxsToCashflowCreate,
 } from './utils';
 import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
+import DeleteCashflowTransactionService from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+
+const CONCURRENCY_ASYNC = 10;
 
 @Service()
 export class PlaidSyncDb {
@@ -21,6 +24,9 @@ export class PlaidSyncDb {
 
   @Inject()
   private createCashflowTransactionService: NewCashflowTransactionService;
+
+  @Inject()
+  private deleteCashflowTransactionService: DeleteCashflowTransactionService;
 
   /**
    * Syncs the plaid accounts to the system accounts.
@@ -39,7 +45,7 @@ export class PlaidSyncDb {
       accountCreateDTOs,
       (createAccountDTO: any) =>
         this.createAccountService.createAccount(tenantId, createAccountDTO),
-      { concurrency: 10 }
+      { concurrency: CONCURRENCY_ASYNC }
     );
   }
 
@@ -79,7 +85,7 @@ export class PlaidSyncDb {
           tenantId,
           cashflowDTO
         ),
-      { concurrency: 10 }
+      { concurrency: CONCURRENCY_ASYNC }
     );
   }
 
@@ -104,7 +110,35 @@ export class PlaidSyncDb {
           plaidTransactions
         );
       },
-      { concurrency: 10 }
+      { concurrency: CONCURRENCY_ASYNC }
+    );
+  }
+
+  /**
+   * Syncs the removed Plaid transactions ids from the cashflow system transactions.
+   * @param {string[]} plaidTransactionsIds - Plaid Transactions IDs.
+   */
+  public async syncRemoveTransactions(
+    tenantId: number,
+    plaidTransactionsIds: string[]
+  ) {
+    const { CashflowTransaction } = this.tenancy.models(tenantId);
+
+    const cashflowTransactions = await CashflowTransaction.query().whereIn(
+      'plaidTransactionId',
+      plaidTransactionsIds
+    );
+    const cashflowTransactionsIds = cashflowTransactions.map(
+      (trans) => trans.id
+    );
+    await bluebird.map(
+      cashflowTransactionsIds,
+      (transactionId: number) =>
+        this.deleteCashflowTransactionService.deleteCashflowTransaction(
+          tenantId,
+          transactionId
+        ),
+      { concurrency: CONCURRENCY_ASYNC }
     );
   }
 
@@ -121,6 +155,6 @@ export class PlaidSyncDb {
   ) {
     const { PlaidItem } = this.tenancy.models(tenantId);
 
-    await PlaidItem.query().findById(plaidItemId).patch({ lastCursor });
+    await PlaidItem.query().findOne({ plaidItemId }).patch({ lastCursor });
   }
 }
