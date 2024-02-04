@@ -9,6 +9,7 @@ import { CashFlowAccountsProvider } from './CashFlowAccountsProvider';
 
 import CashflowAccountsGrid from './CashflowAccountsGrid';
 import CashFlowAccountsActionsBar from './CashFlowAccountsActionsBar';
+import { CashflowAccountsPlaidLink } from './CashflowAccountsPlaidLink';
 
 import withCashflowAccounts from '@/containers/CashFlow/AccountTransactions/withCashflowAccounts';
 import withCashflowAccountsTableActions from '@/containers/CashFlow/AccountTransactions/withCashflowAccountsTableActions';
@@ -38,6 +39,8 @@ function CashFlowAccountsList({
       <DashboardPageContent>
         <CashflowAccountsGrid />
       </DashboardPageContent>
+
+      <CashflowAccountsPlaidLink />
     </CashFlowAccountsProvider>
   );
 }

@@ -1,3 +1,5 @@
+// @ts-nocheck
+import { usePlaidExchangeToken } from '@/hooks/query';
 import React, { useEffect } from 'react';
 import {
   usePlaidLink,
@@ -30,6 +32,8 @@ export function LaunchLink(props: LaunchLinkProps) {
   // const { generateLinkToken, deleteLinkToken } = useLink();
   // const { setError, resetError } = useErrors();
 
+  const { mutateAsync: exchangeAccessToken } = usePlaidExchangeToken();
+
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
   const onSuccess = async (
     publicToken: string,
@@ -45,6 +49,12 @@ export function LaunchLink(props: LaunchLinkProps) {
       // regular link mode: exchange public token for access token
     } else {
       // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
+      debugger;
+
+      await exchangeAccessToken({
+        public_token: publicToken,
+        institution_id: metadata.institution.institution_id,
+      });
       // await exchangeToken(
       //   publicToken,
       //   metadata.institution,

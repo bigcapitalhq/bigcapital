@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React, { useState } from 'react';
 import {
   Button,
   NavbarGroup,
@@ -14,10 +13,7 @@ import {
   Icon,
   FormattedMessage as T,
 } from '@/components';
-import {
-  useGetPlaidLinkToken,
-  useRefreshCashflowAccounts,
-} from '@/hooks/query';
+import { useRefreshCashflowAccounts } from '@/hooks/query';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -29,7 +25,6 @@ import { ACCOUNT_TYPE } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
 
 import { compose } from '@/utils';
-import { LaunchLink } from '@/containers/Banking/Plaid/PlaidLanchLink';
 
 /**
  * Cash Flow accounts actions bar.
@@ -66,21 +61,13 @@ function CashFlowAccountsActionsBar({
     const checked = event.target.checked;
     setCashflowAccountsTableState({ inactiveMode: checked });
   };
-
-  const { mutateAsync: getPlaidLinkToken } = useGetPlaidLinkToken();
-  const [linkToken, setLinkToken] = useState<string>('');
-
+  // Handle connect button click.
   const handleConnectToBank = () => {
-    getPlaidLinkToken()
-      .then((res) => {
-        setLinkToken(res.data.link_token);
-      })
-      .catch(() => {});
+    openDialog(DialogsName.ConnectBankCreditCard);
   };
 
   return (
     <DashboardActionsBar>
-      <LaunchLink userId={3} token={linkToken} />
       <NavbarGroup>
         <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
           <Button
@@ -120,15 +107,15 @@ function CashFlowAccountsActionsBar({
             onChange={handleInactiveSwitchChange}
           />
         </Can>
-
-        <Button
-          className={Classes.MINIMAL}
-          text={'Connect to Bank'}
-          onClick={handleConnectToBank}
-        />
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          text={'Connect to Bank / Credit Card'}
+          onClick={handleConnectToBank}
+        />
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
