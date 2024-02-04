@@ -1,6 +1,10 @@
 import * as R from 'ramda';
-import { IAccountCreateDTO, ICashflowNewCommandDTO } from '@/interfaces';
-import { PlaidAccount, PlaidTransaction } from './_types';
+import {
+  IAccountCreateDTO,
+  ICashflowNewCommandDTO,
+  PlaidAccount,
+  PlaidTransaction,
+} from '@/interfaces';
 
 /**
  * Transformes the Plaid account to create cashflow account DTO.
@@ -18,6 +22,8 @@ export const transformPlaidAccountToCreateAccount = (
     accountType: 'cash',
     active: true,
     plaidAccountId: plaidAccount.account_id,
+    bankBalance: plaidAccount.balances.current,
+    accountMask: plaidAccount.mask,
   };
 };
 
@@ -48,6 +54,7 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
 
       // transactionNumber: string;
       // referenceNo: string;
+      plaidTransactionId: plaidTranasction.transaction_id,
       publish: true,
     };
   }

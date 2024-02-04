@@ -27,7 +27,7 @@ export class PlaidApplication {
    * @param {PlaidItemDTO} itemDTO
    * @returns
    */
-  public exchangeToken(tenantId: number, itemDTO: PlaidItemDTO) {
+  public exchangeToken(tenantId: number, itemDTO: PlaidItemDTO): Promise<void> {
     return this.plaidItemService.item(tenantId, itemDTO);
   }
 }
