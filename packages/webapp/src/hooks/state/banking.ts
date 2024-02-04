@@ -1,4 +1,8 @@
-import { getPlaidToken, setPlaidId } from '@/store/banking/banking.reducer';
+import {
+  getPlaidToken,
+  setPlaidId,
+  resetPlaidId,
+} from '@/store/banking/banking.reducer';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,4 +21,12 @@ export const useGetBankingPlaidToken = () => {
   const plaidToken = useSelector(getPlaidToken);
 
   return plaidToken;
+};
+
+export const useResetBankingPlaidToken = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(() => {
+    dispatch(resetPlaidId());
+  }, [dispatch]);
 };

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import { usePlaidExchangeToken } from '@/hooks/query';
 import React, { useEffect } from 'react';
 import {
   usePlaidLink,
@@ -10,28 +9,28 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkStableEvent,
 } from 'react-plaid-link';
-import { useHistory } from 'react-router-dom';
-// import { exchangeToken, setItemState } from '../services/api';
-// import { useItems, useLink, useErrors } from '../services';
+import { logEvent } from './_utils';
+import { usePlaidExchangeToken } from '@/hooks/query';
+import { useResetBankingPlaidToken } from '@/hooks/state/banking';
 
-interface LaunchLinkProps {
-  isOauth?: boolean;
+interface PlaidLaunchLinkProps {
   token: string;
-  userId: number;
   itemId?: number | null;
   children?: React.ReactNode;
 }
 
-// Uses the usePlaidLink hook to manage the Plaid Link creation.  See https://github.com/plaid/react-plaid-link for full usage instructions.
-// The link token passed to usePlaidLink cannot be null.  It must be generated outside of this component.  In this sample app, the link token
-// is generated in the link context in client/src/services/link.js.
-
-export function LaunchLink(props: LaunchLinkProps) {
-  const history = useHistory();
-  // const { getItemsByUser, getItemById } = useItems();
-  // const { generateLinkToken, deleteLinkToken } = useLink();
-  // const { setError, resetError } = useErrors();
-
+/**
+ * Uses the usePlaidLink hook to manage the Plaid Link creation.
+ * See https://github.com/plaid/react-plaid-link for full usage instructions.
+ * The link token passed to usePlaidLink cannot be null.
+ * It must be generated outside of this component.  In this sample app, the link token
+ * is generated in the link context in client/src/services/link.js.
+ *
+ * @param {PlaidLaunchLinkProps} props
+ * @returns {React.ReactNode}
+ */
+export function LaunchLink(props: PlaidLaunchLinkProps) {
+  const resetPlaidToken = useResetBankingPlaidToken();
   const { mutateAsync: exchangeAccessToken } = usePlaidExchangeToken();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
@@ -40,7 +39,7 @@ export function LaunchLink(props: LaunchLinkProps) {
     metadata: PlaidLinkOnSuccessMetadata,
   ) => {
     // log and save metatdata
-    // logSuccess(metadata, props.userId);
+    logSuccess(metadata);
     if (props.itemId != null) {
       // update mode: no need to exchange public token
       // await setItemState(props.itemId, 'good');
@@ -48,39 +47,26 @@ export function LaunchLink(props: LaunchLinkProps) {
       // getItemById(props.itemId, true);
       // regular link mode: exchange public token for access token
     } else {
-      // call to Plaid api endpoint: /item/public_token/exchange in order to obtain access_token which is then stored with the created item
-      debugger;
-
       await exchangeAccessToken({
         public_token: publicToken,
         institution_id: metadata.institution.institution_id,
       });
-      // await exchangeToken(
-      //   publicToken,
-      //   metadata.institution,
-      //   metadata.accounts,
-      //   props.userId,
-      // );
-      // getItemsByUser(props.userId, true);
     }
     // resetError();
-    // deleteLinkToken(props.userId, null);
-    history.push(`/user/${props.userId}`);
+    resetPlaidToken();
   };
 
+  // Handle other error codes, see https://plaid.com/docs/errors/
   const onExit = async (
     error: PlaidLinkError | null,
     metadata: PlaidLinkOnExitMetadata,
   ) => {
     // log and save error and metatdata
-    // logExit(error, metadata, props.userId);
-    if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-      // await generateLinkToken(props.userId, props.itemId);
-    }
+    logExit(error, metadata, props.userId);
     if (error != null) {
       // setError(error.error_code, error.display_message || error.error_message);
     }
-    // to handle other error codes, see https://plaid.com/docs/errors/
+    resetPlaidToken();
   };
 
   const onEvent = async (
@@ -91,7 +77,7 @@ export function LaunchLink(props: LaunchLinkProps) {
     if (eventName === 'ERROR' && metadata.error_code != null) {
       // setError(metadata.error_code, ' ');
     }
-    // logEvent(eventName, metadata);
+    logEvent(eventName, metadata);
   };
 
   const config: PlaidLinkOptionsWithLinkToken = {
@@ -101,31 +87,14 @@ export function LaunchLink(props: LaunchLinkProps) {
     token: props.token,
   };
 
-  if (props.isOauth) {
-    // add additional receivedRedirectUri config when handling an OAuth reidrect
-    config.receivedRedirectUri = window.location.href;
-  }
   const { open, ready } = usePlaidLink(config);
 
   useEffect(() => {
     // initiallizes Link automatically
-    if (props.isOauth && ready) {
-      open();
-    } else if (ready) {
-      // regular, non-OAuth case:
-      // set link token, userId and itemId in local storage for use if needed later by OAuth
-
-      localStorage.setItem(
-        'oauthConfig',
-        JSON.stringify({
-          userId: props.userId,
-          itemId: props.itemId,
-          token: props.token,
-        }),
-      );
+    if (ready) {
       open();
     }
-  }, [ready, open, props.isOauth, props.userId, props.itemId, props.token]);
+  }, [ready, open, props.itemId, props.token]);
 
   return <></>;
 }

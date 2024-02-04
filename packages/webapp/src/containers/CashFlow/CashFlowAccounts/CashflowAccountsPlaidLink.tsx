@@ -4,5 +4,5 @@ import { useGetBankingPlaidToken } from '@/hooks/state/banking';
 export function CashflowAccountsPlaidLink() {
   const plaidToken = useGetBankingPlaidToken();
 
-  return <LaunchLink userId={3} token={plaidToken} />;
+  return <LaunchLink token={plaidToken} />;
 }
