@@ -9,7 +9,7 @@ import {
   PlaidLinkOnEventMetadata,
   PlaidLinkStableEvent,
 } from 'react-plaid-link';
-import { logEvent } from './_utils';
+import { logEvent, logExit, logSuccess } from './_utils';
 import { usePlaidExchangeToken } from '@/hooks/query';
 import { useResetBankingPlaidToken } from '@/hooks/state/banking';
 

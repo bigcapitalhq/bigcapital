@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { Intent, Tag } from '@blueprintjs/core';
 
 import { If, AppToaster } from '@/components';
-import { NormalCell, BalanceCell } from './components';
+import { NormalCell, BalanceCell, BankBalanceCell } from './components';
 import { transformTableStateToQuery, isBlank } from '@/utils';
 
 /**
@@ -95,6 +95,15 @@ export const useAccountsTableColumns = () => {
         clickable: true,
       },
       {
+        id: 'bank_balance',
+        Header: 'Bank Balance',
+        accessor: 'bank_balance_formatted',
+        Cell: BankBalanceCell,
+        width: 150,
+        clickable: true,
+        align: 'right',
+      },
+      {
         id: 'balance',
         Header: intl.get('balance'),
         accessor: 'amount',
@@ -119,5 +128,5 @@ export const transformAccountsStateToQuery = (tableState) => {
   return {
     ...transformTableStateToQuery(tableState),
     inactive_mode: tableState.inactiveMode,
-  }
-}
+  };
+};

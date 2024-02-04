@@ -28,3 +28,19 @@ export const logSuccess = async ({
     link_session_id,
   });
 };
+
+export const logExit = async (
+  error: PlaidLinkError | null,
+  { institution, status, link_session_id, request_id }: PlaidLinkOnExitMetadata,
+) => {
+  logEvent(
+    'onExit',
+    {
+      institution,
+      status,
+      link_session_id,
+      request_id,
+    },
+    error,
+  );
+};
