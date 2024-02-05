@@ -113,6 +113,16 @@ export const transformErrors = (errors, { setErrors }) => {
     });
   }
   if (
+    errors.some(
+      ({ type }) => type === ERROR.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT,
+    )
+  ) {
+    AppToaster.show({
+      message: intl.get('sale_invoice.total_smaller_than_paid_amount'),
+      intent: Intent.DANGER,
+    });
+  }
+  if (
     errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)
   ) {
     setErrors({
