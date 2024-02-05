@@ -1,11 +1,11 @@
-import { check, param, query, body, ValidationChain } from 'express-validator';
-import { Router, Request, Response, NextFunction } from 'express';
-import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
-import BaseController from '@/api/controllers/BaseController';
-import ContactsService from '@/services/Contacts/ContactsService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { check, param, query, body, ValidationChain } from "express-validator";
+import { Router, Request, Response, NextFunction } from "express";
+import { Inject, Service } from "typedi";
+import { ServiceError } from "@/exceptions";
+import BaseController from "@/api/controllers/BaseController";
+import ContactsService from "@/services/Contacts/ContactsService";
+import DynamicListingService from "@/services/DynamicListing/DynamicListService";
+import { DATATYPES_LENGTH } from "@/data/DataTypes";
 
 @Service()
 export default class ContactsController extends BaseController {
@@ -22,28 +22,28 @@ export default class ContactsController extends BaseController {
     const router = Router();
 
     router.get(
-      '/auto-complete',
+      "/auto-complete",
       [...this.autocompleteQuerySchema],
       this.validationResult,
       this.asyncMiddleware(this.autocompleteContacts.bind(this)),
       this.dynamicListService.handlerErrorsToResponse
     );
     router.get(
-      '/:id',
-      [param('id').exists().isNumeric().toInt()],
+      "/:id",
+      [param("id").exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getContact.bind(this))
     );
     router.post(
-      '/:id/inactivate',
-      [param('id').exists().isNumeric().toInt()],
+      "/:id/inactivate",
+      [param("id").exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.inactivateContact.bind(this)),
       this.handlerServiceErrors
     );
     router.post(
-      '/:id/activate',
-      [param('id').exists().isNumeric().toInt()],
+      "/:id/activate",
+      [param("id").exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.activateContact.bind(this)),
       this.handlerServiceErrors
@@ -56,11 +56,11 @@ export default class ContactsController extends BaseController {
    */
   get autocompleteQuerySchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
-      query('sort_order').optional().isIn(['desc', 'asc']),
+      query("column_sort_by").optional().trim().escape(),
+      query("sort_order").optional().isIn(["desc", "asc"]),
 
-      query('stringified_filter_roles').optional().isJSON(),
-      query('limit').optional().isNumeric().toInt(),
+      query("stringified_filter_roles").optional().isJSON(),
+      query("limit").optional().isNumeric().toInt(),
     ];
   }
 
@@ -97,8 +97,8 @@ export default class ContactsController extends BaseController {
     const { tenantId } = req;
     const filter = {
       filterRoles: [],
-      sortOrder: 'asc',
-      columnSortBy: 'display_name',
+      sortOrder: "asc",
+      columnSortBy: "display_name",
       limit: 10,
       ...this.matchedQueryData(req),
     };
@@ -118,170 +118,170 @@ export default class ContactsController extends BaseController {
    */
   get contactDTOSchema(): ValidationChain[] {
     return [
-      check('salutation')
+      check("salutation")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('first_name')
+      check("first_name")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('last_name')
+      check("last_name")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('company_name')
+      check("company_name")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('display_name')
+      check("display_name")
         .exists()
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('email')
+      check("email")
         .optional({ nullable: true })
         .isString()
-        .normalizeEmail()
+        .normalizeEmail({ gmail_remove_dots: false })
         .isEmail()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('website')
+      check("website")
         .optional({ nullable: true })
         .isString()
         .trim()
         .isURL()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('work_phone')
+      check("work_phone")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('personal_phone')
+      check("personal_phone")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('billing_address_1')
+      check("billing_address_1")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_2')
+      check("billing_address_2")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_city')
+      check("billing_address_city")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_country')
+      check("billing_address_country")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_email')
+      check("billing_address_email")
         .optional({ nullable: true })
         .isString()
         .isEmail()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_postcode')
+      check("billing_address_postcode")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_phone')
+      check("billing_address_phone")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('billing_address_state')
+      check("billing_address_state")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('shipping_address_1')
+      check("shipping_address_1")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_2')
+      check("shipping_address_2")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_city')
+      check("shipping_address_city")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_country')
+      check("shipping_address_country")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_email')
+      check("shipping_address_email")
         .optional({ nullable: true })
         .isString()
         .isEmail()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_postcode')
+      check("shipping_address_postcode")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_phone')
+      check("shipping_address_phone")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('shipping_address_state')
+      check("shipping_address_state")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('note')
+      check("note")
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
-      check('active').optional().isBoolean().toBoolean(),
+      check("active").optional().isBoolean().toBoolean(),
     ];
   }
 
@@ -291,19 +291,19 @@ export default class ContactsController extends BaseController {
    */
   get contactNewDTOSchema(): ValidationChain[] {
     return [
-      check('opening_balance')
+      check("opening_balance")
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
         .toInt(),
-      check('opening_balance_exchange_rate')
+      check("opening_balance_exchange_rate")
         .default(1)
         .isFloat({ gt: 0 })
         .toFloat(),
-      body('opening_balance_at')
-        .if(body('opening_balance').exists())
+      body("opening_balance_at")
+        .if(body("opening_balance").exists())
         .exists()
         .isISO8601(),
-      check('opening_balance_branch_id')
+      check("opening_balance_branch_id")
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
@@ -322,7 +322,7 @@ export default class ContactsController extends BaseController {
    * @returns {ValidationChain[]}
    */
   get specificContactSchema(): ValidationChain[] {
-    return [param('id').exists().isNumeric().toInt()];
+    return [param("id").exists().isNumeric().toInt()];
   }
 
   /**
@@ -340,7 +340,7 @@ export default class ContactsController extends BaseController {
 
       return res.status(200).send({
         id: contactId,
-        message: 'The given contact activated successfully.',
+        message: "The given contact activated successfully.",
       });
     } catch (error) {
       next(error);
@@ -362,7 +362,7 @@ export default class ContactsController extends BaseController {
 
       return res.status(200).send({
         id: contactId,
-        message: 'The given contact inactivated successfully.',
+        message: "The given contact inactivated successfully.",
       });
     } catch (error) {
       next(error);
@@ -383,19 +383,19 @@ export default class ContactsController extends BaseController {
     next: NextFunction
   ) {
     if (error instanceof ServiceError) {
-      if (error.errorType === 'contact_not_found') {
+      if (error.errorType === "contact_not_found") {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CONTACT.NOT.FOUND', code: 100 }],
+          errors: [{ type: "CONTACT.NOT.FOUND", code: 100 }],
         });
       }
-      if (error.errorType === 'CONTACT_ALREADY_ACTIVE') {
+      if (error.errorType === "CONTACT_ALREADY_ACTIVE") {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CONTACT_ALREADY_ACTIVE', code: 700 }],
+          errors: [{ type: "CONTACT_ALREADY_ACTIVE", code: 700 }],
         });
       }
-      if (error.errorType === 'CONTACT_ALREADY_INACTIVE') {
+      if (error.errorType === "CONTACT_ALREADY_INACTIVE") {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'CONTACT_ALREADY_INACTIVE', code: 800 }],
+          errors: [{ type: "CONTACT_ALREADY_INACTIVE", code: 800 }],
         });
       }
     }
