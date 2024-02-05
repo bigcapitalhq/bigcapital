@@ -61,7 +61,8 @@ export class EditPaymentReceive {
     // Validate the payment receive existance.
     const oldPaymentReceive = await PaymentReceive.query()
       .withGraphFetched('entries')
-      .findById(paymentReceiveId);
+      .findById(paymentReceiveId)
+      .throwIfNotFound();
 
     // Validates the payment existance.
     this.validators.validatePaymentExistance(oldPaymentReceive);

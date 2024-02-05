@@ -18,10 +18,9 @@ export class GetPaymentBills {
   public async getPaymentBills(tenantId: number, billPaymentId: number) {
     const { Bill, BillPayment } = this.tenancy.models(tenantId);
 
-    const billPayment = await BillPayment.query().findById(billPaymentId);
-
-    // Validates the bill payment existance.
-    this.validators.validateBillPaymentExistance(billPayment);
+    const billPayment = await BillPayment.query()
+      .findById(billPaymentId)
+      .throwIfNotFound();
 
     const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
 
