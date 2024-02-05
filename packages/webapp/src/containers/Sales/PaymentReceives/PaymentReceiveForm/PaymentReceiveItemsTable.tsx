@@ -28,6 +28,7 @@ export default function PaymentReceiveItemsTable({
   // Formik context.
   const {
     values: { customer_id },
+    errors,
   } = useFormikContext();
 
   // No results message.
@@ -58,7 +59,7 @@ export default function PaymentReceiveItemsTable({
         data={entries}
         spinnerProps={false}
         payload={{
-          errors: [],
+          errors: errors?.entries || [],
           updateData: handleUpdateData,
           currencyCode,
         }}

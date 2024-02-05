@@ -30,6 +30,7 @@ export default function PaymentMadeEntriesTable({
   // Formik context.
   const {
     values: { vendor_id },
+    errors,
   } = useFormikContext();
 
   // Handle update data.
@@ -63,7 +64,7 @@ export default function PaymentMadeEntriesTable({
         data={entries}
         spinnerProps={false}
         payload={{
-          errors: [],
+          errors: errors?.entries || [],
           updateData: handleUpdateData,
           currencyCode,
         }}
