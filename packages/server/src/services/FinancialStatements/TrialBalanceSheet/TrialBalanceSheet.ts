@@ -252,10 +252,6 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @return {ITrialBalanceSheetData}
    */
   public reportData(): ITrialBalanceSheetData {
-    // Don't return noting if the journal has no transactions.
-    if (this.repository.totalAccountsLedger.isEmpty()) {
-      return null;
-    }
     // Retrieve accounts nodes.
     const accounts = this.accountsSection(this.repository.accounts);
 
