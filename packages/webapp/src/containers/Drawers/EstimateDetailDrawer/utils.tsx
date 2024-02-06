@@ -2,7 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { getColumnWidth } from '@/utils';
-import { FormatNumberCell, TextOverviewTooltipCell } from '@/components';
+import { TextOverviewTooltipCell } from '@/components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 /**
@@ -36,7 +36,6 @@ export const useEstimateReadonlyEntriesColumns = () => {
       {
         Header: intl.get('quantity'),
         accessor: 'quantity_formatted',
-        Cell: FormatNumberCell,
         width: getColumnWidth(entries, 'quantity_formatted', {
           minWidth: 60,
           magicSpacing: 5,
