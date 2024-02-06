@@ -35,9 +35,9 @@ export const useEstimateReadonlyEntriesColumns = () => {
       },
       {
         Header: intl.get('quantity'),
-        accessor: 'quantity',
+        accessor: 'quantity_formatted',
         Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'quantity', {
+        width: getColumnWidth(entries, 'quantity_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -59,7 +59,6 @@ export const useEstimateReadonlyEntriesColumns = () => {
       {
         Header: intl.get('amount'),
         accessor: 'total_formatted',
-        Cell: FormatNumberCell,
         width: getColumnWidth(entries, 'total_formatted', {
           minWidth: 60,
           magicSpacing: 5,

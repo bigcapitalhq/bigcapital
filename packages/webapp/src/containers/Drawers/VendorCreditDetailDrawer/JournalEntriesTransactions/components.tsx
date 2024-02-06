@@ -13,7 +13,6 @@ export const useJournalEntriesTransactionsColumns = () => {
     () => [
       {
         Header: intl.get('date'),
-        accessor: 'date',
         accessor: 'formatted_date',
         Cell: FormatDateCell,
         width: 140,
@@ -34,15 +33,17 @@ export const useJournalEntriesTransactionsColumns = () => {
       },
       {
         Header: intl.get('credit'),
-        accessor: ({ credit }) => credit.formatted_amount,
+        accessor: 'credit.formatted_amount',
         width: 100,
         className: 'credit',
+        align: 'right',
       },
       {
         Header: intl.get('debit'),
-        accessor: ({ debit }) => debit.formatted_amount,
+        accessor: 'debit.formatted_amount',
         width: 100,
         className: 'debit',
+        align: 'right',
       },
     ],
     [],
