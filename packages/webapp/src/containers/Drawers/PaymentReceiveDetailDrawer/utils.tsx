@@ -10,7 +10,7 @@ import {
   MenuItem,
   Menu,
 } from '@blueprintjs/core';
-import { Icon, FormatNumberCell } from '@/components';
+import { Icon } from '@/components';
 import { getColumnWidth } from '@/utils';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -40,9 +40,8 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('invoice_amount'),
-        accessor: 'invoice.balance',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'invoice.balance', {
+        accessor: 'invoice.total_formatted',
+        width: getColumnWidth(entries, 'invoice.total_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
@@ -51,10 +50,9 @@ export const usePaymentReceiveEntriesColumns = () => {
       },
       {
         Header: intl.get('amount_due'),
-        accessor: 'invoice.due_amount',
-        Cell: FormatNumberCell,
+        accessor: 'invoice.due_amount_formatted',
         align: 'right',
-        width: getColumnWidth(entries, 'invoice.due_amount', {
+        width: getColumnWidth(entries, 'invoice.due_amount_formatted', {
           minWidth: 60,
           magicSpacing: 5,
         }),
