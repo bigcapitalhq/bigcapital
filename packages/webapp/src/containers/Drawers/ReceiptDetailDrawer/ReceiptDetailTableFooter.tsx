@@ -23,7 +23,7 @@ export default function ReceiptDetailTableFooter() {
       <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.formatted_amount}
+          value={receipt.formatted_subtotal}
         />
         <TotalLine
           title={<T id={'receipt.details.total'} />}
