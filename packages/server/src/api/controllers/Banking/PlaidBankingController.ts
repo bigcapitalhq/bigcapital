@@ -16,6 +16,7 @@ export class PlaidBankingController extends BaseController {
 
     router.post('/link-token', this.linkToken.bind(this));
     router.post('/exchange-token', this.exchangeToken.bind(this));
+    router.post('/webhooks', this.webhooks.bind(this));
 
     return router;
   }
@@ -49,5 +50,22 @@ export class PlaidBankingController extends BaseController {
       publicToken: public_token,
     });
     return res.status(200).send({});
+  }
+
+  public async webhooks(req: Request, res: Response) {
+    const { tenantId } = req;
+    const {
+      webhook_type: webhookType,
+      webhook_code: webhookCode,
+      item_id: plaidItemId,
+    } = req.body;
+
+    await this.plaidApp.webhooks(
+      tenantId,
+      webhookType,
+      plaidItemId,
+      webhookCode
+    );
+    return res.status(200).send({ code: 200, message: 'ok' });
   }
 }
