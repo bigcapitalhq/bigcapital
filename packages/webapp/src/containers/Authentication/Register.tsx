@@ -87,7 +87,7 @@ function RegisterFooterLinks() {
   return (
     <AuthFooterLinks>
       <AuthFooterLink>
-        Return to <Link to={'/auth/login'}>Sign In</Link>
+        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
       </AuthFooterLink>
 
       <AuthFooterLink>
