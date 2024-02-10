@@ -142,6 +142,7 @@ function UniversalSearchBar({ isOpen, onSearchTypeChange, ...listProps }) {
       {...handlers}
     >
       <InputGroup
+        autoFocus
         large={true}
         leftIcon={<Icon icon={'universal-search'} iconSize={20} />}
         placeholder={intl.get('universal_search.placeholder')}
