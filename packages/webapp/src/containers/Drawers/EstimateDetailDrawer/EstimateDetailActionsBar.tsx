@@ -52,6 +52,15 @@ function EstimateDetailActionsBar({
     history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
+
+  // Handle convert to invoice.
+  const handleConvertEstimate = () => {
+    history.push(`/invoices/new?from_estimate_id=${estimateId}`, {
+      action: estimateId,
+    });
+    closeDrawer(DRAWERS.ESTIMATE_DETAILS);
+  };
+
   // Handle delete sale estimate.
   const handleDeleteEstimate = () => {
     openAlert('estimate-delete', { estimateId });
@@ -84,6 +93,12 @@ function EstimateDetailActionsBar({
         </Can>
 
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="convert_to" />}
+            text={<T id={'convert_to_invoice'} />}
+            onClick={handleConvertEstimate}
+          />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="envelope" />}
