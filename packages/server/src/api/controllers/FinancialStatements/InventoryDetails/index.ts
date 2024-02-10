@@ -96,6 +96,7 @@ export default class InventoryDetailsController extends BaseController {
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves the csv format.
       if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
@@ -127,6 +128,15 @@ export default class InventoryDetailsController extends BaseController {
           filter
         );
         return res.status(200).send(table);
+        // Retrieves the pdf format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
+        const buffer = await this.inventoryItemDetailsApp.pdf(tenantId, filter);
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': buffer.length,
+        });
+        return res.send(buffer);
       } else {
         const sheet = await this.inventoryItemDetailsApp.sheet(
           tenantId,

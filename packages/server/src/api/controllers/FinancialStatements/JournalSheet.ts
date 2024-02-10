@@ -82,7 +82,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       // Retrieves the csv format.
     } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
       const buffer = await this.journalSheetApp.csv(tenantId, filter);
-
+  
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 

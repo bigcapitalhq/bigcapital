@@ -70,6 +70,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     try {
       // Retrieves the json table format.

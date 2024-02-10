@@ -75,6 +75,7 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
 
       // Retrieves the xlsx format.
@@ -109,6 +110,19 @@ export default class CustomerBalanceSummaryReportController extends BaseFinancia
           filter
         );
         return res.status(200).send(table);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const buffer = await this.customerBalanceSummaryApp.pdf(
+          tenantId,
+          filter
+        );
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': buffer.length,
+        });
+        return res.send(buffer);
+        // Retrieves the json format.
       } else {
         const sheet = await this.customerBalanceSummaryApp.sheet(
           tenantId,

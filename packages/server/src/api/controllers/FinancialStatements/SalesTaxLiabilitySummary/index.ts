@@ -62,6 +62,7 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
 
       // Retrieves the json table format.
@@ -97,6 +98,16 @@ export default class SalesTaxLiabilitySummary extends BaseFinancialReportControl
 
         return res.send(buffer);
         // Retrieves the json format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
+        const pdfContent = await this.salesTaxLiabilitySummaryApp.pdf(
+          tenantId,
+          filter
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.status(200).send(pdfContent);
       } else {
         const sheet = await this.salesTaxLiabilitySummaryApp.sheet(
           tenantId,
