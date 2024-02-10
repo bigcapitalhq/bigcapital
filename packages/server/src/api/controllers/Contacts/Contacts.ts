@@ -153,7 +153,6 @@ export default class ContactsController extends BaseController {
       check('email')
         .optional({ nullable: true })
         .isString()
-        .normalizeEmail({ gmail_remove_dots: false })
         .isEmail()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('website')
