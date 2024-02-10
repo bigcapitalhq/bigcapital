@@ -1,0 +1,41 @@
+
+.sheet{}
+.sheet__company-name{
+  margin: 0;
+  font-size: 1.6rem;
+}
+.sheet__sheet-type {
+  margin: 0
+}
+.sheet__sheet-date {
+  margin-top: 0.5rem;
+}
+
+.sheet__header {
+    text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sheet__table {
+  border-top: 1px solid #000;
+  table-layout: fixed;
+    border-spacing: 0;
+    text-align: left;
+}
+
+.sheet__table thead th {
+    color: #000;
+    border-bottom: 1px solid #000000;
+    padding: 0.5rem;
+}
+
+.sheet__table tbody td {
+  border-bottom: 0;
+  padding-top: 0.32rem;
+  padding-bottom: 0.32rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: #252A31;
+  border-bottom: 1px solid rgb(37, 42, 49);
+  
+}

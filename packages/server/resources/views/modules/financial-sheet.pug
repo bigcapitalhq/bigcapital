@@ -1,0 +1,21 @@
+block head
+  style 
+    //- include ../../css/modules/financial-sheet.css
+
+block content 
+  .sheet 
+    .sheet__header 
+      .sheet__company-name=organizationName
+      .sheet__sheet-type=sheetName
+      .sheet__sheet-date=sheetDate
+
+    table.sheet__table
+      thead
+        tr
+          each column in table.columns
+            th= column.label
+      tbody
+        each row in table.rows
+          tr
+            each cell in row.cells 
+              td= cell.value

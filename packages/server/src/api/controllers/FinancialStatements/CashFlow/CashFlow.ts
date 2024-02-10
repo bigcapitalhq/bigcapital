@@ -79,6 +79,7 @@ export default class CashFlowController extends BaseFinancialReportController {
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF
       ]);
       // Retrieves the json table format.
       if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
@@ -106,6 +107,15 @@ export default class CashFlowController extends BaseFinancialReportController {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         );
         return res.send(buffer);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const pdfContent = await this.cashflowSheetApp.pdf(tenantId, filter);
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
         // Retrieves the json format.
       } else {
         const cashflow = await this.cashflowSheetApp.sheet(tenantId, filter);

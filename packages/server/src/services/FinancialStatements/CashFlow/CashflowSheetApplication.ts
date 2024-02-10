@@ -3,6 +3,7 @@ import { CashflowExportInjectable } from './CashflowExportInjectable';
 import { ICashFlowStatementQuery } from '@/interfaces';
 import CashFlowStatementService from './CashFlowService';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
+import { CashflowTablePdfInjectable } from './CashflowTablePdfInjectable';
 
 @Service()
 export class CashflowSheetApplication {
@@ -14,6 +15,9 @@ export class CashflowSheetApplication {
 
   @Inject()
   private cashflowTable: CashflowTableInjectable;
+
+  @Inject()
+  private cashflowPdf: CashflowTablePdfInjectable;
 
   /**
    * Retrieves the cashflow sheet
@@ -54,5 +58,18 @@ export class CashflowSheetApplication {
     query: ICashFlowStatementQuery
   ): Promise<string> {
     return this.cashflowExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the cashflow sheet in pdf format.
+   * @param {number} tenantId 
+   * @param {ICashFlowStatementQuery} query 
+   * @returns {Promise<Buffer>}
+   */
+  public async pdf(
+    tenantId: number,
+    query: ICashFlowStatementQuery
+  ): Promise<Buffer> {
+    return this.cashflowPdf.pdf(tenantId, query);
   }
 }

@@ -3,7 +3,6 @@ import { Request, Response, Router, NextFunction } from 'express';
 import { query, ValidationChain } from 'express-validator';
 import { castArray } from 'lodash';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import TrialBalanceSheetService from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetInjectable';
 import BaseFinancialReportController from './BaseFinancialReportController';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
@@ -81,6 +80,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves in json table format.
       if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
@@ -109,6 +109,17 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
         res.setHeader('Content-Type', 'text/csv');
 
         return res.send(buffer);
+        // Retrieves in pdf format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
+        const pdfContent = await this.trialBalanceSheetApp.pdf(
+          tenantId,
+          filter
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        res.send(pdfContent);
         // Retrieves in json format.
       } else {
         const { data, query, meta } = await this.trialBalanceSheetApp.sheet(

@@ -11,7 +11,7 @@ import { ACCEPT_TYPE } from '@/interfaces/Http';
 @Service()
 export default class ARAgingSummaryReportController extends BaseFinancialReportController {
   @Inject()
-  ARAgingSummaryApp: ARAgingSummaryApplication;
+  private ARAgingSummaryApp: ARAgingSummaryApplication;
 
   /**
    * Router constructor.
@@ -69,6 +69,7 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF
       ]);
       // Retrieves the xlsx format.
       if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
@@ -96,6 +97,15 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
         res.setHeader('Content-Type', 'text/csv');
 
         return res.send(buffer);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const pdfContent = await this.ARAgingSummaryApp.pdf(tenantId, filter);
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
         // Retrieves the json format.
       } else {
         const sheet = await this.ARAgingSummaryApp.sheet(tenantId, filter);

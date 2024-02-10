@@ -101,6 +101,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_XLSX,
         ACCEPT_TYPE.APPLICATION_CSV,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves the json table format.
       if (ACCEPT_TYPE.APPLICATION_JSON_TABLE == acceptType) {
@@ -128,6 +129,15 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         );
         return res.send(buffer);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const pdfContent = await this.balanceSheetApp.pdf(tenantId, filter);
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        res.send(pdfContent);
       } else {
         const sheet = await this.balanceSheetApp.sheet(tenantId, filter);
 
