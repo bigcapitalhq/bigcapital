@@ -20,6 +20,8 @@ import withProfitLoss from './withProfitLoss';
 import { compose, saveInvoke } from '@/utils';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { ProfitLossSheetExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Profit/Loss sheet actions bar.
@@ -30,6 +32,9 @@ function ProfitLossActionsBar({
 
   // #withProfitLossActions
   toggleProfitLossFilterDrawer: toggleFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -47,6 +52,10 @@ function ProfitLossActionsBar({
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
+  };
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.ProfitLossSheetPdfPreview);
   };
 
   return (
@@ -110,6 +119,7 @@ function ProfitLossActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<ProfitLossSheetExportMenu />}
@@ -131,4 +141,5 @@ function ProfitLossActionsBar({
 export default compose(
   withProfitLoss(({ profitLossDrawerFilter }) => ({ profitLossDrawerFilter })),
   withProfitLossActions,
+  withDialogActions,
 )(ProfitLossActionsBar);

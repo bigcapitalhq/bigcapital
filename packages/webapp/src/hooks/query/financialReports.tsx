@@ -3,6 +3,7 @@ import { useRequestQuery } from '../useQueryRequest';
 import { purchasesByItemsReducer } from '@/containers/FinancialStatements/reducers';
 import { useDownloadFile } from '../useDownloadFile';
 import t from './types';
+import { useRequestPdf } from '../useRequestPdf';
 
 /**
  * Retrieve balance sheet.
@@ -54,6 +55,13 @@ export const useBalanceSheetCsvExport = (query, args) => {
 };
 
 /**
+ * Retrieves the balance sheet pdf document data.
+ */
+export function useBalanceSheetPdf() {
+  return useRequestPdf(`financial_statements/balance_sheet`);
+}
+
+/**
  * Retrieve trial balance sheet.
  */
 export function useTrialBalanceSheet(query, props) {
@@ -87,6 +95,13 @@ export const useTrialBalanceSheetXlsxExport = (query, args) => {
     ...args,
   });
 };
+
+/**
+ * Retrieves the trial balance sheet pdf document data.
+ */
+export function useTrialBalanceSheetPdf() {
+  return useRequestPdf(`financial_statements/trial_balance_sheet`);
+}
 
 export const useTrialBalanceSheetCsvExport = (query, args) => {
   return useDownloadFile({
@@ -150,6 +165,14 @@ export const useProfitLossSheetCsvExport = (query, args) => {
     ...args,
   });
 };
+
+/**
+ * Retrieves the cashflow sheet pdf document data.
+ */
+export function useProfitLossSheetPdf() {
+  return useRequestPdf(`financial_statements/profit_loss_sheet`);
+}
+
 
 /**
  * Retrieve general ledger (GL) sheet.
@@ -846,6 +869,13 @@ export const useCashFlowStatementCsvExport = (query, args) => {
     ...args,
   });
 };
+
+/**
+ * Retrieves the cashflow sheet pdf document data.
+ */
+export function useCashflowSheetPdf() {
+  return useRequestPdf(`financial_statements/cash-flow`);
+}
 
 /**
  * Retrieve inventory item detail report.

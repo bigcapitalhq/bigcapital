@@ -17,7 +17,9 @@ import { BalanceSheetExportMenu } from './components';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import withBalanceSheet from './withBalanceSheet';
 import withBalanceSheetActions from './withBalanceSheetActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Balance sheet - actions bar.
@@ -28,6 +30,9 @@ function BalanceSheetActionsBar({
 
   // #withBalanceSheetActions
   toggleBalanceSheetFilterDrawer: toggleFilterDrawer,
+
+  // #withDialogsActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -49,6 +54,10 @@ function BalanceSheetActionsBar({
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
+
+  const handlePdfPrintBtnSubmit = () => {
+    openDialog(DialogsName.BalanceSheetPdfPreview)
+  }
 
   return (
     <DashboardActionsBar>
@@ -111,6 +120,7 @@ function BalanceSheetActionsBar({
 
         <Button
           className={Classes.MINIMAL}
+          onClick={handlePdfPrintBtnSubmit}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
         />
@@ -136,4 +146,5 @@ export default compose(
     balanceSheetDrawerFilter,
   })),
   withBalanceSheetActions,
+  withDialogActions
 )(BalanceSheetActionsBar);

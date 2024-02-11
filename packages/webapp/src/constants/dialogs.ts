@@ -53,4 +53,9 @@ export enum DialogsName {
   EstimateMail = 'estimate-mail',
   ReceiptMail = 'receipt-mail',
   PaymentMail = 'payment-mail',
+  BalanceSheetPdfPreview = 'BalanceSheetPdfPreview',
+  TrialBalanceSheetPdfPreview = 'TrialBalanceSheetPdfPreview',
+  CashflowSheetPdfPreview = 'CashflowSheetPdfPreview',
+  ProfitLossSheetPdfPreview = 'ProfitLossSheetPdfPreview',
+
 }

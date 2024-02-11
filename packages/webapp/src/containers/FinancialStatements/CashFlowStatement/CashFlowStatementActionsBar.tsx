@@ -20,6 +20,8 @@ import withCashFlowStatementActions from './withCashFlowStatementActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { CashflowSheetExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Cash flow statement actions bar.
@@ -30,6 +32,9 @@ function CashFlowStatementActionsBar({
 
   //#withCashStatementActions
   toggleCashFlowStatementFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   //#ownProps
   numberFormat,
@@ -50,6 +55,11 @@ function CashFlowStatementActionsBar({
   // handle number format form submit.
   const handleNumberFormatSubmit = (values) =>
     saveInvoke(onNumberFormatSubmit, values);
+
+  // Handle print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.CashflowSheetPdfPreview);
+  };
 
   return (
     <DashboardActionsBar>
@@ -115,6 +125,7 @@ function CashFlowStatementActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<CashflowSheetExportMenu />}
@@ -138,4 +149,5 @@ export default compose(
     isFilterDrawerOpen: cashFlowStatementDrawerFilter,
   })),
   withCashFlowStatementActions,
+  withDialogActions,
 )(CashFlowStatementActionsBar);
