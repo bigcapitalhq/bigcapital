@@ -15,6 +15,7 @@ import withJournalActions from './withJournalActions';
 
 import { useJournalQuery } from './utils';
 import { compose } from '@/utils';
+import { JournalDialogs } from './JournalDialogs';
 
 /**
  * Journal sheet.
@@ -23,7 +24,7 @@ function Journal({
   // #withJournalActions
   toggleJournalSheetFilter,
 }) {
-  const {query, setLocationQuery} = useJournalQuery();
+  const { query, setLocationQuery } = useJournalQuery();
 
   // Handle financial statement filter change.
   const handleFilterSubmit = useCallback(
@@ -60,6 +61,8 @@ function Journal({
           <JournalBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <JournalDialogs />
     </JournalSheetProvider>
   );
 }

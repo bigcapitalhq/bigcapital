@@ -20,6 +20,8 @@ import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
 import { compose, saveInvoke } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Inventory item details actions bar.
@@ -31,6 +33,9 @@ function InventoryItemDetailsActionsBar({
 
   //#withInventoryItemDetails
   isFilterDrawerOpen,
+
+  // #withDialogActions
+  openDialog,
 
   //#withInventoryItemDetailsActions
   toggleInventoryItemDetailsFilterDrawer: toggleFilterDrawer,
@@ -50,7 +55,10 @@ function InventoryItemDetailsActionsBar({
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
-
+  // Handle print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.InventoryItemDetailsPdfPreview);
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -112,6 +120,7 @@ function InventoryItemDetailsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<InventoryItemDetailsExportMenu />}
@@ -135,4 +144,5 @@ export default compose(
     isFilterDrawerOpen: inventoryItemDetailDrawerFilter,
   })),
   withInventoryItemDetailsActions,
+  withDialogActions,
 )(InventoryItemDetailsActionsBar);

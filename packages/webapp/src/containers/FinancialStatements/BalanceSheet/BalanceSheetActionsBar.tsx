@@ -55,6 +55,7 @@ function BalanceSheetActionsBar({
     saveInvoke(onNumberFormatSubmit, values);
   };
 
+  // Handles the pdf print button click.
   const handlePdfPrintBtnSubmit = () => {
     openDialog(DialogsName.BalanceSheetPdfPreview)
   }

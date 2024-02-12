@@ -20,6 +20,8 @@ import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { VendorTransactionsExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * vendors transactions actions bar.
@@ -34,6 +36,9 @@ function VendorsTransactionsActionsBar({
 
   //#withVendorsTransactionsActions
   toggleVendorsTransactionsFilterDrawer,
+
+  //#withDialogActions
+  openDialog
 }) {
   const { isVendorsTransactionsLoading, refetch } =
     useVendorsTransactionsContext();
@@ -52,6 +57,11 @@ function VendorsTransactionsActionsBar({
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.VendorTransactionsPdfPreview)
+  }
 
   return (
     <DashboardActionsBar>
@@ -114,6 +124,7 @@ function VendorsTransactionsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<VendorTransactionsExportMenu />}
@@ -136,4 +147,5 @@ export default compose(
     isFilterDrawerOpen: vendorsTransactionsDrawerFilter,
   })),
   withVendorsTransactionsActions,
+  withDialogActions
 )(VendorsTransactionsActionsBar);

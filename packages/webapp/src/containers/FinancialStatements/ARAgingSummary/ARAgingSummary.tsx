@@ -14,6 +14,8 @@ import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { useARAgingSummaryQuery } from './common';
 import { compose } from '@/utils';
+import { ARAgingSummaryPdfDialog } from './dialogs/ARAgingSummaryPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * A/R aging summary report.
@@ -25,13 +27,16 @@ function ReceivableAgingSummarySheet({
   const { query, setLocationQuery } = useARAgingSummaryQuery();
 
   // Handle filter submit.
-  const handleFilterSubmit = useCallback((filter) => {
-    const _filter = {
-      ...filter,
-      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
-    };
-    setLocationQuery(_filter);
-  }, [setLocationQuery]);
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const _filter = {
+        ...filter,
+        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+      };
+      setLocationQuery(_filter);
+    },
+    [setLocationQuery],
+  );
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
@@ -60,6 +65,10 @@ function ReceivableAgingSummarySheet({
           <ARAgingSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <ARAgingSummaryPdfDialog
+        dialogName={DialogsName.ARAgingSummaryPdfPreview}
+      />
     </ARAgingSummaryProvider>
   );
 }

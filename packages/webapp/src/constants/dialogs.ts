@@ -57,5 +57,17 @@ export enum DialogsName {
   TrialBalanceSheetPdfPreview = 'TrialBalanceSheetPdfPreview',
   CashflowSheetPdfPreview = 'CashflowSheetPdfPreview',
   ProfitLossSheetPdfPreview = 'ProfitLossSheetPdfPreview',
-
+  InventoryValuationPdfPreview = 'InventoryValuationPdfPreview',
+  APAgingSummaryPdfPreview = 'APAgingSummaryPdfPreview',
+  ARAgingSummaryPdfPreview = 'ARAgingSummaryPdfPreview',
+  JournalPdfPreview = 'JournalPdfPreview',
+  SalesByItemsPdfPreview = 'SalesByItemsPdfPreview',
+  PurchasesByItemsPdfPreview = 'PurchasesByItemsPdfPreview',
+  VendorBalancePdfPreview = 'VendorBalancePdfPreview',
+  InventoryItemDetailsPdfPreview = 'InventoryItemDetailsPdfPreview',
+  CustomerBalanceSummaryPdfPreview = 'CustomerBalanceSummaryPdfPreview',
+  CustomerTransactionsPdfPreview = 'CustomerTransactionsPdfPreview',
+  VendorTransactionsPdfPreview = 'VendorTransactionsPdfPreview',
+  GeneralLedgerPdfPreview = 'GeneralLedgerPdfPreview',
+  SalesTaxLiabilitySummaryPdfPreview = 'SalesTaxLiabilitySummaryPdfPreview'
 }

@@ -23,7 +23,7 @@ export default function TrialBalanceSheetPdfDialogContent() {
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={'trial_balance_sheet.pdf'}
           minimal={true}
           outlined={true}
         >

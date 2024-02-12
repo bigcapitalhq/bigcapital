@@ -22,7 +22,7 @@ function CashflowSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'Trial Balance Sheet Print Preview'}
+      title={'Cashflow Sheet Print Preview'}
       className={classNames(CLASSES.DIALOG_PDF_PREVIEW)}
       autoFocus={true}
       canEscapeKeyClose={true}
@@ -30,10 +30,7 @@ function CashflowSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <CashflowSheetPdfDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <CashflowSheetPdfDialogContent />
       </DialogSuspense>
     </Dialog>
   );

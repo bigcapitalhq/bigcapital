@@ -23,7 +23,7 @@ export default function ProfitLossSheetPdfDialogContent() {
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={'profit_loss_sheet.pdf'}
           minimal={true}
           outlined={true}
         >
