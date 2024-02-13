@@ -101,6 +101,7 @@ export class VendorBalanceSummaryService
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta: {}
     };
   }
 }

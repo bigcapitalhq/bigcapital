@@ -26,7 +26,7 @@ export class CustomerBalanceSummaryTableInjectable {
     filter: ICustomerBalanceSummaryQuery
   ): Promise<ICustomerBalanceSummaryTable> {
     const i18n = this.tenancy.i18n(tenantId);
-    const { data, query } =
+    const { data, query, meta } =
       await this.customerBalanceSummaryService.customerBalanceSummary(
         tenantId,
         filter
@@ -39,6 +39,7 @@ export class CustomerBalanceSummaryTableInjectable {
         rows: tableRows.tableRows(),
       },
       query,
+      meta,
     };
   }
 }

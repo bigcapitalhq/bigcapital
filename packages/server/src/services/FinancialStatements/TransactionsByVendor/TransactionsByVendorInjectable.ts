@@ -168,6 +168,7 @@ export class TransactionsByVendorsInjectable
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta: {},
     };
   }
 }

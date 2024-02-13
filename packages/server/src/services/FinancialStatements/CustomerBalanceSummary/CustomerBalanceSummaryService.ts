@@ -100,6 +100,7 @@ export class CustomerBalanceSummaryService
     return {
       data: report.reportData(),
       query: filter,
+      meta: {}
     };
   }
 }

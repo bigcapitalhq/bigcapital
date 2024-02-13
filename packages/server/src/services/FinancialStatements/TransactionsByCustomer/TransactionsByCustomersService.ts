@@ -163,6 +163,7 @@ export class TransactionsByCustomersSheet
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta: {},
     };
   }
 }

@@ -2,7 +2,6 @@ import { Inject, Service } from 'typedi';
 import {
   ISalesByItemsReportQuery,
   ISalesByItemsSheet,
-  ISalesByItemsSheetData,
   ISalesByItemsTable,
 } from '@/interfaces';
 import { SalesByItemsReportService } from './SalesByItemsService';
