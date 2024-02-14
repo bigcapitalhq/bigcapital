@@ -57,6 +57,7 @@ import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
 import { BankingController } from './controllers/Banking/BankingController';
+import { Webhooks } from './controllers/Webhooks/Webhooks';
 
 export default () => {
   const app = Router();
@@ -72,6 +73,7 @@ export default () => {
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
   app.use('/account', Container.get(Account).router());
+  app.use('/webhooks', Container.get(Webhooks).router());
 
   // - Dashboard routes.
   // ---------------------------

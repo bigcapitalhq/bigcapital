@@ -13,22 +13,24 @@ export class PlaidWebooks {
    * @param {string} plaidItemId
    * @param {string} webhookCode
    */
-  async webhooks(
+  public async webhooks(
     tenantId: number,
-    webhookType: string,
     plaidItemId: string,
+    webhookType: string,
     webhookCode: string
   ) {
+    const _webhookType = webhookType.toLowerCase();
+
     // There are five types of webhooks: AUTH, TRANSACTIONS, ITEM, INCOME, and ASSETS.
     // @TODO implement handling for remaining webhook types.
     const webhookHandlerMap = {
-      transactions: this.handleTransactionsWebooks,
-      item: this.itemsHandler,
+      transactions: this.handleTransactionsWebooks.bind(this),
+      item: this.itemsHandler.bind(this),
     };
     const webhookHandler =
-      webhookHandlerMap[webhookType] || this.unhandledWebhook;
+      webhookHandlerMap[_webhookType] || this.unhandledWebhook;
 
-    await webhookHandler(tenantId, webhookCode, plaidItemId);
+    await webhookHandler(tenantId, plaidItemId, webhookCode);
   }
 
   /**
@@ -37,7 +39,7 @@ export class PlaidWebooks {
    * @param {string} webhookCode
    * @param {string} plaidItemId
    */
-  async unhandledWebhook(
+  private async unhandledWebhook(
     webhookType: string,
     webhookCode: string,
     plaidItemId: string
@@ -114,37 +116,24 @@ export class PlaidWebooks {
    */
   public async itemsHandler(
     tenantId: number,
-    webhookCode: string,
-    plaidItemId: string
+    plaidItemId: string,
+    webhookCode: string
   ): Promise<void> {
     switch (webhookCode) {
       case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
         this.serverLogAndEmitSocket('is updated', plaidItemId, error);
         break;
       case 'ERROR': {
-        this.serverLogAndEmitSocket(
-          `ERROR: ${error.error_code}: ${error.error_message}`,
-          itemId,
-          error.error_code
-        );
         break;
       }
       case 'PENDING_EXPIRATION': {
-        const { id: itemId } = await retrieveItemByPlaidItemId(plaidItemId);
-        await updateItemStatus(itemId, 'bad');
-
-        this.serverLogAndEmitSocket(
-          `user needs to re-enter login credentials`,
-          itemId,
-          error
-        );
         break;
       }
       default:
         this.serverLogAndEmitSocket(
           'unhandled webhook type received.',
-          plaidItemId,
-          error
+          webhookCode,
+          plaidItemId
         );
     }
   }

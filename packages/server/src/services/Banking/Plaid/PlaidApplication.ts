@@ -45,14 +45,14 @@ export class PlaidApplication {
    */
   public webhooks(
     tenantId: number,
-    webhookType: string,
     plaidItemId: string,
+    webhookType: string,
     webhookCode: string
   ) {
     return this.plaidWebhooks.webhooks(
       tenantId,
-      webhookType,
       plaidItemId,
+      webhookType,
       webhookCode
     );
   }

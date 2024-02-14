@@ -1,5 +1,6 @@
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import { Service } from 'typedi';
+import config from '@/config';
 
 @Service()
 export class PlaidLinkTokenService {
@@ -11,7 +12,7 @@ export class PlaidLinkTokenService {
   async getLinkToken(tenantId: number) {
     const accessToken = null;
 
-    // must include transactions in order to receive transactions webhooks
+    // Must include transactions in order to receive transactions webhooks
     const products = ['transactions'];
     const linkTokenParams = {
       user: {
@@ -22,13 +23,9 @@ export class PlaidLinkTokenService {
       products,
       country_codes: ['US'],
       language: 'en',
-      // webhook: httpTunnel.public_url + '/services/webhook',
+      webhook: config.plaid.linkWebhook,
       access_token: accessToken,
     };
-    // If user has entered a redirect uri in the .env file
-    // if (redirect_uri.indexOf('http') === 0) {
-    //   linkTokenParams.redirect_uri = redirect_uri;
-    // }
     const plaidInstance = new PlaidClientWrapper();
     const createResponse = await plaidInstance.linkTokenCreate(linkTokenParams);
 
