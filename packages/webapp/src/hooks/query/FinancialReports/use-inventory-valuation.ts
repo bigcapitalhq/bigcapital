@@ -58,13 +58,6 @@ export const useInventoryValuationXlsxExport = (query, args) => {
   });
 };
 
-/**
- * Retrieves the inventory valuation pdf document data.
- */
-export function useInventoryValuationPdf() {
-  return useRequestPdf(`financial_statements/inventory-valuation`);
-}
-
 export const useInventoryValuationCsvExport = (query, args) => {
   return useDownloadFile({
     url: '/financial_statements/inventory-valuation',
@@ -78,3 +71,13 @@ export const useInventoryValuationCsvExport = (query, args) => {
     ...args,
   });
 };
+
+/**
+ * Retrieves the inventory valuation pdf document data.
+ */
+export function useInventoryValuationPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/inventory-valuation`,
+    params: query,
+  });
+}

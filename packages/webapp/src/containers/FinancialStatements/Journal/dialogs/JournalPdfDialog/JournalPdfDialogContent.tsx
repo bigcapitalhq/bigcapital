@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { useJournalSheetPdf } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';
+import { useJournalSheetContext } from '../../JournalProvider';
 
 export default function JournalSheetPdfDialogContent() {
-  const { isLoading, pdfUrl } = useJournalSheetPdf();
+  const { httpQuery } = useJournalSheetContext();
+  const { isLoading, pdfUrl } = useJournalSheetPdf(httpQuery);
 
   return (
     <DialogContent>

@@ -64,8 +64,11 @@ export const useVendorsTransactionsCsvExport = (query, args) => {
   });
 };
 /**
- * Retrieves the balance sheet pdf document data.
+ * Retrieves pdf document data of the transactions by vendor sheet.
  */
-export function useTransactionsByVendorsPdf() {
-  return useRequestPdf(`financial_statements/transactions-by-vendors`);
+export function useTransactionsByVendorsPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/transactions-by-vendors`,
+    params: query,
+  });
 }

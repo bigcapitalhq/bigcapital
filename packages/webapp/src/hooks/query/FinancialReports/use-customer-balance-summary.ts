@@ -61,8 +61,11 @@ export const useCustomerBalanceSummaryCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the balance sheet pdf document data.
+ * Retrieves the pdf content of customers balance summary.
  */
-export function useCustomerBalanceSummaryPdf() {
-  return useRequestPdf(`financial_statements/customer-balance-summary`);
+export function useCustomerBalanceSummaryPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/customer-balance-summary`,
+    params: query,
+  });
 }

@@ -64,6 +64,12 @@ export const useCustomersTransactionsCsvExport = (query, args) => {
   });
 };
 
-export const useCustomersTransactionsPdfExport = () => {
-  return useRequestPdf('/financial_statements/transactions-by-customers');
+/**
+ * Retrieves the pdf content of customers transactions.
+ */
+export const useCustomersTransactionsPdfExport = (query = {}) => {
+  return useRequestPdf({
+    url: '/api/financial_statements/transactions-by-customers',
+    params: query,
+  });
 };

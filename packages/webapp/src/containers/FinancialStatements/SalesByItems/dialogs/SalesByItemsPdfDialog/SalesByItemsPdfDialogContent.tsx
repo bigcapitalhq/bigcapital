@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { useSalesByItemsPdfExport } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';
+import { useSalesByItemsContext } from '../../SalesByItemProvider';
 
 export default function SalesByItemsPdfDialogContent() {
-  const { isLoading, pdfUrl } = useSalesByItemsPdfExport();
+  const { httpQuery } = useSalesByItemsContext();
+  const { isLoading, pdfUrl } = useSalesByItemsPdfExport(httpQuery);
 
   return (
     <DialogContent>

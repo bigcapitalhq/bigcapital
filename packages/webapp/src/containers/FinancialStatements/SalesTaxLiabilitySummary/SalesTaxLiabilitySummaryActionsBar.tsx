@@ -59,7 +59,6 @@ function SalesTaxLiabilitySummaryActionsBar({
     openDialog(DialogsName.SalesTaxLiabilitySummaryPdfPreview)    
   };
 
-
   return (
     <DashboardActionsBar>
       <NavbarGroup>

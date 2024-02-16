@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AnchorButton } from '@blueprintjs/core';
 import {
   DialogContent,
@@ -5,9 +6,11 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { usePurchasesByItemsPdfExport } from '@/hooks/query';
+import { usePurchasesByItemsQuery } from '../../utils';
 
 export default function PurchasesByItemsPdfDialogContent() {
-  const { isLoading, pdfUrl } = usePurchasesByItemsPdfExport();
+  const { httpQuery } = usePurchasesByItemsQuery();
+  const { isLoading, pdfUrl } = usePurchasesByItemsPdfExport(httpQuery);
 
   return (
     <DialogContent>

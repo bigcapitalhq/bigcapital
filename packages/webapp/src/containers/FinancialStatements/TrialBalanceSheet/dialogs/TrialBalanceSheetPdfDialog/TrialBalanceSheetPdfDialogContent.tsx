@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { AnchorButton } from '@blueprintjs/core';
 import { useTrialBalanceSheetPdf } from '@/hooks/query';
+import { useTrialBalanceSheetContext } from '../../TrialBalanceProvider';
 
 export default function TrialBalanceSheetPdfDialogContent() {
-  const { isLoading, pdfUrl } = useTrialBalanceSheetPdf();
+  const { httpQuery } = useTrialBalanceSheetContext();
+  const { isLoading, pdfUrl } = useTrialBalanceSheetPdf(httpQuery);
 
   return (
     <DialogContent>

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useMemo, createContext, useContext } from 'react';
+import { useMemo, createContext, useContext } from 'react';
 
 import FinancialReportPage from '../FinancialReportPage';
 import { useAPAgingSummaryReport } from '@/hooks/query';
@@ -12,22 +12,22 @@ const APAgingSummaryContext = createContext();
  */
 function APAgingSummaryProvider({ filter, ...props }) {
   // Transformers the filter from to the Url query.
-  const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
+  const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   const {
     data: APAgingSummary,
     isLoading: isAPAgingLoading,
     isFetching: isAPAgingFetching,
     refetch,
-  } = useAPAgingSummaryReport(query, { keepPreviousData: true });
+  } = useAPAgingSummaryReport(httpQuery, { keepPreviousData: true });
 
   const provider = {
     APAgingSummary,
-
     isAPAgingLoading,
     isAPAgingFetching,
     refetch,
-    query,
+    query: httpQuery,
+    httpQuery,
   };
 
   return (

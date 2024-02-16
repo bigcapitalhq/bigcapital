@@ -56,6 +56,9 @@ export const useTrialBalanceSheetCsvExport = (query, args) => {
 /**
  * Retrieves the trial balance sheet pdf document data.
  */
-export function useTrialBalanceSheetPdf() {
-  return useRequestPdf(`financial_statements/trial_balance_sheet`);
+export function useTrialBalanceSheetPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/trial_balance_sheet`,
+    params: query,
+  });
 }

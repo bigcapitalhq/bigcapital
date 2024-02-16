@@ -54,8 +54,11 @@ export const useAPAgingSheetCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the balance sheet pdf document data.
+ * Retrieves the A/P aging summary pdf document.
  */
-export function useAPAgingSummaryPdf() {
-  return useRequestPdf(`financial_statements/payable_aging_summary`);
+export function useAPAgingSummaryPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/payable_aging_summary`,
+    params: query,
+  });
 }

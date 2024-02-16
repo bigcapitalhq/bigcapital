@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { useInventoryValuationPdf } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';
+import { useInventoryValuationContext } from '../../InventoryValuationProvider';
 
 export default function InventoryValuationPdfDialogContent() {
-  const { isLoading, pdfUrl } = useInventoryValuationPdf();
+  const { httpQuery } = useInventoryValuationContext();
+  const { isLoading, pdfUrl } = useInventoryValuationPdf(httpQuery);
 
   return (
     <DialogContent>
@@ -23,7 +26,7 @@ export default function InventoryValuationPdfDialogContent() {
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={'inventory-valuation-summary.pdf'}
           minimal={true}
           outlined={true}
         >

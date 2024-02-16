@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { AnchorButton } from '@blueprintjs/core';
 import { useSalesTaxLiabilitySummaryPdf } from '@/hooks/query';
+import { useSalesTaxLiabilitySummaryContext } from '../SalesTaxLiabilitySummaryBoot';
 
 export default function SalesTaxLiabilityPdfDialogContent() {
-  const { isLoading, pdfUrl } = useSalesTaxLiabilitySummaryPdf();
+  const { query } = useSalesTaxLiabilitySummaryContext();
+  const { isLoading, pdfUrl } = useSalesTaxLiabilitySummaryPdf(query);
 
   return (
     <DialogContent>
@@ -23,7 +26,7 @@ export default function SalesTaxLiabilityPdfDialogContent() {
 
         <AnchorButton
           href={pdfUrl}
-          download={'profit_loss_sheet.pdf'}
+          download={'sales-tax-liability-summary.pdf'}
           minimal={true}
           outlined={true}
         >

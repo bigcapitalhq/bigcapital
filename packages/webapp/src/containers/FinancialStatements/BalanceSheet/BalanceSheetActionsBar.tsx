@@ -85,7 +85,6 @@ function BalanceSheetActionsBar({
           active={balanceSheetDrawerFilter}
         />
         <NavbarDivider />
-
         <Popover
           content={
             <NumberFormatDropdown
@@ -118,7 +117,6 @@ function BalanceSheetActionsBar({
         </Popover>
 
         <NavbarDivider />
-
         <Button
           className={Classes.MINIMAL}
           onClick={handlePdfPrintBtnSubmit}

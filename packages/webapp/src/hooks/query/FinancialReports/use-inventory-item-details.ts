@@ -67,6 +67,9 @@ export const useInventoryItemDetailsCsvExport = (query, args) => {
 /**
  * Retrieves the balance sheet pdf document data.
  */
-export function useInventoryItemDetailsPdf() {
-  return useRequestPdf(`financial_statements/inventory-item-details`);
+export function useInventoryItemDetailsPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/inventory-item-details`,
+    params: query,
+  });
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { useVendorBalanceSummaryPdfExport } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';
+import { useVendorsBalanceSummaryContext } from '../../VendorsBalanceSummaryProvider';
 
 export default function VendorTransactionsPdfDialogContent() {
-  const { isLoading, pdfUrl } = useVendorBalanceSummaryPdfExport();
+  const { httpQuery } = useVendorsBalanceSummaryContext();
+  const { isLoading, pdfUrl } = useVendorBalanceSummaryPdfExport(httpQuery);
 
   return (
     <DialogContent>

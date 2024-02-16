@@ -69,9 +69,11 @@ export const usePurchasesByItemsXlsxExport = (query, args) => {
 };
 
 /**
- *
- * @returns
+ * Retrieves the pdf document of purchases by items.
  */
-export const usePurchasesByItemsPdfExport = () => {
-  return useRequestPdf('/financial_statements/purchases-by-items');
+export const usePurchasesByItemsPdfExport = (query = {}) => {
+  return useRequestPdf({
+    url: '/api/financial_statements/purchases-by-items',
+    params: query,
+  });
 };

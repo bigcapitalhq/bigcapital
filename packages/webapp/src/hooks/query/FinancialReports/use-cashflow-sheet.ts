@@ -73,8 +73,11 @@ export const useCashFlowStatementCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the cashflow sheet pdf document data.
+ * Retrieves the cashflow sheet pdf document.
  */
-export function useCashflowSheetPdf() {
-  return useRequestPdf(`financial_statements/cash-flow`);
+export function useCashflowSheetPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/cash-flow`,
+    params: query,
+  });
 }

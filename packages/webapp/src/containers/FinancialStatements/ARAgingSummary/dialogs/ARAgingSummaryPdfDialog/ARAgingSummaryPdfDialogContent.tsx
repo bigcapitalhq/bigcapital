@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { useARAgingSummaryPdf } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';
+import { useARAgingSummaryContext } from '../../ARAgingSummaryProvider';
 
 export default function ARAgingSummaryPdfDialogContent() {
-  const { isLoading, pdfUrl } = useARAgingSummaryPdf();
+  const { httpQuery } = useARAgingSummaryContext();
+  const { isLoading, pdfUrl } = useARAgingSummaryPdf(httpQuery);
 
   return (
     <DialogContent>

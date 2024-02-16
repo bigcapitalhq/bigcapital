@@ -63,6 +63,9 @@ export const useVendorBalanceSummaryCsvExport = (args) => {
   });
 };
 
-export const useVendorBalanceSummaryPdfExport = () => {
-  return useRequestPdf('/financial_statements/vendor-balance-summary');
+export const useVendorBalanceSummaryPdfExport = (query = {}) => {
+  return useRequestPdf({
+    url: '/api/financial_statements/vendor-balance-summary',
+    params: query,
+  });
 };

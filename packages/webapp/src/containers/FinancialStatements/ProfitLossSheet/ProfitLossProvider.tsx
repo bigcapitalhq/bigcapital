@@ -1,7 +1,7 @@
 // @ts-nocheck
-import React, { createContext, useContext, useMemo } from 'react';
-import FinancialReportPage from '../FinancialReportPage';
+import { createContext, useContext, useMemo } from 'react';
 import { useProfitLossSheet } from '@/hooks/query';
+import FinancialReportPage from '../FinancialReportPage';
 import { transformFilterFormToQuery } from '../common';
 
 const ProfitLossSheetContext = createContext();
@@ -11,27 +11,22 @@ const ProfitLossSheetContext = createContext();
  * @returns {React.JSX}
  */
 function ProfitLossSheetProvider({ query, ...props }) {
-
-  const innerQuery = useMemo(() => {
-    return transformFilterFormToQuery(query);
-  }, [query]);
+  const httpQuery = useMemo(() => transformFilterFormToQuery(query), [query]);
 
   const {
     data: profitLossSheet,
     isFetching,
     isLoading,
     refetch,
-  } = useProfitLossSheet(
-    innerQuery,
-    { keepPreviousData: true },
-  );
+  } = useProfitLossSheet(httpQuery, { keepPreviousData: true });
 
   const provider = {
     profitLossSheet,
     isLoading,
     isFetching,
     sheetRefetch: refetch,
-    query: innerQuery
+    query: httpQuery,
+    httpQuery,
   };
 
   return (

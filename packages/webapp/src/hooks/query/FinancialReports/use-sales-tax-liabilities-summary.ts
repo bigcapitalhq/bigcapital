@@ -54,8 +54,11 @@ export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the balance sheet pdf document data.
+ * Retrieves pdf document data of sales tax liability summary.
  */
-export function useSalesTaxLiabilitySummaryPdf() {
-  return useRequestPdf(`financial_statements/sales-tax-liability-summary`);
+export function useSalesTaxLiabilitySummaryPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/sales-tax-liability-summary`,
+    params: query,
+  });
 }

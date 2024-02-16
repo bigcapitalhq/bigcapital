@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useTrialBalanceSheet } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
@@ -7,25 +7,21 @@ import { transformFilterFormToQuery } from '../common';
 const TrialBalanceSheetContext = createContext();
 
 function TrialBalanceSheetProvider({ query, ...props }) {
+  const httpQuery = useMemo(() => transformFilterFormToQuery(query), [query]);
+
   const {
     data: trialBalanceSheet,
     isFetching,
     isLoading,
     refetch,
-  } = useTrialBalanceSheet(
-    {
-      ...transformFilterFormToQuery(query),
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
+  } = useTrialBalanceSheet({ ...httpQuery }, { keepPreviousData: true });
 
   const provider = {
     trialBalanceSheet,
     isLoading,
     isFetching,
     refetchSheet: refetch,
+    httpQuery,
   };
 
   return (

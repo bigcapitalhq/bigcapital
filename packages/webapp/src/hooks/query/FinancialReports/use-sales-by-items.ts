@@ -70,6 +70,9 @@ export const useSalesByItemsXlsxExport = (query, args) => {
   });
 };
 
-export const useSalesByItemsPdfExport = () => {
-  return useRequestPdf('/financial_statements/sales-by-items');
+export const useSalesByItemsPdfExport = (query = {}) => {
+  return useRequestPdf({
+    url: '/api/financial_statements/sales-by-items',
+    params: query,
+  });
 };

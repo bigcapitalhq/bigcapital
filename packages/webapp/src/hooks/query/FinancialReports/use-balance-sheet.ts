@@ -56,6 +56,9 @@ export const useBalanceSheetCsvExport = (query, args) => {
 /**
  * Retrieves the balance sheet pdf document data.
  */
-export function useBalanceSheetPdf() {
-  return useRequestPdf(`financial_statements/balance_sheet`);
+export function useBalanceSheetPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/balance_sheet`,
+    params: query,
+  });
 }

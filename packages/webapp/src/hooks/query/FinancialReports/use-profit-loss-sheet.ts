@@ -54,8 +54,11 @@ export const useProfitLossSheetCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the cashflow sheet pdf document data.
+ * Retrieves the profit/loss sheet pdf document data.
  */
-export function useProfitLossSheetPdf() {
-  return useRequestPdf(`financial_statements/profit_loss_sheet`);
+export function useProfitLossSheetPdf(query = {}) {
+  return useRequestPdf({
+    url: `/api/financial_statements/profit_loss_sheet`,
+    params: query,
+  });
 }

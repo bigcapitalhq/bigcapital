@@ -57,5 +57,8 @@ export const useJournalSheetCsvExport = (query, args) => {
  * Retrieves the journal sheet pdf content.
  */
 export const useJournalSheetPdf = (query = {}) => {
-  return useRequestPdf(`financial_statements/journal`);
+  return useRequestPdf({
+    url: `/api/financial_statements/journal`,
+    params: query,
+  });
 };

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { AnchorButton } from '@blueprintjs/core';
 import { useCashflowSheetPdf } from '@/hooks/query';
+import { useCashFlowStatementContext } from '../CashFlowStatementProvider';
 
 export default function CashflowSheetPdfDialogContent() {
-  const { isLoading, pdfUrl } = useCashflowSheetPdf();
+  const { httpQuery } = useCashFlowStatementContext();
+  const { isLoading, pdfUrl } = useCashflowSheetPdf(httpQuery);
 
   return (
     <DialogContent>

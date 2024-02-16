@@ -96,7 +96,7 @@ export const BalanceSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useBalanceSheetContext();
+  const { httpQuery } = useBalanceSheetContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -114,7 +114,7 @@ export const BalanceSheetExportMenu = () => {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport(query, {
+  const { mutateAsync: xlsxExport } = useBalanceSheetXlsxExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -132,8 +132,9 @@ export const BalanceSheetExportMenu = () => {
       }
     },
   });
+
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useBalanceSheetCsvExport(query, {
+  const { mutateAsync: csvExport } = useBalanceSheetCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { AnchorButton } from '@blueprintjs/core';
 import { useProfitLossSheetPdf } from '@/hooks/query';
+import { useProfitLossSheetContext } from '../ProfitLossProvider';
 
 export default function ProfitLossSheetPdfDialogContent() {
-  const { isLoading, pdfUrl } = useProfitLossSheetPdf();
+  const { httpQuery } = useProfitLossSheetContext();
+  const { isLoading, pdfUrl } = useProfitLossSheetPdf(httpQuery);
 
   return (
     <DialogContent>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   DialogContent,
   PdfDocumentPreview,
@@ -5,9 +6,11 @@ import {
 } from '@/components';
 import { AnchorButton } from '@blueprintjs/core';
 import { useCustomersTransactionsPdfExport } from '@/hooks/query';
+import { useCustomersTransactionsContext } from '../../CustomersTransactionsProvider';
 
 export default function CashflowSheetPdfDialogContent() {
-  const { isLoading, pdfUrl } = useCustomersTransactionsPdfExport();
+  const { httpQuery } = useCustomersTransactionsContext();
+  const { isLoading, pdfUrl } = useCustomersTransactionsPdfExport(httpQuery);
 
   return (
     <DialogContent>
@@ -23,7 +26,7 @@ export default function CashflowSheetPdfDialogContent() {
 
         <AnchorButton
           href={pdfUrl}
-          download={'invoice.pdf'}
+          download={'customer-transactions.pdf'}
           minimal={true}
           outlined={true}
         >
