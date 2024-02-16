@@ -57,6 +57,12 @@ export class TableSheetPdf {
    * @returns {ITableRow[]}
    */
   private tablePdfRows = (rows: ITableRow[]): ITableRow[] => {
-    return R.compose(FinancialTableStructure.flatNestedTree)(rows);
+    const curriedFlatNestedTree = R.curry(
+      FinancialTableStructure.flatNestedTree
+    );
+    const flatNestedTree = curriedFlatNestedTree(R.__, {
+      nestedPrefix: '<span style="padding-left: 15px;"></span>',
+    });
+    return R.compose(flatNestedTree)(rows);
   };
 }

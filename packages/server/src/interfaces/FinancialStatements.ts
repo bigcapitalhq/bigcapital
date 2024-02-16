@@ -43,3 +43,11 @@ export enum ReportsAction {
 export interface IFinancialSheetBranchesQuery {
   branchesIds?: number[];
 }
+
+export interface IFinancialSheetCommonMeta {
+  organizationName: string;
+  baseCurrency: string;
+  dateFormat: string;
+  isCostComputeRunning: boolean;
+  sheetName: string;
+}

@@ -22,12 +22,11 @@ export class BalanceSheetPdfInjectable {
     query: IBalanceSheetQuery
   ): Promise<Buffer> {
     const table = await this.balanceSheetTable.table(tenantId, query);
-    const sheetName = 'Balance Sheet';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
+      table.meta.sheetName,
       table.meta.baseCurrency
     );
   }
