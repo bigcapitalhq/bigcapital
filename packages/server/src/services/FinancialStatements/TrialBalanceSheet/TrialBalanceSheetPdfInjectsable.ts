@@ -12,9 +12,9 @@ export class TrialBalanceSheetPdfInjectable {
   private tableSheetPdf: TableSheetPdf;
 
   /**
-   * Converts the given balance sheet table to pdf.
+   * Converts the given trial balance sheet table to pdf.
    * @param {number} tenantId - Tenant ID.
-   * @param {IBalanceSheetQuery} query - Balance sheet query.
+   * @param {ITrialBalanceSheetQuery} query - Trial balance sheet query.
    * @returns {Promise<Buffer>}
    */
   public async pdf(
@@ -22,13 +22,12 @@ export class TrialBalanceSheetPdfInjectable {
     query: ITrialBalanceSheetQuery
   ): Promise<Buffer> {
     const table = await this.trialBalanceSheetTable.table(tenantId, query);
-    const sheetName = 'Trial Balance Sheet';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

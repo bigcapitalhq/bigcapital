@@ -27,7 +27,7 @@ export class CashflowTablePdfInjectable {
       tenantId,
       table.table,
       sheetName,
-      table.meta.baseCurrency
+      table.meta.formattedDateRange
     );
   }
 }

@@ -22,13 +22,12 @@ export class ProfitLossTablePdfInjectable {
     query: IProfitLossSheetQuery
   ): Promise<Buffer> {
     const table = await this.profitLossTable.table(tenantId, query);
-    const sheetName = 'Profit & Loss Sheet';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

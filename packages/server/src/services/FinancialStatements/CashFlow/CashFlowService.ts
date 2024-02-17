@@ -8,7 +8,7 @@ import {
   ICashFlowStatementQuery,
   ICashFlowStatementDOO,
   IAccountTransaction,
-  ICashFlowStatementMeta
+  ICashFlowStatementMeta,
 } from '@/interfaces';
 import CashFlowStatement from './CashFlow';
 import Ledger from '@/services/Accounting/Ledger';
@@ -16,6 +16,7 @@ import CashFlowRepository from './CashFlowRepository';
 import InventoryService from '@/services/Inventory/Inventory';
 import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
+import { CashflowSheetMeta } from './CashflowSheetMeta';
 
 @Service()
 export default class CashFlowStatementService
@@ -30,6 +31,9 @@ export default class CashFlowStatementService
 
   @Inject()
   inventoryService: InventoryService;
+
+  @Inject()
+  private cashflowSheetMeta: CashflowSheetMeta;
 
   /**
    * Defaults balance sheet filter query.
@@ -138,38 +142,13 @@ export default class CashFlowStatementService
       tenant.metadata.baseCurrency,
       i18n
     );
+    // Retrieve the cashflow sheet meta.
+    const meta = await this.cashflowSheetMeta.meta(tenantId, filter);
 
     return {
       data: cashFlowInstance.reportData(),
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
-
-    /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId - 
-   * @returns {ICashFlowStatementMeta}
-   */
-     private reportMetadata(tenantId: number): ICashFlowStatementMeta {
-      const settings = this.tenancy.settings(tenantId);
-  
-      const isCostComputeRunning = this.inventoryService
-        .isItemsCostComputeRunning(tenantId);
-  
-      const organizationName = settings.get({
-        group: 'organization',
-        key: 'name',
-      });
-      const baseCurrency = settings.get({
-        group: 'organization',
-        key: 'base_currency',
-      });
-  
-      return {
-        isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-        organizationName,
-        baseCurrency
-      };
-    }
 }

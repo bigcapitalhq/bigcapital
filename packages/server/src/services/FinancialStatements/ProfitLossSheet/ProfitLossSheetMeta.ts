@@ -1,33 +1,35 @@
+import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
-import { IBalanceSheetMeta, IBalanceSheetQuery } from '@/interfaces';
-import moment from 'moment';
+import { ICashFlowStatementMeta, ICashFlowStatementQuery } from '@/interfaces';
 
 @Service()
-export class BalanceSheetMetaInjectable {
+export class ProfitLossSheetMeta {
   @Inject()
   private financialSheetMeta: FinancialSheetMeta;
 
   /**
-   * Retrieve the balance sheet meta.
+   * Retrieve the P/L sheet meta.
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
   public async meta(
     tenantId: number,
-    query: IBalanceSheetQuery
-  ): Promise<IBalanceSheetMeta> {
+    query: ICashFlowStatementQuery
+  ): Promise<ICashFlowStatementMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
     const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
 
+    const sheetName = 'Cashflow Statement';
+
     return {
       ...commonMeta,
-      sheetName: 'Balance Sheet',
+      sheetName,
       formattedFromDate,
       formattedToDate,
-      formattedDateRange
+      formattedDateRange,
     };
   }
 }

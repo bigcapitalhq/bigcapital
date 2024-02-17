@@ -1,4 +1,7 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IAccount } from './Account';
 import { ILedger } from './Ledger';
 import { IFinancialTable, ITableRow } from './Table';
@@ -79,8 +82,8 @@ export interface ICashFlowStatementAggregateSection
 
 export interface ICashFlowCashBeginningNode
   extends ICashFlowStatementCommonSection {
-    sectionType: ICashFlowStatementSectionType.CASH_AT_BEGINNING;
-  }
+  sectionType: ICashFlowStatementSectionType.CASH_AT_BEGINNING;
+}
 
 export type ICashFlowStatementSection =
   | ICashFlowStatementAccountSection
@@ -89,10 +92,10 @@ export type ICashFlowStatementSection =
   | ICashFlowStatementCommonSection;
 
 export interface ICashFlowStatementColumn {}
-export interface ICashFlowStatementMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface ICashFlowStatementMeta extends IFinancialSheetCommonMeta {
+  formattedToDate: string;
+  formattedFromDate: string;
+  formattedDateRange: string;
 }
 
 export interface ICashFlowStatementDOO {

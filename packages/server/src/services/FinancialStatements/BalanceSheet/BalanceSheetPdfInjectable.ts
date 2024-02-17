@@ -27,7 +27,7 @@ export class BalanceSheetPdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.baseCurrency
+      table.meta.formattedDateRange
     );
   }
 }

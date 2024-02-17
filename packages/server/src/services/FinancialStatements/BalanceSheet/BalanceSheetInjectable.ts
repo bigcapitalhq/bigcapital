@@ -82,6 +82,7 @@ export default class BalanceSheetStatementService
     const models = this.tenancy.models(tenantId);
     const balanceSheetRepo = new BalanceSheetRepository(models, filter);
 
+    // Loads all resources.
     await balanceSheetRepo.asyncInitialize();
 
     // Balance sheet report instance.
@@ -95,7 +96,7 @@ export default class BalanceSheetStatementService
     const data = balanceSheetInstanace.reportData();
 
     // Balance sheet meta.
-    const meta = await this.balanceSheetMeta.meta(tenantId);
+    const meta = await this.balanceSheetMeta.meta(tenantId, filter);
 
     return {
       query: filter,
