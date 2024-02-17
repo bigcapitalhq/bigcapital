@@ -1,11 +1,15 @@
 // @ts-nocheck
+
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
 import t from '../types';
 
 /**
- * Retrieve balance sheet.
+ * Fetches balance sheet data.
+ * @param {Object} query - The query parameters for the request.
+ * @param {Object} props - Additional options for the request.
+ * @returns {Object} The response object from the useRequestQuery hook.
  */
 export function useBalanceSheet(query, props) {
   return useRequestQuery(
@@ -25,6 +29,12 @@ export function useBalanceSheet(query, props) {
   );
 }
 
+/**
+ * Initiates a download of the balance sheet in XLSX format.
+ * @param {Object} query - The query parameters for the request.
+ * @param {Object} args - Additional configurations for the download.
+ * @returns {Function} A function to trigger the file download.
+ */
 export const useBalanceSheetXlsxExport = (query, args) => {
   return useDownloadFile({
     url: '/financial_statements/balance_sheet',
@@ -39,6 +49,12 @@ export const useBalanceSheetXlsxExport = (query, args) => {
   });
 };
 
+/**
+ * Initiates a download of the balance sheet in CSV format.
+ * @param {Object} query - The query parameters for the request.
+ * @param {Object} args - Additional configurations for the download.
+ * @returns {Function} A function to trigger the file download.
+ */
 export const useBalanceSheetCsvExport = (query, args) => {
   return useDownloadFile({
     url: '/financial_statements/balance_sheet',
@@ -54,7 +70,9 @@ export const useBalanceSheetCsvExport = (query, args) => {
 };
 
 /**
- * Retrieves the balance sheet pdf document data.
+ * Fetches balance sheet data in PDF format.
+ * @param {Object} [query={}] - The query parameters for the request.
+ * @returns {Object} The response object from the useRequestPdf hook.
  */
 export function useBalanceSheetPdf(query = {}) {
   return useRequestPdf({

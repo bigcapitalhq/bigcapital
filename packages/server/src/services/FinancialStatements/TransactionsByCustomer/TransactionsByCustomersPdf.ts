@@ -13,7 +13,7 @@ export class TransactionsByCustomersPdf {
   /**
    * Retrieves the transactions by customers in PDF format.
    * @param {number} tenantId - Tenant ID.
-   * @param {IBalanceSheetQuery} query - Balance sheet query.
+   * @param {ITransactionsByCustomersFilter} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
   public async pdf(
@@ -24,13 +24,11 @@ export class TransactionsByCustomersPdf {
       tenantId,
       query
     );
-    const sheetName = 'Transactions By Customers';
-
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

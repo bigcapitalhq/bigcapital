@@ -29,10 +29,12 @@ export type ITransactionsByCustomersData = ITransactionsByCustomersCustomer[];
 export interface ITransactionsByCustomersStatement {
   data: ITransactionsByCustomersData;
   query: ITransactionsByCustomersFilter;
+  meta: ITransactionsByCustomersMeta;
 }
 
 export interface ITransactionsByCustomersTable extends IFinancialTable {
   query: ITransactionsByCustomersFilter;
+  meta: ITransactionsByCustomersMeta;
 }
 
 export interface ITransactionsByCustomersService {

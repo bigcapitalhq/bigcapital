@@ -22,13 +22,12 @@ export class TransactionsByVendorsPdf {
     query: ITransactionsByVendorsFilter
   ): Promise<Buffer> {
     const table = await this.transactionsByVendorTable.table(tenantId, query);
-    const sheetName = 'Transactions By Vendors';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

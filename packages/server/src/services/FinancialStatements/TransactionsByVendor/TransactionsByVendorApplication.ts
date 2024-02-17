@@ -69,6 +69,7 @@ export class TransactionsByVendorApplication {
    * Retrieves the transactions by vendor in XLSX format.
    * @param {number} tenantId
    * @param {ITransactionsByVendorsFilter} query
+   * @returns {Promise<Buffer>}
    */
   public xlsx(
     tenantId: number,

@@ -43,7 +43,6 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
         accessor: 'closingBalance.formattedAmount',
       },
     ];
-
     return {
       ...tableRowMapper(vendor, columns, { rowTypes: [ROW_TYPE.VENDOR] }),
       children: R.pipe(
@@ -82,6 +81,14 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return [];
+    return [
+      { key: 'vendor_name', label: 'Vendor name' },
+      { key: 'account_name', label: 'Account Name' },
+      { key: 'ref_type', label: 'Reference Type' },
+      { key: 'transaction_type', label: 'Transaction Type' },
+      { key: 'credit', label: 'Credit' },
+      { key: 'debit', label: 'Debit' },
+      { key: 'running_balance', label: 'Running Balance' },
+    ];
   };
 }
