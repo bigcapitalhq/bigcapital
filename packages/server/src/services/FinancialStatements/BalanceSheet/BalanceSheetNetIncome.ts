@@ -31,6 +31,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
     /**
      * Retrieves the closing balance of income accounts.
      * @returns {number}
+     * 
      */
     private getIncomeTotal = () => {
       const closeingBalance = this.repository.incomeLedger.getClosingBalance();

@@ -19,6 +19,7 @@ export class ARAgingSummaryTableInjectable {
     query: IARAgingSummaryQuery
   ): Promise<IARAgingSummaryTable> {
     const report = await this.ARAgingSummarySheet.ARAgingSummary(
+      
       tenantId,
       query
     );

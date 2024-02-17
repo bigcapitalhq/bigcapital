@@ -15,7 +15,7 @@ export class CustomerBalanceSummaryApplication {
 
   @Inject()
   private customerBalanceSummarySheet: CustomerBalanceSummaryService;
-
+  
   @Inject()
   private customerBalanceSummaryPdf: CustomerBalanceSummaryPdf;
 

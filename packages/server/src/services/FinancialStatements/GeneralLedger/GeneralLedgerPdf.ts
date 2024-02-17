@@ -1,7 +1,7 @@
-import { Inject, Service } from "typedi";
-import { TableSheetPdf } from "../TableSheetPdf";
-import { GeneralLedgerTableInjectable } from "./GeneralLedgerTableInjectable";
-import { IGeneralLedgerSheetQuery } from "@/interfaces";
+import { Inject, Service } from 'typedi';
+import { TableSheetPdf } from '../TableSheetPdf';
+import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
+import { IGeneralLedgerSheetQuery } from '@/interfaces';
 
 @Service()
 export class GeneralLedgerPdf {
@@ -14,7 +14,7 @@ export class GeneralLedgerPdf {
   /**
    * Converts the general ledger sheet table to pdf.
    * @param {number} tenantId - Tenant ID.
-   * @param {IGeneralLedgerSheetQuery} query - 
+   * @param {IGeneralLedgerSheetQuery} query -
    * @returns {Promise<Buffer>}
    */
   public async pdf(
@@ -22,13 +22,12 @@ export class GeneralLedgerPdf {
     query: IGeneralLedgerSheetQuery
   ): Promise<Buffer> {
     const table = await this.generalLedgerTable.table(tenantId, query);
-    const sheetName = 'General Ledger';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

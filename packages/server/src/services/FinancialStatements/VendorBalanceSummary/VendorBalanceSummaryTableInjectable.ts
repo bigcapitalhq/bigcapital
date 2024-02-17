@@ -29,6 +29,7 @@ export class VendorBalanceSummaryTableInjectable {
 
     const { data, meta } =
       await this.vendorBalanceSummarySheet.vendorBalanceSummary(
+        
         tenantId,
         query
       );

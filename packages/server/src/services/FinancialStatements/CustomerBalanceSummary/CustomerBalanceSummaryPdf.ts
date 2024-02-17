@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
-import { IAPAgingSummaryQuery, ICustomerBalanceSummaryQuery } from '@/interfaces';
+import { ICustomerBalanceSummaryQuery } from '@/interfaces';
+
 import { TableSheetPdf } from '../TableSheetPdf';
 import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
 
@@ -12,7 +13,7 @@ export class CustomerBalanceSummaryPdf {
   private tableSheetPdf: TableSheetPdf;
 
   /**
-   * Converts the given A/P aging summary sheet table to pdf.
+   * Converts the given customer balance summary sheet table to pdf.
    * @param {number} tenantId - Tenant ID.
    * @param {IAPAgingSummaryQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
@@ -22,13 +23,12 @@ export class CustomerBalanceSummaryPdf {
     query: ICustomerBalanceSummaryQuery
   ): Promise<Buffer> {
     const table = await this.customerBalanceSummaryTable.table(tenantId, query);
-    const sheetName = 'Customer Balance Summary';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

@@ -1,10 +1,12 @@
+
+
 import { Inject, Service } from 'typedi';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
-import { IBalanceSheetMeta, IBalanceSheetQuery } from '@/interfaces';
+import { IBalanceSheetMeta, IBalanceSheetQuery, IInventoryValuationReportQuery } from '@/interfaces';
 import moment from 'moment';
 
 @Service()
-export class BalanceSheetMetaInjectable {
+export class InventoryValuationMetaInjectable {
   @Inject()
   private financialSheetMeta: FinancialSheetMeta;
 
@@ -15,15 +17,15 @@ export class BalanceSheetMetaInjectable {
    */
   public async meta(
     tenantId: number,
-    query: IBalanceSheetQuery
+    query: IInventoryValuationReportQuery
   ): Promise<IBalanceSheetMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
-    const formattedAsDate = moment(query.toDate).format('YYYY/MM/DD');
+    const formattedAsDate = moment(query.asDate).format('YYYY/MM/DD');
     const formattedDateRange = `As ${formattedAsDate}`;
 
     return {
       ...commonMeta,
-      sheetName: 'Balance Sheet',
+      sheetName: 'Inventory Valuation Sheet',
       formattedAsDate,
       formattedDateRange,
     };

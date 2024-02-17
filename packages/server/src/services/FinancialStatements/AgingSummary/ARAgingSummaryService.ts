@@ -1,18 +1,19 @@
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
-import { IARAgingSummaryQuery, IARAgingSummaryMeta } from '@/interfaces';
+import { IARAgingSummaryQuery } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import ARAgingSummarySheet from './ARAgingSummarySheet';
 import { Tenant } from '@/system/models';
+import { ARAgingSummaryMeta } from './ARAgingSummaryMeta';
 
 @Service()
 export default class ARAgingSummaryService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
-  @Inject('logger')
-  logger: any;
+  @Inject()
+  private ARAgingSummaryMeta: ARAgingSummaryMeta;
 
   /**
    * Default report query.
@@ -32,29 +33,6 @@ export default class ARAgingSummaryService {
       customersIds: [],
       branchesIds: [],
       noneZero: false,
-    };
-  }
-
-  /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IARAgingSummaryMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -110,11 +88,14 @@ export default class ARAgingSummaryService {
     const data = ARAgingSummaryReport.reportData();
     const columns = ARAgingSummaryReport.reportColumns();
 
+    // Retrieve the aging summary report meta.
+    const meta = await this.ARAgingSummaryMeta.meta(tenantId, filter);
+
     return {
       data,
       columns,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

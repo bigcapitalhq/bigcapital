@@ -14,34 +14,34 @@ export class TableSheetPdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   /**
-   * Converts the table to PDF.
-   * @param {number} tenantId -
-   * @param {IFinancialTable} table -
-   * @param {string} sheetName - Sheet name.
-   * @param {string} sheetDate - Sheet date.
+   * Converts the table data into a PDF format.
+   * @param {number} tenantId - The unique identifier for the tenant.
+   * @param {ITableData} table - The table data to be converted.
+   * @param {string} sheetName - The name of the sheet.
+   * @param {string} sheetDate - The date of the sheet.
+   * @returns A promise that resolves with the PDF conversion result.
    */
   public async convertToPdf(
     tenantId: number,
     table: ITableData,
     sheetName: string,
     sheetDate: string
-  ) {
+  ): Promise<Buffer> {
+    // Prepare columns and rows for PDF conversion
     const columns = this.tablePdfColumns(table.columns);
     const rows = this.tablePdfRows(table.rows);
+
+    // Generate HTML content from the template
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/financial-sheet',
-      {
-        sheetName,
-        sheetDate,
-        table: { rows, columns },
-      }
+      { sheetName, sheetDate, table: { rows, columns } }
     );
+    // Convert the HTML content to PDF
     return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
     });
   }
-
   /**
    * Converts the table columns to pdf columns.
    * @param {ITableColumn[]} columns

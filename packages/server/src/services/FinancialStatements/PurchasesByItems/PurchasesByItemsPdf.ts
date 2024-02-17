@@ -22,13 +22,12 @@ export class PurchasesByItemsPdf {
     query: IPurchasesByItemsReportQuery
   ): Promise<Buffer> {
     const table = await this.purchasesByItemsTable.table(tenantId, query);
-    const sheetName = 'Purchases By Items';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

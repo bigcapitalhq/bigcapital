@@ -65,8 +65,7 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
 
 // Balance sheet meta.
 export interface IBalanceSheetMeta extends IFinancialSheetCommonMeta {
-  formattedFromDate: string;
-  formattedToDate: string;
+  formattedAsDate: string;
   formattedDateRange: string;
 }
 

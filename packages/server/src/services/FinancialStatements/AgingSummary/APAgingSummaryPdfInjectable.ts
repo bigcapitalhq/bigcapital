@@ -22,13 +22,12 @@ export class APAgingSummaryPdfInjectable {
     query: IAPAgingSummaryQuery
   ): Promise<Buffer> {
     const table = await this.APAgingSummaryTable.table(tenantId, query);
-    const sheetName = 'AR Aging Summary';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedAsDate
     );
   }
 }

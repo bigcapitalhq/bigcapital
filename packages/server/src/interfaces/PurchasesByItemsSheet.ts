@@ -1,4 +1,7 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IPurchasesByItemsReportQuery {
@@ -10,9 +13,10 @@ export interface IPurchasesByItemsReportQuery {
   onlyActive: boolean;
 }
 
-export interface IPurchasesByItemsSheetMeta {
-  organizationName: string;
-  baseCurrency: string;
+export interface IPurchasesByItemsSheetMeta extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDate: string;
+  formattedDateRange: string;
 }
 
 export interface IPurchasesByItemsItem {

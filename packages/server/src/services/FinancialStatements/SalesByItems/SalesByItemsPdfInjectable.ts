@@ -22,13 +22,12 @@ export class SalesByItemsPdfInjectable {
     query: ISalesByItemsReportQuery
   ): Promise<Buffer> {
     const table = await this.salesByItemsTable.table(tenantId, query);
-    const sheetName = 'Sales By Items';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

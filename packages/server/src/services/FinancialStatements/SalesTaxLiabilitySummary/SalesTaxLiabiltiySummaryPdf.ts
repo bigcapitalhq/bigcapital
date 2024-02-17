@@ -22,14 +22,15 @@ export class SalesTaxLiabiltiySummaryPdf {
     tenantId: number,
     query: SalesTaxLiabilitySummaryQuery
   ): Promise<Buffer> {
-    const table = await this.salesTaxLiabiltiySummaryTable.table(tenantId, query);
-    const sheetName = 'Sales Tax Liability Summary';
-
+    const table = await this.salesTaxLiabiltiySummaryTable.table(
+      tenantId,
+      query
+    );
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

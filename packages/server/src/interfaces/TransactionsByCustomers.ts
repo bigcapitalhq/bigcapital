@@ -1,3 +1,4 @@
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable, ITableData } from './Table';
 import {
   ITransactionsByContactsAmount,
@@ -39,4 +40,10 @@ export interface ITransactionsByCustomersService {
     tenantId: number,
     filter: ITransactionsByCustomersFilter
   ): Promise<ITransactionsByCustomersStatement>;
+}
+export interface ITransactionsByCustomersMeta
+  extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDate: string;
+  formattedDateRange: string;
 }

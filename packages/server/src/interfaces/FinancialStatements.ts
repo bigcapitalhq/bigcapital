@@ -50,4 +50,5 @@ export interface IFinancialSheetCommonMeta {
   dateFormat: string;
   isCostComputeRunning: boolean;
   sheetName: string;
+  
 }

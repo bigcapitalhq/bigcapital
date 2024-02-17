@@ -1,8 +1,7 @@
-import { Inject, Service } from "typedi";
-import { InventoryDetailsTableInjectable } from "./InventoryDetailsTableInjectable";
-import { TableSheetPdf } from "../TableSheetPdf";
-import { IInventoryDetailsQuery } from "@/interfaces";
-
+import { Inject, Service } from 'typedi';
+import { InventoryDetailsTableInjectable } from './InventoryDetailsTableInjectable';
+import { TableSheetPdf } from '../TableSheetPdf';
+import { IInventoryDetailsQuery } from '@/interfaces';
 
 @Service()
 export class InventoryDetailsTablePdf {
@@ -23,14 +22,12 @@ export class InventoryDetailsTablePdf {
     query: IInventoryDetailsQuery
   ): Promise<Buffer> {
     const table = await this.inventoryDetailsTable.table(tenantId, query);
-    const sheetName = 'Inventory Items Details';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
-
 }

@@ -22,13 +22,12 @@ export class JournalSheetPdfInjectable {
     query: IJournalReportQuery
   ): Promise<Buffer> {
     const table = await this.journalSheetTable.table(tenantId, query);
-    const sheetName = 'Journal Sheet';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.baseCurrency
+      table.meta.sheetName,
+      table.meta.formattedDateRange
     );
   }
 }

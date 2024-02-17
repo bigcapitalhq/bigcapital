@@ -72,5 +72,6 @@ export class VendorBalanceSummaryApplication {
    */
   public pdf(tenantId: number, query: IVendorBalanceSummaryQuery) {
     return this.vendorBalanceSummaryPdf.pdf(tenantId, query);
+    
   }
 }

@@ -44,6 +44,7 @@ export class SalesTaxLiabilitySummaryApplication {
    * @param {number} tenantId
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns {Promise<Buffer>}
+   * 
    */
   public xlsx(
     tenantId: number,
