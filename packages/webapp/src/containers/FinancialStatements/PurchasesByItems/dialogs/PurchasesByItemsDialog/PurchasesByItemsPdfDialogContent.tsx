@@ -6,10 +6,10 @@ import {
   FormattedMessage as T,
 } from '@/components';
 import { usePurchasesByItemsPdfExport } from '@/hooks/query';
-import { usePurchasesByItemsQuery } from '../../utils';
+import { usePurchaseByItemsContext } from '../../PurchasesByItemsProvider';
 
 export default function PurchasesByItemsPdfDialogContent() {
-  const { httpQuery } = usePurchasesByItemsQuery();
+  const { httpQuery } = usePurchaseByItemsContext();
   const { isLoading, pdfUrl } = usePurchasesByItemsPdfExport(httpQuery);
 
   return (

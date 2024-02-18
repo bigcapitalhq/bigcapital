@@ -40,4 +40,5 @@ function VendorsBalanceSummaryProvider({ filter, ...props }) {
 
 const useVendorsBalanceSummaryContext = () =>
   React.useContext(VendorsBalanceSummaryContext);
+
 export { VendorsBalanceSummaryProvider, useVendorsBalanceSummaryContext };

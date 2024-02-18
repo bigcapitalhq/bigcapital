@@ -20,7 +20,7 @@ function VendorBalancePdfDialogRoot({ dialogName, payload, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={'Vendor Balance Print Preview'}
+      title={'Vendor Balance Summary Print Preview'}
       className={classNames(CLASSES.DIALOG_PDF_PREVIEW)}
       autoFocus={true}
       canEscapeKeyClose={true}

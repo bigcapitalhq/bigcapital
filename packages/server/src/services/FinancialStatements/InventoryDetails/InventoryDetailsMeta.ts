@@ -22,9 +22,11 @@ export class InventoryDetailsMetaInjectable {
     const formattedToDay = moment(query.toDate).format('YYYY/MM/DD');
     const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDay}`;
 
+    const sheetName = 'Inventory Item Details';
+
     return {
       ...commonMeta,
-      sheetName: 'Inventory Details',
+      sheetName,
       formattedFromDate,
       formattedToDay,
       formattedDateRange,

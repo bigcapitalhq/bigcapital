@@ -22,9 +22,11 @@ export class SalesByItemsMeta {
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
     const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
 
+    const sheetName = 'Sales By Items';
+
     return {
       ...commonMeta,
-      sheetName: 'Purchases By Items',
+      sheetName,
       formattedFromDate,
       formattedToDate,
       formattedDateRange,
