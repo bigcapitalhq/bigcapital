@@ -3,6 +3,7 @@ import { ICustomerBalanceSummaryQuery } from '@/interfaces';
 
 import { TableSheetPdf } from '../TableSheetPdf';
 import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
+import { HtmlTableCustomCss } from './constants';
 
 @Service()
 export class CustomerBalanceSummaryPdf {
@@ -28,7 +29,8 @@ export class CustomerBalanceSummaryPdf {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

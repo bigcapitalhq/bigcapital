@@ -19,3 +19,11 @@ export const TOTAL_NODE_TYPES = [
   ProfitLossNodeType.AGGREGATE,
   ProfitLossNodeType.EQUATION
 ];
+
+export const HtmlTableCustomCss =`
+table tr.row-type--total td {
+  font-weight: 600;
+  border-top: 1px solid #bbb;
+  color: #000;
+}
+`;

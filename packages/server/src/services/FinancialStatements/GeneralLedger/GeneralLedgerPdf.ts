@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
 import { IGeneralLedgerSheetQuery } from '@/interfaces';
+import { HtmlTableCustomCss } from './constants';
 
 @Service()
 export class GeneralLedgerPdf {
@@ -27,7 +28,8 @@ export class GeneralLedgerPdf {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

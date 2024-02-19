@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IAPAgingSummaryQuery } from '@/interfaces';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
+import { HtmlTableCss } from './_constants';
 
 @Service()
 export class APAgingSummaryPdfInjectable {
@@ -27,7 +28,8 @@ export class APAgingSummaryPdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedAsDate
+      table.meta.formattedAsDate,
+      HtmlTableCss
     );
   }
 }

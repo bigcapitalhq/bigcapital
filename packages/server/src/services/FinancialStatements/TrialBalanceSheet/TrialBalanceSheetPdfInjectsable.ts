@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { ITrialBalanceSheetQuery } from '@/interfaces';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
+import { HtmlTableCustomCss } from './_constants';
 
 @Service()
 export class TrialBalanceSheetPdfInjectable {
@@ -27,7 +28,8 @@ export class TrialBalanceSheetPdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

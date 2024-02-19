@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { ISalesByItemsReportQuery } from '@/interfaces';
 import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
 import { TableSheetPdf } from '../TableSheetPdf';
+import { HtmlTableCustomCss } from './constants';
 
 @Service()
 export class SalesByItemsPdfInjectable {
@@ -27,7 +28,8 @@ export class SalesByItemsPdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

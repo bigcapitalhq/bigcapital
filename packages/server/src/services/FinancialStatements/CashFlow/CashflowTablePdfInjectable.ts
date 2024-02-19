@@ -2,6 +2,7 @@ import { Inject } from 'typedi';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { ICashFlowStatementQuery } from '@/interfaces';
+import { HtmlTableCustomCss } from './constants';
 
 export class CashflowTablePdfInjectable {
   @Inject()
@@ -21,13 +22,13 @@ export class CashflowTablePdfInjectable {
     query: ICashFlowStatementQuery
   ): Promise<Buffer> {
     const table = await this.cashflowTable.table(tenantId, query);
-    const sheetName = 'Cashflow Sheet';
 
     return this.tableSheetPdf.convertToPdf(
       tenantId,
       table.table,
-      sheetName,
-      table.meta.formattedDateRange
+      table.meta.sheetName,
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

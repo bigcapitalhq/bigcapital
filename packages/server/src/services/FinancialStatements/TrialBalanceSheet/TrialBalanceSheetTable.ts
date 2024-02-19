@@ -2,7 +2,6 @@ import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialTable } from '../FinancialTable';
 import {
-  IBalanceSheetStatementData,
   ITableColumn,
   ITableColumnAccessor,
   ITableRow,

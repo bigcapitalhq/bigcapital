@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IARAgingSummaryQuery } from '@/interfaces';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
+import { HtmlTableCss } from './_constants';
 
 @Service()
 export class ARAgingSummaryPdfInjectable {
@@ -27,7 +28,8 @@ export class ARAgingSummaryPdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCss
     );
   }
 }

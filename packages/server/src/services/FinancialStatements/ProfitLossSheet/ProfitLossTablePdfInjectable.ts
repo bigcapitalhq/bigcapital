@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { IProfitLossSheetQuery } from '@/interfaces';
 import { ProfitLossSheetTableInjectable } from './ProfitLossSheetTableInjectable';
 import { TableSheetPdf } from '../TableSheetPdf';
+import { HtmlTableCustomCss } from './constants';
 
 @Service()
 export class ProfitLossTablePdfInjectable {
@@ -27,7 +28,8 @@ export class ProfitLossTablePdfInjectable {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }

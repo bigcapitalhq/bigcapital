@@ -2,6 +2,7 @@ import { Inject, Service } from "typedi";
 import { InventoryValuationSheetTableInjectable } from "./InventoryValuationSheetTableInjectable";
 import { TableSheetPdf } from "../TableSheetPdf";
 import { IInventoryValuationReportQuery } from "@/interfaces";
+import { HtmlTableCustomCss } from "./_constants";
 
 
 @Service()
@@ -28,7 +29,8 @@ export class InventoryValuationSheetPdf {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   } 
 }
