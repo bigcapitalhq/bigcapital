@@ -3,7 +3,7 @@ block head
     include ../../css/modules/financial-sheet.css
 
 style.
-  #{customCSS}
+  !{customCSS}
 
 block content 
   .sheet 
@@ -16,9 +16,9 @@ block content
       thead
         tr
           each column in table.columns
-            th(style=column.style)= column.label
+            th(style=column.style class='column--' + column.key)= column.label
       tbody
         each row in table.rows
           tr(class=row.classNames)
             each cell in row.cells 
-              td!= cell.value
+              td(class='cell--' + cell.key)!= cell.value

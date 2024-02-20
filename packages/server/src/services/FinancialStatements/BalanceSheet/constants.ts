@@ -23,4 +23,42 @@ table tr.row-type--total.row-id--assets td,
 table tr.row-type--total.row-id--liability-equity td {
   border-bottom: 3px double #000;
 }
+table .column--name,
+table .cell--name {
+  width: 400px;
+}
+
+table .column--total {
+  width: 25%;
+}
+
+table td.cell--total,
+table td.cell--previous_year,
+table td.cell--previous_year_change,
+table td.cell--previous_year_percentage,
+
+table td.cell--previous_period,
+table td.cell--previous_period_change,
+table td.cell--previous_period_percentage,
+
+table td.cell--percentage_of_row,
+table td.cell--percentage_of_column,
+table td[class*="cell--date-range"] {
+  text-align: right;
+}
+
+table .column--total,
+table .column--previous_year,
+table .column--previous_year_change,
+table .column--previous_year_percentage,
+
+table .column--previous_period,
+table .column--previous_period_change,
+table .column--previous_period_percentage,
+
+table .column--percentage_of_row,
+table .column--percentage_of_column,
+table [class*="column--date-range"] {
+  text-align: right;
+}
 `;

@@ -23,8 +23,11 @@ export class CashflowSheetMeta {
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
     const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
 
+    const sheetName = 'Statement of Cash Flow';
+
     return {
       ...meta,
+      sheetName,
       formattedToDate,
       formattedFromDate,
       formattedDateRange,

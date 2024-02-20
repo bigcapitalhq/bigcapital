@@ -9,4 +9,17 @@ table tr.row-type--total td{
   font-weight: 500;
   border-bottom: 3px double #000;
 }
+
+table .column--account {
+  width: 400px;
+}
+
+table .column--debit,
+table .column--credit,
+table .column--total,
+table .cell--debit,
+table .cell--credit,
+table .cell--total{
+  text-align: right;
+}
 `;
