@@ -29,7 +29,7 @@ export default function EstimateFloatingActions() {
 
   // Handle submit & deliver button click.
   const handleSubmitDeliverBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, deliverViaMail: true });
+    setSubmitPayload({ redirect: true, deliver: true });
     submitForm();
   };
 

@@ -33,7 +33,7 @@ export default function ReceiptFormFloatingActions() {
 
   // Handle submit & close button click.
   const handleSubmitCloseBtnClick = (event) => {
-    setSubmitPayload({ redirect: false, deliverMail: true, status: true });
+    setSubmitPayload({ redirect: true, status: true });
     submitForm();
   };
 

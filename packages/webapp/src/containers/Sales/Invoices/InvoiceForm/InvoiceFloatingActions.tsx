@@ -30,19 +30,19 @@ export default function InvoiceFloatingActions() {
   const { setSubmitPayload, invoice } = useInvoiceFormContext();
 
   // Handle submit & deliver button click.
-  const handleSubmitDeliverBtnClick = () => {
-    setSubmitPayload({ redirectToEdit: true, deliverViaMail: true });
+  const handleSubmitDeliverBtnClick = (event) => {
+    setSubmitPayload({ redirect: true, deliver: true });
     submitForm();
   };
 
   // Handle submit, deliver & new button click.
-  const handleSubmitDeliverAndNewBtnClick = () => {
+  const handleSubmitDeliverAndNewBtnClick = (event) => {
     setSubmitPayload({ redirect: false, deliver: true, resetForm: true });
     submitForm();
   };
 
   // Handle submit, deliver & continue editing button click.
-  const handleSubmitDeliverContinueEditingBtnClick = () => {
+  const handleSubmitDeliverContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, deliver: true });
     submitForm();
   };

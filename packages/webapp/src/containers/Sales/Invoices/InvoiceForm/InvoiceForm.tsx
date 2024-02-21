@@ -34,20 +34,12 @@ import {
   transformValueToRequest,
   resetFormState,
 } from './utils';
-import {
-  InvoiceExchangeRateSync,
-  InvoiceNoSyncSettingsToForm,
-} from './components';
-import { DialogsName } from '@/constants/dialogs';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { InvoiceExchangeRateSync, InvoiceNoSyncSettingsToForm } from './components';
 
 /**
  * Invoice form.
  */
 function InvoiceForm({
-  // #withDialogActions
-  openDialog,
-
   // #withSettings
   invoiceNextNumber,
   invoiceNumberPrefix,
@@ -119,7 +111,7 @@ function InvoiceForm({
       from_estimate_id: estimateId,
     };
     // Handle the request success.
-    const onSuccess = (res) => {
+    const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
           isNewMode
@@ -131,11 +123,6 @@ function InvoiceForm({
       });
       setSubmitting(false);
 
-      if (submitPayload.deliverViaMail) {
-        openDialog(DialogsName.InvoiceFormMailDeliver, {
-          invoiceId: res.data.id,
-        });
-      }
       if (submitPayload.redirect) {
         history.push('/invoices');
       }
@@ -214,5 +201,4 @@ export default compose(
     invoiceTermsConditions: invoiceSettings?.termsConditions,
   })),
   withCurrentOrganization(),
-  withDialogActions,
 )(InvoiceForm);

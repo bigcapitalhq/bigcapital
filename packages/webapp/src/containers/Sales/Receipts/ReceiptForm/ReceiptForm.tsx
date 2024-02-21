@@ -34,20 +34,12 @@ import {
   transformFormValuesToRequest,
   resetFormState,
 } from './utils';
-import {
-  ReceiptSyncAutoExRateToForm,
-  ReceiptSyncIncrementSettingsToForm,
-} from './components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { DialogsName } from '@/constants/dialogs';
+import { ReceiptSyncAutoExRateToForm, ReceiptSyncIncrementSettingsToForm } from './components';
 
 /**
  * Receipt form.
  */
 function ReceiptForm({
-  // #withDialogActions
-  openDialog,
-
   // #withSettings
   receiptNextNumber,
   receiptNumberPrefix,
@@ -92,7 +84,10 @@ function ReceiptForm({
         }),
   };
   // Handle the form submit.
-  const handleFormSubmit = (values, { setErrors, setSubmitting }) => {
+  const handleFormSubmit = (
+    values,
+    { setErrors, setSubmitting, resetForm },
+  ) => {
     const entries = values.entries.filter(
       (item) => item.item_id && item.quantity,
     );
@@ -128,11 +123,6 @@ function ReceiptForm({
       }
       if (submitPayload.resetForm) {
         resetFormState();
-      }
-      if (submitPayload.deliverMail) {
-        openDialog(DialogsName.ReceiptFormMailDeliver, {
-          receiptId: response.data.id,
-        });
       }
     };
 
@@ -189,7 +179,6 @@ function ReceiptForm({
 }
 
 export default compose(
-  withDialogActions,
   withDashboardActions,
   withSettings(({ receiptSettings }) => ({
     receiptNextNumber: receiptSettings?.nextNumber,
