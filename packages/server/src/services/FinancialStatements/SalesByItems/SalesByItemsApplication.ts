@@ -1,13 +1,14 @@
 import { Inject, Service } from 'typedi';
+
 import {
   ISalesByItemsReportQuery,
   ISalesByItemsSheet,
-  ISalesByItemsSheetData,
   ISalesByItemsTable,
 } from '@/interfaces';
 import { SalesByItemsReportService } from './SalesByItemsService';
 import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
 import { SalesByItemsExport } from './SalesByItemsExport';
+import { SalesByItemsPdfInjectable } from './SalesByItemsPdfInjectable';
 
 @Service()
 export class SalesByItemsApplication {
@@ -19,6 +20,9 @@ export class SalesByItemsApplication {
 
   @Inject()
   private salesByItemsExport: SalesByItemsExport;
+
+  @Inject()
+  private salesByItemsPdf: SalesByItemsPdfInjectable;
 
   /**
    * Retrieves the sales by items report in json format.
@@ -70,5 +74,18 @@ export class SalesByItemsApplication {
     filter: ISalesByItemsReportQuery
   ): Promise<Buffer> {
     return this.salesByItemsExport.xlsx(tenantId, filter);
+  }
+
+  /**
+   * Retrieves the sales by items in pdf format.
+   * @param {number} tenantId
+   * @param {ISalesByItemsReportQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(
+    tenantId: number,
+    query: ISalesByItemsReportQuery
+  ): Promise<Buffer> {
+    return this.salesByItemsPdf.pdf(tenantId, query);
   }
 }

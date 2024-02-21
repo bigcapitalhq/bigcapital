@@ -7,6 +7,7 @@ import {
 import { TransactionsByVendorExportInjectable } from './TransactionsByVendorExportInjectable';
 import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
 import { TransactionsByVendorsInjectable } from './TransactionsByVendorInjectable';
+import { TransactionsByVendorsPdf } from './TransactionsByVendorPdf';
 
 @Service()
 export class TransactionsByVendorApplication {
@@ -18,6 +19,9 @@ export class TransactionsByVendorApplication {
 
   @Inject()
   private transactionsByVendorSheet: TransactionsByVendorsInjectable;
+
+  @Inject()
+  private transactionsByVendorPdf: TransactionsByVendorsPdf;
 
   /**
    * Retrieves the transactions by vendor in sheet format.
@@ -65,11 +69,22 @@ export class TransactionsByVendorApplication {
    * Retrieves the transactions by vendor in XLSX format.
    * @param {number} tenantId
    * @param {ITransactionsByVendorsFilter} query
+   * @returns {Promise<Buffer>}
    */
   public xlsx(
     tenantId: number,
     query: ITransactionsByVendorsFilter
   ): Promise<Buffer> {
     return this.transactionsByVendorExport.xlsx(tenantId, query);
+  }
+
+  /**
+   * Retrieves the transactions by vendor in PDF format.
+   * @param {number} tenantId
+   * @param {ITransactionsByVendorsFilter} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: ITransactionsByVendorsFilter) {
+    return this.transactionsByVendorPdf.pdf(tenantId, query);
   }
 }

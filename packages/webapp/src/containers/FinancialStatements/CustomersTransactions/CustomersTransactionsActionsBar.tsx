@@ -20,6 +20,8 @@ import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
 import { compose, saveInvoke } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Customers transactions actions bar.
@@ -34,6 +36,9 @@ function CustomersTransactionsActionsBar({
 
   //#withCustomersTransactionsActions
   toggleCustomersTransactionsFilterDrawer,
+
+  // #withDialogActions
+  openDialog
 }) {
   const { isCustomersTransactionsLoading, CustomersTransactionsRefetch } =
     useCustomersTransactionsContext();
@@ -51,6 +56,11 @@ function CustomersTransactionsActionsBar({
   // Handle number format form submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
+  };
+
+  // Handle print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.CustomerTransactionsPdfPreview)
   };
 
   return (
@@ -114,6 +124,7 @@ function CustomersTransactionsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<CustomersTransactionsExportMenu />}
@@ -137,4 +148,5 @@ export default compose(
     isFilterDrawerOpen: customersTransactionsDrawerFilter,
   })),
   withCustomersTransactionsActions,
+  withDialogActions
 )(CustomersTransactionsActionsBar);

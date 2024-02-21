@@ -1,4 +1,7 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IVendorBalanceSummaryQuery {
@@ -39,8 +42,9 @@ export interface IVendorBalanceSummaryData {
 
 export interface IVendorBalanceSummaryStatement {
   data: IVendorBalanceSummaryData;
-  columns: {};
   query: IVendorBalanceSummaryQuery;
+  meta: IVendorBalanceSummaryMeta;
+  
 }
 
 export interface IVendorBalanceSummaryService {
@@ -52,4 +56,9 @@ export interface IVendorBalanceSummaryService {
 
 export interface IVendorBalanceSummaryTable extends IFinancialTable {
   query: IVendorBalanceSummaryQuery;
+  meta: IVendorBalanceSummaryMeta;
+}
+
+export interface IVendorBalanceSummaryMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
 }

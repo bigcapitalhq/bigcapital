@@ -15,6 +15,8 @@ import { APAgingSummarySheetLoadingBar } from './components';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { compose } from '@/utils';
+import { APAgingSummaryPdfDialog } from './dialogs/APAgingSummaryPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * A/P aging summary report.
@@ -68,6 +70,10 @@ function APAgingSummary({
           <APAgingSummaryBody organizationName={organizationName} />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <APAgingSummaryPdfDialog
+        dialogName={DialogsName.APAgingSummaryPdfPreview}
+      />
     </APAgingSummaryProvider>
   );
 }

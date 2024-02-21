@@ -7,6 +7,7 @@ import { Inject, Service } from 'typedi';
 import { InventoryValuationSheetService } from './InventoryValuationSheetService';
 import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
 import { InventoryValuationSheetExportable } from './InventoryValuationSheetExportable';
+import { InventoryValuationSheetPdf } from './InventoryValuationSheetPdf';
 
 @Service()
 export class InventoryValuationSheetApplication {
@@ -18,6 +19,9 @@ export class InventoryValuationSheetApplication {
 
   @Inject()
   private inventoryValuationExport: InventoryValuationSheetExportable;
+
+  @Inject()
+  private inventoryValuationPdf: InventoryValuationSheetPdf;
 
   /**
    * Retrieves the inventory valuation json format.
@@ -72,5 +76,18 @@ export class InventoryValuationSheetApplication {
     query: IInventoryValuationReportQuery
   ): Promise<string> {
     return this.inventoryValuationExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the inventory valuation pdf format.
+   * @param {number} tenantId
+   * @param {IInventoryValuationReportQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(
+    tenantId: number,
+    query: IInventoryValuationReportQuery
+  ): Promise<Buffer> {
+    return this.inventoryValuationPdf.pdf(tenantId, query);
   }
 }

@@ -39,6 +39,7 @@ export class TransactionsByVendorTableInjectable {
         columns: table.tableColumns(),
       },
       query,
+      meta: sheet.meta,
     };
   }
 }

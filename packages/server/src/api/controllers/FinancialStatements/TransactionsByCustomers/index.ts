@@ -70,6 +70,7 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     try {
       // Retrieves the json table format.
@@ -103,6 +104,16 @@ export default class TransactionsByCustomersReportController extends BaseFinanci
         );
         return res.send(buffer);
         // Retrieve the json format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const pdfContent = await this.transactionsByCustomersApp.pdf(
+          tenantId,
+          filter
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
       } else {
         const sheet = await this.transactionsByCustomersApp.sheet(
           tenantId,

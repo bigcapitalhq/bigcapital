@@ -12,15 +12,21 @@ import { VendorBalanceSummaryReport } from './VendorBalanceSummary';
 import Ledger from '@/services/Accounting/Ledger';
 import VendorBalanceSummaryRepository from './VendorBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
+import { JournalSheetMeta } from '../JournalSheet/JournalSheetMeta';
+
+import { VendorBalanceSummaryMeta } from './VendorBalanceSummaryMeta';
 
 export class VendorBalanceSummaryService
   implements IVendorBalanceSummaryService
 {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  reportRepo: VendorBalanceSummaryRepository;
+  private reportRepo: VendorBalanceSummaryRepository;
+
+  @Inject()
+  private vendorBalanceSummaryMeta: VendorBalanceSummaryMeta;
 
   /**
    * Defaults balance sheet filter query.
@@ -43,6 +49,7 @@ export class VendorBalanceSummaryService
   }
 
   /**
+   * 
    * Retrieve the vendors ledger entrjes.
    * @param {number} tenantId -
    * @param {Date|string} date -
@@ -97,10 +104,13 @@ export class VendorBalanceSummaryService
       filter,
       tenant.metadata.baseCurrency
     );
+    // Retrieve the vendor balance summary meta.
+    const meta = await this.vendorBalanceSummaryMeta.meta(tenantId, filter);
 
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta
     };
   }
 }

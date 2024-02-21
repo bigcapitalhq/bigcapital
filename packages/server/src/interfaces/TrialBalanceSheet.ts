@@ -1,4 +1,7 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface ITrialBalanceSheetQuery {
@@ -24,10 +27,10 @@ export interface ITrialBalanceTotal {
   formattedBalance: string;
 }
 
-export interface ITrialBalanceSheetMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface ITrialBalanceSheetMeta extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDate: string;
+  formattedDateRange: string;
 }
 
 export interface ITrialBalanceAccount extends ITrialBalanceTotal {

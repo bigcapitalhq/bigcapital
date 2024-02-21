@@ -19,6 +19,8 @@ import withJournal from './withJournal';
 import { compose } from '@/utils';
 import { useJournalSheetContext } from './JournalProvider';
 import { JournalSheetExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Journal sheeet - Actions bar.
@@ -29,6 +31,9 @@ function JournalActionsBar({
 
   // #withJournalActions
   toggleJournalSheetFilter,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const { refetchSheet } = useJournalSheetContext();
 
@@ -40,6 +45,11 @@ function JournalActionsBar({
   // Handle re-calc the report.
   const handleRecalcReport = () => {
     refetchSheet();
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.JournalPdfPreview);
   };
 
   return (
@@ -85,6 +95,7 @@ function JournalActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<JournalSheetExportMenu />}
@@ -108,4 +119,5 @@ export default compose(
     isFilterDrawerOpen: journalSheetDrawerFilter,
   })),
   withJournalActions,
+  withDialogActions,
 )(JournalActionsBar);

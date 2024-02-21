@@ -354,5 +354,7 @@ export function useRefundCreditTransaction(id, props, requestProps) {
  * Retrieve the credit note pdf document data,
  */
 export function usePdfCreditNote(creditNoteId) {
-  return useRequestPdf(`sales/credit_notes/${creditNoteId}`);
+  return useRequestPdf({
+    url: `sales/credit_notes/${creditNoteId}`,
+  });
 }

@@ -13,6 +13,7 @@ import withSalesByItemsActions from './withSalesByItemsActions';
 
 import { useSalesByItemsQuery } from './utils';
 import { compose } from '@/utils';
+import { SalesByItemsDialogs } from './SalesByitemsDialogs';
 
 /**
  * Sales by items.
@@ -66,6 +67,8 @@ function SalesByItems({
           <SalesByItemsBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <SalesByItemsDialogs />
     </SalesByItemProvider>
   );
 }

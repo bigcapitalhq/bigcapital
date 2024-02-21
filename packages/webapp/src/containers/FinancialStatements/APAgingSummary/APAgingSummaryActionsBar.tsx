@@ -21,6 +21,8 @@ import withAPAgingSummary from './withAPAgingSummary';
 import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 
 import { saveInvoke, compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * AP Aging summary sheet - Actions bar.
@@ -31,6 +33,9 @@ function APAgingSummaryActionsBar({
 
   // #withARAgingSummaryActions
   toggleAPAgingSummaryFilterDrawer: toggleFilterDrawerDisplay,
+
+  // #withDialogActions
+  openDialog,
 
   //#ownProps
   numberFormat,
@@ -50,6 +55,11 @@ function APAgingSummaryActionsBar({
   // handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.APAgingSummaryPdfPreview);
   };
 
   return (
@@ -106,6 +116,7 @@ function APAgingSummaryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<APAgingSummaryExportMenu />}
@@ -129,4 +140,5 @@ export default compose(
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
+  withDialogActions
 )(APAgingSummaryActionsBar);

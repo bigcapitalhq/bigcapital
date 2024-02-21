@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
 import ARAgingSummaryHeader from './ARAgingSummaryHeader';
@@ -13,6 +13,8 @@ import { ARAgingSummaryBody } from './ARAgingSummaryBody';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 
 import { useARAgingSummaryQuery } from './common';
+import { ARAgingSummaryPdfDialog } from './dialogs/ARAgingSummaryPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
 
 /**
@@ -25,13 +27,16 @@ function ReceivableAgingSummarySheet({
   const { query, setLocationQuery } = useARAgingSummaryQuery();
 
   // Handle filter submit.
-  const handleFilterSubmit = useCallback((filter) => {
-    const _filter = {
-      ...filter,
-      asDate: moment(filter.asDate).format('YYYY-MM-DD'),
-    };
-    setLocationQuery(_filter);
-  }, [setLocationQuery]);
+  const handleFilterSubmit = useCallback(
+    (filter) => {
+      const _filter = {
+        ...filter,
+        asDate: moment(filter.asDate).format('YYYY-MM-DD'),
+      };
+      setLocationQuery(_filter);
+    },
+    [setLocationQuery],
+  );
 
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
@@ -60,6 +65,10 @@ function ReceivableAgingSummarySheet({
           <ARAgingSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <ARAgingSummaryPdfDialog
+        dialogName={DialogsName.ARAgingSummaryPdfPreview}
+      />
     </ARAgingSummaryProvider>
   );
 }

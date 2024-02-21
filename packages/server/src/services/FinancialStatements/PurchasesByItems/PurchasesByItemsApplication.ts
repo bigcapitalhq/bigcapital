@@ -7,6 +7,7 @@ import {
 } from '@/interfaces/PurchasesByItemsSheet';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 import { PurchasesByItemsService } from './PurchasesByItemsService';
+import { PurchasesByItemsPdf } from './PurchasesByItemsPdf';
 
 @Service()
 export class PurcahsesByItemsApplication {
@@ -18,6 +19,9 @@ export class PurcahsesByItemsApplication {
 
   @Inject()
   private purchasesByItemsExport: PurchasesByItemsExport;
+
+  @Inject()
+  private purchasesByItemsPdf: PurchasesByItemsPdf;
 
   /**
    * Retrieves the purchases by items in json format.
@@ -69,5 +73,18 @@ export class PurcahsesByItemsApplication {
     query: IPurchasesByItemsReportQuery
   ): Promise<Buffer> {
     return this.purchasesByItemsExport.xlsx(tenantId, query);
+  }
+
+  /**
+   * Retrieves the purchases by items in pdf format.
+   * @param {number} tenantId
+   * @param {IPurchasesByItemsReportQuery} filter
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(
+    tenantId: number,
+    filter: IPurchasesByItemsReportQuery
+  ): Promise<Buffer> {
+    return this.purchasesByItemsPdf.pdf(tenantId, filter);
   }
 }

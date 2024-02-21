@@ -6,19 +6,22 @@ import { Tenant } from '@/system/models';
 import {
   IPurchasesByItemsReportQuery,
   IPurchasesByItemsSheet,
-  IPurchasesByItemsSheetMeta,
 } from '@/interfaces/PurchasesByItemsSheet';
+import { PurchasesByItemsMeta } from './PurchasesByItemsMeta';
 
 @Service()
 export class PurchasesByItemsService {
   @Inject()
   private tenancy: TenancyService;
 
+  @Inject()
+  private purchasesByItemsMeta: PurchasesByItemsMeta;
+
   /**
    * Defaults purchases by items filter query.
    * @return {IPurchasesByItemsReportQuery}
    */
-  get defaultQuery(): IPurchasesByItemsReportQuery {
+  private get defaultQuery(): IPurchasesByItemsReportQuery {
     return {
       fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -32,29 +35,6 @@ export class PurchasesByItemsService {
       },
       noneTransactions: true,
       onlyActive: false,
-    };
-  }
-
-  /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IPurchasesByItemsSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -109,10 +89,13 @@ export class PurchasesByItemsService {
     );
     const purchasesByItemsData = purchasesByItemsInstance.reportData();
 
+    // Retrieve the purchases by items meta.
+    const meta = await this.purchasesByItemsMeta.meta(tenantId, query);
+
     return {
       data: purchasesByItemsData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

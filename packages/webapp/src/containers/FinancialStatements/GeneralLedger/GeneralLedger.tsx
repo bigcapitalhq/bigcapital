@@ -16,6 +16,8 @@ import {
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 import { compose } from '@/utils';
+import { GeneralLedgerPdfDialog } from './dialogs/GeneralLedgerPdfDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * General Ledger (GL) sheet.
@@ -61,6 +63,10 @@ function GeneralLedger({
           <GeneralLedgerBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <GeneralLedgerPdfDialog
+        dialogName={DialogsName.GeneralLedgerPdfPreview}
+      />
     </GeneralLedgerProvider>
   );
 }

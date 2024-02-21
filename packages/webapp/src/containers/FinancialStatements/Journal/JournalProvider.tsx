@@ -11,24 +11,23 @@ const JournalSheetContext = createContext();
  */
 function JournalSheetProvider({ query, ...props }) {
   // Transforms the sheet query to request query.
-  const requestQuery = React.useMemo(
+  const httpQuery = React.useMemo(
     () => transformFilterFormToQuery(query),
     [query],
   );
-
   const {
     data: journalSheet,
     isFetching,
     isLoading,
     refetch,
-  } = useJournalSheet(requestQuery, { keepPreviousData: true });
+  } = useJournalSheet(httpQuery, { keepPreviousData: true });
 
   const provider = {
     journalSheet,
     isLoading,
     isFetching,
     refetchSheet: refetch,
-    httpQuery: requestQuery
+    httpQuery,
   };
 
   return (

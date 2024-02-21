@@ -3,6 +3,7 @@ import { APAgingSummaryExportInjectable } from './APAgingSummaryExportInjectable
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
 import { IAPAgingSummaryQuery } from '@/interfaces';
 import { APAgingSummaryService } from './APAgingSummaryService';
+import { APAgingSummaryPdfInjectable } from './APAgingSummaryPdfInjectable';
 
 @Service()
 export class APAgingSummaryApplication {
@@ -14,6 +15,9 @@ export class APAgingSummaryApplication {
 
   @Inject()
   private APAgingSummarySheet: APAgingSummaryService;
+
+  @Inject()
+  private APAgingSumaryPdf: APAgingSummaryPdfInjectable;
 
   /**
    * Retrieve the A/P aging summary in sheet format.
@@ -49,5 +53,15 @@ export class APAgingSummaryApplication {
    */
   public xlsx(tenantId: number, query: IAPAgingSummaryQuery) {
     return this.APAgingSummaryExport.xlsx(tenantId, query);
+  }
+
+  /**
+   * Retrieves the A/P aging summary in pdf format.
+   * @param {number} tenantId 
+   * @param {IAPAgingSummaryQuery} query 
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: IAPAgingSummaryQuery) {
+    return this.APAgingSumaryPdf.pdf(tenantId, query);
   }
 }

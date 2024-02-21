@@ -72,6 +72,7 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
 
       // Retrieves the csv format.
@@ -100,6 +101,17 @@ export default class VendorBalanceSummaryReportController extends BaseFinancialR
           filter
         );
         return res.status(200).send(table);
+        // Retrieves the pdf format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
+        const pdfContent = await this.vendorBalanceSummaryApp.pdf(
+          tenantId,
+          filter
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
         // Retrieves the json format.
       } else {
         const sheet = await this.vendorBalanceSummaryApp.sheet(

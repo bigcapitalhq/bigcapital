@@ -4,6 +4,7 @@ import {
   IContactBalanceSummaryPercentage,
   IContactBalanceSummaryTotal,
 } from './ContactBalanceSummary';
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface ICustomerBalanceSummaryQuery
@@ -35,9 +36,15 @@ export interface ICustomerBalanceSummaryData {
   total: ICustomerBalanceSummaryTotal;
 }
 
+export interface ICustomerBalanceSummaryMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
+  formattedDateRange: string;
+}
+
 export interface ICustomerBalanceSummaryStatement {
   data: ICustomerBalanceSummaryData;
   query: ICustomerBalanceSummaryQuery;
+  meta: ICustomerBalanceSummaryMeta;
 }
 
 export interface ICustomerBalanceSummaryService {
@@ -49,4 +56,5 @@ export interface ICustomerBalanceSummaryService {
 
 export interface ICustomerBalanceSummaryTable extends IFinancialTable {
   query: ICustomerBalanceSummaryQuery;
+  meta: ICustomerBalanceSummaryMeta;
 }

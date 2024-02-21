@@ -10,8 +10,10 @@ import SalesTaxLiabilitySummaryActionsBar from './SalesTaxLiabilitySummaryAction
 import { SalesTaxLiabilitySummaryBoot } from './SalesTaxLiabilitySummaryBoot';
 import { SalesTaxLiabilitySummaryBody } from './SalesTaxLiabilitySummaryBody';
 import { useSalesTaxLiabilitySummaryQuery } from './utils';
+import { SalesTaxLiabiltiyPdfDialog } from './SalesTaxLiabilityPdfDialog';
 import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Sales tax liability summary.
@@ -63,6 +65,10 @@ function SalesTaxLiabilitySummary({
           <SalesTaxLiabilitySummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <SalesTaxLiabiltiyPdfDialog
+        dialogName={DialogsName.SalesTaxLiabilitySummaryPdfPreview}
+      />
     </SalesTaxLiabilitySummaryBoot>
   );
 }

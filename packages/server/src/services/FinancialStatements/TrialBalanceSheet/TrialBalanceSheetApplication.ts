@@ -57,4 +57,14 @@ export class TrialBalanceSheetApplication {
   public async xlsx(tenantId: number, query: ITrialBalanceSheetQuery) {
     return this.exportable.xlsx(tenantId, query);
   }
+
+  /**
+   * Retrieve the trial balance sheet in pdf format.
+   * @param {number} tenantId
+   * @param {ITrialBalanceSheetQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public async pdf(tenantId: number, query: ITrialBalanceSheetQuery) {
+    return this.exportable.pdf(tenantId, query);
+  }
 }

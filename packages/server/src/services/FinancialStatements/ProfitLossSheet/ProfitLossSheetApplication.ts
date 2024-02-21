@@ -3,6 +3,7 @@ import { ProfitLossSheetExportInjectable } from './ProfitLossSheetExportInjectab
 import { ProfitLossSheetTableInjectable } from './ProfitLossSheetTableInjectable';
 import { IProfitLossSheetQuery, IProfitLossSheetTable } from '@/interfaces';
 import ProfitLossSheetService from './ProfitLossSheetService';
+import { ProfitLossTablePdfInjectable } from './ProfitLossTablePdfInjectable';
 
 @Service()
 export class ProfitLossSheetApplication {
@@ -14,6 +15,9 @@ export class ProfitLossSheetApplication {
 
   @Inject()
   private profitLossSheet: ProfitLossSheetService;
+
+  @Inject()
+  private profitLossPdf: ProfitLossTablePdfInjectable;
 
   /**
    * Retreives the profit/loss sheet.
@@ -56,5 +60,15 @@ export class ProfitLossSheetApplication {
    */
   public xlsx(tenantId: number, query: IProfitLossSheetQuery): Promise<Buffer> {
     return this.profitLossExport.xlsx(tenantId, query);
+  }
+
+  /**
+   * Retrieves the profit/loss sheet in pdf format.
+   * @param {number} tenantId
+   * @param {IProfitLossSheetQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: IProfitLossSheetQuery): Promise<Buffer> {
+    return this.profitLossPdf.pdf(tenantId, query);
   }
 }

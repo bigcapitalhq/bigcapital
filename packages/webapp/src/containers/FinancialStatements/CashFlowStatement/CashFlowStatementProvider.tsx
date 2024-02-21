@@ -10,27 +10,27 @@ const CashFLowStatementContext = React.createContext();
  * Cash flow statement provider.
  */
 function CashFlowStatementProvider({ filter, ...props }) {
-  // transforms the given filter to query.
-  const query = React.useMemo(
+  // Transforms the given state query to http query.
+  const httpQuery = React.useMemo(
     () => transformFilterFormToQuery(filter),
     [filter],
   );
-
-  // fetch the cash flow statement report.
+  // Fetching the cash flow statement report.
   const {
     data: cashFlowStatement,
     isFetching: isCashFlowFetching,
     isLoading: isCashFlowLoading,
     refetch: refetchCashFlow,
-  } = useCashFlowStatementReport(query, { keepPreviousData: true });
+  } = useCashFlowStatementReport(httpQuery, { keepPreviousData: true });
 
   const provider = {
     cashFlowStatement,
     isCashFlowFetching,
     isCashFlowLoading,
     refetchCashFlow,
-    query,
+    query: httpQuery,
     filter,
+    httpQuery,
   };
 
   return (

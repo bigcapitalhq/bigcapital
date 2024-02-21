@@ -2,7 +2,6 @@ import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialTable } from '../FinancialTable';
 import {
-  IBalanceSheetStatementData,
   ITableColumn,
   ITableColumnAccessor,
   ITableRow,
@@ -20,12 +19,13 @@ export class TrialBalanceSheetTable extends R.compose(
   FinancialSheetStructure
 )(FinancialSheet) {
   /**
+   * Trial balance sheet data.
    * @param {ITrialBalanceSheetData}
    */
   public data: ITrialBalanceSheetData;
 
   /**
-   * Balance sheet query.
+   * Trial balance sheet query.
    * @param {ITrialBalanceSheetQuery}
    */
   public query: ITrialBalanceSheetQuery;
@@ -136,7 +136,7 @@ export class TrialBalanceSheetTable extends R.compose(
     return R.compose(
       this.tableColumnsCellIndexing,
       R.concat([
-        { key: 'account_name', label: 'Account' },
+        { key: 'account', label: 'Account' },
         { key: 'debit', label: 'Debit' },
         { key: 'credit', label: 'Credit' },
         { key: 'total', label: 'Total' },
