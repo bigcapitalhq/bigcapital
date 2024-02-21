@@ -20,10 +20,11 @@ export class BalanceSheetMetaInjectable {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedAsDate = moment(query.toDate).format('YYYY/MM/DD');
     const formattedDateRange = `As ${formattedAsDate}`;
+    const sheetName = 'Balance Sheet Statement';
 
     return {
       ...commonMeta,
-      sheetName: 'Balance Sheet',
+      sheetName,
       formattedAsDate,
       formattedDateRange,
     };

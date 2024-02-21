@@ -4,6 +4,7 @@ import { ITableColumn, ITableData, ITableRow } from '@/interfaces';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
 import { FinancialTableStructure } from './FinancialTableStructure';
+import { tableClassNames } from './utils';
 
 @Service()
 export class TableSheetPdf {
@@ -25,21 +26,30 @@ export class TableSheetPdf {
     tenantId: number,
     table: ITableData,
     sheetName: string,
-    sheetDate: string
+    sheetDate: string,
+    customCSS?: string
   ): Promise<Buffer> {
     // Prepare columns and rows for PDF conversion
     const columns = this.tablePdfColumns(table.columns);
     const rows = this.tablePdfRows(table.rows);
 
+    const landscape = columns.length > 4;
+
     // Generate HTML content from the template
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/financial-sheet',
-      { sheetName, sheetDate, table: { rows, columns } }
+      {
+        table: { rows, columns },
+        sheetName,
+        sheetDate,
+        customCSS,
+      }
     );
     // Convert the HTML content to PDF
     return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      landscape,
     });
   }
   /**
@@ -63,6 +73,6 @@ export class TableSheetPdf {
     const flatNestedTree = curriedFlatNestedTree(R.__, {
       nestedPrefix: '<span style="padding-left: 15px;"></span>',
     });
-    return R.compose(flatNestedTree)(rows);
+    return R.compose(tableClassNames, flatNestedTree)(rows);
   };
 }
