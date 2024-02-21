@@ -1,5 +1,6 @@
 import {
   IFinancialSheetBranchesQuery,
+  IFinancialSheetCommonMeta,
   INumberFormatQuery,
 } from './FinancialStatements';
 import { IFinancialTable } from './Table';
@@ -134,10 +135,10 @@ export type IProfitLossSheetNode =
   | IProfitLossSheetEquationNode
   | IProfitLossSheetAccountNode;
 
-export interface IProfitLossSheetMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface IProfitLossSheetMeta extends IFinancialSheetCommonMeta{
+  formattedDateRange: string;
+  formattedFromDate: string;
+  formattedToDate: string;
 }
 
 // ------------------------------------------------

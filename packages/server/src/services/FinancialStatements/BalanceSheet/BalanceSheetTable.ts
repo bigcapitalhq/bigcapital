@@ -41,15 +41,16 @@ export default class BalanceSheetTable extends R.compose(
   BalanceSheetBase
 )(FinancialSheet) {
   /**
-   * @param {}
+   * Balance sheet data.
+   * @param {IBalanceSheetStatementData}
    */
-  reportData: IBalanceSheetStatementData;
+  private reportData: IBalanceSheetStatementData;
 
   /**
    * Balance sheet query.
-   * @parma {}
+   * @parma {BalanceSheetQuery}
    */
-  query: BalanceSheetQuery;
+  private query: BalanceSheetQuery;
 
   /**
    * Constructor method.
@@ -215,13 +216,13 @@ export default class BalanceSheetTable extends R.compose(
 
   /**
    * Retrieves the total children columns.
-   * @returns {ITableColumn[]}
+ * @returns {ITableColumn[]}
    */
   private totalColumnChildren = (): ITableColumn[] => {
     return R.compose(
       R.unless(
         R.isEmpty,
-        R.concat([{ key: 'total', Label: this.i18n.__('balance_sheet.total') }])
+        R.concat([{ key: 'total', label: this.i18n.__('balance_sheet.total') }])
       ),
       R.concat(this.percentageColumns()),
       R.concat(this.getPreviousYearColumns()),

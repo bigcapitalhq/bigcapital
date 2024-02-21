@@ -24,6 +24,9 @@ const commonInvalidateQueries = (client) => {
   // Invalidate financial reports.
   client.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate transactions by reference.
+  client.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate customers.
   client.invalidateQueries(t.CUSTOMERS);
   client.invalidateQueries(t.CUSTOMER);
@@ -230,9 +233,10 @@ export function usePaymentReceiveSMSDetail(
 
 /**
  * Retrieve the payment receive pdf document data.
+ * @param {number} paymentReceiveId - Payment receive id.
  */
 export function usePdfPaymentReceive(paymentReceiveId) {
-  return useRequestPdf(`sales/payment_receives/${paymentReceiveId}`);
+  return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
 }
 
 export function useSendPaymentReceiveMail(props) {

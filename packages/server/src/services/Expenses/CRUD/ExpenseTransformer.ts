@@ -1,6 +1,7 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { IExpense } from '@/interfaces';
+import { ExpenseCategoryTransformer } from './ExpenseCategoryTransformer';
 
 export class ExpenseTransfromer extends Transformer {
   /**
@@ -12,7 +13,8 @@ export class ExpenseTransfromer extends Transformer {
       'formattedAmount',
       'formattedLandedCostAmount',
       'formattedAllocatedCostAmount',
-      'formattedDate'
+      'formattedDate',
+      'categories',
     ];
   };
 
@@ -56,5 +58,16 @@ export class ExpenseTransfromer extends Transformer {
    */
   protected formattedDate = (expense: IExpense): string => {
     return this.formatDate(expense.paymentDate);
-  }
+  };
+
+  /**
+   * Retrieves the transformed expense categories.
+   * @param {IExpense} expense
+   * @returns {}
+   */
+  protected categories = (expense: IExpense) => {
+    return this.item(expense.categories, new ExpenseCategoryTransformer(), {
+      currencyCode: expense.currencyCode,
+    });
+  };
 }

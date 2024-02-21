@@ -27,10 +27,12 @@ export class VendorBalanceSummaryTableInjectable {
   ): Promise<IVendorBalanceSummaryTable> {
     const i18n = this.tenancy.i18n(tenantId);
 
-    const { data } = await this.vendorBalanceSummarySheet.vendorBalanceSummary(
-      tenantId,
-      query
-    );
+    const { data, meta } =
+      await this.vendorBalanceSummarySheet.vendorBalanceSummary(
+        
+        tenantId,
+        query
+      );
     const table = new VendorBalanceSummaryTable(data, query, i18n);
 
     return {
@@ -39,6 +41,7 @@ export class VendorBalanceSummaryTableInjectable {
         rows: table.tableRows(),
       },
       query,
+      meta,
     };
   }
 }

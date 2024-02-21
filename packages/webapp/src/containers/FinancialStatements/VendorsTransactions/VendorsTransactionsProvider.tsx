@@ -10,7 +10,7 @@ const VendorsTransactionsContext = createContext();
  * Vendors transactions provider.
  */
 function VendorsTransactionsProvider({ filter, ...props }) {
-  const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
+  const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // Fetch vendors transactions based on the given query.
   const {
@@ -18,16 +18,15 @@ function VendorsTransactionsProvider({ filter, ...props }) {
     isFetching: isVendorsTransactionFetching,
     isLoading: isVendorsTransactionsLoading,
     refetch,
-  } = useVendorsTransactionsReport(query, { keepPreviousData: true });
+  } = useVendorsTransactionsReport(httpQuery, { keepPreviousData: true });
 
   const provider = {
     vendorsTransactions,
     isVendorsTransactionsLoading,
     isVendorsTransactionFetching,
-
     refetch,
     filter,
-    query,
+    httpQuery,
   };
 
   return (

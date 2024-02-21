@@ -22,7 +22,7 @@ function VendorCreditUniversalSearchSelectComponent({
   openDrawer,
 }) {
   if (resourceType === RESOURCES_TYPES.VENDOR_CREDIT) {
-    openDrawer(DRAWERS.VENDOR_CREDIT_DETAIL_DRAWER, {
+    openDrawer(DRAWERS.VENDOR_CREDIT_DETAILS, {
       vendorCreditId: resourceId,
     });
     onAction && onAction();
@@ -83,7 +83,7 @@ export function VendorCreditUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">${item.reference.amount}</div>
+          <div class="amount">{item.reference.formatted_amount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }

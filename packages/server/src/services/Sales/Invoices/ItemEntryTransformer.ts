@@ -8,7 +8,16 @@ export class ItemEntryTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['rateFormatted', 'totalFormatted'];
+    return ['quantityFormatted', 'rateFormatted', 'totalFormatted'];
+  };
+
+  /**
+   * Retrieves the formatted quantitty of item entry.
+   * @param {IItemEntry} entry
+   * @returns {string}
+   */
+  protected quantityFormatted = (entry: IItemEntry): string => {
+    return formatNumber(entry.quantity, { money: false });
   };
 
   /**

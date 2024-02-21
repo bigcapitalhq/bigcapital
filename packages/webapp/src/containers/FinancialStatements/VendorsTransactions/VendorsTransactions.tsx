@@ -14,6 +14,7 @@ import withVendorsTransactionsActions from './withVendorsTransactionsActions';
 
 import { compose } from '@/utils';
 import { useVendorsTransactionsQuery } from './_utils';
+import { VendorTransactionsDialogs } from './VendorTransactionsDialogs';
 
 /**
  * Vendors transactions.
@@ -65,6 +66,8 @@ function VendorsTransactions({
           <VendorsTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <VendorTransactionsDialogs />
     </VendorsTransactionsProvider>
   );
 }

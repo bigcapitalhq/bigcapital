@@ -9,6 +9,7 @@ import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import events from '@/subscribers/events';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export default class EditVendorCredit extends BaseVendorCredit {
@@ -21,6 +22,9 @@ export default class EditVendorCredit extends BaseVendorCredit {
   @Inject()
   private itemsEntriesService: ItemsEntriesService;
 
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Deletes the given vendor credit.
    * @param {number} tenantId - Tenant id.
@@ -31,7 +35,7 @@ export default class EditVendorCredit extends BaseVendorCredit {
     vendorCreditId: number,
     vendorCreditDTO: IVendorCreditEditDTO
   ) => {
-    const { VendorCredit } = this.tenancy.models(tenantId);
+    const { VendorCredit, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the vendor credit or throw not found service error.
     const oldVendorCredit = await this.getVendorCreditOrThrowError(

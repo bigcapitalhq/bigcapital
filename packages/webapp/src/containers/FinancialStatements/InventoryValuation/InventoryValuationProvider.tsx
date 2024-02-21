@@ -11,7 +11,7 @@ const InventoryValuationContext = React.createContext();
  */
 function InventoryValuationProvider({ query, ...props }) {
   // Transformes the filter form query to request query.
-  const requestQuery = React.useMemo(
+  const httpQuery = React.useMemo(
     () => transformFilterFormToQuery(query),
     [query],
   );
@@ -21,9 +21,7 @@ function InventoryValuationProvider({ query, ...props }) {
     isFetching,
     isLoading,
     refetch,
-  } = useInventoryValuationTable(requestQuery, {
-    keepPreviousData: true,
-  });
+  } = useInventoryValuationTable(httpQuery, { keepPreviousData: true });
 
   // Provider data.
   const provider = {
@@ -31,6 +29,7 @@ function InventoryValuationProvider({ query, ...props }) {
     isLoading,
     isFetching,
     refetchSheet: refetch,
+    httpQuery
   };
 
   return (

@@ -3,6 +3,7 @@ import { IARAgingSummaryQuery } from '@/interfaces';
 import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
 import { ARAgingSummaryExportInjectable } from './ARAgingSummaryExportInjectable';
 import ARAgingSummaryService from './ARAgingSummaryService';
+import { ARAgingSummaryPdfInjectable } from './ARAgingSummaryPdfInjectable';
 
 @Service()
 export class ARAgingSummaryApplication {
@@ -14,6 +15,9 @@ export class ARAgingSummaryApplication {
 
   @Inject()
   private ARAgingSummarySheet: ARAgingSummaryService;
+
+  @Inject()
+  private ARAgingSummaryPdf: ARAgingSummaryPdfInjectable;
 
   /**
    * Retrieve the A/R aging summary sheet.
@@ -49,5 +53,15 @@ export class ARAgingSummaryApplication {
    */
   public csv(tenantId: number, query: IARAgingSummaryQuery) {
     return this.ARAgingSummaryExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the A/R aging summary in pdf format.
+   * @param {number} tenantId
+   * @param {IARAgingSummaryQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: IARAgingSummaryQuery) {
+    return this.ARAgingSummaryPdf.pdf(tenantId, query);
   }
 }

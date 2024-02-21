@@ -80,7 +80,7 @@ export default class EditCreditNote extends BaseCreditNotes {
       } as ICreditNoteEditingPayload);
 
       // Saves the credit note graph to the storage.
-      const creditNote = await CreditNote.query(trx).upsertGraph({
+      const creditNote = await CreditNote.query(trx).upsertGraphAndFetch({
         id: creditNoteId,
         ...creditNoteModel,
       });

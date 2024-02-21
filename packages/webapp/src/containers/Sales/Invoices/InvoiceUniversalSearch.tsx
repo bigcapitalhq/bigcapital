@@ -83,13 +83,13 @@ export function InvoiceUniversalSearchItem(
           <span class="bp4-text-muted">
             {highlightText(item.reference.invoice_no, query)}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
-            {item.reference.formatted_invoice_date}
+            {item.reference.invoice_date_formatted}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">${item.reference.balance}</div>
+          <div class="amount">{item.reference.total_formatted}</div>
           <InvoiceStatus customer={item.reference} />
         </>
       }

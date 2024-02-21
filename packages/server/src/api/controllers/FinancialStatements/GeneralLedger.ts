@@ -16,7 +16,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -32,7 +32,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
   /**
    * Validation schema.
    */
-  get validationSchema(): ValidationChain[] {
+  private get validationSchema(): ValidationChain[] {
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
@@ -61,7 +61,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
    * @param {Request} req -
    * @param {Response} res -
    */
-  async generalLedger(req: Request, res: Response, next: NextFunction) {
+  private async generalLedger(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
     const accept = this.accepts(req);
@@ -71,6 +71,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_XLSX,
       ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     // Retrieves the table format.
     if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
@@ -95,6 +96,17 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
       return res.send(buffer);
+      // Retrieves the pdf format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.generalLedgerApplication.pdf(
+        tenantId,
+        filter
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.send(pdfContent);
       // Retrieves the json format.
     } else {
       const sheet = await this.generalLedgerApplication.sheet(tenantId, filter);

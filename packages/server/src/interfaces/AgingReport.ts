@@ -1,5 +1,7 @@
-
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 
 export interface IAgingPeriodTotal extends IAgingPeriod {
   total: IAgingAmount;
@@ -41,4 +43,9 @@ export interface IAgingSummaryTotal {
 
 export interface IAgingSummaryData {
   total: IAgingSummaryTotal;
+}
+
+export interface IAgingSummaryMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
+  formattedDateRange: string;
 }

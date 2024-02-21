@@ -6,9 +6,9 @@ import { IGeneralLedgerSheetQuery, IGeneralLedgerMeta } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
 import GeneralLedgerSheet from '@/services/FinancialStatements/GeneralLedger/GeneralLedger';
-import InventoryService from '@/services/Inventory/Inventory';
-import { transformToMap, parseBoolean } from 'utils';
+import { transformToMap } from 'utils';
 import { Tenant } from '@/system/models';
+import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 
 const ERRORS = {
   ACCOUNTS_NOT_FOUND: 'ACCOUNTS_NOT_FOUND',
@@ -17,13 +17,10 @@ const ERRORS = {
 @Service()
 export class GeneralLedgerService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  @Inject('logger')
-  logger: any;
+  private generalLedgerMeta: GeneralLedgerMeta;
 
   /**
    * Defaults general ledger report filter query.
@@ -60,39 +57,7 @@ export class GeneralLedgerService {
   }
 
   /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId - 
-   * @returns {IGeneralLedgerMeta}
-   */
-   reportMetadata(tenantId: number, filter): IGeneralLedgerMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning = this.inventoryService
-      .isItemsCostComputeRunning(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-    const fromDate = moment(filter.fromDate).format('YYYY MMM DD');
-    const toDate = moment(filter.toDate).format('YYYY MMM DD');
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
-      fromDate,
-      toDate
-    };
-  }
-
-  /**
    * Retrieve general ledger report statement.
-   * ----------
    * @param {number} tenantId
    * @param {IGeneralLedgerSheetQuery} query
    * @return {IGeneralLedgerStatement}
@@ -103,13 +68,10 @@ export class GeneralLedgerService {
   ): Promise<{
     data: any;
     query: IGeneralLedgerSheetQuery;
-    meta: IGeneralLedgerMeta
+    meta: IGeneralLedgerMeta;
   }> {
-    const {
-      accountRepository,
-      transactionsRepository,
-      contactRepository
-    } = this.tenancy.repositories(tenantId);
+    const { accountRepository, transactionsRepository, contactRepository } =
+      this.tenancy.repositories(tenantId);
 
     const i18n = this.tenancy.i18n(tenantId);
 
@@ -133,13 +95,13 @@ export class GeneralLedgerService {
     const transactions = await transactionsRepository.journal({
       fromDate: filter.fromDate,
       toDate: filter.toDate,
-      branchesIds: filter.branchesIds
+      branchesIds: filter.branchesIds,
     });
     // Retreive opening balance credit/debit sumation.
     const openingBalanceTrans = await transactionsRepository.journal({
       toDate: moment(filter.fromDate).subtract(1, 'day'),
       sumationCreditDebit: true,
-      branchesIds: filter.branchesIds
+      branchesIds: filter.branchesIds,
     });
     // Transform array transactions to journal collection.
     const transactionsJournal = Journal.fromTransactions(
@@ -147,7 +109,7 @@ export class GeneralLedgerService {
       tenantId,
       accountsGraph
     );
-    // Accounts opening transactions. 
+    // Accounts opening transactions.
     const openingTransJournal = Journal.fromTransactions(
       openingBalanceTrans,
       tenantId,
@@ -167,10 +129,13 @@ export class GeneralLedgerService {
     // Retrieve general ledger report data.
     const reportData = generalLedgerInstance.reportData();
 
+    // Retrieve general ledger report metadata.
+    const meta = await this.generalLedgerMeta.meta(tenantId, filter);
+
     return {
       data: reportData,
       query: filter,
-      meta: this.reportMetadata(tenantId, filter),
+      meta,
     };
   }
 }

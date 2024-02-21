@@ -39,6 +39,7 @@ export class TransactionsByCustomersTableInjectable {
         columns: table.tableColumns(),
       },
       query: customersTransactions.query,
+      meta: customersTransactions.meta
     };
   }
 }

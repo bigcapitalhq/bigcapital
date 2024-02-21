@@ -1,17 +1,12 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import {
-  IJournalReportQuery,
-  IJournalSheet,
-  IJournalSheetMeta,
-  IJournalTableData,
-} from '@/interfaces';
+import { IJournalReportQuery, IJournalSheet } from '@/interfaces';
 import JournalSheet from './JournalSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
-import InventoryService from '@/services/Inventory/Inventory';
 import { Tenant } from '@/system/models';
-import { parseBoolean, transformToMap } from 'utils';
+import { transformToMap } from 'utils';
+import { JournalSheetMeta } from './JournalSheetMeta';
 
 @Service()
 export class JournalSheetService {
@@ -19,7 +14,7 @@ export class JournalSheetService {
   private tenancy: TenancyService;
 
   @Inject()
-  private inventoryService: InventoryService;
+  private journalSheetMeta: JournalSheetMeta;
 
   /**
    * Default journal sheet filter queyr.
@@ -35,33 +30,6 @@ export class JournalSheetService {
         noCents: false,
         divideOn1000: false,
       },
-    };
-  }
-
-  /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IJournalSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -130,10 +98,13 @@ export class JournalSheetService {
     // Retrieve journal report columns.
     const journalSheetData = journalSheetInstance.reportData();
 
+    // Retrieve the journal sheet meta.
+    const meta = await this.journalSheetMeta.meta(tenantId, filter);
+
     return {
       data: journalSheetData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

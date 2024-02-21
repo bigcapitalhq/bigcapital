@@ -28,8 +28,8 @@ function InventoryItemDetailsProvider({ query, ...props }) {
     isInventoryItemDetailsFetching,
     isInventoryItemDetailsLoading,
     inventoryItemDetailsRefetch,
-
     query,
+    httpQuery: requestQuery
   };
 
   return (

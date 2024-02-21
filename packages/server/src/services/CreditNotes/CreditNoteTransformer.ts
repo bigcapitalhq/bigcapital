@@ -14,6 +14,7 @@ export class CreditNoteTransformer extends Transformer {
       'formattedCreditNoteDate',
       'formattedAmount',
       'formattedCreditsUsed',
+      'formattedSubtotal',
       'entries',
     ];
   };
@@ -58,6 +59,15 @@ export class CreditNoteTransformer extends Transformer {
     return formatNumber(credit.creditsUsed, {
       currencyCode: credit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the formatted subtotal.
+   * @param {ICreditNote} credit
+   * @returns {string}
+   */
+  protected formattedSubtotal = (credit): string => {
+    return formatNumber(credit.amount, { money: false });
   };
 
   /**

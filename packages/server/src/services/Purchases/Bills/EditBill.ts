@@ -103,6 +103,7 @@ export class EditBill {
       tenantId,
       billDTO.entries
     );
+    
     // Transforms the bill DTO to model object.
     const billObj = await this.transformerDTO.billDTOToModel(
       tenantId,
@@ -110,6 +111,11 @@ export class EditBill {
       vendor,
       authorizedUser,
       oldBill
+    );
+    // Validate bill total amount should be bigger than paid amount.
+    this.validators.validateBillAmountBiggerPaidAmount(
+      billObj.amount,
+      oldBill.paymentAmount
     );
     // Validate landed cost entries that have allocated cost could not be deleted.
     await this.entriesService.validateLandedCostEntriesNotDeleted(

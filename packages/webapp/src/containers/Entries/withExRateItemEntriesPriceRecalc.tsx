@@ -98,24 +98,30 @@ interface UseSyncExRateToFormProps {
  */
 export const useSyncExRateToForm = ({ onSynced }: UseSyncExRateToFormProps) => {
   const { setFieldValue, values } = useFormikContext();
-  const { autoExRateCurrency, autoExchangeRate } = useAutoExRateContext();
+  const { autoExRateCurrency, autoExchangeRate, isAutoExchangeRateLoading } =
+    useAutoExRateContext();
   const updateEntriesOnExChange = useUpdateEntriesOnExchangeRateChange();
 
   // Sync the fetched real-time exchanage rate to the form.
   useEffect(() => {
-    if (autoExchangeRate?.exchange_rate && autoExRateCurrency) {
-      setFieldValue('exchange_rate', autoExchangeRate?.exchange_rate + '');
+    if (!isAutoExchangeRateLoading && autoExRateCurrency) {
+      // Sets a default ex. rate to 1 in case the exchange rate service wasn't configured.
+      // or returned an error from the server-side.
+      const exchangeRate = autoExchangeRate?.exchange_rate || 1;
+
+      setFieldValue('exchange_rate', exchangeRate + '');
       setFieldValue(
         'entries',
-        updateEntriesOnExChange(
-          values.exchange_rate,
-          autoExchangeRate?.exchange_rate,
-        ),
+        updateEntriesOnExChange(values.exchange_rate, exchangeRate),
       );
       onSynced?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoExchangeRate?.exchange_rate, autoExRateCurrency]);
+  }, [
+    autoExchangeRate?.exchange_rate,
+    autoExRateCurrency,
+    isAutoExchangeRateLoading,
+  ]);
 
   return null;
 };

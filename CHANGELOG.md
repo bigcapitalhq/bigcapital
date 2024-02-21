@@ -2,6 +2,27 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.14.0] - 30-01-2024
+
+* feat: purchases by items exporting by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/327
+* fix: expense amounts should not be rounded by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/339
+* feat: get latest exchange rate from third party services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/340
+* fix(webapp): inconsistency in currency of universal search items by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/335
+* hotfix: editing sales and expense transactions don't reflect GL entries by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/342
+
+## [0.13.3] - 22-01-2024
+
+* hotfix(server): Unhandled thrown errors of services by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/329
+
+## [0.13.2] - 21-01-2024
+
+* feat: show customer / vendor balance. by @asenawritescode in https://github.com/bigcapitalhq/bigcapital/pull/311
+* feat: inventory valuation csv and xlsx export by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/308
+* feat: sales by items export csv & xlsx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/310
+* fix(server): the invoice and payment receipt printing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/315
+* fix: get cashflow transaction broken cause transaction type by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/318
+* fix: `AccountActivateAlert` import by @xprnio in https://github.com/bigcapitalhq/bigcapital/pull/322
+
 ## [0.13.1] - 15-01-2024
 
 * feat(webapp): add approve/reject to action bar of estimate details dr… by @ANasouf in https://github.com/bigcapitalhq/bigcapital/pull/304

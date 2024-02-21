@@ -66,12 +66,10 @@ module.exports = {
         // sourcemaps: true, // Allow to enable/disable sourcemaps or pass object to configure it.
         // minify: true, // Allow to enable/disable minify the source.
       },
-    //   {
-    //     src: './assets/sass/editor-style.scss',
-    //     dest: './assets/css',
-    //     sourcemaps: true,
-    //     minify: true,
-    //   },
+      {
+        src: `${RESOURCES_PATH}/scss/modules/financial-sheet.scss`,
+        dest: `${RESOURCES_PATH}/css/modules`,
+      },
     ],
     // RTL builds.
     rtl: [
@@ -114,7 +112,7 @@ module.exports = {
     // SASS Configuration for all builds.
     sass: {
       errLogToConsole: true,
-    //   outputStyle: 'compact',
+      //   outputStyle: 'compact',
     },
 
     // CSS MQ Packer configuration for all builds and style tasks.

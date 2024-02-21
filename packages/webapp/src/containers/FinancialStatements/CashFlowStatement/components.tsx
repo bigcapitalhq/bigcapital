@@ -95,7 +95,7 @@ export function CashflowSheetExportMenu() {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useCashFlowStatementContext();
+  const { httpQuery } = useCashFlowStatementContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -113,26 +113,30 @@ export function CashflowSheetExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(query, {
-    onDownloadProgress: (xlsxExportProgress: number) => {
-      if (!toastKey.current) {
-        toastKey.current = AppToaster.show({
-          message: openProgressToast(xlsxExportProgress),
-          ...commonToastConfig,
-        });
-      } else {
-        AppToaster.show(
-          {
+  const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(
+    httpQuery,
+    {
+      onDownloadProgress: (xlsxExportProgress: number) => {
+        if (!toastKey.current) {
+          toastKey.current = AppToaster.show({
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          },
-          toastKey.current,
-        );
-      }
+          });
+        } else {
+          AppToaster.show(
+            {
+              message: openProgressToast(xlsxExportProgress),
+              ...commonToastConfig,
+            },
+            toastKey.current,
+          );
+        }
+      },
     },
-  });
+  );
+
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(query, {
+  const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

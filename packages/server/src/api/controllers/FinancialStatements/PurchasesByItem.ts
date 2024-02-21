@@ -75,8 +75,8 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_XLSX,
       ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
-
     // JSON table response format.
     if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
       const table = await this.purchasesByItemsApp.table(tenantId, filter);
@@ -100,6 +100,15 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
       return res.send(buffer);
+      // PDF response format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.purchasesByItemsApp.pdf(tenantId, filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.send(pdfContent);
       // Json response format.
     } else {
       const sheet = await this.purchasesByItemsApp.sheet(tenantId, filter);

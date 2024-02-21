@@ -70,10 +70,10 @@ export class ExpensesWriteGLSubscriber {
     authorizedUser,
     trx,
   }: IExpenseEventEditPayload) => {
-    // In case expense published, write journal entries.
-    if (expense.publishedAt) return;
+    // Cannot continue if the expense is not published.
+    if (!expense.publishedAt) return;
 
-    await this.expenseGLEntries.writeExpenseGLEntries(
+    await this.expenseGLEntries.rewriteExpenseGLEntries(
       tenantId,
       expense.id,
       trx

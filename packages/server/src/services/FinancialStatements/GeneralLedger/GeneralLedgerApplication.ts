@@ -6,6 +6,7 @@ import {
 import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
 import { GeneralLedgerExportInjectable } from './GeneralLedgerExport';
 import { GeneralLedgerService } from './GeneralLedgerService';
+import { GeneralLedgerPdf } from './GeneralLedgerPdf';
 
 export class GeneralLedgerApplication {
   @Inject()
@@ -16,6 +17,9 @@ export class GeneralLedgerApplication {
 
   @Inject()
   private GLSheet: GeneralLedgerService;
+
+  @Inject()
+  private GLPdf: GeneralLedgerPdf;
 
   /**
    * Retrieves the G/L sheet in json format.
@@ -62,5 +66,18 @@ export class GeneralLedgerApplication {
     query: IGeneralLedgerSheetQuery
   ): Promise<string> {
     return this.GLExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the G/L sheet in pdf format.
+   * @param {number} tenantId
+   * @param {IGeneralLedgerSheetQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(
+    tenantId: number,
+    query: IGeneralLedgerSheetQuery
+  ): Promise<Buffer> {
+    return this.GLPdf.pdf(tenantId, query);
   }
 }

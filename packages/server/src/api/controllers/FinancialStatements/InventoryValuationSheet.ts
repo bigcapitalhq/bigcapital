@@ -79,6 +79,7 @@ export default class InventoryValuationReportController extends BaseFinancialRep
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_XLSX,
       ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
 
     // Retrieves the json table format.
@@ -104,6 +105,15 @@ export default class InventoryValuationReportController extends BaseFinancialRep
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
       return res.send(buffer);
+      // Retrieves the pdf format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.inventoryValuationApp.pdf(tenantId, filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.status(200).send(pdfContent);
       // Retrieves the json format.
     } else {
       const { data, query, meta } = await this.inventoryValuationApp.sheet(

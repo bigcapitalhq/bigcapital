@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import {
   Button,
   Classes,
@@ -78,7 +78,7 @@ export const ProfitLossSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { query } = useProfitLossSheetContext();
+  const { httpQuery } = useProfitLossSheetContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -96,7 +96,7 @@ export const ProfitLossSheetExportMenu = () => {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useProfitLossSheetXlsxExport(query, {
+  const { mutateAsync: xlsxExport } = useProfitLossSheetXlsxExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -115,7 +115,7 @@ export const ProfitLossSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useProfitLossSheetCsvExport(query, {
+  const { mutateAsync: csvExport } = useProfitLossSheetCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

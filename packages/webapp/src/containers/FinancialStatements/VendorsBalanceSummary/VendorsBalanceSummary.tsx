@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
 import { FinancialStatement, DashboardPageContent } from '@/components';
@@ -14,6 +14,7 @@ import { VendorBalanceSummaryBody } from './VendorsBalanceSummaryBody';
 import withVendorsBalanceSummaryActions from './withVendorsBalanceSummaryActions';
 
 import { useVendorsBalanceSummaryQuery } from './utils';
+import { VendorBalanceDialogs } from './VendorBalanceDialogs';
 import { compose } from '@/utils';
 
 /**
@@ -64,6 +65,8 @@ function VendorsBalanceSummary({
           <VendorBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <VendorBalanceDialogs />
     </VendorsBalanceSummaryProvider>
   );
 }

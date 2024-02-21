@@ -1,27 +1,24 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import {
-  ISalesByItemsReportQuery,
-  ISalesByItemsSheetMeta,
-  ISalesByItemsSheet,
-} from '@/interfaces';
+import { ISalesByItemsReportQuery, ISalesByItemsSheet } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import SalesByItems from './SalesByItems';
 import { Tenant } from '@/system/models';
+import { SalesByItemsMeta } from './SalesByItemsMeta';
 
 @Service()
 export class SalesByItemsReportService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
-  @Inject('logger')
-  logger: any;
+  @Inject()
+  private salesByItemsMeta: SalesByItemsMeta;
 
   /**
    * Defaults balance sheet filter query.
    * @return {IBalanceSheetQuery}
    */
-  get defaultQuery(): ISalesByItemsReportQuery {
+  private get defaultQuery(): ISalesByItemsReportQuery {
     return {
       fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -35,29 +32,6 @@ export class SalesByItemsReportService {
       },
       noneTransactions: true,
       onlyActive: false,
-    };
-  }
-
-  /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): ISalesByItemsSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -112,10 +86,13 @@ export class SalesByItemsReportService {
     );
     const salesByItemsData = sheet.reportData();
 
+    // Retrieve the sales by items meta.
+    const meta = await this.salesByItemsMeta.meta(tenantId, query);
+
     return {
       data: salesByItemsData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

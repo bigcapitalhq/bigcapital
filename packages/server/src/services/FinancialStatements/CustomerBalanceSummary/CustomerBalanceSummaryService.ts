@@ -1,4 +1,4 @@
-import { Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import moment from 'moment';
 import * as R from 'ramda';
 import {
@@ -12,12 +12,17 @@ import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 import Ledger from '@/services/Accounting/Ledger';
 import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
+import { CustomerBalanceSummaryMeta } from './CustomerBalanceSummaryMeta';
 
+@Service()
 export class CustomerBalanceSummaryService
   implements ICustomerBalanceSummaryService
 {
   @Inject()
   private reportRepository: CustomerBalanceSummaryRepository;
+
+  @Inject()
+  private customerBalanceSummaryMeta: CustomerBalanceSummaryMeta;
 
   /**
    * Defaults balance sheet filter query.
@@ -96,10 +101,13 @@ export class CustomerBalanceSummaryService
       filter,
       tenant.metadata.baseCurrency
     );
+    // Retrieve the customer balance summary meta.
+    const meta = await this.customerBalanceSummaryMeta.meta(tenantId, filter);
 
     return {
       data: report.reportData(),
       query: filter,
+      meta,
     };
   }
 }

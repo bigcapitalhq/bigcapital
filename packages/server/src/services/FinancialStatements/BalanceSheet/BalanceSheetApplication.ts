@@ -54,4 +54,14 @@ export class BalanceSheetApplication {
   public csv(tenantId: number, query: IBalanceSheetQuery): Promise<string> {
     return this.balanceSheetExport.csv(tenantId, query);
   }
+
+  /**
+   * Retrieves the balance sheet in pdf format.
+   * @param {number} tenantId
+   * @param {IBalanceSheetQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: IBalanceSheetQuery) {
+    return this.balanceSheetExport.pdf(tenantId, query);
+  }
 }

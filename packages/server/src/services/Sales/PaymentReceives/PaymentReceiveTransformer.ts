@@ -10,6 +10,7 @@ export class PaymentReceiveTransfromer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'subtotalFormatted',
       'formattedPaymentDate',
       'formattedAmount',
       'formattedExchangeRate',
@@ -24,6 +25,18 @@ export class PaymentReceiveTransfromer extends Transformer {
    */
   protected formattedPaymentDate = (payment: IPaymentReceive): string => {
     return this.formatDate(payment.paymentDate);
+  };
+
+  /**
+   * Retrieve the formatted payment subtotal.
+   * @param {IPaymentReceive} payment 
+   * @returns {string}
+   */
+  protected subtotalFormatted = (payment: IPaymentReceive): string => {
+    return formatNumber(payment.amount, {
+      currencyCode: payment.currencyCode,
+      money: false,
+    });
   };
 
   /**

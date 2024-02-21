@@ -10,6 +10,7 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'formattedSubtotal',
       'formattedAmount',
       'formattedEstimateDate',
       'formattedExpirationDate',
@@ -74,6 +75,15 @@ export class SaleEstimateTransfromer extends Transformer {
     return formatNumber(estimate.amount, {
       currencyCode: estimate.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the formatted invoice subtotal.
+   * @param {ISaleEstimate} estimate
+   * @returns {string}
+   */
+  protected formattedSubtotal = (estimate: ISaleEstimate): string => {
+    return formatNumber(estimate.amount, { money: false });
   };
 
   /**

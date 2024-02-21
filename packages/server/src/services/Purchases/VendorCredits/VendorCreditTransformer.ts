@@ -11,6 +11,7 @@ export class VendorCreditTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'formattedAmount',
+      'formattedSubtotal',
       'formattedVendorCreditDate',
       'formattedCreditsRemaining',
       'entries',
@@ -35,6 +36,15 @@ export class VendorCreditTransformer extends Transformer {
     return formatNumber(vendorCredit.amount, {
       currencyCode: vendorCredit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the vendor credit formatted subtotal.
+   * @param {IVendorCredit} vendorCredit
+   * @returns {string}
+   */
+  protected formattedSubtotal = (vendorCredit): string => {
+    return formatNumber(vendorCredit.amount, { money: false });
   };
 
   /**

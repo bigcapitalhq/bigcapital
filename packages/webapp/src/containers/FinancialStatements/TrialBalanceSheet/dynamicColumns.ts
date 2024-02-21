@@ -44,7 +44,7 @@ const dynamicColumnMapper = R.curry((data, column) => {
   const totalColumn = amountAccessor(data);
 
   return R.compose(
-    R.when(R.pathEq(['key'], 'account_name'), accountNameColumn),
+    R.when(R.pathEq(['key'], 'account'), accountNameColumn),
     R.when(R.pathEq(['key'], 'credit'), creditColumn),
     R.when(R.pathEq(['key'], 'debit'), debitColumn),
     R.when(R.pathEq(['key'], 'total'), totalColumn),

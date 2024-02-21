@@ -21,6 +21,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate the transactions by reference.
+  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate the cashflow transactions.
   queryClient.invalidateQueries(t.CASH_FLOW_TRANSACTIONS);
   queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
@@ -159,9 +162,12 @@ export function useReceipt(id, props) {
 
 /**
  * Retrieve the receipt pdf document data.
+ * @param {number} receiptId -
  */
-export function usePdfReceipt(ReceiptId) {
-  return useRequestPdf(`sales/receipts/${ReceiptId}`);
+export function usePdfReceipt(receiptId: number) {
+  return useRequestPdf({
+    url: `sales/receipts/${receiptId}`,
+  });
 }
 
 export function useRefreshReceipts() {

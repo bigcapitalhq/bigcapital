@@ -79,7 +79,7 @@ export const GeneralLedgerSheetExportMenu = () => {
     isCloseButtonShown: true,
     timeout: 2000,
   };
-  const { httpRequest } = useGeneralLedgerContext();
+  const { httpQuery } = useGeneralLedgerContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -97,7 +97,7 @@ export const GeneralLedgerSheetExportMenu = () => {
   };
   // Export the report to xlsx.
   const { mutateAsync: xlsxExport } = useGeneralLedgerSheetXlsxExport(
-    httpRequest,
+    httpQuery,
     {
       onDownloadProgress: (xlsxExportProgress: number) => {
         if (!toastKey.current) {
@@ -118,27 +118,24 @@ export const GeneralLedgerSheetExportMenu = () => {
     },
   );
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useGeneralLedgerSheetCsvExport(
-    httpRequest,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: csvExport } = useGeneralLedgerSheetCsvExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
     csvExport();

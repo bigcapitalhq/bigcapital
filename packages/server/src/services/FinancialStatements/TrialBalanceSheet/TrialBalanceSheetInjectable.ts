@@ -1,28 +1,20 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ITrialBalanceSheetMeta,
-  ITrialBalanceSheetQuery,
-  ITrialBalanceStatement,
-} from '@/interfaces';
+import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from '@/interfaces';
 import TrialBalanceSheet from './TrialBalanceSheet';
 import FinancialSheet from '../FinancialSheet';
-import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
+import { TrialBalanceSheetMeta } from './TrialBalanceSheetMeta';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  @Inject('logger')
-  logger: any;
+  private trialBalanceSheetMetaService: TrialBalanceSheetMeta;
 
   /**
    * Defaults trial balance sheet filter query.
@@ -44,32 +36,6 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       noneTransactions: true,
       onlyActive: false,
       accountIds: [],
-    };
-  }
-
-  /**
-   * Retrieve the trial balance sheet meta.
-   * @param {number} tenantId - Tenant id.
-   * @returns {ITrialBalanceSheetMeta}
-   */
-  private reportMetadata(tenantId: number): ITrialBalanceSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -99,6 +65,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       repos,
       filter
     );
+    // Loads the resources.
     await trialBalanceSheetRepos.asyncInitialize();
 
     // Trial balance report instance.
@@ -111,10 +78,13 @@ export default class TrialBalanceSheetService extends FinancialSheet {
     // Trial balance sheet data.
     const trialBalanceSheetData = trialBalanceInstance.reportData();
 
+    // Trial balance sheet meta.
+    const meta = await this.trialBalanceSheetMetaService.meta(tenantId, filter);
+
     return {
       data: trialBalanceSheetData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

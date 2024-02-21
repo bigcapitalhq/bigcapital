@@ -17,9 +17,11 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import withARAgingSummaryActions from './withARAgingSummaryActions';
 import withARAgingSummary from './withARAgingSummary';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose, safeInvoke } from '@/utils';
 import { ARAgingSummaryExportMenu } from './components';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * A/R Aging summary sheet - Actions bar.
@@ -30,6 +32,9 @@ function ARAgingSummaryActionsBar({
 
   // #withReceivableAgingActions
   toggleARAgingSummaryFilterDrawer: toggleDisplayFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -49,6 +54,11 @@ function ARAgingSummaryActionsBar({
   // Handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     safeInvoke(onNumberFormatSubmit, numberFormat);
+  };
+
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.ARAgingSummaryPdfPreview)
   };
 
   return (
@@ -107,6 +117,7 @@ function ARAgingSummaryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<ARAgingSummaryExportMenu />}
@@ -130,4 +141,5 @@ export default compose(
   withARAgingSummary(({ ARAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: ARAgingSummaryFilterDrawer,
   })),
+  withDialogActions,
 )(ARAgingSummaryActionsBar);
