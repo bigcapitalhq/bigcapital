@@ -143,3 +143,9 @@ export interface SaleReceiptMailOpts extends CommonMailOptions {
 export interface SaleReceiptMailOptsDTO extends CommonMailOptionsDTO {
   attachReceipt?: boolean;
 }
+
+export interface ISaleReceiptMailPresend {
+  tenantId: number;
+  saleReceiptId: number;
+  messageOptions: SaleReceiptMailOptsDTO;
+}

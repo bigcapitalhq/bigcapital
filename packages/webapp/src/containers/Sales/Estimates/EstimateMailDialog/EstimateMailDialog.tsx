@@ -4,12 +4,12 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const EstimateMailDialogContent = React.lazy(
-  () => import('./EstimateMailDialogContent'),
+const EstimateMailDialogBody = React.lazy(
+  () => import('./EstimateMailDialogBody'),
 );
 
 /**
- * Invoice mail dialog.
+ * Estimate mail dialog.
  */
 function EstimateMailDialog({
   dialogName,
@@ -26,10 +26,7 @@ function EstimateMailDialog({
       style={{ width: 600 }}
     >
       <DialogSuspense>
-        <EstimateMailDialogContent
-          dialogName={dialogName}
-          estimateId={estimateId}
-        />
+        <EstimateMailDialogBody estimateId={estimateId} />
       </DialogSuspense>
     </Dialog>
   );

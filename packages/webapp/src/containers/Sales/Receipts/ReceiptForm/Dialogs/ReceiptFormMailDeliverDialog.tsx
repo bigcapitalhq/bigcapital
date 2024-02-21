@@ -4,22 +4,22 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const InvoiceMailDialogBody = React.lazy(
-  () => import('./InvoiceMailDialogBody'),
+const ReceiptFormMailDeliverDialogContent = React.lazy(
+  () => import('./ReceiptFormMailDeliverDialogContent'),
 );
 
 /**
- * Invoice mail dialog.
+ * Receipt mail dialog.
  */
-function InvoiceMailDialog({
+function ReceiptFormMailDeliverDialog({
   dialogName,
-  payload: { invoiceId = null },
+  payload: { receiptId = null },
   isOpen,
 }) {
   return (
     <Dialog
       name={dialogName}
-      title={'Invoice Mail'}
+      title={'Receipt Mail'}
       isOpen={isOpen}
       canEscapeJeyClose={false}
       isCloseButtonShown={false}
@@ -27,9 +27,13 @@ function InvoiceMailDialog({
       style={{ width: 600 }}
     >
       <DialogSuspense>
-        <InvoiceMailDialogBody invoiceId={invoiceId} />
+        <ReceiptFormMailDeliverDialogContent
+          dialogName={dialogName}
+          receiptId={receiptId}
+        />
       </DialogSuspense>
     </Dialog>
   );
 }
-export default compose(withDialogRedux())(InvoiceMailDialog);
+
+export default compose(withDialogRedux())(ReceiptFormMailDeliverDialog);

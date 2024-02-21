@@ -2,6 +2,8 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import ReceiptNumberDialog from '@/containers/Dialogs/ReceiptNumberDialog';
+import ReceiptFormMailDeliverDialog from './Dialogs/ReceiptFormMailDeliverDialog';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Receipt form dialogs.
@@ -26,6 +28,9 @@ export default function ReceiptFormDialogs() {
       <ReceiptNumberDialog
         dialogName={'receipt-number-form'}
         onConfirm={handleReceiptNumberFormConfirm}
+      />
+      <ReceiptFormMailDeliverDialog
+        dialogName={DialogsName.ReceiptFormMailDeliver}
       />
     </>
   );

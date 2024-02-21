@@ -1,5 +1,9 @@
 import { Inject, Service } from 'typedi';
-import { SendInvoiceMailDTO } from '@/interfaces';
+import {
+  ISaleInvoiceMailSend,
+  ISaleInvoiceMailSent,
+  SendInvoiceMailDTO,
+} from '@/interfaces';
 import Mail from '@/lib/Mail';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
@@ -8,6 +12,8 @@ import {
   DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT,
 } from './constants';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SendInvoiceMailReminder {
@@ -19,6 +25,9 @@ export class SendInvoiceMailReminder {
 
   @Inject()
   private invoiceCommonMail: SendSaleInvoiceMailCommon;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Triggers the reminder mail of the given sale invoice.
@@ -86,6 +95,18 @@ export class SendInvoiceMailReminder {
         { filename: 'invoice.pdf', content: invoicePdfBuffer },
       ]);
     }
+    // Triggers the event `onSaleInvoiceSend`.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onMailReminderSend, {
+      saleInvoiceId,
+      messageOptions,
+    } as ISaleInvoiceMailSend);
+
     await mail.send();
+
+    // Triggers the event `onSaleInvoiceSent`.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onMailReminderSent, {
+      saleInvoiceId,
+      messageOptions,
+    } as ISaleInvoiceMailSent);
   }
 }

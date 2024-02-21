@@ -173,3 +173,9 @@ export type IPaymentReceiveGLCommonEntry = Pick<
 export interface PaymentReceiveMailOpts extends CommonMailOptions {}
 
 export interface PaymentReceiveMailOptsDTO extends CommonMailOptionsDTO {}
+
+export interface PaymentReceiveMailPresendEvent {
+  tenantId: number;
+  paymentReceiveId: number;
+  messageOptions: PaymentReceiveMailOptsDTO;
+}

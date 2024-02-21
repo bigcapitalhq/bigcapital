@@ -6,6 +6,7 @@ import { DialogContent } from '@/components';
 interface ReceiptMailDialogBootValues {
   receiptId: number;
   mailOptions: any;
+  redirectToReceiptsList: boolean;
 }
 
 const ReceiptMailDialogBootContext =
@@ -14,6 +15,7 @@ const ReceiptMailDialogBootContext =
 interface ReceiptMailDialogBootProps {
   receiptId: number;
   children: React.ReactNode;
+  redirectToReceiptsList?: boolean;
 }
 
 /**
@@ -21,6 +23,7 @@ interface ReceiptMailDialogBootProps {
  */
 function ReceiptMailDialogBoot({
   receiptId,
+  redirectToReceiptsList = false,
   ...props
 }: ReceiptMailDialogBootProps) {
   const { data: mailOptions, isLoading: isMailOptionsLoading } =
@@ -30,6 +33,7 @@ function ReceiptMailDialogBoot({
     saleReceiptId: receiptId,
     mailOptions,
     isMailOptionsLoading,
+    redirectToReceiptsList,
   };
 
   return (

@@ -1,6 +1,5 @@
 import { IAccountTransaction } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { transaction } from 'objection';
 
 export default class AccountTransactionTransformer extends Transformer {
   /**

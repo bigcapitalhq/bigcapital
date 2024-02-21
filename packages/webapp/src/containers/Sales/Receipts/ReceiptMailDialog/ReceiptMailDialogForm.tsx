@@ -23,7 +23,16 @@ interface ReceiptMailFormValues extends MailNotificationFormValues {
   attachReceipt: boolean;
 }
 
-function ReceiptMailDialogFormRoot({ closeDialog }) {
+interface ReceiptMailDialogFormProps {
+  onFormSubmit?: () => void;
+  onCancelClick?: () => void;
+}
+
+export function ReceiptMailDialogForm({
+  // #props
+  onFormSubmit,
+  onCancelClick,
+}: ReceiptMailDialogFormProps) {
   const { mailOptions, saleReceiptId } = useReceiptMailDialogBoot();
   const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
 
@@ -46,8 +55,8 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
           message: 'The mail notification has been sent successfully.',
           intent: Intent.SUCCESS,
         });
-        closeDialog(DialogsName.ReceiptMail);
         setSubmitting(false);
+        onFormSubmit && onFormSubmit(values);
       })
       .catch(() => {
         AppToaster.show({
@@ -59,7 +68,7 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
   };
   // Handle the close button click.
   const handleClose = () => {
-    closeDialog(DialogsName.ReceiptMail);
+    onCancelClick && onCancelClick();
   };
 
   return (
@@ -68,7 +77,3 @@ function ReceiptMailDialogFormRoot({ closeDialog }) {
     </Formik>
   );
 }
-
-export const ReceiptMailDialogForm = R.compose(withDialogActions)(
-  ReceiptMailDialogFormRoot,
-);

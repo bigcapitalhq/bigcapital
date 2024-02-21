@@ -2,16 +2,21 @@ import { EstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { EstimateMailDialogForm } from './EstimateMailDialogForm';
 
 interface EstimateMailDialogContentProps {
-  dialogName: string;
   estimateId: number;
+  onFormSubmit?: () => void;
+  onCancelClick?: () => void;
 }
 export default function EstimateMailDialogContent({
-  dialogName,
   estimateId,
+  onFormSubmit,
+  onCancelClick,
 }: EstimateMailDialogContentProps) {
   return (
     <EstimateMailDialogBoot estimateId={estimateId}>
-      <EstimateMailDialogForm /> 
+      <EstimateMailDialogForm
+        onFormSubmit={onFormSubmit}
+        onCancelClick={onCancelClick}
+      />
     </EstimateMailDialogBoot>
-  )
+  );
 }

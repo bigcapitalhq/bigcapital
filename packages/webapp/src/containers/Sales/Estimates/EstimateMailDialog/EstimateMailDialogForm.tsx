@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { Formik } from 'formik';
 import * as R from 'ramda';
+import { Intent } from '@blueprintjs/core';
 import { useEstimateMailDialogBoot } from './EstimateMailDialogBoot';
 import { DialogsName } from '@/constants/dialogs';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -12,7 +13,6 @@ import {
   transformMailFormToInitialValues,
   transformMailFormToRequest,
 } from '@/containers/SendMailNotification/utils';
-import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
 const initialFormValues = {
@@ -25,11 +25,15 @@ interface EstimateMailFormValues extends MailNotificationFormValues {
 }
 
 function EstimateMailDialogFormRoot({
+  onFormSubmit,
+  onCancelClick,
+
   // #withDialogClose
   closeDialog,
 }) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
-  const { mailOptions, saleEstimateId } = useEstimateMailDialogBoot();
+  const { mailOptions, saleEstimateId, redirectToEstimatesList } =
+    useEstimateMailDialogBoot();
 
   const initialValues = transformMailFormToInitialValues(
     mailOptions,
@@ -48,14 +52,16 @@ function EstimateMailDialogFormRoot({
         });
         closeDialog(DialogsName.EstimateMail);
         setSubmitting(false);
+        onFormSubmit && onFormSubmit();
       })
-      .catch((error) => {
+      .catch(() => {
         setSubmitting(false);
         closeDialog(DialogsName.EstimateMail);
         AppToaster.show({
           message: 'Something went wrong.',
           intent: Intent.DANGER,
         });
+        onCancelClick && onCancelClick();
       });
   };
 
