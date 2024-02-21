@@ -181,7 +181,9 @@ export function useRejectEstimate(props) {
  */
 
 export function usePdfEstimate(estimateId) {
-  return useRequestPdf(`sales/estimates/${estimateId}`);
+  return useRequestPdf({
+    url: `sales/estimates/${estimateId}`,
+  });
 }
 
 export function useRefreshEstimates() {

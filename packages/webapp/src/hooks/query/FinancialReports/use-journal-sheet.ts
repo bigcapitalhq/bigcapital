@@ -58,7 +58,7 @@ export const useJournalSheetCsvExport = (query, args) => {
  */
 export const useJournalSheetPdf = (query = {}) => {
   return useRequestPdf({
-    url: `/api/financial_statements/journal`,
+    url: `/financial_statements/journal`,
     params: query,
   });
 };

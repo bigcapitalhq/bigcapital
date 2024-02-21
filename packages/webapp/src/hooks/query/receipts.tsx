@@ -162,9 +162,12 @@ export function useReceipt(id, props) {
 
 /**
  * Retrieve the receipt pdf document data.
+ * @param {number} receiptId -
  */
-export function usePdfReceipt(ReceiptId) {
-  return useRequestPdf(`sales/receipts/${ReceiptId}`);
+export function usePdfReceipt(receiptId: number) {
+  return useRequestPdf({
+    url: `sales/receipts/${receiptId}`,
+  });
 }
 
 export function useRefreshReceipts() {

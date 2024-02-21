@@ -52,6 +52,7 @@ export class TableSheetPdf {
       landscape,
     });
   }
+
   /**
    * Converts the table columns to pdf columns.
    * @param {ITableColumn[]} columns

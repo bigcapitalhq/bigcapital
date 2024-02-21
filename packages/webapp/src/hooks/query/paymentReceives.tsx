@@ -233,9 +233,10 @@ export function usePaymentReceiveSMSDetail(
 
 /**
  * Retrieve the payment receive pdf document data.
+ * @param {number} paymentReceiveId - Payment receive id.
  */
 export function usePdfPaymentReceive(paymentReceiveId) {
-  return useRequestPdf(`sales/payment_receives/${paymentReceiveId}`);
+  return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
 }
 
 export function useSendPaymentReceiveMail(props) {

@@ -16,6 +16,7 @@ export const useRequestPdf = (httpProps) => {
         headers: { accept: 'application/pdf' },
         responseType: 'blob',
         ...httpProps,
+        url: `/api/${httpProps?.url}`,
       })
       .then((response) => {
         // Create a Blob from the PDF Stream.

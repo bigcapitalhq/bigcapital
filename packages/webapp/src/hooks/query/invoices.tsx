@@ -24,7 +24,7 @@ const commonInvalidateQueries = (queryClient) => {
 
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
-  
+
   // Invalidate transactions by reference.
   queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
 
@@ -188,7 +188,9 @@ export function useInvoice(invoiceId, props, requestProps) {
  * Retrieve the invoice pdf document data.
  */
 export function usePdfInvoice(invoiceId) {
-  return useRequestPdf(`sales/invoices/${invoiceId}`);
+  return useRequestPdf({
+    url: `sales/invoices/${invoiceId}`,
+  });
 }
 
 /**
@@ -339,4 +341,3 @@ export function useSaleInvoiceDefaultOptions(invoiceId, props) {
     },
   );
 }
-

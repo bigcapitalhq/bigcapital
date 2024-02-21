@@ -77,7 +77,7 @@ export const useCashFlowStatementCsvExport = (query, args) => {
  */
 export function useCashflowSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/cash-flow`,
+    url: `/financial_statements/cash-flow`,
     params: query,
   });
 }

@@ -65,7 +65,7 @@ export const useCustomerBalanceSummaryCsvExport = (query, args) => {
  */
 export function useCustomerBalanceSummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/customer-balance-summary`,
+    url: `/financial_statements/customer-balance-summary`,
     params: query,
   });
 }

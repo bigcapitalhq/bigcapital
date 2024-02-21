@@ -41,13 +41,14 @@ export default class BalanceSheetTable extends R.compose(
   BalanceSheetBase
 )(FinancialSheet) {
   /**
-   * @param {}
+   * Balance sheet data.
+   * @param {IBalanceSheetStatementData}
    */
   private reportData: IBalanceSheetStatementData;
 
   /**
    * Balance sheet query.
-   * @parma {}
+   * @parma {BalanceSheetQuery}
    */
   private query: BalanceSheetQuery;
 

@@ -73,7 +73,7 @@ export const usePurchasesByItemsXlsxExport = (query, args) => {
  */
 export const usePurchasesByItemsPdfExport = (query = {}) => {
   return useRequestPdf({
-    url: '/api/financial_statements/purchases-by-items',
+    url: '/financial_statements/purchases-by-items',
     params: query,
   });
 };

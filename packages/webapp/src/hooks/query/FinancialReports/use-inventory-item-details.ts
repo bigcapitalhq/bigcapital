@@ -69,7 +69,7 @@ export const useInventoryItemDetailsCsvExport = (query, args) => {
  */
 export function useInventoryItemDetailsPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/inventory-item-details`,
+    url: `/financial_statements/inventory-item-details`,
     params: query,
   });
 }

@@ -58,7 +58,7 @@ export const useProfitLossSheetCsvExport = (query, args) => {
  */
 export function useProfitLossSheetPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/profit_loss_sheet`,
+    url: `/financial_statements/profit_loss_sheet`,
     params: query,
   });
 }

@@ -58,7 +58,7 @@ export const useSalesTaxLiabilitySummaryCsvExport = (query, args) => {
  */
 export function useSalesTaxLiabilitySummaryPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/sales-tax-liability-summary`,
+    url: `/financial_statements/sales-tax-liability-summary`,
     params: query,
   });
 }

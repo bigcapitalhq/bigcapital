@@ -57,7 +57,7 @@ export const useGeneralLedgerSheetCsvExport = (query, args) => {
  */
 export function useGeneralLedgerPdf(query = {}) {
   return useRequestPdf({
-    url: `/api/financial_statements/general_ledger`,
+    url: `/financial_statements/general_ledger`,
     params: query
   });
 }

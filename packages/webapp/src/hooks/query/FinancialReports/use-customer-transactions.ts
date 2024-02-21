@@ -69,7 +69,7 @@ export const useCustomersTransactionsCsvExport = (query, args) => {
  */
 export const useCustomersTransactionsPdfExport = (query = {}) => {
   return useRequestPdf({
-    url: '/api/financial_statements/transactions-by-customers',
+    url: '/financial_statements/transactions-by-customers',
     params: query,
   });
 };

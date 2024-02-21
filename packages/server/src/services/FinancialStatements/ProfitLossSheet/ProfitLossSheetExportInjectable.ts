@@ -40,11 +40,4 @@ export class ProfitLossSheetExportInjectable {
 
     return tableCsv;
   }
-
-  public async pdf(
-    tenantId: number,
-    query: IProfitLossSheetQuery
-  ): Promise<Buffer> {
-    const table = await this.profitLossSheetTable.table(tenantId, query);
-  }
 }
