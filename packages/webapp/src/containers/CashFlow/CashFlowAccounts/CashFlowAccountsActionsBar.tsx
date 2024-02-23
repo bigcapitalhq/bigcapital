@@ -110,12 +110,12 @@ function CashFlowAccountsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
-        <Button
+        {/* <Button
           className={Classes.MINIMAL}
           text={'Connect to Bank / Credit Card'}
           onClick={handleConnectToBank}
         />
-        <NavbarDivider />
+        <NavbarDivider /> */}
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
