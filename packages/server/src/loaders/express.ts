@@ -86,7 +86,7 @@ export default ({ app }) => {
       ################################################
     `);
   });
-  const io = new Server(server, {});
+  const io = new Server(server, { path: '/socket' });
 
   // Set socket.io listeners.
   io.on('connection', (socket) => {

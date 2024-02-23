@@ -10,8 +10,8 @@ export function DashboardSockets() {
   const client = useQueryClient();
 
   useEffect(() => {
-    socket.current = io('ws://localhost:4000');
-
+    socket.current = io('/', { path: '/socket' });
+  
     socket.current.on('NEW_TRANSACTIONS_DATA', () => {
       client.invalidateQueries(t.ACCOUNTS);
       client.invalidateQueries(t.ACCOUNT_TRANSACTION);
