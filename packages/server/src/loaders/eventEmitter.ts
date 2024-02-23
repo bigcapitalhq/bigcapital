@@ -84,6 +84,7 @@ import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subsc
 import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
+import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from '@/services/Banking/Plaid/subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
 import { InvoiceChangeStatusOnMailSentSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceChangeStatusOnMailSentSubscriber';
 import { SaleReceiptMarkClosedOnMailSentSubcriber } from '@/services/Sales/Receipts/subscribers/SaleReceiptMarkClosedOnMailSentSubcriber';
 import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/subscribers/SaleEstimateMarkApprovedOnMailSent';
@@ -209,5 +210,8 @@ export const susbcribers = () => {
     WriteBillTaxTransactionsSubscriber,
 
     SyncItemTaxRateOnEditTaxSubscriber,
+
+    // Plaid
+    PlaidUpdateTransactionsOnItemCreatedSubscriber
   ];
 };

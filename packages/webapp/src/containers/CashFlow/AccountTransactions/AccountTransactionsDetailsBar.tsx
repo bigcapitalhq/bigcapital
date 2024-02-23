@@ -71,6 +71,19 @@ function AccountBalanceItem() {
   );
 }
 
+function AccountBankBalanceItem() {
+  const { currentAccount } = useAccountTransactionsContext();
+
+  return (
+    <AccountBalanceItemWrap>
+      Balance in Bank Account
+      <AccountBalanceAmount>
+        {currentAccount.bank_balance_formatted}
+      </AccountBalanceAmount>
+    </AccountBalanceItemWrap>
+  );
+}
+
 function AccountTransactionsDetailsBarSkeleton() {
   return (
     <React.Fragment>
@@ -89,6 +102,7 @@ function AccountTransactionsDetailsContent() {
     <React.Fragment>
       <AccountSwitchItem />
       <AccountBalanceItem />
+      <AccountBankBalanceItem />
     </React.Fragment>
   );
 }

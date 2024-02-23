@@ -5,6 +5,8 @@ import boom from 'express-boom';
 import errorHandler from 'errorhandler';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
+import { Server } from 'socket.io';
+import Container from 'typedi';
 import routes from 'api';
 import LoggerMiddleware from '@/api/middleware/LoggerMiddleware';
 import AgendashController from '@/api/controllers/Agendash';
@@ -72,4 +74,32 @@ export default ({ app }) => {
   app.use((req: Request, res: Response, next: NextFunction) => {
     return res.boom.notFound();
   });
+  const server = app.listen(app.get('port'), (err) => {
+    if (err) {
+      console.log(err);
+      process.exit(1);
+      return;
+    }
+    console.log(`
+      ################################################
+        Server listening on port: ${app.get('port')}
+      ################################################
+    `);
+  });
+  const io = new Server(server, { path: '/socket' });
+
+  // Set socket.io listeners.
+  io.on('connection', (socket) => {
+    console.log('SOCKET CONNECTED');
+
+    socket.on('disconnect', () => {
+      console.log('SOCKET DISCONNECTED');
+    });
+  });
+  // Middleware to pass socket to each request object.
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    req.io = io;
+    next();
+  });
+  Container.set('socket', io);
 };

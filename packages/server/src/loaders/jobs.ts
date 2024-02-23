@@ -10,6 +10,7 @@ import { SendSaleInvoiceReminderMailJob } from '@/services/Sales/Invoices/SendSa
 import { SendSaleEstimateMailJob } from '@/services/Sales/Estimates/SendSaleEstimateMailJob';
 import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleReceiptMailNotificationJob';
 import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentReceives/PaymentReceiveMailNotificationJob';
+import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);
@@ -23,6 +24,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new SendSaleEstimateMailJob(agenda);
   new SaleReceiptMailNotificationJob(agenda);
   new PaymentReceiveMailNotificationJob(agenda);
+  new PlaidFetchTransactionsJob(agenda);
 
   agenda.start();
 };

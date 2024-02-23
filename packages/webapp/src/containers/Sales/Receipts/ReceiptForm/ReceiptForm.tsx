@@ -34,7 +34,10 @@ import {
   transformFormValuesToRequest,
   resetFormState,
 } from './utils';
-import { ReceiptSyncAutoExRateToForm, ReceiptSyncIncrementSettingsToForm } from './components';
+import {
+  ReceiptSyncAutoExRateToForm,
+  ReceiptSyncIncrementSettingsToForm,
+} from './components';
 
 /**
  * Receipt form.

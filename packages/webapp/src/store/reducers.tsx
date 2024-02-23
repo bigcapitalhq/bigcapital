@@ -37,6 +37,7 @@ import creditNotes from './CreditNote/creditNote.reducer';
 import vendorCredit from './VendorCredit/VendorCredit.reducer';
 import warehouseTransfers from './WarehouseTransfer/warehouseTransfer.reducer';
 import projects from './Project/projects.reducer';
+import { PlaidSlice } from './banking/banking.reducer';
 
 const appReducer = combineReducers({
   authentication,
@@ -73,6 +74,7 @@ const appReducer = combineReducers({
   vendorCredit,
   warehouseTransfers,
   projects,
+  plaid: PlaidSlice.reducer,
 });
 
 // Reset the state of a redux store

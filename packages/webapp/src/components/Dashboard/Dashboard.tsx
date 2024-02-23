@@ -14,6 +14,7 @@ import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from '@/components/DrawersContainer';
 import AlertsContainer from '@/containers/AlertsContainer';
+import { DashboardSockets } from './DashboardSockets';
 
 /**
  * Dashboard preferences.
@@ -50,6 +51,7 @@ export default function Dashboard() {
         <Route path="/" component={DashboardAnyPage} />
       </Switch>
 
+      <DashboardSockets />
       <DashboardUniversalSearch />
       <GlobalHotkeys />
       <DialogsContainer />

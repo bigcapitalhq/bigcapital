@@ -116,3 +116,16 @@ export function BalanceCell({ cell }) {
     <span class="placeholder">—</span>
   );
 }
+
+/**
+ * Balance cell.
+ */
+export function BankBalanceCell({ cell }) {
+  const account = cell.row.original;
+
+  return account.amount !== null ? (
+    <span>{account.bank_balance_formatted}</span>
+  ) : (
+    <span class="placeholder">—</span>
+  );
+}

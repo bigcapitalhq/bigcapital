@@ -56,6 +56,8 @@ import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
+import { BankingController } from './controllers/Banking/BankingController';
+import { Webhooks } from './controllers/Webhooks/Webhooks';
 
 export default () => {
   const app = Router();
@@ -71,6 +73,7 @@ export default () => {
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
   app.use('/account', Container.get(Account).router());
+  app.use('/webhooks', Container.get(Webhooks).router());
 
   // - Dashboard routes.
   // ---------------------------
@@ -118,6 +121,7 @@ export default () => {
     Container.get(InventoryItemsCostController).router()
   );
   dashboard.use('/cashflow', Container.get(CashflowController).router());
+  dashboard.use('/banking', Container.get(BankingController).router());
   dashboard.use('/roles', Container.get(RolesController).router());
   dashboard.use(
     '/transactions-locking',

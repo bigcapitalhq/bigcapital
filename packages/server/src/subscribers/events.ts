@@ -601,4 +601,8 @@ export default {
     onInactivating: 'onTaxRateInactivating',
     onInactivated: 'onTaxRateInactivated',
   },
+
+  plaid: {
+    onItemCreated: 'onPlaidItemCreated',
+  },
 };

@@ -61,6 +61,7 @@ import Task from 'models/Task';
 import TaxRate from 'models/TaxRate';
 import TaxRateTransaction from 'models/TaxRateTransaction';
 import Attachment from 'models/Attachment';
+import PlaidItem from 'models/PlaidItem';
 
 export default (knex) => {
   const models = {
@@ -124,7 +125,8 @@ export default (knex) => {
     Task,
     TaxRate,
     TaxRateTransaction,
-    Attachment
+    Attachment,
+    PlaidItem
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };

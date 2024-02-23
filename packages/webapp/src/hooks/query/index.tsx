@@ -36,4 +36,5 @@ export * from './transactionsLocking';
 export * from './warehouses';
 export * from './branches';
 export * from './warehousesTransfers';
+export * from './plaid';
 export * from './FinancialReports';

@@ -6,12 +6,15 @@ export interface IAccountDTO {
   code: string;
   description: string;
   accountType: string;
-  parentAccountId: number;
+  parentAccountId?: number;
   active: boolean;
+  bankBalance?: number;
+  accountMask?: string;
 }
 
 export interface IAccountCreateDTO extends IAccountDTO {
   currencyCode?: string;
+  plaidAccountId?: string;
 }
 
 export interface IAccountEditDTO extends IAccountDTO {}
@@ -33,6 +36,7 @@ export interface IAccount {
   type?: any[];
   accountNormal: string;
   accountParentType: string;
+  bankBalance: string;
 }
 
 export enum AccountNormal {
@@ -153,7 +157,6 @@ export enum AccountAction {
   VIEW = 'View',
   TransactionsLocking = 'TransactionsLocking',
 }
-
 
 export enum TaxRateAction {
   CREATE = 'Create',
