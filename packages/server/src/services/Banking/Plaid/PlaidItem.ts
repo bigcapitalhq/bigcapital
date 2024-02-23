@@ -7,6 +7,7 @@ import {
   IPlaidItemCreatedEventPayload,
   PlaidItemDTO,
 } from '@/interfaces/Plaid';
+import SystemPlaidItem from '@/system/models/SystemPlaidItem';
 
 @Service()
 export class PlaidItemService {
@@ -29,19 +30,23 @@ export class PlaidItemService {
 
     const plaidInstance = new PlaidClientWrapper();
 
-    // exchange the public token for a private access token and store with the item.
+    // Exchange the public token for a private access token and store with the item.
     const response = await plaidInstance.itemPublicTokenExchange({
       public_token: publicToken,
     });
     const plaidAccessToken = response.data.access_token;
     const plaidItemId = response.data.item_id;
 
+    // Store the Plaid item metadata on tenant scope.
     const plaidItem = await PlaidItem.query().insertAndFetch({
       tenantId,
       plaidAccessToken,
       plaidItemId,
       plaidInstitutionId: institutionId,
     });
+    // Stores the Plaid item id on system scope.
+    await SystemPlaidItem.query().insert({ tenantId, plaidItemId });
+
     // Triggers `onPlaidItemCreated` event.
     await this.eventPublisher.emitAsync(events.plaid.onItemCreated, {
       tenantId,

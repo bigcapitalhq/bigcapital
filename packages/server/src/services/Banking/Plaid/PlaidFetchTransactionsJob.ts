@@ -25,11 +25,15 @@ export class PlaidFetchTransactionsJob {
     const plaidFetchTransactionsService = Container.get(
       PlaidUpdateTransactions
     );
+    const io = Container.get('socket');
+
     try {
       await plaidFetchTransactionsService.updateTransactions(
         tenantId,
         plaidItemId
       );
+      // Notify the frontend to reflect the new transactions changes.
+      io.emit('NEW_TRANSACTIONS_DATA', { plaidItemId });
       done();
     } catch (error) {
       console.log(error);

@@ -98,6 +98,7 @@
     "reflect-metadata": "^0.1.13",
     "rtl-detect": "^1.0.4",
     "source-map-loader": "^4.0.1",
+    "socket.io": "^4.7.4",
     "tmp-promise": "^3.0.3",
     "ts-transformer-keys": "^0.4.2",
     "tsyringe": "^4.3.0",

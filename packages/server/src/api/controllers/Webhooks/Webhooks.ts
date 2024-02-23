@@ -3,6 +3,7 @@ import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';
+import { PlaidWebhookTenantBootMiddleware } from '@/services/Banking/Plaid/PlaidWebhookTenantBootMiddleware';
 
 @Service()
 export class Webhooks extends BaseController {
@@ -15,6 +16,7 @@ export class Webhooks extends BaseController {
   router() {
     const router = Router();
 
+    router.use(PlaidWebhookTenantBootMiddleware);
     router.post('/plaid', this.plaidWebhooks.bind(this));
 
     return router;
@@ -33,8 +35,6 @@ export class Webhooks extends BaseController {
       webhook_code: webhookCode,
       item_id: plaidItemId,
     } = req.body;
-
-    console.log(req.body, 'triggered');
 
     await this.plaidApp.webhooks(
       tenantId,

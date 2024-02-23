@@ -8,17 +8,17 @@ export class PlaidWebooks {
 
   /**
    * Listens to Plaid webhooks
-   * @param {number} tenantId
-   * @param {string} webhookType
-   * @param {string} plaidItemId
-   * @param {string} webhookCode
+   * @param {number} tenantId - Tenant Id.
+   * @param {string} webhookType - Webhook type.
+   * @param {string} plaidItemId - Plaid item Id.
+   * @param {string} webhookCode - webhook code.
    */
   public async webhooks(
     tenantId: number,
     plaidItemId: string,
     webhookType: string,
     webhookCode: string
-  ) {
+  ): Promise<void> {
     const _webhookType = webhookType.toLowerCase();
 
     // There are five types of webhooks: AUTH, TRANSACTIONS, ITEM, INCOME, and ASSETS.
@@ -43,7 +43,7 @@ export class PlaidWebooks {
     webhookType: string,
     webhookCode: string,
     plaidItemId: string
-  ) {
+  ): Promise<void> {
     console.log(
       `UNHANDLED ${webhookType} WEBHOOK: ${webhookCode}: Plaid item id ${plaidItemId}: unhandled webhook type received.`
     );
@@ -59,7 +59,7 @@ export class PlaidWebooks {
     additionalInfo: string,
     webhookCode: string,
     plaidItemId: string
-  ) {
+  ): void {
     console.log(
       `WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`
     );
