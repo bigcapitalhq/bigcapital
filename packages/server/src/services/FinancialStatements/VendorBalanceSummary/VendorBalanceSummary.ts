@@ -41,7 +41,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
 
   /**
    * Customer section mapper.
-   * @param   {IVendor} vendor
+   * @param {IVendor} vendor
    * @returns {IVendorBalanceSummaryVendor}
    */
   private vendorMapper = (vendor: IVendor): IVendorBalanceSummaryVendor => {
@@ -58,7 +58,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
 
   /**
    * Mappes the vendor model object to vendor balance summary section.
-   * @param   {IVendor[]} vendors - Customers.
+   * @param {IVendor[]} vendors - Customers.
    * @returns {IVendorBalanceSummaryVendor[]}
    */
   private vendorsMapper = (
@@ -77,7 +77,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
 
   /**
    * Retrieve the vendors sections of the report.
-   * @param   {IVendor} vendors
+   * @param {IVendor} vendors
    * @returns {IVendorBalanceSummaryVendor[]}
    */
   private getVendorsSection(vendors: IVendor[]): IVendorBalanceSummaryVendor[] {

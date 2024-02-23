@@ -34,7 +34,7 @@ export class AccountTransformer extends Transformer {
 
   /**
    * Retrieve formatted account amount.
-   * @param   {IAccount} invoice
+   * @param {IAccount} invoice
    * @returns {string}
    */
   protected formattedAmount = (account: IAccount): string => {

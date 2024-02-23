@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 
-import { AppToaster } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import { useAuthSendResetPassword } from '@/hooks/query';
 
 import SendResetPasswordForm from './SendResetPasswordForm';
@@ -82,11 +82,11 @@ function SendResetPasswordFooterLinks() {
     <AuthFooterLinks>
       {!signupDisabled && (
         <AuthFooterLink>
-          Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+          <T id={'dont_have_an_account'} /> <Link to={'/auth/register'}><T id={'sign_up'} /></Link>
         </AuthFooterLink>
       )}
       <AuthFooterLink>
-        Return to <Link to={'/auth/login'}>Sign In</Link>
+        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
       </AuthFooterLink>
     </AuthFooterLinks>
   );

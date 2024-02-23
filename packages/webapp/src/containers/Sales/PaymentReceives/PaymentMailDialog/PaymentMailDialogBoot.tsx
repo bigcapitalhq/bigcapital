@@ -13,6 +13,7 @@ const PaymentMailDialogBootContext =
 
 interface PaymentMailDialogBootProps {
   paymentReceiveId: number;
+  redirectToPaymentsList: boolean;
   children: React.ReactNode;
 }
 
@@ -29,7 +30,8 @@ function PaymentMailDialogBoot({
   const provider = {
     mailOptions,
     isMailOptionsLoading,
-    paymentReceiveId
+    paymentReceiveId,
+    redirectToPaymentsList
   };
 
   return (

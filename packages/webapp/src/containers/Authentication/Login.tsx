@@ -70,7 +70,7 @@ function LoginFooterLinks() {
     <AuthFooterLinks>
       {!signupDisabled && (
         <AuthFooterLink>
-          Don't have an account? <Link to={'/auth/register'}>Sign up</Link>
+          <T id={'dont_have_an_account'} /> <Link to={'/auth/register'}><T id={'sign_up'} /></Link>
         </AuthFooterLink>
       )}
       <AuthFooterLink>

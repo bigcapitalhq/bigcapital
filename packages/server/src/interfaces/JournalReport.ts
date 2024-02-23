@@ -1,3 +1,4 @@
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IJournalEntry } from './Journal';
 import { IFinancialTable } from './Table';
 
@@ -32,10 +33,10 @@ export interface IJournalReport {
   entries: IJournalReportEntriesGroup[];
 }
 
-export interface IJournalSheetMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface IJournalSheetMeta extends IFinancialSheetCommonMeta {
+  formattedDateRange: string;
+  formattedFromDate: string;
+  formattedToDate: string;
 }
 
 export interface IJournalTable extends IFinancialTable {

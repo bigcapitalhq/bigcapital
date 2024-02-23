@@ -6,7 +6,7 @@ import { SaleReceiptCostGLEntries } from '../SaleReceiptCostGLEntries';
 @Service()
 export class SaleReceiptCostGLEntriesSubscriber {
   @Inject()
-  saleReceiptCostEntries: SaleReceiptCostGLEntries;
+  private saleReceiptCostEntries: SaleReceiptCostGLEntries;
 
   /**
    * Attaches events.

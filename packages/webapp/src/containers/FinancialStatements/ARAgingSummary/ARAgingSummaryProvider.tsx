@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useMemo, createContext, useContext } from 'react';
+import { useMemo, createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useARAgingSummaryReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
@@ -11,10 +11,7 @@ const ARAgingSummaryContext = createContext();
  */
 function ARAgingSummaryProvider({ filter, ...props }) {
   // Transformes the filter from to the url query.
-  const requestQuery = useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
-  );
+  const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // A/R aging summary sheet context.
   const {
@@ -22,13 +19,14 @@ function ARAgingSummaryProvider({ filter, ...props }) {
     isLoading: isARAgingLoading,
     isFetching: isARAgingFetching,
     refetch,
-  } = useARAgingSummaryReport(requestQuery, { keepPreviousData: true });
+  } = useARAgingSummaryReport(httpQuery, { keepPreviousData: true });
 
   const provider = {
     ARAgingSummary,
     isARAgingLoading,
     isARAgingFetching,
     refetch,
+    httpQuery,
   };
 
   return (

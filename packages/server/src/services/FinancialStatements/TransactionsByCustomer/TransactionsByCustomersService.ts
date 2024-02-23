@@ -12,6 +12,7 @@ import TransactionsByCustomers from './TransactionsByCustomers';
 import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
 import { Tenant } from '@/system/models';
+import { TransactionsByCustomersMeta } from './TransactionsByCustomersMeta';
 
 export class TransactionsByCustomersSheet
   implements ITransactionsByCustomersService
@@ -21,6 +22,9 @@ export class TransactionsByCustomersSheet
 
   @Inject()
   private reportRepository: TransactionsByCustomersRepository;
+
+  @Inject()
+  private transactionsByCustomersMeta: TransactionsByCustomersMeta;
 
   /**
    * Defaults balance sheet filter query.
@@ -160,9 +164,12 @@ export class TransactionsByCustomersSheet
       i18n
     );
 
+    const meta = await this.transactionsByCustomersMeta.meta(tenantId, filter);
+
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta,
     };
   }
 }

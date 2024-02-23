@@ -85,6 +85,9 @@ import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/B
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
 import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from '@/services/Banking/Plaid/subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
+import { InvoiceChangeStatusOnMailSentSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceChangeStatusOnMailSentSubscriber';
+import { SaleReceiptMarkClosedOnMailSentSubcriber } from '@/services/Sales/Receipts/subscribers/SaleReceiptMarkClosedOnMailSentSubcriber';
+import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/subscribers/SaleEstimateMarkApprovedOnMailSent';
 
 export default () => {
   return new EventPublisher();
@@ -105,8 +108,12 @@ export const susbcribers = () => {
     InventorySubscriber,
     CustomerWriteGLOpeningBalanceSubscriber,
     VendorsWriteGLOpeningSubscriber,
+
+    // # Estimate
     SaleEstimateAutoSerialSubscriber,
     SaleEstimateSmsNotificationSubscriber,
+    SaleEstimateMarkApprovedOnMailSent,
+
     ExpensesWriteGLSubscriber,
     SaleReceiptAutoSerialSubscriber,
     SaleInvoiceAutoIncrementSubscriber,
@@ -153,11 +160,13 @@ export const susbcribers = () => {
     // #Invoices
     InvoicePaymentGLRewriteSubscriber,
     InvoiceCostGLEntriesSubscriber,
+    InvoiceChangeStatusOnMailSentSubscriber,
 
     BillPaymentsGLEntriesRewriteSubscriber,
 
     // # Receipts
     SaleReceiptCostGLEntriesSubscriber,
+    SaleReceiptMarkClosedOnMailSentSubcriber,
 
     // Transaction locking.
     SalesTransactionLockingGuardSubscriber,

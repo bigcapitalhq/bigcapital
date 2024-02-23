@@ -1,17 +1,22 @@
 import { InvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
 import { InvoiceMailDialogForm } from './InvoiceMailDialogForm';
 
-interface InvoiceMailDialogContentProps {
-  dialogName: string;
+export interface InvoiceMailDialogContentProps {
   invoiceId: number;
+  onFormSubmit?: () => void;
+  onCancelClick?: () => void;
 }
 export default function InvoiceMailDialogContent({
-  dialogName,
   invoiceId,
+  onFormSubmit,
+  onCancelClick,
 }: InvoiceMailDialogContentProps) {
   return (
     <InvoiceMailDialogBoot invoiceId={invoiceId}>
-      <InvoiceMailDialogForm />
+      <InvoiceMailDialogForm
+        onFormSubmit={onFormSubmit}
+        onCancelClick={onCancelClick}
+      />
     </InvoiceMailDialogBoot>
   );
 }

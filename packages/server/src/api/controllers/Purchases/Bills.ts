@@ -560,6 +560,16 @@ export default class BillsController extends BaseController {
           errors: [{ type: 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND', code: 1900 }],
         });
       }
+      if (error.errorType === 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT') {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT',
+              code: 2000,
+            },
+          ],
+        });
+      }
     }
     next(error);
   }

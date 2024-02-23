@@ -72,6 +72,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_XLSX,
       ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
 
     // Retrieves the json table format.
@@ -81,7 +82,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       // Retrieves the csv format.
     } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
       const buffer = await this.journalSheetApp.csv(tenantId, filter);
-
+  
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
@@ -97,6 +98,14 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       );
       return res.send(buffer);
       // Retrieves the json format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.journalSheetApp.pdf(tenantId, filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
     } else {
       const sheet = await this.journalSheetApp.sheet(tenantId, filter);
 

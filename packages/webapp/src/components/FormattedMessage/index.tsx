@@ -1,8 +1,13 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
 
-export function FormattedMessage({ id, values }) {
-  return intl.get(id, values);
+interface FormattedMessageProps {
+  id: string;
+  values?: Record<string, any>;
+}
+
+export function FormattedMessage({ id, values }: FormattedMessageProps) {
+  return <>{intl.get(id, values)}</>;
 }
 
 export function FormattedHTMLMessage({ ...args }) {

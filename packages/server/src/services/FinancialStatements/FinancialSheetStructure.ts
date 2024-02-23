@@ -61,14 +61,14 @@ export const FinancialSheetStructure = (Base: Class) =>
       });
     };
 
-    findNodeDeep = (nodes, callback) => {
+    public findNodeDeep = (nodes, callback) => {
       return findValueDeep(nodes, callback, {
         childrenPath: 'children',
         pathFormat: 'array',
       });
     };
 
-    mapAccNodesDeep = (nodes, callback) => {
+    public mapAccNodesDeep = (nodes, callback) => {
       return reduceDeep(
         nodes,
         (acc, value, key, parentValue, context) => {
@@ -97,11 +97,11 @@ export const FinancialSheetStructure = (Base: Class) =>
       });
     };
 
-    getTotalOfChildrenNodes = (node) => {
+    public getTotalOfChildrenNodes = (node) => {
       return this.getTotalOfNodes(node.children);
     };
 
-    getTotalOfNodes = (nodes) => {
+    public getTotalOfNodes = (nodes) => {
       return sumBy(nodes, 'total.amount');
     };
   };

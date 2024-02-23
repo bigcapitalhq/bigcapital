@@ -1,3 +1,4 @@
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 import {
   ITransactionsByContactsAmount,
@@ -27,6 +28,8 @@ export type ITransactionsByVendorsData = ITransactionsByVendorsVendor[];
 
 export interface ITransactionsByVendorsStatement {
   data: ITransactionsByVendorsData;
+  query: ITransactionsByVendorsFilter;
+  meta: ITransactionsByVendorMeta;
 }
 
 export interface ITransactionsByVendorsService {
@@ -38,4 +41,10 @@ export interface ITransactionsByVendorsService {
 
 export interface ITransactionsByVendorTable extends IFinancialTable {
   query: ITransactionsByVendorsFilter;
+  meta: ITransactionsByVendorMeta;
+}
+export interface ITransactionsByVendorMeta extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDate: string;
+  formattedDateRange: string;
 }

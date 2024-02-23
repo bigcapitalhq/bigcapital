@@ -71,6 +71,7 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
 
       // Retrieves the xlsx format.
@@ -101,6 +102,17 @@ export default class TransactionsByVendorsReportController extends BaseFinancial
           filter
         );
         return res.status(200).send(table);
+        // Retrieves the pdf format.
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        const pdfContent = await this.transactionsByVendorsApp.pdf(
+          tenantId,
+          filter
+        );
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
         // Retrieves the json format.
       } else {
         const sheet = await this.transactionsByVendorsApp.sheet(

@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import Mail from '@/lib/Mail';
-import { SendInvoiceMailDTO } from '@/interfaces';
+import { ISaleInvoiceMailSend, SendInvoiceMailDTO } from '@/interfaces';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
 import {
@@ -8,6 +8,8 @@ import {
   DEFAULT_INVOICE_MAIL_SUBJECT,
 } from './constants';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
 export class SendSaleInvoiceMail {
@@ -20,6 +22,9 @@ export class SendSaleInvoiceMail {
   @Inject('agenda')
   private agenda: any;
 
+  @Inject()
+  private eventPublisher: EventPublisher;
+
   /**
    * Sends the invoice mail of the given sale invoice.
    * @param {number} tenantId
@@ -29,14 +34,21 @@ export class SendSaleInvoiceMail {
   public async triggerMail(
     tenantId: number,
     saleInvoiceId: number,
-    messageDTO: SendInvoiceMailDTO
+    messageOptions: SendInvoiceMailDTO
   ) {
     const payload = {
       tenantId,
       saleInvoiceId,
-      messageDTO,
+      messageOptions,
     };
     await this.agenda.now('sale-invoice-mail-send', payload);
+
+    // Triggers the event `onSaleInvoicePreMailSend`.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onPreMailSend, {
+      tenantId,
+      saleInvoiceId,
+      messageOptions,
+    } as ISaleInvoiceMailSend);
   }
 
   /**
@@ -64,7 +76,7 @@ export class SendSaleInvoiceMail {
   public async sendMail(
     tenantId: number,
     saleInvoiceId: number,
-    messageDTO: SendInvoiceMailDTO
+    messageOptions: SendInvoiceMailDTO
   ) {
     const defaultMessageOpts = await this.getMailOption(
       tenantId,
@@ -73,7 +85,7 @@ export class SendSaleInvoiceMail {
     // Merge message opts with default options and validate the incoming options.
     const messageOpts = parseAndValidateMailOptions(
       defaultMessageOpts,
-      messageDTO
+      messageOptions
     );
     const mail = new Mail()
       .setSubject(messageOpts.subject)
@@ -90,6 +102,20 @@ export class SendSaleInvoiceMail {
         { filename: 'invoice.pdf', content: invoicePdfBuffer },
       ]);
     }
+    // Triggers the event `onSaleInvoiceSend`.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onMailSend, {
+      tenantId,
+      saleInvoiceId,
+      messageOptions,
+    } as ISaleInvoiceMailSend);
+
     await mail.send();
+
+    // Triggers the event `onSaleInvoiceSend`.
+    await this.eventPublisher.emitAsync(events.saleInvoice.onMailSent, {
+      tenantId,
+      saleInvoiceId,
+      messageOptions,
+    } as ISaleInvoiceMailSend);
   }
 }

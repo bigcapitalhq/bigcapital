@@ -16,10 +16,12 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import withInventoryValuation from './withInventoryValuation';
 import withInventoryValuationActions from './withInventoryValuationActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 
 import { compose, saveInvoke } from '@/utils';
 import { InventoryValuationExportMenu } from './components';
+import { DialogsName } from '@/constants/dialogs';
 
 function InventoryValuationActionsBar({
   // #withInventoryValuation
@@ -28,25 +30,33 @@ function InventoryValuationActionsBar({
   // #withInventoryValuationActions
   toggleInventoryValuationFilterDrawer,
 
+  // #withDialogActions
+  openDialog,
+
   // #ownProps
   numberFormat,
   onNumberFormatSubmit,
 }) {
   const { refetchSheet, isLoading } = useInventoryValuationContext();
 
-  // Handle filter toggle click.
+  // Handles filter toggle click.
   const handleFilterToggleClick = () => {
     toggleInventoryValuationFilterDrawer();
   };
 
-  // Handle re-calc button click.
+  // Handles re-calc button click.
   const handleRecalculateReport = () => {
     refetchSheet();
   };
 
-  // Handle number format submit.
+  // Handles number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
+  };
+
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.InventoryValuationPdfPreview);
   };
 
   return (
@@ -109,6 +119,7 @@ function InventoryValuationActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<InventoryValuationExportMenu />}
@@ -132,4 +143,5 @@ export default compose(
     isFilterDrawerOpen: inventoryValuationDrawerFilter,
   })),
   withInventoryValuationActions,
+  withDialogActions,
 )(InventoryValuationActionsBar);

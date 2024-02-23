@@ -9,7 +9,6 @@ import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { useBalanceSheetColumns } from './components';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
 
-
 /**
  * Balance sheet table.
  */

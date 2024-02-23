@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React from 'react';
 import { useFormikContext } from 'formik';
 import InvoiceNumberDialog from '@/containers/Dialogs/InvoiceNumberDialog';
 import { DialogsName } from '@/constants/dialogs';
+import InvoiceFormMailDeliverDialog from './Dialogs/InvoiceFormMailDeliverDialog/InvoiceFormMailDeliverDialog';
 
 /**
  * Invoice form dialogs.
@@ -23,9 +23,14 @@ export default function InvoiceFormDialogs() {
   };
 
   return (
-    <InvoiceNumberDialog
-      dialogName={DialogsName.InvoiceNumberSettings}
-      onConfirm={handleInvoiceNumberFormConfirm}
-    />
+    <>
+      <InvoiceNumberDialog
+        dialogName={DialogsName.InvoiceNumberSettings}
+        onConfirm={handleInvoiceNumberFormConfirm}
+      />
+      <InvoiceFormMailDeliverDialog
+        dialogName={DialogsName.InvoiceFormMailDeliver}
+      />
+    </>
   );
 }

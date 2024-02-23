@@ -37,11 +37,8 @@ export function PurchasesByItemsLoadingBar() {
  */
 export const PurchasesByItemsExportMenu = () => {
   const toastKey = useRef(null);
-  const commonToastConfig = {
-    isCloseButtonShown: true,
-    timeout: 2000,
-  };
-  const { query } = usePurchaseByItemsContext();
+  const commonToastConfig = { isCloseButtonShown: true, timeout: 2000 };
+  const { httpQuery } = usePurchaseByItemsContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -57,9 +54,8 @@ export const PurchasesByItemsExportMenu = () => {
       </Stack>
     );
   };
-
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = usePurchasesByItemsXlsxExport(query, {
+  const { mutateAsync: xlsxExport } = usePurchasesByItemsXlsxExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -78,7 +74,7 @@ export const PurchasesByItemsExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = usePurchasesByItemsCsvExport(query, {
+  const { mutateAsync: csvExport } = usePurchasesByItemsCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

@@ -26,27 +26,27 @@ export default class ContactsController extends BaseController {
       [...this.autocompleteQuerySchema],
       this.validationResult,
       this.asyncMiddleware(this.autocompleteContacts.bind(this)),
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.get(
       '/:id',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
-      this.asyncMiddleware(this.getContact.bind(this))
+      this.asyncMiddleware(this.getContact.bind(this)),
     );
     router.post(
       '/:id/inactivate',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.inactivateContact.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/activate',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.activateContact.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -77,7 +77,7 @@ export default class ContactsController extends BaseController {
     try {
       const contact = await this.contactsService.getContact(
         tenantId,
-        contactId
+        contactId,
       );
       return res.status(200).send({
         customer: this.transfromToResponse(contact),
@@ -105,7 +105,7 @@ export default class ContactsController extends BaseController {
     try {
       const contacts = await this.contactsService.autocompleteContacts(
         tenantId,
-        filter
+        filter,
       );
       return res.status(200).send({ contacts });
     } catch (error) {
@@ -153,7 +153,6 @@ export default class ContactsController extends BaseController {
       check('email')
         .optional({ nullable: true })
         .isString()
-        .normalizeEmail()
         .isEmail()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('website')
@@ -380,7 +379,7 @@ export default class ContactsController extends BaseController {
     error: Error,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'contact_not_found') {

@@ -1,18 +1,19 @@
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { isEmpty } from 'lodash';
-import { IAPAgingSummaryQuery, IARAgingSummaryMeta } from '@/interfaces';
+import { IAPAgingSummaryQuery, IAPAgingSummarySheet } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import APAgingSummarySheet from './APAgingSummarySheet';
 import { Tenant } from '@/system/models';
+import { APAgingSummaryMeta } from './APAgingSummaryMeta';
 
 @Service()
 export class APAgingSummaryService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
-  @Inject('logger')
-  logger: any;
+  @Inject()
+  private APAgingSummaryMeta: APAgingSummaryMeta;
 
   /**
    * Default report query.
@@ -36,34 +37,15 @@ export class APAgingSummaryService {
   }
 
   /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IARAgingSummaryMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
-    };
-  }
-
-  /**
    * Retrieve A/P aging summary report.
    * @param {number} tenantId -
    * @param {IAPAgingSummaryQuery} query -
+   * @returns {Promise<IAPAgingSummarySheet>}
    */
-  async APAgingSummary(tenantId: number, query: IAPAgingSummaryQuery) {
+  public async APAgingSummary(
+    tenantId: number,
+    query: IAPAgingSummaryQuery
+  ): Promise<IAPAgingSummarySheet> {
     const { Bill } = this.tenancy.models(tenantId);
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
@@ -111,11 +93,14 @@ export class APAgingSummaryService {
     const data = APAgingSummaryReport.reportData();
     const columns = APAgingSummaryReport.reportColumns();
 
+    // Retrieve the aging summary report meta.
+    const meta = await this.APAgingSummaryMeta.meta(tenantId, filter);
+
     return {
       data,
       columns,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

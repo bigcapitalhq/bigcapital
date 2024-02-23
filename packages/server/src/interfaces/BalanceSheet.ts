@@ -2,6 +2,7 @@ import {
   INumberFormatQuery,
   IFormatNumberSettings,
   IFinancialSheetBranchesQuery,
+  IFinancialSheetCommonMeta,
 } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
@@ -63,10 +64,9 @@ export interface IBalanceSheetQuery extends IFinancialSheetBranchesQuery {
 }
 
 // Balance sheet meta.
-export interface IBalanceSheetMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface IBalanceSheetMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
+  formattedDateRange: string;
 }
 
 export interface IBalanceSheetFormatNumberSettings

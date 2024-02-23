@@ -6,12 +6,14 @@ import { DialogContent } from '@/components';
 interface EstimateMailDialogBootValues {
   estimateId: number;
   mailOptions: any;
+  redirectToEstimatesList: boolean;
 }
 
 const EstimateMailDialagBoot = createContext<EstimateMailDialogBootValues>();
 
 interface EstimateMailDialogBootProps {
   estimateId: number;
+  redirectToEstimatesList?: boolean;
   children: React.ReactNode;
 }
 
@@ -20,6 +22,7 @@ interface EstimateMailDialogBootProps {
  */
 function EstimateMailDialogBoot({
   estimateId,
+  redirectToEstimatesList,
   ...props
 }: EstimateMailDialogBootProps) {
   const { data: mailOptions, isLoading: isMailOptionsLoading } =
@@ -29,6 +32,7 @@ function EstimateMailDialogBoot({
     saleEstimateId: estimateId,
     mailOptions,
     isMailOptionsLoading,
+    redirectToEstimatesList,
   };
 
   return (

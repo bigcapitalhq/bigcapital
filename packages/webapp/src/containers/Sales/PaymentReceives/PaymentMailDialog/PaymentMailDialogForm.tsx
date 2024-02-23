@@ -3,7 +3,6 @@ import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { usePaymentMailDialogBoot } from './PaymentMailDialogBoot';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 import { useSendPaymentReceiveMail } from '@/hooks/query';
 import { PaymentMailDialogFormContent } from './PaymentMailDialogFormContent';
@@ -14,6 +13,8 @@ import {
   transformMailFormToInitialValues,
 } from '@/containers/SendMailNotification/utils';
 import { AppToaster } from '@/components';
+import { useHistory } from 'react-router-dom';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 const initialFormValues = {
   ...initialMailNotificationValues,
@@ -28,8 +29,11 @@ export function PaymentMailDialogFormRoot({
   // #withDialogActions
   closeDialog,
 }) {
-  const { mailOptions, paymentReceiveId } = usePaymentMailDialogBoot();
+  const { mailOptions, paymentReceiveId, redirectToPaymentsList } =
+    usePaymentMailDialogBoot();
   const { mutateAsync: sendPaymentMail } = useSendPaymentReceiveMail();
+
+  const history = useHistory();
 
   const initialValues = transformMailFormToInitialValues(
     mailOptions,
@@ -51,6 +55,11 @@ export function PaymentMailDialogFormRoot({
         });
         setSubmitting(false);
         closeDialog(DialogsName.PaymentMail);
+
+        // Redirects to payments list if the option is enabled.
+        if (redirectToPaymentsList) {
+          history.push('/payment-receives');
+        }
       })
       .catch(() => {
         AppToaster.show({

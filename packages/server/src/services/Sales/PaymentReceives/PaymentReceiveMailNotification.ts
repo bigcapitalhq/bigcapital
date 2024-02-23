@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import {
   PaymentReceiveMailOpts,
   PaymentReceiveMailOptsDTO,
+  PaymentReceiveMailPresendEvent,
   SendInvoiceMailDTO,
 } from '@/interfaces';
 import Mail from '@/lib/Mail';
@@ -13,6 +14,8 @@ import {
 import { GetPaymentReceive } from './GetPaymentReceive';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class SendPaymentReceiveMailNotification {
@@ -27,6 +30,9 @@ export class SendPaymentReceiveMailNotification {
 
   @Inject('agenda')
   private agenda: any;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Sends the mail of the given payment receive.
@@ -46,6 +52,13 @@ export class SendPaymentReceiveMailNotification {
       messageDTO,
     };
     await this.agenda.now('payment-receive-mail-send', payload);
+
+    // Triggers `onPaymentReceivePreMailSend` event.
+    await this.eventPublisher.emitAsync(events.paymentReceive.onPreMailSend, {
+      tenantId,
+      paymentReceiveId,
+      messageOptions: messageDTO,
+    } as PaymentReceiveMailPresendEvent);
   }
 
   /**

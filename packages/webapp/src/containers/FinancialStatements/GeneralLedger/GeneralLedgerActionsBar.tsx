@@ -18,6 +18,8 @@ import { compose } from '@/utils';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * General ledger - Actions bar.
@@ -28,6 +30,9 @@ function GeneralLedgerActionsBar({
 
   // #withGeneralLedgerActions
   toggleGeneralLedgerFilterDrawer: toggleDisplayFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const { sheetRefresh } = useGeneralLedgerContext();
 
@@ -39,6 +44,11 @@ function GeneralLedgerActionsBar({
   // Handle re-calculate button click.
   const handleRecalcReport = () => {
     sheetRefresh();
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.GeneralLedgerPdfPreview);
   };
 
   return (
@@ -84,6 +94,7 @@ function GeneralLedgerActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<GeneralLedgerSheetExportMenu />}
@@ -107,4 +118,5 @@ export default compose(
     isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
   withGeneralLedgerActions,
+  withDialogActions,
 )(GeneralLedgerActionsBar);

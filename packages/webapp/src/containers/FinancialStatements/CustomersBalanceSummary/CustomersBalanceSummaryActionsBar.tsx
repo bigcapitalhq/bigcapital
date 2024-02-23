@@ -18,6 +18,8 @@ import withCustomersBalanceSummaryActions from './withCustomersBalanceSummaryAct
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
 import { compose, saveInvoke } from '@/utils';
 import { CustomerBalanceSummaryExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * customer balance summary action bar.
@@ -32,6 +34,9 @@ function CustomersBalanceSummaryActionsBar({
 
   //#withCustomersBalanceSummaryActions
   toggleCustomerBalanceFilterDrawer,
+
+  // #withDialogActions
+  openDialog
 }) {
   const { refetch, isCustomersBalanceLoading } =
     useCustomersBalanceSummaryContext();
@@ -50,6 +55,11 @@ function CustomersBalanceSummaryActionsBar({
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
   };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.CustomerBalanceSummaryPdfPreview);
+  }
 
   return (
     <DashboardActionsBar>
@@ -112,6 +122,7 @@ function CustomersBalanceSummaryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<CustomerBalanceSummaryExportMenu />}
@@ -134,4 +145,5 @@ export default compose(
     isFilterDrawerOpen: customersBalanceDrawerFilter,
   })),
   withCustomersBalanceSummaryActions,
+  withDialogActions
 )(CustomersBalanceSummaryActionsBar);

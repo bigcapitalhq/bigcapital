@@ -1,13 +1,9 @@
 // @ts-nocheck
-import { useMemo, useRef } from 'react';
-import intl from 'react-intl-universal';
+import { useRef } from 'react';
 import classNames from 'classnames';
 import { Classes } from '@blueprintjs/core';
 
-import { getColumnWidth } from '@/utils';
 import { AppToaster, If, Stack } from '@/components';
-import { Align } from '@/constants';
-import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
@@ -34,11 +30,8 @@ export function SalesByItemsLoadingBar() {
  */
 export const SalesByItemsSheetExportMenu = () => {
   const toastKey = useRef(null);
-  const commonToastConfig = {
-    isCloseButtonShown: true,
-    timeout: 2000,
-  };
-  const { query } = useSalesByItemsContext();
+  const commonToastConfig = { isCloseButtonShown: true, timeout: 2000, };
+  const { httpQuery } = useSalesByItemsContext();
 
   const openProgressToast = (amount: number) => {
     return (
@@ -54,9 +47,8 @@ export const SalesByItemsSheetExportMenu = () => {
       </Stack>
     );
   };
-
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useSalesByItemsXlsxExport(query, {
+  const { mutateAsync: xlsxExport } = useSalesByItemsXlsxExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({
@@ -75,7 +67,7 @@ export const SalesByItemsSheetExportMenu = () => {
     },
   });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useSalesByItemsCsvExport(query, {
+  const { mutateAsync: csvExport } = useSalesByItemsCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
       if (!toastKey.current) {
         toastKey.current = AppToaster.show({

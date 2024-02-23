@@ -14,8 +14,7 @@ export default function SendResetPasswordForm({ isSubmitting }) {
   return (
     <Form>
       <TopParagraph>
-        Enter the email address associated with your account and we'll send you
-        a link to reset your password.
+        <T id={'enter_the_email_address_associated_with_your_account'} />
       </TopParagraph>
 
       <FFormGroup name={'crediential'} label={<T id={'email_address'} />}>
@@ -29,7 +28,7 @@ export default function SendResetPasswordForm({ isSubmitting }) {
         large={true}
         loading={isSubmitting}
       >
-        Reset Password
+        <T id={'reset_password'} />
       </AuthSubmitButton>
     </Form>
   );

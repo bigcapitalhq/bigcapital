@@ -201,3 +201,15 @@ export interface ISaleInvoiceNotifyPayload {
   saleInvoiceId: number;
   messageDTO: SendInvoiceMailDTO;
 }
+
+export interface ISaleInvoiceMailSend {
+  tenantId: number;
+  saleInvoiceId: number;
+  messageOptions: SendInvoiceMailDTO;
+}
+
+export interface ISaleInvoiceMailSent {
+  tenantId: number;
+  saleInvoiceId: number;
+  messageOptions: SendInvoiceMailDTO;
+}

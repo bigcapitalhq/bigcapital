@@ -11,7 +11,7 @@ import { SalesByItemsApplication } from '@/services/FinancialStatements/SalesByI
 @Service()
 export default class SalesByItemsReportController extends BaseFinancialReportController {
   @Inject()
-  salesByItemsApp: SalesByItemsApplication;
+  private salesByItemsApp: SalesByItemsApplication;
 
   /**
    * Router constructor.
@@ -71,6 +71,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     // Retrieves the csv format.
     if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
@@ -96,6 +97,14 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       );
       return res.send(buffer);
       // Retrieves the json format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.salesByItemsApp.pdf(tenantId, filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      return res.send(pdfContent);
     } else {
       const sheet = await this.salesByItemsApp.sheet(tenantId, filter);
       return res.status(200).send(sheet);

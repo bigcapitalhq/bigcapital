@@ -1,3 +1,4 @@
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable, ITableData } from './Table';
 import {
   ITransactionsByContactsAmount,
@@ -28,10 +29,12 @@ export type ITransactionsByCustomersData = ITransactionsByCustomersCustomer[];
 export interface ITransactionsByCustomersStatement {
   data: ITransactionsByCustomersData;
   query: ITransactionsByCustomersFilter;
+  meta: ITransactionsByCustomersMeta;
 }
 
 export interface ITransactionsByCustomersTable extends IFinancialTable {
   query: ITransactionsByCustomersFilter;
+  meta: ITransactionsByCustomersMeta;
 }
 
 export interface ITransactionsByCustomersService {
@@ -39,4 +42,10 @@ export interface ITransactionsByCustomersService {
     tenantId: number,
     filter: ITransactionsByCustomersFilter
   ): Promise<ITransactionsByCustomersStatement>;
+}
+export interface ITransactionsByCustomersMeta
+  extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDate: string;
+  formattedDateRange: string;
 }

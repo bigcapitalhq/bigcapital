@@ -22,6 +22,20 @@ export class BillsValidators {
   }
 
   /**
+   * Validates the bill amount is bigger than paid amount.
+   * @param {number} billAmount 
+   * @param {number} paidAmount 
+   */
+  public validateBillAmountBiggerPaidAmount(
+    billAmount: number,
+    paidAmount: number,
+  ) {
+    if (billAmount < paidAmount) {
+      throw new ServiceError(ERRORS.BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT);
+    }
+  }
+
+  /**
    * Validates the bill number existance.
    */
   public async validateBillNumberExists(

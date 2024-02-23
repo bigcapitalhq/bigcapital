@@ -14,6 +14,7 @@ import { CustomersTransactionsProvider } from './CustomersTransactionsProvider';
 
 import { compose } from '@/utils';
 import { useCustomersTransactionsQuery } from './_utils';
+import { CustomersTransactionsDialogs } from './CustomersTransactionsDialogs';
 
 /**
  * Customers transactions.
@@ -65,6 +66,8 @@ function CustomersTransactions({
           <CustomersTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <CustomersTransactionsDialogs />
     </CustomersTransactionsProvider>
   );
 }

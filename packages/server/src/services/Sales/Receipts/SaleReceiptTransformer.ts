@@ -12,6 +12,7 @@ export class SaleReceiptTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'formattedSubtotal',
       'formattedAmount',
       'formattedReceiptDate',
       'formattedClosedAtDate',
@@ -35,6 +36,15 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected formattedClosedAtDate = (receipt: ISaleReceipt): string => {
     return this.formatDate(receipt.closedAt);
+  };
+
+  /**
+   * Retrieves the estimate formatted subtotal.
+   * @param {ISaleReceipt} receipt
+   * @returns {string}
+   */
+  protected formattedSubtotal = (receipt: ISaleReceipt): string => {
+    return formatNumber(receipt.amount, { money: false });
   };
 
   /**

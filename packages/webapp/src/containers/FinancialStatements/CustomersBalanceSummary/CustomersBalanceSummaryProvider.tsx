@@ -29,9 +29,9 @@ function CustomersBalanceSummaryProvider({ filter, ...props }) {
     CustomerBalanceSummary,
     isCustomersBalanceFetching,
     isCustomersBalanceLoading,
-
     refetch,
-    query
+    query,
+    httpQuery: query
   };
   return (
     <FinancialReportPage name={'customers-balance-summary'}>

@@ -4,12 +4,12 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ReceiptMailDialogContent = React.lazy(
-  () => import('./ReceiptMailDialogContent'),
+const ReceiptMailDialogBody = React.lazy(
+  () => import('./ReceiptMailDialogBody'),
 );
 
 /**
- * Invoice mail dialog.
+ * Receipt mail dialog.
  */
 function ReceiptMailDialog({
   dialogName,
@@ -26,10 +26,7 @@ function ReceiptMailDialog({
       style={{ width: 600 }}
     >
       <DialogSuspense>
-        <ReceiptMailDialogContent
-          dialogName={dialogName}
-          receiptId={receiptId}
-        />
+        <ReceiptMailDialogBody receiptId={receiptId} />
       </DialogSuspense>
     </Dialog>
   );

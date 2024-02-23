@@ -96,6 +96,7 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
       ACCEPT_TYPE.APPLICATION_JSON_TABLE,
       ACCEPT_TYPE.APPLICATION_CSV,
       ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_PDF,
     ]);
     try {
       // Retrieves the csv format.
@@ -125,6 +126,14 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
         );
         return res.send(sheet);
         // Retrieves the json format.
+      } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
+        const pdfContent = await this.profitLossSheetApp.pdf(tenantId, filter);
+
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': pdfContent.length,
+        });
+        return res.send(pdfContent);
       } else {
         const sheet = await this.profitLossSheetApp.sheet(tenantId, filter);
 

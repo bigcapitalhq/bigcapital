@@ -76,7 +76,7 @@ export default class CashFlowTable implements ICashFlowTable {
    */
   private commonColumns = () => {
     return R.compose(
-      R.concat([{ key: 'label', accessor: 'label' }]),
+      R.concat([{ key: 'name', accessor: 'label' }]),
       R.when(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumnsAccessors())
