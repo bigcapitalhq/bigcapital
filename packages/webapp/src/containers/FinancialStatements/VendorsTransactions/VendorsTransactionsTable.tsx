@@ -20,18 +20,17 @@ export default function VendorsTransactionsTable({
   companyName,
 }) {
   // Vendor transactions context.
-  const {
-    vendorsTransactions: { tableRows },
-    isVendorsTransactionsLoading,
-    query,
-  } = useVendorsTransactionsContext();
+  const { vendorsTransactions, isVendorsTransactionsLoading } =
+    useVendorsTransactionsContext();
+
+  const { table, query } = vendorsTransactions;
 
   // Retireve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
   const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 5),
-    [tableRows],
+    () => defaultExpanderReducer(table.rows, 5),
+    [table.rows],
   );
 
   return (
@@ -46,7 +45,7 @@ export default function VendorsTransactionsTable({
     >
       <VendorsTransactionsDataTable
         columns={columns}
-        data={tableRows}
+        data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
         noInitialFetch={true}
         expandable={true}

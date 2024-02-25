@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import { ITransactionsByVendorsFilter } from '@/interfaces';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
+import { HtmlTableCustomCss } from './constants';
 
 @Service()
 export class TransactionsByVendorsPdf {
@@ -27,7 +28,8 @@ export class TransactionsByVendorsPdf {
       tenantId,
       table.table,
       table.meta.sheetName,
-      table.meta.formattedDateRange
+      table.meta.formattedDateRange,
+      HtmlTableCustomCss
     );
   }
 }
