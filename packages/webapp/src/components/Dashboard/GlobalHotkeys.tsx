@@ -5,12 +5,16 @@ import { useHistory } from 'react-router-dom';
 import { getDashboardRoutes } from '@/routes/dashboard';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import withUniversalSearchActions from '@/containers/UniversalSearch/withUniversalSearchActions';
 
 import { compose } from '@/utils';
 
 function GlobalHotkeys({
   // #withDashboardActions
-  toggleSidebarExpend,
+  toggleSidebarExpand,
+
+  // withUniversalSearchActions
+  openGlobalSearch,
 
   // #withDialogActions
   openDialog,
@@ -24,7 +28,7 @@ function GlobalHotkeys({
     .toString();
 
   const handleSidebarToggleBtn = () => {
-    toggleSidebarExpend();
+    toggleSidebarExpand();
   };
   useHotkeys(
     globalHotkeys,
@@ -37,10 +41,26 @@ function GlobalHotkeys({
     },
     [history],
   );
-  useHotkeys('ctrl+/', (event, handle) => handleSidebarToggleBtn());
-  useHotkeys('shift+d', (event, handle) => openDialog('money-in', {}));
-  useHotkeys('shift+q', (event, handle) => openDialog('money-out', {}));
+  useHotkeys('ctrl+/', () => {
+    handleSidebarToggleBtn();
+  });
+  useHotkeys('shift+d', () => {
+    openDialog('money-in', {});
+  });
+  useHotkeys('shift+q', () => {
+    openDialog('money-out', {});
+  });
+  useHotkeys('/', () => {
+    setTimeout(() => {
+      openGlobalSearch();
+    }, 0);
+  });
+
   return <div></div>;
 }
 
-export default compose(withDashboardActions, withDialogActions)(GlobalHotkeys);
+export default compose(
+  withDashboardActions,
+  withDialogActions,
+  withUniversalSearchActions,
+)(GlobalHotkeys);

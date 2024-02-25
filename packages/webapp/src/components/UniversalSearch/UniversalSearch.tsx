@@ -152,6 +152,7 @@ function UniversalSearchBar({ isOpen, onSearchTypeChange, ...listProps }) {
             onSearchTypeChange={onSearchTypeChange}
           />
         }
+        autoFocus={true}
       />
       {listProps.itemList}
     </div>
