@@ -19,14 +19,7 @@ export function useVendorsTransactionsReport(query, props) {
       },
     },
     {
-      select: (res) => ({
-        data: res.data.table,
-        tableRows: res.data.table.rows,
-      }),
-      defaultData: {
-        tableRows: [],
-        data: [],
-      },
+      select: (res) => res.data,
       ...props,
     },
   );

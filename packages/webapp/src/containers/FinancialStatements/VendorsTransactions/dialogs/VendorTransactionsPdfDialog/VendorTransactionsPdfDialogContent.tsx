@@ -1,13 +1,16 @@
+// @ts-nocheck
+import { AnchorButton } from '@blueprintjs/core';
 import {
   DialogContent,
   PdfDocumentPreview,
   FormattedMessage as T,
 } from '@/components';
 import { useTransactionsByVendorsPdf } from '@/hooks/query';
-import { AnchorButton } from '@blueprintjs/core';
+import { useVendorsTransactionsContext } from '../../VendorsTransactionsProvider';
 
 export default function VendorTransactionsPdfDialogContent() {
-  const { isLoading, pdfUrl } = useTransactionsByVendorsPdf();
+  const { httpQuery } = useVendorsTransactionsContext();
+  const { isLoading, pdfUrl } = useTransactionsByVendorsPdf(httpQuery);
 
   return (
     <DialogContent>

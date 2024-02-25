@@ -25,9 +25,11 @@ export class TransactionsByVendorMeta {
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
     const formattedDateRange = `From ${formattedFromDate} | To ${formattedToDate}`;
 
+    const sheetName = 'Transactions By Vendor';
+
     return {
       ...commonMeta,
-      sheetName: 'Transactions By Vendor',
+      sheetName,
       formattedFromDate,
       formattedToDate,
       formattedDateRange,
