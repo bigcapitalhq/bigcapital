@@ -136,6 +136,11 @@ export default {
       type: 'number',
     },
   },
+  inventory: {
+    cost_compute_running: {
+      type: 'boolean',
+    },
+  },
   accounts: {
     account_code_required: {
       type: 'boolean',
