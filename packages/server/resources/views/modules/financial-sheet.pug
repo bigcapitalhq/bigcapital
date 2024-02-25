@@ -21,4 +21,5 @@ block content
         each row in table.rows
           tr(class=row.classNames)
             each cell in row.cells 
-              td(class='cell--' + cell.key)!= cell.value
+              td(class='cell--' + cell.key)
+                span!= cell.value

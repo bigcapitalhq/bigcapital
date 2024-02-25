@@ -6,7 +6,7 @@ export enum IROW_TYPE {
 export const HtmlTableCustomCss = `
 table tr.row-type--total td{
   border-top: 1px solid #bbb;
-  font-weight: 500;
+  font-weight: 600;
   border-bottom: 3px double #000;
 }
 

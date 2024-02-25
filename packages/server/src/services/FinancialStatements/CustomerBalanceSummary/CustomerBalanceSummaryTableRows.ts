@@ -52,7 +52,7 @@ export class CustomerBalanceSummaryTable {
    */
   private getCustomerColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'customerName', accessor: 'customerName' },
+      { key: 'name', accessor: 'customerName' },
       { key: 'total', accessor: 'total.formattedAmount' },
     ];
     return R.compose(
@@ -85,7 +85,7 @@ export class CustomerBalanceSummaryTable {
    */
   private getTotalColumnsAccessor = (): IColumnMapperMeta[] => {
     const columns = [
-      { key: 'total', value: this.i18n.__('Total') },
+      { key: 'name', value: this.i18n.__('Total') },
       { key: 'total', accessor: 'total.formattedAmount' },
     ];
     return R.compose(
