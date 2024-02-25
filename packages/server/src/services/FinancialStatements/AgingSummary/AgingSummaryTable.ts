@@ -56,7 +56,7 @@ export default abstract class AgingSummaryTable extends R.compose(
     node: IAgingSummaryContact | IAgingSummaryTotal
   ): ITableColumnAccessor[] => {
     return node.aging.map((aging, index) => ({
-      key: 'aging',
+      key: 'aging_period',
       accessor: `aging[${index}].total.formattedAmount`,
     }));
   };
