@@ -75,6 +75,6 @@ export class SalesTaxLiabilitySummaryApplication {
     tenantId: number,
     query: SalesTaxLiabilitySummaryQuery
   ): Promise<Buffer> {
-    return this.salesTaxLiabiltiyPdf.pdf(tenantId, query):
+    return this.salesTaxLiabiltiyPdf.pdf(tenantId, query);
   }
 }
