@@ -212,6 +212,16 @@ $dashboard-views-bar-height: 44px;
             background: rgba(219, 55, 55, 0.1);
           }
         }
+        &.#{$ns}-minimal.#{$ns}-intent-success{
+          color: #1c6e42;
+
+          &:hover,
+          &:focus {
+            background: rgba(35, 133, 81, 0.1);
+            color: #1c6e42;
+          }
+        }
+
 
         &.button--blue-highlight {
           background-color: #ebfaff;
