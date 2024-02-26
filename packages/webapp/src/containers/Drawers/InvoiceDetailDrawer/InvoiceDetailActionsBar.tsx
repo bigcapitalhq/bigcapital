@@ -57,6 +57,11 @@ function InvoiceDetailActionsBar({
     closeDrawer(DRAWERS.INVOICE_DETAILS);
   };
 
+  // Hanlde deliver sale invoice.
+  const handleDeliverInvoice = ({ id }) => {
+    openAlert('invoice-deliver', { invoiceId });
+  };
+
   // Handle convert to invoice.
   const handleConvertToCreitNote = () => {
     history.push(`/credit-notes/new?from_invoice_id=${invoiceId}`, {
@@ -153,6 +158,7 @@ function InvoiceDetailActionsBar({
               onCancelBadDebt: handleCancelBadDebtInvoice,
               onNotifyViaSMS: handleNotifyViaSMS,
               onConvert: handleConvertToCreitNote,
+              onDeliver: handleDeliverInvoice,
             }}
           />
         </Can>

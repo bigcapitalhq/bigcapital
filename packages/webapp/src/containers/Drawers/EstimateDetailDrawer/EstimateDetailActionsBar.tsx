@@ -14,14 +14,18 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  SaleEstimateAction,
+  AbilitySubject,
+  SaleInvoiceAction,
+} from '@/constants/abilityOption';
 import { EstimateMoreMenuItems } from './components';
 import {
   DrawerActionsBar,
   Icon,
   FormattedMessage as T,
   Can,
-  Choose,
+  If,
 } from '@/components';
 
 import { compose } from '@/utils';
@@ -42,7 +46,7 @@ function EstimateDetailActionsBar({
   closeDrawer,
 }) {
   // Estimate details drawer context.
-  const { estimateId } = useEstimateDetailDrawerContext();
+  const { estimateId, estimate } = useEstimateDetailDrawerContext();
 
   // History.
   const history = useHistory();
@@ -52,6 +56,15 @@ function EstimateDetailActionsBar({
     history.push(`/estimates/${estimateId}/edit`);
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
+
+  // Handle convert to invoice.
+  const handleConvertEstimate = () => {
+    history.push(`/invoices/new?from_estimate_id=${estimateId}`, {
+      action: estimateId,
+    });
+    closeDrawer(DRAWERS.ESTIMATE_DETAILS);
+  };
+
   // Handle delete sale estimate.
   const handleDeleteEstimate = () => {
     openAlert('estimate-delete', { estimateId });
@@ -82,7 +95,18 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
-
+        <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+          <If condition={!estimate.is_converted_to_invoice}>
+            <Button
+              className={Classes.MINIMAL}
+              intent={Intent.SUCCESS}
+              icon={<Icon icon="tick" />}
+              text={<T id={'convert_to_invoice'} />}
+              onClick={handleConvertEstimate}
+            />
+            <NavbarDivider />
+          </If>
+        </Can>
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
           <Button
             className={Classes.MINIMAL}
