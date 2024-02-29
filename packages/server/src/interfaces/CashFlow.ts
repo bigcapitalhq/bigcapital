@@ -233,3 +233,27 @@ export interface ICashflowTransactionSchema {
 }
 
 export interface ICashflowTransactionInput extends ICashflowTransactionSchema {}
+
+export interface ICategorizeCashflowTransactioDTO {
+  fromAccountId: number;
+  toAccountId: number;
+  referenceNo: string;
+  transactionNumber: string;
+  transactionType: string;
+  exchangeRate: number;
+  description: string;
+  branchId: number;
+}
+
+export interface IUncategorizedCashflowTransaction {
+  id?: number;
+  amount: number;
+  date: Date;
+  currencyCode: string;
+  accountId: number;
+  description: string;
+  referenceNo: string;
+  categorizeRefType: string;
+  categorizeRefId: number;
+  categorized: boolean;
+}

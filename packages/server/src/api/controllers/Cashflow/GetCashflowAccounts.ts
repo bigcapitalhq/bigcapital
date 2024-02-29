@@ -11,10 +11,10 @@ import { AbilitySubject, CashflowAction } from '@/interfaces';
 @Service()
 export default class GetCashflowAccounts extends BaseController {
   @Inject()
-  getCashflowAccountsService: GetCashflowAccountsService;
+  private getCashflowAccountsService: GetCashflowAccountsService;
 
   @Inject()
-  getCashflowTransactionsService: GetCashflowTransactionsService;
+  private getCashflowTransactionsService: GetCashflowTransactionsService;
 
   /**
    * Controller router.

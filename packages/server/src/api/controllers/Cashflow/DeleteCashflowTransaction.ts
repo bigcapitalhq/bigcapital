@@ -3,14 +3,14 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { param } from 'express-validator';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
-import DeleteCashflowTransactionService from '../../../services/Cashflow/DeleteCashflowTransactionService';
+import { DeleteCashflowTransaction } from '../../../services/Cashflow/DeleteCashflowTransactionService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
 
 @Service()
-export default class DeleteCashflowTransaction extends BaseController {
+export default class DeleteCashflowTransactionController extends BaseController {
   @Inject()
-  deleteCashflowService: DeleteCashflowTransactionService;
+  private deleteCashflowService: DeleteCashflowTransaction;
 
   /**
    * Controller router.

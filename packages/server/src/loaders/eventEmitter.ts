@@ -88,6 +88,7 @@ import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from '@/services/Banki
 import { InvoiceChangeStatusOnMailSentSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceChangeStatusOnMailSentSubscriber';
 import { SaleReceiptMarkClosedOnMailSentSubcriber } from '@/services/Sales/Receipts/subscribers/SaleReceiptMarkClosedOnMailSentSubcriber';
 import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/subscribers/SaleEstimateMarkApprovedOnMailSent';
+import { DeleteCashflowTransactionOnUncategorize } from '@/services/Cashflow/subscribers/DeleteCashflowTransactionOnUncategorize';
 
 export default () => {
   return new EventPublisher();
@@ -212,6 +213,9 @@ export const susbcribers = () => {
     SyncItemTaxRateOnEditTaxSubscriber,
 
     // Plaid
-    PlaidUpdateTransactionsOnItemCreatedSubscriber
+    PlaidUpdateTransactionsOnItemCreatedSubscriber,
+
+    // Cashflow
+    DeleteCashflowTransactionOnUncategorize,
   ];
 };

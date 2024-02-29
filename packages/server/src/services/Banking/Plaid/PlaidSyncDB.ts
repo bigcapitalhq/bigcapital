@@ -9,7 +9,7 @@ import {
   transformPlaidTrxsToCashflowCreate,
 } from './utils';
 import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
-import DeleteCashflowTransactionService from '@/services/Cashflow/DeleteCashflowTransactionService';
+import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 const CONCURRENCY_ASYNC = 10;
@@ -26,7 +26,7 @@ export class PlaidSyncDb {
   private createCashflowTransactionService: NewCashflowTransactionService;
 
   @Inject()
-  private deleteCashflowTransactionService: DeleteCashflowTransactionService;
+  private deleteCashflowTransactionService: DeleteCashflowTransaction;
 
   /**
    * Syncs the plaid accounts to the system accounts.

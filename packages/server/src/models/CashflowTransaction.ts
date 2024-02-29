@@ -12,6 +12,7 @@ export default class CashflowTransaction extends TenantModel {
   transactionType: string;
   amount: number;
   exchangeRate: number;
+  uncategorize: boolean;
 
   /**
    * Table name.

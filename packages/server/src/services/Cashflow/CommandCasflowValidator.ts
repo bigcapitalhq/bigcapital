@@ -4,6 +4,7 @@ import { IAccount } from '@/interfaces';
 import { getCashflowTransactionType } from './utils';
 import { ServiceError } from '@/exceptions';
 import { CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
+import CashflowTransaction from '@/models/CashflowTransaction';
 
 @Service()
 export class CommandCashflowValidator {
@@ -46,4 +47,28 @@ export class CommandCashflowValidator {
     }
     return transformedType;
   };
+
+  /**
+   * Validate the given transaction should be categorized.
+   * @param {CashflowTransaction} cashflowTransaction
+   */
+  public validateTransactionShouldCategorized(
+    cashflowTransaction: CashflowTransaction
+  ) {
+    if (!cashflowTransaction.uncategorize) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+    }
+  }
+
+  /**
+   * Validate the given transcation shouldn't be categorized.
+   * @param {CashflowTransaction} cashflowTransaction
+   */
+  public validateTransactionShouldNotCategorized(
+    cashflowTransaction: CashflowTransaction
+  ) {
+    if (cashflowTransaction.uncategorize) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+    }
+  }
 }

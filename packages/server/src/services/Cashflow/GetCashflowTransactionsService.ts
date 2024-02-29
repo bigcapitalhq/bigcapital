@@ -4,16 +4,12 @@ import { CashflowTransactionTransformer } from './CashflowTransactionTransformer
 import { ERRORS } from './constants';
 import { ICashflowTransaction } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import I18nService from '@/services/I18n/I18nService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export default class GetCashflowTransactionsService {
   @Inject()
   private tenancy: HasTenancyService;
-
-  @Inject()
-  private i18nService: I18nService;
 
   @Inject()
   private transfromer: TransformerInjectable;
