@@ -5,6 +5,7 @@ exports.up = function (knex) {
       table.increments('id');
       table.date('date').index();
       table.decimal('amount');
+      table.string('currency_code');
       table.string('reference_no').index();
       table
         .integer('account_id')

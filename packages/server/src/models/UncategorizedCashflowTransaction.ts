@@ -22,23 +22,42 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
    * Retrieves the withdrawal amount.
    * @returns {number}
    */
-  public withdrawal() {
-    return this.amount > 0 ? Math.abs(this.amount) : 0;
+  public get withdrawal() {
+    return this.amount < 0 ? Math.abs(this.amount) : 0;
   }
 
   /**
    * Retrieves the deposit amount.
    * @returns {number}
    */
-  public deposit() {
-    return this.amount < 0 ? Math.abs(this.amount) : 0;
+  public get deposit(): number {
+    return this.amount > 0 ? Math.abs(this.amount) : 0;
+  }
+
+  /**
+   * Detarmines whether the transaction is deposit transaction.
+   */
+  public get isDepositTransaction(): boolean {
+    return 0 < this.deposit;
+  }
+
+  /**
+   * Detarmines whether the transaction is withdrawal transaction.
+   */
+  public get isWithdrawalTransaction(): boolean {
+    return 0 < this.withdrawal;
   }
 
   /**
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['withdrawal', 'deposit'];
+    return [
+      'withdrawal',
+      'deposit',
+      'isDepositTransaction',
+      'isWithdrawalTransaction',
+    ];
   }
 
   /**

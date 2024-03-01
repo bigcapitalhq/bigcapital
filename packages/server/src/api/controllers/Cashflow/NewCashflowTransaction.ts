@@ -1,5 +1,5 @@
 import { Service, Inject } from 'typedi';
-import { check } from 'express-validator';
+import { check, oneOf } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
@@ -75,14 +75,16 @@ export default class NewCashflowTransactionController extends BaseController {
   public get categorizeCashflowTransactionValidationSchema() {
     return [
       check('date').exists().isISO8601().toDate(),
-
-      check('to_account_id').exists().isInt().toInt(),
-      check('from_account_id').exists().isInt().toInt(),
-
+      oneOf([
+        check('to_account_id').exists().isInt().toInt(),
+        check('from_account_id').exists().isInt().toInt(),
+      ]),
+      check('transaction_number').optional(),
       check('transaction_type').exists(),
       check('reference_no').optional(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
       check('description').optional(),
+      check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -125,7 +127,7 @@ export default class NewCashflowTransactionController extends BaseController {
     const ownerContributionDTO = this.matchedBodyData(req);
 
     try {
-      const { cashflowTransaction } =
+      const cashflowTransaction =
         await this.newCashflowTranscationService.newCashflowTransaction(
           tenantId,
           ownerContributionDTO,
@@ -299,6 +301,16 @@ export default class NewCashflowTransactionController extends BaseController {
               data: { ...error.payload },
             },
           ],
+        });
+      }
+      if (error.errorType === 'UNCATEGORIZED_TRANSACTION_TYPE_INVALID') {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'UNCATEGORIZED_TRANSACTION_TYPE_INVALID',
+              code: 4100,   
+            }
+          ]
         });
       }
     }

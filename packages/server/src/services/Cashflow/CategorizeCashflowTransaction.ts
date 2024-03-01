@@ -12,6 +12,7 @@ import { Knex } from 'knex';
 import { transformCategorizeTransToCashflow } from './utils';
 import { CommandCashflowValidator } from './CommandCasflowValidator';
 import NewCashflowTransactionService from './NewCashflowTransactionService';
+import { TransferAuthorizationGuaranteeDecision } from 'plaid';
 
 @Service()
 export class CategorizeCashflowTransaction {
@@ -50,6 +51,12 @@ export class CategorizeCashflowTransaction {
     // Validates the transaction shouldn't be categorized before.
     this.commandValidators.validateTransactionShouldNotCategorized(transaction);
 
+    // Validate the uncateogirzed transaction if it's deposit the transaction direction
+    // should `IN` and the same thing if it's withdrawal the direction should be OUT.
+    this.commandValidators.validateUncategorizeTransactionType(
+      transaction,
+      categorizeDTO.transactionType
+    );
     // Edits the cashflow transaction under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTransactionCategorizing` event.
