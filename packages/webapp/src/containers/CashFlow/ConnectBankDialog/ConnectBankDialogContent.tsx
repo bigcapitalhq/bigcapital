@@ -1,30 +1,51 @@
-import { Button } from '@blueprintjs/core';
-import { FFormGroup, FSelect } from '@/components';
-import { useFormikContext } from 'formik';
+// @ts-nocheck
+import styled from 'styled-components';
+import { Stack } from '@/components';
+import { TellerIcon } from '../Icons/TellerIcon';
+import { YodleeIcon } from '../Icons/YodleeIcon';
+import { PlaidIcon } from '../Icons/PlaidIcon';
+import { BankServiceCard } from './ConnectBankServiceCard';
+
+const TopDesc = styled('p')`
+  margin-bottom: 20px;
+  color: #5f6b7c;
+`;
 
 export function ConnectBankDialogContent() {
-  const { isSubmitting } = useFormikContext();
-
   return (
     <div>
-      <FFormGroup
-        label={'Banking Syncing Service Provider'}
-        name={'serviceProvider'}
-      >
-        <FSelect
-          name={'serviceProvider'}
-          valueAccessor={'key'}
-          textAccessor={'label'}
-          popoverProps={{ minimal: true }}
-          items={BankFeedsServiceProviders}
-        />
-      </FFormGroup>
+      <TopDesc>
+        Contrary to popular belief, Lorem Ipsum is not simply random text. It
+        has roots in a piece of classical Latin literature
+      </TopDesc>
 
-      <Button type={'submit'} loading={isSubmitting}>
-        Connect
-      </Button>
+      <Stack>
+        <BankServiceCard
+          title={'Plaid (US, UK & Austrial)'}
+          icon={<PlaidIcon />}
+        >
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It
+          has roots in a piece of classical Latin literature.
+        </BankServiceCard>
+
+        <BankServiceCard
+          title={'Teller (US, UK & Austrial) — Soon'}
+          icon={<TellerIcon />}
+          disabled
+        >
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It
+          has roots in a piece of classical Latin literature.
+        </BankServiceCard>
+
+        <BankServiceCard
+          title={'Yodlee (US, UK & Austrial) — Soon'}
+          icon={<YodleeIcon />}
+          disabled
+        >
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It
+          has roots in a piece of classical Latin literature.
+        </BankServiceCard>
+      </Stack>
     </div>
   );
 }
-
-export const BankFeedsServiceProviders = [{ label: 'Plaid', key: 'plaid' }];
