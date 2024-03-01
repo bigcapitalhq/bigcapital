@@ -15,35 +15,32 @@ export function ConnectBankDialogContent() {
   return (
     <div>
       <TopDesc>
-        Contrary to popular belief, Lorem Ipsum is not simply random text. It
-        has roots in a piece of classical Latin literature
+        Connect your bank accounts and fetch the bank transactions using
+        one of our supported third-party service providers.
       </TopDesc>
 
       <Stack>
         <BankServiceCard
-          title={'Plaid (US, UK & Austrial)'}
+          title={'Plaid (US, UK & Canada)'}
           icon={<PlaidIcon />}
         >
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature.
+          Plaid gives the connection to 12,000 financial institutions across US, UK and Canada.
         </BankServiceCard>
 
         <BankServiceCard
-          title={'Teller (US, UK & Austrial) — Soon'}
+          title={'Teller (US) — Soon'}
           icon={<TellerIcon />}
           disabled
         >
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature.
+          Connect instantly with more than 5,000 financial institutions across US.
         </BankServiceCard>
 
         <BankServiceCard
-          title={'Yodlee (US, UK & Austrial) — Soon'}
+          title={'Yodlee (Global) — Soon'}
           icon={<YodleeIcon />}
           disabled
         >
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature.
+          Connect instantly with a global network of financial institutions.
         </BankServiceCard>
       </Stack>
     </div>
