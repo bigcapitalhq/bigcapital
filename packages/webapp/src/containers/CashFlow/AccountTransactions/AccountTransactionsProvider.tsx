@@ -7,12 +7,18 @@ import {
   useAccountTransactionsInfinity,
   useCashflowAccounts,
   useAccount,
+  useAccountUncategorizedTransactionsInfinity,
 } from '@/hooks/query';
+import { useAppQueryString } from '@/hooks';
 
 const AccountTransactionsContext = React.createContext();
 
 function flattenInfinityPages(data) {
   return flatten(map(data.pages, (page) => page.transactions));
+}
+
+function flattenInfinityPagesData(data) {
+  return flatten(map(data.pages, (page) => page.data));
 }
 
 /**
@@ -21,6 +27,13 @@ function flattenInfinityPages(data) {
 function AccountTransactionsProvider({ query, ...props }) {
   const { id } = useParams();
   const accountId = parseInt(id, 10);
+
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const filterTab = locationQuery?.filter || 'all';
+  const setFilterTab = (value: stirng) => {
+    setLocationQuery({ filter: value });
+  };
 
   // Fetch cashflow account transactions list
   const {
@@ -31,10 +44,32 @@ function AccountTransactionsProvider({ query, ...props }) {
     fetchNextPage: fetchNextTransactionsPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useAccountTransactionsInfinity(accountId, {
-    page_size: 50,
-    account_id: accountId,
-  });
+  } = useAccountTransactionsInfinity(
+    accountId,
+    {
+      page_size: 50,
+      account_id: accountId,
+    },
+    {
+      enabled: filterTab === 'all' || filterTab === 'dashboard',
+    },
+  );
+
+  const {
+    data: uncategorizedTransactionsPage,
+    isFetching: isUncategorizedTransactionFetching,
+    isLoading: isUncategorizedTransactionsLoading,
+    isSuccess: isUncategorizedTransactionsSuccess,
+    fetchNextPage: fetchNextUncategorizedTransactionsPage,
+  } = useAccountUncategorizedTransactionsInfinity(
+    accountId,
+    {
+      page_size: 50,
+    },
+    {
+      enabled: filterTab === 'uncategorized',
+    },
+  );
 
   // Memorized the cashflow account transactions.
   const cashflowTransactions = React.useMemo(
@@ -43,6 +78,15 @@ function AccountTransactionsProvider({ query, ...props }) {
         ? flattenInfinityPages(cashflowTransactionsPages)
         : [],
     [cashflowTransactionsPages, isCashflowTransactionsSuccess],
+  );
+
+  // Memorized the cashflow account transactions.
+  const uncategorizedTransactions = React.useMemo(
+    () =>
+      isUncategorizedTransactionsSuccess
+        ? flattenInfinityPagesData(uncategorizedTransactionsPage)
+        : [],
+    [uncategorizedTransactionsPage, isUncategorizedTransactionsSuccess],
   );
 
   // Fetch cashflow accounts.
@@ -78,6 +122,12 @@ function AccountTransactionsProvider({ query, ...props }) {
     isCashFlowAccountsLoading,
     isCurrentAccountFetching,
     isCurrentAccountLoading,
+
+    filterTab,
+    setFilterTab,
+
+    uncategorizedTransactions,
+    isUncategorizedTransactionFetching
   };
 
   return (

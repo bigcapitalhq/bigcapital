@@ -1,18 +1,20 @@
 // @ts-nocheck
-import React from 'react';
+import React, { Suspense } from 'react';
 import styled from 'styled-components';
+import { Spinner } from '@blueprintjs/core';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import { DashboardPageContent } from '@/components';
 
 import AccountTransactionsActionsBar from './AccountTransactionsActionsBar';
-import AccountTransactionsDataTable from './AccountTransactionsDataTable';
-import { AccountTransactionsProvider } from './AccountTransactionsProvider';
+import {
+  AccountTransactionsProvider,
+  useAccountTransactionsContext,
+} from './AccountTransactionsProvider';
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
 import { AccountTransactionsProgressBar } from './components';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
-import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
 
 /**
  * Account transactions list.
@@ -27,13 +29,9 @@ function AccountTransactionsList() {
       <DashboardPageContent>
         <AccountTransactionsFilterTabs />
 
-        <Box>
-          <AccountTransactionsUncategorizeFilter />
-
-          <CashflowTransactionsTableCard>
-            <AccountTransactionsDataTable />
-          </CashflowTransactionsTableCard>
-        </Box>
+        <Suspense fallback={<Spinner size={30} />}>
+          <AccountTransactionsContent />
+        </Suspense>
       </DashboardPageContent>
     </AccountTransactionsProvider>
   );
@@ -41,14 +39,20 @@ function AccountTransactionsList() {
 
 export default AccountTransactionsList;
 
-const CashflowTransactionsTableCard = styled.div`
-  border: 2px solid #f0f0f0;
-  border-radius: 10px;
-  padding: 30px 18px;
-  background: #fff;
-  flex: 0 1;
-`;
+const AccountsTransactionsAll = React.lazy(
+  () => import('./AccountsTransactionsAll'),
+);
 
-const Box = styled.div`
-  margin: 30px 15px;
-`;
+const AccountsTransactionsUncategorized = React.lazy(
+  () => import('./AllTransactionsUncategorized'),
+);
+
+function AccountTransactionsContent() {
+  const { filterTab } = useAccountTransactionsContext();
+
+  return filterTab === 'uncategorized' ? (
+    <AccountsTransactionsUncategorized />
+  ) : (
+    <AccountsTransactionsAll />
+  );
+}

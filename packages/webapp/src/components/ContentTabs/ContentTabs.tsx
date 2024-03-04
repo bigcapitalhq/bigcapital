@@ -6,7 +6,6 @@ import { useUncontrolled } from '@/hooks/useUncontrolled';
 const ContentTabsRoot = styled('div')`
   display: flex;
   gap: 10px;
-  
 `;
 interface ContentTabItemRootProps {
   active?: boolean;
@@ -62,9 +61,10 @@ const ContentTabsItem = ({
   title,
   description,
   active,
+  onClick,
 }: ContentTabsItemProps) => {
   return (
-    <ContentTabItemRoot active={active}>
+    <ContentTabItemRoot active={active} onClick={onClick}>
       <ContentTabTitle>{title}</ContentTabTitle>
       <ContentTabDesc>{description}</ContentTabDesc>
     </ContentTabItemRoot>
@@ -84,7 +84,7 @@ export function ContentTabs({
   value,
   onChange,
   children,
-  className
+  className,
 }: ContentTabsProps) {
   const [localValue, handleItemChange] = useUncontrolled<string>({
     initialValue,

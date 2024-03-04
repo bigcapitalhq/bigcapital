@@ -104,8 +104,8 @@ export function useDeleteCashflowTransaction(props) {
 export function useAccountTransactionsInfinity(
   accountId,
   query,
-  axios,
   infinityProps,
+  axios,
 ) {
   const apiRequest = useApiRequest();
 
@@ -116,6 +116,45 @@ export function useAccountTransactionsInfinity(
         ...axios,
         method: 'get',
         url: `/api/financial_statements/cashflow-account-transactions`,
+        params: { page: pageParam, ...query },
+      });
+      return response.data;
+    },
+    {
+      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
+      getNextPageParam: (lastPage) => {
+        const { pagination } = lastPage;
+
+        return pagination.total > pagination.page_size * pagination.page
+          ? lastPage.pagination.page + 1
+          : undefined;
+      },
+      ...infinityProps,
+    },
+  );
+}
+
+/**
+ * Retrieve account transactions infinity scrolling.
+ * @param {number} accountId
+ * @param {*} axios
+ * @returns
+ */
+export function useAccountUncategorizedTransactionsInfinity(
+  accountId,
+  query,
+  infinityProps,
+  axios,
+) {
+  const apiRequest = useApiRequest();
+
+  return useInfiniteQuery(
+    [t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY, accountId],
+    async ({ pageParam = 1 }) => {
+      const response = await apiRequest.http({
+        ...axios,
+        method: 'get',
+        url: `/api/cashflow/transactions/${accountId}/uncategorized`,
         params: { page: pageParam, ...query },
       });
       return response.data;
