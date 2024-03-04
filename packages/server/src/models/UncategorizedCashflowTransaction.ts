@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 import TenantModel from 'models/TenantModel';
 import { Model } from 'objection';
+import Account from './Account';
 
 export default class UncategorizedCashflowTransaction extends TenantModel {
   amount: number;
@@ -79,5 +80,30 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
         },
       },
     };
+  }
+
+  /**
+   *
+   * @param queryContext
+   */
+  public async $afterInsert(queryContext) {
+    await super.$afterInsert(queryContext);
+
+    // Increments the uncategorized transactions count of the associated account.
+    await Account.query(queryContext.transaction)
+      .findById(this.accountId)
+      .increment('uncategorized_transactions', 1);
+  }
+
+  /**
+   *
+   * @param queryContext
+   */
+  public async $afterDelete(queryContext) {
+    await super.$afterDelete(queryContext);
+
+    await Account.query()
+      .findById(this.accountId)
+      .decrement('uncategorized_transactions', 1);
   }
 }

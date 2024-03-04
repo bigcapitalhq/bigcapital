@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import UnitOfWork from '../UnitOfWork';
+import UnitOfWork, { IsolationLevel } from '../UnitOfWork';
 import { Knex } from 'knex';
 import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 
@@ -21,15 +21,20 @@ export class CreateUncategorizedTransaction {
     tenantId: number,
     createDTO: CreateUncategorizedTransactionDTO
   ) {
-    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
+    const { UncategorizedCashflowTransaction, Account } =
+      this.tenancy.models(tenantId);
 
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      const transaction = await UncategorizedCashflowTransaction.query(
-        trx
-      ).insertAndFetch({
-        ...createDTO,
-      });
-      return transaction;
-    });
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        const transaction = await UncategorizedCashflowTransaction.query(
+          trx
+        ).insertAndFetch({
+          ...createDTO,
+        });
+        
+        return transaction;
+      },
+    );
   }
 }

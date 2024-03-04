@@ -84,6 +84,18 @@ function AccountBankBalanceItem() {
   );
 }
 
+function AccountNumberItem() {
+  const { currentAccount } = useAccountTransactionsContext();
+
+  if (!currentAccount.account_mask) return null;
+
+  return (
+    <AccountBalanceItemWrap>
+      Account Number: xxx{currentAccount.account_mask}
+    </AccountBalanceItemWrap>
+  );
+}
+
 function AccountTransactionsDetailsBarSkeleton() {
   return (
     <React.Fragment>
@@ -101,6 +113,7 @@ function AccountTransactionsDetailsContent() {
   return (
     <React.Fragment>
       <AccountSwitchItem />
+      <AccountNumberItem />
       <AccountBalanceItem />
       <AccountBankBalanceItem />
     </React.Fragment>

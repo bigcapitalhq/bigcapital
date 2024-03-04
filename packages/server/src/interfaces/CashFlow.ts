@@ -264,6 +264,7 @@ export interface CreateUncategorizedTransactionDTO {
   accountId: number;
   amount: number;
   currencyCode: string;
+  payee?: string;
   description?: string;
   referenceNo?: string | null;
   plaidTransactionId?: string | null;

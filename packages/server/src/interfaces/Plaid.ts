@@ -38,7 +38,7 @@ export interface PlaidTransaction {
   iso_currency_code: string;
   transaction_id: string;
   transaction_type: string;
-  payment_meta: { reference_number: string | null };
+  payment_meta: { reference_number: string | null; payee: string | null };
 }
 
 export interface PlaidFetchedTransactionsUpdates {

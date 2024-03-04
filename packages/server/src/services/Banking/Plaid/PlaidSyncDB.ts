@@ -90,7 +90,7 @@ export class PlaidSyncDb {
           tenantId,
           uncategoriedDTO
         ),
-      { concurrency: CONCURRENCY_ASYNC }
+      { concurrency: 1 }
     );
   }
 

@@ -29,9 +29,12 @@ export class UncategorizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected formattetDepositAmount(transaction) {
-    return formatNumber(transaction.deposit, {
-      currencyCode: transaction.currencyCode,
-    });
+    if (transaction.isDepositTransaction) {
+      return formatNumber(transaction.deposit, {
+        currencyCode: transaction.currencyCode,
+      });
+    }
+    return '';
   }
 
   /**
@@ -40,8 +43,11 @@ export class UncategorizedTransactionTransformer extends Transformer {
    * @returns {string}
    */
   protected formattedWithdrawalAmount(transaction) {
-    return formatNumber(transaction.withdrawal, {
-      currencyCode: transaction.currencyCode,
-    });
+    if (transaction.isWithdrawalTransaction) {
+      return formatNumber(transaction.withdrawal, {
+        currencyCode: transaction.currencyCode,
+      });
+    }
+    return '';
   }
 }

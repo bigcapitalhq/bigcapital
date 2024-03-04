@@ -44,8 +44,9 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
   ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
-      description: plaidTranasction.name,
       amount: plaidTranasction.amount,
+      description: plaidTranasction.name,
+      payee: plaidTranasction.payment_meta?.payee,
       currencyCode: plaidTranasction.iso_currency_code,
       accountId: cashflowAccountId,
       referenceNo: plaidTranasction.payment_meta?.reference_number,

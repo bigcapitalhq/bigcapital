@@ -7,6 +7,7 @@ exports.up = function (knex) {
       table.decimal('amount');
       table.string('currency_code');
       table.string('reference_no').index();
+      table.string('payee');
       table
         .integer('account_id')
         .unsigned()
