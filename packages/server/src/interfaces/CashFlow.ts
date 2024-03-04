@@ -257,3 +257,14 @@ export interface IUncategorizedCashflowTransaction {
   categorizeRefId: number;
   categorized: boolean;
 }
+
+
+export interface CreateUncategorizedTransactionDTO {
+  date: Date | string;
+  accountId: number;
+  amount: number;
+  currencyCode: string;
+  description?: string;
+  referenceNo?: string | null;
+  plaidTransactionId?: string | null;
+}

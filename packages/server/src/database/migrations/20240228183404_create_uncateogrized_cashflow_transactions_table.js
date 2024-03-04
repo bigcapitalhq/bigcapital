@@ -16,6 +16,7 @@ exports.up = function (knex) {
       table.string('categorize_ref_type');
       table.integer('categorize_ref_id').unsigned();
       table.boolean('categorized').defaultTo(false);
+      table.string('plaid_transaction_id');
       table.timestamps();
     }
   );

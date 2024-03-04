@@ -13,13 +13,15 @@ export class GetUncategorizedTransactions {
 
   /**
    * Retrieves the uncategorized cashflow transactions.
-   * @param {number} tenantId
+   * @param {number} tenantId - Tenant id.
+   * @param {number} accountId - Account Id.
    */
-  public async getTransactions(tenantId: number) {
+  public async getTransactions(tenantId: number, accountId: number) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     const { results, pagination } =
       await UncategorizedCashflowTransaction.query()
+        .where('accountId', accountId)
         .where('categorized', false)
         .withGraphFetched('account')
         .pagination(0, 10);

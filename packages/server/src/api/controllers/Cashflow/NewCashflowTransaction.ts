@@ -23,7 +23,7 @@ export default class NewCashflowTransactionController extends BaseController {
     const router = Router();
 
     router.get(
-      '/transactions/uncategorized',
+      '/transactions/:id/uncategorized',
       this.asyncMiddleware(this.getUncategorizedCashflowTransactions),
       this.catchServiceErrors
     );
@@ -237,10 +237,12 @@ export default class NewCashflowTransactionController extends BaseController {
     next: NextFunction
   ) => {
     const { tenantId } = req;
+    const { id: accountId } = req.params;
     
     try {
       const data = await this.cashflowApplication.getUncategorizedTransactions(
-        tenantId
+        tenantId,
+        accountId
       );
 
       return res.status(200).send(data);

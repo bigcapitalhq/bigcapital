@@ -4,10 +4,13 @@ import { UncategorizeCashflowTransaction } from './UncategorizeCashflowTransacti
 import { CategorizeCashflowTransaction } from './CategorizeCashflowTransaction';
 import {
   CategorizeTransactionAsExpenseDTO,
+  CreateUncategorizedTransactionDTO,
   ICategorizeCashflowTransactioDTO,
+  IUncategorizedCashflowTransaction,
 } from '@/interfaces';
 import { CategorizeTransactionAsExpense } from './CategorizeTransactionAsExpense';
 import { GetUncategorizedTransactions } from './GetUncategorizedTransactions';
+import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
 
 @Service()
 export class CashflowApplication {
@@ -26,6 +29,9 @@ export class CashflowApplication {
   @Inject()
   private getUncategorizedTransactionsService: GetUncategorizedTransactions;
 
+  @Inject()
+  private createUncategorizedTransactionService: CreateUncategorizedTransaction;
+
   /**
    * Deletes the given cashflow transaction.
    * @param {number} tenantId
@@ -36,6 +42,22 @@ export class CashflowApplication {
     return this.deleteTransactionService.deleteCashflowTransaction(
       tenantId,
       cashflowTransactionId
+    );
+  }
+
+  /**
+   * Creates a new uncategorized cash transaction.
+   * @param {number} tenantId
+   * @param {CreateUncategorizedTransactionDTO} createUncategorizedTransactionDTO
+   * @returns {IUncategorizedCashflowTransaction}
+   */
+  public createUncategorizedTransaction(
+    tenantId: number,
+    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO
+  ) {
+    return this.createUncategorizedTransactionService.create(
+      tenantId,
+      createUncategorizedTransactionDTO
     );
   }
 
@@ -98,7 +120,10 @@ export class CashflowApplication {
    * @param {number} tenantId
    * @returns {}
    */
-  public getUncategorizedTransactions(tenantId: number) {
-    return this.getUncategorizedTransactionsService.getTransactions(tenantId);
+  public getUncategorizedTransactions(tenantId: number, accountId: number) {
+    return this.getUncategorizedTransactionsService.getTransactions(
+      tenantId,
+      accountId
+    );
   }
 }

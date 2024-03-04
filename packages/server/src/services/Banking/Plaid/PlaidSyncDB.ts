@@ -11,6 +11,7 @@ import {
 import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
 import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 const CONCURRENCY_ASYNC = 10;
 
@@ -21,6 +22,9 @@ export class PlaidSyncDb {
 
   @Inject()
   private createAccountService: CreateAccount;
+
+  @Inject()
+  private cashflowApp: CashflowApplication;
 
   @Inject()
   private createCashflowTransactionService: NewCashflowTransactionService;
@@ -75,15 +79,16 @@ export class PlaidSyncDb {
       cashflowAccount.id,
       openingEquityBalance.id
     );
-    const accountsCashflowDTO = R.map(transformTransaction)(plaidTranasctions);
+    const uncategorizedTransDTOs =
+      R.map(transformTransaction)(plaidTranasctions);
 
     // Creating account transaction queue.
     await bluebird.map(
-      accountsCashflowDTO,
-      (cashflowDTO) =>
-        this.createCashflowTransactionService.newCashflowTransaction(
+      uncategorizedTransDTOs,
+      (uncategoriedDTO) =>
+        this.cashflowApp.createUncategorizedTransaction(
           tenantId,
-          cashflowDTO
+          uncategoriedDTO
         ),
       { concurrency: CONCURRENCY_ASYNC }
     );

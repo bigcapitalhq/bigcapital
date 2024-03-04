@@ -1,7 +1,9 @@
 import * as R from 'ramda';
 import {
+  CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
   ICashflowNewCommandDTO,
+  IUncategorizedCashflowTransaction,
   PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';
@@ -32,30 +34,22 @@ export const transformPlaidAccountToCreateAccount = (
  * @param {number} cashflowAccountId - Cashflow account ID.
  * @param {number} creditAccountId - Credit account ID.
  * @param {PlaidTransaction} plaidTranasction - Plaid transaction.
- * @returns {ICashflowNewCommandDTO}
+ * @returns {CreateUncategorizedTransactionDTO}
  */
 export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
     creditAccountId: number,
     plaidTranasction: PlaidTransaction
-  ): ICashflowNewCommandDTO => {
+  ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
-
-      transactionType: 'OwnerContribution',
       description: plaidTranasction.name,
-
       amount: plaidTranasction.amount,
-      exchangeRate: 1,
       currencyCode: plaidTranasction.iso_currency_code,
-      creditAccountId,
-      cashflowAccountId,
-
-      // transactionNumber: string;
-      // referenceNo: string;
+      accountId: cashflowAccountId,
+      referenceNo: plaidTranasction.payment_meta?.reference_number,
       plaidTransactionId: plaidTranasction.transaction_id,
-      publish: true,
     };
   }
 );
