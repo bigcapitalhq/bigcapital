@@ -2,8 +2,6 @@ import * as R from 'ramda';
 import {
   CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
-  ICashflowNewCommandDTO,
-  IUncategorizedCashflowTransaction,
   PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';
@@ -13,21 +11,21 @@ import {
  * @param {PlaidAccount} plaidAccount
  * @returns {IAccountCreateDTO}
  */
-export const transformPlaidAccountToCreateAccount = (
-  plaidAccount: PlaidAccount
-): IAccountCreateDTO => {
-  return {
-    name: plaidAccount.name,
-    code: '',
-    description: plaidAccount.official_name,
-    currencyCode: plaidAccount.balances.iso_currency_code,
-    accountType: 'cash',
-    active: true,
-    plaidAccountId: plaidAccount.account_id,
-    bankBalance: plaidAccount.balances.current,
-    accountMask: plaidAccount.mask,
-  };
-};
+export const transformPlaidAccountToCreateAccount = R.curry(
+  (institution: any, plaidAccount: PlaidAccount): IAccountCreateDTO => {
+    return {
+      name: `${institution.name} - ${plaidAccount.name}`,
+      code: '',
+      description: plaidAccount.official_name,
+      currencyCode: plaidAccount.balances.iso_currency_code,
+      accountType: 'cash',
+      active: true,
+      plaidAccountId: plaidAccount.account_id,
+      bankBalance: plaidAccount.balances.current,
+      accountMask: plaidAccount.mask,
+    };
+  }
+);
 
 /**
  * Transformes the plaid transaction to cashflow create DTO.

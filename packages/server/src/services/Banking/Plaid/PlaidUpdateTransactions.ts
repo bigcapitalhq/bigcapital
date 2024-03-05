@@ -25,17 +25,31 @@ export class PlaidUpdateTransactions {
     const request = { access_token: accessToken };
     const plaidInstance = new PlaidClientWrapper();
     const {
-      data: { accounts },
+      data: { accounts, item },
     } = await plaidInstance.accountsGet(request);
 
+    const plaidAccountsIds = accounts.map((a) => a.account_id);
+
+    const {
+      data: { institution },
+    } = await plaidInstance.institutionsGetById({
+      institution_id: item.institution_id,
+      country_codes: ['US', 'UK'],
+    });
     // Update the DB.
-    await this.plaidSync.syncBankAccounts(tenantId, accounts);
+    await this.plaidSync.syncBankAccounts(tenantId, accounts, institution);
     await this.plaidSync.syncAccountsTransactions(
       tenantId,
       added.concat(modified)
     );
     await this.plaidSync.syncRemoveTransactions(tenantId, removed);
     await this.plaidSync.syncTransactionsCursor(tenantId, plaidItemId, cursor);
+
+    // Update the last feeds updated at of the updated accounts.
+    await this.plaidSync.updateLastFeedsUpdatedAt(tenantId, plaidAccountsIds);
+
+    // Turn on the accounts feeds flag.
+    await this.plaidSync.updateAccountsFeedsActive(tenantId, plaidAccountsIds);
 
     return {
       addedCount: added.length,
