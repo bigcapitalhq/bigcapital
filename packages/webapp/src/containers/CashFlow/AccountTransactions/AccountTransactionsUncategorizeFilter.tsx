@@ -11,6 +11,15 @@ const Root = styled.div`
 
 const FilterTag = styled(Tag)`
   min-height: 26px;
+
+  &.bp4-minimal:not([class*='bp4-intent-']) {
+    background: #fff;
+    border: 1px solid #e1e2e8;
+
+    &.bp4-interactive:hover {
+      background-color: rgba(143, 153, 168, 0.05);
+    }
+  }
 `;
 
 export function AccountTransactionsUncategorizeFilter() {

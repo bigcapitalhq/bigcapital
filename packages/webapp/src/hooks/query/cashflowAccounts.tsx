@@ -211,3 +211,23 @@ export function useRefreshCashflowTransactions() {
     },
   };
 }
+
+/**
+ *
+ */
+export function useUncategorizedTransaction(
+  uncategorizedTranasctionId: nunber,
+  props,
+) {
+  return useRequestQuery(
+    [t.CASHFLOW_UNCAATEGORIZED_TRANSACTION, uncategorizedTranasctionId],
+    {
+      method: 'get',
+      url: `cashflow/transactions/uncategorized/${uncategorizedTranasctionId}`,
+    },
+    {
+      select: (res) => res.data?.data,
+      ...props,
+    },
+  );
+}

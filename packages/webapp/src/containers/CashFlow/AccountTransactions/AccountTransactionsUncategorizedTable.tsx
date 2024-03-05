@@ -25,6 +25,7 @@ import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
+import { DRAWERS } from '@/constants/drawers';
 
 /**
  * Account transactions data table.
@@ -56,7 +57,11 @@ function AccountTransactionsDataTable({
   const handleViewDetailCashflowTransaction = (referenceType) => {};
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {};
+  const handleCellClick = (cell, event) => {
+    openDrawer(DRAWERS.CATEGORIZE_TRANSACTION, {
+      uncategorizedTransactionId: cell.row.original.id,
+    });
+  };
 
   return (
     <CashflowTransactionsTable
@@ -132,7 +137,7 @@ const CashflowTransactionsTable = styled(DashboardConstrantTable)`
       }
 
       .td-description {
-        color: #5F6B7C;
+        color: #5f6b7c;
       }
     }
   }

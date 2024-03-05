@@ -23,6 +23,11 @@ export default class NewCashflowTransactionController extends BaseController {
     const router = Router();
 
     router.get(
+      '/transactions/uncategorized/:id',
+      this.asyncMiddleware(this.getUncategorizedCashflowTransaction),
+      this.catchServiceErrors
+    );
+    router.get(
       '/transactions/:id/uncategorized',
       this.asyncMiddleware(this.getUncategorizedCashflowTransactions),
       this.catchServiceErrors
@@ -220,6 +225,31 @@ export default class NewCashflowTransactionController extends BaseController {
       return res.status(200).send({
         message: 'The cashflow transaction has been created successfully.',
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the uncategorized cashflow transactions.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   */
+  public getUncategorizedCashflowTransaction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: transactionId } = req.params;
+    
+    try {
+      const data = await this.cashflowApplication.getUncategorizedTransaction(
+        tenantId,
+        transactionId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

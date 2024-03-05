@@ -11,6 +11,7 @@ import {
 import { CategorizeTransactionAsExpense } from './CategorizeTransactionAsExpense';
 import { GetUncategorizedTransactions } from './GetUncategorizedTransactions';
 import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
+import { GetUncategorizedTransaction } from './GetUncategorizedTransaction';
 
 @Service()
 export class CashflowApplication {
@@ -28,6 +29,9 @@ export class CashflowApplication {
 
   @Inject()
   private getUncategorizedTransactionsService: GetUncategorizedTransactions;
+
+  @Inject()
+  private getUncategorizedTransactionService: GetUncategorizedTransaction;
 
   @Inject()
   private createUncategorizedTransactionService: CreateUncategorizedTransaction;
@@ -124,6 +128,22 @@ export class CashflowApplication {
     return this.getUncategorizedTransactionsService.getTransactions(
       tenantId,
       accountId
+    );
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   * @param {number} uncategorizedTransactionId 
+   * @returns 
+   */
+  public getUncategorizedTransaction(
+    tenantId: number,
+    uncategorizedTransactionId: number
+  ) {
+    return this.getUncategorizedTransactionService.getTransaction(
+      tenantId,
+      uncategorizedTransactionId
     );
   }
 }
