@@ -231,3 +231,27 @@ export function useUncategorizedTransaction(
     },
   );
 }
+
+/**
+ * Categorize the cashflow transaction.
+ */
+export function useCategorizeTransaction(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`cashflow/transactions/${id}/categorize`, values),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
+        queryClient.invalidateQueries(t.CASHFLOW_UNCAATEGORIZED_TRANSACTION);
+        queryClient.invalidateQueries(
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+        );
+      },
+      ...props,
+    },
+  );
+}

@@ -80,10 +80,7 @@ export default class NewCashflowTransactionController extends BaseController {
   public get categorizeCashflowTransactionValidationSchema() {
     return [
       check('date').exists().isISO8601().toDate(),
-      oneOf([
-        check('to_account_id').exists().isInt().toInt(),
-        check('from_account_id').exists().isInt().toInt(),
-      ]),
+      check('credit_account_id').exists().isInt().toInt(),
       check('transaction_number').optional(),
       check('transaction_type').exists(),
       check('reference_no').optional(),

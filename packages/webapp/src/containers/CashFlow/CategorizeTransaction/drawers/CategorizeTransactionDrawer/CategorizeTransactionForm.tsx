@@ -1,34 +1,57 @@
 // @ts-nocheck
 import { Formik, Form } from 'formik';
+import styled from 'styled-components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import {
-  EditCategorizeTransactionSchema,
-  CreateCategorizeTransactionSchema,
-} from './CategorizeTransactionForm.schema';
-import { compose, transformToForm } from '@/utils';
+import { CreateCategorizeTransactionSchema } from './CategorizeTransactionForm.schema';
 import { CategorizeTransactionFormContent } from './CategorizeTransactionFormContent';
 import { CategorizeTransactionFormFooter } from './CategorizeTransactionFormFooter';
-
-// Default initial form values.
-const defaultInitialValues = {};
+import { useCategorizeTransaction } from '@/hooks/query';
+import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import { DRAWERS } from '@/constants/drawers';
+import {
+  transformToCategorizeForm,
+  defaultInitialValues,
+  tranformToRequest,
+} from './_utils';
+import { compose } from '@/utils';
+import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { AppToaster } from '@/components';
+import { Intent } from '@blueprintjs/core';
 
 /**
  * Categorize cashflow transaction form dialog content.
  */
 function CategorizeTransactionFormRoot({
-  // #withDialogActions
-  closeDialog,
+  // #withDrawerActions
+  closeDrawer,
 }) {
-  const isNewMode = true;
-
-  // Form validation schema in create and edit mode.
-  const validationSchema = isNewMode
-    ? CreateCategorizeTransactionSchema
-    : EditCategorizeTransactionSchema;
+  const { uncategorizedTransactionId, uncategorizedTransaction } =
+    useCategorizeTransactionBoot();
+  const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
 
   // Callbacks handles form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {};
+  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    const transformedValues = tranformToRequest(values);
 
+    setSubmitting(true);
+    categorizeTransaction([uncategorizedTransactionId, transformedValues])
+      .then(() => {
+        setSubmitting(false);
+        closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
+        
+        AppToaster.show({
+          message: 'The uncategorized transaction has been categorized.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        setSubmitting(false);
+        AppToaster.show({
+          message: 'Something went wrong!',
+          intent: Intent.DANGER,
+        });
+      });
+  };
   // Form initial values in create and edit mode.
   const initialValues = {
     ...defaultInitialValues,
@@ -37,23 +60,37 @@ function CategorizeTransactionFormRoot({
      * values such as `notes` come back from the API as null, so remove those
      * as well.
      */
-    ...transformToForm({}, defaultInitialValues),
+    ...transformToCategorizeForm(uncategorizedTransaction),
   };
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
-      <Form>
-        <CategorizeTransactionFormContent />
-        <CategorizeTransactionFormFooter />
-      </Form>
-    </Formik>
+    <DivRoot>
+      <Formik
+        validationSchema={CreateCategorizeTransactionSchema}
+        initialValues={initialValues}
+        onSubmit={handleFormSubmit}
+      >
+        <Form>
+          <CategorizeTransactionFormContent />
+          <CategorizeTransactionFormFooter />
+        </Form>
+      </Formik>
+    </DivRoot>
   );
 }
 
-export const CategorizeTransactionForm = compose(withDialogActions)(
+export const CategorizeTransactionForm = compose(withDrawerActions)(
   CategorizeTransactionFormRoot,
 );
+
+const DivRoot = styled.div`
+  .bp4-form-group .bp4-form-content {
+    flex: 1 0;
+  }
+  .bp4-form-group .bp4-label {
+    width: 140px;
+  }
+  .bp4-form-group {
+    margin-bottom: 18px;
+  }
+`;

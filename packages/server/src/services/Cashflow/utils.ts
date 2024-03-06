@@ -55,7 +55,7 @@ export const transformCategorizeTransToCashflow = (
     referenceNo: categorizeDTO.referenceNo || uncategorizeModel.referenceNo,
     description: categorizeDTO.description || uncategorizeModel.description,
     cashflowAccountId: uncategorizeModel.accountId,
-    creditAccountId: categorizeDTO.fromAccountId || categorizeDTO.toAccountId,
+    creditAccountId: categorizeDTO.creditAccountId,
     exchangeRate: categorizeDTO.exchangeRate || 1,
     currencyCode: uncategorizeModel.currencyCode,
     amount: uncategorizeModel.amount,

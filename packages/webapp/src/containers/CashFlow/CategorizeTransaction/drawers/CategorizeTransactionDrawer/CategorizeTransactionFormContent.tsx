@@ -1,31 +1,39 @@
 // @ts-nocheck
-import { Position } from '@blueprintjs/core';
+import React from 'react';
 import styled from 'styled-components';
-import {
-  AccountsSelect,
-  FDateInput,
-  FFormGroup,
-  FInputGroup,
-  FSelect,
-  FSuggest,
-  FTextArea,
-} from '@/components';
-import { getAddMoneyInOptions } from '@/constants';
+import { FormGroup } from '@blueprintjs/core';
+import { FFormGroup, FSelect, FSuggest } from '@/components';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+import { useFormikContext } from 'formik';
+import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
 
 // Retrieves the add money in button options.
-const AddMoneyInOptions = getAddMoneyInOptions();
+const MoneyInOptions = getAddMoneyInOptions();
+const MoneyOutOptions = getAddMoneyOutOptions();
 
-const Title = styled('h3')``;
+const Title = styled('h3')`
+  font-size: 20px;
+  font-weight: 400;
+  color: #cd4246;
+`;
 
 export function CategorizeTransactionFormContent() {
+  const { uncategorizedTransaction } = useCategorizeTransactionBoot();
+
+  const transactionTypes = uncategorizedTransaction?.is_deposit_transaction
+    ? MoneyInOptions
+    : MoneyOutOptions;
+
   return (
     <>
-      <Title>$22,583.00</Title>
+      <FormGroup label={'Amount'} inline>
+        <Title>{uncategorizedTransaction.formatted_amount}</Title>
+      </FormGroup>
 
       <FFormGroup name={'category'} label={'Category'} fastField inline>
-        <FSuggest
-          name={'transaction_type'}
-          items={AddMoneyInOptions}
+        <FSelect
+          name={'transactionType'}
+          items={transactionTypes}
           popoverProps={{ minimal: true }}
           valueAccessor={'value'}
           textAccessor={'name'}
@@ -33,58 +41,56 @@ export function CategorizeTransactionFormContent() {
         />
       </FFormGroup>
 
-      <FFormGroup name={'date'} label={'Date'} fastField inline>
-        <FDateInput
-          name={'date'}
-          popoverProps={{ position: Position.BOTTOM, minimal: true }}
-          formatDate={(date) => date.toLocaleDateString()}
-          parseDate={(str) => new Date(str)}
-          inputProps={{ fill: true }}
-        />
-      </FFormGroup>
-
-      <FFormGroup
-        name={'from_account_id'}
-        label={'From Account'}
-        fastField={true}
-        inline
-      >
-        <AccountsSelect
-          name={'from_account_id'}
-          items={[]}
-          fastField={true}
-          fill={true}
-          allowCreate={true}
-        />
-      </FFormGroup>
-
-      <FFormGroup
-        name={'toAccountId'}
-        label={'To Account'}
-        fastField={true}
-        inline
-      >
-        <AccountsSelect
-          name={'to_account_id'}
-          items={[]}
-          fastField={true}
-          fill={true}
-          allowCreate={true}
-        />
-      </FFormGroup>
-
-      <FFormGroup name={'referenceNo'} label={'Reference No.'} fastField inline>
-        <FInputGroup name={'reference_no'} fill />
-      </FFormGroup>
-
-      <FFormGroup name={'description'} label={'Description'} fastField inline>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
-      </FFormGroup>
+      <CategorizeTransactionFormSubContent />
     </>
   );
+}
+
+const CategorizeTransactionOtherIncome = React.lazy(
+  () => import('./MoneyIn/CategorizeTransactionOtherIncome'),
+);
+
+const CategorizeTransactionOwnerContribution = React.lazy(
+  () => import('./MoneyIn/CategorizeTransactionOwnerContribution'),
+);
+
+const CategorizeTransactionTransferFrom = React.lazy(
+  () => import('./MoneyIn/CategorizeTransactionTransferFrom'),
+);
+
+const CategorizeTransactionOtherExpense = React.lazy(
+  () => import('./MoneyOut/CategorizeTransactionOtherExpense'),
+);
+
+const CategorizeTransactionToAccount = React.lazy(
+  () => import('./MoneyOut/CategorizeTransactionToAccount'),
+);
+
+const CategorizeTransactionOwnerDrawings = React.lazy(
+  () => import('./MoneyOut/CategorizeTransactionOwnerDrawings'),
+);
+
+function CategorizeTransactionFormSubContent() {
+  const { values } = useFormikContext();
+
+  // Other expense.
+  if (values.transactionType === 'other_expense') {
+    return <CategorizeTransactionOtherExpense />;
+    // Owner contribution.
+  } else if (values.transactionType === 'owner_contribution') {
+    return <CategorizeTransactionOwnerContribution />;
+    // Other Income.
+  } else if (values.transactionType === 'other_income') {
+    return <CategorizeTransactionOtherIncome />;
+    // Transfer from account.
+  } else if (values.transactionType === 'transfer_from_account') {
+    return <CategorizeTransactionTransferFrom />;
+    // Transfer to account.
+  } else if (values.transactionType === 'transfer_to_account') {
+    return <CategorizeTransactionToAccount />;
+    // Owner drawings.
+  } else if (values.transactionType === 'OwnerDrawing') {
+    return <CategorizeTransactionOwnerDrawings />;
+  }
+  return null;
 }

@@ -8,6 +8,7 @@ export class UncategorizedTransactionTransformer extends Transformer {
    */
   public includeAttributes = (): string[] => {
     return [
+      'formattedAmount',
       'formattedDate',
       'formattetDepositAmount',
       'formattedWithdrawalAmount',
@@ -21,6 +22,17 @@ export class UncategorizedTransactionTransformer extends Transformer {
    */
   public formattedDate(transaction) {
     return this.formatDate(transaction.date);
+  }
+
+  /**
+   * Formatted amount.
+   * @param transaction 
+   * @returns {string}
+   */
+  public formattedAmount(transaction) {
+    return formatNumber(transaction.amount, {
+      currencyCode: transaction.currencyCode,
+    });
   }
 
   /**

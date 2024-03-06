@@ -31,6 +31,7 @@ export default class GetCashflowTransactionsService {
       .withGraphFetched('entries.cashflowAccount')
       .withGraphFetched('entries.creditAccount')
       .withGraphFetched('transactions.account')
+      .orderBy('date', 'DESC')
       .throwIfNotFound();
 
     this.throwErrorCashflowTranscationNotFound(cashflowTransaction);

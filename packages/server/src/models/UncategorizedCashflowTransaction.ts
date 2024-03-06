@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
 import TenantModel from 'models/TenantModel';
-import { Model } from 'objection';
+import { Model, ModelOptions, QueryContext } from 'objection';
 import Account from './Account';
 
 export default class UncategorizedCashflowTransaction extends TenantModel {
@@ -95,6 +95,19 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
       .increment('uncategorized_transactions', 1);
   }
 
+  public async $afterUpdate(
+    opt: ModelOptions,
+    queryContext: QueryContext
+  ): void | Promise<any> {
+    await super.$afterUpdate(opt, queryContext);
+
+    if (this.id && this.categorized) {
+      await Account.query(queryContext.transaction)
+        .findById(this.accountId)
+        .decrement('uncategorized_transactions', 1);
+    }
+  }
+
   /**
    *
    * @param queryContext
@@ -102,7 +115,7 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
   public async $afterDelete(queryContext) {
     await super.$afterDelete(queryContext);
 
-    await Account.query()
+    await Account.query(queryContext.transaction)
       .findById(this.accountId)
       .decrement('uncategorized_transactions', 1);
   }

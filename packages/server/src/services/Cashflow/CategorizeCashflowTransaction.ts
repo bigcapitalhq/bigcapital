@@ -79,13 +79,14 @@ export class CategorizeCashflowTransaction {
           cashflowTransactionDTO
         );
       // Updates the uncategorized transaction as categorized.
-      await UncategorizedCashflowTransaction.query(trx)
-        .findById(uncategorizedTransactionId)
-        .patch({
+      await UncategorizedCashflowTransaction.query(trx).patchAndFetchById(
+        uncategorizedTransactionId,
+        {
           categorized: true,
           categorizeRefType: 'CashflowTransaction',
           categorizeRefId: cashflowTransaction.id,
-        });
+        }
+      );
       // Triggers `onCashflowTransactionCategorized` event.
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionCategorized,

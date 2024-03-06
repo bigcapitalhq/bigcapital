@@ -235,8 +235,7 @@ export interface ICashflowTransactionSchema {
 export interface ICashflowTransactionInput extends ICashflowTransactionSchema {}
 
 export interface ICategorizeCashflowTransactioDTO {
-  fromAccountId: number;
-  toAccountId: number;
+  creditAccountId: number;
   referenceNo: string;
   transactionNumber: string;
   transactionType: string;

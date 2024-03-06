@@ -318,7 +318,7 @@ export default class Account extends mixin(TenantModel, [
           to: 'uncategorized_cashflow_transactions.accountId',
         },
         filter: (query) => {
-          query.filter('categorized', false);
+          query.where('categorized', false);
         },
       },
     };

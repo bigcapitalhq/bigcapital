@@ -2,30 +2,55 @@
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
-import { useUncategorizedTransaction } from '@/hooks/query';
+import {
+  useAccounts,
+  useBranches,
+  useUncategorizedTransaction,
+} from '@/hooks/query';
+import { useFeatureCan } from '@/hooks/state';
+import { Features } from '@/constants';
 
 const CategorizeTransactionBootContext = React.createContext();
 
 /**
- * Estimate detail provider.
+ * Categorize transcation boot.
  */
 function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
+  // Detarmines whether the feature is enabled.
+  const { featureCan } = useFeatureCan();
+  const isBranchFeatureCan = featureCan(Features.Branches);
+
+  // Fetches accounts list.
+  const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
+
+  // Fetches the branches list.
+  const { data: branches, isLoading: isBranchesLoading } = useBranches(
+    {},
+    { enabled: isBranchFeatureCan },
+  );
+  // Retrieves the uncategorized transaction.
   const {
     data: uncategorizedTransaction,
     isLoading: isUncategorizedTransactionLoading,
   } = useUncategorizedTransaction(uncategorizedTransactionId);
 
   const provider = {
+    uncategorizedTransactionId,
     uncategorizedTransaction,
     isUncategorizedTransactionLoading,
+    branches,
+    accounts,
+    isBranchesLoading,
+    isAccountsLoading,
   };
+  const isLoading =
+    isBranchesLoading || isUncategorizedTransactionLoading || isAccountsLoading;
 
   return (
-    <DrawerLoading loading={isUncategorizedTransactionLoading}>
+    <DrawerLoading loading={isLoading}>
       <DrawerHeaderContent
         name={DRAWERS.CATEGORIZE_TRANSACTION}
         title={'Categorize Transaction'}
-        subTitle={''}
       />
       <CategorizeTransactionBootContext.Provider value={provider} {...props} />
     </DrawerLoading>

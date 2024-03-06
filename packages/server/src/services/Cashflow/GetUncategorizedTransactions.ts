@@ -24,7 +24,8 @@ export class GetUncategorizedTransactions {
         .where('accountId', accountId)
         .where('categorized', false)
         .withGraphFetched('account')
-        .pagination(0, 10);
+        .orderBy('date', 'DESC')
+        .pagination(0, 1000);
 
     const data = await this.transformer.transform(
       tenantId,
