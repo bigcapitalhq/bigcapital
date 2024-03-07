@@ -39,6 +39,7 @@ export function ActionsMenu({
     </Menu>
   );
 }
+
 /**
  * Retrieve account transctions table columns.
  */
@@ -131,7 +132,75 @@ export function useAccountTransactionsColumns() {
  * Account transactions progress bar.
  */
 export function AccountTransactionsProgressBar() {
-  const { isCashFlowTransactionsFetching } = useAccountTransactionsContext();
+  const { isCashFlowTransactionsFetching, isUncategorizedTransactionFetching } =
+    useAccountTransactionsContext();
 
-  return isCashFlowTransactionsFetching ? <MaterialProgressBar /> : null;
+  return isCashFlowTransactionsFetching ||
+    isUncategorizedTransactionFetching ? (
+    <MaterialProgressBar />
+  ) : null;
+}
+
+/**
+ * Retrieve account uncategorized transctions table columns.
+ */
+export function useAccountUncategorizedTransactionsColumns() {
+  return React.useMemo(
+    () => [
+      {
+        id: 'date',
+        Header: intl.get('date'),
+        accessor: 'formatted_date',
+        width: 40,
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'description',
+        Header: 'Description',
+        accessor: 'description',
+        width: 160,
+        textOverview: true,
+        clickable: true,
+      },
+      {
+        id: 'payee',
+        Header: 'Payee',
+        accessor: 'payee',
+        width: 60,
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'reference_number',
+        Header: intl.get('reference_no'),
+        accessor: 'reference_number',
+        width: 50,
+        className: 'reference_number',
+        clickable: true,
+        textOverview: true,
+      },
+      {
+        id: 'deposit',
+        Header: intl.get('cash_flow.label.deposit'),
+        accessor: 'formattet_deposit_amount',
+        width: 40,
+        className: 'deposit',
+        textOverview: true,
+        align: 'right',
+        clickable: true,
+      },
+      {
+        id: 'withdrawal',
+        Header: intl.get('cash_flow.label.withdrawal'),
+        accessor: 'formatted_withdrawal_amount',
+        className: 'withdrawal',
+        width: 40,
+        textOverview: true,
+        align: 'right',
+        clickable: true,
+      },
+    ],
+    [],
+  );
 }

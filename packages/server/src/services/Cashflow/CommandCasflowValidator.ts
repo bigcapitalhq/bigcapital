@@ -1,9 +1,14 @@
 import { Service } from 'typedi';
 import { includes, camelCase, upperFirst } from 'lodash';
-import { IAccount } from '@/interfaces';
+import { IAccount, IUncategorizedCashflowTransaction } from '@/interfaces';
 import { getCashflowTransactionType } from './utils';
 import { ServiceError } from '@/exceptions';
-import { CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
+import {
+  CASHFLOW_DIRECTION,
+  CASHFLOW_TRANSACTION_TYPE,
+  ERRORS,
+} from './constants';
+import CashflowTransaction from '@/models/CashflowTransaction';
 
 @Service()
 export class CommandCashflowValidator {
@@ -46,4 +51,52 @@ export class CommandCashflowValidator {
     }
     return transformedType;
   };
+
+  /**
+   * Validate the given transaction should be categorized.
+   * @param {CashflowTransaction} cashflowTransaction
+   */
+  public validateTransactionShouldCategorized(
+    cashflowTransaction: CashflowTransaction
+  ) {
+    if (!cashflowTransaction.uncategorize) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+    }
+  }
+
+  /**
+   * Validate the given transcation shouldn't be categorized.
+   * @param {CashflowTransaction} cashflowTransaction
+   */
+  public validateTransactionShouldNotCategorized(
+    cashflowTransaction: CashflowTransaction
+  ) {
+    if (cashflowTransaction.uncategorize) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+    }
+  }
+
+  /**
+   *
+   * @param {uncategorizeTransaction}
+   * @param {string} transactionType
+   * @throws {ServiceError(ERRORS.UNCATEGORIZED_TRANSACTION_TYPE_INVALID)}
+   */
+  public validateUncategorizeTransactionType(
+    uncategorizeTransaction: IUncategorizedCashflowTransaction,
+    transactionType: string
+  ) {
+    const type = getCashflowTransactionType(
+      upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE
+    );
+    if (
+      (type.direction === CASHFLOW_DIRECTION.IN &&
+        uncategorizeTransaction.isDepositTransaction) ||
+      (type.direction === CASHFLOW_DIRECTION.OUT &&
+        uncategorizeTransaction.isWithdrawalTransaction)
+    ) {
+      return;
+    }
+    throw new ServiceError(ERRORS.UNCATEGORIZED_TRANSACTION_TYPE_INVALID);
+  }
 }

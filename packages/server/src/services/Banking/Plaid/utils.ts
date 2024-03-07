@@ -1,7 +1,7 @@
 import * as R from 'ramda';
 import {
+  CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
-  ICashflowNewCommandDTO,
   PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';
@@ -11,51 +11,44 @@ import {
  * @param {PlaidAccount} plaidAccount
  * @returns {IAccountCreateDTO}
  */
-export const transformPlaidAccountToCreateAccount = (
-  plaidAccount: PlaidAccount
-): IAccountCreateDTO => {
-  return {
-    name: plaidAccount.name,
-    code: '',
-    description: plaidAccount.official_name,
-    currencyCode: plaidAccount.balances.iso_currency_code,
-    accountType: 'cash',
-    active: true,
-    plaidAccountId: plaidAccount.account_id,
-    bankBalance: plaidAccount.balances.current,
-    accountMask: plaidAccount.mask,
-  };
-};
+export const transformPlaidAccountToCreateAccount = R.curry(
+  (institution: any, plaidAccount: PlaidAccount): IAccountCreateDTO => {
+    return {
+      name: `${institution.name} - ${plaidAccount.name}`,
+      code: '',
+      description: plaidAccount.official_name,
+      currencyCode: plaidAccount.balances.iso_currency_code,
+      accountType: 'cash',
+      active: true,
+      plaidAccountId: plaidAccount.account_id,
+      bankBalance: plaidAccount.balances.current,
+      accountMask: plaidAccount.mask,
+    };
+  }
+);
 
 /**
  * Transformes the plaid transaction to cashflow create DTO.
  * @param {number} cashflowAccountId - Cashflow account ID.
  * @param {number} creditAccountId - Credit account ID.
  * @param {PlaidTransaction} plaidTranasction - Plaid transaction.
- * @returns {ICashflowNewCommandDTO}
+ * @returns {CreateUncategorizedTransactionDTO}
  */
 export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
     creditAccountId: number,
     plaidTranasction: PlaidTransaction
-  ): ICashflowNewCommandDTO => {
+  ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
-
-      transactionType: 'OwnerContribution',
-      description: plaidTranasction.name,
-
       amount: plaidTranasction.amount,
-      exchangeRate: 1,
+      description: plaidTranasction.name,
+      payee: plaidTranasction.payment_meta?.payee,
       currencyCode: plaidTranasction.iso_currency_code,
-      creditAccountId,
-      cashflowAccountId,
-
-      // transactionNumber: string;
-      // referenceNo: string;
+      accountId: cashflowAccountId,
+      referenceNo: plaidTranasction.payment_meta?.reference_number,
       plaidTransactionId: plaidTranasction.transaction_id,
-      publish: true,
     };
   }
 );

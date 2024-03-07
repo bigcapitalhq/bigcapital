@@ -196,6 +196,7 @@ export default class Account extends mixin(TenantModel, [
     const Expense = require('models/Expense');
     const ExpenseEntry = require('models/ExpenseCategory');
     const ItemEntry = require('models/ItemEntry');
+    const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
 
     return {
       /**
@@ -303,6 +304,21 @@ export default class Account extends mixin(TenantModel, [
         join: {
           from: 'accounts.id',
           to: 'items_entries.sellAccountId',
+        },
+      },
+
+      /**
+       * Associated uncategorized transactions.
+       */
+      uncategorizedTransactions: {
+        relation: Model.HasManyRelation,
+        modelClass: UncategorizedTransaction.default,
+        join: {
+          from: 'accounts.id',
+          to: 'uncategorized_cashflow_transactions.accountId',
+        },
+        filter: (query) => {
+          query.where('categorized', false);
         },
       },
     };

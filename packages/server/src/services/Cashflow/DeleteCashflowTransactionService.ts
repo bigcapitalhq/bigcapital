@@ -13,15 +13,15 @@ import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 
 @Service()
-export default class CommandCashflowTransactionService {
+export class DeleteCashflowTransaction {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  eventPublisher: EventPublisher;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  uow: UnitOfWork;
+  private uow: UnitOfWork;
 
   /**
    * Deletes the cashflow transaction with associated journal entries.

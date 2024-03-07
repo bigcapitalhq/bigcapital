@@ -392,6 +392,15 @@ export default {
 
     onTransactionDeleting: 'onCashflowTransactionDeleting',
     onTransactionDeleted: 'onCashflowTransactionDeleted',
+
+    onTransactionCategorizing: 'onTransactionCategorizing',
+    onTransactionCategorized: 'onCashflowTransactionCategorized',
+
+    onTransactionUncategorizing: 'onTransactionUncategorizing',
+    onTransactionUncategorized: 'onTransactionUncategorized',
+
+    onTransactionCategorizingAsExpense: 'onTransactionCategorizingAsExpense',
+    onTransactionCategorizedAsExpense: 'onTransactionCategorizedAsExpense',
   },
 
   /**
