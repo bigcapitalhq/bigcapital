@@ -182,7 +182,6 @@ export default class Expense extends mixin(TenantModel, [
     const ExpenseCategory = require('models/ExpenseCategory');
     const Media = require('models/Media');
     const Branch = require('models/Branch');
-    const UncategorizedCashflowTransaction = require('models/UncategorizedCashflowTransaction');
 
     return {
       paymentAccount: {
@@ -235,18 +234,6 @@ export default class Expense extends mixin(TenantModel, [
           query.where('model_name', 'Expense');
         },
       },
-
-      /**
-       * Retrieves the related uncategorized cashflow transaction.
-       */
-      categorized: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: UncategorizedCashflowTransaction.default,
-        join: {
-          from: 'expenses_transactions.categorizedTransactionId',
-          to: 'uncategorized_cashflow_transactions.id',
-        },
-      }
     };
   }
 

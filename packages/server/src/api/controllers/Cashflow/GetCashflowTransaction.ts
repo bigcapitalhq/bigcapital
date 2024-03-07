@@ -2,7 +2,6 @@ import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { param } from 'express-validator';
 import BaseController from '../BaseController';
-import GetCashflowTransactionsService from '@/services/Cashflow/GetCashflowTransactionsService';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
@@ -47,7 +46,6 @@ export default class GetCashflowAccounts extends BaseController {
       const cashflowTransaction = await this.cashflowApplication.getTransaction(
         tenantId,
         transactionId
-        
       );
 
       return res.status(200).send({

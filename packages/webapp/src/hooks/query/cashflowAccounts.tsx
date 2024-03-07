@@ -213,7 +213,8 @@ export function useRefreshCashflowTransactions() {
 }
 
 /**
- *
+ * Retrieves specific uncategorized transaction.
+ * @param {number} uncategorizedTranasctionId -
  */
 export function useUncategorizedTransaction(
   uncategorizedTranasctionId: nunber,

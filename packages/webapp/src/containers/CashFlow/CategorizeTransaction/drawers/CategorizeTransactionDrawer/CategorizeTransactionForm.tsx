@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { Formik, Form } from 'formik';
 import styled from 'styled-components';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { CreateCategorizeTransactionSchema } from './CategorizeTransactionForm.schema';
 import { CategorizeTransactionFormContent } from './CategorizeTransactionFormContent';
 import { CategorizeTransactionFormFooter } from './CategorizeTransactionFormFooter';

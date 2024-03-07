@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormGroup } from '@blueprintjs/core';
-import { FFormGroup, FSelect, FSuggest } from '@/components';
+import { FFormGroup, FSelect, } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 import { useFormikContext } from 'formik';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';

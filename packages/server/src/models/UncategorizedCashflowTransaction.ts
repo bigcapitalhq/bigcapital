@@ -4,7 +4,11 @@ import { Model, ModelOptions, QueryContext } from 'objection';
 import Account from './Account';
 
 export default class UncategorizedCashflowTransaction extends TenantModel {
-  amount: number;
+  id!: number;
+  amount!: number;
+  categorized!: boolean;
+  accountId!: number;
+
   /**
    * Table name.
    */
@@ -17,6 +21,18 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
    */
   static get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return [
+      'withdrawal',
+      'deposit',
+      'isDepositTransaction',
+      'isWithdrawalTransaction',
+    ];
   }
 
   /**
@@ -50,18 +66,6 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
   }
 
   /**
-   * Virtual attributes.
-   */
-  static get virtualAttributes() {
-    return [
-      'withdrawal',
-      'deposit',
-      'isDepositTransaction',
-      'isWithdrawalTransaction',
-    ];
-  }
-
-  /**
    * Relationship mapping.
    */
   static get relationMappings() {
@@ -83,40 +87,54 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
   }
 
   /**
-   *
-   * @param queryContext
+   * Updates the count of uncategorized transactions for the associated account
+   * based on the specified operation.
+   * @param {QueryContext} queryContext - The query context for the transaction.
+   * @param {boolean} increment - Indicates whether to increment or decrement the count.
+   */
+  private async updateUncategorizedTransactionCount(
+    queryContext: QueryContext,
+    increment: boolean
+  ) {
+    const operation = increment ? 'increment' : 'decrement';
+    const amount = increment ? 1 : -1;
+
+    await Account.query(queryContext.transaction)
+      .findById(this.accountId)
+      [operation]('uncategorized_transactions', amount);
+  }
+
+  /**
+   * Runs after insert.
+   * @param {QueryContext} queryContext
    */
   public async $afterInsert(queryContext) {
     await super.$afterInsert(queryContext);
-
-    // Increments the uncategorized transactions count of the associated account.
-    await Account.query(queryContext.transaction)
-      .findById(this.accountId)
-      .increment('uncategorized_transactions', 1);
+    await this.updateUncategorizedTransactionCount(queryContext, true);
   }
 
+  /**
+   * Runs after update.
+   * @param {ModelOptions} opt
+   * @param {QueryContext} queryContext
+   */
   public async $afterUpdate(
     opt: ModelOptions,
     queryContext: QueryContext
-  ): void | Promise<any> {
+  ): Promise<any> {
     await super.$afterUpdate(opt, queryContext);
 
     if (this.id && this.categorized) {
-      await Account.query(queryContext.transaction)
-        .findById(this.accountId)
-        .decrement('uncategorized_transactions', 1);
+      await this.updateUncategorizedTransactionCount(queryContext, false);
     }
   }
 
   /**
-   *
-   * @param queryContext
+   * Runs after delete.
+   * @param {QueryContext} queryContext
    */
-  public async $afterDelete(queryContext) {
+  public async $afterDelete(queryContext: QueryContext) {
     await super.$afterDelete(queryContext);
-
-    await Account.query(queryContext.transaction)
-      .findById(this.accountId)
-      .decrement('uncategorized_transactions', 1);
+    await this.updateUncategorizedTransactionCount(queryContext, false);
   }
 }

@@ -8,7 +8,6 @@ import {
   transformPlaidAccountToCreateAccount,
   transformPlaidTrxsToCashflowCreate,
 } from './utils';
-import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
 import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
@@ -25,9 +24,6 @@ export class PlaidSyncDb {
 
   @Inject()
   private cashflowApp: CashflowApplication;
-
-  @Inject()
-  private createCashflowTransactionService: NewCashflowTransactionService;
 
   @Inject()
   private deleteCashflowTransactionService: DeleteCashflowTransaction;

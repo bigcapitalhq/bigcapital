@@ -1,9 +1,7 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { param, query } from 'express-validator';
-import GetCashflowAccountsService from '@/services/Cashflow/GetCashflowAccountsService';
+import { query } from 'express-validator';
 import BaseController from '../BaseController';
-import GetCashflowTransactionsService from '@/services/Cashflow/GetCashflowTransactionsService';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';

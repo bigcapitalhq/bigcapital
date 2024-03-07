@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React, { Suspense } from 'react';
-import styled from 'styled-components';
 import { Spinner } from '@blueprintjs/core';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
