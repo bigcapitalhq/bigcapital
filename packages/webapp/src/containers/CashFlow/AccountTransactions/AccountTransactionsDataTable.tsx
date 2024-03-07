@@ -18,10 +18,10 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
+import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 
 /**
  * Account transactions data table.
@@ -41,7 +41,7 @@ function AccountTransactionsDataTable({
 
   // Retrieve list context.
   const { cashflowTransactions, isCashFlowTransactionsLoading } =
-    useAccountTransactionsContext();
+    useAccountTransactionsAllContext();
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
@@ -51,11 +51,10 @@ function AccountTransactionsDataTable({
   const handleDeleteTransaction = ({ reference_id }) => {
     openAlert('account-transaction-delete', { referenceId: reference_id });
   };
-
+  // Handle view details action.
   const handleViewDetailCashflowTransaction = (referenceType) => {
     handleCashFlowTransactionType(referenceType, openDrawer);
   };
-
   // Handle cell click.
   const handleCellClick = (cell, event) => {
     const referenceType = cell.row.original;

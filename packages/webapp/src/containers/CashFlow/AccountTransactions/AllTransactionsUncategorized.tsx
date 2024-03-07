@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import AccountTransactionsUncategorizedTable from './AccountTransactionsUncategorizedTable';
+import { AccountUncategorizedTransactionsBoot } from './AllTransactionsUncategorizedBoot';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -15,15 +16,16 @@ const CashflowTransactionsTableCard = styled.div`
   padding: 30px 18px;
   background: #fff;
   flex: 0 1;
-`
-
+`;
 
 export default function AllTransactionsUncategorized() {
   return (
-    <Box>
-      <CashflowTransactionsTableCard>
-        <AccountTransactionsUncategorizedTable />
-      </CashflowTransactionsTableCard>
-    </Box>
-  )
+    <AccountUncategorizedTransactionsBoot>
+      <Box>
+        <CashflowTransactionsTableCard>
+          <AccountTransactionsUncategorizedTable />
+        </CashflowTransactionsTableCard>
+      </Box>
+    </AccountUncategorizedTransactionsBoot>
+  );
 }

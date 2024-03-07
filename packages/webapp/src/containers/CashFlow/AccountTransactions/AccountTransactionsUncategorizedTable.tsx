@@ -13,7 +13,6 @@ import {
 import { TABLES } from '@/constants/tables';
 
 import withSettings from '@/containers/Settings/withSettings';
-import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -21,8 +20,7 @@ import {
   ActionsMenu,
   useAccountUncategorizedTransactionsColumns,
 } from './components';
-import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { handleCashFlowTransactionType } from './utils';
+import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -34,9 +32,6 @@ function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
 
-  // #withAlertsActions
-  openAlert,
-
   // #withDrawerActions
   openDrawer,
 }) {
@@ -44,17 +39,12 @@ function AccountTransactionsDataTable({
   const columns = useAccountUncategorizedTransactionsColumns();
 
   // Retrieve list context.
-  const { uncategorizedTransactions, isCashFlowTransactionsLoading } =
-    useAccountTransactionsContext();
+  const { uncategorizedTransactions, isUncategorizedTransactionsLoading } =
+    useAccountUncategorizedTransactionsContext();
 
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
-
-  // handle delete transaction
-  const handleDeleteTransaction = ({ reference_id }) => {};
-
-  const handleViewDetailCashflowTransaction = (referenceType) => {};
+    useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
@@ -69,8 +59,8 @@ function AccountTransactionsDataTable({
       columns={columns}
       data={uncategorizedTransactions || []}
       sticky={true}
-      loading={isCashFlowTransactionsLoading}
-      headerLoading={isCashFlowTransactionsLoading}
+      loading={isUncategorizedTransactionsLoading}
+      headerLoading={isUncategorizedTransactionsLoading}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}
@@ -81,16 +71,12 @@ function AccountTransactionsDataTable({
       ContextMenu={ActionsMenu}
       onCellClick={handleCellClick}
       // #TableVirtualizedListRows props.
-      vListrowHeight={cashflowTansactionsTableSize == 'small' ? 32 : 40}
+      vListrowHeight={cashflowTansactionsTableSize === 'small' ? 32 : 40}
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
-      payload={{
-        onViewDetails: handleViewDetailCashflowTransaction,
-        onDelete: handleDeleteTransaction,
-      }}
     />
   );
 }
@@ -99,7 +85,6 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
-  withAlertsActions,
   withDrawerActions,
 )(AccountTransactionsDataTable);
 

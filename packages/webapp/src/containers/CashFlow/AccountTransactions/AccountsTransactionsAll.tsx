@@ -5,6 +5,7 @@ import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import AccountTransactionsDataTable from './AccountTransactionsDataTable';
 import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
+import { AccountTransactionsAllProvider } from './AccountTransactionsAllBoot';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -20,12 +21,14 @@ const CashflowTransactionsTableCard = styled.div`
 
 export default function AccountTransactionsAll() {
   return (
-    <Box>
-      <AccountTransactionsUncategorizeFilter />
+    <AccountTransactionsAllProvider>
+      <Box>
+        <AccountTransactionsUncategorizeFilter />
 
-      <CashflowTransactionsTableCard>
-        <AccountTransactionsDataTable />
-      </CashflowTransactionsTableCard>
-    </Box>
+        <CashflowTransactionsTableCard>
+          <AccountTransactionsDataTable />
+        </CashflowTransactionsTableCard>
+      </Box>
+    </AccountTransactionsAllProvider>
   );
 }

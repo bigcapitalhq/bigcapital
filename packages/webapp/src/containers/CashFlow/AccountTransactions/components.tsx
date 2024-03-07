@@ -39,6 +39,7 @@ export function ActionsMenu({
     </Menu>
   );
 }
+
 /**
  * Retrieve account transctions table columns.
  */
