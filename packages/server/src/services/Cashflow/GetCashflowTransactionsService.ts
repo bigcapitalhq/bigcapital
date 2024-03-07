@@ -7,7 +7,7 @@ import { ServiceError } from '@/exceptions';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
-export default class GetCashflowTransactionsService {
+export class GetCashflowTransactionService {
   @Inject()
   private tenancy: HasTenancyService;
 

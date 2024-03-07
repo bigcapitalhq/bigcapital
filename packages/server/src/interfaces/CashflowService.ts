@@ -156,3 +156,8 @@ export interface CategorizeTransactionAsExpenseDTO {
   description: string;
   branchId?: number;
 }
+
+export interface IGetUncategorizedTransactionsQuery {
+  page?: number;
+  pageSize?: number;
+}

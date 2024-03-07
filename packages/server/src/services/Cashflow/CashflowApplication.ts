@@ -5,18 +5,32 @@ import { CategorizeCashflowTransaction } from './CategorizeCashflowTransaction';
 import {
   CategorizeTransactionAsExpenseDTO,
   CreateUncategorizedTransactionDTO,
+  ICashflowAccountsFilter,
+  ICashflowNewCommandDTO,
   ICategorizeCashflowTransactioDTO,
-  IUncategorizedCashflowTransaction,
+  IGetUncategorizedTransactionsQuery,
 } from '@/interfaces';
 import { CategorizeTransactionAsExpense } from './CategorizeTransactionAsExpense';
 import { GetUncategorizedTransactions } from './GetUncategorizedTransactions';
 import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
 import { GetUncategorizedTransaction } from './GetUncategorizedTransaction';
+import NewCashflowTransactionService from './NewCashflowTransactionService';
+import GetCashflowAccountsService from './GetCashflowAccountsService';
+import { GetCashflowTransactionService } from './GetCashflowTransactionsService';
 
 @Service()
 export class CashflowApplication {
   @Inject()
+  private createTransactionService: NewCashflowTransactionService;
+
+  @Inject()
   private deleteTransactionService: DeleteCashflowTransaction;
+
+  @Inject()
+  private getCashflowAccountsService: GetCashflowAccountsService;
+
+  @Inject()
+  private getCashflowTransactionService: GetCashflowTransactionService;
 
   @Inject()
   private uncategorizeTransactionService: UncategorizeCashflowTransaction;
@@ -37,6 +51,25 @@ export class CashflowApplication {
   private createUncategorizedTransactionService: CreateUncategorizedTransaction;
 
   /**
+   * Creates a new cashflow transaction.
+   * @param {number} tenantId
+   * @param {ICashflowNewCommandDTO} transactionDTO
+   * @param {number} userId
+   * @returns
+   */
+  public createTransaction(
+    tenantId: number,
+    transactionDTO: ICashflowNewCommandDTO,
+    userId?: number
+  ) {
+    return this.createTransactionService.newCashflowTransaction(
+      tenantId,
+      transactionDTO,
+      userId
+    );
+  }
+
+  /**
    * Deletes the given cashflow transaction.
    * @param {number} tenantId
    * @param {number} cashflowTransactionId
@@ -46,6 +79,35 @@ export class CashflowApplication {
     return this.deleteTransactionService.deleteCashflowTransaction(
       tenantId,
       cashflowTransactionId
+    );
+  }
+
+  /**
+   * Retrieves specific cashflow transaction.
+   * @param {number} tenantId
+   * @param {number} cashflowTransactionId
+   * @returns
+   */
+  public getTransaction(tenantId: number, cashflowTransactionId: number) {
+    return this.getCashflowTransactionService.getCashflowTransaction(
+      tenantId,
+      cashflowTransactionId
+    );
+  }
+
+  /**
+   * Retrieves the cashflow accounts.
+   * @param {number} tenantId
+   * @param {ICashflowAccountsFilter} filterDTO
+   * @returns
+   */
+  public getCashflowAccounts(
+    tenantId: number,
+    filterDTO: ICashflowAccountsFilter
+  ) {
+    return this.getCashflowAccountsService.getCashflowAccounts(
+      tenantId,
+      filterDTO
     );
   }
 
@@ -105,7 +167,6 @@ export class CashflowApplication {
    * @param {number} tenantId
    * @param {number} cashflowTransactionId
    * @param {CategorizeTransactionAsExpenseDTO} transactionDTO
-   * @returns
    */
   public categorizeAsExpense(
     tenantId: number,
@@ -122,20 +183,23 @@ export class CashflowApplication {
   /**
    * Retrieves the uncategorized cashflow transactions.
    * @param {number} tenantId
-   * @returns {}
    */
-  public getUncategorizedTransactions(tenantId: number, accountId: number) {
+  public getUncategorizedTransactions(
+    tenantId: number,
+    accountId: number,
+    query: IGetUncategorizedTransactionsQuery
+  ) {
     return this.getUncategorizedTransactionsService.getTransactions(
       tenantId,
-      accountId
+      accountId,
+      query
     );
   }
 
   /**
-   * 
-   * @param {number} tenantId 
-   * @param {number} uncategorizedTransactionId 
-   * @returns 
+   * Retrieves specific uncategorized transaction.
+   * @param {number} tenantId
+   * @param {number} uncategorizedTransactionId
    */
   public getUncategorizedTransaction(
     tenantId: number,

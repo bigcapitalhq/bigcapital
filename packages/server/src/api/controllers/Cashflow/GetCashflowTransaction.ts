@@ -6,11 +6,12 @@ import GetCashflowTransactionsService from '@/services/Cashflow/GetCashflowTrans
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
 export default class GetCashflowAccounts extends BaseController {
   @Inject()
-  private getCashflowTransactionsService: GetCashflowTransactionsService;
+  private cashflowApplication: CashflowApplication;
 
   /**
    * Controller router.
@@ -43,11 +44,11 @@ export default class GetCashflowAccounts extends BaseController {
     const { transactionId } = req.params;
 
     try {
-      const cashflowTransaction =
-        await this.getCashflowTransactionsService.getCashflowTransaction(
-          tenantId,
-          transactionId
-        );
+      const cashflowTransaction = await this.cashflowApplication.getTransaction(
+        tenantId,
+        transactionId
+        
+      );
 
       return res.status(200).send({
         cashflow_transaction: this.transfromToResponse(cashflowTransaction),

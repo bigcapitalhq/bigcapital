@@ -3,14 +3,15 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { param } from 'express-validator';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
-import { DeleteCashflowTransaction } from '../../../services/Cashflow/DeleteCashflowTransactionService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+
 import { AbilitySubject, CashflowAction } from '@/interfaces';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
 export default class DeleteCashflowTransactionController extends BaseController {
   @Inject()
-  private deleteCashflowService: DeleteCashflowTransaction;
+  private cashflowApplication: CashflowApplication;
 
   /**
    * Controller router.
@@ -44,7 +45,7 @@ export default class DeleteCashflowTransactionController extends BaseController 
 
     try {
       const { oldCashflowTransaction } =
-        await this.deleteCashflowService.deleteCashflowTransaction(
+        await this.cashflowApplication.deleteTransaction(
           tenantId,
           transactionId
         );
