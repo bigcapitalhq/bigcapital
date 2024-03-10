@@ -2,6 +2,7 @@ import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { ICashflowTransactionUncategorizedPayload } from '@/interfaces';
 import { DeleteCashflowTransaction } from '../DeleteCashflowTransactionService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class DeleteCashflowTransactionOnUncategorize {
@@ -33,6 +34,7 @@ export class DeleteCashflowTransactionOnUncategorize {
     ) {
       await this.deleteCashflowTransactionService.deleteCashflowTransaction(
         tenantId,
+
         oldUncategorizedTransaction.categorizeRefId
       );
     }

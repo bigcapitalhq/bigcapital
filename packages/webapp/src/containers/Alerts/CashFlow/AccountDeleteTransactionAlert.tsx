@@ -56,7 +56,21 @@ function AccountDeleteTransactionAlert({
           response: {
             data: { errors },
           },
-        }) => {},
+        }) => {
+          if (
+            errors.find(
+              (e) =>
+                e.type ===
+                'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED',
+            )
+          ) {
+            AppToaster.show({
+              message:
+                'Cannot delete transaction converted from uncategorized transaction but you uncategorize it.',
+              intent: Intent.DANGER,
+            });
+          }
+        },
       )
       .finally(() => {
         closeAlert(name);
