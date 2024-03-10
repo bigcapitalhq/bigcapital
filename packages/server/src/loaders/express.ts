@@ -48,11 +48,11 @@ export default ({ app }) => {
   app.use('/public', express.static(path.join(global.__storage_dir)));
 
   // Handle multi-media requests.
-  app.use(
-    fileUpload({
-      createParentPath: true,
-    })
-  );
+  // app.use(
+  //   fileUpload({
+  //     createParentPath: true,
+  //   })
+  // );
 
   // Logger middleware.
   app.use(LoggerMiddleware);

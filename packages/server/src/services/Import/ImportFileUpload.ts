@@ -26,6 +26,7 @@ export class ImportFileUploadService {
     filename: string
   ) {
     const { Import } = this.tenancy.models(tenantId);
+
     const buffer = await fs.readFile(filePath);
     const workbook = XLSX.read(buffer, { type: 'buffer' });
 
@@ -33,6 +34,7 @@ export class ImportFileUploadService {
     const worksheet = workbook.Sheets[firstSheetName];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
+    // @todo validate the resource.
     const _resource = upperFirst(snakeCase(resource));
 
     const exportFile = await Import.query().insert({
@@ -42,8 +44,9 @@ export class ImportFileUploadService {
     });
     const columns = this.getColumns(jsonData);
 
+    // @todo return the resource importable columns.
     return {
-      ...exportFile,
+      export: exportFile,
       columns,
     };
   }

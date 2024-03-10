@@ -1,5 +1,6 @@
 import { Service, Inject } from 'typedi';
 import TenancyService from '@/services/Tenancy/TenancyService';
+import { Transaction } from 'objection';
 
 /**
  * Enumeration that represents transaction isolation levels for use with the {@link Transactional} annotation
@@ -38,18 +39,22 @@ export default class UnitOfWork {
   public withTransaction = async (
     tenantId: number,
     work,
+    trx?: Transaction,
     isolationLevel: IsolationLevel = IsolationLevel.READ_UNCOMMITTED
   ) => {
     const knex = this.tenancy.knex(tenantId);
-    const trx = await knex.transaction({ isolationLevel });
+    let _trx = trx;
 
+    if (_trx) {
+      _trx = await knex.transaction({ isolationLevel });
+    }
     try {
-      const result = await work(trx);
-      trx.commit();
+      const result = await work(_trx);
+      _trx.commit();
 
       return result;
     } catch (error) {
-      trx.rollback();
+      _trx.rollback();
       throw error;
     }
   };

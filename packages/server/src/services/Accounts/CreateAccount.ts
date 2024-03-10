@@ -97,13 +97,14 @@ export class CreateAccount {
 
   /**
    * Creates a new account on the storage.
-   * @param   {number} tenantId
-   * @param   {IAccountCreateDTO} accountDTO
+   * @param {number} tenantId
+   * @param {IAccountCreateDTO} accountDTO
    * @returns {Promise<IAccount>}
    */
   public createAccount = async (
     tenantId: number,
-    accountDTO: IAccountCreateDTO
+    accountDTO: IAccountCreateDTO,
+    trx?: Knex.Transaction
   ): Promise<IAccount> => {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -119,27 +120,31 @@ export class CreateAccount {
       tenantMeta.baseCurrency
     );
     // Creates a new account with associated transactions under unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onAccountCreating` event.
-      await this.eventPublisher.emitAsync(events.accounts.onCreating, {
-        tenantId,
-        accountDTO,
-        trx,
-      } as IAccountEventCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onAccountCreating` event.
+        await this.eventPublisher.emitAsync(events.accounts.onCreating, {
+          tenantId,
+          accountDTO,
+          trx,
+        } as IAccountEventCreatingPayload);
 
-      // Inserts account to the storage.
-      const account = await Account.query(trx).insertAndFetch({
-        ...accountInputModel,
-      });
-      // Triggers `onAccountCreated` event.
-      await this.eventPublisher.emitAsync(events.accounts.onCreated, {
-        tenantId,
-        account,
-        accountId: account.id,
-        trx,
-      } as IAccountEventCreatedPayload);
+        // Inserts account to the storage.
+        const account = await Account.query(trx).insertAndFetch({
+          ...accountInputModel,
+        });
+        // Triggers `onAccountCreated` event.
+        await this.eventPublisher.emitAsync(events.accounts.onCreated, {
+          tenantId,
+          account,
+          accountId: account.id,
+          trx,
+        } as IAccountEventCreatedPayload);
 
-      return account;
-    });
+        return account;
+      },
+      trx
+    );
   };
 }

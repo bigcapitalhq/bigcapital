@@ -1,15 +1,15 @@
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
-import { IsInt, IsOptional, IsString, Length, Min, Max } from 'class-validator';
+import { IsInt, IsOptional, IsString, Length, Min, Max, IsNotEmpty } from 'class-validator';
 
 export class AccountDTOSchema {
   @IsString()
   @Length(3, DATATYPES_LENGTH.STRING)
+  @IsNotEmpty()
   name: string;
 
-  // @IsString()
-  // @IsInt()
+  @IsString()
   @IsOptional()
-  // @Length(3, 6)
+  @Length(3, 6)
   code?: string;
 
   @IsOptional()
@@ -17,6 +17,7 @@ export class AccountDTOSchema {
 
   @IsString()
   @Length(3, DATATYPES_LENGTH.STRING)
+  @IsNotEmpty()
   accountType: string;
 
   @IsString()

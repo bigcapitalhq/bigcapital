@@ -16,6 +16,7 @@ import { ActivateAccount } from './ActivateAccount';
 import { GetAccounts } from './GetAccounts';
 import { GetAccount } from './GetAccount';
 import { GetAccountTransactions } from './GetAccountTransactions';
+import { Knex } from 'knex';
 
 @Service()
 export class AccountsApplication {
@@ -48,9 +49,10 @@ export class AccountsApplication {
    */
   public createAccount = (
     tenantId: number,
-    accountDTO: IAccountCreateDTO
+    accountDTO: IAccountCreateDTO,
+    trx?: Knex.Transaction
   ): Promise<IAccount> => {
-    return this.createAccountService.createAccount(tenantId, accountDTO);
+    return this.createAccountService.createAccount(tenantId, accountDTO, trx);
   };
 
   /**

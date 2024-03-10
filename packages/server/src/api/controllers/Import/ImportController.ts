@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { query } from 'express-validator';
+import { query, body, param } from 'express-validator';
 import Multer from 'multer';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
@@ -15,9 +15,6 @@ const upload = Multer({
 @Service()
 export class ImportController extends BaseController {
   @Inject()
-  private importResource: ImportResourceInjectable;
-
-  @Inject()
   private importResourceApp: ImportResourceApplication;
 
   /**
@@ -26,23 +23,31 @@ export class ImportController extends BaseController {
   router() {
     const router = Router();
 
-    // router.post(
-    //   '/:import_id/import',
-    //   this.asyncMiddleware(this.import.bind(this)),
-    //   this.catchServiceErrors
-    // );
+    router.post(
+      '/:import_id/import',
+      this.asyncMiddleware(this.import.bind(this)),
+      this.catchServiceErrors
+    );
     router.post(
       '/file',
-      // [...this.importValidationSchema],
       upload.single('file'),
-      this.asyncMiddleware(this.fileUpload.bind(this))
-      // this.catchServiceErrors
+      this.importValidationSchema,
+      this.validationResult,
+      this.asyncMiddleware(this.fileUpload.bind(this)),
+      this.catchServiceErrors
     );
-    // router.post(
-    //   '/:import_id/mapping',
-    //   this.asyncMiddleware(this.mapping.bind(this)),
-    //   this.catchServiceErrors
-    // );
+    router.post(
+      '/:import_id/mapping',
+      [
+        param('import_id').exists().isString(),
+        body('mapping').exists().isArray({ min: 1 }),
+        body('mapping.*.from').exists(),
+        body('mapping.*.to').exists(),
+      ],
+      this.validationResult,
+      this.asyncMiddleware(this.mapping.bind(this)),
+      this.catchServiceErrors
+    );
     // router.get(
     //   '/:import_id/preview',
     //   this.asyncMiddleware(this.preview.bind(this)),
@@ -55,8 +60,19 @@ export class ImportController extends BaseController {
    * Import validation schema.
    * @returns {ValidationSchema[]}
    */
-  get importValidationSchema() {
-    return [query('resource').exists().isString().toString()];
+  private get importValidationSchema() {
+    return [
+      body('resource').exists(),
+    //   body('file').custom((value, { req }) => {
+    //     if (!value) {
+    //       throw new Error('File is required');
+    //     }
+    //     if (!['xlsx', 'csv'].includes(value.split('.').pop())) {
+    //       throw new Error('File must be in xlsx or csv format');
+    //     }
+    //     return true;
+    //   }),
+    // ];
   }
 
   /**
@@ -92,11 +108,18 @@ export class ImportController extends BaseController {
    * @param res
    * @param next
    */
-  async mapping(req: Request, res: Response, next: NextFunction) {
+  private   async mapping(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const { import_id: importId } = req.params;
+    const body = this.matchedBodyData(req);
 
     try {
-      await this.importResource.mapping(tenantId);
+      await this.importResourceApp.mapping(tenantId, importId, body?.mapping);
+
+      return res.status(200).send({
+        id: importId,
+        message: 'The given import sheet has mapped successfully.'
+      })
     } catch (error) {
       next(error);
     }
@@ -108,7 +131,7 @@ export class ImportController extends BaseController {
    * @param res
    * @param next
    */
-  async preview(req: Request, res: Response, next: NextFunction) {}
+  private async preview(req: Request, res: Response, next: NextFunction) {}
 
   /**
    *
@@ -116,14 +139,17 @@ export class ImportController extends BaseController {
    * @param res
    * @param next
    */
-  async import(req: Request, res: Response, next: NextFunction) {
+  private async import(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { import_id: importId } = req.params;
 
     try {
-      await this.importResource.importFile(tenantId, importId);
+      await this.importResourceApp.process(tenantId, importId);
 
-      return res.status(200).send({});
+      return res.status(200).send({
+        id: importId,
+        message: 'Importing the uploaded file is importing.'
+      });
     } catch (error) {
       next(error);
     }
