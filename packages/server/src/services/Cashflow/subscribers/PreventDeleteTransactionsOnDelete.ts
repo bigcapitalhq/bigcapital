@@ -1,11 +1,15 @@
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
 import { ICommandCashflowDeletingPayload } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from '../constants';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class PreventDeleteTransactionOnDelete {
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
    * Attaches events with handlers.
    */
@@ -27,11 +31,22 @@ export class PreventDeleteTransactionOnDelete {
     oldCashflowTransaction,
     trx,
   }: ICommandCashflowDeletingPayload) {
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
     if (oldCashflowTransaction.uncategorizedTransactionId) {
-      throw new ServiceError(
-        ERRORS.CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED,
-        'Cannot delete cashflow transaction converted from uncategorized transaction.'
-      );
+      const foundTransactions = await UncategorizedCashflowTransaction.query(
+        trx
+      ).where({
+        categorized: true,
+        categorizeRefId: oldCashflowTransaction.id,
+        categorizeRefType: 'CashflowTransaction',
+      });
+      // Throw the error if the cashflow transaction still linked to uncategorized transaction.
+      if (foundTransactions.length > 0) {
+        throw new ServiceError(
+          ERRORS.CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED,
+          'Cannot delete cashflow transaction converted from uncategorized transaction.'
+        );
+      }
     }
   }
 }

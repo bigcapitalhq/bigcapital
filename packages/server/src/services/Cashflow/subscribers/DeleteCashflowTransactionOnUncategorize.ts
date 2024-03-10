@@ -9,9 +9,6 @@ export class DeleteCashflowTransactionOnUncategorize {
   @Inject()
   private deleteCashflowTransactionService: DeleteCashflowTransaction;
 
-  @Inject()
-  private tenancy: HasTenancyService;
-
   /**
    * Attaches events with handlers.
    */
@@ -31,20 +28,13 @@ export class DeleteCashflowTransactionOnUncategorize {
     oldUncategorizedTransaction,
     trx,
   }: ICashflowTransactionUncategorizedPayload) {
-    const { CashflowTransaction } = this.tenancy.models(tenantId);
-
     // Deletes the cashflow transaction.
     if (
       oldUncategorizedTransaction.categorizeRefType === 'CashflowTransaction'
     ) {
-      await CashflowTransaction.query()
-        .findById(oldUncategorizedTransaction.categorizeRefId)
-        .patch({
-          uncategorizedTransactionId: null,
-        });
-
       await this.deleteCashflowTransactionService.deleteCashflowTransaction(
         tenantId,
+
         oldUncategorizedTransaction.categorizeRefId
       );
     }
