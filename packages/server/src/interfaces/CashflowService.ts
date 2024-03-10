@@ -51,6 +51,7 @@ export interface ICashflowCommandDTO {
 
 export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {
   plaidAccountId?: string;
+  uncategorizedTransactionId?: number;
 }
 
 export interface ICashflowTransaction {
@@ -83,6 +84,8 @@ export interface ICashflowTransaction {
 
   isCashDebit?: boolean;
   isCashCredit?: boolean;
+
+  uncategorizedTransactionId?: number;
 }
 
 export interface ICashflowTransactionLine {

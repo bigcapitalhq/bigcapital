@@ -256,3 +256,26 @@ export function useCategorizeTransaction(props) {
     },
   );
 }
+
+/**
+ * Uncategorize the cashflow transaction.
+ */
+export function useUncategorizeTransaction(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (id: number) => apiRequest.post(`cashflow/transactions/${id}/uncategorize`),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
+        queryClient.invalidateQueries(t.CASHFLOW_UNCAATEGORIZED_TRANSACTION);
+        queryClient.invalidateQueries(
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+        );
+      },
+      ...props,
+    },
+  );
+}

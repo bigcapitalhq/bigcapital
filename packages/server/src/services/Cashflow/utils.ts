@@ -61,6 +61,7 @@ export const transformCategorizeTransToCashflow = (
     amount: uncategorizeModel.amount,
     transactionNumber: categorizeDTO.transactionNumber,
     transactionType: categorizeDTO.transactionType,
+    uncategorizedTransactionId: uncategorizeModel.id,
     publish: true,
   };
 };

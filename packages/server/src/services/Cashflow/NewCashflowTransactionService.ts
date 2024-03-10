@@ -86,6 +86,7 @@ export default class NewCashflowTransactionService {
       'creditAccountId',
       'branchId',
       'plaidTransactionId',
+      'uncategorizedTransactionId',
     ]);
     // Retreive the next invoice number.
     const autoNextNumber =

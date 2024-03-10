@@ -13,6 +13,7 @@ export default class CashflowTransaction extends TenantModel {
   amount: number;
   exchangeRate: number;
   uncategorize: boolean;
+  uncategorizedTransaction!: boolean;
 
   /**
    * Table name.
@@ -84,6 +85,14 @@ export default class CashflowTransaction extends TenantModel {
    */
   get isCashDebit() {
     return this.typeMeta?.direction === CASHFLOW_DIRECTION.IN;
+  }
+
+  /**
+   * Detarmines whether the transaction imported from uncategorized transaction.
+   * @returns {boolean}
+   */
+  get isCategroizedTranasction() {
+    return !!this.uncategorizedTransaction;
   }
 
   /**

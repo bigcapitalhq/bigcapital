@@ -93,6 +93,19 @@ export default class DeleteCashflowTransactionController extends BaseController 
           ],
         });
       }
+      if (
+        error.errorType ===
+        'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED'
+      ) {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED',
+              code: 4100,
+            },
+          ],
+        });
+      }
     }
     next(error);
   }
