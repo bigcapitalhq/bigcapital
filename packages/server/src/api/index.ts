@@ -56,6 +56,7 @@ import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
+import { ImportController } from './controllers/Import/ImportController';
 
 export default () => {
   const app = Router();
@@ -131,6 +132,9 @@ export default () => {
   dashboard.use('/warehouses', Container.get(WarehousesController).router());
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
+
+  dashboard.use('/import', Container.get(ImportController).router());
+
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
 
