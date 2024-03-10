@@ -1,12 +1,16 @@
+import { Inject, Service } from 'typedi';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { ITrialBalanceSheetQuery } from '@/interfaces';
-import { Inject, Service } from 'typedi';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
+import { TrialBalanceSheetPdfInjectable } from './TrialBalanceSheetPdfInjectsable';
 
 @Service()
 export class TrialBalanceExportInjectable {
   @Inject()
   private trialBalanceSheetTable: TrialBalanceSheetTableInjectable;
+
+  @Inject()
+  private trialBalanceSheetPdf: TrialBalanceSheetPdfInjectable;
 
   /**
    * Retrieves the trial balance sheet in XLSX format.
@@ -39,5 +43,18 @@ export class TrialBalanceExportInjectable {
     const tableCsv = tableSheet.convertToCSV();
 
     return tableCsv;
+  }
+
+  /**
+   * Retrieves the trial balance sheet in PDF format.
+   * @param {number} tenantId 
+   * @param {ITrialBalanceSheetQuery} query 
+   * @returns {Promise<Buffer>}
+   */
+  public async pdf(
+    tenantId: number,
+    query: ITrialBalanceSheetQuery
+  ): Promise<Buffer> {
+    return this.trialBalanceSheetPdf.pdf(tenantId, query);
   }
 }

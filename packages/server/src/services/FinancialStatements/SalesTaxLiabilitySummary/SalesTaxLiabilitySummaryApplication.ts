@@ -3,6 +3,7 @@ import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySum
 import { SalesTaxLiabilitySummaryTableInjectable } from './SalesTaxLiabilitySummaryTableInjectable';
 import { SalesTaxLiabilitySummaryExportInjectable } from './SalesTaxLiabilitySummaryExportInjectable';
 import { SalesTaxLiabilitySummaryService } from './SalesTaxLiabilitySummaryService';
+import { SalesTaxLiabiltiySummaryPdf } from './SalesTaxLiabiltiySummaryPdf';
 
 @Service()
 export class SalesTaxLiabilitySummaryApplication {
@@ -14,6 +15,9 @@ export class SalesTaxLiabilitySummaryApplication {
 
   @Inject()
   private salesTaxLiabilityTable: SalesTaxLiabilitySummaryTableInjectable;
+
+  @Inject()
+  private salesTaxLiabiltiyPdf: SalesTaxLiabiltiySummaryPdf;
 
   /**
    * Retrieves the sales tax liability summary in json format.
@@ -59,5 +63,18 @@ export class SalesTaxLiabilitySummaryApplication {
     query: SalesTaxLiabilitySummaryQuery
   ): Promise<string> {
     return this.salesTaxLiabilityExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the sales tax liability summary in PDF format.
+   * @param {number} tenantId 
+   * @param {SalesTaxLiabilitySummaryQuery} query 
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(
+    tenantId: number,
+    query: SalesTaxLiabilitySummaryQuery
+  ): Promise<Buffer> {
+    return this.salesTaxLiabiltiyPdf.pdf(tenantId, query);
   }
 }

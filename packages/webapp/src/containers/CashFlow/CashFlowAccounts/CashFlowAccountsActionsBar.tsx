@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import {
   Button,
   NavbarGroup,
@@ -62,6 +61,10 @@ function CashFlowAccountsActionsBar({
     const checked = event.target.checked;
     setCashflowAccountsTableState({ inactiveMode: checked });
   };
+  // Handle connect button click.
+  const handleConnectToBank = () => {
+    openDialog(DialogsName.ConnectBankCreditCard);
+  };
 
   return (
     <DashboardActionsBar>
@@ -107,6 +110,12 @@ function CashFlowAccountsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        <Button
+          className={Classes.MINIMAL}
+          text={'Connect to Bank / Credit Card'}
+          onClick={handleConnectToBank}
+        />
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}

@@ -19,6 +19,8 @@ import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBo
 import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
 import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
 import { SalesTaxLiabilityExportMenu } from './components';
+import { DialogsName } from '@/constants/dialogs';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 /**
  * Sales tax liability summary - actions bar.
@@ -29,6 +31,9 @@ function SalesTaxLiabilitySummaryActionsBar({
 
   // #withSalesTaxLiabilitySummaryActions
   toggleSalesTaxLiabilitySummaryFilterDrawer: toggleFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -48,6 +53,10 @@ function SalesTaxLiabilitySummaryActionsBar({
   // Handle number format form submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.SalesTaxLiabilitySummaryPdfPreview)    
   };
 
   return (
@@ -113,6 +122,7 @@ function SalesTaxLiabilitySummaryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<SalesTaxLiabilityExportMenu />}
@@ -136,4 +146,5 @@ export default compose(
     salesTaxLiabilitySummaryFilter,
   })),
   withSalesTaxLiabilitySummaryActions,
+  withDialogActions
 )(SalesTaxLiabilitySummaryActionsBar);

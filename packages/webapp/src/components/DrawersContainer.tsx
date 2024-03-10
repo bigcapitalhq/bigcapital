@@ -23,6 +23,7 @@ import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransfe
 import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
+import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
 
 /**
  * Drawers container of the dashboard.
@@ -61,6 +62,7 @@ export default function DrawersContainer() {
         name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS}
       />
       <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
+      <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
     </div>
   );
 }

@@ -22,6 +22,7 @@ import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimates datatable.
@@ -100,6 +101,11 @@ function EstimatesDataTable({
     openDrawer(DRAWERS.ESTIMATE_DETAILS, { estimateId: cell.row.original.id });
   };
 
+  // Handle mail send estimate.
+  const handleMailSendEstimate = ({ id }) => {
+    openDialog(DialogsName.EstimateMail, { estimateId: id });
+  }
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.ESTIMATES);
@@ -153,6 +159,7 @@ function EstimatesDataTable({
           onConvert: handleConvertToInvoice,
           onViewDetails: handleViewDetailEstimate,
           onPrint: handlePrintEstimate,
+          onSendMail: handleMailSendEstimate,
         }}
       />
     </DashboardContentTable>

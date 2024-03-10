@@ -1,33 +1,29 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
-import { usePurchasesByItems } from '@/hooks/query';
+import { usePurchasesByItemsTable } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
 
 const PurchasesByItemsContext = createContext();
 
 function PurchasesByItemsProvider({ query, ...props }) {
+  // Transformes the report query to http query.
+  const httpQuery = useMemo(() => transformFilterFormToQuery(query), [query]);
+
   // Handle fetching the purchases by items report based on the given query.
   const {
     data: purchaseByItems,
     isFetching,
     isLoading,
     refetch,
-  } = usePurchasesByItems(
-    {
-      ...transformFilterFormToQuery(query),
-    },
-    {
-      keepPreviousData: true,
-    },
-  );
+  } = usePurchasesByItemsTable(httpQuery, { keepPreviousData: true });
 
   const provider = {
     purchaseByItems,
     isFetching,
     isLoading,
-
     refetchSheet: refetch,
+    httpQuery,
   };
   return (
     <FinancialReportPage name={'purchase-by-items'}>

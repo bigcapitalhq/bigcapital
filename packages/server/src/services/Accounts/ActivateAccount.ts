@@ -5,7 +5,6 @@ import { IAccountEventActivatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { CommandAccountValidators } from './CommandAccountValidators';
 
 @Service()
 export class ActivateAccount {
@@ -17,9 +16,6 @@ export class ActivateAccount {
 
   @Inject()
   private uow: UnitOfWork;
-
-  @Inject()
-  private validator: CommandAccountValidators;
 
   /**
    * Activates/Inactivates the given account.

@@ -1,4 +1,5 @@
 import { get, sumBy } from 'lodash';
+
 import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { allPassedConditionsPass, transformToMap } from 'utils';
@@ -7,7 +8,7 @@ import {
   IAccountTransaction,
   ISalesByItemsItem,
   ISalesByItemsTotal,
-  ISalesByItemsSheetStatement,
+  ISalesByItemsSheetData,
   IItem,
 } from '@/interfaces';
 
@@ -146,7 +147,7 @@ export default class SalesByItemsReport extends FinancialSheet {
    * @param {IInventoryValuationItem[]} items
    * @returns {IInventoryValuationTotal}
    */
-  totalSection(items: ISalesByItemsItem[]): ISalesByItemsTotal {
+  private totalSection(items: ISalesByItemsItem[]): ISalesByItemsTotal {
     const quantitySold = sumBy(items, (item) => item.quantitySold);
     const soldCost = sumBy(items, (item) => item.soldCost);
 
@@ -163,12 +164,12 @@ export default class SalesByItemsReport extends FinancialSheet {
 
   /**
    * Retrieve the sheet data.
-   * @returns {ISalesByItemsSheetStatement}
+   * @returns {ISalesByItemsSheetData}
    */
-  reportData(): ISalesByItemsSheetStatement {
+  public reportData(): ISalesByItemsSheetData {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return items.length > 0 ? { items, total } : {};
+    return { items, total };
   }
 }

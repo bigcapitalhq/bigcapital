@@ -59,6 +59,12 @@ export default {
     auto_increment: {
       type: 'boolean',
     },
+    customer_notes: {
+      type: 'string',
+    },
+    terms_conditions: {
+      type: 'string',
+    },
   },
   sales_receipts: {
     next_number: {
@@ -73,6 +79,12 @@ export default {
     preferred_deposit_account: {
       type: 'number',
     },
+    receipt_message: {
+      type: 'string',
+    },
+    terms_conditions: {
+      type: 'string',
+    },
   },
   sales_invoices: {
     next_number: {
@@ -83,6 +95,12 @@ export default {
     },
     auto_increment: {
       type: 'boolean',
+    },
+    customer_notes: {
+      type: 'string',
+    },
+    terms_conditions: {
+      type: 'string',
     },
   },
   payment_receives: {
@@ -118,6 +136,11 @@ export default {
       type: 'number',
     },
   },
+  inventory: {
+    cost_compute_running: {
+      type: 'boolean',
+    },
+  },
   accounts: {
     account_code_required: {
       type: 'boolean',
@@ -146,6 +169,12 @@ export default {
     },
     auto_increment: {
       type: 'boolean',
+    },
+    customer_notes: {
+      type: 'string',
+    },
+    terms_conditions: {
+      type: 'string',
     },
   },
   vendor_credit: {

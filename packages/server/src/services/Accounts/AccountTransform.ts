@@ -13,7 +13,7 @@ export class AccountTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount', 'flattenName'];
+    return ['formattedAmount', 'flattenName', 'bankBalanceFormatted'];
   };
 
   /**
@@ -34,11 +34,22 @@ export class AccountTransformer extends Transformer {
 
   /**
    * Retrieve formatted account amount.
-   * @param   {IAccount} invoice
+   * @param {IAccount} invoice
    * @returns {string}
    */
   protected formattedAmount = (account: IAccount): string => {
     return formatNumber(account.amount, { currencyCode: account.currencyCode });
+  };
+
+  /**
+   * Retrieves the formatted bank balance.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  protected bankBalanceFormatted = (account: IAccount): string => {
+    return formatNumber(account.bankBalance, {
+      currencyCode: account.currencyCode,
+    });
   };
 
   /**

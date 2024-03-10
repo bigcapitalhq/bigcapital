@@ -12,11 +12,14 @@ import {
 import classNames from 'classnames';
 
 import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
+import { GeneralLedgerSheetExportMenu } from './components';
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { compose } from '@/utils';
 
 import withGeneralLedger from './withGeneralLedger';
 import withGeneralLedgerActions from './withGeneralLedgerActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * General ledger - Actions bar.
@@ -27,6 +30,9 @@ function GeneralLedgerActionsBar({
 
   // #withGeneralLedgerActions
   toggleGeneralLedgerFilterDrawer: toggleDisplayFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const { sheetRefresh } = useGeneralLedgerContext();
 
@@ -38,6 +44,11 @@ function GeneralLedgerActionsBar({
   // Handle re-calculate button click.
   const handleRecalcReport = () => {
     sheetRefresh();
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.GeneralLedgerPdfPreview);
   };
 
   return (
@@ -83,12 +94,20 @@ function GeneralLedgerActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<GeneralLedgerSheetExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -99,4 +118,5 @@ export default compose(
     isFilterDrawerOpen: generalLedgerFilterDrawer,
   })),
   withGeneralLedgerActions,
+  withDialogActions,
 )(GeneralLedgerActionsBar);

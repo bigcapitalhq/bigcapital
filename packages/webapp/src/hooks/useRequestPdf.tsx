@@ -2,7 +2,7 @@
 import React from 'react';
 import useApiRequest from './useRequest';
 
-export const useRequestPdf = (url) => {
+export const useRequestPdf = (httpProps) => {
   const apiRequest = useApiRequest();
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoaded, setIsLoaded] = React.useState(false);
@@ -12,9 +12,11 @@ export const useRequestPdf = (url) => {
   React.useEffect(() => {
     setIsLoading(true);
     apiRequest
-      .get(url, {
+      .http({
         headers: { accept: 'application/pdf' },
         responseType: 'blob',
+        ...httpProps,
+        url: `/api/${httpProps?.url}`,
       })
       .then((response) => {
         // Create a Blob from the PDF Stream.

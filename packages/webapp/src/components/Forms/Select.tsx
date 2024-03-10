@@ -26,12 +26,12 @@ const SelectButton = styled(Button)`
   position: relative;
   padding-right: 30px;
 
-  &.bp4-small{
+  &.bp4-small {
     padding-right: 24px;
   }
 
   &:not(.is-selected):not([class*='bp4-intent-']):not(.bp4-minimal) {
-    color: #5c7080;
+    color: #8f99a8;
   }
   &:after {
     content: '';

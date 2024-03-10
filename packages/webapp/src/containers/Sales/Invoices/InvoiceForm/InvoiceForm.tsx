@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, isEmpty } from 'lodash';
+import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -34,7 +34,7 @@ import {
   transformValueToRequest,
   resetFormState,
 } from './utils';
-import { InvoiceNoSyncSettingsToForm } from './components';
+import { InvoiceExchangeRateSync, InvoiceNoSyncSettingsToForm } from './components';
 
 /**
  * Invoice form.
@@ -44,6 +44,8 @@ function InvoiceForm({
   invoiceNextNumber,
   invoiceNumberPrefix,
   invoiceAutoIncrementMode,
+  invoiceCustomerNotes,
+  invoiceTermsConditions,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -79,6 +81,8 @@ function InvoiceForm({
           }),
           entries: orderingLinesIndexes(defaultInvoice.entries),
           currency_code: base_currency,
+          invoice_message: defaultTo(invoiceCustomerNotes, ''),
+          terms_conditions: defaultTo(invoiceTermsConditions, ''),
           ...newInvoice,
         }),
   };
@@ -180,6 +184,7 @@ function InvoiceForm({
 
           {/*---------- Effects ----------*/}
           <InvoiceNoSyncSettingsToForm />
+          <InvoiceExchangeRateSync />
         </Form>
       </Formik>
     </div>
@@ -192,6 +197,8 @@ export default compose(
     invoiceNextNumber: invoiceSettings?.nextNumber,
     invoiceNumberPrefix: invoiceSettings?.numberPrefix,
     invoiceAutoIncrementMode: invoiceSettings?.autoIncrement,
+    invoiceCustomerNotes: invoiceSettings?.customerNotes,
+    invoiceTermsConditions: invoiceSettings?.termsConditions,
   })),
   withCurrentOrganization(),
 )(InvoiceForm);

@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
-import { ISaleInvoice } from '@/interfaces';
+import { GetSaleInvoice } from './GetSaleInvoice';
 
 @Service()
 export class SaleInvoicePdf {
@@ -11,16 +11,23 @@ export class SaleInvoicePdf {
   @Inject()
   private templateInjectable: TemplateInjectable;
 
+  @Inject()
+  private getInvoiceService: GetSaleInvoice;
+
   /**
    * Retrieve sale invoice pdf content.
    * @param {number} tenantId - Tenant Id.
    * @param {ISaleInvoice} saleInvoice -
    * @returns {Promise<Buffer>}
    */
-  async saleInvoicePdf(
+  public async saleInvoicePdf(
     tenantId: number,
-    saleInvoice: ISaleInvoice
+    invoiceId: number
   ): Promise<Buffer> {
+    const saleInvoice = await this.getInvoiceService.getSaleInvoice(
+      tenantId,
+      invoiceId
+    );
     const htmlContent = await this.templateInjectable.render(
       tenantId,
       'modules/invoice-regular',

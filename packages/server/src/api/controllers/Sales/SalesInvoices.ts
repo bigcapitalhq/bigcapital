@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
+import { body, check, param, query } from 'express-validator';
 import { Service, Inject } from 'typedi';
 import BaseController from '../BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -10,14 +10,12 @@ import {
   ISaleInvoiceCreateDTO,
   SaleInvoiceAction,
   AbilitySubject,
+  SendInvoiceMailDTO,
 } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
-const ACCEPT_TYPE = {
-  APPLICATION_PDF: 'application/pdf',
-  APPLICATION_JSON: 'application/json',
-};
 @Service()
 export default class SaleInvoicesController extends BaseController {
   @Inject()
@@ -144,6 +142,48 @@ export default class SaleInvoicesController extends BaseController {
       asyncMiddleware(this.getSalesInvoices.bind(this)),
       this.handleServiceErrors,
       this.dynamicListService.handlerErrorsToResponse
+    );
+    router.get(
+      '/:id/mail-reminder',
+      this.specificSaleInvoiceValidation,
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail-reminder',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMailReminder.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.specificSaleInvoiceValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.validationResult,
+      asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [...this.specificSaleInvoiceValidation],
+      this.validationResult,
+      asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
+      this.handleServiceErrors
     );
     return router;
   }
@@ -360,7 +400,6 @@ export default class SaleInvoicesController extends BaseController {
         saleInvoiceId,
         user
       );
-
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The sale invoice has been deleted successfully.',
@@ -375,43 +414,35 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Request} req - Request object.
    * @param {Response} res - Response object.
    */
-  private async getSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getSaleInvoice(req: Request, res: Response) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
-    try {
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Retrieves invoice in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
+      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
+        tenantId,
+        saleInvoiceId
+      );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+      // Retrieves invoice in json format.
+    } else {
       const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
         tenantId,
         saleInvoiceId,
         user
       );
-      // Response formatter.
-      res.format({
-        // JSON content type.
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res
-            .status(200)
-            .send(this.transfromToResponse({ saleInvoice }));
-        },
-        // PDF content type.
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
-            tenantId,
-            saleInvoice
-          );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
-      });
-    } catch (error) {
-      next(error);
+      return res.status(200).send({ saleInvoice });
     }
   }
   /**
@@ -434,14 +465,10 @@ export default class SaleInvoicesController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const { salesInvoices, filterMeta, pagination } =
+      const salesInvoicesWithPagination =
         await this.saleInvoiceApplication.getSaleInvoices(tenantId, filter);
 
-      return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      return res.status(200).send(salesInvoicesWithPagination);
     } catch (error) {
       next(error);
     }
@@ -468,9 +495,7 @@ export default class SaleInvoicesController extends BaseController {
           tenantId,
           customerId
         );
-      return res.status(200).send({
-        sales_invoices: this.transfromToResponse(salesInvoices),
-      });
+      return res.status(200).send({ salesInvoices });
     } catch (error) {
       next(error);
     }
@@ -498,7 +523,6 @@ export default class SaleInvoicesController extends BaseController {
         invoiceId,
         writeoffDTO
       );
-
       return res.status(200).send({
         id: saleInvoice.id,
         message: 'The given sale invoice has been written-off successfully.',
@@ -629,6 +653,119 @@ export default class SaleInvoicesController extends BaseController {
       next(error);
     }
   };
+
+  /**
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
+
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMail(
+        tenantId,
+        invoiceId,
+        invoiceMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retreivers the sale invoice reminder options.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async sendSaleInvoiceMailReminder(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+    const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
+    try {
+      await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
+        tenantId,
+        invoiceId,
+        invoiceMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The sale invoice mail reminder has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the default mail options of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public async getSaleInvoiceMail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { id: invoiceId } = req.params;
+
+    try {
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
+        tenantId,
+        invoiceId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   /**
    * Handles service errors.

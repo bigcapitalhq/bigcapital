@@ -57,12 +57,12 @@ export class EditBillPayment {
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
-    const oldBillPayment = await BillPayment.query().findById(billPaymentId);
+    const oldBillPayment = await BillPayment.query()
+      .findById(billPaymentId)
+      .withGraphFetched('entries')
+      .throwIfNotFound();
 
-    // Validates the bill payment existance.
-    this.validators.validateBillPaymentExistance(oldBillPayment);
-
-    //
+    // Retrieves the bill payment vendor or throw not found error.
     const vendor = await Contact.query()
       .modify('vendor')
       .findById(billPaymentDTO.vendorId)
@@ -126,7 +126,7 @@ export class EditBillPayment {
         trx,
       } as IBillPaymentEditingPayload);
 
-      // Deletes the bill payment transaction graph from the storage.
+      // Edits the bill payment transaction graph on the storage.
       const billPayment = await BillPayment.query(trx).upsertGraphAndFetch({
         id: billPaymentId,
         ...billPaymentObj,

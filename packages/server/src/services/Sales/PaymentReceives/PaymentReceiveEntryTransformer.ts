@@ -8,7 +8,7 @@ export class PaymentReceiveEntryTransfromer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['paymentAmountFormatted', 'entry'];
+    return ['paymentAmountFormatted', 'invoice'];
   };
 
   /**

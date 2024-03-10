@@ -181,7 +181,9 @@ export function useRejectEstimate(props) {
  */
 
 export function usePdfEstimate(estimateId) {
-  return useRequestPdf(`sales/estimates/${estimateId}`);
+  return useRequestPdf({
+    url: `sales/estimates/${estimateId}`,
+  });
 }
 
 export function useRefreshEstimates() {
@@ -235,6 +237,36 @@ export function useEstimateSMSDetail(estimateId, props, requestProps) {
     {
       select: (res) => res.data.data,
       defaultData: {},
+      ...props,
+    },
+  );
+}
+
+export function useSendSaleEstimateMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useSaleEstimateDefaultOptions(estimateId, props) {
+  return useRequestQuery(
+    [t.SALE_ESTIMATE_MAIL_OPTIONS, estimateId],
+    {
+      method: 'get',
+      url: `sales/estimates/${estimateId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
       ...props,
     },
   );

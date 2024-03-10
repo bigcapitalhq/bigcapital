@@ -24,8 +24,7 @@ export class GetSaleInvoice {
    */
   public async getSaleInvoice(
     tenantId: number,
-    saleInvoiceId: number,
-    authorizedUser: ISystemUser
+    saleInvoiceId: number
   ): Promise<ISaleInvoice> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 

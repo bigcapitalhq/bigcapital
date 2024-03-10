@@ -303,7 +303,7 @@ export default class BillsController extends BaseController {
     try {
       const bill = await this.billsApplication.getBill(tenantId, billId);
 
-      return res.status(200).send(this.transfromToResponse({ bill }));
+      return res.status(200).send({ bill });
     } catch (error) {
       next(error);
     }
@@ -348,14 +348,11 @@ export default class BillsController extends BaseController {
     };
 
     try {
-      const { bills, pagination, filterMeta } =
-        await this.billsApplication.getBills(tenantId, filter);
-
-      return res.status(200).send({
-        bills: this.transfromToResponse(bills),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      const billsWithPagination = await this.billsApplication.getBills(
+        tenantId,
+        filter
+      );
+      return res.status(200).send(billsWithPagination);
     } catch (error) {
       next(error);
     }
@@ -561,6 +558,16 @@ export default class BillsController extends BaseController {
       if (error.errorType === 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'ITEM_ENTRY_TAX_RATE_ID_NOT_FOUND', code: 1900 }],
+        });
+      }
+      if (error.errorType === 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT') {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT',
+              code: 2000,
+            },
+          ],
         });
       }
     }

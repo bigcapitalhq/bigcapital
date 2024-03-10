@@ -3,15 +3,17 @@ import moment from 'moment';
 import { isEmpty } from 'lodash';
 import {
   IInventoryValuationReportQuery,
+  IInventoryValuationSheet,
   IInventoryValuationSheetMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import InventoryValuationSheet from './InventoryValuationSheet';
+import { InventoryValuationSheet } from './InventoryValuationSheet';
 import InventoryService from '@/services/Inventory/Inventory';
 import { Tenant } from '@/system/models';
+import { InventoryValuationMetaInjectable } from './InventoryValuationSheetMeta';
 
 @Service()
-export default class InventoryValuationSheetService {
+export class InventoryValuationSheetService {
   @Inject()
   tenancy: TenancyService;
 
@@ -20,6 +22,9 @@ export default class InventoryValuationSheetService {
 
   @Inject()
   inventoryService: InventoryService;
+
+  @Inject()
+  private inventoryValuationMeta: InventoryValuationMetaInjectable;
 
   /**
    * Defaults balance sheet filter query.
@@ -46,33 +51,6 @@ export default class InventoryValuationSheetService {
   }
 
   /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IInventoryValuationSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
-      isCostComputeRunning,
-    };
-  }
-
-  /**
    * Inventory valuation sheet.
    * @param {number} tenantId - Tenant id.
    * @param {IInventoryValuationReportQuery} query - Valuation query.
@@ -80,7 +58,7 @@ export default class InventoryValuationSheetService {
   public async inventoryValuationSheet(
     tenantId: number,
     query: IInventoryValuationReportQuery
-  ) {
+  ): Promise<IInventoryValuationSheet> {
     const { Item, InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
     const tenant = await Tenant.query()
@@ -135,10 +113,13 @@ export default class InventoryValuationSheetService {
     // Retrieve the inventory valuation report data.
     const inventoryValuationData = inventoryValuationInstance.reportData();
 
+    // Retrieves the inventorty valuation meta.
+    const meta = await this.inventoryValuationMeta.meta(tenantId, filter);
+
     return {
       data: inventoryValuationData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

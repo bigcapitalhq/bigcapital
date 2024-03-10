@@ -1,27 +1,24 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import {
-  ISalesByItemsReportQuery,
-  ISalesByItemsSheetStatement,
-  ISalesByItemsSheetMeta
-} from '@/interfaces';
+import { ISalesByItemsReportQuery, ISalesByItemsSheet } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import SalesByItems from './SalesByItems';
 import { Tenant } from '@/system/models';
+import { SalesByItemsMeta } from './SalesByItemsMeta';
 
 @Service()
-export default class SalesByItemsReportService {
+export class SalesByItemsReportService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
-  @Inject('logger')
-  logger: any;
+  @Inject()
+  private salesByItemsMeta: SalesByItemsMeta;
 
   /**
    * Defaults balance sheet filter query.
    * @return {IBalanceSheetQuery}
    */
-  get defaultQuery(): ISalesByItemsReportQuery {
+  private get defaultQuery(): ISalesByItemsReportQuery {
     return {
       fromDate: moment().startOf('month').format('YYYY-MM-DD'),
       toDate: moment().format('YYYY-MM-DD'),
@@ -39,44 +36,15 @@ export default class SalesByItemsReportService {
   }
 
   /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): ISalesByItemsSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      organizationName,
-      baseCurrency,
-    };
-  }
-
-  /**
    * Retrieve balance sheet statement.
-   * -------------
    * @param {number} tenantId
    * @param {IBalanceSheetQuery} query
-   *
-   * @return {IBalanceSheetStatement}
+   * @return {Promise<ISalesByItemsSheet>}
    */
   public async salesByItems(
     tenantId: number,
     query: ISalesByItemsReportQuery
-  ): Promise<{
-    data: ISalesByItemsSheetStatement,
-    query: ISalesByItemsReportQuery,
-    meta: ISalesByItemsSheetMeta,
-  }> {
+  ): Promise<ISalesByItemsSheet> {
     const { Item, InventoryTransaction } = this.tenancy.models(tenantId);
 
     const tenant = await Tenant.query()
@@ -107,22 +75,24 @@ export default class SalesByItemsReportService {
         builder.whereIn('itemId', inventoryItemsIds);
 
         // Filter the date range of the sheet.
-        builder.modify('filterDateRange', filter.fromDate, filter.toDate)
+        builder.modify('filterDateRange', filter.fromDate, filter.toDate);
       }
     );
-
-    const purchasesByItemsInstance = new SalesByItems(
+    const sheet = new SalesByItems(
       filter,
       inventoryItems,
       inventoryTransactions,
-      tenant.metadata.baseCurrency,
+      tenant.metadata.baseCurrency
     );
-    const purchasesByItemsData = purchasesByItemsInstance.reportData();
+    const salesByItemsData = sheet.reportData();
+
+    // Retrieve the sales by items meta.
+    const meta = await this.salesByItemsMeta.meta(tenantId, query);
 
     return {
-      data: purchasesByItemsData,
+      data: salesByItemsData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

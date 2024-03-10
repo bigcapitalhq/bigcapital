@@ -8,7 +8,6 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FormatNumber,
 } from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 
@@ -23,7 +22,7 @@ export default function VendorCreditDetailDrawerFooter() {
       <VendorCreditTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'vendor_credit.drawer.label_subtotal'} />}
-          value={vendorCredit.formatted_amount}
+          value={vendorCredit.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine

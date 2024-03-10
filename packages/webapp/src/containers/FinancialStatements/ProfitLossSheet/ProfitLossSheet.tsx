@@ -15,6 +15,7 @@ import { useProfitLossSheetQuery } from './utils';
 import { ProfitLossSheetProvider } from './ProfitLossProvider';
 import { ProfitLossSheetAlerts, ProfitLossSheetLoadingBar } from './components';
 import { ProfitLossBody } from './ProfitLossBody';
+import { ProfitLossSheetDialogs } from './ProfitLossSheetDialogs';
 
 /**
  * Profit/Loss financial statement sheet.
@@ -67,6 +68,8 @@ function ProfitLossSheet({
         />
         <ProfitLossBody />
       </DashboardPageContent>
+
+      <ProfitLossSheetDialogs />
     </ProfitLossSheetProvider>
   );
 }

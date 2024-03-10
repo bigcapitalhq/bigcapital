@@ -1,10 +1,9 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { sumBy, isEmpty } from 'lodash';
+import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 
@@ -19,7 +18,10 @@ import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 import EstimtaeFormTopBar from './EstimtaeFormTopBar';
-import { EstimateIncrementSyncSettingsToForm } from './components';
+import {
+  EstimateIncrementSyncSettingsToForm,
+  EstimateSyncAutoExRateToForm,
+} from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -43,6 +45,8 @@ function EstimateForm({
   estimateNextNumber,
   estimateNumberPrefix,
   estimateAutoIncrementMode,
+  estimateCustomerNotes,
+  estimateTermsConditions,
 
   // #withCurrentOrganization
   organization: { base_currency },
@@ -60,25 +64,23 @@ function EstimateForm({
     estimateNumberPrefix,
     estimateNextNumber,
   );
-
   // Initial values in create and edit mode.
-  const initialValues = useMemo(
-    () => ({
-      ...(!isEmpty(estimate)
-        ? { ...transformToEditForm(estimate) }
-        : {
-            ...defaultEstimate,
-            // If the auto-increment mode is enabled, take the next estimate
-            // number from the settings.
-            ...(estimateAutoIncrementMode && {
-              estimate_number: estimateNumber,
-            }),
-            entries: orderingLinesIndexes(defaultEstimate.entries),
-            currency_code: base_currency,
+  const initialValues = {
+    ...(!isEmpty(estimate)
+      ? { ...transformToEditForm(estimate) }
+      : {
+          ...defaultEstimate,
+          // If the auto-increment mode is enabled, take the next estimate
+          // number from the settings.
+          ...(estimateAutoIncrementMode && {
+            estimate_number: estimateNumber,
           }),
-    }),
-    [estimate, estimateNumber, estimateAutoIncrementMode, base_currency],
-  );
+          entries: orderingLinesIndexes(defaultEstimate.entries),
+          currency_code: base_currency,
+          terms_conditions: defaultTo(estimateTermsConditions, ''),
+          note: defaultTo(estimateCustomerNotes, ''),
+        }),
+  };
 
   // Handles form submit.
   const handleFormSubmit = (
@@ -170,6 +172,7 @@ function EstimateForm({
 
           {/*------- Effects -------*/}
           <EstimateIncrementSyncSettingsToForm />
+          <EstimateSyncAutoExRateToForm />
         </Form>
       </Formik>
     </div>
@@ -181,6 +184,8 @@ export default compose(
     estimateNextNumber: estimatesSettings?.nextNumber,
     estimateNumberPrefix: estimatesSettings?.numberPrefix,
     estimateAutoIncrementMode: estimatesSettings?.autoIncrement,
+    estimateCustomerNotes: estimatesSettings?.customerNotes,
+    estimateTermsConditions: estimatesSettings?.termsConditions,
   })),
   withCurrentOrganization(),
 )(EstimateForm);

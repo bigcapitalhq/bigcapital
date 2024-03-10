@@ -8,9 +8,9 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import authenticationRoutes from '@/routes/authentication';
 import { Icon, FormattedMessage as T } from '@/components';
 import { useIsAuthenticated } from '@/hooks/state';
+import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 import '@/style/pages/Authentication/Auth.scss';
-import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 export function Authentication() {
   const to = { pathname: '/' };

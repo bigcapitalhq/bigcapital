@@ -25,6 +25,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate transactions by reference.
+  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate accounts.
   queryClient.invalidateQueries(t.ACCOUNTS);
   queryClient.invalidateQueries(t.ACCOUNT);
@@ -185,7 +188,9 @@ export function useInvoice(invoiceId, props, requestProps) {
  * Retrieve the invoice pdf document data.
  */
 export function usePdfInvoice(invoiceId) {
-  return useRequestPdf(`sales/invoices/${invoiceId}`);
+  return useRequestPdf({
+    url: `sales/invoices/${invoiceId}`,
+  });
 }
 
 /**
@@ -302,6 +307,36 @@ export function useInvoicePaymentTransactions(invoiceId, props) {
     {
       select: (res) => res.data.data,
       defaultData: [],
+      ...props,
+    },
+  );
+}
+
+export function useSendSaleInvoiceMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function useSaleInvoiceDefaultOptions(invoiceId, props) {
+  return useRequestQuery(
+    [t.SALE_INVOICE_DEFAULT_OPTIONS, invoiceId],
+    {
+      method: 'get',
+      url: `sales/invoices/${invoiceId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
       ...props,
     },
   );

@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -15,17 +14,23 @@ import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  SaleEstimateAction,
+  AbilitySubject,
+  SaleInvoiceAction,
+} from '@/constants/abilityOption';
 import { EstimateMoreMenuItems } from './components';
 import {
   DrawerActionsBar,
   Icon,
   FormattedMessage as T,
   Can,
+  If,
 } from '@/components';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimate read-only details actions bar of the drawer.
@@ -41,7 +46,7 @@ function EstimateDetailActionsBar({
   closeDrawer,
 }) {
   // Estimate details drawer context.
-  const { estimateId } = useEstimateDetailDrawerContext();
+  const { estimateId, estimate } = useEstimateDetailDrawerContext();
 
   // History.
   const history = useHistory();
@@ -49,6 +54,14 @@ function EstimateDetailActionsBar({
   // Handle edit sale estimate.
   const handleEditEstimate = () => {
     history.push(`/estimates/${estimateId}/edit`);
+    closeDrawer(DRAWERS.ESTIMATE_DETAILS);
+  };
+
+  // Handle convert to invoice.
+  const handleConvertEstimate = () => {
+    history.push(`/invoices/new?from_estimate_id=${estimateId}`, {
+      action: estimateId,
+    });
     closeDrawer(DRAWERS.ESTIMATE_DETAILS);
   };
 
@@ -65,6 +78,10 @@ function EstimateDetailActionsBar({
   const handleNotifyViaSMS = () => {
     openDialog('notify-estimate-via-sms', { estimateId });
   };
+  // Handles the estimate mail dialog.
+  const handleMailEstimate = () => {
+    openDialog(DialogsName.EstimateMail, { estimateId });
+  };
 
   return (
     <DrawerActionsBar>
@@ -78,13 +95,32 @@ function EstimateDetailActionsBar({
           />
           <NavbarDivider />
         </Can>
+        <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
+          <If condition={!estimate.is_converted_to_invoice}>
+            <Button
+              className={Classes.MINIMAL}
+              intent={Intent.SUCCESS}
+              icon={<Icon icon="tick" />}
+              text={<T id={'convert_to_invoice'} />}
+              onClick={handleConvertEstimate}
+            />
+            <NavbarDivider />
+          </If>
+        </Can>
         <Can I={SaleEstimateAction.View} a={AbilitySubject.Estimate}>
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="envelope" />}
+            text={'Send Mail'}
+            onClick={handleMailEstimate}
+          />
           <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintEstimate}
           />
+          <NavbarDivider />
         </Can>
         <Can I={SaleEstimateAction.Delete} a={AbilitySubject.Estimate}>
           <Button

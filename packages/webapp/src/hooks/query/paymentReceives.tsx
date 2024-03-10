@@ -24,6 +24,9 @@ const commonInvalidateQueries = (client) => {
   // Invalidate financial reports.
   client.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate transactions by reference.
+  client.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate customers.
   client.invalidateQueries(t.CUSTOMERS);
   client.invalidateQueries(t.CUSTOMER);
@@ -230,7 +233,39 @@ export function usePaymentReceiveSMSDetail(
 
 /**
  * Retrieve the payment receive pdf document data.
+ * @param {number} paymentReceiveId - Payment receive id.
  */
 export function usePdfPaymentReceive(paymentReceiveId) {
-  return useRequestPdf(`sales/payment_receives/${paymentReceiveId}`);
+  return useRequestPdf({ url: `sales/payment_receives/${paymentReceiveId}` });
+}
+
+export function useSendPaymentReceiveMail(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([id, values]) =>
+      apiRequest.post(`sales/payment_receives/${id}/mail`, values),
+    {
+      onSuccess: (res, [id, values]) => {
+        // Common invalidate queries.
+        commonInvalidateQueries(queryClient);
+      },
+      ...props,
+    },
+  );
+}
+
+export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {
+  return useRequestQuery(
+    [t.PAYMENT_RECEIVE_MAIL_OPTIONS, paymentReceiveId],
+    {
+      method: 'get',
+      url: `sales/payment_receives/${paymentReceiveId}/mail`,
+    },
+    {
+      select: (res) => res.data.data,
+      ...props,
+    },
+  );
 }

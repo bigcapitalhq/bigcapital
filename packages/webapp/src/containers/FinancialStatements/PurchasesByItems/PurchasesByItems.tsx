@@ -13,6 +13,7 @@ import { usePurchasesByItemsQuery } from './utils';
 import { compose } from '@/utils';
 
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
+import { PurchasesByItemsDialogs } from './PurchasesByItemsDialogs';
 
 /**
  * Purchases by items.
@@ -67,6 +68,8 @@ function PurchasesByItems({
           <PurchasesByItemsBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <PurchasesByItemsDialogs />
     </PurchasesByItemsProvider>
   );
 }

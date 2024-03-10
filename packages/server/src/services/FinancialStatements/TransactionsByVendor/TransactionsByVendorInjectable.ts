@@ -12,6 +12,7 @@ import TransactionsByVendor from './TransactionsByVendor';
 import Ledger from '@/services/Accounting/Ledger';
 import TransactionsByVendorRepository from './TransactionsByVendorRepository';
 import { Tenant } from '@/system/models';
+import { TransactionsByVendorMeta } from './TransactionsByVendorMeta';
 
 export class TransactionsByVendorsInjectable
   implements ITransactionsByVendorsService
@@ -21,6 +22,9 @@ export class TransactionsByVendorsInjectable
 
   @Inject()
   private reportRepository: TransactionsByVendorRepository;
+
+  @Inject()
+  private transactionsByVendorMeta: TransactionsByVendorMeta;
 
   /**
    * Defaults balance sheet filter query.
@@ -165,9 +169,12 @@ export class TransactionsByVendorsInjectable
       tenant.metadata.baseCurrency,
       i18n
     );
+    const meta = await this.transactionsByVendorMeta.meta(tenantId, filter);
+
     return {
       data: reportInstance.reportData(),
       query: filter,
+      meta,
     };
   }
 }

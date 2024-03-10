@@ -1,17 +1,17 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import moment from 'moment';
+import { query, ValidationChain, ValidationSchema } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseFinancialReportController from './BaseFinancialReportController';
-import SalesByItemsReportService from '@/services/FinancialStatements/SalesByItems/SalesByItemsService';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { SalesByItemsApplication } from '@/services/FinancialStatements/SalesByItems/SalesByItemsApplication';
 
 @Service()
 export default class SalesByItemsReportController extends BaseFinancialReportController {
   @Inject()
-  salesByItemsService: SalesByItemsReportService;
+  private salesByItemsApp: SalesByItemsApplication;
 
   /**
    * Router constructor.
@@ -24,13 +24,14 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       CheckPolicies(ReportsAction.READ_SALES_BY_ITEMS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.purchasesByItems.bind(this))
+      asyncMiddleware(this.salesByItems.bind(this))
     );
     return router;
   }
 
   /**
    * Validation schema.
+   * @returns {ValidationChain[]}
    */
   private get validationSchema(): ValidationChain[] {
     return [
@@ -60,26 +61,53 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
    * @param {Request} req -
    * @param {Response} res -
    */
-  private async purchasesByItems(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async salesByItems(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
+    const accept = this.accepts(req);
 
-    try {
-      const { data, query, meta } = await this.salesByItemsService.salesByItems(
-        tenantId,
-        filter
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_JSON_TABLE,
+      ACCEPT_TYPE.APPLICATION_CSV,
+      ACCEPT_TYPE.APPLICATION_XLSX,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Retrieves the csv format.
+    if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
+      const buffer = await this.salesByItemsApp.csv(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
+      res.setHeader('Content-Type', 'text/csv');
+
+      return res.send(buffer);
+      // Retrieves the json table format.
+    } else if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
+      const table = await this.salesByItemsApp.table(tenantId, filter);
+
+      return res.status(200).send(table);
+      // Retrieves the xlsx format.
+    } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
+      const buffer = this.salesByItemsApp.xlsx(tenantId, filter);
+
+      res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+      res.setHeader(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       );
-      return res.status(200).send({
-        meta: this.transfromToResponse(meta),
-        data: this.transfromToResponse(data),
-        query: this.transfromToResponse(query),
+      return res.send(buffer);
+      // Retrieves the json format.
+    } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent = await this.salesByItemsApp.pdf(tenantId, filter);
+
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
       });
-    } catch (error) {
-      next(error);
+      return res.send(pdfContent);
+    } else {
+      const sheet = await this.salesByItemsApp.sheet(tenantId, filter);
+      return res.status(200).send(sheet);
     }
   }
 }

@@ -26,6 +26,7 @@ import { useInvoicesListContext } from './InvoicesListProvider';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Invoices datatable.
@@ -98,6 +99,11 @@ function InvoicesDataTable({
     openDialog('invoice-pdf-preview', { invoiceId: id });
   };
 
+  // Handle send mail invoice.
+  const handleSendMailInvoice = ({ id }) => {
+    openDialog(DialogsName.InvoiceMail, { invoiceId: id });
+  };
+
   // Handle cell click.
   const handleCellClick = (cell, event) => {
     openDrawer(DRAWERS.INVOICE_DETAILS, { invoiceId: cell.row.original.id });
@@ -157,6 +163,7 @@ function InvoicesDataTable({
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,
           onConvert: handleConvertToCreitNote,
+          onSendMail: handleSendMailInvoice
         }}
       />
     </DashboardContentTable>

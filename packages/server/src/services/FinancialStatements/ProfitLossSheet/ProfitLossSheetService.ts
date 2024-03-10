@@ -6,11 +6,10 @@ import {
 } from '@/interfaces';
 import ProfitLossSheet from './ProfitLossSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
 import { mergeQueryWithDefaults } from './utils';
 import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
+import { ProfitLossSheetMeta } from './ProfitLossSheetMeta';
 
 // Profit/Loss sheet service.
 @Service()
@@ -19,7 +18,7 @@ export default class ProfitLossSheetService {
   private tenancy: TenancyService;
 
   @Inject()
-  private inventoryService: InventoryService;
+  private profitLossSheetMeta: ProfitLossSheetMeta;
 
   /**
    * Retrieve profit/loss sheet statement.
@@ -47,6 +46,7 @@ export default class ProfitLossSheetService {
 
     const profitLossRepo = new ProfitLossSheetRepository(models, filter);
 
+    // Loads the profit/loss sheet data.
     await profitLossRepo.asyncInitialize();
 
     // Profit/Loss report instance.
@@ -57,38 +57,15 @@ export default class ProfitLossSheetService {
       i18n
     );
     // Profit/loss report data and collumns.
-    const profitLossData = profitLossInstance.reportData();
+    const data = profitLossInstance.reportData();
+
+    // Retrieve the profit/loss sheet meta.
+    const meta = await this.profitLossSheetMeta.meta(tenantId, filter);
 
     return {
-      data: profitLossData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      data,
+      meta,
     };
   };
-
-  /**
-   * Retrieve the trial balance sheet meta.
-   * @param {number} tenantId - Tenant id.
-   * @returns {ITrialBalanceSheetMeta}
-   */
-  private reportMetadata(tenantId: number): IProfitLossSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
-    };
-  }
 }

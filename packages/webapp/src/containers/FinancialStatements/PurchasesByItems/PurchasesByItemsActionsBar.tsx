@@ -16,8 +16,11 @@ import NumberFormatDropdown from '@/components/NumberFormatDropdown';
 
 import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose, saveInvoke } from '@/utils';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
+import { PurchasesByItemsExportMenu } from './components';
+import { DialogsName } from '@/constants/dialogs';
 
 function PurchasesByItemsActionsBar({
   // #withPurchasesByItems
@@ -25,6 +28,9 @@ function PurchasesByItemsActionsBar({
 
   // #withPurchasesByItemsActions
   togglePurchasesByItemsFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -45,6 +51,11 @@ function PurchasesByItemsActionsBar({
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
+  };
+
+  // Handle print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.PurchasesByItemsPdfPreview);
   };
 
   return (
@@ -105,12 +116,20 @@ function PurchasesByItemsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<PurchasesByItemsExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -121,4 +140,5 @@ export default compose(
     purchasesByItemsDrawerFilter,
   })),
   withPurchasesByItemsActions,
+  withDialogActions,
 )(PurchasesByItemsActionsBar);

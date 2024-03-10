@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
+import { Service, Inject } from 'typedi';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
 import { ExpenseGLEntries } from './ExpenseGLEntries';
 
 @Service()

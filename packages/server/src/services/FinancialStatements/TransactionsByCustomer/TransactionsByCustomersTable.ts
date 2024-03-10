@@ -1,6 +1,10 @@
 import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
-import { ITransactionsByCustomersCustomer, ITableRow, ITableColumn } from '@/interfaces';
+import {
+  ITransactionsByCustomersCustomer,
+  ITableRow,
+  ITableColumn,
+} from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -78,6 +82,14 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    * @returns {ITableColumn[]}
    */
   public tableColumns = (): ITableColumn[] => {
-    return [];
-  }
+    return [
+      { key: 'customer_name', label: 'Customer name' },
+      { key: 'account_name', label: 'Account Name' },
+      { key: 'ref_type', label: 'Reference Type' },
+      { key: 'transaction_type', label: 'Transaction Type' },
+      { key: 'credit', label: 'Credit' },
+      { key: 'debit', label: 'Debit' },
+      { key: 'running_balance', label: 'Running Balance' },
+    ];
+  };
 }

@@ -11,7 +11,7 @@ import {
 } from '@/interfaces';
 import { allPassedConditionsPass, transformToMap } from 'utils';
 
-export default class InventoryValuationSheet extends FinancialSheet {
+export class InventoryValuationSheet extends FinancialSheet {
   readonly query: IInventoryValuationReportQuery;
   readonly items: IItem[];
   readonly INInventoryCostLots: Map<number, InventoryCostLotTracker>;
@@ -259,6 +259,6 @@ export default class InventoryValuationSheet extends FinancialSheet {
     const items = this.itemsSection();
     const total = this.totalSection(items);
 
-    return items.length > 0 ? { items, total } : {};
+    return { items, total };
   }
 }

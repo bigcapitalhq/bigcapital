@@ -1,3 +1,18 @@
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
+  'Estimate {EstimateNumber} is awaiting your approval';
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {CustomerName}</p>
+<p>Thank you for your business, You can view or print your estimate from attachements.</p>
+<p>
+Estimate <strong>#{EstimateNumber}</strong><br />
+Expiration Date : <strong>{EstimateExpirationDate}</strong><br />
+Amount   : <strong>{EstimateAmount}</strong></br />
+</p>
+
+<p>
+<i>Regards</i><br />
+<i>{CompanyName}</i>
+</p>
+`;
 
 export const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
@@ -8,7 +23,7 @@ export const ERRORS = {
   CUSTOMER_HAS_SALES_ESTIMATES: 'CUSTOMER_HAS_SALES_ESTIMATES',
   SALE_ESTIMATE_NO_IS_REQUIRED: 'SALE_ESTIMATE_NO_IS_REQUIRED',
   SALE_ESTIMATE_ALREADY_DELIVERED: 'SALE_ESTIMATE_ALREADY_DELIVERED',
-  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED'
+  SALE_ESTIMATE_ALREADY_APPROVED: 'SALE_ESTIMATE_ALREADY_APPROVED',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];

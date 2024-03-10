@@ -67,6 +67,7 @@ export const ERRORS = {
   BILL_NUMBER_EXISTS: 'BILL.NUMBER.EXISTS',
   ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
     'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+  BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT: 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT',
 };
 /**
  * Transformes the bill to initial values of edit form.
@@ -200,6 +201,14 @@ export const handleErrors = (errors, { setErrors }) => {
       }),
     );
   }
+  if (
+    errors.some((e) => e.type === ERRORS.BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT)
+  ) {
+    AppToaster.show({
+      intent: Intent.DANGER,
+      message: intl.get('bill.total_smaller_than_paid_amount'),
+    });
+  }
 };
 
 export const useSetPrimaryBranchToForm = () => {
@@ -322,8 +331,8 @@ export const useBillAggregatedTaxRates = () => {
   const { taxRates } = useBillFormContext();
 
   const aggregateTaxRates = React.useMemo(
-    () => aggregateItemEntriesTaxRates(taxRates),
-    [taxRates],
+    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
+    [values.currency_code, taxRates],
   );
   // Calculate the total tax amount of bill entries.
   return React.useMemo(() => {

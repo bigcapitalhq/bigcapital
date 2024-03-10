@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { omit, first, sumBy } from 'lodash';
+import { omit, first, sumBy, round } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -57,7 +57,7 @@ export const defaultInvoice = {
   reference_no: '',
   invoice_message: '',
   terms_conditions: '',
-  exchange_rate: 1,
+  exchange_rate: '1',
   currency_code: '',
   branch_id: '',
   warehouse_id: '',
@@ -109,6 +109,16 @@ export const transformErrors = (errors, { setErrors }) => {
   ) {
     AppToaster.show({
       message: intl.get('sale_estimate_is_already_converted_to_invoice'),
+      intent: Intent.DANGER,
+    });
+  }
+  if (
+    errors.some(
+      ({ type }) => type === ERROR.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT,
+    )
+  ) {
+    AppToaster.show({
+      message: intl.get('sale_invoice.total_smaller_than_paid_amount'),
       intent: Intent.DANGER,
     });
   }
@@ -333,8 +343,8 @@ export const useInvoiceAggregatedTaxRates = () => {
   const { taxRates } = useInvoiceFormContext();
 
   const aggregateTaxRates = React.useMemo(
-    () => aggregateItemEntriesTaxRates(taxRates),
-    [taxRates],
+    () => aggregateItemEntriesTaxRates(values.currency_code, taxRates),
+    [values.currency_code, taxRates],
   );
   // Calculate the total tax amount of invoice entries.
   return React.useMemo(() => {

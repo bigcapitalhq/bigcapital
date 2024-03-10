@@ -3,6 +3,7 @@ import { CustomerBalanceSummaryExportInjectable } from './CustomerBalanceSummary
 import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
 import { ICustomerBalanceSummaryQuery } from '@/interfaces';
 import { CustomerBalanceSummaryService } from './CustomerBalanceSummaryService';
+import { CustomerBalanceSummaryPdf } from './CustomerBalanceSummaryPdf';
 
 @Service()
 export class CustomerBalanceSummaryApplication {
@@ -14,6 +15,9 @@ export class CustomerBalanceSummaryApplication {
 
   @Inject()
   private customerBalanceSummarySheet: CustomerBalanceSummaryService;
+  
+  @Inject()
+  private customerBalanceSummaryPdf: CustomerBalanceSummaryPdf;
 
   /**
    * Retrieves the customer balance sheet in json format.
@@ -56,5 +60,15 @@ export class CustomerBalanceSummaryApplication {
    */
   public csv(tenantId: number, query: ICustomerBalanceSummaryQuery) {
     return this.customerBalanceSummaryExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the customer balance sheet in PDF format.
+   * @param {number} tenantId
+   * @param {ICustomerBalanceSummaryQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: ICustomerBalanceSummaryQuery) {
+    return this.customerBalanceSummaryPdf.pdf(tenantId, query);
   }
 }

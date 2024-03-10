@@ -54,7 +54,7 @@ function CashflowBankAccount({
   // #withAlertsDialog
   openAlert,
 
-  // #withDial
+  // #withDialog
   openDialog,
 
   // #withDrawerActions

@@ -140,7 +140,6 @@ function ReceiptActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
-
         <NavbarDivider />
         <DashboardRowsHeightButton
           initialValue={receiptsTableSize}

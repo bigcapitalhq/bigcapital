@@ -1,0 +1,57 @@
+@import "../base.scss";
+
+html,
+body {
+  font-size: 14px;
+}
+body{
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.28581;
+  text-transform: none;
+  color: #000;
+  font-family: Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, Icons16, sans-serif;
+}
+.sheet{
+  padding: 20px;
+}
+.sheet__company-name{
+  margin: 0;
+  font-size: 1.4rem;
+}
+.sheet__sheet-type {
+  margin: 0
+}
+.sheet__sheet-date {
+  margin-top: 0.35rem;
+}
+
+.sheet__header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.sheet__table {
+  border-top: 1px solid #000;
+  table-layout: fixed;
+  border-spacing: 0;
+  text-align: left;
+  font-size: inherit;
+  width: 100%;
+}
+
+.sheet__table thead th {
+  color: #000;
+  border-bottom: 1px solid #000000;
+  padding: 0.5rem;
+}
+
+.sheet__table tbody td {
+  border-bottom: 0;
+  padding-top: 0.28rem;
+  padding-bottom: 0.28rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  color: #252A31;
+  border-bottom: 1px solid transparent;
+}

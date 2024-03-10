@@ -3,6 +3,7 @@ import { IVendorBalanceSummaryQuery } from '@/interfaces';
 import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
 import { VendorBalanceSummaryExportInjectable } from './VendorBalanceSummaryExportInjectable';
 import { VendorBalanceSummaryService } from './VendorBalanceSummaryService';
+import { VendorBalanceSummaryPdf } from './VendorBalanceSummaryPdf';
 
 @Service()
 export class VendorBalanceSummaryApplication {
@@ -14,6 +15,9 @@ export class VendorBalanceSummaryApplication {
 
   @Inject()
   private vendorBalanceSummaryExport: VendorBalanceSummaryExportInjectable;
+
+  @Inject()
+  private vendorBalanceSummaryPdf: VendorBalanceSummaryPdf;
 
   /**
    * Retrieves the vendor balance summary sheet in sheet format.
@@ -58,5 +62,15 @@ export class VendorBalanceSummaryApplication {
     query: IVendorBalanceSummaryQuery
   ): Promise<string> {
     return this.vendorBalanceSummaryExport.csv(tenantId, query);
+  }
+
+  /**
+   * Retrieves the vendor balance summary sheet in pdf format.
+   * @param {number} tenantId
+   * @param {IVendorBalanceSummaryQuery} query
+   * @returns {Promise<Buffer>}
+   */
+  public pdf(tenantId: number, query: IVendorBalanceSummaryQuery) {
+    return this.vendorBalanceSummaryPdf.pdf(tenantId, query);
   }
 }

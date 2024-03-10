@@ -19,6 +19,7 @@ import {
   FormattedMessage as T,
   Choose,
   Can,
+  If,
   TextOverviewTooltipCell,
 } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
@@ -94,7 +95,7 @@ export const useInvoiceReadonlyEntriesColumns = () => {
  * @returns {React.JSX}
  */
 export const BadDebtMenuItem = ({
-  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert },
+  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert, onDeliver },
 }) => {
   const { invoice } = useInvoiceDetailDrawerContext();
 
@@ -108,6 +109,12 @@ export const BadDebtMenuItem = ({
       }}
       content={
         <Menu>
+          <If condition={!invoice.is_delivered}>
+            <MenuItem
+              onClick={onDeliver}
+              text={<T id={'mark_as_delivered'} />}
+            />
+          </If>
           <Choose>
             <Choose.When condition={!invoice.is_writtenoff}>
               <MenuItem

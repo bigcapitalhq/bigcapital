@@ -20,6 +20,8 @@ import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider
 
 import { saveInvoke, compose } from '@/utils';
 import { VendorSummarySheetExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Vendors balance summary action bar.
@@ -34,6 +36,9 @@ function VendorsBalanceSummaryActionsBar({
 
   // #withVendorsBalanceSummaryActions
   toggleVendorSummaryFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const { isVendorsBalanceLoading, refetch } =
     useVendorsBalanceSummaryContext();
@@ -50,6 +55,11 @@ function VendorsBalanceSummaryActionsBar({
   // handle number format submit.
   const handleNumberFormatSubmit = (numberFormat) => {
     saveInvoke(onNumberFormatSubmit, numberFormat);
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.VendorBalancePdfPreview);
   };
 
   return (
@@ -106,6 +116,7 @@ function VendorsBalanceSummaryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Popover
           content={<VendorSummarySheetExportMenu />}
@@ -128,4 +139,5 @@ export default compose(
   withVendorsBalanceSummary(({ VendorsSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: VendorsSummaryFilterDrawer,
   })),
+  withDialogActions,
 )(VendorsBalanceSummaryActionsBar);

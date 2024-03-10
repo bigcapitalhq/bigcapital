@@ -3,8 +3,6 @@ import InviteUserDialog from '@/containers/Dialogs/InviteUserDialog';
 import UserFormDialog from '@/containers/Dialogs/UserFormDialog';
 import ItemCategoryDialog from '@/containers/Dialogs/ItemCategoryDialog';
 import CurrencyFormDialog from '@/containers/Dialogs/CurrencyFormDialog';
-import ExchangeRateFormDialog from '@/containers/Dialogs/ExchangeRateFormDialog';
-
 import InventoryAdjustmentDialog from '@/containers/Dialogs/InventoryAdjustmentFormDialog';
 import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 import KeyboardShortcutsDialog from '@/containers/Dialogs/keyboardShortcutsDialog';
@@ -47,6 +45,12 @@ import ProjectInvoicingFormDialog from '@/containers/Projects/containers/Project
 import ProjectBillableEntriesFormDialog from '@/containers/Projects/containers/ProjectBillableEntriesFormDialog';
 import TaxRateFormDialog from '@/containers/TaxRates/dialogs/TaxRateFormDialog/TaxRateFormDialog';
 import { DialogsName } from '@/constants/dialogs';
+import InvoiceExchangeRateChangeDialog from '@/containers/Sales/Invoices/InvoiceForm/Dialogs/InvoiceExchangeRateChangeDialog';
+import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/InvoiceMailDialog';
+import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
+import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
+import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
+import { ConnectBankDialog } from '@/containers/CashFlow/ConnectBankDialog';
 
 /**
  * Dialogs container.
@@ -58,7 +62,6 @@ export default function DialogsContainer() {
       <CurrencyFormDialog dialogName={DialogsName.CurrencyForm} />
       <InviteUserDialog dialogName={DialogsName.InviteForm} />
       <UserFormDialog dialogName={DialogsName.UserForm} />
-      <ExchangeRateFormDialog dialogName={DialogsName.ExchangeRateForm} />
       <ItemCategoryDialog dialogName={DialogsName.ItemCategoryForm} />
       <InventoryAdjustmentDialog
         dialogName={DialogsName.InventoryAdjustmentForm}
@@ -137,6 +140,14 @@ export default function DialogsContainer() {
         dialogName={DialogsName.ProjectBillableEntriesForm}
       />
       <TaxRateFormDialog dialogName={DialogsName.TaxRateForm} />
+      <InvoiceExchangeRateChangeDialog
+        dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
+      />
+      <InvoiceMailDialog dialogName={DialogsName.InvoiceMail} />
+      <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
+      <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
+      <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
+      <ConnectBankDialog dialogName={DialogsName.ConnectBankCreditCard} />
     </div>
   );
 }

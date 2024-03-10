@@ -6,6 +6,7 @@ import '@/style/pages/CreditNote/PageForm.scss';
 
 import CreditNoteForm from './CreditNoteForm';
 import { CreditNoteFormProvider } from './CreditNoteFormProvider';
+import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvider';
 
 /**
  * Credit note form page.
@@ -16,7 +17,9 @@ export default function CreditNoteFormPage() {
 
   return (
     <CreditNoteFormProvider creditNoteId={idAsInteger}>
-      <CreditNoteForm />
+      <AutoExchangeRateProvider>
+        <CreditNoteForm />
+      </AutoExchangeRateProvider>
     </CreditNoteFormProvider>
   );
 }

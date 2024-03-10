@@ -1,10 +1,11 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
+import { body, check, param, query, ValidationChain } from 'express-validator';
 import {
   AbilitySubject,
   IPaymentReceiveDTO,
   PaymentReceiveAction,
+  PaymentReceiveMailOptsDTO,
 } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
@@ -13,6 +14,7 @@ import DynamicListingService from '@/services/DynamicListing/DynamicListService'
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class PaymentReceivesController extends BaseController {
@@ -115,6 +117,25 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.deletePaymentReceive.bind(this)),
+      this.handleServiceErrors
+    );
+    router.post(
+      '/:id/mail',
+      [
+        ...this.paymentReceiveValidation,
+        body('subject').isString().optional(),
+        body('from').isString().optional(),
+        body('to').isString().optional(),
+        body('body').isString().optional(),
+        body('attach_invoice').optional().isBoolean().toBoolean(),
+      ],
+      this.sendPaymentReceiveByMail.bind(this),
+      this.handleServiceErrors
+    );
+    router.get(
+      '/:id/mail',
+      [...this.paymentReceiveValidation],
+      asyncMiddleware(this.getPaymentDefaultMail.bind(this)),
       this.handleServiceErrors
     );
     return router;
@@ -328,17 +349,12 @@ export default class PaymentReceivesController extends BaseController {
     };
 
     try {
-      const { paymentReceives, pagination, filterMeta } =
+      const paymentsReceivedWithPagination =
         await this.paymentReceiveApplication.getPaymentReceives(
           tenantId,
           filter
         );
-
-      return res.status(200).send({
-        payment_receives: this.transfromToResponse(paymentReceives),
-        pagination: this.transfromToResponse(pagination),
-        filter_meta: this.transfromToResponse(filterMeta),
-      });
+      return res.status(200).send(paymentsReceivedWithPagination);
     } catch (error) {
       next(error);
     }
@@ -415,38 +431,34 @@ export default class PaymentReceivesController extends BaseController {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
-    try {
+    const accept = this.accepts(req);
+
+    const acceptType = accept.types([
+      ACCEPT_TYPE.APPLICATION_JSON,
+      ACCEPT_TYPE.APPLICATION_PDF,
+    ]);
+    // Response in pdf format.
+    if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+      const pdfContent =
+        await this.paymentReceiveApplication.getPaymentReceivePdf(
+          tenantId,
+          paymentReceiveId
+        );
+      res.set({
+        'Content-Type': 'application/pdf',
+        'Content-Length': pdfContent.length,
+      });
+      res.send(pdfContent);
+      // Response in json format.
+    } else {
       const paymentReceive =
         await this.paymentReceiveApplication.getPaymentReceive(
           tenantId,
           paymentReceiveId
         );
-
-      const ACCEPT_TYPE = {
-        APPLICATION_PDF: 'application/pdf',
-        APPLICATION_JSON: 'application/json',
-      };
-      res.format({
-        [ACCEPT_TYPE.APPLICATION_JSON]: () => {
-          return res.status(200).send({
-            payment_receive: this.transfromToResponse(paymentReceive),
-          });
-        },
-        [ACCEPT_TYPE.APPLICATION_PDF]: async () => {
-          const pdfContent =
-            await this.paymentReceiveApplication.getPaymentReceivePdf(
-              tenantId,
-              paymentReceive
-            );
-          res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Length': pdfContent.length,
-          });
-          res.send(pdfContent);
-        },
+      return res.status(200).send({
+        payment_receive: paymentReceive,
       });
-    } catch (error) {
-      next(error);
     }
   }
 
@@ -480,7 +492,7 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
-   *
+   * Retrieves the sms details of the given payment receive.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
@@ -508,13 +520,73 @@ export default class PaymentReceivesController extends BaseController {
   };
 
   /**
-   * Handles service errors.
-   * @param error
-   * @param req
-   * @param res
-   * @param next
+   * Sends mail invoice of the given sale invoice.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  handleServiceErrors(
+  public sendPaymentReceiveByMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+    const paymentMailDTO: PaymentReceiveMailOptsDTO = this.matchedBodyData(
+      req,
+      {
+        includeOptionals: false,
+      }
+    );
+
+    try {
+      await this.paymentReceiveApplication.notifyPaymentByMail(
+        tenantId,
+        paymentReceiveId,
+        paymentMailDTO
+      );
+      return res.status(200).send({
+        code: 200,
+        message: 'The payment notification has been sent successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the default mail options of the given payment transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getPaymentDefaultMail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: paymentReceiveId } = req.params;
+
+    try {
+      const data = await this.paymentReceiveApplication.getPaymentMailOptions(
+        tenantId,
+        paymentReceiveId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Handles service errors.
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private handleServiceErrors(
     error: Error,
     req: Request,
     res: Response,

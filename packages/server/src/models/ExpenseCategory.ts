@@ -2,6 +2,8 @@ import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class ExpenseCategory extends TenantModel {
+  amount: number;
+  
   /**
    * Table name
    */

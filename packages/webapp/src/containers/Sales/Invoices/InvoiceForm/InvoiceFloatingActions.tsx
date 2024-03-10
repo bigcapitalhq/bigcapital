@@ -70,6 +70,7 @@ export default function InvoiceFloatingActions() {
     history.goBack();
   };
 
+  // Handle clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };

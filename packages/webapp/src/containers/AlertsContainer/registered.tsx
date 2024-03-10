@@ -12,7 +12,6 @@ import PaymentMadesAlerts from '@/containers/Purchases/PaymentMades/PaymentMades
 import CustomersAlerts from '@/containers/Customers/CustomersAlerts';
 import VendorsAlerts from '@/containers/Vendors/VendorsAlerts';
 import ManualJournalsAlerts from '@/containers/Accounting/JournalsLanding/ManualJournalsAlerts';
-import ExchangeRatesAlerts from '@/containers/ExchangeRates/ExchangeRatesAlerts';
 import ExpensesAlerts from '@/containers/Expenses/ExpensesAlerts';
 import AccountTransactionsAlerts from '@/containers/CashFlow/AccountTransactions/AccountTransactionsAlerts';
 import UsersAlerts from '@/containers/Preferences/Users/UsersAlerts';
@@ -26,6 +25,7 @@ import WarehousesTransfersAlerts from '@/containers/WarehouseTransfers/Warehouse
 import BranchesAlerts from '@/containers/Preferences/Branches/BranchesAlerts';
 import ProjectAlerts from '@/containers/Projects/containers/ProjectAlerts';
 import TaxRatesAlerts from '@/containers/TaxRates/alerts';
+import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -41,7 +41,6 @@ export default [
   ...CustomersAlerts,
   ...VendorsAlerts,
   ...ManualJournalsAlerts,
-  ...ExchangeRatesAlerts,
   ...ExpensesAlerts,
   ...AccountTransactionsAlerts,
   ...UsersAlerts,
@@ -54,5 +53,6 @@ export default [
   ...WarehousesTransfersAlerts,
   ...BranchesAlerts,
   ...ProjectAlerts,
-  ...TaxRatesAlerts
+  ...TaxRatesAlerts,
+  ...CashflowAlerts,
 ];

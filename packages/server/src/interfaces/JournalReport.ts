@@ -1,36 +1,53 @@
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IJournalEntry } from './Journal';
+import { IFinancialTable } from './Table';
 
 export interface IJournalReportQuery {
-  fromDate: Date | string,
-  toDate: Date | string,
+  fromDate: Date | string;
+  toDate: Date | string;
   numberFormat: {
-    noCents: boolean,
-    divideOn1000: boolean,
-  },
-  transactionType: string,
-  transactionId: string,
+    noCents: boolean;
+    divideOn1000: boolean;
+  };
+  transactionType: string;
+  transactionId: string;
 
-  accountsIds: number | number[],
-  fromRange: number,
-  toRange: number,
+  accountsIds: number | number[];
+  fromRange: number;
+  toRange: number;
 }
 
 export interface IJournalReportEntriesGroup {
-  id: string,
-  entries: IJournalEntry[],
-  currencyCode: string,
-  credit: number,
-  debit: number,
-  formattedCredit: string,
-  formattedDebit: string,
+  id: string;
+  date: Date;
+  dateFormatted: string;
+  entries: IJournalEntry[];
+  currencyCode: string;
+  credit: number;
+  debit: number;
+  formattedCredit: string;
+  formattedDebit: string;
 }
 
 export interface IJournalReport {
-  entries: IJournalReportEntriesGroup[],
+  entries: IJournalReportEntriesGroup[];
 }
 
-export interface IJournalSheetMeta {
-  isCostComputeRunning: boolean,
-  organizationName: string,
-  baseCurrency: string,
+export interface IJournalSheetMeta extends IFinancialSheetCommonMeta {
+  formattedDateRange: string;
+  formattedFromDate: string;
+  formattedToDate: string;
+}
+
+export interface IJournalTable extends IFinancialTable {
+  query: IJournalReportQuery;
+  meta: IJournalSheetMeta;
+}
+
+export type IJournalTableData = IJournalReportEntriesGroup[];
+
+export interface IJournalSheet {
+  data: IJournalTableData;
+  query: IJournalReportQuery;
+  meta: IJournalSheetMeta;
 }

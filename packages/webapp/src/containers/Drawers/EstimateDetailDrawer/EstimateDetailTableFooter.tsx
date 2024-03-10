@@ -8,7 +8,6 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
-  FormatNumber,
 } from '@/components';
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
@@ -23,7 +22,7 @@ export default function EstimateDetailTableFooter() {
       <EstimateTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'estimate.details.subtotal'} />}
-          value={<FormatNumber value={estimate.amount} />}
+          value={estimate.formatted_subtotal}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />
         <TotalLine

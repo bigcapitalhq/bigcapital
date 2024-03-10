@@ -1,11 +1,10 @@
 import { Service, Inject } from 'typedi';
-import { isEmpty, pick } from 'lodash';
+import { pick } from 'lodash';
 import { Knex } from 'knex';
 import * as R from 'ramda';
 import {
   ICashflowNewCommandDTO,
   ICashflowTransaction,
-  ICashflowTransactionLine,
   ICommandCashflowCreatedPayload,
   ICommandCashflowCreatingPayload,
   ICashflowTransactionInput,
@@ -86,6 +85,8 @@ export default class NewCashflowTransactionService {
       'cashflowAccountId',
       'creditAccountId',
       'branchId',
+      'plaidTransactionId',
+      'uncategorizedTransactionId',
     ]);
     // Retreive the next invoice number.
     const autoNextNumber =
@@ -124,8 +125,8 @@ export default class NewCashflowTransactionService {
   public newCashflowTransaction = async (
     tenantId: number,
     newTransactionDTO: ICashflowNewCommandDTO,
-    userId: number
-  ): Promise<{ cashflowTransaction: ICashflowTransaction }> => {
+    userId?: number
+  ): Promise<ICashflowTransaction> => {
     const { CashflowTransaction, Account } = this.tenancy.models(tenantId);
 
     // Retrieves the cashflow account or throw not found error.
@@ -174,7 +175,7 @@ export default class NewCashflowTransactionService {
           trx,
         } as ICommandCashflowCreatedPayload
       );
-      return { cashflowTransaction };
+      return cashflowTransaction;
     });
   };
 }

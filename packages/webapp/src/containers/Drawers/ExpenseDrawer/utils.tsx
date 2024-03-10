@@ -36,8 +36,7 @@ export const useExpenseReadEntriesColumns = () => {
       },
       {
         Header: intl.get('amount'),
-        accessor: 'amount',
-        Cell: FormatNumberCell,
+        accessor: 'amount_formatted',
         width: getColumnWidth(categories, 'amount', {
           minWidth: 60,
           magicSpacing: 5,

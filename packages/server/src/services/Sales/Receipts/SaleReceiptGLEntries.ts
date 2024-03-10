@@ -32,7 +32,7 @@ export class SaleReceiptGLEntries {
   ): Promise<void> => {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
-    const saleReceipt = await SaleReceipt.query()
+    const saleReceipt = await SaleReceipt.query(trx)
       .findById(saleReceiptId)
       .withGraphFetched('entries.item');
 

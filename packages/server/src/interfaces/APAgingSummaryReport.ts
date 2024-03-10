@@ -1,13 +1,11 @@
 import {
   IAgingPeriod,
-  IAgingPeriodTotal,
-  IAgingAmount,
   IAgingSummaryQuery,
   IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
 } from './AgingReport';
-import { INumberFormatQuery } from './FinancialStatements';
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IAPAgingSummaryQuery extends IAgingSummaryQuery {
@@ -26,17 +24,22 @@ export interface IAPAgingSummaryData extends IAgingSummaryData {
 
 export type IAPAgingSummaryColumns = IAgingPeriod[];
 
-export interface IARAgingSummaryMeta {
-  baseCurrency: string;
-  organizationName: string;
+export interface IARAgingSummaryMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
 }
 
-export interface IAPAgingSummaryMeta {
-  baseCurrency: string;
-  organizationName: string;
+export interface IAPAgingSummaryMeta extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
 }
 
 export interface IAPAgingSummaryTable extends IFinancialTable {
   query: IAPAgingSummaryQuery;
   meta: IAPAgingSummaryMeta;
+}
+
+export interface IAPAgingSummarySheet {
+  data: IAPAgingSummaryData;
+  meta: IAPAgingSummaryMeta;
+  query: IAPAgingSummaryQuery;
+  columns: any;
 }

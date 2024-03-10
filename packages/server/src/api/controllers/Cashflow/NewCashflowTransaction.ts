@@ -1,16 +1,16 @@
 import { Service, Inject } from 'typedi';
-import { check } from 'express-validator';
+import { ValidationChain, check, param, query } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
-import NewCashflowTransactionService from '@/services/Cashflow/NewCashflowTransactionService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
 export default class NewCashflowTransactionController extends BaseController {
   @Inject()
-  private newCashflowTranscationService: NewCashflowTransactionService;
+  private cashflowApplication: CashflowApplication;
 
   /**
    * Router constructor.
@@ -18,6 +18,18 @@ export default class NewCashflowTransactionController extends BaseController {
   public router() {
     const router = Router();
 
+    router.get(
+      '/transactions/uncategorized/:id',
+      this.asyncMiddleware(this.getUncategorizedCashflowTransaction),
+      this.catchServiceErrors
+    );
+    router.get(
+      '/transactions/:id/uncategorized',
+      this.getUncategorizedTransactionsValidationSchema,
+      this.validationResult,
+      this.asyncMiddleware(this.getUncategorizedCashflowTransactions),
+      this.catchServiceErrors
+    );
     router.post(
       '/transactions',
       CheckPolicies(CashflowAction.Create, AbilitySubject.Cashflow),
@@ -26,13 +38,72 @@ export default class NewCashflowTransactionController extends BaseController {
       this.asyncMiddleware(this.newCashflowTransaction),
       this.catchServiceErrors
     );
+    router.post(
+      '/transactions/:id/uncategorize',
+      this.revertCategorizedCashflowTransaction,
+      this.catchServiceErrors
+    );
+    router.post(
+      '/transactions/:id/categorize',
+      this.categorizeCashflowTransactionValidationSchema,
+      this.validationResult,
+      this.categorizeCashflowTransaction,
+      this.catchServiceErrors
+    );
+    router.post(
+      '/transaction/:id/categorize/expense',
+      this.categorizeAsExpenseValidationSchema,
+      this.validationResult,
+      this.categorizesCashflowTransactionAsExpense,
+      this.catchServiceErrors
+    );
     return router;
+  }
+
+  /**
+   * Getting uncategorized transactions validation schema.
+   * @returns {ValidationChain}
+   */
+  public get getUncategorizedTransactionsValidationSchema() {
+    return [
+      param('id').exists().isNumeric().toInt(),
+      query('page').optional().isNumeric().toInt(),
+      query('page_size').optional().isNumeric().toInt(),
+    ];
+  }
+
+  /**
+   * Categorize as expense validation schema.
+   */
+  public get categorizeAsExpenseValidationSchema() {
+    return [
+      check('expense_account_id').exists(),
+      check('date').isISO8601().exists(),
+      check('reference_no').optional(),
+      check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
+    ];
+  }
+
+  /**
+   * Categorize cashflow tranasction validation schema.
+   */
+  public get categorizeCashflowTransactionValidationSchema() {
+    return [
+      check('date').exists().isISO8601().toDate(),
+      check('credit_account_id').exists().isInt().toInt(),
+      check('transaction_number').optional(),
+      check('transaction_type').exists(),
+      check('reference_no').optional(),
+      check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
+      check('description').optional(),
+      check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
+    ];
   }
 
   /**
    * New cashflow transaction validation schema.
    */
-  get newTransactionValidationSchema() {
+  public get newTransactionValidationSchema() {
     return [
       check('date').exists().isISO8601().toDate(),
       check('reference_no').optional({ nullable: true }).trim().escape(),
@@ -48,9 +119,7 @@ export default class NewCashflowTransactionController extends BaseController {
       check('credit_account_id').exists().isInt().toInt(),
 
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
-
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
-
       check('publish').default(false).isBoolean().toBoolean(),
     ];
   }
@@ -70,13 +139,12 @@ export default class NewCashflowTransactionController extends BaseController {
     const ownerContributionDTO = this.matchedBodyData(req);
 
     try {
-      const { cashflowTransaction } =
-        await this.newCashflowTranscationService.newCashflowTransaction(
+      const cashflowTransaction =
+        await this.cashflowApplication.createTransaction(
           tenantId,
           ownerContributionDTO,
           userId
         );
-
       return res.status(200).send({
         id: cashflowTransaction.id,
         message: 'New cashflow transaction has been created successfully.',
@@ -87,10 +155,146 @@ export default class NewCashflowTransactionController extends BaseController {
   };
 
   /**
+   * Revert the categorized cashflow transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private revertCategorizedCashflowTransaction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: cashflowTransactionId } = req.params;
+
+    try {
+      const data = await this.cashflowApplication.uncategorizeTransaction(
+        tenantId,
+        cashflowTransactionId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Categorize the cashflow transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private categorizeCashflowTransaction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: cashflowTransactionId } = req.params;
+    const cashflowTransaction = this.matchedBodyData(req);
+
+    try {
+      await this.cashflowApplication.categorizeTransaction(
+        tenantId,
+        cashflowTransactionId,
+        cashflowTransaction
+      );
+      return res.status(200).send({
+        message: 'The cashflow transaction has been created successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Categorize the transaction as expense transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private categorizesCashflowTransactionAsExpense = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: cashflowTransactionId } = req.params;
+    const cashflowTransaction = this.matchedBodyData(req);
+
+    try {
+      await this.cashflowApplication.categorizeAsExpense(
+        tenantId,
+        cashflowTransactionId,
+        cashflowTransaction
+      );
+      return res.status(200).send({
+        message: 'The cashflow transaction has been created successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the uncategorized cashflow transactions.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getUncategorizedCashflowTransaction = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: transactionId } = req.params;
+
+    try {
+      const data = await this.cashflowApplication.getUncategorizedTransaction(
+        tenantId,
+        transactionId
+      );
+      return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
+   * Retrieves the uncategorized cashflow transactions.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  public getUncategorizedCashflowTransactions = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { tenantId } = req;
+    const { id: accountId } = req.params;
+    const query = this.matchedQueryData(req);
+
+    try {
+      const data = await this.cashflowApplication.getUncategorizedTransactions(
+        tenantId,
+        accountId,
+        query
+      );
+
+      return res.status(200).send(data);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  /**
    * Handle the service errors.
    * @param error
-   * @param req
-   * @param res
+   * @param {Request} req
+   * @param {res
    * @param next
    * @returns
    */
@@ -136,6 +340,16 @@ export default class NewCashflowTransactionController extends BaseController {
               type: 'TRANSACTIONS_DATE_LOCKED',
               code: 4000,
               data: { ...error.payload },
+            },
+          ],
+        });
+      }
+      if (error.errorType === 'UNCATEGORIZED_TRANSACTION_TYPE_INVALID') {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'UNCATEGORIZED_TRANSACTION_TYPE_INVALID',
+              code: 4100,
             },
           ],
         });

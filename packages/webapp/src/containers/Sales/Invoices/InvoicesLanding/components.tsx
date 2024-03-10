@@ -128,6 +128,7 @@ export function ActionsMenu({
     onQuick,
     onViewDetails,
     onPrint,
+    onSendMail
   },
   row: { original },
 }) {
@@ -150,7 +151,6 @@ export function ActionsMenu({
           text={intl.get('invoice.convert_to_credit_note')}
           onClick={safeCallback(onConvert, original)}
         />
-
         <If condition={!original.is_delivered}>
           <MenuItem
             icon={<Icon icon="send" iconSize={16} />}
@@ -169,6 +169,11 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
+        <MenuItem
+          icon={<Icon icon={'envelope'} iconSize={16} />}
+          text={'Send Mail'}
+          onClick={safeCallback(onSendMail, original)}
+        />
         <MenuItem
           icon={<Icon icon={'print-16'} iconSize={16} />}
           text={intl.get('print')}

@@ -473,16 +473,6 @@ export const getDashboardRoutes = () => [
     pageTitle: intl.get('all_financial_reports'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-  // Exchange Rates
-  // {
-  //   path: `/exchange-rates`,
-  //   component: lazy(
-  //     () => import('@/containers/ExchangeRates/ExchangeRatesList'),
-  //   ),
-  //   breadcrumb: intl.get('exchange_rates_list'),
-  //   pageTitle: intl.get('exchange_rates_list'),
-  //   subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
-  // },
   // Expenses.
   {
     path: `/expenses/new`,

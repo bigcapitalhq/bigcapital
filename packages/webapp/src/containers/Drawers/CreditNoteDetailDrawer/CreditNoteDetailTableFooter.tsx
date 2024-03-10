@@ -1,12 +1,9 @@
 // @ts-nocheck
-import React from 'react';
 import styled from 'styled-components';
-
 import {
   T,
   TotalLines,
   TotalLine,
-  FormatNumber,
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
@@ -23,7 +20,7 @@ export default function CreditNoteDetailTableFooter() {
       <CreditNoteTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
           title={<T id={'credit_note.drawer.label_subtotal'} />}
-          value={<FormatNumber value={creditNote.formatted_amount} />}
+          value={creditNote.formatted_subtotal}
         />
         <TotalLine
           title={<T id={'credit_note.drawer.label_total'} />}

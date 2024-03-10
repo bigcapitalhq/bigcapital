@@ -4,7 +4,6 @@ import { ServiceError } from '@/exceptions';
 import {
   ISaleInvoiceDeliveringPayload,
   ISaleInvoiceEventDeliveredPayload,
-  ISystemUser,
 } from '@/interfaces';
 import { ERRORS } from './constants';
 import { Inject, Service } from 'typedi';
@@ -36,8 +35,7 @@ export class DeliverSaleInvoice {
    */
   public async deliverSaleInvoice(
     tenantId: number,
-    saleInvoiceId: number,
-    authorizedUser: ISystemUser
+    saleInvoiceId: number
   ): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 

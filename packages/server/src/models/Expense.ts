@@ -215,6 +215,10 @@ export default class Expense extends mixin(TenantModel, [
           to: 'branches.id',
         },
       },
+
+      /**
+       * 
+       */
       media: {
         relation: Model.ManyToManyRelation,
         modelClass: Media.default,

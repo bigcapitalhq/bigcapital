@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { createContext, useContext, useMemo } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCustomersTransactionsReport } from '@/hooks/query';
 import { transformFilterFormToQuery } from '../common';
@@ -10,9 +10,7 @@ const CustomersTransactionsContext = createContext();
  * Customers transactions provider.
  */
 function CustomersTransactionsProvider({ filter, ...props }) {
-  const query = useMemo(() => transformFilterFormToQuery(filter), [
-    filter,
-  ]);
+  const query = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // Fetches the customers transactions.
   const {
@@ -29,7 +27,8 @@ function CustomersTransactionsProvider({ filter, ...props }) {
     CustomersTransactionsRefetch,
 
     filter,
-    query
+    query,
+    httpQuery: query,
   };
 
   return (

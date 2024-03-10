@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
+import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 
 export interface ISaleEstimate {
   id?: number;
@@ -123,4 +124,18 @@ export interface ISaleEstimateApprovedEvent {
   oldSaleEstimate: ISaleEstimate;
   saleEstimate: ISaleEstimate;
   trx: Knex.Transaction;
+}
+
+export interface SaleEstimateMailOptions extends CommonMailOptions {
+  attachEstimate?: boolean;
+}
+
+export interface SaleEstimateMailOptionsDTO extends CommonMailOptionsDTO {
+  attachEstimate?: boolean;
+}
+
+export interface ISaleEstimateMailPresendEvent {
+  tenantId: number;
+  saleEstimateId: number;
+  messageOptions: SaleEstimateMailOptionsDTO;
 }

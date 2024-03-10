@@ -13,9 +13,9 @@ export default class CashflowController {
   router() {
     const router = Router();
 
+    router.use(Container.get(CommandCashflowTransaction).router());
     router.use(Container.get(GetCashflowTransaction).router());
     router.use(Container.get(GetCashflowAccounts).router());
-    router.use(Container.get(CommandCashflowTransaction).router());
     router.use(Container.get(DeleteCashflowTransaction).router());
 
     return router;

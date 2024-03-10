@@ -1,24 +1,20 @@
 import { Service, Inject } from 'typedi';
 import moment from 'moment';
-import { IJournalReportQuery, IJournalSheetMeta } from '@/interfaces';
-
+import { IJournalReportQuery, IJournalSheet } from '@/interfaces';
 import JournalSheet from './JournalSheet';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import Journal from '@/services/Accounting/JournalPoster';
-import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean, transformToMap } from 'utils';
 import { Tenant } from '@/system/models';
+import { transformToMap } from 'utils';
+import { JournalSheetMeta } from './JournalSheetMeta';
 
 @Service()
-export default class JournalSheetService {
+export class JournalSheetService {
   @Inject()
-  tenancy: TenancyService;
+  private tenancy: TenancyService;
 
   @Inject()
-  inventoryService: InventoryService;
-
-  @Inject('logger')
-  logger: any;
+  private journalSheetMeta: JournalSheetMeta;
 
   /**
    * Default journal sheet filter queyr.
@@ -38,38 +34,15 @@ export default class JournalSheetService {
   }
 
   /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IBalanceSheetMeta}
-   */
-  reportMetadata(tenantId: number): IJournalSheetMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
-    };
-  }
-
-  /**
    * Journal sheet.
    * @param {number} tenantId
-   * @param {IJournalSheetFilterQuery} query
+   * @param {IJournalReportQuery} query
+   * @returns {Promise<IJournalSheet>}
    */
-  async journalSheet(tenantId: number, query: IJournalReportQuery) {
+  async journalSheet(
+    tenantId: number,
+    query: IJournalReportQuery
+  ): Promise<IJournalSheet> {
     const i18n = this.tenancy.i18n(tenantId);
     const { accountRepository, transactionsRepository, contactRepository } =
       this.tenancy.repositories(tenantId);
@@ -80,11 +53,6 @@ export default class JournalSheetService {
       ...this.defaultQuery,
       ...query,
     };
-    this.logger.info('[journal] trying to calculate the report.', {
-      tenantId,
-      filter,
-    });
-
     const tenant = await Tenant.query()
       .findById(tenantId)
       .withGraphFetched('metadata');
@@ -130,10 +98,13 @@ export default class JournalSheetService {
     // Retrieve journal report columns.
     const journalSheetData = journalSheetInstance.reportData();
 
+    // Retrieve the journal sheet meta.
+    const meta = await this.journalSheetMeta.meta(tenantId, filter);
+
     return {
       data: journalSheetData,
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

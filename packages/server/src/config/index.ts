@@ -58,6 +58,7 @@ module.exports = {
     secure: !!parseInt(process.env.MAIL_SECURE, 10),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
+    from: process.env.MAIL_FROM_ADDRESS,
   },
 
   /**
@@ -168,4 +169,27 @@ module.exports = {
    * to application detarmines to upgrade.
    */
   databaseBatch: 4,
+
+  /**
+   * Exchange rate.
+   */
+  exchangeRate: {
+    service: 'open-exchange-rate',
+    openExchangeRate: {
+      appId: process.env.OPEN_EXCHANGE_RATE_APP_ID,
+    },
+  },
+
+  /**
+   * Plaid.
+   */
+  plaid: {
+    env: process.env.PLAID_ENV || 'sandbox',
+    clientId: process.env.PLAID_CLIENT_ID,
+    secretDevelopment: process.env.PLAID_SECRET_DEVELOPMENT,
+    secretSandbox: process.env.PLAID_SECRET_SANDBOX,
+    redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
+    redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
+    linkWebhook: process.env.PLAID_LINK_WEBHOOK
+  },
 };

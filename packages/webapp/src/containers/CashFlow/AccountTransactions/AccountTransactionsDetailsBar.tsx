@@ -71,6 +71,31 @@ function AccountBalanceItem() {
   );
 }
 
+function AccountBankBalanceItem() {
+  const { currentAccount } = useAccountTransactionsContext();
+
+  return (
+    <AccountBalanceItemWrap>
+      Balance in Bank Account
+      <AccountBalanceAmount>
+        {currentAccount.bank_balance_formatted}
+      </AccountBalanceAmount>
+    </AccountBalanceItemWrap>
+  );
+}
+
+function AccountNumberItem() {
+  const { currentAccount } = useAccountTransactionsContext();
+
+  if (!currentAccount.account_mask) return null;
+
+  return (
+    <AccountBalanceItemWrap>
+      Account Number: xxx{currentAccount.account_mask}
+    </AccountBalanceItemWrap>
+  );
+}
+
 function AccountTransactionsDetailsBarSkeleton() {
   return (
     <React.Fragment>
@@ -88,7 +113,9 @@ function AccountTransactionsDetailsContent() {
   return (
     <React.Fragment>
       <AccountSwitchItem />
+      <AccountNumberItem />
       <AccountBalanceItem />
+      <AccountBankBalanceItem />
     </React.Fragment>
   );
 }

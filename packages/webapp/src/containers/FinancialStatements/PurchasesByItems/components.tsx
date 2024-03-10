@@ -1,69 +1,22 @@
 // @ts-nocheck
-import React from 'react';
-import intl from 'react-intl-universal';
+import { useRef } from 'react';
+import classNames from 'classnames';
+import {
+  Classes,
+  Intent,
+  Menu,
+  MenuItem,
+  ProgressBar,
+  Text,
+} from '@blueprintjs/core';
 
-import { If } from '@/components';
-import { Align } from '@/constants';
-import { CellTextSpan } from '@/components/Datatable/Cells';
+import { AppToaster, If, Stack } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
-import { getColumnWidth } from '@/utils';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-
-/**
- * Retrieve purchases by items table columns.
- */
-export const usePurchasesByItemsTableColumns = () => {
-  // purchases by items context.
-  const {
-    purchaseByItems: { tableRows },
-  } = usePurchaseByItemsContext();
-
-  return React.useMemo(
-    () => [
-      {
-        Header: intl.get('item_name'),
-        accessor: (row) => (row.code ? `${row.name} - ${row.code}` : row.name),
-        className: 'name',
-        width: 180,
-        textOverview: true,
-      },
-      {
-        Header: intl.get('quantity_purchased'),
-        accessor: 'quantity_purchased_formatted',
-        Cell: CellTextSpan,
-        className: 'quantity_purchased_formatted',
-        width: getColumnWidth(tableRows, `quantity_purchased_formatted`, {
-          minWidth: 150,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('purchase_amount'),
-        accessor: 'purchase_cost_formatted',
-        Cell: CellTextSpan,
-        className: 'purchase_cost_formatted',
-        width: getColumnWidth(tableRows, `purchase_cost_formatted`, {
-          minWidth: 150,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-      {
-        Header: intl.get('average_price'),
-        accessor: 'average_cost_price_formatted',
-        Cell: CellTextSpan,
-        className: 'average_cost_price_formatted',
-        width: getColumnWidth(tableRows, `average_cost_price_formatted`, {
-          minWidth: 180,
-        }),
-        textOverview: true,
-        align: Align.Right,
-      },
-    ],
-    [tableRows],
-  );
-};
+import {
+  usePurchasesByItemsCsvExport,
+  usePurchasesByItemsXlsxExport,
+} from '@/hooks/query';
 
 /**
  * Purchases by items progress loading bar.
@@ -77,3 +30,84 @@ export function PurchasesByItemsLoadingBar() {
     </If>
   );
 }
+
+/**
+ * Retrieves the purchases by items export menu.
+ * @returns {JSX.Element}
+ */
+export const PurchasesByItemsExportMenu = () => {
+  const toastKey = useRef(null);
+  const commonToastConfig = { isCloseButtonShown: true, timeout: 2000 };
+  const { httpQuery } = usePurchaseByItemsContext();
+
+  const openProgressToast = (amount: number) => {
+    return (
+      <Stack spacing={8}>
+        <Text>The report has been exported successfully.</Text>
+        <ProgressBar
+          className={classNames('toast-progress', {
+            [Classes.PROGRESS_NO_STRIPES]: amount >= 100,
+          })}
+          intent={amount < 100 ? Intent.PRIMARY : Intent.SUCCESS}
+          value={amount / 100}
+        />
+      </Stack>
+    );
+  };
+  // Export the report to xlsx.
+  const { mutateAsync: xlsxExport } = usePurchasesByItemsXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Export the report to csv.
+  const { mutateAsync: csvExport } = usePurchasesByItemsCsvExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
+            message: openProgressToast(xlsxExportProgress),
+            ...commonToastConfig,
+          },
+          toastKey.current,
+        );
+      }
+    },
+  });
+  // Handle csv export button click.
+  const handleCsvExportBtnClick = () => {
+    csvExport();
+  };
+  // Handle xlsx export button click.
+  const handleXlsxExportBtnClick = () => {
+    xlsxExport();
+  };
+
+  return (
+    <Menu>
+      <MenuItem
+        text={'XLSX (Microsoft Excel)'}
+        onClick={handleXlsxExportBtnClick}
+      />
+      <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
+    </Menu>
+  );
+};

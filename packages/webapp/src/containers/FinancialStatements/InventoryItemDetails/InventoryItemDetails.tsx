@@ -15,6 +15,7 @@ import {
 } from './components';
 
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
+import { InventoryItemDetailsDialogs } from './InventoryItemDetailsDialogs';
 import { useInventoryValuationQuery } from './utils2';
 import { compose } from '@/utils';
 
@@ -64,6 +65,8 @@ function InventoryItemDetails({
           <InventoryItemDetailsBody />
         </FinancialStatement>
       </DashboardPageContent>
+
+      <InventoryItemDetailsDialogs />
     </InventoryItemDetailsProvider>
   );
 }

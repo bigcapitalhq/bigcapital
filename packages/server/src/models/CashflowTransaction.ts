@@ -7,8 +7,14 @@ import {
 } from '@/services/Cashflow/utils';
 import AccountTransaction from './AccountTransaction';
 import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
-
+import { getTransactionTypeLabel } from '@/utils/transactions-types';
 export default class CashflowTransaction extends TenantModel {
+  transactionType: string;
+  amount: number;
+  exchangeRate: number;
+  uncategorize: boolean;
+  uncategorizedTransaction!: boolean;
+
   /**
    * Table name.
    */
@@ -55,9 +61,10 @@ export default class CashflowTransaction extends TenantModel {
 
   /**
    * Transaction type formatted.
+   * @returns {string}
    */
   get transactionTypeFormatted() {
-    return AccountTransaction.getReferenceTypeFormatted(this.transactionType);
+    return getTransactionTypeLabel(this.transactionType);
   }
 
   get typeMeta() {
@@ -78,6 +85,14 @@ export default class CashflowTransaction extends TenantModel {
    */
   get isCashDebit() {
     return this.typeMeta?.direction === CASHFLOW_DIRECTION.IN;
+  }
+
+  /**
+   * Detarmines whether the transaction imported from uncategorized transaction.
+   * @returns {boolean}
+   */
+  get isCategroizedTranasction() {
+    return !!this.uncategorizedTransaction;
   }
 
   /**

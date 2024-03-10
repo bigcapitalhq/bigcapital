@@ -1,20 +1,16 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { param, query } from 'express-validator';
-import GetCashflowAccountsService from '@/services/Cashflow/GetCashflowAccountsService';
+import { query } from 'express-validator';
 import BaseController from '../BaseController';
-import GetCashflowTransactionsService from '@/services/Cashflow/GetCashflowTransactionsService';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
 export default class GetCashflowAccounts extends BaseController {
   @Inject()
-  getCashflowAccountsService: GetCashflowAccountsService;
-
-  @Inject()
-  getCashflowTransactionsService: GetCashflowTransactionsService;
+  private cashflowApplication: CashflowApplication;
 
   /**
    * Controller router.
@@ -62,10 +58,7 @@ export default class GetCashflowAccounts extends BaseController {
 
     try {
       const cashflowAccounts =
-        await this.getCashflowAccountsService.getCashflowAccounts(
-          tenantId,
-          filter
-        );
+        await this.cashflowApplication.getCashflowAccounts(tenantId, filter);
 
       return res.status(200).send({
         cashflow_accounts: this.transfromToResponse(cashflowAccounts),

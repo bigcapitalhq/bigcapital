@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { IAccount } from './Account';
+import { IUncategorizedCashflowTransaction } from './CashFlow';
 
 export interface ICashflowAccountTransactionsFilter {
   page: number;
@@ -45,9 +46,13 @@ export interface ICashflowCommandDTO {
 
   publish: boolean;
   branchId?: number;
+  plaidTransactionId?: string;
 }
 
-export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {}
+export interface ICashflowNewCommandDTO extends ICashflowCommandDTO {
+  plaidAccountId?: string;
+  uncategorizedTransactionId?: number;
+}
 
 export interface ICashflowTransaction {
   id?: number;
@@ -79,6 +84,8 @@ export interface ICashflowTransaction {
 
   isCashDebit?: boolean;
   isCashCredit?: boolean;
+
+  uncategorizedTransactionId?: number;
 }
 
 export interface ICashflowTransactionLine {
@@ -121,8 +128,39 @@ export interface ICommandCashflowDeletedPayload {
   trx: Knex.Transaction;
 }
 
+export interface ICashflowTransactionCategorizedPayload {
+  tenantId: number;
+  cashflowTransactionId: number;
+  cashflowTransaction: ICashflowTransaction;
+  trx: Knex.Transaction;
+}
+export interface ICashflowTransactionUncategorizingPayload {
+  tenantId: number;
+  uncategorizedTransaction: IUncategorizedCashflowTransaction;
+  trx: Knex.Transaction;
+}
+export interface ICashflowTransactionUncategorizedPayload {
+  tenantId: number;
+  uncategorizedTransaction: IUncategorizedCashflowTransaction;
+  oldUncategorizedTransaction: IUncategorizedCashflowTransaction;
+  trx: Knex.Transaction;
+}
+
 export enum CashflowAction {
   Create = 'Create',
   Delete = 'Delete',
   View = 'View',
+}
+
+export interface CategorizeTransactionAsExpenseDTO {
+  expenseAccountId: number;
+  exchangeRate: number;
+  referenceNo: string;
+  description: string;
+  branchId?: number;
+}
+
+export interface IGetUncategorizedTransactionsQuery {
+  page?: number;
+  pageSize?: number;
 }

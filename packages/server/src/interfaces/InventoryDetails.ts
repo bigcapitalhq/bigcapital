@@ -1,4 +1,7 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IInventoryDetailsQuery {
@@ -79,10 +82,10 @@ export type IInventoryDetailsNode =
   | IInventoryDetailsItemTransaction;
 export type IInventoryDetailsData = IInventoryDetailsItem[];
 
-export interface IInventoryItemDetailMeta {
-  isCostComputeRunning: boolean;
-  organizationName: string;
-  baseCurrency: string;
+export interface IInventoryItemDetailMeta extends IFinancialSheetCommonMeta {
+  formattedFromDate: string;
+  formattedToDay: string;
+  formattedDateRange: string;
 }
 
 export interface IInvetoryItemDetailDOO {

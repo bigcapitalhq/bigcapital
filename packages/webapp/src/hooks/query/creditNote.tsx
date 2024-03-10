@@ -44,6 +44,9 @@ const commonInvalidateQueries = (queryClient) => {
   // Invalidate financial reports.
   queryClient.invalidateQueries(t.FINANCIAL_REPORT);
 
+  // Invalidate transactions by reference.
+  queryClient.invalidateQueries(t.TRANSACTIONS_BY_REFERENCE);
+
   // Invalidate mutate base currency abilities.
   queryClient.invalidateQueries(t.ORGANIZATION_MUTATE_BASE_CURRENCY_ABILITIES);
 };
@@ -351,5 +354,7 @@ export function useRefundCreditTransaction(id, props, requestProps) {
  * Retrieve the credit note pdf document data,
  */
 export function usePdfCreditNote(creditNoteId) {
-  return useRequestPdf(`sales/credit_notes/${creditNoteId}`);
+  return useRequestPdf({
+    url: `sales/credit_notes/${creditNoteId}`,
+  });
 }

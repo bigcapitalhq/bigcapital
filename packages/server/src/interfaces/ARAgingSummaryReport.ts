@@ -32,3 +32,11 @@ export interface IARAgingSummaryTable extends IFinancialTable {
   meta: IARAgingSummaryMeta;
   query: IARAgingSummaryQuery;
 }
+
+export interface IARAgingSummarySheet {
+  data: IARAgingSummaryData;
+  meta: IARAgingSummaryMeta;
+  query: IARAgingSummaryQuery;
+  columns: IARAgingSummaryColumns;
+}
+

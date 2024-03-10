@@ -84,6 +84,12 @@ import { WriteInvoiceTaxTransactionsSubscriber } from '@/services/TaxRates/subsc
 import { BillTaxRateValidateSubscriber } from '@/services/TaxRates/subscribers/BillTaxRateValidateSubscriber';
 import { WriteBillTaxTransactionsSubscriber } from '@/services/TaxRates/subscribers/WriteBillTaxTransactionsSubscriber';
 import { SyncItemTaxRateOnEditTaxSubscriber } from '@/services/TaxRates/SyncItemTaxRateOnEditTaxSubscriber';
+import { PlaidUpdateTransactionsOnItemCreatedSubscriber } from '@/services/Banking/Plaid/subscribers/PlaidUpdateTransactionsOnItemCreatedSubscriber';
+import { InvoiceChangeStatusOnMailSentSubscriber } from '@/services/Sales/Invoices/subscribers/InvoiceChangeStatusOnMailSentSubscriber';
+import { SaleReceiptMarkClosedOnMailSentSubcriber } from '@/services/Sales/Receipts/subscribers/SaleReceiptMarkClosedOnMailSentSubcriber';
+import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/subscribers/SaleEstimateMarkApprovedOnMailSent';
+import { DeleteCashflowTransactionOnUncategorize } from '@/services/Cashflow/subscribers/DeleteCashflowTransactionOnUncategorize';
+import { PreventDeleteTransactionOnDelete } from '@/services/Cashflow/subscribers/PreventDeleteTransactionsOnDelete'; }
 
 export default () => {
   return new EventPublisher();
@@ -104,8 +110,12 @@ export const susbcribers = () => {
     InventorySubscriber,
     CustomerWriteGLOpeningBalanceSubscriber,
     VendorsWriteGLOpeningSubscriber,
+
+    // # Estimate
     SaleEstimateAutoSerialSubscriber,
     SaleEstimateSmsNotificationSubscriber,
+    SaleEstimateMarkApprovedOnMailSent,
+
     ExpensesWriteGLSubscriber,
     SaleReceiptAutoSerialSubscriber,
     SaleInvoiceAutoIncrementSubscriber,
@@ -152,11 +162,13 @@ export const susbcribers = () => {
     // #Invoices
     InvoicePaymentGLRewriteSubscriber,
     InvoiceCostGLEntriesSubscriber,
+    InvoiceChangeStatusOnMailSentSubscriber,
 
     BillPaymentsGLEntriesRewriteSubscriber,
 
     // # Receipts
     SaleReceiptCostGLEntriesSubscriber,
+    SaleReceiptMarkClosedOnMailSentSubcriber,
 
     // Transaction locking.
     SalesTransactionLockingGuardSubscriber,
@@ -199,6 +211,13 @@ export const susbcribers = () => {
     BillTaxRateValidateSubscriber,
     WriteBillTaxTransactionsSubscriber,
 
-    SyncItemTaxRateOnEditTaxSubscriber
+    SyncItemTaxRateOnEditTaxSubscriber,
+
+    // Plaid
+    PlaidUpdateTransactionsOnItemCreatedSubscriber,
+
+    // Cashflow
+    DeleteCashflowTransactionOnUncategorize,
+    PreventDeleteTransactionOnDelete
   ];
 };

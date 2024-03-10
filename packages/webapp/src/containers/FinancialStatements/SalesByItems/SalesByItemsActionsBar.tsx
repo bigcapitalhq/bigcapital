@@ -19,6 +19,9 @@ import withSalesByItemsActions from './withSalesByItemsActions';
 
 import { compose, saveInvoke } from '@/utils';
 import { useSalesByItemsContext } from './SalesByItemProvider';
+import { SalesByItemsSheetExportMenu } from './components';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 function SalesByItemsActionsBar({
   // #withSalesByItems
@@ -26,6 +29,9 @@ function SalesByItemsActionsBar({
 
   // #withSalesByItemsActions
   toggleSalesByItemsFilterDrawer,
+
+  // #withDialogActions
+  openDialog,
 
   // #ownProps
   numberFormat,
@@ -45,6 +51,11 @@ function SalesByItemsActionsBar({
   // Handle number format submit.
   const handleNumberFormatSubmit = (values) => {
     saveInvoke(onNumberFormatSubmit, values);
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    openDialog(DialogsName.SalesByItemsPdfPreview);
   };
 
   return (
@@ -107,12 +118,20 @@ function SalesByItemsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
-        />
+        <Popover
+          content={<SalesByItemsSheetExportMenu />}
+          interactionKind={PopoverInteractionKind.CLICK}
+          placement="bottom-start"
+          minimal
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="file-export-16" iconSize={16} />}
+            text={<T id={'export'} />}
+          />
+        </Popover>
       </NavbarGroup>
     </DashboardActionsBar>
   );
@@ -123,4 +142,5 @@ export default compose(
     salesByItemsDrawerFilter,
   })),
   withSalesByItemsActions,
+  withDialogActions,
 )(SalesByItemsActionsBar);

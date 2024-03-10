@@ -129,6 +129,16 @@ export default {
 
     onNotifySms: 'onSaleInvoiceNotifySms',
     onNotifiedSms: 'onSaleInvoiceNotifiedSms',
+
+    onNotifyMail: 'onSaleInvoiceNotifyMail',
+    onNotifyReminderMail: 'onSaleInvoiceNotifyReminderMail',
+
+    onPreMailSend: 'onSaleInvoicePreMailSend',
+    onMailSend: 'onSaleInvoiceMailSend',
+    onMailSent: 'onSaleInvoiceMailSent',
+
+    onMailReminderSend: 'onSaleInvoiceMailReminderSend',
+    onMailReminderSent: 'onSaleInvoiceMailReminderSent',
   },
 
   /**
@@ -160,6 +170,12 @@ export default {
 
     onRejecting: 'onSaleEstimateRejecting',
     onRejected: 'onSaleEstimateRejected',
+
+    onNotifyMail: 'onSaleEstimateNotifyMail',
+
+    onPreMailSend: 'onSaleEstimatePreMailSend',
+    onMailSend: 'onSaleEstimateMailSend',
+    onMailSent: 'onSaleEstimateMailSend',
   },
 
   /**
@@ -183,6 +199,10 @@ export default {
 
     onNotifySms: 'onSaleReceiptNotifySms',
     onNotifiedSms: 'onSaleReceiptNotifiedSms',
+
+    onPreMailSend: 'onSaleReceiptPreMailSend',
+    onMailSend: 'onSaleReceiptMailSend',
+    onMailSent: 'onSaleReceiptMailSent', 
   },
 
   /**
@@ -203,6 +223,10 @@ export default {
 
     onNotifySms: 'onPaymentReceiveNotifySms',
     onNotifiedSms: 'onPaymentReceiveNotifiedSms',
+
+    onPreMailSend: 'onPaymentReceivePreMailSend',
+    onMailSend: 'onPaymentReceiveMailSend',
+    onMailSent: 'onPaymentReceiveMailSent', 
   },
 
   /**
@@ -368,6 +392,15 @@ export default {
 
     onTransactionDeleting: 'onCashflowTransactionDeleting',
     onTransactionDeleted: 'onCashflowTransactionDeleted',
+
+    onTransactionCategorizing: 'onTransactionCategorizing',
+    onTransactionCategorized: 'onCashflowTransactionCategorized',
+
+    onTransactionUncategorizing: 'onTransactionUncategorizing',
+    onTransactionUncategorized: 'onTransactionUncategorized',
+
+    onTransactionCategorizingAsExpense: 'onTransactionCategorizingAsExpense',
+    onTransactionCategorizedAsExpense: 'onTransactionCategorizedAsExpense',
   },
 
   /**
@@ -575,6 +608,10 @@ export default {
     onActivated: 'onTaxRateActivated',
 
     onInactivating: 'onTaxRateInactivating',
-    onInactivated: 'onTaxRateInactivated'
+    onInactivated: 'onTaxRateInactivated',
+  },
+
+  plaid: {
+    onItemCreated: 'onPlaidItemCreated',
   },
 };

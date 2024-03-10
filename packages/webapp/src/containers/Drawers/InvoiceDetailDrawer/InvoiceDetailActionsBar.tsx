@@ -31,6 +31,7 @@ import {
 import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
 import { DRAWERS } from '@/constants/drawers';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Invoice details action bar.
@@ -54,6 +55,11 @@ function InvoiceDetailActionsBar({
   const handleEditInvoice = () => {
     history.push(`/invoices/${invoiceId}/edit`);
     closeDrawer(DRAWERS.INVOICE_DETAILS);
+  };
+
+  // Hanlde deliver sale invoice.
+  const handleDeliverInvoice = ({ id }) => {
+    openAlert('invoice-deliver', { invoiceId });
   };
 
   // Handle convert to invoice.
@@ -93,6 +99,10 @@ function InvoiceDetailActionsBar({
     openAlert('cancel-bad-debt', { invoiceId });
   };
 
+  const handleMailInvoice = () => {
+    openDialog(DialogsName.InvoiceMail, { invoiceId });
+  };
+
   return (
     <DrawerActionsBar>
       <NavbarGroup>
@@ -118,11 +128,18 @@ function InvoiceDetailActionsBar({
         </Can>
         <Can I={SaleInvoiceAction.View} a={AbilitySubject.Invoice}>
           <Button
+            text={'Send Mail'}
+            icon={<Icon icon="envelope" />}
+            onClick={handleMailInvoice}
+            className={Classes.MINIMAL}
+          />
+          <Button
             className={Classes.MINIMAL}
             icon={<Icon icon="print-16" />}
             text={<T id={'print'} />}
             onClick={handlePrintInvoice}
           />
+          <NavbarDivider />
         </Can>
         <Can I={SaleInvoiceAction.Delete} a={AbilitySubject.Invoice}>
           <Button
@@ -141,6 +158,7 @@ function InvoiceDetailActionsBar({
               onCancelBadDebt: handleCancelBadDebtInvoice,
               onNotifyViaSMS: handleNotifyViaSMS,
               onConvert: handleConvertToCreitNote,
+              onDeliver: handleDeliverInvoice,
             }}
           />
         </Can>

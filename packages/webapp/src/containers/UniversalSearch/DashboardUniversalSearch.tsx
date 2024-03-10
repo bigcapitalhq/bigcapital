@@ -11,11 +11,10 @@ import { compose } from '@/utils';
 import withUniversalSearchActions from './withUniversalSearchActions';
 import withUniversalSearch from './withUniversalSearch';
 
+import { useGetUniversalSearchTypeOptions } from './utils';
 import DashboardUniversalSearchItemActions from './DashboardUniversalSearchItemActions';
 import { DashboardUniversalSearchItem } from './components';
-
 import DashboardUniversalSearchHotkeys from './DashboardUniversalSearchHotkeys';
-import { useGetUniversalSearchTypeOptions } from './utils';
 
 /**
  * Dashboard universal search.

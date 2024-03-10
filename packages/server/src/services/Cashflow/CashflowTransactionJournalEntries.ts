@@ -1,11 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import * as R from 'ramda';
 import {
   ILedgerEntry,
   ICashflowTransaction,
   AccountNormal,
-  ICashflowTransactionLine,
 } from '../../interfaces';
 import {
   transformCashflowTransactionType,

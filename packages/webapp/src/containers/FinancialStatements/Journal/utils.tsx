@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import { castArray } from 'lodash';
 import moment from 'moment';
 
 import { useAppQueryString } from '@/hooks';

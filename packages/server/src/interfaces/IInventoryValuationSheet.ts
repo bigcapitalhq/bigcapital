@@ -1,4 +1,8 @@
-import { INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface IInventoryValuationReportQuery {
   asDate: Date | string;
@@ -12,10 +16,10 @@ export interface IInventoryValuationReportQuery {
   branchesIds?: number[];
 }
 
-export interface IInventoryValuationSheetMeta {
-  organizationName: string;
-  baseCurrency: string;
-  isCostComputeRunning: boolean;
+export interface IInventoryValuationSheetMeta
+  extends IFinancialSheetCommonMeta {
+  formattedAsDate: string;
+  formattedDateRange: string;
 }
 
 export interface IInventoryValuationItem {
@@ -39,9 +43,19 @@ export interface IInventoryValuationTotal {
   quantityFormatted: string;
 }
 
-export type IInventoryValuationStatement =
-  | {
-      items: IInventoryValuationItem[];
-      total: IInventoryValuationTotal;
-    }
-  | {};
+export type IInventoryValuationStatement = {
+  items: IInventoryValuationItem[];
+  total: IInventoryValuationTotal;
+};
+export type IInventoryValuationSheetData = IInventoryValuationStatement;
+
+export interface IInventoryValuationSheet {
+  data: IInventoryValuationStatement;
+  meta: IInventoryValuationSheetMeta;
+  query: IInventoryValuationReportQuery;
+}
+
+export interface IInventoryValuationTable extends IFinancialTable {
+  meta: IInventoryValuationSheetMeta;
+  query: IInventoryValuationReportQuery;
+}

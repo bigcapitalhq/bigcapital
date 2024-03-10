@@ -19,6 +19,11 @@
   "log_in": "Log in",
   "forget_my_password": "Forget my password",
   "keep_me_logged_in": "Keep me logged in",
+  "dont_have_an_account": "Don't have an account?",
+  "sign_up": "Sign up",
+  "return_to": "Return to",
+  "sign_in": "Sign In",
+  "enter_the_email_address_associated_with_your_account": "Enter the email address associated with your account and we'll send you a link to reset your password.",
   "create_an_account": "Create an account",
   "need_bigcapital_account": "Need a Bigcapital account ?",
   "show": "Show",
@@ -653,7 +658,9 @@
   "invoice_number_is_not_unqiue": "Invoice number is not unqiue",
   "sale_receipt_number_not_unique": "Receipt number is not unique",
   "sale_invoice_number_is_exists": "Sale invoice number is exists",
+  "sale_invoice.total_smaller_than_paid_amount": "The invoice total is smaller than the invoice paid amount.",
   "bill_number_exists": "Bill number exists",
+  "bill.total_smaller_than_paid_amount": "The bill total is smaller than the bill paid amount.",
   "ok": "Ok!",
   "quantity_cannot_be_zero_or_empty": "Quantity cannot be zero or empty.",
   "customer_email": "Customer email",
@@ -2070,7 +2077,7 @@
   "project_task.dialog.edit_success_message": "The task has been edited successfully.",
   "project_task.action.edit_task": "Edit Task",
   "project_task.action.delete_task": "Delete Task",
-"project_task.rate": "{rate} / hour",
+  "project_task.rate": "{rate} / hour",
   "project_task.fixed_price": "Fixed price",
   "project_task.non_chargable": "Non-chargeable",
   "project_task.estimate_hours": "• {estimate_hours}h 0m estimated",
@@ -2290,5 +2297,27 @@
   "sidebar.new_project": "New Project",
   "sidebar.new_time_entry": "New Time Entry",
   "sidebar.project_profitability_summary": "Project Profitability Summary",
-  "global_error.too_many_requests": "Too many requests"
+  "global_error.too_many_requests": "Too many requests",
+
+  "pref.invoices.termsConditions.field": "Terms & Conditions",
+  "pref.invoices.customerNotes.field": "Customer Notes",
+
+  "pref.creditNotes.termsConditions.field": "Terms & Conditions",
+  "pref.creditNotes.customerNotes.field": "Customer Notes",
+
+  "pref.estimates.termsConditions.field": "Terms & Conditions",
+  "pref.estimates.customerNotes.field": "Customer Notes",
+
+  "pref.receipts.termsConditions.field": "Terms & Conditions",
+  "pref.receipts.receiptMessage.field": "Receipt Message",
+
+  "preferences.invoices": "Invoices",
+  "preferences.estimates": "Estimates",
+  "preferences.creditNotes": "Credit Notes",
+  "preferences.receipts": "Receipts",
+
+  "preferences.estimates.success_message": "The preferences have been saved successfully.",
+  "preferences.credit_notes.success_message": "The preferences have been saved successfully.",
+  "preferences.receipts.success_message": "The preferences have been saved successfully.",
+  "preferences.invoices.success_message": "The preferences have been saved successfully."
 }

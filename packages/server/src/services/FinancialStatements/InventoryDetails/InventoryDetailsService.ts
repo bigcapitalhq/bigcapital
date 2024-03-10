@@ -1,17 +1,12 @@
 import moment from 'moment';
 import { Service, Inject } from 'typedi';
-import {
-  IInventoryDetailsQuery,
-  IInvetoryItemDetailDOO,
-  IInventoryItemDetailMeta,
-} from '@/interfaces';
+import { IInventoryDetailsQuery, IInvetoryItemDetailDOO } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { InventoryDetails } from './InventoryDetails';
 import FinancialSheet from '../FinancialSheet';
 import InventoryDetailsRepository from './InventoryDetailsRepository';
-import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean } from 'utils';
 import { Tenant } from '@/system/models';
+import { InventoryDetailsMetaInjectable } from './InventoryDetailsMeta';
 
 @Service()
 export class InventoryDetailsService extends FinancialSheet {
@@ -22,7 +17,7 @@ export class InventoryDetailsService extends FinancialSheet {
   private reportRepo: InventoryDetailsRepository;
 
   @Inject()
-  private inventoryService: InventoryService;
+  private inventoryDetailsMeta: InventoryDetailsMetaInjectable;
 
   /**
    * Defaults balance sheet filter query.
@@ -43,33 +38,6 @@ export class InventoryDetailsService extends FinancialSheet {
       noneTransactions: false,
       branchesIds: [],
       warehousesIds: [],
-    };
-  }
-
-  /**
-   * Retrieve the balance sheet meta.
-   * @param {number} tenantId -
-   * @returns {IInventoryItemDetailMeta}
-   */
-  private reportMetadata(tenantId: number): IInventoryItemDetailMeta {
-    const settings = this.tenancy.settings(tenantId);
-
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
-
-    const organizationName = settings.get({
-      group: 'organization',
-      key: 'name',
-    });
-    const baseCurrency = settings.get({
-      group: 'organization',
-      key: 'base_currency',
-    });
-
-    return {
-      isCostComputeRunning: parseBoolean(isCostComputeRunning, false),
-      organizationName,
-      baseCurrency,
     };
   }
 
@@ -115,11 +83,12 @@ export class InventoryDetailsService extends FinancialSheet {
       tenant.metadata.baseCurrency,
       i18n
     );
+    const meta = await this.inventoryDetailsMeta.meta(tenantId, query);
 
     return {
       data: inventoryDetailsInstance.reportData(),
       query: filter,
-      meta: this.reportMetadata(tenantId),
+      meta,
     };
   }
 }

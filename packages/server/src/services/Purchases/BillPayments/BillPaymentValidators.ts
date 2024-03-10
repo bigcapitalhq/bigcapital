@@ -10,26 +10,12 @@ import {
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
-import { BillPayment } from '@/models';
 import { ERRORS } from './constants';
 
 @Service()
 export class BillPaymentValidators {
   @Inject()
   private tenancy: TenancyService;
-
-  /**
-   * Validates the payment existance.
-   * @param {BillPayment | undefined | null} payment
-   * @throws {ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND)}
-   */
-  public async validateBillPaymentExistance(
-    payment: BillPayment | undefined | null
-  ) {
-    if (!payment) {
-      throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
-    }
-  }
 
   /**
    * Validates the bill payment existance.

@@ -3,14 +3,15 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { param } from 'express-validator';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
-import DeleteCashflowTransactionService from '../../../services/Cashflow/DeleteCashflowTransactionService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+
 import { AbilitySubject, CashflowAction } from '@/interfaces';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
-export default class DeleteCashflowTransaction extends BaseController {
+export default class DeleteCashflowTransactionController extends BaseController {
   @Inject()
-  deleteCashflowService: DeleteCashflowTransactionService;
+  private cashflowApplication: CashflowApplication;
 
   /**
    * Controller router.
@@ -44,7 +45,7 @@ export default class DeleteCashflowTransaction extends BaseController {
 
     try {
       const { oldCashflowTransaction } =
-        await this.deleteCashflowService.deleteCashflowTransaction(
+        await this.cashflowApplication.deleteTransaction(
           tenantId,
           transactionId
         );
@@ -88,6 +89,19 @@ export default class DeleteCashflowTransaction extends BaseController {
               type: 'TRANSACTIONS_DATE_LOCKED',
               code: 4000,
               data: { ...error.payload },
+            },
+          ],
+        });
+      }
+      if (
+        error.errorType ===
+        'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED'
+      ) {
+        return res.boom.badRequest(null, {
+          errors: [
+            {
+              type: 'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED',
+              code: 4100,
             },
           ],
         });

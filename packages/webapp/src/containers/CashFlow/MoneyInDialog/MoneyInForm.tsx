@@ -72,7 +72,7 @@ function MoneyInForm({
   };
 
   // Handles the form submit.
-  const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+  const handleFormSubmit = (values, { setSubmitting }) => {
     const form = {
       ...omit(values, ['currency_code']),
       publish: true,

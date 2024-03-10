@@ -66,7 +66,7 @@ export function DetailItem({ label, children, name, align, className }) {
       >
         {label}
       </div>
-      <div class="detail-item__content">{children}</div>
+      <div>{children}</div>
     </div>
   );
 }
