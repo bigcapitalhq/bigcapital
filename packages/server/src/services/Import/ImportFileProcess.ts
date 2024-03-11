@@ -3,15 +3,16 @@ import * as R from 'ramda';
 import XLSX from 'xlsx';
 import { first, isUndefined } from 'lodash';
 import bluebird from 'bluebird';
+import fs from 'fs/promises';
+import { Knex } from 'knex';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { trimObject } from './_utils';
+import { ERRORS, convertFieldsToYupValidation, trimObject } from './_utils';
 import { ImportMappingAttr, ImportValidationError } from './interfaces';
 import { AccountsImportable } from './AccountsImportable';
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
 import UnitOfWork from '../UnitOfWork';
-import { Knex } from 'knex';
-const fs = require('fs').promises;
+import { ServiceError } from '@/exceptions';
+import ResourceService from '../Resource/ResourceService';
+
 
 @Service()
 export class ImportFileProcess {
@@ -23,6 +24,9 @@ export class ImportFileProcess {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private resourceService: ResourceService;
 
   /**
    * Reads the import file.
@@ -84,24 +88,30 @@ export class ImportFileProcess {
    * @returns {Promise<ImportValidationError[][]>}
    */
   private async validateData(
+    tenantId: number,
+    resource: string,
     mappedDTOs: Record<string, any>
   ): Promise<ImportValidationError[][]> {
-    const validateData = async (data, index: number) => {
-      const account = { ...data };
-      const accountClass = plainToInstance(
-        this.importable.validation(),
-        account
-      );
-      const errors = await validate(accountClass);
+    const importableFields = this.resourceService.getResourceImportableFields(
+      tenantId,
+      resource
+    );
+    const YupSchema = convertFieldsToYupValidation(importableFields);
 
-      if (errors?.length > 0) {
-        return errors.map((error) => ({
-          index,
-          property: error.property,
-          constraints: error.constraints,
+    const validateData = async (data, index: number) => {
+      const _data = { ...data };
+
+      try {
+        await YupSchema.validate(_data, { abortEarly: false });
+        return { index, data: _data, errors: [] };
+      } catch (validationError) {
+        const errors = validationError.inner.map((error) => ({
+          path: error.params.path,
+          label: error.params.label,
+          message: error.errors,
         }));
+        return { index, data: _data, errors };
       }
-      return false;
     };
     const errors = await bluebird.map(mappedDTOs, validateData, {
       concurrency: 20,
@@ -110,7 +120,7 @@ export class ImportFileProcess {
   }
 
   /**
-   * Transfomees the mapped DTOs.
+   * Transformes the mapped DTOs.
    * @param DTOs
    * @returns
    */
@@ -119,21 +129,22 @@ export class ImportFileProcess {
   }
 
   /**
-   * Process
+   * Processes the import file sheet through the resource service.
    * @param {number} tenantId
    * @param {number} importId
+   * @returns {Promise<void>}
    */
-  public async process(
-    tenantId: number,
-    importId: number,
-    settings = { skipErrors: true }
-  ) {
+  public async process(tenantId: number, importId: number) {
     const { Import } = this.tenancy.models(tenantId);
 
     const importFile = await Import.query()
       .findOne('importId', importId)
       .throwIfNotFound();
 
+    // Throw error if the import file is not mapped yet.
+    if (!importFile.isMapped) {
+      throw new ServiceError(ERRORS.IMPORT_FILE_NOT_MAPPED);
+    }
     const buffer = await this.readImportFile(importFile.filename);
     const jsonData = this.parseXlsxSheet(buffer);
 
@@ -146,15 +157,43 @@ export class ImportFileProcess {
     const transformedDTOs = this.transformDTOs(mappedDTOs);
 
     // Validate the mapped DTOs.
-    const errors = await this.validateData(transformedDTOs);
-
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
+    const rowsWithErrors = await this.validateData(
+      tenantId,
+      importFile.resource,
+      transformedDTOs
+    );
+    // Runs the importing under UOW envirement.
+    await this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await bluebird.map(
-        transformedDTOs,
-        (transformedDTO) =>
-          this.importable.importable(tenantId, transformedDTO, trx),
+        rowsWithErrors,
+        (rowWithErrors) => {
+          if (rowWithErrors.errors.length === 0) {
+            return this.importable.importable(
+              tenantId,
+              rowWithErrors.data,
+              trx
+            );
+          }
+        },
         { concurrency: 10 }
       );
     });
+    // Deletes the imported file after importing success./
+    await this.deleteImportFile(tenantId, importFile)
+  }
+
+  /**
+   * Deletes the imported file from the storage and database.
+   * @param {number} tenantId 
+   * @param {} importFile 
+   */
+  private async deleteImportFile(tenantId: number, importFile: any) {
+    const { Import } = this.tenancy.models(tenantId);
+
+    // Deletes the import row.
+    await Import.query().findById(importFile.id).delete();
+
+    // Deletes the imported file.
+    await fs.unlink(`public/imports/${importFile.filename}`);
   }
 }

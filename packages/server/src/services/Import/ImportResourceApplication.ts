@@ -65,10 +65,10 @@ export class ImportResourceApplication {
   }
 
   /**
-   *
+   * Process the import file sheet through service for creating entities.
    * @param {number} tenantId
    * @param {number} importId
-   * @returns
+   * @returns {Promise<void>}
    */
   public async process(tenantId: number, importId: number) {
     return this.importProcessService.process(tenantId, importId);

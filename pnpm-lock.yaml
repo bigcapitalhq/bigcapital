@@ -47,6 +47,9 @@ importers:
       '@types/mathjs':
         specifier: ^6.0.12
         version: 6.0.12
+      '@types/yup':
+        specifier: ^0.29.13
+        version: 0.29.14
       accepts:
         specifier: ^1.3.7
         version: 1.3.8
@@ -299,6 +302,9 @@ importers:
       xlsx:
         specifier: ^0.18.5
         version: 0.18.5
+      yup:
+        specifier: ^0.28.1
+        version: 0.28.5
     devDependencies:
       '@types/lodash':
         specifier: ^4.14.158

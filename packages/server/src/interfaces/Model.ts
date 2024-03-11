@@ -77,5 +77,6 @@ export type IModelMetaRelationField = IModelMetaRelationFieldCommon & (
 export interface IModelMeta {
   defaultFilterField: string;
   defaultSort: IModelMetaDefaultSort;
+  importable?: boolean;
   fields: { [key: string]: IModelMetaField };
 }

@@ -169,6 +169,21 @@ export class ImportController extends BaseController {
     next: NextFunction
   ) {
     if (error instanceof ServiceError) {
+      if (error.errorType === 'INVALID_MAP_ATTRS') {
+        return res.status(400).send({
+          errors: [{ type: 'INVALID_MAP_ATTRS' }]
+        });
+      }
+      if (error.errorType === 'DUPLICATED_FROM_MAP_ATTR') {
+        return res.status(400).send({
+          errors: [{ type: 'DUPLICATED_FROM_MAP_ATTR' }],
+        });
+      };
+      if (error.errorType === 'DUPLICATED_TO_MAP_ATTR') {
+        return res.status(400).send({
+          errors: [{ type: 'DUPLICATED_TO_MAP_ATTR' }],
+        })
+      }
     }
     next(error);
   }

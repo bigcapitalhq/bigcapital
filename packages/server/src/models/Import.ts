@@ -31,6 +31,18 @@ export default class Import extends TenantModel {
     return {};
   }
 
+  public get isMapped() {
+    return Boolean(this.mapping);
+  }
+
+  public get columnsParsed() {
+    try {
+      return JSON.parse(this.columns);
+    } catch {
+      return [];
+    }
+  }
+
   public get mappingParsed() {
     try {
       return JSON.parse(this.mapping);

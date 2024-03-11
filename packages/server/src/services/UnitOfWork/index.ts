@@ -45,7 +45,7 @@ export default class UnitOfWork {
     const knex = this.tenancy.knex(tenantId);
     let _trx = trx;
 
-    if (_trx) {
+    if (!_trx) {
       _trx = await knex.transaction({ isolationLevel });
     }
     try {

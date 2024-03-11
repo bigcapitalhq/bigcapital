@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.string('filename');
     table.string('import_id');
     table.string('resource');
+    table.json('columns');
     table.json('mapping');
     table.timestamps();
   });

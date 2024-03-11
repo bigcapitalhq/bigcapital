@@ -25,21 +25,12 @@ export class AccountsImportable {
 
   /**
    *
-   * @returns {}
-   */
-  public validation() {
-    return AccountDTOSchema;
-  }
-
-  /**
-   *
    * @param data
    * @returns
    */
   public transform(data) {
     return {
       ...data,
-      accountType: this.mapAccountType(data.accounType),
     };
   }
 

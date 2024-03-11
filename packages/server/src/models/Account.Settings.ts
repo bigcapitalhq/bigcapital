@@ -6,16 +6,21 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  importable: true,
   fields: {
     name: {
       name: 'account.field.name',
       column: 'name',
       fieldType: 'text',
+      unique: true,
+      required: true,
+      importable: true,
     },
     description: {
       name: 'account.field.description',
       column: 'description',
       fieldType: 'text',
+      importable: true,
     },
     slug: {
       name: 'account.field.slug',
@@ -23,13 +28,17 @@ export default {
       fieldType: 'text',
       columnable: false,
       filterable: false,
+      importable: false,
     },
     code: {
       name: 'account.field.code',
       column: 'code',
       fieldType: 'text',
+      importable: true,
+      minLength: 3,
+      maxLength: 6,
     },
-    root_type: {
+    rootType: {
       name: 'account.field.root_type',
       fieldType: 'enumeration',
       options: [
@@ -41,6 +50,7 @@ export default {
       ],
       filterCustomQuery: RootTypeFieldFilterQuery,
       sortable: false,
+      importable: false,
     },
     normal: {
       name: 'account.field.normal',
@@ -51,6 +61,7 @@ export default {
       ],
       filterCustomQuery: NormalTypeFieldFilterQuery,
       sortable: false,
+      importable: false,
     },
     type: {
       name: 'account.field.type',
@@ -58,30 +69,42 @@ export default {
       fieldType: 'enumeration',
       options: ACCOUNT_TYPES.map((accountType) => ({
         label: accountType.label,
-        key: accountType.key
+        key: accountType.key,
       })),
+      required: true,
+      importable: true,
     },
     active: {
       name: 'account.field.active',
       column: 'active',
       fieldType: 'boolean',
       filterable: false,
+      importable: true,
     },
-    balance: {
+    openingBalance: {
       name: 'account.field.balance',
       column: 'amount',
       fieldType: 'number',
+      importable: true,
     },
-    currency: {
+    currencyCode: {
       name: 'account.field.currency',
       column: 'currency_code',
       fieldType: 'text',
       filterable: false,
+      importable: true,
     },
-    created_at: {
+    parentAccount: {
+      name: 'account.field.parent_account',
+      column: 'parent_account_id',
+      fieldType: 'relation',
+      to: { model: 'Account', to: 'id' },
+    },
+    createdAt: {
       name: 'account.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+      importable: false,
     },
   },
 };

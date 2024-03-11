@@ -25,6 +25,7 @@
     "@types/i18n": "^0.8.7",
     "@types/knex": "^0.16.1",
     "@types/mathjs": "^6.0.12",
+    "@types/yup": "^0.29.13",
     "accepts": "^1.3.7",
     "accounting": "^0.4.1",
     "agenda": "^4.2.1",
@@ -108,7 +109,8 @@
     "typedi": "^0.8.0",
     "uniqid": "^5.2.0",
     "winston": "^3.2.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "yup": "^0.28.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.158",
