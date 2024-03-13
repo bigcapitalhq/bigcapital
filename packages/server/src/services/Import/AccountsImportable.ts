@@ -1,13 +1,13 @@
-import { IAccountCreateDTO } from '@/interfaces';
-import { AccountsApplication } from '../Accounts/AccountsApplication';
-import { AccountDTOSchema } from '../Accounts/CreateAccountDTOSchema';
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
+import { IAccountCreateDTO } from '@/interfaces';
+import { AccountsApplication } from '../Accounts/AccountsApplication';
+import { CreateAccount } from '../Accounts/CreateAccount';
 
 @Service()
 export class AccountsImportable {
   @Inject()
-  private accountsApp: AccountsApplication;
+  private createAccountService: CreateAccount;
 
   /**
    *
@@ -20,7 +20,11 @@ export class AccountsImportable {
     createAccountDTO: IAccountCreateDTO,
     trx?: Knex.Transaction
   ) {
-    return this.accountsApp.createAccount(tenantId, createAccountDTO, trx);
+    return this.createAccountService.createAccount(
+      tenantId,
+      createAccountDTO,
+      trx
+    );
   }
 
   /**
@@ -29,12 +33,15 @@ export class AccountsImportable {
    * @returns
    */
   public transform(data) {
-    return {
-      ...data,
-    };
+    return { ...data };
   }
 
-  mapAccountType(accountType: string) {
-    return 'Cash';
+  /**
+   *
+   * @param data
+   * @returns
+   */
+  public preTransform(data) {
+    return { ...data };
   }
 }

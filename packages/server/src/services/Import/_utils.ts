@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { ResourceMetaFieldsMap } from './interfaces';
+import { IModelMetaField } from '@/interfaces';
 
 export function trimObject(obj) {
   return Object.entries(obj).reduce((acc, [key, value]) => {
@@ -13,10 +15,10 @@ export function trimObject(obj) {
   }, {});
 }
 
-export const convertFieldsToYupValidation = (fields: any) => {
+export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
   const yupSchema = {};
-  Object.keys(fields).forEach((fieldName) => {
-    const field = fields[fieldName];
+  Object.keys(fields).forEach((fieldName: string) => {
+    const field = fields[fieldName] as IModelMetaField;
     let fieldSchema;
     fieldSchema = Yup.string().label(field.name);
 
@@ -58,4 +60,13 @@ export const ERRORS = {
   DUPLICATED_FROM_MAP_ATTR: 'DUPLICATED_FROM_MAP_ATTR',
   DUPLICATED_TO_MAP_ATTR: 'DUPLICATED_TO_MAP_ATTR',
   IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
+};
+
+/**
+ *
+ */
+export const getUnmappedSheetColumns = (columns, mapping) => {
+  return columns.filter(
+    (column) => !mapping.some((map) => map.from === column)
+  );
 };

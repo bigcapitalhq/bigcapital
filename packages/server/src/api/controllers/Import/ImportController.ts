@@ -1,10 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { query, body, param } from 'express-validator';
+import { body, param } from 'express-validator';
 import Multer from 'multer';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
-import { ImportResourceInjectable } from '@/services/Import/ImportResourceInjectable';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
 
 const upload = Multer({
@@ -24,16 +23,16 @@ export class ImportController extends BaseController {
     const router = Router();
 
     router.post(
-      '/:import_id/import',
-      this.asyncMiddleware(this.import.bind(this)),
-      this.catchServiceErrors
-    );
-    router.post(
       '/file',
       upload.single('file'),
       this.importValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.fileUpload.bind(this)),
+      this.catchServiceErrors
+    );
+    router.post(
+      '/:import_id/import',
+      this.asyncMiddleware(this.import.bind(this)),
       this.catchServiceErrors
     );
     router.post(
@@ -48,11 +47,11 @@ export class ImportController extends BaseController {
       this.asyncMiddleware(this.mapping.bind(this)),
       this.catchServiceErrors
     );
-    // router.get(
-    //   '/:import_id/preview',
-    //   this.asyncMiddleware(this.preview.bind(this)),
-    //   this.catchServiceErrors
-    // );
+    router.post(
+      '/:import_id/preview',
+      this.asyncMiddleware(this.preview.bind(this)),
+      this.catchServiceErrors
+    );
     return router;
   }
 
@@ -86,7 +85,7 @@ export class ImportController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async fileUpload(req: Request, res: Response, next: NextFunction) {
+  private async fileUpload(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
     try {
@@ -103,10 +102,10 @@ export class ImportController extends BaseController {
   }
 
   /**
-   *
-   * @param req
-   * @param res
-   * @param next
+   * Maps the columns of the imported file.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   private   async mapping(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -126,12 +125,23 @@ export class ImportController extends BaseController {
   }
 
   /**
-   *
-   * @param req
-   * @param res
-   * @param next
+   * Preview the imported file before actual importing.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  private async preview(req: Request, res: Response, next: NextFunction) {}
+  private async preview(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { import_id: importId } = req.params;
+
+    try {
+      const  preview = await this.importResourceApp.preview(tenantId, importId);
+
+      return res.status(200).send(preview);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   /**
    *

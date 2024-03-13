@@ -34,6 +34,7 @@ export interface IModelMetaFieldCommon {
   columnable?: boolean;
   fieldType: IModelColumnType;
   customQuery?: Function;
+  required?: boolean;
 }
 
 export interface IModelMetaFieldNumber {

@@ -63,7 +63,7 @@ export default {
       sortable: false,
       importable: false,
     },
-    type: {
+    accountType: {
       name: 'account.field.type',
       column: 'account_type',
       fieldType: 'enumeration',

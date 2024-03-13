@@ -50,11 +50,15 @@ export default class UnitOfWork {
     }
     try {
       const result = await work(_trx);
-      _trx.commit();
 
+      if (!trx) {
+        _trx.commit();
+      }
       return result;
     } catch (error) {
-      _trx.rollback();
+      if (!trx) {
+        _trx.rollback();
+      }
       throw error;
     }
   };

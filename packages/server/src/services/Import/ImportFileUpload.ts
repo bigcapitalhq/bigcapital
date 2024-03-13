@@ -8,7 +8,7 @@ import { ERRORS, trimObject } from './_utils';
 import ResourceService from '../Resource/ResourceService';
 import fs from 'fs/promises';
 import { IModelMetaField } from '@/interfaces';
-
+import { ImportFileCommon } from './ImportFileCommon';
 @Service()
 export class ImportFileUploadService {
   @Inject()
@@ -17,11 +17,15 @@ export class ImportFileUploadService {
   @Inject()
   private resourceService: ResourceService;
 
+  @Inject()
+  private importFileCommon: ImportFileCommon;
+
   /**
    * Reads the imported file and stores the import file meta under unqiue id.
-   * @param {number} tenantId -
-   * @param {string} filePath -
-   * @param {string} fileName -
+   * @param {number} tenantId - Tenant id.
+   * @param {string} resource - Resource name.
+   * @param {string} filePath - File path.
+   * @param {string} fileName - File name.
    * @returns
    */
   public async import(
@@ -40,16 +44,15 @@ export class ImportFileUploadService {
     if (!resourceMeta.importable) {
       throw new ServiceError(ERRORS.RESOURCE_NOT_IMPORTABLE);
     }
-    const buffer = await fs.readFile(filePath);
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
+    // Reads the imported file into buffer.
+    const buffer = await this.importFileCommon.readImportFile(filename);
 
-    const firstSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheetName];
-    const jsonData = XLSX.utils.sheet_to_json(worksheet);
-    
+    // Parse the buffer file to array data.
+    const jsonData = this.importFileCommon.parseXlsxSheet(buffer);
+
     const columns = this.getColumns(jsonData);
     const coumnsStringified = JSON.stringify(columns);
-    
+
     // @todo validate the resource.
     const _resource = this.resourceService.resourceToModelName(resource);
 
@@ -66,7 +69,6 @@ export class ImportFileUploadService {
     const resourceColumnsTransformeed = Object.entries(resourceColumns).map(
       ([key, { name }]: [string, IModelMetaField]) => ({ key, name })
     );
-    // @todo return the resource importable columns.
     return {
       export: exportFile,
       columns,
