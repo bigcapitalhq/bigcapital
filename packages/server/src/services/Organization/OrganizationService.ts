@@ -21,25 +21,19 @@ import { ERRORS } from './constants';
 @Service()
 export default class OrganizationService {
   @Inject()
-  eventPublisher: EventPublisher;
-
-  @Inject('logger')
-  logger: any;
-
-  @Inject('repositories')
-  sysRepositories: any;
+  private eventPublisher: EventPublisher;
 
   @Inject()
-  tenantsManager: TenantsManager;
+  private tenantsManager: TenantsManager;
 
   @Inject('agenda')
-  agenda: any;
+  private agenda: any;
 
   @Inject()
-  baseCurrencyMutateLocking: OrganizationBaseCurrencyLocking;
+  private baseCurrencyMutateLocking: OrganizationBaseCurrencyLocking;
 
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Builds the database schema and seed data of the given organization id.
