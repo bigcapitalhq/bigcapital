@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import boom from 'express-boom';
 import errorHandler from 'errorhandler';
 import bodyParser from 'body-parser';
-import fileUpload from 'express-fileupload';
 import { Server } from 'socket.io';
 import Container from 'typedi';
 import routes from 'api';
@@ -46,13 +45,6 @@ export default ({ app }) => {
   app.use(JSONResponseTransformer(snakecaseResponseTransformer));
 
   app.use('/public', express.static(path.join(global.__storage_dir)));
-
-  // Handle multi-media requests.
-  // app.use(
-  //   fileUpload({
-  //     createParentPath: true,
-  //   })
-  // );
 
   // Logger middleware.
   app.use(LoggerMiddleware);

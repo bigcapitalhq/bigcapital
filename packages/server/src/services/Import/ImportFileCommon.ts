@@ -11,7 +11,7 @@ import {
   ImportOperError,
   ImportOperSuccess,
 } from './interfaces';
-import { AccountsImportable } from './AccountsImportable';
+import { AccountsImportable } from '../Accounts/AccountsImportable';
 import { ServiceError } from '@/exceptions';
 import { trimObject } from './_utils';
 import { ImportableResources } from './ImportableResources';
@@ -57,12 +57,12 @@ export class ImportFileCommon {
   }
 
   /**
-   *
+   * Imports the given parsed data to the resource storage through registered importable service. 
    * @param {number} tenantId -
    * @param {string} resourceName - Resource name.
-   * @param {Record<string, any>} parsedData -
-   * @param {Knex.Transaction} trx
-   * @returns
+   * @param {Record<string, any>} parsedData - Parsed data.
+   * @param {Knex.Transaction} trx - Knex transaction.
+   * @returns {Promise<[ImportOperSuccess[], ImportOperError[]]>}
    */
   public async import(
     tenantId: number,
@@ -76,6 +76,8 @@ export class ImportFileCommon {
     );
     const ImportableRegistry = this.importable.registry;
     const importable = ImportableRegistry.getImportable(resourceName);
+
+    const concurrency = importable.concurrency || 10;
 
     const success: ImportOperSuccess[] = [];
     const failed: ImportOperError[] = [];
@@ -108,7 +110,7 @@ export class ImportFileCommon {
         failed.push({ index, error });
       }
     };
-    await bluebird.map(parsedData, importAsync, { concurrency: 2 });
+    await bluebird.map(parsedData, importAsync, { concurrency });
 
     return [success, failed];
   }
@@ -127,7 +129,7 @@ export class ImportFileCommon {
    * @param {number} tenantId
    * @param {} importFile
    */
-  private async deleteImportFile(tenantId: number, importFile: any) {
+  public async deleteImportFile(tenantId: number, importFile: any) {
     const { Import } = this.tenancy.models(tenantId);
 
     // Deletes the import row.

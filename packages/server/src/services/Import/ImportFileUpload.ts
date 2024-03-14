@@ -27,7 +27,7 @@ export class ImportFileUploadService {
    * @param {string} resource - Resource name.
    * @param {string} filePath - File path.
    * @param {string} fileName - File name.
-   * @returns
+   * @returns {Promise<ImportFileUploadPOJO>}
    */
   public async import(
     tenantId: number,

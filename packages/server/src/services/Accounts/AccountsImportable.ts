@@ -1,15 +1,16 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import { IAccountCreateDTO } from '@/interfaces';
-import { CreateAccount } from '../Accounts/CreateAccount';
+import { CreateAccount } from './CreateAccount';
+import { Importable } from '../Import/Importable';
 
 @Service()
-export class AccountsImportable {
+export class AccountsImportable extends Importable {
   @Inject()
   private createAccountService: CreateAccount;
 
   /**
-   *
+   * Importing to account service.
    * @param {number} tenantId
    * @param {IAccountCreateDTO} createAccountDTO
    * @returns
@@ -27,20 +28,10 @@ export class AccountsImportable {
   }
 
   /**
-   *
-   * @param data
-   * @returns
+   * Concurrrency controlling of the importing process.
+   * @returns {number}
    */
-  public transform(data) {
-    return { ...data };
-  }
-
-  /**
-   *
-   * @param data
-   * @returns
-   */
-  public preTransform(data) {
-    return { ...data };
+  public get concurrency() {
+    return 1;
   }
 }

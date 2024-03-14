@@ -1,15 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
-import Multer from 'multer';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
-
-const upload = Multer({
-  dest: './public/imports',
-  limits: { fileSize: 5 * 1024 * 1024 },
-});
+import { uploadImportFile } from './_utils';
 
 @Service()
 export class ImportController extends BaseController {
@@ -24,7 +19,7 @@ export class ImportController extends BaseController {
 
     router.post(
       '/file',
-      upload.single('file'),
+      uploadImportFile.single('file'),
       this.importValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.fileUpload.bind(this)),
@@ -60,27 +55,11 @@ export class ImportController extends BaseController {
    * @returns {ValidationSchema[]}
    */
   private get importValidationSchema() {
-    return [
-      body('resource').exists(),
-      //   body('file').custom((value, { req }) => {
-      //     if (!value) {
-      //       throw new Error('File is required');
-      //     }
-      //     if (!['xlsx', 'csv'].includes(value.split('.').pop())) {
-      //       throw new Error('File must be in xlsx or csv format');
-      //     }
-      //     return true;
-      //   }),
-    ];
+    return [body('resource').exists()];
   }
 
   /**
    * Imports xlsx/csv to the given resource type.
-   *
-   * - Save the xlsx/csv file and give it a random name.
-   * - Save the file metadata on the DB storage.
-   * -
-   *
    * @param {Request} req -
    * @param {Response} res -
    * @param {NextFunction} next -
@@ -117,7 +96,6 @@ export class ImportController extends BaseController {
         importId,
         body?.mapping
       );
-
       return res.status(200).send(mapping);
     } catch (error) {
       next(error);
@@ -144,22 +122,19 @@ export class ImportController extends BaseController {
   }
 
   /**
-   *
-   * @param req
-   * @param res
-   * @param next
+   * Importing the imported file to the application storage.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   private async import(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { import_id: importId } = req.params;
 
     try {
-      await this.importResourceApp.process(tenantId, importId);
+      const result = await this.importResourceApp.process(tenantId, importId);
 
-      return res.status(200).send({
-        id: importId,
-        message: 'Importing the uploaded file is importing.',
-      });
+      return res.status(200).send(result);
     } catch (error) {
       next(error);
     }
@@ -192,6 +167,11 @@ export class ImportController extends BaseController {
       if (error.errorType === 'DUPLICATED_TO_MAP_ATTR') {
         return res.status(400).send({
           errors: [{ type: 'DUPLICATED_TO_MAP_ATTR' }],
+        });
+      }
+      if (error.errorType === 'IMPORTED_FILE_EXTENSION_INVALID') {
+        return res.status(400).send({
+          errors: [{ type: 'IMPORTED_FILE_EXTENSION_INVALID' }],
         });
       }
     }

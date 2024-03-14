@@ -1,12 +1,11 @@
 import Container, { Service } from 'typedi';
-import { AccountsImportable } from './AccountsImportable';
+import { AccountsImportable } from '../Accounts/AccountsImportable';
 import { ImportableRegistry } from './ImportableRegistry';
 
 @Service()
 export class ImportableResources {
   private static registry: ImportableRegistry;
 
-  
   constructor() {
     this.boot();
   }

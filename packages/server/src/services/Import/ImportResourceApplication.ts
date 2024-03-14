@@ -52,7 +52,7 @@ export class ImportResourceApplication {
    * Preview the mapped results before process importing.
    * @param {number} tenantId
    * @param {number} importId
-   * @returns {}
+   * @returns {Promise<ImportFilePreviewPOJO>}
    */
   public async preview(tenantId: number, importId: number) {
     return this.ImportFilePreviewService.preview(tenantId, importId);
@@ -62,7 +62,7 @@ export class ImportResourceApplication {
    * Process the import file sheet through service for creating entities.
    * @param {number} tenantId
    * @param {number} importId
-   * @returns {Promise<void>}
+   * @returns {Promise<ImportFilePreviewPOJO>}
    */
   public async process(tenantId: number, importId: number) {
     return this.importProcessService.import(tenantId, importId);
