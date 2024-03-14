@@ -22,22 +22,16 @@ export class ImportResourceApplication {
   /**
    * Reads the imported file and stores the import file meta under unqiue id.
    * @param {number} tenantId -
-   * @param {string} filePath -
+   * @param {string} resource - 
    * @param {string} fileName -
-   * @returns
+   * @returns {Promise<ImportFileUploadPOJO>}
    */
   public async import(
     tenantId: number,
     resource: string,
-    filePath: string,
     filename: string
   ) {
-    return this.importFileService.import(
-      tenantId,
-      resource,
-      filePath,
-      filename
-    );
+    return this.importFileService.import(tenantId, resource, filename);
   }
 
   /**
@@ -71,6 +65,6 @@ export class ImportResourceApplication {
    * @returns {Promise<void>}
    */
   public async process(tenantId: number, importId: number) {
-    return this.importProcessService.process(tenantId, importId);
+    return this.importProcessService.import(tenantId, importId);
   }
 }

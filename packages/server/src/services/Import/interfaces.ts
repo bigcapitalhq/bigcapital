@@ -18,3 +18,40 @@ export interface ImportInsertError {
   errorCode: string;
   errorMessage: string;
 }
+
+export interface ImportFileUploadPOJO {
+  import: {
+    importId: string;
+    resource: string;
+  };
+  sheetColumns: string[];
+  resourceColumns: { key: string; name: string }[];
+}
+
+export interface ImportFileMapPOJO {
+  import: {
+    importId: string;
+    resource: string;
+  };
+}
+
+export interface ImportFilePreviewPOJO {
+  createdCount: number;
+  skippedCount: number;
+  totalCount: number;
+  errorsCount: number;
+  errors: ImportInsertError[];
+  unmappedColumns: string[];
+  unmappedColumnsCount: number;
+}
+
+
+export interface ImportOperSuccess {
+  data: unknown;
+  index: number;
+}
+
+export interface ImportOperError {
+  error: ImportInsertError;
+  index: number;
+}

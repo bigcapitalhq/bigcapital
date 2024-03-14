@@ -1,4 +1,6 @@
 import * as Yup from 'yup';
+import { upperFirst, camelCase, first } from 'lodash';
+import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
 
@@ -62,11 +64,16 @@ export const ERRORS = {
   IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
 };
 
-/**
- *
- */
 export const getUnmappedSheetColumns = (columns, mapping) => {
   return columns.filter(
     (column) => !mapping.some((map) => map.from === column)
   );
+};
+
+export const sanitizeResourceName = (resourceName: string) => {
+  return upperFirst(camelCase(pluralize.singular(resourceName)));
+};
+
+export const getSheetColumns = (sheetData: unknown[]) => {
+  return Object.keys(first(sheetData));
 };

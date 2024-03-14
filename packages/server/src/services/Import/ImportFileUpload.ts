@@ -1,14 +1,12 @@
-import { first, values } from 'lodash';
 import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
-import XLSX from 'xlsx';
-import * as R from 'ramda';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { ERRORS, trimObject } from './_utils';
+import { sanitizeResourceName } from './_utils';
 import ResourceService from '../Resource/ResourceService';
-import fs from 'fs/promises';
 import { IModelMetaField } from '@/interfaces';
 import { ImportFileCommon } from './ImportFileCommon';
+import { ImportFileDataValidator } from './ImportFileDataValidator';
+import { ImportFileUploadPOJO } from './interfaces';
+
 @Service()
 export class ImportFileUploadService {
   @Inject()
@@ -20,6 +18,9 @@ export class ImportFileUploadService {
   @Inject()
   private importFileCommon: ImportFileCommon;
 
+  @Inject()
+  private importValidator: ImportFileDataValidator;
+
   /**
    * Reads the imported file and stores the import file meta under unqiue id.
    * @param {number} tenantId - Tenant id.
@@ -30,58 +31,50 @@ export class ImportFileUploadService {
    */
   public async import(
     tenantId: number,
-    resource: string,
-    filePath: string,
+    resourceName: string,
     filename: string
-  ) {
+  ): Promise<ImportFileUploadPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
     const resourceMeta = this.resourceService.getResourceMeta(
       tenantId,
-      resource
+      resourceName
     );
     // Throw service error if the resource does not support importing.
-    if (!resourceMeta.importable) {
-      throw new ServiceError(ERRORS.RESOURCE_NOT_IMPORTABLE);
-    }
+    this.importValidator.validateResourceImportable(resourceMeta);
+
     // Reads the imported file into buffer.
     const buffer = await this.importFileCommon.readImportFile(filename);
 
     // Parse the buffer file to array data.
-    const jsonData = this.importFileCommon.parseXlsxSheet(buffer);
+    const sheetData = this.importFileCommon.parseXlsxSheet(buffer);
 
-    const columns = this.getColumns(jsonData);
-    const coumnsStringified = JSON.stringify(columns);
+    const sheetColumns = this.importFileCommon.parseSheetColumns(sheetData);
+    const coumnsStringified = JSON.stringify(sheetColumns);
 
-    // @todo validate the resource.
-    const _resource = this.resourceService.resourceToModelName(resource);
+    const _resourceName = sanitizeResourceName(resourceName);
 
-    const exportFile = await Import.query().insert({
+    // Store the import model with related metadata.
+    const importFile = await Import.query().insert({
       filename,
       importId: filename,
-      resource: _resource,
+      resource: _resourceName,
       columns: coumnsStringified,
     });
     const resourceColumns = this.resourceService.getResourceImportableFields(
       tenantId,
-      resource
+      _resourceName
     );
     const resourceColumnsTransformeed = Object.entries(resourceColumns).map(
       ([key, { name }]: [string, IModelMetaField]) => ({ key, name })
     );
     return {
-      export: exportFile,
-      columns,
+      import: {
+        importId: importFile.importId,
+        resource: importFile.resource,
+      },
+      sheetColumns,
       resourceColumns: resourceColumnsTransformeed,
     };
-  }
-
-  /**
-   * Retrieves the sheet columns from the given sheet data.
-   * @param {unknown[]} json
-   * @returns {string[]}
-   */
-  private getColumns(json: unknown[]): string[] {
-    return R.compose(Object.keys, trimObject, first)(json);
   }
 }

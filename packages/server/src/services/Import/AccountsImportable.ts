@@ -1,7 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import { IAccountCreateDTO } from '@/interfaces';
-import { AccountsApplication } from '../Accounts/AccountsApplication';
 import { CreateAccount } from '../Accounts/CreateAccount';
 
 @Service()

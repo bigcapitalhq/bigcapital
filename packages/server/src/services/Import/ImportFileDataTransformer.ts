@@ -8,14 +8,12 @@ import ResourceService from '../Resource/ResourceService';
 
 @Service()
 export class ImportFileDataTransformer {
-  @Inject()
-  private resource: ResourceService;
   /**
    *
    * @param {number} tenantId -
    * @param {}
    */
-  public transformSheetData(
+  public parseSheetData(
     importFile: any,
     importableFields: any,
     data: Record<string, unknown>[]

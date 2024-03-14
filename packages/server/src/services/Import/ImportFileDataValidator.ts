@@ -1,13 +1,26 @@
 import { Service } from 'typedi';
 import { ImportInsertError, ResourceMetaFieldsMap } from './interfaces';
-import { convertFieldsToYupValidation } from './_utils';
+import { ERRORS, convertFieldsToYupValidation } from './_utils';
+import { IModelMeta } from '@/interfaces';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export class ImportFileDataValidator {
   /**
+   * Validates the given resource is importable.
+   * @param {IModelMeta} resourceMeta
+   */
+  public validateResourceImportable(resourceMeta: IModelMeta) {
+    // Throw service error if the resource does not support importing.
+    if (!resourceMeta.importable) {
+      throw new ServiceError(ERRORS.RESOURCE_NOT_IMPORTABLE);
+    }
+  }
+
+  /**
    * Validates the given mapped DTOs and returns errors with their index.
    * @param {Record<string, any>} mappedDTOs
-   * @returns {Promise<ImportValidationError[][]>}
+   * @returns {Promise<void | ImportInsertError[]>}
    */
   public async validateData(
     importableFields: ResourceMetaFieldsMap,

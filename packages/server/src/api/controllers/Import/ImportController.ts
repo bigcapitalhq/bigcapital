@@ -62,16 +62,16 @@ export class ImportController extends BaseController {
   private get importValidationSchema() {
     return [
       body('resource').exists(),
-    //   body('file').custom((value, { req }) => {
-    //     if (!value) {
-    //       throw new Error('File is required');
-    //     }
-    //     if (!['xlsx', 'csv'].includes(value.split('.').pop())) {
-    //       throw new Error('File must be in xlsx or csv format');
-    //     }
-    //     return true;
-    //   }),
-    // ];
+      //   body('file').custom((value, { req }) => {
+      //     if (!value) {
+      //       throw new Error('File is required');
+      //     }
+      //     if (!['xlsx', 'csv'].includes(value.split('.').pop())) {
+      //       throw new Error('File must be in xlsx or csv format');
+      //     }
+      //     return true;
+      //   }),
+    ];
   }
 
   /**
@@ -92,7 +92,6 @@ export class ImportController extends BaseController {
       const data = await this.importResourceApp.import(
         tenantId,
         req.body.resource,
-        req.file.path,
         req.file.filename
       );
       return res.status(200).send(data);
@@ -107,18 +106,19 @@ export class ImportController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private   async mapping(req: Request, res: Response, next: NextFunction) {
+  private async mapping(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { import_id: importId } = req.params;
     const body = this.matchedBodyData(req);
 
     try {
-      await this.importResourceApp.mapping(tenantId, importId, body?.mapping);
+      const mapping = await this.importResourceApp.mapping(
+        tenantId,
+        importId,
+        body?.mapping
+      );
 
-      return res.status(200).send({
-        id: importId,
-        message: 'The given import sheet has mapped successfully.'
-      })
+      return res.status(200).send(mapping);
     } catch (error) {
       next(error);
     }
@@ -135,7 +135,7 @@ export class ImportController extends BaseController {
     const { import_id: importId } = req.params;
 
     try {
-      const  preview = await this.importResourceApp.preview(tenantId, importId);
+      const preview = await this.importResourceApp.preview(tenantId, importId);
 
       return res.status(200).send(preview);
     } catch (error) {
@@ -158,7 +158,7 @@ export class ImportController extends BaseController {
 
       return res.status(200).send({
         id: importId,
-        message: 'Importing the uploaded file is importing.'
+        message: 'Importing the uploaded file is importing.',
       });
     } catch (error) {
       next(error);
@@ -181,18 +181,18 @@ export class ImportController extends BaseController {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVALID_MAP_ATTRS') {
         return res.status(400).send({
-          errors: [{ type: 'INVALID_MAP_ATTRS' }]
+          errors: [{ type: 'INVALID_MAP_ATTRS' }],
         });
       }
       if (error.errorType === 'DUPLICATED_FROM_MAP_ATTR') {
         return res.status(400).send({
           errors: [{ type: 'DUPLICATED_FROM_MAP_ATTR' }],
         });
-      };
+      }
       if (error.errorType === 'DUPLICATED_TO_MAP_ATTR') {
         return res.status(400).send({
           errors: [{ type: 'DUPLICATED_TO_MAP_ATTR' }],
-        })
+        });
       }
     }
     next(error);

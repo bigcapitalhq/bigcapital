@@ -1,10 +1,10 @@
+import { fromPairs } from 'lodash';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { ImportMappingAttr } from './interfaces';
+import { ImportFileMapPOJO, ImportMappingAttr } from './interfaces';
 import ResourceService from '../Resource/ResourceService';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './_utils';
-import { fromPairs } from 'lodash';
 
 @Service()
 export class ImportFileMapping {
@@ -24,7 +24,7 @@ export class ImportFileMapping {
     tenantId: number,
     importId: number,
     maps: ImportMappingAttr[]
-  ) {
+  ): Promise<ImportFileMapPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
     const importFile = await Import.query()
@@ -42,6 +42,13 @@ export class ImportFileMapping {
     await Import.query().findById(importFile.id).patch({
       mapping: mappingStringified,
     });
+
+    return {
+      import: {
+        importId: importFile.importId,
+        resource: importFile.resource,
+      },
+    };
   }
 
   /**
@@ -80,7 +87,7 @@ export class ImportFileMapping {
 
   /**
    * Validate the map attrs relation should be one-to-one relation only.
-   * @param {ImportMappingAttr[]} maps 
+   * @param {ImportMappingAttr[]} maps
    */
   private validateDuplicatedMapAttrs(maps: ImportMappingAttr[]) {
     const fromMap = {};
