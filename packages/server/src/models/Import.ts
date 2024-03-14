@@ -2,7 +2,8 @@ import TenantModel from 'models/TenantModel';
 
 export default class Import extends TenantModel {
   mapping!: string;
-
+  columns!: string;
+  
   /**
    * Table name.
    */
@@ -31,6 +32,10 @@ export default class Import extends TenantModel {
     return {};
   }
 
+  /**
+   * Detarmines whether the import is mapped.
+   * @returns {boolean}
+   */
   public get isMapped() {
     return Boolean(this.mapping);
   }
@@ -42,6 +47,7 @@ export default class Import extends TenantModel {
       return [];
     }
   }
+
 
   public get mappingParsed() {
     try {

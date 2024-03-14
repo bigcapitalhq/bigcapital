@@ -83,12 +83,6 @@ importers:
       body-parser:
         specifier: ^1.20.2
         version: 1.20.2
-      class-transformer:
-        specifier: ^0.5.1
-        version: 0.5.1
-      class-validator:
-        specifier: ^0.14.0
-        version: 0.14.0
       compression:
         specifier: ^1.7.4
         version: 1.7.4
@@ -140,9 +134,6 @@ importers:
       express-boom:
         specifier: ^3.0.0
         version: 3.0.0
-      express-fileupload:
-        specifier: ^1.1.7-alpha.3
-        version: 1.4.0
       express-oauth-server:
         specifier: ^2.0.0
         version: 2.0.0
@@ -6931,10 +6922,6 @@ packages:
     resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
     dev: false
 
-  /@types/validator@13.11.7:
-    resolution: {integrity: sha512-q0JomTsJ2I5Mv7dhHhQLGjMvX0JJm5dyZ1DXQySIUzU1UlwzB8bt+R6+LODUbz0UDIOvEzGc28tk27gBJw2N8Q==}
-    dev: false
-
   /@types/webidl-conversions@7.0.0:
     resolution: {integrity: sha512-xTE1E+YF4aWPJJeUzaZI5DRntlkY3+BCVJi0axFptnjGmAoWxkyREIh/XMrfxVLejwQxMCfDXdICo0VLxThrog==}
     dev: false
@@ -9538,10 +9525,6 @@ packages:
     resolution: {integrity: sha512-0TNiGstbQmCFwt4akjjBg5pLRTSyj/PkWQ1ZoO2zntmg9yLqSRxwEa4iCfQLGjqhiqBfOJa7W/E8wfGrTDmlZQ==}
     dev: false
 
-  /class-transformer@0.5.1:
-    resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
-    dev: false
-
   /class-utils@0.3.6:
     resolution: {integrity: sha512-qOhPa/Fj7s6TY8H8esGu5QNpMMQxz79h+urzrNYN6mn+9BnxlDGf5QZ+XeCDsxSjPqsSR56XOZOJmpeurnLMeg==}
     engines: {node: '>=0.10.0'}
@@ -9550,14 +9533,6 @@ packages:
       define-property: 0.2.5
       isobject: 3.0.1
       static-extend: 0.1.2
-    dev: false
-
-  /class-validator@0.14.0:
-    resolution: {integrity: sha512-ct3ltplN8I9fOwUd8GrP8UQixwff129BkEtuWDKL5W45cQuLd19xqmTLu5ge78YDm/fdje6FMt0hGOhl0lii3A==}
-    dependencies:
-      '@types/validator': 13.11.7
-      libphonenumber-js: 1.10.19
-      validator: 13.9.0
     dev: false
 
   /classnames@2.3.2:
@@ -12506,13 +12481,6 @@ packages:
     resolution: {integrity: sha512-/esN6Am8YE1rzRsi+vBpJkdr8O+GX+oBjRE/hEuBu6Y3uyS9y026XptRZduAMYS8KxyLzXM5Qh+RlnqLOR1pVQ==}
     dependencies:
       boom: 7.3.0
-    dev: false
-
-  /express-fileupload@1.4.0:
-    resolution: {integrity: sha512-RjzLCHxkv3umDeZKeFeMg8w7qe0V09w3B7oGZprr/oO2H/ISCgNzuqzn7gV3HRWb37GjRk429CCpSLS2KNTqMQ==}
-    engines: {node: '>=12.0.0'}
-    dependencies:
-      busboy: 1.6.0
     dev: false
 
   /express-oauth-server@2.0.0:
