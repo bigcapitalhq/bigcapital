@@ -190,6 +190,9 @@ module.exports = {
     secretSandbox: process.env.PLAID_SECRET_SANDBOX,
     redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
     redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
-    linkWebhook: process.env.PLAID_LINK_WEBHOOK
+    linkWebhook: process.env.PLAID_LINK_WEBHOOK,
+  },
+  oidcLogin: {
+    disabled: parseBoolean<boolean>(process.env.OIDC_LOGIN_DISABLED, false),
   },
 };

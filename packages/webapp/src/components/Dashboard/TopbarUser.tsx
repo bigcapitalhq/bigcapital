@@ -11,11 +11,9 @@ import {
 } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 
-import { useAuthActions } from '@/hooks/state';
-
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { useAuthenticatedAccount } from '@/hooks/query';
+import { useAuthOidcLogout, useAuthenticatedAccount } from '@/hooks/query';
 import { firstLettersArgs, compose } from '@/utils';
 
 /**
@@ -26,13 +24,13 @@ function DashboardTopbarUser({
   openDialog,
 }) {
   const history = useHistory();
-  const { setLogout } = useAuthActions();
+  const { mutateAsync: oidcLogoutMutate } = useAuthOidcLogout();
 
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
 
   const onClickLogout = () => {
-    setLogout();
+    oidcLogoutMutate();
   };
 
   const onKeyboardShortcut = () => {

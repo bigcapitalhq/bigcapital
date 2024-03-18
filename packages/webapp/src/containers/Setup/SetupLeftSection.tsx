@@ -3,7 +3,7 @@ import React from 'react';
 import { Icon, For, FormattedMessage as T } from '@/components';
 
 import { getFooterLinks } from '@/constants/footerLinks';
-import { useAuthActions } from '@/hooks/state';
+import { useAuthOidcLogout } from '@/hooks/query'
 
 /**
  * Footer item link.
@@ -38,11 +38,11 @@ function SetupLeftSectionFooter() {
  * Setup left section header.
  */
 function SetupLeftSectionHeader() {
-  const { setLogout } = useAuthActions();
+  const { mutateAsync: oidcLogoutMutate } = useAuthOidcLogout();
 
   // Handle logout link click.
   const onClickLogout = () => {
-    setLogout();
+    oidcLogoutMutate();
   };
 
   return (

@@ -14,6 +14,8 @@ import {
   AuthInsiderCard,
 } from './_components';
 import { useAuthMetaBoot } from './AuthMetaBoot';
+import useQueryParams from '@/hooks/useQueryParams'
+import OidcSignin from '@/containers/Authentication/OidcSignin'
 
 const initialValues = {
   crediential: '',
@@ -25,6 +27,10 @@ const initialValues = {
  * Login page.
  */
 export default function Login() {
+   const query = useQueryParams();
+
+   const codeParam = query.get('code');
+
   const { mutateAsync: loginMutate } = useAuthLogin();
 
   const handleSubmit = (values, { setSubmitting }) => {
@@ -56,6 +62,8 @@ export default function Login() {
           onSubmit={handleSubmit}
           component={LoginForm}
         />
+
+        <OidcSignin code={codeParam} />
       </AuthInsiderCard>
 
       <LoginFooterLinks />
