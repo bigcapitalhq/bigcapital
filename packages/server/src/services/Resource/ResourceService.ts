@@ -1,12 +1,11 @@
 import { Service, Inject } from 'typedi';
-import { camelCase, upperFirst } from 'lodash';
+import { camelCase, upperFirst, pickBy } from 'lodash';
 import * as qim from 'qim';
 import pluralize from 'pluralize';
-import { IModelMeta } from '@/interfaces';
+import { IModelMeta, IModelMetaField } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import I18nService from '@/services/I18n/I18nService';
-import { tenantKnexConfig } from 'config/knexConfig';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -24,7 +23,7 @@ export default class ResourceService {
    * Transform resource to model name.
    * @param {string} resourceName
    */
-  private resourceToModelName(resourceName: string): string {
+  public resourceToModelName(resourceName: string): string {
     return upperFirst(camelCase(pluralize.singular(resourceName)));
   }
 
@@ -61,6 +60,33 @@ export default class ResourceService {
 
     // Localization the fields names.
     return this.getResourceMetaLocalized(resourceMeta, tenantId);
+  }
+
+  /**
+   *
+   */
+  public getResourceFields(
+    tenantId: number,
+    modelName: string
+  ): { [key: string]: IModelMetaField } {
+    const meta = this.getResourceMeta(tenantId, modelName);
+
+    return meta.fields;
+  }
+
+  /**
+   * 
+   * @param {number} tenantId 
+   * @param {string} modelName 
+   * @returns 
+   */
+  public getResourceImportableFields(
+    tenantId: number,
+    modelName: string
+  ): { [key: string]: IModelMetaField } {
+    const fields = this.getResourceFields(tenantId, modelName);
+
+    return pickBy(fields, (field) => field.importable);
   }
 
   /**

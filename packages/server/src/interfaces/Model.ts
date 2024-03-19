@@ -34,6 +34,7 @@ export interface IModelMetaFieldCommon {
   columnable?: boolean;
   fieldType: IModelColumnType;
   customQuery?: Function;
+  required?: boolean;
 }
 
 export interface IModelMetaFieldNumber {
@@ -77,5 +78,6 @@ export type IModelMetaRelationField = IModelMetaRelationFieldCommon & (
 export interface IModelMeta {
   defaultFilterField: string;
   defaultSort: IModelMetaDefaultSort;
+  importable?: boolean;
   fields: { [key: string]: IModelMetaField };
 }
