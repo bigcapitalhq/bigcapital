@@ -11,6 +11,12 @@ const SUBSCRIPTION_TYPE = {
 export const getDashboardRoutes = () => [
   // Accounts.
   {
+    path: '/accounts/import',
+    component: lazy(() => import('@/containers/Import/ImportPage')),
+    breadcrumb: 'Import Accounts',
+    pageTitle: 'Import Accounts',
+  },
+  {
     path: `/accounts`,
     component: lazy(() => import('@/containers/Accounts/AccountsChart')),
     breadcrumb: intl.get('accounts_chart'),
@@ -19,7 +25,6 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Accounting.
   {
     path: `/make-journal-entry`,
@@ -1062,8 +1067,7 @@ export const getDashboardRoutes = () => [
   {
     path: '/tax-rates',
     component: lazy(
-      () =>
-        import('@/containers/TaxRates/pages/TaxRatesLanding'),
+      () => import('@/containers/TaxRates/pages/TaxRatesLanding'),
     ),
     pageTitle: 'Tax Rates',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

@@ -1,0 +1,21 @@
+.table {
+  width: 100%;
+  margin-top: 1.8rem;
+
+  thead{
+    th{
+      border-top: 1px solid #d9d9da;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      color: #738091;
+    }
+    th.label{
+      width: 32%;
+    }
+  }
+  tbody{
+    tr td {
+      vertical-align: middle;
+    }
+  }
+}

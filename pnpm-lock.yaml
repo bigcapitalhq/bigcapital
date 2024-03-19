@@ -660,6 +660,9 @@ importers:
       react-dropzone:
         specifier: ^11.0.1
         version: 11.7.1(react@18.2.0)
+      react-dropzone-esm:
+        specifier: ^15.0.1
+        version: 15.0.1(react@18.2.0)
       react-error-boundary:
         specifier: ^3.0.2
         version: 3.1.4(react@18.2.0)
@@ -21178,6 +21181,16 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /react-dropzone-esm@15.0.1(react@18.2.0):
+    resolution: {integrity: sha512-RdeGpqwHnoV/IlDFpQji7t7pTtlC2O1i/Br0LWkRZ9hYtLyce814S71h5NolnCZXsIN5wrZId6+8eQj2EBnEzg==}
+    engines: {node: '>= 10.13'}
+    peerDependencies:
+      react: '>= 16.8 || 18.0.0'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-dropzone@11.7.1(react@18.2.0):
