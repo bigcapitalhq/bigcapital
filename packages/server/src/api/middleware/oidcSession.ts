@@ -12,9 +12,10 @@ const oidcSessionMiddleware = async (
     const oidcAccessToken = token.oidc_access_token;
 
     if (oidcAccessToken) {
-      const oidcUser = await oidcClient.userinfo(oidcAccessToken);
-
-      if (!oidcUser) {
+      const introspectionResponse = await oidcClient.introspect(
+        oidcAccessToken
+      );
+      if (!introspectionResponse.active) {
         return res.boom.unauthorized();
       }
     }
