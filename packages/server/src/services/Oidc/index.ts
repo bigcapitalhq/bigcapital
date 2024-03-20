@@ -5,12 +5,16 @@ import {
 } from '@/config/oidcConfig';
 import { ISystemUser, ITenant } from '@/interfaces';
 import { oidcClient } from '@/lib/Oidc/OidcClient';
-import { generateToken } from '@/services/Authentication/_utils';
 import TenantsManagerService from '@/services/Tenancy/TenantsManager';
 import { Tenant } from '@/system/models';
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
-import { TokenSet, UnknownObject, UserinfoResponse } from 'openid-client';
+import {
+  IntrospectionResponse,
+  TokenSet,
+  UnknownObject,
+  UserinfoResponse,
+} from 'openid-client';
 import { Inject } from 'typedi';
 interface IOidcLoginResponse {
   token: string;
@@ -54,7 +58,20 @@ export class OidcService {
   }
 
   /**
-   * Authorize and grant access tokens
+   * Introspect access token
+   * @param {string} accessToken
+   * @return {Promise<IntrospectionResponse>}
+   */
+  public async introspectAccessToken(
+    accessToken: string
+  ): Promise<IntrospectionResponse> {
+    const introspectionResponse = await oidcClient.introspect(accessToken);
+
+    return introspectionResponse;
+  }
+
+  /**
+   * Get user info by access token
    * @param {string} accessToken
    * @return {Promise<UserinfoResponse<UnknownObject, UnknownObject>>}
    */
@@ -115,13 +132,7 @@ export class OidcService {
     // Remove password property from user object.
     Reflect.deleteProperty(user, 'password');
 
-    const token = generateToken({
-      ...systemUser,
-      oidc_access_token: tokenSet.access_token,
-      oidc_id_token: tokenSet.id_token,
-      oidc_refresh_token: tokenSet.refresh_token,
-    });
-
+    const token = accessToken;
     return {
       token,
       user,
@@ -131,17 +142,18 @@ export class OidcService {
 
   /**
    * Logout oidc user
-   * @param {string} idToken
+   * @param {string} oidcAccessToken
    * @return {string}
    */
-  public async generateEndSessionUrl({
-    oidcIdToken,
-    oidcAccessToken,
-  }): Promise<string> | null {
-    if (!oidcIdToken || !oidcAccessToken) return null;
+  public async generateEndSessionUrl(
+    oidcAccessToken: string
+  ): Promise<string> | null {
+    if (!oidcAccessToken) return null;
 
     const loggedOutUrl = oidcClient.endSessionUrl({
-      id_token_hint: oidcIdToken,
+      id_token_hint: {
+        access_token: oidcAccessToken,
+      },
     });
 
     await oidcClient.revoke(oidcAccessToken, 'access_token');

@@ -85,13 +85,9 @@ export default class OidcController extends BaseController {
     try {
       const { token } = req;
 
-      const oidcIdToken = token.oidc_id_token;
       const oidcAccessToken = token.oidc_access_token;
 
-      const logoutUrl = await this.oidcService.generateEndSessionUrl({
-        oidcIdToken,
-        oidcAccessToken,
-      });
+      const logoutUrl = await this.oidcService.generateEndSessionUrl(oidcAccessToken);
 
       return res.status(200).send({ logoutUrl });
     } catch (error) {
