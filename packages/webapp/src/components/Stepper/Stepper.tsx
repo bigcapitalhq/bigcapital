@@ -81,8 +81,8 @@ export function Stepper({
     active > _children.length - 1 ? completedContent : stepContent;
 
   return (
-    <Box>
-      <StepsItems>{items}</StepsItems>
+    <Box className={classNames?.root}>
+      <StepsItems className={classNames?.items}>{items}</StepsItems>
       <StepsContent className={classNames?.content}>{content} </StepsContent>
     </Box>
   );

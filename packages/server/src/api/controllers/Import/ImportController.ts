@@ -42,7 +42,7 @@ export class ImportController extends BaseController {
       this.asyncMiddleware(this.mapping.bind(this)),
       this.catchServiceErrors
     );
-    router.post(
+    router.get(
       '/:import_id/preview',
       this.asyncMiddleware(this.preview.bind(this)),
       this.catchServiceErrors

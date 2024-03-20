@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { Button, Callout, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
+import { useHistory } from 'react-router-dom';
 import {
   ImportFilePreviewBootProvider,
   useImportFilePreviewBootContext,
@@ -9,7 +10,7 @@ import { useImportFileContext } from './ImportFileProvider';
 import { AppToaster, Card, Group } from '@/components';
 import { useImportFileProcess } from '@/hooks/query/import';
 import { CLASSES } from '@/constants';
-import { useHistory } from 'react-router-dom';
+import { ImportStepperStep } from './_types';
 
 export function ImportFilePreview() {
   const { importId } = useImportFileContext();
@@ -81,7 +82,7 @@ function ImportFilePreviewContent() {
 }
 
 function ImportFilePreviewFloatingActions() {
-  const { importId } = useImportFileContext();
+  const { importId, setStep } = useImportFileContext();
   const { importPreview } = useImportFilePreviewBootContext();
   const { mutateAsync: importFile, isLoading: isImportFileLoading } =
     useImportFileProcess();
@@ -102,9 +103,14 @@ function ImportFilePreviewFloatingActions() {
       })
       .catch((error) => {});
   };
+  const handleCancelBtnClick = () => {
+    setStep(ImportStepperStep.Mapping);
+  };
+
   return (
     <div className={clsx(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
-      <Group>
+      <Group spacing={10}>
+        <Button onClick={handleCancelBtnClick}>Cancel</Button>
         <Button
           type="submit"
           intent={Intent.PRIMARY}
@@ -114,7 +120,6 @@ function ImportFilePreviewFloatingActions() {
         >
           Import
         </Button>
-        <Button>Cancel</Button>
       </Group>
     </div>
   );

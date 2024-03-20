@@ -5,6 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useImportFileContext } from './ImportFileProvider';
+import { ImportStepperStep } from './_types';
 
 const initialValues = {
   file: null,
@@ -22,9 +23,14 @@ interface ImportFileUploadValues {
   file: File | null;
 }
 
-export function ImportFileUploadForm({ children }: ImportFileUploadFormProps) {
+export function ImportFileUploadForm({
+  children,
+  formikProps,
+  formProps,
+}: ImportFileUploadFormProps) {
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
-  const { setStep, setSheetColumns, setEntityColumns, setImportId } = useImportFileContext();
+  const { setStep, setSheetColumns, setEntityColumns, setImportId } =
+    useImportFileContext();
 
   const handleSubmit = (
     values: ImportFileUploadValues,
@@ -42,7 +48,7 @@ export function ImportFileUploadForm({ children }: ImportFileUploadFormProps) {
         setImportId(data.import.import_id);
         setSheetColumns(data.sheet_columns);
         setEntityColumns(data.resource_columns);
-        setStep(1);
+        setStep(ImportStepperStep.Mapping);
         setSubmitting(false);
       })
       .catch((error) => {
@@ -55,8 +61,9 @@ export function ImportFileUploadForm({ children }: ImportFileUploadFormProps) {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
+      {...formikProps}
     >
-      <Form>{children}</Form>
+      <Form {...formProps}>{children}</Form>
     </Formik>
   );
 }

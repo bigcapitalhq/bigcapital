@@ -1,18 +1,16 @@
-.content {
-  margin-top: 0;
-  margin-bottom: 0;
-  border-top: 1px solid #DCE0E5;
-}
-
 .root {
-  
+  margin-top: 2.2rem
 }
 
-.items {
+.content {
+  flex: 1;
   padding: 32px 20px;
   min-width: 660px;
   max-width: 760px;
   width: 75%;
   margin-left: auto;
   margin-right: auto;
+}
+
+.form {
 }

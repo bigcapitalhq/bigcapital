@@ -1,6 +1,11 @@
 .table {
   width: 100%;
-  margin-top: 1.8rem;
+  margin-top: 1.4rem;
+
+  th.label,
+  td.label{
+    width: 32% !important;
+  }
 
   thead{
     th{
@@ -8,14 +13,19 @@
       padding-top: 8px;
       padding-bottom: 8px;
       color: #738091;
-    }
-    th.label{
-      width: 32%;
+      font-weight: 500;
     }
   }
+  
   tbody{
     tr td {
       vertical-align: middle;
+    }
+
+    tr td{
+      :global(.bp4-popover-target .bp4-button){
+        max-width: 250px;
+      }
     }
   }
 }
