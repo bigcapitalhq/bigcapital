@@ -15,6 +15,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useAuthOidcLogout, useAuthenticatedAccount } from '@/hooks/query';
 import { firstLettersArgs, compose } from '@/utils';
+import { LoadingOverlay } from '@/components/LoadingOverlay'
 
 /**
  * Dashboard topbar user.
@@ -24,7 +25,7 @@ function DashboardTopbarUser({
   openDialog,
 }) {
   const history = useHistory();
-  const { mutateAsync: oidcLogoutMutate } = useAuthOidcLogout();
+  const {isLoading:isLoggingOut, mutateAsync: oidcLogoutMutate } = useAuthOidcLogout();
 
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
@@ -38,43 +39,46 @@ function DashboardTopbarUser({
   };
 
   return (
-    <Popover
-      content={
-        <Menu className={'menu--logged-user-dropdown'}>
-          <MenuItem
-            multiline={true}
-            className={'menu-item--profile'}
-            text={
-              <div>
-                <div class="person">
-                  {user.first_name} {user.last_name}
+    <>
+      <Popover
+        content={
+          <Menu className={'menu--logged-user-dropdown'}>
+            <MenuItem
+              multiline={true}
+              className={'menu-item--profile'}
+              text={
+                <div>
+                  <div class="person">
+                    {user.first_name} {user.last_name}
+                  </div>
+                  <div class="org">
+                    <T id="organization_id" />: {user.tenant_id}
+                  </div>
                 </div>
-                <div class="org">
-                  <T id="organization_id" />: {user.tenant_id}
-                </div>
-              </div>
-            }
-          />
-          <MenuDivider />
-          <MenuItem
-            text={<T id={'keyboard_shortcuts'} />}
-            onClick={onKeyboardShortcut}
-          />
-          <MenuItem
-            text={<T id={'preferences'} />}
-            onClick={() => history.push('/preferences')}
-          />
-          <MenuItem text={<T id={'logout'} />} onClick={onClickLogout} />
-        </Menu>
-      }
-      position={Position.BOTTOM}
-    >
-      <Button>
-        <div className="user-text">
-          {firstLettersArgs(user.first_name, user.last_name)}
-        </div>
-      </Button>
-    </Popover>
+              }
+            />
+            <MenuDivider />
+            <MenuItem
+              text={<T id={'keyboard_shortcuts'} />}
+              onClick={onKeyboardShortcut}
+            />
+            <MenuItem
+              text={<T id={'preferences'} />}
+              onClick={() => history.push('/preferences')}
+            />
+            <MenuItem text={<T id={'logout'} />} onClick={onClickLogout} />
+          </Menu>
+        }
+        position={Position.BOTTOM}
+      >
+        <Button>
+          <div className="user-text">
+            {firstLettersArgs(user.first_name, user.last_name)}
+          </div>
+        </Button>
+      </Popover>
+      {isLoggingOut && <LoadingOverlay/>}
+    </>
   );
 }
 export default compose(
