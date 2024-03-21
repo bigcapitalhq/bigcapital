@@ -1,11 +1,11 @@
 // @ts-nocheck
+import { Intent } from '@blueprintjs/core';
 import { useImportFileMapping } from '@/hooks/query/import';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useImportFileContext } from './ImportFileProvider';
 import { useMemo } from 'react';
 import { isEmpty } from 'lodash';
-
-const validationSchema = null;
+import { AppToaster } from '@/components';
 
 interface ImportFileMappingFormProps {
   children: React.ReactNode;
@@ -33,7 +33,13 @@ export function ImportFileMappingForm({
         setSubmitting(false);
         setStep(2);
       })
-      .catch((error) => {
+      .catch(({ response: { data } }) => {
+        if (data.errors.find(e => e.type === "DUPLICATED_FROM_MAP_ATTR")) {
+          AppToaster.show({
+            message: 'Selected the same sheet columns to multiple fields.',
+            intent: Intent.DANGER
+          })
+        }
         setSubmitting(false);
       });
   };
@@ -42,7 +48,6 @@ export function ImportFileMappingForm({
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      // validationSchema={validationSchema}
     >
       <Form>{children}</Form>
     </Formik>

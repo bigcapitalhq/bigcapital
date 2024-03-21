@@ -7,10 +7,13 @@ import {
   useImportFilePreviewBootContext,
 } from './ImportFilePreviewBoot';
 import { useImportFileContext } from './ImportFileProvider';
-import { AppToaster, Card, Group } from '@/components';
 import { useImportFileProcess } from '@/hooks/query/import';
+import { AppToaster, Box, Group, Stack } from '@/components';
 import { CLASSES } from '@/constants';
 import { ImportStepperStep } from './_types';
+import { ImportFileContainer } from './ImportFileContainer';
+import { SectionCard, Section } from '@/components/Section';
+import styles from './ImportFilePreview.module.scss';
 
 export function ImportFilePreview() {
   const { importId } = useImportFileContext();
@@ -26,23 +29,68 @@ function ImportFilePreviewContent() {
   const { importPreview } = useImportFilePreviewBootContext();
 
   return (
-    <div>
-      <Callout>
-        {importPreview.createdCount} of {importPreview.totalCount} Items in your
-        file are ready to be imported.
-      </Callout>
+    <Box>
+      <ImportFileContainer>
+        <Stack spacing={20}>
+          <Callout
+            intent={
+              importPreview.createdCount <= 0 ? Intent.DANGER : Intent.NONE
+            }
+          >
+            {importPreview.createdCount} of {importPreview.totalCount} Items in
+            your file are ready to be imported.
+          </Callout>
 
-      <Card>
+          <ImportFilePreviewImported />
+          <ImportFilePreviewSkipped />
+          <ImportFilePreviewUnmapped />
+        </Stack>
+      </ImportFileContainer>
+      <ImportFilePreviewFloatingActions />
+    </Box>
+  );
+}
+
+function ImportFilePreviewImported() {
+  const { importPreview } = useImportFilePreviewBootContext();
+
+  return (
+    <Section
+      collapseProps={{ defaultIsOpen: false }}
+      defaultIsOpen={true}
+      title={`(${importPreview.createdCount}) Items are ready to import`}
+    >
+      <SectionCard padded={true}>
         <Text>
           Items that are ready to be imported - {importPreview.createdCount}
         </Text>
-        <ul>
-          <li>Items to be created: ({importPreview.createdCount})</li>
-          <li>Items to be skipped: ({importPreview.skippedCount})</li>
-          <li>Items have errors: ({importPreview.errorsCount})</li>
+        <ul className={styles.previewList}>
+          <li>
+            Items to be created: <span>({importPreview.createdCount})</span>
+          </li>
+          <li>
+            Items to be skipped: <span>({importPreview.skippedCount})</span>
+          </li>
+          <li>
+            Items have errors: <span>({importPreview.errorsCount})</span>
+          </li>
         </ul>
+      </SectionCard>
+    </Section>
+  );
+}
 
-        <table className={clsx('bp4-html-table')}>
+function ImportFilePreviewSkipped() {
+  const { importPreview } = useImportFilePreviewBootContext();
+
+  return (
+    <Section
+      collapseProps={{ defaultIsOpen: false }}
+      collapsible={true}
+      title={`(${importPreview.skippedCount}) Items are skipped`}
+    >
+      <SectionCard padded={true}>
+        <table className={clsx('bp4-html-table', styles.skippedTable)}>
           <thead>
             <tr>
               <th className={'number'}>#</th>
@@ -64,20 +112,28 @@ function ImportFilePreviewContent() {
             ))}
           </tbody>
         </table>
+      </SectionCard>
+    </Section>
+  );
+}
 
-        <Text>
-          Unmapped Sheet Columns - ({importPreview?.unmappedColumnsCount})
-        </Text>
+function ImportFilePreviewUnmapped() {
+  const { importPreview } = useImportFilePreviewBootContext();
 
-        <ul>
+  return (
+    <Section
+      collapseProps={{ defaultIsOpen: false }}
+      collapsible={true}
+      title={`(${importPreview?.unmappedColumnsCount}) Unmapped Columns`}
+    >
+      <SectionCard padded={true}>
+        <ul className={styles.unmappedList}>
           {importPreview.unmappedColumns?.map((column, key) => (
             <li key={key}>{column}</li>
           ))}
         </ul>
-      </Card>
-
-      <ImportFilePreviewFloatingActions />
-    </div>
+      </SectionCard>
+    </Section>
   );
 }
 
