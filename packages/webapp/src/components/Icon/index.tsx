@@ -17,11 +17,20 @@
 
 import classNames from 'classnames';
 import * as React from 'react';
-import { Classes } from '@blueprintjs/core';
+import { Classes, Props } from '@blueprintjs/core';
 import IconSvgPaths from '@/static/json/icons';
 import PropTypes from 'prop-types';
+export interface IconProps extends Props {
+  color?: string;
+  htmlTitle?: string;
+  icon: IconName | MaybeElement;
+  iconSize?: number;
+  style?: object;
+  tagName?: keyof JSX.IntrinsicElements;
+  title?: string;
+}
 
-export class Icon extends React.Component {
+export class Icon extends React.Component<IconProps> {
   static displayName = `af.Icon`;
 
   static SIZE_STANDARD = 16;

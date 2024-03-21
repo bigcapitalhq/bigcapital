@@ -20,7 +20,7 @@ import {
   DashboardActionViewsList,
   DashboardFilterButton,
   DashboardRowsHeightButton,
-  DashboardActionsBar
+  DashboardActionsBar,
 } from '@/components';
 
 import { AccountAction, AbilitySubject } from '@/constants/abilityOption';
@@ -37,6 +37,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Accounts actions bar.
@@ -66,6 +67,8 @@ function AccountsActionsBar({
   addSetting,
 }) {
   const { resourceViews, fields } = useAccountsChartContext();
+
+  const history = useHistory();
 
   const onClickNewAccount = () => {
     openDialog(DialogsName.AccountForm, {});
@@ -111,6 +114,11 @@ function AccountsActionsBar({
   const handleTableRowSizeChange = (size) => {
     addSetting('accounts', 'tableSize', size);
   };
+  // handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/accounts/import');
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -183,6 +191,7 @@ function AccountsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton

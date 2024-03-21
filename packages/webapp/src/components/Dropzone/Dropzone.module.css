@@ -1,0 +1,12 @@
+
+
+.root {
+  padding: 20px;
+  border: 2px dotted #c5cbd3;
+  border-radius: 6px;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  position: relative;
+}
