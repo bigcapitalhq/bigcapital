@@ -1,3 +1,4 @@
+
 export interface IModel {
   name: string;
   tableName: string;
@@ -35,6 +36,8 @@ export interface IModelMetaFieldCommon {
   fieldType: IModelColumnType;
   customQuery?: Function;
   required?: boolean;
+  importHint?: string;
+  order?: number;
 }
 
 export interface IModelMetaFieldNumber {

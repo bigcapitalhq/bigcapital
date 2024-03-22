@@ -349,7 +349,7 @@ export default class AccountsController extends BaseController {
     // Filter query.
     const filter = {
       sortOrder: 'desc',
-      columnSortBy: 'created_at',
+      columnSortBy: 'createdAt',
       inactiveMode: false,
       structure: IAccountsStructureType.Tree,
       ...this.matchedQueryData(req),

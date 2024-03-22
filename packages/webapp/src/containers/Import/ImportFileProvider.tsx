@@ -7,9 +7,14 @@ import React, {
   useState,
 } from 'react';
 
-type EntityColumn = { key: string; name: string };
-type SheetColumn = string;
-type SheetMap = { from: string; to: string };
+export type EntityColumn = {
+  key: string;
+  name: string;
+  required?: boolean;
+  hint?: string;
+};
+export type SheetColumn = string;
+export type SheetMap = { from: string; to: string };
 
 interface ImportFileContextValue {
   sheetColumns: SheetColumn[];

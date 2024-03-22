@@ -4,7 +4,7 @@ import { useImportFileMapping } from '@/hooks/query/import';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useImportFileContext } from './ImportFileProvider';
 import { useMemo } from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, lowerCase } from 'lodash';
 import { AppToaster } from '@/components';
 
 interface ImportFileMappingFormProps {
@@ -34,21 +34,18 @@ export function ImportFileMappingForm({
         setStep(2);
       })
       .catch(({ response: { data } }) => {
-        if (data.errors.find(e => e.type === "DUPLICATED_FROM_MAP_ATTR")) {
+        if (data.errors.find((e) => e.type === 'DUPLICATED_FROM_MAP_ATTR')) {
           AppToaster.show({
             message: 'Selected the same sheet columns to multiple fields.',
-            intent: Intent.DANGER
-          })
+            intent: Intent.DANGER,
+          });
         }
         setSubmitting(false);
       });
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
       <Form>{children}</Form>
     </Formik>
   );
@@ -62,14 +59,20 @@ const transformValueToReq = (value: ImportFileMappingFormValues) => {
 };
 
 const useImportFileMappingInitialValues = () => {
-  const { entityColumns } = useImportFileContext();
+  const { entityColumns, sheetColumns } = useImportFileContext();
 
   return useMemo(
     () =>
       entityColumns.reduce((acc, { key, name }) => {
-        acc[key] = '';
+        const _name = lowerCase(name);
+        const _matched = sheetColumns.find(
+          (column) => lowerCase(column) === _name,
+        );
+        // Match the default column name the same field name
+        // if matched one of sheet columns has the same field name.
+        acc[key] = _matched ? _matched : '';
         return acc;
       }, {}),
-    [entityColumns],
+    [entityColumns, sheetColumns],
   );
 };

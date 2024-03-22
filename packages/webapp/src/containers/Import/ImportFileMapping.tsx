@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import clsx from 'classnames';
-import { Button, Intent } from '@blueprintjs/core';
+import { Button, Intent, Position } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FSelect, Group } from '@/components';
+import { FSelect, Group, Hint } from '@/components';
 import { ImportFileMappingForm } from './ImportFileMappingForm';
-import { useImportFileContext } from './ImportFileProvider';
+import { EntityColumn, useImportFileContext } from './ImportFileProvider';
 import { CLASSES } from '@/constants';
 import { ImportFileContainer } from './ImportFileContainer';
 import styles from './ImportFileMapping.module.scss';
@@ -44,21 +44,29 @@ function ImportFileMappingFields() {
     () => sheetColumns.map((column) => ({ value: column, text: column })),
     [sheetColumns],
   );
-
-  const columns = entityColumns.map((column, index) => (
+  const columnMapper = (column: EntityColumn, index: number) => (
     <tr key={index}>
-      <td className={styles.label}>{column.name}</td>
+      <td className={styles.label}>
+        {column.name}{' '}
+        {column.required && <span className={styles.requiredSign}>*</span>}
+      </td>
       <td className={styles.field}>
-        <FSelect
-          name={column.key}
-          items={items}
-          popoverProps={{ minimal: true }}
-          minimal={true}
-          fill={true}
-        />
+        <Group spacing={4}>
+          <FSelect
+            name={column.key}
+            items={items}
+            popoverProps={{ minimal: true }}
+            minimal={true}
+            fill={true}
+          />
+          {column.hint && (
+            <Hint content={column.hint} position={Position.BOTTOM} />
+          )}
+        </Group>
       </td>
     </tr>
-  ));
+  );
+  const columns = entityColumns.map(columnMapper);
   return <>{columns}</>;
 }
 

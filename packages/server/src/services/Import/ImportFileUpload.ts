@@ -61,20 +61,38 @@ export class ImportFileUploadService {
       resource: _resourceName,
       columns: coumnsStringified,
     });
-    const resourceColumns = this.resourceService.getResourceImportableFields(
+    const resourceColumnsMap = this.resourceService.getResourceImportableFields(
       tenantId,
       _resourceName
     );
-    const resourceColumnsTransformeed = Object.entries(resourceColumns).map(
-      ([key, { name }]: [string, IModelMetaField]) => ({ key, name })
-    );
+    const resourceColumns = this.getResourceColumns(resourceColumnsMap);
+
     return {
       import: {
         importId: importFile.importId,
         resource: importFile.resource,
       },
       sheetColumns,
-      resourceColumns: resourceColumnsTransformeed,
+      resourceColumns,
     };
+  }
+
+  getResourceColumns(resourceColumns: { [key: string]: IModelMetaField }) {
+    return Object.entries(resourceColumns)
+      .map(
+        ([key, { name, importHint, required, order }]: [
+          string,
+          IModelMetaField
+        ]) => ({
+          key,
+          name,
+          required,
+          hint: importHint,
+          order,
+        })
+      )
+      .sort((a, b) =>
+        a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0
+      );
   }
 }

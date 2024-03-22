@@ -23,9 +23,14 @@
     }
 
     tr td{
-      :global(.bp4-popover-target .bp4-button){
+      :global(.bp4-popover-target .bp4-button),
+      :global(.bp4-popover-wrapper){
         max-width: 250px;
       }
     }
   }
+}
+
+.requiredSign{
+  color: rgb(250, 82, 82);
 }

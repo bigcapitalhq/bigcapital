@@ -83,6 +83,9 @@ function ImportFilePreviewImported() {
 function ImportFilePreviewSkipped() {
   const { importPreview } = useImportFilePreviewBootContext();
 
+  // Can't continue if there's no skipped items.
+  if (importPreview.skippedCount <= 0) return null;
+
   return (
     <Section
       collapseProps={{ defaultIsOpen: false }}
@@ -119,6 +122,9 @@ function ImportFilePreviewSkipped() {
 
 function ImportFilePreviewUnmapped() {
   const { importPreview } = useImportFilePreviewBootContext();
+
+  // Can't continue if there's no unmapped columns.
+  if (importPreview?.unmappedColumnsCount <= 0) return null;
 
   return (
     <Section

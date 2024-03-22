@@ -13,8 +13,8 @@ export const getDashboardRoutes = () => [
   {
     path: '/accounts/import',
     component: lazy(() => import('@/containers/Import/ImportPage')),
-    breadcrumb: 'Import Accounts',
-    pageTitle: 'Import Accounts',
+    breadcrumb: 'Accounts Import',
+    pageTitle: 'Accounts Import',
   },
   {
     path: `/accounts`,

@@ -1,6 +1,7 @@
 import React from 'react';
+import { HTMLDivProps, Props } from '@blueprintjs/core';
 
-export interface BoxProps {
+export interface BoxProps extends Props, HTMLDivProps {
   className?: string;
 }
 

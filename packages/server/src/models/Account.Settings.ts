@@ -15,6 +15,7 @@ export default {
       unique: true,
       required: true,
       importable: true,
+      order: 1,
     },
     description: {
       name: 'account.field.description',
@@ -37,6 +38,7 @@ export default {
       importable: true,
       minLength: 3,
       maxLength: 6,
+      importHint: 'Unique number to identify the account.',
     },
     rootType: {
       name: 'account.field.root_type',
@@ -73,6 +75,7 @@ export default {
       })),
       required: true,
       importable: true,
+      order: 2,
     },
     active: {
       name: 'account.field.active',
@@ -81,11 +84,11 @@ export default {
       filterable: false,
       importable: true,
     },
-    openingBalance: {
+    balance: {
       name: 'account.field.balance',
       column: 'amount',
       fieldType: 'number',
-      importable: true,
+      importable: false,
     },
     currencyCode: {
       name: 'account.field.currency',
@@ -99,6 +102,7 @@ export default {
       column: 'parent_account_id',
       fieldType: 'relation',
       to: { model: 'Account', to: 'id' },
+      importable: false,
     },
     createdAt: {
       name: 'account.field.created_at',

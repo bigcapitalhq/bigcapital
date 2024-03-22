@@ -1,6 +1,7 @@
-import { useImportFilePreview } from '@/hooks/query/import';
-import { transformToCamelCase } from '@/utils';
+import { Spinner } from '@blueprintjs/core';
 import React, { createContext, useContext } from 'react';
+import { Box } from '@/components';
+import { useImportFilePreview } from '@/hooks/query/import';
 
 interface ImportFilePreviewBootContextValue {}
 
@@ -46,7 +47,13 @@ export const ImportFilePreviewBootProvider = ({
   };
   return (
     <ImportFilePreviewBootContext.Provider value={value}>
-      {isImportPreviewLoading ? 'loading' : <>{children}</>}
+      {isImportPreviewLoading ? (
+        <Box style={{ padding: '2rem', textAlign: 'center' }}>
+          <Spinner size={26} />
+        </Box>
+      ) : (
+        <>{children}</>
+      )}
     </ImportFilePreviewBootContext.Provider>
   );
 };

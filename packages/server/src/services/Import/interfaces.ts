@@ -25,7 +25,12 @@ export interface ImportFileUploadPOJO {
     resource: string;
   };
   sheetColumns: string[];
-  resourceColumns: { key: string; name: string }[];
+  resourceColumns: {
+    key: string;
+    name: string;
+    required?: boolean;
+    hint?: string;
+  }[];
 }
 
 export interface ImportFileMapPOJO {
@@ -44,7 +49,6 @@ export interface ImportFilePreviewPOJO {
   unmappedColumns: string[];
   unmappedColumnsCount: number;
 }
-
 
 export interface ImportOperSuccess {
   data: unknown;
