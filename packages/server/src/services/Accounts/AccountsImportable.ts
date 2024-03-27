@@ -34,4 +34,12 @@ export class AccountsImportable extends Importable {
   public get concurrency() {
     return 1;
   }
+
+  public public sampleData(): any[] {
+    return [
+      {
+        
+      }
+    ]
+  }
 }

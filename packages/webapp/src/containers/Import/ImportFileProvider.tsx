@@ -33,11 +33,35 @@ interface ImportFileContextValue {
   setImportId: Dispatch<SetStateAction<string>>;
 
   resource: string;
+  description?: string;
+  params: Record<string, any>;
+  onImportSuccess?: () => void;
+  onImportFailed?: () => void;
+  onCancelClick?: () => void;
+  sampleFileName?: string;
+
+  exampleDownload?: boolean;
+  exampleTitle?: string;
+  exampleDescription?: string;
 }
 interface ImportFileProviderProps {
   resource: string;
+  description?: string;
+  params: Record<string, any>;
+  onImportSuccess?: () => void;
+  onImportFailed?: () => void;
+  onCancelClick?: () => void;
   children: React.ReactNode;
+  sampleFileName?: string;
+
+  exampleDownload?: boolean;
+  exampleTitle?: string;
+  exampleDescription?: string;
 }
+
+const ExampleDescription =
+  'You can download the sample file to obtain detailed information about the data fields used during the import.';
+const ExampleTitle = 'Table Example';
 
 const ImportFileContext = createContext<ImportFileContextValue>(
   {} as ImportFileContextValue,
@@ -57,6 +81,16 @@ export const useImportFileContext = () => {
 export const ImportFileProvider = ({
   resource,
   children,
+  description,
+  params,
+  onImportFailed,
+  onImportSuccess,
+  onCancelClick,
+  sampleFileName,
+
+  exampleDownload = true,
+  exampleTitle = ExampleTitle,
+  exampleDescription = ExampleDescription,
 }: ImportFileProviderProps) => {
   const [sheetColumns, setSheetColumns] = useState<SheetColumn[]>([]);
   const [entityColumns, setEntityColumns] = useState<SheetColumn[]>([]);
@@ -82,6 +116,18 @@ export const ImportFileProvider = ({
     setImportId,
 
     resource,
+    description,
+    params,
+
+    onImportSuccess,
+    onImportFailed,
+    onCancelClick,
+
+    sampleFileName,
+
+    exampleDownload,
+    exampleTitle,
+    exampleDescription,
   };
 
   return (

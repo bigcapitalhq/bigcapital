@@ -7,33 +7,38 @@ import { ImportFileMappingForm } from './ImportFileMappingForm';
 import { EntityColumn, useImportFileContext } from './ImportFileProvider';
 import { CLASSES } from '@/constants';
 import { ImportFileContainer } from './ImportFileContainer';
-import styles from './ImportFileMapping.module.scss';
 import { ImportStepperStep } from './_types';
+import { ImportFileMapBootProvider } from './ImportFileMappingBoot';
+import styles from './ImportFileMapping.module.scss';
 
 export function ImportFileMapping() {
+  const { importId } = useImportFileContext();
+
   return (
-    <ImportFileMappingForm>
-      <ImportFileContainer>
-        <p>
-          Review and map the column headers in your csv/xlsx file with the
-          Bigcapital fields.
-        </p>
+    <ImportFileMapBootProvider importId={importId}>
+      <ImportFileMappingForm>
+        <ImportFileContainer>
+          <p>
+            Review and map the column headers in your csv/xlsx file with the
+            Bigcapital fields.
+          </p>
 
-        <table className={clsx('bp4-html-table', styles.table)}>
-          <thead>
-            <tr>
-              <th className={styles.label}>Bigcapital Fields</th>
-              <th className={styles.field}>Sheet Column Headers</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ImportFileMappingFields />
-          </tbody>
-        </table>
-      </ImportFileContainer>
+          <table className={clsx('bp4-html-table', styles.table)}>
+            <thead>
+              <tr>
+                <th className={styles.label}>Bigcapital Fields</th>
+                <th className={styles.field}>Sheet Column Headers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ImportFileMappingFields />
+            </tbody>
+          </table>
+        </ImportFileContainer>
 
-      <ImportFileMappingFloatingActions />
-    </ImportFileMappingForm>
+        <ImportFileMappingFloatingActions />
+      </ImportFileMappingForm>
+    </ImportFileMapBootProvider>
   );
 }
 
@@ -67,6 +72,7 @@ function ImportFileMappingFields() {
     </tr>
   );
   const columns = entityColumns.map(columnMapper);
+
   return <>{columns}</>;
 }
 
@@ -81,7 +87,7 @@ function ImportFileMappingFloatingActions() {
   return (
     <div className={clsx(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
       <Group spacing={10}>
-        <Button onClick={handleCancelBtnClick}>Cancel</Button>
+        <Button onClick={handleCancelBtnClick}>Back</Button>
         <Button type="submit" intent={Intent.PRIMARY} loading={isSubmitting}>
           Next
         </Button>

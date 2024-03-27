@@ -15,6 +15,7 @@ export default {
       unique: true,
       required: true,
       importable: true,
+      exportable: true,
       order: 1,
     },
     description: {
@@ -22,6 +23,7 @@ export default {
       column: 'description',
       fieldType: 'text',
       importable: true,
+      exportable: true,
     },
     slug: {
       name: 'account.field.slug',
@@ -35,6 +37,7 @@ export default {
       name: 'account.field.code',
       column: 'code',
       fieldType: 'text',
+      exportable: true,
       importable: true,
       minLength: 3,
       maxLength: 6,
@@ -75,6 +78,7 @@ export default {
       })),
       required: true,
       importable: true,
+      exportable: true,
       order: 2,
     },
     active: {
@@ -82,6 +86,7 @@ export default {
       column: 'active',
       fieldType: 'boolean',
       filterable: false,
+      exportable: true,
       importable: true,
     },
     balance: {
@@ -96,6 +101,7 @@ export default {
       fieldType: 'text',
       filterable: false,
       importable: true,
+      exportable: true,
     },
     parentAccount: {
       name: 'account.field.parent_account',
@@ -109,6 +115,7 @@ export default {
       column: 'created_at',
       fieldType: 'date',
       importable: false,
+      exportable: true,
     },
   },
 };

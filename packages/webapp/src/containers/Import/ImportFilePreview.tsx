@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { Button, Callout, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
-import { useHistory } from 'react-router-dom';
 import {
   ImportFilePreviewBootProvider,
   useImportFilePreviewBootContext,
@@ -144,12 +143,12 @@ function ImportFilePreviewUnmapped() {
 }
 
 function ImportFilePreviewFloatingActions() {
-  const { importId, setStep } = useImportFileContext();
+  const { importId, setStep, onImportSuccess, onImportFailed } =
+    useImportFileContext();
   const { importPreview } = useImportFilePreviewBootContext();
   const { mutateAsync: importFile, isLoading: isImportFileLoading } =
     useImportFileProcess();
 
-  const history = useHistory();
   const isValidToImport = importPreview?.createdCount > 0;
 
   const handleSubmitBtn = () => {
@@ -161,9 +160,11 @@ function ImportFilePreviewFloatingActions() {
             importPreview.createdCount
           } of ${10} has imported successfully.`,
         });
-        history.push('/accounts');
+        onImportSuccess && onImportSuccess();
       })
-      .catch((error) => {});
+      .catch((error) => {
+        onImportFailed && onImportFailed();
+      });
   };
   const handleCancelBtnClick = () => {
     setStep(ImportStepperStep.Mapping);

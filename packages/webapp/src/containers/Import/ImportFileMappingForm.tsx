@@ -6,6 +6,8 @@ import { useImportFileContext } from './ImportFileProvider';
 import { useMemo } from 'react';
 import { isEmpty, lowerCase } from 'lodash';
 import { AppToaster } from '@/components';
+import { useImportFileMapBootContext } from './ImportFileMappingBoot';
+import { transformToForm } from '@/utils';
 
 interface ImportFileMappingFormProps {
   children: React.ReactNode;
@@ -58,10 +60,23 @@ const transformValueToReq = (value: ImportFileMappingFormValues) => {
   return { mapping };
 };
 
+const transformResToFormValues = (value: { from: string; to: string }[]) => {
+  return value?.reduce((acc, map) => {
+    acc[map.to] = map.from;
+    return acc;
+  }, {});
+};
+
 const useImportFileMappingInitialValues = () => {
+  const { importFile } = useImportFileMapBootContext();
   const { entityColumns, sheetColumns } = useImportFileContext();
 
-  return useMemo(
+  const initialResValues = useMemo(
+    () => transformResToFormValues(importFile?.map || []),
+    [importFile?.map],
+  );
+
+  const initialValues = useMemo(
     () =>
       entityColumns.reduce((acc, { key, name }) => {
         const _name = lowerCase(name);
@@ -74,5 +89,13 @@ const useImportFileMappingInitialValues = () => {
         return acc;
       }, {}),
     [entityColumns, sheetColumns],
+  );
+
+  return useMemo(
+    () => ({
+      ...transformToForm(initialResValues, initialValues),
+      ...initialValues,
+    }),
+    [initialValues, initialResValues],
   );
 };

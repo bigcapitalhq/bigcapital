@@ -1,8 +1,10 @@
 import { IModelMetaField } from '@/interfaces';
+import Import from '@/models/Import';
 
 export interface ImportMappingAttr {
   from: string;
   to: string;
+  dateFormat?: string;
 }
 
 export interface ImportValidationError {
@@ -59,3 +61,16 @@ export interface ImportOperError {
   error: ImportInsertError;
   index: number;
 }
+ 
+export interface ImportableContext {
+  import: Import,
+  rowIndex: number;
+}
+
+
+export const ImportDateFormats = [
+  'yyyy-MM-dd',
+  'dd.MM.yy',
+  'MM/dd/yy',
+  'dd/MMM/yyyy'
+]

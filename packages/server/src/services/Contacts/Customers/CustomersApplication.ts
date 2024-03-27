@@ -53,13 +53,8 @@ export class CustomersApplication {
   public createCustomer = (
     tenantId: number,
     customerDTO: ICustomerNewDTO,
-    authorizedUser: ISystemUser
   ) => {
-    return this.createCustomerService.createCustomer(
-      tenantId,
-      customerDTO,
-      authorizedUser
-    );
+    return this.createCustomerService.createCustomer(tenantId, customerDTO);
   };
 
   /**

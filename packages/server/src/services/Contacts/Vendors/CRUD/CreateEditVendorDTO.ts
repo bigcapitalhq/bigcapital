@@ -49,6 +49,10 @@ export class CreateEditVendorDTO {
             ).toMySqlDateTime(),
           }
         : {}),
+      openingBalanceExchangeRate: defaultTo(
+        vendorDTO.openingBalanceExchangeRate,
+        1
+      ),
     };
   };
 

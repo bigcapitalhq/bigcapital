@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { defaultTo, omit, isEmpty } from 'lodash';
-import { Service, Inject } from 'typedi';
+import { Service } from 'typedi';
 import {
   ContactService,
   ICustomer,
@@ -51,6 +51,10 @@ export class CreateEditCustomerDTO {
             ).toMySqlDateTime(),
           }
         : {}),
+      openingBalanceExchangeRate: defaultTo(
+        customerDTO.openingBalanceExchangeRate,
+        1
+      ),
     };
   };
 

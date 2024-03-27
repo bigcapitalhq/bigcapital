@@ -6,6 +6,7 @@ import { IModelMetaField } from '@/interfaces';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export class ImportFileUploadService {
@@ -32,13 +33,15 @@ export class ImportFileUploadService {
   public async import(
     tenantId: number,
     resourceName: string,
-    filename: string
+    filename: string,
+    params: Record<string, number | string>
   ): Promise<ImportFileUploadPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
+    const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.resourceService.getResourceMeta(
       tenantId,
-      resourceName
+      resource
     );
     // Throw service error if the resource does not support importing.
     this.importValidator.validateResourceImportable(resourceMeta);
@@ -48,22 +51,32 @@ export class ImportFileUploadService {
 
     // Parse the buffer file to array data.
     const sheetData = this.importFileCommon.parseXlsxSheet(buffer);
-
     const sheetColumns = this.importFileCommon.parseSheetColumns(sheetData);
     const coumnsStringified = JSON.stringify(sheetColumns);
 
-    const _resourceName = sanitizeResourceName(resourceName);
+    try {
+      // Validates the params Yup schema.
+      await this.importFileCommon.validateParamsSchema(resource, params);
+
+      // Validates importable params asyncly.
+      await this.importFileCommon.validateParams(tenantId, resource, params);
+    } catch (error) {
+      throw error;
+    }
+    const _params = this.importFileCommon.transformParams(resource, params);
+    const paramsStringified = JSON.stringify(_params);
 
     // Store the import model with related metadata.
     const importFile = await Import.query().insert({
       filename,
+      resource,
       importId: filename,
-      resource: _resourceName,
       columns: coumnsStringified,
+      params: paramsStringified,
     });
     const resourceColumnsMap = this.resourceService.getResourceImportableFields(
       tenantId,
-      _resourceName
+      resource
     );
     const resourceColumns = this.getResourceColumns(resourceColumnsMap);
 
