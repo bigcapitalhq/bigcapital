@@ -29,7 +29,7 @@ export function ImportFileUploadForm({
   formProps,
 }: ImportFileUploadFormProps) {
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
-  const { setStep, setSheetColumns, setEntityColumns, setImportId } =
+  const { resource, params, setStep, setSheetColumns, setEntityColumns, setImportId } =
     useImportFileContext();
 
   const handleSubmit = (
@@ -41,7 +41,8 @@ export function ImportFileUploadForm({
     setSubmitting(true);
     const formData = new FormData();
     formData.append('file', values.file);
-    formData.append('resource', 'Account');
+    formData.append('resource', resource);
+    formData.append('params', JSON.stringify(params));
 
     uploadImportFile(formData)
       .then(({ data }) => {

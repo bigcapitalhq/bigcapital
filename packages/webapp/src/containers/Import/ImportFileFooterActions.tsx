@@ -9,9 +9,11 @@ import { useImportFileContext } from './ImportFileProvider';
 
 export function ImportFileUploadFooterActions() {
   const { isSubmitting } = useFormikContext();
-  const { setStep } = useImportFileContext();
+  const { onCancelClick } = useImportFileContext();
 
-  const handleCancelBtnClick = () => {};
+  const handleCancelBtnClick = () => {
+    onCancelClick && onCancelClick();
+  };
 
   return (
     <div className={clsx(CLASSES.PAGE_FORM_FLOATING_ACTIONS, styles.root)}>

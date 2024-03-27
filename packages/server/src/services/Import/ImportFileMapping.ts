@@ -1,7 +1,11 @@
 import { fromPairs } from 'lodash';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { ImportFileMapPOJO, ImportMappingAttr } from './interfaces';
+import {
+  ImportDateFormats,
+  ImportFileMapPOJO,
+  ImportMappingAttr,
+} from './interfaces';
 import ResourceService from '../Resource/ResourceService';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './_utils';
@@ -37,12 +41,14 @@ export class ImportFileMapping {
     // Validate the diplicated relations of map attrs.
     this.validateDuplicatedMapAttrs(maps);
 
+    // Validate the date format mapping.
+    this.validateDateFormatMapping(tenantId, importFile.resource, maps);
+
     const mappingStringified = JSON.stringify(maps);
 
     await Import.query().findById(importFile.id).patch({
       mapping: mappingStringified,
     });
-
     return {
       import: {
         importId: importFile.importId,
@@ -103,6 +109,36 @@ export class ImportFileMapping {
         throw new ServiceError(ERRORS.DUPLICATED_TO_MAP_ATTR);
       } else {
         toMap[map.to] = true;
+      }
+    });
+  }
+
+  /**
+   * Validates the date format mapping.
+   * @param {number} tenantId
+   * @param {string} resource
+   * @param {ImportMappingAttr[]} maps
+   */
+  private validateDateFormatMapping(
+    tenantId: number,
+    resource: string,
+    maps: ImportMappingAttr[]
+  ) {
+    const fields = this.resource.getResourceImportableFields(
+      tenantId,
+      resource
+    );
+    maps.forEach((map) => {
+      if (
+        typeof fields[map.to] !== 'undefined' &&
+        fields[map.to].fieldType === 'date'
+      ) {
+        if (
+          typeof map.dateFormat !== 'undefined' &&
+          ImportDateFormats.indexOf(map.dateFormat) === -1
+        ) {
+          throw new ServiceError(ERRORS.INVALID_MAP_DATE_FORMAT);
+        }
       }
     });
   }

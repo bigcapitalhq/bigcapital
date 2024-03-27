@@ -1,7 +1,7 @@
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import UnitOfWork, { IsolationLevel } from '../UnitOfWork';
-import { Knex } from 'knex';
+import UnitOfWork from '../UnitOfWork';
 import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 
 @Service()
@@ -19,10 +19,10 @@ export class CreateUncategorizedTransaction {
    */
   public create(
     tenantId: number,
-    createDTO: CreateUncategorizedTransactionDTO
+    createDTO: CreateUncategorizedTransactionDTO,
+    trx?: Knex.Transaction
   ) {
-    const { UncategorizedCashflowTransaction, Account } =
-      this.tenancy.models(tenantId);
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     return this.uow.withTransaction(
       tenantId,
@@ -32,9 +32,9 @@ export class CreateUncategorizedTransaction {
         ).insertAndFetch({
           ...createDTO,
         });
-        
         return transaction;
       },
+      trx
     );
   }
 }

@@ -7,6 +7,7 @@ import {
   NavbarDivider,
   Alignment,
 } from '@blueprintjs/core';
+import { useHistory } from 'react-router-dom';
 import {
   Icon,
   DashboardActionsBar,
@@ -48,6 +49,8 @@ function AccountTransactionsActionsBar({
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
+  const history = useHistory();
+
   // Handle money in form
   const handleMoneyInFormTransaction = (account) => {
     openDialog('money-in', {
@@ -64,6 +67,11 @@ function AccountTransactionsActionsBar({
       account_name: account.name,
     });
   };
+  // Handle import button click.
+  const handleImportBtnClick = () => {
+    history.push(`/cashflow-accounts/${accountId}/import`);
+  };
+
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
 
@@ -106,6 +114,7 @@ function AccountTransactionsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton

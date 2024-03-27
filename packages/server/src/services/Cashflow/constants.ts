@@ -75,3 +75,25 @@ export interface ICashflowTransactionTypeMeta {
   direction: CASHFLOW_DIRECTION;
   creditType: string[];
 }
+
+
+export const ImportSampleData = [
+  {
+    Amount: 5000,
+    Date: '2024-01-01',
+    Payee: 'John Roberts',
+    Description: 'Cheque deposit',
+  },
+  {
+    Amount: 5000,
+    Date: '2024-01-01',
+    Payee: 'John Roberts',
+    Description: 'Cheque deposit',
+  },
+  {
+    Amount: 5000,
+    Date: '2024-01-01',
+    Payee: 'John Roberts',
+    Description: 'Cheque deposit',
+  },
+]

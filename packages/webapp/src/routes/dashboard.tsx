@@ -6,15 +6,13 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',
 };
-// const BASE_URL = '/dashboard';
-
 export const getDashboardRoutes = () => [
   // Accounts.
   {
     path: '/accounts/import',
-    component: lazy(() => import('@/containers/Import/ImportPage')),
-    breadcrumb: 'Import Accounts',
-    pageTitle: 'Import Accounts',
+    component: lazy(() => import('@/containers/Accounts/AccountsImport')),
+    breadcrumb: 'Accounts Import',
+    pageTitle: 'Accounts Import',
   },
   {
     path: `/accounts`,
@@ -77,6 +75,7 @@ export const getDashboardRoutes = () => [
   },
 
   // Items.
+  
   {
     path: `/items/:id/edit`,
     component: lazy(() => import('@/containers/Items/ItemFormPage')),
@@ -512,8 +511,20 @@ export const getDashboardRoutes = () => [
     hotkey: 'shift+x',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Customers
+  {
+    path: `/customers/import`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Customers/CustomersImport'
+        ),
+    ),
+    backLink: true,
+    pageTitle: 'Customers Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+  },
   {
     path: `/customers/:id/edit`,
     component: lazy(
@@ -564,6 +575,16 @@ export const getDashboardRoutes = () => [
   },
 
   // Vendors
+  {
+    path: `/vendors/import`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorsImport'),
+    ),
+    backLink: true,
+    pageTitle: 'Vendors Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+  },
   {
     path: `/vendors/:id/edit`,
     component: lazy(
@@ -1028,6 +1049,19 @@ export const getDashboardRoutes = () => [
     sidebarExpand: false,
     backLink: true,
     pageTitle: intl.get('cash_flow.label_account_transcations'),
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
+    path: `/cashflow-accounts/:id/import`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/CashFlow/ImportIUncategorizedTransactions/ImportUncategorizedTransactionsPage'
+        ),
+    ),
+    backLink: true,
+    pageTitle: 'Bank Transactions Import',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },

@@ -35,7 +35,7 @@ export class CreateVendor {
   public async createVendor(
     tenantId: number,
     vendorDTO: IVendorNewDTO,
-    authorizedUser: ISystemUser
+    trx?: Knex.Transaction
   ) {
     const { Contact } = this.tenancy.models(tenantId);
 
@@ -45,28 +45,31 @@ export class CreateVendor {
       vendorDTO
     );
     // Creates vendor contact under unit-of-work evnirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onVendorCreating` event.
-      await this.eventPublisher.emitAsync(events.vendors.onCreating, {
-        tenantId,
-        vendorDTO,
-        trx,
-      } as IVendorEventCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onVendorCreating` event.
+        await this.eventPublisher.emitAsync(events.vendors.onCreating, {
+          tenantId,
+          vendorDTO,
+          trx,
+        } as IVendorEventCreatingPayload);
 
-      // Creates a new contact as vendor.
-      const vendor = await Contact.query(trx).insertAndFetch({
-        ...vendorObject,
-      });
-      // Triggers `onVendorCreated` event.
-      await this.eventPublisher.emitAsync(events.vendors.onCreated, {
-        tenantId,
-        vendorId: vendor.id,
-        vendor,
-        authorizedUser,
-        trx,
-      } as IVendorEventCreatedPayload);
+        // Creates a new contact as vendor.
+        const vendor = await Contact.query(trx).insertAndFetch({
+          ...vendorObject,
+        });
+        // Triggers `onVendorCreated` event.
+        await this.eventPublisher.emitAsync(events.vendors.onCreated, {
+          tenantId,
+          vendorId: vendor.id,
+          vendor,
+          trx,
+        } as IVendorEventCreatedPayload);
 
-      return vendor;
-    });
+        return vendor;
+      },
+      trx
+    );
   }
 }

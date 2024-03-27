@@ -3,6 +3,17 @@ import { upperFirst, camelCase, first } from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
+import moment from 'moment';
+
+export const ERRORS = {
+  RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
+  INVALID_MAP_ATTRS: 'INVALID_MAP_ATTRS',
+  DUPLICATED_FROM_MAP_ATTR: 'DUPLICATED_FROM_MAP_ATTR',
+  DUPLICATED_TO_MAP_ATTR: 'DUPLICATED_TO_MAP_ATTR',
+  IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
+  INVALID_MAP_DATE_FORMAT: 'INVALID_MAP_DATE_FORMAT',
+  MAP_DATE_FORMAT_NOT_DEFINED: 'MAP_DATE_FORMAT_NOT_DEFINED',
+};
 
 export function trimObject(obj) {
   return Object.entries(obj).reduce((acc, [key, value]) => {
@@ -47,6 +58,18 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
         return acc;
       }, {});
       fieldSchema = Yup.string().oneOf(Object.keys(options)).label(field.name);
+      // Validate date field type.
+    } else if (field.fieldType === 'date') {
+      fieldSchema = fieldSchema.test(
+        'date validation',
+        'Invalid date or format. The string should be a valid YYYY-MM-DD format.',
+        (val) => {
+          if (!val) {
+            return true;
+          }
+          return moment(val, 'YYYY-MM-DD', true).isValid();
+        }
+      );
     }
     if (field.required) {
       fieldSchema = fieldSchema.required();
@@ -54,14 +77,6 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
     yupSchema[fieldName] = fieldSchema;
   });
   return Yup.object().shape(yupSchema);
-};
-
-export const ERRORS = {
-  RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
-  INVALID_MAP_ATTRS: 'INVALID_MAP_ATTRS',
-  DUPLICATED_FROM_MAP_ATTR: 'DUPLICATED_FROM_MAP_ATTR',
-  DUPLICATED_TO_MAP_ATTR: 'DUPLICATED_TO_MAP_ATTR',
-  IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
 };
 
 export const getUnmappedSheetColumns = (columns, mapping) => {

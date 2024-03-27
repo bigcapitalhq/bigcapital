@@ -67,12 +67,7 @@ export class ImportFileProcess {
     const [successedImport, failedImport] = await this.uow.withTransaction(
       tenantId,
       (trx: Knex.Transaction) =>
-        this.importCommon.import(
-          tenantId,
-          importFile.resource,
-          parsedData,
-          trx
-        ),
+        this.importCommon.import(tenantId, importFile, parsedData, trx),
       trx
     );
     const mapping = importFile.mappingParsed;

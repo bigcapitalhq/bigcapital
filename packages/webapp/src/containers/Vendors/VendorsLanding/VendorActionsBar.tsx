@@ -83,6 +83,10 @@ function VendorActionsBar({
   const handleTableRowSizeChange = (size) => {
     addSetting('vendors', 'tableSize', size);
   };
+  // Handle import button success.
+  const handleImportBtnSuccess = () => {
+    history.push('/vendors/import');
+  };
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -128,6 +132,7 @@ function VendorActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnSuccess}
         />
         <Button
           className={Classes.MINIMAL}
