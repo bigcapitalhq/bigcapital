@@ -38,7 +38,7 @@ export default {
       importable: true,
     },
     personalPhone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       column: 'personal_phone',
       fieldType: 'text',
       importable: true,
@@ -84,6 +84,18 @@ export default {
       fieldType: 'text',
       importable: true,
     },
+    note: {
+      name: 'Note',
+      column: 'note',
+      fieldType: 'text',
+      importable: true,
+    },
+    active: {
+      name: 'Active',
+      column: 'active',
+      fieldType: 'boolean',
+      importable: true,
+    },
     status: {
       name: 'vendor.field.status',
       type: 'enumeration',
@@ -101,7 +113,6 @@ export default {
             break;
         }
       },
-      importable: true,
     },
     // Billing Address
     billingAddress1: {

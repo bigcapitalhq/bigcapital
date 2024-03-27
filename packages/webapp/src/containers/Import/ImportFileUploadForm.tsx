@@ -29,8 +29,14 @@ export function ImportFileUploadForm({
   formProps,
 }: ImportFileUploadFormProps) {
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
-  const { resource, params, setStep, setSheetColumns, setEntityColumns, setImportId } =
-    useImportFileContext();
+  const {
+    resource,
+    params,
+    setStep,
+    setSheetColumns,
+    setEntityColumns,
+    setImportId,
+  } = useImportFileContext();
 
   const handleSubmit = (
     values: ImportFileUploadValues,
@@ -52,7 +58,17 @@ export function ImportFileUploadForm({
         setStep(ImportStepperStep.Mapping);
         setSubmitting(false);
       })
-      .catch((error) => {
+      .catch(({ response: { data } }) => {
+        if (
+          data.errors.find(
+            (er) => er.type === 'IMPORTED_FILE_EXTENSION_INVALID',
+          )
+        ) {
+          AppToaster.show({
+            intent: Intent.DANGER,
+            message: 'The extenstion of uploaded file is not supported.',
+          });
+        }
         setSubmitting(false);
       });
   };

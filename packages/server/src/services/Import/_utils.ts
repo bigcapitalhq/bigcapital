@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { upperFirst, camelCase, first } from 'lodash';
+import { upperFirst, camelCase, first, isUndefined } from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
@@ -36,13 +36,13 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
     fieldSchema = Yup.string().label(field.name);
 
     if (field.fieldType === 'text') {
-      if (field.minLength) {
+      if (!isUndefined(field.minLength)) {
         fieldSchema = fieldSchema.min(
           field.minLength,
           `Minimum length is ${field.minLength} characters`
         );
       }
-      if (field.maxLength) {
+      if (!isUndefined(field.maxLength)) {
         fieldSchema = fieldSchema.max(
           field.maxLength,
           `Maximum length is ${field.maxLength} characters`
@@ -50,6 +50,13 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
       }
     } else if (field.fieldType === 'number') {
       fieldSchema = Yup.number().label(field.name);
+
+      if (!isUndefined(field.max)) {
+        fieldSchema = fieldSchema.max(field.max);
+      }
+      if (!isUndefined(field.min)) {
+        fieldSchema = fieldSchema.min(field.min);
+      }
     } else if (field.fieldType === 'boolean') {
       fieldSchema = Yup.boolean().label(field.name);
     } else if (field.fieldType === 'enumeration') {
@@ -70,6 +77,8 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
           return moment(val, 'YYYY-MM-DD', true).isValid();
         }
       );
+    } else if (field.fieldType === 'url') {
+      fieldSchema = fieldSchema.url();
     }
     if (field.required) {
       fieldSchema = fieldSchema.required();

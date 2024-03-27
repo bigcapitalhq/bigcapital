@@ -6,6 +6,17 @@ export default {
     sortField: 'createdAt',
   },
   fields: {
+    customerType: {
+      name: 'Customer Type',
+      column: 'contact_type',
+      fieldType: 'enumeration',
+      options: [
+        { key: 'business', label: 'Business' },
+        { key: 'individual', label: 'Individual' },
+      ],
+      importable: true,
+      required: true,
+    },
     firstName: {
       name: 'customer.field.first_name',
       column: 'first_name',
@@ -52,7 +63,7 @@ export default {
     website: {
       name: 'customer.field.website',
       column: 'website',
-      fieldType: 'text',
+      fieldType: 'url',
       importable: true,
     },
     balance: {
@@ -85,6 +96,18 @@ export default {
       fieldType: 'text',
       importable: true,
     },
+    note: {
+      name: 'Note',
+      column: 'note',
+      fieldType: 'text',
+      importable: true,
+    },
+    active: {
+      name: 'Active',
+      column: 'active',
+      fieldType: 'boolean',
+      importable: true,
+    },
     status: {
       name: 'customer.field.status',
       fieldType: 'enumeration',
@@ -95,7 +118,6 @@ export default {
         { key: 'unpaid', label: 'customer.field.status.unpaid' },
       ],
       filterCustomQuery: statusFieldFilterQuery,
-      importable: true,
     },
     // Billing Address
     billingAddress1: {

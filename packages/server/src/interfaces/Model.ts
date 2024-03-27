@@ -1,4 +1,3 @@
-
 export interface IModel {
   name: string;
   tableName: string;
@@ -40,18 +39,35 @@ export interface IModelMetaFieldCommon {
   order?: number;
 }
 
-export interface IModelMetaFieldNumber {
-  fieldType: 'number';
+export interface IModelMetaFieldText {
+  fieldType: 'text';
   minLength?: number;
   maxLength?: number;
 }
-
-export interface IModelMetaFieldOther {
-  fieldType: 'text' | 'boolean';
+export interface IModelMetaFieldBoolean {
+  fieldType: 'boolean';
 }
-
+export interface IModelMetaFieldNumber {
+  fieldType: 'number';
+  min?: number;
+  max?: number;
+}
+export interface IModelMetaFieldDate {
+  fieldType: 'date';
+}
+export interface IModelMetaFieldUrl {
+  fieldType: 'url';
+}
 export type IModelMetaField = IModelMetaFieldCommon &
-  (IModelMetaFieldOther | IModelMetaEnumerationField | IModelMetaRelationField);
+  (
+    | IModelMetaFieldText
+    | IModelMetaFieldNumber
+    | IModelMetaFieldBoolean
+    | IModelMetaFieldDate
+    | IModelMetaFieldUrl
+    | IModelMetaEnumerationField
+    | IModelMetaRelationField
+  );
 
 export interface IModelMetaEnumerationOption {
   key: string;
@@ -74,9 +90,8 @@ export interface IModelMetaRelationEnumerationField {
   relationEntityKey: string;
 }
 
-export type IModelMetaRelationField = IModelMetaRelationFieldCommon & (
-  IModelMetaRelationEnumerationField
-);
+export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
+  IModelMetaRelationEnumerationField;
 
 export interface IModelMeta {
   defaultFilterField: string;
