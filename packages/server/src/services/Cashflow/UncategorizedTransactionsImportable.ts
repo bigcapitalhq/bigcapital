@@ -6,7 +6,7 @@ import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction
 import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 import { ImportableContext } from '../Import/interfaces';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { ImportSampleData } from './constants';
+import { BankTransactionsSampleData } from './constants';
 
 @Service()
 export class UncategorizedTransactionsImportable extends Importable {
@@ -32,8 +32,8 @@ export class UncategorizedTransactionsImportable extends Importable {
 
   /**
    * Transformes the DTO before validating and importing.
-   * @param {CreateUncategorizedTransactionDTO} createDTO 
-   * @param {ImportableContext} context 
+   * @param {CreateUncategorizedTransactionDTO} createDTO
+   * @param {ImportableContext} context
    * @returns {CreateUncategorizedTransactionDTO}
    */
   public transform(
@@ -51,7 +51,7 @@ export class UncategorizedTransactionsImportable extends Importable {
    * @returns {Record<string, any>[]}
    */
   public sampleData(): Record<string, any>[] {
-    return ImportSampleData;
+    return BankTransactionsSampleData;
   }
 
   /**
@@ -76,9 +76,7 @@ export class UncategorizedTransactionsImportable extends Importable {
     const { Account } = this.tenancy.models(tenantId);
 
     if (params.accountId) {
-      await Account.query()
-        .findById(params.accountId)
-        .throwIfNotFound({});
+      await Account.query().findById(params.accountId).throwIfNotFound({});
     }
   }
 }
