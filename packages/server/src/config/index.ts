@@ -195,4 +195,9 @@ module.exports = {
   oidcLogin: {
     disabled: parseBoolean<boolean>(process.env.OIDC_LOGIN_DISABLED, false),
   },
+  cors: {
+    whitelistedDomains: castCommaListEnvVarToArray(
+      process.env.CORS_ALLOWED_DOMAINS
+    ),
+  },
 };

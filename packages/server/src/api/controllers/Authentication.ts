@@ -8,6 +8,8 @@ import { ServiceError, ServiceErrors } from '@/exceptions';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import LoginThrottlerMiddleware from '@/api/middleware/LoginThrottlerMiddleware';
 import AuthenticationApplication from '@/services/Authentication/AuthApplication';
+import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import JWTAuth from '@/api/middleware/jwtAuth';
 
 @Service()
 export default class AuthenticationController extends BaseController {
@@ -50,6 +52,12 @@ export default class AuthenticationController extends BaseController {
       this.handlerErrors
     );
     router.get('/meta', asyncMiddleware(this.getAuthMeta.bind(this)));
+
+    router.use(JWTAuth);
+    router.use(AttachCurrentTenantUser);
+
+    router.get('/me', asyncMiddleware(this.getAuthMe.bind(this)));
+
     return router;
   }
 
@@ -221,6 +229,27 @@ export default class AuthenticationController extends BaseController {
       const meta = await this.authApplication.getAuthMeta();
 
       return res.status(200).send({ meta });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the authentication user and its tenant
+   * @param {Request} req
+   * @param {Response} res
+   * @param {Function} next
+   * @returns {Response|void}
+   */
+  private async getAuthMe(req: Request, res: Response, next: Function) {
+    try {
+      const { user } = req;
+
+      const tenantId = user.tenantId;
+
+      const tenant = await this.authApplication.getAuthTenant(tenantId);
+
+      return res.status(200).send({ user, tenant });
     } catch (error) {
       next(error);
     }
