@@ -27,7 +27,7 @@ export default class AccountsController extends BaseController {
   /**
    * Router constructor method.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -98,7 +98,7 @@ export default class AccountsController extends BaseController {
   /**
    * Create account DTO Schema validation.
    */
-  get createAccountDTOSchema() {
+  private get createAccountDTOSchema() {
     return [
       check('name')
         .exists()
@@ -131,7 +131,7 @@ export default class AccountsController extends BaseController {
   /**
    * Account DTO Schema validation.
    */
-  get editAccountDTOSchema() {
+  private get editAccountDTOSchema() {
     return [
       check('name')
         .exists()
@@ -160,14 +160,14 @@ export default class AccountsController extends BaseController {
     ];
   }
 
-  get accountParamSchema() {
+  private get accountParamSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Accounts list validation schema.
    */
-  get accountsListSchema() {
+  private get accountsListSchema() {
     return [
       query('view_slug').optional({ nullable: true }).isString().trim(),
       query('stringified_filter_roles').optional().isJSON(),
@@ -349,7 +349,7 @@ export default class AccountsController extends BaseController {
     // Filter query.
     const filter = {
       sortOrder: 'desc',
-      columnSortBy: 'created_at',
+      columnSortBy: 'createdAt',
       inactiveMode: false,
       structure: IAccountsStructureType.Tree,
       ...this.matchedQueryData(req),

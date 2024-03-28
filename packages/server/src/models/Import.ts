@@ -1,8 +1,10 @@
 import TenantModel from 'models/TenantModel';
 
 export default class Import extends TenantModel {
+  resource!: string;
   mapping!: string;
   columns!: string;
+  params!: Record<string, any>;
   
   /**
    * Table name.
@@ -48,6 +50,14 @@ export default class Import extends TenantModel {
     }
   }
 
+
+  public get paramsParsed() {
+    try {
+      return JSON.parse(this.params);
+    } catch {
+      return [];
+    }
+  }
 
   public get mappingParsed() {
     try {

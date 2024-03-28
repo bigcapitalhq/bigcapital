@@ -6,6 +6,7 @@ exports.up = function (knex) {
     table.string('resource');
     table.json('columns');
     table.json('mapping');
+    table.json('params');
     table.timestamps();
   });
 };

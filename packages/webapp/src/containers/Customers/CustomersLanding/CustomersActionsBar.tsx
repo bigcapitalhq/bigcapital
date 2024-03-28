@@ -95,6 +95,11 @@ function CustomerActionsBar({
     addSetting('customers', 'tableSize', size);
   };
 
+  // Handle import button click.
+  const handleImportBtnClick = () => {
+    history.push('/customers/import');
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -142,6 +147,7 @@ function CustomerActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
+          onClick={handleImportBtnClick}
           text={<T id={'import'} />}
         />
         <Button

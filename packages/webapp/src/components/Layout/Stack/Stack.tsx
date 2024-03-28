@@ -30,7 +30,7 @@ export function Stack(props: StackProps) {
 const StackStyled = styled(Box)`
   display: flex;
   flex-direction: column;
-  align-items: align;
+  align-items: ${(props: StackProps) => props.align};
   justify-content: justify;
   gap: ${(props: StackProps) => props.spacing}px;
 `;

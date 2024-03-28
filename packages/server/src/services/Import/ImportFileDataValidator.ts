@@ -32,10 +32,14 @@ export class ImportFileDataValidator {
     try {
       await YupSchema.validate(_data, { abortEarly: false });
     } catch (validationError) {
-      const errors = validationError.inner.map((error) => ({
-        errorCode: 'ValidationError',
-        errorMessage: error.errors,
-      }));
+      const errors = validationError.inner.reduce((errors, error) => {
+        const newErrors = error.errors.map((errMsg) => ({
+          errorCode: 'ValidationError',
+          errorMessage: errMsg,
+        }));
+        return [...errors, ...newErrors];
+      }, []);
+
       throw errors;
     }
   }

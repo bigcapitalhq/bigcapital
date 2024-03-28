@@ -1,9 +1,15 @@
 /* eslint-disable global-require */
+import * as R from 'ramda';
+import { Model, ModelOptions, QueryContext, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
-import { Model, ModelOptions, QueryContext } from 'objection';
+import ModelSettings from './ModelSetting';
 import Account from './Account';
+import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
 
-export default class UncategorizedCashflowTransaction extends TenantModel {
+export default class UncategorizedCashflowTransaction extends mixin(
+  TenantModel,
+  [ModelSettings]
+) {
   id!: number;
   amount!: number;
   categorized!: boolean;
@@ -33,6 +39,10 @@ export default class UncategorizedCashflowTransaction extends TenantModel {
       'isDepositTransaction',
       'isWithdrawalTransaction',
     ];
+  }
+
+  static get meta() {
+    return UncategorizedCashflowTransactionMeta;
   }
 
   /**

@@ -1,0 +1,36 @@
+
+.previewList {
+  list-style: none;
+  margin-top: 14px;
+
+  :global(li) {
+    border-top: 1px solid #d9d9da;
+    padding: 6px 0;
+
+    &:last-child{ 
+      padding-bottom: 0;
+    }
+  }
+}
+
+.unmappedList {
+  padding-left: 2rem;
+}
+
+table.skippedTable {
+  width: 100%;
+ 
+  tbody{
+    tr:first-child td {
+      box-shadow: 0 0 0 0;
+    }
+    tr td {
+      vertical-align: middle;
+      padding: 7px;
+    }
+
+    tr:hover td{
+      background: #F6F7F9;
+    }
+  }
+}

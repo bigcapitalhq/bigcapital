@@ -36,7 +36,7 @@ export class CreateCustomer {
   public async createCustomer(
     tenantId: number,
     customerDTO: ICustomerNewDTO,
-    authorizedUser: ISystemUser
+    trx?: Knex.Transaction
   ): Promise<ICustomer> {
     const { Contact } = this.tenancy.models(tenantId);
 
@@ -46,28 +46,31 @@ export class CreateCustomer {
       customerDTO
     );
     // Creates a new customer under unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onCustomerCreating` event.
-      await this.eventPublisher.emitAsync(events.customers.onCreating, {
-        tenantId,
-        customerDTO,
-        trx,
-      } as ICustomerEventCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onCustomerCreating` event.
+        await this.eventPublisher.emitAsync(events.customers.onCreating, {
+          tenantId,
+          customerDTO,
+          trx,
+        } as ICustomerEventCreatingPayload);
 
-      // Creates a new contact as customer.
-      const customer = await Contact.query(trx).insertAndFetch({
-        ...customerObj,
-      });
-      // Triggers `onCustomerCreated` event.
-      await this.eventPublisher.emitAsync(events.customers.onCreated, {
-        customer,
-        tenantId,
-        customerId: customer.id,
-        authorizedUser,
-        trx,
-      } as ICustomerEventCreatedPayload);
+        // Creates a new contact as customer.
+        const customer = await Contact.query(trx).insertAndFetch({
+          ...customerObj,
+        });
+        // Triggers `onCustomerCreated` event.
+        await this.eventPublisher.emitAsync(events.customers.onCreated, {
+          customer,
+          tenantId,
+          customerId: customer.id,
+          trx,
+        } as ICustomerEventCreatedPayload);
 
-      return customer;
-    });
+        return customer;
+      },
+      trx
+    );
   }
 }

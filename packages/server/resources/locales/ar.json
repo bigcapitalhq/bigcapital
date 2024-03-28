@@ -242,7 +242,7 @@
   "account.field.normal.credit": "دائن",
   "account.field.normal.debit": "مدين",
   "account.field.type": "نوع الحساب",
-  "account.field.active": "Activity",
+  "account.field.active": "Active",
   "account.field.balance": "الرصيد",
   "account.field.created_at": "أنشئت في",
   "item.field.type": "نوع الصنف",
