@@ -1,10 +1,12 @@
 import { Inject, Service } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { body, param } from 'express-validator';
+import { body, param, query } from 'express-validator';
+import { defaultTo } from 'lodash';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
 import { uploadImportFile } from './_utils';
+import { parseJsonSafe } from '@/utils/parse-json-safe';
 
 @Service()
 export class ImportController extends BaseController {
@@ -42,7 +44,18 @@ export class ImportController extends BaseController {
       this.asyncMiddleware(this.mapping.bind(this)),
       this.catchServiceErrors
     );
-    router.post(
+    router.get(
+      '/sample',
+      [query('resource').exists(), query('format').optional()],
+      this.downloadImportSample.bind(this),
+      this.catchServiceErrors
+    );
+    router.get(
+      '/:import_id',
+      this.asyncMiddleware(this.getImportFileMeta.bind(this)),
+      this.catchServiceErrors
+    );
+    router.get(
       '/:import_id/preview',
       this.asyncMiddleware(this.preview.bind(this)),
       this.catchServiceErrors
@@ -55,7 +68,7 @@ export class ImportController extends BaseController {
    * @returns {ValidationSchema[]}
    */
   private get importValidationSchema() {
-    return [body('resource').exists()];
+    return [body('resource').exists(), body('params').optional()];
   }
 
   /**
@@ -66,12 +79,15 @@ export class ImportController extends BaseController {
    */
   private async fileUpload(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
+    const body = this.matchedBodyData(req);
+    const params = defaultTo(parseJsonSafe(body.params), {});
 
     try {
       const data = await this.importResourceApp.import(
         tenantId,
-        req.body.resource,
-        req.file.filename
+        body.resource,
+        req.file.filename,
+        params
       );
       return res.status(200).send(data);
     } catch (error) {
@@ -141,6 +157,54 @@ export class ImportController extends BaseController {
   }
 
   /**
+   * Retrieves the csv/xlsx sample sheet of the given resource name.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private async downloadImportSample(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { format, resource } = this.matchedQueryData(req);
+
+    try {
+      const result = this.importResourceApp.sample(tenantId, resource, format);
+
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the import file meta.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private async getImportFileMeta(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { import_id: importId } = req.params;
+
+    try {
+      const result = await this.importResourceApp.importMeta(
+        tenantId,
+        importId
+      );
+      return res.status(200).send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Transforms service errors to response.
    * @param {Error}
    * @param {Request} req
@@ -174,7 +238,11 @@ export class ImportController extends BaseController {
           errors: [{ type: 'IMPORTED_FILE_EXTENSION_INVALID' }],
         });
       }
+      return res.status(400).send({
+        errors: [{ type: error.errorType }],
+      });
     }
+
     next(error);
   }
 }

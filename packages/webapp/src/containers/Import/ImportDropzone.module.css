@@ -1,0 +1,32 @@
+
+.root {
+  
+}
+
+.title{
+  color: #5F6B7C;
+  font-weight: 600;
+}
+
+.iconWrap{
+  color: #8F99A8;
+}
+.subtitle {
+  color: #8F99A8;
+}
+.dropzoneContent{
+  text-align: center;
+  margin: auto;  
+}
+
+.buttons-wrap {
+  margin-top: 12px;
+}
+
+.dropzoneHint{
+  display: flex;
+  font-size: 12px;
+  margin-top: 6px;
+  color: #8F99A8;
+  justify-content: space-between;
+}

@@ -6,7 +6,7 @@ import { ERRORS } from './constants';
 @Service()
 export default class CashflowDeleteAccount {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   /**
    * Validate the account has no associated cashflow transactions.

@@ -160,10 +160,8 @@ export default class CustomersController extends ContactsController {
     try {
       const contact = await this.customersApplication.createCustomer(
         tenantId,
-        contactDTO,
-        user
+        contactDTO
       );
-
       return res.status(200).send({
         id: contact.id,
         message: 'The customer has been created successfully.',
@@ -291,7 +289,7 @@ export default class CustomersController extends ContactsController {
     const filter = {
       inactiveMode: false,
       sortOrder: 'desc',
-      columnSortBy: 'created_at',
+      columnSortBy: 'createdAt',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

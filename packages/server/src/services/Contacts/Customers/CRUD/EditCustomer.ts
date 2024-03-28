@@ -4,7 +4,6 @@ import {
   ICustomerEditDTO,
   ICustomerEventEditedPayload,
   ICustomerEventEditingPayload,
-  ISystemUser,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';

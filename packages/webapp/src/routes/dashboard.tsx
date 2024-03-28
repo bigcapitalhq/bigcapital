@@ -6,10 +6,14 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 const SUBSCRIPTION_TYPE = {
   MAIN: 'main',
 };
-// const BASE_URL = '/dashboard';
-
 export const getDashboardRoutes = () => [
   // Accounts.
+  {
+    path: '/accounts/import',
+    component: lazy(() => import('@/containers/Accounts/AccountsImport')),
+    breadcrumb: 'Accounts Import',
+    pageTitle: 'Accounts Import',
+  },
   {
     path: `/accounts`,
     component: lazy(() => import('@/containers/Accounts/AccountsChart')),
@@ -19,7 +23,6 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Accounting.
   {
     path: `/make-journal-entry`,
@@ -72,6 +75,7 @@ export const getDashboardRoutes = () => [
   },
 
   // Items.
+  
   {
     path: `/items/:id/edit`,
     component: lazy(() => import('@/containers/Items/ItemFormPage')),
@@ -507,8 +511,20 @@ export const getDashboardRoutes = () => [
     hotkey: 'shift+x',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Customers
+  {
+    path: `/customers/import`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/Customers/CustomersImport'
+        ),
+    ),
+    backLink: true,
+    pageTitle: 'Customers Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+  },
   {
     path: `/customers/:id/edit`,
     component: lazy(
@@ -559,6 +575,16 @@ export const getDashboardRoutes = () => [
   },
 
   // Vendors
+  {
+    path: `/vendors/import`,
+    component: lazy(
+      () => import('@/containers/Vendors/VendorsImport'),
+    ),
+    backLink: true,
+    pageTitle: 'Vendors Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.VENDOR,
+  },
   {
     path: `/vendors/:id/edit`,
     component: lazy(
@@ -1027,6 +1053,19 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
   {
+    path: `/cashflow-accounts/:id/import`,
+    component: lazy(
+      () =>
+        import(
+          '@/containers/CashFlow/ImportIUncategorizedTransactions/ImportUncategorizedTransactionsPage'
+        ),
+    ),
+    backLink: true,
+    pageTitle: 'Bank Transactions Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
+  },
+  {
     path: `/cashflow-accounts`,
     component: lazy(
       () =>
@@ -1062,8 +1101,7 @@ export const getDashboardRoutes = () => [
   {
     path: '/tax-rates',
     component: lazy(
-      () =>
-        import('@/containers/TaxRates/pages/TaxRatesLanding'),
+      () => import('@/containers/TaxRates/pages/TaxRatesLanding'),
     ),
     pageTitle: 'Tax Rates',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],

@@ -1,6 +1,9 @@
 import Container, { Service } from 'typedi';
 import { AccountsImportable } from '../Accounts/AccountsImportable';
 import { ImportableRegistry } from './ImportableRegistry';
+import { UncategorizedTransactionsImportable } from '../Cashflow/UncategorizedTransactionsImportable';
+import { CustomersImportable } from '../Contacts/Customers/CustomersImportable';
+import { VendorsImportable } from '../Contacts/Vendors/VendorsImportable';
 
 @Service()
 export class ImportableResources {
@@ -15,6 +18,12 @@ export class ImportableResources {
    */
   private importables = [
     { resource: 'Account', importable: AccountsImportable },
+    {
+      resource: 'UncategorizedCashflowTransaction',
+      importable: UncategorizedTransactionsImportable,
+    },
+    { resource: 'Customer', importable: CustomersImportable },
+    { resource: 'Vendor', importable: VendorsImportable },
   ];
 
   public get registry() {

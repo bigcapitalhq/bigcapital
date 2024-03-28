@@ -1,8 +1,10 @@
 import { IModelMetaField } from '@/interfaces';
+import Import from '@/models/Import';
 
 export interface ImportMappingAttr {
   from: string;
   to: string;
+  dateFormat?: string;
 }
 
 export interface ImportValidationError {
@@ -25,7 +27,12 @@ export interface ImportFileUploadPOJO {
     resource: string;
   };
   sheetColumns: string[];
-  resourceColumns: { key: string; name: string }[];
+  resourceColumns: {
+    key: string;
+    name: string;
+    required?: boolean;
+    hint?: string;
+  }[];
 }
 
 export interface ImportFileMapPOJO {
@@ -45,13 +52,25 @@ export interface ImportFilePreviewPOJO {
   unmappedColumnsCount: number;
 }
 
-
 export interface ImportOperSuccess {
   data: unknown;
   index: number;
 }
 
 export interface ImportOperError {
-  error: ImportInsertError;
+  error: ImportInsertError[];
   index: number;
 }
+ 
+export interface ImportableContext {
+  import: Import,
+  rowIndex: number;
+}
+
+
+export const ImportDateFormats = [
+  'yyyy-MM-dd',
+  'dd.MM.yy',
+  'MM/dd/yy',
+  'dd/MMM/yyyy'
+]
