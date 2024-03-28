@@ -93,23 +93,12 @@ function ImportFilePreviewSkipped() {
     >
       <SectionCard padded={true}>
         <table className={clsx('bp4-html-table', styles.skippedTable)}>
-          <thead>
-            <tr>
-              <th className={'number'}>#</th>
-              <th className={'name'}>Name</th>
-              <th>Error</th>
-            </tr>
-          </thead>
           <tbody>
             {importPreview?.errors.map((error, key) => (
               <tr key={key}>
                 <td>{error.rowNumber}</td>
-                <td>{error.rowNumber}</td>
-                <td>
-                  {error.errorMessage.map((message) => (
-                    <div>{message}</div>
-                  ))}
-                </td>
+                <td>{error.uniqueValue}</td>
+                <td>{error.errorMessage}</td>
               </tr>
             ))}
           </tbody>

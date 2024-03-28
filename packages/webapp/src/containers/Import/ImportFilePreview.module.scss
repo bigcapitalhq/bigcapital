@@ -17,19 +17,13 @@
   padding-left: 2rem;
 }
 
-.skippedTable {
+table.skippedTable {
   width: 100%;
-  
-  thead{
-    th{
-      padding-top: 0;
-      padding-bottom: 8px;
-      color: #738091;
-      font-weight: 500;
-    }
-  }
-  
+ 
   tbody{
+    tr:first-child td {
+      box-shadow: 0 0 0 0;
+    }
     tr td {
       vertical-align: middle;
       padding: 7px;

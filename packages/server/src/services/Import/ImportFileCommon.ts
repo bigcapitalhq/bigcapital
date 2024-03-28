@@ -7,12 +7,13 @@ import { first } from 'lodash';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { Knex } from 'knex';
 import {
+  ImportInsertError,
   ImportOperError,
   ImportOperSuccess,
   ImportableContext,
 } from './interfaces';
 import { ServiceError } from '@/exceptions';
-import { trimObject } from './_utils';
+import { getUniqueImportableValue, trimObject } from './_utils';
 import { ImportableResources } from './ImportableResources';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
@@ -88,7 +89,12 @@ export class ImportFileCommon {
         import: importFile,
       };
       const transformedDTO = importable.transform(objectDTO, context);
-
+      const rowNumber = index + 1;
+      const uniqueValue = getUniqueImportableValue(importableFields, objectDTO);
+      const errorContext = {
+        rowNumber,
+        uniqueValue,
+      };
       try {
         // Validate the DTO object before passing it to the service layer.
         await this.importFileValidator.validateData(
@@ -105,18 +111,27 @@ export class ImportFileCommon {
           success.push({ index, data });
         } catch (err) {
           if (err instanceof ServiceError) {
-            const error = [
+            const error: ImportInsertError[] = [
               {
-                errorCode: 'ValidationError',
+                errorCode: 'ServiceError',
                 errorMessage: err.message || err.errorType,
-                rowNumber: index + 1,
+                ...errorContext,
+              },
+            ];
+            failed.push({ index, error });
+          } else {
+            const error: ImportInsertError[] = [
+              {
+                errorCode: 'UnknownError',
+                errorMessage: 'Unknown error occurred',
+                ...errorContext,
               },
             ];
             failed.push({ index, error });
           }
         }
       } catch (errors) {
-        const error = errors.map((er) => ({ ...er, rowNumber: index + 1 }));
+        const error = errors.map((er) => ({ ...er, ...errorContext }));
         failed.push({ index, error });
       }
     };

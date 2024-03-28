@@ -58,7 +58,7 @@ export interface ImportOperSuccess {
 }
 
 export interface ImportOperError {
-  error: ImportInsertError;
+  error: ImportInsertError[];
   index: number;
 }
  

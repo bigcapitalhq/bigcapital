@@ -41,6 +41,7 @@ export default {
       importable: true,
       minLength: 3,
       maxLength: 6,
+      unique: true,
       importHint: 'Unique number to identify the account.',
     },
     rootType: {

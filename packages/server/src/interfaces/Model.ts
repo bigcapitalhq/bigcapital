@@ -37,6 +37,7 @@ export interface IModelMetaFieldCommon {
   required?: boolean;
   importHint?: string;
   order?: number;
+  unique?: number;
 }
 
 export interface IModelMetaFieldText {
