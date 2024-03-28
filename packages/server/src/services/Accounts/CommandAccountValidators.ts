@@ -97,9 +97,11 @@ export class CommandAccountValidators {
           query.whereNot('id', notAccountId);
         }
       });
-
     if (account.length > 0) {
-      throw new ServiceError(ERRORS.ACCOUNT_CODE_NOT_UNIQUE);
+      throw new ServiceError(
+        ERRORS.ACCOUNT_CODE_NOT_UNIQUE,
+        'Account code is not unique.'
+      );
     }
   }
 
@@ -124,7 +126,10 @@ export class CommandAccountValidators {
         }
       });
     if (foundAccount) {
-      throw new ServiceError(ERRORS.ACCOUNT_NAME_NOT_UNIQUE);
+      throw new ServiceError(
+        ERRORS.ACCOUNT_NAME_NOT_UNIQUE,
+        'Account name is not unique.'
+      );
     }
   }
 

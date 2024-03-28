@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { upperFirst, camelCase, first, isUndefined } from 'lodash';
+import { defaultTo, upperFirst, camelCase, first, isUndefined, pickBy } from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
@@ -100,4 +100,25 @@ export const sanitizeResourceName = (resourceName: string) => {
 
 export const getSheetColumns = (sheetData: unknown[]) => {
   return Object.keys(first(sheetData));
+};
+
+/**
+ * Retrieves the unique value from the given imported object DTO based on the
+ * configured unique resource field.
+ * @param {{ [key: string]: IModelMetaField }} importableFields -
+ * @param {<Record<string, any>}
+ * @returns {string}
+ */
+export const getUniqueImportableValue = (
+  importableFields: { [key: string]: IModelMetaField },
+  objectDTO: Record<string, any>
+) => {
+  const uniqueImportableValue = pickBy(
+    importableFields,
+    (field) => field.unique
+  );
+  const uniqueImportableKeys = Object.keys(uniqueImportableValue);
+  const uniqueImportableKey = first(uniqueImportableKeys);
+
+  return defaultTo(objectDTO[uniqueImportableKey], '');
 };
