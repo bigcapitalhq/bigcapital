@@ -4,6 +4,7 @@ import useApiRequest from '../useRequest';
 import { setCookie } from '../../utils';
 import { useRequestQuery } from '../useQueryRequest';
 import t from './types';
+import { useAuthActions } from '@/hooks/state'
 
 /**
  * Saves the response data to cookies.
@@ -32,6 +33,64 @@ export const useAuthLogin = (props) => {
 
       // Reboot the application.
       window.location.reload();
+    },
+    ...props,
+  });
+};
+
+
+/**
+ * Authentication OIDC authorize
+ */
+
+export const useAuthOidcAuthorize = (props) => {
+  const apiRequest = useApiRequest();
+
+  return useMutation((values) => apiRequest.post('oidc/authorize', values), {
+    select: (res) => res.data,
+    onSuccess: (data) => {
+      window.location.href = data.data.authorization_url;
+    },
+    ...props,
+  });
+};
+
+/**
+ * Authentication OIDC login
+ */
+
+export const useAuthOidcLogin = (props) => {
+  const apiRequest = useApiRequest();
+
+  return useMutation((values) => apiRequest.post('oidc/login', values), {
+    select: (res) => res.data,
+    onSuccess: (data) => {
+      // Set authentication cookies.
+      setAuthLoginCookies(data.data);
+
+      window.location.href = '/';
+    },
+    ...props,
+  });
+};
+
+/**
+ * Authentication OIDC logout
+ */
+
+export const useAuthOidcLogout = (props) => {
+  const apiRequest = useApiRequest();
+  const { setLogout } = useAuthActions();
+
+  return useMutation((values) => apiRequest.post('oidc/logout', values), {
+    select: (res) => res.data,
+    onSuccess: (data) => {
+      const logoutUrl = data.data.logout_url;
+
+      setLogout(logoutUrl);
+    },
+    onError: (err) => {
+      setLogout();
     },
     ...props,
   });

@@ -3,7 +3,8 @@ import React from 'react';
 import { Icon, For, FormattedMessage as T } from '@/components';
 
 import { getFooterLinks } from '@/constants/footerLinks';
-import { useAuthActions } from '@/hooks/state';
+import { useAuthOidcLogout } from '@/hooks/query'
+import { LoadingOverlay } from '@/components/LoadingOverlay'
 
 /**
  * Footer item link.
@@ -38,32 +39,36 @@ function SetupLeftSectionFooter() {
  * Setup left section header.
  */
 function SetupLeftSectionHeader() {
-  const { setLogout } = useAuthActions();
+  const {isLoading:isLoggingOut, mutateAsync: oidcLogoutMutate } = useAuthOidcLogout();
 
   // Handle logout link click.
   const onClickLogout = () => {
-    setLogout();
+    oidcLogoutMutate();
   };
 
   return (
-    <div className={'content__header'}>
-      <h1 className={'content__title'}>
-        <T id={'setup.left_side.title'} />
-      </h1>
+    <>
+      <div className={'content__header'}>
+        <h1 className={'content__title'}>
+          <T id={'setup.left_side.title'} />
+        </h1>
 
-      <p className={'content__text'}>
-        <T id={'setup.left_side.description'} />
-      </p>
-      <div class="content__divider"></div>
+        <p className={'content__text'}>
+          <T id={'setup.left_side.description'} />
+        </p>
+        <div class="content__divider"></div>
 
-      <div className={'content__organization'}>
-        <span class="signout">
-          <a onClick={onClickLogout} href="#">
-            <T id={'sign_out'} />
-          </a>
-        </span>
+        <div className={'content__organization'}>
+          <span class="signout">
+            <a onClick={onClickLogout} href="#">
+              <T id={'sign_out'} />
+            </a>
+          </span>
+        </div>
       </div>
-    </div>
+
+      {isLoggingOut && <LoadingOverlay />}
+    </>
   );
 }
 

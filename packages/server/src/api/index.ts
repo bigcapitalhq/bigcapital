@@ -59,6 +59,7 @@ import { TaxRatesController } from './controllers/TaxRates/TaxRates';
 import { ImportController } from './controllers/Import/ImportController';
 import { BankingController } from './controllers/Banking/BankingController';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
+import OidcController from '@/api/controllers/Oidc'
 
 export default () => {
   const app = Router();
@@ -67,7 +68,8 @@ export default () => {
   // ---------------------------
   app.use(asyncRenderMiddleware);
   app.use(I18nMiddleware);
-
+   
+  app.use('/oidc', Container.get(OidcController).router());
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/organization', Container.get(Organization).router());

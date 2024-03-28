@@ -15,6 +15,7 @@ function AuthMetaBootProvider({ ...props }) {
   const state = {
     isAuthMetaLoading,
     signupDisabled: authMeta?.meta?.signup_disabled,
+    oidcLoginDisabled: authMeta?.meta?.oidc_login_disabled,
   };
 
   if (isAuthMetaLoading) {

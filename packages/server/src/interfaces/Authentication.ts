@@ -76,6 +76,7 @@ export interface IAuthSendedResetPassword {
   token: string;
 }
 
-export interface IAuthGetMetaPOJO  {
+export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
+  oidcLoginDisabled: boolean;
 }

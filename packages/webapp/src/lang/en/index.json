@@ -17,6 +17,7 @@
   "to_date": "To date",
   "report_date_range": "Report date range",
   "log_in": "Log in",
+  "oidc_log_in": "Log in with OIDC",
   "forget_my_password": "Forget my password",
   "keep_me_logged_in": "Keep me logged in",
   "dont_have_an_account": "Don't have an account?",

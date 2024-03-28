@@ -11,6 +11,7 @@ export class GetAuthMeta {
   public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
     return {
       signupDisabled: config.signupRestrictions.disabled,
+      oidcLoginDisabled: config.oidcLogin.disabled,
     };
   }
 }
