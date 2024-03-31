@@ -32,12 +32,13 @@ export interface IModelMetaFieldCommon {
   name: string;
   column: string;
   columnable?: boolean;
-  fieldType: IModelColumnType;
   customQuery?: Function;
   required?: boolean;
   importHint?: string;
+  importableRelationLabel?: string;
   order?: number;
   unique?: number;
+  dataTransferObjectKey?: string;
 }
 
 export interface IModelMetaFieldText {

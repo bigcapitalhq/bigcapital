@@ -344,7 +344,7 @@ export default class ItemsController extends BaseController {
 
     const filter = {
       sortOrder: 'DESC',
-      columnSortBy: 'created_at',
+      columnSortBy: 'createdAt',
       page: 1,
       pageSize: 12,
       inactiveMode: false,

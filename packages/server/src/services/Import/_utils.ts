@@ -1,5 +1,12 @@
 import * as Yup from 'yup';
-import { defaultTo, upperFirst, camelCase, first, isUndefined, pickBy } from 'lodash';
+import {
+  defaultTo,
+  upperFirst,
+  camelCase,
+  first,
+  isUndefined,
+  pickBy,
+} from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
@@ -83,9 +90,23 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
     if (field.required) {
       fieldSchema = fieldSchema.required();
     }
-    yupSchema[fieldName] = fieldSchema;
+    const _fieldName = parseFieldName(fieldName, field);
+
+    yupSchema[_fieldName] = fieldSchema;
   });
   return Yup.object().shape(yupSchema);
+};
+
+const parseFieldName = (fieldName: string, field: IModelMetaField) => {
+  let _key = fieldName;
+
+  if (field.fieldType === 'relation') {
+    _key = `${fieldName}Id`;
+  }
+  if (field.dataTransferObjectKey) {
+    _key = field.dataTransferObjectKey;
+  }
+  return _key;
 };
 
 export const getUnmappedSheetColumns = (columns, mapping) => {
