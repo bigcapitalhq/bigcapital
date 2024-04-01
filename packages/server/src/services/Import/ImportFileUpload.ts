@@ -1,12 +1,11 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { sanitizeResourceName } from './_utils';
+import { sanitizeResourceName, validateSheetEmpty } from './_utils';
 import ResourceService from '../Resource/ResourceService';
 import { IModelMetaField } from '@/interfaces';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
-import { ServiceError } from '@/exceptions';
 
 @Service()
 export class ImportFileUploadService {
@@ -51,6 +50,10 @@ export class ImportFileUploadService {
 
     // Parse the buffer file to array data.
     const sheetData = this.importFileCommon.parseXlsxSheet(buffer);
+
+    // Throws service error if the sheet data is empty.
+    validateSheetEmpty(sheetData);
+
     const sheetColumns = this.importFileCommon.parseSheetColumns(sheetData);
     const coumnsStringified = JSON.stringify(sheetColumns);
 

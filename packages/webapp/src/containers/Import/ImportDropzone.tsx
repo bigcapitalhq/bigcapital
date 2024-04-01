@@ -3,8 +3,11 @@ import { Field } from 'formik';
 import { Box, Group, Stack } from '@/components';
 import styles from './ImportDropzone.module.css';
 import { ImportDropzoneField } from './ImportDropzoneFile';
+import { useAlertsManager } from './AlertsManager';
 
 export function ImportDropzone() {
+  const { hideAlerts } = useAlertsManager();
+
   return (
     <Stack spacing={0}>
       <Field id={'file'} name={'file'} type="file">
@@ -12,6 +15,7 @@ export function ImportDropzone() {
           <ImportDropzoneField
             value={form.file}
             onChange={(file) => {
+              hideAlerts();
               form.setFieldValue('file', file);
             }}
           />

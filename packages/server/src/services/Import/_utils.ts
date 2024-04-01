@@ -1,9 +1,18 @@
 import * as Yup from 'yup';
-import { defaultTo, upperFirst, camelCase, first, isUndefined, pickBy } from 'lodash';
+import {
+  defaultTo,
+  upperFirst,
+  camelCase,
+  first,
+  isUndefined,
+  pickBy,
+  isEmpty,
+} from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
 import moment from 'moment';
+import { ServiceError } from '@/exceptions';
 
 export const ERRORS = {
   RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
@@ -13,6 +22,7 @@ export const ERRORS = {
   IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
   INVALID_MAP_DATE_FORMAT: 'INVALID_MAP_DATE_FORMAT',
   MAP_DATE_FORMAT_NOT_DEFINED: 'MAP_DATE_FORMAT_NOT_DEFINED',
+  IMPORTED_SHEET_EMPTY: 'IMPORTED_SHEET_EMPTY',
 };
 
 export function trimObject(obj) {
@@ -121,4 +131,14 @@ export const getUniqueImportableValue = (
   const uniqueImportableKey = first(uniqueImportableKeys);
 
   return defaultTo(objectDTO[uniqueImportableKey], '');
+};
+
+/**
+ * Throws service error the given sheet is empty.
+ * @param {Array<any>} sheetData
+ */
+export const validateSheetEmpty = (sheetData: Array<any>) => {
+  if (isEmpty(sheetData)) {
+    throw new ServiceError(ERRORS.IMPORTED_SHEET_EMPTY);
+  }
 };

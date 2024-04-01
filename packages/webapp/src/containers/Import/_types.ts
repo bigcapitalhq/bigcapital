@@ -3,3 +3,7 @@ export enum ImportStepperStep {
   Mapping = 1,
   Preview = 2,
 }
+
+export enum ImportAlert {
+  IMPORTED_SHEET_EMPTY = 'IMPORTED_SHEET_EMPTY'
+}
