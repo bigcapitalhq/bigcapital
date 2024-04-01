@@ -57,19 +57,31 @@ export class ImportFileProcess {
       tenantId,
       importFile.resource
     );
-    // Prases the sheet json data.
-    const parsedData = this.importParser.parseSheetData(
-      importFile,
-      importableFields,
-      sheetData
-    );
+
     // Runs the importing operation with ability to return errors that will happen.
-    const [successedImport, failedImport] = await this.uow.withTransaction(
-      tenantId,
-      (trx: Knex.Transaction) =>
-        this.importCommon.import(tenantId, importFile, parsedData, trx),
-      trx
-    );
+    const [successedImport, failedImport, allData] =
+      await this.uow.withTransaction(
+        tenantId,
+        async (trx: Knex.Transaction) => {
+          // Prases the sheet json data.
+          const parsedData = await this.importParser.parseSheetData(
+            tenantId,
+            importFile,
+            importableFields,
+            sheetData,
+            trx
+          );
+          const [successedImport, failedImport] =
+            await this.importCommon.import(
+              tenantId,
+              importFile,
+              parsedData,
+              trx
+            );
+          return [successedImport, failedImport, parsedData];
+        },
+        trx
+      );
     const mapping = importFile.mappingParsed;
     const errors = chain(failedImport)
       .map((oper) => oper.error)
@@ -77,7 +89,7 @@ export class ImportFileProcess {
       .value();
 
     const unmappedColumns = getUnmappedSheetColumns(header, mapping);
-    const totalCount = parsedData.length;
+    const totalCount = allData.length;
 
     const createdCount = successedImport.length;
     const errorsCount = failedImport.length;

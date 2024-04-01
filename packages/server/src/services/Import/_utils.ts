@@ -93,9 +93,23 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
     if (field.required) {
       fieldSchema = fieldSchema.required();
     }
-    yupSchema[fieldName] = fieldSchema;
+    const _fieldName = parseFieldName(fieldName, field);
+
+    yupSchema[_fieldName] = fieldSchema;
   });
   return Yup.object().shape(yupSchema);
+};
+
+const parseFieldName = (fieldName: string, field: IModelMetaField) => {
+  let _key = fieldName;
+
+  if (field.fieldType === 'relation') {
+    _key = `${fieldName}Id`;
+  }
+  if (field.dataTransferObjectKey) {
+    _key = field.dataTransferObjectKey;
+  }
+  return _key;
 };
 
 export const getUnmappedSheetColumns = (columns, mapping) => {

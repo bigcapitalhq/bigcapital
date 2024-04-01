@@ -64,6 +64,16 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/item/categories/import`,
+    component: lazy(
+      () => import('@/containers/ItemsCategories/ItemCategoriesImport'),
+    ),
+    backLink: true,
+    pageTitle: 'Item Categories Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.ITEM,
+  },
+  {
     path: `/items/categories`,
     component: lazy(
       () => import('@/containers/ItemsCategories/ItemCategoriesList'),
@@ -73,9 +83,16 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.ITEM,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Items.
-  
+  {
+    path: `/items/import`,
+    component: lazy(() => import('@/containers/Items/ItemsImportPage')),
+    backLink: true,
+    pageTitle: 'Items Import',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+    defaultSearchResource: RESOURCES_TYPES.CUSTOMER,
+  },
+
   {
     path: `/items/:id/edit`,
     component: lazy(() => import('@/containers/Items/ItemFormPage')),
@@ -514,12 +531,7 @@ export const getDashboardRoutes = () => [
   // Customers
   {
     path: `/customers/import`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Customers/CustomersImport'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Customers/CustomersImport')),
     backLink: true,
     pageTitle: 'Customers Import',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -577,9 +589,7 @@ export const getDashboardRoutes = () => [
   // Vendors
   {
     path: `/vendors/import`,
-    component: lazy(
-      () => import('@/containers/Vendors/VendorsImport'),
-    ),
+    component: lazy(() => import('@/containers/Vendors/VendorsImport')),
     backLink: true,
     pageTitle: 'Vendors Import',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
