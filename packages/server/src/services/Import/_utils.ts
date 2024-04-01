@@ -141,4 +141,29 @@ export const validateSheetEmpty = (sheetData: Array<any>) => {
   if (isEmpty(sheetData)) {
     throw new ServiceError(ERRORS.IMPORTED_SHEET_EMPTY);
   }
+
+const booleanValuesRepresentingTrue: string[] = ['true', 'yes', 'y', 't', '1'];
+const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
+
+/**
+ * Parses the given string value to boolean.
+ * @param {string} value 
+ * @returns {string|null} 
+ */
+export const parseBoolean = (value: string): boolean | null => {
+  const normalizeValue = (value: string): string =>
+    value.toString().trim().toLowerCase();
+
+  const normalizedValue = normalizeValue(value);
+  const valuesRepresentingTrue =
+    booleanValuesRepresentingTrue.map(normalizeValue);
+  const valueRepresentingFalse =
+    booleanValuesRepresentingFalse.map(normalizeValue);
+
+  if (valuesRepresentingTrue.includes(normalizedValue)) {
+    return true;
+  } else if (valueRepresentingFalse.includes(normalizedValue)) {
+    return false;
+  }
+  return null;
 };

@@ -2,13 +2,14 @@ import { Service } from 'typedi';
 import * as R from 'ramda';
 import { isUndefined, get, chain } from 'lodash';
 import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
-import { parseBoolean } from '@/utils';
-import { trimObject } from './_utils';
+import { trimObject, parseBoolean } from './_utils';
+import { multiNumberParse } from '@/utils/multi-number-parse';
 
 @Service()
 export class ImportFileDataTransformer {
   /**
-   *
+   * Parses the given sheet data before passing to the service layer.
+   * based on the mapped fields and the each field type .
    * @param {number} tenantId -
    * @param {}
    */
@@ -76,7 +77,7 @@ export class ImportFileDataTransformer {
 
       // Parses the boolean value.
       if (fields[key].fieldType === 'boolean') {
-        _value = parseBoolean(value, false);
+        _value = parseBoolean(value);
 
         // Parses the enumeration value.
       } else if (fields[key].fieldType === 'enumeration') {
@@ -87,7 +88,7 @@ export class ImportFileDataTransformer {
         _value = get(option, 'key');
         // Prases the numeric value.
       } else if (fields[key].fieldType === 'number') {
-        _value = parseFloat(value);
+        _value = multiNumberParse(value);
       }
       return _value;
     };
