@@ -2,12 +2,12 @@ import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
 import bluebird from 'bluebird';
 import { isUndefined, get, chain, toArray, pickBy, castArray } from 'lodash';
+import { Knex } from 'knex';
 import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
-import { parseBoolean } from '@/utils';
-import { trimObject } from './_utils';
+import { trimObject, parseBoolean } from './_utils';
 import { Account, Item } from '@/models';
 import ResourceService from '../Resource/ResourceService';
-import { Knex } from 'knex';
+import { multiNumberParse } from '@/utils/multi-number-parse';
 
 const CurrencyParsingDTOs = 10;
 
@@ -17,7 +17,8 @@ export class ImportFileDataTransformer {
   private resource: ResourceService;
 
   /**
-   *
+   * Parses the given sheet data before passing to the service layer.
+   * based on the mapped fields and the each field type .
    * @param {number} tenantId -
    * @param {}
    */
@@ -98,7 +99,7 @@ export class ImportFileDataTransformer {
 
       // Parses the boolean value.
       if (fields[key].fieldType === 'boolean') {
-        _value = parseBoolean(value, false);
+        _value = parseBoolean(value);
 
         // Parses the enumeration value.
       } else if (field.fieldType === 'enumeration') {
@@ -109,7 +110,7 @@ export class ImportFileDataTransformer {
         _value = get(option, 'key');
         // Parses the numeric value.
       } else if (fields[key].fieldType === 'number') {
-        _value = parseFloat(value);
+        _value = multiNumberParse(value);
         // Parses the relation value.
       } else if (field.fieldType === 'relation') {
         const relationModel = resourceModel.relationMappings[field.relationKey];

@@ -6,11 +6,13 @@ import {
   first,
   isUndefined,
   pickBy,
+  isEmpty,
 } from 'lodash';
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
 import moment from 'moment';
+import { ServiceError } from '@/exceptions';
 
 export const ERRORS = {
   RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
@@ -20,6 +22,7 @@ export const ERRORS = {
   IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
   INVALID_MAP_DATE_FORMAT: 'INVALID_MAP_DATE_FORMAT',
   MAP_DATE_FORMAT_NOT_DEFINED: 'MAP_DATE_FORMAT_NOT_DEFINED',
+  IMPORTED_SHEET_EMPTY: 'IMPORTED_SHEET_EMPTY',
 };
 
 export function trimObject(obj) {
@@ -142,4 +145,39 @@ export const getUniqueImportableValue = (
   const uniqueImportableKey = first(uniqueImportableKeys);
 
   return defaultTo(objectDTO[uniqueImportableKey], '');
+};
+
+/**
+ * Throws service error the given sheet is empty.
+ * @param {Array<any>} sheetData
+ */
+export const validateSheetEmpty = (sheetData: Array<any>) => {
+  if (isEmpty(sheetData)) {
+    throw new ServiceError(ERRORS.IMPORTED_SHEET_EMPTY);
+  }
+
+const booleanValuesRepresentingTrue: string[] = ['true', 'yes', 'y', 't', '1'];
+const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
+
+/**
+ * Parses the given string value to boolean.
+ * @param {string} value 
+ * @returns {string|null} 
+ */
+export const parseBoolean = (value: string): boolean | null => {
+  const normalizeValue = (value: string): string =>
+    value.toString().trim().toLowerCase();
+
+  const normalizedValue = normalizeValue(value);
+  const valuesRepresentingTrue =
+    booleanValuesRepresentingTrue.map(normalizeValue);
+  const valueRepresentingFalse =
+    booleanValuesRepresentingFalse.map(normalizeValue);
+
+  if (valuesRepresentingTrue.includes(normalizedValue)) {
+    return true;
+  } else if (valueRepresentingFalse.includes(normalizedValue)) {
+    return false;
+  }
+  return null;
 };

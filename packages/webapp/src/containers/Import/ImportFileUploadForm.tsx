@@ -5,7 +5,8 @@ import { Intent } from '@blueprintjs/core';
 import { Formik, Form, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import { useImportFileContext } from './ImportFileProvider';
-import { ImportStepperStep } from './_types';
+import { ImportAlert, ImportStepperStep } from './_types';
+import { useAlertsManager } from './AlertsManager';
 
 const initialValues = {
   file: null,
@@ -28,6 +29,7 @@ export function ImportFileUploadForm({
   formikProps,
   formProps,
 }: ImportFileUploadFormProps) {
+  const { showAlert, hideAlerts } = useAlertsManager();
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
   const {
     resource,
@@ -42,6 +44,7 @@ export function ImportFileUploadForm({
     values: ImportFileUploadValues,
     { setSubmitting }: FormikHelpers<ImportFileUploadValues>,
   ) => {
+    hideAlerts();
     if (!values.file) return;
 
     setSubmitting(true);
@@ -68,6 +71,9 @@ export function ImportFileUploadForm({
             intent: Intent.DANGER,
             message: 'The extenstion of uploaded file is not supported.',
           });
+        }
+        if (data.errors.find((er) => er.type === 'IMPORTED_SHEET_EMPTY')) {
+          showAlert(ImportAlert.IMPORTED_SHEET_EMPTY);
         }
         setSubmitting(false);
       });
