@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import moment from 'moment';
 import {
   defaultTo,
   upperFirst,
@@ -11,7 +12,6 @@ import {
 import pluralize from 'pluralize';
 import { ResourceMetaFieldsMap } from './interfaces';
 import { IModelMetaField } from '@/interfaces';
-import moment from 'moment';
 import { ServiceError } from '@/exceptions';
 
 export const ERRORS = {
@@ -155,6 +155,7 @@ export const validateSheetEmpty = (sheetData: Array<any>) => {
   if (isEmpty(sheetData)) {
     throw new ServiceError(ERRORS.IMPORTED_SHEET_EMPTY);
   }
+}
 
 const booleanValuesRepresentingTrue: string[] = ['true', 'yes', 'y', 't', '1'];
 const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
