@@ -13,6 +13,7 @@ export const ERRORS = {
   IMPORT_FILE_NOT_MAPPED: 'IMPORT_FILE_NOT_MAPPED',
   INVALID_MAP_DATE_FORMAT: 'INVALID_MAP_DATE_FORMAT',
   MAP_DATE_FORMAT_NOT_DEFINED: 'MAP_DATE_FORMAT_NOT_DEFINED',
+  IMPORTED_SHEET_EMPTY: 'IMPORTED_SHEET_EMPTY',
 };
 
 export function trimObject(obj) {
@@ -121,4 +122,30 @@ export const getUniqueImportableValue = (
   const uniqueImportableKey = first(uniqueImportableKeys);
 
   return defaultTo(objectDTO[uniqueImportableKey], '');
+};
+
+const booleanValuesRepresentingTrue: string[] = ['true', 'yes', 'y', 't', '1'];
+const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
+
+/**
+ * Parses the given string value to boolean.
+ * @param {string} value 
+ * @returns {string|null} 
+ */
+export const parseBoolean = (value: string): boolean | null => {
+  const normalizeValue = (value: string): string =>
+    value.toString().trim().toLowerCase();
+
+  const normalizedValue = normalizeValue(value);
+  const valuesRepresentingTrue =
+    booleanValuesRepresentingTrue.map(normalizeValue);
+  const valueRepresentingFalse =
+    booleanValuesRepresentingFalse.map(normalizeValue);
+
+  if (valuesRepresentingTrue.includes(normalizedValue)) {
+    return true;
+  } else if (valueRepresentingFalse.includes(normalizedValue)) {
+    return false;
+  }
+  return null;
 };
