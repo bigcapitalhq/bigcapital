@@ -1,4 +1,4 @@
-import { fromPairs } from 'lodash';
+import { fromPairs, isUndefined } from 'lodash';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import {
@@ -69,7 +69,7 @@ export class ImportFileMapping {
     importFile: any,
     maps: ImportMappingAttr[]
   ) {
-    const fields = this.resource.getResourceImportableFields(
+    const fields = this.resource.getResourceFields2(
       tenantId,
       importFile.resource
     );
@@ -78,11 +78,20 @@ export class ImportFileMapping {
     );
     const invalid = [];
 
+    // is not empty, is not undefined or map.group
     maps.forEach((map) => {
-      if (
-        'undefined' === typeof fields[map.to] ||
-        'undefined' === typeof columnsMap[map.from]
-      ) {
+      let _invalid = true;
+
+      if (!map.group && fields[map.to]) {
+        _invalid = false;
+      }
+      if (map.group && fields[map.group] && fields[map.group]?.fields[map.to]) {
+        _invalid = false;
+      }
+      if (columnsMap[map.from]) {
+        _invalid = false;
+      }
+      if (_invalid) {
         invalid.push(map);
       }
     });
@@ -105,10 +114,14 @@ export class ImportFileMapping {
       } else {
         fromMap[map.from] = true;
       }
-      if (toMap[map.to]) {
+      const toPath = !isUndefined(map?.group)
+        ? `${map.group}.${map.to}`
+        : map.to;
+
+      if (toMap[toPath]) {
         throw new ServiceError(ERRORS.DUPLICATED_TO_MAP_ATTR);
       } else {
-        toMap[map.to] = true;
+        toMap[toPath] = true;
       }
     });
   }
@@ -128,6 +141,7 @@ export class ImportFileMapping {
       tenantId,
       resource
     );
+    // @todo Validate date type of the nested fields.
     maps.forEach((map) => {
       if (
         typeof fields[map.to] !== 'undefined' &&

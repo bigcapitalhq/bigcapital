@@ -1,9 +1,10 @@
-import { IModelMetaField } from '@/interfaces';
+import { IModelMetaField, IModelMetaField2 } from '@/interfaces';
 import Import from '@/models/Import';
 
 export interface ImportMappingAttr {
   from: string;
   to: string;
+  group?: string;
   dateFormat?: string;
 }
 
@@ -13,7 +14,7 @@ export interface ImportValidationError {
   constraints: Record<string, string>;
 }
 
-export type ResourceMetaFieldsMap = { [key: string]: IModelMetaField };
+export type ResourceMetaFieldsMap = { [key: string]: IModelMetaField2 };
 
 export interface ImportInsertError {
   rowNumber: number;
@@ -61,16 +62,15 @@ export interface ImportOperError {
   error: ImportInsertError[];
   index: number;
 }
- 
+
 export interface ImportableContext {
-  import: Import,
+  import: Import;
   rowIndex: number;
 }
-
 
 export const ImportDateFormats = [
   'yyyy-MM-dd',
   'dd.MM.yy',
   'MM/dd/yy',
-  'dd/MMM/yyyy'
-]
+  'dd/MMM/yyyy',
+];

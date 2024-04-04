@@ -6,6 +6,8 @@ import { CustomersImportable } from '../Contacts/Customers/CustomersImportable';
 import { VendorsImportable } from '../Contacts/Vendors/VendorsImportable';
 import { ItemsImportable } from '../Items/ItemsImportable';
 import { ItemCategoriesImportable } from '../ItemCategories/ItemCategoriesImportable';
+import { ManualJournalImportable } from '../ManualJournals/ManualJournalsImport';
+import { BillsImportable } from '../Purchases/Bills/BillsImportable';
 
 @Service()
 export class ImportableResources {
@@ -28,6 +30,8 @@ export class ImportableResources {
     { resource: 'Vendor', importable: VendorsImportable },
     { resource: 'Item', importable: ItemsImportable },
     { resource: 'ItemCategory', importable: ItemCategoriesImportable },
+    { resource: 'ManualJournal', importable: ManualJournalImportable },
+    { resource: 'Bill', importable: BillsImportable },
   ];
 
   public get registry() {

@@ -53,11 +53,10 @@ export class ImportFileProcess {
     const sheetData = this.importCommon.parseXlsxSheet(buffer);
     const header = getSheetColumns(sheetData);
 
-    const importableFields = this.resource.getResourceImportableFields(
+    const resourceFields = this.resource.getResourceFields2(
       tenantId,
       importFile.resource
     );
-
     // Runs the importing operation with ability to return errors that will happen.
     const [successedImport, failedImport, allData] =
       await this.uow.withTransaction(
@@ -67,7 +66,7 @@ export class ImportFileProcess {
           const parsedData = await this.importParser.parseSheetData(
             tenantId,
             importFile,
-            importableFields,
+            resourceFields,
             sheetData,
             trx
           );

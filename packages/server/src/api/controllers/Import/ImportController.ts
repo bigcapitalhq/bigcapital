@@ -37,6 +37,7 @@ export class ImportController extends BaseController {
       [
         param('import_id').exists().isString(),
         body('mapping').exists().isArray({ min: 1 }),
+        body('mapping.*.group').optional(),
         body('mapping.*.from').exists(),
         body('mapping.*.to').exists(),
       ],

@@ -7,12 +7,19 @@ import React, {
   useState,
 } from 'react';
 
-export type EntityColumn = {
+export type EntityColumnField = {
   key: string;
   name: string;
   required?: boolean;
   hint?: string;
+  group?: string;
 };
+
+export interface EntityColumn {
+  groupKey: string;
+  groupName: string;
+  fields: EntityColumnField[];
+}
 export type SheetColumn = string;
 export type SheetMap = { from: string; to: string };
 

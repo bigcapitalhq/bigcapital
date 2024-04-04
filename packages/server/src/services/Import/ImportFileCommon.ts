@@ -71,7 +71,7 @@ export class ImportFileCommon {
     parsedData: Record<string, any>[],
     trx?: Knex.Transaction
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
-    const importableFields = this.resource.getResourceImportableFields(
+    const resourceFields = this.resource.getResourceFields2(
       tenantId,
       importFile.resource
     );
@@ -90,7 +90,7 @@ export class ImportFileCommon {
       };
       const transformedDTO = importable.transform(objectDTO, context);
       const rowNumber = index + 1;
-      const uniqueValue = getUniqueImportableValue(importableFields, objectDTO);
+      const uniqueValue = getUniqueImportableValue(resourceFields, objectDTO);
       const errorContext = {
         rowNumber,
         uniqueValue,
@@ -98,7 +98,7 @@ export class ImportFileCommon {
       try {
         // Validate the DTO object before passing it to the service layer.
         await this.importFileValidator.validateData(
-          importableFields,
+          resourceFields,
           transformedDTO
         );
         try {

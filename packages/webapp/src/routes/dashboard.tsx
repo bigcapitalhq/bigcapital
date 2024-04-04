@@ -52,6 +52,18 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/manual-journals/import`,
+    component: lazy(
+      () => import('@/containers/Accounting/ManualJournalsImport'),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Manual Journals Import',
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/manual-journals`,
     component: lazy(
       () =>
@@ -893,6 +905,17 @@ export const getDashboardRoutes = () => [
   },
 
   // Bills
+  {
+    path: `/bills/import`,
+    component: lazy(() => import('@/containers/Purchases/Bills/BillImport')),
+    name: 'bill-edit',
+    // breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Import',
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/bills/:id/edit`,
     component: lazy(

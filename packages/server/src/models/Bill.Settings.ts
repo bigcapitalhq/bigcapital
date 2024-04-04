@@ -1,10 +1,13 @@
-
 export default {
   defaultFilterField: 'vendor',
   defaultSort: {
     sortOrder: 'DESC',
     sortField: 'bill_date',
   },
+  importable: true,
+  importAggregator: 'group',
+  importAggregateOn: 'entries',
+  importAggregateBy: 'billNumber',
   fields: {
     vendor: {
       name: 'bill.field.vendor',
@@ -75,6 +78,76 @@ export default {
       name: 'bill.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  fields2: {
+    billNumber: {
+      name: 'Bill No.',
+      fieldType: 'text',
+      required: true,
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      fieldType: 'text',
+    },
+    billDate: {
+      name: 'Date',
+      fieldType: 'date',
+      required: true,
+    },
+    dueDate: {
+      name: 'Due Date',
+      fieldType: 'date',
+      required: true,
+    },
+    vendorId: {
+      name: 'Vendor',
+      fieldType: 'relation',
+      relationModel: 'Contact',
+      relationImportMatch: 'displayName',
+      required: true,
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      fieldType: 'number',
+    },
+    note: {
+      name: 'Note',
+      fieldType: 'text',
+    },
+    open: {
+      name: 'Open',
+      fieldType: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      fieldType: 'collection',
+      collectionOf: 'object',
+      collectionMinLength: 1,
+      required: true,
+      fields: {
+        itemId: {
+          name: 'Item',
+          fieldType: 'relation',
+          relationModel: 'Item',
+          relationImportMatch: ['name', 'code'],
+          required: true,
+        },
+        rate: {
+          name: 'Rate',
+          fieldType: 'number',
+          required: true,
+        },
+        quantity: {
+          name: 'Quantity',
+          fieldType: 'number',
+          required: true,
+        },
+        description: {
+          name: 'Description',
+          fieldType: 'text',
+        },
+      },
     },
   },
 };
