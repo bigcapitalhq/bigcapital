@@ -1,14 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import { Importable } from '@/services/Import/Importable';
-import { CreateBill } from './CreateBill';
-import { IBillDTO } from '@/interfaces';
-import { BillsSampleData } from './constants';
+import { IExpenseCreateDTO } from '@/interfaces';
+import { Importable } from '../Import/Importable';
+import { CreateExpense } from './CRUD/CreateExpense';
+import { ExpensesSampleData } from './constants';
 
 @Service()
-export class BillsImportable extends Importable {
+export class ExpensesImportable extends Importable {
   @Inject()
-  private createBillService: CreateBill;
+  private createExpenseService: CreateExpense;
 
   /**
    * Importing to account service.
@@ -18,10 +18,10 @@ export class BillsImportable extends Importable {
    */
   public importable(
     tenantId: number,
-    createAccountDTO: IBillDTO,
+    createAccountDTO: IExpenseCreateDTO,
     trx?: Knex.Transaction
   ) {
-    return this.createBillService.createBill(
+    return this.createExpenseService.newExpense(
       tenantId,
       createAccountDTO,
       {},
@@ -41,6 +41,6 @@ export class BillsImportable extends Importable {
    * Retrieves the sample data that used to download accounts sample sheet.
    */
   public sampleData(): any[] {
-    return BillsSampleData;
+    return ExpensesSampleData;
   }
 }

@@ -51,4 +51,33 @@ export default {
       importable: false,
     },
   },
+  fields2: {
+    date: {
+      name: 'Date',
+      fieldType: 'date',
+      required: true,
+    },
+    payee: {
+      name: 'Payee',
+      column: 'payee',
+      fieldType: 'text',
+    },
+    description: {
+      name: 'Description',
+      column: 'description',
+      fieldType: 'text',
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      column: 'reference_no',
+      fieldType: 'text',
+    },
+    amount: {
+      name: 'Amount',
+      column: 'Amount',
+      fieldType: 'numeric',
+      required: true,
+    },
+   
+  }
 };

@@ -328,7 +328,7 @@ export default class ManualJournalsController extends BaseController {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
-      columnSortBy: 'created_at',
+      columnSortBy: 'createdAt',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

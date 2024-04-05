@@ -508,6 +508,16 @@ export const getDashboardRoutes = () => [
   },
   // Expenses.
   {
+    path: `/expenses/import`,
+    component: lazy(() => import('@/containers/Expenses/ExpensesImport')),
+    breadcrumb: 'Expenses Import',
+    hotkey: 'ctrl+shift+x',
+    pageTitle: 'Expenses Import',
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/expenses/new`,
     component: lazy(
       () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
@@ -658,6 +668,19 @@ export const getDashboardRoutes = () => [
 
   // Estimates
   {
+    path: `/estimates/import`,
+    component: lazy(
+      () => import('@/containers/Sales/Estimates/EstimatesImport'),
+    ),
+    name: 'estimate-edit',
+    breadcrumb: 'Estimates Import',
+    pageTitle: 'Estimates Import',
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/estimates/:id/edit`,
     component: lazy(
       () =>
@@ -715,6 +738,17 @@ export const getDashboardRoutes = () => [
   },
 
   // Invoices.
+  {
+    path: `/invoices/import`,
+    component: lazy(() => import('@/containers/Sales/Invoices/InvoicesImport')),
+    name: 'invoice-edit',
+    breadcrumb: 'Invoices Import',
+    pageTitle: 'Invoices Import',
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/invoices/:id/edit`,
     component: lazy(
@@ -1025,6 +1059,19 @@ export const getDashboardRoutes = () => [
     subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Payment modes.
+  {
+    path: `/payment-mades/import`,
+    component: lazy(
+      () => import('@/containers/Purchases/PaymentMades/PaymentMadesImport'),
+    ),
+    name: 'payment-made-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Payments Import',
+    sidebarExpand: false,
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/payment-mades/:id/edit`,
     component: lazy(

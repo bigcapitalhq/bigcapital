@@ -206,4 +206,149 @@ export default {
       fieldType: 'date',
     },
   },
+  fields2: {
+    firstName: {
+      name: 'vendor.field.first_name',
+      column: 'first_name',
+      fieldType: 'text',
+    },
+    lastName: {
+      name: 'vendor.field.last_name',
+      column: 'last_name',
+      fieldType: 'text',
+    },
+    displayName: {
+      name: 'vendor.field.display_name',
+      column: 'display_name',
+      fieldType: 'text',
+      required: true,
+    },
+    email: {
+      name: 'vendor.field.email',
+      column: 'email',
+      fieldType: 'text',
+    },
+    workPhone: {
+      name: 'vendor.field.work_phone',
+      column: 'work_phone',
+      fieldType: 'text',
+    },
+    personalPhone: {
+      name: 'vendor.field.personal_phone',
+      column: 'personal_phone',
+      fieldType: 'text',
+    },
+    companyName: {
+      name: 'vendor.field.company_name',
+      column: 'company_name',
+      fieldType: 'text',
+    },
+    website: {
+      name: 'vendor.field.website',
+      column: 'website',
+      fieldType: 'text',
+    },
+    openingBalance: {
+      name: 'vendor.field.opening_balance',
+      column: 'opening_balance',
+      fieldType: 'number',
+    },
+    openingBalanceAt: {
+      name: 'vendor.field.opening_balance_at',
+      column: 'opening_balance_at',
+      fieldType: 'date',
+    },
+    openingBalanceExchangeRate: {
+      name: 'Opening Balance Ex. Rate',
+      column: 'opening_balance_exchange_rate',
+      fieldType: 'number',
+    },
+    currencyCode: {
+      name: 'vendor.field.currency',
+      column: 'currency_code',
+      fieldType: 'text',
+    },
+    note: {
+      name: 'Note',
+      column: 'note',
+      fieldType: 'text',
+    },
+    active: {
+      name: 'Active',
+      column: 'active',
+      fieldType: 'boolean',
+    },
+    // Billing Address
+    billingAddress1: {
+      name: 'Billing Address 1',
+      column: 'billing_address1',
+      fieldType: 'text',
+    },
+    billingAddress2: {
+      name: 'Billing Address 2',
+      column: 'billing_address2',
+      fieldType: 'text',
+    },
+    billingAddressCity: {
+      name: 'Billing Address City',
+      column: 'billing_address_city',
+      fieldType: 'text',
+    },
+    billingAddressCountry: {
+      name: 'Billing Address Country',
+      column: 'billing_address_country',
+      fieldType: 'text',
+    },
+    billingAddressPostcode: {
+      name: 'Billing Address Postcode',
+      column: 'billing_address_postcode',
+      fieldType: 'text',
+    },
+    billingAddressState: {
+      name: 'Billing Address State',
+      column: 'billing_address_state',
+      fieldType: 'text',
+    },
+    billingAddressPhone: {
+      name: 'Billing Address Phone',
+      column: 'billing_address_phone',
+      fieldType: 'text',
+    },
+    // Shipping Address
+    shippingAddress1: {
+      name: 'Shipping Address 1',
+      column: 'shipping_address1',
+      fieldType: 'text',
+    },
+    shippingAddress2: {
+      name: 'Shipping Address 2',
+      column: 'shipping_address2',
+      fieldType: 'text',
+    },
+    shippingAddressCity: {
+      name: 'Shipping Address City',
+      column: 'shipping_address_city',
+      fieldType: 'text',
+    },
+    shippingAddressCountry: {
+      name: 'Shipping Address Country',
+      column: 'shipping_address_country',
+      fieldType: 'text',
+    },
+    shippingAddressPostcode: {
+      name: 'Shipping Address Postcode',
+      column: 'shipping_address_postcode',
+      fieldType: 'text',
+    },
+    shippingAddressState: {
+      name: 'Shipping Address State',
+      column: 'shipping_address_state',
+      fieldType: 'text',
+    },
+    shippingAddressPhone: {
+      name: 'Shipping Address Phone',
+      column: 'shipping_address_phone',
+      fieldType: 'text',
+    },
+  },
 };

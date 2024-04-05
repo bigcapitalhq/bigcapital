@@ -51,7 +51,8 @@ export class CreateSaleInvoice {
   public createSaleInvoice = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    authorizedUser: ITenantUser
+    authorizedUser: ITenantUser,
+    trx?: Knex.Transaction
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice, SaleEstimate, Contact } =
       this.tenancy.models(tenantId);
@@ -96,33 +97,37 @@ export class CreateSaleInvoice {
       );
     }
     // Creates a new sale invoice and associated transactions under unit of work env.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onSaleInvoiceCreating` event.
-      await this.eventPublisher.emitAsync(events.saleInvoice.onCreating, {
-        saleInvoiceDTO,
-        tenantId,
-        trx,
-      } as ISaleInvoiceCreatingPaylaod);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onSaleInvoiceCreating` event.
+        await this.eventPublisher.emitAsync(events.saleInvoice.onCreating, {
+          saleInvoiceDTO,
+          tenantId,
+          trx,
+        } as ISaleInvoiceCreatingPaylaod);
 
-      // Create sale invoice graph to the storage.
-      const saleInvoice = await SaleInvoice.query(trx).upsertGraph(
-        saleInvoiceObj
-      );
-      const eventPayload: ISaleInvoiceCreatedPayload = {
-        tenantId,
-        saleInvoice,
-        saleInvoiceDTO,
-        saleInvoiceId: saleInvoice.id,
-        authorizedUser,
-        trx,
-      };
-      // Triggers the event `onSaleInvoiceCreated`.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onCreated,
-        eventPayload
-      );
-      return saleInvoice;
-    });
+        // Create sale invoice graph to the storage.
+        const saleInvoice = await SaleInvoice.query(trx).upsertGraph(
+          saleInvoiceObj
+        );
+        const eventPayload: ISaleInvoiceCreatedPayload = {
+          tenantId,
+          saleInvoice,
+          saleInvoiceDTO,
+          saleInvoiceId: saleInvoice.id,
+          authorizedUser,
+          trx,
+        };
+        // Triggers the event `onSaleInvoiceCreated`.
+        await this.eventPublisher.emitAsync(
+          events.saleInvoice.onCreated,
+          eventPayload
+        );
+        return saleInvoice;
+      },
+      trx
+    );
   };
 
   /**

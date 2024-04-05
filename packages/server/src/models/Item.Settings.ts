@@ -5,6 +5,96 @@ export default {
     sortField: 'name',
     sortOrder: 'DESC',
   },
+  fields2: {
+    type: {
+      name: 'item.field.type',
+      fieldType: 'enumeration',
+      options: [
+        { key: 'inventory', label: 'item.field.type.inventory' },
+        { key: 'service', label: 'item.field.type.service' },
+        { key: 'non-inventory', label: 'item.field.type.non-inventory' },
+      ],
+      required: true,
+    },
+    name: {
+      name: 'item.field.name',
+      fieldType: 'text',
+      required: true,
+      unique: true,
+    },
+    code: {
+      name: 'item.field.code',
+      fieldType: 'text',
+      unique: true,
+    },
+    sellable: {
+      name: 'item.field.sellable',
+      fieldType: 'boolean',
+      required: true,
+    },
+    purchasable: {
+      name: 'item.field.purchasable',
+      fieldType: 'boolean',
+      required: true,
+    },
+    sellPrice: {
+      name: 'item.field.sell_price',
+      fieldType: 'number',
+      required: true,
+    },
+    costPrice: {
+      name: 'item.field.cost_price',
+      fieldType: 'number',
+      required: true,
+    },
+    costAccount: {
+      name: 'item.field.cost_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
+      required: true,
+    },
+    sellAccount: {
+      name: 'item.field.sell_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
+      required: true,
+    },
+    inventoryAccount: {
+      name: 'item.field.inventory_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
+      required: true,
+    },
+    sellDescription: {
+      name: 'Sell description',
+      column: 'sell_description',
+      fieldType: 'text',
+    },
+    purchaseDescription: {
+      name: 'Purchase description',
+      column: 'purchase_description',
+      fieldType: 'text',
+      importable: true,
+    },
+    note: {
+      name: 'item.field.note',
+      fieldType: 'text',
+    },
+    category: {
+      name: 'item.field.category',
+      fieldType: 'relation',
+      relationModel: 'ItemCategory',
+      relationImportMatch: 'name',
+    },
+    active: {
+      name: 'item.field.active',
+      fieldType: 'boolean',
+      importable: true,
+    },
+  },
   fields: {
     type: {
       name: 'item.field.type',
@@ -31,7 +121,6 @@ export default {
       column: 'code',
       fieldType: 'text',
       importable: true,
-      
     },
     sellable: {
       name: 'item.field.sellable',
@@ -66,13 +155,11 @@ export default {
       column: 'cost_account_id',
       fieldType: 'relation',
 
-      relationType: 'enumeration',
       relationKey: 'costAccount',
 
       relationEntityLabel: 'name',
       relationEntityKey: 'slug',
 
-      dataTransferObjectKey: 'costAccountId',
       importableRelationLabel: ['name', 'code'],
       importable: true,
       required: true,
@@ -82,8 +169,8 @@ export default {
       column: 'sell_account_id',
       fieldType: 'relation',
 
-      relationType: 'enumeration',
       relationKey: 'sellAccount',
+      relationType: 'one-to-many',
 
       relationEntityLabel: 'name',
       relationEntityKey: 'slug',
@@ -98,7 +185,6 @@ export default {
       column: 'inventory_account_id',
       fieldType: 'relation',
 
-      relationType: 'enumeration',
       relationKey: 'inventoryAccount',
 
       relationEntityLabel: 'name',
@@ -137,7 +223,6 @@ export default {
       column: 'category_id',
       fieldType: 'relation',
 
-      relationType: 'enumeration',
       relationKey: 'category',
 
       relationEntityLabel: 'name',

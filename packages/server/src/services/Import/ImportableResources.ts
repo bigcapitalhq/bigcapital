@@ -8,6 +8,10 @@ import { ItemsImportable } from '../Items/ItemsImportable';
 import { ItemCategoriesImportable } from '../ItemCategories/ItemCategoriesImportable';
 import { ManualJournalImportable } from '../ManualJournals/ManualJournalsImport';
 import { BillsImportable } from '../Purchases/Bills/BillsImportable';
+import { ExpensesImportable } from '../Expenses/ExpensesImportable';
+import { SaleInvoicesImportable } from '../Sales/Invoices/SaleInvoicesImportable';
+import { SaleEstimatesImportable } from '../Sales/Estimates/SaleEstimatesImportable';
+import { BillPaymentsImportable } from '../Purchases/BillPayments/BillPaymentsImportable';
 
 @Service()
 export class ImportableResources {
@@ -32,6 +36,10 @@ export class ImportableResources {
     { resource: 'ItemCategory', importable: ItemCategoriesImportable },
     { resource: 'ManualJournal', importable: ManualJournalImportable },
     { resource: 'Bill', importable: BillsImportable },
+    { resource: 'Expense', importable: ExpensesImportable },
+    { resource: 'SaleInvoice', importable: SaleInvoicesImportable },
+    { resource: 'SaleEstimate', importable: SaleEstimatesImportable },
+    { resource: 'BillPayment', importable: BillPaymentsImportable },
   ];
 
   public get registry() {

@@ -4,6 +4,10 @@ export default {
     sortOrder: 'DESC',
     sortField: 'bill_date',
   },
+  importable: true,
+  importAggregator: 'group',
+  importAggregateOn: 'entries',
+  importAggregateBy: 'paymentNumber',
   fields: {
     vendor: {
       name: 'bill_payment.field.vendor',
@@ -33,7 +37,7 @@ export default {
 
       relationType: 'enumeration',
       relationKey: 'paymentAccount',
-      
+
       relationEntityLabel: 'name',
       relationEntityKey: 'slug',
     },
@@ -61,6 +65,66 @@ export default {
       name: 'bill_payment.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  fields2: {
+    vendorId: {
+      name: 'bill_payment.field.vendor',
+      fieldType: 'relation',
+      relationModel: 'Contact',
+      relationImportMatch: ['displayName'],
+      required: true,
+    },
+    payment_date: {
+      name: 'bill_payment.field.payment_date',
+      fieldType: 'date',
+      required: true,
+    },
+    paymentNumber: {
+      name: 'bill_payment.field.payment_number',
+      fieldType: 'text',
+      unique: true,
+    },
+    paymentAccountId: {
+      name: 'bill_payment.field.payment_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
+      required: true,
+    },
+    exchangeRate: {
+      name: 'bill_payment.field.exchange_rate',
+      fieldType: 'number',
+    },
+    statement: {
+      name: 'bill_payment.field.statement',
+      fieldType: 'text',
+    },
+    reference: {
+      name: 'bill_payment.field.reference',
+      fieldType: 'text',
+    },
+    entries: {
+      name: 'bill_payment.field.entries',
+      column: 'entries',
+      fieldType: 'collection',
+      collectionOf: 'object',
+      collectionMinLength: 1,
+      required: true,
+      fields: {
+        billId: {
+          name: 'bill_payment.field.entries.bill',
+          fieldType: 'relation',
+          relationModel: 'Bill',
+          relationImportMatch: 'billNumber',
+          required: true,
+        },
+        paymentAmount: {
+          name: 'bill_payment.field.entries.payment_amount',
+          fieldType: 'number',
+          required: true,
+        },
+      },
     },
   },
 };

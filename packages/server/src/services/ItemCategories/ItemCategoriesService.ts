@@ -102,7 +102,10 @@ export default class ItemCategoriesService implements IItemCategoriesService {
         }
       });
     if (foundItemCategory) {
-      throw new ServiceError(ERRORS.CATEGORY_NAME_EXISTS);
+      throw new ServiceError(
+        ERRORS.CATEGORY_NAME_EXISTS,
+        'The item category name is already exist.'
+      );
     }
   }
 

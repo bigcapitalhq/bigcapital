@@ -88,7 +88,8 @@ export class CreateExpense {
   public newExpense = async (
     tenantId: number,
     expenseDTO: IExpenseCreateDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    trx?: Knex.Transaction
   ): Promise<IExpense> => {
     const { Expense } = await this.tenancy.models(tenantId);
 
@@ -103,28 +104,32 @@ export class CreateExpense {
     );
     // Writes the expense transaction with associated transactions under
     // unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onExpenseCreating` event.
-      await this.eventPublisher.emitAsync(events.expenses.onCreating, {
-        trx,
-        tenantId,
-        expenseDTO,
-      } as IExpenseCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onExpenseCreating` event.
+        await this.eventPublisher.emitAsync(events.expenses.onCreating, {
+          trx,
+          tenantId,
+          expenseDTO,
+        } as IExpenseCreatingPayload);
 
-      // Creates a new expense transaction graph.
-      const expense: IExpense = await Expense.query(trx).upsertGraph(
-        expenseObj
-      );
-      // Triggers `onExpenseCreated` event.
-      await this.eventPublisher.emitAsync(events.expenses.onCreated, {
-        tenantId,
-        expenseId: expense.id,
-        authorizedUser,
-        expense,
-        trx,
-      } as IExpenseCreatedPayload);
+        // Creates a new expense transaction graph.
+        const expense: IExpense = await Expense.query(trx).upsertGraph(
+          expenseObj
+        );
+        // Triggers `onExpenseCreated` event.
+        await this.eventPublisher.emitAsync(events.expenses.onCreated, {
+          tenantId,
+          expenseId: expense.id,
+          authorizedUser,
+          expense,
+          trx,
+        } as IExpenseCreatedPayload);
 
-      return expense;
-    });
+        return expense;
+      },
+      trx
+    );
   };
 }

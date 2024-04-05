@@ -119,6 +119,49 @@ export default {
       exportable: true,
     },
   },
+  fields2: {
+    name: {
+      name: 'account.field.name',
+      fieldType: 'text',
+      unique: true,
+      required: true,
+    },
+    description: {
+      name: 'account.field.description',
+      fieldType: 'text',
+    },
+    code: {
+      name: 'account.field.code',
+      fieldType: 'text',
+      minLength: 3,
+      maxLength: 6,
+      unique: true,
+      importHint: 'Unique number to identify the account.',
+    },
+    accountType: {
+      name: 'account.field.type',
+      fieldType: 'enumeration',
+      options: ACCOUNT_TYPES.map((accountType) => ({
+        label: accountType.label,
+        key: accountType.key,
+      })),
+      required: true,
+    },
+    active: {
+      name: 'account.field.active',
+      fieldType: 'boolean',
+    },
+    currencyCode: {
+      name: 'account.field.currency',
+      fieldType: 'text',
+    },
+    parentAccountId: {
+      name: 'account.field.parent_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
+    },
+  },
 };
 
 /**

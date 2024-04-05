@@ -144,7 +144,7 @@ export default {
           required: true,
         },
         description: {
-          name: 'Description',
+          name: 'Line Description',
           fieldType: 'text',
         },
       },

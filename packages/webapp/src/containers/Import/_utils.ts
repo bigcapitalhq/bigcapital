@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { useMemo } from 'react';
-import { chain, isEmpty, lowerCase, head, last, set } from 'lodash';
+import { chain, isEmpty, lowerCase, head, last, set, get } from 'lodash';
 import { useImportFileContext } from './ImportFileProvider';
 import { useImportFileMapBootContext } from './ImportFileMappingBoot';
 import { deepdash, transformToForm } from '@/utils';
@@ -21,7 +22,7 @@ export const transformValueToReq = (
 ): { mapping: ImportFileMappingRes[] } => {
   const mapping = chain(value)
     .thru(deepdash.index)
-    .pickBy((_value, key) => !isEmpty(_.get(value, key)))
+    .pickBy((_value, key) => !isEmpty(get(value, key)))
     .map((from, key) => ({
       from,
       to: key.includes('.') ? last(key.split('.')) : key,

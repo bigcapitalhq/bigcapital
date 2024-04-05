@@ -79,6 +79,11 @@ function ExpensesActionsBar({
     refresh();
   };
 
+  // Handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/expenses/import');
+  }
+
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('expenses', 'tableSize', size);
@@ -135,6 +140,7 @@ function ExpensesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
