@@ -77,4 +77,75 @@ export default {
       fieldType: 'date',
     },
   },
+  importable: true,
+  importAggregator: 'group',
+  importAggregateOn: 'entries',
+  importAggregateBy: 'creditNoteNumber',
+  fields2: {
+    customerId: {
+      name: 'Customer',
+      fieldType: 'relation',
+      relationModel: 'Contact',
+      relationImportMatch: 'displayName',
+      required: true,
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      fieldType: 'number',
+    },
+    creditNoteDate: {
+      name: 'Credit Note Date',
+      fieldType: 'date',
+      required: true,
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      fieldType: 'text',
+    },
+    note: {
+      name: 'Note',
+      fieldType: 'text',
+    },
+    termsConditions: {
+      name: 'Terms & Conditions',
+      fieldType: 'text',
+    },
+    creditNoteNumber: {
+      name: 'Credit Note Number',
+      fieldType: 'text',
+    },
+    open: {
+      name: 'Open',
+      fieldType: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      fieldType: 'collection',
+      collectionOf: 'object',
+      collectionMinLength: 1,
+      fields: {
+        itemId: {
+        name: 'Item',
+          fieldType: 'relation',
+          relationModel: 'Item',
+          relationImportMatch: ['name', 'code'],
+          required: true,
+        },
+        rate: {
+          name: 'Rate',
+          fieldType: 'number',
+          required: true,
+        },
+        quantity: {
+          name: 'Quantity',
+          fieldType: 'number',
+          required: true,
+        },
+        description: {
+          name: 'Description',
+          fieldType: 'text',
+        },
+      },
+    },
+  },
 };

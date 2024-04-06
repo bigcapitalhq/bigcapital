@@ -12,6 +12,10 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  importable: true,
+  importAggregator: 'group',
+  importAggregateOn: 'entries',
+  importAggregateBy: 'vendorCreditNumber',
   fields: {
     vendor: {
       name: 'vendor_credit.field.vendor',
@@ -70,6 +74,70 @@ export default {
       name: 'vendor_credit.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  fields2: {
+    vendorId: {
+      name: 'Vendor',
+      fieldType: 'relation',
+      relationModel: 'Contact',
+      relationImportMatch: 'displayName',
+      required: true,
+    },
+    exchangeRate: {
+      name: 'Echange Rate',
+      fieldType: 'text',
+    },
+    vendorCreditNumber: {
+      name: 'Vendor Credit No.',
+      fieldType: 'text',
+    },
+    referenceNo: {
+      name: 'Refernece No.',
+      fieldType: 'text',
+    },
+    vendorCreditDate: {
+      name: 'Vendor Credit Date',
+      fieldType: 'date',
+      required: true,
+    },
+    note: {
+      name: 'Note',
+      fieldType: 'text',
+    },
+    open: {
+      name: 'Open',
+      fieldType: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      fieldType: 'collection',
+      collectionOf: 'object',
+      collectionMinLength: 1,
+      required: true,
+      fields: {
+        itemId: {
+          name: 'Item Name',
+          fieldType: 'relation',
+          relationModel: 'Item',
+          relationImportMatch: ['name', 'code'],
+          required: true,
+        },
+        rate: {
+          name: 'Rate',
+          fieldType: 'number',
+          required: true,
+        },
+        quantity: {
+          name: 'Quantity',
+          fieldType: 'number',
+          required: true,
+        },
+        description: {
+          name: 'Description',
+          fieldType: 'text',
+        },
+      },
     },
   },
 };

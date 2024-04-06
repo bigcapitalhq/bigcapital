@@ -41,7 +41,8 @@ export class CreateSaleReceipt {
    */
   public async createSaleReceipt(
     tenantId: number,
-    saleReceiptDTO: any
+    saleReceiptDTO: any,
+    trx?: Knex.Transaction
   ): Promise<ISaleReceipt> {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);
 
@@ -80,27 +81,31 @@ export class CreateSaleReceipt {
       );
     }
     // Creates a sale receipt transaction and associated transactions under UOW env.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onSaleReceiptCreating` event.
-      await this.eventPublisher.emitAsync(events.saleReceipt.onCreating, {
-        saleReceiptDTO,
-        tenantId,
-        trx,
-      } as ISaleReceiptCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onSaleReceiptCreating` event.
+        await this.eventPublisher.emitAsync(events.saleReceipt.onCreating, {
+          saleReceiptDTO,
+          tenantId,
+          trx,
+        } as ISaleReceiptCreatingPayload);
 
-      // Inserts the sale receipt graph to the storage.
-      const saleReceipt = await SaleReceipt.query().upsertGraph({
-        ...saleReceiptObj,
-      });
-      // Triggers `onSaleReceiptCreated` event.
-      await this.eventPublisher.emitAsync(events.saleReceipt.onCreated, {
-        tenantId,
-        saleReceipt,
-        saleReceiptId: saleReceipt.id,
-        trx,
-      } as ISaleReceiptCreatedPayload);
+        // Inserts the sale receipt graph to the storage.
+        const saleReceipt = await SaleReceipt.query().upsertGraph({
+          ...saleReceiptObj,
+        });
+        // Triggers `onSaleReceiptCreated` event.
+        await this.eventPublisher.emitAsync(events.saleReceipt.onCreated, {
+          tenantId,
+          saleReceipt,
+          saleReceiptId: saleReceipt.id,
+          trx,
+        } as ISaleReceiptCreatedPayload);
 
-      return saleReceipt;
-    });
+        return saleReceipt;
+      },
+      trx
+    );
   }
 }

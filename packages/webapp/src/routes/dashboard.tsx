@@ -790,6 +790,19 @@ export const getDashboardRoutes = () => [
 
   // Sales Receipts.
   {
+    path: `/receipts/import`,
+    component: lazy(
+      () => import('@/containers/Sales/Receipts/SaleReceiptsImport'),
+    ),
+    name: 'receipt-import',
+    breadcrumb: 'Receipts Import',
+    pageTitle: 'Receipts Import',
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/receipts/:id/edit`,
     component: lazy(
       () => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
@@ -829,6 +842,19 @@ export const getDashboardRoutes = () => [
   },
 
   // Sales Credit notes.
+  {
+    path: `/credit-notes/import`,
+    component: lazy(
+      () => import('@/containers/Sales/CreditNotes/CreditNotesImport'),
+    ),
+    name: 'credit-note-import',
+    breadcrumb: 'Credit Notes Import',
+    pageTitle: 'Credit Notes Import',
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/credit-notes/:id/edit`,
     component: lazy(
@@ -890,8 +916,20 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Payment receives
+  {
+    path: `/payment-receives/import`,
+    component: lazy(
+      () => import('@/containers/Sales/PaymentReceives/PaymentReceivesImport'),
+    ),
+    name: 'payment-receive-import',
+    breadcrumb: 'Payments Receive Import',
+    pageTitle: 'Payments Receive Import',
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/payment-receives/:id/edit`,
     component: lazy(
@@ -989,6 +1027,19 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   //  Purchases Credit note.
+  {
+    path: `/vendor-credits/import`,
+    component: lazy(
+      () => import('@/containers/Purchases/CreditNotes/VendorCreditsImport'),
+    ),
+    name: 'vendor-credits-edit',
+    breadcrumb: 'Vendor Credits Import',
+    pageTitle: 'Vendor Credits Import',
+    backLink: true,
+    sidebarExpand: false,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/vendor-credits/:id/edit`,
     component: lazy(

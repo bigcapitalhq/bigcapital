@@ -42,7 +42,8 @@ export class CreatePaymentReceive {
   public async createPaymentReceive(
     tenantId: number,
     paymentReceiveDTO: IPaymentReceiveCreateDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    trx?: Knex.Transaction
   ) {
     const { PaymentReceive, Contact } = this.tenancy.models(tenantId);
 
@@ -88,31 +89,35 @@ export class CreatePaymentReceive {
       tenantMeta.baseCurrency
     );
     // Creates a payment receive transaction under UOW envirment.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onPaymentReceiveCreating` event.
-      await this.eventPublisher.emitAsync(events.paymentReceive.onCreating, {
-        trx,
-        paymentReceiveDTO,
-        tenantId,
-      } as IPaymentReceiveCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onPaymentReceiveCreating` event.
+        await this.eventPublisher.emitAsync(events.paymentReceive.onCreating, {
+          trx,
+          paymentReceiveDTO,
+          tenantId,
+        } as IPaymentReceiveCreatingPayload);
 
-      // Inserts the payment receive transaction.
-      const paymentReceive = await PaymentReceive.query(
-        trx
-      ).insertGraphAndFetch({
-        ...paymentReceiveObj,
-      });
-      // Triggers `onPaymentReceiveCreated` event.
-      await this.eventPublisher.emitAsync(events.paymentReceive.onCreated, {
-        tenantId,
-        paymentReceive,
-        paymentReceiveId: paymentReceive.id,
-        authorizedUser,
-        trx,
-      } as IPaymentReceiveCreatedPayload);
+        // Inserts the payment receive transaction.
+        const paymentReceive = await PaymentReceive.query(
+          trx
+        ).insertGraphAndFetch({
+          ...paymentReceiveObj,
+        });
+        // Triggers `onPaymentReceiveCreated` event.
+        await this.eventPublisher.emitAsync(events.paymentReceive.onCreated, {
+          tenantId,
+          paymentReceive,
+          paymentReceiveId: paymentReceive.id,
+          authorizedUser,
+          trx,
+        } as IPaymentReceiveCreatedPayload);
 
-      return paymentReceive;
-    });
+        return paymentReceive;
+      },
+      trx
+    );
   }
 
   /**

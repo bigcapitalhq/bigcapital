@@ -33,7 +33,8 @@ export default class CreateVendorCredit extends BaseVendorCredit {
    */
   public newVendorCredit = async (
     tenantId: number,
-    vendorCreditCreateDTO: IVendorCreditCreateDTO
+    vendorCreditCreateDTO: IVendorCreditCreateDTO,
+    trx?: Knex.Transaction
   ) => {
     const { VendorCredit, Vendor } = this.tenancy.models(tenantId);
 
@@ -59,27 +60,31 @@ export default class CreateVendorCredit extends BaseVendorCredit {
       vendor.currencyCode
     );
     // Saves the vendor credit transactions under UOW envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onVendorCreditCreating` event.
-      await this.eventPublisher.emitAsync(events.vendorCredit.onCreating, {
-        tenantId,
-        vendorCreditCreateDTO,
-        trx,
-      } as IVendorCreditCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onVendorCreditCreating` event.
+        await this.eventPublisher.emitAsync(events.vendorCredit.onCreating, {
+          tenantId,
+          vendorCreditCreateDTO,
+          trx,
+        } as IVendorCreditCreatingPayload);
 
-      // Saves the vendor credit graph.
-      const vendorCredit = await VendorCredit.query(trx).upsertGraphAndFetch({
-        ...vendorCreditModel,
-      });
-      // Triggers `onVendorCreditCreated` event.
-      await this.eventPublisher.emitAsync(events.vendorCredit.onCreated, {
-        tenantId,
-        vendorCredit,
-        vendorCreditCreateDTO,
-        trx,
-      } as IVendorCreditCreatedPayload);
+        // Saves the vendor credit graph.
+        const vendorCredit = await VendorCredit.query(trx).upsertGraphAndFetch({
+          ...vendorCreditModel,
+        });
+        // Triggers `onVendorCreditCreated` event.
+        await this.eventPublisher.emitAsync(events.vendorCredit.onCreated, {
+          tenantId,
+          vendorCredit,
+          vendorCreditCreateDTO,
+          trx,
+        } as IVendorCreditCreatedPayload);
 
-      return vendorCredit;
-    });
+        return vendorCredit;
+      },
+      trx
+    );
   };
 }

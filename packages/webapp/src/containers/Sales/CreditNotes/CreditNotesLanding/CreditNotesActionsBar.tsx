@@ -69,6 +69,11 @@ function CreditNotesActionsBar({
     addSetting('creditNote', 'tableSize', size);
   };
 
+  // Handle import button click.
+  const handleImportBtnClick = () => {
+    history.push('/credit-notes/import');
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -111,6 +116,7 @@ function CreditNotesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

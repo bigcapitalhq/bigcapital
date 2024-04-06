@@ -46,3 +46,23 @@ export const DEFAULT_VIEWS = [
     columns: DEFAULT_VIEW_COLUMNS,
   },
 ];
+
+
+export const SaleReceiptsSampleData = [
+  {
+    "Receipt Date": "2023-01-01",
+    "Customer": "Randall Kohler",
+    "Deposit Account": "Petty Cash",
+    "Exchange Rate": "",
+    "Receipt Number": "REC-00001",
+    "Reference No.": "REF-0001",
+    "Statement": "Delectus unde aut soluta et accusamus placeat.",
+    "Receipt Message": "Vitae asperiores dicta.",
+    "Closed": "T",
+    "Item": "Schmitt Group",
+    "Quantity": 100,
+    "Rate": 200,
+    "Line Description": "Distinctio distinctio sit veritatis consequatur iste quod veritatis."
+  }
+  
+]
