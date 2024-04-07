@@ -14,6 +14,8 @@ import { VendorCreditsImportable } from '../Purchases/VendorCredits/VendorCredit
 import { PaymentReceivesImportable } from '../Sales/PaymentReceives/PaymentReceivesImportable';
 import { CreditNotesImportable } from '../CreditNotes/CreditNotesImportable';
 import { SaleReceiptsImportable } from '../Sales/Receipts/SaleReceiptsImportable';
+import { ImportableRegistry } from './ImportableRegistry';
+import { ItemsImportable } from '../Items/ItemsImportable';
 
 @Service()
 export class ImportableResources {

@@ -11,11 +11,13 @@
     "format": "lerna run format --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
     "lint": "lerna run lint --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
     "lint.server": "lerna run lint:eslint --scope \"@bigcapital/server\"",
-    "prepare": "husky install",
+    "prepare": "husky",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
     "test:e2e": "playwright test"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
@@ -23,9 +25,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.6.4",
-    "@commitlint/cli": "^17.8.1",
-    "@commitlint/config-conventional": "^17.8.1",
-    "@commitlint/config-lerna-scopes": "^17.8.1",
+    "@commitlint/cli": "^19.2.1",
+    "@commitlint/config-conventional": "^19.1.0",
+    "@commitlint/config-lerna-scopes": "^19.0.0",
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.43.0",
     "@types/bcryptjs": "^2.4.6",
