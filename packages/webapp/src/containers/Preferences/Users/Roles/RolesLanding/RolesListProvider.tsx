@@ -11,11 +11,7 @@ const RolesListContext = React.createContext();
  */
 function RolesListProvider({ ...props }) {
   // Fetch roles list.
-  const {
-    data: roles,
-    isFetching: isRolesFetching,
-    isLoading: isRolesLoading,
-  } = useRoles();
+  const { data: roles, isFetching: isRolesFetching, isLoading: isRolesLoading } = useRoles();
 
   // Provider state.
   const provider = {
@@ -24,12 +20,7 @@ function RolesListProvider({ ...props }) {
     isRolesLoading,
   };
   return (
-    <div
-      className={classNames(
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS,
-      )}
-    >
+    <div className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT, CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_USERS)}>
       <RolesListContext.Provider value={provider} {...props} />
     </div>
   );

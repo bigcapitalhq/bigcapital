@@ -8,7 +8,6 @@ import EstimateDetailTable from './EstimateDetailTable';
 import EstimateDetailTableFooter from './EstimateDetailTableFooter';
 import EstimateDetailFooter from './EstimateDetailFooter';
 
-
 export default function EstimateDetailTab() {
   return (
     <CommercialDocBox>

@@ -4,8 +4,7 @@ import { paginationLocationQuery } from '@/store/selectors';
 import { createDeepEqualSelector } from '@/utils';
 import { defaultTableQuery } from './warehouseTransfer.reducer';
 
-const warehouseTransfersTableStateSelector = (state) =>
-  state.warehouseTransfers.tableState;
+const warehouseTransfersTableStateSelector = (state) => state.warehouseTransfers.tableState;
 
 /**
  * Retrieve warehouse transfers table state.
@@ -26,9 +25,6 @@ export const getWarehouseTransfersTableStateFactory = () =>
  * Retrieve warehouse transfers table state.
  */
 export const isWarehouseTransferTableStateChangedFactory = () =>
-  createDeepEqualSelector(
-    warehouseTransfersTableStateSelector,
-    (tableState) => {
-      return !isEqual(tableState, defaultTableQuery);
-    },
-  );
+  createDeepEqualSelector(warehouseTransfersTableStateSelector, (tableState) => {
+    return !isEqual(tableState, defaultTableQuery);
+  });

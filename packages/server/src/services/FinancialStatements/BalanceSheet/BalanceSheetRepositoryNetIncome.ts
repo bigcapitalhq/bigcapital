@@ -1,7 +1,7 @@
-import * as R from 'ramda';
-import { IAccount, ILedger } from '@/interfaces';
-import { FinancialDatePeriods } from '../FinancialDatePeriods';
 import { ACCOUNT_PARENT_TYPE } from '@/data/AccountTypes';
+import { IAccount, ILedger } from '@/interfaces';
+import * as R from 'ramda';
+import { FinancialDatePeriods } from '../FinancialDatePeriods';
 
 export const BalanceSheetRepositoryNetIncome = (Base) =>
   class extends R.compose(FinancialDatePeriods)(Base) {
@@ -63,17 +63,11 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
         this.initNetIncomePreviousPeriod();
       }
       // Previous Year (PY) / Date Periods.
-      if (
-        this.query.isPreviousYearActive() &&
-        this.query.isDatePeriodsColumnsType()
-      ) {
+      if (this.query.isPreviousYearActive() && this.query.isDatePeriodsColumnsType()) {
         this.initNetIncomePeriodsPreviewYear();
       }
       // Previous Period (PP) / Date Periods.
-      if (
-        this.query.isPreviousPeriodActive() &&
-        this.query.isDatePeriodsColumnsType()
-      ) {
+      if (this.query.isPreviousPeriodActive() && this.query.isDatePeriodsColumnsType()) {
         this.initNetIncomePeriodsPreviousPeriod();
       }
     };
@@ -85,9 +79,7 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      * Initialize income accounts.
      */
     private initIncomeAccounts = () => {
-      const incomeAccounts = this.accountsByParentType.get(
-        ACCOUNT_PARENT_TYPE.INCOME
-      );
+      const incomeAccounts = this.accountsByParentType.get(ACCOUNT_PARENT_TYPE.INCOME);
       const incomeAccountsIds = incomeAccounts.map((a) => a.id);
 
       this.incomeAccounts = incomeAccounts;
@@ -98,9 +90,7 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      * Initialize expense accounts.
      */
     private initExpenseAccounts = () => {
-      const expensesAccounts = this.accountsByParentType.get(
-        ACCOUNT_PARENT_TYPE.EXPENSE
-      );
+      const expensesAccounts = this.accountsByParentType.get(ACCOUNT_PARENT_TYPE.EXPENSE);
       const expensesAccountsIds = expensesAccounts.map((a) => a.id);
 
       this.expenseAccounts = expensesAccounts;
@@ -112,18 +102,14 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      */
     private initIncomeTotalLedger = (): void => {
       // Inject to the repository.
-      this.incomeLedger = this.totalAccountsLedger.whereAccountsIds(
-        this.incomeAccountsIds
-      );
+      this.incomeLedger = this.totalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
     };
 
     /**
      * Initialize the expenses total ledger.
      */
     private initExpensesTotalLedger = (): void => {
-      this.expensesLedger = this.totalAccountsLedger.whereAccountsIds(
-        this.expenseAccountsIds
-      );
+      this.expensesLedger = this.totalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
     };
 
     // ----------------------------
@@ -133,21 +119,15 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      * Initialize the net income date periods.
      */
     public initNetIncomeDatePeriods = () => {
-      this.incomePeriodsAccountsLedger =
-        this.periodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+      this.incomePeriodsAccountsLedger = this.periodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
 
-      this.incomePeriodsOpeningAccountsLedger =
-        this.periodsOpeningAccountLedger.whereAccountsIds(
-          this.incomeAccountsIds
-        );
+      this.incomePeriodsOpeningAccountsLedger = this.periodsOpeningAccountLedger.whereAccountsIds(
+        this.incomeAccountsIds,
+      );
 
-      this.expensesPeriodsAccountsLedger =
-        this.periodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+      this.expensesPeriodsAccountsLedger = this.periodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
 
-      this.expensesOpeningAccountLedger =
-        this.periodsOpeningAccountLedger.whereAccountsIds(
-          this.expenseAccountsIds
-        );
+      this.expensesOpeningAccountLedger = this.periodsOpeningAccountLedger.whereAccountsIds(this.expenseAccountsIds);
     };
 
     // ----------------------------
@@ -157,32 +137,25 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      * Initialize the total net income PP.
      */
     public initNetIncomePreviousPeriod = () => {
-      this.incomePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(
-        this.incomeAccountsIds
-      );
-      this.expensePPAccountsLedger =
-        this.PPTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+      this.incomePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+      this.expensePPAccountsLedger = this.PPTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
     };
 
     /**
      * Initialize the net income periods of previous period.
      */
     public initNetIncomePeriodsPreviousPeriod = () => {
-      this.incomePPPeriodsAccountsLedger =
-        this.PPPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+      this.incomePPPeriodsAccountsLedger = this.PPPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
 
-      this.incomePPPeriodsOpeningAccountLedger =
-        this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
-          this.incomeAccountsIds
-        );
+      this.incomePPPeriodsOpeningAccountLedger = this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.incomeAccountsIds,
+      );
 
-      this.expensePPPeriodsAccountsLedger =
-        this.PPPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+      this.expensePPPeriodsAccountsLedger = this.PPPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
 
-      this.expensePPPeriodsOpeningAccountLedger =
-        this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
-          this.expenseAccountsIds
-        );
+      this.expensePPPeriodsOpeningAccountLedger = this.PPPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.expenseAccountsIds,
+      );
     };
 
     // ----------------------------
@@ -192,31 +165,25 @@ export const BalanceSheetRepositoryNetIncome = (Base) =>
      * Initialize the net income PY total.
      */
     public initNetIncomePreviousYear = () => {
-      this.incomePYTotalAccountsLedger =
-        this.PYTotalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+      this.incomePYTotalAccountsLedger = this.PYTotalAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
 
-      this.expensePYTotalAccountsLedger =
-        this.PYTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+      this.expensePYTotalAccountsLedger = this.PYTotalAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
     };
 
     /**
      * Initialize the net income PY periods.
      */
     public initNetIncomePeriodsPreviewYear = () => {
-      this.incomePYPeriodsAccountsLedger =
-        this.PYPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
+      this.incomePYPeriodsAccountsLedger = this.PYPeriodsAccountsLedger.whereAccountsIds(this.incomeAccountsIds);
 
-      this.incomePYPeriodsOpeningAccountLedger =
-        this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
-          this.incomeAccountsIds
-        );
+      this.incomePYPeriodsOpeningAccountLedger = this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.incomeAccountsIds,
+      );
 
-      this.expensePYPeriodsAccountsLedger =
-        this.PYPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
+      this.expensePYPeriodsAccountsLedger = this.PYPeriodsAccountsLedger.whereAccountsIds(this.expenseAccountsIds);
 
-      this.expensePYPeriodsOpeningAccountLedger =
-        this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
-          this.expenseAccountsIds
-        );
+      this.expensePYPeriodsOpeningAccountLedger = this.PYPeriodsOpeningAccountLedger.whereAccountsIds(
+        this.expenseAccountsIds,
+      );
     };
   };

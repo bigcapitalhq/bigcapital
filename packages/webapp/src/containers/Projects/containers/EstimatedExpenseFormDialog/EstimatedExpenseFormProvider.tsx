@@ -25,7 +25,6 @@ function EstimatedExpenseFormProvider({
   );
 }
 
-const useEstimatedExpenseFormContext = () =>
-  React.useContext(EstimatedExpenseFormContext);
+const useEstimatedExpenseFormContext = () => React.useContext(EstimatedExpenseFormContext);
 
 export { EstimatedExpenseFormProvider, useEstimatedExpenseFormContext };

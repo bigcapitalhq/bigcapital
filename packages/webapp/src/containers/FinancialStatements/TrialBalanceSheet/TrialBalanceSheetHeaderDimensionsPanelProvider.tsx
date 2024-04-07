@@ -35,10 +35,6 @@ function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
   );
 }
 
-const useTrialBalanceSheetPanelContext = () =>
-  React.useContext(TrialBLSheetHeaderDimensionsContext);
+const useTrialBalanceSheetPanelContext = () => React.useContext(TrialBLSheetHeaderDimensionsContext);
 
-export {
-  TrialBLHeaderDimensionsPanelProvider,
-  useTrialBalanceSheetPanelContext,
-};
+export { TrialBLHeaderDimensionsPanelProvider, useTrialBalanceSheetPanelContext };

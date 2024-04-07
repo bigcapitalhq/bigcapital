@@ -1,7 +1,7 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
-import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
+import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**

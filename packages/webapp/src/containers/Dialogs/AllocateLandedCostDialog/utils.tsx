@@ -49,14 +49,8 @@ export function getTransactionEntryById(transaction, transactionEntryId) {
  */
 export function allocateCostToEntries(total, allocateType, entries) {
   return R.compose(
-    R.when(
-      R.always(allocateType === 'value'),
-      R.curry(allocateCostByValue)(total),
-    ),
-    R.when(
-      R.always(allocateType === 'quantity'),
-      R.curry(allocateCostByQuantity)(total),
-    ),
+    R.when(R.always(allocateType === 'value'), R.curry(allocateCostByValue)(total)),
+    R.when(R.always(allocateType === 'quantity'), R.curry(allocateCostByQuantity)(total)),
   )(entries);
 }
 
@@ -111,10 +105,7 @@ export function getCostTransactionById(id, transactions) {
  * Detarmines the transactions selet field when should update.
  */
 export function transactionsSelectShouldUpdate(newProps, oldProps) {
-  return (
-    newProps.transactions !== oldProps.transactions ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.transactions !== oldProps.transactions || defaultFastFieldShouldUpdate(newProps, oldProps);
 }
 
 /**

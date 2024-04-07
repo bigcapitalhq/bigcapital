@@ -1,8 +1,6 @@
 import { IAccountTransaction, ILedgerEntry } from '@/interfaces';
 
-export const transformLedgerEntryToTransaction = (
-  entry: ILedgerEntry
-): IAccountTransaction => {
+export const transformLedgerEntryToTransaction = (entry: ILedgerEntry): IAccountTransaction => {
   return {
     date: entry.date,
 

@@ -25,10 +25,7 @@ import { Icon } from '../Icon';
 export type SectionElevation = typeof Elevation.ZERO | typeof Elevation.ONE;
 
 export interface SectionCollapseProps
-  extends Pick<
-    CollapseProps,
-    'className' | 'isOpen' | 'keepChildrenMounted' | 'transitionDuration'
-  > {
+  extends Pick<CollapseProps, 'className' | 'isOpen' | 'keepChildrenMounted' | 'transitionDuration'> {
   /**
    * Whether the component is initially open or closed.
    *
@@ -119,72 +116,66 @@ export interface SectionProps extends Props, Omit<HTMLDivProps, 'title'> {
  *
  * @see https://blueprintjs.com/docs/#core/components/section
  */
-export const Section: React.FC<SectionProps> = React.forwardRef(
-  (props, ref) => {
-    const {
-      children,
-      className,
-      collapseProps,
-      collapsible,
-      compact,
-      elevation,
-      icon,
-      rightElement,
-      subtitle,
-      title,
-      titleRenderer = H6,
-      ...htmlProps
-    } = props;
-    // Determine whether to use controlled or uncontrolled state.
-    const isControlled = collapseProps?.isOpen != null;
+export const Section: React.FC<SectionProps> = React.forwardRef((props, ref) => {
+  const {
+    children,
+    className,
+    collapseProps,
+    collapsible,
+    compact,
+    elevation,
+    icon,
+    rightElement,
+    subtitle,
+    title,
+    titleRenderer = H6,
+    ...htmlProps
+  } = props;
+  // Determine whether to use controlled or uncontrolled state.
+  const isControlled = collapseProps?.isOpen != null;
 
-    // The initial useState value is negated in order to conform to the `isCollapsed` expectation.
-    const [isCollapsedUncontrolled, setIsCollapsed] = React.useState<boolean>(
-      !(collapseProps?.defaultIsOpen ?? true),
-    );
+  // The initial useState value is negated in order to conform to the `isCollapsed` expectation.
+  const [isCollapsedUncontrolled, setIsCollapsed] = React.useState<boolean>(!(collapseProps?.defaultIsOpen ?? true));
 
-    const isCollapsed = isControlled
-      ? !collapseProps?.isOpen
-      : isCollapsedUncontrolled;
+  const isCollapsed = isControlled ? !collapseProps?.isOpen : isCollapsedUncontrolled;
 
-    const toggleIsCollapsed = React.useCallback(() => {
-      if (isControlled) {
-        collapseProps?.onToggle?.();
-      } else {
-        setIsCollapsed(!isCollapsed);
-      }
-    }, [collapseProps, isCollapsed, isControlled]);
+  const toggleIsCollapsed = React.useCallback(() => {
+    if (isControlled) {
+      collapseProps?.onToggle?.();
+    } else {
+      setIsCollapsed(!isCollapsed);
+    }
+  }, [collapseProps, isCollapsed, isControlled]);
 
-    const isHeaderRightContainerVisible = rightElement != null || collapsible;
+  const isHeaderRightContainerVisible = rightElement != null || collapsible;
 
-    const sectionId = Utils.uniqueId('section');
-    const sectionTitleId = title ? Utils.uniqueId('section-title') : undefined;
+  const sectionId = Utils.uniqueId('section');
+  const sectionTitleId = title ? Utils.uniqueId('section-title') : undefined;
 
-    return (
-      <Card
-        className={classNames(className, CLASSES.SECTION, {
-          [CLASSES.COMPACT]: compact,
-          [CLASSES.SECTION_COLLAPSED]:
-            (collapsible && isCollapsed) || Utils.isReactNodeEmpty(children),
-        })}
-        elevation={elevation}
-        aria-labelledby={sectionTitleId}
-        {...htmlProps}
-        id={sectionId}
-      >
-        {title && (
-          <div
-            role={collapsible ? 'button' : undefined}
-            aria-pressed={collapsible ? isCollapsed : undefined}
-            aria-expanded={collapsible ? isCollapsed : undefined}
-            aria-controls={collapsible ? sectionId : undefined}
-            className={classNames(CLASSES.SECTION_HEADER, {
-              [CLASSES.INTERACTIVE]: collapsible,
-            })}
-            onClick={collapsible ? toggleIsCollapsed : undefined}
-          >
-            <div className={CLASSES.SECTION_HEADER_LEFT}>
-              {/* {icon && (
+  return (
+    <Card
+      className={classNames(className, CLASSES.SECTION, {
+        [CLASSES.COMPACT]: compact,
+        [CLASSES.SECTION_COLLAPSED]: (collapsible && isCollapsed) || Utils.isReactNodeEmpty(children),
+      })}
+      elevation={elevation}
+      aria-labelledby={sectionTitleId}
+      {...htmlProps}
+      id={sectionId}
+    >
+      {title && (
+        <div
+          role={collapsible ? 'button' : undefined}
+          aria-pressed={collapsible ? isCollapsed : undefined}
+          aria-expanded={collapsible ? isCollapsed : undefined}
+          aria-controls={collapsible ? sectionId : undefined}
+          className={classNames(CLASSES.SECTION_HEADER, {
+            [CLASSES.INTERACTIVE]: collapsible,
+          })}
+          onClick={collapsible ? toggleIsCollapsed : undefined}
+        >
+          <div className={CLASSES.SECTION_HEADER_LEFT}>
+            {/* {icon && (
                 <Icon
                   icon={icon}
                   aria-hidden={true}
@@ -192,55 +183,42 @@ export const Section: React.FC<SectionProps> = React.forwardRef(
                   className={CLASSES.TEXT_MUTED}
                 />
               )} */}
-              <div>
-                {React.createElement(
-                  titleRenderer,
-                  {
-                    className: CLASSES.SECTION_HEADER_TITLE,
-                    id: sectionTitleId,
-                  },
-                  title,
-                )}
-                {subtitle && (
-                  <div
-                    className={classNames(
-                      CLASSES.TEXT_MUTED,
-                      CLASSES.SECTION_HEADER_SUB_TITLE,
-                    )}
-                  >
-                    {subtitle}
-                  </div>
-                )}
-              </div>
+            <div>
+              {React.createElement(
+                titleRenderer,
+                {
+                  className: CLASSES.SECTION_HEADER_TITLE,
+                  id: sectionTitleId,
+                },
+                title,
+              )}
+              {subtitle && (
+                <div className={classNames(CLASSES.TEXT_MUTED, CLASSES.SECTION_HEADER_SUB_TITLE)}>{subtitle}</div>
+              )}
             </div>
-            {isHeaderRightContainerVisible && (
-              <div className={CLASSES.SECTION_HEADER_RIGHT}>
-                {rightElement}
-                {collapsible &&
-                  (isCollapsed ? (
-                    <Icon
-                      icon={'chevron-down'}
-                      className={CLASSES.TEXT_MUTED}
-                    />
-                  ) : (
-                    <Icon icon={'chevron-up'} className={CLASSES.TEXT_MUTED} />
-                  ))}
-              </div>
-            )}
           </div>
-        )}
-        {collapsible ? (
-          // @ts-ignore
-          <Collapse isOpen={!isCollapsed}>
-            {children}
-          </Collapse>
-        ) : (
-          children
-        )}
-      </Card>
-    );
-  },
-);
+          {isHeaderRightContainerVisible && (
+            <div className={CLASSES.SECTION_HEADER_RIGHT}>
+              {rightElement}
+              {collapsible &&
+                (isCollapsed ? (
+                  <Icon icon={'chevron-down'} className={CLASSES.TEXT_MUTED} />
+                ) : (
+                  <Icon icon={'chevron-up'} className={CLASSES.TEXT_MUTED} />
+                ))}
+            </div>
+          )}
+        </div>
+      )}
+      {collapsible ? (
+        // @ts-ignore
+        <Collapse isOpen={!isCollapsed}>{children}</Collapse>
+      ) : (
+        children
+      )}
+    </Card>
+  );
+});
 Section.defaultProps = {
   compact: false,
   elevation: Elevation.ZERO,

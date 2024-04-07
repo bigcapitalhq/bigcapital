@@ -8,12 +8,7 @@ export default class ItemTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'typeFormatted',
-      'sellPriceFormatted',
-      'costPriceFormatted',
-      'itemWarehouses',
-    ];
+    return ['typeFormatted', 'sellPriceFormatted', 'costPriceFormatted', 'itemWarehouses'];
   };
 
   /**
@@ -53,10 +48,6 @@ export default class ItemTransformer extends Transformer {
    * @returns
    */
   public itemWarehouses = (item) => {
-    return this.item(
-      item.itemWarehouses,
-      new GetItemWarehouseTransformer(),
-      {}
-    );
+    return this.item(item.itemWarehouses, new GetItemWarehouseTransformer(), {});
   };
 }

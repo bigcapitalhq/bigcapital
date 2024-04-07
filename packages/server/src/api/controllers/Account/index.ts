@@ -1,10 +1,10 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
 import BaseController from '@/api/controllers/BaseController';
-import AuthenticatedAccount from '@/services/AuthenticatedAccount';
-import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import JWTAuth from '@/api/middleware/jwtAuth';
+import AuthenticatedAccount from '@/services/AuthenticatedAccount';
+import { NextFunction, Request, Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class AccountController extends BaseController {
@@ -34,11 +34,7 @@ export default class AccountController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private getAccount = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getAccount = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
 
     try {

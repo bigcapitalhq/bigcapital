@@ -25,12 +25,7 @@ export function RoleFormFloatingActions() {
 
   return (
     <RoleFormFloatingActionsRoot>
-      <Button
-        intent={Intent.PRIMARY}
-        loading={isSubmitting}
-        type="submit"
-        style={{ minWidth: '90px' }}
-      >
+      <Button intent={Intent.PRIMARY} loading={isSubmitting} type="submit" style={{ minWidth: '90px' }}>
         <T id={'save'} />
       </Button>
       <Button onClick={handleCloseClick} disabled={isSubmitting}>

@@ -16,19 +16,8 @@ export class TransactionsByCustomersPdf {
    * @param {ITransactionsByCustomersFilter} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<Buffer> {
-    const table = await this.transactionsByCustomersTable.table(
-      tenantId,
-      query
-    );
-    return this.tableSheetPdf.convertToPdf(
-      tenantId,
-      table.table,
-      table.meta.sheetName,
-      table.meta.formattedDateRange
-    );
+  public async pdf(tenantId: number, query: ITransactionsByCustomersFilter): Promise<Buffer> {
+    const table = await this.transactionsByCustomersTable.table(tenantId, query);
+    return this.tableSheetPdf.convertToPdf(tenantId, table.table, table.meta.sheetName, table.meta.formattedDateRange);
   }
 }

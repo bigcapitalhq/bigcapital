@@ -1,12 +1,10 @@
+import { IBalanceSheetQuery, IFinancialDatePeriodsUnit } from '@/interfaces';
 import { merge } from 'lodash';
 import * as R from 'ramda';
-import { IBalanceSheetQuery, IFinancialDatePeriodsUnit } from '@/interfaces';
 import { FinancialDateRanges } from '../FinancialDateRanges';
 import { DISPLAY_COLUMNS_BY } from './constants';
 
-export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
-  class {}
-) {
+export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(class {}) {
   /**
    * Balance sheet query.
    * @param {IBalanceSheetQuery}
@@ -51,10 +49,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
 
     // Previous Period (PP) Dates for Total column.
     if (this.isTotalColumnType()) {
-      const { fromDate, toDate } = this.getPPTotalDateRange(
-        this.query.fromDate,
-        this.query.toDate
-      );
+      const { fromDate, toDate } = this.getPPTotalDateRange(this.query.fromDate, this.query.toDate);
       this.PPToDate = toDate;
       this.PPFromDate = fromDate;
       // Previous Period (PP) Dates for Date period columns type.
@@ -62,7 +57,7 @@ export class BalanceSheetQuery extends R.compose(FinancialDateRanges)(
       const { fromDate, toDate } = this.getPPDatePeriodDateRange(
         this.query.fromDate,
         this.query.toDate,
-        this.query.displayColumnsBy as IFinancialDatePeriodsUnit
+        this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
       );
       this.PPToDate = toDate;
       this.PPFromDate = fromDate;

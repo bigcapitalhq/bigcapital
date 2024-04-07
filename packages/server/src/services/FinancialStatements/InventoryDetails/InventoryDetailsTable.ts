@@ -1,15 +1,15 @@
-import * as R from 'ramda';
 import {
+  IInventoryDetailsClosing,
   IInventoryDetailsItem,
   IInventoryDetailsItemTransaction,
-  IInventoryDetailsClosing,
-  ITableColumn,
-  ITableRow,
   IInventoryDetailsNode,
   IInventoryDetailsOpening,
+  ITableColumn,
+  ITableRow,
 } from '@/interfaces';
-import { mapValuesDeep } from 'utils/deepdash';
+import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
+import { mapValuesDeep } from 'utils/deepdash';
 
 enum IROW_TYPE {
   ITEM = 'ITEM',
@@ -51,9 +51,7 @@ export class InventoryDetailsTable {
    * @param {IInventoryDetailsItemTransaction} transaction
    * @returns {ITableRow}
    */
-  private itemTransactionNodeMapper = (
-    transaction: IInventoryDetailsItemTransaction
-  ) => {
+  private itemTransactionNodeMapper = (transaction: IInventoryDetailsItemTransaction) => {
     const columns = [
       { key: 'date', accessor: 'date.formattedDate' },
       { key: 'transaction_type', accessor: 'transactionType' },
@@ -82,9 +80,7 @@ export class InventoryDetailsTable {
    * @param {IInventoryDetailsOpening} transaction
    * @returns {ITableRow}
    */
-  private openingNodeMapper = (
-    transaction: IInventoryDetailsOpening
-  ): ITableRow => {
+  private openingNodeMapper = (transaction: IInventoryDetailsOpening): ITableRow => {
     const columns = [
       { key: 'date', accessor: 'date.formattedDate' },
       { key: 'closing', value: this.i18n.__('Opening balance') },
@@ -104,9 +100,7 @@ export class InventoryDetailsTable {
    * @param {IInventoryDetailsClosing} transaction
    * @returns {ITableRow}
    */
-  private closingNodeMapper = (
-    transaction: IInventoryDetailsClosing
-  ): ITableRow => {
+  private closingNodeMapper = (transaction: IInventoryDetailsClosing): ITableRow => {
     const columns = [
       { key: 'date', accessor: 'date.formattedDate' },
       { key: 'closing', value: this.i18n.__('Closing balance') },
@@ -129,10 +123,7 @@ export class InventoryDetailsTable {
    * @param {IInventoryDetailsNode} node
    * @returns {boolean}
    */
-  private isNodeTypeEquals = (
-    type: string,
-    node: IInventoryDetailsNode
-  ): boolean => {
+  private isNodeTypeEquals = (type: string, node: IInventoryDetailsNode): boolean => {
     return node.nodeType === type;
   };
 
@@ -143,19 +134,10 @@ export class InventoryDetailsTable {
    */
   private itemMapper = (node: IInventoryDetailsNode): ITableRow => {
     return R.compose(
-      R.when(
-        R.curry(this.isNodeTypeEquals)('OPENING_ENTRY'),
-        this.openingNodeMapper
-      ),
-      R.when(
-        R.curry(this.isNodeTypeEquals)('CLOSING_ENTRY'),
-        this.closingNodeMapper
-      ),
+      R.when(R.curry(this.isNodeTypeEquals)('OPENING_ENTRY'), this.openingNodeMapper),
+      R.when(R.curry(this.isNodeTypeEquals)('CLOSING_ENTRY'), this.closingNodeMapper),
       R.when(R.curry(this.isNodeTypeEquals)('item'), this.itemNodeMapper),
-      R.when(
-        R.curry(this.isNodeTypeEquals)('transaction'),
-        this.itemTransactionNodeMapper
-      )
+      R.when(R.curry(this.isNodeTypeEquals)('transaction'), this.itemTransactionNodeMapper),
     )(node);
   };
 

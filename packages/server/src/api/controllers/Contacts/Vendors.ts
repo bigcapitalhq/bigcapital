@@ -1,18 +1,12 @@
-import { Request, Response, Router, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
-import { body, query, ValidationChain, check } from 'express-validator';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 import ContactsController from '@/api/controllers/Contacts/Contacts';
-import { ServiceError } from '@/exceptions';
-import {
-  IVendorNewDTO,
-  IVendorEditDTO,
-  IVendorsFilter,
-  AbilitySubject,
-  VendorAction,
-} from '@/interfaces';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, IVendorEditDTO, IVendorNewDTO, IVendorsFilter, VendorAction } from '@/interfaces';
 import { VendorsApplication } from '@/services/Contacts/Vendors/VendorsApplication';
 
 @Service()
@@ -29,14 +23,10 @@ export default class VendorsController extends ContactsController {
     router.post(
       '/',
       CheckPolicies(VendorAction.Create, AbilitySubject.Vendor),
-      [
-        ...this.contactDTOSchema,
-        ...this.contactNewDTOSchema,
-        ...this.vendorDTOSchema,
-      ],
+      [...this.contactDTOSchema, ...this.contactNewDTOSchema, ...this.vendorDTOSchema],
       this.validationResult,
       asyncMiddleware(this.newVendor.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/opening_balance',
@@ -45,30 +35,20 @@ export default class VendorsController extends ContactsController {
         ...this.specificContactSchema,
         check('opening_balance').exists().isNumeric().toFloat(),
         check('opening_balance_at').optional().isISO8601(),
-        check('opening_balance_exchange_rate')
-          .default(1)
-          .isFloat({ gt: 0 })
-          .toFloat(),
-        check('opening_balance_branch_id')
-          .optional({ nullable: true })
-          .isNumeric()
-          .toInt(),
+        check('opening_balance_exchange_rate').default(1).isFloat({ gt: 0 }).toFloat(),
+        check('opening_balance_branch_id').optional({ nullable: true }).isNumeric().toInt(),
       ],
       this.validationResult,
       asyncMiddleware(this.editOpeningBalanceVendor.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
       CheckPolicies(VendorAction.Edit, AbilitySubject.Vendor),
-      [
-        ...this.contactDTOSchema,
-        ...this.contactEditDTOSchema,
-        ...this.vendorDTOSchema,
-      ],
+      [...this.contactDTOSchema, ...this.contactEditDTOSchema, ...this.vendorDTOSchema],
       this.validationResult,
       asyncMiddleware(this.editVendor.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.delete(
       '/:id',
@@ -76,7 +56,7 @@ export default class VendorsController extends ContactsController {
       [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.deleteVendor.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/:id',
@@ -84,14 +64,14 @@ export default class VendorsController extends ContactsController {
       [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.getVendor.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
       CheckPolicies(VendorAction.View, AbilitySubject.Vendor),
       [...this.vendorsListSchema],
       this.validationResult,
-      asyncMiddleware(this.getVendorsList.bind(this))
+      asyncMiddleware(this.getVendorsList.bind(this)),
     );
     return router;
   }
@@ -102,12 +82,7 @@ export default class VendorsController extends ContactsController {
    */
   get vendorDTOSchema(): ValidationChain[] {
     return [
-      check('currency_code')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ min: 3, max: 3 }),
+      check('currency_code').optional({ nullable: true }).isString().trim().escape().isLength({ min: 3, max: 3 }),
     ];
   }
 
@@ -142,11 +117,7 @@ export default class VendorsController extends ContactsController {
     const { tenantId, user } = req;
 
     try {
-      const vendor = await this.vendorsApplication.createVendor(
-        tenantId,
-        contactDTO,
-        user
-      );
+      const vendor = await this.vendorsApplication.createVendor(tenantId, contactDTO, user);
 
       return res.status(200).send({
         id: vendor.id,
@@ -169,12 +140,7 @@ export default class VendorsController extends ContactsController {
     const { id: contactId } = req.params;
 
     try {
-      await this.vendorsApplication.editVendor(
-        tenantId,
-        contactId,
-        contactDTO,
-        user
-      );
+      await this.vendorsApplication.editVendor(tenantId, contactId, contactDTO, user);
 
       return res.status(200).send({
         id: contactId,
@@ -191,25 +157,16 @@ export default class VendorsController extends ContactsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async editOpeningBalanceVendor(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  async editOpeningBalanceVendor(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: vendorId } = req.params;
     const editOpeningBalanceDTO = this.matchedBodyData(req);
 
     try {
-      await this.vendorsApplication.editOpeningBalance(
-        tenantId,
-        vendorId,
-        editOpeningBalanceDTO
-      );
+      await this.vendorsApplication.editOpeningBalance(tenantId, vendorId, editOpeningBalanceDTO);
       return res.status(200).send({
         id: vendorId,
-        message:
-          'The opening balance of the given vendor has been changed successfully.',
+        message: 'The opening balance of the given vendor has been changed successfully.',
       });
     } catch (error) {
       next(error);
@@ -249,11 +206,7 @@ export default class VendorsController extends ContactsController {
     const { id: vendorId } = req.params;
 
     try {
-      const vendor = await this.vendorsApplication.getVendor(
-        tenantId,
-        vendorId,
-        user
-      );
+      const vendor = await this.vendorsApplication.getVendor(tenantId, vendorId, user);
       return res.status(200).send(this.transfromToResponse({ vendor }));
     } catch (error) {
       next(error);
@@ -279,8 +232,7 @@ export default class VendorsController extends ContactsController {
     };
 
     try {
-      const { vendors, pagination, filterMeta } =
-        await this.vendorsApplication.getVendors(tenantId, vendorsFilter);
+      const { vendors, pagination, filterMeta } = await this.vendorsApplication.getVendors(tenantId, vendorsFilter);
 
       return res.status(200).send({
         vendors: this.transfromToResponse(vendors),
@@ -299,12 +251,7 @@ export default class VendorsController extends ContactsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private handlerServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {

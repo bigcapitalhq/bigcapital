@@ -1,23 +1,14 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useVendorCrditNoteTotals } from './utils';
 
 export function VendorCreditNoteFormFooterRight() {
   const { formattedSubtotal, formattedTotal } = useVendorCrditNoteTotals();
 
   return (
-    <VendorCreditNoteTotalLines
-      labelColWidth={'180px'}
-      amountColWidth={'180px'}
-    >
+    <VendorCreditNoteTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
         title={<T id={'vendor_credit_form.label.subtotal'} />}
         value={formattedSubtotal}

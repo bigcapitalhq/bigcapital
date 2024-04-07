@@ -1,11 +1,8 @@
-import {
-  IInventoryDetailsQuery,
-  IInvetoryItemDetailsTable,
-} from '@/interfaces';
+import { IInventoryDetailsQuery, IInvetoryItemDetailsTable } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { InventoryDetailsExportInjectable } from './InventoryDetailsExportInjectable';
-import { InventoryDetailsTableInjectable } from './InventoryDetailsTableInjectable';
 import { InventoryDetailsService } from './InventoryDetailsService';
+import { InventoryDetailsTableInjectable } from './InventoryDetailsTableInjectable';
 import { InventoryDetailsTablePdf } from './InventoryDetailsTablePdf';
 
 @Service()
@@ -38,10 +35,7 @@ export class InventortyDetailsApplication {
    * @param {IInventoryDetailsQuery} query
    * @returns
    */
-  public table(
-    tenantId: number,
-    query: IInventoryDetailsQuery
-  ): Promise<IInvetoryItemDetailsTable> {
+  public table(tenantId: number, query: IInventoryDetailsQuery): Promise<IInvetoryItemDetailsTable> {
     return this.inventoryDetailsTable.table(tenantId, query);
   }
 
@@ -51,10 +45,7 @@ export class InventortyDetailsApplication {
    * @param {IInventoryDetailsQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: IInventoryDetailsQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: IInventoryDetailsQuery): Promise<Buffer> {
     return this.inventoryDetailsExport.xlsx(tenantId, query);
   }
 

@@ -2,13 +2,7 @@
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
 
-import {
-  AccountsMultiSelect,
-  Row,
-  Col,
-  FormattedMessage as T,
-  FFormGroup,
-} from '@/components';
+import { AccountsMultiSelect, Row, Col, FormattedMessage as T, FFormGroup } from '@/components';
 
 import RadiosAccountingBasis from '../RadiosAccountingBasis';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
@@ -41,19 +35,12 @@ function GLHeaderGeneralPaneContent() {
 
       <Row>
         <Col xs={4}>
-          <FinancialStatementsFilter
-            items={filterAccountsOptions}
-            initialSelectedItem={'with-transactions'}
-          />
+          <FinancialStatementsFilter items={filterAccountsOptions} initialSelectedItem={'with-transactions'} />
         </Col>
       </Row>
       <Row>
         <Col xs={4}>
-          <FFormGroup
-            label={<T id={'specific_accounts'} />}
-            name={'accountsIds'}
-            className={Classes.FILL}
-          >
+          <FFormGroup label={<T id={'specific_accounts'} />} name={'accountsIds'} className={Classes.FILL}>
             <AccountsMultiSelect name="accountsIds" items={accounts} />
           </FFormGroup>
         </Col>

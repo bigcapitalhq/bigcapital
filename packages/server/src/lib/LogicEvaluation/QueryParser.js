@@ -1,7 +1,6 @@
 import { OPERATION } from './Parser';
 
 export default class QueryParser {
-
   constructor(tree, queries) {
     this.tree = tree;
     this.queries = queries;
@@ -19,7 +18,9 @@ export default class QueryParser {
   parseNode(node) {
     if (typeof node === 'string') {
       const nodeQuery = this.getQuery(node);
-      return (query) => { nodeQuery(query); };
+      return (query) => {
+        nodeQuery(query);
+      };
     }
     if (OPERATION[node.operation] === undefined) {
       throw new Error(`unknow expression ${node.operation}`);
@@ -31,16 +32,26 @@ export default class QueryParser {
       case '&&':
       case 'AND':
       default:
-        return (nodeQuery) => nodeQuery.where((query) => {
-          query.where((q) => { leftQuery(q); });
-          query.andWhere((q) => { rightQuery(q); });
-        });
+        return (nodeQuery) =>
+          nodeQuery.where((query) => {
+            query.where((q) => {
+              leftQuery(q);
+            });
+            query.andWhere((q) => {
+              rightQuery(q);
+            });
+          });
       case '||':
       case 'OR':
-        return (nodeQuery) => nodeQuery.where((query) => {
-          query.where((q) => { leftQuery(q); });
-          query.orWhere((q) => { rightQuery(q); });
-        });
+        return (nodeQuery) =>
+          nodeQuery.where((query) => {
+            query.where((q) => {
+              leftQuery(q);
+            });
+            query.orWhere((q) => {
+              rightQuery(q);
+            });
+          });
     }
   }
 
@@ -48,7 +59,7 @@ export default class QueryParser {
     if (typeof node !== 'string' && node !== null) {
       return this.parseNode(node);
     }
-    const value = parseFloat(node);
+    const value = Number.parseFloat(node);
 
     if (!isNaN(value)) {
       if (typeof this.queries[node] === 'undefined') {

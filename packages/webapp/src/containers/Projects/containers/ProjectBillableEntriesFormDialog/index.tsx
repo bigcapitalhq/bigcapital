@@ -6,19 +6,13 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectBillableEntriesFormDialogContent = React.lazy(
-  () => import('./ProjectBillableEntriesFormDialogContent'),
-);
+const ProjectBillableEntriesFormDialogContent = React.lazy(() => import('./ProjectBillableEntriesFormDialogContent'));
 
 /**
  * Project billable entries form dialog.
  * @returns
  */
-function ProjectBillableEntriesFormDialog({
-  dialogName,
-  payload: { projectId },
-  isOpen,
-}) {
+function ProjectBillableEntriesFormDialog({ dialogName, payload: { projectId }, isOpen }) {
   return (
     <ProjectBillableEntriesFormDialogRoot
       name={dialogName}
@@ -29,10 +23,7 @@ function ProjectBillableEntriesFormDialog({
       style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <ProjectBillableEntriesFormDialogContent
-          dialogName={dialogName}
-          projectId={projectId}
-        />
+        <ProjectBillableEntriesFormDialogContent dialogName={dialogName} projectId={projectId} />
       </DialogSuspense>
     </ProjectBillableEntriesFormDialogRoot>
   );

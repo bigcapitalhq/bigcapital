@@ -1,6 +1,4 @@
-import { Service, Inject } from 'typedi';
-import { omit } from 'lodash';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ServiceError } from '@/exceptions';
 import {
   ICancelTransactionsLockingDTO,
   ITransactionLockingPartiallyDTO,
@@ -11,11 +9,13 @@ import {
   TransactionsLockingGroup,
   TransactionsLockingType,
 } from '@/interfaces';
-import TransactionsLockingRepository from './TransactionsLockingRepository';
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
+import TransactionsLockingRepository from './TransactionsLockingRepository';
+import { ERRORS } from './constants';
 
 const Modules = ['all', 'sales', 'purchases', 'financial'];
 
@@ -40,42 +40,30 @@ export default class TransactionsLockingService {
   public commandTransactionsLocking = async (
     tenantId: number,
     module: TransactionsLockingGroup = TransactionsLockingGroup.All,
-    transactionLockingDTO: Partial<ITransactionsLockingAllDTO>
+    transactionLockingDTO: Partial<ITransactionsLockingAllDTO>,
   ): Promise<ITransactionMeta> => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(module);
 
     // Saves all transactions locking settings.
-    await this.transactionsLockingRepo.saveTransactionsLocking(
-      tenantId,
-      module,
-      {
-        active: true,
-        lockToDate: transactionLockingDTO.lockToDate,
-        lockReason: transactionLockingDTO.reason,
-      }
-    );
+    await this.transactionsLockingRepo.saveTransactionsLocking(tenantId, module, {
+      active: true,
+      lockToDate: transactionLockingDTO.lockToDate,
+      lockReason: transactionLockingDTO.reason,
+    });
     // Flag transactions locking type.
     await this.transactionsLockingRepo.flagTransactionsLockingType(
       tenantId,
-      module === TransactionsLockingGroup.All
-        ? TransactionsLockingType.All
-        : TransactionsLockingType.Partial
+      module === TransactionsLockingGroup.All ? TransactionsLockingType.All : TransactionsLockingType.Partial,
     );
     // Triggers `onTransactionLockingPartialUnlocked` event.
-    await this.eventPublisher.emitAsync(
-      events.transactionsLocking.partialUnlocked,
-      {
-        tenantId,
-        module,
-        transactionLockingDTO,
-      } as ITransactionsLockingPartialUnlocked
-    );
-    // Retrieve the transaction locking meta of the given
-    return this.transactionsLockingRepo.getTransactionsLocking(
+    await this.eventPublisher.emitAsync(events.transactionsLocking.partialUnlocked, {
       tenantId,
-      module
-    );
+      module,
+      transactionLockingDTO,
+    } as ITransactionsLockingPartialUnlocked);
+    // Retrieve the transaction locking meta of the given
+    return this.transactionsLockingRepo.getTransactionsLocking(tenantId, module);
   };
 
   /**
@@ -88,40 +76,27 @@ export default class TransactionsLockingService {
   public cancelTransactionLocking = async (
     tenantId: number,
     module: TransactionsLockingGroup = TransactionsLockingGroup.All,
-    cancelLockingDTO: ICancelTransactionsLockingDTO
+    cancelLockingDTO: ICancelTransactionsLockingDTO,
   ): Promise<ITransactionMeta> => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(module);
 
     // Saves transactions locking.
-    await this.transactionsLockingRepo.saveTransactionsLocking(
+    await this.transactionsLockingRepo.saveTransactionsLocking(tenantId, module, {
+      active: false,
+      unlockFromDate: '',
+      unlockToDate: '',
+      unlockReason: cancelLockingDTO.reason,
+    });
+    // Reset flag transactions locking type to partial.
+    await this.transactionsLockingRepo.flagTransactionsLockingType(tenantId, TransactionsLockingType.Partial);
+    // Triggers `onTransactionLockingPartialUnlocked` event.
+    await this.eventPublisher.emitAsync(events.transactionsLocking.partialUnlocked, {
       tenantId,
       module,
-      {
-        active: false,
-        unlockFromDate: '',
-        unlockToDate: '',
-        unlockReason: cancelLockingDTO.reason,
-      }
-    );
-    // Reset flag transactions locking type to partial.
-    await this.transactionsLockingRepo.flagTransactionsLockingType(
-      tenantId,
-      TransactionsLockingType.Partial
-    );
-    // Triggers `onTransactionLockingPartialUnlocked` event.
-    await this.eventPublisher.emitAsync(
-      events.transactionsLocking.partialUnlocked,
-      {
-        tenantId,
-        module,
-        cancelLockingDTO,
-      } as ITransactionsLockingCanceled
-    );
-    return this.transactionsLockingRepo.getTransactionsLocking(
-      tenantId,
-      module
-    );
+      cancelLockingDTO,
+    } as ITransactionsLockingCanceled);
+    return this.transactionsLockingRepo.getTransactionsLocking(tenantId, module);
   };
 
   /**
@@ -134,32 +109,24 @@ export default class TransactionsLockingService {
   public unlockTransactionsLockingPartially = async (
     tenantId: number,
     moduleGroup: TransactionsLockingGroup = TransactionsLockingGroup.All,
-    partialTransactionLockingDTO: ITransactionLockingPartiallyDTO
+    partialTransactionLockingDTO: ITransactionLockingPartiallyDTO,
   ): Promise<ITransactionMeta> => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(moduleGroup);
 
     // Retrieve the current transactions locking type.
-    const lockingType =
-      this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
+    const lockingType = this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
 
     if (moduleGroup !== TransactionsLockingGroup.All) {
       this.validateLockingTypeNotAll(lockingType);
     }
     // Saves transactions locking settings.
-    await this.transactionsLockingRepo.saveTransactionsLocking(
-      tenantId,
-      moduleGroup,
-      {
-        ...omit(partialTransactionLockingDTO, ['reason']),
-        partialUnlockReason: partialTransactionLockingDTO.reason,
-      }
-    );
+    await this.transactionsLockingRepo.saveTransactionsLocking(tenantId, moduleGroup, {
+      ...omit(partialTransactionLockingDTO, ['reason']),
+      partialUnlockReason: partialTransactionLockingDTO.reason,
+    });
     // Retrieve transaction locking meta of the given module.
-    return this.transactionsLockingRepo.getTransactionsLocking(
-      tenantId,
-      moduleGroup
-    );
+    return this.transactionsLockingRepo.getTransactionsLocking(tenantId, moduleGroup);
   };
 
   /**
@@ -169,17 +136,17 @@ export default class TransactionsLockingService {
    */
   public cancelPartialTransactionsUnlock = async (
     tenantId: number,
-    module: TransactionsLockingGroup = TransactionsLockingGroup.All
+    module: TransactionsLockingGroup = TransactionsLockingGroup.All,
   ) => {
     // Validate the transaction locking module.
     this.validateTransactionsLockingModule(module);
 
     // Saves transactions locking settings.
-    await this.transactionsLockingRepo.saveTransactionsLocking(
-      tenantId,
-      module,
-      { unlockFromDate: '', unlockToDate: '', partialUnlockReason: '' }
-    );
+    await this.transactionsLockingRepo.saveTransactionsLocking(tenantId, module, {
+      unlockFromDate: '',
+      unlockToDate: '',
+      partialUnlockReason: '',
+    });
   };
 
   /**

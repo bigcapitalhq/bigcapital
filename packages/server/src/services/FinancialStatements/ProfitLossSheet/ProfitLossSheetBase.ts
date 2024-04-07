@@ -18,7 +18,7 @@ export const ProfitLossSheetBase = (Base) =>
     });
 
     /**
-     * 
+     *
      */
     protected findNodeById = R.curry((id, nodes) => {
       return this.findNodeDeep(nodes, (node) => node.id === id);
@@ -26,5 +26,5 @@ export const ProfitLossSheetBase = (Base) =>
 
     isNodeTotal = (node) => {
       return this.isNodeTypeIn(TOTAL_NODE_TYPES, node);
-    }
+    };
   };

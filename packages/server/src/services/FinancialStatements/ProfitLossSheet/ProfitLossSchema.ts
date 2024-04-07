@@ -1,10 +1,6 @@
-import * as R from 'ramda';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
-import {
-  ProfitLossAggregateNodeId,
-  ProfitLossNodeType,
-  IProfitLossSchemaNode,
-} from '@/interfaces';
+import { IProfitLossSchemaNode, ProfitLossAggregateNodeId, ProfitLossNodeType } from '@/interfaces';
+import * as R from 'ramda';
 import { FinancialSchema } from '../FinancialSchema';
 
 export const ProfitLossShema = (Base) =>

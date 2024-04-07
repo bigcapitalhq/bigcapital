@@ -42,16 +42,12 @@ function ItemsCategoriesProvider({ tableState, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      isLoading={isResourceLoading}
-      name={'items-categories-list'}
-    >
+    <DashboardInsider isLoading={isResourceLoading} name={'items-categories-list'}>
       <ItemsCategoriesContext.Provider value={state} {...props} />
     </DashboardInsider>
   );
 }
 
-const useItemsCategoriesContext = () =>
-  React.useContext(ItemsCategoriesContext);
+const useItemsCategoriesContext = () => React.useContext(ItemsCategoriesContext);
 
 export { ItemsCategoriesProvider, useItemsCategoriesContext };

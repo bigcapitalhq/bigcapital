@@ -19,7 +19,7 @@ function ManualJournalsViewTabs({
   setManualJournalsTableState,
 
   // #withManualJournals
-  journalsTableState
+  journalsTableState,
 }) {
   // Manual journals context.
   const { journalsViews } = useManualJournalsContext();
@@ -36,7 +36,7 @@ function ManualJournalsViewTabs({
       customViewId: viewId || null,
     });
   };
-  
+
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>

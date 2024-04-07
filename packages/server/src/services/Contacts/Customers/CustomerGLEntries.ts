@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { AccountNormal, ICustomer, ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
+import { Service } from 'typedi';
 
 @Service()
 export class CustomerGLEntries {
@@ -33,10 +33,7 @@ export class CustomerGLEntries {
    * @param   {ICustomer} customer
    * @returns {ILedgerEntry}
    */
-  private getCustomerOpeningGLCreditEntry = (
-    ARAccountId: number,
-    customer: ICustomer
-  ): ILedgerEntry => {
+  private getCustomerOpeningGLCreditEntry = (ARAccountId: number, customer: ICustomer): ILedgerEntry => {
     const commonEntry = this.getCustomerOpeningGLCommonEntry(customer);
 
     return {
@@ -55,10 +52,7 @@ export class CustomerGLEntries {
    * @param   {ICustomer} customer
    * @returns {ILedgerEntry}
    */
-  private getCustomerOpeningGLDebitEntry = (
-    incomeAccountId: number,
-    customer: ICustomer
-  ): ILedgerEntry => {
+  private getCustomerOpeningGLDebitEntry = (incomeAccountId: number, customer: ICustomer): ILedgerEntry => {
     const commonEntry = this.getCustomerOpeningGLCommonEntry(customer);
 
     return {
@@ -79,19 +73,9 @@ export class CustomerGLEntries {
    * @param   {ICustomer} customer
    * @returns {ILedgerEntry[]}
    */
-  public getCustomerOpeningGLEntries = (
-    ARAccountId: number,
-    incomeAccountId: number,
-    customer: ICustomer
-  ) => {
-    const debitEntry = this.getCustomerOpeningGLDebitEntry(
-      incomeAccountId,
-      customer
-    );
-    const creditEntry = this.getCustomerOpeningGLCreditEntry(
-      ARAccountId,
-      customer
-    );
+  public getCustomerOpeningGLEntries = (ARAccountId: number, incomeAccountId: number, customer: ICustomer) => {
+    const debitEntry = this.getCustomerOpeningGLDebitEntry(incomeAccountId, customer);
+    const creditEntry = this.getCustomerOpeningGLCreditEntry(ARAccountId, customer);
     return [debitEntry, creditEntry];
   };
 
@@ -102,16 +86,8 @@ export class CustomerGLEntries {
    * @param   {ICustomer} customer
    * @returns {ILedger}
    */
-  public getCustomerOpeningLedger = (
-    ARAccountId: number,
-    incomeAccountId: number,
-    customer: ICustomer
-  ) => {
-    const entries = this.getCustomerOpeningGLEntries(
-      ARAccountId,
-      incomeAccountId,
-      customer
-    );
+  public getCustomerOpeningLedger = (ARAccountId: number, incomeAccountId: number, customer: ICustomer) => {
+    const entries = this.getCustomerOpeningGLEntries(ARAccountId, incomeAccountId, customer);
     return new Ledger(entries);
   };
 }

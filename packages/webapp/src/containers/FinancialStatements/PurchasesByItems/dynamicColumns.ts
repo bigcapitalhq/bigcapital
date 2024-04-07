@@ -7,12 +7,7 @@ import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, headerText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    headerText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, headerText);
 };
 
 /**

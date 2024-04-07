@@ -34,10 +34,7 @@ function PaymentReceiveFormBigTotal() {
   } = useFormikContext();
 
   // Calculates the total payment amount from due amount.
-  const paymentFullAmount = useMemo(
-    () => sumBy(entries, 'payment_amount'),
-    [entries],
-  );
+  const paymentFullAmount = useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>

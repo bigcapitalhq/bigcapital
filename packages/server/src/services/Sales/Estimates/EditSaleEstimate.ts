@@ -1,17 +1,12 @@
-import { Inject, Service } from 'typedi';
-import {
-  ISaleEstimate,
-  ISaleEstimateDTO,
-  ISaleEstimateEditedPayload,
-  ISaleEstimateEditingPayload,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { SaleEstimateValidators } from './SaleEstimateValidators';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ISaleEstimate, ISaleEstimateDTO, ISaleEstimateEditedPayload, ISaleEstimateEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
+import { SaleEstimateValidators } from './SaleEstimateValidators';
 
 @Service()
 export class EditSaleEstimate {
@@ -44,7 +39,7 @@ export class EditSaleEstimate {
   public async editEstimate(
     tenantId: number,
     estimateId: number,
-    estimateDTO: ISaleEstimateDTO
+    estimateDTO: ISaleEstimateDTO,
   ): Promise<ISaleEstimate> {
     const { SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
@@ -55,43 +50,25 @@ export class EditSaleEstimate {
     this.validators.validateEstimateExistance(oldSaleEstimate);
 
     // Retrieve the given customer or throw not found service error.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(estimateDTO.customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(estimateDTO.customerId).throwIfNotFound();
 
     // Transform DTO object ot model object.
-    const estimateObj = await this.transformerDTO.transformDTOToModel(
-      tenantId,
-      estimateDTO,
-      oldSaleEstimate,
-      customer
-    );
+    const estimateObj = await this.transformerDTO.transformDTOToModel(tenantId, estimateDTO, oldSaleEstimate, customer);
     // Validate estimate number uniquiness on the storage.
     if (estimateDTO.estimateNumber) {
-      await this.validators.validateEstimateNumberExistance(
-        tenantId,
-        estimateDTO.estimateNumber,
-        estimateId
-      );
+      await this.validators.validateEstimateNumberExistance(tenantId, estimateDTO.estimateNumber, estimateId);
     }
     // Validate sale estimate entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       tenantId,
       estimateId,
       'SaleEstimate',
-      estimateDTO.entries
+      estimateDTO.entries,
     );
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      estimateDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
     // Validate non-sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      estimateDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
     // Edits estimate transaction with associated transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx) => {

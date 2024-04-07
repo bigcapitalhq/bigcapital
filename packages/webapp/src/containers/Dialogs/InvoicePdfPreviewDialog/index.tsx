@@ -10,9 +10,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const PdfPreviewDialogContent = lazy(() =>
-  import('./InvoicePdfPreviewDialogContent'),
-);
+const PdfPreviewDialogContent = lazy(() => import('./InvoicePdfPreviewDialogContent'));
 
 /**
  * Invoice PDF preview dialog.
@@ -29,10 +27,7 @@ function InvoicePdfPreviewDialog({ dialogName, payload, isOpen }) {
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <PdfPreviewDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <PdfPreviewDialogContent dialogName={dialogName} subscriptionForm={payload} />
       </DialogSuspense>
     </Dialog>
   );

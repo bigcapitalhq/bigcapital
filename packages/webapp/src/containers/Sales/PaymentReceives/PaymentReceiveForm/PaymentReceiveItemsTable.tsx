@@ -14,11 +14,7 @@ import { compose, updateTableCell } from '@/utils';
 /**
  * Payment receive items table.
  */
-export default function PaymentReceiveItemsTable({
-  entries,
-  onUpdateData,
-  currencyCode,
-}) {
+export default function PaymentReceiveItemsTable({ entries, onUpdateData, currencyCode }) {
   // Payment receive form context.
   const { isDueInvoicesFetching } = usePaymentReceiveInnerContext();
 
@@ -41,9 +37,7 @@ export default function PaymentReceiveItemsTable({
   // Handle update data.
   const handleUpdateData = useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
-        entries,
-      );
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(entries);
 
       onUpdateData(newRows);
     },

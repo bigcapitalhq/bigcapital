@@ -19,21 +19,15 @@ function BillableEntriesList({ billableEntries }) {
         <ButtonLink>{billableEntries.billable_type} </ButtonLink>
       </BillableEntry>
 
-      <BillableEntry label={'Transaction No.'}>
-        {billableEntries.billable_transaction_no}
-      </BillableEntry>
+      <BillableEntry label={'Transaction No.'}>{billableEntries.billable_transaction_no}</BillableEntry>
       <BillableEntry label={'Date'}>2022-02-02</BillableEntry>
-      <BillableEntry label={'Amount'}>
-        {billableEntries.billable_amount_formatted}
-      </BillableEntry>
+      <BillableEntry label={'Amount'}>{billableEntries.billable_amount_formatted}</BillableEntry>
     </BillableEntriesContent>
   );
 }
 
 export function BillableEntriesItems({ billableEntries }) {
-  return billableEntries.map((entries) => (
-    <BillableEntriesList billableEntries={entries} />
-  ));
+  return billableEntries.map((entries) => <BillableEntriesList billableEntries={entries} />);
 }
 
 const BillableEntriesContent = styled.div`

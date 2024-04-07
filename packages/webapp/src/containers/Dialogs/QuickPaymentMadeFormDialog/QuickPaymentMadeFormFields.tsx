@@ -4,14 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { isEqual } from 'lodash';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, InputGroup, TextArea, Position, ControlGroup } from '@blueprintjs/core';
 import { useAutofocus } from '@/hooks';
 import classNames from 'classnames';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
@@ -32,12 +25,7 @@ import {
   BranchSelect,
   BranchSelectButton,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 
@@ -66,10 +54,7 @@ function QuickPaymentMadeFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FormGroup label={<T id={'branch'} />} className={classNames('form-group--select-list', Classes.FILL)}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
@@ -93,12 +78,7 @@ function QuickPaymentMadeFormFields({
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'vendor'} />}
               >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  minimal={true}
-                  disabled={true}
-                  {...field}
-                />
+                <InputGroup intent={inputIntent({ error, touched })} minimal={true} disabled={true} {...field} />
               </FormGroup>
             )}
           </FastField>
@@ -113,11 +93,7 @@ function QuickPaymentMadeFormFields({
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="payment_number" />}
               >
-                <InputGroup
-                  intent={inputIntent({ error, touched })}
-                  minimal={true}
-                  {...field}
-                />
+                <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
               </FormGroup>
             )}
           </FastField>
@@ -125,11 +101,7 @@ function QuickPaymentMadeFormFields({
       </Row>
       {/*------------ Amount Received -----------*/}
       <FastField name={'payment_amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'amount_received'} />}
             labelInfo={<FieldRequiredHint />}
@@ -198,28 +170,18 @@ function QuickPaymentMadeFormFields({
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'payment_account'} />}
-                className={classNames(
-                  'form-group--payment_account_id',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
+                className={classNames('form-group--payment_account_id', 'form-group--select-list', CLASSES.FILL)}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'payment_account_id'} />}
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('payment_account_id', id)
-                  }
+                  onAccountSelected={({ id }) => form.setFieldValue('payment_account_id', id)}
                   inputProps={{
                     placeholder: intl.get('select_account'),
                   }}
-                  filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-                  ]}
+                  filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
                 />
               </FormGroup>
             )}
@@ -235,21 +197,14 @@ function QuickPaymentMadeFormFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
       {/* --------- Statement --------- */}
       <FastField name={'statement'}>
         {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'statement'} />}
-            className={'form-group--statement'}
-          >
+          <FormGroup label={<T id={'statement'} />} className={'form-group--statement'}>
             <TextArea growVertically={true} {...field} />
           </FormGroup>
         )}

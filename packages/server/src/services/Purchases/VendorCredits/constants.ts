@@ -5,7 +5,7 @@ export const ERRORS = {
   VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND: 'VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND',
   BILLS_HAS_NO_REMAINING_AMOUNT: 'BILLS_HAS_NO_REMAINING_AMOUNT',
   VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS: 'VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS',
-  VENDOR_CREDIT_HAS_APPLIED_BILLS: 'VENDOR_CREDIT_HAS_APPLIED_BILLS'
+  VENDOR_CREDIT_HAS_APPLIED_BILLS: 'VENDOR_CREDIT_HAS_APPLIED_BILLS',
 };
 
 export const DEFAULT_VIEW_COLUMNS = [];
@@ -14,9 +14,7 @@ export const DEFAULT_VIEWS = [
     name: 'vendor_credit.view.draft',
     slug: 'draft',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {

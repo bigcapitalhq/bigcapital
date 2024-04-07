@@ -6,12 +6,7 @@ import classNames from 'classnames';
 /**
  * Postbox.
  */
-export function Postbox({
-  defaultOpen = true,
-  toggable = true,
-  title,
-  children,
-}) {
+export function Postbox({ defaultOpen = true, toggable = true, title, children }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   // Handle the title click.

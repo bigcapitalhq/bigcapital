@@ -39,11 +39,7 @@ export default function QuickNewDropdown() {
       className={'form-group--quick-new-downDrop'}
       filterable={false}
     >
-      <Button
-        text={<T id={'quick_new'} />}
-        icon={<Icon icon={'plus-24'} iconSize={20} />}
-        minimal={true}
-      />
+      <Button text={<T id={'quick_new'} />} icon={<Icon icon={'plus-24'} iconSize={20} />} minimal={true} />
     </Select>
   );
 }

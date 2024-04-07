@@ -1,10 +1,10 @@
-import async from 'async';
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { ISaleInvoice, ISaleInvoiceDTO, ProjectLinkRefType } from '@/interfaces';
+import async from 'async';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ProjectBillableTask } from './ProjectBillableTasks';
-import { filterEntriesByRefType } from './_utils';
 import { IncreaseInvoicedTaskQueuePayload } from './_types';
+import { filterEntriesByRefType } from './_utils';
 
 @Service()
 export class ProjectBillableTasksInvoiced {
@@ -20,17 +20,11 @@ export class ProjectBillableTasksInvoiced {
   public increaseInvoicedTasks = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceDTO | ISaleInvoice,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Initiate a new queue for accounts balance mutation.
-    const saveAccountsBalanceQueue = async.queue(
-      this.increaseInvoicedTaskQueue,
-      10
-    );
-    const filteredEntries = filterEntriesByRefType(
-      saleInvoiceDTO.entries,
-      ProjectLinkRefType.Task
-    );
+    const saveAccountsBalanceQueue = async.queue(this.increaseInvoicedTaskQueue, 10);
+    const filteredEntries = filterEntriesByRefType(saleInvoiceDTO.entries, ProjectLinkRefType.Task);
     filteredEntries.forEach((entry) => {
       saveAccountsBalanceQueue.push({
         tenantId,
@@ -54,17 +48,11 @@ export class ProjectBillableTasksInvoiced {
   public decreaseInvoicedTasks = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceDTO | ISaleInvoice,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Initiate a new queue for accounts balance mutation.
-    const saveAccountsBalanceQueue = async.queue(
-      this.decreaseInvoicedTaskQueue,
-      10
-    );
-    const filteredEntries = filterEntriesByRefType(
-      saleInvoiceDTO.entries,
-      ProjectLinkRefType.Task
-    );
+    const saveAccountsBalanceQueue = async.queue(this.decreaseInvoicedTaskQueue, 10);
+    const filteredEntries = filterEntriesByRefType(saleInvoiceDTO.entries, ProjectLinkRefType.Task);
     filteredEntries.forEach((entry) => {
       saveAccountsBalanceQueue.push({
         tenantId,
@@ -88,29 +76,14 @@ export class ProjectBillableTasksInvoiced {
     projectRefInvoicedAmount,
     trx,
   }: IncreaseInvoicedTaskQueuePayload) => {
-    await this.projectBillableTasks.increaseInvoicedTask(
-      tenantId,
-      projectRefId,
-      projectRefInvoicedAmount,
-      trx
-    );
+    await this.projectBillableTasks.increaseInvoicedTask(tenantId, projectRefId, projectRefInvoicedAmount, trx);
   };
 
   /**
    * Queue jobs decreases the invoiced amount of the given task.
    * @param {IncreaseInvoicedTaskQueuePayload} - payload
    */
-  private decreaseInvoicedTaskQueue = async ({
-    tenantId,
-    projectRefId,
-    projectRefInvoicedAmount,
-    trx,
-  }) => {
-    await this.projectBillableTasks.decreaseInvoicedTask(
-      tenantId,
-      projectRefId,
-      projectRefInvoicedAmount,
-      trx
-    );
+  private decreaseInvoicedTaskQueue = async ({ tenantId, projectRefId, projectRefInvoicedAmount, trx }) => {
+    await this.projectBillableTasks.decreaseInvoicedTask(tenantId, projectRefId, projectRefInvoicedAmount, trx);
   };
 }

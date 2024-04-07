@@ -40,12 +40,10 @@ function AccountTransactionsDataTable({
   const columns = useAccountTransactionsColumns();
 
   // Retrieve list context.
-  const { cashflowTransactions, isCashFlowTransactionsLoading } =
-    useAccountTransactionsAllContext();
+  const { cashflowTransactions, isCashFlowTransactionsLoading } = useAccountTransactionsAllContext();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
 
   // handle delete transaction
   const handleDeleteTransaction = ({ reference_id }) => {

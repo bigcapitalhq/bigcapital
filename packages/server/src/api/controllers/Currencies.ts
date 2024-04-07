@@ -1,10 +1,10 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseController from './BaseController';
-import CurrenciesService from '@/services/Currencies/CurrenciesService';
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
+import CurrenciesService from '@/services/Currencies/CurrenciesService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from './BaseController';
 
 @Service()
 export default class CurrenciesController extends BaseController {
@@ -17,32 +17,27 @@ export default class CurrenciesController extends BaseController {
   router() {
     const router = Router();
 
-    router.get(
-      '/',
-      [...this.listSchema],
-      this.validationResult,
-      asyncMiddleware(this.all.bind(this))
-    );
+    router.get('/', [...this.listSchema], this.validationResult, asyncMiddleware(this.all.bind(this)));
     router.post(
       '/',
       [...this.currencyDTOSchemaValidation],
       this.validationResult,
       asyncMiddleware(this.newCurrency.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.post(
       '/:id',
       [...this.currencyIdParamSchema, ...this.currencyEditDTOSchemaValidation],
       this.validationResult,
       asyncMiddleware(this.editCurrency.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.delete(
       '/:currency_code',
       [...this.currencyParamSchema],
       this.validationResult,
       asyncMiddleware(this.deleteCurrency.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     return router;
   }
@@ -56,10 +51,7 @@ export default class CurrenciesController extends BaseController {
   }
 
   get currencyEditDTOSchemaValidation(): ValidationChain[] {
-    return [
-      check('currency_name').exists().trim(),
-      check('currency_sign').exists().trim(),
-    ];
+    return [check('currency_name').exists().trim(), check('currency_sign').exists().trim()];
   }
 
   get currencyIdParamSchema(): ValidationChain[] {
@@ -71,10 +63,7 @@ export default class CurrenciesController extends BaseController {
   }
 
   get listSchema(): ValidationChain[] {
-    return [
-      query('page').optional().isNumeric().toInt(),
-      query('page_size').optional().isNumeric().toInt(),
-    ];
+    return [query('page').optional().isNumeric().toInt(), query('page_size').optional().isNumeric().toInt()];
   }
 
   /**
@@ -152,11 +141,7 @@ export default class CurrenciesController extends BaseController {
     const editCurrencyDTO = this.matchedBodyData(req);
 
     try {
-      const currency = await this.currenciesService.editCurrency(
-        tenantId,
-        currencyId,
-        editCurrencyDTO
-      );
+      const currency = await this.currenciesService.editCurrency(tenantId, currencyId, editCurrencyDTO);
       return res.status(200).send({
         currency_code: currency.currencyCode,
         message: 'The currency has been edited successfully.',
@@ -173,12 +158,7 @@ export default class CurrenciesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handlerServiceError(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  handlerServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'currency_not_found') {
         return res.boom.badRequest(null, {
@@ -187,11 +167,13 @@ export default class CurrenciesController extends BaseController {
       }
       if (error.errorType === 'currency_code_exists') {
         return res.boom.badRequest(null, {
-          errors: [{
-            type: 'CURRENCY_CODE_EXISTS',
-            message: 'The given currency code is already exists.',
-            code: 200,
-           }],
+          errors: [
+            {
+              type: 'CURRENCY_CODE_EXISTS',
+              message: 'The given currency code is already exists.',
+              code: 200,
+            },
+          ],
         });
       }
       if (error.errorType === 'CANNOT_DELETE_BASE_CURRENCY') {

@@ -1,16 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
+import { ServiceError } from '@/exceptions';
+import { IWarehouseTransfer, IWarehouseTransferEditedPayload, IWarehouseTransferInitiatePayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import {
-  IWarehouseTransfer,
-  IWarehouseTransferEditedPayload,
-  IWarehouseTransferInitiatePayload,
-} from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CommandWarehouseTransfer } from './CommandWarehouseTransfer';
-import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 
 @Service()
@@ -28,9 +24,7 @@ export class InitiateWarehouseTransfer extends CommandWarehouseTransfer {
    * Validate the given warehouse transfer not already initiated.
    * @param {IWarehouseTransfer} warehouseTransfer
    */
-  private validateWarehouseTransferNotAlreadyInitiated = (
-    warehouseTransfer: IWarehouseTransfer
-  ) => {
+  private validateWarehouseTransferNotAlreadyInitiated = (warehouseTransfer: IWarehouseTransfer) => {
     if (warehouseTransfer.transferInitiatedAt) {
       throw new ServiceError(ERRORS.WAREHOUSE_TRANSFER_ALREADY_INITIATED);
     }
@@ -44,7 +38,7 @@ export class InitiateWarehouseTransfer extends CommandWarehouseTransfer {
    */
   public initiateWarehouseTransfer = async (
     tenantId: number,
-    warehouseTransferId: number
+    warehouseTransferId: number,
   ): Promise<IWarehouseTransfer> => {
     const { WarehouseTransfer } = this.tenancy.models(tenantId);
 
@@ -66,26 +60,21 @@ export class InitiateWarehouseTransfer extends CommandWarehouseTransfer {
       } as IWarehouseTransferInitiatePayload);
 
       // Updates warehouse transfer graph on the storage.
-      const warehouseTransferUpdated = await WarehouseTransfer.query(trx)
-        .findById(warehouseTransferId)
-        .patch({
-          transferInitiatedAt: new Date(),
-        });
+      const warehouseTransferUpdated = await WarehouseTransfer.query(trx).findById(warehouseTransferId).patch({
+        transferInitiatedAt: new Date(),
+      });
       // Fetches the warehouse transfer with entries.
       const warehouseTransfer = await WarehouseTransfer.query(trx)
         .findById(warehouseTransferId)
         .withGraphFetched('entries');
 
       // Triggers `onWarehouseTransferEdit` event
-      await this.eventPublisher.emitAsync(
-        events.warehouseTransfer.onInitiated,
-        {
-          tenantId,
-          warehouseTransfer,
-          oldWarehouseTransfer,
-          trx,
-        } as IWarehouseTransferEditedPayload
-      );
+      await this.eventPublisher.emitAsync(events.warehouseTransfer.onInitiated, {
+        tenantId,
+        warehouseTransfer,
+        oldWarehouseTransfer,
+        trx,
+      } as IWarehouseTransferEditedPayload);
       return warehouseTransfer;
     });
   };

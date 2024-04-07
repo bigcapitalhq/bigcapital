@@ -28,15 +28,11 @@ export function ProjectSuggestField({
     [initialProjectId, projects],
   );
 
-  const [selectedProject, setSelectedProject] = React.useState(
-    initialProject || null,
-  );
+  const [selectedProject, setSelectedProject] = React.useState(initialProject || null);
 
   React.useEffect(() => {
     if (typeof selectedProjectId !== 'undefined') {
-      const project = selectedProjectId
-        ? projects.find((a) => a.id === selectedProjectId)
-        : null;
+      const project = selectedProjectId ? projects.find((a) => a.id === selectedProjectId) : null;
       setSelectedProject(project);
     }
   }, [selectedProjectId, projects, setSelectedProject]);
@@ -73,9 +69,7 @@ export function ProjectSuggestField({
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
-      return (
-        `${project.name}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-      );
+      return `${project.name}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
     }
   };
 

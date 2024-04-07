@@ -24,8 +24,7 @@ function EstimateDeliveredAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deliverEstimateMutate, isLoading } =
-    useDeliverEstimate();
+  const { mutateAsync: deliverEstimateMutate, isLoading } = useDeliverEstimate();
 
   // Handle cancel delivered estimate alert.
   const handleAlertCancel = () => {
@@ -64,7 +63,4 @@ function EstimateDeliveredAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(EstimateDeliveredAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(EstimateDeliveredAlert);

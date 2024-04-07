@@ -1,10 +1,8 @@
 import { Router } from 'express';
 import { Container, Service } from 'typedi';
-import SmsNotificationSettings from './SmsNotificationsSettings';
-import Settings from './Settings';
 import EasySmsIntegrationController from './EasySmsIntegration';
-import { AbilitySubject, PreferencesAction } from '@/interfaces';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
+import Settings from './Settings';
+import SmsNotificationSettings from './SmsNotificationsSettings';
 
 @Service()
 export default class SettingsController {

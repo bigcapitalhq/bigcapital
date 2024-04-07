@@ -38,9 +38,7 @@ export const TemplateContent = ({
     </div>
     <div className="template__content__info">
       <span> {defaultLabels.amount} </span>
-      <p className={'info-paragraph-amount'}>
-        {<Money amount={amount} currency={currencyCode} />}
-      </p>
+      <p className={'info-paragraph-amount'}>{<Money amount={amount} currency={currencyCode} />}</p>
     </div>
     <div className="template__content__info">
       <span> {defaultLabels.billedFrom} </span>
@@ -49,9 +47,7 @@ export const TemplateContent = ({
     <div className="template__content__info">
       <If condition={dueDate}>
         <span> {defaultLabels.dueDate} </span>
-        <p className={'info-paragraph'}>
-          {moment(dueDate).format('YYYY MMM DD')}
-        </p>
+        <p className={'info-paragraph'}>{moment(dueDate).format('YYYY MMM DD')}</p>
       </If>
     </div>
   </div>

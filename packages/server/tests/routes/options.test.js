@@ -1,21 +1,11 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
 import Option from 'models/Option';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: `/options`', () => {
   describe('POST: `/options/`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/options')
-        .send();
+      const res = await request().post('/api/options').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -40,9 +30,7 @@ describe('routes: `/options`', () => {
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'OPTIONS.KEY.NOT.DEFINED',
         code: 200,
-        keys: [
-          { key: 'key', group: 'group' },
-        ],
+        keys: [{ key: 'key', group: 'group' }],
       });
     });
 
@@ -52,17 +40,17 @@ describe('routes: `/options`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          options: [{
-            key: 'name',
-            group: 'organization',
-            value: 'hello world', 
-          }],
+          options: [
+            {
+              key: 'name',
+              group: 'organization',
+              value: 'hello world',
+            },
+          ],
         });
       expect(res.status).equals(200);
 
-      const storedOptions = await Option.tenant().query()
-        .where('group', 'organization')
-        .where('key', 'name');
+      const storedOptions = await Option.tenant().query().where('group', 'organization').where('key', 'name');
 
       expect(storedOptions.metadata.length).equals(1);
     });

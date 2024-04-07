@@ -1,6 +1,6 @@
+import { IExpense } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
-import { IExpense } from '@/interfaces';
 import { ExpenseCategoryTransformer } from './ExpenseCategoryTransformer';
 
 export class ExpenseTransfromer extends Transformer {

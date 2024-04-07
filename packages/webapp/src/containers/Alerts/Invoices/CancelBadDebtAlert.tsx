@@ -62,7 +62,4 @@ function CancelBadDebtAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CancelBadDebtAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CancelBadDebtAlert);

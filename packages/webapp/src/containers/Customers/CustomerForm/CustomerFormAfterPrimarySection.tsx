@@ -25,29 +25,17 @@ export default function CustomerFormAfterPrimarySection({}) {
       </FastField>
 
       {/*------------ Phone number -----------*/}
-      <FormGroup
-        className={'form-group--phone-number'}
-        label={<T id={'phone_number'} />}
-        inline={true}
-      >
+      <FormGroup className={'form-group--phone-number'} label={<T id={'phone_number'} />} inline={true}>
         <ControlGroup>
           <FastField name={'personal_phone'}>
             {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                placeholder={intl.get('personal')}
-                {...field}
-              />
+              <InputGroup intent={inputIntent({ error, touched })} placeholder={intl.get('personal')} {...field} />
             )}
           </FastField>
 
           <FastField name={'work_phone'}>
             {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                placeholder={intl.get('work')}
-                {...field}
-              />
+              <InputGroup intent={inputIntent({ error, touched })} placeholder={intl.get('work')} {...field} />
             )}
           </FastField>
         </ControlGroup>

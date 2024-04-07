@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { IAgingSummaryMeta, IAgingSummaryQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { AgingSummaryMeta } from './AgingSummaryMeta';
 
 @Service()
@@ -12,10 +12,7 @@ export class APAgingSummaryMeta {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  public async meta(
-    tenantId: number,
-    query: IAgingSummaryQuery
-  ): Promise<IAgingSummaryMeta> {
+  public async meta(tenantId: number, query: IAgingSummaryQuery): Promise<IAgingSummaryMeta> {
     const commonMeta = await this.agingSummaryMeta.meta(tenantId, query);
 
     return {

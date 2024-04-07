@@ -1,9 +1,9 @@
-import { Inject } from 'typedi';
-import { JournalSheetService } from './JournalSheetService';
-import { JournalSheetTableInjectable } from './JournalSheetTableInjectable';
 import { IJournalReportQuery, IJournalTable } from '@/interfaces';
+import { Inject } from 'typedi';
 import { JournalSheetExportInjectable } from './JournalSheetExport';
 import { JournalSheetPdfInjectable } from './JournalSheetPdfInjectable';
+import { JournalSheetService } from './JournalSheetService';
+import { JournalSheetTableInjectable } from './JournalSheetTableInjectable';
 
 export class JournalSheetApplication {
   @Inject()
@@ -34,10 +34,7 @@ export class JournalSheetApplication {
    * @param {IJournalReportQuery} query
    * @returns {Promise<IJournalTable>}
    */
-  public table(
-    tenantId: number,
-    query: IJournalReportQuery
-  ): Promise<IJournalTable> {
+  public table(tenantId: number, query: IJournalReportQuery): Promise<IJournalTable> {
     return this.journalSheetTable.table(tenantId, query);
   }
 
@@ -62,9 +59,9 @@ export class JournalSheetApplication {
   }
 
   /**
-   * Retrieves the journal sheet in pdf format. 
-   * @param {number} tenantId 
-   * @param {IJournalReportQuery} query 
+   * Retrieves the journal sheet in pdf format.
+   * @param {number} tenantId
+   * @param {IJournalReportQuery} query
    * @returns {Promise<Buffer>}
    */
   public pdf(tenantId: number, query: IJournalReportQuery) {

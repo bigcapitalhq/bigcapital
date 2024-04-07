@@ -297,10 +297,7 @@ export class ProjectDetailedTransformer extends Transformer {
    * @returns {number}
    */
   public totalInvoicedExpenses = (project: Project) => {
-    const totalInvoicedExpenses = sumBy(
-      project.expenses,
-      'totalInvoicedExpenses'
-    );
+    const totalInvoicedExpenses = sumBy(project.expenses, 'totalInvoicedExpenses');
     const totalInvoicedBills = sumBy(project.bills, 'totalInvoicedBills');
 
     return totalInvoicedExpenses + totalInvoicedBills;

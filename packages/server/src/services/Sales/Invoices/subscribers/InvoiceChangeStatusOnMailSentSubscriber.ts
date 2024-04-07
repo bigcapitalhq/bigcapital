@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { ISaleInvoiceMailSent } from '@/interfaces';
-import { DeliverSaleInvoice } from '../DeliverSaleInvoice';
 import { ServiceError } from '@/exceptions';
+import { ISaleInvoiceMailSent } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { DeliverSaleInvoice } from '../DeliverSaleInvoice';
 import { ERRORS } from '../constants';
 
 @Service()
@@ -15,10 +15,7 @@ export class InvoiceChangeStatusOnMailSentSubscriber {
    */
   public attach(bus) {
     bus.subscribe(events.saleInvoice.onPreMailSend, this.markInvoiceDelivered);
-    bus.subscribe(
-      events.saleInvoice.onMailReminderSent,
-      this.markInvoiceDelivered
-    );
+    bus.subscribe(events.saleInvoice.onMailReminderSent, this.markInvoiceDelivered);
   }
 
   /**
@@ -26,21 +23,11 @@ export class InvoiceChangeStatusOnMailSentSubscriber {
    * @param {ISaleInvoiceMailSent}
    * @returns {Promise<void>}
    */
-  private markInvoiceDelivered = async ({
-    tenantId,
-    saleInvoiceId,
-    messageOptions,
-  }: ISaleInvoiceMailSent) => {
+  private markInvoiceDelivered = async ({ tenantId, saleInvoiceId, messageOptions }: ISaleInvoiceMailSent) => {
     try {
-      await this.markInvoiceDelivedService.deliverSaleInvoice(
-        tenantId,
-        saleInvoiceId
-      );
+      await this.markInvoiceDelivedService.deliverSaleInvoice(tenantId, saleInvoiceId);
     } catch (error) {
-      if (
-        error instanceof ServiceError &&
-        error.errorType === ERRORS.SALE_INVOICE_ALREADY_DELIVERED
-      ) {
+      if (error instanceof ServiceError && error.errorType === ERRORS.SALE_INVOICE_ALREADY_DELIVERED) {
       } else {
         throw error;
       }

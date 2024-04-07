@@ -38,18 +38,15 @@ export function useEditProject(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`/projects/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific project.
-        queryClient.invalidateQueries([t.PROJECT, id]);
+  return useMutation(([id, values]) => apiRequest.post(`/projects/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific project.
+      queryClient.invalidateQueries([t.PROJECT, id]);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -123,18 +120,15 @@ export function useProjectStatus(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.patch(`projects/${id}/status`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific project.
-        queryClient.invalidateQueries([t.PROJECT, id]);
+  return useMutation(([id, values]) => apiRequest.patch(`projects/${id}/status`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific project.
+      queryClient.invalidateQueries([t.PROJECT, id]);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useRefreshProjects() {

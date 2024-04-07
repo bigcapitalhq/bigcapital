@@ -1,5 +1,5 @@
-import { Model } from 'objection';
 import SystemModel from '@/system/models/SystemModel';
+import { Model } from 'objection';
 
 export default class SystemPlaidItem extends SystemModel {
   tenantId: number;

@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 
-const asyncRender = (app) => (path: string, attributes = {}) =>
-  new Promise((resolve, reject) => {
-    app.render(path, attributes, (error, data) => {
-      if (error) { reject(error); }
+const asyncRender =
+  (app) =>
+  (path: string, attributes = {}) =>
+    new Promise((resolve, reject) => {
+      app.render(path, attributes, (error, data) => {
+        if (error) {
+          reject(error);
+        }
 
-      resolve(data);
+        resolve(data);
+      });
     });
-  });
 
 /**
  * Injects `asyncRender` method to response object.

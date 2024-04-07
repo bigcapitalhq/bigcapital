@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { Container, Service } from 'typedi';
 import Bills from '@/api/controllers/Purchases/Bills';
 import BillPayments from '@/api/controllers/Purchases/BillsPayments';
+import { Router } from 'express';
+import { Container, Service } from 'typedi';
 import BillAllocateLandedCost from './LandedCost';
 import VendorCredit from './VendorCredit';
 import VendorCreditApplyToBills from './VendorCreditApplyToBills';
@@ -15,10 +15,7 @@ export default class PurchasesController {
     router.use('/bill_payments', Container.get(BillPayments).router());
     router.use('/landed-cost', Container.get(BillAllocateLandedCost).router());
     router.use('/vendor-credit', Container.get(VendorCredit).router());
-    router.use(
-      '/vendor-credit',
-      Container.get(VendorCreditApplyToBills).router()
-    );
+    router.use('/vendor-credit', Container.get(VendorCreditApplyToBills).router());
 
     return router;
   }

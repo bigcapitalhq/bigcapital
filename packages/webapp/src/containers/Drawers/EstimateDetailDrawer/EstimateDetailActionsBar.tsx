@@ -1,32 +1,16 @@
 // @ts-nocheck
 import { useHistory } from 'react-router-dom';
 
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useEstimateDetailDrawerContext } from './EstimateDetailDrawerProvider';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import {
-  SaleEstimateAction,
-  AbilitySubject,
-  SaleInvoiceAction,
-} from '@/constants/abilityOption';
+import { SaleEstimateAction, AbilitySubject, SaleInvoiceAction } from '@/constants/abilityOption';
 import { EstimateMoreMenuItems } from './components';
-import {
-  DrawerActionsBar,
-  Icon,
-  FormattedMessage as T,
-  Can,
-  If,
-} from '@/components';
+import { DrawerActionsBar, Icon, FormattedMessage as T, Can, If } from '@/components';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -144,8 +128,4 @@ function EstimateDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertsActions,
-  withDrawerActions,
-)(EstimateDetailActionsBar);
+export default compose(withDialogActions, withAlertsActions, withDrawerActions)(EstimateDetailActionsBar);

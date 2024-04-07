@@ -102,12 +102,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isVendorsLoading ||
-        isItemsLoading ||
-        isAccountsLoading ||
-        isPaymentLoading
-      }
+      loading={isVendorsLoading || isItemsLoading || isAccountsLoading || isPaymentLoading}
       name={'payment-made'}
     >
       <PaymentMadeFormContext.Provider value={provider} {...props} />

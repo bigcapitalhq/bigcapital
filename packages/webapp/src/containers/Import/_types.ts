@@ -5,5 +5,5 @@ export enum ImportStepperStep {
 }
 
 export enum ImportAlert {
-  IMPORTED_SHEET_EMPTY = 'IMPORTED_SHEET_EMPTY'
+  IMPORTED_SHEET_EMPTY = 'IMPORTED_SHEET_EMPTY',
 }

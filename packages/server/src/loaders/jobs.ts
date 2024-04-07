@@ -1,16 +1,16 @@
-import Agenda from 'agenda';
-import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
-import ComputeItemCost from 'jobs/ComputeItemCost';
-import RewriteInvoicesJournalEntries from 'jobs/WriteInvoicesJEntries';
-import UserInviteMailJob from 'jobs/UserInviteMail';
-import OrganizationSetupJob from 'jobs/OrganizationSetup';
-import OrganizationUpgrade from 'jobs/OrganizationUpgrade';
+import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
+import { SendSaleEstimateMailJob } from '@/services/Sales/Estimates/SendSaleEstimateMailJob';
 import { SendSaleInvoiceMailJob } from '@/services/Sales/Invoices/SendSaleInvoiceMailJob';
 import { SendSaleInvoiceReminderMailJob } from '@/services/Sales/Invoices/SendSaleInvoiceMailReminderJob';
-import { SendSaleEstimateMailJob } from '@/services/Sales/Estimates/SendSaleEstimateMailJob';
-import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleReceiptMailNotificationJob';
 import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentReceives/PaymentReceiveMailNotificationJob';
-import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
+import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleReceiptMailNotificationJob';
+import Agenda from 'agenda';
+import ComputeItemCost from 'jobs/ComputeItemCost';
+import OrganizationSetupJob from 'jobs/OrganizationSetup';
+import OrganizationUpgrade from 'jobs/OrganizationUpgrade';
+import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
+import UserInviteMailJob from 'jobs/UserInviteMail';
+import RewriteInvoicesJournalEntries from 'jobs/WriteInvoicesJEntries';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);

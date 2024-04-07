@@ -20,10 +20,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';
 import { DialogsName } from '@/constants/dialogs';
-import {
-  useActivateTaxRate,
-  useInactivateTaxRate,
-} from '@/hooks/query/taxRates';
+import { useActivateTaxRate, useInactivateTaxRate } from '@/hooks/query/taxRates';
 
 /**
  * Tax rate details content actions bar.
@@ -115,25 +112,12 @@ function TaxRateDetailsContentActionsBar({
             }}
             content={
               <Menu>
-                {!taxRate.active && (
-                  <MenuItem
-                    text={'Activate Tax Rate'}
-                    onClick={handleActivateTaxRate}
-                  />
-                )}
-                {!!taxRate.active && (
-                  <MenuItem
-                    text={'Inactivate Tax Rate'}
-                    onClick={handleInactivateTaxRate}
-                  />
-                )}
+                {!taxRate.active && <MenuItem text={'Activate Tax Rate'} onClick={handleActivateTaxRate} />}
+                {!!taxRate.active && <MenuItem text={'Inactivate Tax Rate'} onClick={handleInactivateTaxRate} />}
               </Menu>
             }
           >
-            <Button
-              icon={<Icon icon="more-vert" iconSize={16} />}
-              minimal={true}
-            />
+            <Button icon={<Icon icon="more-vert" iconSize={16} />} minimal={true} />
           </Popover>
         </Can>
       </NavbarGroup>
@@ -141,8 +125,4 @@ function TaxRateDetailsContentActionsBar({
   );
 }
 
-export default R.compose(
-  withDrawerActions,
-  withDialogActions,
-  withAlertsActions,
-)(TaxRateDetailsContentActionsBar);
+export default R.compose(withDrawerActions, withDialogActions, withAlertsActions)(TaxRateDetailsContentActionsBar);

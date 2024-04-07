@@ -1,9 +1,9 @@
+import { ICustomerBalanceSummaryQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CustomerBalanceSummaryExportInjectable } from './CustomerBalanceSummaryExportInjectable';
-import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
-import { ICustomerBalanceSummaryQuery } from '@/interfaces';
-import { CustomerBalanceSummaryService } from './CustomerBalanceSummaryService';
 import { CustomerBalanceSummaryPdf } from './CustomerBalanceSummaryPdf';
+import { CustomerBalanceSummaryService } from './CustomerBalanceSummaryService';
+import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
 
 @Service()
 export class CustomerBalanceSummaryApplication {
@@ -15,7 +15,7 @@ export class CustomerBalanceSummaryApplication {
 
   @Inject()
   private customerBalanceSummarySheet: CustomerBalanceSummaryService;
-  
+
   @Inject()
   private customerBalanceSummaryPdf: CustomerBalanceSummaryPdf;
 
@@ -26,10 +26,7 @@ export class CustomerBalanceSummaryApplication {
    * @returns {Promise<ICustomerBalanceSummarySheet>}
    */
   public sheet(tenantId: number, query: ICustomerBalanceSummaryQuery) {
-    return this.customerBalanceSummarySheet.customerBalanceSummary(
-      tenantId,
-      query
-    );
+    return this.customerBalanceSummarySheet.customerBalanceSummary(tenantId, query);
   }
 
   /**

@@ -39,8 +39,7 @@ function SalesTaxLiabilitySummaryActionsBar({
   numberFormat,
   onNumberFormatSubmit,
 }) {
-  const { isLoading, refetchSalesTaxLiabilitySummary } =
-    useSalesTaxLiabilitySummaryContext();
+  const { isLoading, refetchSalesTaxLiabilitySummary } = useSalesTaxLiabilitySummaryContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
@@ -56,7 +55,7 @@ function SalesTaxLiabilitySummaryActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    openDialog(DialogsName.SalesTaxLiabilitySummaryPdfPreview)    
+    openDialog(DialogsName.SalesTaxLiabilitySummaryPdfPreview);
   };
 
   return (
@@ -73,13 +72,7 @@ function SalesTaxLiabilitySummaryActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            !salesTaxLiabilitySummaryFilter ? (
-              <T id={'customize_report'} />
-            ) : (
-              <T id={'hide_customizer'} />
-            )
-          }
+          text={!salesTaxLiabilitySummaryFilter ? <T id={'customize_report'} /> : <T id={'hide_customizer'} />}
           onClick={handleFilterToggleClick}
           active={salesTaxLiabilitySummaryFilter}
         />
@@ -146,5 +139,5 @@ export default compose(
     salesTaxLiabilitySummaryFilter,
   })),
   withSalesTaxLiabilitySummaryActions,
-  withDialogActions
+  withDialogActions,
 )(SalesTaxLiabilitySummaryActionsBar);

@@ -25,7 +25,7 @@ export function useProjectTaskColumns() {
         className: 'name',
         clickable: true,
         textOverview: true,
-      }
+      },
     ],
     [],
   );

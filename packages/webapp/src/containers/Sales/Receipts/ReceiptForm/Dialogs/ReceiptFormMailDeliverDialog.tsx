@@ -4,18 +4,12 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ReceiptFormMailDeliverDialogContent = React.lazy(
-  () => import('./ReceiptFormMailDeliverDialogContent'),
-);
+const ReceiptFormMailDeliverDialogContent = React.lazy(() => import('./ReceiptFormMailDeliverDialogContent'));
 
 /**
  * Receipt mail dialog.
  */
-function ReceiptFormMailDeliverDialog({
-  dialogName,
-  payload: { receiptId = null },
-  isOpen,
-}) {
+function ReceiptFormMailDeliverDialog({ dialogName, payload: { receiptId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -27,10 +21,7 @@ function ReceiptFormMailDeliverDialog({
       style={{ width: 600 }}
     >
       <DialogSuspense>
-        <ReceiptFormMailDeliverDialogContent
-          dialogName={dialogName}
-          receiptId={receiptId}
-        />
+        <ReceiptFormMailDeliverDialogContent dialogName={dialogName} receiptId={receiptId} />
       </DialogSuspense>
     </Dialog>
   );

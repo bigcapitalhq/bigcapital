@@ -1,32 +1,27 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
-import { Inject, Service } from 'typedi';
-import {
-  AbilitySubject,
-  CreditNoteAction,
-  ICreditNoteEditDTO,
-  ICreditNoteNewDTO,
-} from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, CreditNoteAction, ICreditNoteEditDTO, ICreditNoteNewDTO } from '@/interfaces';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 import CreateCreditNote from '@/services/CreditNotes/CreateCreditNote';
-import EditCreditNote from '@/services/CreditNotes/EditCreditNote';
-import DeleteCreditNote from '@/services/CreditNotes/DeleteCreditNote';
-import GetCreditNote from '@/services/CreditNotes/GetCreditNote';
-import ListCreditNotes from '@/services/CreditNotes/ListCreditNotes';
-import DeleteRefundCreditNote from '@/services/CreditNotes/DeleteRefundCreditNote';
-import ListCreditNoteRefunds from '@/services/CreditNotes/ListCreditNoteRefunds';
-import OpenCreditNote from '@/services/CreditNotes/OpenCreditNote';
 import CreateRefundCreditNote from '@/services/CreditNotes/CreateRefundCreditNote';
 import CreditNoteApplyToInvoices from '@/services/CreditNotes/CreditNoteApplyToInvoices';
+import DeleteCreditNote from '@/services/CreditNotes/DeleteCreditNote';
 import DeletreCreditNoteApplyToInvoices from '@/services/CreditNotes/DeleteCreditNoteApplyToInvoices';
-import GetCreditNoteAssociatedInvoicesToApply from '@/services/CreditNotes/GetCreditNoteAssociatedInvoicesToApply';
+import DeleteRefundCreditNote from '@/services/CreditNotes/DeleteRefundCreditNote';
+import EditCreditNote from '@/services/CreditNotes/EditCreditNote';
+import GetCreditNote from '@/services/CreditNotes/GetCreditNote';
 import GetCreditNoteAssociatedAppliedInvoices from '@/services/CreditNotes/GetCreditNoteAssociatedAppliedInvoices';
+import GetCreditNoteAssociatedInvoicesToApply from '@/services/CreditNotes/GetCreditNoteAssociatedInvoicesToApply';
 import GetRefundCreditTransaction from '@/services/CreditNotes/GetRefundCreditNoteTransaction';
+import ListCreditNoteRefunds from '@/services/CreditNotes/ListCreditNoteRefunds';
+import ListCreditNotes from '@/services/CreditNotes/ListCreditNotes';
+import OpenCreditNote from '@/services/CreditNotes/OpenCreditNote';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 import GetCreditNotePdf from '../../../services/CreditNotes/GetCreditNotePdf';
-import { ACCEPT_TYPE } from '@/interfaces/Http';
 /**
  * Credit notes controller.
  * @service
@@ -94,7 +89,7 @@ export default class PaymentReceivesController extends BaseController {
       this.editCreditNoteDTOShema,
       this.validationResult,
       this.asyncMiddleware(this.editCreditNote),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     // New credit note.
     router.post(
@@ -103,7 +98,7 @@ export default class PaymentReceivesController extends BaseController {
       [...this.newCreditNoteDTOSchema],
       this.validationResult,
       this.asyncMiddleware(this.newCreditNote),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     // Get specific credit note.
     router.get(
@@ -111,7 +106,7 @@ export default class PaymentReceivesController extends BaseController {
       CheckPolicies(CreditNoteAction.View, AbilitySubject.CreditNote),
       this.getCreditNoteSchema,
       this.asyncMiddleware(this.getCreditNote),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     // Get credit note list.
     router.get(
@@ -121,7 +116,7 @@ export default class PaymentReceivesController extends BaseController {
       this.validationResult,
       this.asyncMiddleware(this.getCreditNotesList),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     // Get specific credit note.
     router.delete(
@@ -130,21 +125,21 @@ export default class PaymentReceivesController extends BaseController {
       this.deleteCreditNoteSchema,
       this.validationResult,
       this.asyncMiddleware(this.deleteCreditNote),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/open',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.openCreditNoteTransaction),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/refund',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.creditNoteRefundTransactions),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/refund',
@@ -152,49 +147,49 @@ export default class PaymentReceivesController extends BaseController {
       this.creditNoteRefundSchema,
       this.validationResult,
       this.asyncMiddleware(this.refundCreditNote),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/apply-to-invoices',
       this.creditNoteApplyToInvoices,
       this.validationResult,
       this.asyncMiddleware(this.applyCreditNoteToInvoices),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/refunds/:refundId',
       this.deleteRefundCreditSchema,
       this.validationResult,
       this.asyncMiddleware(this.deleteCreditNoteRefund),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/refunds/:refundId',
       this.getRefundCreditTransactionSchema,
       this.validationResult,
       this.asyncMiddleware(this.getRefundCreditTransaction),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/applied-to-invoices/:applyId',
       [param('applyId').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteApplyCreditToInvoices),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/apply-to-invoices',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getCreditNoteInvoicesToApply),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/applied-invoices',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getCreditNoteAppliedInvoices),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -224,18 +219,9 @@ export default class PaymentReceivesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -284,10 +270,7 @@ export default class PaymentReceivesController extends BaseController {
    * Edit credit note DTO validation schema.
    */
   get editCreditNoteDTOShema() {
-    return [
-      param('id').exists().isNumeric().toInt(),
-      ...this.creditNoteDTOSchema,
-    ];
+    return [param('id').exists().isNumeric().toInt(), ...this.creditNoteDTOSchema];
   }
 
   get creditNoteRefundSchema() {
@@ -327,20 +310,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private newCreditNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private newCreditNote = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
     const creditNoteDTO: ICreditNoteNewDTO = this.matchedBodyData(req);
 
     try {
-      const creditNote = await this.createCreditNoteService.newCreditNote(
-        tenantId,
-        creditNoteDTO,
-        user
-      );
+      const creditNote = await this.createCreditNoteService.newCreditNote(tenantId, creditNoteDTO, user);
       return res.status(200).send({
         id: creditNote.id,
         message: 'The credit note has been created successfully.',
@@ -356,22 +331,14 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private editCreditNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private editCreditNote = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
 
     const creditNoteDTO: ICreditNoteEditDTO = this.matchedBodyData(req);
 
     try {
-      await this.editCreditNoteService.editCreditNote(
-        tenantId,
-        creditNoteId,
-        creditNoteDTO
-      );
+      await this.editCreditNoteService.editCreditNote(tenantId, creditNoteId, creditNoteDTO);
       return res.status(200).send({
         id: creditNoteId,
         message: 'The credit note has been edited successfully.',
@@ -386,19 +353,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private deleteCreditNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteCreditNote = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
     const { id: creditNoteId } = req.params;
 
     try {
-      await this.deleteCreditNoteService.deleteCreditNote(
-        tenantId,
-        creditNoteId
-      );
+      await this.deleteCreditNoteService.deleteCreditNote(tenantId, creditNoteId);
       return res.status(200).send({
         id: creditNoteId,
         message: 'The credit note has been deleted successfully',
@@ -414,11 +374,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private getCreditNotesList = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getCreditNotesList = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -429,8 +385,10 @@ export default class PaymentReceivesController extends BaseController {
     };
 
     try {
-      const { creditNotes, pagination, filterMeta } =
-        await this.listCreditNotesService.getCreditNotesList(tenantId, filter);
+      const { creditNotes, pagination, filterMeta } = await this.listCreditNotesService.getCreditNotesList(
+        tenantId,
+        filter,
+      );
 
       return res.status(200).send({ creditNotes, pagination, filterMeta });
     } catch (error) {
@@ -444,35 +402,22 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getCreditNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getCreditNote = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
 
     const accept = this.accepts(req);
 
-    const acceptType = accept.types([
-      ACCEPT_TYPE.APPLICATION_JSON,
-      ACCEPT_TYPE.APPLICATION_PDF,
-    ]);
+    const acceptType = accept.types([ACCEPT_TYPE.APPLICATION_JSON, ACCEPT_TYPE.APPLICATION_PDF]);
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
-      const pdfContent = await this.creditNotePdf.getCreditNotePdf(
-        tenantId,
-        creditNoteId
-      );
+      const pdfContent = await this.creditNotePdf.getCreditNotePdf(tenantId, creditNoteId);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
       });
       res.send(pdfContent);
     } else {
-      const creditNote = await this.getCreditNoteService.getCreditNote(
-        tenantId,
-        creditNoteId
-      );
+      const creditNote = await this.getCreditNoteService.getCreditNote(tenantId, creditNoteId);
       return res.status(200).send({ creditNote });
     }
   };
@@ -484,26 +429,20 @@ export default class PaymentReceivesController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  private refundCreditNote = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private refundCreditNote = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
     const creditNoteRefundDTO = this.matchedBodyData(req);
 
     try {
-      const creditNoteRefund =
-        await this.createCreditNoteRefund.createCreditNoteRefund(
-          tenantId,
-          creditNoteId,
-          creditNoteRefundDTO
-        );
+      const creditNoteRefund = await this.createCreditNoteRefund.createCreditNoteRefund(
+        tenantId,
+        creditNoteId,
+        creditNoteRefundDTO,
+      );
       return res.status(200).send({
         id: creditNoteRefund.id,
-        message:
-          'The customer credit note refund has been created successfully.',
+        message: 'The customer credit note refund has been created successfully.',
       });
     } catch (error) {
       next(error);
@@ -516,11 +455,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private applyCreditNoteToInvoices = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private applyCreditNoteToInvoices = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
     const applyCreditNoteToInvoicesDTO = this.matchedBodyData(req);
@@ -529,12 +464,11 @@ export default class PaymentReceivesController extends BaseController {
       await this.applyCreditNoteToInvoicesService.applyCreditNoteToInvoices(
         tenantId,
         creditNoteId,
-        applyCreditNoteToInvoicesDTO
+        applyCreditNoteToInvoicesDTO,
       );
       return res.status(200).send({
         id: creditNoteId,
-        message:
-          'The credit note has been applied the given invoices successfully.',
+        message: 'The credit note has been applied the given invoices successfully.',
       });
     } catch (error) {
       next(error);
@@ -548,19 +482,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param next
    * @returns
    */
-  private deleteCreditNoteRefund = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteCreditNoteRefund = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { refundId: creditRefundId } = req.params;
 
     try {
-      await this.deleteRefundCredit.deleteCreditNoteRefund(
-        tenantId,
-        creditRefundId
-      );
+      await this.deleteRefundCredit.deleteCreditNoteRefund(tenantId, creditRefundId);
       return res.status(200).send({
         id: creditRefundId,
         message: 'The credit note refund has been deleted successfully.',
@@ -577,20 +504,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {NextFunction} next
    * @returns {Promise<Response>}
    */
-  private getRefundCreditTransaction = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getRefundCreditTransaction = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { refundId: creditRefundId } = req.params;
 
     try {
-      const refundCredit =
-        await this.getRefundCreditService.getRefundCreditTransaction(
-          tenantId,
-          creditRefundId
-        );
+      const refundCredit = await this.getRefundCreditService.getRefundCreditTransaction(tenantId, creditRefundId);
       return res.status(200).send({ refundCredit });
     } catch (error) {
       next(error);
@@ -603,19 +522,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private creditNoteRefundTransactions = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private creditNoteRefundTransactions = async (req: Request, res: Response, next: NextFunction) => {
     const { id: creditNoteId } = req.params;
     const { tenantId } = req;
 
     try {
-      const transactions = await this.listCreditRefunds.getCreditNoteRefunds(
-        tenantId,
-        creditNoteId
-      );
+      const transactions = await this.listCreditRefunds.getCreditNoteRefunds(tenantId, creditNoteId);
       return res.status(200).send({ data: transactions });
     } catch (error) {
       next(error);
@@ -629,19 +541,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param next
    * @returns
    */
-  private openCreditNoteTransaction = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private openCreditNoteTransaction = async (req: Request, res: Response, next: NextFunction) => {
     const { id: creditNoteId } = req.params;
     const { tenantId } = req;
 
     try {
-      const creditNote = await this.openCreditNote.openCreditNote(
-        tenantId,
-        creditNoteId
-      );
+      const creditNote = await this.openCreditNote.openCreditNote(tenantId, creditNoteId);
       return res.status(200).send({
         message: 'The credit note has been opened successfully',
         id: creditNote.id,
@@ -658,23 +563,18 @@ export default class PaymentReceivesController extends BaseController {
    * @param next
    * @returns
    */
-  private deleteApplyCreditToInvoices = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteApplyCreditToInvoices = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { applyId: creditAppliedToInvoicesId } = req.params;
 
     try {
       await this.deleteApplyCreditToInvoicesService.deleteApplyCreditNoteToInvoices(
         tenantId,
-        creditAppliedToInvoicesId
+        creditAppliedToInvoicesId,
       );
       return res.status(200).send({
         id: creditAppliedToInvoicesId,
-        message:
-          'The applied credit to invoices has been deleted successfully.',
+        message: 'The applied credit to invoices has been deleted successfully.',
       });
     } catch (error) {
       next(error);
@@ -687,20 +587,15 @@ export default class PaymentReceivesController extends BaseController {
    * @param res
    * @param next
    */
-  private getCreditNoteInvoicesToApply = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getCreditNoteInvoicesToApply = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
 
     try {
-      const saleInvoices =
-        await this.getCreditAssociatedInvoicesToApply.getCreditAssociatedInvoicesToApply(
-          tenantId,
-          creditNoteId
-        );
+      const saleInvoices = await this.getCreditAssociatedInvoicesToApply.getCreditAssociatedInvoicesToApply(
+        tenantId,
+        creditNoteId,
+      );
       return res.status(200).send({ data: saleInvoices });
     } catch (error) {
       next(error);
@@ -714,20 +609,15 @@ export default class PaymentReceivesController extends BaseController {
    * @param next
    * @returns
    */
-  private getCreditNoteAppliedInvoices = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getCreditNoteAppliedInvoices = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: creditNoteId } = req.params;
 
     try {
-      const appliedInvoices =
-        await this.getCreditAssociatedAppliedInvoices.getCreditAssociatedAppliedInvoices(
-          tenantId,
-          creditNoteId
-        );
+      const appliedInvoices = await this.getCreditAssociatedAppliedInvoices.getCreditAssociatedAppliedInvoices(
+        tenantId,
+        creditNoteId,
+      );
       return res.status(200).send({ data: appliedInvoices });
     } catch (error) {
       next(error);
@@ -741,12 +631,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param next
    */
-  handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ENTRIES_ITEMS_IDS_NOT_EXISTS') {
         return res.boom.badRequest(null, {
@@ -778,10 +663,7 @@ export default class PaymentReceivesController extends BaseController {
           errors: [{ type: 'CREDIT_NOTE_ALREADY_OPENED', code: 600 }],
         });
       }
-      if (
-        error.errorType === 'INVOICES_IDS_NOT_FOUND' ||
-        error.errorType === 'INVOICES_NOT_DELIVERED_YET'
-      ) {
+      if (error.errorType === 'INVOICES_IDS_NOT_FOUND' || error.errorType === 'INVOICES_NOT_DELIVERED_YET') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'APPLIED_INVOICES_IDS_NOT_FOUND', code: 700 }],
         });
@@ -793,9 +675,7 @@ export default class PaymentReceivesController extends BaseController {
       }
       if (error.errorType === 'CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND', code: 900 },
-          ],
+          errors: [{ type: 'CREDIT_NOTE_APPLY_TO_INVOICES_NOT_FOUND', code: 900 }],
         });
       }
       if (error.errorType === 'INVOICES_HAS_NO_REMAINING_AMOUNT') {
@@ -805,9 +685,7 @@ export default class PaymentReceivesController extends BaseController {
       }
       if (error.errorType === 'CREDIT_NOTE_HAS_REFUNDS_TRANSACTIONS') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'CREDIT_NOTE_HAS_REFUNDS_TRANSACTIONS', code: 1100 },
-          ],
+          errors: [{ type: 'CREDIT_NOTE_HAS_REFUNDS_TRANSACTIONS', code: 1100 }],
         });
       }
       if (error.errorType === 'CREDIT_NOTE_HAS_APPLIED_INVOICES') {

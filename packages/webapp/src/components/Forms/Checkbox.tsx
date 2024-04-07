@@ -1,8 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import {
-  Checkbox as BPCheckbox,    
-} from '@blueprintjs/core';
+import { Checkbox as BPCheckbox } from '@blueprintjs/core';
 
 export default function CheckboxComponent(props: any) {
   const { field, form, ...rest } = props;
@@ -23,6 +21,6 @@ export default function CheckboxComponent(props: any) {
     onChange: handleChange,
     onBlur: handleBlur,
     checked: value,
-  }
+  };
   return <BPCheckbox {...checkboxProps} />;
 }

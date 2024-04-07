@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getPlansSelector,
-} from '@/store/plans/plans.selectors';
+import { getPlansSelector } from '@/store/plans/plans.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

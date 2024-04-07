@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 import { ServiceError } from '@/exceptions';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -59,8 +59,7 @@ export class ActivateWarehouses {
         trx,
       });
       // Creates a primary warehouse on the storage..
-      const primaryWarehouse =
-        await this.createInitialWarehouse.createInitialWarehouse(tenantId);
+      const primaryWarehouse = await this.createInitialWarehouse.createInitialWarehouse(tenantId);
 
       // Marks the multi-warehouses is activated.
       this.settings.markMutliwarehoussAsActivated(tenantId);

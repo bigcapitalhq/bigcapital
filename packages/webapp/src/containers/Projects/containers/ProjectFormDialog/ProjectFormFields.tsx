@@ -36,10 +36,7 @@ function ProjectFormFields() {
         <ProjectFormCustomerSelect />
 
         {/*------------ Project Name -----------*/}
-        <FFormGroup
-          label={intl.get('projects.dialog.project_name')}
-          name={'name'}
-        >
+        <FFormGroup label={intl.get('projects.dialog.project_name')} name={'name'}>
           <FInputGroup name="name" />
         </FFormGroup>
 
@@ -63,18 +60,12 @@ function ProjectFormFields() {
 
           {/*------------ CheckBox -----------*/}
           <FFormGroup name={'published'}>
-            <FCheckbox
-              name="published"
-              label={intl.get('projects.dialog.calculator_expenses')}
-            />
+            <FCheckbox name="published" label={intl.get('projects.dialog.calculator_expenses')} />
           </FFormGroup>
         </Stack>
 
         {/*------------ Cost Estimate -----------*/}
-        <FFormGroup
-          name={'cost_estimate'}
-          label={intl.get('projects.dialog.cost_estimate')}
-        >
+        <FFormGroup name={'cost_estimate'} label={intl.get('projects.dialog.cost_estimate')}>
           <ControlGroup>
             <FMoneyInputGroup
               disabled={values.published}

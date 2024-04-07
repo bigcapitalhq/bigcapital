@@ -13,10 +13,7 @@ export default function UnlockingPartialTransactionsDialogContent({
   dialogName,
 }) {
   return (
-    <UnlockingPartialTransactionsFormProvider
-      moduleName={moduleName}
-      dialogName={dialogName}
-    >
+    <UnlockingPartialTransactionsFormProvider moduleName={moduleName} dialogName={dialogName}>
       <UnlockingPartialTransactionsForm />
     </UnlockingPartialTransactionsFormProvider>
   );

@@ -40,8 +40,7 @@ function VendorsBalanceSummaryActionsBar({
   // #withDialogActions
   openDialog,
 }) {
-  const { isVendorsBalanceLoading, refetch } =
-    useVendorsBalanceSummaryContext();
+  const { isVendorsBalanceLoading, refetch } = useVendorsBalanceSummaryContext();
 
   const handleFilterToggleClick = () => {
     toggleVendorSummaryFilterDrawer();
@@ -75,13 +74,7 @@ function VendorsBalanceSummaryActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            isFilterDrawerOpen ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={isFilterDrawerOpen ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />
@@ -105,11 +98,7 @@ function VendorsBalanceSummaryActionsBar({
           />
         </Popover>
 
-        <Button
-          className={Classes.MINIMAL}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
+        <Button className={Classes.MINIMAL} text={<T id={'filter'} />} icon={<Icon icon="filter-16" iconSize={16} />} />
         <NavbarDivider />
 
         <Button

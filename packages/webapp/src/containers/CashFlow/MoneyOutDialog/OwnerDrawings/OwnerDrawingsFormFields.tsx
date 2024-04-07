@@ -20,17 +20,9 @@ import {
   FMoneyInputGroup,
 } from '@/components';
 import { CLASSES, Features, ACCOUNT_TYPE } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyOutDialog/utils';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../../MoneyOutDialog/utils';
 import { MoneyInOutTransactionNoField } from '../../_components';
 import { useMoneyOutFieldsContext } from '../MoneyOutFieldsProvider';
 import { MoneyOutExchangeRateField } from '../MoneyOutExchangeRateField';
@@ -103,11 +95,7 @@ export default function OwnerDrawingsFormFields() {
 
       <Row>
         <Col xs={10}>
-          <FormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FormGroup name={'amount'} label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -133,9 +121,7 @@ export default function OwnerDrawingsFormFields() {
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
+                  onAccountSelected={({ id }) => form.setFieldValue('credit_account_id', id)}
                   filterByTypes={ACCOUNT_TYPE.EQUITY}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
@@ -156,12 +142,7 @@ export default function OwnerDrawingsFormFields() {
 
       {/*------------ description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </React.Fragment>
   );

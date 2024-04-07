@@ -24,26 +24,12 @@ interface ImportFileUploadValues {
   file: File | null;
 }
 
-export function ImportFileUploadForm({
-  children,
-  formikProps,
-  formProps,
-}: ImportFileUploadFormProps) {
+export function ImportFileUploadForm({ children, formikProps, formProps }: ImportFileUploadFormProps) {
   const { showAlert, hideAlerts } = useAlertsManager();
   const { mutateAsync: uploadImportFile } = useImportFileUpload();
-  const {
-    resource,
-    params,
-    setStep,
-    setSheetColumns,
-    setEntityColumns,
-    setImportId,
-  } = useImportFileContext();
+  const { resource, params, setStep, setSheetColumns, setEntityColumns, setImportId } = useImportFileContext();
 
-  const handleSubmit = (
-    values: ImportFileUploadValues,
-    { setSubmitting }: FormikHelpers<ImportFileUploadValues>,
-  ) => {
+  const handleSubmit = (values: ImportFileUploadValues, { setSubmitting }: FormikHelpers<ImportFileUploadValues>) => {
     hideAlerts();
     if (!values.file) return;
 
@@ -62,11 +48,7 @@ export function ImportFileUploadForm({
         setSubmitting(false);
       })
       .catch(({ response: { data } }) => {
-        if (
-          data.errors.find(
-            (er) => er.type === 'IMPORTED_FILE_EXTENSION_INVALID',
-          )
-        ) {
+        if (data.errors.find((er) => er.type === 'IMPORTED_FILE_EXTENSION_INVALID')) {
           AppToaster.show({
             intent: Intent.DANGER,
             message: 'The extenstion of uploaded file is not supported.',
@@ -80,12 +62,7 @@ export function ImportFileUploadForm({
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-      {...formikProps}
-    >
+    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema} {...formikProps}>
       <Form {...formProps}>{children}</Form>
     </Formik>
   );

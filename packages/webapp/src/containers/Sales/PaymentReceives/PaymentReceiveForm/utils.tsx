@@ -39,7 +39,7 @@ export const defaultPaymentReceive = {
   // Holds the payment number that entered manually only.
   payment_receive_no_manually: '',
   statement: '',
-  full_amount: '', 
+  full_amount: '',
   currency_code: '',
   branch_id: '',
   exchange_rate: 1,
@@ -99,9 +99,7 @@ export const transformEntriesToEditForm = (receivableEntries) => [
   ...transformInvoicesNewPageEntries([...(receivableEntries || [])]),
 ];
 
-export const clearAllPaymentEntries = (entries) => [
-  ...entries.map((entry) => ({ ...entry, payment_amount: 0 })),
-];
+export const clearAllPaymentEntries = (entries) => [...entries.map((entry) => ({ ...entry, payment_amount: 0 }))];
 
 export const amountPaymentEntries = (amount, entries) => {
   let total = amount;
@@ -138,10 +136,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines the accounts fast-field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
@@ -188,22 +183,14 @@ export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);
 
   if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
-    setFieldError(
-      'payment_receive_no',
-      intl.get('payment_number_is_not_unique'),
-    );
+    setFieldError('payment_receive_no', intl.get('payment_number_is_not_unique'));
   }
   if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
-    setFieldError(
-      'payment_receive_no',
-      intl.get('payment_receive.field.error.payment_receive_no_required'),
-    );
+    setFieldError('payment_receive_no', intl.get('payment_receive.field.error.payment_receive_no_required'));
   }
   if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
     AppToaster.show({
-      message: intl.get(
-        'payment_Receive.error.payment_account_currency_invalid',
-      ),
+      message: intl.get('payment_Receive.error.payment_account_currency_invalid'),
       intent: Intent.DANGER,
     });
   }
@@ -218,16 +205,10 @@ export const usePaymentReceiveTotals = () => {
   } = useFormikContext();
 
   // Retrieves the invoice entries total.
-  const total = React.useMemo(
-    () => sumBy(entries, 'payment_amount'),
-    [entries],
-  );
+  const total = React.useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

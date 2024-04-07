@@ -30,11 +30,7 @@ function ProjectEntriesFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <SaveButton
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          type="submit"
-        >
+        <SaveButton intent={Intent.PRIMARY} loading={isSubmitting} type="submit">
           <T id={'save'} />
         </SaveButton>
         <Button onClick={handleCancelBtnClick} disabled={isSubmitting}>

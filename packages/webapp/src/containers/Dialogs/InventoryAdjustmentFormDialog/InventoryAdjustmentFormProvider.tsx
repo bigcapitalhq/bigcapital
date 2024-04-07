@@ -3,13 +3,7 @@ import React, { useState, createContext } from 'react';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import {
-  useItem,
-  useAccounts,
-  useBranches,
-  useWarehouses,
-  useCreateInventoryAdjustment,
-} from '@/hooks/query';
+import { useItem, useAccounts, useBranches, useWarehouses, useCreateInventoryAdjustment } from '@/hooks/query';
 
 const InventoryAdjustmentContext = createContext();
 
@@ -42,8 +36,7 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
-  const { mutateAsync: createInventoryAdjMutate } =
-    useCreateInventoryAdjustment();
+  const { mutateAsync: createInventoryAdjMutate } = useCreateInventoryAdjustment();
 
   // Submit payload.
   const [submitPayload, setSubmitPayload] = useState({});
@@ -81,7 +74,6 @@ function InventoryAdjustmentFormProvider({ itemId, dialogName, ...props }) {
   );
 }
 
-const useInventoryAdjContext = () =>
-  React.useContext(InventoryAdjustmentContext);
+const useInventoryAdjContext = () => React.useContext(InventoryAdjustmentContext);
 
 export { InventoryAdjustmentFormProvider, useInventoryAdjContext };

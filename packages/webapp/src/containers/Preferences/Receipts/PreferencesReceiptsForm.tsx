@@ -20,31 +20,13 @@ export function PreferencesReceiptsForm({ isSubmitting }) {
   return (
     <Form>
       {/* ---------- Customer Notes ----------  */}
-      <FFormGroup
-        name={'receiptMessage'}
-        label={<T id={'pref.receipts.receiptMessage.field'} />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'receiptMessage'}
-          fastField={true}
-          fill={true}
-        />
+      <FFormGroup name={'receiptMessage'} label={<T id={'pref.receipts.receiptMessage.field'} />} fastField={true}>
+        <FTextArea medium={'true'} name={'receiptMessage'} fastField={true} fill={true} />
       </FFormGroup>
 
       {/* ---------- Terms & Conditions ----------  */}
-      <FFormGroup
-        name={'termsConditions'}
-        label={<T id={'pref.receipts.termsConditions.field'} />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'termsConditions'}
-          fastField={true}
-          fill={true}
-        />
+      <FFormGroup name={'termsConditions'} label={<T id={'pref.receipts.termsConditions.field'} />} fastField={true}>
+        <FTextArea medium={'true'} name={'termsConditions'} fastField={true} fill={true} />
       </FFormGroup>
 
       <CardFooterActions>

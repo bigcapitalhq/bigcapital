@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class CashflowTransactionsActivateBranches {
@@ -16,7 +16,7 @@ export class CashflowTransactionsActivateBranches {
   public updateCashflowTransactionsWithBranch = async (
     tenantId: number,
     primaryBranchId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { CashflowTransaction } = this.tenancy.models(tenantId);
 

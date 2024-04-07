@@ -4,13 +4,8 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 
 import { Card, DrawerLoading } from '@/components';
-import {
-  CustomerFormProvider,
-  useCustomerFormContext,
-} from '@/containers/Customers/CustomerForm/CustomerFormProvider';
-import CustomerFormFormik, {
-  CustomerFormHeaderPrimary,
-} from '@/containers/Customers/CustomerForm/CustomerFormFormik';
+import { CustomerFormProvider, useCustomerFormContext } from '@/containers/Customers/CustomerForm/CustomerFormProvider';
+import CustomerFormFormik, { CustomerFormHeaderPrimary } from '@/containers/Customers/CustomerForm/CustomerFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';

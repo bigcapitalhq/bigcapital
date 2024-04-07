@@ -7,10 +7,7 @@ import { AppToaster } from '@/components';
 import CurrencyFormContent from './CurrencyFormContent';
 
 import { useCurrencyFormContext } from './CurrencyFormProvider';
-import {
-  CreateCurrencyFormSchema,
-  EditCurrencyFormSchema,
-} from './CurrencyForm.schema';
+import { CreateCurrencyFormSchema, EditCurrencyFormSchema } from './CurrencyForm.schema';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose, transformToForm } from '@/utils';
@@ -28,18 +25,10 @@ function CurrencyForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    createCurrencyMutate,
-    editCurrencyMutate,
-    dialogName,
-    currency,
-    isEditMode,
-  } = useCurrencyFormContext();
+  const { createCurrencyMutate, editCurrencyMutate, dialogName, currency, isEditMode } = useCurrencyFormContext();
 
   // Form validation schema in create and edit mode.
-  const validationSchema = isEditMode
-    ? EditCurrencyFormSchema
-    : CreateCurrencyFormSchema;
+  const validationSchema = isEditMode ? EditCurrencyFormSchema : CreateCurrencyFormSchema;
 
   const initialValues = useMemo(
     () => ({
@@ -62,9 +51,7 @@ function CurrencyForm({
     const onSuccess = ({ response }) => {
       AppToaster.show({
         message: intl.get(
-          isEditMode
-            ? 'the_currency_has_been_edited_successfully'
-            : 'the_currency_has_been_created_successfully',
+          isEditMode ? 'the_currency_has_been_edited_successfully' : 'the_currency_has_been_created_successfully',
         ),
         intent: Intent.SUCCESS,
       });
@@ -92,11 +79,7 @@ function CurrencyForm({
   };
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       <CurrencyFormContent />
     </Formik>
   );

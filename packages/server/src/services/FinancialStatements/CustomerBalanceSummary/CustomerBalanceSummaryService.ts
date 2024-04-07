@@ -1,23 +1,20 @@
-import { Inject, Service } from 'typedi';
-import moment from 'moment';
-import * as R from 'ramda';
 import {
-  ICustomerBalanceSummaryService,
   ICustomerBalanceSummaryQuery,
+  ICustomerBalanceSummaryService,
   ICustomerBalanceSummaryStatement,
-  ICustomer,
   ILedgerEntry,
 } from '@/interfaces';
-import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 import Ledger from '@/services/Accounting/Ledger';
-import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 import { Tenant } from '@/system/models';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 import { CustomerBalanceSummaryMeta } from './CustomerBalanceSummaryMeta';
+import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
 
 @Service()
-export class CustomerBalanceSummaryService
-  implements ICustomerBalanceSummaryService
-{
+export class CustomerBalanceSummaryService implements ICustomerBalanceSummaryService {
   @Inject()
   private reportRepository: CustomerBalanceSummaryRepository;
 
@@ -51,14 +48,8 @@ export class CustomerBalanceSummaryService
    * @param {Date|string} asDate
    * @returns {Promise<ILedgerEntry[]>}
    */
-  private async getReportCustomersEntries(
-    tenantId: number,
-    asDate: Date | string
-  ): Promise<ILedgerEntry[]> {
-    const transactions = await this.reportRepository.getCustomersTransactions(
-      tenantId,
-      asDate
-    );
+  private async getReportCustomersEntries(tenantId: number, asDate: Date | string): Promise<ILedgerEntry[]> {
+    const transactions = await this.reportRepository.getCustomersTransactions(tenantId, asDate);
     const commonProps = { accountNormal: 'debit', date: asDate };
 
     return R.map(R.merge(commonProps))(transactions);
@@ -72,35 +63,22 @@ export class CustomerBalanceSummaryService
    */
   public async customerBalanceSummary(
     tenantId: number,
-    query: ICustomerBalanceSummaryQuery
+    query: ICustomerBalanceSummaryQuery,
   ): Promise<ICustomerBalanceSummaryStatement> {
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Merges the default query and request query.
     const filter = { ...this.defaultQuery, ...query };
 
     // Retrieve the customers list ordered by the display name.
-    const customers = await this.reportRepository.getCustomers(
-      tenantId,
-      query.customersIds
-    );
+    const customers = await this.reportRepository.getCustomers(tenantId, query.customersIds);
     // Retrieve the customers debit/credit totals.
-    const customersEntries = await this.getReportCustomersEntries(
-      tenantId,
-      filter.asDate
-    );
+    const customersEntries = await this.getReportCustomersEntries(tenantId, filter.asDate);
     // Ledger query.
     const ledger = new Ledger(customersEntries);
 
     // Report instance.
-    const report = new CustomerBalanceSummaryReport(
-      ledger,
-      customers,
-      filter,
-      tenant.metadata.baseCurrency
-    );
+    const report = new CustomerBalanceSummaryReport(ledger, customers, filter, tenant.metadata.baseCurrency);
     // Retrieve the customer balance summary meta.
     const meta = await this.customerBalanceSummaryMeta.meta(tenantId, filter);
 

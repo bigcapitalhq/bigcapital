@@ -10,19 +10,14 @@ import { useAllocateLandedCostEntriesTableColumns } from './utils';
 /**
  * Allocate landed cost entries table.
  */
-export default function AllocateLandedCostEntriesTable({
-  onUpdateData,
-  entries,
-}) {
+export default function AllocateLandedCostEntriesTable({ onUpdateData, entries }) {
   // Allocate landed cost entries table columns.
   const columns = useAllocateLandedCostEntriesTableColumns();
 
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
-        entries,
-      );
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(entries);
       onUpdateData(newRows);
     },
     [onUpdateData, entries],
@@ -40,9 +35,7 @@ export default function AllocateLandedCostEntriesTable({
   );
 }
 
-export const AllocateLandeedCostEntriesEditableTable = styled(
-  DataTableEditable,
-)`
+export const AllocateLandeedCostEntriesEditableTable = styled(DataTableEditable)`
   .table {
     .thead .tr .th {
       padding-top: 8px;

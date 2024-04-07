@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import {
   ICreditNoteCreatedPayload,
   ICreditNoteDeletedPayload,
   ICreditNoteEditedPayload,
   ICreditNoteOpenedPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import CreditNoteGLEntries from './CreditNoteGLEntries';
 
 @Service()
@@ -18,22 +18,10 @@ export default class CreditNoteGLEntriesSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.creditNote.onCreated,
-      this.writeGlEntriesOnceCreditNoteCreated
-    );
-    bus.subscribe(
-      events.creditNote.onOpened,
-      this.writeGLEntriesOnceCreditNoteOpened
-    );
-    bus.subscribe(
-      events.creditNote.onEdited,
-      this.editVendorCreditGLEntriesOnceEdited
-    );
-    bus.subscribe(
-      events.creditNote.onDeleted,
-      this.revertGLEntriesOnceCreditNoteDeleted
-    );
+    bus.subscribe(events.creditNote.onCreated, this.writeGlEntriesOnceCreditNoteCreated);
+    bus.subscribe(events.creditNote.onOpened, this.writeGLEntriesOnceCreditNoteOpened);
+    bus.subscribe(events.creditNote.onEdited, this.editVendorCreditGLEntriesOnceEdited);
+    bus.subscribe(events.creditNote.onDeleted, this.revertGLEntriesOnceCreditNoteDeleted);
   }
 
   /**
@@ -50,27 +38,15 @@ export default class CreditNoteGLEntriesSubscriber {
     // Can't continue if the credit note is not published yet.
     if (!creditNote.isPublished) return;
 
-    await this.creditNoteGLEntries.createVendorCreditGLEntries(
-      tenantId,
-      creditNoteId,
-      trx
-    );
+    await this.creditNoteGLEntries.createVendorCreditGLEntries(tenantId, creditNoteId, trx);
   };
 
   /**
    * Writes the GL entries once the vendor credit transaction opened.
    * @param {ICreditNoteOpenedPayload} payload
    */
-  private writeGLEntriesOnceCreditNoteOpened = async ({
-    tenantId,
-    creditNoteId,
-    trx,
-  }: ICreditNoteOpenedPayload) => {
-    await this.creditNoteGLEntries.createVendorCreditGLEntries(
-      tenantId,
-      creditNoteId,
-      trx
-    );
+  private writeGLEntriesOnceCreditNoteOpened = async ({ tenantId, creditNoteId, trx }: ICreditNoteOpenedPayload) => {
+    await this.creditNoteGLEntries.createVendorCreditGLEntries(tenantId, creditNoteId, trx);
   };
 
   /**
@@ -85,10 +61,7 @@ export default class CreditNoteGLEntriesSubscriber {
     // Can't continue if the credit note is not published yet.
     if (!oldCreditNote.isPublished) return;
 
-    await this.creditNoteGLEntries.revertVendorCreditGLEntries(
-      tenantId,
-      creditNoteId
-    );
+    await this.creditNoteGLEntries.revertVendorCreditGLEntries(tenantId, creditNoteId);
   };
 
   /**
@@ -104,10 +77,6 @@ export default class CreditNoteGLEntriesSubscriber {
     // Can't continue if the credit note is not published yet.
     if (!creditNote.isPublished) return;
 
-    await this.creditNoteGLEntries.editVendorCreditGLEntries(
-      tenantId,
-      creditNoteId,
-      trx
-    );
+    await this.creditNoteGLEntries.editVendorCreditGLEntries(tenantId, creditNoteId, trx);
   };
 }

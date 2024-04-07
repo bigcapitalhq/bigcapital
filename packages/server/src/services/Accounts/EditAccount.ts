@@ -1,14 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  IAccountEventEditedPayload,
-  IAccountEditDTO,
-  IAccount,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IAccount, IAccountEditDTO, IAccountEventEditedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CommandAccountValidators } from './CommandAccountValidators';
 
 @Service()
@@ -36,33 +32,22 @@ export class EditAccount {
     tenantId: number,
     accountId: number,
     accountDTO: IAccountEditDTO,
-    oldAccount: IAccount
+    oldAccount: IAccount,
   ) => {
     // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
-      tenantId,
-      accountDTO.name,
-      accountId
-    );
+    await this.validator.validateAccountNameUniquiness(tenantId, accountDTO.name, accountId);
     // Validate the account type should be not mutated.
-    await this.validator.isAccountTypeChangedOrThrowError(
-      oldAccount,
-      accountDTO
-    );
+    await this.validator.isAccountTypeChangedOrThrowError(oldAccount, accountDTO);
     // Validate the account code not exists on the storage.
     if (accountDTO.code && accountDTO.code !== oldAccount.code) {
-      await this.validator.isAccountCodeUniqueOrThrowError(
-        tenantId,
-        accountDTO.code,
-        oldAccount.id
-      );
+      await this.validator.isAccountCodeUniqueOrThrowError(tenantId, accountDTO.code, oldAccount.id);
     }
     // Retrieve the parent account of throw not found service error.
     if (accountDTO.parentAccountId) {
       const parentAccount = await this.validator.getParentAccountOrThrowError(
         tenantId,
         accountDTO.parentAccountId,
-        oldAccount.id
+        oldAccount.id,
       );
       this.validator.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
     }
@@ -74,17 +59,11 @@ export class EditAccount {
    * @param {number} accountId
    * @param {IAccountDTO} accountDTO
    */
-  public async editAccount(
-    tenantId: number,
-    accountId: number,
-    accountDTO: IAccountEditDTO
-  ): Promise<IAccount> {
+  public async editAccount(tenantId: number, accountId: number, accountDTO: IAccountEditDTO): Promise<IAccount> {
     const { Account } = this.tenancy.models(tenantId);
 
     // Retrieve the old account or throw not found service error.
-    const oldAccount = await Account.query()
-      .findById(accountId)
-      .throwIfNotFound();
+    const oldAccount = await Account.query().findById(accountId).throwIfNotFound();
 
     // Authorize the account editing.
     await this.authorize(tenantId, accountId, accountDTO, oldAccount);

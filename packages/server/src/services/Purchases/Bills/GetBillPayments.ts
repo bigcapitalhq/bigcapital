@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { BillPaymentTransactionTransformer } from '../BillPayments/BillPaymentTransactionTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { BillPaymentTransactionTransformer } from '../BillPayments/BillPaymentTransactionTransformer';
 
 @Service()
 export class GetBillPayments {
@@ -26,10 +26,6 @@ export class GetBillPayments {
       .withGraphJoined('bill')
       .orderBy('payment:paymentDate', 'ASC');
 
-    return this.transformer.transform(
-      tenantId,
-      billsEntries,
-      new BillPaymentTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, billsEntries, new BillPaymentTransactionTransformer());
   };
 }

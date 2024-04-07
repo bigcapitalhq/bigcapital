@@ -28,11 +28,7 @@ export default function WarehouseTransferDetail() {
 function WarehouseTransferDetailsTabs() {
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<WarehouseTransferDetailPanel />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<WarehouseTransferDetailPanel />} />
     </DrawerMainTabs>
   );
 }

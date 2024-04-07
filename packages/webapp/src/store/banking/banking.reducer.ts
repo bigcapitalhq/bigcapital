@@ -15,7 +15,7 @@ export const PlaidSlice = createSlice({
     },
     resetPlaidId: (state: StorePlaidState) => {
       state.plaidToken = '';
-    }
+    },
   },
 });
 

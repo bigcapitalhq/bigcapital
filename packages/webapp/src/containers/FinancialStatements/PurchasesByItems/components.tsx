@@ -1,22 +1,12 @@
 // @ts-nocheck
 import { useRef } from 'react';
 import classNames from 'classnames';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 
 import { AppToaster, If, Stack } from '@/components';
 import { usePurchaseByItemsContext } from './PurchasesByItemsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import {
-  usePurchasesByItemsCsvExport,
-  usePurchasesByItemsXlsxExport,
-} from '@/hooks/query';
+import { usePurchasesByItemsCsvExport, usePurchasesByItemsXlsxExport } from '@/hooks/query';
 
 /**
  * Purchases by items progress loading bar.
@@ -103,10 +93,7 @@ export const PurchasesByItemsExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

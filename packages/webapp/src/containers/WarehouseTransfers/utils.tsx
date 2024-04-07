@@ -6,41 +6,25 @@ import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 
 import { Align, CellType } from '@/constants';
-import {
-  MoneyFieldCell,
-  Icon,
-  ItemsListCell,
-  InputGroupCell,
-} from '@/components';
+import { MoneyFieldCell, Icon, ItemsListCell, InputGroupCell } from '@/components';
 
 /**
  * Actions cell renderer component.
  */
-export function ActionsCellRenderer({
-  row: { index },
-  payload: { removeRow },
-}) {
+export function ActionsCellRenderer({ row: { index }, payload: { removeRow } }) {
   const onRemoveRole = () => {
     removeRow(index);
   };
 
   const exampleMenu = (
     <Menu>
-      <MenuItem
-        onClick={onRemoveRole}
-        text={intl.get('warehouse_transfer.entries.remove_row')}
-      />
+      <MenuItem onClick={onRemoveRole} text={intl.get('warehouse_transfer.entries.remove_row')} />
     </Menu>
   );
 
   return (
     <Popover2 content={exampleMenu} placement="left-start">
-      <Button
-        icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
-        className="m12"
-        minimal={true}
-      />
+      <Button icon={<Icon icon={'more-13'} iconSize={13} />} iconSize={14} className="m12" minimal={true} />
     </Popover2>
   );
 }
@@ -50,10 +34,7 @@ function SourceWarehouseAccessorCell({ row: { original }, payload }) {
   // Ignore display zero if the item not selected yet.
   if (!original.item_id) return '';
 
-  const warehouse = find(
-    original.warehouses,
-    (w) => w.warehouseId === payload.sourceWarehouseId,
-  );
+  const warehouse = find(original.warehouses, (w) => w.warehouseId === payload.sourceWarehouseId);
   return get(warehouse, 'quantityOnHandFormatted', '0');
 }
 
@@ -61,10 +42,7 @@ function DistentionWarehouseAccessorCell({ row: { original }, payload }) {
   // Ignore display zero if the item not selected yet.
   if (!original.item_id) return '';
 
-  const warehouse = find(
-    original.warehouses,
-    (w) => w.warehouseId === payload.destinationWarehouseId,
-  );
+  const warehouse = find(original.warehouses, (w) => w.warehouseId === payload.destinationWarehouseId);
   return get(warehouse, 'quantityOnHandFormatted', '0');
 }
 

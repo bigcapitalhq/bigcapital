@@ -126,13 +126,7 @@ module.exports = {
   },
 
   // Clean specific files.
-  clean: [
-    '**/.DS_Store',
-    './assets/js/**/*.min.js',
-    '**/*.map',
-    '**/*.min.css',
-    'assets/js/hypernews.js',
-  ],
+  clean: ['**/.DS_Store', './assets/js/**/*.min.js', '**/*.map', '**/*.min.css', 'assets/js/hypernews.js'],
 
   // Watch related.
   watch: {

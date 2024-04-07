@@ -1,5 +1,5 @@
-import { omit } from 'lodash';
 import { IView, IViewRole } from '@/interfaces';
+import { omit } from 'lodash';
 import DynamicFilterRoleAbstractor from './DynamicFilterRoleAbstractor';
 
 export default class DynamicFilterViews extends DynamicFilterRoleAbstractor {
@@ -18,9 +18,7 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstractor {
     this.viewSlug = view.slug;
     this.filterRoles = view.roles;
     this.viewColumns = view.columns;
-    this.logicExpression = view.rolesLogicExpression
-      .replace('AND', '&&')
-      .replace('OR', '||');
+    this.logicExpression = view.rolesLogicExpression.replace('AND', '&&').replace('OR', '||');
 
     this.setResponseMeta();
   }
@@ -30,11 +28,7 @@ export default class DynamicFilterViews extends DynamicFilterRoleAbstractor {
    */
   public buildQuery() {
     return (builder) => {
-      this.buildFilterQuery(
-        this.model,
-        this.filterRoles,
-        this.logicExpression
-      )(builder);
+      this.buildFilterQuery(this.model, this.filterRoles, this.logicExpression)(builder);
     };
   }
 

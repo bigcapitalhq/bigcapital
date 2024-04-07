@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
 import {
   IPaymentReceiveCreatedPayload,
   IPaymentReceiveDeletedPayload,
   IPaymentReceiveEditedPayload,
 } from '@/interfaces';
-import events from '@/subscribers/events';
 import { PaymentReceiveGLEntries } from '@/services/Sales/PaymentReceives/PaymentReceiveGLEntries';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class PaymentReceivesWriteGLEntriesSubscriber {
@@ -16,18 +16,9 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.paymentReceive.onCreated,
-      this.handleWriteJournalEntriesOnceCreated
-    );
-    bus.subscribe(
-      events.paymentReceive.onEdited,
-      this.handleOverwriteJournalEntriesOnceEdited
-    );
-    bus.subscribe(
-      events.paymentReceive.onDeleted,
-      this.handleRevertJournalEntriesOnceDeleted
-    );
+    bus.subscribe(events.paymentReceive.onCreated, this.handleWriteJournalEntriesOnceCreated);
+    bus.subscribe(events.paymentReceive.onEdited, this.handleOverwriteJournalEntriesOnceEdited);
+    bus.subscribe(events.paymentReceive.onDeleted, this.handleRevertJournalEntriesOnceDeleted);
   }
 
   /**
@@ -38,11 +29,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     paymentReceiveId,
     trx,
   }: IPaymentReceiveCreatedPayload) => {
-    await this.paymentReceiveGLEntries.writePaymentGLEntries(
-      tenantId,
-      paymentReceiveId,
-      trx
-    );
+    await this.paymentReceiveGLEntries.writePaymentGLEntries(tenantId, paymentReceiveId, trx);
   };
 
   /**
@@ -53,11 +40,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     paymentReceive,
     trx,
   }: IPaymentReceiveEditedPayload) => {
-    await this.paymentReceiveGLEntries.rewritePaymentGLEntries(
-      tenantId,
-      paymentReceive.id,
-      trx
-    );
+    await this.paymentReceiveGLEntries.rewritePaymentGLEntries(tenantId, paymentReceive.id, trx);
   };
 
   /**
@@ -68,10 +51,6 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     paymentReceiveId,
     trx,
   }: IPaymentReceiveDeletedPayload) => {
-    await this.paymentReceiveGLEntries.revertPaymentGLEntries(
-      tenantId,
-      paymentReceiveId,
-      trx
-    );
+    await this.paymentReceiveGLEntries.revertPaymentGLEntries(tenantId, paymentReceiveId, trx);
   };
 }

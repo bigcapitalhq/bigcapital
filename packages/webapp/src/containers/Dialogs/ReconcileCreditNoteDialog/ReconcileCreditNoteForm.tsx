@@ -30,12 +30,8 @@ function ReconcileCreditNoteForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    creditNoteId,
-    reconcileCreditNotes,
-    createReconcileCreditNoteMutate,
-  } = useReconcileCreditNoteContext();
+  const { dialogName, creditNoteId, reconcileCreditNotes, createReconcileCreditNoteMutate } =
+    useReconcileCreditNoteContext();
 
   // Initial form values.
   const initialValues = {
@@ -80,9 +76,7 @@ function ReconcileCreditNoteForm({
       setSubmitting(false);
     };
 
-    createReconcileCreditNoteMutate([creditNoteId, form])
-      .then(onSuccess)
-      .catch(onError);
+    createReconcileCreditNoteMutate([creditNoteId, form]).then(onSuccess).catch(onError);
   };
 
   return (

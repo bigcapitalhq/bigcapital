@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
-import {
-  TransactionsLockingList,
-  TransactionsLockingFull,
-  TransactionLockingSkeletonList,
-} from './components';
+import { TransactionsLockingList, TransactionsLockingFull, TransactionLockingSkeletonList } from './components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -23,8 +19,7 @@ function TransactionsLockingBodyJsx({
   // #withAlertsActions
   openAlert,
 }) {
-  const { isTransactionLockingLoading, transactionLockingType } =
-    useTransactionsLockingContext();
+  const { isTransactionLockingLoading, transactionLockingType } = useTransactionsLockingContext();
 
   // Handle locking transactions.
   const handleLockingTransactions = (module, {}, isEnabled) => {
@@ -68,7 +63,4 @@ function TransactionsLockingBodyJsx({
   );
 }
 
-export const TransactionsLockingBody = R.compose(
-  withAlertsActions,
-  withDialogActions,
-)(TransactionsLockingBodyJsx);
+export const TransactionsLockingBody = R.compose(withAlertsActions, withDialogActions)(TransactionsLockingBodyJsx);

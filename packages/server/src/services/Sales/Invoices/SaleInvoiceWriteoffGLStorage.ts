@@ -1,7 +1,7 @@
-import { Knex } from 'knex';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { SaleInvoiceWriteoffGLEntries } from './SaleInvoiceWriteoffGLEntries';
 
 @Service()
@@ -22,11 +22,7 @@ export class SaleInvoiceWriteoffGLStorage {
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  public writeInvoiceWriteoffEntries = async (
-    tenantId: number,
-    saleInvoiceId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public writeInvoiceWriteoffEntries = async (tenantId: number, saleInvoiceId: number, trx?: Knex.Transaction) => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
@@ -36,16 +32,9 @@ export class SaleInvoiceWriteoffGLStorage {
       .withGraphFetched('writtenoffExpenseAccount');
 
     // Find or create the A/R account.
-    const ARAccount = await accountRepository.findOrCreateAccountReceivable(
-      saleInvoice.currencyCode,
-      {},
-      trx
-    );
+    const ARAccount = await accountRepository.findOrCreateAccountReceivable(saleInvoice.currencyCode, {}, trx);
     // Retrieves the invoice write-off ledger.
-    const ledger = this.invoiceWriteoffLedger.getInvoiceWriteoffLedger(
-      ARAccount.id,
-      saleInvoice
-    );
+    const ledger = this.invoiceWriteoffLedger.getInvoiceWriteoffLedger(ARAccount.id, saleInvoice);
     return this.ledgerStorage.commit(tenantId, ledger, trx);
   };
 
@@ -56,11 +45,7 @@ export class SaleInvoiceWriteoffGLStorage {
    * @param   {Knex.Transactio} actiontrx
    * @returns {Promise<void>}
    */
-  public rewriteInvoiceWriteoffEntries = async (
-    tenantId: number,
-    saleInvoiceId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewriteInvoiceWriteoffEntries = async (tenantId: number, saleInvoiceId: number, trx?: Knex.Transaction) => {
     await this.revertInvoiceWriteoffEntries(tenantId, saleInvoiceId, trx);
 
     await this.writeInvoiceWriteoffEntries(tenantId, saleInvoiceId, trx);
@@ -73,16 +58,7 @@ export class SaleInvoiceWriteoffGLStorage {
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  public revertInvoiceWriteoffEntries = async (
-    tenantId: number,
-    saleInvoiceId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      saleInvoiceId,
-      'InvoiceWriteOff',
-      trx
-    );
+  public revertInvoiceWriteoffEntries = async (tenantId: number, saleInvoiceId: number, trx?: Knex.Transaction) => {
+    await this.ledgerStorage.deleteByReference(tenantId, saleInvoiceId, 'InvoiceWriteOff', trx);
   };
 }

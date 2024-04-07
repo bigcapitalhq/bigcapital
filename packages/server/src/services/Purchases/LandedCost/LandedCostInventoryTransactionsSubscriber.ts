@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
-import {
-  IAllocatedLandedCostCreatedPayload,
-  IAllocatedLandedCostDeletedPayload,
-} from '@/interfaces';
+import { IAllocatedLandedCostCreatedPayload, IAllocatedLandedCostDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import LandedCostInventoryTransactions from './LandedCostInventoryTransactions';
 
 @Service()
@@ -15,14 +12,8 @@ export default class LandedCostInventoryTransactionsSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.billLandedCost.onCreated,
-      this.writeInventoryTransactionsOnceCreated
-    );
-    bus.subscribe(
-      events.billLandedCost.onDeleted,
-      this.revertInventoryTransactionsOnceDeleted
-    );
+    bus.subscribe(events.billLandedCost.onCreated, this.writeInventoryTransactionsOnceCreated);
+    bus.subscribe(events.billLandedCost.onDeleted, this.revertInventoryTransactionsOnceDeleted);
   }
 
   /**
@@ -36,12 +27,7 @@ export default class LandedCostInventoryTransactionsSubscriber {
     bill,
   }: IAllocatedLandedCostCreatedPayload) => {
     // Records the inventory transactions.
-    await this.landedCostInventory.recordInventoryTransactions(
-      tenantId,
-      billLandedCost,
-      bill,
-      trx
-    );
+    await this.landedCostInventory.recordInventoryTransactions(tenantId, billLandedCost, bill, trx);
   };
 
   /**
@@ -54,10 +40,6 @@ export default class LandedCostInventoryTransactionsSubscriber {
     trx,
   }: IAllocatedLandedCostDeletedPayload) => {
     // Removes the inventory transactions.
-    await this.landedCostInventory.removeInventoryTransactions(
-      tenantId,
-      oldBillLandedCost.id,
-      trx
-    );
+    await this.landedCostInventory.removeInventoryTransactions(tenantId, oldBillLandedCost.id, trx);
   };
 }

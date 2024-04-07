@@ -5,27 +5,17 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { compose } from '@/utils';
 
-const BranchFormDialogContent = React.lazy(
-  () => import('./BranchFormDialogContent'),
-);
+const BranchFormDialogContent = React.lazy(() => import('./BranchFormDialogContent'));
 
 /**
  * Branch form form dialog.
  */
-function BranchFormDialog({
-  dialogName,
-  payload: { branchId, action },
-  isOpen,
-}) {
+function BranchFormDialog({ dialogName, payload: { branchId, action }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
       title={
-        action === 'edit' ? (
-          <T id={'branch.dialog.label_edit_branch'} />
-        ) : (
-          <T id={'branch.dialog.label_new_branch'} />
-        )
+        action === 'edit' ? <T id={'branch.dialog.label_edit_branch'} /> : <T id={'branch.dialog.label_new_branch'} />
       }
       isOpen={isOpen}
       canEscapeJeyClose={true}

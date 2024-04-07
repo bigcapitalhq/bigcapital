@@ -11,9 +11,7 @@ interface SendMailNotificationFormProps {
   onClose?: () => void;
 }
 
-export function InvoiceMailDialogFormContent({
-  onClose,
-}: SendMailNotificationFormProps) {
+export function InvoiceMailDialogFormContent({ onClose }: SendMailNotificationFormProps) {
   const { isSubmitting } = useFormikContext();
   const { mailOptions } = useInvoiceMailDialogBoot();
 
@@ -24,10 +22,7 @@ export function InvoiceMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
-        />
+        <MailNotificationForm fromAddresses={mailOptions.from_addresses} toAddresses={mailOptions.to_addresses} />
         <AttachFormGroup name={'attachInvoice'} inline>
           <FSwitch name={'attachInvoice'} label={'Attach Invoice'} />
         </AttachFormGroup>
@@ -35,20 +30,11 @@ export function InvoiceMailDialogFormContent({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '65px' }}
-          >
+          <Button disabled={isSubmitting} onClick={handleClose} style={{ minWidth: '65px' }}>
             Close
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '75px' }}
-            type="submit"
-          >
+          <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
             Send
           </Button>
         </div>

@@ -1,6 +1,6 @@
+import { EchangeRateLatestPOJO, ExchangeRateLatestDTO } from '@/interfaces';
 import { Inject } from 'typedi';
 import { ExchangeRatesService } from './ExchangeRatesService';
-import { EchangeRateLatestPOJO, ExchangeRateLatestDTO } from '@/interfaces';
 
 export class ExchangeRateApplication {
   @Inject()
@@ -12,10 +12,7 @@ export class ExchangeRateApplication {
    * @param {ExchangeRateLatestDTO} exchangeRateLatestDTO
    * @returns {Promise<EchangeRateLatestPOJO>}
    */
-  public latest(
-    tenantId: number,
-    exchangeRateLatestDTO: ExchangeRateLatestDTO
-  ): Promise<EchangeRateLatestPOJO> {
+  public latest(tenantId: number, exchangeRateLatestDTO: ExchangeRateLatestDTO): Promise<EchangeRateLatestPOJO> {
     return this.exchangeRateService.latest(tenantId, exchangeRateLatestDTO);
   }
 }

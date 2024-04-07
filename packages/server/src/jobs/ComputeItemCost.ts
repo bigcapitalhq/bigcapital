@@ -1,11 +1,8 @@
-import { Container } from 'typedi';
-import events from '@/subscribers/events';
-import InventoryService from '@/services/Inventory/Inventory';
+import { IComputeItemCostJobCompletedPayload, IComputeItemCostJobStartedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import {
-  IComputeItemCostJobCompletedPayload,
-  IComputeItemCostJobStartedPayload,
-} from '@/interfaces';
+import InventoryService from '@/services/Inventory/Inventory';
+import events from '@/subscribers/events';
+import { Container } from 'typedi';
 
 export default class ComputeItemCostJob {
   agenda: any;
@@ -19,16 +16,9 @@ export default class ComputeItemCostJob {
     this.agenda = agenda;
     this.eventPublisher = Container.get(EventPublisher);
 
-    agenda.define(
-      'compute-item-cost',
-      { priority: 'high', concurrency: 1 },
-      this.handler.bind(this)
-    );
+    agenda.define('compute-item-cost', { priority: 'high', concurrency: 1 }, this.handler.bind(this));
     this.agenda.on('start:compute-item-cost', this.onJobStart.bind(this));
-    this.agenda.on(
-      'complete:compute-item-cost',
-      this.onJobCompleted.bind(this)
-    );
+    this.agenda.on('complete:compute-item-cost', this.onJobCompleted.bind(this));
   }
 
   /**
@@ -52,10 +42,11 @@ export default class ComputeItemCostJob {
   async onJobStart(job) {
     const { startingDate, itemId, tenantId } = job.attrs.data;
 
-    await this.eventPublisher.emitAsync(
-      events.inventory.onComputeItemCostJobStarted,
-      { startingDate, itemId, tenantId } as IComputeItemCostJobStartedPayload
-    );
+    await this.eventPublisher.emitAsync(events.inventory.onComputeItemCostJobStarted, {
+      startingDate,
+      itemId,
+      tenantId,
+    } as IComputeItemCostJobStartedPayload);
   }
 
   /**
@@ -65,9 +56,10 @@ export default class ComputeItemCostJob {
   async onJobCompleted(job) {
     const { startingDate, itemId, tenantId } = job.attrs.data;
 
-    await this.eventPublisher.emitAsync(
-      events.inventory.onComputeItemCostJobCompleted,
-      { startingDate, itemId, tenantId } as IComputeItemCostJobCompletedPayload
-    );
+    await this.eventPublisher.emitAsync(events.inventory.onComputeItemCostJobCompleted, {
+      startingDate,
+      itemId,
+      tenantId,
+    } as IComputeItemCostJobCompletedPayload);
   }
 }

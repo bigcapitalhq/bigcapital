@@ -25,10 +25,7 @@ function SetupRightSection({
 }) {
   return (
     <section className={'setup-page__right-section'}>
-      <SetupWizardContent
-        setupStepId={setupStepId}
-        setupStepIndex={setupStepIndex}
-      />
+      <SetupWizardContent setupStepId={setupStepId} setupStepIndex={setupStepIndex} />
       <SetupDialogs />
     </section>
   );

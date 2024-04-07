@@ -10,18 +10,12 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const PdfPreviewDialogContent = React.lazy(() =>
-  import('./PaymentReceivePdfPreviewContent'),
-);
+const PdfPreviewDialogContent = React.lazy(() => import('./PaymentReceivePdfPreviewContent'));
 
 /**
  * Payment receive PDF preview dialog.
  */
-function PaymentReceivePdfPreviewDialog({
-  dialogName,
-  payload = { paymentReceiveId: null },
-  isOpen,
-}) {
+function PaymentReceivePdfPreviewDialog({ dialogName, payload = { paymentReceiveId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -33,10 +27,7 @@ function PaymentReceivePdfPreviewDialog({
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <PdfPreviewDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <PdfPreviewDialogContent dialogName={dialogName} subscriptionForm={payload} />
       </DialogSuspense>
     </Dialog>
   );

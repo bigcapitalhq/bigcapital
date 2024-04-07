@@ -30,9 +30,7 @@ function BillUniversalSearchSelectComponent({
   return null;
 }
 
-export const BillUniversalSearchSelect = withDrawerActions(
-  BillUniversalSearchSelectComponent,
-);
+export const BillUniversalSearchSelect = withDrawerActions(BillUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -48,14 +46,10 @@ export function BillStatus({ bill }) {
       <Choose.When condition={bill.is_open}>
         <Choose>
           <Choose.When condition={bill.is_overdue}>
-            <span className={'overdue-status'}>
-              {intl.get('overdue_by', { overdue: bill.overdue_days })}
-            </span>
+            <span className={'overdue-status'}>{intl.get('overdue_by', { overdue: bill.overdue_days })}</span>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'due-status'}>
-              {intl.get('due_in', { due: bill.remaining_days })}
-            </span>
+            <span className={'due-status'}>{intl.get('due_in', { due: bill.remaining_days })}</span>
           </Choose.Otherwise>
         </Choose>
         <If condition={bill.is_partially_paid}>
@@ -78,10 +72,7 @@ export function BillStatus({ bill }) {
 /**
  * Bill universal search item.
  */
-export function BillUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function BillUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -89,8 +80,7 @@ export function BillUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.bill_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.bill_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_bill_date}
           </span>
         </div>

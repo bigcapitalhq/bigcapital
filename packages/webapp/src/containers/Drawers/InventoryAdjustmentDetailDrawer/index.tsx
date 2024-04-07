@@ -6,9 +6,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const InventoryAdjustmentDrawerContent = React.lazy(() =>
-  import('./InventoryAdjustmentDrawerContent'),
-);
+const InventoryAdjustmentDrawerContent = React.lazy(() => import('./InventoryAdjustmentDrawerContent'));
 
 /**
  * Inventory adjustment detail drawer.
@@ -20,12 +18,7 @@ function InventoryAdjustmentDetailDrawer({
   payload: { inventoryId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
         <InventoryAdjustmentDrawerContent inventoryId={inventoryId} />
       </DrawerSuspense>

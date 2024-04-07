@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
 import { ITransactionsByCustomersFilter } from '@/interfaces';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { TransactionsByCustomersTableInjectable } from './TransactionsByCustomersTableInjectable';
 
 @Service()
@@ -14,10 +14,7 @@ export class TransactionsByCustomersExportInjectable {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: ITransactionsByCustomersFilter): Promise<Buffer> {
     const table = await this.transactionsByCustomerTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class TransactionsByCustomersExportInjectable {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<string>}
    */
-  public async csv(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<string> {
+  public async csv(tenantId: number, query: ITransactionsByCustomersFilter): Promise<string> {
     const table = await this.transactionsByCustomerTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

@@ -1,16 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import {
-  ICashflowTransaction,
-  ICommandCashflowDeletedPayload,
-  ICommandCashflowDeletingPayload,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ICashflowTransaction, ICommandCashflowDeletedPayload, ICommandCashflowDeletingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeleteCashflowTransaction {
@@ -30,15 +26,12 @@ export class DeleteCashflowTransaction {
    */
   public deleteCashflowTransaction = async (
     tenantId: number,
-    cashflowTransactionId: number
+    cashflowTransactionId: number,
   ): Promise<{ oldCashflowTransaction: ICashflowTransaction }> => {
-    const { CashflowTransaction, CashflowTransactionLine } =
-      this.tenancy.models(tenantId);
+    const { CashflowTransaction, CashflowTransactionLine } = this.tenancy.models(tenantId);
 
     // Retrieve the cashflow transaction.
-    const oldCashflowTransaction = await CashflowTransaction.query().findById(
-      cashflowTransactionId
-    );
+    const oldCashflowTransaction = await CashflowTransaction.query().findById(cashflowTransactionId);
     // Throw not found error if the given transaction id not found.
     this.throwErrorIfTransactionNotFound(oldCashflowTransaction);
 
@@ -52,14 +45,10 @@ export class DeleteCashflowTransaction {
       } as ICommandCashflowDeletingPayload);
 
       // Delete cashflow transaction associated lines first.
-      await CashflowTransactionLine.query(trx)
-        .where('cashflow_transaction_id', cashflowTransactionId)
-        .delete();
+      await CashflowTransactionLine.query(trx).where('cashflow_transaction_id', cashflowTransactionId).delete();
 
       // Delete cashflow transaction.
-      await CashflowTransaction.query(trx)
-        .findById(cashflowTransactionId)
-        .delete();
+      await CashflowTransaction.query(trx).findById(cashflowTransactionId).delete();
 
       // Triggers `onCashflowTransactionDeleted` event.
       await this.eventPublisher.emitAsync(events.cashflow.onTransactionDeleted, {

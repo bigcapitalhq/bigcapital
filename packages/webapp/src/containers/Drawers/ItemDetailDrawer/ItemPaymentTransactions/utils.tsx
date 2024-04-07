@@ -1,14 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  MenuItem,
-  Menu,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-} from '@blueprintjs/core';
+import { Button, MenuItem, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { useItemDetailDrawerContext } from '../ItemDetailDrawerProvider';
 import { useGetItemPaymentTransactionsMenu } from '@/constants/itemPaymentTranactionsOption';
@@ -39,11 +32,7 @@ export const ItemManuTransaction = ({ onChange }) => {
       }}
       content={<Menu>{content}</Menu>}
     >
-      <ItemSwitchButton
-        minimal={true}
-        text={<T id={'item.drawer_transactions_by'} />}
-        rightIcon={'caret-down'}
-      >
+      <ItemSwitchButton minimal={true} text={<T id={'item.drawer_transactions_by'} />} rightIcon={'caret-down'}>
         <ItemSwitchText>
           <T id={value} />
         </ItemSwitchText>

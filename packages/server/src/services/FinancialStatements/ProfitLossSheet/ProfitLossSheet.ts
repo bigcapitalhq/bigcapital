@@ -1,29 +1,29 @@
-import * as R from 'ramda';
+import {
+  IAccount,
+  IProfitLossAccountsSchemaNode,
+  IProfitLossEquationSchemaNode,
+  IProfitLossSchemaNode,
+  IProfitLossSheetAccountNode,
+  IProfitLossSheetAccountsNode,
+  IProfitLossSheetEquationNode,
+  IProfitLossSheetNode,
+  ProfitLossNodeType,
+} from '@/interfaces';
 import { IProfitLossSheetQuery } from '@/interfaces/ProfitLossSheet';
+import * as R from 'ramda';
+import { FinancialDateRanges } from '../FinancialDateRanges';
+import { FinancialEvaluateEquation } from '../FinancialEvaluateEquation';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
-import {
-  ProfitLossNodeType,
-  IProfitLossSheetEquationNode,
-  IProfitLossEquationSchemaNode,
-  IProfitLossSheetAccountsNode,
-  IProfitLossAccountsSchemaNode,
-  IProfitLossSchemaNode,
-  IProfitLossSheetNode,
-  IAccount,
-  IProfitLossSheetAccountNode,
-} from '@/interfaces';
 import { ProfitLossShema } from './ProfitLossSchema';
-import { ProfitLossSheetPercentage } from './ProfitLossSheetPercentage';
-import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
-import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 import { ProfitLossSheetBase } from './ProfitLossSheetBase';
 import { ProfitLossSheetDatePeriods } from './ProfitLossSheetDatePeriods';
-import { FinancialEvaluateEquation } from '../FinancialEvaluateEquation';
-import { ProfitLossSheetPreviousYear } from './ProfitLossSheetPreviousYear';
-import { ProfitLossSheetPreviousPeriod } from './ProfitLossSheetPreviousPeriod';
-import { FinancialDateRanges } from '../FinancialDateRanges';
 import { ProfitLossSheetFilter } from './ProfitLossSheetFilter';
+import { ProfitLossSheetPercentage } from './ProfitLossSheetPercentage';
+import { ProfitLossSheetPreviousPeriod } from './ProfitLossSheetPreviousPeriod';
+import { ProfitLossSheetPreviousYear } from './ProfitLossSheetPreviousYear';
+import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
+import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
 
 export default class ProfitLossSheet extends R.compose(
   ProfitLossSheetPreviousYear,
@@ -35,7 +35,7 @@ export default class ProfitLossSheet extends R.compose(
   ProfitLossSheetBase,
   FinancialDateRanges,
   FinancialEvaluateEquation,
-  FinancialSheetStructure
+  FinancialSheetStructure,
 )(FinancialSheet) {
   /**
    * Profit/Loss sheet query.
@@ -65,12 +65,7 @@ export default class ProfitLossSheet extends R.compose(
    * @param {IAccount[]} accounts -
    * @param {IJournalPoster} transactionsJournal -
    */
-  constructor(
-    repository: ProfitLossSheetRepository,
-    query: IProfitLossSheetQuery,
-    baseCurrency: string,
-    i18n: any
-  ) {
+  constructor(repository: ProfitLossSheetRepository, query: IProfitLossSheetQuery, baseCurrency: string, i18n: any) {
     super();
 
     this.query = new ProfitLossSheetQuery(query);
@@ -85,12 +80,8 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {IAccount} account
    * @returns {IProfitLossSheetAccountNode}
    */
-  private accountNodeMapper = (
-    account: IAccount
-  ): IProfitLossSheetAccountNode => {
-    const total = this.repository.totalAccountsLedger
-      .whereAccountId(account.id)
-      .getClosingBalance();
+  private accountNodeMapper = (account: IAccount): IProfitLossSheetAccountNode => {
+    const total = this.repository.totalAccountsLedger.whereAccountId(account.id).getClosingBalance();
 
     return {
       id: account.id,
@@ -105,23 +96,12 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {IAccount} node
    * @returns {IProfitLossSheetAccountNode}
    */
-  private accountNodeCompose = (
-    account: IAccount
-  ): IProfitLossSheetAccountNode => {
+  private accountNodeCompose = (account: IAccount): IProfitLossSheetAccountNode => {
     return R.compose(
-      R.when(
-        this.query.isPreviousPeriodActive,
-        this.previousPeriodAccountNodeCompose
-      ),
-      R.when(
-        this.query.isPreviousYearActive,
-        this.previousYearAccountNodeCompose
-      ),
-      R.when(
-        this.query.isDatePeriodsColumnsType,
-        this.assocAccountNodeDatePeriod
-      ),
-      this.accountNodeMapper
+      R.when(this.query.isPreviousPeriodActive, this.previousPeriodAccountNodeCompose),
+      R.when(this.query.isPreviousYearActive, this.previousYearAccountNodeCompose),
+      R.when(this.query.isDatePeriodsColumnsType, this.assocAccountNodeDatePeriod),
+      this.accountNodeMapper,
     )(account);
   };
 
@@ -130,14 +110,8 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {string[]} types
    * @returns {IBalanceSheetAccountNode}
    */
-  private getAccountsNodesByTypes = (
-    types: string[]
-  ): IProfitLossSheetAccountNode[] => {
-    return R.compose(
-      R.map(this.accountNodeCompose),
-      R.flatten,
-      R.map(this.repository.getAccountsByType)
-    )(types);
+  private getAccountsNodesByTypes = (types: string[]): IProfitLossSheetAccountNode[] => {
+    return R.compose(R.map(this.accountNodeCompose), R.flatten, R.map(this.repository.getAccountsByType))(types);
   };
 
   /**
@@ -145,9 +119,7 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {IProfitLossSchemaNode} node
    * @returns {IProfitLossSheetNode}
    */
-  private accountsSchemaNodeMapper = (
-    node: IProfitLossAccountsSchemaNode
-  ): IProfitLossSheetNode => {
+  private accountsSchemaNodeMapper = (node: IProfitLossAccountsSchemaNode): IProfitLossSheetNode => {
     // Retrieve accounts node by the given types.
     const children = this.getAccountsNodesByTypes(node.accountsTypes);
 
@@ -168,23 +140,12 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {IProfitLossSchemaNode} node
    * @returns {IProfitLossSheetAccountsNode}
    */
-  private accountsSchemaNodeCompose = (
-    node: IProfitLossSchemaNode
-  ): IProfitLossSheetAccountsNode => {
+  private accountsSchemaNodeCompose = (node: IProfitLossSchemaNode): IProfitLossSheetAccountsNode => {
     return R.compose(
-      R.when(
-        this.query.isPreviousPeriodActive,
-        this.previousPeriodAggregateNodeCompose
-      ),
-      R.when(
-        this.query.isPreviousYearActive,
-        this.previousYearAggregateNodeCompose
-      ),
-      R.when(
-        this.query.isDatePeriodsColumnsType,
-        this.assocAggregateDatePeriod
-      ),
-      this.accountsSchemaNodeMapper
+      R.when(this.query.isPreviousPeriodActive, this.previousPeriodAggregateNodeCompose),
+      R.when(this.query.isPreviousYearActive, this.previousYearAggregateNodeCompose),
+      R.when(this.query.isDatePeriodsColumnsType, this.assocAggregateDatePeriod),
+      this.accountsSchemaNodeMapper,
     )(node);
   };
 
@@ -197,12 +158,9 @@ export default class ProfitLossSheet extends R.compose(
   private equationSchemaNodeParser = R.curry(
     (
       accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
-      node: IProfitLossEquationSchemaNode
+      node: IProfitLossEquationSchemaNode,
     ): IProfitLossSheetEquationNode => {
-      const tableNodes = this.getNodesTableForEvaluating(
-        'total.amount',
-        accNodes
-      );
+      const tableNodes = this.getNodesTableForEvaluating('total.amount', accNodes);
       // Evaluate the given equation.
       const total = this.evaluateEquation(node.equation, tableNodes);
 
@@ -212,7 +170,7 @@ export default class ProfitLossSheet extends R.compose(
         nodeType: ProfitLossNodeType.EQUATION,
         total: this.getTotalAmountMeta(total),
       };
-    }
+    },
   );
 
   /**
@@ -224,24 +182,15 @@ export default class ProfitLossSheet extends R.compose(
   private equationSchemaNodeCompose = R.curry(
     (
       accNodes: (IProfitLossSchemaNode | IProfitLossSheetNode)[],
-      node: IProfitLossEquationSchemaNode
+      node: IProfitLossEquationSchemaNode,
     ): IProfitLossSheetEquationNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodEquationNodeCompose(accNodes, node.equation)
-        ),
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearEquationNodeCompose(accNodes, node.equation)
-        ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocEquationNodeDatePeriod(accNodes, node.equation)
-        ),
-        this.equationSchemaNodeParser(accNodes)
+        R.when(this.query.isPreviousPeriodActive, this.previousPeriodEquationNodeCompose(accNodes, node.equation)),
+        R.when(this.query.isPreviousYearActive, this.previousYearEquationNodeCompose(accNodes, node.equation)),
+        R.when(this.query.isDatePeriodsColumnsType, this.assocEquationNodeDatePeriod(accNodes, node.equation)),
+        this.equationSchemaNodeParser(accNodes),
       )(node);
-    }
+    },
   );
 
   /**
@@ -249,15 +198,8 @@ export default class ProfitLossSheet extends R.compose(
    * @param   {IProfitLossSchemaNode} schemaNode
    * @returns {IProfitLossSheetNode | IProfitLossSchemaNode}
    */
-  private accountsSchemaNodeMap = (
-    schemaNode: IProfitLossSchemaNode
-  ): IProfitLossSheetNode | IProfitLossSchemaNode => {
-    return R.compose(
-      R.when(
-        this.isNodeType(ProfitLossNodeType.ACCOUNTS),
-        this.accountsSchemaNodeCompose
-      )
-    )(schemaNode);
+  private accountsSchemaNodeMap = (schemaNode: IProfitLossSchemaNode): IProfitLossSheetNode | IProfitLossSchemaNode => {
+    return R.compose(R.when(this.isNodeType(ProfitLossNodeType.ACCOUNTS), this.accountsSchemaNodeCompose))(schemaNode);
   };
 
   /**
@@ -274,14 +216,11 @@ export default class ProfitLossSheet extends R.compose(
     key: number,
     parentValue: IProfitLossSheetNode | IProfitLossSchemaNode,
     accNodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
-    context
+    context,
   ): IProfitLossSheetEquationNode => {
-    return R.compose(
-      R.when(
-        this.isNodeType(ProfitLossNodeType.EQUATION),
-        this.equationSchemaNodeCompose(accNodes)
-      )
-    )(node);
+    return R.compose(R.when(this.isNodeType(ProfitLossNodeType.EQUATION), this.equationSchemaNodeCompose(accNodes)))(
+      node,
+    );
   };
 
   /**
@@ -290,7 +229,7 @@ export default class ProfitLossSheet extends R.compose(
    * @returns {(IProfitLossSheetNode | IProfitLossSchemaNode)[]}
    */
   private reportSchemaAccountsNodesCompose = (
-    schemaNodes: IProfitLossSchemaNode[]
+    schemaNodes: IProfitLossSchemaNode[],
   ): (IProfitLossSheetNode | IProfitLossSchemaNode)[] => {
     return this.mapNodesDeep(schemaNodes, this.accountsSchemaNodeMap);
   };
@@ -301,7 +240,7 @@ export default class ProfitLossSheet extends R.compose(
    * @returns {(IProfitLossSheetNode | IProfitLossSchemaNode)[]}
    */
   private reportSchemaEquationNodesCompose = (
-    nodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[]
+    nodes: (IProfitLossSheetNode | IProfitLossSchemaNode)[],
   ): (IProfitLossSheetNode | IProfitLossSchemaNode)[] => {
     return this.mapAccNodesDeep(nodes, this.reportSchemaEquationNodeCompose);
   };
@@ -318,7 +257,7 @@ export default class ProfitLossSheet extends R.compose(
       this.reportRowsPercentageCompose,
       this.reportColumnsPerentageCompose,
       this.reportSchemaEquationNodesCompose,
-      this.reportSchemaAccountsNodesCompose
+      this.reportSchemaAccountsNodesCompose,
     )(schema);
   };
 }

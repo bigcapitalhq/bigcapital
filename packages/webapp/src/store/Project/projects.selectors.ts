@@ -8,16 +8,12 @@ const projectsTableState = (state) => state.projects.tableState;
 
 // Retrieve projects table query.
 export const getProjectsTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    projectsTableState,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, projectsTableState, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 export const isProjectsTableStateChangedFactory = () =>
   createDeepEqualSelector(projectsTableState, (tableState) => {

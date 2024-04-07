@@ -9,12 +9,7 @@ import { getColumnWidth } from '@/utils';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, labelText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    labelText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, labelText);
 };
 
 const isNodeHasChildren = (node) => !isEmpty(node.children);
@@ -209,39 +204,18 @@ const totalColumnsMapper = R.curry((data, column) => {
   return R.compose(
     R.when(R.pathEq(['key'], 'total'), totalColumn(data)),
     // Percetage of column/row.
-    R.when(
-      R.pathEq(['key'], 'percentage_column'),
-      percentageOfColumnAccessor(data),
-    ),
+    R.when(R.pathEq(['key'], 'percentage_column'), percentageOfColumnAccessor(data)),
     R.when(R.pathEq(['key'], 'percentage_row'), percentageOfRowAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'percentage_income'),
-      percentageOfIncomeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'percentage_expenses'),
-      percentageOfExpenseAccessor(data),
-    ),
+    R.when(R.pathEq(['key'], 'percentage_income'), percentageOfIncomeAccessor(data)),
+    R.when(R.pathEq(['key'], 'percentage_expenses'), percentageOfExpenseAccessor(data)),
     // Previous year.
     R.when(R.pathEq(['key'], 'previous_year'), previousYearAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previous_year_change'),
-      previousYearChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previous_year_percentage'),
-      previousYearPercentageAccessor(data),
-    ),
+    R.when(R.pathEq(['key'], 'previous_year_change'), previousYearChangeAccessor(data)),
+    R.when(R.pathEq(['key'], 'previous_year_percentage'), previousYearPercentageAccessor(data)),
     // Pervious period.
     R.when(R.pathEq(['key'], 'previous_period'), previousPeriodAccessor(data)),
-    R.when(
-      R.pathEq(['key'], 'previous_period_change'),
-      previousPeriodChangeAccessor(data),
-    ),
-    R.when(
-      R.pathEq(['key'], 'previous_period_percentage'),
-      previousPeriodPercentageAccessor(data),
-    ),
+    R.when(R.pathEq(['key'], 'previous_period_change'), previousPeriodChangeAccessor(data)),
+    R.when(R.pathEq(['key'], 'previous_period_percentage'), previousPeriodPercentageAccessor(data)),
   )(column);
 });
 
@@ -287,10 +261,7 @@ const totalColumn = R.curry((data, column) => {
 const totalColumnCompose = R.curry((data, column) => {
   const hasChildren = isNodeHasChildren(column);
 
-  return R.compose(
-    R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)),
-    totalColumn(data),
-  )(column);
+  return R.compose(R.when(R.always(hasChildren), assocColumnsToTotalColumn(data, column)), totalColumn(data))(column);
 });
 
 /**
@@ -340,14 +311,8 @@ const dateRangeColumn = R.curry((data, column) => {
     align: isDateColumnHasColumns ? Align.Center : Align.Right,
   };
   return R.compose(
-    R.when(
-      R.always(isDateColumnHasColumns),
-      assocColumnsToTotalColumn(data, column),
-    ),
-    R.when(
-      R.always(!isDateColumnHasColumns),
-      R.mergeLeft(dateRangeSoloColumnAttrs(data, column)),
-    ),
+    R.when(R.always(isDateColumnHasColumns), assocColumnsToTotalColumn(data, column)),
+    R.when(R.always(!isDateColumnHasColumns), R.mergeLeft(dateRangeSoloColumnAttrs(data, column))),
   )(columnAccessor);
 });
 

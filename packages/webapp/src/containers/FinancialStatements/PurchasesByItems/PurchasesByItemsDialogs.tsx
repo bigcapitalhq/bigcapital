@@ -4,9 +4,7 @@ import { PurchasesByItemsPdfDialog } from './dialogs/PurchasesByItemsDialog';
 export function PurchasesByItemsDialogs() {
   return (
     <>
-      <PurchasesByItemsPdfDialog
-        dialogName={DialogsName.PurchasesByItemsPdfPreview}
-      />
+      <PurchasesByItemsPdfDialog dialogName={DialogsName.PurchasesByItemsPdfPreview} />
     </>
   );
 }

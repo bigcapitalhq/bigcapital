@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import {
   ICustomerEventCreatingPayload,
   ICustomerOpeningBalanceEditingPayload,
   IVendorEventCreatingPayload,
   IVendorOpeningBalanceEditingPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -17,22 +17,13 @@ export class ContactBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.customers.onCreating,
-      this.validateBranchExistanceOnCustomerCreating
-    );
+    bus.subscribe(events.customers.onCreating, this.validateBranchExistanceOnCustomerCreating);
     bus.subscribe(
       events.customers.onOpeningBalanceChanging,
-      this.validateBranchExistanceOnCustomerOpeningBalanceEditing
+      this.validateBranchExistanceOnCustomerOpeningBalanceEditing,
     );
-    bus.subscribe(
-      events.vendors.onCreating,
-      this.validateBranchExistanceonVendorCreating
-    );
-    bus.subscribe(
-      events.vendors.onOpeningBalanceChanging,
-      this.validateBranchExistanceOnVendorOpeningBalanceEditing
-    );
+    bus.subscribe(events.vendors.onCreating, this.validateBranchExistanceonVendorCreating);
+    bus.subscribe(events.vendors.onOpeningBalanceChanging, this.validateBranchExistanceOnVendorOpeningBalanceEditing);
     return bus;
   };
 
@@ -49,7 +40,7 @@ export class ContactBranchValidateSubscriber {
 
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       tenantId,
-      customerDTO.openingBalanceBranchId
+      customerDTO.openingBalanceBranchId,
     );
   };
 
@@ -65,7 +56,7 @@ export class ContactBranchValidateSubscriber {
 
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       tenantId,
-      openingBalanceEditDTO.openingBalanceBranchId
+      openingBalanceEditDTO.openingBalanceBranchId,
     );
   };
 
@@ -73,17 +64,11 @@ export class ContactBranchValidateSubscriber {
    * Validates the branch existance on vendor creating.
    * @param {IVendorEventCreatingPayload} payload -
    */
-  private validateBranchExistanceonVendorCreating = async ({
-    vendorDTO,
-    tenantId,
-  }: IVendorEventCreatingPayload) => {
+  private validateBranchExistanceonVendorCreating = async ({ vendorDTO, tenantId }: IVendorEventCreatingPayload) => {
     // Can't continue if the customer opening balance is zero.
     if (!vendorDTO.openingBalance) return;
 
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      vendorDTO.openingBalanceBranchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, vendorDTO.openingBalanceBranchId);
   };
 
   /**
@@ -98,7 +83,7 @@ export class ContactBranchValidateSubscriber {
 
     await this.validateBranchExistance.validateTransactionBranchWhenActive(
       tenantId,
-      openingBalanceEditDTO.openingBalanceBranchId
+      openingBalanceEditDTO.openingBalanceBranchId,
     );
   };
 }

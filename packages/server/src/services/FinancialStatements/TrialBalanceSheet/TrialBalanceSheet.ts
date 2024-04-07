@@ -1,15 +1,15 @@
+import {
+  IAccount,
+  IAccountType,
+  ITrialBalanceAccount,
+  ITrialBalanceSheetData,
+  ITrialBalanceSheetQuery,
+  ITrialBalanceTotal,
+} from '@/interfaces';
 import { sumBy } from 'lodash';
 import * as R from 'ramda';
-import {
-  ITrialBalanceSheetQuery,
-  ITrialBalanceAccount,
-  IAccount,
-  ITrialBalanceTotal,
-  ITrialBalanceSheetData,
-  IAccountType,
-} from '@/interfaces';
-import FinancialSheet from '../FinancialSheet';
 import { allPassedConditionsPass, flatToNestedArray } from 'utils';
+import FinancialSheet from '../FinancialSheet';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 
 export default class TrialBalanceSheet extends FinancialSheet {
@@ -42,7 +42,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
     tenantId: number,
     query: ITrialBalanceSheetQuery,
     repository: TrialBalanceSheetRepository,
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
 
@@ -59,12 +59,9 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @returns {number}
    */
   public getClosingAccountCredit(accountId: number) {
-    const depsAccountsIds =
-      this.repository.accountsDepGraph.dependenciesOf(accountId);
+    const depsAccountsIds = this.repository.accountsDepGraph.dependenciesOf(accountId);
 
-    return this.repository.totalAccountsLedger
-      .whereAccountsIds([accountId, ...depsAccountsIds])
-      .getClosingCredit();
+    return this.repository.totalAccountsLedger.whereAccountsIds([accountId, ...depsAccountsIds]).getClosingCredit();
   }
 
   /**
@@ -73,12 +70,9 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @returns {number}
    */
   public getClosingAccountDebit(accountId: number) {
-    const depsAccountsIds =
-      this.repository.accountsDepGraph.dependenciesOf(accountId);
+    const depsAccountsIds = this.repository.accountsDepGraph.dependenciesOf(accountId);
 
-    return this.repository.totalAccountsLedger
-      .whereAccountsIds([accountId, ...depsAccountsIds])
-      .getClosingDebit();
+    return this.repository.totalAccountsLedger.whereAccountsIds([accountId, ...depsAccountsIds]).getClosingDebit();
   }
 
   /**
@@ -98,9 +92,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {IAccount} account
    * @return {ITrialBalanceAccount}
    */
-  private accountTransformer = (
-    account: IAccount & { type: IAccountType }
-  ): ITrialBalanceAccount => {
+  private accountTransformer = (account: IAccount & { type: IAccountType }): ITrialBalanceAccount => {
     const debit = this.getClosingAccountDebit(account.id);
     const credit = this.getClosingAccountCredit(account.id);
     const balance = this.getClosingAccountTotal(account.id);
@@ -109,9 +101,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
       id: account.id,
       parentAccountId: account.parentAccountId,
       name: account.name,
-      formattedName: account.code
-        ? `${account.name} - ${account.code}`
-        : `${account.name}`,
+      formattedName: account.code ? `${account.name} - ${account.code}` : `${account.name}`,
       code: account.code,
       accountNormal: account.accountNormal,
 
@@ -148,9 +138,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */
-  private accountsFilter = (
-    accountsNodes: ITrialBalanceAccount[]
-  ): ITrialBalanceAccount[] => {
+  private accountsFilter = (accountsNodes: ITrialBalanceAccount[]): ITrialBalanceAccount[] => {
     return accountsNodes.filter(this.accountFilter);
   };
 
@@ -159,9 +147,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {IAccount[]} accountsNodes
    * @returns {ITrialBalanceAccount[]}
    */
-  private accountsMapper = (
-    accountsNodes: IAccount[]
-  ): ITrialBalanceAccount[] => {
+  private accountsMapper = (accountsNodes: IAccount[]): ITrialBalanceAccount[] => {
     return accountsNodes.map(this.accountTransformer);
   };
 
@@ -170,9 +156,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount} accountNode
    * @returns {boolean}
    */
-  private filterNoneTransactions = (
-    accountNode: ITrialBalanceAccount
-  ): boolean => {
+  private filterNoneTransactions = (accountNode: ITrialBalanceAccount): boolean => {
     return false === this.repository.totalAccountsLedger.isEmpty();
   };
 
@@ -199,9 +183,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount[]} flattenAccounts
    * @returns {ITrialBalanceAccount[]}
    */
-  private nestedAccountsNode = (
-    flattenAccounts: ITrialBalanceAccount[]
-  ): ITrialBalanceAccount[] => {
+  private nestedAccountsNode = (flattenAccounts: ITrialBalanceAccount[]): ITrialBalanceAccount[] => {
     return flatToNestedArray(flattenAccounts, {
       id: 'id',
       parentId: 'parentAccountId',
@@ -213,9 +195,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @param {ITrialBalanceAccount[]} accountsBalances
    * @return {ITrialBalanceTotal}
    */
-  private tatalSection(
-    accountsBalances: ITrialBalanceAccount[]
-  ): ITrialBalanceTotal {
+  private tatalSection(accountsBalances: ITrialBalanceAccount[]): ITrialBalanceTotal {
     const credit = sumBy(accountsBalances, 'credit');
     const debit = sumBy(accountsBalances, 'debit');
     const balance = sumBy(accountsBalances, 'balance');
@@ -238,11 +218,7 @@ export default class TrialBalanceSheet extends FinancialSheet {
    * @returns {ITrialBalanceAccount[]}
    */
   private accountsSection(accounts: IAccount & { type: IAccountType }[]) {
-    return R.compose(
-      this.nestedAccountsNode,
-      this.accountsFilter,
-      this.accountsMapper
-    )(accounts);
+    return R.compose(this.nestedAccountsNode, this.accountsFilter, this.accountsMapper)(accounts);
   }
 
   /**

@@ -38,8 +38,7 @@ function BillForm({
   const history = useHistory();
 
   // Bill form context.
-  const { bill, isNewMode, submitPayload, createBillMutate, editBillMutate } =
-    useBillFormContext();
+  const { bill, isNewMode, submitPayload, createBillMutate, editBillMutate } = useBillFormContext();
 
   // Initial values in create and edit mode.
   const initialValues = useMemo(
@@ -57,10 +56,7 @@ function BillForm({
   );
 
   // Handles form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
-  ) => {
+  const handleFormSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
 
@@ -80,9 +76,7 @@ function BillForm({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_bill_has_been_created_successfully'
-            : 'the_bill_has_been_edited_successfully',
+          isNewMode ? 'the_bill_has_been_created_successfully' : 'the_bill_has_been_edited_successfully',
         ),
         intent: Intent.SUCCESS,
       });
@@ -112,13 +106,7 @@ function BillForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_BILL,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_BILL)}>
       <Formik
         validationSchema={isNewMode ? CreateBillFormSchema : EditBillFormSchema}
         initialValues={initialValues}

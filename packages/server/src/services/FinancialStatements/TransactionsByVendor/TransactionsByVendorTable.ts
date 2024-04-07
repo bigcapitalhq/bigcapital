@@ -1,10 +1,6 @@
+import { ITableColumn, ITableRow, ITransactionsByVendorsVendor } from '@/interfaces';
 import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
-import {
-  ITransactionsByVendorsVendor,
-  ITableRow,
-  ITableColumn,
-} from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -48,12 +44,9 @@ export class TransactionsByVendorsTable extends TransactionsByContactsTableRows 
       children: R.pipe(
         R.when(
           R.always(vendor.transactions.length > 0),
-          R.pipe(
-            R.concat(this.contactTransactions(vendor)),
-            R.prepend(this.contactOpeningBalance(vendor))
-          )
+          R.pipe(R.concat(this.contactTransactions(vendor)), R.prepend(this.contactOpeningBalance(vendor))),
         ),
-        R.append(this.contactClosingBalance(vendor))
+        R.append(this.contactClosingBalance(vendor)),
       )([]),
     };
   };

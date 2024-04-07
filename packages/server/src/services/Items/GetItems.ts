@@ -1,10 +1,10 @@
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { IItemsFilter } from '@/interfaces';
-import ItemTransformer from './ItemTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import ItemTransformer from './ItemTransformer';
 
 @Service()
 export class GetItems {
@@ -37,11 +37,7 @@ export class GetItems {
     const filter = this.parseItemsListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      Item,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Item, filter);
     const { results: items, pagination } = await Item.query()
       .onBuild((builder) => {
         builder.modify('inactiveMode', filter.inactiveMode);
@@ -56,11 +52,7 @@ export class GetItems {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed items.
-    const transformedItems = await this.transformer.transform(
-      tenantId,
-      items,
-      new ItemTransformer()
-    );
+    const transformedItems = await this.transformer.transform(tenantId, items, new ItemTransformer());
     return {
       items: transformedItems,
       pagination,

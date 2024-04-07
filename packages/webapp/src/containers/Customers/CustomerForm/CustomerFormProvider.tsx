@@ -1,14 +1,7 @@
 // @ts-nocheck
 import React, { useState, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  useCustomer,
-  useCurrencies,
-  useCreateCustomer,
-  useEditCustomer,
-  useContact,
-  useBranches,
-} from '@/hooks/query';
+import { useCustomer, useCurrencies, useCreateCustomer, useEditCustomer, useContact, useBranches } from '@/hooks/query';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -23,15 +16,9 @@ function CustomerFormProvider({ query, customerId, ...props }) {
   const isBranchFeatureCan = featureCan(Features.Branches);
 
   // Handle fetch customer details.
-  const { data: customer, isLoading: isCustomerLoading } = useCustomer(
-    customerId,
-    { enabled: !!customerId },
-  );
+  const { data: customer, isLoading: isCustomerLoading } = useCustomer(customerId, { enabled: !!customerId });
   // Handle fetch contact duplicate details.
-  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
-    contactId,
-    { enabled: !!contactId },
-  );
+  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(contactId, { enabled: !!contactId });
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
@@ -51,8 +38,7 @@ function CustomerFormProvider({ query, customerId, ...props }) {
   // determines whether the form new or duplicate mode.
   const isNewMode = contactId || !customerId;
 
-  const isFormLoading =
-    isCustomerLoading || isCurrenciesLoading || isBranchesLoading;
+  const isFormLoading = isCustomerLoading || isCurrenciesLoading || isBranchesLoading;
 
   const provider = {
     customerId,

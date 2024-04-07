@@ -2,13 +2,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 import { VendorCreditMenuItem } from './utils';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
@@ -16,13 +10,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  If,
-  Icon,
-  FormattedMessage as T,
-  DashboardActionsBar,
-  Can,
-} from '@/components';
+import { If, Icon, FormattedMessage as T, DashboardActionsBar, Can } from '@/components';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -109,8 +97,4 @@ function VendorCreditDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertsActions,
-  withDrawerActions,
-)(VendorCreditDetailActionsBar);
+export default compose(withDialogActions, withAlertsActions, withDrawerActions)(VendorCreditDetailActionsBar);

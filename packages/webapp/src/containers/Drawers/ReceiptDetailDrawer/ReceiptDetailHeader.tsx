@@ -48,38 +48,17 @@ export default function ReceiptDetailHeader() {
               children={defaultTo(receipt.receipt_number, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={receipt.customer_id}>
-                {receipt.customer?.display_name}
-              </CustomerDrawerLink>
+              <CustomerDrawerLink customerId={receipt.customer_id}>{receipt.customer?.display_name}</CustomerDrawerLink>
             </DetailItem>
-            <DetailItem
-              label={intl.get('receipt_date')}
-              children={<FormatDate value={receipt.receipt_date} />}
-            />
-            <DetailItem
-              label={intl.get('closed_date')}
-              children={<FormatDate value={receipt.closed_at_date} />}
-            />
-            <ExchangeRateDetailItem
-              exchangeRate={receipt?.exchange_rate}
-              toCurrency={receipt?.currency_code}
-            />
+            <DetailItem label={intl.get('receipt_date')} children={<FormatDate value={receipt.receipt_date} />} />
+            <DetailItem label={intl.get('closed_date')} children={<FormatDate value={receipt.closed_at_date} />} />
+            <ExchangeRateDetailItem exchangeRate={receipt?.exchange_rate} toCurrency={receipt?.currency_code} />
           </DetailsMenu>
         </Col>
         <Col xs={6}>
-          <DetailsMenu
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-            textAlign={'right'}
-          >
-            <DetailItem
-              label={intl.get('deposit_account')}
-              children={receipt.deposit_account?.name}
-            />
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(receipt.reference_no, '--')}
-            />
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'} textAlign={'right'}>
+            <DetailItem label={intl.get('deposit_account')} children={receipt.deposit_account?.name} />
+            <DetailItem label={intl.get('reference')} children={defaultTo(receipt.reference_no, '--')} />
             <DetailItem
               label={intl.get('receipt.details.created_at')}
               children={<FormatDate value={receipt.created_at} />}

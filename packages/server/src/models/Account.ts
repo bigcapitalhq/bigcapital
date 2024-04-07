@@ -1,26 +1,19 @@
-/* eslint-disable global-require */
-import { mixin, Model } from 'objection';
-import { castArray } from 'lodash';
-import TenantModel from '@/models/TenantModel';
-import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
-import { flatToNestedArray } from 'utils';
-import DependencyGraph from '@/lib/DependencyGraph';
+import { ACCOUNT_TYPES, getAccountsSupportsMultiCurrency } from '@/data/AccountTypes';
 import AccountTypesUtils from '@/lib/AccountTypes';
-import AccountSettings from './Account.Settings';
-import ModelSettings from './ModelSetting';
-import {
-  ACCOUNT_TYPES,
-  getAccountsSupportsMultiCurrency,
-} from '@/data/AccountTypes';
-import CustomViewBaseModel from './CustomViewBaseModel';
+import DependencyGraph from '@/lib/DependencyGraph';
+import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
+import TenantModel from '@/models/TenantModel';
 import { DEFAULT_VIEWS } from '@/services/Accounts/constants';
+import { castArray } from 'lodash';
+/* eslint-disable global-require */
+import { Model, mixin } from 'objection';
+import { flatToNestedArray } from 'utils';
+import AccountSettings from './Account.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSettings from './ModelSetting';
 
-export default class Account extends mixin(TenantModel, [
-  ModelSettings,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Account extends mixin(TenantModel, [ModelSettings, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name.
    */
@@ -141,9 +134,9 @@ export default class Account extends mixin(TenantModel, [
        * Filter by root type.
        */
       filterByRootType(query, rootType) {
-        const filterTypes = ACCOUNT_TYPES.filter(
-          (accountType) => accountType.rootType === rootType
-        ).map((accountType) => accountType.key);
+        const filterTypes = ACCOUNT_TYPES.filter((accountType) => accountType.rootType === rootType).map(
+          (accountType) => accountType.key,
+        );
 
         query.whereIn('account_type', filterTypes);
       },
@@ -152,9 +145,9 @@ export default class Account extends mixin(TenantModel, [
        * Filter by account normal
        */
       filterByAccountNormal(query, accountNormal) {
-        const filterTypes = ACCOUNT_TYPES.filter(
-          (accountType) => accountType.normal === accountNormal
-        ).map((accountType) => accountType.key);
+        const filterTypes = ACCOUNT_TYPES.filter((accountType) => accountType.normal === accountNormal).map(
+          (accountType) => accountType.key,
+        );
 
         query.whereIn('account_type', filterTypes);
       },
@@ -177,10 +170,7 @@ export default class Account extends mixin(TenantModel, [
         const accountsTypes = getAccountsSupportsMultiCurrency();
         const accountsTypesKeys = accountsTypes.map((type) => type.key);
 
-        query
-          .whereIn('accountType', accountsTypesKeys)
-          .where('seededAt', null)
-          .first();
+        query.whereIn('accountType', accountsTypesKeys).where('seededAt', null).first();
       },
     };
   }
@@ -349,10 +339,7 @@ export default class Account extends mixin(TenantModel, [
    * @return {boolean}
    */
   isParentType(parentType) {
-    return AccountTypesUtils.isParentTypeEqualsKey(
-      this.accountType,
-      parentType
-    );
+    return AccountTypesUtils.isParentTypeEqualsKey(this.accountType, parentType);
   }
 
   /**

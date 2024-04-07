@@ -53,18 +53,15 @@ export function useEditTaxRate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`tax-rates/${id}`, values),
-    {
-      onSuccess: (res, id) => {
-        commonInvalidateQueries(queryClient);
-        queryClient.invalidateQueries([QUERY_TYPES.TAX_RATES, id]);
-        queryClient.invalidateQueries(QUERY_TYPES.ITEM);
-        queryClient.invalidateQueries(QUERY_TYPES.ITEMS);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`tax-rates/${id}`, values), {
+    onSuccess: (res, id) => {
+      commonInvalidateQueries(queryClient);
+      queryClient.invalidateQueries([QUERY_TYPES.TAX_RATES, id]);
+      queryClient.invalidateQueries(QUERY_TYPES.ITEM);
+      queryClient.invalidateQueries(QUERY_TYPES.ITEMS);
     },
-  );
+    ...props,
+  });
 }
 
 /**

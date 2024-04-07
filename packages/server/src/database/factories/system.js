@@ -1,5 +1,5 @@
-import KnexFactory from '@/lib/KnexFactory';
 import systemDb from '@/database/knex';
+import KnexFactory from '@/lib/KnexFactory';
 import faker from 'faker';
 
 export default () => {

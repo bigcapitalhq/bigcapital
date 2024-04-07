@@ -16,11 +16,5 @@ export default function BillDetailTable() {
   // Retrieve bill readonly entries table columns.
   const columns = useBillReadonlyEntriesTableColumns();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

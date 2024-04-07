@@ -1,5 +1,5 @@
 import { IInventoryItemCostMeta } from '@/interfaces';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { InventoryItemCostService } from './InventoryCostsService';
 
 @Service()
@@ -17,13 +17,9 @@ export class InventoryCostApplication {
   public getItemsInventoryValuationList = async (
     tenantId: number,
     itemsId: number[],
-    date: Date
+    date: Date,
   ): Promise<IInventoryItemCostMeta[]> => {
-    const itemsMap = await this.inventoryCost.getItemsInventoryValuation(
-      tenantId,
-      itemsId,
-      date
-    );
+    const itemsMap = await this.inventoryCost.getItemsInventoryValuation(tenantId, itemsId, date);
     return [...itemsMap.values()];
   };
 }

@@ -79,21 +79,18 @@ export function useCreatePaymentReceive(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('sales/payment_receives', values),
-    {
-      onSuccess: (data, values) => {
-        // Invalidate specific payment receive.
-        commonInvalidateQueries(client);
+  return useMutation((values) => apiRequest.post('sales/payment_receives', values), {
+    onSuccess: (data, values) => {
+      // Invalidate specific payment receive.
+      commonInvalidateQueries(client);
 
-        // Invalidate payment receive settings.
-        client.invalidateQueries([t.SETTING, t.SETTING_PAYMENT_RECEIVES]);
+      // Invalidate payment receive settings.
+      client.invalidateQueries([t.SETTING, t.SETTING_PAYMENT_RECEIVES]);
 
-        saveInvoke(props?.onSuccess, data);
-      },
-      ...props,
+      saveInvoke(props?.onSuccess, data);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -103,21 +100,18 @@ export function useEditPaymentReceive(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/payment_receives/${id}`, values),
-    {
-      onSuccess: (data, [id, values]) => {
-        // Invalidate specific payment receive.
-        client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/payment_receives/${id}`, values), {
+    onSuccess: (data, [id, values]) => {
+      // Invalidate specific payment receive.
+      client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(client);
+      // Common invalidate queries.
+      commonInvalidateQueries(client);
 
-        saveInvoke(props?.onSuccess, data);
-      },
-      ...props,
+      saveInvoke(props?.onSuccess, data);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -127,20 +121,17 @@ export function useDeletePaymentReceive(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`sales/payment_receives/${id}`),
-    {
-      onSuccess: (data, id) => {
-        // Invalidate specific payment receive.
-        client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
+  return useMutation((id) => apiRequest.delete(`sales/payment_receives/${id}`), {
+    onSuccess: (data, id) => {
+      // Invalidate specific payment receive.
+      client.invalidateQueries([t.PAYMENT_RECEIVE, id]);
 
-        commonInvalidateQueries(client);
+      commonInvalidateQueries(client);
 
-        saveInvoke(props?.onSuccess, data);
-      },
-      ...props,
+      saveInvoke(props?.onSuccess, data);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -195,27 +186,19 @@ export function useCreateNotifyPaymentReceiveBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate
-        queryClient.invalidateQueries([t.NOTIFY_PAYMENT_RECEIVE_BY_SMS, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/payment_receives/${id}/notify-by-sms`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.NOTIFY_PAYMENT_RECEIVE_BY_SMS, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
-export function usePaymentReceiveSMSDetail(
-  paymentReceiveId,
-  props,
-  requestProps,
-) {
+export function usePaymentReceiveSMSDetail(paymentReceiveId, props, requestProps) {
   return useRequestQuery(
     [t.PAYMENT_RECEIVE_SMS_DETAIL, paymentReceiveId],
     {
@@ -243,17 +226,13 @@ export function useSendPaymentReceiveMail(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/payment_receives/${id}/mail`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`sales/payment_receives/${id}/mail`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function usePaymentReceiveDefaultOptions(paymentReceiveId, props) {

@@ -1,20 +1,15 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { body, check, param, query, ValidationChain } from 'express-validator';
-import {
-  AbilitySubject,
-  IPaymentReceiveDTO,
-  PaymentReceiveAction,
-  PaymentReceiveMailOptsDTO,
-} from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, IPaymentReceiveDTO, PaymentReceiveAction, PaymentReceiveMailOptsDTO } from '@/interfaces';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { ServiceError } from '@/exceptions';
-import { ACCEPT_TYPE } from '@/interfaces/Http';
+import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, body, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class PaymentReceivesController extends BaseController {
@@ -39,29 +34,23 @@ export default class PaymentReceivesController extends BaseController {
       this.editPaymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.editPaymentReceive.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/notify-by-sms',
-      CheckPolicies(
-        PaymentReceiveAction.NotifyBySms,
-        AbilitySubject.PaymentReceive
-      ),
+      CheckPolicies(PaymentReceiveAction.NotifyBySms, AbilitySubject.PaymentReceive),
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.paymentReceiveNotifyBySms),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/sms-details',
-      CheckPolicies(
-        PaymentReceiveAction.NotifyBySms,
-        AbilitySubject.PaymentReceive
-      ),
+      CheckPolicies(PaymentReceiveAction.NotifyBySms, AbilitySubject.PaymentReceive),
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.paymentReceiveSmsDetails),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/',
@@ -69,7 +58,7 @@ export default class PaymentReceivesController extends BaseController {
       [...this.newPaymentReceiveValidation],
       this.validationResult,
       asyncMiddleware(this.newPaymentReceive.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/edit-page',
@@ -77,7 +66,7 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveEditPage.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/new-page/entries',
@@ -85,7 +74,7 @@ export default class PaymentReceivesController extends BaseController {
       [query('customer_id').exists().isNumeric().toInt()],
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveNewPageEntries.bind(this)),
-      this.getPaymentReceiveNewPageEntries.bind(this)
+      this.getPaymentReceiveNewPageEntries.bind(this),
     );
     router.get(
       '/:id/invoices',
@@ -93,14 +82,14 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveInvoices.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
       CheckPolicies(PaymentReceiveAction.View, AbilitySubject.PaymentReceive),
       this.paymentReceiveValidation,
       this.asyncMiddleware(this.getPaymentReceive.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
@@ -109,7 +98,7 @@ export default class PaymentReceivesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getPaymentReceiveList.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.delete(
       '/:id',
@@ -117,7 +106,7 @@ export default class PaymentReceivesController extends BaseController {
       this.paymentReceiveValidation,
       this.validationResult,
       asyncMiddleware(this.deletePaymentReceive.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/mail',
@@ -130,13 +119,13 @@ export default class PaymentReceivesController extends BaseController {
         body('attach_invoice').optional().isBoolean().toBoolean(),
       ],
       this.sendPaymentReceiveByMail.bind(this),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/mail',
       [...this.paymentReceiveValidation],
       asyncMiddleware(this.getPaymentDefaultMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -205,10 +194,7 @@ export default class PaymentReceivesController extends BaseController {
    * Edit payment receive validation.
    */
   private get editPaymentReceiveValidation() {
-    return [
-      param('id').exists().isNumeric().toInt(),
-      ...this.paymentReceiveSchema,
-    ];
+    return [param('id').exists().isNumeric().toInt(), ...this.paymentReceiveSchema];
   }
 
   /**
@@ -217,21 +203,16 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private async newPaymentReceive(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async newPaymentReceive(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
-      const storedPaymentReceive =
-        await this.paymentReceiveApplication.createPaymentReceive(
-          tenantId,
-          paymentReceive,
-          user
-        );
+      const storedPaymentReceive = await this.paymentReceiveApplication.createPaymentReceive(
+        tenantId,
+        paymentReceive,
+        user,
+      );
       return res.status(200).send({
         id: storedPaymentReceive.id,
         message: 'The payment receive has been created successfully.',
@@ -247,23 +228,14 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private async editPaymentReceive(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async editPaymentReceive(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     const paymentReceive: IPaymentReceiveDTO = this.matchedBodyData(req);
 
     try {
-      await this.paymentReceiveApplication.editPaymentReceive(
-        tenantId,
-        paymentReceiveId,
-        paymentReceive,
-        user
-      );
+      await this.paymentReceiveApplication.editPaymentReceive(tenantId, paymentReceiveId, paymentReceive, user);
       return res.status(200).send({
         id: paymentReceiveId,
         message: 'The payment receive has been edited successfully.',
@@ -278,20 +250,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async deletePaymentReceive(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deletePaymentReceive(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      await this.paymentReceiveApplication.deletePaymentReceive(
-        tenantId,
-        paymentReceiveId,
-        user
-      );
+      await this.paymentReceiveApplication.deletePaymentReceive(tenantId, paymentReceiveId, user);
       return res.status(200).send({
         id: paymentReceiveId,
         message: 'The payment receive has been deleted successfully',
@@ -307,20 +271,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async getPaymentReceiveInvoices(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentReceiveInvoices(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const saleInvoices =
-        await this.paymentReceiveApplication.getPaymentReceiveInvoices(
-          tenantId,
-          paymentReceiveId
-        );
+      const saleInvoices = await this.paymentReceiveApplication.getPaymentReceiveInvoices(tenantId, paymentReceiveId);
 
       return res.status(200).send(this.transfromToResponse({ saleInvoices }));
     } catch (error) {
@@ -334,11 +290,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private async getPaymentReceiveList(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentReceiveList(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -349,11 +301,7 @@ export default class PaymentReceivesController extends BaseController {
     };
 
     try {
-      const paymentsReceivedWithPagination =
-        await this.paymentReceiveApplication.getPaymentReceives(
-          tenantId,
-          filter
-        );
+      const paymentsReceivedWithPagination = await this.paymentReceiveApplication.getPaymentReceives(tenantId, filter);
       return res.status(200).send(paymentsReceivedWithPagination);
     } catch (error) {
       next(error);
@@ -365,19 +313,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req - Request.
    * @param {Response} res - Response.
    */
-  private async getPaymentReceiveNewPageEntries(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentReceiveNewPageEntries(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const entries = await this.PaymentReceivesPages.getNewPageEntries(
-        tenantId,
-        customerId
-      );
+      const entries = await this.PaymentReceivesPages.getNewPageEntries(tenantId, customerId);
       return res.status(200).send({
         entries: this.transfromToResponse(entries),
       });
@@ -392,21 +333,16 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  private async getPaymentReceiveEditPage(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentReceiveEditPage(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const { paymentReceive, entries } =
-        await this.PaymentReceivesPages.getPaymentReceiveEditPage(
-          tenantId,
-          paymentReceiveId,
-          user
-        );
+      const { paymentReceive, entries } = await this.PaymentReceivesPages.getPaymentReceiveEditPage(
+        tenantId,
+        paymentReceiveId,
+        user,
+      );
 
       return res.status(200).send({
         payment_receive: this.transfromToResponse({ ...paymentReceive }),
@@ -423,27 +359,16 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async getPaymentReceive(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentReceive(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     const accept = this.accepts(req);
 
-    const acceptType = accept.types([
-      ACCEPT_TYPE.APPLICATION_JSON,
-      ACCEPT_TYPE.APPLICATION_PDF,
-    ]);
+    const acceptType = accept.types([ACCEPT_TYPE.APPLICATION_JSON, ACCEPT_TYPE.APPLICATION_PDF]);
     // Response in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
-      const pdfContent =
-        await this.paymentReceiveApplication.getPaymentReceivePdf(
-          tenantId,
-          paymentReceiveId
-        );
+      const pdfContent = await this.paymentReceiveApplication.getPaymentReceivePdf(tenantId, paymentReceiveId);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
@@ -451,11 +376,7 @@ export default class PaymentReceivesController extends BaseController {
       res.send(pdfContent);
       // Response in json format.
     } else {
-      const paymentReceive =
-        await this.paymentReceiveApplication.getPaymentReceive(
-          tenantId,
-          paymentReceiveId
-        );
+      const paymentReceive = await this.paymentReceiveApplication.getPaymentReceive(tenantId, paymentReceiveId);
       return res.status(200).send({
         payment_receive: paymentReceive,
       });
@@ -468,20 +389,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public paymentReceiveNotifyBySms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public paymentReceiveNotifyBySms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const paymentReceive =
-        await this.paymentReceiveApplication.notifyPaymentBySms(
-          tenantId,
-          paymentReceiveId
-        );
+      const paymentReceive = await this.paymentReceiveApplication.notifyPaymentBySms(tenantId, paymentReceiveId);
       return res.status(200).send({
         id: paymentReceive.id,
         message: 'The payment notification has been sent successfully.',
@@ -497,20 +410,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public paymentReceiveSmsDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public paymentReceiveSmsDetails = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const smsDetails =
-        await this.paymentReceiveApplication.getPaymentSmsDetails(
-          tenantId,
-          paymentReceiveId
-        );
+      const smsDetails = await this.paymentReceiveApplication.getPaymentSmsDetails(tenantId, paymentReceiveId);
       return res.status(200).send({
         data: smsDetails,
       });
@@ -525,26 +430,15 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public sendPaymentReceiveByMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public sendPaymentReceiveByMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
-    const paymentMailDTO: PaymentReceiveMailOptsDTO = this.matchedBodyData(
-      req,
-      {
-        includeOptionals: false,
-      }
-    );
+    const paymentMailDTO: PaymentReceiveMailOptsDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
 
     try {
-      await this.paymentReceiveApplication.notifyPaymentByMail(
-        tenantId,
-        paymentReceiveId,
-        paymentMailDTO
-      );
+      await this.paymentReceiveApplication.notifyPaymentByMail(tenantId, paymentReceiveId, paymentMailDTO);
       return res.status(200).send({
         code: 200,
         message: 'The payment notification has been sent successfully.',
@@ -560,19 +454,12 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public getPaymentDefaultMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getPaymentDefaultMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const data = await this.paymentReceiveApplication.getPaymentMailOptions(
-        tenantId,
-        paymentReceiveId
-      );
+      const data = await this.paymentReceiveApplication.getPaymentMailOptions(tenantId, paymentReceiveId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -586,12 +473,7 @@ export default class PaymentReceivesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'DEPOSIT_ACCOUNT_NOT_FOUND') {
         return res.boom.badRequest(null, {
@@ -645,10 +527,7 @@ export default class PaymentReceivesController extends BaseController {
               type: 'INVOICES_NOT_DELIVERED_YET',
               code: 200,
               data: {
-                not_delivered_invoices_ids:
-                  error.payload.notDeliveredInvoices.map(
-                    (invoice) => invoice.id
-                  ),
+                not_delivered_invoices_ids: error.payload.notDeliveredInvoices.map((invoice) => invoice.id),
               },
             },
           ],

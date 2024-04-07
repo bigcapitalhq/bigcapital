@@ -1,14 +1,10 @@
-import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
+import { Model, mixin } from 'objection';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class RefundCreditNote extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class RefundCreditNote extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name.
    */

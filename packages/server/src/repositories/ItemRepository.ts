@@ -1,6 +1,5 @@
-
-import { Item } from "models";
-import TenantRepository from "./TenantRepository";
+import { Item } from 'models';
+import TenantRepository from './TenantRepository';
 
 export default class ItemRepository extends TenantRepository {
   /**

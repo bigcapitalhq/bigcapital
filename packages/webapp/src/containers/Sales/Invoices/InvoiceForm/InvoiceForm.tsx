@@ -7,10 +7,7 @@ import { Intent } from '@blueprintjs/core';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
-import {
-  getCreateInvoiceFormSchema,
-  getEditInvoiceFormSchema,
-} from './InvoiceForm.schema';
+import { getCreateInvoiceFormSchema, getEditInvoiceFormSchema } from './InvoiceForm.schema';
 
 import InvoiceFormHeader from './InvoiceFormHeader';
 import InvoiceItemsEntriesEditorField from './InvoiceItemsEntriesEditorField';
@@ -27,13 +24,7 @@ import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 import { InvoiceFormActions } from './InvoiceFormActions';
-import {
-  transformToEditForm,
-  defaultInvoice,
-  transformErrors,
-  transformValueToRequest,
-  resetFormState,
-} from './utils';
+import { transformToEditForm, defaultInvoice, transformErrors, transformValueToRequest, resetFormState } from './utils';
 import { InvoiceExchangeRateSync, InvoiceNoSyncSettingsToForm } from './components';
 
 /**
@@ -53,21 +44,11 @@ function InvoiceForm({
   const history = useHistory();
 
   // Invoice form context.
-  const {
-    isNewMode,
-    invoice,
-    estimateId,
-    newInvoice,
-    createInvoiceMutate,
-    editInvoiceMutate,
-    submitPayload,
-  } = useInvoiceFormContext();
+  const { isNewMode, invoice, estimateId, newInvoice, createInvoiceMutate, editInvoiceMutate, submitPayload } =
+    useInvoiceFormContext();
 
   // Invoice number.
-  const invoiceNumber = transactionNumber(
-    invoiceNumberPrefix,
-    invoiceNextNumber,
-  );
+  const invoiceNumber = transactionNumber(invoiceNumberPrefix, invoiceNextNumber);
   // Form initial values.
   const initialValues = {
     ...(!isEmpty(invoice)
@@ -90,10 +71,8 @@ function InvoiceForm({
   const handleSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
 
-    const entries = values.entries.filter(
-      (item) => item.item_id && item.quantity,
-    );
-    const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+    const entries = values.entries.filter((item) => item.item_id && item.quantity);
+    const totalQuantity = sumBy(entries, (entry) => Number.parseInt(entry.quantity));
 
     // Throw danger toaster in case total quantity equals zero.
     if (totalQuantity === 0) {
@@ -114,9 +93,7 @@ function InvoiceForm({
     const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_invoice_has_been_created_successfully'
-            : 'the_invoice_has_been_edited_successfully',
+          isNewMode ? 'the_invoice_has_been_created_successfully' : 'the_invoice_has_been_edited_successfully',
           { number: values.invoice_no },
         ),
         intent: Intent.SUCCESS,
@@ -154,17 +131,9 @@ function InvoiceForm({
   const EditInvoiceFormSchema = getEditInvoiceFormSchema();
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_INVOICE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_INVOICE)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema
-        }
+        validationSchema={isNewMode ? CreateInvoiceFormSchema : EditInvoiceFormSchema}
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >

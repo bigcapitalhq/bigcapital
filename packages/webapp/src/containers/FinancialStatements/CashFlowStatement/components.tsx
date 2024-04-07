@@ -1,27 +1,10 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import {
-  AppToaster,
-  Icon,
-  If,
-  Stack,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  useCashFlowStatementCsvExport,
-  useCashFlowStatementXlsxExport,
-} from '@/hooks/query';
+import { AppToaster, Icon, If, Stack, FormattedMessage as T } from '@/components';
+import { useCashFlowStatementCsvExport, useCashFlowStatementXlsxExport } from '@/hooks/query';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { dynamicColumns } from './dynamicColumns';
@@ -36,10 +19,7 @@ export const useCashFlowStatementColumns = () => {
     cashFlowStatement: { columns, tableRows },
   } = useCashFlowStatementContext();
 
-  return React.useMemo(
-    () => dynamicColumns(columns, tableRows),
-    [columns, tableRows],
-  );
+  return React.useMemo(() => dynamicColumns(columns, tableRows), [columns, tableRows]);
 };
 
 /**
@@ -59,8 +39,7 @@ export function CashFlowStatementLoadingBar() {
  * Cash flow statement alter
  */
 export function CashFlowStatementAlerts() {
-  const { cashFlowStatement, isCashFlowLoading, refetchCashFlow } =
-    useCashFlowStatementContext();
+  const { cashFlowStatement, isCashFlowLoading, refetchCashFlow } = useCashFlowStatementContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
@@ -113,27 +92,24 @@ export function CashflowSheetExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useCashFlowStatementXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
 
   // Export the report to csv.
   const { mutateAsync: csvExport } = useCashFlowStatementCsvExport(httpQuery, {
@@ -165,10 +141,7 @@ export function CashflowSheetExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

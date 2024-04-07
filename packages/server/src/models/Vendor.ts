@@ -1,11 +1,11 @@
-import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import PaginationQueryBuilder from './Pagination';
-import ModelSetting from './ModelSetting';
-import VendorSettings from './Vendor.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Contacts/Vendors/constants';
+import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
+import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
+import PaginationQueryBuilder from './Pagination';
+import VendorSettings from './Vendor.Settings';
 
 class VendorQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -19,11 +19,7 @@ class VendorQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Vendor extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Vendor extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Query builder.
    */
@@ -64,9 +60,7 @@ export default class Vendor extends mixin(TenantModel, [
    * @returns {number}
    */
   get localOpeningBalance() {
-    return this.openingBalance
-      ? this.openingBalance * this.openingBalanceExchangeRate
-      : 0;
+    return this.openingBalance ? this.openingBalance * this.openingBalanceExchangeRate : 0;
   }
 
   /**
@@ -104,12 +98,7 @@ export default class Vendor extends mixin(TenantModel, [
        * Filters the vendors that have overdue invoices.
        */
       overdue(query) {
-        query.select(
-          '*',
-          Vendor.relatedQuery('overdueBills', query.knex())
-            .count()
-            .as('countOverdue')
-        );
+        query.select('*', Vendor.relatedQuery('overdueBills', query.knex()).count().as('countOverdue'));
         query.having('countOverdue', '>', 0);
       },
       /**

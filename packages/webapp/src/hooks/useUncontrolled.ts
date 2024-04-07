@@ -14,15 +14,8 @@ interface UseUncontrolledInput<T> {
   onChange?(value: T): void;
 }
 
-export function useUncontrolled<T>({
-  value,
-  initialValue,
-  finalValue,
-  onChange = () => {},
-}: UseUncontrolledInput<T>) {
-  const [uncontrolledValue, setUncontrolledValue] = useState(
-    initialValue !== undefined ? initialValue : finalValue,
-  );
+export function useUncontrolled<T>({ value, initialValue, finalValue, onChange = () => {} }: UseUncontrolledInput<T>) {
+  const [uncontrolledValue, setUncontrolledValue] = useState(initialValue !== undefined ? initialValue : finalValue);
 
   const handleUncontrolledChange = (val: T) => {
     setUncontrolledValue(val);

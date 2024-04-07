@@ -21,19 +21,9 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import {
-  Can,
-  Icon,
-  DashboardActionsBar,
-  FormattedMessage as T,
-} from '@/components';
+import { Can, Icon, DashboardActionsBar, FormattedMessage as T } from '@/components';
 import { VendorMoreMenuItem } from './utils';
-import {
-  AbilitySubject,
-  SaleInvoiceAction,
-  PaymentMadeAction,
-  VendorAction,
-} from '../../../constants/abilityOption';
+import { AbilitySubject, SaleInvoiceAction, PaymentMadeAction, VendorAction } from '../../../constants/abilityOption';
 import { safeCallback, compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 
@@ -86,16 +76,10 @@ function VendorDetailsActionsBar({
           content={
             <Menu>
               <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
-                <MenuItem
-                  text={<T id={'vendor.drawer.action.new_invoice'} />}
-                  onClick={handleNewInvoiceClick}
-                />
+                <MenuItem text={<T id={'vendor.drawer.action.new_invoice'} />} onClick={handleNewInvoiceClick} />
               </Can>
               <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
-                <MenuItem
-                  text={<T id={'vendor.drawer.action.new_payment'} />}
-                  onClick={handleNewPaymentClick}
-                />
+                <MenuItem text={<T id={'vendor.drawer.action.new_payment'} />} onClick={handleNewPaymentClick} />
               </Can>
             </Menu>
           }
@@ -139,8 +123,4 @@ function VendorDetailsActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertsActions,
-  withDialogActions,
-)(VendorDetailsActionsBar);
+export default compose(withDrawerActions, withAlertsActions, withDialogActions)(VendorDetailsActionsBar);

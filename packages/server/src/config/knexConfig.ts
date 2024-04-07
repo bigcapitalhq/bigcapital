@@ -23,8 +23,8 @@ export const tenantKnexConfig = (tenant: ITenant) => {
     pool: { min: 0, max: 5 },
     userParams: {
       tenantId: id,
-      organizationId
-    }
+      organizationId,
+    },
   };
 };
 
@@ -56,4 +56,4 @@ export const tenantSeedConfig = (tenant: ITenant) => {
   return {
     directory: config.tenant.seeds_dir,
   };
-}
+};

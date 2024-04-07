@@ -21,7 +21,6 @@ function TransactionNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useTransactionNumberDialogContext = () =>
-  React.useContext(TransactionNumberDialogContext);
+const useTransactionNumberDialogContext = () => React.useContext(TransactionNumberDialogContext);
 
 export { TransactionNumberDialogProvider, useTransactionNumberDialogContext };

@@ -1,11 +1,5 @@
 // @ts-nocheck
-import {
-  Box,
-  FFormGroup,
-  FInputGroup,
-  FMultiSelect,
-  FRichEditor,
-} from '@/components';
+import { Box, FFormGroup, FInputGroup, FMultiSelect, FRichEditor } from '@/components';
 import styled from 'styled-components';
 import { SelectOptionProps } from '@blueprintjs-formik/select';
 
@@ -22,10 +16,7 @@ const commonAddressSelect = {
   textAccessor: (item) => `<${item.label}> (${item.mail})`,
 };
 
-export function MailNotificationForm({
-  fromAddresses,
-  toAddresses,
-}: MailNotificationFormProps) {
+export function MailNotificationForm({ fromAddresses, toAddresses }: MailNotificationFormProps) {
   return (
     <Box>
       <HeaderBox>
@@ -56,12 +47,7 @@ export function MailNotificationForm({
           />
         </FFormGroup>
 
-        <FFormGroup
-          label={'Subject'}
-          name={'subject'}
-          inline={true}
-          fastField={true}
-        >
+        <FFormGroup label={'Subject'} name={'subject'} inline={true} fastField={true}>
           <FInputGroup name={'subject'} fill={true} />
         </FFormGroup>
       </HeaderBox>

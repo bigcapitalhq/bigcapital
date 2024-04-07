@@ -1,19 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Classes,
-  NavbarGroup,
-  Intent,
-  NavbarDivider,
-} from '@blueprintjs/core';
-import {
-  Icon,
-  DrawerActionsBar,
-  Can,
-  FormattedMessage as T,
-} from '@/components';
+import { Button, Classes, NavbarGroup, Intent, NavbarDivider } from '@blueprintjs/core';
+import { Icon, DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
@@ -74,7 +63,4 @@ function ManualJournalDrawerActionBar({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(ManualJournalDrawerActionBar);
+export default compose(withAlertsActions, withDrawerActions)(ManualJournalDrawerActionBar);

@@ -18,11 +18,5 @@ export default function PaymentMadeDetailTable() {
   // Payment made details context.
   const { paymentMade } = usePaymentMadeDetailContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={paymentMade.entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={paymentMade.entries} styleName={TableStyle.Constrant} />;
 }

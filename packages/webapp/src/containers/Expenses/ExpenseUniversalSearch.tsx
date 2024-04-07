@@ -20,6 +20,4 @@ function ExpenseUniversalSearchItemSelectComponent({
   return null;
 }
 
-export const ExpenseUniversalSearchItemSelect = withDrawerActions(
-  ExpenseUniversalSearchItemSelectComponent,
-);
+export const ExpenseUniversalSearchItemSelect = withDrawerActions(ExpenseUniversalSearchItemSelectComponent);

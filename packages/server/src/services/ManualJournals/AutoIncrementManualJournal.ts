@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class AutoIncrementManualJournal {
@@ -7,20 +7,14 @@ export class AutoIncrementManualJournal {
   private autoIncrementOrdersService: AutoIncrementOrdersService;
 
   public autoIncrementEnabled = (tenantId: number) => {
-    return this.autoIncrementOrdersService.autoIncrementEnabled(
-      tenantId,
-      'manual_journals'
-    );
+    return this.autoIncrementOrdersService.autoIncrementEnabled(tenantId, 'manual_journals');
   };
 
   /**
    * Retrieve the next journal number.
    */
   public getNextJournalNumber = (tenantId: number): string => {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'manual_journals'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'manual_journals');
   };
 
   /**
@@ -28,9 +22,6 @@ export class AutoIncrementManualJournal {
    * @param {number} tenantId
    */
   public incrementNextJournalNumber = (tenantId: number) => {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'manual_journals'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'manual_journals');
   };
 }

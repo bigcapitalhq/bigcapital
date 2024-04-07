@@ -1,6 +1,3 @@
-import * as R from 'ramda';
-import { defaultTo, toArray } from 'lodash';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IAccount,
@@ -11,15 +8,18 @@ import {
   IBalanceSheetSchemaNode,
   INumberFormatQuery,
 } from '@/interfaces';
-import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
-import { BalanceSheetFiltering } from './BalanceSheetFiltering';
-import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
+import { defaultTo, toArray } from 'lodash';
+import * as R from 'ramda';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
+import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
+import { BalanceSheetFiltering } from './BalanceSheetFiltering';
+import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
 import { BalanceSheetPercentage } from './BalanceSheetPercentage';
-import { BalanceSheetSchema } from './BalanceSheetSchema';
-import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetSchema } from './BalanceSheetSchema';
 
 export const BalanceSheetAccounts = (Base: any) =>
   class extends R.compose(
@@ -31,7 +31,7 @@ export const BalanceSheetAccounts = (Base: any) =>
     BalanceSheetPercentage,
     BalanceSheetSchema,
     BalanceSheetBase,
-    FinancialSheetStructure
+    FinancialSheetStructure,
   )(Base) {
     /**
      * Balance sheet query.
@@ -61,12 +61,8 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @param   {string} accountsTypes
      * @returns {IAccount[]}
      */
-    private getAccountsByAccountTypes = (
-      accountsTypes: string[]
-    ): IAccount[] => {
-      const mapAccountsByTypes = R.map((accountType) =>
-        defaultTo(this.repository.accountsByType.get(accountType), [])
-      );
+    private getAccountsByAccountTypes = (accountsTypes: string[]): IAccount[] => {
+      const mapAccountsByTypes = R.map((accountType) => defaultTo(this.repository.accountsByType.get(accountType), []));
       return R.compose(R.flatten, mapAccountsByTypes)(accountsTypes);
     };
 
@@ -75,12 +71,8 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @param   {IAccount} account
      * @returns {IBalanceSheetAccountNode}
      */
-    private reportSchemaAccountNodeMapper = (
-      account: IAccount
-    ): IBalanceSheetAccountNode => {
-      const total = this.repository.totalAccountsLedger
-        .whereAccountId(account.id)
-        .getClosingBalance();
+    private reportSchemaAccountNodeMapper = (account: IAccount): IBalanceSheetAccountNode => {
+      const total = this.repository.totalAccountsLedger.whereAccountId(account.id).getClosingBalance();
 
       return {
         id: account.id,
@@ -97,23 +89,12 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @param {IAccount} account
      * @returns {IBalanceSheetAccountNode}
      */
-    private reportSchemaAccountNodeComposer = (
-      account: IAccount
-    ): IBalanceSheetAccountNode => {
+    private reportSchemaAccountNodeComposer = (account: IAccount): IBalanceSheetAccountNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearAccountNodeComposer
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodAccountNodeComposer
-        ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocAccountNodeDatePeriods
-        ),
-        this.reportSchemaAccountNodeMapper
+        R.when(this.query.isPreviousYearActive, this.previousYearAccountNodeComposer),
+        R.when(this.query.isPreviousPeriodActive, this.previousPeriodAccountNodeComposer),
+        R.when(this.query.isDatePeriodsColumnsType, this.assocAccountNodeDatePeriods),
+        this.reportSchemaAccountNodeMapper,
       )(account);
     };
 
@@ -125,9 +106,7 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @param {string[]} accountsTypes
      * @returns {IBalanceSheetAccountNode[]}
      */
-    private getAccountsNodesByAccountTypes = (
-      accountsTypes: string[]
-    ): IBalanceSheetAccountNode[] => {
+    private getAccountsNodesByAccountTypes = (accountsTypes: string[]): IBalanceSheetAccountNode[] => {
       const accounts = this.getAccountsByAccountTypes(accountsTypes);
       return R.map(this.reportSchemaAccountNodeComposer, accounts);
     };
@@ -137,9 +116,7 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @param   {IBalanceSheetSchemaNode} node - Schema node.
      * @returns {IBalanceSheetAccountNode}
      */
-    private reportSchemaAccountsNodeMapper = (
-      node: IBalanceSheetSchemaAccountNode
-    ): IBalanceSheetAccountsNode => {
+    private reportSchemaAccountsNodeMapper = (node: IBalanceSheetSchemaAccountNode): IBalanceSheetAccountsNode => {
       const accounts = this.getAccountsNodesByAccountTypes(node.accountsTypes);
       const children = toArray(node?.children);
 
@@ -159,13 +136,10 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @return {IBalanceSheetSchemaNode | IBalanceSheetDataNode}
      */
     private reportAccountSchemaParser = (
-      node: IBalanceSheetSchemaNode | IBalanceSheetDataNode
+      node: IBalanceSheetSchemaNode | IBalanceSheetDataNode,
     ): IBalanceSheetSchemaNode | IBalanceSheetDataNode => {
       return R.compose(
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
-          this.reportSchemaAccountsNodeMapper
-        )
+        R.when(this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS), this.reportSchemaAccountsNodeMapper),
       )(node);
     };
 
@@ -175,7 +149,7 @@ export const BalanceSheetAccounts = (Base: any) =>
      * @return {IBalanceSheetStructureSection[]}
      */
     public accountsSchemaParser = (
-      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[]
+      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[],
     ): (IBalanceSheetDataNode | IBalanceSheetSchemaNode)[] => {
       return this.mapNodesDeepReverse(nodes, this.reportAccountSchemaParser);
     };

@@ -35,10 +35,7 @@ function BillsList({
   );
 
   return (
-    <BillsListProvider
-      query={transformTableStateToQuery(billsTableState)}
-      tableStateChanged={billsTableStateChanged}
-    >
+    <BillsListProvider query={transformTableStateToQuery(billsTableState)} tableStateChanged={billsTableStateChanged}>
       <BillsActionsBar />
 
       <DashboardPageContent>

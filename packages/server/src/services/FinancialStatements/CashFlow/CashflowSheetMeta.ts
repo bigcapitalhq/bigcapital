@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import moment from 'moment';
 import { ICashFlowStatementMeta, ICashFlowStatementQuery } from '@/interfaces';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
 
 @Service()
@@ -14,10 +14,7 @@ export class CashflowSheetMeta {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<ICashFlowStatementMeta>}
    */
-  public async meta(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<ICashFlowStatementMeta> {
+  public async meta(tenantId: number, query: ICashFlowStatementQuery): Promise<ICashFlowStatementMeta> {
     const meta = await this.financialSheetMeta.meta(tenantId);
     const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');

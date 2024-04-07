@@ -34,15 +34,8 @@ export default function CurrencyFormFields() {
   return (
     <div className={Classes.DIALOG_BODY}>
       <FastField name={'currency_code'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
-          <FormGroup
-            label={<T id={'currency_code'} />}
-            className={classNames(CLASSES.FILL, 'form-group--type')}
-          >
+        {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
+          <FormGroup label={<T id={'currency_code'} />} className={classNames(CLASSES.FILL, 'form-group--type')}>
             <ListSelect
               items={currenciesOptions}
               selectedItemProp={'currency_code'}
@@ -72,10 +65,7 @@ export default function CurrencyFormFields() {
             helperText={<ErrorMessage name="currency_name" />}
             // inline={true}
           >
-            <InputGroup
-              inputRef={(ref) => (currencyNameFieldRef.current = ref)}
-              {...field}
-            />
+            <InputGroup inputRef={(ref) => (currencyNameFieldRef.current = ref)} {...field} />
           </FormGroup>
         )}
       </FastField>

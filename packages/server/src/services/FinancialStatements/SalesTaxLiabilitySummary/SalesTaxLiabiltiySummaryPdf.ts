@@ -1,8 +1,7 @@
+import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
 import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { SalesTaxLiabilitySummaryTableInjectable } from './SalesTaxLiabilitySummaryTableInjectable';
-import { ISalesByItemsReportQuery } from '@/interfaces';
-import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
 
 @Service()
 export class SalesTaxLiabiltiySummaryPdf {
@@ -18,19 +17,8 @@ export class SalesTaxLiabiltiySummaryPdf {
    * @param {ISalesByItemsReportQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<Buffer> {
-    const table = await this.salesTaxLiabiltiySummaryTable.table(
-      tenantId,
-      query
-    );
-    return this.tableSheetPdf.convertToPdf(
-      tenantId,
-      table.table,
-      table.meta.sheetName,
-      table.meta.formattedDateRange
-    );
+  public async pdf(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<Buffer> {
+    const table = await this.salesTaxLiabiltiySummaryTable.table(tenantId, query);
+    return this.tableSheetPdf.convertToPdf(tenantId, table.table, table.meta.sheetName, table.meta.formattedDateRange);
   }
 }

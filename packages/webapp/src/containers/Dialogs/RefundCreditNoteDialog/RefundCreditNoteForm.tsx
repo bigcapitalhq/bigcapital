@@ -30,8 +30,7 @@ function RefundCreditNoteForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, creditNote, createRefundCreditNoteMutate } =
-    useRefundCreditNoteContext();
+  const { dialogName, creditNote, createRefundCreditNoteMutate } = useRefundCreditNoteContext();
 
   // Initial form values
   const initialValues = {
@@ -61,9 +60,7 @@ function RefundCreditNoteForm({
     }) => {
       setSubmitting(false);
     };
-    createRefundCreditNoteMutate([creditNote.id, form])
-      .then(onSaved)
-      .catch(onError);
+    createRefundCreditNoteMutate([creditNote.id, form]).then(onSaved).catch(onError);
   };
 
   return (

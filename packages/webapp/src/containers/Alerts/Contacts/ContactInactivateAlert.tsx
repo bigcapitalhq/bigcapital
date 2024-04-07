@@ -64,7 +64,4 @@ function ContactInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ContactInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ContactInactivateAlert);

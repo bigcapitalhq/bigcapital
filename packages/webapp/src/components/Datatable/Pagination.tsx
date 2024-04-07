@@ -40,9 +40,7 @@ const getState = ({ currentPage, size, total }) => {
       endPage = currentPage + halfVisibleItems - 1;
     }
   }
-  const pages = [...Array(endPage + 1 - startPage).keys()].map(
-    (i) => startPage + i,
-  );
+  const pages = [...Array(endPage + 1 - startPage).keys()].map((i) => startPage + i);
 
   // Too large or small currentPage
   let correctCurrentpage = currentPage;
@@ -91,11 +89,7 @@ export function Pagination({
   onPageChange,
   onPageSizeChange,
 }) {
-  const [state, dispatch] = useReducer(
-    reducer,
-    { currentPage, total, size },
-    getState,
-  );
+  const [state, dispatch] = useReducer(reducer, { currentPage, total, size }, getState);
 
   useEffect(() => {
     dispatch({
@@ -139,13 +133,9 @@ export function Pagination({
                 onPageChange({ page, pageSize });
               }}
               minimal={true}
-              className={classNames(
-                'pagination__item',
-                'pagination__item--page',
-                {
-                  'is-active': state.currentPage === page,
-                },
-              )}
+              className={classNames('pagination__item', 'pagination__item--page', {
+                'is-active': state.currentPage === page,
+              })}
             >
               {page}
             </Button>
@@ -179,7 +169,7 @@ export function Pagination({
             options={range(1, state.totalPages + 1)}
             value={state.currentPage}
             onChange={(event) => {
-              const page = parseInt(event.currentTarget.value, 10);
+              const page = Number.parseInt(event.currentTarget.value, 10);
               const { size: pageSize } = state;
 
               dispatch({ type: 'PAGE_CHANGE', page });
@@ -195,7 +185,7 @@ export function Pagination({
             options={pageSizesOptions}
             value={size}
             onChange={(event) => {
-              const pageSize = parseInt(event.currentTarget.value, 10);
+              const pageSize = Number.parseInt(event.currentTarget.value, 10);
               dispatch({ type: 'PAGE_SIZE_CHANGE', size: pageSize });
               dispatch({ type: 'PAGE_CHANGE', page: 1 });
 

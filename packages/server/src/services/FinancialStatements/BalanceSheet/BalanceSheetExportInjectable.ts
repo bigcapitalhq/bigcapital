@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { BalanceSheetTableInjectable } from './BalanceSheetTableInjectable';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { IBalanceSheetQuery } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { BalanceSheetPdfInjectable } from './BalanceSheetPdfInjectable';
+import { BalanceSheetTableInjectable } from './BalanceSheetTableInjectable';
 
 @Service()
 export class BalanceSheetExportInjectable {
@@ -33,10 +33,7 @@ export class BalanceSheetExportInjectable {
    * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IBalanceSheetQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IBalanceSheetQuery): Promise<string> {
     const table = await this.balanceSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -51,10 +48,7 @@ export class BalanceSheetExportInjectable {
    * @param {IBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IBalanceSheetQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IBalanceSheetQuery): Promise<Buffer> {
     return this.balanceSheetPdf.pdf(tenantId, query);
   }
 }

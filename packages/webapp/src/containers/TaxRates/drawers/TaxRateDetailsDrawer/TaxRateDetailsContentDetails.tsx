@@ -26,10 +26,7 @@ export default function TaxRateDetailsContentDetails() {
         <DetailsMenu direction={'horizantal'} minLabelSize={200}>
           <DetailItem label={'Tax Rate Name'} children={taxRate.name} />
           <DetailItem label={'Code'} children={taxRate.code} />
-          <DetailItem
-            label={'Description'}
-            children={taxRate.description || '-'}
-          />
+          <DetailItem label={'Description'} children={taxRate.description || '-'} />
           <DetailItem
             label={'Non Recoverable'}
             children={

@@ -15,10 +15,9 @@ export const transformErrors = (errors) => {
   }
 };
 
-
 export const transformVendorsStateToQuery = (tableState) => {
   return {
     ...transformTableStateToQuery(tableState),
     inactive_mode: tableState.inactiveMode || false,
   };
-}
+};

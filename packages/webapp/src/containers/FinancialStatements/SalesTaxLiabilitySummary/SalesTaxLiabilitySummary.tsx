@@ -58,21 +58,14 @@ function SalesTaxLiabilitySummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <SalesTaxLiabilitySummaryHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <SalesTaxLiabilitySummaryHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <SalesTaxLiabilitySummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
 
-      <SalesTaxLiabiltiyPdfDialog
-        dialogName={DialogsName.SalesTaxLiabilitySummaryPdfPreview}
-      />
+      <SalesTaxLiabiltiyPdfDialog dialogName={DialogsName.SalesTaxLiabilitySummaryPdfPreview} />
     </SalesTaxLiabilitySummaryBoot>
   );
 }
 
-export default compose(withSalesTaxLiabilitySummaryActions)(
-  SalesTaxLiabilitySummary,
-);
+export default compose(withSalesTaxLiabilitySummaryActions)(SalesTaxLiabilitySummary);

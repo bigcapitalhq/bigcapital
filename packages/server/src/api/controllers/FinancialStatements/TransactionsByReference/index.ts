@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import TransactionsByReferenceService from '@/services/FinancialStatements/TransactionsByReference';
 import { ITransactionsByReferenceTransaction } from '@/interfaces';
+import TransactionsByReferenceService from '@/services/FinancialStatements/TransactionsByReference';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 @Service()
 export default class TransactionsByReferenceController extends BaseController {
   @Inject()
@@ -19,7 +19,7 @@ export default class TransactionsByReferenceController extends BaseController {
       '/',
       this.validationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.transactionsByReference.bind(this))
+      this.asyncMiddleware(this.transactionsByReference.bind(this)),
     );
     return router;
   }
@@ -32,16 +32,9 @@ export default class TransactionsByReferenceController extends BaseController {
       query('reference_id').exists().isInt(),
       query('reference_type').exists().isString(),
 
-      query('number_format.precision')
-        .optional()
-        .isInt({ min: 0, max: 5 })
-        .toInt(),
+      query('number_format.precision').optional().isInt({ min: 0, max: 5 }).toInt(),
       query('number_format.divide_on_1000').optional().isBoolean().toBoolean(),
-      query('number_format.negative_format')
-        .optional()
-        .isIn(['parentheses', 'mines'])
-        .trim()
-        .escape(),
+      query('number_format.negative_format').optional().isIn(['parentheses', 'mines']).trim().escape(),
     ];
   }
 
@@ -52,24 +45,14 @@ export default class TransactionsByReferenceController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  public async transactionsByReference(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async transactionsByReference(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
     try {
-      const data =
-        await this.transactionsByReferenceService.getTransactionsByReference(
-          tenantId,
-          filter
-        );
+      const data = await this.transactionsByReferenceService.getTransactionsByReference(tenantId, filter);
 
-      return res
-        .status(200)
-        .send(this.transformToJsonResponse(data.transactions));
+      return res.status(200).send(this.transformToJsonResponse(data.transactions));
     } catch (error) {
       next(error);
     }
@@ -80,9 +63,7 @@ export default class TransactionsByReferenceController extends BaseController {
    * @param transactions
    * @returns
    */
-  private transformToJsonResponse(
-    transactions: ITransactionsByReferenceTransaction[]
-  ) {
+  private transformToJsonResponse(transactions: ITransactionsByReferenceTransaction[]) {
     return {
       transactions: this.transfromToResponse(transactions),
     };

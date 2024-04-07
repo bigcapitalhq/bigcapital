@@ -1,10 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import {
-  IVendorCreditApplyToBillDeletedPayload,
-  IVendorCreditApplyToBillsCreatedPayload,
-} from '@/interfaces';
+import { IVendorCreditApplyToBillDeletedPayload, IVendorCreditApplyToBillsCreatedPayload } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import ApplyVendorCreditSyncBills from './ApplyVendorCreditSyncBills';
 
 @Service()
@@ -19,14 +16,8 @@ export default class ApplyVendorCreditSyncBillsSubscriber {
    * Attaches events with handlers.
    */
   attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onApplyToInvoicesCreated,
-      this.incrementAppliedBillsOnceCreditCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onApplyToInvoicesDeleted,
-      this.decrementAppliedBillsOnceCreditDeleted
-    );
+    bus.subscribe(events.vendorCredit.onApplyToInvoicesCreated, this.incrementAppliedBillsOnceCreditCreated);
+    bus.subscribe(events.vendorCredit.onApplyToInvoicesDeleted, this.decrementAppliedBillsOnceCreditDeleted);
   }
 
   /**
@@ -39,11 +30,7 @@ export default class ApplyVendorCreditSyncBillsSubscriber {
     vendorCreditAppliedBills,
     trx,
   }: IVendorCreditApplyToBillsCreatedPayload) => {
-    await this.syncBillsWithVendorCredit.incrementBillsCreditedAmount(
-      tenantId,
-      vendorCreditAppliedBills,
-      trx
-    );
+    await this.syncBillsWithVendorCredit.incrementBillsCreditedAmount(tenantId, vendorCreditAppliedBills, trx);
   };
 
   /**
@@ -56,10 +43,6 @@ export default class ApplyVendorCreditSyncBillsSubscriber {
     tenantId,
     trx,
   }: IVendorCreditApplyToBillDeletedPayload) => {
-    await this.syncBillsWithVendorCredit.decrementBillCreditedAmount(
-      tenantId,
-      oldCreditAppliedToBill,
-      trx
-    );
+    await this.syncBillsWithVendorCredit.decrementBillCreditedAmount(tenantId, oldCreditAppliedToBill, trx);
   };
 }

@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeleteCurrency } from '@/hooks/query';
@@ -71,15 +67,10 @@ function CurrencyDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_currency_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_currency_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CurrencyDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CurrencyDeleteAlert);

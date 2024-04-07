@@ -5,10 +5,7 @@ import { getCustomersBalanceSummaryFilterDrawer } from '@/store/financialStateme
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      customersBalanceDrawerFilter: getCustomersBalanceSummaryFilterDrawer(
-        state,
-        props,
-      ),
+      customersBalanceDrawerFilter: getCustomersBalanceSummaryFilterDrawer(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -1,7 +1,7 @@
-import { Model } from 'objection';
-import { castArray, isEmpty } from 'lodash';
-import moment from 'moment';
+import { castArray } from 'lodash';
 import TenantModel from 'models/TenantModel';
+import moment from 'moment';
+import { Model } from 'objection';
 
 export default class InventoryCostLotTracker extends TenantModel {
   /**

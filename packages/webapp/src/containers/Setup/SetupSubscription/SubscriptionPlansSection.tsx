@@ -37,6 +37,4 @@ function SubscriptionPlansSection({ plans }) {
   );
 }
 
-export default compose(withPlans(({ plans }) => ({ plans })))(
-  SubscriptionPlansSection,
-);
+export default compose(withPlans(({ plans }) => ({ plans })))(SubscriptionPlansSection);

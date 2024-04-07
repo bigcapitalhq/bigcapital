@@ -1,18 +1,18 @@
-import { Inject, Service } from 'typedi';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check } from 'express-validator';
 import moment from 'moment-timezone';
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, ValidationChain } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
+import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import JWTAuth from '@/api/middleware/jwtAuth';
-import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
-import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
-import OrganizationService from '@/services/Organization/OrganizationService';
-import { MONTHS, ACCEPTED_LOCALES } from '@/services/Organization/constants';
 import { DATE_FORMATS } from '@/services/Miscellaneous/DateFormats/constants';
+import OrganizationService from '@/services/Organization/OrganizationService';
+import { ACCEPTED_LOCALES, MONTHS } from '@/services/Organization/constants';
 
-import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export default class OrganizationController extends BaseController {
@@ -34,20 +34,16 @@ export default class OrganizationController extends BaseController {
       this.buildOrganizationValidationSchema,
       this.validationResult,
       asyncMiddleware(this.build.bind(this)),
-      this.handleServiceErrors.bind(this)
+      this.handleServiceErrors.bind(this),
     );
     router.put(
       '/',
       this.updateOrganizationValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.updateOrganization.bind(this)),
-      this.handleServiceErrors.bind(this)
+      this.handleServiceErrors.bind(this),
     );
-    router.get(
-      '/',
-      asyncMiddleware(this.currentOrganization.bind(this)),
-      this.handleServiceErrors.bind(this)
-    );
+    router.get('/', asyncMiddleware(this.currentOrganization.bind(this)), this.handleServiceErrors.bind(this));
     return router;
   }
 
@@ -83,11 +79,7 @@ export default class OrganizationController extends BaseController {
   private get updateOrganizationValidationSchema(): ValidationChain[] {
     return [
       ...this.commonOrganizationValidationSchema,
-      check('tax_number')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape(),
+      check('tax_number').optional({ nullable: true }).isString().trim().escape(),
     ];
   }
 
@@ -102,11 +94,7 @@ export default class OrganizationController extends BaseController {
     const buildDTO = this.matchedBodyData(req);
 
     try {
-      const result = await this.organizationService.buildRunJob(
-        tenantId,
-        buildDTO,
-        user
-      );
+      const result = await this.organizationService.buildRunJob(tenantId, buildDTO, user);
       return res.status(200).send({
         type: 'success',
         code: 'ORGANIZATION.DATABASE.INITIALIZED',
@@ -124,17 +112,11 @@ export default class OrganizationController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async currentOrganization(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async currentOrganization(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
     try {
-      const organization = await this.organizationService.currentOrganization(
-        tenantId
-      );
+      const organization = await this.organizationService.currentOrganization(tenantId);
       return res.status(200).send({
         organization: this.transfromToResponse(organization),
       });
@@ -150,11 +132,7 @@ export default class OrganizationController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  private async updateOrganization(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async updateOrganization(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const tenantDTO = this.matchedBodyData(req);
 
@@ -165,7 +143,7 @@ export default class OrganizationController extends BaseController {
         this.transfromToResponse({
           tenantId,
           message: 'Organization information has been updated successfully.',
-        })
+        }),
       );
     } catch (error) {
       next(error);
@@ -179,12 +157,7 @@ export default class OrganizationController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'tenant_not_found') {
         return res.status(400).send({

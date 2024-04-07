@@ -31,9 +31,7 @@ function SidebarHeadJSX({
           content={
             <Menu className={'menu--dashboard-organization'}>
               <div class="org-item">
-                <div class="org-item__logo">
-                  {firstLettersArgs(...(organization.name || '').split(' '))}{' '}
-                </div>
+                <div class="org-item__logo">{firstLettersArgs(...(organization.name || '').split(' '))} </div>
                 <div class="org-item__name">{organization.name}</div>
               </div>
             </Menu>
@@ -41,10 +39,7 @@ function SidebarHeadJSX({
           position={Position.BOTTOM}
           minimal={true}
         >
-          <Button
-            className="title"
-            rightIcon={<Icon icon={'caret-down-16'} size={16} />}
-          >
+          <Button className="title" rightIcon={<Icon icon={'caret-down-16'} size={16} />}>
             {organization.name}
           </Button>
         </Popover>
@@ -52,17 +47,10 @@ function SidebarHeadJSX({
       </div>
 
       <div className="sidebar__head-logo">
-        <Icon
-          icon={'mini-bigcapital'}
-          width={28}
-          height={28}
-          className="bigcapital--alt"
-        />
+        <Icon icon={'mini-bigcapital'} width={28} height={28} className="bigcapital--alt" />
       </div>
     </div>
   );
 }
 
-export const SidebarHead = compose(
-  withCurrentOrganization(({ organization }) => ({ organization })),
-)(SidebarHeadJSX);
+export const SidebarHead = compose(withCurrentOrganization(({ organization }) => ({ organization })))(SidebarHeadJSX);

@@ -4,19 +4,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const WarehouseTransferNumberDialogContent = React.lazy(
-  () => import('./WarehouseTransferNumberDialogContent'),
-);
+const WarehouseTransferNumberDialogContent = React.lazy(() => import('./WarehouseTransferNumberDialogContent'));
 
 /**
  * Warehouse transfer number dialog.
  */
-function WarehouseTransferNumberDilaog({
-  dialogName,
-  payload: { initialFormValues },
-  isOpen,
-  onConfirm,
-}) {
+function WarehouseTransferNumberDilaog({ dialogName, payload: { initialFormValues }, isOpen, onConfirm }) {
   const handleConfirm = (values) => {
     saveInvoke(onConfirm, values);
   };
@@ -29,10 +22,7 @@ function WarehouseTransferNumberDilaog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <WarehouseTransferNumberDialogContent
-          initialValues={{ ...initialFormValues }}
-          onConfirm={handleConfirm}
-        />
+        <WarehouseTransferNumberDialogContent initialValues={{ ...initialFormValues }} onConfirm={handleConfirm} />
       </DialogSuspense>
     </Dialog>
   );

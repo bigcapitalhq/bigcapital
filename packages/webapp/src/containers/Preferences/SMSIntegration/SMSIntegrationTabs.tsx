@@ -31,10 +31,7 @@ function SMSIntegrationTabs({
     <SMSIntegrationCard>
       <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
         <Tabs animate={true} defaultSelectedTabId={'sms_messages'}>
-          <Tab
-            id="overview"
-            title={intl.get('sms_integration.label.overview')}
-          />
+          <Tab id="overview" title={intl.get('sms_integration.label.overview')} />
           <Tab
             id="sms_messages"
             title={intl.get('sms_integration.label.sms_messages')}

@@ -1,17 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import * as R from 'ramda';
-import {
-  AccountNormal,
-  IItemEntry,
-  ILedgerEntry,
-  ICreditNote,
-  ILedger,
-  ICreditNoteGLCommonEntry,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { AccountNormal, ICreditNote, ICreditNoteGLCommonEntry, IItemEntry, ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CreditNoteGLEntries {
@@ -27,14 +20,8 @@ export default class CreditNoteGLEntries {
    * @param   {number} receivableAccount
    * @returns {Ledger}
    */
-  private getCreditNoteGLedger = (
-    creditNote: ICreditNote,
-    receivableAccount: number
-  ): Ledger => {
-    const ledgerEntries = this.getCreditNoteGLEntries(
-      creditNote,
-      receivableAccount
-    );
+  private getCreditNoteGLedger = (creditNote: ICreditNote, receivableAccount: number): Ledger => {
+    const ledgerEntries = this.getCreditNoteGLEntries(creditNote, receivableAccount);
     return new Ledger(ledgerEntries);
   };
 
@@ -49,7 +36,7 @@ export default class CreditNoteGLEntries {
     tenantId: number,
     creditNote: ICreditNote,
     payableAccount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const ledger = this.getCreditNoteGLedger(creditNote, payableAccount);
 
@@ -65,14 +52,9 @@ export default class CreditNoteGLEntries {
   public revertVendorCreditGLEntries = async (
     tenantId: number,
     creditNoteId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      creditNoteId,
-      'CreditNote',
-      trx
-    );
+    await this.ledgerStorage.deleteByReference(tenantId, creditNoteId, 'CreditNote', trx);
   };
 
   /**
@@ -84,27 +66,18 @@ export default class CreditNoteGLEntries {
   public createVendorCreditGLEntries = async (
     tenantId: number,
     creditNoteId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { CreditNote } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the credit note with associated entries and items.
-    const creditNoteWithItems = await CreditNote.query(trx)
-      .findById(creditNoteId)
-      .withGraphFetched('entries.item');
+    const creditNoteWithItems = await CreditNote.query(trx).findById(creditNoteId).withGraphFetched('entries.item');
 
     // Retreive the the `accounts receivable` account based on the given currency.
-    const ARAccount = await accountRepository.findOrCreateAccountReceivable(
-      creditNoteWithItems.currencyCode
-    );
+    const ARAccount = await accountRepository.findOrCreateAccountReceivable(creditNoteWithItems.currencyCode);
     // Saves the credit note GL entries.
-    await this.saveCreditNoteGLEntries(
-      tenantId,
-      creditNoteWithItems,
-      ARAccount.id,
-      trx
-    );
+    await this.saveCreditNoteGLEntries(tenantId, creditNoteWithItems, ARAccount.id, trx);
   };
 
   /**
@@ -116,7 +89,7 @@ export default class CreditNoteGLEntries {
   public editVendorCreditGLEntries = async (
     tenantId: number,
     creditNoteId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Reverts vendor credit GL entries.
     await this.revertVendorCreditGLEntries(tenantId, creditNoteId, trx);
@@ -130,9 +103,7 @@ export default class CreditNoteGLEntries {
    * @param   {ICreditNote} creditNote -
    * @returns {ICreditNoteGLCommonEntry}
    */
-  private getCreditNoteCommonEntry = (
-    creditNote: ICreditNote
-  ): ICreditNoteGLCommonEntry => {
+  private getCreditNoteCommonEntry = (creditNote: ICreditNote): ICreditNoteGLCommonEntry => {
     return {
       date: creditNote.creditNoteDate,
       userId: creditNote.userId,
@@ -161,10 +132,7 @@ export default class CreditNoteGLEntries {
    * @param   {number} ARAccountId -
    * @returns {ILedgerEntry}
    */
-  private getCreditNoteAREntry = (
-    creditNote: ICreditNote,
-    ARAccountId: number
-  ): ILedgerEntry => {
+  private getCreditNoteAREntry = (creditNote: ICreditNote, ARAccountId: number): ILedgerEntry => {
     const commonEntry = this.getCreditNoteCommonEntry(creditNote);
 
     return {
@@ -185,11 +153,7 @@ export default class CreditNoteGLEntries {
    * @returns {ILedgerEntry}
    */
   private getCreditNoteItemEntry = R.curry(
-    (
-      creditNote: ICreditNote,
-      entry: IItemEntry,
-      index: number
-    ): ILedgerEntry => {
+    (creditNote: ICreditNote, entry: IItemEntry, index: number): ILedgerEntry => {
       const commonEntry = this.getCreditNoteCommonEntry(creditNote);
       const localAmount = entry.amount * creditNote.exchangeRate;
 
@@ -203,7 +167,7 @@ export default class CreditNoteGLEntries {
         itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
       };
-    }
+    },
   );
 
   /**
@@ -212,10 +176,7 @@ export default class CreditNoteGLEntries {
    * @param   {IAccount} receivableAccount - Receviable account.
    * @returns {ILedgerEntry[]} - Ledger entries.
    */
-  public getCreditNoteGLEntries = (
-    creditNote: ICreditNote,
-    ARAccountId: number
-  ): ILedgerEntry[] => {
+  public getCreditNoteGLEntries = (creditNote: ICreditNote, ARAccountId: number): ILedgerEntry[] => {
     const AREntry = this.getCreditNoteAREntry(creditNote, ARAccountId);
 
     const getItemEntry = this.getCreditNoteItemEntry(creditNote);

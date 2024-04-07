@@ -1,13 +1,8 @@
-import moment from 'moment';
-import { defaultTo, isEmpty } from 'lodash';
-import { Service } from 'typedi';
-import {
-  ContactService,
-  IVendor,
-  IVendorEditDTO,
-  IVendorNewDTO,
-} from '@/interfaces';
+import { ContactService, IVendorEditDTO, IVendorNewDTO } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
+import { defaultTo, isEmpty } from 'lodash';
+import moment from 'moment';
+import { Service } from 'typedi';
 
 @Service()
 export class CreateEditVendorDTO {
@@ -27,10 +22,7 @@ export class CreateEditVendorDTO {
    * @param   {IVendorNewDTO} vendorDTO -
    * @returns {}
    */
-  public transformCreateDTO = async (
-    tenantId: number,
-    vendorDTO: IVendorNewDTO
-  ) => {
+  public transformCreateDTO = async (tenantId: number, vendorDTO: IVendorNewDTO) => {
     const commonDTO = this.transformCommonDTO(vendorDTO);
 
     // Retrieves the tenant metadata.
@@ -44,15 +36,10 @@ export class CreateEditVendorDTO {
 
       ...(!isEmpty(vendorDTO.openingBalanceAt)
         ? {
-            openingBalanceAt: moment(
-              vendorDTO?.openingBalanceAt
-            ).toMySqlDateTime(),
+            openingBalanceAt: moment(vendorDTO?.openingBalanceAt).toMySqlDateTime(),
           }
         : {}),
-      openingBalanceExchangeRate: defaultTo(
-        vendorDTO.openingBalanceExchangeRate,
-        1
-      ),
+      openingBalanceExchangeRate: defaultTo(vendorDTO.openingBalanceExchangeRate, 1),
     };
   };
 

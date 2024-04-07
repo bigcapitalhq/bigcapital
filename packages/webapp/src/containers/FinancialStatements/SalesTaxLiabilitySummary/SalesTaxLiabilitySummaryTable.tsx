@@ -26,10 +26,7 @@ function SalesTaxLiabilitySummaryTableRoot({
   const columns = useSalesTaxLiabilitySummaryColumns();
 
   // Retrieve default expanded rows of balance sheet.
-  const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table.rows, 3),
-    [table],
-  );
+  const expandedRows = React.useMemo(() => defaultExpanderReducer(table.rows, 3), [table]);
 
   return (
     <FinancialSheet

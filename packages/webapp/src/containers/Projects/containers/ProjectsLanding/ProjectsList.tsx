@@ -14,7 +14,7 @@ import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Projects list.
- * @returns 
+ * @returns
  */
 function ProjectsList({
   // #withProjects

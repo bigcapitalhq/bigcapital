@@ -64,8 +64,4 @@ function AccountBulkActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkActivateAlert);

@@ -11,9 +11,7 @@ interface EstimateMailDialogFormContentProps {
   onClose?: () => void;
 }
 
-export function EstimateMailDialogFormContent({
-  onClose,
-}: EstimateMailDialogFormContentProps) {
+export function EstimateMailDialogFormContent({ onClose }: EstimateMailDialogFormContentProps) {
   const { isSubmitting } = useFormikContext();
   const { mailOptions } = useEstimateMailDialogBoot();
 
@@ -24,10 +22,7 @@ export function EstimateMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
-        />
+        <MailNotificationForm fromAddresses={mailOptions.from_addresses} toAddresses={mailOptions.to_addresses} />
         <AttachFormGroup name={'attachEstimate'} inline>
           <FSwitch name={'attachEstimate'} label={'Attach Estimate'} />
         </AttachFormGroup>
@@ -35,20 +30,11 @@ export function EstimateMailDialogFormContent({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '65px' }}
-          >
+          <Button disabled={isSubmitting} onClick={handleClose} style={{ minWidth: '65px' }}>
             Close
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '75px' }}
-            type="submit"
-          >
+          <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
             Send
           </Button>
         </div>

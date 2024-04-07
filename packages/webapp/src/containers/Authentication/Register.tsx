@@ -10,11 +10,7 @@ import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
 import { RegisterSchema, transformRegisterErrorsToForm, transformRegisterToastMessages } from './utils';
-import {
-  AuthFooterLinks,
-  AuthFooterLink,
-  AuthInsiderCard,
-} from './_components';
+import { AuthFooterLinks, AuthFooterLink, AuthInsiderCard } from './_components';
 
 const initialValues = {
   first_name: '',
@@ -87,7 +83,10 @@ function RegisterFooterLinks() {
   return (
     <AuthFooterLinks>
       <AuthFooterLink>
-        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
+        <T id={'return_to'} />{' '}
+        <Link to={'/auth/login'}>
+          <T id={'sign_in'} />
+        </Link>
       </AuthFooterLink>
 
       <AuthFooterLink>

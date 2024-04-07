@@ -32,13 +32,7 @@ function EstimateFormBigTotal() {
   // Calculate the total due amount of bill entries.
   const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
-  return (
-    <PageFormBigNumber
-      label={intl.get('amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
-  );
+  return <PageFormBigNumber label={intl.get('amount')} amount={totalDueAmount} currencyCode={currency_code} />;
 }
 
 export default EstimateFormHeader;

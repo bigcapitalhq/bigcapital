@@ -15,9 +15,7 @@ function InventoryItemDetailsHeaderGeneralProvider({ ...props }) {
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
-    stringified_filter_roles: JSON.stringify([
-      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
-    ]),
+    stringified_filter_roles: JSON.stringify([{ fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 }]),
     page_size: 10000,
   });
 
@@ -32,16 +30,9 @@ function InventoryItemDetailsHeaderGeneralProvider({ ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <InventoryItemDetailsHeaderGeneralContext.Provider
-      value={provider}
-      {...props}
-    />
+    <InventoryItemDetailsHeaderGeneralContext.Provider value={provider} {...props} />
   );
 }
-const useInventoryItemDetailsHeaderGeneralContext = () =>
-  React.useContext(InventoryItemDetailsHeaderGeneralContext);
+const useInventoryItemDetailsHeaderGeneralContext = () => React.useContext(InventoryItemDetailsHeaderGeneralContext);
 
-export {
-  InventoryItemDetailsHeaderGeneralProvider,
-  useInventoryItemDetailsHeaderGeneralContext,
-};
+export { InventoryItemDetailsHeaderGeneralProvider, useInventoryItemDetailsHeaderGeneralContext };

@@ -1,11 +1,7 @@
-import { Service, Inject } from 'typedi';
-import { isUndefined } from 'lodash';
+import { ITransactionMeta, TransactionsLockingGroup, TransactionsLockingType } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ITransactionMeta,
-  TransactionsLockingGroup,
-  TransactionsLockingType,
-} from '@/interfaces';
+import { isUndefined } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { parseDate } from 'utils';
 
 @Service()
@@ -16,7 +12,7 @@ export default class TransactionsLockingRepository {
   async saveTransactionsLocking(
     tenantId: number,
     lockingGroup: string = TransactionsLockingGroup.All,
-    transactionlocking
+    transactionlocking,
   ) {
     const settings = this.tenancy.settings(tenantId);
     const group = `transactions-locking`;
@@ -74,10 +70,7 @@ export default class TransactionsLockingRepository {
     await settings.save();
   }
 
-  getTransactionsLocking(
-    tenantId: number,
-    lockingGroup: string = TransactionsLockingGroup.All
-  ): ITransactionMeta {
+  getTransactionsLocking(tenantId: number, lockingGroup: string = TransactionsLockingGroup.All): ITransactionMeta {
     const settings = this.tenancy.settings(tenantId);
     const group = `transactions-locking`;
 
@@ -136,10 +129,7 @@ export default class TransactionsLockingRepository {
     return lockingType || 'partial';
   }
 
-  flagTransactionsLockingType(
-    tenantId: number,
-    transactionsType: TransactionsLockingType
-  ) {
+  flagTransactionsLockingType(tenantId: number, transactionsType: TransactionsLockingType) {
     const settings = this.tenancy.settings(tenantId);
 
     settings.set({

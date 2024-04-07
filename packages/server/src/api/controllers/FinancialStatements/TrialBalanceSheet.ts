@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import { castArray } from 'lodash';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { TrialBalanceSheetApplication } from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetApplication';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { TrialBalanceSheetApplication } from '@/services/FinancialStatements/TrialBalanceSheet/TrialBalanceSheetApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { castArray } from 'lodash';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class TrialBalanceSheetController extends BaseFinancialReportController {
@@ -22,13 +22,10 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_TRIAL_BALANCE_SHEET,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_TRIAL_BALANCE_SHEET, AbilitySubject.Report),
       this.trialBalanceSheetValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.trialBalanceSheet.bind(this))
+      asyncMiddleware(this.trialBalanceSheet.bind(this)),
     );
     return router;
   }
@@ -52,7 +49,10 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
       query('only_active').optional().isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -60,11 +60,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
   /**
    * Retrieve the trial balance sheet.
    */
-  private async trialBalanceSheet(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async trialBalanceSheet(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     let filter = this.matchedQueryData(req);
 
@@ -84,22 +80,13 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
       ]);
       // Retrieves in json table format.
       if (acceptType === ACCEPT_TYPE.APPLICATION_JSON_TABLE) {
-        const { table, meta, query } = await this.trialBalanceSheetApp.table(
-          tenantId,
-          filter
-        );
+        const { table, meta, query } = await this.trialBalanceSheetApp.table(tenantId, filter);
         return res.status(200).send({ table, meta, query });
         // Retrieves in xlsx format
       } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
         const buffer = await this.trialBalanceSheetApp.xlsx(tenantId, filter);
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(buffer);
         // Retrieves in csv format.
       } else if (acceptType === ACCEPT_TYPE.APPLICATION_CSV) {
@@ -111,10 +98,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
         return res.send(buffer);
         // Retrieves in pdf format.
       } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {
-        const pdfContent = await this.trialBalanceSheetApp.pdf(
-          tenantId,
-          filter
-        );
+        const pdfContent = await this.trialBalanceSheetApp.pdf(tenantId, filter);
         res.set({
           'Content-Type': 'application/pdf',
           'Content-Length': pdfContent.length,
@@ -122,10 +106,7 @@ export default class TrialBalanceSheetController extends BaseFinancialReportCont
         res.send(pdfContent);
         // Retrieves in json format.
       } else {
-        const { data, query, meta } = await this.trialBalanceSheetApp.sheet(
-          tenantId,
-          filter
-        );
+        const { data, query, meta } = await this.trialBalanceSheetApp.sheet(tenantId, filter);
         return res.status(200).send({ data, query, meta });
       }
     } catch (error) {

@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
+import { IAcceptInviteEventPayload } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
 import { omit } from 'lodash';
 import moment from 'moment';
-import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { IAcceptInviteEventPayload } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SyncTenantAcceptInvite {
@@ -22,11 +22,7 @@ export default class SyncTenantAcceptInvite {
    * Syncs accept invite to tenant user.
    * @param {IAcceptInviteEventPayload} payload -
    */
-  private syncTenantAcceptInvite = async ({
-    inviteToken,
-    user,
-    inviteUserDTO,
-  }: IAcceptInviteEventPayload) => {
+  private syncTenantAcceptInvite = async ({ inviteToken, user, inviteUserDTO }: IAcceptInviteEventPayload) => {
     const { User } = this.tenancy.models(inviteToken.tenantId);
 
     await User.query()

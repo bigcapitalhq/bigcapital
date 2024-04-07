@@ -5,10 +5,7 @@ import { getCustomersTransactionsFilterDrawer } from '@/store/financialStatement
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      customersTransactionsDrawerFilter: getCustomersTransactionsFilterDrawer(
-        state,
-        props,
-      ),
+      customersTransactionsDrawerFilter: getCustomersTransactionsFilterDrawer(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

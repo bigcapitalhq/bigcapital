@@ -1,12 +1,6 @@
 // @ts-nocheck
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import {
-  ParseOptions,
-  ParsedQuery,
-  StringifyOptions,
-  parse,
-  stringify,
-} from 'query-string';
+import { ParseOptions, ParsedQuery, StringifyOptions, parse, stringify } from 'query-string';
 import { useHistory } from 'react-router';
 
 export interface QueryStringResult {
@@ -14,11 +8,7 @@ export interface QueryStringResult {
   [1]: Dispatch<SetStateAction<Record<string, any>>>;
 }
 
-type NavigateCallback = (
-  pathnameWithParams: string,
-  pathname: string,
-  stringifedParams: string,
-) => void;
+type NavigateCallback = (pathnameWithParams: string, pathname: string, stringifedParams: string) => void;
 
 /**
  * Query string.
@@ -68,10 +58,7 @@ export function useQueryString(
  * @param {ParseOptions} parseOptions
  * @returns {QueryStringResult}
  */
-export const useAppQueryString = (
-  navigate: NavigateCallback,
-  parseOptions: ParseOptions = {},
-): QueryStringResult => {
+export const useAppQueryString = (navigate: NavigateCallback, parseOptions: ParseOptions = {}): QueryStringResult => {
   const history = useHistory();
 
   return useQueryString(

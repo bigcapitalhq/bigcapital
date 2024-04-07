@@ -4,12 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 import { FormatDate } from '@/components';
-import {
-  DetailFinancialCard,
-  DetailFinancialSection,
-  FinancialProgressBar,
-  FinancialCardText,
-} from '../components';
+import { DetailFinancialCard, DetailFinancialSection, FinancialProgressBar, FinancialCardText } from '../components';
 import { calculateStatus } from '@/utils';
 
 /**
@@ -30,10 +25,7 @@ export function ProjectTimesheetsHeader() {
       </DetailFinancialCard>
 
       <DetailFinancialCard label={'To be invoiced'} value={'3.14'} />
-      <DetailFinancialCard
-        label={'Deadline'}
-        value={<FormatDate value={'2022-06-08T22:00:00.000Z'} />}
-      >
+      <DetailFinancialCard label={'Deadline'} value={<FormatDate value={'2022-06-08T22:00:00.000Z'} />}>
         <FinancialCardText>4 days to go</FinancialCardText>
       </DetailFinancialCard>
     </DetailFinancialSection>

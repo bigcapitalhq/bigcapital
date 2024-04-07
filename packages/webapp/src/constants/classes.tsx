@@ -81,22 +81,14 @@ const CLASSES = {
   PREFERENCES_TOPBAR: 'preferences-topbar',
 
   PREFERENCES_PAGE_INSIDE_CONTENT: 'preferences-page__inside-content',
-  PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL:
-    'preferences-page__inside-content--general',
-  PREFERENCES_PAGE_INSIDE_CONTENT_USERS:
-    'preferences-page__inside-content--users',
-  PREFERENCES_PAGE_INSIDE_CONTENT_CURRENCIES:
-    'preferences-page__inside-content--currencies',
-  PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT:
-    'preferences-page__inside-content--accountant',
-  PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION:
-    'preferences-page__inside-content--sms-integration',
-  PREFERENCES_PAGE_INSIDE_CONTENT_ROLES_FORM:
-    'preferences-page__inside-content--roles-form',
-  PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES:
-    'preferences-page__inside-content--branches',
-  PREFERENCES_PAGE_INSIDE_CONTENT_WAREHOUSES:
-    'preferences-page__inside-content--warehouses',
+  PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL: 'preferences-page__inside-content--general',
+  PREFERENCES_PAGE_INSIDE_CONTENT_USERS: 'preferences-page__inside-content--users',
+  PREFERENCES_PAGE_INSIDE_CONTENT_CURRENCIES: 'preferences-page__inside-content--currencies',
+  PREFERENCES_PAGE_INSIDE_CONTENT_ACCOUNTANT: 'preferences-page__inside-content--accountant',
+  PREFERENCES_PAGE_INSIDE_CONTENT_SMS_INTEGRATION: 'preferences-page__inside-content--sms-integration',
+  PREFERENCES_PAGE_INSIDE_CONTENT_ROLES_FORM: 'preferences-page__inside-content--roles-form',
+  PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES: 'preferences-page__inside-content--branches',
+  PREFERENCES_PAGE_INSIDE_CONTENT_WAREHOUSES: 'preferences-page__inside-content--warehouses',
 
   FINANCIAL_REPORT_INSIDER: 'dashboard__insider--financial-report',
 
@@ -104,19 +96,15 @@ const CLASSES = {
   UNIVERSAL_SEARCH_OMNIBAR: 'universal-search__omnibar',
   UNIVERSAL_SEARCH_OVERLAY: 'universal-search-overlay',
   UNIVERSAL_SEARCH_INPUT: 'universal-search__input',
-  UNIVERSAL_SEARCH_INPUT_RIGHT_ELEMENTS:
-    'universal-search-input-right-elements',
+  UNIVERSAL_SEARCH_INPUT_RIGHT_ELEMENTS: 'universal-search-input-right-elements',
   UNIVERSAL_SEARCH_TYPE_SELECT_OVERLAY: 'universal-search__type-select-overlay',
   UNIVERSAL_SEARCH_TYPE_SELECT_BTN: 'universal-search__type-select-btn',
   UNIVERSAL_SEARCH_FOOTER: 'universal-search__footer',
 
   UNIVERSAL_SEARCH_ACTIONS: 'universal-search__actions',
-  UNIVERSAL_SEARCH_ACTION_SELECT:
-    'universal-search__action universal-search__action--select',
-  UNIVERSAL_SEARCH_ACTION_CLOSE:
-    'universal-search__action universal-search__action--close',
-  UNIVERSAL_SEARCH_ACTION_ARROWS:
-    'universal-search__action universal-search__action--arrows',
+  UNIVERSAL_SEARCH_ACTION_SELECT: 'universal-search__action universal-search__action--select',
+  UNIVERSAL_SEARCH_ACTION_CLOSE: 'universal-search__action universal-search__action--close',
+  UNIVERSAL_SEARCH_ACTION_ARROWS: 'universal-search__action universal-search__action--arrows',
 
   DIALOG_PDF_PREVIEW: 'dialog--pdf-preview-dialog',
 

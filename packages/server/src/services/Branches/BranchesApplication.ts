@@ -1,5 +1,5 @@
 import { IBranch, ICreateBranchDTO, IEditBranchDTO } from '@/interfaces';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { ActivateBranches } from './ActivateBranches';
 import { CreateBranch } from './CreateBranch';
 import { DeleteBranch } from './DeleteBranch';
@@ -56,10 +56,7 @@ export class BranchesApplication {
    * @param   {ICreateBranchDTO} createBranchDTO
    * @returns {Promise<IBranch>}
    */
-  public createBranch = (
-    tenantId: number,
-    createBranchDTO: ICreateBranchDTO
-  ): Promise<IBranch> => {
+  public createBranch = (tenantId: number, createBranchDTO: ICreateBranchDTO): Promise<IBranch> => {
     return this.createBranchService.createBranch(tenantId, createBranchDTO);
   };
 
@@ -70,11 +67,7 @@ export class BranchesApplication {
    * @param   {IEditBranchDTO} editBranchDTO - Edit branch DTO.
    * @returns {Promise<IBranch>}
    */
-  public editBranch = (
-    tenantId: number,
-    branchId: number,
-    editBranchDTO: IEditBranchDTO
-  ): Promise<IBranch> => {
+  public editBranch = (tenantId: number, branchId: number, editBranchDTO: IEditBranchDTO): Promise<IBranch> => {
     return this.editBranchService.editBranch(tenantId, branchId, editBranchDTO);
   };
 
@@ -103,10 +96,7 @@ export class BranchesApplication {
    * @param   {number} branchId
    * @returns {Promise<IBranch>}
    */
-  public markBranchAsPrimary = async (
-    tenantId: number,
-    branchId: number
-  ): Promise<IBranch> => {
+  public markBranchAsPrimary = async (tenantId: number, branchId: number): Promise<IBranch> => {
     return this.markBranchAsPrimaryService.markAsPrimary(tenantId, branchId);
   };
 }

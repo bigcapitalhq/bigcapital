@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { IAccountCreateDTO } from '@/interfaces';
-import { CreateAccount } from './CreateAccount';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { Importable } from '../Import/Importable';
 import { AccountsSampleData } from './AccountsImportable.SampleData';
+import { CreateAccount } from './CreateAccount';
 
 @Service()
 export class AccountsImportable extends Importable {
@@ -16,16 +16,8 @@ export class AccountsImportable extends Importable {
    * @param {IAccountCreateDTO} createAccountDTO
    * @returns
    */
-  public importable(
-    tenantId: number,
-    createAccountDTO: IAccountCreateDTO,
-    trx?: Knex.Transaction
-  ) {
-    return this.createAccountService.createAccount(
-      tenantId,
-      createAccountDTO,
-      trx
-    );
+  public importable(tenantId: number, createAccountDTO: IAccountCreateDTO, trx?: Knex.Transaction) {
+    return this.createAccountService.createAccount(tenantId, createAccountDTO, trx);
   }
 
   /**
@@ -37,7 +29,7 @@ export class AccountsImportable extends Importable {
   }
 
   /**
-   * Retrieves the sample data that used to download accounts sample sheet. 
+   * Retrieves the sample data that used to download accounts sample sheet.
    */
   public sampleData(): any[] {
     return AccountsSampleData;

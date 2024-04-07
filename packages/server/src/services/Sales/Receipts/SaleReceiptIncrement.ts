@@ -12,10 +12,7 @@ export class SaleReceiptIncrement {
    * @return {string}
    */
   public getNextReceiptNumber(tenantId: number): string {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'sales_receipts'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'sales_receipts');
   }
 
   /**
@@ -23,9 +20,6 @@ export class SaleReceiptIncrement {
    * @param {number} tenantId -
    */
   public incrementNextReceiptNumber(tenantId: number) {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'sales_receipts'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'sales_receipts');
   }
 }

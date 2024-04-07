@@ -24,8 +24,7 @@ function InventoryAdjustmentPublishAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: publishInventoryAdjustmentMutate, isLoading } =
-    usePublishInventoryAdjustment();
+  const { mutateAsync: publishInventoryAdjustmentMutate, isLoading } = usePublishInventoryAdjustment();
 
   // Handle cancel inventory adjustment alert.
   const handleCancelPublish = () => {
@@ -64,7 +63,4 @@ function InventoryAdjustmentPublishAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(InventoryAdjustmentPublishAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(InventoryAdjustmentPublishAlert);

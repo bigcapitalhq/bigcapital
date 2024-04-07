@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class RejectSaleEstimate {
@@ -24,16 +24,11 @@ export class RejectSaleEstimate {
    * @param {number} tenantId
    * @param {number} saleEstimateId
    */
-  public async rejectSaleEstimate(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> {
+  public async rejectSaleEstimate(tenantId: number, saleEstimateId: number): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const saleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .throwIfNotFound();
+    const saleEstimate = await SaleEstimate.query().findById(saleEstimateId).throwIfNotFound();
 
     // Throws error in case the sale estimate still not delivered to customer.
     if (!saleEstimate.isDelivered) {

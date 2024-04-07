@@ -12,9 +12,7 @@ export default function BranchActivateFormContent() {
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <p class="paragraph">
-          {intl.getHTML('branch_activate.dialog_paragraph')}
-        </p>
+        <p class="paragraph">{intl.getHTML('branch_activate.dialog_paragraph')}</p>
 
         <ul class="paragraph list">
           <li>{intl.get('branch_activate.dialog_paragraph.line_1')}</li>

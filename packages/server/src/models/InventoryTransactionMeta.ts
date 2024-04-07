@@ -1,5 +1,5 @@
-import { Model, raw } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { Model } from 'objection';
 
 export default class InventoryTransactionMeta extends TenantModel {
   /**
@@ -21,9 +21,9 @@ export default class InventoryTransactionMeta extends TenantModel {
         modelClass: InventoryTransactions.default,
         join: {
           from: 'inventory_transaction_meta.inventoryTransactionId',
-          to: 'inventory_transactions.inventoryTransactionId'
-        }
-      }
+          to: 'inventory_transactions.inventoryTransactionId',
+        },
+      },
     };
   }
 }

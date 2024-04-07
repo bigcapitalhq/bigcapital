@@ -1,15 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Alignment,
-  NavbarGroup,
-  NavbarDivider,
-  Classes,
-} from '@blueprintjs/core';
-import {
-  useSetPrimaryWarehouseToForm,
-  useSetPrimaryBranchToForm,
-} from './utils';
+import { Alignment, NavbarGroup, NavbarDivider, Classes } from '@blueprintjs/core';
+import { useSetPrimaryWarehouseToForm, useSetPrimaryBranchToForm } from './utils';
 
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -49,9 +41,7 @@ export default function ReceiptFormTopBar() {
         <FeatureCan feature={Features.Branches}>
           <ReceiptFormSelectBranch />
         </FeatureCan>
-        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
-          <NavbarDivider />
-        )}
+        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && <NavbarDivider />}
         <FeatureCan feature={Features.Warehouses}>
           <ReceiptFormSelectWarehouse />
         </FeatureCan>

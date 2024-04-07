@@ -16,7 +16,7 @@ const Loader = (config) =>
       return null;
     },
     delay: 250,
-    ...config
+    ...config,
   });
 
 export default Loader;

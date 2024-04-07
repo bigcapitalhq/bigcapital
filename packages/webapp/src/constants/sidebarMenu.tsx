@@ -2,10 +2,7 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Features } from '@/constants/features';
-import {
-  ISidebarMenuItemType,
-  ISidebarMenuOverlayIds,
-} from '@/containers/Dashboard/Sidebar/interfaces';
+import { ISidebarMenuItemType, ISidebarMenuOverlayIds } from '@/containers/Dashboard/Sidebar/interfaces';
 import {
   ReportsAction,
   AbilitySubject,

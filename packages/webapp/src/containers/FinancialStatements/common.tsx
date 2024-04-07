@@ -7,9 +7,7 @@ import { transfromToSnakeCase, flatten } from '@/utils';
  * Associate display columns by and type properties to query object.
  */
 export const transformDisplayColumnsType = (form) => {
-  const columnType = displayColumnsByOptions.find(
-    (o) => o.key === form.displayColumnsType,
-  );
+  const columnType = displayColumnsByOptions.find((o) => o.key === form.displayColumnsType);
   return {
     ...form,
     displayColumnsBy: columnType ? columnType.by : '',

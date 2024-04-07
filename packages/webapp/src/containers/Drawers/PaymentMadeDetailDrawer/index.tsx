@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const PaymentMadeDetailContent = React.lazy(() =>
-  import('./PaymentMadeDetailContent'),
-);
+const PaymentMadeDetailContent = React.lazy(() => import('./PaymentMadeDetailContent'));
 
 /**
  * Payment made detail drawer.
@@ -19,12 +17,7 @@ function PaymentMadeDetailDrawer({
   payload: { paymentMadeId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      size={'65%'}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-    >
+    <Drawer isOpen={isOpen} name={name} size={'65%'} style={{ minWidth: '700px', maxWidth: '900px' }}>
       <DrawerSuspense>
         <PaymentMadeDetailContent paymentMadeId={paymentMadeId} />
       </DrawerSuspense>

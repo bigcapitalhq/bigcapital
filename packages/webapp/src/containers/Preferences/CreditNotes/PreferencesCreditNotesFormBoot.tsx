@@ -31,10 +31,7 @@ function PreferencesCreditNotesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesCreditNotesFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesCreditNotesFormContext.Provider value={provider} {...props} />
         )}
       </PreferencesCreditNotesCard>
     </div>
@@ -49,7 +46,6 @@ const PreferencesCreditNotesCard = styled(Card)`
   }
 `;
 
-const usePreferencesCreditNotesFormContext = () =>
-  React.useContext(PreferencesCreditNotesFormContext);
+const usePreferencesCreditNotesFormContext = () => React.useContext(PreferencesCreditNotesFormContext);
 
 export { PreferencesCreditNotesBoot, usePreferencesCreditNotesFormContext };

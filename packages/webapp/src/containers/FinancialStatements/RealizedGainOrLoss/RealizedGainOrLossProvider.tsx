@@ -17,7 +17,6 @@ function RealizedGainOrLossProvider({ filter, ...props }) {
   );
 }
 
-const useRealizedGainOrLossContext = () =>
-  React.useContext(RealizedGainOrLossContext);
+const useRealizedGainOrLossContext = () => React.useContext(RealizedGainOrLossContext);
 
 export { RealizedGainOrLossProvider, useRealizedGainOrLossContext };

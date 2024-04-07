@@ -1,12 +1,6 @@
 // @ts-nocheck
 import { Position } from '@blueprintjs/core';
-import {
-  AccountsSelect,
-  FDateInput,
-  FFormGroup,
-  FInputGroup,
-  FTextArea,
-} from '@/components';
+import { AccountsSelect, FDateInput, FFormGroup, FInputGroup, FTextArea } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
 
 export default function CategorizeTransactionOwnerContribution() {
@@ -24,28 +18,11 @@ export default function CategorizeTransactionOwnerContribution() {
         />
       </FFormGroup>
 
-      <FFormGroup
-        name={'debitAccountId'}
-        label={'From Account'}
-        fastField
-        inline
-      >
-        <AccountsSelect
-          name={'debitAccountId'}
-          items={accounts}
-          fastField
-          fill
-          allowCreate
-          disabled
-        />
+      <FFormGroup name={'debitAccountId'} label={'From Account'} fastField inline>
+        <AccountsSelect name={'debitAccountId'} items={accounts} fastField fill allowCreate disabled />
       </FFormGroup>
 
-      <FFormGroup
-        name={'creditAccountId'}
-        label={'Equity Account'}
-        fastField
-        inline
-      >
+      <FFormGroup name={'creditAccountId'} label={'Equity Account'} fastField inline>
         <AccountsSelect
           name={'creditAccountId'}
           items={accounts}

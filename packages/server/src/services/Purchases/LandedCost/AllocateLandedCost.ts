@@ -1,14 +1,10 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  IAllocatedLandedCostCreatedPayload,
-  IBillLandedCost,
-  ILandedCostDTO,
-} from '@/interfaces';
-import BaseLandedCostService from './BaseLandedCost';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IAllocatedLandedCostCreatedPayload, IBillLandedCost, ILandedCostDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import BaseLandedCostService from './BaseLandedCost';
 
 @Service()
 export default class AllocateLandedCost extends BaseLandedCostService {
@@ -39,7 +35,7 @@ export default class AllocateLandedCost extends BaseLandedCostService {
   public allocateLandedCost = async (
     tenantId: number,
     allocateCostDTO: ILandedCostDTO,
-    billId: number
+    billId: number,
   ): Promise<IBillLandedCost> => {
     const { BillLandedCost, Bill } = this.tenancy.models(tenantId);
 
@@ -47,46 +43,38 @@ export default class AllocateLandedCost extends BaseLandedCostService {
     const amount = this.getAllocateItemsCostTotal(allocateCostDTO);
 
     // Retrieve the purchase invoice or throw not found error.
-    const bill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries')
-      .throwIfNotFound();
+    const bill = await Bill.query().findById(billId).withGraphFetched('entries').throwIfNotFound();
 
     // Retrieve landed cost transaction or throw not found service error.
     const costTransaction = await this.getLandedCostOrThrowError(
       tenantId,
       allocateCostDTO.transactionType,
-      allocateCostDTO.transactionId
+      allocateCostDTO.transactionId,
     );
     // Retrieve landed cost transaction entries.
     const costTransactionEntry = await this.getLandedCostEntry(
       tenantId,
       allocateCostDTO.transactionType,
       allocateCostDTO.transactionId,
-      allocateCostDTO.transactionEntryId
+      allocateCostDTO.transactionEntryId,
     );
     // Validates allocate cost items association with the purchase invoice entries.
     this.validateAllocateCostItems(bill.entries, allocateCostDTO.items);
 
     // Validate the amount of cost with unallocated landed cost.
-    this.validateLandedCostEntryAmount(
-      costTransactionEntry.unallocatedCostAmount,
-      amount
-    );
+    this.validateLandedCostEntryAmount(costTransactionEntry.unallocatedCostAmount, amount);
     // Transformes DTO to bill landed cost model object.
     const billLandedCostObj = this.transformToBillLandedCost(
       allocateCostDTO,
       bill,
       costTransaction,
-      costTransactionEntry
+      costTransactionEntry,
     );
     // Saves landed cost transactions with associated tranasctions under
     // unit-of-work eniverment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Save the bill landed cost model.
-      const billLandedCost = await BillLandedCost.query(trx).insertGraph(
-        billLandedCostObj
-      );
+      const billLandedCost = await BillLandedCost.query(trx).insertGraph(billLandedCostObj);
       // Triggers `onBillLandedCostCreated` event.
       await this.eventPublisher.emitAsync(events.billLandedCost.onCreated, {
         tenantId,

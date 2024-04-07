@@ -73,7 +73,4 @@ function ProjectDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ProjectDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ProjectDeleteAlert);

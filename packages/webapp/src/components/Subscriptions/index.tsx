@@ -117,10 +117,7 @@ export function SubscriptionPeriod({
   return (
     <div
       id={`plan-period-${period}`}
-      className={classNames(
-        { 'is-selected': period === selectedPeriod },
-        'period-radio',
-      )}
+      className={classNames({ 'is-selected': period === selectedPeriod }, 'period-radio')}
       onClick={handlePeriodClick}
     >
       <span className={'period-radio__label'}>{label}</span>

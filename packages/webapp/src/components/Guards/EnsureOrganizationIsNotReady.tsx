@@ -14,11 +14,9 @@ function EnsureOrganizationIsNotReady({
 
   // #withOrganization
   isOrganizationReady,
-  isOrganizationSetupCompleted
+  isOrganizationSetupCompleted,
 }) {
-  return (isOrganizationReady && !isOrganizationSetupCompleted) ? (
-    <Redirect to={{ pathname: '/' }} />
-  ) : children;
+  return isOrganizationReady && !isOrganizationSetupCompleted ? <Redirect to={{ pathname: '/' }} /> : children;
 }
 
 export default compose(
@@ -28,11 +26,8 @@ export default compose(
   connect((state, props) => ({
     organizationId: props.currentOrganizationId,
   })),
-  withOrganization(({
+  withOrganization(({ isOrganizationReady, isOrganizationSetupCompleted }) => ({
     isOrganizationReady,
-    isOrganizationSetupCompleted
-  }) => ({
-    isOrganizationReady,
-    isOrganizationSetupCompleted
+    isOrganizationSetupCompleted,
   })),
 )(EnsureOrganizationIsNotReady);

@@ -12,10 +12,7 @@ export default function RefundVendorCreditDialogContent({
   vendorCreditId,
 }) {
   return (
-    <RefundVendorCreditFormProvider
-      vendorCreditId={vendorCreditId}
-      dialogName={dialogName}
-    >
+    <RefundVendorCreditFormProvider vendorCreditId={vendorCreditId} dialogName={dialogName}>
       <RefundVendorCreditForm />
     </RefundVendorCreditFormProvider>
   );

@@ -11,10 +11,10 @@ const ProjectTimesheetContext = React.createContext();
  */
 function ProjectTimesheetsProvider({ ...props }) {
   const { id } = useParams();
-  const projectId = parseInt(id, 10);
+  const projectId = Number.parseInt(id, 10);
 
   // fetch project time entries.
-const {
+  const {
     data: { projectTimeEntries },
     isLoading: isProjectTimeEntriesLoading,
   } = useProjectTimeEntries(projectId, {
@@ -37,7 +37,6 @@ const {
   return <ProjectTimesheetContext.Provider value={provider} {...props} />;
 }
 
-const useProjectTimesheetContext = () =>
-  React.useContext(ProjectTimesheetContext);
+const useProjectTimesheetContext = () => React.useContext(ProjectTimesheetContext);
 
 export { ProjectTimesheetsProvider, useProjectTimesheetContext };

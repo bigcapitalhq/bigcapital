@@ -49,13 +49,7 @@ export default function LoginForm({ isSubmitting }) {
         <T id={'keep_me_logged_in'} />
       </FCheckbox>
 
-      <AuthSubmitButton
-        type={'submit'}
-        intent={Intent.PRIMARY}
-        fill={true}
-        large={true}
-        loading={isSubmitting}
-      >
+      <AuthSubmitButton type={'submit'} intent={Intent.PRIMARY} fill={true} large={true} loading={isSubmitting}>
         <T id={'log_in'} />
       </AuthSubmitButton>
     </Form>

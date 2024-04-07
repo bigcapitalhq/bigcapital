@@ -1,9 +1,8 @@
-import { Inject, Service } from "typedi";
-import { InventoryValuationSheetTableInjectable } from "./InventoryValuationSheetTableInjectable";
-import { TableSheetPdf } from "../TableSheetPdf";
-import { IInventoryValuationReportQuery } from "@/interfaces";
-import { HtmlTableCustomCss } from "./_constants";
-
+import { IInventoryValuationReportQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { TableSheetPdf } from '../TableSheetPdf';
+import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
+import { HtmlTableCustomCss } from './_constants';
 
 @Service()
 export class InventoryValuationSheetPdf {
@@ -19,10 +18,7 @@ export class InventoryValuationSheetPdf {
    * @param {IBalanceSheetQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IInventoryValuationReportQuery): Promise<Buffer> {
     const table = await this.inventoryValuationTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -30,7 +26,7 @@ export class InventoryValuationSheetPdf {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
-  } 
+  }
 }

@@ -62,7 +62,4 @@ function CreditNoteOpenedAlert({
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CreditNoteOpenedAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CreditNoteOpenedAlert);

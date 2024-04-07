@@ -12,10 +12,7 @@ import withProjectProfitabilitySummaryActions from './withProjectProfitabilitySu
 import ProjectProfitabilitySummaryHeaderGeneralPanal from './ProjectProfitabilitySummaryHeaderGeneralPanal';
 import FinancialStatementHeader from '../FinancialStatementHeader';
 
-import {
-  getProjectProfitabilitySummaryValidationSchema,
-  getDefaultProjectProfitabilitySummaryQuery,
-} from './utils';
+import { getProjectProfitabilitySummaryValidationSchema, getDefaultProjectProfitabilitySummaryQuery } from './utils';
 import { compose, transformToForm } from '@/utils';
 
 /**
@@ -72,18 +69,10 @@ function ProjectProfitabilitySummaryHeader({
         onClose: handleDrawerClose,
       }}
     >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<ProjectProfitabilitySummaryHeaderGeneralPanal />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<ProjectProfitabilitySummaryHeaderGeneralPanal />} />
           </Tabs>
           <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
@@ -100,11 +89,9 @@ function ProjectProfitabilitySummaryHeader({
 }
 
 export default compose(
-  withProjectProfitabilitySummary(
-    ({ projectProfitabilitySummaryDrawerFilter }) => ({
-      isFilterDrawerOpen: projectProfitabilitySummaryDrawerFilter,
-    }),
-  ),
+  withProjectProfitabilitySummary(({ projectProfitabilitySummaryDrawerFilter }) => ({
+    isFilterDrawerOpen: projectProfitabilitySummaryDrawerFilter,
+  })),
   withProjectProfitabilitySummaryActions,
 )(ProjectProfitabilitySummaryHeader);
 

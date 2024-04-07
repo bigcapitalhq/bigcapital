@@ -15,9 +15,7 @@ interface ImportFileMappingFormProps {
 
 type ImportFileMappingFormValues = Record<string, string | null>;
 
-export function ImportFileMappingForm({
-  children,
-}: ImportFileMappingFormProps) {
+export function ImportFileMappingForm({ children }: ImportFileMappingFormProps) {
   const { mutateAsync: submitImportFileMapping } = useImportFileMapping();
   const { importId, setStep } = useImportFileContext();
 
@@ -71,18 +69,13 @@ const useImportFileMappingInitialValues = () => {
   const { importFile } = useImportFileMapBootContext();
   const { entityColumns, sheetColumns } = useImportFileContext();
 
-  const initialResValues = useMemo(
-    () => transformResToFormValues(importFile?.map || []),
-    [importFile?.map],
-  );
+  const initialResValues = useMemo(() => transformResToFormValues(importFile?.map || []), [importFile?.map]);
 
   const initialValues = useMemo(
     () =>
       entityColumns.reduce((acc, { key, name }) => {
         const _name = lowerCase(name);
-        const _matched = sheetColumns.find(
-          (column) => lowerCase(column) === _name,
-        );
+        const _matched = sheetColumns.find((column) => lowerCase(column) === _name);
         // Match the default column name the same field name
         // if matched one of sheet columns has the same field name.
         acc[key] = _matched ? _matched : '';

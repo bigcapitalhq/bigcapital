@@ -5,8 +5,7 @@ import { getProjectProfitabilitySummaryFilterDrawer } from '@/store/financialSta
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      projectProfitabilitySummaryDrawerFilter:
-        getProjectProfitabilitySummaryFilterDrawer(state),
+      projectProfitabilitySummaryDrawerFilter: getProjectProfitabilitySummaryFilterDrawer(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

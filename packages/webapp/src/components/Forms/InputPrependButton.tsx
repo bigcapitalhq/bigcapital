@@ -3,18 +3,9 @@ import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { Button, Tooltip, Classes } from '@blueprintjs/core';
 
-export function InputPrependButton({
-  buttonProps = {},
-  tooltip = false,
-  tooltipProps = {},
-}) {
+export function InputPrependButton({ buttonProps = {}, tooltip = false, tooltipProps = {} }) {
   const appendButton = useMemo(
-    () => (
-      <Button
-        className={classNames('input-prepend__button', Classes.SMALL)}
-        {...buttonProps}
-      />
-    ),
+    () => <Button className={classNames('input-prepend__button', Classes.SMALL)} {...buttonProps} />,
     [buttonProps],
   );
 
@@ -23,9 +14,5 @@ export function InputPrependButton({
     [tooltipProps, appendButton],
   );
 
-  return (
-    <div class="input-prepend">
-      {tooltip ? appendButtonWithTooltip : appendButton}
-    </div>
-  );
+  return <div class="input-prepend">{tooltip ? appendButtonWithTooltip : appendButton}</div>;
 }

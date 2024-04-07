@@ -1,15 +1,12 @@
+import { IBalanceSheetNetIncomeNode } from '@/interfaces';
 import * as R from 'ramda';
-import {
-  IBalanceSheetDataNode,
-  IBalanceSheetNetIncomeNode,
-} from '@/interfaces';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
-import BalanceSheetRepository from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
+import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetNetIncomeDatePeriodsPY } from './BalanceSheetNetIncomeDatePeriodsPY';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetNetIncomePY = (Base: any) =>
   class extends R.compose(
@@ -17,7 +14,7 @@ export const BalanceSheetNetIncomePY = (Base: any) =>
     BalanceSheetComparsionPreviousYear,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
-    FinancialHorizTotals
+    FinancialHorizTotals,
   )(Base) {
     private repository: BalanceSheetRepository;
     private query: BalanceSheetQuery;
@@ -30,10 +27,8 @@ export const BalanceSheetNetIncomePY = (Base: any) =>
      * @returns {number}
      */
     protected getPreviousYearNetIncome = () => {
-      const income =
-        this.repository.incomePYTotalAccountsLedger.getClosingBalance();
-      const expense =
-        this.repository.expensePYTotalAccountsLedger.getClosingBalance();
+      const income = this.repository.incomePYTotalAccountsLedger.getClosingBalance();
+      const expense = this.repository.expensePYTotalAccountsLedger.getClosingBalance();
 
       return income - expense;
     };
@@ -43,9 +38,7 @@ export const BalanceSheetNetIncomePY = (Base: any) =>
      * @param {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    protected assocPreviousYearNetIncomeNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    protected assocPreviousYearNetIncomeNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       const total = this.getPreviousYearNetIncome();
 
       return R.assoc('previousYear', this.getTotalAmountMeta(total), node);
@@ -56,24 +49,13 @@ export const BalanceSheetNetIncomePY = (Base: any) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    protected previousYearNetIncomeNodeCompose = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    protected previousYearNetIncomeNodeCompose = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          this.assocPreviousYearTotalPercentageNode
-        ),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearTotalChangeNode
-        ),
+        R.when(this.query.isPreviousYearPercentageActive, this.assocPreviousYearTotalPercentageNode),
+        R.when(this.query.isPreviousYearChangeActive, this.assocPreviousYearTotalChangeNode),
         // Associate the PY to date periods horizontal nodes.
-        R.when(
-          this.isNodeHasHorizontalTotals,
-          this.assocPreviousYearNetIncomeHorizNode
-        ),
-        this.assocPreviousYearNetIncomeNode
+        R.when(this.isNodeHasHorizontalTotals, this.assocPreviousYearNetIncomeHorizNode),
+        this.assocPreviousYearNetIncomeNode,
       )(node);
     };
   };

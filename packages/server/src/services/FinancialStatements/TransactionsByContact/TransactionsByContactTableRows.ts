@@ -1,7 +1,7 @@
+import { ITableRow, ITransactionsByContactsContact } from '@/interfaces';
 import moment from 'moment';
 import * as R from 'ramda';
 import { tableMapper, tableRowMapper } from 'utils';
-import { ITransactionsByContactsContact, ITableRow } from '@/interfaces';
 
 enum ROW_TYPE {
   OPENING_BALANCE = 'OPENING_BALANCE',
@@ -20,9 +20,7 @@ export default class TransactionsByContactsTableRows {
    * @param {ITransactionsByCustomersCustomer} contact
    * @returns {ITableRow[]}
    */
-  protected contactTransactions = (
-    contact: ITransactionsByContactsContact
-  ): ITableRow[] => {
+  protected contactTransactions = (contact: ITransactionsByContactsContact): ITableRow[] => {
     const columns = [
       { key: 'date', accessor: this.dateAccessor },
       { key: 'account', accessor: 'accountName' },
@@ -42,9 +40,7 @@ export default class TransactionsByContactsTableRows {
    * @param {ITransactionsByCustomersCustomer} contact
    * @returns {ITableRow}
    */
-  protected contactOpeningBalance = (
-    contact: ITransactionsByContactsContact
-  ): ITableRow => {
+  protected contactOpeningBalance = (contact: ITransactionsByContactsContact): ITableRow => {
     const columns = [
       { key: 'openingBalanceLabel', value: this.i18n.__('Opening balance') },
       ...R.repeat({ key: 'empty', value: '' }, 5),
@@ -63,9 +59,7 @@ export default class TransactionsByContactsTableRows {
    * @param {ITransactionsByCustomersCustomer} contact -
    * @returns {ITableRow}
    */
-  protected contactClosingBalance = (
-    contact: ITransactionsByContactsContact
-  ): ITableRow => {
+  protected contactClosingBalance = (contact: ITransactionsByContactsContact): ITableRow => {
     const columns = [
       { key: 'closingBalanceLabel', value: this.i18n.__('Closing balance') },
       ...R.repeat({ key: 'empty', value: '' }, 5),

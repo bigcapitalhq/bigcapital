@@ -2,22 +2,16 @@ import { TenantSeeder } from '@/lib/Seeder/TenantSeeder';
 
 export default class SeedSettings extends TenantSeeder {
   /**
-   * 
-   * @param knex 
-   * @returns 
+   *
+   * @param knex
+   * @returns
    */
   async up(knex) {
-    const costAccount = await knex('accounts')
-      .where('slug', 'cost-of-goods-sold')
-      .first();
+    const costAccount = await knex('accounts').where('slug', 'cost-of-goods-sold').first();
 
-    const sellAccount = await knex('accounts')
-      .where('slug', 'sales-of-product-income')
-      .first();
+    const sellAccount = await knex('accounts').where('slug', 'sales-of-product-income').first();
 
-    const inventoryAccount = await knex('accounts')
-      .where('slug', 'inventory-asset')
-      .first();
+    const inventoryAccount = await knex('accounts').where('slug', 'inventory-asset').first();
 
     const settings = [
       // Items settings.

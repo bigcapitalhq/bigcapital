@@ -1,16 +1,16 @@
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
 import {
-  IBillPaymentDTO,
   IBillPayment,
-  IBillPaymentEventCreatedPayload,
   IBillPaymentCreatingPayload,
+  IBillPaymentDTO,
+  IBillPaymentEventCreatedPayload,
 } from '@/interfaces';
-import { TenantMetadata } from '@/system/models';
-import { Inject, Service } from 'typedi';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { BillPaymentValidators } from './BillPaymentValidators';
 import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransformer';
 
@@ -46,54 +46,34 @@ export class CreateBillPayment {
    * @param {number} tenantId - Tenant id.
    * @param {BillPaymentDTO} billPayment - Bill payment object.
    */
-  public async createBillPayment(
-    tenantId: number,
-    billPaymentDTO: IBillPaymentDTO
-  ): Promise<IBillPayment> {
+  public async createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentDTO): Promise<IBillPayment> {
     const { BillPayment, Contact } = this.tenancy.models(tenantId);
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieves the payment vendor or throw not found error.
-    const vendor = await Contact.query()
-      .findById(billPaymentDTO.vendorId)
-      .modify('vendor')
-      .throwIfNotFound();
+    const vendor = await Contact.query().findById(billPaymentDTO.vendorId).modify('vendor').throwIfNotFound();
 
     // Transform create DTO to model object.
-    const billPaymentObj = await this.commandTransformerDTO.transformDTOToModel(
-      tenantId,
-      billPaymentDTO,
-      vendor
-    );
+    const billPaymentObj = await this.commandTransformerDTO.transformDTOToModel(tenantId, billPaymentDTO, vendor);
     // Validate the payment account existance and type.
     const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
       tenantId,
-      billPaymentObj.paymentAccountId
+      billPaymentObj.paymentAccountId,
     );
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
-      await this.validators.validatePaymentNumber(
-        tenantId,
-        billPaymentObj.paymentNumber
-      );
+      await this.validators.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber);
     }
     // Validates the bills existance and associated to the given vendor.
-    await this.validators.validateBillsExistance(
-      tenantId,
-      billPaymentObj.entries,
-      billPaymentDTO.vendorId
-    );
+    await this.validators.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
     // Validates the bills due payment amount.
-    await this.validators.validateBillsDueAmount(
-      tenantId,
-      billPaymentObj.entries
-    );
+    await this.validators.validateBillsDueAmount(tenantId, billPaymentObj.entries);
     // Validates the withdrawal account currency code.
     this.validators.validateWithdrawalAccountCurrency(
       paymentAccount.currencyCode,
       vendor.currencyCode,
-      tenantMeta.baseCurrency
+      tenantMeta.baseCurrency,
     );
     // Writes bill payment transacation with associated transactions
     // under unit-of-work envirement.

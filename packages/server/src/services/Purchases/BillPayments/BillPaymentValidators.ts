@@ -1,15 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { sumBy, difference } from 'lodash';
-import {
-  IBill,
-  IBillPaymentDTO,
-  IBillPaymentEntryDTO,
-  IBillPayment,
-  IBillPaymentEntry,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { ServiceError } from '@/exceptions';
+import { IBill, IBillPayment, IBillPaymentDTO, IBillPaymentEntry, IBillPaymentEntryDTO } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { difference, sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 @Service()
@@ -23,14 +17,9 @@ export class BillPaymentValidators {
    * @param {Response} res
    * @param {Function} next
    */
-  public async getPaymentMadeOrThrowError(
-    tenantid: number,
-    paymentMadeId: number
-  ) {
+  public async getPaymentMadeOrThrowError(tenantid: number, paymentMadeId: number) {
     const { BillPayment } = this.tenancy.models(tenantid);
-    const billPayment = await BillPayment.query()
-      .withGraphFetched('entries')
-      .findById(paymentMadeId);
+    const billPayment = await BillPayment.query().withGraphFetched('entries').findById(paymentMadeId);
 
     if (!billPayment) {
       throw new ServiceError(ERRORS.PAYMENT_MADE_NOT_FOUND);
@@ -44,26 +33,15 @@ export class BillPaymentValidators {
    * @param {number} paymentAccountId
    * @return {Promise<IAccountType>}
    */
-  public async getPaymentAccountOrThrowError(
-    tenantId: number,
-    paymentAccountId: number
-  ) {
+  public async getPaymentAccountOrThrowError(tenantId: number, paymentAccountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const paymentAccount = await accountRepository.findOneById(
-      paymentAccountId
-    );
+    const paymentAccount = await accountRepository.findOneById(paymentAccountId);
     if (!paymentAccount) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_FOUND);
     }
     // Validate the payment account type.
-    if (
-      !paymentAccount.isAccountType([
-        ACCOUNT_TYPE.BANK,
-        ACCOUNT_TYPE.CASH,
-        ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-      ])
-    ) {
+    if (!paymentAccount.isAccountType([ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.OTHER_CURRENT_ASSET])) {
       throw new ServiceError(ERRORS.PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE);
     }
     return paymentAccount;
@@ -75,22 +53,16 @@ export class BillPaymentValidators {
    * @param {string} paymentMadeNumber -
    * @return {Promise<IBillPayment>}
    */
-  public async validatePaymentNumber(
-    tenantId: number,
-    paymentMadeNumber: string,
-    notPaymentMadeId?: number
-  ) {
+  public async validatePaymentNumber(tenantId: number, paymentMadeNumber: string, notPaymentMadeId?: number) {
     const { BillPayment } = this.tenancy.models(tenantId);
 
-    const foundBillPayment = await BillPayment.query().onBuild(
-      (builder: any) => {
-        builder.findOne('payment_number', paymentMadeNumber);
+    const foundBillPayment = await BillPayment.query().onBuild((builder: any) => {
+      builder.findOne('payment_number', paymentMadeNumber);
 
-        if (notPaymentMadeId) {
-          builder.whereNot('id', notPaymentMadeId);
-        }
+      if (notPaymentMadeId) {
+        builder.whereNot('id', notPaymentMadeId);
       }
-    );
+    });
 
     if (foundBillPayment) {
       throw new ServiceError(ERRORS.BILL_PAYMENT_NUMBER_NOT_UNQIUE);
@@ -104,17 +76,11 @@ export class BillPaymentValidators {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async validateBillsExistance(
-    tenantId: number,
-    billPaymentEntries: { billId: number }[],
-    vendorId: number
-  ) {
+  public async validateBillsExistance(tenantId: number, billPaymentEntries: { billId: number }[], vendorId: number) {
     const { Bill } = this.tenancy.models(tenantId);
     const entriesBillsIds = billPaymentEntries.map((e: any) => e.billId);
 
-    const storedBills = await Bill.query()
-      .whereIn('id', entriesBillsIds)
-      .where('vendor_id', vendorId);
+    const storedBills = await Bill.query().whereIn('id', entriesBillsIds).where('vendor_id', vendorId);
 
     const storedBillsIds = storedBills.map((t: IBill) => t.id);
     const notFoundBillsIds = difference(entriesBillsIds, storedBillsIds);
@@ -143,26 +109,19 @@ export class BillPaymentValidators {
   public async validateBillsDueAmount(
     tenantId: number,
     billPaymentEntries: IBillPaymentEntryDTO[],
-    oldPaymentEntries: IBillPaymentEntry[] = []
+    oldPaymentEntries: IBillPaymentEntry[] = [],
   ) {
     const { Bill } = this.tenancy.models(tenantId);
-    const billsIds = billPaymentEntries.map(
-      (entry: IBillPaymentEntryDTO) => entry.billId
-    );
+    const billsIds = billPaymentEntries.map((entry: IBillPaymentEntryDTO) => entry.billId);
 
     const storedBills = await Bill.query().whereIn('id', billsIds);
     const storedBillsMap = new Map(
       storedBills.map((bill) => {
-        const oldEntries = oldPaymentEntries.filter(
-          (entry) => entry.billId === bill.id
-        );
+        const oldEntries = oldPaymentEntries.filter((entry) => entry.billId === bill.id);
         const oldPaymentAmount = sumBy(oldEntries, 'paymentAmount') || 0;
 
-        return [
-          bill.id,
-          { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount },
-        ];
-      })
+        return [bill.id, { ...bill, dueAmount: bill.dueAmount + oldPaymentAmount }];
+      }),
     );
     interface invalidPaymentAmountError {
       index: number;
@@ -192,18 +151,13 @@ export class BillPaymentValidators {
   public async validateEntriesIdsExistance(
     tenantId: number,
     billPaymentId: number,
-    billPaymentEntries: IBillPaymentEntry[]
+    billPaymentEntries: IBillPaymentEntry[],
   ) {
     const { BillPaymentEntry } = this.tenancy.models(tenantId);
 
-    const entriesIds = billPaymentEntries
-      .filter((entry: any) => entry.id)
-      .map((entry: any) => entry.id);
+    const entriesIds = billPaymentEntries.filter((entry: any) => entry.id).map((entry: any) => entry.id);
 
-    const storedEntries = await BillPaymentEntry.query().where(
-      'bill_payment_id',
-      billPaymentId
-    );
+    const storedEntries = await BillPaymentEntry.query().where('bill_payment_id', billPaymentId);
 
     const storedEntriesIds = storedEntries.map((entry: any) => entry.id);
     const notFoundEntriesIds = difference(entriesIds, storedEntriesIds);
@@ -217,10 +171,7 @@ export class BillPaymentValidators {
    * * Validate the payment vendor whether modified.
    * @param {string} billPaymentNo
    */
-  public validateVendorNotModified(
-    billPaymentDTO: IBillPaymentDTO,
-    oldBillPayment: IBillPayment
-  ) {
+  public validateVendorNotModified(billPaymentDTO: IBillPaymentDTO, oldBillPayment: IBillPayment) {
     if (billPaymentDTO.vendorId !== oldBillPayment.vendorId) {
       throw new ServiceError(ERRORS.PAYMENT_NUMBER_SHOULD_NOT_MODIFY);
     }
@@ -237,12 +188,9 @@ export class BillPaymentValidators {
   public validateWithdrawalAccountCurrency = (
     paymentAccountCurrency: string,
     customerCurrency: string,
-    baseCurrency: string
+    baseCurrency: string,
   ) => {
-    if (
-      paymentAccountCurrency !== customerCurrency &&
-      paymentAccountCurrency !== baseCurrency
-    ) {
+    if (paymentAccountCurrency !== customerCurrency && paymentAccountCurrency !== baseCurrency) {
       throw new ServiceError(ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID);
     }
   };

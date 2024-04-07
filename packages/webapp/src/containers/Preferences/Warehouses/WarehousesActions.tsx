@@ -21,11 +21,7 @@ function WarehousesActions({
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Warehouses}>
-        <Button
-          icon={<Icon icon="plus" iconSize={12} />}
-          onClick={handleClickNewWarehouse}
-          intent={Intent.PRIMARY}
-        >
+        <Button icon={<Icon icon="plus" iconSize={12} />} onClick={handleClickNewWarehouse} intent={Intent.PRIMARY}>
           <T id={'warehouses.label.new_warehouse'} />
         </Button>
       </FeatureCan>

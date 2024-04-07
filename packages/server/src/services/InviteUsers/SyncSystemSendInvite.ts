@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
 import {
-  IUserInvitedEventPayload,
   IUserInviteResendEventPayload,
   IUserInviteTenantSyncedEventPayload,
+  IUserInvitedEventPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { Invite, SystemUser } from '@/system/models';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SyncSystemSendInvite {
@@ -23,22 +23,14 @@ export default class SyncSystemSendInvite {
    */
   public attach(bus) {
     bus.subscribe(events.inviteUser.sendInvite, this.syncSendInviteSystem);
-    bus.subscribe(
-      events.inviteUser.resendInvite,
-      this.syncResendInviteSystemUser
-    );
+    bus.subscribe(events.inviteUser.resendInvite, this.syncResendInviteSystemUser);
   }
 
   /**
    * Syncs send invite to system user.
    * @param {IUserInvitedEventPayload} payload -
    */
-  private syncSendInviteSystem = async ({
-    inviteToken,
-    user,
-    tenantId,
-    authorizedUser,
-  }: IUserInvitedEventPayload) => {
+  private syncSendInviteSystem = async ({ inviteToken, user, tenantId, authorizedUser }: IUserInvitedEventPayload) => {
     const { User } = this.tenancy.models(tenantId);
 
     // Creates a new system user.
@@ -59,15 +51,12 @@ export default class SyncSystemSendInvite {
       systemUserId: systemUser.id,
     });
     // Triggers `onUserSendInviteTenantSynced` event.
-    await this.eventPublisher.emitAsync(
-      events.inviteUser.sendInviteTenantSynced,
-      {
-        invite,
-        tenantId,
-        user,
-        authorizedUser,
-      } as IUserInviteTenantSyncedEventPayload
-    );
+    await this.eventPublisher.emitAsync(events.inviteUser.sendInviteTenantSynced, {
+      invite,
+      tenantId,
+      user,
+      authorizedUser,
+    } as IUserInviteTenantSyncedEventPayload);
   };
 
   /**
@@ -95,10 +84,7 @@ export default class SyncSystemSendInvite {
    * Clear invite tokens of the given user id.
    * @param {number} userId - User id.
    */
-  private clearInviteTokensByUserId = async (
-    userId: number,
-    tenantId: number
-  ) => {
+  private clearInviteTokensByUserId = async (userId: number, tenantId: number) => {
     await Invite.query()
       .where({
         userId,

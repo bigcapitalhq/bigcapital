@@ -1,7 +1,7 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 
+import { Container, Inject, Service } from 'typedi';
 import BaseController from '../BaseController';
-import { Container, Service, Inject } from 'typedi';
 
 import RolesService from '@/services/Roles/RolesService';
 import PermissionsSchema from './PermissionsSchema';

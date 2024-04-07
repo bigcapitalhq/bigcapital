@@ -1,17 +1,17 @@
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
 import {
   ISaleEstimate,
   ISaleEstimateCreatedPayload,
   ISaleEstimateCreatingPayload,
   ISaleEstimateDTO,
 } from '@/interfaces';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
+import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 import { SaleEstimateValidators } from './SaleEstimateValidators';
 
 @Service()
@@ -41,39 +41,20 @@ export class CreateSaleEstimate {
    * @param {EstimateDTO} estimate
    * @return {Promise<ISaleEstimate>}
    */
-  public async createEstimate(
-    tenantId: number,
-    estimateDTO: ISaleEstimateDTO
-  ): Promise<ISaleEstimate> {
+  public async createEstimate(tenantId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
     const { SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the given customer or throw not found service error.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(estimateDTO.customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(estimateDTO.customerId).throwIfNotFound();
 
     // Transform DTO object ot model object.
-    const estimateObj = await this.transformerDTO.transformDTOToModel(
-      tenantId,
-      estimateDTO,
-      customer
-    );
+    const estimateObj = await this.transformerDTO.transformDTOToModel(tenantId, estimateDTO, customer);
     // Validate estimate number uniquiness on the storage.
-    await this.validators.validateEstimateNumberExistance(
-      tenantId,
-      estimateObj.estimateNumber
-    );
+    await this.validators.validateEstimateNumberExistance(tenantId, estimateObj.estimateNumber);
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      estimateDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, estimateDTO.entries);
     // Validate non-sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      estimateDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, estimateDTO.entries);
     // Creates a sale estimate transaction with associated transactions as UOW.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleEstimateCreating` event.

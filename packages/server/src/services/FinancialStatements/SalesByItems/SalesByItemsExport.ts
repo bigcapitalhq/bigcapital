@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { ISalesByItemsReportQuery } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
 
 @Service()
@@ -29,10 +29,7 @@ export class SalesByItemsExport {
    * @param {ISalesByItemsReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: ISalesByItemsReportQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: ISalesByItemsReportQuery): Promise<string> {
     const table = await this.salesByItemsTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

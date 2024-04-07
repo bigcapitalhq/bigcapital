@@ -24,9 +24,7 @@ export default function getMergedConfig(config, currentConfig) {
     config &&
     // If user specifies any FS related config,
     // clear specified migrationSource to avoid ambiguity
-    (config.directory ||
-      config.sortDirsSeparately !== undefined ||
-      config.loadExtensions)
+    (config.directory || config.sortDirsSeparately !== undefined || config.loadExtensions)
   ) {
     mergedConfig.migrationSource = null;
   }
@@ -37,7 +35,7 @@ export default function getMergedConfig(config, currentConfig) {
     mergedConfig.migrationSource = new FsMigrations(
       mergedConfig.directory,
       mergedConfig.sortDirsSeparately,
-      mergedConfig.loadExtensions
+      mergedConfig.loadExtensions,
     );
   }
   return mergedConfig;

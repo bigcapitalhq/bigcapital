@@ -1,10 +1,9 @@
-import axios from 'axios';
 import SMSClientInterface from '@/services/SMSClient/SMSClientInterfaces';
-import config from '@/config';
+import axios from 'axios';
 
 export default class EasySMSClient implements SMSClientInterface {
   token: string;
-  clientName: string = 'easysms';
+  clientName = 'easysms';
 
   /**
    *

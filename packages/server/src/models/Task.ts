@@ -1,16 +1,10 @@
-import { mixin, Model, raw } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { Model, mixin, raw } from 'objection';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import ModelSetting from './ModelSetting';
 import ModelSearchable from './ModelSearchable';
-import { ProjectTaskChargeType } from '@/services/Projects/Tasks/constants';
-import { number } from 'mathjs';
+import ModelSetting from './ModelSetting';
 
-export default class Task extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Task extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   type!: string;
   rate!: number;
   actualHours!: number;
@@ -35,13 +29,7 @@ export default class Task extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'actualAmount',
-      'invoicedAmount',
-      'estimateAmount',
-      'billableAmount',
-      'billableHours',
-    ];
+    return ['actualAmount', 'invoicedAmount', 'estimateAmount', 'billableAmount', 'billableHours'];
   }
 
   /**

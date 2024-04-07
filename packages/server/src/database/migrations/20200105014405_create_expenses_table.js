@@ -1,14 +1,10 @@
-exports.up = function (knex) {
-  return knex.schema
+exports.up = (knex) =>
+  knex.schema
     .createTable('expenses_transactions', (table) => {
       table.increments();
       table.string('currency_code', 3);
       table.text('description');
-      table
-        .integer('payment_account_id')
-        .unsigned()
-        .references('id')
-        .inTable('accounts');
+      table.integer('payment_account_id').unsigned().references('id').inTable('accounts');
       table.integer('payee_id').unsigned().references('id').inTable('contacts');
       table.string('reference_no');
 
@@ -22,8 +18,5 @@ exports.up = function (knex) {
       table.timestamps();
     })
     .raw('ALTER TABLE `EXPENSES_TRANSACTIONS` AUTO_INCREMENT = 1000');
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('expenses');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('expenses');

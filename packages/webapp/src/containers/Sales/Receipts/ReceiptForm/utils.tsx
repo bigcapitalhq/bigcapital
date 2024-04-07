@@ -5,17 +5,9 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { omit, first } from 'lodash';
 import { useFormikContext } from 'formik';
-import {
-  defaultFastFieldShouldUpdate,
-  repeatValue,
-  transformToForm,
-  formattedAmount,
-} from '@/utils';
+import { defaultFastFieldShouldUpdate, repeatValue, transformToForm, formattedAmount } from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
+import { updateItemsEntriesTotal, ensureEntriesHaveEmptyLine } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
 
@@ -71,15 +63,9 @@ export const transformToEditForm = (receipt) => {
     ...receipt.entries.map((entry) => ({
       ...transformToForm(entry, defaultReceiptEntry),
     })),
-    ...repeatValue(
-      defaultReceiptEntry,
-      Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0),
-    ),
+    ...repeatValue(defaultReceiptEntry, Math.max(MIN_LINES_NUMBER - receipt.entries.length, 0)),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultReceiptEntry),
-    updateItemsEntriesTotal,
-  )(initialEntries);
+  const entries = R.compose(ensureEntriesHaveEmptyLine(defaultReceiptEntry), updateItemsEntriesTotal)(initialEntries);
 
   return {
     ...transformToForm(receipt, defaultReceipt),
@@ -91,20 +77,14 @@ export const transformToEditForm = (receipt) => {
  * Detarmines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
  * Detarmines accounts fast field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
@@ -139,9 +119,7 @@ export const handleErrors = (errors, { setErrors }) => {
  * @returns
  */
 export const transformFormValuesToRequest = (values) => {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
+  const entries = values.entries.filter((item) => item.item_id && item.quantity);
 
   return {
     ...omit(values, ['receipt_number_manually', 'receipt_number']),
@@ -161,8 +139,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -198,10 +175,7 @@ export const useReceiptTotals = () => {
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),
@@ -216,15 +190,9 @@ export const useReceiptTotals = () => {
     [paymentTotal, currencyCode],
   );
   // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
+  const dueTotal = React.useMemo(() => total - paymentTotal, [total, paymentTotal]);
   // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
+  const formattedDueTotal = React.useMemo(() => formattedAmount(dueTotal, currencyCode), [dueTotal, currencyCode]);
 
   return {
     total,

@@ -2,26 +2,9 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-  Intent,
-  Tag,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Intent, Tag } from '@blueprintjs/core';
 import { getColumnWidth } from '@/utils';
-import {
-  FormatNumberCell,
-  Icon,
-  FormattedMessage as T,
-  Choose,
-  Can,
-  If,
-  TextOverviewTooltipCell,
-} from '@/components';
+import { FormatNumberCell, Icon, FormattedMessage as T, Choose, Can, If, TextOverviewTooltipCell } from '@/components';
 import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
@@ -94,9 +77,7 @@ export const useInvoiceReadonlyEntriesColumns = () => {
  * Invoice details more actions menu.
  * @returns {React.JSX}
  */
-export const BadDebtMenuItem = ({
-  payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert, onDeliver },
-}) => {
+export const BadDebtMenuItem = ({ payload: { onCancelBadDebt, onBadDebt, onNotifyViaSMS, onConvert, onDeliver } }) => {
   const { invoice } = useInvoiceDetailDrawerContext();
 
   return (
@@ -110,36 +91,21 @@ export const BadDebtMenuItem = ({
       content={
         <Menu>
           <If condition={!invoice.is_delivered}>
-            <MenuItem
-              onClick={onDeliver}
-              text={<T id={'mark_as_delivered'} />}
-            />
+            <MenuItem onClick={onDeliver} text={<T id={'mark_as_delivered'} />} />
           </If>
           <Choose>
             <Choose.When condition={!invoice.is_writtenoff}>
-              <MenuItem
-                text={<T id={'bad_debt.dialog.bad_debt'} />}
-                onClick={onBadDebt}
-              />
+              <MenuItem text={<T id={'bad_debt.dialog.bad_debt'} />} onClick={onBadDebt} />
             </Choose.When>
             <Choose.When condition={invoice.is_writtenoff}>
-              <MenuItem
-                onClick={onCancelBadDebt}
-                text={<T id={'bad_debt.dialog.cancel_bad_debt'} />}
-              />
+              <MenuItem onClick={onCancelBadDebt} text={<T id={'bad_debt.dialog.cancel_bad_debt'} />} />
             </Choose.When>
           </Choose>
           <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>
-            <MenuItem
-              onClick={onConvert}
-              text={<T id={'invoice.convert_to_credit_note'} />}
-            />
+            <MenuItem onClick={onConvert} text={<T id={'invoice.convert_to_credit_note'} />} />
           </Can>
           <Can I={SaleInvoiceAction.NotifyBySms} a={AbilitySubject.Invoice}>
-            <MenuItem
-              onClick={onNotifyViaSMS}
-              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-            />
+            <MenuItem onClick={onNotifyViaSMS} text={<T id={'notify_via_sms.dialog.notify_via_sms'} />} />
           </Can>
         </Menu>
       }

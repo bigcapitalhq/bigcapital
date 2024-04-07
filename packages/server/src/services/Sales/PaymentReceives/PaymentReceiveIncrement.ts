@@ -12,10 +12,7 @@ export class PaymentReceiveIncrement {
    * @return {string}
    */
   public getNextPaymentReceiveNumber(tenantId: number): string {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'payment_receives'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'payment_receives');
   }
 
   /**
@@ -23,9 +20,6 @@ export class PaymentReceiveIncrement {
    * @param {number} tenantId
    */
   public incrementNextPaymentReceiveNumber(tenantId: number) {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'payment_receives'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'payment_receives');
   }
 }

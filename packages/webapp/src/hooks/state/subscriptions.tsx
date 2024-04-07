@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useCallback } from "react"
-import { useDispatch, useSelector } from "react-redux";
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSubscriptions } from '@/store/subscription/subscription.actions';
 import {
   isSubscriptionOnTrialFactory,
@@ -14,14 +14,17 @@ import {
 export const useSetSubscriptions = () => {
   const dispatch = useDispatch();
 
-  return useCallback((subscriptions) => {
-    dispatch(setSubscriptions(subscriptions));
-  }, [dispatch]);
-}
+  return useCallback(
+    (subscriptions) => {
+      dispatch(setSubscriptions(subscriptions));
+    },
+    [dispatch],
+  );
+};
 
 /**
  * The organization subscription selector.
- * @param   {string} slug 
+ * @param   {string} slug
  * @returns {}
  */
 export const useSubscription = (slug = 'main') => {
@@ -32,6 +35,6 @@ export const useSubscription = (slug = 'main') => {
   return {
     isSubscriptionActive,
     isSubscriptionInactive,
-    isSubscriptionOnTrial
-  }
-}
+    isSubscriptionOnTrial,
+  };
+};

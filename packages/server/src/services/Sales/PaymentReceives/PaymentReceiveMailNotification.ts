@@ -1,21 +1,18 @@
-import { Inject, Service } from 'typedi';
 import {
   PaymentReceiveMailOpts,
   PaymentReceiveMailOptsDTO,
   PaymentReceiveMailPresendEvent,
   SendInvoiceMailDTO,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import Mail from '@/lib/Mail';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import {
-  DEFAULT_PAYMENT_MAIL_CONTENT,
-  DEFAULT_PAYMENT_MAIL_SUBJECT,
-} from './constants';
-import { GetPaymentReceive } from './GetPaymentReceive';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
 import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { GetPaymentReceive } from './GetPaymentReceive';
+import { DEFAULT_PAYMENT_MAIL_CONTENT, DEFAULT_PAYMENT_MAIL_SUBJECT } from './constants';
 
 @Service()
 export class SendPaymentReceiveMailNotification {
@@ -44,7 +41,7 @@ export class SendPaymentReceiveMailNotification {
   public async triggerMail(
     tenantId: number,
     paymentReceiveId: number,
-    messageDTO: PaymentReceiveMailOptsDTO
+    messageDTO: PaymentReceiveMailOptsDTO,
   ): Promise<void> {
     const payload = {
       tenantId,
@@ -67,15 +64,10 @@ export class SendPaymentReceiveMailNotification {
    * @param {number} paymentReceiveId - Payment receive id.
    * @returns {Promise<PaymentReceiveMailOpts>}
    */
-  public getMailOptions = async (
-    tenantId: number,
-    paymentId: number
-  ): Promise<PaymentReceiveMailOpts> => {
+  public getMailOptions = async (tenantId: number, paymentId: number): Promise<PaymentReceiveMailOpts> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
-    const paymentReceive = await PaymentReceive.query()
-      .findById(paymentId)
-      .throwIfNotFound();
+    const paymentReceive = await PaymentReceive.query().findById(paymentId).throwIfNotFound();
 
     const formatterData = await this.textFormatter(tenantId, paymentId);
 
@@ -84,7 +76,7 @@ export class SendPaymentReceiveMailNotification {
       paymentReceive.customerId,
       DEFAULT_PAYMENT_MAIL_SUBJECT,
       DEFAULT_PAYMENT_MAIL_CONTENT,
-      formatterData
+      formatterData,
     );
   };
 
@@ -95,14 +87,8 @@ export class SendPaymentReceiveMailNotification {
    * @param {string} text - The given text.
    * @returns {Promise<string>}
    */
-  public textFormatter = async (
-    tenantId: number,
-    invoiceId: number
-  ): Promise<Record<string, string>> => {
-    const payment = await this.getPaymentService.getPaymentReceive(
-      tenantId,
-      invoiceId
-    );
+  public textFormatter = async (tenantId: number, invoiceId: number): Promise<Record<string, string>> => {
+    const payment = await this.getPaymentService.getPaymentReceive(tenantId, invoiceId);
     return {
       CustomerName: payment.customer.displayName,
       PaymentNumber: payment.payment_receive_no,
@@ -118,20 +104,10 @@ export class SendPaymentReceiveMailNotification {
    * @param {SendInvoiceMailDTO} messageDTO
    * @returns {Promise<void>}
    */
-  public async sendMail(
-    tenantId: number,
-    paymentReceiveId: number,
-    messageDTO: SendInvoiceMailDTO
-  ): Promise<void> {
-    const defaultMessageOpts = await this.getMailOptions(
-      tenantId,
-      paymentReceiveId
-    );
+  public async sendMail(tenantId: number, paymentReceiveId: number, messageDTO: SendInvoiceMailDTO): Promise<void> {
+    const defaultMessageOpts = await this.getMailOptions(tenantId, paymentReceiveId);
     // Parsed message opts with default options.
-    const parsedMessageOpts = parseAndValidateMailOptions(
-      defaultMessageOpts,
-      messageDTO
-    );
+    const parsedMessageOpts = parseAndValidateMailOptions(defaultMessageOpts, messageDTO);
     await new Mail()
       .setSubject(parsedMessageOpts.subject)
       .setTo(parsedMessageOpts.to)

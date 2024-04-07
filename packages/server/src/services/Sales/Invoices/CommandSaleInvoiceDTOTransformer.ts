@@ -1,23 +1,17 @@
-import { Service, Inject } from 'typedi';
-import { omit, sumBy } from 'lodash';
-import * as R from 'ramda';
-import moment from 'moment';
-import composeAsync from 'async/compose';
-import {
-  ISaleInvoice,
-  ISaleInvoiceCreateDTO,
-  ISaleInvoiceEditDTO,
-  ICustomer,
-  ITenantUser,
-} from '@/interfaces';
+import { ICustomer, ISaleInvoice, ISaleInvoiceCreateDTO, ISaleInvoiceEditDTO, ITenantUser } from '@/interfaces';
+import { ItemEntry } from '@/models';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import composeAsync from 'async/compose';
+import { omit, sumBy } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { formatDateFields } from 'utils';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { SaleInvoiceIncrement } from './SaleInvoiceIncrement';
-import { formatDateFields } from 'utils';
-import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
-import { ItemEntry } from '@/models';
 
 @Service()
 export class CommandSaleInvoiceDTOTransformer {
@@ -50,7 +44,7 @@ export class CommandSaleInvoiceDTOTransformer {
     customer: ICustomer,
     saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO,
     authorizedUser: ITenantUser,
-    oldSaleInvoice?: ISaleInvoice
+    oldSaleInvoice?: ISaleInvoice,
   ): Promise<ISaleInvoice> {
     const entriesModels = this.transformDTOEntriesToModels(saleInvoiceDTO);
     const amount = this.getDueBalanceItemEntries(entriesModels);
@@ -59,8 +53,7 @@ export class CommandSaleInvoiceDTOTransformer {
     const autoNextNumber = this.invoiceIncrement.getNextInvoiceNumber(tenantId);
 
     // Invoice number.
-    const invoiceNo =
-      saleInvoiceDTO.invoiceNo || oldSaleInvoice?.invoiceNo || autoNextNumber;
+    const invoiceNo = saleInvoiceDTO.invoiceNo || oldSaleInvoice?.invoiceNo || autoNextNumber;
 
     // Validate the invoice is required.
     this.validators.validateInvoiceNoRequire(invoiceNo);
@@ -76,19 +69,16 @@ export class CommandSaleInvoiceDTOTransformer {
       // Associate tax rate id from tax code to entries.
       this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(tenantId),
       // Sets default cost and sell account to invoice items entries.
-      this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId)
+      this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId),
     )(initialEntries);
 
     const entries = R.compose(
       // Remove tax code from entries.
-      R.map(R.omit(['taxCode']))
+      R.map(R.omit(['taxCode'])),
     )(asyncEntries);
 
     const initialDTO = {
-      ...formatDateFields(
-        omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']),
-        ['invoiceDate', 'dueDate']
-      ),
+      ...formatDateFields(omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']), ['invoiceDate', 'dueDate']),
       // Avoid rewrite the deliver date in edit mode when already published.
       balance: amount,
       currencyCode: customer.currencyCode,
@@ -107,7 +97,7 @@ export class CommandSaleInvoiceDTOTransformer {
     return R.compose(
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO<ISaleInvoice>(tenantId),
-      this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId)
+      this.warehouseDTOTransform.transformDTO<ISaleInvoice>(tenantId),
     )(initialDTO);
   }
 
@@ -116,9 +106,7 @@ export class CommandSaleInvoiceDTOTransformer {
    * @param {ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO} entries
    * @returns {IItemEntry[]}
    */
-  private transformDTOEntriesToModels = (
-    saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO
-  ): ItemEntry[] => {
+  private transformDTOEntriesToModels = (saleInvoiceDTO: ISaleInvoiceCreateDTO | ISaleInvoiceEditDTO): ItemEntry[] => {
     return saleInvoiceDTO.entries.map((entry) => {
       return ItemEntry.fromJson({
         ...entry,

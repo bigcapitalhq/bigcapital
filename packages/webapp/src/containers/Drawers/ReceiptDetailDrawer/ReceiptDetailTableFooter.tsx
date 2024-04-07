@@ -2,14 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-  FormatNumber,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle, FormatNumber } from '@/components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
 /**
@@ -21,10 +14,7 @@ export default function ReceiptDetailTableFooter() {
   return (
     <ReceiptDetailsFooterRoot>
       <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
-        <TotalLine
-          title={<T id={'receipt.details.subtotal'} />}
-          value={receipt.formatted_subtotal}
-        />
+        <TotalLine title={<T id={'receipt.details.subtotal'} />} value={receipt.formatted_subtotal} />
         <TotalLine
           title={<T id={'receipt.details.total'} />}
           value={receipt.formatted_amount}
@@ -36,10 +26,7 @@ export default function ReceiptDetailTableFooter() {
           value={receipt.formatted_amount}
           borderStyle={TotalLineBorderStyle.DoubleDark}
         />
-        <TotalLine
-          title={<T id={'receipt.details.due_amount'} />}
-          value={'0'}
-        />
+        <TotalLine title={<T id={'receipt.details.due_amount'} />} value={'0'} />
       </ReceiptTotalLines>
     </ReceiptDetailsFooterRoot>
   );

@@ -1,11 +1,7 @@
-import { Service, Inject } from 'typedi';
-import {
-  IAccountsTransactionsFilter,
-  IAccountTransaction,
-  IGetAccountTransactionPOJO,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { IAccountsTransactionsFilter, IGetAccountTransactionPOJO } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import AccountTransactionTransformer from './AccountTransactionTransformer';
 
 @Service()
@@ -23,7 +19,7 @@ export class GetAccountTransactions {
    */
   public getAccountsTransactions = async (
     tenantId: number,
-    filter: IAccountsTransactionsFilter
+    filter: IAccountsTransactionsFilter,
   ): Promise<IGetAccountTransactionPOJO[]> => {
     const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
@@ -42,10 +38,6 @@ export class GetAccountTransactions {
       query.limit(filter.limit || 50);
     });
     // Transform the account transaction.
-    return this.transformer.transform(
-      tenantId,
-      transactions,
-      new AccountTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, transactions, new AccountTransactionTransformer());
   };
 }

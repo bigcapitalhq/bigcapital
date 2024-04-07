@@ -2,23 +2,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import {
-  Can,
-  Icon,
-  FormattedMessage as T,
-  DrawerActionsBar,
-} from '@/components';
+import { Can, Icon, FormattedMessage as T, DrawerActionsBar } from '@/components';
 import { ReceiptMoreMenuItems } from './components';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
@@ -113,8 +102,4 @@ function ReceiptDetailActionBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-  withAlertsActions,
-)(ReceiptDetailActionBar);
+export default compose(withDialogActions, withDrawerActions, withAlertsActions)(ReceiptDetailActionBar);

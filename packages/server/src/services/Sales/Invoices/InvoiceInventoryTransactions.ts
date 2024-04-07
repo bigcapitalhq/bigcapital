@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { ISaleInvoice } from '@/interfaces';
-import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import InventoryService from '@/services/Inventory/Inventory';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class InvoiceInventoryTransactions {
@@ -26,14 +26,10 @@ export class InvoiceInventoryTransactions {
     tenantId: number,
     saleInvoice: ISaleInvoice,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries =
-      await this.itemsEntriesService.filterInventoryEntries(
-        tenantId,
-        saleInvoice.entries
-      );
+    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(tenantId, saleInvoice.entries);
     const transaction = {
       transactionId: saleInvoice.id,
       transactionType: 'SaleInvoice',
@@ -47,12 +43,7 @@ export class InvoiceInventoryTransactions {
       entries: inventoryEntries,
       createdAt: saleInvoice.createdAt,
     };
-    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
-      tenantId,
-      transaction,
-      override,
-      trx
-    );
+    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(tenantId, transaction, override, trx);
   }
   /**
    * Reverting the inventory transactions once the invoice deleted.
@@ -63,15 +54,14 @@ export class InvoiceInventoryTransactions {
   public async revertInventoryTransactions(
     tenantId: number,
     saleInvoiceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Delete the inventory transaction of the given sale invoice.
-    const { oldInventoryTransactions } =
-      await this.inventoryService.deleteInventoryTransactions(
-        tenantId,
-        saleInvoiceId,
-        'SaleInvoice',
-        trx
-      );
+    const { oldInventoryTransactions } = await this.inventoryService.deleteInventoryTransactions(
+      tenantId,
+      saleInvoiceId,
+      'SaleInvoice',
+      trx,
+    );
   }
 }

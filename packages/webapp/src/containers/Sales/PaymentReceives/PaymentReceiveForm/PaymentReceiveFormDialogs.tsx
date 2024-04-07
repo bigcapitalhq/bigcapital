@@ -21,9 +21,6 @@ export default function PaymentReceiveFormDialogs() {
   };
 
   return (
-    <PaymentReceiveNumberDialog
-      dialogName={'payment-receive-number-form'}
-      onConfirm={handleUpdatePaymentNumber}
-    />
+    <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} onConfirm={handleUpdatePaymentNumber} />
   );
 }

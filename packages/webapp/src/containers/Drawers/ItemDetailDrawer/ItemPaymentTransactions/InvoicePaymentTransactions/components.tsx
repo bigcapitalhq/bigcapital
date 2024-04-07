@@ -12,10 +12,7 @@ import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 /**
  * Table actions menu.
  */
-export function ActionsMenu({
-  row: { original },
-  payload: { onEdit, onDelete },
-}) {
+export function ActionsMenu({ row: { original }, payload: { onEdit, onDelete } }) {
   return (
     <Menu>
       <Can I={SaleInvoiceAction.Edit} a={AbilitySubject.Invoice}>

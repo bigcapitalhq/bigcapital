@@ -1,6 +1,6 @@
-import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
 import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
+import TenantModel from 'models/TenantModel';
+import { Model } from 'objection';
 
 export default class ItemEntry extends TenantModel {
   public taxRate: number;
@@ -30,13 +30,7 @@ export default class ItemEntry extends TenantModel {
    * @returns {string[]}
    */
   static get virtualAttributes() {
-    return [
-      'amount',
-      'taxAmount',
-      'amountExludingTax',
-      'amountInclusingTax',
-      'total',
-    ];
+    return ['amount', 'taxAmount', 'amountExludingTax', 'amountInclusingTax', 'total'];
   }
 
   /**

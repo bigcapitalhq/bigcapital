@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
@@ -15,13 +9,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  DrawerActionsBar,
-  Can,
-  Icon,
-  FormattedMessage as T,
-  If,
-} from '@/components';
+import { DrawerActionsBar, Can, Icon, FormattedMessage as T, If } from '@/components';
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
@@ -124,8 +112,4 @@ function CreditNoteDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertsActions,
-  withDrawerActions,
-)(CreditNoteDetailActionsBar);
+export default compose(withDialogActions, withAlertsActions, withDrawerActions)(CreditNoteDetailActionsBar);

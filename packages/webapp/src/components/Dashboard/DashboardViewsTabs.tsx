@@ -28,17 +28,12 @@ export function DashboardViewsTabs({
   const [currentView, setCurrentView] = useState(initialViewSlug || 0);
 
   useEffect(() => {
-    if (
-      typeof currentViewSlug !== 'undefined' &&
-      currentViewSlug !== currentView
-    ) {
+    if (typeof currentViewSlug !== 'undefined' && currentViewSlug !== currentView) {
       setCurrentView(currentViewSlug || 0);
     }
   }, [currentView, setCurrentView, currentViewSlug]);
 
-  const throttledOnChange = useRef(
-    debounce((viewId) => saveInvoke(OnThrottledChange, viewId), throttleTime),
-  );
+  const throttledOnChange = useRef(debounce((viewId) => saveInvoke(OnThrottledChange, viewId), throttleTime));
 
   // Trigger `onChange` and `onThrottledChange` events.
   const triggerOnChange = (viewSlug) => {
@@ -75,10 +70,7 @@ export function DashboardViewsTabs({
           <Tab id={tab.slug} title={tab.name} />
         ))}
         <If condition={newViewTab}>
-          <Tooltip
-            content={<T id={'create_a_new_view'} />}
-            position={Position.RIGHT}
-          >
+          <Tooltip content={<T id={'create_a_new_view'} />} position={Position.RIGHT}>
             <Button
               className="button--new-view"
               icon={<Icon icon="plus" />}

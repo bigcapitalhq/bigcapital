@@ -62,7 +62,7 @@ export const useSetPrimaryBranchToForm = () => {
 };
 
 /**
- * Detarmines whether the current customer has foreign currency. 
+ * Detarmines whether the current customer has foreign currency.
  * @returns {boolean}
  */
 export const useIsCustomerForeignCurrency = () => {
@@ -77,8 +77,7 @@ export const useIsCustomerForeignCurrency = () => {
  */
 export const openingBalanceFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.shouldUpdateDeps.currencyCode !==
-      oldProps.shouldUpdateDeps.currencyCode ||
+    newProps.shouldUpdateDeps.currencyCode !== oldProps.shouldUpdateDeps.currencyCode ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

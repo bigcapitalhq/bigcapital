@@ -14,10 +14,7 @@ export class SalesTaxLiabilitySummaryExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<Buffer> {
     const table = await this.salesTaxLiabilityTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class SalesTaxLiabilitySummaryExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<string>}
    */
-  public async csv(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<string> {
     const table = await this.salesTaxLiabilityTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

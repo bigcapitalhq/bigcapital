@@ -8,13 +8,11 @@ export const locale = {
     oneOf: '${path} must be one of the following values: ${values}',
     notOneOf: '${path} must not be one of the following values: ${values}',
     notType: ({ path, type, value, originalValue }) => {
-      let isCast = originalValue != null && originalValue !== value;
+      const isCast = originalValue != null && originalValue !== value;
       let msg =
         `${path} must be a \`${type}\` type, ` +
         `but the final value was: \`${printValue(value, true)}\`` +
-        (isCast
-          ? ` (cast from the value \`${printValue(originalValue, true)}\`).`
-          : '.');
+        (isCast ? ` (cast from the value \`${printValue(originalValue, true)}\`).` : '.');
 
       if (value === null) {
         msg += `\n If "null" is intended as an empty value be sure to mark the schema as \`.nullable()\``;
@@ -51,8 +49,7 @@ export const locale = {
   },
   boolean: {},
   object: {
-    noUnknown:
-      '${path} field cannot have keys not specified in the object shape',
+    noUnknown: '${path} field cannot have keys not specified in the object shape',
   },
   array: {
     min: '${path} field must have at least ${min} items',

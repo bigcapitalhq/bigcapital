@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { ISalesByItemsReportQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { SalesByItemsReportService } from './SalesByItemsService';
 import { SalesByItemsTable } from './SalesByItemsTable';
 
@@ -15,10 +15,7 @@ export class SalesByItemsTableInjectable {
    * @returns {Promise<ISalesByItemsTable>}
    */
   public async table(tenantId: number, filter: ISalesByItemsReportQuery) {
-    const { data, query, meta } = await this.salesByItemSheet.salesByItems(
-      tenantId,
-      filter
-    );
+    const { data, query, meta } = await this.salesByItemSheet.salesByItems(tenantId, filter);
     const table = new SalesByItemsTable(data);
 
     return {

@@ -72,9 +72,7 @@ function AccountsSelectRoot({
   });
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   // Handles the create item click.
   const handleCreateItemClick = () => {

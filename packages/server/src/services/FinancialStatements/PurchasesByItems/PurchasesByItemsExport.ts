@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
-import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 import { IPurchasesByItemsReportQuery } from '@/interfaces/PurchasesByItemsSheet';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
+import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 
 @Service()
 export class PurchasesByItemsExport {
@@ -14,10 +14,7 @@ export class PurchasesByItemsExport {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<Buffer> {
     const table = await this.purchasesByItemsTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class PurchasesByItemsExport {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<string> {
     const table = await this.purchasesByItemsTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

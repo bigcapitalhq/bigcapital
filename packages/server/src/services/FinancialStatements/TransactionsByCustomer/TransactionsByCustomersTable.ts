@@ -1,10 +1,6 @@
+import { ITableColumn, ITableRow, ITransactionsByCustomersCustomer } from '@/interfaces';
 import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
-import {
-  ITransactionsByCustomersCustomer,
-  ITableRow,
-  ITableColumn,
-} from '@/interfaces';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {
@@ -47,12 +43,9 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
       children: R.pipe(
         R.when(
           R.always(customer.transactions.length > 0),
-          R.pipe(
-            R.concat(this.contactTransactions(customer)),
-            R.prepend(this.contactOpeningBalance(customer))
-          )
+          R.pipe(R.concat(this.contactTransactions(customer)), R.prepend(this.contactOpeningBalance(customer))),
         ),
-        R.append(this.contactClosingBalance(customer))
+        R.append(this.contactClosingBalance(customer)),
       )([]),
     };
   };
@@ -72,9 +65,7 @@ export class TransactionsByCustomersTable extends TransactionsByContactsTableRow
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.map(this.customerRowsMapper.bind(this))(
-      this.customersTransactions
-    );
+    return R.map(this.customerRowsMapper.bind(this))(this.customersTransactions);
   };
 
   /**

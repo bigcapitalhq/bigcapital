@@ -15,22 +15,10 @@ export default function ItemDetailTab() {
 
   return (
     <DrawerMainTabs renderActiveTabPanelOnly={true}>
-      <Tab
-        id={'overview'}
-        title={<T id={'overview'} />}
-        panel={<ItemDetailHeader />}
-      />
-      <Tab
-        id={'transactions'}
-        title={<T id={'transactions'} />}
-        panel={<ItemPaymentTransactions />}
-      />
+      <Tab id={'overview'} title={<T id={'overview'} />} panel={<ItemDetailHeader />} />
+      <Tab id={'transactions'} title={<T id={'transactions'} />} panel={<ItemPaymentTransactions />} />
       {featureCan(Features.Warehouses) && (
-        <Tab
-          id={'warehouses'}
-          title={<T id={'warehouse_locations.label'} />}
-          panel={<WarehousesLocationsTable />}
-        />
+        <Tab id={'warehouses'} title={<T id={'warehouse_locations.label'} />} panel={<WarehousesLocationsTable />} />
       )}
     </DrawerMainTabs>
   );

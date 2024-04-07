@@ -27,12 +27,8 @@ function UnlockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    moduleName,
-    cancelLockingTransactionMutate,
-    cancelUnLockingPartialTransactionMutate,
-  } = useUnlockingTransactionsContext();
+  const { dialogName, moduleName, cancelLockingTransactionMutate, cancelUnLockingPartialTransactionMutate } =
+    useUnlockingTransactionsContext();
 
   // Initial form values.
   const initialValues = {

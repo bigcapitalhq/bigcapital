@@ -3,13 +3,9 @@ import { Intent } from '@blueprintjs/core';
 import { castArray } from 'lodash';
 
 export const transformErrors = (errors, { setErrors }) => {
-  let unsupportedVariablesError = errors.find(
-    (error) => error.type === 'UNSUPPORTED_SMS_MESSAGE_VARIABLES',
-  );
+  const unsupportedVariablesError = errors.find((error) => error.type === 'UNSUPPORTED_SMS_MESSAGE_VARIABLES');
   if (unsupportedVariablesError) {
-    const variables = castArray(
-      unsupportedVariablesError.data.unsupported_args,
-    );
+    const variables = castArray(unsupportedVariablesError.data.unsupported_args);
     const stringifiedVariables = variables.join(', ');
 
     setErrors({

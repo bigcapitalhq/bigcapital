@@ -1,7 +1,7 @@
+import { IGeneralLedgerSheetQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
-import { IGeneralLedgerSheetQuery } from '@/interfaces';
 import { HtmlTableCustomCss } from './constants';
 
 @Service()
@@ -18,10 +18,7 @@ export class GeneralLedgerPdf {
    * @param {IGeneralLedgerSheetQuery} query -
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<Buffer> {
     const table = await this.generalLedgerTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class GeneralLedgerPdf {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

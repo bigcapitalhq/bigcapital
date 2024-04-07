@@ -78,8 +78,4 @@ function BillDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(BillDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(BillDeleteAlert);

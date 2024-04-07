@@ -1,64 +1,64 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 
+import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
+import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
+import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
+import I18nMiddleware from '@/api/middleware/I18nMiddleware';
+import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
+import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 // Middlewares
 import JWTAuth from '@/api/middleware/jwtAuth';
-import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
-import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
-import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
-import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
-import I18nMiddleware from '@/api/middleware/I18nMiddleware';
-import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
-import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
 
+import Account from '@/api/controllers/Account';
+import AccountTypes from '@/api/controllers/AccountTypes';
+import Accounts from '@/api/controllers/Accounts';
 // Routes
 import Authentication from '@/api/controllers/Authentication';
-import InviteUsers from '@/api/controllers/InviteUsers';
-import Organization from '@/api/controllers/Organization';
-import Account from '@/api/controllers/Account';
-import Users from '@/api/controllers/Users';
-import Items from '@/api/controllers/Items';
-import ItemCategories from '@/api/controllers/ItemCategories';
-import Accounts from '@/api/controllers/Accounts';
-import AccountTypes from '@/api/controllers/AccountTypes';
-import Views from '@/api/controllers/Views';
-import ManualJournals from '@/api/controllers/ManualJournals';
-import FinancialStatements from '@/api/controllers/FinancialStatements';
-import Expenses from '@/api/controllers/Expenses';
-import Settings from '@/api/controllers/Settings';
-import Currencies from '@/api/controllers/Currencies';
 import Contacts from '@/api/controllers/Contacts/Contacts';
 import Customers from '@/api/controllers/Contacts/Customers';
 import Vendors from '@/api/controllers/Contacts/Vendors';
-import Sales from '@/api/controllers/Sales';
-import Purchases from '@/api/controllers/Purchases';
-import Resources from './controllers/Resources';
+import Currencies from '@/api/controllers/Currencies';
 import ExchangeRates from '@/api/controllers/ExchangeRates';
-import Media from '@/api/controllers/Media';
-import Ping from '@/api/controllers/Ping';
+import Expenses from '@/api/controllers/Expenses';
+import FinancialStatements from '@/api/controllers/FinancialStatements';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
-import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
-import Jobs from './controllers/Jobs';
+import InviteUsers from '@/api/controllers/InviteUsers';
+import ItemCategories from '@/api/controllers/ItemCategories';
+import Items from '@/api/controllers/Items';
+import ManualJournals from '@/api/controllers/ManualJournals';
+import Media from '@/api/controllers/Media';
 import Miscellaneous from '@/api/controllers/Miscellaneous';
+import Organization from '@/api/controllers/Organization';
 import OrganizationDashboard from '@/api/controllers/OrganizationDashboard';
-import CashflowController from './controllers/Cashflow/CashflowController';
-import AuthorizationMiddleware from './middleware/AuthorizationMiddleware';
-import RolesController from './controllers/Roles';
-import TransactionsLocking from './controllers/TransactionsLocking';
-import DashboardController from './controllers/Dashboard';
-import { BranchesController } from './controllers/Branches';
-import { WarehousesController } from './controllers/Warehouses';
-import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
-import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
+import Ping from '@/api/controllers/Ping';
+import Purchases from '@/api/controllers/Purchases';
+import Sales from '@/api/controllers/Sales';
+import Settings from '@/api/controllers/Settings';
+import Users from '@/api/controllers/Users';
+import Views from '@/api/controllers/Views';
 import { BranchIntegrationErrorsMiddleware } from '@/services/Branches/BranchIntegrationErrorsMiddleware';
+import { BankingController } from './controllers/Banking/BankingController';
+import { BranchesController } from './controllers/Branches';
+import CashflowController from './controllers/Cashflow/CashflowController';
+import DashboardController from './controllers/Dashboard';
+import { ImportController } from './controllers/Import/ImportController';
 import { InventoryItemsCostController } from './controllers/Inventory/InventortyItemsCosts';
+import Jobs from './controllers/Jobs';
 import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
+import Resources from './controllers/Resources';
+import RolesController from './controllers/Roles';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
-import { ImportController } from './controllers/Import/ImportController';
-import { BankingController } from './controllers/Banking/BankingController';
+import TransactionsLocking from './controllers/TransactionsLocking';
+import { WarehousesController } from './controllers/Warehouses';
+import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
+import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
+import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
+import AuthorizationMiddleware from './middleware/AuthorizationMiddleware';
 
 export default () => {
   const app = Router();
@@ -101,10 +101,7 @@ export default () => {
   dashboard.use('/items', Container.get(Items).router());
   dashboard.use('/item_categories', Container.get(ItemCategories).router());
   dashboard.use('/expenses', Container.get(Expenses).router());
-  dashboard.use(
-    '/financial_statements',
-    Container.get(FinancialStatements).router()
-  );
+  dashboard.use('/financial_statements', Container.get(FinancialStatements).router());
   dashboard.use('/contacts', Container.get(Contacts).router());
   dashboard.use('/customers', Container.get(Customers).router());
   dashboard.use('/vendors', Container.get(Vendors).router());
@@ -113,26 +110,14 @@ export default () => {
   dashboard.use('/resources', Container.get(Resources).router());
   dashboard.use('/exchange_rates', Container.get(ExchangeRates).router());
   dashboard.use('/media', Container.get(Media).router());
-  dashboard.use(
-    '/inventory_adjustments',
-    Container.get(InventoryAdjustments).router()
-  );
-  dashboard.use(
-    '/inventory',
-    Container.get(InventoryItemsCostController).router()
-  );
+  dashboard.use('/inventory_adjustments', Container.get(InventoryAdjustments).router());
+  dashboard.use('/inventory', Container.get(InventoryItemsCostController).router());
   dashboard.use('/cashflow', Container.get(CashflowController).router());
   dashboard.use('/banking', Container.get(BankingController).router());
   dashboard.use('/roles', Container.get(RolesController).router());
-  dashboard.use(
-    '/transactions-locking',
-    Container.get(TransactionsLocking).router()
-  );
+  dashboard.use('/transactions-locking', Container.get(TransactionsLocking).router());
   dashboard.use('/branches', Container.get(BranchesController).router());
-  dashboard.use(
-    '/warehouses/transfers',
-    Container.get(WarehousesTransfers).router()
-  );
+  dashboard.use('/warehouses/transfers', Container.get(WarehousesTransfers).router());
   dashboard.use('/warehouses', Container.get(WarehousesController).router());
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());

@@ -44,10 +44,7 @@ function PreferencesReceiptsFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )({ salesReceipts: { ...values } });
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)({ salesReceipts: { ...values } });
 
     // Handle request success.
     const onSuccess = () => {

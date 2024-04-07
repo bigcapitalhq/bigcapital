@@ -14,9 +14,7 @@ export function EmptyStatuCallout() {
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
         <p>
-          <T
-            id={'project_billable_entries.alert.there_is_no_billable_entries'}
-          />
+          <T id={'project_billable_entries.alert.there_is_no_billable_entries'} />
         </p>
       </Callout>
     </div>

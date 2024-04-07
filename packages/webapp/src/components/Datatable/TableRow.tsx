@@ -17,12 +17,7 @@ function TableRowContextMenu({ children, row }) {
     table,
   } = useContext(TableContext);
 
-  const [
-    bindMenu,
-    bindMenuItem,
-    useContextTrigger,
-    { coords, setVisible, isVisible },
-  ] = useContextMenu();
+  const [bindMenu, bindMenuItem, useContextTrigger, { coords, setVisible, isVisible }] = useContextMenu();
 
   const [bindTrigger] = useContextTrigger({
     collect: () => 'Title',
@@ -36,12 +31,7 @@ function TableRowContextMenu({ children, row }) {
     <div class="tr-context" {...bindTrigger}>
       {children}
 
-      <ContextMenu
-        bindMenu={bindMenu}
-        isOpen={isVisible}
-        coords={coords}
-        onClosed={handleClose}
-      >
+      <ContextMenu bindMenu={bindMenu} isOpen={isVisible} coords={coords} onClosed={handleClose}>
         <ContextMenuContent {...table} row={row} />
       </ContextMenu>
     </div>
@@ -53,11 +43,7 @@ function TableRowContextMenu({ children, row }) {
  */
 export default function TableRow({ row, className, style }) {
   const {
-    props: {
-      TableCellRenderer,
-      rowClassNames,
-      ContextMenu: ContextMenuContent,
-    },
+    props: { TableCellRenderer, rowClassNames, ContextMenu: ContextMenuContent },
   } = useContext(TableContext);
 
   return (
@@ -72,18 +58,9 @@ export default function TableRow({ row, className, style }) {
         style,
       })}
     >
-      <ConditionalWrapper
-        condition={ContextMenuContent}
-        wrapper={TableRowContextMenu}
-        row={row}
-      >
+      <ConditionalWrapper condition={ContextMenuContent} wrapper={TableRowContextMenu} row={row}>
         {row.cells.map((cell, index) => (
-          <TableCellRenderer
-            key={index}
-            cell={cell}
-            row={row}
-            index={index + 1}
-          />
+          <TableCellRenderer key={index} cell={cell} row={row} index={index + 1} />
         ))}
       </ConditionalWrapper>
     </div>

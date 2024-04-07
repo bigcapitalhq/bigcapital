@@ -1,10 +1,10 @@
-import * as R from 'ramda';
-import { sumBy } from 'lodash'
 import {
   IFinancialCommonHorizDatePeriodNode,
   IFinancialCommonNode,
   IFinancialNodeWithPreviousYear,
 } from '@/interfaces';
+import { sumBy } from 'lodash';
+import * as R from 'ramda';
 
 export const FinancialPreviousYear = (Base) =>
   class extends Base {
@@ -17,12 +17,9 @@ export const FinancialPreviousYear = (Base) =>
      * @returns  {IProfitLossSheetAccountNode}
      */
     protected assocPreviousYearChangetNode = (
-      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear
+      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear,
     ): IFinancialNodeWithPreviousYear => {
-      const change = this.getAmountChange(
-        node.total.amount,
-        node.previousYear.amount
-      );
+      const change = this.getAmountChange(node.total.amount, node.previousYear.amount);
       return R.assoc('previousYearChange', this.getAmountMeta(change), node);
     };
 
@@ -35,17 +32,10 @@ export const FinancialPreviousYear = (Base) =>
      * @returns {IProfitLossSheetAccountNode}
      */
     protected assocPreviousYearPercentageNode = (
-      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear
+      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear,
     ): IFinancialNodeWithPreviousYear => {
-      const percentage = this.getPercentageBasis(
-        node.previousYear.amount,
-        node.previousYearChange.amount
-      );
-      return R.assoc(
-        'previousYearPercentage',
-        this.getPercentageAmountMeta(percentage),
-        node
-      );
+      const percentage = this.getPercentageBasis(node.previousYear.amount, node.previousYearChange.amount);
+      return R.assoc('previousYearPercentage', this.getPercentageAmountMeta(percentage), node);
     };
 
     /**
@@ -54,17 +44,10 @@ export const FinancialPreviousYear = (Base) =>
      * @returns  {IProfitLossSheetAccountNode}
      */
     protected assocPreviousYearTotalChangeNode = (
-      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear
+      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear,
     ): IFinancialNodeWithPreviousYear => {
-      const change = this.getAmountChange(
-        node.total.amount,
-        node.previousYear.amount
-      );
-      return R.assoc(
-        'previousYearChange',
-        this.getTotalAmountMeta(change),
-        node
-      );
+      const change = this.getAmountChange(node.total.amount, node.previousYear.amount);
+      return R.assoc('previousYearChange', this.getTotalAmountMeta(change), node);
     };
 
     /**
@@ -73,17 +56,10 @@ export const FinancialPreviousYear = (Base) =>
      * @returns {IProfitLossSheetAccountNode}
      */
     protected assocPreviousYearTotalPercentageNode = (
-      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear
+      node: IFinancialCommonNode & IFinancialNodeWithPreviousYear,
     ): IFinancialNodeWithPreviousYear => {
-      const percentage = this.getPercentageBasis(
-        node.previousYear.amount,
-        node.previousYearChange.amount
-      );
-      return R.assoc(
-        'previousYearPercentage',
-        this.getPercentageTotalAmountMeta(percentage),
-        node
-      );
+      const percentage = this.getPercentageBasis(node.previousYear.amount, node.previousYearChange.amount);
+      return R.assoc('previousYearPercentage', this.getPercentageTotalAmountMeta(percentage), node);
     };
 
     /**
@@ -91,28 +67,23 @@ export const FinancialPreviousYear = (Base) =>
      * @param horizNode
      * @returns
      */
-    protected assocPreviousYearHorizNodeFromToDates = (
-      horizNode: IFinancialCommonHorizDatePeriodNode
-    ) => {
+    protected assocPreviousYearHorizNodeFromToDates = (horizNode: IFinancialCommonHorizDatePeriodNode) => {
       const PYFromDate = this.getPreviousYearDate(horizNode.fromDate.date);
       const PYToDate = this.getPreviousYearDate(horizNode.toDate.date);
 
       return R.compose(
         R.assoc('previousYearToDate', this.getDateMeta(PYToDate)),
-        R.assoc('previousYearFromDate', this.getDateMeta(PYFromDate))
+        R.assoc('previousYearFromDate', this.getDateMeta(PYFromDate)),
       )(horizNode);
     };
 
     /**
-     * Retrieves PP total sumation of the given horiz index node. 
-     * @param   {number} index 
-     * @param   {} node 
+     * Retrieves PP total sumation of the given horiz index node.
+     * @param   {number} index
+     * @param   {} node
      * @returns {number}
      */
     protected getPYHorizNodesTotalSumation = (index: number, node): number => {
-      return sumBy(
-        node.children,
-        `horizontalTotals[${index}].previousYear.amount`
-      )
-    }
+      return sumBy(node.children, `horizontalTotals[${index}].previousYear.amount`);
+    };
   };

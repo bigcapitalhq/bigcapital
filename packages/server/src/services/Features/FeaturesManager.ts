@@ -1,9 +1,8 @@
+import { IFeatureAllItem } from '@/interfaces';
 import { defaultTo } from 'lodash';
 import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import { FeaturesSettingsDriver } from './FeaturesSettingsDriver';
 import { FeaturesConfigureManager } from './FeaturesConfigureManager';
-import { IFeatureAllItem } from '@/interfaces';
+import { FeaturesSettingsDriver } from './FeaturesSettingsDriver';
 
 @Service()
 export class FeaturesManager {
@@ -41,10 +40,7 @@ export class FeaturesManager {
    */
   public async accessible(tenantId: number, feature: string) {
     // Retrieves the feature default accessible value.
-    const defaultValue = this.configure.getFeatureConfigure(
-      feature,
-      'defaultValue'
-    );
+    const defaultValue = this.configure.getFeatureConfigure(feature, 'defaultValue');
     const isAccessible = await this.drive.accessible(tenantId, feature);
 
     return defaultTo(isAccessible, defaultValue);
@@ -59,10 +55,7 @@ export class FeaturesManager {
     const all = await this.drive.all(tenantId);
 
     return all.map((feature: IFeatureAllItem) => {
-      const defaultAccessible = this.configure.getFeatureConfigure(
-        feature.name,
-        'defaultValue'
-      );
+      const defaultAccessible = this.configure.getFeatureConfigure(feature.name, 'defaultValue');
       const isAccessible = feature.isAccessible;
 
       return {

@@ -9,10 +9,7 @@ export const mapStateToProps = (state, props) => {
   return {
     dialogName: 'user-form',
     payload: { action: 'new', id: null },
-    userDetails:
-      dialogPayload.action === 'edit'
-        ? getUserDetails(state, dialogPayload.user.id)
-        : {},
+    userDetails: dialogPayload.action === 'edit' ? getUserDetails(state, dialogPayload.user.id) : {},
   };
 };
 

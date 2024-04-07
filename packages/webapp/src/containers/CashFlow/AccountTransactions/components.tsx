@@ -2,22 +2,13 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import {
-  Can,
-  FormatDateCell,
-  If,
-  Icon,
-  MaterialProgressBar,
-} from '@/components';
+import { Can, FormatDateCell, If, Icon, MaterialProgressBar } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TRANSACRIONS_TYPE } from '@/constants/cashflowOptions';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
-export function ActionsMenu({
-  payload: { onDelete, onViewDetails },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onDelete, onViewDetails }, row: { original } }) {
   return (
     <Menu>
       <MenuItem
@@ -132,13 +123,9 @@ export function useAccountTransactionsColumns() {
  * Account transactions progress bar.
  */
 export function AccountTransactionsProgressBar() {
-  const { isCashFlowTransactionsFetching, isUncategorizedTransactionFetching } =
-    useAccountTransactionsContext();
+  const { isCashFlowTransactionsFetching, isUncategorizedTransactionFetching } = useAccountTransactionsContext();
 
-  return isCashFlowTransactionsFetching ||
-    isUncategorizedTransactionFetching ? (
-    <MaterialProgressBar />
-  ) : null;
+  return isCashFlowTransactionsFetching || isUncategorizedTransactionFetching ? <MaterialProgressBar /> : null;
 }
 
 /**

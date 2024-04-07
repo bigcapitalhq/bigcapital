@@ -1,13 +1,7 @@
-import { pick } from 'lodash';
-import {
-  ITenantUser,
-  ITenantUserActivatedPayload,
-  ITenantUserDeletedPayload,
-  ITenantUserEditedPayload,
-  ITenantUserInactivatedPayload,
-} from '@/interfaces';
+import { ITenantUserActivatedPayload, ITenantUserEditedPayload, ITenantUserInactivatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import { SystemUser } from '@/system/models';
+import { pick } from 'lodash';
 
 export default class SyncTenantUserMutate {
   /**
@@ -16,32 +10,18 @@ export default class SyncTenantUserMutate {
    */
   attach(bus) {
     bus.subscribe(events.tenantUser.onEdited, this.syncSystemUserOnceEdited);
-    bus.subscribe(
-      events.tenantUser.onActivated,
-      this.syncSystemUserOnceActivated
-    );
-    bus.subscribe(
-      events.tenantUser.onInactivated,
-      this.syncSystemUserOnceInactivated
-    );
+    bus.subscribe(events.tenantUser.onActivated, this.syncSystemUserOnceActivated);
+    bus.subscribe(events.tenantUser.onInactivated, this.syncSystemUserOnceInactivated);
   }
   /**
    *
    * @param tenantUser
    */
-  private syncSystemUserOnceEdited = async ({
-    tenantUser,
-  }: ITenantUserEditedPayload) => {
+  private syncSystemUserOnceEdited = async ({ tenantUser }: ITenantUserEditedPayload) => {
     await SystemUser.query()
       .where('id', tenantUser.systemUserId)
       .patch({
-        ...pick(tenantUser, [
-          'firstName',
-          'lastName',
-          'email',
-          'active',
-          'phoneNumber',
-        ]),
+        ...pick(tenantUser, ['firstName', 'lastName', 'email', 'active', 'phoneNumber']),
       });
   };
 
@@ -49,9 +29,7 @@ export default class SyncTenantUserMutate {
    * Syncs activate system user.
    * @param {ITenantUserInactivatedPayload} payload -
    */
-  private syncSystemUserOnceActivated = async ({
-    tenantUser,
-  }: ITenantUserInactivatedPayload) => {
+  private syncSystemUserOnceActivated = async ({ tenantUser }: ITenantUserInactivatedPayload) => {
     await SystemUser.query().where('id', tenantUser.systemUserId).patch({
       active: true,
     });
@@ -61,9 +39,7 @@ export default class SyncTenantUserMutate {
    * Syncs inactivate system user.
    * @param {ITenantUserActivatedPayload} payload -
    */
-  private syncSystemUserOnceInactivated = async ({
-    tenantUser,
-  }: ITenantUserActivatedPayload) => {
+  private syncSystemUserOnceInactivated = async ({ tenantUser }: ITenantUserActivatedPayload) => {
     await SystemUser.query().where('id', tenantUser.systemUserId).patch({
       active: false,
     });

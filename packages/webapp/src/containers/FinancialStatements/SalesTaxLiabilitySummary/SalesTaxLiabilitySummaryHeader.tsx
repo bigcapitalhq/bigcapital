@@ -10,10 +10,7 @@ import { useFeatureCan } from '@/hooks/state';
 import FinancialStatementHeader from '../../FinancialStatements/FinancialStatementHeader';
 
 import { compose, transformToForm } from '@/utils';
-import {
-  getDefaultSalesTaxLiablitySummaryQuery,
-  getSalesTaxLiabilitySummaryQueryValidation,
-} from './utils';
+import { getDefaultSalesTaxLiablitySummaryQuery, getSalesTaxLiabilitySummaryQueryValidation } from './utils';
 import withSalesTaxLiabilitySummary from './withSalesTaxLiabilitySummary';
 import withSalesTaxLiabilitySummaryActions from './withSalesTaxLiabilitySummaryActions';
 import { SalesTaxLiabilitySummaryHeaderGeneral } from './SalesTaxLiabilitySummaryHeaderGeneralPanel';
@@ -72,18 +69,10 @@ function SalesTaxLiabilitySummaryHeader({
         onClose: handleDrawerClose,
       }}
     >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<SalesTaxLiabilitySummaryHeaderGeneral />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<SalesTaxLiabilitySummaryHeaderGeneral />} />
           </Tabs>
 
           <div class="financial-header-drawer__footer">

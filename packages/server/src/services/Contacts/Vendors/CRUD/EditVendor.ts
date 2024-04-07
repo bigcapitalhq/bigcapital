@@ -1,14 +1,9 @@
-import {
-  ISystemUser,
-  IVendorEditDTO,
-  IVendorEventEditedPayload,
-  IVendorEventEditingPayload,
-} from '@/interfaces';
-import { Knex } from 'knex';
+import { ISystemUser, IVendorEditDTO, IVendorEventEditedPayload, IVendorEventEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import { CreateEditVendorDTO } from './CreateEditVendorDTO';
 
@@ -33,19 +28,11 @@ export class EditVendor {
    * @param   {IVendorEditDTO} vendorDTO -
    * @returns {Promise<IVendor>}
    */
-  public async editVendor(
-    tenantId: number,
-    vendorId: number,
-    vendorDTO: IVendorEditDTO,
-    authorizedUser: ISystemUser
-  ) {
+  public async editVendor(tenantId: number, vendorId: number, vendorDTO: IVendorEditDTO, authorizedUser: ISystemUser) {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the vendor or throw not found error.
-    const oldVendor = await Contact.query()
-      .findById(vendorId)
-      .modify('vendor')
-      .throwIfNotFound();
+    const oldVendor = await Contact.query().findById(vendorId).modify('vendor').throwIfNotFound();
 
     // Transformes vendor DTO to object.
     const vendorObj = this.transformDTO.transformEditDTO(vendorDTO);

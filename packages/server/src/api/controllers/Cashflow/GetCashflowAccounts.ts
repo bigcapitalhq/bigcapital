@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query } from 'express-validator';
-import BaseController from '../BaseController';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export default class GetCashflowAccounts extends BaseController {
@@ -31,7 +31,7 @@ export default class GetCashflowAccounts extends BaseController {
         query('search_keyword').optional({ nullable: true }).isString().trim(),
       ],
       this.asyncMiddleware(this.getCashflowAccounts),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -42,11 +42,7 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getCashflowAccounts = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getCashflowAccounts = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     // Filter query.
     const filter = {
@@ -57,8 +53,7 @@ export default class GetCashflowAccounts extends BaseController {
     };
 
     try {
-      const cashflowAccounts =
-        await this.cashflowApplication.getCashflowAccounts(tenantId, filter);
+      const cashflowAccounts = await this.cashflowApplication.getCashflowAccounts(tenantId, filter);
 
       return res.status(200).send({
         cashflow_accounts: this.transfromToResponse(cashflowAccounts),
@@ -75,12 +70,7 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {Response} res - Response.
    * @param {NextFunction} next -
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
     }
     next(error);

@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { ITransactionsByCustomersFilter, ITransactionsByCustomersTable } from '@/interfaces';
-import { TransactionsByCustomersSheet } from './TransactionsByCustomersService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { TransactionsByCustomersSheet } from './TransactionsByCustomersService';
 import { TransactionsByCustomersTable } from './TransactionsByCustomersTable';
 
 @Service()
@@ -14,32 +14,22 @@ export class TransactionsByCustomersTableInjectable {
 
   /**
    * Retrieves the transactions by customers sheet in table format.
-   * @param {number} tenantId 
-   * @param {ITransactionsByCustomersFilter} filter 
+   * @param {number} tenantId
+   * @param {ITransactionsByCustomersFilter} filter
    * @returns {Promise<ITransactionsByCustomersFilter>}
    */
-  public async table(
-    tenantId: number,
-    filter: ITransactionsByCustomersFilter
-  ): Promise<ITransactionsByCustomersTable> {
+  public async table(tenantId: number, filter: ITransactionsByCustomersFilter): Promise<ITransactionsByCustomersTable> {
     const i18n = this.tenancy.i18n(tenantId);
 
-    const customersTransactions =
-      await this.transactionsByCustomerService.transactionsByCustomers(
-        tenantId,
-        filter
-      );
-    const table = new TransactionsByCustomersTable(
-      customersTransactions.data,
-      i18n
-    );
+    const customersTransactions = await this.transactionsByCustomerService.transactionsByCustomers(tenantId, filter);
+    const table = new TransactionsByCustomersTable(customersTransactions.data, i18n);
     return {
       table: {
         rows: table.tableRows(),
         columns: table.tableColumns(),
       },
       query: customersTransactions.query,
-      meta: customersTransactions.meta
+      meta: customersTransactions.meta,
     };
   }
 }

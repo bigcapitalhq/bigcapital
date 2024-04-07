@@ -8,12 +8,7 @@ export default function DashboardContentRoute() {
     <Route pathname="/preferences">
       <Switch>
         {preferencesRoutes.map((route, index) => (
-          <Route
-            key={index}
-            path={`${route.path}`}
-            exact={route.exact}
-            component={route.component}
-          />
+          <Route key={index} path={`${route.path}`} exact={route.exact} component={route.component} />
         ))}
       </Switch>
     </Route>

@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { ActionsMenu } from './components';
 import { useProjectTaskColumns } from './hooks';
@@ -44,8 +40,7 @@ function ProjectTaskTableRoot({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PROJECT_TASKS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.PROJECT_TASKS);
 
   return (
     <ProjectTaksDataTable

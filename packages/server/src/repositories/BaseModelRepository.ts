@@ -1,5 +1,1 @@
-
-
-export default class BaseModelRepository {
-
-}
+export default class BaseModelRepository {}

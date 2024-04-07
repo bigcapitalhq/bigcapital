@@ -2,26 +2,14 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Menu,
-  Popover,
-  Button,
-  Position,
-  MenuItem,
-  MenuDivider,
-  Intent,
-  Tag,
-} from '@blueprintjs/core';
+import { Menu, Popover, Button, Position, MenuItem, MenuDivider, Intent, Tag } from '@blueprintjs/core';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
  * Row actions menu list.
  */
-export function ActionMenuList({
-  row: { original },
-  payload: { onEditCurrency, onDeleteCurrency },
-}) {
+export function ActionMenuList({ row: { original }, payload: { onEditCurrency, onDeleteCurrency } }) {
   return (
     <Menu>
       <MenuItem
@@ -45,10 +33,7 @@ export function ActionMenuList({
  */
 export const ActionsCell = (props) => {
   return (
-    <Popover
-      position={Position.RIGHT_BOTTOM}
-      content={<ActionMenuList {...props} />}
-    >
+    <Popover position={Position.RIGHT_BOTTOM} content={<ActionMenuList {...props} />}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

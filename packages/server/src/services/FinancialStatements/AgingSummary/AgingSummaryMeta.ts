@@ -1,7 +1,7 @@
-import { Inject } from 'typedi';
-import { FinancialSheetMeta } from '../FinancialSheetMeta';
 import { IAgingSummaryMeta, IAgingSummaryQuery } from '@/interfaces';
 import moment from 'moment';
+import { Inject } from 'typedi';
+import { FinancialSheetMeta } from '../FinancialSheetMeta';
 
 export class AgingSummaryMeta {
   @Inject()
@@ -12,10 +12,7 @@ export class AgingSummaryMeta {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  public async meta(
-    tenantId: number,
-    query: IAgingSummaryQuery
-  ): Promise<IAgingSummaryMeta> {
+  public async meta(tenantId: number, query: IAgingSummaryQuery): Promise<IAgingSummaryMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedAsDate = moment(query.asDate).format('YYYY/MM/DD');
     const formattedDateRange = `As ${formattedAsDate}`;

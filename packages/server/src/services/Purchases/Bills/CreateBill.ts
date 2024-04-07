@@ -1,19 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import {
-  IBillDTO,
-  IBill,
-  ISystemUser,
-  IBillCreatedPayload,
-  IBillCreatingPayload,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { IBill, IBillCreatedPayload, IBillCreatingPayload, IBillDTO, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import UnitOfWork from '@/services/UnitOfWork';
-import { BillsValidators } from './BillsValidators';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { BillDTOTransformer } from './BillDTOTransformer';
+import { BillsValidators } from './BillsValidators';
 
 @Service()
 export class CreateBill {
@@ -50,46 +44,22 @@ export class CreateBill {
    * @param  {IBillDTO} billDTO -
    * @return {Promise<IBill>}
    */
-  public async createBill(
-    tenantId: number,
-    billDTO: IBillDTO,
-    authorizedUser: ISystemUser
-  ): Promise<IBill> {
+  public async createBill(tenantId: number, billDTO: IBillDTO, authorizedUser: ISystemUser): Promise<IBill> {
     const { Bill, Contact } = this.tenancy.models(tenantId);
 
     // Retrieves the given bill vendor or throw not found error.
-    const vendor = await Contact.query()
-      .modify('vendor')
-      .findById(billDTO.vendorId)
-      .throwIfNotFound();
+    const vendor = await Contact.query().modify('vendor').findById(billDTO.vendorId).throwIfNotFound();
 
     // Validate the bill number uniqiness on the storage.
-    await this.validators.validateBillNumberExists(
-      tenantId,
-      billDTO.billNumber
-    );
+    await this.validators.validateBillNumberExists(tenantId, billDTO.billNumber);
     // Validate items IDs existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      billDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
     // Validate non-purchasable items.
-    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
-      tenantId,
-      billDTO.entries
-    );
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
     // Validates the cost entries should be with inventory items.
-    await this.validators.validateCostEntriesShouldBeInventoryItems(
-      tenantId,
-      billDTO.entries
-    );
+    await this.validators.validateCostEntriesShouldBeInventoryItems(tenantId, billDTO.entries);
     // Transform the bill DTO to model object.
-    const billObj = await this.transformerDTO.billDTOToModel(
-      tenantId,
-      billDTO,
-      vendor,
-      authorizedUser
-    );
+    const billObj = await this.transformerDTO.billDTOToModel(tenantId, billDTO, vendor, authorizedUser);
     // Write new bill transaction with associated transactions under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillCreating` event.

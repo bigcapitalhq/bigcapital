@@ -9,11 +9,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
 
   return (
     <BodyClassName className={''}>
-      {isAuthenticated ? (
-        <Component />
-      ) : (
-        <Redirect to={{ pathname: '/auth/login' }} />
-      )}
+      {isAuthenticated ? <Component /> : <Redirect to={{ pathname: '/auth/login' }} />}
     </BodyClassName>
   );
 }

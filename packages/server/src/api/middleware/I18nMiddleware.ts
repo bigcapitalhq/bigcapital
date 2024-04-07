@@ -1,10 +1,10 @@
-import { Container } from 'typedi';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { lowerCase } from 'lodash';
+import { Container } from 'typedi';
 
 /**
  * Set the language from request `accept-language` header
-*  or default application language.
+ *  or default application language.
  */
 export default (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');

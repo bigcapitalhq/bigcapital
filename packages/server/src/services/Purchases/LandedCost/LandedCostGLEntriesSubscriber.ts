@@ -1,10 +1,7 @@
-import { Service, Inject } from 'typedi';
+import { IAllocatedLandedCostCreatedPayload, IAllocatedLandedCostDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import LandedCostGLEntries from './LandedCostGLEntries';
-import {
-  IAllocatedLandedCostCreatedPayload,
-  IAllocatedLandedCostDeletedPayload,
-} from '@/interfaces';
 
 @Service()
 export default class LandedCostGLEntriesSubscriber {
@@ -12,14 +9,8 @@ export default class LandedCostGLEntriesSubscriber {
   billLandedCostGLEntries: LandedCostGLEntries;
 
   attach(bus) {
-    bus.subscribe(
-      events.billLandedCost.onCreated,
-      this.writeGLEntriesOnceLandedCostCreated
-    );
-    bus.subscribe(
-      events.billLandedCost.onDeleted,
-      this.revertGLEnteriesOnceLandedCostDeleted
-    );
+    bus.subscribe(events.billLandedCost.onCreated, this.writeGLEntriesOnceLandedCostCreated);
+    bus.subscribe(events.billLandedCost.onDeleted, this.revertGLEnteriesOnceLandedCostDeleted);
   }
 
   /**
@@ -31,11 +22,7 @@ export default class LandedCostGLEntriesSubscriber {
     billLandedCost,
     trx,
   }: IAllocatedLandedCostCreatedPayload) => {
-    await this.billLandedCostGLEntries.createLandedCostGLEntries(
-      tenantId,
-      billLandedCost.id,
-      trx
-    );
+    await this.billLandedCostGLEntries.createLandedCostGLEntries(tenantId, billLandedCost.id, trx);
   };
 
   /**
@@ -48,10 +35,6 @@ export default class LandedCostGLEntriesSubscriber {
     billId,
     trx,
   }: IAllocatedLandedCostDeletedPayload) => {
-    await this.billLandedCostGLEntries.revertLandedCostGLEntries(
-      tenantId,
-      oldBillLandedCost.id,
-      trx
-    );
+    await this.billLandedCostGLEntries.revertLandedCostGLEntries(tenantId, oldBillLandedCost.id, trx);
   };
 }

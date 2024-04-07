@@ -10,10 +10,7 @@ export default function NotifyPaymentReceiveViaSMSContent({
   paymentReceive,
 }) {
   return (
-    <NotifyPaymentReceiveViaFormProvider
-      paymentReceiveId={paymentReceive}
-      dialogName={dialogName}
-    >
+    <NotifyPaymentReceiveViaFormProvider paymentReceiveId={paymentReceive} dialogName={dialogName}>
       <NotifyPaymentReceiveViaSMSForm />
     </NotifyPaymentReceiveViaFormProvider>
   );

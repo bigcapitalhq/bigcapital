@@ -91,8 +91,7 @@ export default [
     parent_account_id: null,
     index: 1,
     active: 1,
-    description:
-      'An account that holds valuation of products or goods that available for sale.',
+    description: 'An account that holds valuation of products or goods that available for sale.',
   },
 
   // Libilities
@@ -133,8 +132,7 @@ export default [
     slug: 'opening-balance-liabilities',
     account_type: 'other-current-liability',
     code: '20004',
-    description:
-      'This account will hold the difference in the debits and credits entered during the opening balance..',
+    description: 'This account will hold the difference in the debits and credits entered during the opening balance..',
     active: 1,
     index: 1,
     predefined: 0,
@@ -158,8 +156,7 @@ export default [
     slug: 'retained-earnings',
     account_type: 'equity',
     code: '30001',
-    description:
-      'Retained earnings tracks net income from previous fiscal years.',
+    description: 'Retained earnings tracks net income from previous fiscal years.',
     active: 1,
     index: 1,
     predefined: 1,
@@ -186,12 +183,11 @@ export default [
     predefined: 1,
   },
   {
-    name: `Drawings`,
+    name: 'Drawings',
     slug: 'drawings',
     account_type: 'equity',
     code: '30003',
-    description:
-      'Goods purchased with the intention of selling these to customers',
+    description: 'Goods purchased with the intention of selling these to customers',
     active: 1,
     index: 1,
     predefined: 1,
@@ -317,8 +313,7 @@ export default [
     account_type: 'other-income',
     parent_account_id: null,
     code: '50004',
-    description:
-      'The income activities are not associated to the core business.',
+    description: 'The income activities are not associated to the core business.',
     active: 1,
     index: 1,
     predefined: 0,

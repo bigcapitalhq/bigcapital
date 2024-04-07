@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, oneOf } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseController from './BaseController';
 import { ServiceError } from '@/exceptions';
 import { EchangeRateErrors } from '@/lib/ExchangeRate/types';
 import { ExchangeRateApplication } from '@/services/ExchangeRates/ExchangeRateApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { oneOf, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from './BaseController';
 
 @Service()
 export default class ExchangeRatesController extends BaseController {
@@ -28,7 +28,7 @@ export default class ExchangeRatesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.latestExchangeRate.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     return router;
   }
@@ -39,19 +39,12 @@ export default class ExchangeRatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async latestExchangeRate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async latestExchangeRate(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const exchangeRateQuery = this.matchedQueryData(req);
 
     try {
-      const exchangeRate = await this.exchangeRatesApp.latest(
-        tenantId,
-        exchangeRateQuery
-      );
+      const exchangeRate = await this.exchangeRatesApp.latest(tenantId, exchangeRateQuery);
       return res.status(200).send(exchangeRate);
     } catch (error) {
       next(error);
@@ -65,12 +58,7 @@ export default class ExchangeRatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceError(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (EchangeRateErrors.EX_RATE_INVALID_BASE_CURRENCY === error.errorType) {
         return res.status(400).send({
@@ -82,9 +70,7 @@ export default class ExchangeRatesController extends BaseController {
             },
           ],
         });
-      } else if (
-        EchangeRateErrors.EX_RATE_SERVICE_NOT_ALLOWED === error.errorType
-      ) {
+      } else if (EchangeRateErrors.EX_RATE_SERVICE_NOT_ALLOWED === error.errorType) {
         return res.status(400).send({
           errors: [
             {
@@ -94,9 +80,7 @@ export default class ExchangeRatesController extends BaseController {
             },
           ],
         });
-      } else if (
-        EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED === error.errorType
-      ) {
+      } else if (EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED === error.errorType) {
         return res.status(400).send({
           errors: [
             {

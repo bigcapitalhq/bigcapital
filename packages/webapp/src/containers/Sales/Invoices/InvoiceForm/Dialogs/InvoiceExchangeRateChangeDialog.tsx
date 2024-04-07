@@ -30,13 +30,12 @@ function InvoiceExchangeRateChangeDialog({
       <DialogSuspense>
         <div className={Classes.DIALOG_BODY}>
           <p>
-            The item rates have been <strong>adjusted</strong> to the new
-            currency using realtime exchange rate.
+            The item rates have been <strong>adjusted</strong> to the new currency using realtime exchange rate.
           </p>
 
           <p style={{ marginBottom: '30px' }}>
-            Make sure to check that the item rates match the current exchange
-            rate of the newly selected currency before saving the transaction.
+            Make sure to check that the item rates match the current exchange rate of the newly selected currency before
+            saving the transaction.
           </p>
         </div>
 
@@ -50,7 +49,4 @@ function InvoiceExchangeRateChangeDialog({
   );
 }
 
-export default compose(
-  withDialogRedux(),
-  withDialogActions,
-)(InvoiceExchangeRateChangeDialog);
+export default compose(withDialogRedux(), withDialogActions)(InvoiceExchangeRateChangeDialog);

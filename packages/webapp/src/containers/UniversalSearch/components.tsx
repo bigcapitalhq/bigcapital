@@ -17,11 +17,7 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          {item.subText && (
-            <span class="bp4-text-muted">
-              {highlightText(item.subText, query)}
-            </span>
-          )}
+          {item.subText && <span class="bp4-text-muted">{highlightText(item.subText, query)}</span>}
         </div>
       }
       label={item.label ? highlightText(item.label, query) : ''}
@@ -37,9 +33,7 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
  * @returns
  */
 export const DashboardUniversalSearchItem = (props, actions) => {
-    const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
+  const itemRenderer = getUniversalSearchBind(props._type, 'itemRenderer');
 
-    return typeof itemRenderer !== 'undefined'
-      ? itemRenderer(props, actions)
-      : UniversalSearchItemDetail(props, actions);
-  };
+  return typeof itemRenderer !== 'undefined' ? itemRenderer(props, actions) : UniversalSearchItemDetail(props, actions);
+};

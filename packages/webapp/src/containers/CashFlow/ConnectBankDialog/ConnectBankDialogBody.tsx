@@ -27,10 +27,7 @@ function ConnectBankDialogBodyRoot({
   const setPlaidId = useSetBankingPlaidToken();
 
   // Handles the form submitting.
-  const handleSubmit = (
-    values: ConnectBankDialogForm,
-    { setSubmitting }: FormikHelpers<ConnectBankDialogForm>,
-  ) => {
+  const handleSubmit = (values: ConnectBankDialogForm, { setSubmitting }: FormikHelpers<ConnectBankDialogForm>) => {
     setSubmitting(true);
     getPlaidLinkToken()
       .then((res) => {

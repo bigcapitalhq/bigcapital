@@ -21,11 +21,7 @@ function JournalBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <JournalTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <JournalTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

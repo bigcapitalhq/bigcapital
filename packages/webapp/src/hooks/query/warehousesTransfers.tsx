@@ -25,16 +25,13 @@ export function useCreateWarehouseTransfer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('warehouses/transfers', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.post('warehouses/transfers', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -44,19 +41,16 @@ export function useEditWarehouseTransfer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`warehouses/transfers/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific sale invoice.
-        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+  return useMutation(([id, values]) => apiRequest.post(`warehouses/transfers/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific sale invoice.
+      queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -129,18 +123,15 @@ export function useInitiateWarehouseTransfer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.put(`warehouses/transfers/${id}/initiate`),
-    {
-      onSuccess: (res, id) => {
-        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+  return useMutation((id) => apiRequest.put(`warehouses/transfers/${id}/initiate`), {
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -152,18 +143,15 @@ export function useTransferredWarehouseTransfer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.put(`warehouses/transfers/${id}/transferred`),
-    {
-      onSuccess: (res, id) => {
-        queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
+  return useMutation((id) => apiRequest.put(`warehouses/transfers/${id}/transferred`), {
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries([t.WAREHOUSE_TRANSFER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useRefreshWarehouseTransfers() {

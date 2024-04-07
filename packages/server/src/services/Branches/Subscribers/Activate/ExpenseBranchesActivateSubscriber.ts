@@ -1,6 +1,6 @@
 import { IBranchesActivatedPayload } from '@/interfaces';
-import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ExpensesActivateBranches } from '../../Integrations/Expense/ExpensesActivateBranches';
 
 @Service()
@@ -12,10 +12,7 @@ export class ExpenseActivateBranchesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateExpensesWithBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateExpensesWithBranchOnActivated);
     return bus;
   }
 
@@ -24,15 +21,7 @@ export class ExpenseActivateBranchesSubscriber {
    * the multi-branches is activated.
    * @param {IBranchesActivatedPayload}
    */
-  private updateExpensesWithBranchOnActivated = async ({
-    tenantId,
-    primaryBranch,
-    trx,
-  }: IBranchesActivatedPayload) => {
-    await this.expensesActivateBranches.updateExpensesWithBranch(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+  private updateExpensesWithBranchOnActivated = async ({ tenantId, primaryBranch, trx }: IBranchesActivatedPayload) => {
+    await this.expensesActivateBranches.updateExpensesWithBranch(tenantId, primaryBranch.id, trx);
   };
 }

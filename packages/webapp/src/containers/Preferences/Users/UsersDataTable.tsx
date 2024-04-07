@@ -74,8 +74,7 @@ function UsersDataTable({
         }) => {
           if (errors.find((e) => e.type === 'USER_RECENTLY_INVITED')) {
             AppToaster.show({
-              message:
-                'This person was recently invited. No need to invite them again just yet.',
+              message: 'This person was recently invited. No need to invite them again just yet.',
               intent: Intent.WARNING,
             });
           }

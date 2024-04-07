@@ -10,10 +10,7 @@ export default function NotifyInvoiceViaSMSDialogContent({
   invoiceId,
 }) {
   return (
-    <NotifyInvoiceViaSMSFormProvider
-      invoiceId={invoiceId}
-      dialogName={dialogName}
-    >
+    <NotifyInvoiceViaSMSFormProvider invoiceId={invoiceId} dialogName={dialogName}>
       <NotifyInvoiceViaSMSForm />
     </NotifyInvoiceViaSMSFormProvider>
   );

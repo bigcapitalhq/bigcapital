@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { IJournalReportQuery } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { JournalSheetTableInjectable } from './JournalSheetTableInjectable';
 
 @Service()
@@ -29,10 +29,7 @@ export class JournalSheetExportInjectable {
    * @param {IJournalReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IJournalReportQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IJournalReportQuery): Promise<string> {
     const table = await this.journalSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

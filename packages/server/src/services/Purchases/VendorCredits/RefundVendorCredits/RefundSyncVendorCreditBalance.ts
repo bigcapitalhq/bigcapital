@@ -1,6 +1,6 @@
-import Knex from 'knex';
 import { IRefundVendorCredit } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import Knex from 'knex';
 import { Inject, Service } from 'typedi';
 
 @Service()
@@ -17,14 +17,11 @@ export default class RefundSyncVendorCreditBalance {
   public incrementVendorCreditRefundAmount = async (
     tenantId: number,
     refundVendorCredit: IRefundVendorCredit,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
-    await VendorCredit.query(trx).increment(
-      'refundedAmount',
-      refundVendorCredit.amount
-    );
+    await VendorCredit.query(trx).increment('refundedAmount', refundVendorCredit.amount);
   };
 
   /**
@@ -36,13 +33,10 @@ export default class RefundSyncVendorCreditBalance {
   public decrementVendorCreditRefundAmount = async (
     tenantId: number,
     refundVendorCredit: IRefundVendorCredit,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
-    await VendorCredit.query(trx).decrement(
-      'refundedAmount',
-      refundVendorCredit.amount
-    );
+    await VendorCredit.query(trx).decrement('refundedAmount', refundVendorCredit.amount);
   };
 }

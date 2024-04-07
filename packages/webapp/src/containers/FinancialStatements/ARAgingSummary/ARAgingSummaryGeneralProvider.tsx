@@ -29,7 +29,6 @@ function ARAgingSummaryGeneralProvider({ ...props }) {
   );
 }
 
-const useARAgingSummaryGeneralContext = () =>
-  useContext(ARAgingSummaryGeneralContext);
+const useARAgingSummaryGeneralContext = () => useContext(ARAgingSummaryGeneralContext);
 
 export { ARAgingSummaryGeneralProvider, useARAgingSummaryGeneralContext };

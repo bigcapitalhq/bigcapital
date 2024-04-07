@@ -25,7 +25,6 @@ function WarehouseActivateFormProvider({ dialogName, ...props }) {
   );
 }
 
-const useWarehouseActivateContext = () =>
-  React.useContext(WarehouseActivateContext);
+const useWarehouseActivateContext = () => React.useContext(WarehouseActivateContext);
 
 export { WarehouseActivateFormProvider, useWarehouseActivateContext };

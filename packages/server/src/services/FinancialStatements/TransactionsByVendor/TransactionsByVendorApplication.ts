@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
 import {
   ITransactionsByVendorTable,
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsStatement,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { TransactionsByVendorExportInjectable } from './TransactionsByVendorExportInjectable';
-import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
 import { TransactionsByVendorsInjectable } from './TransactionsByVendorInjectable';
 import { TransactionsByVendorsPdf } from './TransactionsByVendorPdf';
+import { TransactionsByVendorTableInjectable } from './TransactionsByVendorTableInjectable';
 
 @Service()
 export class TransactionsByVendorApplication {
@@ -29,14 +29,8 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<ITransactionsByVendorsStatement>}
    */
-  public sheet(
-    tenantId: number,
-    query: ITransactionsByVendorsFilter
-  ): Promise<ITransactionsByVendorsStatement> {
-    return this.transactionsByVendorSheet.transactionsByVendors(
-      tenantId,
-      query
-    );
+  public sheet(tenantId: number, query: ITransactionsByVendorsFilter): Promise<ITransactionsByVendorsStatement> {
+    return this.transactionsByVendorSheet.transactionsByVendors(tenantId, query);
   }
 
   /**
@@ -45,10 +39,7 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<ITransactionsByVendorTable>}
    */
-  public table(
-    tenantId: number,
-    query: ITransactionsByVendorsFilter
-  ): Promise<ITransactionsByVendorTable> {
+  public table(tenantId: number, query: ITransactionsByVendorsFilter): Promise<ITransactionsByVendorTable> {
     return this.transactionsByVendorTable.table(tenantId, query);
   }
 
@@ -58,10 +49,7 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<string>}
    */
-  public csv(
-    tenantId: number,
-    query: ITransactionsByVendorsFilter
-  ): Promise<string> {
+  public csv(tenantId: number, query: ITransactionsByVendorsFilter): Promise<string> {
     return this.transactionsByVendorExport.csv(tenantId, query);
   }
 
@@ -71,10 +59,7 @@ export class TransactionsByVendorApplication {
    * @param {ITransactionsByVendorsFilter} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: ITransactionsByVendorsFilter
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: ITransactionsByVendorsFilter): Promise<Buffer> {
     return this.transactionsByVendorExport.xlsx(tenantId, query);
   }
 

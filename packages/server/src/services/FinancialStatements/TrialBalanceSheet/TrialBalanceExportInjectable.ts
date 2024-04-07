@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { ITrialBalanceSheetQuery } from '@/interfaces';
-import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { TrialBalanceSheetPdfInjectable } from './TrialBalanceSheetPdfInjectsable';
+import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
 
 @Service()
 export class TrialBalanceExportInjectable {
@@ -33,10 +33,7 @@ export class TrialBalanceExportInjectable {
    * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: ITrialBalanceSheetQuery): Promise<string> {
     const table = await this.trialBalanceSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -47,14 +44,11 @@ export class TrialBalanceExportInjectable {
 
   /**
    * Retrieves the trial balance sheet in PDF format.
-   * @param {number} tenantId 
-   * @param {ITrialBalanceSheetQuery} query 
+   * @param {number} tenantId
+   * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: ITrialBalanceSheetQuery): Promise<Buffer> {
     return this.trialBalanceSheetPdf.pdf(tenantId, query);
   }
 }

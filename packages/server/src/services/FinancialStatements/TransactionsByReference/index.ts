@@ -1,11 +1,8 @@
-import { Service, Inject } from 'typedi';
+import { ITransactionsByReferenceQuery, ITransactionsByReferenceTransaction } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ITransactionsByReferenceQuery,
-  ITransactionsByReferenceTransaction,
-} from '@/interfaces';
-import TransactionsByReferenceRepository from './TransactionsByReferenceRepository';
+import { Inject, Service } from 'typedi';
 import TransactionsByReferenceReport from './TransactionsByReferenceReport';
+import TransactionsByReferenceRepository from './TransactionsByReferenceRepository';
 
 @Service()
 export default class TransactionsByReferenceService {
@@ -40,7 +37,7 @@ export default class TransactionsByReferenceService {
    */
   public async getTransactionsByReference(
     tenantId: number,
-    query: ITransactionsByReferenceQuery
+    query: ITransactionsByReferenceQuery,
   ): Promise<{
     transactions: ITransactionsByReferenceTransaction[];
   }> {
@@ -53,7 +50,7 @@ export default class TransactionsByReferenceService {
     const transactions = await this.reportRepository.getTransactions(
       tenantId,
       filter.referenceId,
-      filter.referenceType
+      filter.referenceType,
     );
 
     // Settings tenant service.
@@ -64,11 +61,7 @@ export default class TransactionsByReferenceService {
     });
 
     // Transactions by reference report.
-    const report = new TransactionsByReferenceReport(
-      transactions,
-      filter,
-      baseCurrency
-    );
+    const report = new TransactionsByReferenceReport(transactions, filter, baseCurrency);
 
     return {
       transactions: report.reportData(),

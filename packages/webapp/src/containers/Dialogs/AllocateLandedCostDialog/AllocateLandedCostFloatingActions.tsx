@@ -3,11 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import {
-  DialogFooter,
-  DialogFooterActions,
-  FormattedMessage as T,
-} from '@/components';
+import { DialogFooter, DialogFooterActions, FormattedMessage as T } from '@/components';
 
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -25,8 +21,7 @@ function AllocateLandedCostFloatingActions({
   const { isSubmitting } = useFormikContext();
 
   // Allocate landed cost dialog context.
-  const { dialogName, costTransactionEntry, formattedUnallocatedCostAmount } =
-    useAllocateLandedConstDialogContext();
+  const { dialogName, costTransactionEntry, formattedUnallocatedCostAmount } = useAllocateLandedConstDialogContext();
 
   // Handle cancel button click.
   const handleCancelBtnClick = (event) => {
@@ -38,7 +33,7 @@ function AllocateLandedCostFloatingActions({
       <DialogFooterActions alignment={'left'}>
         {costTransactionEntry && (
           <UnallocatedAmount>
-           <T id={'landed_cost.dialog.label_unallocated_cost_amount'}/>
+            <T id={'landed_cost.dialog.label_unallocated_cost_amount'} />
             <strong>{formattedUnallocatedCostAmount}</strong>
           </UnallocatedAmount>
         )}
@@ -48,12 +43,7 @@ function AllocateLandedCostFloatingActions({
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>
-        <Button
-          intent={Intent.PRIMARY}
-          style={{ minWidth: '95px' }}
-          type="submit"
-          loading={isSubmitting}
-        >
+        <Button intent={Intent.PRIMARY} style={{ minWidth: '95px' }} type="submit" loading={isSubmitting}>
           {<T id={'save'} />}
         </Button>
       </DialogFooterActions>

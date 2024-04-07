@@ -4,12 +4,7 @@ import classNames from 'classnames';
 import { Classes, TextArea, FormGroup, Intent } from '@blueprintjs/core';
 import { CellType } from '@/constants';
 
-const TextAreaEditableCell = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  payload,
-}) => {
+const TextAreaEditableCell = ({ row: { index }, column: { id }, cell: { value: initialValue }, payload }) => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (e) => {
@@ -25,18 +20,8 @@ const TextAreaEditableCell = ({
   const error = payload.errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames(Classes.FILL)}
-    >
-      <TextArea
-        growVertically={true}
-        large={true}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        fill={true}
-      />
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames(Classes.FILL)}>
+      <TextArea growVertically={true} large={true} value={value} onChange={onChange} onBlur={onBlur} fill={true} />
     </FormGroup>
   );
 };

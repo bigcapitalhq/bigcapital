@@ -1,9 +1,7 @@
-import { Container } from 'typedi';
-import { EventSubscriber, On } from 'event-dispatch';
-
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import BillsService from '@/services/Purchases/Bills';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { EventSubscriber } from 'event-dispatch';
+import { Container } from 'typedi';
 
 @EventSubscriber()
 export default class BillSubscriber {

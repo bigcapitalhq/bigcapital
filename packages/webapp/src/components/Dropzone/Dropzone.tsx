@@ -2,14 +2,7 @@
 import React from 'react';
 import { Ref, useCallback } from 'react';
 import clsx from 'classnames';
-import {
-  Accept,
-  DropEvent,
-  FileError,
-  FileRejection,
-  FileWithPath,
-  useDropzone,
-} from 'react-dropzone-esm';
+import { Accept, DropEvent, FileError, FileRejection, FileWithPath, useDropzone } from 'react-dropzone-esm';
 import { DropzoneProvider } from './DropzoneProvider';
 import { DropzoneAccept, DropzoneIdle, DropzoneReject } from './DropzoneStatus';
 import { Box } from '../Layout';
@@ -107,9 +100,7 @@ export interface DropzoneProps {
   useFsAccessApi?: boolean;
 
   /** Use this to provide a custom file aggregator */
-  getFilesFromEvent?: (
-    event: DropEvent,
-  ) => Promise<Array<File | DataTransferItem>>;
+  getFilesFromEvent?: (event: DropEvent) => Promise<Array<File | DataTransferItem>>;
 
   /** Custom validation function. It must return null if there's no errors. */
   validator?: <T extends File>(file: T) => FileError | FileError[] | null;
@@ -139,7 +130,7 @@ export type DropzoneFactory = Factory<{
 const defaultProps: Partial<DropzoneProps> = {
   loading: false,
   multiple: true,
-  maxSize: Infinity,
+  maxSize: Number.POSITIVE_INFINITY,
   autoFocus: false,
   activateOnClick: true,
   activateOnDrag: true,
@@ -198,41 +189,36 @@ export const Dropzone = (_props: DropzoneProps) => {
     ..._props,
   };
 
-  const { getRootProps, getInputProps, isDragAccept, isDragReject, open } =
-    useDropzone({
-      onDrop: onDropAny,
-      onDropAccepted: onDrop,
-      onDropRejected: onReject,
-      disabled: disabled || loading,
-      accept: Array.isArray(accept)
-        ? accept.reduce((r, key) => ({ ...r, [key]: [] }), {})
-        : accept,
-      multiple,
-      maxSize,
-      maxFiles,
-      autoFocus,
-      noClick: !activateOnClick,
-      noDrag: !activateOnDrag,
-      noDragEventsBubbling: !dragEventsBubbling,
-      noKeyboard: !activateOnKeyboard,
-      onDragEnter,
-      onDragLeave,
-      onDragOver,
-      onFileDialogCancel,
-      onFileDialogOpen,
-      preventDropOnDocument,
-      useFsAccessApi,
-      validator,
-      ...(getFilesFromEvent ? { getFilesFromEvent } : null),
-    });
+  const { getRootProps, getInputProps, isDragAccept, isDragReject, open } = useDropzone({
+    onDrop: onDropAny,
+    onDropAccepted: onDrop,
+    onDropRejected: onReject,
+    disabled: disabled || loading,
+    accept: Array.isArray(accept) ? accept.reduce((r, key) => ({ ...r, [key]: [] }), {}) : accept,
+    multiple,
+    maxSize,
+    maxFiles,
+    autoFocus,
+    noClick: !activateOnClick,
+    noDrag: !activateOnDrag,
+    noDragEventsBubbling: !dragEventsBubbling,
+    noKeyboard: !activateOnKeyboard,
+    onDragEnter,
+    onDragLeave,
+    onDragOver,
+    onFileDialogCancel,
+    onFileDialogOpen,
+    preventDropOnDocument,
+    useFsAccessApi,
+    validator,
+    ...(getFilesFromEvent ? { getFilesFromEvent } : null),
+  });
 
   const isIdle = !isDragAccept && !isDragReject;
   assignRef(openRef, open);
 
   return (
-    <DropzoneProvider
-      value={{ accept: isDragAccept, reject: isDragReject, idle: isIdle }}
-    >
+    <DropzoneProvider value={{ accept: isDragAccept, reject: isDragReject, idle: isIdle }}>
       <Box
         {...getRootProps({
           className: clsx(styles.root, classNames?.root),
@@ -251,10 +237,7 @@ export const Dropzone = (_props: DropzoneProps) => {
         ]}
       >
         <input {...getInputProps(inputProps)} name={name} />
-        <div
-          data-enable-pointer-events={enablePointerEvents || undefined}
-          className={classNames?.content}
-        >
+        <div data-enable-pointer-events={enablePointerEvents || undefined} className={classNames?.content}>
           {children}
         </div>
       </Box>
@@ -266,9 +249,6 @@ Dropzone.displayName = '@mantine/dropzone/Dropzone';
 Dropzone.Accept = DropzoneAccept;
 Dropzone.Idle = DropzoneIdle;
 Dropzone.Reject = DropzoneReject;
-
-
-
 
 type PossibleRef<T> = Ref<T> | undefined;
 

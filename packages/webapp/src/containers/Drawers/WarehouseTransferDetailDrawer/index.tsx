@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const WarehouseTransferDetailDrawerContent = React.lazy(() =>
-  import('./WarehouseTransferDetailDrawerContent'),
-);
+const WarehouseTransferDetailDrawerContent = React.lazy(() => import('./WarehouseTransferDetailDrawerContent'));
 
 /**
  * Warehouse transfer detail drawer.
@@ -19,16 +17,9 @@ function WarehouseTransferDetailDrawer({
   payload: { warehouseTransferId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
-        <WarehouseTransferDetailDrawerContent
-          warehouseTransferId={warehouseTransferId}
-        />
+        <WarehouseTransferDetailDrawerContent warehouseTransferId={warehouseTransferId} />
       </DrawerSuspense>
     </Drawer>
   );

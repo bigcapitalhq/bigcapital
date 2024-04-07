@@ -7,12 +7,7 @@ import { Align } from '@/constants';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, headerText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    headerText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, headerText);
 };
 
 /**
@@ -79,14 +74,8 @@ const dynamiColumnMapper = R.curry((data, column) => {
 
   return R.compose(
     R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-    R.when(
-      R.pathEq(['key'], 'reference_type'),
-      transactionTypeColumnAccessor,
-    ),
-    R.when(
-      R.pathEq(['key'], 'reference_number'),
-      transactionIdColumnAccessor,
-    ),
+    R.when(R.pathEq(['key'], 'reference_type'), transactionTypeColumnAccessor),
+    R.when(R.pathEq(['key'], 'reference_number'), transactionIdColumnAccessor),
     R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'amount'), _numericColumnAccessor),

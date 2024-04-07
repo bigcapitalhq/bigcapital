@@ -18,27 +18,15 @@ export default function TaxRateFormDialogContent() {
         name={'name'}
         label={'Name'}
         labelInfo={<Tag minimal>Required</Tag>}
-        subLabel={
-          'The name as you would like it to appear in customers invoices.'
-        }
+        subLabel={'The name as you would like it to appear in customers invoices.'}
         fastField={true}
       >
         <FInputGroup name={'name'} fastField={true} />
       </FFormGroup>
 
       <TaxRateCodeField />
-      <FFormGroup
-        name={'rate'}
-        label={'Rate (%)'}
-        labelInfo={<Tag minimal>Required</Tag>}
-        fastField={true}
-      >
-        <RateFormGroup
-          name={'rate'}
-          rightElement={<Tag minimal>%</Tag>}
-          fill={false}
-          fastField={true}
-        />
+      <FFormGroup name={'rate'} label={'Rate (%)'} labelInfo={<Tag minimal>Required</Tag>} fastField={true}>
+        <RateFormGroup name={'rate'} rightElement={<Tag minimal>%</Tag>} fill={false} fastField={true} />
       </FFormGroup>
 
       <FFormGroup
@@ -53,19 +41,11 @@ export default function TaxRateFormDialogContent() {
       </FFormGroup>
 
       <CompoundFormGroup name={'is_compound'} fastField={true}>
-        <FCheckbox
-          label={'Is compound'}
-          name={'is_compound'}
-          fastField={true}
-        />
+        <FCheckbox label={'Is compound'} name={'is_compound'} fastField={true} />
       </CompoundFormGroup>
 
       <CompoundFormGroup name={'is_non_recoverable'} fastField={true}>
-        <FCheckbox
-          label={'Is non recoverable'}
-          name={'is_non_recoverable'}
-          fastField={true}
-        />
+        <FCheckbox label={'Is non recoverable'} name={'is_non_recoverable'} fastField={true} />
       </CompoundFormGroup>
 
       <ConfirmEditingTaxRate />
@@ -87,12 +67,7 @@ function TaxRateCodeField() {
   };
 
   return (
-    <FFormGroup
-      name={'code'}
-      label={'Code'}
-      labelInfo={<Tag minimal>Required</Tag>}
-      fastField={true}
-    >
+    <FFormGroup name={'code'} label={'Code'} labelInfo={<Tag minimal>Required</Tag>} fastField={true}>
       <FInputGroup name={'code'} fastField={true} onChange={handleChange} />
     </FFormGroup>
   );

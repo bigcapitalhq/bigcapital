@@ -1,10 +1,5 @@
 // @ts-nocheck
-import {
-  transformToForm,
-  optionsMapToArray,
-  transfromToSnakeCase,
-  transactionNumber,
-} from '@/utils';
+import { transformToForm, optionsMapToArray, transfromToSnakeCase, transactionNumber } from '@/utils';
 import { omit } from 'lodash';
 
 export const defaultInvoiceNoSettings = {
@@ -28,19 +23,16 @@ export const transformFormToSettings = (values, group) => {
 
 /**
  * Transaction number returns auto-increment if the increment mode is auto or
- * returns empty string if the increment mode is manually or returns the entered 
- * manual text if the increment mode is manual once just in this transaction.  
+ * returns empty string if the increment mode is manually or returns the entered
+ * manual text if the increment mode is manual once just in this transaction.
  */
 export const transformValuesToForm = (values) => {
-  const autoIncrementNumber = transactionNumber(
-    values.numberPrefix,
-    values.nextNumber,
-  );
+  const autoIncrementNumber = transactionNumber(values.numberPrefix, values.nextNumber);
   const _transactionNumber =
     values.incrementMode === 'auto'
       ? autoIncrementNumber
       : values.incrementMode === 'manual-transaction'
-      ? values.onceManualNumber
-      : '';
+        ? values.onceManualNumber
+        : '';
   return { transactionNumber: _transactionNumber };
 };

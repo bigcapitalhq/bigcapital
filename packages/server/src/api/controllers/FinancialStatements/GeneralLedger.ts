@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { GeneralLedgerApplication } from '@/services/FinancialStatements/GeneralLedger/GeneralLedgerApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class GeneralLedgerReportController extends BaseFinancialReportController {
@@ -24,7 +24,7 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
       CheckPolicies(ReportsAction.READ_GENERAL_LEDGET, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.generalLedger.bind(this))
+      asyncMiddleware(this.generalLedger.bind(this)),
     );
     return router;
   }
@@ -51,7 +51,10 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
       query('order').optional().isIn(['desc', 'asc']),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -91,17 +94,11 @@ export default class GeneralLedgerReportController extends BaseFinancialReportCo
       const buffer = await this.generalLedgerApplication.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       return res.send(buffer);
       // Retrieves the pdf format.
     } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
-      const pdfContent = await this.generalLedgerApplication.pdf(
-        tenantId,
-        filter
-      );
+      const pdfContent = await this.generalLedgerApplication.pdf(tenantId, filter);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,

@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import { ILedger } from '@/interfaces';
-import { LedgerContactsBalanceStorage } from './LedgerContactStorage';
-import { LedegrAccountsStorage } from './LedgetAccountStorage';
-import { LedgerEntriesStorage } from './LedgerEntriesStorage';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import Ledger from './Ledger';
+import { LedgerContactsBalanceStorage } from './LedgerContactStorage';
+import { LedgerEntriesStorage } from './LedgerEntriesStorage';
+import { LedegrAccountsStorage } from './LedgetAccountStorage';
 @Service()
 export default class LedgerStorageService {
   @Inject()
@@ -26,11 +26,7 @@ export default class LedgerStorageService {
    * @param   {ILedger} ledger
    * @returns {Promise<void>}
    */
-  public commit = async (
-    tenantId: number,
-    ledger: ILedger,
-    trx?: Knex.Transaction
-  ): Promise<void> => {
+  public commit = async (tenantId: number, ledger: ILedger, trx?: Knex.Transaction): Promise<void> => {
     const tasks = [
       // Saves the ledger entries.
       this.ledgerEntriesService.saveEntries(tenantId, ledger, trx),
@@ -51,11 +47,7 @@ export default class LedgerStorageService {
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  public delete = async (
-    tenantId: number,
-    ledger: ILedger,
-    trx?: Knex.Transaction
-  ) => {
+  public delete = async (tenantId: number, ledger: ILedger, trx?: Knex.Transaction) => {
     const tasks = [
       // Deletes the ledger entries.
       this.ledgerEntriesService.deleteEntries(tenantId, ledger, trx),
@@ -79,16 +71,12 @@ export default class LedgerStorageService {
     tenantId: number,
     referenceId: number | number[],
     referenceType: string | string[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { transactionsRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieves the transactions of the given reference.
-    const transactions =
-      await transactionsRepository.getTransactionsByReference(
-        referenceId,
-        referenceType
-      );
+    const transactions = await transactionsRepository.getTransactionsByReference(referenceId, referenceType);
     // Creates a new ledger from transaction and reverse the entries.
     const reversedLedger = Ledger.fromTransactions(transactions).reverse();
 

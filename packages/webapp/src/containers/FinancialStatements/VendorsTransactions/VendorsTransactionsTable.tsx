@@ -20,18 +20,14 @@ export default function VendorsTransactionsTable({
   companyName,
 }) {
   // Vendor transactions context.
-  const { vendorsTransactions, isVendorsTransactionsLoading } =
-    useVendorsTransactionsContext();
+  const { vendorsTransactions, isVendorsTransactionsLoading } = useVendorsTransactionsContext();
 
   const { table, query } = vendorsTransactions;
 
   // Retireve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(table.rows, 5),
-    [table.rows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(table.rows, 5), [table.rows]);
 
   return (
     <FinancialSheet

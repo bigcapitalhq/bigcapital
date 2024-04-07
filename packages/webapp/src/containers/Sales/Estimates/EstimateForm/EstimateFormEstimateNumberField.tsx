@@ -3,13 +3,7 @@ import React from 'react';
 import * as R from 'ramda';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import {
-  FFormGroup,
-  FInputGroup,
-  FormattedMessage as T,
-  Icon,
-  InputPrependButton,
-} from '@/components';
+import { FFormGroup, FInputGroup, FormattedMessage as T, Icon, InputPrependButton } from '@/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
@@ -59,11 +53,7 @@ export const EstimateFormEstimateNumberField = R.compose(
     };
 
     return (
-      <FFormGroup
-        name={'estimate_number'}
-        label={<T id={'estimate'} />}
-        inline={true}
-      >
+      <FFormGroup name={'estimate_number'} label={<T id={'estimate'} />} inline={true}>
         <ControlGroup fill={true}>
           <FInputGroup
             name={'estimate_number'}

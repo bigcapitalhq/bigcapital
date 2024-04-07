@@ -25,13 +25,8 @@ export default function ReceiptFormDialogs() {
 
   return (
     <>
-      <ReceiptNumberDialog
-        dialogName={'receipt-number-form'}
-        onConfirm={handleReceiptNumberFormConfirm}
-      />
-      <ReceiptFormMailDeliverDialog
-        dialogName={DialogsName.ReceiptFormMailDeliver}
-      />
+      <ReceiptNumberDialog dialogName={'receipt-number-form'} onConfirm={handleReceiptNumberFormConfirm} />
+      <ReceiptFormMailDeliverDialog dialogName={DialogsName.ReceiptFormMailDeliver} />
     </>
   );
 }

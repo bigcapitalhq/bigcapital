@@ -7,14 +7,9 @@ function ItemEntriesTableProvider({ children, value }) {
   const provider = {
     ...value,
   };
-  return (
-    <ItemEntriesTableContext.Provider value={provider}>
-      {children}
-    </ItemEntriesTableContext.Provider>
-  );
+  return <ItemEntriesTableContext.Provider value={provider}>{children}</ItemEntriesTableContext.Provider>;
 }
 
-const useItemEntriesTableContext = () =>
-  React.useContext(ItemEntriesTableContext);
+const useItemEntriesTableContext = () => React.useContext(ItemEntriesTableContext);
 
 export { ItemEntriesTableProvider, useItemEntriesTableContext };

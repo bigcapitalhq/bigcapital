@@ -3,16 +3,12 @@ import { FieldConfig, FieldProps } from 'formik';
 import { Field } from '@blueprintjs-formik/core';
 import { RichEditor, RichEditorProps } from '../../components/RichEditor';
 
-export interface FRichEditorProps
-  extends Omit<FieldConfig, 'children' | 'component' | 'as'>,
-    RichEditorProps {
+export interface FRichEditorProps extends Omit<FieldConfig, 'children' | 'component' | 'as'>, RichEditorProps {
   name: string;
   value?: string;
 }
 
-interface FieldToRichEditorProps
-  extends FieldProps,
-    Omit<RichEditorProps, 'form'> {}
+interface FieldToRichEditorProps extends FieldProps, Omit<RichEditorProps, 'form'> {}
 
 /**
  * Transformes the field props to `RichEditor` props.

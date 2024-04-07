@@ -50,9 +50,6 @@ const parseCustomersBalanceSummaryQuery = (locationQuery) => {
 export const useCustomerBalanceSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  const query = useMemo(
-    () => parseCustomersBalanceSummaryQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseCustomersBalanceSummaryQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

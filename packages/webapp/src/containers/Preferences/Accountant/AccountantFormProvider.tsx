@@ -40,11 +40,7 @@ function AccountantFormProvider({ ...props }) {
       )}
     >
       <AccountantFormCard>
-        {isLoading ? (
-          <PreferencesPageLoader />
-        ) : (
-          <AccountantFormContext.Provider value={provider} {...props} />
-        )}
+        {isLoading ? <PreferencesPageLoader /> : <AccountantFormContext.Provider value={provider} {...props} />}
       </AccountantFormCard>
     </div>
   );

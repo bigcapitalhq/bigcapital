@@ -33,7 +33,7 @@ export default {
 
       relationType: 'enumeration',
       relationKey: 'paymentAccount',
-      
+
       relationEntityLabel: 'name',
       relationEntityKey: 'slug',
     },

@@ -30,12 +30,8 @@ function ReconcileVendorCreditForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    reconcileVendorCredits,
-    createReconcileVendorCreditMutate,
-    vendorCredit,
-  } = useReconcileVendorCreditContext();
+  const { dialogName, reconcileVendorCredits, createReconcileVendorCreditMutate, vendorCredit } =
+    useReconcileVendorCreditContext();
 
   // Initial form values.
   const initialValues = {
@@ -81,9 +77,7 @@ function ReconcileVendorCreditForm({
       setSubmitting(false);
     };
 
-    createReconcileVendorCreditMutate([vendorCredit.id, form])
-      .then(onSuccess)
-      .catch(onError);
+    createReconcileVendorCreditMutate([vendorCredit.id, form]).then(onSuccess).catch(onError);
   };
 
   return (

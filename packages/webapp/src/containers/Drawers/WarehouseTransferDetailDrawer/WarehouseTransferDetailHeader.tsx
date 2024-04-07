@@ -27,9 +27,7 @@ export default function WarehouseTransferDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <StatusDetailItem>
-            <WarehouseTransferDetailsStatus
-              warehouseTransfer={warehouseTransfer}
-            />
+            <WarehouseTransferDetailsStatus warehouseTransfer={warehouseTransfer} />
           </StatusDetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>
@@ -41,9 +39,7 @@ export default function WarehouseTransferDetailHeader() {
             </DetailItem>
 
             <DetailItem
-              label={intl.get(
-                'warehouse_transfer.drawer.label.transfer_number',
-              )}
+              label={intl.get('warehouse_transfer.drawer.label.transfer_number')}
               children={defaultTo(warehouseTransfer.transaction_number, '-')}
             />
             <DetailItem

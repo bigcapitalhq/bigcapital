@@ -1,13 +1,9 @@
-import {
-  IInventoryValuationReportQuery,
-  IInventoryValuationSheet,
-  IInventoryValuationTable,
-} from '@/interfaces';
+import { IInventoryValuationReportQuery, IInventoryValuationSheet, IInventoryValuationTable } from '@/interfaces';
 import { Inject, Service } from 'typedi';
-import { InventoryValuationSheetService } from './InventoryValuationSheetService';
-import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
 import { InventoryValuationSheetExportable } from './InventoryValuationSheetExportable';
 import { InventoryValuationSheetPdf } from './InventoryValuationSheetPdf';
+import { InventoryValuationSheetService } from './InventoryValuationSheetService';
+import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
 
 @Service()
 export class InventoryValuationSheetApplication {
@@ -29,14 +25,8 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public sheet(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<IInventoryValuationSheet> {
-    return this.inventoryValuationSheet.inventoryValuationSheet(
-      tenantId,
-      query
-    );
+  public sheet(tenantId: number, query: IInventoryValuationReportQuery): Promise<IInventoryValuationSheet> {
+    return this.inventoryValuationSheet.inventoryValuationSheet(tenantId, query);
   }
 
   /**
@@ -45,10 +35,7 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns {Promise<IInventoryValuationTable>}
    */
-  public table(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<IInventoryValuationTable> {
+  public table(tenantId: number, query: IInventoryValuationReportQuery): Promise<IInventoryValuationTable> {
     return this.inventoryValuationTable.table(tenantId, query);
   }
 
@@ -58,10 +45,7 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public xlsx(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: IInventoryValuationReportQuery): Promise<Buffer> {
     return this.inventoryValuationExport.xlsx(tenantId, query);
   }
 
@@ -71,10 +55,7 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns
    */
-  public csv(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<string> {
+  public csv(tenantId: number, query: IInventoryValuationReportQuery): Promise<string> {
     return this.inventoryValuationExport.csv(tenantId, query);
   }
 
@@ -84,10 +65,7 @@ export class InventoryValuationSheetApplication {
    * @param {IInventoryValuationReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<Buffer> {
+  public pdf(tenantId: number, query: IInventoryValuationReportQuery): Promise<Buffer> {
     return this.inventoryValuationPdf.pdf(tenantId, query);
   }
 }

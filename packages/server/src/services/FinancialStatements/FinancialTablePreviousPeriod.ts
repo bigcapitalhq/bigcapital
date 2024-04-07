@@ -1,5 +1,5 @@
+import { IDateRange, ITableColumn, ITableColumnAccessor } from '@/interfaces';
 import moment from 'moment';
-import { ITableColumn, IDateRange, ITableColumnAccessor } from '@/interfaces';
 
 export const FinancialTablePreviousPeriod = (Base) =>
   class extends Base {
@@ -14,12 +14,8 @@ export const FinancialTablePreviousPeriod = (Base) =>
      * @param   {IDateRange} dateRange -
      * @returns {ITableColumn}
      */
-    protected getPreviousPeriodTotalColumn = (
-      dateRange?: IDateRange
-    ): ITableColumn => {
-      const PPDate = dateRange
-        ? dateRange.toDate
-        : this.getTotalPreviousPeriod();
+    protected getPreviousPeriodTotalColumn = (dateRange?: IDateRange): ITableColumn => {
+      const PPDate = dateRange ? dateRange.toDate : this.getTotalPreviousPeriod();
       const PPFormatted = moment(PPDate).format('YYYY-MM-DD');
 
       return {
@@ -78,22 +74,19 @@ export const FinancialTablePreviousPeriod = (Base) =>
      * Retrieves previous period percentage accessor.
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousPeriodPercentageAccessor =
-      (): ITableColumnAccessor => {
-        return {
-          key: 'previous_period_percentage',
-          accessor: 'previousPeriodPercentage.formattedAmount',
-        };
+    protected getPreviousPeriodPercentageAccessor = (): ITableColumnAccessor => {
+      return {
+        key: 'previous_period_percentage',
+        accessor: 'previousPeriodPercentage.formattedAmount',
       };
+    };
 
     /**
      * Retrieves previous period total horizontal column accessor.
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousPeriodTotalHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousPeriodTotalHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_period',
         accessor: `horizontalTotals[${index}].previousPeriod.formattedAmount`,
@@ -105,9 +98,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousPeriodChangeHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousPeriodChangeHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_period_change',
         accessor: `horizontalTotals[${index}].previousPeriodChange.formattedAmount`,
@@ -119,9 +110,7 @@ export const FinancialTablePreviousPeriod = (Base) =>
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousPeriodPercentageHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousPeriodPercentageHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_period_percentage',
         accessor: `horizontalTotals[${index}].previousPeriodPercentage.formattedAmount`,

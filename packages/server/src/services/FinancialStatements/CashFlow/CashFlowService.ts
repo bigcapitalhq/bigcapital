@@ -1,28 +1,23 @@
-import moment from 'moment';
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import FinancialSheet from '../FinancialSheet';
 import {
-  ICashFlowStatementService,
-  ICashFlowStatementQuery,
-  ICashFlowStatementDOO,
   IAccountTransaction,
-  ICashFlowStatementMeta,
+  ICashFlowStatementDOO,
+  ICashFlowStatementQuery,
+  ICashFlowStatementService,
 } from '@/interfaces';
-import CashFlowStatement from './CashFlow';
 import Ledger from '@/services/Accounting/Ledger';
-import CashFlowRepository from './CashFlowRepository';
 import InventoryService from '@/services/Inventory/Inventory';
-import { parseBoolean } from 'utils';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import FinancialSheet from '../FinancialSheet';
+import CashFlowStatement from './CashFlow';
+import CashFlowRepository from './CashFlowRepository';
 import { CashflowSheetMeta } from './CashflowSheetMeta';
 
 @Service()
-export default class CashFlowStatementService
-  extends FinancialSheet
-  implements ICashFlowStatementService
-{
+export default class CashFlowStatementService extends FinancialSheet implements ICashFlowStatementService {
   @Inject()
   tenancy: TenancyService;
 
@@ -66,22 +61,14 @@ export default class CashFlowStatementService
    */
   private async cashAtBeginningTransactions(
     tenantId: number,
-    filter: ICashFlowStatementQuery
+    filter: ICashFlowStatementQuery,
   ): Promise<IAccountTransaction[]> {
     const appendPeriodsOperToChain = (trans) =>
-      R.append(
-        this.cashFlowRepo.cashAtBeginningPeriodTransactions(tenantId, filter),
-        trans
-      );
+      R.append(this.cashFlowRepo.cashAtBeginningPeriodTransactions(tenantId, filter), trans);
 
     const promisesChain = R.pipe(
-      R.append(
-        this.cashFlowRepo.cashAtBeginningTotalTransactions(tenantId, filter)
-      ),
-      R.when(
-        R.always(R.equals(filter.displayColumnsType, 'date_periods')),
-        appendPeriodsOperToChain
-      )
+      R.append(this.cashFlowRepo.cashAtBeginningTotalTransactions(tenantId, filter)),
+      R.when(R.always(R.equals(filter.displayColumnsType, 'date_periods')), appendPeriodsOperToChain),
     )([]);
     const promisesResults = await Promise.all(promisesChain);
     const transactions = R.flatten(promisesResults);
@@ -95,38 +82,24 @@ export default class CashFlowStatementService
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<ICashFlowStatementDOO>}
    */
-  public async cashFlow(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<ICashFlowStatementDOO> {
+  public async cashFlow(tenantId: number, query: ICashFlowStatementQuery): Promise<ICashFlowStatementDOO> {
     const i18n = this.tenancy.i18n(tenantId);
 
     // Retrieve all accounts on the storage.
     const accounts = await this.cashFlowRepo.cashFlowAccounts(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
       ...query,
     };
     // Retrieve the accounts transactions.
-    const transactions = await this.cashFlowRepo.getAccountsTransactions(
-      tenantId,
-      filter
-    );
+    const transactions = await this.cashFlowRepo.getAccountsTransactions(tenantId, filter);
     // Retrieve the net income transactions.
-    const netIncome = await this.cashFlowRepo.getNetIncomeTransactions(
-      tenantId,
-      filter
-    );
+    const netIncome = await this.cashFlowRepo.getNetIncomeTransactions(tenantId, filter);
     // Retrieve the cash at beginning transactions.
-    const cashAtBeginningTransactions = await this.cashAtBeginningTransactions(
-      tenantId,
-      filter
-    );
+    const cashAtBeginningTransactions = await this.cashAtBeginningTransactions(tenantId, filter);
     // Transformes the transactions to ledgers.
     const ledger = Ledger.fromTransactions(transactions);
     const cashLedger = Ledger.fromTransactions(cashAtBeginningTransactions);
@@ -140,7 +113,7 @@ export default class CashFlowStatementService
       netIncomeLedger,
       filter,
       tenant.metadata.baseCurrency,
-      i18n
+      i18n,
     );
     // Retrieve the cashflow sheet meta.
     const meta = await this.cashflowSheetMeta.meta(tenantId, filter);

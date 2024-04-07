@@ -1,14 +1,14 @@
-import { Service, Inject } from 'typedi';
 import {
   ITransactionLockingMetaPOJO,
   ITransactionsLockingListPOJO,
   ITransactionsLockingSchema,
   TransactionsLockingGroup,
 } from '@/interfaces';
-import { TRANSACTIONS_LOCKING_SCHEMA } from './constants';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { Inject, Service } from 'typedi';
 import TransactionsLockingMetaTransformer from './TransactionsLockingMetaTransformer';
 import TransactionsLockingRepository from './TransactionsLockingRepository';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { TRANSACTIONS_LOCKING_SCHEMA } from './constants';
 
 @Service()
 export default class QueryTransactionsLocking {
@@ -23,12 +23,9 @@ export default class QueryTransactionsLocking {
    * @param   {number} tenantId
    * @returns {ITransactionLockingMetaPOJO[]}
    */
-  public getTransactionsLockingModules = (
-    tenantId: number
-  ): Promise<ITransactionLockingMetaPOJO[]> => {
-    const modules = TRANSACTIONS_LOCKING_SCHEMA.map(
-      (schema: ITransactionsLockingSchema) =>
-        this.getTransactionsLockingModuleMeta(tenantId, schema.module)
+  public getTransactionsLockingModules = (tenantId: number): Promise<ITransactionLockingMetaPOJO[]> => {
+    const modules = TRANSACTIONS_LOCKING_SCHEMA.map((schema: ITransactionsLockingSchema) =>
+      this.getTransactionsLockingModuleMeta(tenantId, schema.module),
     );
     return Promise.all(modules);
   };
@@ -38,13 +35,8 @@ export default class QueryTransactionsLocking {
    * @param   {number} tenantId
    * @returns {ITransactionLockingMetaPOJO}
    */
-  public getTransactionsLockingAll = (
-    tenantId: number
-  ): Promise<ITransactionLockingMetaPOJO> => {
-    return this.getTransactionsLockingModuleMeta(
-      tenantId,
-      TransactionsLockingGroup.All
-    );
+  public getTransactionsLockingAll = (tenantId: number): Promise<ITransactionLockingMetaPOJO> => {
+    return this.getTransactionsLockingModuleMeta(tenantId, TransactionsLockingGroup.All);
   };
 
   /**
@@ -55,18 +47,10 @@ export default class QueryTransactionsLocking {
    */
   public getTransactionsLockingModuleMeta = (
     tenantId: number,
-    module: TransactionsLockingGroup
+    module: TransactionsLockingGroup,
   ): Promise<ITransactionLockingMetaPOJO> => {
-    const meta = this.transactionsLockingRepo.getTransactionsLocking(
-      tenantId,
-      module
-    );
-    return this.transformer.transform(
-      tenantId,
-      meta,
-      new TransactionsLockingMetaTransformer(),
-      { module }
-    );
+    const meta = this.transactionsLockingRepo.getTransactionsLocking(tenantId, module);
+    return this.transformer.transform(tenantId, meta, new TransactionsLockingMetaTransformer(), { module });
   };
 
   /**
@@ -74,12 +58,9 @@ export default class QueryTransactionsLocking {
    * @param   {number} tenantId
    * @returns {Promise<ITransactionsLockingListPOJO>}
    */
-  public getTransactionsLockingList = async (
-    tenantId: number
-  ): Promise<ITransactionsLockingListPOJO> => {
+  public getTransactionsLockingList = async (tenantId: number): Promise<ITransactionsLockingListPOJO> => {
     // Retrieve the current transactions locking type.
-    const lockingType =
-      this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
+    const lockingType = this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
 
     const all = await this.getTransactionsLockingAll(tenantId);
     const modules = await this.getTransactionsLockingModules(tenantId);

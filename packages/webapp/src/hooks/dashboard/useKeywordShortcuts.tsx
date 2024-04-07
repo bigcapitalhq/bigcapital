@@ -9,8 +9,5 @@ import { useAbilitiesFilter } from '../utils/useAbilityContext';
 export const useKeywordShortcuts = () => {
   const abilitiesFilter = useAbilitiesFilter();
 
-  return React.useMemo(
-    () => abilitiesFilter(keyboardShortcuts),
-    [abilitiesFilter],
-  );
+  return React.useMemo(() => abilitiesFilter(keyboardShortcuts), [abilitiesFilter]);
 };

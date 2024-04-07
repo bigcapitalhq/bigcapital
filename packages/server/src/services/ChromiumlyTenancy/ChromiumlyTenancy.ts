@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { PageProperties, PdfFormat } from '@/lib/Chromiumly/_types';
+import { Inject, Service } from 'typedi';
 import { ChromiumlyHtmlConvert } from './ChromiumlyHtmlConvert';
 
 @Service()
@@ -14,12 +14,7 @@ export class ChromiumlyTenancy {
    * @param {PdfFormat} pdfFormat
    * @returns {Promise<Buffer>}
    */
-  public convertHtmlContent(
-    tenantId: number,
-    content: string,
-    properties?: PageProperties,
-    pdfFormat?: PdfFormat
-  ) {
+  public convertHtmlContent(tenantId: number, content: string, properties?: PageProperties, pdfFormat?: PdfFormat) {
     return this.htmlConvert.convert(tenantId, content, properties, pdfFormat);
   }
 }

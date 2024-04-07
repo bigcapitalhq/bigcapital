@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
-import moment from 'moment';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import moment from 'moment';
+import { Service } from 'typedi';
 
 @Service()
 export class JobTransformer extends Transformer {
@@ -36,10 +36,6 @@ export class JobTransformer extends Transformer {
    * @returns
    */
   protected failed = (job): boolean => {
-    return (
-      job.lastFinishedAt &&
-      job.failedAt &&
-      moment(job.failedAt).isSame(job.lastFinishedAt)
-    );
+    return job.lastFinishedAt && job.failedAt && moment(job.failedAt).isSame(job.lastFinishedAt);
   };
 }

@@ -1,5 +1,5 @@
-import events from '@/subscribers/events';
 import { ITenantUserDeletedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
 import { SystemUser } from '@/system/models';
 
 export class SyncTenantUserDelete {
@@ -8,19 +8,14 @@ export class SyncTenantUserDelete {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.tenantUser.onDeleted,
-      this.syncSystemUserOnceUserDeleted
-    );
+    bus.subscribe(events.tenantUser.onDeleted, this.syncSystemUserOnceUserDeleted);
   }
 
   /**
    * Deletes the system user once tenant user be deleted.
    * @param {ITenantUserDeletedPayload} payload -
    */
-  private syncSystemUserOnceUserDeleted = async ({
-    tenantUser,
-  }: ITenantUserDeletedPayload) => {
+  private syncSystemUserOnceUserDeleted = async ({ tenantUser }: ITenantUserDeletedPayload) => {
     await SystemUser.query().where('id', tenantUser.systemUserId).delete();
   };
 }

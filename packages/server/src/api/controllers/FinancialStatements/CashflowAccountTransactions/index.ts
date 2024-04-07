@@ -1,23 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { query } from 'express-validator';
-import {
-  NextFunction,
-  Router,
-  Request,
-  Response,
-  ValidationChain,
-} from 'express';
-import BaseFinancialReportController from '../BaseFinancialReportController';
-import {
-  AbilitySubject,
-  ICashFlowStatementDOO,
-  ReportsAction,
-} from '@/interfaces';
-import CashFlowTable from '@/services/FinancialStatements/CashFlow/CashFlowTable';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import CashflowAccountTransactionsService from '@/services/FinancialStatements/CashflowAccountTransactions/CashflowAccountTransactionsService';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, ICashFlowStatementDOO, ReportsAction } from '@/interfaces';
+import CashFlowTable from '@/services/FinancialStatements/CashFlow/CashFlowTable';
+import CashflowAccountTransactionsService from '@/services/FinancialStatements/CashflowAccountTransactions/CashflowAccountTransactionsService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from '../BaseFinancialReportController';
 
 @Service()
 export default class CashFlowAccountTransactionsController extends BaseFinancialReportController {
@@ -35,14 +25,11 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_CASHFLOW_ACCOUNT_TRANSACTION, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
       this.asyncMiddleware(this.cashFlow),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -77,10 +64,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
    * Transformes the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
-  private transformToTableRows(
-    cashFlowDOO: ICashFlowStatementDOO,
-    tenantId: number
-  ) {
+  private transformToTableRows(cashFlowDOO: ICashFlowStatementDOO, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
     const cashFlowTable = new CashFlowTable(cashFlowDOO, i18n);
 
@@ -101,20 +85,15 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
    * @param {NextFunction} next
    * @returns {Response}
    */
-  private cashFlow = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private cashFlow = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const query = this.matchedQueryData(req);
 
     try {
-      const cashFlowAccountTransactions =
-        await this.cashflowAccountTransactions.cashflowAccountTransactions(
-          tenantId,
-          query
-        );
+      const cashFlowAccountTransactions = await this.cashflowAccountTransactions.cashflowAccountTransactions(
+        tenantId,
+        query,
+      );
 
       const accept = this.accepts(req);
       const acceptType = accept.types(['json', 'application/json+table']);
@@ -126,9 +105,7 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
         //     .send(this.transformToTableRows(cashFlow, tenantId));
         case 'json':
         default:
-          return res
-            .status(200)
-            .send(this.transformJsonResponse(cashFlowAccountTransactions));
+          return res.status(200).send(this.transformJsonResponse(cashFlowAccountTransactions));
       }
     } catch (error) {
       next(error);
@@ -142,20 +119,12 @@ export default class CashFlowAccountTransactionsController extends BaseFinancial
    * @param {Response} res - Response.
    * @param {NextFunction} next -
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ACCOUNT_ID_HAS_INVALID_TYPE') {
-        return res.boom.badRequest(
-          'The given account id should be cash, bank or credit card type.',
-          {
-            errors: [{ type: 'ACCOUNT_ID_HAS_INVALID_TYPE', code: 200 }],
-          }
-        );
+        return res.boom.badRequest('The given account id should be cash, bank or credit card type.', {
+          errors: [{ type: 'ACCOUNT_ID_HAS_INVALID_TYPE', code: 200 }],
+        });
       }
       if (error.errorType === 'account_not_found') {
         return res.boom.notFound('The given account not found.', {

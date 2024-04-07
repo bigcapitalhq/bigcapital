@@ -43,32 +43,21 @@ function ReceivableAgingSummarySheet({
     setLocationQuery({ ...query, numberFormat });
   };
   // Hide the filter drawer once the page unmount.
-  useEffect(
-    () => () => toggleDisplayFilterDrawer(false),
-    [toggleDisplayFilterDrawer],
-  );
+  useEffect(() => () => toggleDisplayFilterDrawer(false), [toggleDisplayFilterDrawer]);
 
   return (
     <ARAgingSummaryProvider filter={query}>
-      <ARAgingSummaryActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <ARAgingSummaryActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <ARAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <ARAgingSummaryHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <ARAgingSummaryHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <ARAgingSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
 
-      <ARAgingSummaryPdfDialog
-        dialogName={DialogsName.ARAgingSummaryPdfPreview}
-      />
+      <ARAgingSummaryPdfDialog dialogName={DialogsName.ARAgingSummaryPdfPreview} />
     </ARAgingSummaryProvider>
   );
 }

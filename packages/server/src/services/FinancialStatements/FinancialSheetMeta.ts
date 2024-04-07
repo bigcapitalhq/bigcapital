@@ -1,7 +1,7 @@
+import { IFinancialSheetCommonMeta } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
 import { Inject, Service } from 'typedi';
 import InventoryService from '../Inventory/Inventory';
-import { IFinancialSheetCommonMeta } from '@/interfaces';
 
 @Service()
 export class FinancialSheetMeta {
@@ -20,8 +20,7 @@ export class FinancialSheetMeta {
     const baseCurrency = tenantMetadata.baseCurrency;
     const dateFormat = tenantMetadata.dateFormat;
 
-    const isCostComputeRunning =
-      this.inventoryService.isItemsCostComputeRunning(tenantId);
+    const isCostComputeRunning = this.inventoryService.isItemsCostComputeRunning(tenantId);
 
     return {
       organizationName,

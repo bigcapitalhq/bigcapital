@@ -1,6 +1,6 @@
-import { Knex } from 'knex';
 import { AbilitySubject } from '@/interfaces';
 import { IFilterRole } from '@/interfaces/DynamicFilter';
+import { Knex } from 'knex';
 
 export interface IItem {
   id: number;
@@ -76,10 +76,7 @@ export interface IItemsService {
   deleteItem(tenantId: number, itemId: number): Promise<void>;
   editItem(tenantId: number, itemId: number, itemDTO: IItemDTO): Promise<IItem>;
   newItem(tenantId: number, itemDTO: IItemDTO): Promise<IItem>;
-  itemsList(
-    tenantId: number,
-    itemsFilter: IItemsFilter
-  ): Promise<{ items: IItem[] }>;
+  itemsList(tenantId: number, itemsFilter: IItemsFilter): Promise<{ items: IItem[] }>;
 }
 
 export interface IItemsFilter extends IDynamicListFilterDTO {

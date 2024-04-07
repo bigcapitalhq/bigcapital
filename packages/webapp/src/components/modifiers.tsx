@@ -4,5 +4,5 @@ export default {
   SELECT_LIST_FILL_BUTTON: 'select-list--fill-button',
   SELECT_LIST_TOOLTIP_ITEMS: 'select-list--tooltip-items',
 
-  FINANCIAL_SHEET_MINIMAL: 'financial-sheet--minimal'
-}
+  FINANCIAL_SHEET_MINIMAL: 'financial-sheet--minimal',
+};

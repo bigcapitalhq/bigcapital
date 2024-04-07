@@ -1,8 +1,8 @@
-import * as R from 'ramda';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { isUndefined } from 'lodash';
 import * as qim from 'qim';
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class I18nService {
@@ -10,11 +10,11 @@ export default class I18nService {
   tenancy: HasTenancyService;
 
   /**
-   * 
-   * @param i18n 
-   * @param attributes 
-   * @param data 
-   * @returns 
+   *
+   * @param i18n
+   * @param attributes
+   * @param data
+   * @returns
    */
   private i18nAttributesMapper(i18n, attributes, data) {
     return attributes.reduce((acc, attr, index) => {
@@ -31,11 +31,7 @@ export default class I18nService {
    * @param {string[]} attributes - Attributes.
    * @param {number} tenantId - Tenant id.
    */
-  public i18nMapper(
-    data: Array<any>,
-    attributes: string[] = [],
-    tenantId: number
-  ) {
+  public i18nMapper(data: Array<any>, attributes: string[] = [], tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
 
     return data.map((_data) => {
@@ -48,11 +44,7 @@ export default class I18nService {
     });
   }
 
-  public i18nApply(
-    paths: (string|Function)[][],
-    data: Array<any>,
-    tenantId: number,
-  ) {
+  public i18nApply(paths: (string | Function)[][], data: Array<any>, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
     const applyCurry = R.curryN(3, qim.apply);
     const transformedData = !isUndefined(data.toJSON) ? data.toJSON() : data;

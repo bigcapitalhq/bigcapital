@@ -1,15 +1,10 @@
-import { Knex } from 'knex';
 import Bluebird from 'bluebird';
-import { getTable, getTableName, getLockTableName } from './TableUtils';
-import getMergedConfig from './SeederConfig';
-import {
-  listAllAndCompleted,
-  getNewMigrations,
-  listCompleted,
-  ensureMigrationTables,
-} from './MigrateUtils';
-import { MigrateItem, SeedMigrationContext, ISeederConfig } from './interfaces';
+import { Knex } from 'knex';
 import { FsMigrations } from './FsMigrations';
+import { ensureMigrationTables, getNewMigrations, listAllAndCompleted, listCompleted } from './MigrateUtils';
+import getMergedConfig from './SeederConfig';
+import { getLockTableName, getTable, getTableName } from './TableUtils';
+import { ISeederConfig, MigrateItem, SeedMigrationContext } from './interfaces';
 
 export class SeedMigration {
   knex: Knex;
@@ -117,7 +112,7 @@ export class SeedMigration {
     batchNo: number,
     migrations: MigrateItem[],
     direction: string,
-    trx: Knex.Transaction
+    trx: Knex.Transaction,
   ): Promise<void> {
     const { tableName } = this.config;
 
@@ -126,9 +121,7 @@ export class SeedMigration {
 
       return this.migrationSource
         .getMigration(migration)
-        .then((migrationContent) =>
-          this.runMigrationContent(migrationContent.default, direction, trx)
-        )
+        .then((migrationContent) => this.runMigrationContent(migrationContent.default, direction, trx))
         .then(() => {
           if (direction === 'up') {
             return trx.into(getTableName(tableName)).insert({
@@ -168,13 +161,8 @@ export class SeedMigration {
 
     // maybe promise
     const migrationContent = await this.migrationSource.getMigration(migration);
-    if (
-      typeof migrationContent.up !== 'function' ||
-      typeof migrationContent.down !== 'function'
-    ) {
-      throw new Error(
-        `Invalid migration: ${migrationName} must have both an up and down function`
-      );
+    if (typeof migrationContent.up !== 'function' || typeof migrationContent.down !== 'function') {
+      throw new Error(`Invalid migration: ${migrationName} must have both an up and down function`);
     }
     return migration;
   }
@@ -186,27 +174,15 @@ export class SeedMigration {
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  private async runBatch(
-    migrations: MigrateItem[],
-    direction: string,
-    trx: Knex.Transaction
-  ): Promise<void> {
+  private async runBatch(migrations: MigrateItem[], direction: string, trx: Knex.Transaction): Promise<void> {
     // Adds flag to migration lock.
     await this.migrationLock(trx);
 
     // When there is a wrapping transaction, some migrations
     // could have been done while waiting for the lock:
-    const completed = await listCompleted(
-      this.config.tableName,
-      this.config.schemaName,
-      trx
-    );
+    const completed = await listCompleted(this.config.tableName, this.config.schemaName, trx);
     // Differentiate between all and completed to get new migrations.
-    const newMigrations = getNewMigrations(
-      this.config.migrationSource,
-      migrations,
-      completed
-    );
+    const newMigrations = getNewMigrations(this.config.migrationSource, migrations, completed);
     // Retrieve the latest batch number.
     const batchNo = await this.latestBatchNumber(trx);
 

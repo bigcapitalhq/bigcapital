@@ -1,16 +1,10 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import {
-  IAccountsFilter,
-  IAccountResponse,
-  IFilterMeta,
-  IAccountsStructureType,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { AccountTransformer } from './AccountTransform';
+import { IAccountResponse, IAccountsFilter, IFilterMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-import { flatToNestedArray } from '@/utils';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { AccountTransformer } from './AccountTransform';
 
 @Service()
 export class GetAccounts {
@@ -31,7 +25,7 @@ export class GetAccounts {
    */
   public getAccountsList = async (
     tenantId: number,
-    filterDTO: IAccountsFilter
+    filterDTO: IAccountsFilter,
   ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> => {
     const { Account } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
@@ -40,11 +34,7 @@ export class GetAccounts {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      Account,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Account, filter);
     // Retrieve accounts model based on the given query.
     const accounts = await Account.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
@@ -54,12 +44,10 @@ export class GetAccounts {
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieves the transformed accounts collection.
-    const transformedAccounts = await this.transformer.transform(
-      tenantId,
-      accounts,
-      new AccountTransformer(),
-      { accountsGraph, structure: filterDTO.structure }
-    );
+    const transformedAccounts = await this.transformer.transform(tenantId, accounts, new AccountTransformer(), {
+      accountsGraph,
+      structure: filterDTO.structure,
+    });
 
     return {
       accounts: transformedAccounts,

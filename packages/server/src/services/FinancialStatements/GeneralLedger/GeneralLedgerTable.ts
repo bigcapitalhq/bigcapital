@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   IColumnMapperMeta,
   IGeneralLedgerMeta,
@@ -10,16 +9,14 @@ import {
   ITableColumnAccessor,
   ITableRow,
 } from '@/interfaces';
+import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
-import { tableRowMapper } from '@/utils';
 import { ROW_TYPE } from './utils';
 
-export class GeneralLedgerTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class GeneralLedgerTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   private data: IGeneralLedgerSheetData;
   private query: IGeneralLedgerSheetQuery;
   private meta: IGeneralLedgerMeta;
@@ -29,11 +26,7 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetData} data
    * @param {IGeneralLedgerSheetQuery} query
    */
-  constructor(
-    data: IGeneralLedgerSheetData,
-    query: IGeneralLedgerSheetQuery,
-    meta: IGeneralLedgerMeta
-  ) {
+  constructor(data: IGeneralLedgerSheetData, query: IGeneralLedgerSheetQuery, meta: IGeneralLedgerMeta) {
     super();
 
     this.data = data;
@@ -137,17 +130,14 @@ export class GeneralLedgerTable extends R.compose(
    * @returns {ITableRow}
    */
   private transactionMapper = R.curry(
-    (
-      account: IGeneralLedgerSheetAccount,
-      transaction: IGeneralLedgerSheetAccountTransaction
-    ): ITableRow => {
+    (account: IGeneralLedgerSheetAccount, transaction: IGeneralLedgerSheetAccountTransaction): ITableRow => {
       const columns = this.transactionColumnAccessors();
       const data = { ...transaction, account };
       const meta = {
         rowTypes: [ROW_TYPE.TRANSACTION],
       };
       return tableRowMapper(data, columns, meta);
-    }
+    },
   );
 
   /**
@@ -155,9 +145,7 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetAccountTransaction[]} transactions
    * @returns {ITableRow[]}
    */
-  private transactionsMapper = (
-    account: IGeneralLedgerSheetAccount
-  ): ITableRow[] => {
+  private transactionsMapper = (account: IGeneralLedgerSheetAccount): ITableRow[] => {
     const transactionMapper = this.transactionMapper(account);
 
     return R.map(transactionMapper)(account.transactions);
@@ -168,9 +156,7 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetAccount} account
    * @returns {ITableRow}
    */
-  private openingBalanceMapper = (
-    account: IGeneralLedgerSheetAccount
-  ): ITableRow => {
+  private openingBalanceMapper = (account: IGeneralLedgerSheetAccount): ITableRow => {
     const columns = this.openingBalanceColumnsAccessors();
     const meta = {
       rowTypes: [ROW_TYPE.OPENING_BALANCE],
@@ -196,16 +182,14 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetAccount} account
    * @returns {ITableRow[]}
    */
-  private transactionsNode = (
-    account: IGeneralLedgerSheetAccount
-  ): ITableRow[] => {
+  private transactionsNode = (account: IGeneralLedgerSheetAccount): ITableRow[] => {
     const openingBalance = this.openingBalanceMapper(account);
     const transactions = this.transactionsMapper(account);
     const closingBalance = this.closingBalanceMapper(account);
 
     return R.when(
       R.always(R.not(R.isEmpty(transactions))),
-      R.prepend(openingBalance)
+      R.prepend(openingBalance),
     )([...transactions, closingBalance]) as ITableRow[];
   };
 
@@ -230,9 +214,7 @@ export class GeneralLedgerTable extends R.compose(
    * @param {IGeneralLedgerSheetAccount[]} accounts
    * @returns {ITableRow[]}
    */
-  private accountsMapper = (
-    accounts: IGeneralLedgerSheetAccount[]
-  ): ITableRow[] => {
+  private accountsMapper = (accounts: IGeneralLedgerSheetAccount[]): ITableRow[] => {
     return this.mapNodesDeep(accounts, this.accountMapper);
   };
 

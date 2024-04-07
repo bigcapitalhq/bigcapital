@@ -25,7 +25,7 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
     taxRates,
     isTaxRatesFetching,
     isTaxRatesLoading,
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
@@ -35,7 +35,6 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
   );
 }
 
-const useTaxRatesLandingContext = () =>
-  React.useContext(TaxRatesLandingContext);
+const useTaxRatesLandingContext = () => React.useContext(TaxRatesLandingContext);
 
 export { TaxRatesLandingProvider, useTaxRatesLandingContext };

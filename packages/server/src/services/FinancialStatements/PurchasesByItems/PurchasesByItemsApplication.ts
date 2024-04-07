@@ -1,13 +1,13 @@
-import { Service, Inject } from 'typedi';
-import { PurchasesByItemsExport } from './PurchasesByItemsExport';
 import {
   IPurchasesByItemsReportQuery,
   IPurchasesByItemsSheet,
   IPurchasesByItemsTable,
 } from '@/interfaces/PurchasesByItemsSheet';
-import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
-import { PurchasesByItemsService } from './PurchasesByItemsService';
+import { Inject, Service } from 'typedi';
+import { PurchasesByItemsExport } from './PurchasesByItemsExport';
 import { PurchasesByItemsPdf } from './PurchasesByItemsPdf';
+import { PurchasesByItemsService } from './PurchasesByItemsService';
+import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
 
 @Service()
 export class PurcahsesByItemsApplication {
@@ -29,10 +29,7 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns
    */
-  public sheet(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<IPurchasesByItemsSheet> {
+  public sheet(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<IPurchasesByItemsSheet> {
     return this.purchasesByItemsSheet.purchasesByItems(tenantId, query);
   }
 
@@ -42,10 +39,7 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns {Promise<IPurchasesByItemsTable>}
    */
-  public table(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<IPurchasesByItemsTable> {
+  public table(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<IPurchasesByItemsTable> {
     return this.purchasesByItemsTable.table(tenantId, query);
   }
 
@@ -55,10 +49,7 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns {Promise<string>}
    */
-  public csv(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<string> {
+  public csv(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<string> {
     return this.purchasesByItemsExport.csv(tenantId, query);
   }
 
@@ -68,10 +59,7 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<Buffer> {
     return this.purchasesByItemsExport.xlsx(tenantId, query);
   }
 
@@ -81,10 +69,7 @@ export class PurcahsesByItemsApplication {
    * @param {IPurchasesByItemsReportQuery} filter
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    tenantId: number,
-    filter: IPurchasesByItemsReportQuery
-  ): Promise<Buffer> {
+  public pdf(tenantId: number, filter: IPurchasesByItemsReportQuery): Promise<Buffer> {
     return this.purchasesByItemsPdf.pdf(tenantId, filter);
   }
 }

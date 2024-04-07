@@ -1,6 +1,6 @@
-import { Container } from 'typedi';
-import { Request, Response, NextFunction } from 'express';
 import config from '@/config';
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
 
 const MAX_CONSECUTIVE_FAILS = config.throttler.login.points;
 
@@ -21,4 +21,4 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   } else {
     next();
   }
-}
+};

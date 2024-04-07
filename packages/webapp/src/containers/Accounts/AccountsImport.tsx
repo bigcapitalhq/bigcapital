@@ -15,11 +15,7 @@ export default function AccountsImport() {
 
   return (
     <DashboardInsider name={'import-accounts'}>
-      <ImportView
-        resource={'accounts'}
-        onCancelClick={handleCancelBtnClick}
-        onImportSuccess={handleImportSuccess}
-      />
+      <ImportView resource={'accounts'} onCancelClick={handleCancelBtnClick} onImportSuccess={handleImportSuccess} />
     </DashboardInsider>
   );
 }

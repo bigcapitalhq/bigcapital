@@ -1,17 +1,8 @@
-import knex from '@/database/knex';
-import {
-  request,
-  expect,
-  createUser,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-import Invite from '@/system/models/Invite'
-import TenantUser from 'models/TenantUser';
+import Invite from '@/system/models/Invite';
 import SystemUser from '@/system/models/SystemUser';
+import TenantUser from 'models/TenantUser';
+import { loginRes, tenantWebsite } from '~/dbInit';
+import { createUser, expect, request } from '~/testInit';
 
 describe('routes: `/api/invite_users`', () => {
   describe('POST: `/api/invite_users/send`', () => {
@@ -31,7 +22,9 @@ describe('routes: `/api/invite_users`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'email', location: 'body',
+        msg: 'Invalid value',
+        param: 'email',
+        location: 'body',
       });
     });
 
@@ -40,7 +33,7 @@ describe('routes: `/api/invite_users`', () => {
         active: false,
         email: 'admin@admin.com',
       });
-      
+
       const res = await request()
         .post('/api/invite/send')
         .set('x-access-token', loginRes.body.token)
@@ -51,7 +44,8 @@ describe('routes: `/api/invite_users`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'USER.EMAIL.ALREADY.REGISTERED', code: 100,
+        type: 'USER.EMAIL.ALREADY.REGISTERED',
+        code: 100,
       });
     });
 
@@ -61,12 +55,11 @@ describe('routes: `/api/invite_users`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          email: 'admin@admin.com'
+          email: 'admin@admin.com',
         });
 
-      const foundInviteToken = await Invite.query()
-        .where('email', 'admin@admin.com').first();
-      
+      const foundInviteToken = await Invite.query().where('email', 'admin@admin.com').first();
+
       expect(foundInviteToken).is.not.null;
       expect(foundInviteToken.token).is.not.null;
     });
@@ -77,11 +70,10 @@ describe('routes: `/api/invite_users`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          email: 'admin@admin.com'
+          email: 'admin@admin.com',
         });
-    
-      const foundTenantUser = await TenantUser.tenant().query()
-        .where('email', 'admin@admin.com').first();
+
+      const foundTenantUser = await TenantUser.tenant().query().where('email', 'admin@admin.com').first();
 
       expect(foundTenantUser).is.not.null;
       expect(foundTenantUser.email).equals('admin@admin.com');
@@ -91,7 +83,7 @@ describe('routes: `/api/invite_users`', () => {
   });
 
   describe('POST: `/api/invite/accept/:token`', () => {
-    let sendInviteRes; 
+    let sendInviteRes;
     let inviteUser;
 
     beforeEach(async () => {
@@ -100,104 +92,97 @@ describe('routes: `/api/invite_users`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          email: 'admin@admin.com'
+          email: 'admin@admin.com',
         });
 
-      inviteUser = await Invite.query()
-        .where('email', 'admin@admin.com')
-        .first();
+      inviteUser = await Invite.query().where('email', 'admin@admin.com').first();
     });
 
     it('Should the given token be valid.', async () => {
-      const res = await request()
-        .post('/api/invite/accept/invalid_token')
-        .send({
-          first_name: 'Ahmed',
-          last_name: 'Bouhuolia',
-          password: 'hard-password',
-          phone_number: '0927918381',
-        });
+      const res = await request().post('/api/invite/accept/invalid_token').send({
+        first_name: 'Ahmed',
+        last_name: 'Bouhuolia',
+        password: 'hard-password',
+        phone_number: '0927918381',
+      });
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'INVITE.TOKEN.NOT.FOUND', code: 300,
+        type: 'INVITE.TOKEN.NOT.FOUND',
+        code: 300,
       });
     });
 
     it('Should first_name be required.', async () => {
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send();
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send();
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'first_name', location: 'body'
+        msg: 'Invalid value',
+        param: 'first_name',
+        location: 'body',
       });
     });
 
     it('Should last_name be required.', async () => {
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send();
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send();
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'last_name', location: 'body'
+        msg: 'Invalid value',
+        param: 'last_name',
+        location: 'body',
       });
     });
 
     it('Should phone_number be required.', async () => {
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send();
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send();
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'phone_number', location: 'body'
+        msg: 'Invalid value',
+        param: 'phone_number',
+        location: 'body',
       });
     });
 
     it('Should password be required.', async () => {
-      const res = await request()
-      .post(`/api/invite/accept/${inviteUser.token}`)
-      .send();
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send();
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'password', location: 'body'
+        msg: 'Invalid value',
+        param: 'password',
+        location: 'body',
       });
     });
 
     it('Should phone number not be already registered.', async () => {
       const user = await createUser(tenantWebsite);
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send({
-          first_name: 'Ahmed',
-          last_name: 'Bouhuolia',
-          password: 'hard-password',
-          phone_number: user.phone_number,
-        })
-      
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send({
+        first_name: 'Ahmed',
+        last_name: 'Bouhuolia',
+        password: 'hard-password',
+        phone_number: user.phone_number,
+      });
+
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PHONE_MUMNER.ALREADY.EXISTS', code: 400,
+        type: 'PHONE_MUMNER.ALREADY.EXISTS',
+        code: 400,
       });
     });
 
     it('Should tenant user details updated after invite accept.', async () => {
       const user = await createUser(tenantWebsite);
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send({
-          first_name: 'Ahmed',
-          last_name: 'Bouhuolia',
-          password: 'hard-password',
-          phone_number: '0927918381',
-        });
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send({
+        first_name: 'Ahmed',
+        last_name: 'Bouhuolia',
+        password: 'hard-password',
+        phone_number: '0927918381',
+      });
 
-      const foundTenantUser = await TenantUser.tenant().query()
-        .where('email', 'admin@admin.com').first();
+      const foundTenantUser = await TenantUser.tenant().query().where('email', 'admin@admin.com').first();
 
       expect(foundTenantUser).is.not.null;
       expect(foundTenantUser.id).is.not.null;
@@ -212,17 +197,14 @@ describe('routes: `/api/invite_users`', () => {
 
     it('Should user details be insereted to the system database', async () => {
       const user = await createUser(tenantWebsite);
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send({
-          first_name: 'Ahmed',
-          last_name: 'Bouhuolia',
-          password: 'hard-password',
-          phone_number: '0927918381',
-        });
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send({
+        first_name: 'Ahmed',
+        last_name: 'Bouhuolia',
+        password: 'hard-password',
+        phone_number: '0927918381',
+      });
 
-      const foundSystemUser = await SystemUser.query()
-        .where('email', 'admin@admin.com').first();
+      const foundSystemUser = await SystemUser.query().where('email', 'admin@admin.com').first();
 
       expect(foundSystemUser).is.not.null;
       expect(foundSystemUser.id).is.not.null;
@@ -237,23 +219,19 @@ describe('routes: `/api/invite_users`', () => {
     });
 
     it('Should invite token be deleted after invite accept.', async () => {
-      const res = await request()
-        .post(`/api/invite/accept/${inviteUser.token}`)
-        .send({
-          first_name: 'Ahmed',
-          last_name: 'Bouhuolia',
-          password: 'hard-password',
-          phone_number: '0927918381',
-        });
-      
+      const res = await request().post(`/api/invite/accept/${inviteUser.token}`).send({
+        first_name: 'Ahmed',
+        last_name: 'Bouhuolia',
+        password: 'hard-password',
+        phone_number: '0927918381',
+      });
+
       const foundInviteToken = await Invite.query().where('token', inviteUser.token);
       expect(foundInviteToken.length).equals(0);
     });
   });
 
   describe('GET: `/api/invite_users/:token`', () => {
-    it('Should response token invalid.', () => {
-
-    });
+    it('Should response token invalid.', () => {});
   });
 });

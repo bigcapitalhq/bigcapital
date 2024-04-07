@@ -1,9 +1,9 @@
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
-  IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
+  IAgingSummaryQuery,
+  IAgingSummaryTotal,
 } from './AgingReport';
 import { IFinancialTable } from './Table';
 
@@ -39,4 +39,3 @@ export interface IARAgingSummarySheet {
   query: IARAgingSummaryQuery;
   columns: IARAgingSummaryColumns;
 }
-

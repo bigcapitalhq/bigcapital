@@ -60,12 +60,7 @@ function PaymentViaLicenseForm({
             <T id={'close'} />
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            disabled={false}
-            type="submit"
-            loading={isSubmitting}
-          >
+          <Button intent={Intent.PRIMARY} disabled={false} type="submit" loading={isSubmitting}>
             <T id={'submit'} />
           </Button>
         </div>

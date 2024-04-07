@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { BillPaymentValidators } from './BillPaymentValidators';
 
 @Service()
@@ -18,9 +18,7 @@ export class GetPaymentBills {
   public async getPaymentBills(tenantId: number, billPaymentId: number) {
     const { Bill, BillPayment } = this.tenancy.models(tenantId);
 
-    const billPayment = await BillPayment.query()
-      .findById(billPaymentId)
-      .throwIfNotFound();
+    const billPayment = await BillPayment.query().findById(billPaymentId).throwIfNotFound();
 
     const paymentBillsIds = billPayment.entries.map((entry) => entry.id);
 

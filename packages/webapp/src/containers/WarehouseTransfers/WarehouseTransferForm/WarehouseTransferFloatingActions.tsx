@@ -29,8 +29,7 @@ export default function WarehouseTransferFloatingActions() {
   const { isSubmitting, submitForm, resetForm } = useFormikContext();
 
   // Warehouse tansfer form context.
-  const { warehouseTransfer, setSubmitPayload } =
-    useWarehouseTransferFormContext();
+  const { warehouseTransfer, setSubmitPayload } = useWarehouseTransferFormContext();
 
   // Handle submit initiate button click.
   const handleSubmitInitiateBtnClick = (event) => {
@@ -93,9 +92,7 @@ export default function WarehouseTransferFloatingActions() {
             content={
               <Menu>
                 <MenuItem
-                  text={
-                    <T id={'warehouse_transfer.save_mark_as_transferred'} />
-                  }
+                  text={<T id={'warehouse_transfer.save_mark_as_transferred'} />}
                   onClick={handleSubmitTransferredBtnClick}
                 />
               </Menu>
@@ -123,10 +120,7 @@ export default function WarehouseTransferFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDraftAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'save_continue_editing'} />}
                   onClick={handleSubmitDraftContinueEditingBtnClick}
@@ -137,10 +131,7 @@ export default function WarehouseTransferFloatingActions() {
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
           >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
+            <Button disabled={isSubmitting} rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
           </Popover>
         </ButtonGroup>
       </If>
@@ -163,12 +154,7 @@ export default function WarehouseTransferFloatingActions() {
       />
 
       {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} disabled={isSubmitting} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

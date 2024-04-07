@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class SaleReceiptActivateBranches {
@@ -13,11 +13,7 @@ export class SaleReceiptActivateBranches {
    * @param   {number} primaryBranchId
    * @returns {Promise<void>}
    */
-  public updateReceiptsWithBranch = async (
-    tenantId: number,
-    primaryBranchId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public updateReceiptsWithBranch = async (tenantId: number, primaryBranchId: number, trx?: Knex.Transaction) => {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Updates the sale receipt with primary branch.

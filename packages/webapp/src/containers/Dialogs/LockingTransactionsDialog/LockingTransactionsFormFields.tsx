@@ -7,12 +7,7 @@ import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 import { useAutofocus } from '@/hooks';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 
 /**
  *  locking Transactions form fields.

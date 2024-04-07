@@ -71,7 +71,4 @@ function ReceiptPaymentTransactions({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(ReceiptPaymentTransactions);
+export default compose(withAlertsActions, withDrawerActions)(ReceiptPaymentTransactions);

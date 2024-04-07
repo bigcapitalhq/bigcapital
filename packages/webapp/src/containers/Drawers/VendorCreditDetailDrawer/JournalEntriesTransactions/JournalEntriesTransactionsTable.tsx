@@ -33,11 +33,7 @@ export function VendorCreditGLEntriesTable() {
   return (
     <Card>
       <AmountDisplayedBaseCurrencyMessage />
-      <JournalEntriesTable
-        columns={columns}
-        data={transactions}
-        loading={isTransactionLoading}
-      />
+      <JournalEntriesTable columns={columns} data={transactions} loading={isTransactionLoading} />
     </Card>
   );
 }

@@ -63,7 +63,4 @@ function InvoiceDeliverAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(InvoiceDeliverAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(InvoiceDeliverAlert);

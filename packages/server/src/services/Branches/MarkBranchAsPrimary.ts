@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
+import { IBranch, IBranchMarkAsPrimaryPayload, IBranchMarkedAsPrimaryPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CURDBranch } from './CRUDBranch';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import {
-  IBranch,
-  IBranchMarkAsPrimaryPayload,
-  IBranchMarkedAsPrimaryPayload,
-} from '@/interfaces';
 
 @Service()
 export class MarkBranchAsPrimary extends CURDBranch {
@@ -28,10 +24,7 @@ export class MarkBranchAsPrimary extends CURDBranch {
    * @param   {number} branchId
    * @returns {Promise<IBranch>}
    */
-  public markAsPrimary = async (
-    tenantId: number,
-    branchId: number
-  ): Promise<IBranch> => {
+  public markAsPrimary = async (tenantId: number, branchId: number): Promise<IBranch> => {
     const { Branch } = this.tenancy.models(tenantId);
 
     // Retrieves the old branch or throw not found service error.

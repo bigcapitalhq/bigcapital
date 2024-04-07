@@ -1,22 +1,20 @@
-import { Inject } from 'typedi';
-import * as R from 'ramda';
-import moment from 'moment';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import {
-  ITransactionsByCustomersService,
-  ITransactionsByCustomersFilter,
-  ITransactionsByCustomersStatement,
   ILedgerEntry,
+  ITransactionsByCustomersFilter,
+  ITransactionsByCustomersService,
+  ITransactionsByCustomersStatement,
 } from '@/interfaces';
-import TransactionsByCustomers from './TransactionsByCustomers';
 import Ledger from '@/services/Accounting/Ledger';
-import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject } from 'typedi';
+import TransactionsByCustomers from './TransactionsByCustomers';
 import { TransactionsByCustomersMeta } from './TransactionsByCustomersMeta';
+import TransactionsByCustomersRepository from './TransactionsByCustomersRepository';
 
-export class TransactionsByCustomersSheet
-  implements ITransactionsByCustomersService
-{
+export class TransactionsByCustomersSheet implements ITransactionsByCustomersService {
   @Inject()
   private tenancy: TenancyService;
 
@@ -60,18 +58,17 @@ export class TransactionsByCustomersSheet
   private async getCustomersOpeningBalanceEntries(
     tenantId: number,
     openingDate: Date,
-    customersIds?: number[]
+    customersIds?: number[],
   ): Promise<ILedgerEntry[]> {
-    const openingTransactions =
-      await this.reportRepository.getCustomersOpeningBalanceTransactions(
-        tenantId,
-        openingDate,
-        customersIds
-      );
+    const openingTransactions = await this.reportRepository.getCustomersOpeningBalanceTransactions(
+      tenantId,
+      openingDate,
+      customersIds,
+    );
 
     return R.compose(
       R.map(R.assoc('date', openingDate)),
-      R.map(R.assoc('accountNormal', 'debit'))
+      R.map(R.assoc('accountNormal', 'debit')),
     )(openingTransactions);
   }
 
@@ -85,20 +82,15 @@ export class TransactionsByCustomersSheet
   private async getCustomersPeriodsEntries(
     tenantId: number,
     fromDate: Date | string,
-    toDate: Date | string
+    toDate: Date | string,
   ): Promise<ILedgerEntry[]> {
-    const transactions =
-      await this.reportRepository.getCustomersPeriodTransactions(
-        tenantId,
-        fromDate,
-        toDate
-      );
+    const transactions = await this.reportRepository.getCustomersPeriodTransactions(tenantId, fromDate, toDate);
     return R.compose(
       R.map(R.assoc('accountNormal', 'debit')),
       R.map((trans) => ({
         ...trans,
         referenceTypeFormatted: trans.referenceTypeFormatted,
-      }))
+      })),
     )(transactions);
   }
 
@@ -110,15 +102,13 @@ export class TransactionsByCustomersSheet
    */
   public async transactionsByCustomers(
     tenantId: number,
-    query: ITransactionsByCustomersFilter
+    query: ITransactionsByCustomersFilter,
   ): Promise<ITransactionsByCustomersStatement> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const i18n = this.tenancy.i18n(tenantId);
 
     // Retrieve tenant information.
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -127,31 +117,16 @@ export class TransactionsByCustomersSheet
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Retrieve the report customers.
-    const customers = await this.reportRepository.getCustomers(
-      tenantId,
-      filter.customersIds
-    );
+    const customers = await this.reportRepository.getCustomers(tenantId, filter.customersIds);
 
-    const openingBalanceDate = moment(filter.fromDate)
-      .subtract(1, 'days')
-      .toDate();
+    const openingBalanceDate = moment(filter.fromDate).subtract(1, 'days').toDate();
 
     // Retrieve all ledger transactions of the opening balance of.
-    const openingBalanceEntries = await this.getCustomersOpeningBalanceEntries(
-      tenantId,
-      openingBalanceDate
-    );
+    const openingBalanceEntries = await this.getCustomersOpeningBalanceEntries(tenantId, openingBalanceDate);
     // Retrieve all ledger transactions between opeing and closing period.
-    const customersTransactions = await this.getCustomersPeriodsEntries(
-      tenantId,
-      query.fromDate,
-      query.toDate
-    );
+    const customersTransactions = await this.getCustomersPeriodsEntries(tenantId, query.fromDate, query.toDate);
     // Concats the opening balance and period customer ledger transactions.
-    const journalTransactions = [
-      ...openingBalanceEntries,
-      ...customersTransactions,
-    ];
+    const journalTransactions = [...openingBalanceEntries, ...customersTransactions];
     const journal = new Ledger(journalTransactions);
 
     // Transactions by customers data mapper.
@@ -161,7 +136,7 @@ export class TransactionsByCustomersSheet
       journal,
       filter,
       tenant.metadata.baseCurrency,
-      i18n
+      i18n,
     );
 
     const meta = await this.transactionsByCustomersMeta.meta(tenantId, filter);

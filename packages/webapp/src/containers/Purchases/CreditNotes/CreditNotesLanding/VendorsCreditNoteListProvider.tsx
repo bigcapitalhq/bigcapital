@@ -3,12 +3,7 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceMeta,
-  useVendorCredits,
-  useRefreshVendorCredits,
-} from '@/hooks/query';
+import { useResourceViews, useResourceMeta, useVendorCredits, useRefreshVendorCredits } from '@/hooks/query';
 
 import { getFieldsFromResourceMeta } from '@/utils';
 
@@ -22,8 +17,7 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
   const { refresh } = useRefreshVendorCredits();
 
   // Fetch accounts resource views and fields.
-  const { data: VendorCreditsViews, isLoading: isViewsLoading } =
-    useResourceViews('vendor_credits');
+  const { data: VendorCreditsViews, isLoading: isViewsLoading } = useResourceViews('vendor_credits');
 
   // Fetch the accounts resource fields.
   const {
@@ -40,8 +34,7 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
   } = useVendorCredits(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(vendorCredits) && !isVendorCreditsLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(vendorCredits) && !isVendorCreditsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
@@ -62,16 +55,12 @@ function VendorsCreditNoteListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'vendor-credits'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'vendor-credits'}>
       <VendorsCreditNoteListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const useVendorsCreditNoteListContext = () =>
-  React.useContext(VendorsCreditNoteListContext);
+const useVendorsCreditNoteListContext = () => React.useContext(VendorsCreditNoteListContext);
 
 export { VendorsCreditNoteListProvider, useVendorsCreditNoteListContext };

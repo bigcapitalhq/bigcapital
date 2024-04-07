@@ -16,12 +16,7 @@ const MoneyInDialogContent = React.createContext();
 /**
  * Money in dialog provider.
  */
-function MoneyInDialogProvider({
-  accountId: defaultAccountId,
-  accountType,
-  dialogName,
-  ...props
-}) {
+function MoneyInDialogProvider({ accountId: defaultAccountId, accountType, dialogName, ...props }) {
   // Holds the selected account id of the dialog.
   const [accountId, setAccountId] = useState<number | null>(defaultAccountId);
 
@@ -40,12 +35,13 @@ function MoneyInDialogProvider({
   } = useBranches({}, { enabled: isBranchFeatureCan });
 
   // Fetch cash flow list.
-  const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } =
-    useCashflowAccounts({}, { keepPreviousData: true });
+  const { data: cashflowAccounts, isLoading: isCashFlowAccountsLoading } = useCashflowAccounts(
+    {},
+    { keepPreviousData: true },
+  );
 
   // Mutation create cashflow transaction.
-  const { mutateAsync: createCashflowTransactionMutate } =
-    useCreateCashflowTransaction();
+  const { mutateAsync: createCashflowTransactionMutate } = useCreateCashflowTransaction();
 
   // Handle fetching settings.
   const { isLoading: isSettingsLoading } = useSettingCashFlow();
@@ -75,11 +71,7 @@ function MoneyInDialogProvider({
     setSubmitPayload,
   };
 
-  const isLoading =
-    isAccountsLoading ||
-    isCashFlowAccountsLoading ||
-    isBranchesLoading ||
-    isSettingsLoading;
+  const isLoading = isAccountsLoading || isCashFlowAccountsLoading || isBranchesLoading || isSettingsLoading;
 
   return (
     <DialogContent isLoading={isLoading}>

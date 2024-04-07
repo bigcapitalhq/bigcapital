@@ -1,19 +1,15 @@
-/* eslint-disable global-require */
-import { mixin, Model } from 'objection';
+import AccountTypesUtils from '@/lib/AccountTypes';
+import { DEFAULT_VIEWS } from '@/services/Accounts/constants';
 import { castArray } from 'lodash';
 import TenantModel from 'models/TenantModel';
-import AccountTypesUtils from '@/lib/AccountTypes';
+/* eslint-disable global-require */
+import { Model, mixin } from 'objection';
 import CashflowAccountSettings from './CashflowAccount.Settings';
-import ModelSettings from './ModelSetting';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Accounts/constants';
 import ModelSearchable from './ModelSearchable';
+import ModelSettings from './ModelSetting';
 
-export default class CashflowAccount extends mixin(TenantModel, [
-  ModelSettings,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class CashflowAccount extends mixin(TenantModel, [ModelSettings, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name.
    */
@@ -100,10 +96,7 @@ export default class CashflowAccount extends mixin(TenantModel, [
    * @return {boolean}
    */
   isParentType(parentType) {
-    return AccountTypesUtils.isParentTypeEqualsKey(
-      this.accountType,
-      parentType
-    );
+    return AccountTypesUtils.isParentTypeEqualsKey(this.accountType, parentType);
   }
 
   /**

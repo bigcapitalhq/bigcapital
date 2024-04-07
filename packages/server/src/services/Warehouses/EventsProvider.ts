@@ -1,22 +1,22 @@
 import {
   BillsActivateWarehousesSubscriber,
   CreditsActivateWarehousesSubscriber,
-  InvoicesActivateWarehousesSubscriber,
-  ReceiptsActivateWarehousesSubscriber,
   EstimatesActivateWarehousesSubscriber,
   InventoryActivateWarehousesSubscriber,
+  InvoicesActivateWarehousesSubscriber,
+  ReceiptsActivateWarehousesSubscriber,
   VendorCreditsActivateWarehousesSubscriber,
 } from './Subscribers/Activate';
+import { DeleteItemWarehousesQuantitySubscriber } from './Subscribers/DeleteItemWarehousesQuantitySubscriber';
 import {
   BillWarehousesValidateSubscriber,
   CreditNoteWarehousesValidateSubscriber,
-  SaleReceiptWarehousesValidateSubscriber,
+  InventoryAdjustmentWarehouseValidatorSubscriber,
   SaleEstimateWarehousesValidateSubscriber,
   SaleInvoicesWarehousesValidateSubscriber,
+  SaleReceiptWarehousesValidateSubscriber,
   VendorCreditWarehousesValidateSubscriber,
-  InventoryAdjustmentWarehouseValidatorSubscriber,
 } from './Subscribers/Validators';
-import { DeleteItemWarehousesQuantitySubscriber } from './Subscribers/DeleteItemWarehousesQuantitySubscriber';
 
 export default () => [
   BillsActivateWarehousesSubscriber,

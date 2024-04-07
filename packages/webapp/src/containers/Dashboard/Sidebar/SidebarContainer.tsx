@@ -52,10 +52,7 @@ function SidebarContainerJSX({
       onMouseLeave={handleSidebarMouseLeave}
     >
       <div className={'sidebar__scroll-wrapper'}>
-        <Scrollbar
-          noDefaultStyles={true}
-          scrollerProps={{ elementRef: scrollerElementRef }}
-        >
+        <Scrollbar noDefaultStyles={true} scrollerProps={{ elementRef: scrollerElementRef }}>
           <div className="sidebar__inner">{children}</div>
         </Scrollbar>
       </div>

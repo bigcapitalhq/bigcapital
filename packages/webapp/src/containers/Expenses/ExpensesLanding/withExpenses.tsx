@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  expensesTableStateChangedFactory,
-  getExpensesTableStateFactory,
-} from '@/store/expenses/expenses.selectors';
+import { expensesTableStateChangedFactory, getExpensesTableStateFactory } from '@/store/expenses/expenses.selectors';
 
 export default (mapState) => {
   const getExpensesTableState = getExpensesTableStateFactory();

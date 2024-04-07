@@ -62,11 +62,7 @@ export default function ARAgingSummaryHeaderGeneralContent() {
                 className={'form-group--aging-before-days'}
                 intent={error && Intent.DANGER}
               >
-                <InputGroup
-                  medium={true}
-                  intent={error && Intent.DANGER}
-                  {...field}
-                />
+                <InputGroup medium={true} intent={error && Intent.DANGER} {...field} />
               </FormGroup>
             )}
           </FastField>
@@ -75,11 +71,7 @@ export default function ARAgingSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <FFormGroup
-            name={'agingPeriods'}
-            label={<T id={'aging_periods'} />}
-            labelInfo={<FieldHint />}
-          >
+          <FFormGroup name={'agingPeriods'} label={<T id={'aging_periods'} />} labelInfo={<FieldHint />}>
             <FInputGroup name={'agingPeriods'} medium={true} />
           </FFormGroup>
         </Col>
@@ -96,10 +88,7 @@ export default function ARAgingSummaryHeaderGeneralContent() {
 
       <Row>
         <Col xs={5}>
-          <FFormGroup
-            name="customersIds"
-            label={<T id={'specific_customers'} />}
-          >
+          <FFormGroup name="customersIds" label={<T id={'specific_customers'} />}>
             <CustomersMultiSelect name="customersIds" items={customers} />
           </FFormGroup>
         </Col>

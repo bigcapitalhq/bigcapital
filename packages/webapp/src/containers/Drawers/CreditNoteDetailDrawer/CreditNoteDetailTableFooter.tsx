@@ -1,12 +1,6 @@
 // @ts-nocheck
 import styled from 'styled-components';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
 /**
@@ -18,10 +12,7 @@ export default function CreditNoteDetailTableFooter() {
   return (
     <CreditNoteDetailsFooterRoot>
       <CreditNoteTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
-        <TotalLine
-          title={<T id={'credit_note.drawer.label_subtotal'} />}
-          value={creditNote.formatted_subtotal}
-        />
+        <TotalLine title={<T id={'credit_note.drawer.label_subtotal'} />} value={creditNote.formatted_subtotal} />
         <TotalLine
           title={<T id={'credit_note.drawer.label_total'} />}
           value={creditNote.formatted_amount}

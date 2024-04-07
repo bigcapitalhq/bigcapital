@@ -2,18 +2,8 @@
 import React from 'react';
 import * as R from 'ramda';
 import { Can, Icon, T } from '@/components';
-import {
-  Button,
-  Menu,
-  MenuItem,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-} from '@blueprintjs/core';
-import {
-  AbilitySubject,
-  InventoryAdjustmentAction,
-} from '@/constants/abilityOption';
+import { Button, Menu, MenuItem, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import { AbilitySubject, InventoryAdjustmentAction } from '@/constants/abilityOption';
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -45,14 +35,8 @@ export const ItemDetailActionsMoreBtn = R.compose(withDialogActions)(
         }}
         content={
           <Menu>
-            <Can
-              I={InventoryAdjustmentAction.Edit}
-              a={AbilitySubject.InventoryAdjustment}
-            >
-              <MenuItem
-                text={<T id={'item.view_drawer.make_adjustment'} />}
-                onClick={handleInventoryAdjustment}
-              />
+            <Can I={InventoryAdjustmentAction.Edit} a={AbilitySubject.InventoryAdjustment}>
+              <MenuItem text={<T id={'item.view_drawer.make_adjustment'} />} onClick={handleInventoryAdjustment} />
             </Can>
           </Menu>
         }

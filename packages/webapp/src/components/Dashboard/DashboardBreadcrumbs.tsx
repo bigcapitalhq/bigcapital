@@ -1,12 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  CollapsibleList,
-  MenuItem,
-  Classes,
-  Boundary,
-} from '@blueprintjs/core';
+import { CollapsibleList, MenuItem, Classes, Boundary } from '@blueprintjs/core';
 import withBreadcrumbs from 'react-router-breadcrumbs-hoc';
 
 function DashboardBreadcrumbs({ breadcrumbs }) {
@@ -21,12 +16,7 @@ function DashboardBreadcrumbs({ breadcrumbs }) {
     >
       {breadcrumbs.map(({ breadcrumb, match }) => {
         return (
-          <MenuItem
-            key={match.url}
-            icon={'folder-close'}
-            text={breadcrumb}
-            onClick={() => history.push(match.url)}
-          />
+          <MenuItem key={match.url} icon={'folder-close'} text={breadcrumb} onClick={() => history.push(match.url)} />
         );
       })}
     </CollapsibleList>

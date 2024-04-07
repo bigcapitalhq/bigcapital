@@ -1,5 +1,5 @@
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class GetBranches {
@@ -8,9 +8,9 @@ export class GetBranches {
 
   /**
    * Retrieves branches list.
-   * @param {number} tenantId 
-   * @param {number} branchId 
-   * @returns 
+   * @param {number} tenantId
+   * @param {number} branchId
+   * @returns
    */
   public getBranches = async (tenantId: number) => {
     const { Branch } = this.tenancy.models(tenantId);

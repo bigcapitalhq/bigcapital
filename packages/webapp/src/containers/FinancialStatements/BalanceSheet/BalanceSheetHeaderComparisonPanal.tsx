@@ -118,12 +118,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FastField name={'percentageOfColumn'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'balance_sheet.percentage_of_column'} />}
-              {...field}
-            />
+            <Checkbox inline={true} small={true} label={<T id={'balance_sheet.percentage_of_column'} />} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -132,12 +127,7 @@ function BalanceSheetHeaderComparisonPanalFields() {
       <FastField name={'percentageOfRow'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'balance_sheet.percentage_of_row'} />}
-              {...field}
-            />
+            <Checkbox inline={true} small={true} label={<T id={'balance_sheet.percentage_of_row'} />} {...field} />
           </FormGroup>
         )}
       </FastField>

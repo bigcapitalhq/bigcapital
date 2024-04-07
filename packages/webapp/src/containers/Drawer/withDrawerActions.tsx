@@ -7,10 +7,8 @@ export const mapStateToProps = (state, props) => {
 };
 
 export const mapDispatchToProps = (dispatch) => ({
-  openDrawer: (name, payload) =>
-    dispatch({ type: t.OPEN_DRAWER, name, payload }),
-  closeDrawer: (name, payload) =>
-    dispatch({ type: t.CLOSE_DRAWER, name, payload }),
+  openDrawer: (name, payload) => dispatch({ type: t.OPEN_DRAWER, name, payload }),
+  closeDrawer: (name, payload) => dispatch({ type: t.CLOSE_DRAWER, name, payload }),
 });
 
 export default connect(null, mapDispatchToProps);

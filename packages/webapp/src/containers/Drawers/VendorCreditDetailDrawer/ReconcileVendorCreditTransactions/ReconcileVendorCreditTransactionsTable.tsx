@@ -6,10 +6,7 @@ import { TableStyle } from '@/constants';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
-import {
-  useReconcileVendorCreditTransactionsTableColumns,
-  ActionsMenu,
-} from './components';
+import { useReconcileVendorCreditTransactionsTableColumns, ActionsMenu } from './components';
 import { compose } from '@/utils';
 
 /**
@@ -43,6 +40,4 @@ function ReconcileVendorCreditTransactionsTable({
   );
 }
 
-export default compose(withAlertsActions)(
-  ReconcileVendorCreditTransactionsTable,
-);
+export default compose(withAlertsActions)(ReconcileVendorCreditTransactionsTable);

@@ -61,16 +61,10 @@ export interface ImportOperError {
   error: ImportInsertError[];
   index: number;
 }
- 
+
 export interface ImportableContext {
-  import: Import,
+  import: Import;
   rowIndex: number;
 }
 
-
-export const ImportDateFormats = [
-  'yyyy-MM-dd',
-  'dd.MM.yy',
-  'MM/dd/yy',
-  'dd/MMM/yyyy'
-]
+export const ImportDateFormats = ['yyyy-MM-dd', 'dd.MM.yy', 'MM/dd/yy', 'dd/MMM/yyyy'];

@@ -9,10 +9,7 @@ import { Align, CLASSES } from '@/constants';
 import { useVendorsBalanceSummaryContext } from './VendorsBalanceSummaryProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
-import {
-  useVendorBalanceSummaryCsvExport,
-  useVendorBalanceSummaryXlsxExport,
-} from '@/hooks/query';
+import { useVendorBalanceSummaryCsvExport, useVendorBalanceSummaryXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve vendors balance summary columns.
@@ -71,10 +68,7 @@ const dynamicColumns = (columns) => {
     R.compose(
       R.when(R.pathEq(['key'], 'name'), vendorColumnAccessor),
       R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
-      ),
+      R.when(R.pathEq(['key'], 'percentage_of_column'), percentageColumnAccessor),
     ),
   )(columns);
 };
@@ -165,10 +159,7 @@ export function VendorSummarySheetExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

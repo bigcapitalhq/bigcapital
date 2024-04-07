@@ -18,18 +18,11 @@ function WarehouseTransferNumberDialogProvider({ query, ...props }) {
 
   return (
     <DialogContent isLoading={isSettingsLoading}>
-      <WarehouseTransferNumberDilaogContext.Provider
-        value={provider}
-        {...props}
-      />
+      <WarehouseTransferNumberDilaogContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useWarehouseTransferNumberDialogContext = () =>
-  React.useContext(WarehouseTransferNumberDilaogContext);
+const useWarehouseTransferNumberDialogContext = () => React.useContext(WarehouseTransferNumberDilaogContext);
 
-export {
-  WarehouseTransferNumberDialogProvider,
-  useWarehouseTransferNumberDialogContext,
-};
+export { WarehouseTransferNumberDialogProvider, useWarehouseTransferNumberDialogContext };

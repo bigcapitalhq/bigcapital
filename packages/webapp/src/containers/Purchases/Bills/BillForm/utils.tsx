@@ -21,10 +21,7 @@ import {
   aggregateItemEntriesTaxRates,
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
-import {
-  isLandedCostDisabled,
-  getEntriesTotal,
-} from '@/containers/Entries/utils';
+import { isLandedCostDisabled, getEntriesTotal } from '@/containers/Entries/utils';
 import { useBillFormContext } from './BillFormProvider';
 import { TaxType } from '@/interfaces/TaxRates';
 
@@ -65,8 +62,7 @@ export const defaultBill = {
 export const ERRORS = {
   // Bills
   BILL_NUMBER_EXISTS: 'BILL.NUMBER.EXISTS',
-  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
-    'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
   BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT: 'BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT',
 };
 /**
@@ -78,21 +74,13 @@ export const transformToEditForm = (bill) => {
       ...transformToForm(entry, defaultBillEntry),
       landed_cost_disabled: isLandedCostDisabled(entry.item),
     })),
-    ...repeatValue(
-      defaultBillEntry,
-      Math.max(MIN_LINES_NUMBER - bill.entries.length, 0),
-    ),
+    ...repeatValue(defaultBillEntry, Math.max(MIN_LINES_NUMBER - bill.entries.length, 0)),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultBillEntry),
-    updateItemsEntriesTotal,
-  )(initialEntries);
+  const entries = R.compose(ensureEntriesHaveEmptyLine(defaultBillEntry), updateItemsEntriesTotal)(initialEntries);
 
   return {
     ...transformToForm(bill, defaultBill),
-    inclusive_exclusive_tax: bill.is_inclusive_tax
-      ? TaxType.Inclusive
-      : TaxType.Exclusive,
+    inclusive_exclusive_tax: bill.is_inclusive_tax ? TaxType.Inclusive : TaxType.Exclusive,
     entries,
   };
 };
@@ -101,10 +89,7 @@ export const transformToEditForm = (bill) => {
  * Transformes bill entries to submit request.
  */
 export const transformEntriesToSubmit = (entries) => {
-  const transformBillEntry = R.compose(
-    R.omit(['amount']),
-    R.curry(transformToForm)(R.__, defaultBillEntry),
-  );
+  const transformBillEntry = R.compose(R.omit(['amount']), R.curry(transformToForm)(R.__, defaultBillEntry));
   return R.compose(orderingLinesIndexes, R.map(transformBillEntry))(entries);
 };
 
@@ -132,31 +117,21 @@ export const transformFormValuesToRequest = (values) => {
  * Handle delete errors.
  */
 export const handleDeleteErrors = (errors) => {
-  if (
-    errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES')
-  ) {
+  if (errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_PAYMENT_ENTRIES')) {
     AppToaster.show({
       message: intl.get('cannot_delete_bill_that_has_payment_transactions'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_LANDED_COSTS')
-  ) {
+  if (errors.find((error) => error.type === 'BILL_HAS_ASSOCIATED_LANDED_COSTS')) {
     AppToaster.show({
-      message: intl.get(
-        'cannot_delete_bill_that_has_associated_landed_cost_transactions',
-      ),
+      message: intl.get('cannot_delete_bill_that_has_associated_landed_cost_transactions'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find((error) => error.type === 'BILL_HAS_APPLIED_TO_VENDOR_CREDIT')
-  ) {
+  if (errors.find((error) => error.type === 'BILL_HAS_APPLIED_TO_VENDOR_CREDIT')) {
     AppToaster.show({
-      message: intl.get(
-        'bills.error.you_couldn_t_delete_bill_has_reconciled_with_vendor_credit',
-      ),
+      message: intl.get('bills.error.you_couldn_t_delete_bill_has_reconciled_with_vendor_credit'),
       intent: Intent.DANGER,
     });
   }
@@ -176,10 +151,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 // Transform response error to fields.
@@ -189,11 +161,7 @@ export const handleErrors = (errors, { setErrors }) => {
       bill_number: intl.get('bill_number_exists'),
     });
   }
-  if (
-    errors.some(
-      (e) => e.type === ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED,
-    )
-  ) {
+  if (errors.some((e) => e.type === ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED)) {
     setErrors(
       AppToaster.show({
         intent: Intent.DANGER,
@@ -201,9 +169,7 @@ export const handleErrors = (errors, { setErrors }) => {
       }),
     );
   }
-  if (
-    errors.some((e) => e.type === ERRORS.BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT)
-  ) {
+  if (errors.some((e) => e.type === ERRORS.BILL_AMOUNT_SMALLER_THAN_PAID_AMOUNT)) {
     AppToaster.show({
       intent: Intent.DANGER,
       message: intl.get('bill.total_smaller_than_paid_amount'),
@@ -232,8 +198,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -255,10 +220,7 @@ export const useBillTotals = () => {
   const total = useBillTotal();
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(subtotal, currencyCode, { money: false }),
@@ -273,15 +235,9 @@ export const useBillTotals = () => {
     [paymentTotal, currencyCode],
   );
   // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
+  const dueTotal = React.useMemo(() => total - paymentTotal, [total, paymentTotal]);
   // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
+  const formattedDueTotal = React.useMemo(() => formattedAmount(dueTotal, currencyCode), [dueTotal, currencyCode]);
 
   return {
     total,
@@ -313,13 +269,8 @@ export const useBillIsForeignCustomer = () => {
  * Re-calculates the entries tax amount when editing.
  * @returns {string}
  */
-export const composeEntriesOnEditInclusiveTax = (
-  inclusiveExclusiveTax: string,
-  entries,
-) => {
-  return R.compose(
-    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
-  )(entries);
+export const composeEntriesOnEditInclusiveTax = (inclusiveExclusiveTax: string, entries) => {
+  return R.compose(assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'))(entries);
 };
 
 /**
@@ -387,7 +338,5 @@ export const useBillTotal = () => {
   const totalTaxAmount = useBillTotalTaxAmount();
   const isExclusiveTax = useIsBillTaxExclusive();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(subtotal);
 };

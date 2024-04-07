@@ -21,12 +21,7 @@ function QuickPaymentMadeForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
-  const {
-    bill,
-    dialogName,
-    createPaymentMadeMutate,
-  } = useQuickPaymentMadeContext();
+  const { bill, dialogName, createPaymentMadeMutate } = useQuickPaymentMadeContext();
 
   // Initial form values
   const initialValues = {

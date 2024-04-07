@@ -8,12 +8,12 @@ export default {
     sortField: 'name',
   },
   fields: {
-    'payment_date': {
+    payment_date: {
       name: 'expense.field.payment_date',
       column: 'payment_date',
       fieldType: 'date',
     },
-    'payment_account': {
+    payment_account: {
       name: 'expense.field.payment_account',
       column: 'payment_account_id',
       fieldType: 'relation',
@@ -24,27 +24,27 @@ export default {
       relationEntityLabel: 'name',
       relationEntityKey: 'slug',
     },
-    'amount': {
+    amount: {
       name: 'expense.field.amount',
       column: 'total_amount',
       fieldType: 'number',
     },
-    'reference_no': {
+    reference_no: {
       name: 'expense.field.reference_no',
       column: 'reference_no',
       fieldType: 'text',
     },
-    'description': {
+    description: {
       name: 'expense.field.description',
       column: 'description',
       fieldType: 'text',
     },
-    'published': {
+    published: {
       name: 'expense.field.published',
       column: 'published_at',
       fieldType: 'date',
     },
-    'status': {
+    status: {
       name: 'expense.field.status',
       fieldType: 'enumeration',
       options: [
@@ -54,7 +54,7 @@ export default {
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
-    'created_at': {
+    created_at: {
       name: 'expense.field.created_at',
       column: 'created_at',
       fieldType: 'date',

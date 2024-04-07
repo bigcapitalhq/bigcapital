@@ -23,11 +23,7 @@ export default function ContactsListCellRenderer({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(
-        'form-group--select-list',
-        'form-group--contacts-list',
-        Classes.FILL,
-      )}
+      className={classNames('form-group--select-list', 'form-group--contacts-list', Classes.FILL)}
     >
       <ContactsSuggestField
         contactsList={contacts}

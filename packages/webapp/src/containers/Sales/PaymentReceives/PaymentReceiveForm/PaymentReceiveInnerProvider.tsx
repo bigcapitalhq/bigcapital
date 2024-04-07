@@ -45,7 +45,6 @@ function PaymentReceiveInnerProvider({ ...props }) {
   return <PaymentReceiveInnerContext.Provider value={provider} {...props} />;
 }
 
-const usePaymentReceiveInnerContext = () =>
-  useContext(PaymentReceiveInnerContext);
+const usePaymentReceiveInnerContext = () => useContext(PaymentReceiveInnerContext);
 
 export { PaymentReceiveInnerProvider, usePaymentReceiveInnerContext };

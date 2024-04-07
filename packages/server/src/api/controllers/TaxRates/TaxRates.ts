@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response } from 'express';
-import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import { TaxRatesApplication } from '@/services/TaxRates/TaxRatesApplication';
 import CheckAbilities from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from '@/services/TaxRates/constants';
 import { AbilitySubject, TaxRateAction } from '@/interfaces';
+import { TaxRatesApplication } from '@/services/TaxRates/TaxRatesApplication';
+import { ERRORS } from '@/services/TaxRates/constants';
+import { Request, Response, Router } from 'express';
+import { body, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class TaxRatesController extends BaseController {
@@ -26,7 +26,7 @@ export class TaxRatesController extends BaseController {
       this.taxRateValidationSchema,
       this.validationResult,
       asyncMiddleware(this.createTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
@@ -34,7 +34,7 @@ export class TaxRatesController extends BaseController {
       [param('id').exists().toInt(), ...this.taxRateValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/active',
@@ -42,7 +42,7 @@ export class TaxRatesController extends BaseController {
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.activateTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/inactive',
@@ -50,7 +50,7 @@ export class TaxRatesController extends BaseController {
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.inactivateTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
@@ -58,7 +58,7 @@ export class TaxRatesController extends BaseController {
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.deleteTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
@@ -66,14 +66,14 @@ export class TaxRatesController extends BaseController {
       [param('id').exists().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTaxRate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
       CheckAbilities(TaxRateAction.VIEW, AbilitySubject.TaxRate),
       this.validationResult,
       asyncMiddleware(this.getTaxRates.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -103,10 +103,7 @@ export class TaxRatesController extends BaseController {
     const createTaxRateDTO = this.matchedBodyData(req);
 
     try {
-      const taxRate = await this.taxRatesApplication.createTaxRate(
-        tenantId,
-        createTaxRateDTO
-      );
+      const taxRate = await this.taxRatesApplication.createTaxRate(tenantId, createTaxRateDTO);
       return res.status(200).send({
         data: taxRate,
       });
@@ -126,11 +123,7 @@ export class TaxRatesController extends BaseController {
     const { id: taxRateId } = req.params;
 
     try {
-      const taxRate = await this.taxRatesApplication.editTaxRate(
-        tenantId,
-        taxRateId,
-        editTaxRateDTO
-      );
+      const taxRate = await this.taxRatesApplication.editTaxRate(tenantId, taxRateId, editTaxRateDTO);
       return res.status(200).send({
         data: taxRate,
       });
@@ -170,10 +163,7 @@ export class TaxRatesController extends BaseController {
     const { id: taxRateId } = req.params;
 
     try {
-      const taxRate = await this.taxRatesApplication.getTaxRate(
-        tenantId,
-        taxRateId
-      );
+      const taxRate = await this.taxRatesApplication.getTaxRate(tenantId, taxRateId);
       return res.status(200).send({ data: taxRate });
     } catch (error) {
       next(error);

@@ -35,18 +35,9 @@ export function FinancialSheet({
   className,
 }) {
   const format = 'DD MMMM YYYY';
-  const formattedFromDate = useMemo(
-    () => moment(fromDate).format(format),
-    [fromDate],
-  );
-  const formattedToDate = useMemo(
-    () => moment(toDate).format(format),
-    [toDate],
-  );
-  const formattedAsDate = useMemo(
-    () => moment(asDate).format(format),
-    [asDate],
-  );
+  const formattedFromDate = useMemo(() => moment(fromDate).format(format), [fromDate]);
+  const formattedToDate = useMemo(() => moment(toDate).format(format), [toDate]);
+  const formattedAsDate = useMemo(() => moment(asDate).format(format), [asDate]);
   const methodsLabels = useMemo(
     () => ({
       cash: intl.get('cash'),
@@ -55,17 +46,10 @@ export function FinancialSheet({
     [],
   );
   const getBasisLabel = useCallback((b) => methodsLabels[b], [methodsLabels]);
-  const basisLabel = useMemo(
-    () => getBasisLabel(basis),
-    [getBasisLabel, basis],
-  );
+  const basisLabel = useMemo(() => getBasisLabel(basis), [getBasisLabel, basis]);
 
   return (
-    <FinancialSheetRoot
-      minimal={minimal}
-      fullWidth={fullWidth}
-      className={className}
-    >
+    <FinancialSheetRoot minimal={minimal} fullWidth={fullWidth} className={className}>
       {companyName && <FinancialSheetTitle>{companyName}</FinancialSheetTitle>}
       {sheetType && <FinancialSheetType>{sheetType}</FinancialSheetType>}
 
@@ -74,15 +58,12 @@ export function FinancialSheet({
           <T id={'as'} /> {formattedAsDate}
         </If>
         <If condition={fromDate && toDate}>
-          <T id={'from'} /> {formattedFromDate} | <T id={'to'} />{' '}
-          {formattedToDate}
+          <T id={'from'} /> {formattedFromDate} | <T id={'to'} /> {formattedToDate}
         </If>
       </FinancialSheetDate>
 
       <FinancialSheetTable>{children}</FinancialSheetTable>
-      <FinancialSheetAccountingBasis>
-        {accountingBasis}
-      </FinancialSheetAccountingBasis>
+      <FinancialSheetAccountingBasis>{accountingBasis}</FinancialSheetAccountingBasis>
 
       <FinancialSheetFooter>
         {basisLabel && (
@@ -91,9 +72,7 @@ export function FinancialSheet({
           </FinancialSheetFooterBasis>
         )}
         {currentDate && (
-          <FinancialSheetFooterCurrentTime>
-            {moment().format('YYYY MMM DD  HH:MM')}
-          </FinancialSheetFooterCurrentTime>
+          <FinancialSheetFooterCurrentTime>{moment().format('YYYY MMM DD  HH:MM')}</FinancialSheetFooterCurrentTime>
         )}
       </FinancialSheetFooter>
     </FinancialSheetRoot>

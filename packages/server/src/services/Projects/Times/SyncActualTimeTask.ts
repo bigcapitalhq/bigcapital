@@ -1,6 +1,6 @@
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class SyncActualTimeTask {
@@ -18,13 +18,11 @@ export class SyncActualTimeTask {
     tenantId: number,
     taskId: number,
     actualHours: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Task } = this.tenancy.models(tenantId);
 
-    await Task.query(trx)
-      .findById(taskId)
-      .increment('actualHours', actualHours);
+    await Task.query(trx).findById(taskId).increment('actualHours', actualHours);
   };
 
   /**
@@ -38,12 +36,10 @@ export class SyncActualTimeTask {
     tenantId: number,
     taskId: number,
     actualHours: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Task } = this.tenancy.models(tenantId);
 
-    await Task.query(trx)
-      .findById(taskId)
-      .decrement('actualHours', actualHours);
+    await Task.query(trx).findById(taskId).decrement('actualHours', actualHours);
   };
 }

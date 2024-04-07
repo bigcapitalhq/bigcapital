@@ -2,23 +2,10 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { isNumber } from 'lodash';
-import {
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Intent,
-  Tag,
-  Position,
-  Button,
-  Popover,
-} from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem, Intent, Tag, Position, Button, Popover } from '@blueprintjs/core';
 import { FormattedMessage as T, Icon, Money, If, Can } from '@/components';
 import { isBlank, safeCallback } from '@/utils';
-import {
-  AbilitySubject,
-  ItemAction,
-  InventoryAdjustmentAction,
-} from '@/constants/abilityOption';
+import { AbilitySubject, ItemAction, InventoryAdjustmentAction } from '@/constants/abilityOption';
 
 /**
  * Publish accessor
@@ -55,9 +42,7 @@ export const ItemCodeAccessor = (row) =>
   );
 
 export const QuantityOnHandCell = ({ cell: { value } }) => {
-  return isNumber(value) ? (
-    <span className={value < 0 ? 'quantity_on_hand' : null}>{value}</span>
-  ) : null;
+  return isNumber(value) ? <span className={value < 0 ? 'quantity_on_hand' : null}>{value}</span> : null;
 };
 
 export const CostPriceCell = ({ cell: { value } }) => {
@@ -78,15 +63,7 @@ export const ItemTypeAccessor = (row) => {
 
 export function ItemsActionMenuList({
   row: { original },
-  payload: {
-    onEditItem,
-    onInactivateItem,
-    onActivateItem,
-    onMakeAdjustment,
-    onDeleteItem,
-    onDuplicate,
-    onViewDetails,
-  },
+  payload: { onEditItem, onInactivateItem, onActivateItem, onMakeAdjustment, onDeleteItem, onDuplicate, onViewDetails },
 }) {
   return (
     <Menu>
@@ -127,10 +104,7 @@ export function ItemsActionMenuList({
           />
         </If>
       </Can>
-      <Can
-        I={InventoryAdjustmentAction.Edit}
-        a={AbilitySubject.InventoryAdjustment}
-      >
+      <Can I={InventoryAdjustmentAction.Edit} a={AbilitySubject.InventoryAdjustment}>
         <If condition={original.type === 'inventory'}>
           <MenuItem
             text={intl.get('make_adjustment')}
@@ -154,10 +128,7 @@ export function ItemsActionMenuList({
 
 export const ItemsActionsTableCell = (props) => {
   return (
-    <Popover
-      position={Position.RIGHT_BOTTOM}
-      content={<ItemsActionMenuList {...props} />}
-    >
+    <Popover position={Position.RIGHT_BOTTOM} content={<ItemsActionMenuList {...props} />}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

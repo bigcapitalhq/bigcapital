@@ -63,7 +63,4 @@ function ItemInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ItemInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ItemInactivateAlert);

@@ -10,7 +10,6 @@ import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
-
 /**
  * Customers views tabs.
  */

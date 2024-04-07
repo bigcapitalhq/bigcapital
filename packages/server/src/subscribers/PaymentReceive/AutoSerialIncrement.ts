@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
+import { IPaymentReceiveCreatedPayload } from '@/interfaces';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import { PaymentReceiveIncrement } from '@/services/Sales/PaymentReceives/PaymentReceiveIncrement';
-import { IPaymentReceiveCreatedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber {
@@ -14,10 +14,7 @@ export default class PaymentReceiveAutoSerialSubscriber extends EventSubscriber 
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.paymentReceive.onCreated,
-      this.handlePaymentNextNumberIncrement
-    );
+    bus.subscribe(events.paymentReceive.onCreated, this.handlePaymentNextNumberIncrement);
   }
 
   /**

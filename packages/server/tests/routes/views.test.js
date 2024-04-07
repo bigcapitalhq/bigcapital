@@ -1,17 +1,9 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
+import 'models/ResourceField';
 import View from 'models/View';
 import ViewRole from 'models/ViewRole';
-import 'models/ResourceField';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 import ViewColumn from '../../src/models/ViewColumn';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
 
 describe('routes: `/views`', () => {
   describe('GET: `/views`', () => {
@@ -51,10 +43,7 @@ describe('routes: `/views`', () => {
         roles_logic_expression: '',
       });
 
-      const res = await request()
-        .get(`/api/views/${resourceView.id}`)
-        .query({ resource_name: 'resource_name' })
-        .send();
+      const res = await request().get(`/api/views/${resourceView.id}`).query({ resource_name: 'resource_name' }).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -76,7 +65,8 @@ describe('routes: `/views`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors[0]).deep.equals({
-        type: 'VIEW_NOT_FOUND', code: 100,
+        type: 'VIEW_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -138,7 +128,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'name', location: 'body',
+        msg: 'Invalid value',
+        param: 'name',
+        location: 'body',
       });
     });
 
@@ -152,7 +144,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'resource_name', location: 'body',
+        msg: 'Invalid value',
+        param: 'resource_name',
+        location: 'body',
       });
     });
 
@@ -169,7 +163,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'columns', location: 'body',
+        msg: 'Invalid value',
+        param: 'columns',
+        location: 'body',
       });
     });
 
@@ -186,7 +182,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'columns', location: 'body',
+        msg: 'Invalid value',
+        param: 'columns',
+        location: 'body',
       });
     });
 
@@ -205,7 +203,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'roles[0].field_key', location: 'body',
+        msg: 'Invalid value',
+        param: 'roles[0].field_key',
+        location: 'body',
       });
     });
 
@@ -235,9 +235,7 @@ describe('routes: `/views`', () => {
         .send({
           resource_name: resource.name,
           label: 'View Label',
-          roles: [
-            { index: 'not_numeric' },
-          ],
+          roles: [{ index: 'not_numeric' }],
         })
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId);
@@ -265,22 +263,25 @@ describe('routes: `/views`', () => {
             { key: 'thumbnail', index: 1 },
             { key: 'status', index: 1 },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'amount',
-            comparator: 'equals',
-            value: '100',
-          }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'amount',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
           logic_expression: '1',
         });
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'RESOURCE_NOT_FOUND', code: 100,
+        type: 'RESOURCE_NOT_FOUND',
+        code: 100,
       });
     });
 
-    it('Should response invalid logic expression.', async () =>{
+    it('Should response invalid logic expression.', async () => {
       const resource = await tenantFactory.create('resource');
       await tenantFactory.create('resource_field', {
         resource_id: resource.id,
@@ -295,19 +296,20 @@ describe('routes: `/views`', () => {
           resource_name: resource.name,
           logic_expression: '100 && 100',
           name: 'View Label',
-          columns: [
-            { key: 'amount', index: 1 },
+          columns: [{ key: 'amount', index: 1 }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'amount',
+              comparator: 'equals',
+              value: '100',
+            },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'amount',
-            comparator: 'equals',
-            value: '100',
-          }],
         });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID', code: 400,
+        type: 'VIEW.ROLES.LOGIC.EXPRESSION.INVALID',
+        code: 400,
       });
     });
 
@@ -328,16 +330,20 @@ describe('routes: `/views`', () => {
             { key: 'thumbnail', index: 1 },
             { key: 'status', index: 1 },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'price',
-            comparator: 'equals',
-            value: '100',
-          }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'price',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'RESOURCE_FIELDS_NOT_EXIST', code: 100, fields: ['price'],
+        type: 'RESOURCE_FIELDS_NOT_EXIST',
+        code: 100,
+        fields: ['price'],
       });
     });
 
@@ -361,16 +367,20 @@ describe('routes: `/views`', () => {
             { key: 'thumbnail', index: 2 },
             { key: 'status', index: 3 },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'price',
-            comparator: 'equals',
-            value: '100',
-          }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'price',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'COLUMNS_NOT_EXIST', code: 200, columns: ['thumbnail', 'status'],
+        type: 'COLUMNS_NOT_EXIST',
+        code: 200,
+        columns: ['thumbnail', 'status'],
       });
     });
 
@@ -389,15 +399,15 @@ describe('routes: `/views`', () => {
           resource_name: resource.name,
           name: 'View Label',
           logic_expression: '1',
-          columns: [
-            { key: 'amount', index: 1 },
+          columns: [{ key: 'amount', index: 1 }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'amount',
+              comparator: 'equals',
+              value: '100',
+            },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'amount',
-            comparator: 'equals',
-            value: '100',
-          }],
         });
 
       const storedView = await View.tenant().query().where('name', 'View Label').first();
@@ -424,12 +434,14 @@ describe('routes: `/views`', () => {
           name: 'View Label',
           columns: [{ key: 'amount', index: 1 }],
           logic_expression: '1',
-          roles: [{
-            index: 1,
-            field_key: 'amount',
-            comparator: 'equals',
-            value: '100',
-          }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'amount',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       const viewRoles = await ViewRole.tenant().query().where('view_id', res.body.id);
@@ -457,22 +469,20 @@ describe('routes: `/views`', () => {
           resource_name: resource.name,
           name: 'View Label',
           logic_expression: '1',
-          columns: [
-            { key: 'amount', index: 1 },
+          columns: [{ key: 'amount', index: 1 }],
+          roles: [
+            {
+              index: 1,
+              field_key: 'amount',
+              comparator: 'equals',
+              value: '100',
+            },
           ],
-          roles: [{
-            index: 1,
-            field_key: 'amount',
-            comparator: 'equals',
-            value: '100',
-          }],
         });
 
       const viewColumns = await ViewColumn.tenant().query().where('view_id', res.body.id);
       expect(viewColumns.length).equals(1);
     });
-
-   
   });
 
   describe('POST: `/views/:view_id`', () => {
@@ -487,7 +497,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'name', location: 'body',
+        msg: 'Invalid value',
+        param: 'name',
+        location: 'body',
       });
     });
 
@@ -505,7 +517,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'columns', location: 'body',
+        msg: 'Invalid value',
+        param: 'columns',
+        location: 'body',
       });
     });
 
@@ -519,13 +533,16 @@ describe('routes: `/views`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          columns: 'columns'
+          columns: 'columns',
         });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'columns', location: 'body', value: 'columns',
+        msg: 'Invalid value',
+        param: 'columns',
+        location: 'body',
+        value: 'columns',
       });
     });
 
@@ -543,7 +560,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'roles[0].field_key', location: 'body',
+        msg: 'Invalid value',
+        param: 'roles[0].field_key',
+        location: 'body',
       });
     });
 
@@ -561,7 +580,9 @@ describe('routes: `/views`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'roles[0].comparator', location: 'body',
+        msg: 'Invalid value',
+        param: 'roles[0].comparator',
+        location: 'body',
       });
     });
 
@@ -599,25 +620,33 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: 'amount',
-            index: 1,
-          }, {
-            key: 'thumbnail',
-            index: 2,
-          }, {
-            key: 'status',
-            index: 3,
-          }],
-          roles: [{
-            index: 1,
-            field_key: 'price',
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: 'amount',
+              index: 1,
+            },
+            {
+              key: 'thumbnail',
+              index: 2,
+            },
+            {
+              key: 'status',
+              index: 3,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: 'price',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'RESOURCE_FIELDS_NOT_EXIST', code: 100, fields: ['price'],
+        type: 'RESOURCE_FIELDS_NOT_EXIST',
+        code: 100,
+        fields: ['price'],
       });
     });
 
@@ -634,22 +663,28 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: 'amount',
-            index: 1,
-          }, {
-            key: 'thumbnail',
-            index: 2,
-          }, {
-            key: 'status',
-            index: 3,
-          }],
-          roles: [{
-            index: 1,
-            field_key: 'price',
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: 'amount',
+              index: 1,
+            },
+            {
+              key: 'thumbnail',
+              index: 2,
+            },
+            {
+              key: 'status',
+              index: 3,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: 'price',
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
       expect(res.body.errors).include.something.that.deep.equals({
         type: 'RESOURCE_COLUMNS_NOT_EXIST',
@@ -658,9 +693,7 @@ describe('routes: `/views`', () => {
       });
     });
 
-    it('Should validate the logic expressions with the given conditions.', () => {
-
-    });
+    it('Should validate the logic expressions with the given conditions.', () => {});
 
     it('Should delete the view roles that not presented the post data.', async () => {
       const resource = await tenantFactory.create('resource');
@@ -682,16 +715,20 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: resourceField.key,
-            index: 1,
-          }],
-          roles: [{
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: resourceField.key,
+              index: 1,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       const foundViewRole = await ViewRole.tenant().query().where('id', viewRole.id);
@@ -718,17 +755,21 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: resourceField.key,
-            index: 1,
-          }],
-          roles: [{
-            id: viewRole.id,
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: resourceField.key,
+              index: 1,
+            },
+          ],
+          roles: [
+            {
+              id: viewRole.id,
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       const foundViewRole = await ViewRole.tenant().query().where('id', viewRole.id);
@@ -756,21 +797,27 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: resourceField.key,
-            index: 1,
-          }],
-          roles: [{
-            id: 1,
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: resourceField.key,
+              index: 1,
+            },
+          ],
+          roles: [
+            {
+              id: 1,
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'VIEW.ROLES.IDS.NOT.FOUND', code: 500, ids: [1],
+        type: 'VIEW.ROLES.IDS.NOT.FOUND',
+        code: 500,
+        ids: [1],
       });
     });
 
@@ -791,16 +838,20 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: resourceField.key,
-            index: 1,
-          }],
-          roles: [{
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: resourceField.key,
+              index: 1,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
       const foundViewColumns = await ViewColumn.tenant().query().where('id', viewColumn.id);
       expect(foundViewColumns.length).equals(0);
@@ -822,16 +873,20 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{
-            key: resourceField.key,
-            index: 1,
-          }],
-          roles: [{
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              key: resourceField.key,
+              index: 1,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
       const foundViewColumns = await ViewColumn.tenant().query().where('view_id', view.id);
@@ -841,7 +896,6 @@ describe('routes: `/views`', () => {
       expect(foundViewColumns[0].index).equals(1);
       expect(foundViewColumns[0].fieldId).equals(resourceField.id);
     });
-
 
     it('Should update columns on the storage.', async () => {
       const resource = await tenantFactory.create('resource');
@@ -860,20 +914,24 @@ describe('routes: `/views`', () => {
         .send({
           name: 'View Label',
           logic_expression: '1',
-          columns: [{ 
-            id: viewColumn.id,
-            key: resourceField.key,
-            index: 10,
-          }],
-          roles: [{
-            index: 1,
-            field_key: resourceField.key,
-            comparator: 'equals',
-            value: '100',
-          }],
+          columns: [
+            {
+              id: viewColumn.id,
+              key: resourceField.key,
+              index: 10,
+            },
+          ],
+          roles: [
+            {
+              index: 1,
+              field_key: resourceField.key,
+              comparator: 'equals',
+              value: '100',
+            },
+          ],
         });
 
-      console.log(res.body)
+      console.log(res.body);
 
       const foundViewColumns = await ViewColumn.tenant().query().where('id', viewColumn.id);
 
@@ -882,7 +940,7 @@ describe('routes: `/views`', () => {
       expect(foundViewColumns[0].viewId).equals(view.id);
       expect(foundViewColumns[0].index).equals(10);
       // expect(foundViewColumns[0].fieldId).equals();
-    })
+    });
   });
 
   describe('DELETE: `/views/:resource_id`', () => {
@@ -896,7 +954,8 @@ describe('routes: `/views`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'PREDEFINED_VIEW', code: 200,
+        type: 'PREDEFINED_VIEW',
+        code: 200,
       });
     });
 
@@ -909,7 +968,8 @@ describe('routes: `/views`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'VIEW_NOT_FOUND', code: 100,
+        type: 'VIEW_NOT_FOUND',
+        code: 100,
       });
     });
 

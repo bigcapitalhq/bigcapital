@@ -2,23 +2,12 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
-import {
-  Intent,
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Button, Popover, Menu, MenuItem, MenuDivider, Position } from '@blueprintjs/core';
 
 import { FormatDateCell, Money, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Table actions menu.
@@ -72,10 +61,7 @@ export function AmountAccessor(row) {
  */
 export function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );
@@ -119,8 +105,7 @@ export function usePaymentReceivesColumns() {
       {
         id: 'payment_receive_no',
         Header: intl.get('payment_receive_no'),
-        accessor: (row) =>
-          row.payment_receive_no ? `${row.payment_receive_no}` : null,
+        accessor: (row) => (row.payment_receive_no ? `${row.payment_receive_no}` : null),
         width: 140,
         className: 'payment_receive_no',
         clickable: true,

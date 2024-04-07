@@ -3,10 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataTable, Card, TableSkeletonRows } from '@/components';
 
-import {
-  useInvoicePaymentTransactionsColumns,
-  ActionsMenu,
-} from './components';
+import { useInvoicePaymentTransactionsColumns, ActionsMenu } from './components';
 import { useInvoiceDetailDrawerContext } from '../InvoiceDetailDrawerProvider';
 import { useInvoicePaymentTransactions } from '@/hooks/query';
 
@@ -77,7 +74,4 @@ function InvoicePaymentTransactionsTable({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(InvoicePaymentTransactionsTable);
+export default compose(withAlertsActions, withDrawerActions)(InvoicePaymentTransactionsTable);

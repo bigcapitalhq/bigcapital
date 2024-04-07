@@ -1,16 +1,13 @@
 import { ServiceError } from '@/exceptions';
-import {
-  ISaleEstimateEventDeliveredPayload,
-  ISaleEstimateEventDeliveringPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ISaleEstimateEventDeliveredPayload, ISaleEstimateEventDeliveringPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeliverSaleEstimate {
@@ -28,16 +25,11 @@ export class DeliverSaleEstimate {
    * @param {number} tenantId - Tenant id.
    * @param {number} saleEstimateId - Sale estimate id.
    */
-  public async deliverSaleEstimate(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> {
+  public async deliverSaleEstimate(tenantId: number, saleEstimateId: number): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .throwIfNotFound();
+    const oldSaleEstimate = await SaleEstimate.query().findById(saleEstimateId).throwIfNotFound();
 
     // Throws error in case the sale estimate already published.
     if (oldSaleEstimate.isDelivered) {
@@ -54,12 +46,9 @@ export class DeliverSaleEstimate {
       } as ISaleEstimateEventDeliveringPayload);
 
       // Record the delivered at on the storage.
-      const saleEstimate = await SaleEstimate.query(trx).patchAndFetchById(
-        saleEstimateId,
-        {
-          deliveredAt: moment().toMySqlDateTime(),
-        }
-      );
+      const saleEstimate = await SaleEstimate.query(trx).patchAndFetchById(saleEstimateId, {
+        deliveredAt: moment().toMySqlDateTime(),
+      });
       // Triggers `onSaleEstimateDelivered` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onDelivered, {
         tenantId,

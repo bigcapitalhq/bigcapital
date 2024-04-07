@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import {
   IProjectProfitabilitySummaryMeta,
   IProjectProfitabilitySummaryPOJO,
@@ -6,6 +5,7 @@ import {
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import { Inject, Service } from 'typedi';
 import { ProfitProfitabilitySummary } from './ProjectProfitabilitySummary';
 import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
 
@@ -22,24 +22,19 @@ export class ProjectProfitabilitySummaryService {
    */
   public projectProfitabilitySummary = async (
     tenantId: number,
-    query: ProjectProfitabilitySummaryQuery
+    query: ProjectProfitabilitySummaryQuery,
   ): Promise<IProjectProfitabilitySummaryPOJO> => {
     const models = this.tenancy.models(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Initialize the report repository.
-    const projectProfitabilityRepo = new ProjectProfitabilitySummaryRespository(
-      models,
-      query
-    );
+    const projectProfitabilityRepo = new ProjectProfitabilitySummaryRespository(models, query);
     await projectProfitabilityRepo.asyncInitialize();
 
     const projectProfitabilityInstance = new ProfitProfitabilitySummary(
       projectProfitabilityRepo,
-      tenant.metadata.baseCurrency
+      tenant.metadata.baseCurrency,
     );
     const projectProfitData = projectProfitabilityInstance.getReportData();
 

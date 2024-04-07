@@ -1,5 +1,5 @@
-import { Container } from 'typedi';
 import AuthenticationMailMesssages from '@/services/Authentication/AuthenticationMailMessages';
+import { Container } from 'typedi';
 
 export default class ResetPasswordEmailJob {
   /**
@@ -7,11 +7,7 @@ export default class ResetPasswordEmailJob {
    * @param {Agenda} agenda
    */
   constructor(agenda) {
-    agenda.define(
-      'reset-password-mail',
-      { priority: 'high' },
-      this.handler.bind(this)
-    );
+    agenda.define('reset-password-mail', { priority: 'high' }, this.handler.bind(this));
   }
 
   /**

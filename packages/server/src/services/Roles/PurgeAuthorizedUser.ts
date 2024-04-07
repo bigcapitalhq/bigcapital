@@ -1,12 +1,12 @@
-import { Service } from 'typedi';
 import events from '@/subscribers/events';
+import { Service } from 'typedi';
 import { ABILITIES_CACHE } from '../../api/middleware/AuthorizationMiddleware';
 
 @Service()
 export default class PurgeAuthorizedUserOnceRoleMutate {
   /**
    * Attaches events with handlers.
-   * @param bus 
+   * @param bus
    */
   attach(bus) {
     bus.subscribe(events.roles.onEdited, this.purgeAuthedUserOnceRoleMutated);

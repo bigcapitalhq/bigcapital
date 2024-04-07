@@ -1,15 +1,10 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
-import {
-  AccountNormal,
-  ILedgerEntry,
-  ISaleReceipt,
-  IItemEntry,
-} from '@/interfaces';
+import { AccountNormal, IItemEntry, ILedgerEntry, ISaleReceipt } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
+import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class SaleReceiptGLEntries {
@@ -28,13 +23,11 @@ export class SaleReceiptGLEntries {
   public writeIncomeGLEntries = async (
     tenantId: number,
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
-    const saleReceipt = await SaleReceipt.query(trx)
-      .findById(saleReceiptId)
-      .withGraphFetched('entries.item');
+    const saleReceipt = await SaleReceipt.query(trx).findById(saleReceiptId).withGraphFetched('entries.item');
 
     // Retrieve the income entries ledger.
     const incomeLedger = this.getIncomeEntriesLedger(saleReceipt);
@@ -53,14 +46,9 @@ export class SaleReceiptGLEntries {
   public revertReceiptGLEntries = async (
     tenantId: number,
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      saleReceiptId,
-      'SaleReceipt',
-      trx
-    );
+    await this.ledgerStorage.deleteByReference(tenantId, saleReceiptId, 'SaleReceipt', trx);
   };
 
   /**
@@ -73,7 +61,7 @@ export class SaleReceiptGLEntries {
   public rewriteReceiptGLEntries = async (
     tenantId: number,
     saleReceiptId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Reverts the receipt GL entries.
     await this.revertReceiptGLEntries(tenantId, saleReceiptId, trx);
@@ -128,11 +116,7 @@ export class SaleReceiptGLEntries {
    * @returns {ILedgerEntry}
    */
   private getReceiptIncomeItemEntry = R.curry(
-    (
-      saleReceipt: ISaleReceipt,
-      entry: IItemEntry,
-      index: number
-    ): ILedgerEntry => {
+    (saleReceipt: ISaleReceipt, entry: IItemEntry, index: number): ILedgerEntry => {
       const commonEntry = this.getIncomeGLCommonEntry(saleReceipt);
       const itemIncome = entry.amount * saleReceipt.exchangeRate;
 
@@ -146,7 +130,7 @@ export class SaleReceiptGLEntries {
         itemQuantity: entry.quantity,
         accountNormal: AccountNormal.CREDIT,
       };
-    }
+    },
   );
 
   /**
@@ -154,9 +138,7 @@ export class SaleReceiptGLEntries {
    * @param   {ISaleReceipt} saleReceipt
    * @returns {ILedgerEntry}
    */
-  private getReceiptDepositEntry = (
-    saleReceipt: ISaleReceipt
-  ): ILedgerEntry => {
+  private getReceiptDepositEntry = (saleReceipt: ISaleReceipt): ILedgerEntry => {
     const commonEntry = this.getIncomeGLCommonEntry(saleReceipt);
 
     return {

@@ -23,7 +23,6 @@ function VendorCreditNumberDilaogProvider({ query, ...props }) {
   );
 }
 
-const useVendorCreditNumberDialogContext = () =>
-  React.useContext(VendorCreditNumberDialogContext);
+const useVendorCreditNumberDialogContext = () => React.useContext(VendorCreditNumberDialogContext);
 
 export { VendorCreditNumberDilaogProvider, useVendorCreditNumberDialogContext };

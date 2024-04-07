@@ -35,16 +35,8 @@ function CreditNoteDetailsTabs() {
 
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<CreditNoteDetailPanel />}
-      />
-      <Tab
-        title={intl.get('journal_entries')}
-        id={'journal_entries'}
-        panel={<CreditNoteGLEntriesTable />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<CreditNoteDetailPanel />} />
+      <Tab title={intl.get('journal_entries')} id={'journal_entries'} panel={<CreditNoteGLEntriesTable />} />
 
       {ability.can(CreditNoteAction.View, AbilitySubject.CreditNote) && (
         <Tab

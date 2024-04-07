@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { useRef, useEffect } from 'react';
 
-
 // Hook
 export function usePrevious(value) {
   // The ref object is a generic container whose current property is mutable ...

@@ -5,11 +5,7 @@ export const isCellLoading = (loading, cellsCoords, rowIndex, columnId) => {
   if (!loading) {
     return false;
   }
-  return !cellsCoords
-    ? true
-    : cellsCoords.some(
-        (cellCoord) => cellCoord[0] === rowIndex && cellCoord[1] === columnId,
-      );
+  return !cellsCoords ? true : cellsCoords.some((cellCoord) => cellCoord[0] === rowIndex && cellCoord[1] === columnId);
 };
 
 export const useResizeObserver = (state, callback) => {
@@ -19,11 +15,7 @@ export const useResizeObserver = (state, callback) => {
   React.useEffect(() => {
     // We are interested in calling the resize event only when "state.columnResizing?.isResizingColumn" changes from
     // a string to undefined, because it indicates that it WAS resizing but it no longer is.
-    if (
-      state.columnResizing &&
-      !state.columnResizing?.isResizingColumn &&
-      columnResizeRef.current
-    ) {
+    if (state.columnResizing && !state.columnResizing?.isResizingColumn && columnResizeRef.current) {
       // Trigger resize event
       callback(
         columnResizeRef.current,

@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Alignment } from '@blueprintjs/core';
 import {
   Icon,
   FormattedMessage as T,
@@ -45,8 +39,7 @@ function WarehouseTransfersActionsBar({
   const history = useHistory();
 
   // credit note list context.
-  const { WarehouseTransferView, fields, refresh } =
-    useWarehouseTranfersListContext();
+  const { WarehouseTransferView, fields, refresh } = useWarehouseTranfersListContext();
 
   // Handle new warehouse transfer button click.
   const handleClickNewWarehouseTransfer = () => {
@@ -97,9 +90,7 @@ function WarehouseTransfersActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={warehouseTransferFilterRoles.length}
-          />
+          <DashboardFilterButton conditionsCount={warehouseTransferFilterRoles.length} />
         </AdvancedFilterPopover>
 
         <Button
@@ -107,21 +98,14 @@ function WarehouseTransfersActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'file-import-16'} />}
-          text={<T id={'import'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon={'file-import-16'} />} text={<T id={'import'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={warehouseTransferTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={warehouseTransferTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

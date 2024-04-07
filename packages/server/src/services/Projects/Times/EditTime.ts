@@ -1,16 +1,16 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
   IProjectTimeEditDTO,
-  IProjectTimeEditedEventPayload,
   IProjectTimeEditEventPayload,
-  IProjectTimeEditingEventPayload,
   IProjectTimeEditPOJO,
+  IProjectTimeEditedEventPayload,
+  IProjectTimeEditingEventPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class EditTimeService {
@@ -32,7 +32,7 @@ export class EditTimeService {
   public editTime = async (
     tenantId: number,
     timeId: number,
-    timeDTO: IProjectTimeEditDTO
+    timeDTO: IProjectTimeEditDTO,
   ): Promise<IProjectTimeEditPOJO> => {
     const { Time } = this.tenancy.models(tenantId);
 

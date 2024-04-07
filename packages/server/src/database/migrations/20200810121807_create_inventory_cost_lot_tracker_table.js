@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('inventory_cost_lot_tracker', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('inventory_cost_lot_tracker', (table) => {
     table.increments();
     table.date('date').index();
     table.string('direction').index();
@@ -19,8 +19,5 @@ exports.up = function (knex) {
 
     table.datetime('created_at').index();
   });
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('inventory_cost_lot_tracker');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('inventory_cost_lot_tracker');

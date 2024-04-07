@@ -29,8 +29,7 @@ function SMSMessageForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, smsNotification, editSMSNotificationMutate } =
-    useSMSMessageDialogContext();
+  const { dialogName, smsNotification, editSMSNotificationMutate } = useSMSMessageDialogContext();
 
   // Initial form values.
   const initialValues = {

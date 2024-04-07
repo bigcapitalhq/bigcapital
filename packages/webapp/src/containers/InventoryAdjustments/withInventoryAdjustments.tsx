@@ -7,10 +7,7 @@ export default (mapState) => {
 
   const mapStateToProps = (state, props) => {
     const mapped = {
-      inventoryAdjustmentTableState: getInventoryAdjustmentTableState(
-        state,
-        props,
-      ),
+      inventoryAdjustmentTableState: getInventoryAdjustmentTableState(state, props),
       inventoryAdjustmentsSelectedRows: state.inventoryAdjustments.selectedRows,
     };
     return mapState ? mapState(mapped, state, props) : mapped;

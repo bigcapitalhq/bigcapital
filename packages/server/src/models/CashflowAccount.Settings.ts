@@ -1,4 +1,3 @@
-
 export default {
   defaultFilterField: 'name',
   defaultSort: {

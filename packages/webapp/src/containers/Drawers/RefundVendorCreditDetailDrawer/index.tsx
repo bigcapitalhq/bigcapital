@@ -6,9 +6,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const RefundVendorCreditDrawerContent = React.lazy(() =>
-  import('./RefundVendorCreditDrawerContent'),
-);
+const RefundVendorCreditDrawerContent = React.lazy(() => import('./RefundVendorCreditDrawerContent'));
 
 /**
  * Refund credit note detail.
@@ -21,16 +19,9 @@ function RefundCreditNoteDetailDrawer({
   payload: { refundTransactionId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '750px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '750px' }} size={'65%'}>
       <DrawerSuspense>
-        <RefundVendorCreditDrawerContent
-          refundTransactionId={refundTransactionId}
-        />
+        <RefundVendorCreditDrawerContent refundTransactionId={refundTransactionId} />
       </DrawerSuspense>
     </Drawer>
   );

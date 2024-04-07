@@ -1,16 +1,11 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import {
-  IItem,
-  IItemDTO,
-  IItemEditDTO,
-  IItemEventEditedPayload,
-} from '@/interfaces';
+import { IItem, IItemDTO, IItemEditDTO, IItemEventEditedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { ItemsValidators } from './ItemValidators';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ItemsValidators } from './ItemValidators';
 
 @Service()
 export class EditItem {
@@ -37,66 +32,36 @@ export class EditItem {
     this.validators.validateEditItemFromInventory(itemDTO, oldItem);
 
     // Validate edit item type to inventory type.
-    await this.validators.validateEditItemTypeToInventory(
-      tenantId,
-      oldItem,
-      itemDTO
-    );
+    await this.validators.validateEditItemTypeToInventory(tenantId, oldItem, itemDTO);
     // Validate whether the given item name already exists on the storage.
-    await this.validators.validateItemNameUniquiness(
-      tenantId,
-      itemDTO.name,
-      oldItem.id
-    );
+    await this.validators.validateItemNameUniquiness(tenantId, itemDTO.name, oldItem.id);
     // Validate the item category existance on the storage,
     if (itemDTO.categoryId) {
-      await this.validators.validateItemCategoryExistance(
-        tenantId,
-        itemDTO.categoryId
-      );
+      await this.validators.validateItemCategoryExistance(tenantId, itemDTO.categoryId);
     }
     // Validate the sell account existance on the storage.
     if (itemDTO.sellAccountId) {
-      await this.validators.validateItemSellAccountExistance(
-        tenantId,
-        itemDTO.sellAccountId
-      );
+      await this.validators.validateItemSellAccountExistance(tenantId, itemDTO.sellAccountId);
     }
     // Validate the cost account existance on the storage.
     if (itemDTO.costAccountId) {
-      await this.validators.validateItemCostAccountExistance(
-        tenantId,
-        itemDTO.costAccountId
-      );
+      await this.validators.validateItemCostAccountExistance(tenantId, itemDTO.costAccountId);
     }
     // Validate the inventory account existance onthe storage.
     if (itemDTO.inventoryAccountId) {
-      await this.validators.validateItemInventoryAccountExistance(
-        tenantId,
-        itemDTO.inventoryAccountId
-      );
+      await this.validators.validateItemInventoryAccountExistance(tenantId, itemDTO.inventoryAccountId);
     }
     // Validate the purchase tax rate id existance.
     if (itemDTO.purchaseTaxRateId) {
-      await this.validators.validatePurchaseTaxRateExistance(
-        tenantId,
-        itemDTO.purchaseTaxRateId
-      );
+      await this.validators.validatePurchaseTaxRateExistance(tenantId, itemDTO.purchaseTaxRateId);
     }
     // Validate the sell tax rate id existance.
     if (itemDTO.sellTaxRateId) {
-      await this.validators.validateSellTaxRateExistance(
-        tenantId,
-        itemDTO.sellTaxRateId
-      );
+      await this.validators.validateSellTaxRateExistance(tenantId, itemDTO.sellTaxRateId);
     }
     // Validate inventory account should be modified in inventory item
     // has inventory transactions.
-    await this.validators.validateItemInvnetoryAccountModified(
-      tenantId,
-      oldItem,
-      itemDTO
-    );
+    await this.validators.validateItemInvnetoryAccountModified(tenantId, oldItem, itemDTO);
   }
 
   /**
@@ -134,27 +99,24 @@ export class EditItem {
     const itemModel = this.transformEditItemDTOToModel(itemDTO, oldItem);
 
     // Edits the item with associated transactions under unit-of-work envirement.
-    const newItem = this.uow.withTransaction(
-      tenantId,
-      async (trx: Knex.Transaction) => {
-        // Updates the item on the storage and fetches the updated once.
-        const newItem = await Item.query(trx).patchAndFetchById(itemId, {
-          ...itemModel,
-        });
-        // Edit event payload.
-        const eventPayload: IItemEventEditedPayload = {
-          tenantId,
-          item: newItem,
-          oldItem,
-          itemId: newItem.id,
-          trx,
-        };
-        // Triggers `onItemEdited` event.
-        await this.eventPublisher.emitAsync(events.item.onEdited, eventPayload);
+    const newItem = this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
+      // Updates the item on the storage and fetches the updated once.
+      const newItem = await Item.query(trx).patchAndFetchById(itemId, {
+        ...itemModel,
+      });
+      // Edit event payload.
+      const eventPayload: IItemEventEditedPayload = {
+        tenantId,
+        item: newItem,
+        oldItem,
+        itemId: newItem.id,
+        trx,
+      };
+      // Triggers `onItemEdited` event.
+      await this.eventPublisher.emitAsync(events.item.onEdited, eventPayload);
 
-        return newItem;
-      }
-    );
+      return newItem;
+    });
 
     return newItem;
   }

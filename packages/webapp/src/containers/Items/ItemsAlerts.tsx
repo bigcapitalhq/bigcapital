@@ -1,27 +1,16 @@
 // @ts-nocheck
 import React from 'react';
 
-const ItemDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Items/ItemDeleteAlert'),
-);
+const ItemDeleteAlert = React.lazy(() => import('@/containers/Alerts/Items/ItemDeleteAlert'));
 
-const ItemInactivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Items/ItemInactivateAlert'),
-);
+const ItemInactivateAlert = React.lazy(() => import('@/containers/Alerts/Items/ItemInactivateAlert'));
 
-const ItemActivateAlert = React.lazy(
-  () => import('@/containers/Alerts/Items/ItemActivateAlert'),
-);
+const ItemActivateAlert = React.lazy(() => import('@/containers/Alerts/Items/ItemActivateAlert'));
 
-const ItemBulkDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Items/ItemBulkDeleteAlert'),
-);
+const ItemBulkDeleteAlert = React.lazy(() => import('@/containers/Alerts/Items/ItemBulkDeleteAlert'));
 
 const cancelUnlockingPartialAlert = React.lazy(
-  () =>
-    import(
-      '@/containers/Alerts/TransactionLocking/cancelUnlockingPartialAlert'
-    ),
+  () => import('@/containers/Alerts/TransactionLocking/cancelUnlockingPartialAlert'),
 );
 
 /**

@@ -5,12 +5,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
-import {
-  FFormGroup,
-  FCheckbox,
-  FDateInput,
-  FieldRequiredHint,
-} from '@/components';
+import { FFormGroup, FCheckbox, FDateInput, FieldRequiredHint } from '@/components';
 import { momentFormatter } from '@/utils';
 
 /**
@@ -39,20 +34,11 @@ function ProjectInvoicingFormFields() {
 
       <FFormGroup name={'time'}>
         {/*------------ All time entreis -----------*/}
-        <FCheckbox
-          name="time"
-          label={intl.get('project_invoicing.dialog.all_time_entries')}
-        />
+        <FCheckbox name="time" label={intl.get('project_invoicing.dialog.all_time_entries')} />
         {/*------------ All unbilled expenses -----------*/}
-        <FCheckbox
-          name="unbilled"
-          label={intl.get('project_invoicing.dialog.all_unbilled_expenses')}
-        />
+        <FCheckbox name="unbilled" label={intl.get('project_invoicing.dialog.all_unbilled_expenses')} />
         {/*------------ All bills. -----------*/}
-        <FCheckbox
-          name="bills"
-          label={intl.get('project_invoicing.dialog.all_bills')}
-        />
+        <FCheckbox name="bills" label={intl.get('project_invoicing.dialog.all_bills')} />
       </FFormGroup>
     </div>
   );

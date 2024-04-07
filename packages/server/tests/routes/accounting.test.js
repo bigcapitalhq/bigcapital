@@ -1,17 +1,8 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import moment from 'moment';
-import ManualJournal from 'models/ManualJournal';
 import AccountTransaction from 'models/AccountTransaction';
-import AccountBalance from 'models/AccountBalance';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import ManualJournal from 'models/ManualJournal';
+import moment from 'moment';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: `/accounting`', () => {
   describe('route: `/accounting/make-journal-entries`', async () => {
@@ -211,11 +202,15 @@ describe('routes: `/accounting`', () => {
         });
 
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMERS.CONTACTS.NOT.FOUND', code: 500, ids: [100],
+        type: 'CUSTOMERS.CONTACTS.NOT.FOUND',
+        code: 500,
+        ids: [100],
       });
       expect(res.body.errors).include.something.deep.equals({
-        type: 'VENDORS.CONTACTS.NOT.FOUND', code: 600, ids: [300],
-      })
+        type: 'VENDORS.CONTACTS.NOT.FOUND',
+        code: 600,
+        ids: [300],
+      });
     });
 
     it('Should customer contact_type with receivable accounts type.', async () => {
@@ -252,7 +247,7 @@ describe('routes: `/accounting`', () => {
       expect(res.body.errors).include.something.deep.equals({
         type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
         code: 700,
-        indexes: [1]
+        indexes: [1],
       });
     });
 
@@ -282,7 +277,9 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS', code: 900, indexes: [1],
+        type: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
+        code: 900,
+        indexes: [1],
       });
     });
 
@@ -312,7 +309,9 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PAYABLE.ENTRIES.HAS.NO.VENDORS', code: 1000, indexes: [2]
+        type: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
+        code: 1000,
+        indexes: [2],
       });
     });
 
@@ -346,7 +345,9 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT', code: 700, indexes: [1],
+        type: 'CUSTOMERS.NOT.WITH.RECEIVABLE.ACCOUNT',
+        code: 700,
+        indexes: [1],
       });
     });
 
@@ -379,7 +380,7 @@ describe('routes: `/accounting`', () => {
 
       const foundManualJournal = await ManualJournal.tenant().query();
       expect(foundManualJournal.length).equals(1);
-      
+
       expect(foundManualJournal[0].reference).equals('2000');
       expect(foundManualJournal[0].journalNumber).equals('1000');
       expect(foundManualJournal[0].transactionType).equals('Journal');
@@ -508,7 +509,8 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'CREDIT.DEBIT.NOT.EQUALS', code: 100,
+        type: 'CREDIT.DEBIT.NOT.EQUALS',
+        code: 100,
       });
     });
 
@@ -543,7 +545,8 @@ describe('routes: `/accounting`', () => {
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300,
+        type: 'JOURNAL.NUMBER.ALREADY.EXISTS',
+        code: 300,
       });
     });
 
@@ -578,9 +581,10 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).not.include.something.that.deep.equal({
-        type: 'JOURNAL.NUMBER.ALREADY.EXISTS', code: 300,
+        type: 'JOURNAL.NUMBER.ALREADY.EXISTS',
+        code: 300,
       });
-    })
+    });
 
     it('Should response error in case account id not exists in one of the given entries.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal');
@@ -613,8 +617,9 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200,
-      }); 
+        type: 'ACCOUNTS.IDS.NOT.FOUND',
+        code: 200,
+      });
     });
 
     it('Should update the given manual journal transaction in the storage.', async () => {
@@ -644,9 +649,8 @@ describe('routes: `/accounting`', () => {
             },
           ],
         });
-      
-      const foundManualJournal = await ManualJournal.tenant().query()
-        .where('id', manualJournal.id);
+
+      const foundManualJournal = await ManualJournal.tenant().query().where('id', manualJournal.id);
 
       expect(foundManualJournal.length).equals(1);
       expect(foundManualJournal[0].journalNumber).equals('123');
@@ -693,7 +697,7 @@ describe('routes: `/accounting`', () => {
         });
 
       const foundTransactions = await AccountTransaction.tenant().query();
-    
+
       expect(foundTransactions.length).equals(2);
       expect(foundTransactions[0].credit).equals(0);
       expect(foundTransactions[0].debit).equals(1000);
@@ -708,7 +712,7 @@ describe('routes: `/accounting`', () => {
   });
 
   describe('route: DELETE `accounting/manual-journals/:id`', () => {
-    it('Should response not found in case the manual journal transaction was not found.', async() => {
+    it('Should response not found in case the manual journal transaction was not found.', async () => {
       const res = await request()
         .delete('/api/accounting/manual-journals/1000')
         .set('x-access-token', loginRes.body.token)
@@ -717,7 +721,8 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equal({
-        type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100,
+        type: 'MANUAL.JOURNAL.NOT.FOUND',
+        code: 100,
       });
     });
 
@@ -730,8 +735,7 @@ describe('routes: `/accounting`', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundManualTransaction = await ManualJournal.tenant().query()
-        .where('id', manualJournal.id).first();
+      const foundManualTransaction = await ManualJournal.tenant().query().where('id', manualJournal.id).first();
 
       expect(foundManualTransaction).equals(undefined);
     });
@@ -739,10 +743,12 @@ describe('routes: `/accounting`', () => {
     it('Should delete associated transactions of journal transaction.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal');
       const transaction1 = await tenantFactory.create('account_transaction', {
-        reference_type: 'Journal', reference_id: manualJournal.id,
+        reference_type: 'Journal',
+        reference_id: manualJournal.id,
       });
       const transaction2 = await tenantFactory.create('account_transaction', {
-        reference_type: 'Journal', reference_id: manualJournal.id,
+        reference_type: 'Journal',
+        reference_id: manualJournal.id,
       });
 
       const res = await request()
@@ -755,9 +761,7 @@ describe('routes: `/accounting`', () => {
       expect(foundTransactions.length).equals(0);
     });
 
-    it('Should revert accounts balance after delete account transactions.', () => {
-
-    });
+    it('Should revert accounts balance after delete account transactions.', () => {});
   });
 
   describe('route: GET `accounting/manual-journals/:id`', () => {
@@ -770,18 +774,15 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100,
+        type: 'MANUAL.JOURNAL.NOT.FOUND',
+        code: 100,
       });
     });
 
-    it('Should response manual transaction and transactions metadata.', async () => {
-
-    });
-
+    it('Should response manual transaction and transactions metadata.', async () => {});
   });
 
   describe('route: `accounting/manual-journals`', async () => {
-
     it('Should retrieve all manual journals with pagination meta.', async () => {
       const manualJournal1 = await tenantFactory.create('manual_journal');
       const manualJournal2 = await tenantFactory.create('manual_journal');
@@ -799,7 +800,6 @@ describe('routes: `/accounting`', () => {
   });
 
   describe('route: POST `accounting/manual-journals/:id/publish`', () => {
-
     it('Should response not found in case the manual journal id was not exists.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal');
 
@@ -811,13 +811,14 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'MANUAL.JOURNAL.NOT.FOUND', code: 100,
+        type: 'MANUAL.JOURNAL.NOT.FOUND',
+        code: 100,
       });
     });
 
     it('Should response published ready.', async () => {
       const manualJournal = await tenantFactory.create('manual_journal', { status: 1 });
-      
+
       const res = await request()
         .post(`/api/accounting/manual-journals/${manualJournal.id}/publish`)
         .set('x-access-token', loginRes.body.token)
@@ -826,7 +827,8 @@ describe('routes: `/accounting`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'MANUAL.JOURNAL.PUBLISHED.ALREADY', code: 200,
+        type: 'MANUAL.JOURNAL.PUBLISHED.ALREADY',
+        code: 200,
       });
     });
 
@@ -848,40 +850,27 @@ describe('routes: `/accounting`', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundTransactions = await AccountTransaction.tenant().query()
+      const foundTransactions = await AccountTransaction.tenant()
+        .query()
         .whereIn('id', [transaction.id, transaction2.id]);
 
       expect(foundTransactions[0].draft).equals(0);
       expect(foundTransactions[1].draft).equals(0);
     });
 
-    it('Should increment/decrement accounts balance.', () => {
-
-    });
+    it('Should increment/decrement accounts balance.', () => {});
   });
 
   describe('route: `/accounting/quick-journal-entries`', async () => {
-    it('Shoud `credit_account_id` be required', () => {
+    it('Shoud `credit_account_id` be required', () => {});
+    it('Should `debit_account_id` be required.', () => {});
 
-    });
-    it('Should `debit_account_id` be required.', () => {
+    it('Should `amount` be required.', () => {});
 
-    });
+    it('Should credit account id be exists.', () => {});
 
-    it('Should `amount` be required.', () => {
+    it('Should debit account id be exists.', () => {});
 
-    });
-
-    it('Should credit account id be exists.', () => {
-
-    });
-
-    it('Should debit account id be exists.', () => {
-
-    });
-
-    it('Should store the quick journal entry to the storage.', () => {
-
-    });
+    it('Should store the quick journal entry to the storage.', () => {});
   });
 });

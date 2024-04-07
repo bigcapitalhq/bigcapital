@@ -109,19 +109,16 @@ export function useEditExpense(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`expenses/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific expense.
-        queryClient.invalidateQueries([t.EXPENSE, id]);
+  return useMutation(([id, values]) => apiRequest.post(`expenses/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific expense.
+      queryClient.invalidateQueries([t.EXPENSE, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

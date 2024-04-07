@@ -64,19 +64,16 @@ export function useEditReceipt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific receipt.
-        queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/receipts/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific receipt.
+      queryClient.invalidateQueries([t.SALE_RECEIPT, id]);
 
-        // Invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -183,19 +180,15 @@ export function useRefreshReceipts() {
 export function useCreateNotifyReceiptBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/receipts/${id}/notify-by-sms`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/receipts/${id}/notify-by-sms`, values), {
+    onSuccess: (res, [id, values]) => {
+      queryClient.invalidateQueries([t.NOTIFY_SALE_RECEIPT_BY_SMS, id]);
 
-        // Invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useReceiptSMSDetail(receiptId, props, requestProps) {
@@ -221,16 +214,13 @@ export function useSendSaleReceiptMail(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/receipts/${id}/mail`, values),
-    {
-      onSuccess: () => {
-        // Invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`sales/receipts/${id}/mail`, values), {
+    onSuccess: () => {
+      // Invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useSaleReceiptDefaultOptions(invoiceId, props) {

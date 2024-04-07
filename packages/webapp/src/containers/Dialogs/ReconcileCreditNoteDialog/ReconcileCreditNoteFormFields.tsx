@@ -4,13 +4,7 @@ import styled from 'styled-components';
 import { FastField, useFormikContext } from 'formik';
 import { Classes } from '@blueprintjs/core';
 
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { subtract } from 'lodash';
 import { getEntriesTotal } from '@/containers/Entries/utils';
 import ReconcileCreditNoteEntriesTable from './ReconcileCreditNoteEntriesTable';
@@ -30,9 +24,7 @@ export default function ReconcileCreditNoteFormFields() {
       <CreditRemainingRoot>
         <T id={'reconcile_credit_note.dialog.credits_balance'} />
 
-        <CreditRemainingBalance>
-          {formatted_credits_remaining}
-        </CreditRemainingBalance>
+        <CreditRemainingBalance>{formatted_credits_remaining}</CreditRemainingBalance>
       </CreditRemainingRoot>
 
       {/*------------ Reconcile credit entries table -----------*/}
@@ -67,10 +59,7 @@ function ReconcileCreditNoteTotalLines() {
   const { values } = useFormikContext();
 
   // Calculate the total amount of credit entries.
-  const totalAmount = React.useMemo(
-    () => getEntriesTotal(values.entries),
-    [values.entries],
-  );
+  const totalAmount = React.useMemo(() => getEntriesTotal(values.entries), [values.entries]);
   // Calculate the total amount of credit remaining.
   const creditsRemaining = subtract(credits_remaining, totalAmount);
 
@@ -78,9 +67,7 @@ function ReconcileCreditNoteTotalLines() {
     <ReconcileCreditNoteTotalLinesRoot>
       <ReconcileTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
         <TotalLine
-          title={
-            <T id={'reconcile_credit_note.dialog.total_amount_to_credit'} />
-          }
+          title={<T id={'reconcile_credit_note.dialog.total_amount_to_credit'} />}
           value={formattedAmount(totalAmount, currency_code)}
           borderStyle={TotalLineBorderStyle.SingleDark}
         />

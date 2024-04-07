@@ -15,10 +15,7 @@ import InventoryItemDetailsHeaderDimensionsPanel from './InventoryItemDetailsHea
 import withInventoryItemDetails from './withInventoryItemDetails';
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 
-import {
-  getInventoryItemDetailsDefaultQuery,
-  getInventoryItemDetailsQuerySchema,
-} from './utils2';
+import { getInventoryItemDetailsDefaultQuery, getInventoryItemDetailsQuerySchema } from './utils2';
 import { compose, transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
@@ -73,22 +70,11 @@ function InventoryItemDetailsHeader({
   const isWarehousesFeatureCan = featureCan(Features.Warehouses);
 
   return (
-    <InventoryItemDetailsDrawerHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <InventoryItemDetailsDrawerHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<InventoryItemDetailsHeaderGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<InventoryItemDetailsHeaderGeneralPanel />} />
             {(isBranchesFeatureCan || isWarehousesFeatureCan) && (
               <Tab
                 id="dimensions"

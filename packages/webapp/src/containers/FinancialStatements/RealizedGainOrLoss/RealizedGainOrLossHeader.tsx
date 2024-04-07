@@ -49,10 +49,7 @@ function RealizedGainOrLossHeader({
   const validationSchema = Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('toDate')),
     displayColumnsType: Yup.string(),
   });
 
@@ -69,22 +66,11 @@ function RealizedGainOrLossHeader({
   };
 
   return (
-    <FinancialStatementHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <FinancialStatementHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<RealizedGainOrLossGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<RealizedGainOrLossGeneralPanel />} />
           </Tabs>
 
           <div class="financial-header-drawer__footer">

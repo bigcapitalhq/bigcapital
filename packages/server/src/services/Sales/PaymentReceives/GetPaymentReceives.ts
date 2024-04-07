@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import {
-  IFilterMeta,
-  IPaginationMeta,
-  IPaymentReceive,
-  IPaymentReceivesFilter,
-} from '@/interfaces';
-import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { IFilterMeta, IPaginationMeta, IPaymentReceive, IPaymentReceivesFilter } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
 
 @Service()
 export class GetPaymentReceives {
@@ -29,7 +24,7 @@ export class GetPaymentReceives {
    */
   public async getPaymentReceives(
     tenantId: number,
-    filterDTO: IPaymentReceivesFilter
+    filterDTO: IPaymentReceivesFilter,
   ): Promise<{
     paymentReceives: IPaymentReceive[];
     pagination: IPaginationMeta;
@@ -41,11 +36,7 @@ export class GetPaymentReceives {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      PaymentReceive,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, PaymentReceive, filter);
     const { results, pagination } = await PaymentReceive.query()
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
@@ -55,11 +46,7 @@ export class GetPaymentReceives {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformer the payment receives models to POJO.
-    const transformedPayments = await this.transformer.transform(
-      tenantId,
-      results,
-      new PaymentReceiveTransfromer()
-    );
+    const transformedPayments = await this.transformer.transform(tenantId, results, new PaymentReceiveTransfromer());
     return {
       paymentReceives: transformedPayments,
       pagination,

@@ -1,7 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { DeleteCashflowTransaction } from './DeleteCashflowTransactionService';
-import { UncategorizeCashflowTransaction } from './UncategorizeCashflowTransaction';
-import { CategorizeCashflowTransaction } from './CategorizeCashflowTransaction';
 import {
   CategorizeTransactionAsExpenseDTO,
   CreateUncategorizedTransactionDTO,
@@ -10,13 +6,17 @@ import {
   ICategorizeCashflowTransactioDTO,
   IGetUncategorizedTransactionsQuery,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { CategorizeCashflowTransaction } from './CategorizeCashflowTransaction';
 import { CategorizeTransactionAsExpense } from './CategorizeTransactionAsExpense';
-import { GetUncategorizedTransactions } from './GetUncategorizedTransactions';
 import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
-import { GetUncategorizedTransaction } from './GetUncategorizedTransaction';
-import NewCashflowTransactionService from './NewCashflowTransactionService';
+import { DeleteCashflowTransaction } from './DeleteCashflowTransactionService';
 import GetCashflowAccountsService from './GetCashflowAccountsService';
 import { GetCashflowTransactionService } from './GetCashflowTransactionsService';
+import { GetUncategorizedTransaction } from './GetUncategorizedTransaction';
+import { GetUncategorizedTransactions } from './GetUncategorizedTransactions';
+import NewCashflowTransactionService from './NewCashflowTransactionService';
+import { UncategorizeCashflowTransaction } from './UncategorizeCashflowTransaction';
 
 @Service()
 export class CashflowApplication {
@@ -57,16 +57,8 @@ export class CashflowApplication {
    * @param {number} userId
    * @returns
    */
-  public createTransaction(
-    tenantId: number,
-    transactionDTO: ICashflowNewCommandDTO,
-    userId?: number
-  ) {
-    return this.createTransactionService.newCashflowTransaction(
-      tenantId,
-      transactionDTO,
-      userId
-    );
+  public createTransaction(tenantId: number, transactionDTO: ICashflowNewCommandDTO, userId?: number) {
+    return this.createTransactionService.newCashflowTransaction(tenantId, transactionDTO, userId);
   }
 
   /**
@@ -76,10 +68,7 @@ export class CashflowApplication {
    * @returns
    */
   public deleteTransaction(tenantId: number, cashflowTransactionId: number) {
-    return this.deleteTransactionService.deleteCashflowTransaction(
-      tenantId,
-      cashflowTransactionId
-    );
+    return this.deleteTransactionService.deleteCashflowTransaction(tenantId, cashflowTransactionId);
   }
 
   /**
@@ -89,10 +78,7 @@ export class CashflowApplication {
    * @returns
    */
   public getTransaction(tenantId: number, cashflowTransactionId: number) {
-    return this.getCashflowTransactionService.getCashflowTransaction(
-      tenantId,
-      cashflowTransactionId
-    );
+    return this.getCashflowTransactionService.getCashflowTransaction(tenantId, cashflowTransactionId);
   }
 
   /**
@@ -101,14 +87,8 @@ export class CashflowApplication {
    * @param {ICashflowAccountsFilter} filterDTO
    * @returns
    */
-  public getCashflowAccounts(
-    tenantId: number,
-    filterDTO: ICashflowAccountsFilter
-  ) {
-    return this.getCashflowAccountsService.getCashflowAccounts(
-      tenantId,
-      filterDTO
-    );
+  public getCashflowAccounts(tenantId: number, filterDTO: ICashflowAccountsFilter) {
+    return this.getCashflowAccountsService.getCashflowAccounts(tenantId, filterDTO);
   }
 
   /**
@@ -119,12 +99,9 @@ export class CashflowApplication {
    */
   public createUncategorizedTransaction(
     tenantId: number,
-    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO
+    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO,
   ) {
-    return this.createUncategorizedTransactionService.create(
-      tenantId,
-      createUncategorizedTransactionDTO
-    );
+    return this.createUncategorizedTransactionService.create(tenantId, createUncategorizedTransactionDTO);
   }
 
   /**
@@ -133,14 +110,8 @@ export class CashflowApplication {
    * @param {number} cashflowTransactionId
    * @returns
    */
-  public uncategorizeTransaction(
-    tenantId: number,
-    cashflowTransactionId: number
-  ) {
-    return this.uncategorizeTransactionService.uncategorize(
-      tenantId,
-      cashflowTransactionId
-    );
+  public uncategorizeTransaction(tenantId: number, cashflowTransactionId: number) {
+    return this.uncategorizeTransactionService.uncategorize(tenantId, cashflowTransactionId);
   }
 
   /**
@@ -153,13 +124,9 @@ export class CashflowApplication {
   public categorizeTransaction(
     tenantId: number,
     cashflowTransactionId: number,
-    categorizeDTO: ICategorizeCashflowTransactioDTO
+    categorizeDTO: ICategorizeCashflowTransactioDTO,
   ) {
-    return this.categorizeTransactionService.categorize(
-      tenantId,
-      cashflowTransactionId,
-      categorizeDTO
-    );
+    return this.categorizeTransactionService.categorize(tenantId, cashflowTransactionId, categorizeDTO);
   }
 
   /**
@@ -171,29 +138,17 @@ export class CashflowApplication {
   public categorizeAsExpense(
     tenantId: number,
     cashflowTransactionId: number,
-    transactionDTO: CategorizeTransactionAsExpenseDTO
+    transactionDTO: CategorizeTransactionAsExpenseDTO,
   ) {
-    return this.categorizeAsExpenseService.categorize(
-      tenantId,
-      cashflowTransactionId,
-      transactionDTO
-    );
+    return this.categorizeAsExpenseService.categorize(tenantId, cashflowTransactionId, transactionDTO);
   }
 
   /**
    * Retrieves the uncategorized cashflow transactions.
    * @param {number} tenantId
    */
-  public getUncategorizedTransactions(
-    tenantId: number,
-    accountId: number,
-    query: IGetUncategorizedTransactionsQuery
-  ) {
-    return this.getUncategorizedTransactionsService.getTransactions(
-      tenantId,
-      accountId,
-      query
-    );
+  public getUncategorizedTransactions(tenantId: number, accountId: number, query: IGetUncategorizedTransactionsQuery) {
+    return this.getUncategorizedTransactionsService.getTransactions(tenantId, accountId, query);
   }
 
   /**
@@ -201,13 +156,7 @@ export class CashflowApplication {
    * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    */
-  public getUncategorizedTransaction(
-    tenantId: number,
-    uncategorizedTransactionId: number
-  ) {
-    return this.getUncategorizedTransactionService.getTransaction(
-      tenantId,
-      uncategorizedTransactionId
-    );
+  public getUncategorizedTransaction(tenantId: number, uncategorizedTransactionId: number) {
+    return this.getUncategorizedTransactionService.getTransaction(tenantId, uncategorizedTransactionId);
   }
 }

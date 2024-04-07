@@ -1,10 +1,6 @@
 exports.up = (knex) => {
   return knex.schema.table('sales_invoices', (table) => {
-    table
-      .integer('writtenoff_expense_account_id')
-      .unsigned()
-      .references('id')
-      .inTable('accounts');
+    table.integer('writtenoff_expense_account_id').unsigned().references('id').inTable('accounts');
   });
 };
 

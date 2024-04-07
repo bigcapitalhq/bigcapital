@@ -10,10 +10,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { compose } from '@/utils';
-import {
-  transformFormToSettings,
-  transformSettingsToForm,
-} from '@/containers/JournalNumber/utils';
+import { transformFormToSettings, transformSettingsToForm } from '@/containers/JournalNumber/utils';
 
 /**
  * credit note number dialog content

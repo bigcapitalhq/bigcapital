@@ -26,13 +26,7 @@ function PreferencesPage({ toggleSidebarExpand }) {
 
   return (
     <ErrorBoundary FallbackComponent={DashboardErrorBoundary}>
-      <div
-        id={'dashboard'}
-        className={classNames(
-          CLASSES.DASHBOARD_CONTENT,
-          CLASSES.DASHBOARD_CONTENT_PREFERENCES,
-        )}
-      >
+      <div id={'dashboard'} className={classNames(CLASSES.DASHBOARD_CONTENT, CLASSES.DASHBOARD_CONTENT_PREFERENCES)}>
         <div className={classNames(CLASSES.PREFERENCES_PAGE)}>
           <PreferencesSidebar />
 

@@ -4,15 +4,15 @@ export interface ITenantMetadata {
   currencyCode: string;
 }
 export interface ITenant {
-  id: number,
-  organizationId: string,
+  id: number;
+  organizationId: string;
 
-  initializedAt: Date|null,
-  seededAt: Date|null,
-  builtAt: Date|null,
-  createdAt: Date|null,
+  initializedAt: Date | null;
+  seededAt: Date | null;
+  builtAt: Date | null;
+  createdAt: Date | null;
 
-  metadata?: ITenantMetadata
+  metadata?: ITenantMetadata;
 }
 
 export interface ITenantDBManager {

@@ -1,8 +1,8 @@
-  import { Service, Inject } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import AccountsTypesService from '@/services/Accounts/AccountsTypesServices';
+import { NextFunction, Request, Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class AccountsTypesController extends BaseController {

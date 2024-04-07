@@ -29,13 +29,8 @@ function LockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    moduleName,
-    transactionLocking,
-    isEnabled,
-    createLockingTransactionMutate,
-  } = useLockingTransactionsContext();
+  const { dialogName, moduleName, transactionLocking, isEnabled, createLockingTransactionMutate } =
+    useLockingTransactionsContext();
 
   // Initial form values.
   const initialValues = React.useMemo(

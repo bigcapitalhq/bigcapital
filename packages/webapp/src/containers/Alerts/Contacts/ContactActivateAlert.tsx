@@ -61,7 +61,4 @@ function ContactActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ContactActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ContactActivateAlert);

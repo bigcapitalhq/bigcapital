@@ -1,18 +1,18 @@
-import { groupBy, sum, isEmpty } from 'lodash';
-import * as R from 'ramda';
-import AgingSummaryReport from './AgingSummary';
 import {
+  IAPAgingSummaryColumns,
+  IAPAgingSummaryData,
   IAPAgingSummaryQuery,
+  IAPAgingSummaryTotal,
+  IAPAgingSummaryVendor,
   IAgingPeriod,
   IBill,
   IVendor,
-  IAPAgingSummaryData,
-  IAPAgingSummaryVendor,
-  IAPAgingSummaryColumns,
-  IAPAgingSummaryTotal,
 } from '@/interfaces';
+import { groupBy, isEmpty, sum } from 'lodash';
+import * as R from 'ramda';
 import { Dictionary } from 'tsyringe/dist/typings/types';
 import { allPassedConditionsPass } from 'utils';
+import AgingSummaryReport from './AgingSummary';
 
 export default class APAgingSummarySheet extends AgingSummaryReport {
   readonly tenantId: number;
@@ -39,7 +39,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
     vendors: IVendor[],
     overdueBills: IBill[],
     unpaidBills: IBill[],
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
 
@@ -53,11 +53,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
     this.currentInvoicesByContactId = groupBy(unpaidBills, 'vendorId');
 
     // Initializes the aging periods.
-    this.agingPeriods = this.agingRangePeriods(
-      this.query.asDate,
-      this.query.agingDaysBefore,
-      this.query.agingPeriods
-    );
+    this.agingPeriods = this.agingRangePeriods(this.query.asDate, this.query.agingDaysBefore, this.query.agingPeriods);
   }
 
   /**
@@ -111,9 +107,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    * @param {IAPAgingSummaryVendor} vendorNode
    * @returns {boolean}
    */
-  private filterNoneZeroVendorNode = (
-    vendorNode: IAPAgingSummaryVendor
-  ): boolean => {
+  private filterNoneZeroVendorNode = (vendorNode: IAPAgingSummaryVendor): boolean => {
     return vendorNode.total.amount !== 0;
   };
 
@@ -135,9 +129,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    * @param {IAPAgingSummaryVendor[]} vendorNodes
    * @returns {IAPAgingSummaryVendor[]}
    */
-  private vendorsFilter = (
-    vendorNodes: IAPAgingSummaryVendor[]
-  ): IAPAgingSummaryVendor[] => {
+  private vendorsFilter = (vendorNodes: IAPAgingSummaryVendor[]): IAPAgingSummaryVendor[] => {
     return vendorNodes.filter(this.vendorNodeFilter);
   };
 
@@ -154,10 +146,7 @@ export default class APAgingSummarySheet extends AgingSummaryReport {
    * @return {IAPAgingSummaryVendor[]}
    */
   private vendorsSection = (vendors: IVendor[]): IAPAgingSummaryVendor[] => {
-    return R.compose(
-      R.when(this.isVendorNodesFilter, this.vendorsFilter),
-      this.vendorsMapper
-    )(vendors);
+    return R.compose(R.when(this.isVendorNodesFilter, this.vendorsFilter), this.vendorsMapper)(vendors);
   };
 
   /**

@@ -1,16 +1,12 @@
-import { Model, mixin } from 'objection';
+import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
 import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ModelSearchable from './ModelSearchable';
 import ModelSetting from './ModelSetting';
 import SaleReceiptSettings from './SaleReceipt.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/Receipts/constants';
-import ModelSearchable from './ModelSearchable';
 
-export default class SaleReceipt extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class SaleReceipt extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */

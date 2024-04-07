@@ -20,9 +20,7 @@ function InventoryAdjustmentList({
   inventoryAdjustmentTableState,
 }) {
   return (
-    <InventoryAdjustmentsProvider
-      query={transformTableStateToQuery(inventoryAdjustmentTableState)}
-    >
+    <InventoryAdjustmentsProvider query={transformTableStateToQuery(inventoryAdjustmentTableState)}>
       <DashboardPageContent>
         <DashboardContentTable>
           <InventoryAdjustmentTable />

@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -33,8 +29,7 @@ function CreditNoteDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { isLoading, mutateAsync: deleteCreditNoteMutate } =
-    useDeleteCreditNote();
+  const { isLoading, mutateAsync: deleteCreditNoteMutate } = useDeleteCreditNote();
 
   // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
@@ -81,8 +76,4 @@ function CreditNoteDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(CreditNoteDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(CreditNoteDeleteAlert);

@@ -6,8 +6,5 @@ const transports = {
 };
 
 export default winston.createLogger({
-  transports: [
-    transports.console,
-    transports.file,
-  ],
+  transports: [transports.console, transports.file],
 });

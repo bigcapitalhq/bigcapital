@@ -71,8 +71,4 @@ function JournalDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(JournalDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(JournalDeleteAlert);

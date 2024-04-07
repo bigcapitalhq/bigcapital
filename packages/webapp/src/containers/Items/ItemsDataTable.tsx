@@ -3,12 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { TABLES } from '@/constants/tables';
 import { FormattedMessage as T } from '@/components';
-import {
-  DashboardContentTable,
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DashboardContentTable, DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 
 import ItemsEmptyStatus from './ItemsEmptyStatus';
 
@@ -47,8 +42,7 @@ function ItemsDataTable({
   tableProps,
 }) {
   // Items list context.
-  const { items, pagination, isItemsLoading, isEmptyStatus, isItemsFetching } =
-    useItemsListContext();
+  const { items, pagination, isItemsLoading, isEmptyStatus, isItemsFetching } = useItemsListContext();
 
   // Datatable columns.
   const columns = useItemsTableColumns();
@@ -62,8 +56,7 @@ function ItemsDataTable({
   });
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.ITEMS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.ITEMS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(

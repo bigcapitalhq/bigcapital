@@ -1,9 +1,9 @@
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
-  IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
+  IAgingSummaryQuery,
+  IAgingSummaryTotal,
 } from './AgingReport';
 import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';

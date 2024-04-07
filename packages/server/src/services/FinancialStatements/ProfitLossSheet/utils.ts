@@ -1,6 +1,6 @@
-import moment from 'moment';
-import { merge } from 'lodash';
 import { IProfitLossSheetQuery } from '@/interfaces';
+import { merge } from 'lodash';
+import moment from 'moment';
 
 /**
  * Default sheet filter query.
@@ -47,8 +47,6 @@ export const getDefaultPLQuery = (): IProfitLossSheetQuery => ({
  * @param query
  * @returns
  */
-export const mergeQueryWithDefaults = (
-  query: IProfitLossSheetQuery
-): IProfitLossSheetQuery => {
+export const mergeQueryWithDefaults = (query: IProfitLossSheetQuery): IProfitLossSheetQuery => {
   return merge(getDefaultPLQuery(), query);
 };

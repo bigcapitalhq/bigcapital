@@ -1,21 +1,18 @@
+import { IBalanceSheetDataNode, IBalanceSheetNetIncomeNode } from '@/interfaces';
 import * as R from 'ramda';
-import {
-  IBalanceSheetDataNode,
-  IBalanceSheetNetIncomeNode,
-} from '@/interfaces';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
-import BalanceSheetRepository from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { BalanceSheetNetIncomeDatePeriodsPP } from './BalanceSheetNetIncomeDatePeriodsPP';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetNetIncomePP = (Base: any) =>
   class extends R.compose(
     BalanceSheetNetIncomeDatePeriodsPP,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
-    FinancialHorizTotals
+    FinancialHorizTotals,
   )(Base) {
     private repository: BalanceSheetRepository;
     private query: BalanceSheetQuery;
@@ -29,8 +26,7 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
      */
     protected getPreviousPeriodNetIncome = () => {
       const income = this.repository.incomePPAccountsLedger.getClosingBalance();
-      const expense =
-        this.repository.expensePPAccountsLedger.getClosingBalance();
+      const expense = this.repository.expensePPAccountsLedger.getClosingBalance();
 
       return income - expense;
     };
@@ -40,9 +36,7 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
      * @param {IBalanceSheetDataNode} node
      * @returns {IBalanceSheetDataNode}
      */
-    protected assocPreviousPeriodNetIncomeNode = (
-      node: IBalanceSheetDataNode
-    ): IBalanceSheetDataNode => {
+    protected assocPreviousPeriodNetIncomeNode = (node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
       const total = this.getPreviousPeriodNetIncome();
 
       return R.assoc('previousPeriod', this.getAmountMeta(total), node);
@@ -53,23 +47,12 @@ export const BalanceSheetNetIncomePP = (Base: any) =>
      * @param {IBalanceSheetNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    protected previousPeriodNetIncomeNodeCompose = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    protected previousPeriodNetIncomeNodeCompose = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       return R.compose(
-        R.when(
-          this.isNodeHasHorizTotals,
-          this.assocPreviousPeriodNetIncomeHorizNode
-        ),
-        R.when(
-          this.query.isPreviousPeriodPercentageActive,
-          this.assocPreviousPeriodPercentageNode
-        ),
-        R.when(
-          this.query.isPreviousPeriodChangeActive,
-          this.assocPreviousPeriodChangeNode
-        ),
-        this.assocPreviousPeriodNetIncomeNode
+        R.when(this.isNodeHasHorizTotals, this.assocPreviousPeriodNetIncomeHorizNode),
+        R.when(this.query.isPreviousPeriodPercentageActive, this.assocPreviousPeriodPercentageNode),
+        R.when(this.query.isPreviousPeriodChangeActive, this.assocPreviousPeriodChangeNode),
+        this.assocPreviousPeriodNetIncomeNode,
       )(node);
     };
   };

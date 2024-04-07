@@ -1,11 +1,11 @@
-import { check, param, query, body, ValidationChain } from 'express-validator';
-import { Router, Request, Response, NextFunction } from 'express';
-import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
+import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { ServiceError } from '@/exceptions';
 import ContactsService from '@/services/Contacts/ContactsService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, body, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ContactsController extends BaseController {
@@ -75,10 +75,7 @@ export default class ContactsController extends BaseController {
     const { id: contactId } = req.params;
 
     try {
-      const contact = await this.contactsService.getContact(
-        tenantId,
-        contactId,
-      );
+      const contact = await this.contactsService.getContact(tenantId, contactId);
       return res.status(200).send({
         customer: this.transfromToResponse(contact),
       });
@@ -103,10 +100,7 @@ export default class ContactsController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const contacts = await this.contactsService.autocompleteContacts(
-        tenantId,
-        filter,
-      );
+      const contacts = await this.contactsService.autocompleteContacts(tenantId, filter);
       return res.status(200).send({ contacts });
     } catch (error) {
       next(error);
@@ -143,18 +137,9 @@ export default class ContactsController extends BaseController {
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('display_name')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('display_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('email')
-        .optional({ nullable: true })
-        .isString()
-        .isEmail()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('email').optional({ nullable: true }).isString().isEmail().isLength({ max: DATATYPES_LENGTH.STRING }),
       check('website')
         .optional({ nullable: true })
         .isString()
@@ -274,12 +259,7 @@ export default class ContactsController extends BaseController {
         .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
-      check('note')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('note').optional({ nullable: true }).isString().trim().escape().isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
     ];
   }
@@ -294,18 +274,9 @@ export default class ContactsController extends BaseController {
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
         .toInt(),
-      check('opening_balance_exchange_rate')
-        .default(1)
-        .isFloat({ gt: 0 })
-        .toFloat(),
-      body('opening_balance_at')
-        .if(body('opening_balance').exists())
-        .exists()
-        .isISO8601(),
-      check('opening_balance_branch_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('opening_balance_exchange_rate').default(1).isFloat({ gt: 0 }).toFloat(),
+      body('opening_balance_at').if(body('opening_balance').exists()).exists().isISO8601(),
+      check('opening_balance_branch_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -375,12 +346,7 @@ export default class ContactsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {

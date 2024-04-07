@@ -1,5 +1,5 @@
-import { Knex } from 'knex';
 import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
+import { Knex } from 'knex';
 
 export interface IAccountDTO {
   name: string;

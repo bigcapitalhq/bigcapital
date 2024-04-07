@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { ICreditNote } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CreditNoteInventoryTransactions {
@@ -20,14 +20,10 @@ export default class CreditNoteInventoryTransactions {
   public createInventoryTransactions = async (
     tenantId: number,
     creditNote: ICreditNote,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries =
-      await this.itemsEntriesService.filterInventoryEntries(
-        tenantId,
-        creditNote.entries
-      );
+    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(tenantId, creditNote.entries);
     const transaction = {
       transactionId: creditNote.id,
       transactionType: 'CreditNote',
@@ -40,12 +36,7 @@ export default class CreditNoteInventoryTransactions {
       warehouseId: creditNote.warehouseId,
     };
     // Writes inventory tranactions.
-    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(
-      tenantId,
-      transaction,
-      false,
-      trx
-    );
+    await this.inventoryService.recordInventoryTransactionsFromItemsEntries(tenantId, transaction, false, trx);
   };
 
   /**
@@ -59,7 +50,7 @@ export default class CreditNoteInventoryTransactions {
     tenantId: number,
     creditNoteId: number,
     creditNote: ICreditNote,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Deletes inventory transactions.
     await this.deleteInventoryTransactions(tenantId, creditNoteId, trx);
@@ -77,14 +68,9 @@ export default class CreditNoteInventoryTransactions {
   public deleteInventoryTransactions = async (
     tenantId: number,
     creditNoteId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Deletes the inventory transactions by the given reference id and type.
-    await this.inventoryService.deleteInventoryTransactions(
-      tenantId,
-      creditNoteId,
-      'CreditNote',
-      trx
-    );
+    await this.inventoryService.deleteInventoryTransactions(tenantId, creditNoteId, 'CreditNote', trx);
   };
 }

@@ -1,14 +1,7 @@
 // @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  useItem,
-  useSettingsItems,
-  useItemsCategories,
-  useCreateItem,
-  useEditItem,
-  useAccounts,
-} from '@/hooks/query';
+import { useItem, useSettingsItems, useItemsCategories, useCreateItem, useEditItem, useAccounts } from '@/hooks/query';
 import { useWatchItemError } from './utils';
 import { useTaxRates } from '@/hooks/query/taxRates';
 
@@ -44,10 +37,7 @@ function ItemFormProvider({ itemId, ...props }) {
   useWatchItemError(itemQuery);
 
   // Fetches item settings.
-  const {
-    isLoading: isItemsSettingsLoading,
-    isFetching: isItemsSettingsFetching,
-  } = useSettingsItems();
+  const { isLoading: isItemsSettingsLoading, isFetching: isItemsSettingsFetching } = useSettingsItems();
 
   // Create and edit item mutations.
   const { mutateAsync: editItemMutate } = useEditItem();
@@ -60,11 +50,7 @@ function ItemFormProvider({ itemId, ...props }) {
   const isNewMode = duplicateId || !itemId;
 
   // Detarmines the form loading state.
-  const isFormLoading =
-    isItemsSettingsLoading ||
-    isAccountsLoading ||
-    isItemsCategoriesLoading ||
-    isItemLoading;
+  const isFormLoading = isItemsSettingsLoading || isAccountsLoading || isItemsCategoriesLoading || isItemLoading;
 
   // Provider state.
   const provider = {

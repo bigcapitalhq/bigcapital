@@ -50,10 +50,7 @@ export default function TablePagination() {
   );
 
   // Detarmines when display the pagination.
-  const showPagination =
-    pagination &&
-    ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) &&
-    !loading;
+  const showPagination = pagination && ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) && !loading;
 
   return (
     showPagination && (

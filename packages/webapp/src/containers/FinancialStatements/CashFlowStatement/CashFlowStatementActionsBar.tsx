@@ -53,8 +53,7 @@ function CashFlowStatementActionsBar({
   };
 
   // handle number format form submit.
-  const handleNumberFormatSubmit = (values) =>
-    saveInvoke(onNumberFormatSubmit, values);
+  const handleNumberFormatSubmit = (values) => saveInvoke(onNumberFormatSubmit, values);
 
   // Handle print button click.
   const handlePrintBtnClick = () => {
@@ -76,13 +75,7 @@ function CashFlowStatementActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            isFilterDrawerOpen ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={isFilterDrawerOpen ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />

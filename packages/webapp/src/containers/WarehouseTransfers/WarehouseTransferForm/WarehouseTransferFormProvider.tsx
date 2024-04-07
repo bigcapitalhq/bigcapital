@@ -35,10 +35,9 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   });
 
   // Handle fetch warehouse transfer detail.
-  const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } =
-    useWarehouseTransfer(warehouseTransferId, {
-      enabled: !!warehouseTransferId,
-    });
+  const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } = useWarehouseTransfer(warehouseTransferId, {
+    enabled: !!warehouseTransferId,
+  });
   // Fetch warehouses list.
   const {
     data: warehouses,
@@ -50,8 +49,7 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
   const [itemCostQuery, setItemCostQuery] = React.useState(null);
 
   // Detarmines whether the inventory items cost query is enabled.
-  const isItemsCostQueryEnabled =
-    !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
+  const isItemsCostQueryEnabled = !isEmpty(itemCostQuery?.date) && !isEmpty(itemCostQuery?.itemsIds);
 
   // Retrieves the inventory item cost.
   const {
@@ -69,10 +67,8 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
     },
   );
   // Create and edit warehouse mutations.
-  const { mutateAsync: createWarehouseTransferMutate } =
-    useCreateWarehouseTransfer();
-  const { mutateAsync: editWarehouseTransferMutate } =
-    useEditWarehouseTransfer();
+  const { mutateAsync: createWarehouseTransferMutate } = useCreateWarehouseTransfer();
+  const { mutateAsync: editWarehouseTransferMutate } = useEditWarehouseTransfer();
 
   // Detarmines whether the form in new mode.
   const isNewMode = !warehouseTransferId;
@@ -105,16 +101,13 @@ function WarehouseTransferFormProvider({ warehouseTransferId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isItemsLoading || isWarehouesLoading || isWarehouseTransferLoading
-      }
+      loading={isItemsLoading || isWarehouesLoading || isWarehouseTransferLoading}
       name={'warehouse-transfer-form'}
     >
       <WarehouseFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
-const useWarehouseTransferFormContext = () =>
-  React.useContext(WarehouseFormContext);
+const useWarehouseTransferFormContext = () => React.useContext(WarehouseFormContext);
 
 export { WarehouseTransferFormProvider, useWarehouseTransferFormContext };

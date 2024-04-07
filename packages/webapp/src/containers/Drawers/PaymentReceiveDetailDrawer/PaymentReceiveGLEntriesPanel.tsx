@@ -2,9 +2,7 @@
 import styled from 'styled-components';
 
 import { Card } from '@/components';
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 import { useTransactionsByReference } from '@/hooks/query';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
@@ -31,10 +29,7 @@ export function PaymentReceiveGLEntriesPanel() {
   return (
     <PaymentReceiveGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <JournalEntriesTable
-        loading={isTransactionsLoading}
-        transactions={transactions}
-      />
+      <JournalEntriesTable loading={isTransactionsLoading} transactions={transactions} />
     </PaymentReceiveGLEntriesRoot>
   );
 }

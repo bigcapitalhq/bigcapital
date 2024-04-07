@@ -1,16 +1,12 @@
-import { Model, mixin } from 'objection';
+import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceives/constants';
 import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
+import { Model, mixin } from 'objection';
 import BillPaymentSettings from './BillPayment.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/PaymentReceives/constants';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class BillPayment extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class BillPayment extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */

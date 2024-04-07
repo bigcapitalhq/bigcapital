@@ -1,12 +1,9 @@
-import { Service, Inject } from 'typedi';
-import { sumBy } from 'lodash';
+import { IVendorCreditApplyToBillDeletedPayload, IVendorCreditApplyToBillsCreatedPayload } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import ApplyVendorCreditSyncInvoiced from './ApplyVendorCreditSyncInvoiced';
 import events from '@/subscribers/events';
-import {
-  IVendorCreditApplyToBillDeletedPayload,
-  IVendorCreditApplyToBillsCreatedPayload,
-} from '@/interfaces';
+import { sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
+import ApplyVendorCreditSyncInvoiced from './ApplyVendorCreditSyncInvoiced';
 
 @Service()
 export default class ApplyVendorCreditSyncInvoicedSubscriber {
@@ -20,14 +17,8 @@ export default class ApplyVendorCreditSyncInvoicedSubscriber {
    * Attaches events with handlers.
    */
   attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onApplyToInvoicesCreated,
-      this.incrementBillInvoicedOnceCreditApplied
-    );
-    bus.subscribe(
-      events.vendorCredit.onApplyToInvoicesDeleted,
-      this.decrementBillInvoicedOnceCreditApplyDeleted
-    );
+    bus.subscribe(events.vendorCredit.onApplyToInvoicesCreated, this.incrementBillInvoicedOnceCreditApplied);
+    bus.subscribe(events.vendorCredit.onApplyToInvoicesDeleted, this.decrementBillInvoicedOnceCreditApplyDeleted);
   }
 
   /**
@@ -42,12 +33,7 @@ export default class ApplyVendorCreditSyncInvoicedSubscriber {
   }: IVendorCreditApplyToBillsCreatedPayload) => {
     const amount = sumBy(vendorCreditAppliedBills, 'amount');
 
-    await this.syncCreditWithInvoiced.incrementVendorCreditInvoicedAmount(
-      tenantId,
-      vendorCredit.id,
-      amount,
-      trx
-    );
+    await this.syncCreditWithInvoiced.incrementVendorCreditInvoicedAmount(tenantId, vendorCredit.id, amount, trx);
   };
 
   /**
@@ -64,7 +50,7 @@ export default class ApplyVendorCreditSyncInvoicedSubscriber {
       tenantId,
       oldCreditAppliedToBill.vendorCreditId,
       oldCreditAppliedToBill.amount,
-      trx
+      trx,
     );
   };
 }

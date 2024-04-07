@@ -16,12 +16,7 @@ interface HintProps {
 /**
  * Field hint.
  */
-export function FieldHint({
-  content,
-  position,
-  iconSize = 12,
-  tooltipProps,
-}: HintProps) {
+export function FieldHint({ content, position, iconSize = 12, tooltipProps }: HintProps) {
   return (
     <span class="hint">
       <Tooltip content={content} position={position} {...tooltipProps}>

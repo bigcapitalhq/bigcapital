@@ -16,15 +16,12 @@ export const defaultInitialValues = {
 export const transformToCategorizeForm = (uncategorizedTransaction) => {
   const defaultValues = {
     debitAccountId: uncategorizedTransaction.account_id,
-    transactionType: uncategorizedTransaction.is_deposit_transaction
-      ? 'other_income'
-      : 'other_expense',
+    transactionType: uncategorizedTransaction.is_deposit_transaction ? 'other_income' : 'other_expense',
     amount: uncategorizedTransaction.amount,
     date: uncategorizedTransaction.date,
   };
   return transformToForm(defaultValues, defaultInitialValues);
 };
-
 
 export const tranformToRequest = (formValues) => {
   return transfromToSnakeCase(formValues);

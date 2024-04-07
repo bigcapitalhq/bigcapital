@@ -1,8 +1,8 @@
-import { mixin, Model } from 'objection';
 import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
+import { Model, mixin } from 'objection';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
 export default class CreditNoteAppliedInvoice extends mixin(TenantModel, [
   ModelSetting,

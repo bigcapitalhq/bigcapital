@@ -1,6 +1,3 @@
-
-
-
 export enum PreferencesAction {
-  Mutate = 'Mutate'
+  Mutate = 'Mutate',
 }

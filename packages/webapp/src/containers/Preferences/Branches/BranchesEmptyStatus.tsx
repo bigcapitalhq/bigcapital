@@ -25,11 +25,7 @@ function BranchesEmptyStatus({
       }
       action={
         <React.Fragment>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={handleActivateBranch}
-          >
+          <Button intent={Intent.PRIMARY} large={true} onClick={handleActivateBranch}>
             <T id={'branches.activate_button'} />
           </Button>
         </React.Fragment>

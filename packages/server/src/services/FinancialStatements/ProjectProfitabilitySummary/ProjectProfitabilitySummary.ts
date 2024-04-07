@@ -1,12 +1,9 @@
+import { IProjectProfitabilitySummaryProjectNode, IProjectProfitabilitySummaryTotal } from '@/interfaces';
 import { sumBy } from 'lodash';
 import { map } from 'lodash/fp';
-import {
-  IProjectProfitabilitySummaryProjectNode,
-  IProjectProfitabilitySummaryTotal,
-} from '@/interfaces';
 import Project from 'models/Project';
-import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
 import FinancialSheet from '../FinancialSheet';
+import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
 
 export class ProfitProfitabilitySummary extends FinancialSheet {
   private readonly repository: ProjectProfitabilitySummaryRespository;
@@ -17,10 +14,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {ProjectProfitabilitySummaryRespository} repository
    * @param {string} baseCurrency
    */
-  constructor(
-    repository: ProjectProfitabilitySummaryRespository,
-    baseCurrency: string
-  ) {
+  constructor(repository: ProjectProfitabilitySummaryRespository, baseCurrency: string) {
     super();
 
     this.repository = repository;
@@ -32,12 +26,8 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {number} projectId
    * @returns {IProjectProfitabilitySummaryTotal}
    */
-  private getProjectIncomeNode = (
-    projectId: number
-  ): IProjectProfitabilitySummaryTotal => {
-    const amount = this.repository.incomeLedger
-      .whereProject(projectId)
-      .getClosingBalance();
+  private getProjectIncomeNode = (projectId: number): IProjectProfitabilitySummaryTotal => {
+    const amount = this.repository.incomeLedger.whereProject(projectId).getClosingBalance();
 
     const formattedAmount = this.formatNumber(amount);
 
@@ -53,12 +43,8 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param   {number} projectId
    * @returns {IProjectProfitabilitySummaryTotal}
    */
-  private getProjectExpenseNode = (
-    projectId: number
-  ): IProjectProfitabilitySummaryTotal => {
-    const amount = this.repository.expenseLedger
-      .whereProject(projectId)
-      .getClosingBalance();
+  private getProjectExpenseNode = (projectId: number): IProjectProfitabilitySummaryTotal => {
+    const amount = this.repository.expenseLedger.whereProject(projectId).getClosingBalance();
 
     const formattedAmount = this.formatNumber(amount);
 
@@ -75,13 +61,9 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @returns {number}
    */
   private getProjectProfitTotal = (projectId: number): number => {
-    const incomeTotal = this.repository.incomeLedger
-      .whereProject(projectId)
-      .getClosingBalance();
+    const incomeTotal = this.repository.incomeLedger.whereProject(projectId).getClosingBalance();
 
-    const expenseTotal = this.repository.expenseLedger
-      .whereProject(projectId)
-      .getClosingBalance();
+    const expenseTotal = this.repository.expenseLedger.whereProject(projectId).getClosingBalance();
 
     return incomeTotal - expenseTotal;
   };
@@ -91,9 +73,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {number} projectId - Project id.
    * @returns {IProjectProfitabilitySummaryTotal}
    */
-  private getProjectProfitNode = (
-    projectId: number
-  ): IProjectProfitabilitySummaryTotal => {
+  private getProjectProfitNode = (projectId: number): IProjectProfitabilitySummaryTotal => {
     const amount = this.getProjectProfitTotal(projectId);
     const formattedAmount = this.formatNumber(amount);
 
@@ -109,9 +89,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {Project} project
    * @returns {IProjectProfitabilitySummaryProjectNode}
    */
-  private getProjectNode = (
-    project: Project
-  ): IProjectProfitabilitySummaryProjectNode => {
+  private getProjectNode = (project: Project): IProjectProfitabilitySummaryProjectNode => {
     return {
       projectId: project.id,
       projectName: project.name,
@@ -140,7 +118,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @returns {IProjectProfitabilitySummaryTotal}
    */
   private getProjectsTotalIncomeNode = (
-    projects: IProjectProfitabilitySummaryProjectNode[]
+    projects: IProjectProfitabilitySummaryProjectNode[],
   ): IProjectProfitabilitySummaryTotal => {
     const amount = sumBy(projects, 'income.amount');
     const formattedAmount = this.formatTotalNumber(amount);
@@ -158,7 +136,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @returns {IProjectProfitabilitySummaryTotal}
    */
   private getProjectsTotalExpensesNode = (
-    projects: IProjectProfitabilitySummaryProjectNode[]
+    projects: IProjectProfitabilitySummaryProjectNode[],
   ): IProjectProfitabilitySummaryTotal => {
     const amount = sumBy(projects, 'expenses.amount');
     const formattedAmount = this.formatTotalNumber(amount);
@@ -175,9 +153,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {IProjectProfitabilitySummaryProjectNode[]} projects
    * @returns {IProjectProfitabilitySummaryTotal}
    */
-  private getProjectsTotalProfitNode = (
-    projects: IProjectProfitabilitySummaryProjectNode[]
-  ) => {
+  private getProjectsTotalProfitNode = (projects: IProjectProfitabilitySummaryProjectNode[]) => {
     const amount = sumBy(projects, 'profit.amount');
     const formattedAmount = this.formatTotalNumber(amount);
 
@@ -193,9 +169,7 @@ export class ProfitProfitabilitySummary extends FinancialSheet {
    * @param {IProjectProfitabilitySummaryProjectNode[]} projects
    * @returns {IProjectProfitabilitySummaryTotal}
    */
-  private getProjectsTotalNode = (
-    projects: IProjectProfitabilitySummaryProjectNode[]
-  ) => {
+  private getProjectsTotalNode = (projects: IProjectProfitabilitySummaryProjectNode[]) => {
     const income = this.getProjectsTotalIncomeNode(projects);
     const expenses = this.getProjectsTotalExpensesNode(projects);
     const profit = this.getProjectsTotalProfitNode(projects);

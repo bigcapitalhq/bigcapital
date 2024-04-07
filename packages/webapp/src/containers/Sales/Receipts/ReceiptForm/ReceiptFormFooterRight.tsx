@@ -2,22 +2,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useReceiptTotals } from './utils';
 
 export function ReceiptFormFooterRight() {
-  const {
-    formattedSubtotal,
-    formattedTotal,
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useReceiptTotals();
+  const { formattedSubtotal, formattedTotal, formattedDueTotal, formattedPaymentTotal } = useReceiptTotals();
 
   return (
     <ReceiptTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>

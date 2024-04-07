@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import commander from 'commander';
 import color from 'colorette';
+import commander from 'commander';
 import argv from 'getopts';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';
@@ -50,9 +50,7 @@ function initTenantKnex(organizationId) {
 }
 function exit(text) {
   if (text instanceof Error) {
-    console.error(
-      color.red(`${text.detail ? `${text.detail}\n` : ''}${text.stack}`)
-    );
+    console.error(color.red(`${text.detail ? `${text.detail}\n` : ''}${text.stack}`));
   } else {
     console.error(color.red(text));
   }
@@ -101,7 +99,7 @@ commander
       }
       success(
         color.green(`Batch ${batchNo} rolled back: ${_log.length} migrations`) +
-          (argv.verbose ? `\n${color.cyan(_log.join('\n'))}` : '')
+          (argv.verbose ? `\n${color.cyan(_log.join('\n'))}` : ''),
       );
     } catch (error) {
       exit(error);
@@ -121,7 +119,7 @@ commander
       }
       success(
         color.green(`Batch ${batchNo} run: ${log.length} migrations`) +
-          (argv.verbose ? `\n${color.cyan(log.join('\n'))}` : '')
+          (argv.verbose ? `\n${color.cyan(log.join('\n'))}` : ''),
       );
     } catch (error) {
       exit(error);
@@ -152,9 +150,7 @@ commander
 
       tenants.forEach((tenant) => {
         const dbName = `${config.tenant.db_name_prefix}${tenant.organizationId}`;
-        console.log(
-          `ID: ${tenant.id} | Organization ID: ${tenant.organizationId} | DB Name: ${dbName}`
-        );
+        console.log(`ID: ${tenant.id} | Organization ID: ${tenant.organizationId} | DB Name: ${dbName}`);
       });
     } catch (error) {
       exit(error);
@@ -202,9 +198,8 @@ commander
             log(color.cyan('Already up to date'));
           }
           log(
-            color.green(
-              `Tenant ${tenantDb} > Batch ${batchNo} run: ${_log.length} migrations`
-            ) + (argv.verbose ? `\n${color.cyan(log.join('\n'))}` : '')
+            color.green(`Tenant ${tenantDb} > Batch ${batchNo} run: ${_log.length} migrations`) +
+              (argv.verbose ? `\n${color.cyan(log.join('\n'))}` : ''),
           );
           log('-------------------');
         } catch (error) {
@@ -254,9 +249,8 @@ commander
             log(color.cyan('Already at the base migration'));
           }
           log(
-            color.green(
-              `Tenant: ${tenantDb} > Batch ${batchNo} rolled back: ${_log.length} migrations`
-            ) + (argv.verbose ? `\n${color.cyan(_log.join('\n'))}` : '')
+            color.green(`Tenant: ${tenantDb} > Batch ${batchNo} rolled back: ${_log.length} migrations`) +
+              (argv.verbose ? `\n${color.cyan(_log.join('\n'))}` : ''),
           );
           log('---------------');
         } catch (error) {
@@ -280,4 +274,3 @@ commander
       exit(error);
     }
   });
-

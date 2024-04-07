@@ -6,19 +6,13 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const CustomerOpeningBalanceDialogContent = React.lazy(() =>
-  import('./CustomerOpeningBalanceDialogContent'),
-);
+const CustomerOpeningBalanceDialogContent = React.lazy(() => import('./CustomerOpeningBalanceDialogContent'));
 
 /**
  * Customer opening balance dialog.
  * @returns
  */
-function CustomerOpeningBalanceDialog({
-  dialogName,
-  payload: { customerId },
-  isOpen,
-}) {
+function CustomerOpeningBalanceDialog({ dialogName, payload: { customerId }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -29,10 +23,7 @@ function CustomerOpeningBalanceDialog({
       className={'dialog--customer-opening-balance'}
     >
       <DialogSuspense>
-        <CustomerOpeningBalanceDialogContent
-          customerId={customerId}
-          dialogName={dialogName}
-        />
+        <CustomerOpeningBalanceDialogContent customerId={customerId} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

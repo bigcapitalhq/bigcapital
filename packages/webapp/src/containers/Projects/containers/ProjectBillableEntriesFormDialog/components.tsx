@@ -24,17 +24,11 @@ function BillableEntriesBox({ billableEntry }) {
         </BillableEntryContent>
       </BillableEntriesHeader>
       <BillableEntriesContent>
-        <BillableEntryAmount>
-          {billableEntry.billable_amount_formatted}
-        </BillableEntryAmount>
+        <BillableEntryAmount>{billableEntry.billable_amount_formatted}</BillableEntryAmount>
       </BillableEntriesContent>
       <BillableEntryFooter>
-        <BillableEntryButton small={true}>
-          {intl.get('project_billable_entries.dialog.add')}
-        </BillableEntryButton>
-        <BillableEntryButton small={true}>
-          {intl.get('project_billable_entries.dialog.show')}
-        </BillableEntryButton>
+        <BillableEntryButton small={true}>{intl.get('project_billable_entries.dialog.add')}</BillableEntryButton>
+        <BillableEntryButton small={true}>{intl.get('project_billable_entries.dialog.show')}</BillableEntryButton>
       </BillableEntryFooter>
     </BillableEntriesWrap>
   );
@@ -45,9 +39,7 @@ function BillableEntriesBox({ billableEntry }) {
  * @returns
  */
 export function BillableEntiresBox({ billableEntries }) {
-  return billableEntries.map((entries) => (
-    <BillableEntriesBox billableEntry={entries} />
-  ));
+  return billableEntries.map((entries) => <BillableEntriesBox billableEntry={entries} />);
 }
 
 const BillableEntriesWrap = styled.div`

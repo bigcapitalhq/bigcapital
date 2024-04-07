@@ -1,7 +1,7 @@
+import { ISaleInvoice, ISaleInvoiceDTO, ProjectLinkRefType } from '@/interfaces';
 import async from 'async';
 import { Knex } from 'knex';
 import { Service } from 'typedi';
-import { ISaleInvoice, ISaleInvoiceDTO, ProjectLinkRefType } from '@/interfaces';
 import { ProjectBillableExpense } from './ProjectBillableExpense';
 import { filterEntriesByRefType } from './_utils';
 
@@ -20,17 +20,11 @@ export class ProjectBillableBill {
   public increaseInvoicedBill = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoice | ISaleInvoiceDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Initiates a new queue for accounts balance mutation.
-    const saveAccountsBalanceQueue = async.queue(
-      this.increaseInvoicedExpenseQueue,
-      10
-    );
-    const filteredEntries = filterEntriesByRefType(
-      saleInvoiceDTO.entries,
-      ProjectLinkRefType.Task
-    );
+    const saveAccountsBalanceQueue = async.queue(this.increaseInvoicedExpenseQueue, 10);
+    const filteredEntries = filterEntriesByRefType(saleInvoiceDTO.entries, ProjectLinkRefType.Task);
     filteredEntries.forEach((entry) => {
       saveAccountsBalanceQueue.push({
         tenantId,
@@ -54,17 +48,11 @@ export class ProjectBillableBill {
   public decreaseInvoicedBill = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoice | ISaleInvoiceDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Initiates a new queue for accounts balance mutation.
-    const saveAccountsBalanceQueue = async.queue(
-      this.decreaseInvoicedExpenseQueue,
-      10
-    );
-    const filteredEntries = filterEntriesByRefType(
-      saleInvoiceDTO.entries,
-      ProjectLinkRefType.Task
-    );
+    const saveAccountsBalanceQueue = async.queue(this.decreaseInvoicedExpenseQueue, 10);
+    const filteredEntries = filterEntriesByRefType(saleInvoiceDTO.entries, ProjectLinkRefType.Task);
     filteredEntries.forEach((entry) => {
       saveAccountsBalanceQueue.push({
         tenantId,
@@ -82,35 +70,15 @@ export class ProjectBillableBill {
    * Queue job increases the invoiced amount of the given bill.
    * @param {IncreaseInvoicedTaskQueuePayload} - payload
    */
-  private increaseInvoicedExpenseQueue = async ({
-    tenantId,
-    projectRefId,
-    projectRefInvoicedAmount,
-    trx,
-  }) => {
-    await this.projectBillableExpense.increaseInvoicedExpense(
-      tenantId,
-      projectRefId,
-      projectRefInvoicedAmount,
-      trx
-    );
+  private increaseInvoicedExpenseQueue = async ({ tenantId, projectRefId, projectRefInvoicedAmount, trx }) => {
+    await this.projectBillableExpense.increaseInvoicedExpense(tenantId, projectRefId, projectRefInvoicedAmount, trx);
   };
 
   /**
    * Queue job decreases the invoiced amount of the given bill.
    * @param {IncreaseInvoicedTaskQueuePayload} - payload
    */
-  private decreaseInvoicedExpenseQueue = async ({
-    tenantId,
-    projectRefId,
-    projectRefInvoicedAmount,
-    trx,
-  }) => {
-    await this.projectBillableExpense.decreaseInvoicedExpense(
-      tenantId,
-      projectRefId,
-      projectRefInvoicedAmount,
-      trx
-    );
+  private decreaseInvoicedExpenseQueue = async ({ tenantId, projectRefId, projectRefInvoicedAmount, trx }) => {
+    await this.projectBillableExpense.decreaseInvoicedExpense(tenantId, projectRefId, projectRefInvoicedAmount, trx);
   };
 }

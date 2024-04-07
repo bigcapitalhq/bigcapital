@@ -1,10 +1,6 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
-import {
-  defaultFastFieldShouldUpdate,
-  uniqueMultiProps,
-  checkRequiredProperties,
-} from '@/utils';
+import { defaultFastFieldShouldUpdate, uniqueMultiProps, checkRequiredProperties } from '@/utils';
 
 // Conditions options.
 export const getConditionalsOptions = () => [
@@ -54,25 +50,21 @@ export const getNumberCampatators = () => [
   { value: 'smaller_or_equal', label: intl.get('smaller_or_equals') },
 ];
 
-export const getConditionTypeCompatators = (
-  dataType,
-) => {
+export const getConditionTypeCompatators = (dataType) => {
   return [
     ...(dataType === 'enumeration'
       ? [...getOptionsCompatators()]
       : dataType === 'date'
-      ? [...getDateCompatators()]
-      : dataType === 'boolean'
-      ? [...getBooleanCompatators()]
-      : dataType === 'number'
-      ? [...getNumberCampatators()]
-      : [...getTextCompatators()]),
+        ? [...getDateCompatators()]
+        : dataType === 'boolean'
+          ? [...getBooleanCompatators()]
+          : dataType === 'number'
+            ? [...getNumberCampatators()]
+            : [...getTextCompatators()]),
   ];
 };
 
-export const getConditionDefaultCompatator = (
-  dataType,
-) => {
+export const getConditionDefaultCompatator = (dataType) => {
   const compatators = getConditionTypeCompatators(dataType);
   return compatators[0];
 };
@@ -89,15 +81,10 @@ export const transformFieldsToOptions = (fields) =>
  * @param {IFilterRole[]} conditions
  * @returns
  */
-export const filterConditionRoles = (
-  conditions,
-) => {
+export const filterConditionRoles = (conditions) => {
   const requiredProps = ['fieldKey', 'condition', 'comparator', 'value'];
 
-  const filteredConditions = conditions.filter(
-    (condition) =>
-      !checkRequiredProperties(condition, requiredProps),
-  );
+  const filteredConditions = conditions.filter((condition) => !checkRequiredProperties(condition, requiredProps));
   return uniqueMultiProps(filteredConditions, requiredProps);
 };
 
@@ -106,8 +93,5 @@ export const filterConditionRoles = (
  * @returns {boolean}
  */
 export const shouldFilterValueFieldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.fieldKey !== oldProps.fieldKey ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.fieldKey !== oldProps.fieldKey || defaultFastFieldShouldUpdate(newProps, oldProps);
 };

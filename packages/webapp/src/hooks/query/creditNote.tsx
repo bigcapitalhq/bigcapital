@@ -58,16 +58,13 @@ export function useCreateCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('sales/credit_notes', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.post('sales/credit_notes', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -77,19 +74,16 @@ export function useEditCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/credit_notes/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation(([id, values]) => apiRequest.post(`sales/credit_notes/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate credit note query.
-        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
-      },
-      ...props,
+      // Invalidate credit note query.
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -174,20 +168,16 @@ export function useCreateRefundCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/credit_notes/${id}/refund`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation(([id, values]) => apiRequest.post(`sales/credit_notes/${id}/refund`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate credit note query.
-        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
-      },
-      ...props,
+      // Invalidate credit note query.
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -197,19 +187,16 @@ export function useDeleteRefundCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`sales/credit_notes/refunds/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation((id) => apiRequest.delete(`sales/credit_notes/refunds/${id}`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate vendor credit query.
-        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
-      },
-      ...props,
+      // Invalidate vendor credit query.
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -276,20 +263,16 @@ export function useCreateReconcileCreditNote(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/credit_notes/${id}/apply-to-invoices`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation(([id, values]) => apiRequest.post(`sales/credit_notes/${id}/apply-to-invoices`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate credit note query.
-        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
-      },
-      ...props,
+      // Invalidate credit note query.
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -318,19 +301,16 @@ export function useDeleteReconcileCredit(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`sales/credit_notes/applied-to-invoices/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation((id) => apiRequest.delete(`sales/credit_notes/applied-to-invoices/${id}`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate vendor credit query.
-        queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
-      },
-      ...props,
+      // Invalidate vendor credit query.
+      queryClient.invalidateQueries([t.CREDIT_NOTE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**

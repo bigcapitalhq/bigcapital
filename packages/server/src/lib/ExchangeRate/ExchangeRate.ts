@@ -18,9 +18,7 @@ export class ExchangeRate {
    * Initialize the exchange rate service based on the service type.
    */
   private initService() {
-    if (
-      this.exchangeRateServiceType === ExchangeRateServiceType.OpenExchangeRate
-    ) {
+    if (this.exchangeRateServiceType === ExchangeRateServiceType.OpenExchangeRate) {
       this.setExchangeRateService(new OpenExchangeRate());
     }
   }

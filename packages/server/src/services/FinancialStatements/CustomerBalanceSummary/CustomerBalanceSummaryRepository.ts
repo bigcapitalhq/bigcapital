@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { map, isEmpty } from 'lodash';
-import { ICustomer, IAccount } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { IAccount, ICustomer } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { isEmpty, map } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CustomerBalanceSummaryRepository {
@@ -35,10 +35,7 @@ export default class CustomerBalanceSummaryRepository {
   public getReceivableAccounts(tenantId: number): Promise<IAccount> {
     const { Account } = this.tenancy.models(tenantId);
 
-    return Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE
-    );
+    return Account.query().where('accountType', ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE);
   }
 
   /**
@@ -54,16 +51,14 @@ export default class CustomerBalanceSummaryRepository {
     const receivableAccountsIds = map(receivableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await AccountTransaction.query().onBuild(
-      (query) => {
-        query.whereIn('accountId', receivableAccountsIds);
-        query.modify('filterDateRange', null, asDate);
-        query.groupBy('contactId');
-        query.sum('credit as credit');
-        query.sum('debit as debit');
-        query.select('contactId');
-      }
-    );
+    const customersTranasctions = await AccountTransaction.query().onBuild((query) => {
+      query.whereIn('accountId', receivableAccountsIds);
+      query.modify('filterDateRange', null, asDate);
+      query.groupBy('contactId');
+      query.sum('credit as credit');
+      query.sum('debit as debit');
+      query.select('contactId');
+    });
     return customersTranasctions;
   }
 }

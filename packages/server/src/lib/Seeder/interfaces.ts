@@ -1,6 +1,6 @@
-import { ITenant } from "interfaces";
+import { ITenant } from 'interfaces';
 
-export interface FsMigrations {}
+export type FsMigrations = {};
 
 export interface ISeederConfig {
   tableName: string;

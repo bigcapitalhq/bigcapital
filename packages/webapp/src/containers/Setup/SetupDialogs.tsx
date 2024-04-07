@@ -10,5 +10,5 @@ export default function SetupDialogs() {
     <div class="setup-dialogs">
       <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
     </div>
-  )
+  );
 }

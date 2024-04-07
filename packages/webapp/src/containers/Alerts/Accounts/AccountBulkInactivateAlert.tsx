@@ -22,7 +22,6 @@ function AccountBulkInactivateAlert({
 
   closeAlert,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
@@ -65,8 +64,4 @@ function AccountBulkInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkInactivateAlert);

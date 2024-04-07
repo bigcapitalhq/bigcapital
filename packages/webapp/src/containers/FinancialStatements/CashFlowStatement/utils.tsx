@@ -46,10 +46,7 @@ export const useCashflowStatementQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseCashflowQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseCashflowQuery(locationQuery), [locationQuery]);
 
   return {
     query,

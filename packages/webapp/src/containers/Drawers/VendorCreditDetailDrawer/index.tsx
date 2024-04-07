@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const VendorCreditDetailDrawerContent = React.lazy(() =>
-  import('./VendorCreditDetailDrawerContent'),
-);
+const VendorCreditDetailDrawerContent = React.lazy(() => import('./VendorCreditDetailDrawerContent'));
 
 /**
  * Vendor Credit detail drawer.
@@ -19,12 +17,7 @@ function VendorCreditDetailDrawer({
   payload: { vendorCreditId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
         <VendorCreditDetailDrawerContent vendorCreditId={vendorCreditId} />
       </DrawerSuspense>

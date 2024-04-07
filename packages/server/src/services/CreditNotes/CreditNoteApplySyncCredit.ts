@@ -1,6 +1,6 @@
-import Knex from 'knex';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import Knex from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CreditNoteApplySyncCredit {
@@ -17,13 +17,11 @@ export default class CreditNoteApplySyncCredit {
     tenantId: number,
     creditNoteId: number,
     invoicesAppliedAmount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
-    await CreditNote.query(trx)
-      .findById(creditNoteId)
-      .increment('invoicesAmount', invoicesAppliedAmount);
+    await CreditNote.query(trx).findById(creditNoteId).increment('invoicesAmount', invoicesAppliedAmount);
   };
 
   /**
@@ -36,12 +34,10 @@ export default class CreditNoteApplySyncCredit {
     tenantId: number,
     creditNoteId: number,
     invoicesAppliedAmount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
-    await CreditNote.query(trx)
-      .findById(creditNoteId)
-      .decrement('invoicesAmount', invoicesAppliedAmount);
+    await CreditNote.query(trx).findById(creditNoteId).decrement('invoicesAmount', invoicesAppliedAmount);
   };
 }

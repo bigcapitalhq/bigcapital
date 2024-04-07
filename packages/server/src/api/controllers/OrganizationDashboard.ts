@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
 import BaseController from '@/api/controllers/BaseController';
+import { NextFunction, Request, Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
+import { ServiceError } from '../../exceptions';
 import OrganizationService from '../../services/Organization/OrganizationService';
 import OrganizationUpgrade from '../../services/Organization/OrganizationUpgrade';
-import { ServiceError } from '../../exceptions';
 
 @Service()
 export default class OrganizationDashboardController extends BaseController {
@@ -19,15 +19,12 @@ export default class OrganizationDashboardController extends BaseController {
   router() {
     const router = Router();
 
-    router.get(
-      '/base_currency_mutate',
-      this.baseCurrencyMutateAbility.bind(this)
-    );
+    router.get('/base_currency_mutate', this.baseCurrencyMutateAbility.bind(this));
     router.post(
       '/upgrade',
       this.validationResult,
       this.asyncMiddleware(this.upgradeOrganization),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -39,16 +36,11 @@ export default class OrganizationDashboardController extends BaseController {
    * @param next
    * @returns
    */
-  private async baseCurrencyMutateAbility(
-    req: Request,
-    res: Response,
-    next: Function
-  ) {
+  private async baseCurrencyMutateAbility(req: Request, res: Response, next: Function) {
     const { tenantId } = req;
 
     try {
-      const abilities =
-        await this.organizationService.mutateBaseCurrencyAbility(tenantId);
+      const abilities = await this.organizationService.mutateBaseCurrencyAbility(tenantId);
 
       return res.status(200).send({ abilities });
     } catch (error) {
@@ -63,11 +55,7 @@ export default class OrganizationDashboardController extends BaseController {
    * @param {NextFunction} next -
    * @returns {Response}
    */
-  public upgradeOrganization = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public upgradeOrganization = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
@@ -91,12 +79,7 @@ export default class OrganizationDashboardController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  private handleServiceErrors = (
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private handleServiceErrors = (error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
       if (error.errorType === 'TENANT_DATABASE_UPGRADED') {
         return res.status(400).send({

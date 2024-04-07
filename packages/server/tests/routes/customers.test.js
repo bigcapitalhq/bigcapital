@@ -1,21 +1,11 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import Currency from 'models/Currency';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 import Customer from '../../src/models/Customer';
 
 describe('route: `/customers`', () => {
   describe('POST: `/customers`', () => {
     it('Should response unauthorized in case the user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/customers')
-        .send({});
+      const res = await request().post('/api/customers').send({});
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -26,14 +16,14 @@ describe('route: `/customers`', () => {
         .post('/api/customers')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .send({
-
-        });
+        .send({});
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'display_name', location: 'body',
-      })
+        msg: 'Invalid value',
+        param: 'display_name',
+        location: 'body',
+      });
     });
 
     it('Should `customer_type` be required field', async () => {
@@ -45,7 +35,9 @@ describe('route: `/customers`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'customer_type', location: 'body',
+        msg: 'Invalid value',
+        param: 'customer_type',
+        location: 'body',
       });
     });
 
@@ -79,7 +71,7 @@ describe('route: `/customers`', () => {
           shipping_address_email: 'a.bouhuolia@live.com',
           shipping_address_state: 'State Tripoli',
           shipping_address_zipcode: '21892',
-          
+
           note: '__desc__',
 
           active: true,
@@ -96,7 +88,7 @@ describe('route: `/customers`', () => {
       expect(foundCustomer[0].displayName).equals('Ahmed Bouhuolia, Bigcapital');
 
       expect(foundCustomer[0].email).equals('a.bouhuolia@live.com');
-      
+
       expect(foundCustomer[0].workPhone).equals('0927918381');
       expect(foundCustomer[0].personalPhone).equals('0925173379');
 
@@ -105,7 +97,7 @@ describe('route: `/customers`', () => {
       expect(foundCustomer[0].billingAddressEmail).equals('a.bouhuolia@live.com');
       expect(foundCustomer[0].billingAddressState).equals('State Tripoli');
       expect(foundCustomer[0].billingAddressZipcode).equals('21892');
-      
+
       expect(foundCustomer[0].shippingAddressCity).equals('Tripoli');
       expect(foundCustomer[0].shippingAddressCountry).equals('Libya');
       expect(foundCustomer[0].shippingAddressEmail).equals('a.bouhuolia@live.com');
@@ -124,7 +116,8 @@ describe('route: `/customers`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.NOT.FOUND', code: 200,
+        type: 'CUSTOMER.NOT.FOUND',
+        code: 200,
       });
     });
   });
@@ -154,7 +147,8 @@ describe('route: `/customers`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.NOT.FOUND', code: 200,
+        type: 'CUSTOMER.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -170,7 +164,7 @@ describe('route: `/customers`', () => {
 
       const foundCustomer = await Customer.tenant().query().where('id', customer.id);
       expect(foundCustomer.length).equals(0);
-    })
+    });
   });
 
   describe('POST: `/customers/:id`', () => {
@@ -186,7 +180,8 @@ describe('route: `/customers`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.NOT.FOUND', code: 200,
+        type: 'CUSTOMER.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -207,7 +202,7 @@ describe('route: `/customers`', () => {
       expect(foundCustomer.length).equals(1);
       expect(foundCustomer[0].customerType).equals('business');
       expect(foundCustomer[0].displayName).equals('Ahmed Bouhuolia, Bigcapital');
-    })
+    });
   });
 
   describe('DELETE: `customers`', () => {
@@ -223,7 +218,8 @@ describe('route: `/customers`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMERS.NOT.FOUND', code: 200,        
+        type: 'CUSTOMERS.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -240,11 +236,10 @@ describe('route: `/customers`', () => {
         })
         .send();
 
-      const foundCustomers = await Customer.tenant().query()
-        .whereIn('id', [customer1.id, customer2.id]);
+      const foundCustomers = await Customer.tenant().query().whereIn('id', [customer1.id, customer2.id]);
 
       expect(res.status).equals(200);
       expect(foundCustomers.length).equals(0);
     });
-  })
+  });
 });

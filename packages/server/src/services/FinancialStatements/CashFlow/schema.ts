@@ -1,5 +1,5 @@
-import { ICashFlowSchemaSection, CASH_FLOW_SECTION_ID, ICashFlowStatementSectionType } from '@/interfaces';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { CASH_FLOW_SECTION_ID, ICashFlowSchemaSection, ICashFlowStatementSectionType } from '@/interfaces';
 
 export default [
   {
@@ -36,9 +36,7 @@ export default [
     id: CASH_FLOW_SECTION_ID.INVESTMENT,
     sectionType: ICashFlowStatementSectionType.ACCOUNTS,
     label: 'INVESTMENT ACTIVITIES',
-    accountsRelations: [
-      { type: ACCOUNT_TYPE.FIXED_ASSET, direction: 'mines' }
-    ],
+    accountsRelations: [{ type: ACCOUNT_TYPE.FIXED_ASSET, direction: 'mines' }],
     footerLabel: 'Net cash provided by investing activities',
   },
   {

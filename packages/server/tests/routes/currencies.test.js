@@ -1,21 +1,11 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
 import Currency from 'models/Currency';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: /currencies/', () => {
   describe('POST: `/api/currencies`', () => {
     it('Should response unauthorized in case user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/currencies')
-        .send();
+      const res = await request().post('/api/currencies').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -31,7 +21,9 @@ describe('route: /currencies/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'currency_name', location: 'body',
+        msg: 'Invalid value',
+        param: 'currency_name',
+        location: 'body',
       });
     });
 
@@ -45,7 +37,9 @@ describe('route: /currencies/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'currency_code', location: 'body',
+        msg: 'Invalid value',
+        param: 'currency_code',
+        location: 'body',
       });
     });
 
@@ -63,7 +57,8 @@ describe('route: /currencies/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CURRENCY.CODE.ALREADY.EXISTS', code: 100,
+        type: 'CURRENCY.CODE.ALREADY.EXISTS',
+        code: 100,
       });
     });
 
@@ -126,7 +121,9 @@ describe('route: /currencies/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'currency_name', location: 'body',
+        msg: 'Invalid value',
+        param: 'currency_name',
+        location: 'body',
       });
     });
 
@@ -141,7 +138,9 @@ describe('route: /currencies/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'currency_code', location: 'body',
+        msg: 'Invalid value',
+        param: 'currency_code',
+        location: 'body',
       });
     });
 
@@ -160,7 +159,8 @@ describe('route: /currencies/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CURRENCY.CODE.ALREADY.EXISTS', code: 100,
+        type: 'CURRENCY.CODE.ALREADY.EXISTS',
+        code: 100,
       });
     });
 
@@ -184,8 +184,6 @@ describe('route: /currencies/', () => {
       expect(foundCurrency[0].currencyName).equals('Name');
     });
 
-    it('Should response success with correct data.', () => {
-
-    });
-  })
+    it('Should response success with correct data.', () => {});
+  });
 });

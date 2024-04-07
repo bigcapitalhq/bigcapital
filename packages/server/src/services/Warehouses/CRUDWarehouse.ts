@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './contants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject } from 'typedi';
+import { ERRORS } from './contants';
 
 export class CRUDWarehouse {
   @Inject()
@@ -22,5 +22,5 @@ export class CRUDWarehouse {
     if (!warehouse) {
       throw new ServiceError(ERRORS.WAREHOUSE_NOT_FOUND);
     }
-  }
+  };
 }

@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
-import { AbilitySubject, AccountAction } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, AccountAction } from '@/interfaces';
 import { TimesApplication } from '@/services/Projects/Times/TimesApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ProjectTimesController extends BaseController {
@@ -30,7 +30,7 @@ export class ProjectTimesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.createTime.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/projects/times/:timeId',
@@ -43,37 +43,31 @@ export class ProjectTimesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.editTime.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/projects/times/:timeId',
       CheckPolicies(AccountAction.VIEW, AbilitySubject.Project),
-      [
-        param('timeId').exists().isInt().toInt(),
-      ],
+      [param('timeId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTime.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/projects/:projectId/times',
       CheckPolicies(AccountAction.VIEW, AbilitySubject.Project),
-      [
-        param('projectId').exists().isInt().toInt(),
-      ],
+      [param('projectId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTimeline.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.delete(
       '/projects/times/:timeId',
       CheckPolicies(AccountAction.DELETE, AbilitySubject.Project),
-      [
-        param('timeId').exists().isInt().toInt(),
-      ],
+      [param('timeId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.deleteTime.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -129,11 +123,7 @@ export class ProjectTimesController extends BaseController {
     const taskDTO = this.matchedBodyData(req);
 
     try {
-      const task = await this.timesApplication.createTime(
-        tenantId,
-        taskId,
-        taskDTO
-      );
+      const task = await this.timesApplication.createTime(tenantId, taskId, taskDTO);
       return res.status(200).send({
         id: task.id,
         message: 'The time entry has been created successfully.',
@@ -156,11 +146,7 @@ export class ProjectTimesController extends BaseController {
     const editTaskDTO = this.matchedBodyData(req);
 
     try {
-      const task = await this.timesApplication.editTime(
-        tenantId,
-        timeId,
-        editTaskDTO
-      );
+      const task = await this.timesApplication.editTime(tenantId, timeId, editTaskDTO);
       return res.status(200).send({
         id: task.id,
         message: 'The task has been edited successfully.',
@@ -222,10 +208,7 @@ export class ProjectTimesController extends BaseController {
     const { projectId } = req.params;
 
     try {
-      const timeline = await this.timesApplication.getTimeline(
-        tenantId,
-        projectId
-      );
+      const timeline = await this.timesApplication.getTimeline(tenantId, projectId);
 
       return res.status(200).send({ timeline });
     } catch (error) {
@@ -240,12 +223,7 @@ export class ProjectTimesController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
     }
     next(error);

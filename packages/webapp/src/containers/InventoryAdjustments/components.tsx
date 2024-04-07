@@ -2,24 +2,12 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import {
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Intent,
-  Tag,
-  Position,
-  Button,
-  Popover,
-} from '@blueprintjs/core';
+import { Menu, MenuDivider, MenuItem, Intent, Tag, Position, Button, Popover } from '@blueprintjs/core';
 
 import { isNumber } from 'lodash';
 import { Icon, Money, If, FormattedMessage as T, Can } from '@/components';
 import { isBlank, safeCallback } from '@/utils';
-import {
-  InventoryAdjustmentAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { InventoryAdjustmentAction, AbilitySubject } from '@/constants/abilityOption';
 
 /**
  * Publish accessor
@@ -65,9 +53,7 @@ export const ItemCodeAccessor = (row) =>
  * Quantity on hand cell.
  */
 export const QuantityOnHandCell = ({ cell: { value } }) => {
-  return isNumber(value) ? (
-    <span className={'quantity_on_hand'}>{value}</span>
-  ) : null;
+  return isNumber(value) ? <span className={'quantity_on_hand'}>{value}</span> : null;
 };
 
 /**
@@ -95,10 +81,7 @@ export const ItemTypeAccessor = (row) => {
   ) : null;
 };
 
-export const ActionsMenu = ({
-  row: { original },
-  payload: { onDelete, onPublish, onViewDetails },
-}) => {
+export const ActionsMenu = ({ row: { original }, payload: { onDelete, onPublish, onViewDetails } }) => {
   return (
     <Menu>
       <MenuItem
@@ -107,10 +90,7 @@ export const ActionsMenu = ({
         onClick={safeCallback(onViewDetails, original)}
       />
 
-      <Can
-        I={InventoryAdjustmentAction.Create}
-        a={AbilitySubject.InventoryAdjustment}
-      >
+      <Can I={InventoryAdjustmentAction.Create} a={AbilitySubject.InventoryAdjustment}>
         <MenuDivider />
         <If condition={!original.is_published}>
           <MenuItem
@@ -120,10 +100,7 @@ export const ActionsMenu = ({
           />
         </If>
       </Can>
-      <Can
-        I={InventoryAdjustmentAction.Delete}
-        a={AbilitySubject.InventoryAdjustment}
-      >
+      <Can I={InventoryAdjustmentAction.Delete} a={AbilitySubject.InventoryAdjustment}>
         <MenuItem
           text={intl.get('delete_adjustment')}
           intent={Intent.DANGER}
@@ -137,10 +114,7 @@ export const ActionsMenu = ({
 
 export const ActionsCell = (props) => {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

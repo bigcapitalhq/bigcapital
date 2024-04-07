@@ -1,10 +1,10 @@
-import * as R from 'ramda';
-import { Service, Inject } from 'typedi';
-import BaseVendorCredit from './BaseVendorCredit';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { IVendorCreditsQueryDTO } from '@/interfaces';
-import { VendorCreditTransformer } from './VendorCreditTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import BaseVendorCredit from './BaseVendorCredit';
+import { VendorCreditTransformer } from './VendorCreditTransformer';
 
 @Service()
 export default class ListVendorCredits extends BaseVendorCredit {
@@ -28,21 +28,14 @@ export default class ListVendorCredits extends BaseVendorCredit {
    * @param {number} tenantId - Tenant id.
    * @param {IVendorCreditsQueryDTO} vendorCreditQuery -
    */
-  public getVendorCredits = async (
-    tenantId: number,
-    vendorCreditQuery: IVendorCreditsQueryDTO
-  ) => {
+  public getVendorCredits = async (tenantId: number, vendorCreditQuery: IVendorCreditsQueryDTO) => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
     // Parses stringified filter roles.
     const filter = this.parseListFilterDTO(vendorCreditQuery);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      VendorCredit,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, VendorCredit, filter);
     const { results, pagination } = await VendorCredit.query()
       .onBuild((builder) => {
         builder.withGraphFetched('entries');
@@ -52,11 +45,7 @@ export default class ListVendorCredits extends BaseVendorCredit {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the vendor credits models to POJO.
-    const vendorCredits = await this.transformer.transform(
-      tenantId,
-      results,
-      new VendorCreditTransformer()
-    );
+    const vendorCredits = await this.transformer.transform(tenantId, results, new VendorCreditTransformer());
     return {
       vendorCredits,
       pagination,

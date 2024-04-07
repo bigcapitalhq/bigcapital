@@ -18,7 +18,6 @@ import { CLASSES } from '@/constants/classes';
 import { useCustomerFormContext } from './CustomerFormProvider';
 import { safeInvoke } from '@/utils';
 
-
 /**
  * Customer floating actions bar.
  */
@@ -65,10 +64,7 @@ export default function CustomerFloatingActions({ onCancel }) {
         <Popover
           content={
             <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitAndNewClick}
-              />
+              <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitAndNewClick} />
             </Menu>
           }
           minimal={true}
@@ -91,11 +87,7 @@ export default function CustomerFloatingActions({ onCancel }) {
         text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

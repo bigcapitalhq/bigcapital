@@ -21,20 +21,11 @@ function CategorizeTransactionFormFooterRoot({
     <Root>
       <div className={Classes.DRAWER_FOOTER}>
         <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '75px' }}
-            type="submit"
-          >
+          <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
             Save
           </Button>
 
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '75px' }}
-          >
+          <Button disabled={isSubmitting} onClick={handleClose} style={{ minWidth: '75px' }}>
             Close
           </Button>
         </Group>
@@ -43,9 +34,7 @@ function CategorizeTransactionFormFooterRoot({
   );
 }
 
-export const CategorizeTransactionFormFooter = R.compose(withDrawerActions)(
-  CategorizeTransactionFormFooterRoot,
-);
+export const CategorizeTransactionFormFooter = R.compose(withDrawerActions)(CategorizeTransactionFormFooterRoot);
 
 const Root = styled.div`
   position: absolute;

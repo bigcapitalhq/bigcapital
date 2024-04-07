@@ -34,11 +34,9 @@ function DashboardUniversalSearchItemActions({
 }
 
 export default R.compose(
-  withUniversalSearch(
-    ({ searchSelectedResourceType, searchSelectedResourceId }) => ({
-      searchSelectedResourceType,
-      searchSelectedResourceId,
-    }),
-  ),
+  withUniversalSearch(({ searchSelectedResourceType, searchSelectedResourceId }) => ({
+    searchSelectedResourceType,
+    searchSelectedResourceId,
+  })),
   withUniversalSearchActions,
 )(DashboardUniversalSearchItemActions);

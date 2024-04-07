@@ -1,8 +1,7 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { ICashflowTransactionUncategorizedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { DeleteCashflowTransaction } from '../DeleteCashflowTransactionService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class DeleteCashflowTransactionOnUncategorize {
@@ -13,10 +12,7 @@ export class DeleteCashflowTransactionOnUncategorize {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.cashflow.onTransactionUncategorized,
-      this.deleteCashflowTransactionOnUncategorize.bind(this)
-    );
+    bus.subscribe(events.cashflow.onTransactionUncategorized, this.deleteCashflowTransactionOnUncategorize.bind(this));
   };
 
   /**
@@ -29,13 +25,11 @@ export class DeleteCashflowTransactionOnUncategorize {
     trx,
   }: ICashflowTransactionUncategorizedPayload) {
     // Deletes the cashflow transaction.
-    if (
-      oldUncategorizedTransaction.categorizeRefType === 'CashflowTransaction'
-    ) {
+    if (oldUncategorizedTransaction.categorizeRefType === 'CashflowTransaction') {
       await this.deleteCashflowTransactionService.deleteCashflowTransaction(
         tenantId,
 
-        oldUncategorizedTransaction.categorizeRefId
+        oldUncategorizedTransaction.categorizeRefId,
       );
     }
   }

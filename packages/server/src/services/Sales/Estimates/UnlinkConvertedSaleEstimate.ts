@@ -1,6 +1,6 @@
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class UnlinkConvertedSaleEstimate {
@@ -16,7 +16,7 @@ export class UnlinkConvertedSaleEstimate {
   public async unlinkConvertedEstimateFromInvoice(
     tenantId: number,
     invoiceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 

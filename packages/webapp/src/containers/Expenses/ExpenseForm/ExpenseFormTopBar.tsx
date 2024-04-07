@@ -4,13 +4,7 @@ import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
-import {
-  BranchSelect,
-  FeatureCan,
-  FormTopbar,
-  DetailsBarSkeletonBase,
-  FormBranchSelectButton,
-} from '@/components';
+import { BranchSelect, FeatureCan, FormTopbar, DetailsBarSkeletonBase, FormBranchSelectButton } from '@/components';
 import { useExpenseFormContext } from './ExpenseFormPageProvider';
 
 /**

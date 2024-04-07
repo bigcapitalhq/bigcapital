@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { ITrialBalanceSheetQuery, ITrialBalanceSheetTable } from '@/interfaces';
-import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
+import { Inject, Service } from 'typedi';
 import TrialBalanceSheetService from './TrialBalanceSheetInjectable';
+import { TrialBalanceSheetTable } from './TrialBalanceSheetTable';
 
 @Service()
 export class TrialBalanceSheetTableInjectable {
@@ -14,10 +14,7 @@ export class TrialBalanceSheetTableInjectable {
    * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<ITrialBalanceSheetTable>}
    */
-  public async table(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<ITrialBalanceSheetTable> {
+  public async table(tenantId: number, query: ITrialBalanceSheetQuery): Promise<ITrialBalanceSheetTable> {
     const trialBalance = await this.sheet.trialBalanceSheet(tenantId, query);
     const table = new TrialBalanceSheetTable(trialBalance.data, query, {});
 

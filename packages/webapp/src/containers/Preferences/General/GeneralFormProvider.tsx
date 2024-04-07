@@ -20,15 +20,12 @@ const GeneralFormContext = createContext();
  */
 function GeneralFormProvider({ ...props }) {
   // Fetches current organization information.
-  const { isLoading: isOrganizationLoading, data: organization } =
-    useCurrentOrganization();
+  const { isLoading: isOrganizationLoading, data: organization } = useCurrentOrganization();
 
   // Fetch date format options.
-  const { data: dateFormats, isLoading: isDateFormatsLoading } =
-    useDateFormats();
+  const { data: dateFormats, isLoading: isDateFormatsLoading } = useDateFormats();
 
-  const { data: baseCurrencyMutateAbility } =
-    useOrgBaseCurrencyMutateAbilities();
+  const { data: baseCurrencyMutateAbility } = useOrgBaseCurrencyMutateAbilities();
 
   // Mutate organization information.
   const { mutateAsync: updateOrganization } = useUpdateOrganization();
@@ -45,10 +42,7 @@ function GeneralFormProvider({ ...props }) {
 
   return (
     <div
-      className={classNames(
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL,
-      )}
+      className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT, CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_GENERAL)}
     >
       <GeneralFormCard>
         {isOrganizationLoading || isDateFormatsLoading ? (

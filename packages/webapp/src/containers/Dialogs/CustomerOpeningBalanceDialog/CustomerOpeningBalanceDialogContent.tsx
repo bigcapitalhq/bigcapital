@@ -16,10 +16,7 @@ export default function CustomerOpeningBalanceDialogContent({
   customerId,
 }) {
   return (
-    <CustomerOpeningBalanceFormProvider
-      customerId={customerId}
-      dialogName={dialogName}
-    >
+    <CustomerOpeningBalanceFormProvider customerId={customerId} dialogName={dialogName}>
       <CustomerOpeningBalanceForm />
     </CustomerOpeningBalanceFormProvider>
   );

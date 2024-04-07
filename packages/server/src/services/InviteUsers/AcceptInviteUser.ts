@@ -1,23 +1,16 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
 import { ServiceError } from '@/exceptions';
-import { Invite, SystemUser, Tenant } from '@/system/models';
-import { hashPassword } from 'utils';
-import events from '@/subscribers/events';
-import {
-  IAcceptInviteEventPayload,
-  IInviteUserInput,
-  ICheckInviteEventPayload,
-  IUserInvite,
-} from '@/interfaces';
-import { ERRORS } from './constants';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { IAcceptInviteEventPayload, ICheckInviteEventPayload, IInviteUserInput, IUserInvite } from '@/interfaces';
 import { IAcceptInviteUserService } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import { Invite, SystemUser, Tenant } from '@/system/models';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { hashPassword } from 'utils';
+import { ERRORS } from './constants';
 
 @Service()
-export default class AcceptInviteUserService
-  implements IAcceptInviteUserService
-{
+export default class AcceptInviteUserService implements IAcceptInviteUserService {
   @Inject()
   private eventPublisher: EventPublisher;
 
@@ -28,10 +21,7 @@ export default class AcceptInviteUserService
    * @throws {ServiceErrors}
    * @returns {Promise<void>}
    */
-  public async acceptInvite(
-    token: string,
-    inviteUserDTO: IInviteUserInput
-  ): Promise<void> {
+  public async acceptInvite(token: string, inviteUserDTO: IInviteUserInput): Promise<void> {
     // Retrieve the invite token or throw not found error.
     const inviteToken = await this.getInviteTokenOrThrowError(token);
 
@@ -42,14 +32,11 @@ export default class AcceptInviteUserService
     const user = await SystemUser.query().findOne('email', inviteToken.email);
 
     // Sets the invited user details after invite accepting.
-    const systemUser = await SystemUser.query().updateAndFetchById(
-      inviteToken.userId,
-      {
-        ...inviteUserDTO,
-        inviteAcceptedAt: moment().format('YYYY-MM-DD'),
-        password: hashedPassword,
-      }
-    );
+    const systemUser = await SystemUser.query().updateAndFetchById(inviteToken.userId, {
+      ...inviteUserDTO,
+      inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+      password: hashedPassword,
+    });
     // Clear invite token by the given user id.
     await this.clearInviteTokensByUserId(inviteToken.userId);
 
@@ -66,15 +53,11 @@ export default class AcceptInviteUserService
    * @param {string} token - the given token string.
    * @throws {ServiceError}
    */
-  public async checkInvite(
-    token: string
-  ): Promise<{ inviteToken: IUserInvite; orgName: object }> {
+  public async checkInvite(token: string): Promise<{ inviteToken: IUserInvite; orgName: object }> {
     const inviteToken = await this.getInviteTokenOrThrowError(token);
 
     // Find the tenant that associated to the given token.
-    const tenant = await Tenant.query()
-      .findById(inviteToken.tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(inviteToken.tenantId).withGraphFetched('metadata');
 
     // Triggers `onUserCheckInvite` event.
     await this.eventPublisher.emitAsync(events.inviteUser.checkInvite, {
@@ -91,12 +74,8 @@ export default class AcceptInviteUserService
    * @throws {ServiceError}
    * @returns {Invite}
    */
-  private getInviteTokenOrThrowError = async (
-    token: string
-  ): Promise<IUserInvite> => {
-    const inviteToken = await Invite.query()
-      .modify('notExpired')
-      .findOne('token', token);
+  private getInviteTokenOrThrowError = async (token: string): Promise<IUserInvite> => {
+    const inviteToken = await Invite.query().modify('notExpired').findOne('token', token);
 
     if (!inviteToken) {
       throw new ServiceError(ERRORS.INVITE_TOKEN_INVALID);
@@ -108,9 +87,7 @@ export default class AcceptInviteUserService
    * Validate the given user email and phone number uniquine.
    * @param {IInviteUserInput} inviteUserInput
    */
-  private validateUserPhoneNumberNotExists = async (
-    phoneNumber: string
-  ): Promise<void> => {
+  private validateUserPhoneNumberNotExists = async (phoneNumber: string): Promise<void> => {
     const foundUser = await SystemUser.query().findOne({ phoneNumber });
 
     if (foundUser) {

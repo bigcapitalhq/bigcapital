@@ -1,20 +1,14 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import {
-  IBalanceSheetStatementService,
-  IBalanceSheetQuery,
-  IBalanceSheetStatement,
-} from '@/interfaces';
+import { IBalanceSheetQuery, IBalanceSheetStatement, IBalanceSheetStatementService } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import BalanceSheetStatement from './BalanceSheet';
 import { Tenant } from '@/system/models';
-import BalanceSheetRepository from './BalanceSheetRepository';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import BalanceSheetStatement from './BalanceSheet';
 import { BalanceSheetMetaInjectable } from './BalanceSheetMeta';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 @Service()
-export default class BalanceSheetStatementService
-  implements IBalanceSheetStatementService
-{
+export default class BalanceSheetStatementService implements IBalanceSheetStatementService {
   @Inject()
   private tenancy: TenancyService;
 
@@ -65,15 +59,10 @@ export default class BalanceSheetStatementService
    * @param {IBalanceSheetQuery} query
    * @return {IBalanceSheetStatement}
    */
-  public async balanceSheet(
-    tenantId: number,
-    query: IBalanceSheetQuery
-  ): Promise<IBalanceSheetStatement> {
+  public async balanceSheet(tenantId: number, query: IBalanceSheetQuery): Promise<IBalanceSheetStatement> {
     const i18n = this.tenancy.i18n(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -90,7 +79,7 @@ export default class BalanceSheetStatementService
       filter,
       balanceSheetRepo,
       tenant.metadata.baseCurrency,
-      i18n
+      i18n,
     );
     // Balance sheet data.
     const data = balanceSheetInstanace.reportData();

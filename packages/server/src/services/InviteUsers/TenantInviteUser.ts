@@ -1,20 +1,20 @@
-import { Service, Inject } from 'typedi';
-import uniqid from 'uniqid';
-import moment from 'moment';
 import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
 import {
-  ISystemUser,
-  IUserSendInviteDTO,
   IInviteUserService,
+  ISystemUser,
   ITenantUser,
-  IUserInvitedEventPayload,
   IUserInviteResendEventPayload,
+  IUserInvitedEventPayload,
+  IUserSendInviteDTO,
 } from '@/interfaces';
-import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import RolesService from '@/services/Roles/RolesService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import uniqid from 'uniqid';
+import { ERRORS } from './constants';
 
 @Service()
 export default class InviteTenantUserService implements IInviteUserService {
@@ -37,17 +37,14 @@ export default class InviteTenantUserService implements IInviteUserService {
   public async sendInvite(
     tenantId: number,
     sendInviteDTO: IUserSendInviteDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{
     invitedUser: ITenantUser;
   }> {
     const { User } = this.tenancy.models(tenantId);
 
     // Get the given role or throw not found service error.
-    const role = await this.rolesService.getRoleOrThrowError(
-      tenantId,
-      sendInviteDTO.roleId
-    );
+    const role = await this.rolesService.getRoleOrThrowError(tenantId, sendInviteDTO.roleId);
     // Validates the given email not exists on the storage.
     await this.validateUserEmailNotExists(tenantId, sendInviteDTO.email);
 
@@ -81,7 +78,7 @@ export default class InviteTenantUserService implements IInviteUserService {
   public async resendInvite(
     tenantId: number,
     userId: number,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{ user: ITenantUser }> {
     // Retrieve the user by id or throw not found service error.
     const user = await this.getUserByIdOrThrowError(tenantId, userId);
@@ -135,10 +132,7 @@ export default class InviteTenantUserService implements IInviteUserService {
    * Retrieve the given user by id or throw not found service error.
    * @param {number} userId - User id.
    */
-  private getUserByIdOrThrowError = async (
-    tenantId: number,
-    userId: number
-  ): Promise<ITenantUser> => {
+  private getUserByIdOrThrowError = async (tenantId: number, userId: number): Promise<ITenantUser> => {
     const { User } = this.tenancy.models(tenantId);
 
     // Retrieve the tenant user.
@@ -156,10 +150,7 @@ export default class InviteTenantUserService implements IInviteUserService {
    * @param {string} email
    * @throws {ServiceError}
    */
-  private async validateUserEmailNotExists(
-    tenantId: number,
-    email: string
-  ): Promise<void> {
+  private async validateUserEmailNotExists(tenantId: number, email: string): Promise<void> {
     const { User } = this.tenancy.models(tenantId);
     const foundUser = await User.query().findOne('email', email);
 

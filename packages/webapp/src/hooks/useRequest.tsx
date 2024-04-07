@@ -1,12 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import axios from 'axios';
-import {
-  useAuthActions,
-  useAuthOrganizationId,
-  useSetGlobalErrors,
-  useAuthToken,
-} from './state';
+import { useAuthActions, useAuthOrganizationId, useSetGlobalErrors, useAuthToken } from './state';
 import { getCookie } from '../utils';
 
 export default function useApiRequest() {
@@ -64,9 +59,7 @@ export default function useApiRequest() {
           setGlobalErrors({ too_many_requests: true });
         }
         if (status === 400) {
-          const lockedError = data.errors.find(
-            (error) => error.type === 'TRANSACTIONS_DATE_LOCKED',
-          );
+          const lockedError = data.errors.find((error) => error.type === 'TRANSACTIONS_DATE_LOCKED');
           if (lockedError) {
             setGlobalErrors({ transactionsLocked: { ...lockedError.data } });
           }

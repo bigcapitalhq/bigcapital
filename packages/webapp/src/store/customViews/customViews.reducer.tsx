@@ -1,12 +1,12 @@
 // @ts-nocheck
-import { createReducer } from "@reduxjs/toolkit";
+import { createReducer } from '@reduxjs/toolkit';
 import t from '@/store/types';
 
 const initialState = {
   views: {},
   resourceViews: {
-    'accounts': [],
-    'expenses': [],
+    accounts: [],
+    expenses: [],
   },
   viewsMeta: {},
 };
@@ -17,7 +17,7 @@ export default createReducer(initialState, {
   },
 
   [t.RESOURCE_VIEWS_SET]: (state, action) => {
-    state.resourceViews[action.resource] = action.views.map(v => v.id);
+    state.resourceViews[action.resource] = action.views.map((v) => v.id);
   },
 
   [t.VIEW_ITEMS_SET]: (state, action) => {
@@ -28,4 +28,4 @@ export default createReducer(initialState, {
     });
     state.views = { ...state.views, ..._views };
   },
-})
+});

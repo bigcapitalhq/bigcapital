@@ -25,8 +25,7 @@ function EstimateApproveAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deliverEstimateMutate, isLoading } =
-    useApproveEstimate();
+  const { mutateAsync: deliverEstimateMutate, isLoading } = useApproveEstimate();
 
   // handle cancel approve alert.
   const handleCancelApproveEstimate = () => {
@@ -65,7 +64,4 @@ function EstimateApproveAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(EstimateApproveAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(EstimateApproveAlert);

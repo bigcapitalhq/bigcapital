@@ -12,7 +12,6 @@ import ManualJournalsDataTable from './ManualJournalsDataTable';
 import ManualJournalsActionsBar from './ManualJournalActionsBar';
 import withManualJournals from './withManualJournals';
 
-
 /**
  * Manual journals table.
  */
@@ -37,10 +36,8 @@ function ManualJournalsTable({
 }
 
 export default compose(
-  withManualJournals(
-    ({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
-      journalsTableState: manualJournalsTableState,
-      journalsTableStateChanged: manualJournalTableStateChanged,
-    }),
-  ),
+  withManualJournals(({ manualJournalsTableState, manualJournalTableStateChanged }) => ({
+    journalsTableState: manualJournalsTableState,
+    journalsTableStateChanged: manualJournalTableStateChanged,
+  })),
 )(ManualJournalsTable);

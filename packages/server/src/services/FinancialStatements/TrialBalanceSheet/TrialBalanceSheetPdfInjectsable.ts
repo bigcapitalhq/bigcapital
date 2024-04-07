@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { ITrialBalanceSheetQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
 import { HtmlTableCustomCss } from './_constants';
@@ -18,10 +18,7 @@ export class TrialBalanceSheetPdfInjectable {
    * @param {ITrialBalanceSheetQuery} query - Trial balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: ITrialBalanceSheetQuery): Promise<Buffer> {
     const table = await this.trialBalanceSheetTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class TrialBalanceSheetPdfInjectable {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

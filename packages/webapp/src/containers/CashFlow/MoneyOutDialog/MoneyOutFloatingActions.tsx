@@ -20,8 +20,7 @@ function MoneyOutFloatingActions({
   // Formik context.
   const { isSubmitting, submitForm } = useFormikContext();
   //  money in  dialog context.
-  const { dialogName, setSubmitPayload, submitPayload } =
-    useMoneyOutDialogContext();
+  const { dialogName, setSubmitPayload, submitPayload } = useMoneyOutDialogContext();
 
   // handle submit as draft button click.
   const handleSubmitDraftBtnClick = () => {
@@ -40,11 +39,7 @@ function MoneyOutFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleCloseBtnClick}
-          style={{ minWidth: '75px' }}
-        >
+        <Button disabled={isSubmitting} onClick={handleCloseBtnClick} style={{ minWidth: '75px' }}>
           <T id={'close'} />
         </Button>
 

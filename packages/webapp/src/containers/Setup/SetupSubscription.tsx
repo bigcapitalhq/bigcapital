@@ -30,10 +30,7 @@ function SetupSubscription({
   const handleSubmit = (values) => {};
 
   // Retrieve momerized subscription form schema.
-  const SubscriptionFormSchema = React.useMemo(
-    () => getSubscriptionFormSchema(),
-    [],
-  );
+  const SubscriptionFormSchema = React.useMemo(() => getSubscriptionFormSchema(), []);
 
   return (
     <div className={'setup-subscription-form'}>

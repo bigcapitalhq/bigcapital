@@ -1,7 +1,7 @@
-import { mixin, Model, raw } from 'objection';
-import TenantModel from 'models/TenantModel';
-import ModelSearchable from './ModelSearchable';
 import SoftDeleteQueryBuilder from '@/collection/SoftDeleteQueryBuilder';
+import TenantModel from 'models/TenantModel';
+import { mixin } from 'objection';
+import ModelSearchable from './ModelSearchable';
 
 export default class TaxRate extends mixin(TenantModel, [ModelSearchable]) {
   /**

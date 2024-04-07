@@ -26,15 +26,11 @@ export function BranchSuggestField({
     [initialBranchId, branches],
   );
 
-  const [selectedBranch, setSelectedBranch] = React.useState(
-    initialBranch || null,
-  );
+  const [selectedBranch, setSelectedBranch] = React.useState(initialBranch || null);
 
   React.useEffect(() => {
     if (typeof selectedBranchId !== 'undefined') {
-      const branch = selectedBranchId
-        ? branches.find((a) => a.id === selectedBranchId)
-        : null;
+      const branch = selectedBranchId ? branches.find((a) => a.id === selectedBranchId) : null;
       setSelectedBranch(branch);
     }
   }, [selectedBranchId, branches, setSelectedBranch]);

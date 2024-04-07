@@ -63,7 +63,4 @@ function ItemActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ItemActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ItemActivateAlert);

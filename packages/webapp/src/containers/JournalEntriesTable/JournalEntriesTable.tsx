@@ -31,9 +31,7 @@ export default function JournalEntriesTable({ transactions, ...restProps }) {
  *
  * @returns {React.JSX}
  */
-export function AmountDisplayedBaseCurrencyMessageJSX({
-  organization: { base_currency: baseCurrency },
-}) {
+export function AmountDisplayedBaseCurrencyMessageJSX({ organization: { base_currency: baseCurrency } }) {
   return (
     <Message>
       {intl.get('journal_entries.amount_displayed_base_currency')}
@@ -42,9 +40,9 @@ export function AmountDisplayedBaseCurrencyMessageJSX({
   );
 }
 
-export const AmountDisplayedBaseCurrencyMessage = R.compose(
-  withCurrentOrganization(),
-)(AmountDisplayedBaseCurrencyMessageJSX);
+export const AmountDisplayedBaseCurrencyMessage = R.compose(withCurrentOrganization())(
+  AmountDisplayedBaseCurrencyMessageJSX,
+);
 
 const Message = styled.div`
   font-size: 10px;

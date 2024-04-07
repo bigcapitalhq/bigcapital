@@ -6,8 +6,7 @@ import {
 } from '@/store/WarehouseTransfer/warehouseTransfer.actions';
 
 const mapDipatchToProps = (dispatch) => ({
-  setWarehouseTransferTableState: (queries) =>
-    dispatch(setWarehouseTransferTableState(queries)),
+  setWarehouseTransferTableState: (queries) => dispatch(setWarehouseTransferTableState(queries)),
   resetWarehouseTransferTableState: () => dispatch(resetWarehouseTransferTableState()),
 });
 

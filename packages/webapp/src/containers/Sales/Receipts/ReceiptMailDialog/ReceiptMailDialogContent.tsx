@@ -10,14 +10,11 @@ export interface ReceiptMailDialogContentProps {
 export default function ReceiptMailDialogContent({
   receiptId,
   onFormSubmit,
-  onCancelClick
+  onCancelClick,
 }: ReceiptMailDialogContentProps) {
   return (
     <ReceiptMailDialogBoot receiptId={receiptId}>
-      <ReceiptMailDialogForm
-        onFormSubmit={onFormSubmit}
-        onCancelClick={onCancelClick}
-      />
+      <ReceiptMailDialogForm onFormSubmit={onFormSubmit} onCancelClick={onCancelClick} />
     </ReceiptMailDialogBoot>
   );
 }

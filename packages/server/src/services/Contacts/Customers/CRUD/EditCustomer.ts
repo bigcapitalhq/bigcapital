@@ -1,15 +1,10 @@
-import { Knex } from 'knex';
-import {
-  ICustomer,
-  ICustomerEditDTO,
-  ICustomerEventEditedPayload,
-  ICustomerEventEditingPayload,
-} from '@/interfaces';
+import { ICustomer, ICustomerEditDTO, ICustomerEventEditedPayload, ICustomerEventEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import UnitOfWork from '@/services/UnitOfWork';
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CreateEditCustomerDTO } from './CreateEditCustomerDTO';
 
 @Service()
@@ -33,18 +28,11 @@ export class EditCustomer {
    * @param {ICustomerEditDTO} customerDTO
    * @return {Promise<ICustomer>}
    */
-  public async editCustomer(
-    tenantId: number,
-    customerId: number,
-    customerDTO: ICustomerEditDTO
-  ): Promise<ICustomer> {
+  public async editCustomer(tenantId: number, customerId: number, customerDTO: ICustomerEditDTO): Promise<ICustomer> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the vendor or throw not found error.
-    const oldCustomer = await Contact.query()
-      .findById(customerId)
-      .modify('customer')
-      .throwIfNotFound();
+    const oldCustomer = await Contact.query().findById(customerId).modify('customer').throwIfNotFound();
 
     // Transformes the given customer DTO to object.
     const customerObj = this.customerDTO.transformEditDTO(customerDTO);

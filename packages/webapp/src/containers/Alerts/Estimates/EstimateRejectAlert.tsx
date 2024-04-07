@@ -63,7 +63,4 @@ function EstimateRejectAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(EstimateRejectAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(EstimateRejectAlert);

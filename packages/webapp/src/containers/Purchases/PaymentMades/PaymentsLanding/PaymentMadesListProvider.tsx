@@ -3,11 +3,7 @@ import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  usePaymentMades,
-  useResourceMeta,
-} from '@/hooks/query';
+import { useResourceViews, usePaymentMades, useResourceMeta } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 const PaymentMadesListContext = createContext();
@@ -17,8 +13,7 @@ const PaymentMadesListContext = createContext();
  */
 function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: paymentMadesViews, isLoading: isViewsLoading } =
-    useResourceViews('bill_payments');
+  const { data: paymentMadesViews, isLoading: isViewsLoading } = useResourceViews('bill_payments');
 
   // Fetch the accounts resource fields.
   const {
@@ -35,8 +30,7 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
   } = usePaymentMades(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(paymentMades) && !isPaymentsLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
@@ -57,16 +51,12 @@ function PaymentMadesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading}
-      name={'payment-mades-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceMetaLoading} name={'payment-mades-list'}>
       <PaymentMadesListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentMadesListContext = () =>
-  React.useContext(PaymentMadesListContext);
+const usePaymentMadesListContext = () => React.useContext(PaymentMadesListContext);
 
 export { PaymentMadesListProvider, usePaymentMadesListContext };

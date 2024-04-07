@@ -5,19 +5,13 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectExpenseFormeDialogContent = React.lazy(
-  () => import('./ProjectExpenseFormDialogContent'),
-);
+const ProjectExpenseFormeDialogContent = React.lazy(() => import('./ProjectExpenseFormDialogContent'));
 
 /**
  * Project expense form dialog.
  * @returns
  */
-function ProjectExpenseFormDialog({
-  dialogName,
-  payload: { projectId = null },
-  isOpen,
-}) {
+function ProjectExpenseFormDialog({ dialogName, payload: { projectId = null }, isOpen }) {
   return (
     <ProjectExpenseFormDialogRoot
       name={dialogName}
@@ -28,10 +22,7 @@ function ProjectExpenseFormDialog({
       style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <ProjectExpenseFormeDialogContent
-          dialogName={dialogName}
-          expense={projectId}
-        />
+        <ProjectExpenseFormeDialogContent dialogName={dialogName} expense={projectId} />
       </DialogSuspense>
     </ProjectExpenseFormDialogRoot>
   );

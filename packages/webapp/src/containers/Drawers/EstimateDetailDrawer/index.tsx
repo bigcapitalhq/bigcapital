@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const EstimateDetailDrawerContent = React.lazy(() =>
-  import('./EstimateDetailDrawerContent'),
-);
+const EstimateDetailDrawerContent = React.lazy(() => import('./EstimateDetailDrawerContent'));
 
 function EstimateDetailDrawer({
   name,
@@ -15,14 +13,8 @@ function EstimateDetailDrawer({
   isOpen,
   payload: { estimateId },
 }) {
- 
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
         <EstimateDetailDrawerContent estimateId={estimateId} />
       </DrawerSuspense>

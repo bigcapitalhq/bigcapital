@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
 import {
   IProjectTimeCreatedEventPayload,
   IProjectTimeDeletedEventPayload,
   IProjectTimeEditedEventPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { SyncActualTimeTask } from './SyncActualTimeTask';
 
 @Service()
@@ -17,35 +17,17 @@ export class SyncActualTimeTaskSubscriber {
    * @param bus
    */
   attach(bus) {
-    bus.subscribe(
-      events.projectTime.onCreated,
-      this.handleIncreaseActualTimeOnTimeCreate
-    );
-    bus.subscribe(
-      events.projectTime.onDeleted,
-      this.handleDecreaseActualTimeOnTimeDelete
-    );
-    bus.subscribe(
-      events.projectTime.onEdited,
-      this.handleAdjustActualTimeOnTimeEdited
-    );
+    bus.subscribe(events.projectTime.onCreated, this.handleIncreaseActualTimeOnTimeCreate);
+    bus.subscribe(events.projectTime.onDeleted, this.handleDecreaseActualTimeOnTimeDelete);
+    bus.subscribe(events.projectTime.onEdited, this.handleAdjustActualTimeOnTimeEdited);
   }
 
   /**
    * Handles increasing the actual time of the task once time entry be created.
    * @param {IProjectTimeCreatedEventPayload} payload -
    */
-  private handleIncreaseActualTimeOnTimeCreate = async ({
-    tenantId,
-    time,
-    trx,
-  }: IProjectTimeCreatedEventPayload) => {
-    await this.syncActualTimeTask.increaseActualTimeTask(
-      tenantId,
-      time.taskId,
-      time.duration,
-      trx
-    );
+  private handleIncreaseActualTimeOnTimeCreate = async ({ tenantId, time, trx }: IProjectTimeCreatedEventPayload) => {
+    await this.syncActualTimeTask.increaseActualTimeTask(tenantId, time.taskId, time.duration, trx);
   };
 
   /**
@@ -57,12 +39,7 @@ export class SyncActualTimeTaskSubscriber {
     oldTime,
     trx,
   }: IProjectTimeDeletedEventPayload) => {
-    await this.syncActualTimeTask.decreaseActualTimeTask(
-      tenantId,
-      oldTime.taskId,
-      oldTime.duration,
-      trx
-    );
+    await this.syncActualTimeTask.decreaseActualTimeTask(tenantId, oldTime.taskId, oldTime.duration, trx);
   };
 
   /**
@@ -75,17 +52,7 @@ export class SyncActualTimeTaskSubscriber {
     oldTime,
     trx,
   }: IProjectTimeEditedEventPayload) => {
-    await this.syncActualTimeTask.decreaseActualTimeTask(
-      tenantId,
-      oldTime.taskId,
-      oldTime.duration,
-      trx
-    );
-    await this.syncActualTimeTask.increaseActualTimeTask(
-      tenantId,
-      time.taskId,
-      time.duration,
-      trx
-    );
+    await this.syncActualTimeTask.decreaseActualTimeTask(tenantId, oldTime.taskId, oldTime.duration, trx);
+    await this.syncActualTimeTask.increaseActualTimeTask(tenantId, time.taskId, time.duration, trx);
   };
 }

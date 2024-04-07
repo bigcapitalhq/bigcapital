@@ -20,10 +20,6 @@ function Branches({
     changePreferencesPageTitle(intl.get('branches.label'));
   }, [changePreferencesPageTitle]);
 
-  return (
-    <React.Fragment>
-      {isEmptyStatus ? <BranchesEmptyStatus /> : <BranchesDataTable />}
-    </React.Fragment>
-  );
+  return <React.Fragment>{isEmptyStatus ? <BranchesEmptyStatus /> : <BranchesDataTable />}</React.Fragment>;
 }
 export default compose(withDashboardActions)(Branches);

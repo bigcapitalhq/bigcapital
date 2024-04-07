@@ -1,16 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 
-const InvoiceDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Invoices/InvoiceDeleteAlert'),
-);
-const InvoiceDeliverAlert = React.lazy(
-  () => import('@/containers/Alerts/Invoices/InvoiceDeliverAlert'),
-);
+const InvoiceDeleteAlert = React.lazy(() => import('@/containers/Alerts/Invoices/InvoiceDeleteAlert'));
+const InvoiceDeliverAlert = React.lazy(() => import('@/containers/Alerts/Invoices/InvoiceDeliverAlert'));
 
-const CancelBadDebtAlert = React.lazy(
-  () => import('@/containers/Alerts/Invoices/CancelBadDebtAlert'),
-);
+const CancelBadDebtAlert = React.lazy(() => import('@/containers/Alerts/Invoices/CancelBadDebtAlert'));
 
 /**
  * Invoices alert.

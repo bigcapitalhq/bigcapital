@@ -16,10 +16,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
-import {
-  ActionsMenu,
-  useAccountUncategorizedTransactionsColumns,
-} from './components';
+import { ActionsMenu, useAccountUncategorizedTransactionsColumns } from './components';
 import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
 
 import { compose } from '@/utils';
@@ -43,8 +40,9 @@ function AccountTransactionsDataTable({
     useAccountUncategorizedTransactionsContext();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(
+    TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION,
+  );
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {

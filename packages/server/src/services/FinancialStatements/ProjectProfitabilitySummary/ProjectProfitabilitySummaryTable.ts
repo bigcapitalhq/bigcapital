@@ -1,5 +1,3 @@
-import { map } from 'lodash/fp';
-import * as R from 'ramda';
 import {
   IProjectProfitabilitySummaryData,
   IProjectProfitabilitySummaryProjectNode,
@@ -8,6 +6,8 @@ import {
   ITableColumn,
   ITableRow,
 } from '@/interfaces';
+import { map } from 'lodash/fp';
+import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
 
 export class ProjectProfitabilitySummaryTable {
@@ -22,10 +22,7 @@ export class ProjectProfitabilitySummaryTable {
    * @param {IProjectProfitabilitySummaryData} reportData
    * @param {} i18n
    */
-  constructor(
-    reportData: IProjectProfitabilitySummaryData,
-    i18n: any
-  ) {
+  constructor(reportData: IProjectProfitabilitySummaryData, i18n: any) {
     this.reportData = reportData;
     this.i18n = i18n;
   }
@@ -38,9 +35,7 @@ export class ProjectProfitabilitySummaryTable {
    * @param {IProjectProfitabilitySummaryProjectNode} node
    * @returns {ITableRow}
    */
-  private projectNodeData = (
-    node: IProjectProfitabilitySummaryProjectNode
-  ): ITableRow => {
+  private projectNodeData = (node: IProjectProfitabilitySummaryProjectNode): ITableRow => {
     const meta = {
       rowTypes: [IProjectProfitabilitySummaryRowType.PROJECT],
     };
@@ -59,9 +54,7 @@ export class ProjectProfitabilitySummaryTable {
    * @param {IProjectProfitabilitySummaryProjectNode[]} nodes
    * @returns {ITableRow[]}
    */
-  public projectsNodesData = (
-    nodes: IProjectProfitabilitySummaryProjectNode[]
-  ): ITableRow[] => {
+  public projectsNodesData = (nodes: IProjectProfitabilitySummaryProjectNode[]): ITableRow[] => {
     return map(this.projectNodeData)(nodes);
   };
 
@@ -70,9 +63,7 @@ export class ProjectProfitabilitySummaryTable {
    * @param {IProjectProfitabilitySummaryTotal} totalNode
    * @returns {ITableRow}
    */
-  public projectsTotalRow = (
-    node: IProjectProfitabilitySummaryTotalNode
-  ): ITableRow => {
+  public projectsTotalRow = (node: IProjectProfitabilitySummaryTotalNode): ITableRow => {
     const meta = {
       rowTypes: [IProjectProfitabilitySummaryRowType.TOTAL],
     };
@@ -93,7 +84,7 @@ export class ProjectProfitabilitySummaryTable {
   public tableData = (): ITableRow[] => {
     return R.pipe(
       R.concat(this.projectsNodesData(this.reportData.projects)),
-      R.append(this.projectsTotalRow(this.reportData.total))
+      R.append(this.projectsTotalRow(this.reportData.total)),
     )([]);
   };
 

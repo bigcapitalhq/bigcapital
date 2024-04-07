@@ -52,7 +52,6 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   );
 }
 
-const usePaymentReceiveDetailContext = () =>
-  React.useContext(PaymentReceiveDetailContext);
+const usePaymentReceiveDetailContext = () => React.useContext(PaymentReceiveDetailContext);
 
 export { PaymentReceiveDetailProvider, usePaymentReceiveDetailContext };

@@ -4,14 +4,7 @@ import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { isEqual } from 'lodash';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, InputGroup, TextArea, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES, Features } from '@/constants';
 import { DateInput } from '@blueprintjs/datetime';
@@ -30,13 +23,7 @@ import {
   BranchSelectButton,
   FeatureCan,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  compose,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange, compose } from '@/utils';
 import { useAutofocus } from '@/hooks';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { useSetPrimaryBranchToForm } from './utils';
@@ -64,10 +51,7 @@ function RefundCreditNoteFormFields({
       <FeatureCan feature={Features.Branches}>
         <Row>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FormGroup label={<T id={'branch'} />} className={classNames('form-group--select-list', Classes.FILL)}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
@@ -114,11 +98,7 @@ function RefundCreditNoteFormFields({
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'refund_credit_note.dialog.from_account'} />}
-                className={classNames(
-                  'form-group--from_account_id',
-                  'form-group--select-list',
-                  CLASSES.FILL,
-                )}
+                className={classNames('form-group--from_account_id', 'form-group--select-list', CLASSES.FILL)}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name={'from_account_id'} />}
@@ -126,17 +106,11 @@ function RefundCreditNoteFormFields({
                 <AccountsSuggestField
                   selectedAccountId={value}
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('from_account_id', id)
-                  }
+                  onAccountSelected={({ id }) => form.setFieldValue('from_account_id', id)}
                   inputProps={{
                     placeholder: intl.get('select_account'),
                   }}
-                  filterByTypes={[
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.FIXED_ASSET,
-                  ]}
+                  filterByTypes={[ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.FIXED_ASSET]}
                 />
               </FormGroup>
             )}
@@ -145,11 +119,7 @@ function RefundCreditNoteFormFields({
       </Row>
       {/* ------------- Amount ------------- */}
       <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'refund_credit_note.dialog.amount'} />}
             labelInfo={<FieldRequiredHint />}
@@ -194,11 +164,7 @@ function RefundCreditNoteFormFields({
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -206,10 +172,7 @@ function RefundCreditNoteFormFields({
       {/* --------- Statement --------- */}
       <FastField name={'description'}>
         {({ form, field, meta: { error, touched } }) => (
-          <FormGroup
-            label={<T id={'refund_credit_note.dialog.description'} />}
-            className={'form-group--description'}
-          >
+          <FormGroup label={<T id={'refund_credit_note.dialog.description'} />} className={'form-group--description'}>
             <TextArea growVertically={true} {...field} />
           </FormGroup>
         )}

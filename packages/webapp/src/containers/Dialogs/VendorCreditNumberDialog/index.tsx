@@ -4,19 +4,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const VendorCreditNumberDialogContent = React.lazy(() =>
-  import('./VendorCreditNumberDialogContent'),
-);
+const VendorCreditNumberDialogContent = React.lazy(() => import('./VendorCreditNumberDialogContent'));
 
 /**
  * Vendor Credit number dialog.
  */
-function VendorCreditNumberDialog({
-  dialogName,
-  payload: { initialFormValues },
-  isOpen,
-  onConfirm,
-}) {
+function VendorCreditNumberDialog({ dialogName, payload: { initialFormValues }, isOpen, onConfirm }) {
   const handleConfirm = (values) => {
     saveInvoke(onConfirm, values);
   };
@@ -30,10 +23,7 @@ function VendorCreditNumberDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <VendorCreditNumberDialogContent
-          initialValues={{ ...initialFormValues }}
-          onConfirm={handleConfirm}
-        />
+        <VendorCreditNumberDialogContent initialValues={{ ...initialFormValues }} onConfirm={handleConfirm} />
       </DialogSuspense>
     </Dialog>
   );

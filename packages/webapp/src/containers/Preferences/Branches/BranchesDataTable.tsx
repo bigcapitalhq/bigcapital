@@ -32,8 +32,7 @@ function BranchesDataTable({
   // MarkBranchAsPrimary
   const { mutateAsync: markBranchAsPrimaryMutate } = useMarkBranchAsPrimary();
 
-  const { branches, isBranchesLoading, isBranchesFetching } =
-    useBranchesContext();
+  const { branches, isBranchesLoading, isBranchesFetching } = useBranchesContext();
 
   // Handle edit branch.
   const handleEditBranch = ({ id }) => {

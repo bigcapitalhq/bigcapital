@@ -77,11 +77,7 @@ function DashboardPage({
     return () => {
       resetResourceTypeUniversalSearch();
     };
-  }, [
-    defaultSearchResource,
-    resetResourceTypeUniversalSearch,
-    setResourceTypeUniversalSearch,
-  ]);
+  }, [defaultSearchResource, resetResourceTypeUniversalSearch, setResourceTypeUniversalSearch]);
 
   return (
     <div className={CLASSES.DASHBOARD_PAGE}>

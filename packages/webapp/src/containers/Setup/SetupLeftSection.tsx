@@ -11,7 +11,7 @@ import { useAuthActions } from '@/hooks/state';
 function FooterLinkItem({ title, link }) {
   return (
     <div class="content__links-item">
-      <a href={link} target="_blank">
+      <a href={link} target="_blank" rel="noreferrer">
         {title}
       </a>
     </div>
@@ -75,12 +75,7 @@ export default function SetupLeftSection() {
     <section className={'setup-page__left-section'}>
       <div className={'content'}>
         <div className={'content__logo'}>
-          <Icon
-            icon="bigcapital"
-            className={'bigcapital--alt'}
-            height={37}
-            width={190}
-          />
+          <Icon icon="bigcapital" className={'bigcapital--alt'} height={37} width={190} />
         </div>
         <SetupLeftSectionHeader />
         <SetupLeftSectionFooter />

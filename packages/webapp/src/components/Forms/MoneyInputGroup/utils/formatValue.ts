@@ -40,13 +40,7 @@ type Props = {
  * Format value with decimal separator, group separator and prefix
  */
 export const formatValue = (props: Props): string => {
-  const {
-    value: _value,
-    groupSeparator = ',',
-    decimalSeparator = '.',
-    turnOffSeparators = false,
-    prefix,
-  } = props;
+  const { value: _value, groupSeparator = ',', decimalSeparator = '.', turnOffSeparators = false, prefix } = props;
 
   if (_value === '' || _value === undefined) {
     return '';
@@ -58,7 +52,7 @@ export const formatValue = (props: Props): string => {
     return '-';
   }
 
-  const isNegative = RegExp('^-\\d+').test(value);
+  const isNegative = /^-\d+/.test(value);
   const hasDecimalSeparator = decimalSeparator && value.includes(decimalSeparator);
 
   const valueOnly = isNegative ? value.replace('-', '') : value;
@@ -72,8 +66,8 @@ export const formatValue = (props: Props): string => {
     hasDecimalSeparator && decimals
       ? `${decimalSeparator}${decimals}`
       : hasDecimalSeparator
-      ? `${decimalSeparator}`
-      : '';
+        ? `${decimalSeparator}`
+        : '';
 
   return `${includeNegative}${includePrefix}${formattedInt}${includeDecimals}`;
 };

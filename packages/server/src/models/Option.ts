@@ -1,6 +1,5 @@
-import TenantModel from 'models/TenantModel';
 import definedOptions from '@/data/options';
-
+import TenantModel from 'models/TenantModel';
 
 export default class Option extends TenantModel {
   /**
@@ -12,7 +11,7 @@ export default class Option extends TenantModel {
 
   /**
    * Validates the given options is defined or either not.
-   * @param {Array} options 
+   * @param {Array} options
    * @return {Boolean}
    */
   static validateDefined(options) {

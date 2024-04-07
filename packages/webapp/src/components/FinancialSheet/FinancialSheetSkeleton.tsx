@@ -4,11 +4,7 @@ import styled from 'styled-components';
 
 import { Align, TableStyle } from '@/constants';
 import { SkeletonText } from '@/components';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '../Datatable';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '../Datatable';
 
 import {
   FinancialSheetRoot,

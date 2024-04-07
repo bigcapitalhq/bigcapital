@@ -20,13 +20,8 @@ interface InvoiceMailDialogBootProps {
 /**
  * Invoice mail dialog boot provider.
  */
-function InvoiceMailDialogBoot({
-  invoiceId,
-  redirectToInvoicesList,
-  ...props
-}: InvoiceMailDialogBootProps) {
-  const { data: mailOptions, isLoading: isMailOptionsLoading } =
-    useSaleInvoiceDefaultOptions(invoiceId);
+function InvoiceMailDialogBoot({ invoiceId, redirectToInvoicesList, ...props }: InvoiceMailDialogBootProps) {
+  const { data: mailOptions, isLoading: isMailOptionsLoading } = useSaleInvoiceDefaultOptions(invoiceId);
 
   const provider = {
     saleInvoiceId: invoiceId,
@@ -42,7 +37,6 @@ function InvoiceMailDialogBoot({
   );
 }
 
-const useInvoiceMailDialogBoot = () =>
-  React.useContext<InvoiceMailDialogBootValues>(InvoiceMailDialagBoot);
+const useInvoiceMailDialogBoot = () => React.useContext<InvoiceMailDialogBootValues>(InvoiceMailDialagBoot);
 
 export { InvoiceMailDialogBoot, useInvoiceMailDialogBoot };

@@ -1,17 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Position,
-  Tooltip,
-  Intent,
-  Classes,
-} from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, MenuDivider, Position, Tooltip, Intent, Classes } from '@blueprintjs/core';
 
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
@@ -22,14 +12,7 @@ import { safeCallback, firstLettersArgs } from '@/utils';
  */
 export function ActionsMenu({
   row: { original },
-  payload: {
-    onEdit,
-    onDelete,
-    onDuplicate,
-    onInactivate,
-    onActivate,
-    onViewDetails,
-  },
+  payload: { onEdit, onDelete, onDuplicate, onInactivate, onActivate, onViewDetails },
 }) {
   return (
     <Menu>
@@ -87,10 +70,7 @@ export function ActionsMenu({
  */
 export function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

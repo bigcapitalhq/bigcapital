@@ -1,17 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import {
-  ILedgerEntry,
-  ICashflowTransaction,
-  AccountNormal,
-} from '../../interfaces';
-import {
-  transformCashflowTransactionType,
-  getCashflowAccountTransactionsTypes,
-} from './utils';
-import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import Ledger from '@/services/Accounting/Ledger';
+import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { AccountNormal, ICashflowTransaction, ILedgerEntry } from '../../interfaces';
+import { getCashflowAccountTransactionsTypes, transformCashflowTransactionType } from './utils';
 
 @Service()
 export default class CashflowTransactionJournalEntries {
@@ -34,9 +27,7 @@ export default class CashflowTransactionJournalEntries {
       currencyCode: transaction.currencyCode,
       exchangeRate: transaction.exchangeRate,
 
-      transactionType: transformCashflowTransactionType(
-        transaction.transactionType
-      ),
+      transactionType: transformCashflowTransactionType(transaction.transactionType),
       transactionId: transaction.id,
       transactionNumber: transaction.transactionNumber,
       referenceNumber: transaction.referenceNo,
@@ -55,20 +46,14 @@ export default class CashflowTransactionJournalEntries {
    * @param {number} index
    * @returns {ILedgerEntry}
    */
-  private getCashflowDebitGLEntry = (
-    cashflowTransaction: ICashflowTransaction
-  ): ILedgerEntry => {
+  private getCashflowDebitGLEntry = (cashflowTransaction: ICashflowTransaction): ILedgerEntry => {
     const commonEntry = this.getCommonEntry(cashflowTransaction);
 
     return {
       ...commonEntry,
       accountId: cashflowTransaction.cashflowAccountId,
-      credit: cashflowTransaction.isCashCredit
-        ? cashflowTransaction.localAmount
-        : 0,
-      debit: cashflowTransaction.isCashDebit
-        ? cashflowTransaction.localAmount
-        : 0,
+      credit: cashflowTransaction.isCashCredit ? cashflowTransaction.localAmount : 0,
+      debit: cashflowTransaction.isCashDebit ? cashflowTransaction.localAmount : 0,
       accountNormal: AccountNormal.DEBIT,
       index: 1,
     };
@@ -81,19 +66,13 @@ export default class CashflowTransactionJournalEntries {
    * @param {number} index
    * @returns {ILedgerEntry}
    */
-  private getCashflowCreditGLEntry = (
-    cashflowTransaction: ICashflowTransaction
-  ): ILedgerEntry => {
+  private getCashflowCreditGLEntry = (cashflowTransaction: ICashflowTransaction): ILedgerEntry => {
     const commonEntry = this.getCommonEntry(cashflowTransaction);
 
     return {
       ...commonEntry,
-      credit: cashflowTransaction.isCashDebit
-        ? cashflowTransaction.localAmount
-        : 0,
-      debit: cashflowTransaction.isCashCredit
-        ? cashflowTransaction.localAmount
-        : 0,
+      credit: cashflowTransaction.isCashDebit ? cashflowTransaction.localAmount : 0,
+      debit: cashflowTransaction.isCashCredit ? cashflowTransaction.localAmount : 0,
       accountId: cashflowTransaction.creditAccountId,
       accountNormal: cashflowTransaction.creditAccount.accountNormal,
       index: 2,
@@ -107,9 +86,7 @@ export default class CashflowTransactionJournalEntries {
    * @param {number} index
    * @returns {ILedgerEntry[]}
    */
-  private getJournalEntries = (
-    cashflowTransaction: ICashflowTransaction
-  ): ILedgerEntry[] => {
+  private getJournalEntries = (cashflowTransaction: ICashflowTransaction): ILedgerEntry[] => {
     const debitEntry = this.getCashflowDebitGLEntry(cashflowTransaction);
     const creditEntry = this.getCashflowCreditGLEntry(cashflowTransaction);
 
@@ -135,7 +112,7 @@ export default class CashflowTransactionJournalEntries {
   public writeJournalEntries = async (
     tenantId: number,
     cashflowTransactionId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { CashflowTransaction } = this.tenancy.models(tenantId);
 
@@ -159,15 +136,10 @@ export default class CashflowTransactionJournalEntries {
   public revertJournalEntries = async (
     tenantId: number,
     cashflowTransactionId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const transactionTypes = getCashflowAccountTransactionsTypes();
 
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      cashflowTransactionId,
-      transactionTypes,
-      trx
-    );
+    await this.ledgerStorage.deleteByReference(tenantId, cashflowTransactionId, transactionTypes, trx);
   };
 }

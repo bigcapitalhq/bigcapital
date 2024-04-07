@@ -6,12 +6,9 @@ import { getItemById } from '@/store/selectors';
 const currenciesItemsSelector = (state) => state.currencies.data;
 const currenciesCodePropSelector = (state, props) => props.currencyId;
 
-export const getCurrenciesList = createSelector(
-  currenciesItemsSelector,
-  (currencies) => {
-    return Object.values(currencies);
-  },
-);
+export const getCurrenciesList = createSelector(currenciesItemsSelector, (currencies) => {
+  return Object.values(currencies);
+});
 
 export const getCurrencyByCode = createSelector(
   currenciesItemsSelector,
@@ -20,4 +17,3 @@ export const getCurrencyByCode = createSelector(
     return getItemById(currencies, currencyCode);
   },
 );
-

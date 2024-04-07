@@ -1,6 +1,6 @@
-import { Knex } from 'knex';
-import async from 'async';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import async from 'async';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import { BillPaymentGLEntries } from '../BillPayments/BillPaymentGLEntries';
 
@@ -18,17 +18,10 @@ export class BillPaymentsGLEntriesRewrite {
    * @param {number} billId
    * @param {Knex.Transaction} trx
    */
-  public rewriteBillPaymentsGLEntries = async (
-    tenantId: number,
-    billId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewriteBillPaymentsGLEntries = async (tenantId: number, billId: number, trx?: Knex.Transaction) => {
     const { BillPaymentEntry } = this.tenancy.models(tenantId);
 
-    const billPaymentEntries = await BillPaymentEntry.query().where(
-      'billId',
-      billId
-    );
+    const billPaymentEntries = await BillPaymentEntry.query().where('billId', billId);
     const paymentsIds = billPaymentEntries.map((e) => e.billPaymentId);
 
     await this.rewritePaymentsGLEntriesQueue(tenantId, paymentsIds, trx);
@@ -40,11 +33,7 @@ export class BillPaymentsGLEntriesRewrite {
    * @param {number[]} paymentsIds
    * @param {Knex.Transaction} trx
    */
-  public rewritePaymentsGLEntriesQueue = async (
-    tenantId: number,
-    paymentsIds: number[],
-    trx?: Knex.Transaction
-  ) => {
+  public rewritePaymentsGLEntriesQueue = async (tenantId: number, paymentsIds: number[], trx?: Knex.Transaction) => {
     // Initiate a new queue for accounts balance mutation.
     const rewritePaymentGL = async.queue(this.rewritePaymentsGLEntriesTask, 10);
 
@@ -62,15 +51,7 @@ export class BillPaymentsGLEntriesRewrite {
    * @param {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
-  public rewritePaymentsGLEntriesTask = async ({
-    tenantId,
-    paymentId,
-    trx,
-  }) => {
-    await this.paymentGLEntries.rewritePaymentGLEntries(
-      tenantId,
-      paymentId,
-      trx
-    );
+  public rewritePaymentsGLEntriesTask = async ({ tenantId, paymentId, trx }) => {
+    await this.paymentGLEntries.rewritePaymentGLEntries(tenantId, paymentId, trx);
   };
 }

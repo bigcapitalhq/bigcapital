@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { CashflowExportInjectable } from './CashflowExportInjectable';
 import { ICashFlowStatementQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import CashFlowStatementService from './CashFlowService';
+import { CashflowExportInjectable } from './CashflowExportInjectable';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
 import { CashflowTablePdfInjectable } from './CashflowTablePdfInjectable';
 
@@ -53,23 +53,17 @@ export class CashflowSheetApplication {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: ICashFlowStatementQuery): Promise<string> {
     return this.cashflowExport.csv(tenantId, query);
   }
 
   /**
    * Retrieves the cashflow sheet in pdf format.
-   * @param {number} tenantId 
-   * @param {ICashFlowStatementQuery} query 
+   * @param {number} tenantId
+   * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: ICashFlowStatementQuery): Promise<Buffer> {
     return this.cashflowPdf.pdf(tenantId, query);
   }
 }

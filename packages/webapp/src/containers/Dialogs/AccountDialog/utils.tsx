@@ -21,12 +21,8 @@ export const transformApiErrors = (errors) => {
   if (errors.find((e) => e.type === 'ACCOUNT.NAME.NOT.UNIQUE')) {
     fields.name = intl.get('account_name_is_already_used');
   }
-  if (
-    errors.find((e) => e.type === 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT')
-  ) {
-    fields.parent_account_id = intl.get(
-      'accounts.error.account_currency_not_same_parent_account',
-    );
+  if (errors.find((e) => e.type === 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT')) {
+    fields.parent_account_id = intl.get('accounts.error.account_currency_not_same_parent_account');
   }
   return fields;
 };
@@ -86,14 +82,9 @@ export const transformAccountToForm = (account, payload) => {
   const conditions = getConditions();
 
   const results = conditions.map((condition) => {
-    const transformer = !isUndefined(condition[1])
-      ? condition[1]
-      : defaultPayloadTransform;
+    const transformer = !isUndefined(condition[1]) ? condition[1] : defaultPayloadTransform;
 
-    return [
-      condition[0] === payload.action ? R.T : R.F,
-      mergeWithAccount(transformer(account, payload)),
-    ];
+    return [condition[0] === payload.action ? R.T : R.F, mergeWithAccount(transformer(account, payload))];
   });
   return R.cond(results)(account);
 };
@@ -129,9 +120,6 @@ export const parentAccountShouldUpdate = (newProps, oldProps) => {
 export const transformFormToReq = (form) => {
   return R.compose(
     R.omit(['subaccount']),
-    R.when(
-      R.propSatisfies(R.equals(R.__, false), 'subaccount'),
-      R.assoc(['parent_account_id'], ''),
-    ),
+    R.when(R.propSatisfies(R.equals(R.__, false), 'subaccount'), R.assoc(['parent_account_id'], '')),
   )(form);
 };

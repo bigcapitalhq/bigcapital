@@ -1,5 +1,1 @@
-
-
-describe('ExpenseCategory', () => {
-
-});
+describe('ExpenseCategory', () => {});

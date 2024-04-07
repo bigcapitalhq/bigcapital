@@ -52,19 +52,13 @@ function BalanceSheet({
 
   return (
     <BalanceSheetProvider filter={query}>
-      <BalanceSheetActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <BalanceSheetActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <BalanceSheetLoadingBar />
       <BalanceSheetAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <BalanceSheetHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <BalanceSheetHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <BalanceSheetBody />
         </FinancialStatement>
       </DashboardPageContent>

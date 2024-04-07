@@ -21,16 +21,13 @@ export function useCreateProjectTimeEntry(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`/projects/tasks/${id}/times`, values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`/projects/tasks/${id}/times`, values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -42,18 +39,15 @@ export function useEditProjectTimeEntry(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`projects/times/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific project time entry.
-        queryClient.invalidateQueries([t.PROJECT_TIME_ENTRY, id]);
+  return useMutation(([id, values]) => apiRequest.post(`projects/times/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific project time entry.
+      queryClient.invalidateQueries([t.PROJECT_TIME_ENTRY, id]);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

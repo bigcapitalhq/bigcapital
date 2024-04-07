@@ -16,25 +16,14 @@ import {
   FeatureCan,
   CustomersSelect,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { CLASSES } from '@/constants/classes';
 import { customerNameFieldShouldUpdate } from './utils';
 
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import {
-  InvoiceExchangeRateInputField,
-  InvoiceProjectSelectButton,
-} from './components';
+import { InvoiceExchangeRateInputField, InvoiceProjectSelectButton } from './components';
 import { InvoiceFormInvoiceNumberField } from './InvoiceFormInvoiceNumberField';
-import {
-  ProjectsSelect,
-  ProjectBillableEntriesLink,
-} from '@/containers/Projects/components';
+import { ProjectsSelect, ProjectBillableEntriesLink } from '@/containers/Projects/components';
 import { Features } from '@/constants';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 

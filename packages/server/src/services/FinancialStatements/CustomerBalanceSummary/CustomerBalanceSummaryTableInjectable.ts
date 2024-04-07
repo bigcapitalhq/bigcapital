@@ -1,10 +1,7 @@
+import { ICustomerBalanceSummaryQuery, ICustomerBalanceSummaryTable } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { CustomerBalanceSummaryService } from './CustomerBalanceSummaryService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ICustomerBalanceSummaryQuery,
-  ICustomerBalanceSummaryTable,
-} from '@/interfaces';
 import { CustomerBalanceSummaryTable } from './CustomerBalanceSummaryTableRows';
 
 @Service()
@@ -21,16 +18,9 @@ export class CustomerBalanceSummaryTableInjectable {
    * @param {ICustomerBalanceSummaryQuery} filter
    * @returns {Promise<ICustomerBalanceSummaryTable>}
    */
-  public async table(
-    tenantId: number,
-    filter: ICustomerBalanceSummaryQuery
-  ): Promise<ICustomerBalanceSummaryTable> {
+  public async table(tenantId: number, filter: ICustomerBalanceSummaryQuery): Promise<ICustomerBalanceSummaryTable> {
     const i18n = this.tenancy.i18n(tenantId);
-    const { data, query, meta } =
-      await this.customerBalanceSummaryService.customerBalanceSummary(
-        tenantId,
-        filter
-      );
+    const { data, query, meta } = await this.customerBalanceSummaryService.customerBalanceSummary(tenantId, filter);
     const table = new CustomerBalanceSummaryTable(data, filter, i18n);
 
     return {

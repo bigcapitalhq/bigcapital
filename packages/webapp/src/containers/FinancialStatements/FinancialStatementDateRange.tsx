@@ -22,12 +22,7 @@ export default function FinancialStatementDateRange() {
         <Col xs={4}>
           <FastField name={'date_range'}>
             {({ form: { setFieldValue }, field: { value } }) => (
-              <FormGroup
-                label={intl.get('report_date_range')}
-                labelInfo={<Hint />}
-                minimal={true}
-                fill={true}
-              >
+              <FormGroup label={intl.get('report_date_range')} labelInfo={<Hint />} minimal={true} fill={true}>
                 <HTMLSelect
                   fill={true}
                   options={dateRangeOptions}
@@ -39,14 +34,8 @@ export default function FinancialStatementDateRange() {
                       const dateRange = parseDateRangeQuery(newValue);
 
                       if (dateRange) {
-                        setFieldValue(
-                          'fromDate',
-                          moment(dateRange.fromDate).toDate(),
-                        );
-                        setFieldValue(
-                          'toDate',
-                          moment(dateRange.toDate).toDate(),
-                        );
+                        setFieldValue('fromDate', moment(dateRange.fromDate).toDate());
+                        setFieldValue('toDate', moment(dateRange.toDate).toDate());
                       }
                     }
                     setFieldValue('dateRange', newValue);
@@ -61,11 +50,7 @@ export default function FinancialStatementDateRange() {
       <Row>
         <Col xs={4}>
           <FastField name={'fromDate'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={intl.get('from_date')}
                 labelInfo={<Hint />}
@@ -92,11 +77,7 @@ export default function FinancialStatementDateRange() {
 
         <Col xs={4}>
           <FastField name={'toDate'}>
-            {({
-              form: { setFieldValue },
-              field: { value },
-              meta: { error },
-            }) => (
+            {({ form: { setFieldValue }, field: { value }, meta: { error } }) => (
               <FormGroup
                 label={intl.get('to_date')}
                 labelInfo={<Hint />}

@@ -21,10 +21,5 @@ export default function CreditNoteFormDialogs() {
     }
   };
 
-  return (
-    <CreditNoteNumberDialog
-      dialogName={'credit-number-form'}
-      onConfirm={handleCreditNumberFormConfirm}
-    />
-  );
+  return <CreditNoteNumberDialog dialogName={'credit-number-form'} onConfirm={handleCreditNumberFormConfirm} />;
 }

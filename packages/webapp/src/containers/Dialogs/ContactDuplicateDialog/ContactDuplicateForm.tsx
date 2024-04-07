@@ -24,9 +24,7 @@ function ContactDuplicateForm({
   const { dialogName, contactId } = useContactDuplicateFromContext();
 
   const validationSchema = Yup.object().shape({
-    contact_type: Yup.string()
-      .required()
-      .label(intl.get('contact_type_')),
+    contact_type: Yup.string().required().label(intl.get('contact_type_')),
   });
 
   const initialValues = {
@@ -47,11 +45,7 @@ function ContactDuplicateForm({
   };
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       {({ isSubmitting }) => (
         <Form>
           <div className={Classes.DIALOG_BODY}>
@@ -71,9 +65,7 @@ function ContactDuplicateForm({
                 >
                   <ListSelect
                     items={Contacts}
-                    onItemSelect={({ path }) =>
-                      form.setFieldValue('contact_type', path)
-                    }
+                    onItemSelect={({ path }) => form.setFieldValue('contact_type', path)}
                     defaultText={<T id={'select_contact'} />}
                     textProp={'name'}
                     selectedItemProp={'name'}
@@ -91,11 +83,7 @@ function ContactDuplicateForm({
                 <T id={'cancel'} />
               </Button>
 
-              <Button
-                intent={Intent.PRIMARY}
-                type="submit"
-                disabled={isSubmitting}
-              >
+              <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
                 <T id={'duplicate'} />
               </Button>
             </div>

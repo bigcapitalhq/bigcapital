@@ -1,13 +1,10 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import InvoiceMailDialogContent, {
-  InvoiceMailDialogContentProps,
-} from './InvoiceMailDialogContent';
+import InvoiceMailDialogContent, { InvoiceMailDialogContentProps } from './InvoiceMailDialogContent';
 import { DialogsName } from '@/constants/dialogs';
 
-export interface InvoiceMailDialogBodyProps
-  extends InvoiceMailDialogContentProps {}
+export interface InvoiceMailDialogBodyProps extends InvoiceMailDialogContentProps {}
 
 function InvoiceMailDialogBodyRoot({
   invoiceId,

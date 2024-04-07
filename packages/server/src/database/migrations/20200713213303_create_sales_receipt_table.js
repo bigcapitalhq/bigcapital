@@ -1,6 +1,5 @@
-
-exports.up = function(knex) {
-  return knex.schema.createTable('sales_receipts', table => {
+exports.up = (knex) =>
+  knex.schema.createTable('sales_receipts', (table) => {
     table.increments();
     table.decimal('amount', 13, 3);
     table.string('currency_code', 3);
@@ -14,9 +13,6 @@ exports.up = function(knex) {
     table.text('statement');
     table.date('closed_at').index();
     table.timestamps();
-  })  
-};
+  });
 
-exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('sales_receipts');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('sales_receipts');

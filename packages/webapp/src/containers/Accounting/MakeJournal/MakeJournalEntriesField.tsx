@@ -3,11 +3,7 @@ import React from 'react';
 import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import {
-  entriesFieldShouldUpdate,
-  defaultEntry,
-  MIN_LINES_NUMBER,
-} from './utils';
+import { entriesFieldShouldUpdate, defaultEntry, MIN_LINES_NUMBER } from './utils';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import MakeJournalEntriesTable from './MakeJournalEntriesTable';
 
@@ -15,8 +11,7 @@ import MakeJournalEntriesTable from './MakeJournalEntriesTable';
  * Make journal entries field.
  */
 export default function MakeJournalEntriesField() {
-  const { accounts, contacts, branches, projects } =
-    useMakeJournalFormContext();
+  const { accounts, contacts, branches, projects } = useMakeJournalFormContext();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
@@ -28,11 +23,7 @@ export default function MakeJournalEntriesField() {
         projects={projects}
         shouldUpdate={entriesFieldShouldUpdate}
       >
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <MakeJournalEntriesTable
             onChange={(entries) => {
               setFieldValue('entries', entries);

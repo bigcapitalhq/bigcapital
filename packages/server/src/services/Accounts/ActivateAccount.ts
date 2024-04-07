@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import { IAccountEventActivatedPayload } from '@/interfaces';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ActivateAccount {
@@ -23,18 +23,12 @@ export class ActivateAccount {
    * @param {number} accountId
    * @param {boolean} activate
    */
-  public activateAccount = async (
-    tenantId: number,
-    accountId: number,
-    activate?: boolean
-  ) => {
+  public activateAccount = async (tenantId: number, accountId: number, activate?: boolean) => {
     const { Account } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the given account or throw not found error.
-    const oldAccount = await Account.query()
-      .findById(accountId)
-      .throwIfNotFound();
+    const oldAccount = await Account.query().findById(accountId).throwIfNotFound();
 
     // Get all children accounts.
     const accountsGraph = await accountRepository.getDependencyGraph();

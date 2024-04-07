@@ -1,10 +1,7 @@
 // @ts-nocheck
 import { Button, Callout, Intent, Text } from '@blueprintjs/core';
 import clsx from 'classnames';
-import {
-  ImportFilePreviewBootProvider,
-  useImportFilePreviewBootContext,
-} from './ImportFilePreviewBoot';
+import { ImportFilePreviewBootProvider, useImportFilePreviewBootContext } from './ImportFilePreviewBoot';
 import { useImportFileContext } from './ImportFileProvider';
 import { useImportFileProcess } from '@/hooks/query/import';
 import { AppToaster, Box, Group, Stack } from '@/components';
@@ -31,13 +28,8 @@ function ImportFilePreviewContent() {
     <Box>
       <ImportFileContainer>
         <Stack spacing={20}>
-          <Callout
-            intent={
-              importPreview.createdCount <= 0 ? Intent.DANGER : Intent.NONE
-            }
-          >
-            {importPreview.createdCount} of {importPreview.totalCount} Items in
-            your file are ready to be imported.
+          <Callout intent={importPreview.createdCount <= 0 ? Intent.DANGER : Intent.NONE}>
+            {importPreview.createdCount} of {importPreview.totalCount} Items in your file are ready to be imported.
           </Callout>
 
           <ImportFilePreviewImported />
@@ -60,9 +52,7 @@ function ImportFilePreviewImported() {
       title={`(${importPreview.createdCount}) Items are ready to import`}
     >
       <SectionCard padded={true}>
-        <Text>
-          Items that are ready to be imported - {importPreview.createdCount}
-        </Text>
+        <Text>Items that are ready to be imported - {importPreview.createdCount}</Text>
         <ul className={styles.previewList}>
           <li>
             Items to be created: <span>({importPreview.createdCount})</span>
@@ -132,11 +122,9 @@ function ImportFilePreviewUnmapped() {
 }
 
 function ImportFilePreviewFloatingActions() {
-  const { importId, setStep, onImportSuccess, onImportFailed } =
-    useImportFileContext();
+  const { importId, setStep, onImportSuccess, onImportFailed } = useImportFileContext();
   const { importPreview } = useImportFilePreviewBootContext();
-  const { mutateAsync: importFile, isLoading: isImportFileLoading } =
-    useImportFileProcess();
+  const { mutateAsync: importFile, isLoading: isImportFileLoading } = useImportFileProcess();
 
   const isValidToImport = importPreview?.createdCount > 0;
 
@@ -145,9 +133,7 @@ function ImportFilePreviewFloatingActions() {
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
-          message: `The ${
-            importPreview.createdCount
-          } of ${10} has imported successfully.`,
+          message: `The ${importPreview.createdCount} of ${10} has imported successfully.`,
         });
         onImportSuccess && onImportSuccess();
       })

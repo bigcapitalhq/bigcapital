@@ -21,10 +21,5 @@ export default function MakeJournalFormDialogs() {
     }
   };
 
-  return (
-    <JournalNumberDialog
-      dialogName={'journal-number-form'}
-      onConfirm={handleConfirm}
-    />
-  );
+  return <JournalNumberDialog dialogName={'journal-number-form'} onConfirm={handleConfirm} />;
 }

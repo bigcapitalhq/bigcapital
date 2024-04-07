@@ -6,9 +6,7 @@ import { Card } from '@/components';
 import { useTransactionsByReference } from '@/hooks/query';
 import { useReceiptDetailDrawerContext } from './ReceiptDetailDrawerProvider';
 
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Receipt details GL entries panel.
@@ -33,10 +31,7 @@ export function ReceiptDetailsGLEntriesPanel() {
   return (
     <ReceiptGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <JournalEntriesTable
-        loading={isTransactionLoading}
-        transactions={transactions}
-      />
+      <JournalEntriesTable loading={isTransactionLoading} transactions={transactions} />
     </ReceiptGLEntriesRoot>
   );
 }

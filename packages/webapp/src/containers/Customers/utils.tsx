@@ -11,9 +11,7 @@ export const transformErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find((error) => error.type === 'SOME.CUSTOMERS.HAVE.SALES_INVOICES')
-  ) {
+  if (errors.find((error) => error.type === 'SOME.CUSTOMERS.HAVE.SALES_INVOICES')) {
     AppToaster.show({
       message: intl.get('some_customers_have_sales_invoices'),
       intent: Intent.DANGER,

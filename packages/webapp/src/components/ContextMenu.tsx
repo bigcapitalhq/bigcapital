@@ -42,10 +42,7 @@ function ContextMenu(props) {
 }
 
 export default memo(ContextMenu, (prevProps, nextProps) => {
-  if (
-    prevProps.isOpen === nextProps.isOpen &&
-    prevProps.bindMenu.style === nextProps.bindMenu.style
-  ) {
+  if (prevProps.isOpen === nextProps.isOpen && prevProps.bindMenu.style === nextProps.bindMenu.style) {
     return true;
   } else {
     return false;

@@ -6,19 +6,11 @@ import { AdvancedFilterDropdown } from './AdvancedFilterDropdown';
 /**
  * Advanced filter popover.
  */
-export function AdvancedFilterPopover({
-  popoverProps,
-  advancedFilterProps,
-  children,
-}) {
+export function AdvancedFilterPopover({ popoverProps, advancedFilterProps, children }) {
   return (
     <Popover
       minimal={true}
-      content={
-        <AdvancedFilterDropdown
-          {...advancedFilterProps}
-        />
-      }
+      content={<AdvancedFilterDropdown {...advancedFilterProps} />}
       interactionKind={PopoverInteractionKind.CLICK}
       position={Position.BOTTOM_LEFT}
       canOutsideClickClose={true}

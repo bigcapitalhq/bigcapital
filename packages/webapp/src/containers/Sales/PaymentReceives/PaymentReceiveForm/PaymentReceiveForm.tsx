@@ -22,10 +22,7 @@ import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import {
-  EditPaymentReceiveFormSchema,
-  CreatePaymentReceiveFormSchema,
-} from './PaymentReceiveForm.schema';
+import { EditPaymentReceiveFormSchema, CreatePaymentReceiveFormSchema } from './PaymentReceiveForm.schema';
 import { AppToaster } from '@/components';
 import { transactionNumber, compose } from '@/utils';
 
@@ -66,10 +63,7 @@ function PaymentReceiveForm({
   } = usePaymentReceiveFormContext();
 
   // Payment receive number.
-  const nextPaymentNumber = transactionNumber(
-    paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber,
-  );
+  const nextPaymentNumber = transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber);
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -96,10 +90,7 @@ function PaymentReceiveForm({
   );
 
   // Handle form submit.
-  const handleSubmitForm = (
-    values,
-    { setSubmitting, resetForm, setFieldError },
-  ) => {
+  const handleSubmitForm = (values, { setSubmitting, resetForm, setFieldError }) => {
     setSubmitting(true);
 
     // Calculates the total payment amount of entries.
@@ -148,29 +139,17 @@ function PaymentReceiveForm({
     };
 
     if (paymentReceiveId) {
-      editPaymentReceiveMutate([paymentReceiveId, form])
-        .then(onSaved)
-        .catch(onError);
+      editPaymentReceiveMutate([paymentReceiveId, form]).then(onSaved).catch(onError);
     } else {
       createPaymentReceiveMutate(form).then(onSaved).catch(onError);
     }
   };
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_PAYMENT_RECEIVE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_PAYMENT_RECEIVE)}>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmitForm}
-        validationSchema={
-          isNewMode
-            ? CreatePaymentReceiveFormSchema
-            : EditPaymentReceiveFormSchema
-        }
+        validationSchema={isNewMode ? CreatePaymentReceiveFormSchema : EditPaymentReceiveFormSchema}
       >
         <Form>
           <PaymentReceiveInnerProvider>

@@ -1,6 +1,6 @@
-import xlsx, { WorkBook } from 'xlsx';
-import { IFinancialTable, ITableData } from '@/interfaces';
+import { ITableData } from '@/interfaces';
 import { FinancialTableStructure } from '@/services/FinancialStatements/FinancialTableStructure';
+import xlsx, { WorkBook } from 'xlsx';
 
 interface ITableSheet {
   convertToXLSX(): WorkBook;
@@ -38,9 +38,7 @@ export class TableSheet implements ITableSheet {
    * @returns {Record<string, string>}
    */
   private get rows() {
-    const computedRows = FinancialTableStructure.flatNestedTree(
-      this.table.rows
-    );
+    const computedRows = FinancialTableStructure.flatNestedTree(this.table.rows);
     return computedRows.map((row) => {
       const entries = row.cells.map((cell, index) => {
         return [`${index}`, cell.value];

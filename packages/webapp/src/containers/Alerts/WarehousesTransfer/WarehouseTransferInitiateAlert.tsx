@@ -25,8 +25,7 @@ function WarehouseTransferInitiateAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: initialWarehouseTransferMutate, isLoading } =
-    useInitiateWarehouseTransfer();
+  const { mutateAsync: initialWarehouseTransferMutate, isLoading } = useInitiateWarehouseTransfer();
 
   // handle cancel alert.
   const handleCancelAlert = () => {
@@ -65,7 +64,4 @@ function WarehouseTransferInitiateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(WarehouseTransferInitiateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(WarehouseTransferInitiateAlert);

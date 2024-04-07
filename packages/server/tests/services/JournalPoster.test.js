@@ -1,16 +1,11 @@
-import { expect } from '~/testInit';
-import JournalPoster from '@/services/Accounting/JournalPoster';
 import JournalEntry from '@/services/Accounting/JournalEntry';
+import JournalPoster from '@/services/Accounting/JournalPoster';
+import { omit } from 'lodash';
+import Account from 'models/Account';
 import AccountBalance from 'models/AccountBalance';
 import AccountTransaction from 'models/AccountTransaction';
-import Account from 'models/Account';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-import { omit } from 'lodash';
-import DependencyGraph from '@/lib/DependencyGraph';
+import { tenantFactory } from '~/dbInit';
+import { expect } from '~/testInit';
 
 let accountsDepGraph;
 
@@ -77,13 +72,9 @@ describe('JournalPoster', () => {
   });
 
   describe('setContactAccountBalance', () => {
-    it('Should increment balance amount after credit/debit entry.', () => {
+    it('Should increment balance amount after credit/debit entry.', () => {});
 
-    });
-
-    it('Should decrement balance amount after credit/debit customer/vendor entry.', () => {
-      
-    });
+    it('Should decrement balance amount after credit/debit customer/vendor entry.', () => {});
   });
 
   describe('saveEntries()', () => {
@@ -241,9 +232,7 @@ describe('JournalPoster', () => {
     });
   });
 
-  describe('groupingEntriesByDate(accountId, dateGroupType)', () => {
-
-  });
+  describe('groupingEntriesByDate(accountId, dateGroupType)', () => {});
 
   describe('removeEntries', () => {
     it('Should remove all entries in the collection.', () => {
@@ -334,13 +323,11 @@ describe('JournalPoster', () => {
 
       expect(journalPoster.balancesChange['1']).equals(0);
       expect(journalPoster.balancesChange['2']).equals(1000);
-    })
+    });
   });
 
   describe('deleteEntries', () => {
-    it('Should delete all entries from the storage based on the stacked deleted entries ids.', () => {
-
-    });
+    it('Should delete all entries from the storage based on the stacked deleted entries ids.', () => {});
   });
 
   describe('effectParentAccountsBalance()', () => {
@@ -371,36 +358,32 @@ describe('JournalPoster', () => {
 
       journalPoster.debit(journalEntryA);
       journalPoster.debit(journalEntryB);
-      
+
       await journalPoster.saveBalance();
 
       const accountBalances = await AccountBalance.tenant().query();
-      const simplifiedArray = accountBalances.map(x => ({ ...omit(x, ['id']) }));
+      const simplifiedArray = accountBalances.map((x) => ({ ...omit(x, ['id']) }));
 
       expect(simplifiedArray.length).equals(3);
       expect(simplifiedArray).to.include.something.deep.equals({
         accountId: accountA.id,
         amount: 1000,
-        currencyCode: 'USD'
+        currencyCode: 'USD',
       });
       expect(simplifiedArray).to.include.something.deep.equals({
         accountId: accountAC.id,
         amount: 1000,
-        currencyCode: 'USD'
-      });      
+        currencyCode: 'USD',
+      });
       expect(simplifiedArray).to.include.something.deep.equals({
         accountId: accountBD.id,
         amount: 1000,
-        currencyCode: 'USD'
+        currencyCode: 'USD',
       });
     });
   });
 
-  describe('reverseEntries()', () => {
+  describe('reverseEntries()', () => {});
 
-  });
-
-  describe('loadFromCollection', () => {
-
-  });
+  describe('loadFromCollection', () => {});
 });

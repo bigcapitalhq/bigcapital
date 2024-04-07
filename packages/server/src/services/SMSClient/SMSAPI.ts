@@ -1,6 +1,5 @@
-import { Container } from 'typedi';
 import SMSClientInterface from '@/services/SMSClient/SMSClientInterface';
-import { thomsonCrossSectionDependencies } from 'mathjs';
+import { Container } from 'typedi';
 
 export default class SMSAPI {
   smsClient: SMSClientInterface;
@@ -16,20 +15,15 @@ export default class SMSAPI {
    * @param {array} extraParams
    * @param {array} extraHeaders
    */
-  sendMessage(
-    to: string,
-    message: string,
-    extraParams?: [],
-    extraHeaders?: []
-  ) {
+  sendMessage(to: string, message: string, extraParams?: [], extraHeaders?: []) {
     return this.smsClient.send(to, message);
   }
 
   /**
-   * 
-   * @param to 
-   * @param message 
-   * @returns 
+   *
+   * @param to
+   * @param message
+   * @returns
    */
   sendMessageJob(to: string, message: string) {
     const agenda = Container.get('agenda');

@@ -13,18 +13,9 @@ export const TotalLineTextStyle = {
   Bold: 'Bold',
 };
 
-export function TotalLines({
-  children,
-  amountColWidth,
-  labelColWidth,
-  className,
-}) {
+export function TotalLines({ children, amountColWidth, labelColWidth, className }) {
   return (
-    <TotalLinesRoot
-      className={className}
-      amountColWidth={amountColWidth}
-      labelColWidth={labelColWidth}
-    >
+    <TotalLinesRoot className={className} amountColWidth={amountColWidth} labelColWidth={labelColWidth}>
       {children}
     </TotalLinesRoot>
   );
@@ -32,11 +23,7 @@ export function TotalLines({
 
 export function TotalLine({ title, value, borderStyle, textStyle, className }) {
   return (
-    <TotalLineRoot
-      borderStyle={borderStyle}
-      textStyle={textStyle}
-      className={className}
-    >
+    <TotalLineRoot borderStyle={borderStyle} textStyle={textStyle} className={className}>
       <div class="title">{title}</div>
       <div class="amount">{value}</div>
     </TotalLineRoot>

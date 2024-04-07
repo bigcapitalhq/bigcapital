@@ -1,9 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 
-const RoleDeleteAlert = React.lazy(
-  () => import('@/containers/Alerts/Roles/RoleDeleteAlert'),
-);
+const RoleDeleteAlert = React.lazy(() => import('@/containers/Alerts/Roles/RoleDeleteAlert'));
 
 /**
  * Roles alerts

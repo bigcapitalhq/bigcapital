@@ -1,9 +1,9 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
-import BaseController from '../BaseController';
-import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import RolesService from '@/services/Roles/RolesService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export default class RolesController extends BaseController {
@@ -25,7 +25,7 @@ export default class RolesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.createRole),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
@@ -40,29 +40,23 @@ export default class RolesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.editRole),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteRole),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getRole),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
-    router.get(
-      '/',
-      [],
-      this.validationResult,
-      this.asyncMiddleware(this.listRoles),
-      this.handleServiceErrors
-    );
+    router.get('/', [], this.validationResult, this.asyncMiddleware(this.listRoles), this.handleServiceErrors);
     return router;
   }
 
@@ -72,11 +66,7 @@ export default class RolesController extends BaseController {
    * @param res
    * @param next
    */
-  private createRole = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private createRole = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const newRoleDTO = this.matchedBodyData(req);
 
@@ -98,11 +88,7 @@ export default class RolesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private deleteRole = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteRole = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: roleId } = req.params;
 
@@ -124,11 +110,7 @@ export default class RolesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private editRole = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private editRole = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: roleId } = req.params;
     const editRoleDTO = this.matchedBodyData(req);
@@ -151,11 +133,7 @@ export default class RolesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private listRoles = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private listRoles = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
@@ -197,12 +175,7 @@ export default class RolesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private handleServiceErrors = (
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private handleServiceErrors = (error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ROLE_PREFINED') {
         return res.status(400).send({
@@ -243,7 +216,7 @@ export default class RolesController extends BaseController {
             {
               type: 'CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS',
               message: 'Cannot delete role associated to users.',
-              code: 400
+              code: 400,
             },
           ],
         });

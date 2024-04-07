@@ -31,10 +31,7 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
   // Fetches payment recevie details.
   const {
-    data: {
-      paymentReceive: paymentReceiveEditPage,
-      entries: paymentEntriesEditPage,
-    },
+    data: { paymentReceive: paymentReceiveEditPage, entries: paymentEntriesEditPage },
     isLoading: isPaymentLoading,
     isFetching: isPaymentFetching,
   } = usePaymentReceiveEditPage(paymentReceiveId, {
@@ -109,7 +106,6 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   );
 }
 
-const usePaymentReceiveFormContext = () =>
-  useContext(PaymentReceiveFormContext);
+const usePaymentReceiveFormContext = () => useContext(PaymentReceiveFormContext);
 
 export { PaymentReceiveFormProvider, usePaymentReceiveFormContext };

@@ -3,12 +3,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 
 import BillsEmptyStatus from './BillsEmptyStatus';
 
@@ -49,8 +44,7 @@ function BillsDataTable({
   billsTableSize,
 }) {
   // Bills list context.
-  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus } =
-    useBillsListContext();
+  const { bills, pagination, isBillsLoading, isBillsFetching, isEmptyStatus } = useBillsListContext();
 
   const history = useHistory();
 
@@ -109,8 +103,7 @@ function BillsDataTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.BILLS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.BILLS);
 
   if (isEmptyStatus) {
     return <BillsEmptyStatus />;

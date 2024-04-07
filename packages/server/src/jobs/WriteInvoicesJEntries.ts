@@ -1,7 +1,7 @@
-import { Container } from 'typedi';
-import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { SaleInvoicesCost } from '@/services/Sales/Invoices/SalesInvoicesCost';
+import events from '@/subscribers/events';
+import { Container } from 'typedi';
 
 export default class WriteInvoicesJournalEntries {
   eventPublisher: EventPublisher;
@@ -13,11 +13,7 @@ export default class WriteInvoicesJournalEntries {
     const eventName = 'rewrite-invoices-journal-entries';
     this.eventPublisher = Container.get(EventPublisher);
 
-    agenda.define(
-      eventName,
-      { priority: 'normal', concurrency: 1 },
-      this.handler.bind(this)
-    );
+    agenda.define(eventName, { priority: 'normal', concurrency: 1 }, this.handler.bind(this));
     agenda.on(`complete:${eventName}`, this.onJobCompleted.bind(this));
   }
 
@@ -42,9 +38,10 @@ export default class WriteInvoicesJournalEntries {
   async onJobCompleted(job) {
     const { startingDate, itemId, tenantId } = job.attrs.data;
 
-    await this.eventPublisher.emitAsync(
-      events.inventory.onInventoryCostEntriesWritten,
-      { startingDate, itemId, tenantId }
-    );
+    await this.eventPublisher.emitAsync(events.inventory.onInventoryCostEntriesWritten, {
+      startingDate,
+      itemId,
+      tenantId,
+    });
   }
 }

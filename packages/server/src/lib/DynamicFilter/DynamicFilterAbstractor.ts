@@ -1,4 +1,3 @@
-
 export default class DynamicFilterAbstractor {
   /**
    * Extract relation table name from relation.
@@ -25,7 +24,7 @@ export default class DynamicFilterAbstractor {
 
   /**
    * Builds join queries of fields.
-   * @param builder - 
+   * @param builder -
    * @param {string[]} fieldsRelations -
    */
   private buildFieldsJoinQueries = (builder, fieldsRelations: string[]) => {

@@ -14,11 +14,7 @@ function AppIntlProvider({ currentLocale, isRTL, children }) {
     direction: isRTL ? 'rtl' : 'ltr',
   };
 
-  return (
-    <AppIntlContext.Provider value={provider}>
-      {children}
-    </AppIntlContext.Provider>
-  );
+  return <AppIntlContext.Provider value={provider}>{children}</AppIntlContext.Provider>;
 }
 
 const useAppIntlContext = () => React.useContext(AppIntlContext);

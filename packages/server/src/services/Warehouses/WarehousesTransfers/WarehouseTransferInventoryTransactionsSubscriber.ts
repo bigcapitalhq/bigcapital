@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import {
-  IWarehouseTransferEditedPayload,
-  IWarehouseTransferDeletedPayload,
   IWarehouseTransferCreated,
+  IWarehouseTransferDeletedPayload,
+  IWarehouseTransferEditedPayload,
   IWarehouseTransferInitiatedPayload,
   IWarehouseTransferTransferredPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { WarehouseTransferInventoryTransactions } from './WriteInventoryTransactions';
 
 @Service()
@@ -18,26 +18,11 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.warehouseTransfer.onCreated,
-      this.writeInventoryTransactionsOnWarehouseTransferCreated
-    );
-    bus.subscribe(
-      events.warehouseTransfer.onEdited,
-      this.rewriteInventoryTransactionsOnWarehouseTransferEdited
-    );
-    bus.subscribe(
-      events.warehouseTransfer.onDeleted,
-      this.revertInventoryTransactionsOnWarehouseTransferDeleted
-    );
-    bus.subscribe(
-      events.warehouseTransfer.onInitiated,
-      this.writeInventoryTransactionsOnTransferInitiated
-    );
-    bus.subscribe(
-      events.warehouseTransfer.onTransferred,
-      this.writeInventoryTransactionsOnTransferred
-    );
+    bus.subscribe(events.warehouseTransfer.onCreated, this.writeInventoryTransactionsOnWarehouseTransferCreated);
+    bus.subscribe(events.warehouseTransfer.onEdited, this.rewriteInventoryTransactionsOnWarehouseTransferEdited);
+    bus.subscribe(events.warehouseTransfer.onDeleted, this.revertInventoryTransactionsOnWarehouseTransferDeleted);
+    bus.subscribe(events.warehouseTransfer.onInitiated, this.writeInventoryTransactionsOnTransferInitiated);
+    bus.subscribe(events.warehouseTransfer.onTransferred, this.writeInventoryTransactionsOnTransferred);
     return bus;
   };
 
@@ -59,7 +44,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         tenantId,
         warehouseTransfer,
         false,
-        trx
+        trx,
       );
       // Write initiate inventory transaction if warehouse transfer initited and transferred yet.
     } else if (warehouseTransfer.isInitiated) {
@@ -67,7 +52,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         tenantId,
         warehouseTransfer,
         false,
-        trx
+        trx,
       );
     }
   };
@@ -90,7 +75,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         tenantId,
         warehouseTransfer,
         true,
-        trx
+        trx,
       );
       // Write initiate inventory transaction if warehouse transfer initited and transferred yet.
     } else if (warehouseTransfer.isInitiated) {
@@ -98,7 +83,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
         tenantId,
         warehouseTransfer,
         true,
-        trx
+        trx,
       );
     }
   };
@@ -115,7 +100,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
     await this.warehouseTransferInventoryTransactions.revertInventoryTransactions(
       tenantId,
       oldWarehouseTransfer.id,
-      trx
+      trx,
     );
   };
 
@@ -132,7 +117,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
       tenantId,
       warehouseTransfer,
       false,
-      trx
+      trx,
     );
   };
 
@@ -149,7 +134,7 @@ export class WarehouseTransferInventoryTransactionsSubscriber {
       tenantId,
       warehouseTransfer,
       false,
-      trx
+      trx,
     );
   };
 }

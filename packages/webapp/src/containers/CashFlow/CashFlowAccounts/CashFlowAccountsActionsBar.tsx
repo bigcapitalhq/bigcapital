@@ -1,18 +1,6 @@
 // @ts-nocheck
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Alignment,
-  Switch,
-} from '@blueprintjs/core';
-import {
-  DashboardActionsBar,
-  Can,
-  Icon,
-  FormattedMessage as T,
-} from '@/components';
+import { Button, NavbarGroup, Classes, NavbarDivider, Alignment, Switch } from '@blueprintjs/core';
+import { DashboardActionsBar, Can, Icon, FormattedMessage as T } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
@@ -84,11 +72,7 @@ function CashFlowAccountsActionsBar({
           />
           <NavbarDivider />
         </Can>
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon="print-16" iconSize={16} />} text={<T id={'print'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
@@ -101,20 +85,12 @@ function CashFlowAccountsActionsBar({
         />
         <NavbarDivider />
         <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
-          <Switch
-            labelElement={<T id={'inactive'} />}
-            defaultChecked={false}
-            onChange={handleInactiveSwitchChange}
-          />
+          <Switch labelElement={<T id={'inactive'} />} defaultChecked={false} onChange={handleInactiveSwitchChange} />
         </Can>
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
-        <Button
-          className={Classes.MINIMAL}
-          text={'Connect to Bank / Credit Card'}
-          onClick={handleConnectToBank}
-        />
+        <Button className={Classes.MINIMAL} text={'Connect to Bank / Credit Card'} onClick={handleConnectToBank} />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -125,7 +101,4 @@ function CashFlowAccountsActionsBar({
     </DashboardActionsBar>
   );
 }
-export default compose(
-  withDialogActions,
-  withCashflowAccountsTableActions,
-)(CashFlowAccountsActionsBar);
+export default compose(withDialogActions, withCashflowAccountsTableActions)(CashFlowAccountsActionsBar);

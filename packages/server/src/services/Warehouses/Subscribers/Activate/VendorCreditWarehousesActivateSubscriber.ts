@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { IWarehousesActivatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { VendorCreditActivateWarehouses } from '../../Activate/VendorCreditWarehousesActivate';
 
 @Service()
@@ -12,10 +12,7 @@ export class VendorCreditsActivateWarehousesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.warehouse.onActivated,
-      this.updateCreditsWithWarehouseOnActivated
-    );
+    bus.subscribe(events.warehouse.onActivated, this.updateCreditsWithWarehouseOnActivated);
     return bus;
   }
 
@@ -28,9 +25,6 @@ export class VendorCreditsActivateWarehousesSubscriber {
     tenantId,
     primaryWarehouse,
   }: IWarehousesActivatedPayload) => {
-    await this.creditsActivateWarehouses.updateCreditsWithWarehouse(
-      tenantId,
-      primaryWarehouse
-    );
+    await this.creditsActivateWarehouses.updateCreditsWithWarehouse(tenantId, primaryWarehouse);
   };
 }

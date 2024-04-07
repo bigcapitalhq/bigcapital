@@ -1,16 +1,13 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ISaleReceiptEditedPayload, ISaleReceiptEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import {
-  ISaleReceiptEditedPayload,
-  ISaleReceiptEditingPayload,
-} from '@/interfaces';
-import { SaleReceiptValidators } from './SaleReceiptValidators';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptDTOTransformer } from './SaleReceiptDTOTransformer';
+import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
 export class EditSaleReceipt {
@@ -38,17 +35,11 @@ export class EditSaleReceipt {
    * @param {ISaleReceipt} saleReceipt
    * @return {void}
    */
-  public async editSaleReceipt(
-    tenantId: number,
-    saleReceiptId: number,
-    saleReceiptDTO: any
-  ) {
+  public async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve sale receipt or throw not found service error.
-    const oldSaleReceipt = await SaleReceipt.query()
-      .findById(saleReceiptId)
-      .withGraphFetched('entries');
+    const oldSaleReceipt = await SaleReceipt.query().findById(saleReceiptId).withGraphFetched('entries');
 
     // Validates the sale receipt existance.
     this.validators.validateReceiptExistance(oldSaleReceipt);
@@ -64,30 +55,17 @@ export class EditSaleReceipt {
       tenantId,
       saleReceiptDTO,
       paymentCustomer,
-      oldSaleReceipt
+      oldSaleReceipt,
     );
     // Validate receipt deposit account existance and type.
-    await this.validators.validateReceiptDepositAccountExistance(
-      tenantId,
-      saleReceiptDTO.depositAccountId
-    );
+    await this.validators.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      saleReceiptDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleReceiptDTO.entries);
     // Validate the sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      saleReceiptDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
     // Validate sale receipt number uniuqiness.
     if (saleReceiptDTO.receiptNumber) {
-      await this.validators.validateReceiptNumberUnique(
-        tenantId,
-        saleReceiptDTO.receiptNumber,
-        saleReceiptId
-      );
+      await this.validators.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber, saleReceiptId);
     }
     // Edits the sale receipt tranasctions with associated transactions under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

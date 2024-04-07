@@ -14,12 +14,7 @@ interface ImportDropzoneFieldProps {
   dropzoneProps?: DropzoneProps;
 }
 
-export function ImportDropzoneField({
-  initialValue,
-  value,
-  onChange,
-  dropzoneProps,
-}: ImportDropzoneFieldProps) {
+export function ImportDropzoneField({ initialValue, value, onChange, dropzoneProps }: ImportDropzoneFieldProps) {
   const [localValue, handleChange] = useUncontrolled({
     value,
     initialValue,
@@ -56,22 +51,12 @@ export function ImportDropzoneField({
           </Stack>
         ) : (
           <Stack spacing={4} align="center">
-            <h4 className={styles.title}>
-              Drag images here or click to select files
-            </h4>
-            <span className={styles.subtitle}>
-              Drag and Drop file here or Choose file
-            </span>
+            <h4 className={styles.title}>Drag images here or click to select files</h4>
+            <span className={styles.subtitle}>Drag and Drop file here or Choose file</span>
           </Stack>
         )}
 
-        <Button
-          intent="none"
-          onClick={() => openRef.current?.()}
-          style={{ pointerEvents: 'all' }}
-          minimal
-          outlined
-        >
+        <Button intent="none" onClick={() => openRef.current?.()} style={{ pointerEvents: 'all' }} minimal outlined>
           {localValue ? 'Replace File' : 'Upload File'}
         </Button>
       </Stack>

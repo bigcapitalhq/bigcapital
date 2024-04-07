@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { BillPaymentBillSync } from '@/services/Purchases/BillPayments/BillPaymentBillSync';
 import {
   IBillPaymentEventCreatedPayload,
   IBillPaymentEventDeletedPayload,
   IBillPaymentEventEditedPayload,
 } from '@/interfaces';
+import { BillPaymentBillSync } from '@/services/Purchases/BillPayments/BillPaymentBillSync';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class PaymentSyncBillBalance {
@@ -17,18 +17,9 @@ export default class PaymentSyncBillBalance {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.billPayment.onCreated,
-      this.handleBillsIncrementPaymentAmount
-    );
-    bus.subscribe(
-      events.billPayment.onEdited,
-      this.handleBillsIncrementPaymentAmount
-    );
-    bus.subscribe(
-      events.billPayment.onDeleted,
-      this.handleBillDecrementPaymentAmount
-    );
+    bus.subscribe(events.billPayment.onCreated, this.handleBillsIncrementPaymentAmount);
+    bus.subscribe(events.billPayment.onEdited, this.handleBillsIncrementPaymentAmount);
+    bus.subscribe(events.billPayment.onDeleted, this.handleBillDecrementPaymentAmount);
   }
 
   /**
@@ -45,7 +36,7 @@ export default class PaymentSyncBillBalance {
       tenantId,
       billPayment.entries,
       oldBillPayment?.entries || null,
-      trx
+      trx,
     );
   };
 
@@ -62,7 +53,7 @@ export default class PaymentSyncBillBalance {
       tenantId,
       oldBillPayment.entries.map((entry) => ({ ...entry, paymentAmount: 0 })),
       oldBillPayment.entries,
-      trx
+      trx,
     );
   };
 }

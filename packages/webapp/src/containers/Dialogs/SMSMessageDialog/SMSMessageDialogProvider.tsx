@@ -1,10 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useSettingEditSMSNotification,
-  useSettingSMSNotification,
-} from '@/hooks/query';
+import { useSettingEditSMSNotification, useSettingSMSNotification } from '@/hooks/query';
 
 const SMSMessageDialogContext = React.createContext();
 
@@ -13,12 +10,10 @@ const SMSMessageDialogContext = React.createContext();
  */
 function SMSMessageDialogProvider({ notificationkey, dialogName, ...props }) {
   // Edit SMS message notification mutations.
-  const { mutateAsync: editSMSNotificationMutate } =
-    useSettingEditSMSNotification();
+  const { mutateAsync: editSMSNotificationMutate } = useSettingEditSMSNotification();
 
   // SMS notificiation details
-  const { data: smsNotification, isLoading: isSMSNotificationLoading } =
-    useSettingSMSNotification(notificationkey);
+  const { data: smsNotification, isLoading: isSMSNotificationLoading } = useSettingSMSNotification(notificationkey);
 
   //  provider.
   const provider = {
@@ -34,7 +29,6 @@ function SMSMessageDialogProvider({ notificationkey, dialogName, ...props }) {
   );
 }
 
-const useSMSMessageDialogContext = () =>
-  React.useContext(SMSMessageDialogContext);
+const useSMSMessageDialogContext = () => React.useContext(SMSMessageDialogContext);
 
 export { SMSMessageDialogProvider, useSMSMessageDialogContext };

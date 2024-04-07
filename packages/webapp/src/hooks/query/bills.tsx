@@ -68,19 +68,16 @@ export function useEditBill(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`purchases/bills/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation(([id, values]) => apiRequest.post(`purchases/bills/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate bill query.
-        queryClient.invalidateQueries([t.BILL, id]);
-      },
-      ...props,
+      // Invalidate bill query.
+      queryClient.invalidateQueries([t.BILL, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**

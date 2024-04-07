@@ -4,21 +4,9 @@ import { FastField, Field } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position } from '@blueprintjs/core';
 
-import {
-  FormattedMessage as T,
-  ItemsMultiSelect,
-  Row,
-  Col,
-  FieldHint,
-  FFormGroup,
-} from '@/components';
+import { FormattedMessage as T, ItemsMultiSelect, Row, Col, FieldHint, FFormGroup } from '@/components';
 import { filterInventoryValuationOptions } from '../constants';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import {
   InventoryValuationGeneralPanelProvider,
   useInventoryValuationGeneralPanelContext,

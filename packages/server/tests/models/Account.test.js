@@ -1,23 +1,14 @@
-import { 
-  expect,
-} from '~/testInit';
-import Account from 'models/Account';
-import AccountType from 'models/AccountType';
-import {
-  tenantFactory,
-  tenantWebsite
-} from '~/dbInit';
 import DependencyGraph from '@/lib/DependencyGraph';
+import Account from 'models/Account';
+import { tenantFactory } from '~/dbInit';
+import { expect } from '~/testInit';
 
 describe('Model: Account', () => {
   it('Should account model belongs to the associated account type model.', async () => {
     const accountType = await tenantFactory.create('account_type');
     const account = await tenantFactory.create('account', { account_type_id: accountType.id });
 
-    const accountModel = await Account.tenant().query()
-      .where('id', account.id)
-      .withGraphFetched('type')
-      .first();
+    const accountModel = await Account.tenant().query().where('id', account.id).withGraphFetched('type').first();
 
     expect(accountModel.type.id).equals(accountType.id);
   });
@@ -25,7 +16,8 @@ describe('Model: Account', () => {
   it('Should account model has one balance model that associated to the account model.', async () => {
     const accountBalance = await tenantFactory.create('account_balance');
 
-    const accountModel = await Account.tenant().query()
+    const accountModel = await Account.tenant()
+      .query()
       .where('id', accountBalance.accountId)
       .withGraphFetched('balance')
       .first();

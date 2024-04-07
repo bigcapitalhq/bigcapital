@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Alignment } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
   Icon,
@@ -97,9 +91,7 @@ function CreditNotesActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={creditNoteFilterRoles.length}
-          />
+          <DashboardFilterButton conditionsCount={creditNoteFilterRoles.length} />
         </AdvancedFilterPopover>
 
         <Button
@@ -107,21 +99,14 @@ function CreditNotesActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'file-import-16'} />}
-          text={<T id={'import'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon={'file-import-16'} />} text={<T id={'import'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={creditNoteTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={creditNoteTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

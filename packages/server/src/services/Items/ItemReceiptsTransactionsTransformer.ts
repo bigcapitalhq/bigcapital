@@ -7,12 +7,7 @@ export class ItemReceiptTransactionTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedAmount',
-      'formattedReceiptDate',
-      'formattedRate',
-      'formattedCost',
-    ];
+    return ['formattedAmount', 'formattedReceiptDate', 'formattedRate', 'formattedCost'];
   };
 
   /**

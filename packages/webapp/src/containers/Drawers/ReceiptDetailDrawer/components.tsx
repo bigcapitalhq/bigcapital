@@ -1,15 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-  Intent,
-  Tag,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Intent, Tag } from '@blueprintjs/core';
 
 import { Icon, Choose, T } from '@/components';
 
@@ -41,10 +32,7 @@ export function ReceiptMoreMenuItems({ payload: { onNotifyViaSMS } }) {
       minimal={true}
       content={
         <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-          />
+          <MenuItem onClick={onNotifyViaSMS} text={<T id={'notify_via_sms.dialog.notify_via_sms'} />} />
         </Menu>
       }
       interactionKind={PopoverInteractionKind.CLICK}

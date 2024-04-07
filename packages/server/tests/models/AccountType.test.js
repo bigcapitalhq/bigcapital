@@ -1,12 +1,7 @@
-import { create, expect } from '~/testInit';
 import 'models/Account';
 import AccountType from 'models/AccountType';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { tenantFactory } from '~/dbInit';
+import { expect } from '~/testInit';
 
 describe('Model: AccountType', () => {
   it('Shoud account type model has many associated accounts.', async () => {

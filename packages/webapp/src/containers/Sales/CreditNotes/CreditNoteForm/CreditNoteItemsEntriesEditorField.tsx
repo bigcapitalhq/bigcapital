@@ -15,16 +15,8 @@ export default function CreditNoteItemsEntriesEditorField() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField
-        name={'entries'}
-        items={items}
-        shouldUpdate={entriesFieldShouldUpdate}
-      >
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+      <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {

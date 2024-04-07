@@ -39,8 +39,7 @@ function InventoryAdjustmentForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, item, itemId, submitPayload, createInventoryAdjMutate } =
-    useInventoryAdjContext();
+  const { dialogName, item, itemId, submitPayload, createInventoryAdjMutate } = useInventoryAdjContext();
 
   // Initial form values.
   const initialValues = {
@@ -61,9 +60,7 @@ function InventoryAdjustmentForm({
         closeDialog(dialogName);
 
         AppToaster.show({
-          message: intl.get(
-            'the_adjustment_transaction_has_been_created_successfully',
-          ),
+          message: intl.get('the_adjustment_transaction_has_been_created_successfully'),
           intent: Intent.SUCCESS,
         });
       })

@@ -3,12 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-  DashboardContentTable,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader, DashboardContentTable } from '@/components';
 
 import VendorsEmptyStatus from './VendorsEmptyStatus';
 import { useVendorsListContext } from './VendorsListProvider';
@@ -48,13 +43,7 @@ function VendorsTable({
   vendorsTableSize,
 }) {
   // Vendors list context.
-  const {
-    vendors,
-    pagination,
-    isVendorsFetching,
-    isVendorsLoading,
-    isEmptyStatus,
-  } = useVendorsListContext();
+  const { vendors, pagination, isVendorsFetching, isVendorsLoading, isEmptyStatus } = useVendorsListContext();
 
   // Vendors table columns.
   const columns = useVendorsTableColumns();
@@ -103,8 +92,7 @@ function VendorsTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.VENDORS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.VENDORS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(

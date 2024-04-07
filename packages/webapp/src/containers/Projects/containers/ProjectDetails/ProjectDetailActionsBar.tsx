@@ -1,19 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Alignment,
-} from '@blueprintjs/core';
-import {
-  Icon,
-  FormattedMessage as T,
-  DashboardRowsHeightButton,
-  DashboardActionsBar,
-} from '@/components';
+import { Button, Classes, NavbarDivider, NavbarGroup, Alignment } from '@blueprintjs/core';
+import { Icon, FormattedMessage as T, DashboardRowsHeightButton, DashboardActionsBar } from '@/components';
 import { ProjectTransactionsSelect } from './components';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
@@ -80,10 +69,7 @@ function ProjectDetailActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <ProjectTransactionsSelect
-          transactions={projectTranslations}
-          onItemSelect={handleNewTransactionBtnClick}
-        />
+        <ProjectTransactionsSelect transactions={projectTranslations} onItemSelect={handleNewTransactionBtnClick} />
         <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
@@ -103,21 +89,14 @@ function ProjectDetailActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'file-import-16'} />}
-          text={<T id={'import'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon={'file-import-16'} />} text={<T id={'import'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={timesheetsTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={timesheetsTableSize} onChange={handleTableRowSizeChange} />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>
         <Button

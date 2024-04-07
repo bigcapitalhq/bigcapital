@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import {
   ICustomer,
   ISaleInvoice,
@@ -8,14 +6,16 @@ import {
   ISaleInvoiceCreatingPaylaod,
   ITenantUser,
 } from '@/interfaces';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
-import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { SaleEstimateValidators } from '../Estimates/SaleEstimateValidators';
+import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class CreateSaleInvoice {
@@ -51,49 +51,29 @@ export class CreateSaleInvoice {
   public createSaleInvoice = async (
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    authorizedUser: ITenantUser
+    authorizedUser: ITenantUser,
   ): Promise<ISaleInvoice> => {
-    const { SaleInvoice, SaleEstimate, Contact } =
-      this.tenancy.models(tenantId);
+    const { SaleInvoice, SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
     // Validate customer existance.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(saleInvoiceDTO.customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(saleInvoiceDTO.customerId).throwIfNotFound();
 
     // Validate the from estimate id exists on the storage.
     if (saleInvoiceDTO.fromEstimateId) {
-      const fromEstimate = await SaleEstimate.query()
-        .findById(saleInvoiceDTO.fromEstimateId)
-        .throwIfNotFound();
+      const fromEstimate = await SaleEstimate.query().findById(saleInvoiceDTO.fromEstimateId).throwIfNotFound();
 
       // Validate the sale estimate is not already converted to invoice.
       this.commandEstimateValidators.validateEstimateNotConverted(fromEstimate);
     }
     // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleInvoiceDTO.entries);
     // Validate items should be sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleInvoiceDTO.entries);
     // Transform DTO object to model object.
-    const saleInvoiceObj = await this.transformCreateDTOToModel(
-      tenantId,
-      customer,
-      saleInvoiceDTO,
-      authorizedUser
-    );
+    const saleInvoiceObj = await this.transformCreateDTOToModel(tenantId, customer, saleInvoiceDTO, authorizedUser);
     // Validate sale invoice number uniquiness.
     if (saleInvoiceObj.invoiceNo) {
-      await this.validators.validateInvoiceNumberUnique(
-        tenantId,
-        saleInvoiceObj.invoiceNo
-      );
+      await this.validators.validateInvoiceNumberUnique(tenantId, saleInvoiceObj.invoiceNo);
     }
     // Creates a new sale invoice and associated transactions under unit of work env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -105,9 +85,7 @@ export class CreateSaleInvoice {
       } as ISaleInvoiceCreatingPaylaod);
 
       // Create sale invoice graph to the storage.
-      const saleInvoice = await SaleInvoice.query(trx).upsertGraph(
-        saleInvoiceObj
-      );
+      const saleInvoice = await SaleInvoice.query(trx).upsertGraph(saleInvoiceObj);
       const eventPayload: ISaleInvoiceCreatedPayload = {
         tenantId,
         saleInvoice,
@@ -117,10 +95,7 @@ export class CreateSaleInvoice {
         trx,
       };
       // Triggers the event `onSaleInvoiceCreated`.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onCreated,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onCreated, eventPayload);
       return saleInvoice;
     });
   };
@@ -135,13 +110,8 @@ export class CreateSaleInvoice {
     tenantId: number,
     customer: ICustomer,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    authorizedUser: ITenantUser
+    authorizedUser: ITenantUser,
   ) => {
-    return this.transformerDTO.transformDTOToModel(
-      tenantId,
-      customer,
-      saleInvoiceDTO,
-      authorizedUser
-    );
+    return this.transformerDTO.transformDTOToModel(tenantId, customer, saleInvoiceDTO, authorizedUser);
   };
 }

@@ -1,14 +1,10 @@
-import { Inject } from 'typedi';
-import {
-  ICreateWarehouseTransferDTO,
-  IEditWarehouseTransferDTO,
-  IItem,
-} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ICreateWarehouseTransferDTO, IEditWarehouseTransferDTO, IItem } from '@/interfaces';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject } from 'typedi';
 import { CRUDWarehouseTransfer } from './CRUDWarehouseTransfer';
+import { ERRORS } from './constants';
 
 export class CommandWarehouseTransfer extends CRUDWarehouseTransfer {
   @Inject()
@@ -22,14 +18,9 @@ export class CommandWarehouseTransfer extends CRUDWarehouseTransfer {
    * @param {ICreateWarehouseTransferDTO|IEditWarehouseTransferDTO} warehouseTransferDTO
    */
   protected validateWarehouseFromToNotSame = (
-    warehouseTransferDTO:
-      | ICreateWarehouseTransferDTO
-      | IEditWarehouseTransferDTO
+    warehouseTransferDTO: ICreateWarehouseTransferDTO | IEditWarehouseTransferDTO,
   ) => {
-    if (
-      warehouseTransferDTO.fromWarehouseId ===
-      warehouseTransferDTO.toWarehouseId
-    ) {
+    if (warehouseTransferDTO.fromWarehouseId === warehouseTransferDTO.toWarehouseId) {
       throw new ServiceError(ERRORS.WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME);
     }
   };
@@ -43,16 +34,11 @@ export class CommandWarehouseTransfer extends CRUDWarehouseTransfer {
     const nonInventoryItems = items.filter((item) => item.type !== 'inventory');
 
     if (nonInventoryItems.length > 0) {
-      throw new ServiceError(
-        ERRORS.WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY
-      );
+      throw new ServiceError(ERRORS.WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY);
     }
   };
 
-  protected getToWarehouseOrThrow = async (
-    tenantId: number,
-    fromWarehouseId: number
-  ) => {
+  protected getToWarehouseOrThrow = async (tenantId: number, fromWarehouseId: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const warehouse = await Warehouse.query().findById(fromWarehouseId);
@@ -63,10 +49,7 @@ export class CommandWarehouseTransfer extends CRUDWarehouseTransfer {
     return warehouse;
   };
 
-  protected getFromWarehouseOrThrow = async (
-    tenantId: number,
-    fromWarehouseId: number
-  ) => {
+  protected getFromWarehouseOrThrow = async (tenantId: number, fromWarehouseId: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const warehouse = await Warehouse.query().findById(fromWarehouseId);

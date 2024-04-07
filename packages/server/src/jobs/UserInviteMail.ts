@@ -1,6 +1,5 @@
-import { Container, Inject } from 'typedi';
-import InviteUserService from '@/services/InviteUsers/AcceptInviteUser';
 import SendInviteUsersMailMessage from '@/services/InviteUsers/SendInviteUsersMailMessage';
+import { Container } from 'typedi';
 
 export default class UserInviteMailJob {
   /**
@@ -8,11 +7,7 @@ export default class UserInviteMailJob {
    * @param {Agenda} agenda
    */
   constructor(agenda) {
-    agenda.define(
-      'user-invite-mail',
-      { priority: 'high' },
-      this.handler.bind(this)
-    );
+    agenda.define('user-invite-mail', { priority: 'high' }, this.handler.bind(this));
   }
 
   /**
@@ -25,11 +20,7 @@ export default class UserInviteMailJob {
     const sendInviteMailMessage = Container.get(SendInviteUsersMailMessage);
 
     try {
-      await sendInviteMailMessage.sendInviteMail(
-        tenantId,
-        authorizedUser,
-        invite
-      );
+      await sendInviteMailMessage.sendInviteMail(tenantId, authorizedUser, invite);
       done();
     } catch (error) {
       console.log(error);

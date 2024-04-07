@@ -19,11 +19,5 @@ export default function VendorCreditDetailTable() {
   // Vendor Credit entries table columns.
   const columns = useVendorCreditReadonlyEntriesTableColumns();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

@@ -1,16 +1,14 @@
 import { IFinancialSheetCommonMeta } from './FinancialStatements';
-import { IFinancialTable, ITableData } from './Table';
+import { IFinancialTable } from './Table';
 import {
   ITransactionsByContactsAmount,
-  ITransactionsByContactsTransaction,
   ITransactionsByContactsFilter,
+  ITransactionsByContactsTransaction,
 } from './TransactionsByContacts';
 
-export interface ITransactionsByCustomersAmount
-  extends ITransactionsByContactsAmount {}
+export interface ITransactionsByCustomersAmount extends ITransactionsByContactsAmount {}
 
-export interface ITransactionsByCustomersTransaction
-  extends ITransactionsByContactsTransaction {}
+export interface ITransactionsByCustomersTransaction extends ITransactionsByContactsTransaction {}
 
 export interface ITransactionsByCustomersCustomer {
   customerName: string;
@@ -19,8 +17,7 @@ export interface ITransactionsByCustomersCustomer {
   transactions: ITransactionsByCustomersTransaction[];
 }
 
-export interface ITransactionsByCustomersFilter
-  extends ITransactionsByContactsFilter {
+export interface ITransactionsByCustomersFilter extends ITransactionsByContactsFilter {
   customersIds: number[];
 }
 
@@ -40,11 +37,10 @@ export interface ITransactionsByCustomersTable extends IFinancialTable {
 export interface ITransactionsByCustomersService {
   transactionsByCustomers(
     tenantId: number,
-    filter: ITransactionsByCustomersFilter
+    filter: ITransactionsByCustomersFilter,
   ): Promise<ITransactionsByCustomersStatement>;
 }
-export interface ITransactionsByCustomersMeta
-  extends IFinancialSheetCommonMeta {
+export interface ITransactionsByCustomersMeta extends IFinancialSheetCommonMeta {
   formattedFromDate: string;
   formattedToDate: string;
   formattedDateRange: string;

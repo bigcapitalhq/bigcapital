@@ -1,20 +1,20 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { body, check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
-import BaseController from '../BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ServiceError } from '@/exceptions';
 import {
-  ISaleInvoiceDTO,
-  ISaleInvoiceCreateDTO,
-  SaleInvoiceAction,
   AbilitySubject,
+  ISaleInvoiceCreateDTO,
+  ISaleInvoiceDTO,
+  SaleInvoiceAction,
   SendInvoiceMailDTO,
 } from '@/interfaces';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { SaleInvoiceApplication } from '@/services/Sales/Invoices/SaleInvoicesApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { body, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export default class SaleInvoicesController extends BaseController {
@@ -33,13 +33,10 @@ export default class SaleInvoicesController extends BaseController {
     router.post(
       '/',
       CheckPolicies(SaleInvoiceAction.Create, AbilitySubject.SaleInvoice),
-      [
-        ...this.saleInvoiceValidationSchema,
-        check('from_estimate_id').optional().isNumeric().toInt(),
-      ],
+      [...this.saleInvoiceValidationSchema, check('from_estimate_id').optional().isNumeric().toInt()],
       this.validationResult,
       asyncMiddleware(this.newSaleInvoice.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/deliver',
@@ -47,7 +44,7 @@ export default class SaleInvoicesController extends BaseController {
       [...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.deliverSaleInvoice.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/writeoff',
@@ -60,7 +57,7 @@ export default class SaleInvoicesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.writeoffSaleInvoice),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/writeoff/cancel',
@@ -68,40 +65,31 @@ export default class SaleInvoicesController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.cancelWrittenoffSaleInvoice),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/notify-by-sms',
       CheckPolicies(SaleInvoiceAction.NotifyBySms, AbilitySubject.SaleInvoice),
-      [
-        param('id').exists().isInt().toInt(),
-        check('notification_key').exists().isIn(['details', 'reminder']),
-      ],
+      [param('id').exists().isInt().toInt(), check('notification_key').exists().isIn(['details', 'reminder'])],
       this.validationResult,
       this.asyncMiddleware(this.saleInvoiceNotifyBySms),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/sms-details',
       CheckPolicies(SaleInvoiceAction.NotifyBySms, AbilitySubject.SaleInvoice),
-      [
-        param('id').exists().isInt().toInt(),
-        query('notification_key').exists().isIn(['details', 'reminder']),
-      ],
+      [param('id').exists().isInt().toInt(), query('notification_key').exists().isIn(['details', 'reminder'])],
       this.validationResult,
       this.asyncMiddleware(this.saleInvoiceSmsDetails),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
       CheckPolicies(SaleInvoiceAction.Edit, AbilitySubject.SaleInvoice),
-      [
-        ...this.saleInvoiceValidationSchema,
-        ...this.specificSaleInvoiceValidation,
-      ],
+      [...this.saleInvoiceValidationSchema, ...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.editSaleInvoice.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
@@ -109,7 +97,7 @@ export default class SaleInvoicesController extends BaseController {
       this.specificSaleInvoiceValidation,
       this.validationResult,
       asyncMiddleware(this.deleteSaleInvoice.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/payable',
@@ -117,14 +105,14 @@ export default class SaleInvoicesController extends BaseController {
       [...this.dueSalesInvoicesListValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getPayableInvoices.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/payment-transactions',
       [param('id').exists().isString()],
       this.validationResult,
       this.asyncMiddleware(this.getInvoicePaymentTransactions),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
@@ -132,7 +120,7 @@ export default class SaleInvoicesController extends BaseController {
       this.specificSaleInvoiceValidation,
       this.validationResult,
       asyncMiddleware(this.getSaleInvoice.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
@@ -141,14 +129,14 @@ export default class SaleInvoicesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getSalesInvoices.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.get(
       '/:id/mail-reminder',
       this.specificSaleInvoiceValidation,
       this.validationResult,
       asyncMiddleware(this.getSaleInvoiceMailReminder.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/mail-reminder',
@@ -162,7 +150,7 @@ export default class SaleInvoicesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleInvoiceMailReminder.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/mail',
@@ -176,14 +164,14 @@ export default class SaleInvoicesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleInvoiceMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/mail',
       [...this.specificSaleInvoiceValidation],
       this.validationResult,
       asyncMiddleware(this.getSaleInvoiceMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -216,45 +204,20 @@ export default class SaleInvoicesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toFloat(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.tax_code')
-        .optional({ nullable: true })
-        .trim()
-        .escape()
-        .isString(),
-      check('entries.*.tax_rate_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
-      check('entries.*.project_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.tax_code').optional({ nullable: true }).trim().escape().isString(),
+      check('entries.*.tax_rate_id').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.project_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('entries.*.project_ref_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.project_ref_id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.project_ref_type')
         .optional({ nullable: true })
         .isString()
         .toUpperCase()
         .isIn(['TASK', 'BILL', 'EXPENSE']),
-      check('entries.*.project_ref_invoiced_amount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
+      check('entries.*.project_ref_invoiced_amount').optional({ nullable: true }).isNumeric().toFloat(),
     ];
   }
 
@@ -293,22 +256,13 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  private async newSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async newSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const saleInvoiceDTO: ISaleInvoiceCreateDTO = this.matchedBodyData(req);
 
     try {
       // Creates a new sale invoice with associated entries.
-      const storedSaleInvoice =
-        await this.saleInvoiceApplication.createSaleInvoice(
-          tenantId,
-          saleInvoiceDTO,
-          user
-        );
+      const storedSaleInvoice = await this.saleInvoiceApplication.createSaleInvoice(tenantId, saleInvoiceDTO, user);
       return res.status(200).send({
         id: storedSaleInvoice.id,
         message: 'The sale invoice has been created successfully.',
@@ -324,23 +278,14 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  private async editSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async editSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
     const saleInvoiceOTD: ISaleInvoiceDTO = this.matchedBodyData(req);
 
     try {
       // Update the given sale invoice details.
-      await this.saleInvoiceApplication.editSaleInvoice(
-        tenantId,
-        saleInvoiceId,
-        saleInvoiceOTD,
-        user
-      );
+      await this.saleInvoiceApplication.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceOTD, user);
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The sale invoice has been edited successfully.',
@@ -356,20 +301,12 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private async deliverSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deliverSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: saleInvoiceId } = req.params;
 
     try {
-      await this.saleInvoiceApplication.deliverSaleInvoice(
-        tenantId,
-        saleInvoiceId,
-        user
-      );
+      await this.saleInvoiceApplication.deliverSaleInvoice(tenantId, saleInvoiceId, user);
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The given sale invoice has been delivered successfully',
@@ -385,21 +322,13 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  private async deleteSaleInvoice(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deleteSaleInvoice(req: Request, res: Response, next: NextFunction) {
     const { id: saleInvoiceId } = req.params;
     const { tenantId, user } = req;
 
     try {
       // Deletes the sale invoice with associated entries and journal transaction.
-      await this.saleInvoiceApplication.deleteSaleInvoice(
-        tenantId,
-        saleInvoiceId,
-        user
-      );
+      await this.saleInvoiceApplication.deleteSaleInvoice(tenantId, saleInvoiceId, user);
       return res.status(200).send({
         id: saleInvoiceId,
         message: 'The sale invoice has been deleted successfully.',
@@ -420,16 +349,10 @@ export default class SaleInvoicesController extends BaseController {
 
     const accept = this.accepts(req);
 
-    const acceptType = accept.types([
-      ACCEPT_TYPE.APPLICATION_JSON,
-      ACCEPT_TYPE.APPLICATION_PDF,
-    ]);
+    const acceptType = accept.types([ACCEPT_TYPE.APPLICATION_JSON, ACCEPT_TYPE.APPLICATION_PDF]);
     // Retrieves invoice in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(
-        tenantId,
-        saleInvoiceId
-      );
+      const pdfContent = await this.saleInvoiceApplication.saleInvoicePdf(tenantId, saleInvoiceId);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
@@ -437,11 +360,7 @@ export default class SaleInvoicesController extends BaseController {
       res.send(pdfContent);
       // Retrieves invoice in json format.
     } else {
-      const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(
-        tenantId,
-        saleInvoiceId,
-        user
-      );
+      const saleInvoice = await this.saleInvoiceApplication.getSaleInvoice(tenantId, saleInvoiceId, user);
       return res.status(200).send({ saleInvoice });
     }
   }
@@ -451,11 +370,7 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  public async getSalesInvoices(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getSalesInvoices(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -465,8 +380,7 @@ export default class SaleInvoicesController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const salesInvoicesWithPagination =
-        await this.saleInvoiceApplication.getSaleInvoices(tenantId, filter);
+      const salesInvoicesWithPagination = await this.saleInvoiceApplication.getSaleInvoices(tenantId, filter);
 
       return res.status(200).send(salesInvoicesWithPagination);
     } catch (error) {
@@ -481,20 +395,12 @@ export default class SaleInvoicesController extends BaseController {
    * @param {NextFunction} next -
    * @return {Response|void}
    */
-  public async getPayableInvoices(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getPayableInvoices(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { customerId } = this.matchedQueryData(req);
 
     try {
-      const salesInvoices =
-        await this.saleInvoiceApplication.getReceivableSaleInvoices(
-          tenantId,
-          customerId
-        );
+      const salesInvoices = await this.saleInvoiceApplication.getReceivableSaleInvoices(tenantId, customerId);
       return res.status(200).send({ salesInvoices });
     } catch (error) {
       next(error);
@@ -507,22 +413,14 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param next
    */
-  public writeoffSaleInvoice = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public writeoffSaleInvoice = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     const writeoffDTO = this.matchedBodyData(req);
 
     try {
-      const saleInvoice = await this.saleInvoiceApplication.writeOff(
-        tenantId,
-        invoiceId,
-        writeoffDTO
-      );
+      const saleInvoice = await this.saleInvoiceApplication.writeOff(tenantId, invoiceId, writeoffDTO);
       return res.status(200).send({
         id: saleInvoice.id,
         message: 'The given sale invoice has been written-off successfully.',
@@ -538,23 +436,15 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param next
    */
-  public cancelWrittenoffSaleInvoice = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public cancelWrittenoffSaleInvoice = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     try {
-      const saleInvoice = await this.saleInvoiceApplication.cancelWrittenoff(
-        tenantId,
-        invoiceId
-      );
+      const saleInvoice = await this.saleInvoiceApplication.cancelWrittenoff(tenantId, invoiceId);
       return res.status(200).send({
         id: saleInvoice.id,
-        message:
-          'The given sale invoice has been canceled write-off successfully.',
+        message: 'The given sale invoice has been canceled write-off successfully.',
       });
     } catch (error) {
       next(error);
@@ -567,27 +457,21 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public saleInvoiceNotifyBySms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public saleInvoiceNotifyBySms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     const invoiceNotifySmsDTO = this.matchedBodyData(req);
 
     try {
-      const saleInvoice =
-        await this.saleInvoiceApplication.notifySaleInvoiceBySms(
-          tenantId,
-          invoiceId,
-          invoiceNotifySmsDTO.notificationKey
-        );
+      const saleInvoice = await this.saleInvoiceApplication.notifySaleInvoiceBySms(
+        tenantId,
+        invoiceId,
+        invoiceNotifySmsDTO.notificationKey,
+      );
       return res.status(200).send({
         id: saleInvoice.id,
-        message:
-          'The sale invoice sms notification has been sent successfully.',
+        message: 'The sale invoice sms notification has been sent successfully.',
       });
     } catch (error) {
       next(error);
@@ -600,22 +484,17 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public saleInvoiceSmsDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public saleInvoiceSmsDetails = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
     const smsDetailsDTO = this.matchedQueryData(req);
 
     try {
-      const invoiceSmsDetails =
-        await this.saleInvoiceApplication.getSaleInvoiceSmsDetails(
-          tenantId,
-          invoiceId,
-          smsDetailsDTO
-        );
+      const invoiceSmsDetails = await this.saleInvoiceApplication.getSaleInvoiceSmsDetails(
+        tenantId,
+        invoiceId,
+        smsDetailsDTO,
+      );
       return res.status(200).send({
         data: invoiceSmsDetails,
       });
@@ -631,20 +510,12 @@ export default class SaleInvoicesController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  public getInvoicePaymentTransactions = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getInvoicePaymentTransactions = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     try {
-      const invoicePayments =
-        await this.saleInvoiceApplication.getInvoicePayments(
-          tenantId,
-          invoiceId
-        );
+      const invoicePayments = await this.saleInvoiceApplication.getInvoicePayments(tenantId, invoiceId);
 
       return res.status(200).send({
         data: invoicePayments,
@@ -660,11 +531,7 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async sendSaleInvoiceMail(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async sendSaleInvoiceMail(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
     const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
@@ -672,11 +539,7 @@ export default class SaleInvoicesController extends BaseController {
     });
 
     try {
-      await this.saleInvoiceApplication.sendSaleInvoiceMail(
-        tenantId,
-        invoiceId,
-        invoiceMailDTO
-      );
+      await this.saleInvoiceApplication.sendSaleInvoiceMail(tenantId, invoiceId, invoiceMailDTO);
       return res.status(200).send({
         code: 200,
         message: 'The sale invoice mail has been sent successfully.',
@@ -692,19 +555,12 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async getSaleInvoiceMailReminder(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getSaleInvoiceMailReminder(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     try {
-      const data = await this.saleInvoiceApplication.getSaleInvoiceMailReminder(
-        tenantId,
-        invoiceId
-      );
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMailReminder(tenantId, invoiceId);
       return res.status(200).send(data);
     } catch (error) {
       next(error);
@@ -717,22 +573,14 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async sendSaleInvoiceMailReminder(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async sendSaleInvoiceMailReminder(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
     const invoiceMailDTO: SendInvoiceMailDTO = this.matchedBodyData(req, {
       includeOptionals: false,
     });
     try {
-      await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(
-        tenantId,
-        invoiceId,
-        invoiceMailDTO
-      );
+      await this.saleInvoiceApplication.sendSaleInvoiceMailReminder(tenantId, invoiceId, invoiceMailDTO);
       return res.status(200).send({
         code: 200,
         message: 'The sale invoice mail reminder has been sent successfully.',
@@ -748,19 +596,12 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public async getSaleInvoiceMail(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public async getSaleInvoiceMail(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     try {
-      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(
-        tenantId,
-        invoiceId
-      );
+      const data = await this.saleInvoiceApplication.getSaleInvoiceMail(tenantId, invoiceId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -774,12 +615,7 @@ export default class SaleInvoicesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVOICE_NUMBER_NOT_UNIQUE') {
         return res.boom.badRequest(null, {
@@ -833,9 +669,7 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES', code: 1100 },
-          ],
+          errors: [{ type: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES', code: 1100 }],
         });
       }
       if (error.errorType === 'SALE_ESTIMATE_NOT_FOUND') {
@@ -855,9 +689,7 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT', code: 1400 },
-          ],
+          errors: [{ type: 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT', code: 1400 }],
         });
       }
       if (error.errorType === 'SALE_INVOICE_NO_IS_REQUIRED') {
@@ -887,9 +719,7 @@ export default class SaleInvoicesController extends BaseController {
       }
       if (error.errorType === 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES', code: 1900 },
-          ],
+          errors: [{ type: 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES', code: 1900 }],
         });
       }
       if (error.errorType === 'TRANSACTIONS_DATE_LOCKED') {

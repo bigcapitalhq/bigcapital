@@ -7,12 +7,7 @@ export class GetItemWarehouseTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'warehouseId',
-      'warehouseName',
-      'warehouseCode',
-      'quantityOnHandFormatted',
-    ];
+    return ['warehouseId', 'warehouseName', 'warehouseCode', 'quantityOnHandFormatted'];
   };
 
   public excludeAttributes = (): string[] => {

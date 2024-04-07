@@ -1,14 +1,14 @@
-import { Inject, Service } from 'typedi';
-import { ObjectId } from 'mongodb';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { SeedMigration } from '@/lib/Seeder/SeedMigration';
-import { Tenant } from '@/system/models';
 import { ServiceError } from '@/exceptions';
+import { SeedMigration } from '@/lib/Seeder/SeedMigration';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import TenantDBManager from '@/services/Tenancy/TenantDBManager';
-import config from '../../config';
-import { ERRORS } from './constants';
-import OrganizationService from './OrganizationService';
 import TenantsManagerService from '@/services/Tenancy/TenantsManager';
+import { Tenant } from '@/system/models';
+import { ObjectId } from 'mongodb';
+import { Inject, Service } from 'typedi';
+import config from '../../config';
+import OrganizationService from './OrganizationService';
+import { ERRORS } from './constants';
 
 @Service()
 export default class OrganizationUpgrade {
@@ -30,9 +30,7 @@ export default class OrganizationUpgrade {
    * @returns {Promise<void>}
    */
   public upgradeJob = async (tenantId: number): Promise<void> => {
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Validate tenant version.
     this.validateTenantVersion(tenant);

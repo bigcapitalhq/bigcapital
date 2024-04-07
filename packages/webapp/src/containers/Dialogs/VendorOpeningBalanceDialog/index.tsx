@@ -5,19 +5,13 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const VendorOpeningBalanceDialogContent = React.lazy(
-  () => import('./VendorOpeningBalanceDialogContent'),
-);
+const VendorOpeningBalanceDialogContent = React.lazy(() => import('./VendorOpeningBalanceDialogContent'));
 
 /**
  * Vendor Opening balance dialog.
  * @returns
  */
-function VendorOpeningBalanceDialog({
-  dialogName,
-  payload: { vendorId },
-  isOpen,
-}) {
+function VendorOpeningBalanceDialog({ dialogName, payload: { vendorId }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -28,10 +22,7 @@ function VendorOpeningBalanceDialog({
       className={'dialog--vendor-opening-balance'}
     >
       <DialogSuspense>
-        <VendorOpeningBalanceDialogContent
-          vendorId={vendorId}
-          dialogName={dialogName}
-        />
+        <VendorOpeningBalanceDialogContent vendorId={vendorId} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

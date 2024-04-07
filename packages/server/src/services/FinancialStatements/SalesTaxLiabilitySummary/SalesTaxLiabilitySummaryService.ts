@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
 import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
+import { Inject, Service } from 'typedi';
 import { SalesTaxLiabilitySummary } from './SalesTaxLiabilitySummary';
 import { SalesTaxLiabilitySummaryMeta } from './SalesTaxLiabilitySummaryMeta';
+import { SalesTaxLiabilitySummaryRepository } from './SalesTaxLiabilitySummaryRepository';
 
 @Service()
 export class SalesTaxLiabilitySummaryService {
@@ -18,24 +18,13 @@ export class SalesTaxLiabilitySummaryService {
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns
    */
-  public async salesTaxLiability(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ) {
-    const payableByRateId =
-      await this.repostiory.taxesPayableSumGroupedByRateId(tenantId);
+  public async salesTaxLiability(tenantId: number, query: SalesTaxLiabilitySummaryQuery) {
+    const payableByRateId = await this.repostiory.taxesPayableSumGroupedByRateId(tenantId);
 
-    const salesByRateId = await this.repostiory.taxesSalesSumGroupedByRateId(
-      tenantId
-    );
+    const salesByRateId = await this.repostiory.taxesSalesSumGroupedByRateId(tenantId);
     const taxRates = await this.repostiory.taxRates(tenantId);
 
-    const taxLiabilitySummary = new SalesTaxLiabilitySummary(
-      query,
-      taxRates,
-      payableByRateId,
-      salesByRateId
-    );
+    const taxLiabilitySummary = new SalesTaxLiabilitySummary(query, taxRates, payableByRateId, salesByRateId);
     const meta = await this.salesTaxLiabilityMeta.meta(tenantId, query);
 
     return {

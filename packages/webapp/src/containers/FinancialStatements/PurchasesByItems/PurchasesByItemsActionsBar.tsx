@@ -71,13 +71,7 @@ function PurchasesByItemsActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            purchasesByItemsDrawerFilter ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={purchasesByItemsDrawerFilter ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           active={purchasesByItemsDrawerFilter}
           onClick={handleFilterToggleClick}
         />

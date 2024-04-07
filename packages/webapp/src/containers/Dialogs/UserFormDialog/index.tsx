@@ -6,11 +6,7 @@ import { compose } from '@/utils';
 
 const UserFormDialogContent = lazy(() => import('./UserFormDialogContent'));
 
-function UserFormDialog({
-  dialogName,
-  payload = { action: '', userId: null },
-  isOpen,
-}) {
+function UserFormDialog({ dialogName, payload = { action: '', userId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -21,11 +17,7 @@ function UserFormDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <UserFormDialogContent
-          dialogName={dialogName}
-          userId={payload.userId}
-          action={payload.action}
-        />
+        <UserFormDialogContent dialogName={dialogName} userId={payload.userId} action={payload.action} />
       </DialogSuspense>
     </Dialog>
   );

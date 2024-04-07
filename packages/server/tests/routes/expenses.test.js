@@ -1,25 +1,15 @@
-import moment from 'moment';
 import { pick } from 'lodash';
-import {
-  request,
-  expect,
-} from '~/testInit';
+import AccountTransaction from 'models/AccountTransaction';
 import Expense from 'models/Expense';
 import ExpenseCategory from 'models/ExpenseCategory';
-import AccountTransaction from 'models/AccountTransaction';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes,
-} from '~/dbInit';
+import moment from 'moment';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: /expenses/', () => {
   describe('POST `/expenses`', () => {
     it('Should retrieve unauthorized access if the user was not authorized.', async () => {
-      const res = await request()
-        .post('/api/expenses')
-        .set('organization-id', tenantWebsite.organizationId)
-        .send();
+      const res = await request().post('/api/expenses').set('organization-id', tenantWebsite.organizationId).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -42,18 +32,20 @@ describe('routes: /expenses/', () => {
               expense_account_id: 33,
               amount: 1000,
               description: '',
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED', code: 400, ids: [33]
+        type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED',
+        code: 400,
+        ids: [33],
       });
     });
 
     it('Should expense accounts ids be stored in the storage.', async () => {
-      const res = await request() 
+      const res = await request()
         .post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
@@ -75,12 +67,14 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED', code: 400, ids: [22],
+        type: 'EXPENSE.ACCOUNTS.IDS.NOT.STORED',
+        code: 400,
+        ids: [22],
       });
     });
 
     it('Should `payment_account_id` be in the storage.', async () => {
-      const res = await request() 
+      const res = await request()
         .post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
@@ -102,12 +96,13 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 500,
+        type: 'PAYMENT.ACCOUNT.NOT.FOUND',
+        code: 500,
       });
     });
 
     it('Should payment_account be required.', async () => {
-      const res = await request() 
+      const res = await request()
         .post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
@@ -121,15 +116,15 @@ describe('routes: /expenses/', () => {
         .post('/api/expenses')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .send({
-
-        });
+        .send({});
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'payment_account_id', location: 'body'
+        msg: 'Invalid value',
+        param: 'payment_account_id',
+        location: 'body',
       });
     });
 
-    it('Should expense transactions be stored on the storage.', async () => { 
+    it('Should expense transactions be stored on the storage.', async () => {
       const paymentAccount = await tenantFactory.create('account');
       const expenseAccount = await tenantFactory.create('account');
 
@@ -150,11 +145,11 @@ describe('routes: /expenses/', () => {
               amount: 1000,
               description: '',
             },
-          ],          
-        });      
+          ],
+        });
 
       const foundExpense = await Expense.tenant().query().where('id', res.body.id);
-    
+
       expect(foundExpense.length).equals(1);
       expect(foundExpense[0].referenceNo).equals('ABC');
       expect(foundExpense[0].paymentAccountId).equals(paymentAccount.id);
@@ -183,7 +178,7 @@ describe('routes: /expenses/', () => {
               amount: 1000,
               description: 'category desc',
             },
-          ],          
+          ],
         });
 
       const foundCategories = await ExpenseCategory.tenant().query().where('id', res.body.id);
@@ -216,14 +211,15 @@ describe('routes: /expenses/', () => {
               amount: 1000,
               description: 'category desc',
             },
-          ],          
+          ],
         });
 
-      const transactions = await AccountTransaction.tenant().query()
+      const transactions = await AccountTransaction.tenant()
+        .query()
         .where('reference_id', res.body.id)
         .where('reference_type', 'Expense');
 
-      const mappedTransactions = transactions.map(tr => ({
+      const mappedTransactions = transactions.map((tr) => ({
         ...pick(tr, ['credit', 'debit', 'referenceId', 'referenceType']),
       }));
 
@@ -240,15 +236,12 @@ describe('routes: /expenses/', () => {
         referenceId: res.body.id,
       });
       expect(transactions.length).equals(2);
-    })
+    });
   });
 
   describe('GET: `/expenses`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/expenses')
-        .set('organization-id', tenantWebsite.organizationId)
-        .send();
+      const res = await request().post('/api/expenses').set('organization-id', tenantWebsite.organizationId).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -263,26 +256,19 @@ describe('routes: /expenses/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send();
-      
+
       expect(res.body.expenses).that.is.an('object');
       expect(res.body.expenses.results).that.is.an('array');
     });
 
-    it('Should retrieve expenses based on view roles conditions of the custom view.', () => {
+    it('Should retrieve expenses based on view roles conditions of the custom view.', () => {});
 
-    });
-
-    it('Should sort expenses based on the given `column_sort_order` column on ASC direction.', () => {
-
-    });
+    it('Should sort expenses based on the given `column_sort_order` column on ASC direction.', () => {});
   });
 
   describe('DELETE: `/expenses/:id`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
-      const res = await request()
-        .delete('/api/expenses')
-        .set('organization-id', tenantWebsite.organizationId)
-        .send();
+      const res = await request().delete('/api/expenses').set('organization-id', tenantWebsite.organizationId).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -297,7 +283,8 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSE.NOT.FOUND', code: 200,
+        type: 'EXPENSE.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -332,7 +319,8 @@ describe('routes: /expenses/', () => {
         .set('x-access-token', loginRes.body.token)
         .send();
 
-      const foundTransactions = await AccountTransaction.tenant().query()
+      const foundTransactions = await AccountTransaction.tenant()
+        .query()
         .where('reference_type', 'Expense')
         .where('reference_id', expense.id);
 
@@ -342,10 +330,7 @@ describe('routes: /expenses/', () => {
 
   describe('GET: `/expenses/:id`', () => {
     it('Should response unauthorized if the user was not logged in.', async () => {
-      const res = await request()
-        .get('/api/expenses/123')
-        .set('organization-id', tenantWebsite.organizationId)
-        .send();
+      const res = await request().get('/api/expenses/123').set('organization-id', tenantWebsite.organizationId).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -365,7 +350,7 @@ describe('routes: /expenses/', () => {
       const expense = await tenantFactory.create('expense');
       const expenseCategory = await tenantFactory.create('expense_category', {
         expense_id: expense.id,
-      })
+      });
       const res = await request()
         .get(`/api/expenses/${expense.id}`)
         .set('organization-id', tenantWebsite.organizationId)
@@ -373,7 +358,7 @@ describe('routes: /expenses/', () => {
         .send();
 
       expect(res.status).equals(200);
-    
+
       expect(res.body.expense.id).is.a('number');
       expect(res.body.expense.paymentAccountId).is.a('number');
       expect(res.body.expense.totalAmount).is.a('number');
@@ -442,7 +427,8 @@ describe('routes: /expenses/', () => {
         });
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSE.NOT.FOUND', code: 200,
+        type: 'EXPENSE.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -451,30 +437,31 @@ describe('routes: /expenses/', () => {
       const expenseAccount = await tenantFactory.create('account');
 
       const res = await request()
-      .post(`/api/expenses/${expense.id}`)
-      .set('x-access-token', loginRes.body.token)
-      .set('organization-id', tenantWebsite.organizationId)
-      .send({
-        reference_no: '123',
-        payment_date: moment().format('YYYY-MM-DD'),
-        payment_account_id: 321,
-        publish: true,
-        categories: [
-          {
-            expense_account_id: expenseAccount.id,
-            index: 1,
-            amount: 1000,
-            description: '',
-          },
-        ],
-      });
-      
+        .post(`/api/expenses/${expense.id}`)
+        .set('x-access-token', loginRes.body.token)
+        .set('organization-id', tenantWebsite.organizationId)
+        .send({
+          reference_no: '123',
+          payment_date: moment().format('YYYY-MM-DD'),
+          payment_account_id: 321,
+          publish: true,
+          categories: [
+            {
+              expense_account_id: expenseAccount.id,
+              index: 1,
+              amount: 1000,
+              description: '',
+            },
+          ],
+        });
+
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PAYMENT.ACCOUNT.NOT.FOUND', code: 400,
+        type: 'PAYMENT.ACCOUNT.NOT.FOUND',
+        code: 400,
       });
     });
-    
+
     it('Should response the given `categories.*.expense_account_id` not exists.', async () => {
       const paymentAccount = await tenantFactory.create('account');
       const expense = await tenantFactory.create('expense');
@@ -500,7 +487,9 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSE.ACCOUNTS.IDS.NOT.FOUND', code: 600, ids: [100],
+        type: 'EXPENSE.ACCOUNTS.IDS.NOT.FOUND',
+        code: 600,
+        ids: [100],
       });
     });
 
@@ -530,7 +519,8 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'TOTAL.AMOUNT.EQUALS.ZERO', code: 500,
+        type: 'TOTAL.AMOUNT.EQUALS.ZERO',
+        code: 500,
       });
     });
 
@@ -559,9 +549,8 @@ describe('routes: /expenses/', () => {
           ],
         });
       expect(res.status).equals(200);
-      
-      const updatedExpense = await Expense.tenant().query()
-        .where('id', expense.id).first();
+
+      const updatedExpense = await Expense.tenant().query().where('id', expense.id).first();
 
       expect(updatedExpense.id).equals(expense.id);
       expect(updatedExpense.referenceNo).equals('123');
@@ -598,9 +587,8 @@ describe('routes: /expenses/', () => {
           ],
         });
 
-      const foundExpenseCategories = await ExpenseCategory.tenant()
-        .query().where('id', expenseCategory.id)
-    
+      const foundExpenseCategories = await ExpenseCategory.tenant().query().where('id', expenseCategory.id);
+
       expect(foundExpenseCategories.length).equals(0);
     });
 
@@ -632,9 +620,7 @@ describe('routes: /expenses/', () => {
           ],
         });
 
-      const foundExpenseCategories = await ExpenseCategory.tenant()
-        .query()
-        .where('expense_id', expense.id)
+      const foundExpenseCategories = await ExpenseCategory.tenant().query().where('expense_id', expense.id);
 
       expect(foundExpenseCategories.length).equals(1);
       expect(foundExpenseCategories[0].id).not.equals(expenseCategory.id);
@@ -668,9 +654,8 @@ describe('routes: /expenses/', () => {
             },
           ],
         });
-      
-      const foundExpenseCategory = await ExpenseCategory.tenant().query()
-        .where('id', expenseCategory.id);
+
+      const foundExpenseCategory = await ExpenseCategory.tenant().query().where('id', expenseCategory.id);
 
       expect(foundExpenseCategory.length).equals(1);
       expect(foundExpenseCategory[0].expenseAccountId).equals(expenseAccount.id);
@@ -692,14 +677,15 @@ describe('routes: /expenses/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXPENSES.NOT.FOUND', code: 200,
+        type: 'EXPENSES.NOT.FOUND',
+        code: 200,
       });
     });
 
     it('Should delete the given expenses ids.', async () => {
       const expense1 = await tenantFactory.create('expense');
       const expense2 = await tenantFactory.create('expense');
-    
+
       const res = await request()
         .delete('/api/expenses')
         .set('x-access-token', loginRes.body.token)
@@ -708,13 +694,12 @@ describe('routes: /expenses/', () => {
           ids: [expense1.id, expense2.id],
         })
         .send({});
-        
-      const foundExpenses = await Expense.tenant().query()
-        .whereIn('id', [expense1.id, expense2.id]);
-        
+
+      const foundExpenses = await Expense.tenant().query().whereIn('id', [expense1.id, expense2.id]);
+
       expect(res.status).equals(200);
       expect(foundExpenses.length).equals(0);
-    })
+    });
   });
 
   describe('POST: `/api/expenses/:id/publish`', () => {
@@ -729,8 +714,7 @@ describe('routes: /expenses/', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const foundExpense = await Expense.tenant().query()
-        .where('id', expense.id).first();
+      const foundExpense = await Expense.tenant().query().where('id', expense.id).first();
 
       expect(res.status).equals(200);
       expect(foundExpense.published).equals(1);

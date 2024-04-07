@@ -2,12 +2,7 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceMeta,
-  useWarehousesTransfers,
-  useRefreshWarehouseTransfers,
-} from '@/hooks/query';
+import { useResourceViews, useResourceMeta, useWarehousesTransfers, useRefreshWarehouseTransfers } from '@/hooks/query';
 
 import { getFieldsFromResourceMeta } from '@/utils';
 
@@ -16,11 +11,7 @@ const WarehouseTransfersListContext = React.createContext();
 /**
  * WarehouseTransfer data provider
  */
-function WarehouseTransfersListProvider({
-  query,
-  tableStateChanged,
-  ...props
-}) {
+function WarehouseTransfersListProvider({ query, tableStateChanged, ...props }) {
   // warehouse transfers refresh action.
   const { refresh } = useRefreshWarehouseTransfers();
 
@@ -32,14 +23,10 @@ function WarehouseTransfersListProvider({
   } = useWarehousesTransfers(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(warehousesTransfers) &&
-    !tableStateChanged &&
-    !isWarehouseTransfersLoading;
+  const isEmptyStatus = isEmpty(warehousesTransfers) && !tableStateChanged && !isWarehouseTransfersLoading;
 
   // Fetch create notes resource views and fields.
-  const { data: WarehouseTransferView, isLoading: isViewsLoading } =
-    useResourceViews('warehouse_transfer');
+  const { data: WarehouseTransferView, isLoading: isViewsLoading } = useResourceViews('warehouse_transfer');
 
   // Fetch the accounts resource fields.
   const {
@@ -68,16 +55,12 @@ function WarehouseTransfersListProvider({
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'warehouse-transfers-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'warehouse-transfers-list'}>
       <WarehouseTransfersListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const useWarehouseTranfersListContext = () =>
-  React.useContext(WarehouseTransfersListContext);
+const useWarehouseTranfersListContext = () => React.useContext(WarehouseTransfersListContext);
 
 export { WarehouseTransfersListProvider, useWarehouseTranfersListContext };

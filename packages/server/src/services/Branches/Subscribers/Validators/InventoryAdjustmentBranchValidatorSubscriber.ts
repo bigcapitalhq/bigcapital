@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IInventoryAdjustmentCreatingPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -12,10 +12,7 @@ export class InventoryAdjustmentBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.inventoryAdjustment.onQuickCreating,
-      this.validateBranchExistanceOnInventoryCreating
-    );
+    bus.subscribe(events.inventoryAdjustment.onQuickCreating, this.validateBranchExistanceOnInventoryCreating);
     return bus;
   };
 
@@ -27,9 +24,6 @@ export class InventoryAdjustmentBranchValidateSubscriber {
     tenantId,
     quickAdjustmentDTO,
   }: IInventoryAdjustmentCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      quickAdjustmentDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, quickAdjustmentDTO.branchId);
   };
 }

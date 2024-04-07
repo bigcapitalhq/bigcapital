@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ProjectBillableExpense {
@@ -18,13 +18,11 @@ export class ProjectBillableExpense {
     tenantId: number,
     expenseId: number,
     invoicedAmount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Expense } = this.tenancy.models(tenantId);
 
-    await Expense.query(trx)
-      .findById(expenseId)
-      .increment('invoicedAmount', invoicedAmount);
+    await Expense.query(trx).findById(expenseId).increment('invoicedAmount', invoicedAmount);
   };
 
   /**
@@ -38,12 +36,10 @@ export class ProjectBillableExpense {
     tenantId: number,
     expenseId: number,
     invoiceHours: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Expense } = this.tenancy.models(tenantId);
 
-    await Expense.query(trx)
-      .findById(expenseId)
-      .decrement('invoicedAmount', invoiceHours);
+    await Expense.query(trx).findById(expenseId).decrement('invoicedAmount', invoiceHours);
   };
 }

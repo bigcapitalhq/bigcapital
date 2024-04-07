@@ -1,14 +1,14 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
   IVendorOpeningBalanceEditDTO,
   IVendorOpeningBalanceEditedPayload,
   IVendorOpeningBalanceEditingPayload,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class EditOpeningBalanceVendor {
@@ -32,7 +32,7 @@ export class EditOpeningBalanceVendor {
   public async editOpeningBalance(
     tenantId: number,
     vendorId: number,
-    openingBalanceEditDTO: IVendorOpeningBalanceEditDTO
+    openingBalanceEditDTO: IVendorOpeningBalanceEditDTO,
   ) {
     const { Vendor } = this.tenancy.models(tenantId);
 
@@ -42,30 +42,24 @@ export class EditOpeningBalanceVendor {
     // Mutates the customer opening balance under unit-of-work.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorOpeingBalanceChanging` event.
-      await this.eventPublisher.emitAsync(
-        events.vendors.onOpeningBalanceChanging,
-        {
-          tenantId,
-          oldVendor,
-          openingBalanceEditDTO,
-          trx,
-        } as IVendorOpeningBalanceEditingPayload
-      );
+      await this.eventPublisher.emitAsync(events.vendors.onOpeningBalanceChanging, {
+        tenantId,
+        oldVendor,
+        openingBalanceEditDTO,
+        trx,
+      } as IVendorOpeningBalanceEditingPayload);
       // Mutates the vendor on the storage.
       const vendor = await Vendor.query().patchAndFetchById(vendorId, {
         ...openingBalanceEditDTO,
       });
       // Triggers `onVendorOpeingBalanceChanged` event.
-      await this.eventPublisher.emitAsync(
-        events.vendors.onOpeningBalanceChanged,
-        {
-          tenantId,
-          vendor,
-          oldVendor,
-          openingBalanceEditDTO,
-          trx,
-        } as IVendorOpeningBalanceEditedPayload
-      );
+      await this.eventPublisher.emitAsync(events.vendors.onOpeningBalanceChanged, {
+        tenantId,
+        vendor,
+        oldVendor,
+        openingBalanceEditDTO,
+        trx,
+      } as IVendorOpeningBalanceEditedPayload);
       return vendor;
     });
   }

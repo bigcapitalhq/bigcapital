@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Tab } from '@blueprintjs/core';
 
 import { DrawerMainTabs } from '@/components';
-import RefundVendorCreditDetailTab from './RefundVendorCreditDetailTab'
+import RefundVendorCreditDetailTab from './RefundVendorCreditDetailTab';
 import RefundVendorCreditDetailActionsBar from './RefundVendorCreditDetailActionsBar';
 
 /**
@@ -28,11 +28,7 @@ export default function RefundVendorCreditDetail() {
 function RefundVendorCreditDetailTabs() {
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<RefundVendorCreditDetailTab />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<RefundVendorCreditDetailTab />} />
     </DrawerMainTabs>
   );
 }

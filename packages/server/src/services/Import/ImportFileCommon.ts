@@ -1,23 +1,18 @@
-import fs from 'fs/promises';
-import XLSX from 'xlsx';
+import { ServiceError } from '@/exceptions';
+import Import from '@/models/Import';
 import bluebird from 'bluebird';
+import fs from 'fs/promises';
+import { Knex } from 'knex';
+import { first } from 'lodash';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import { first } from 'lodash';
-import { ImportFileDataValidator } from './ImportFileDataValidator';
-import { Knex } from 'knex';
-import {
-  ImportInsertError,
-  ImportOperError,
-  ImportOperSuccess,
-  ImportableContext,
-} from './interfaces';
-import { ServiceError } from '@/exceptions';
-import { getUniqueImportableValue, trimObject } from './_utils';
-import { ImportableResources } from './ImportableResources';
+import XLSX from 'xlsx';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
-import Import from '@/models/Import';
+import { ImportFileDataValidator } from './ImportFileDataValidator';
+import { ImportableResources } from './ImportableResources';
+import { getUniqueImportableValue, trimObject } from './_utils';
+import { ImportInsertError, ImportOperError, ImportOperSuccess, ImportableContext } from './interfaces';
 
 @Service()
 export class ImportFileCommon {
@@ -69,12 +64,9 @@ export class ImportFileCommon {
     tenantId: number,
     importFile: Import,
     parsedData: Record<string, any>[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
-    const importableFields = this.resource.getResourceImportableFields(
-      tenantId,
-      importFile.resource
-    );
+    const importableFields = this.resource.getResourceImportableFields(tenantId, importFile.resource);
     const ImportableRegistry = this.importable.registry;
     const importable = ImportableRegistry.getImportable(importFile.resource);
 
@@ -97,17 +89,10 @@ export class ImportFileCommon {
       };
       try {
         // Validate the DTO object before passing it to the service layer.
-        await this.importFileValidator.validateData(
-          importableFields,
-          transformedDTO
-        );
+        await this.importFileValidator.validateData(importableFields, transformedDTO);
         try {
           // Run the importable function and listen to the errors.
-          const data = await importable.importable(
-            tenantId,
-            transformedDTO,
-            trx
-          );
+          const data = await importable.importable(tenantId, transformedDTO, trx);
           success.push({ index, data });
         } catch (err) {
           if (err instanceof ServiceError) {
@@ -145,10 +130,7 @@ export class ImportFileCommon {
    * @param {string} resourceName
    * @param {Record<string, any>} params
    */
-  public async validateParamsSchema(
-    resourceName: string,
-    params: Record<string, any>
-  ) {
+  public async validateParamsSchema(resourceName: string, params: Record<string, any>) {
     const ImportableRegistry = this.importable.registry;
     const importable = ImportableRegistry.getImportable(resourceName);
 
@@ -170,11 +152,7 @@ export class ImportFileCommon {
    * @param {string} resourceName
    * @param {Record<string, any>} params
    */
-  public async validateParams(
-    tenantId: number,
-    resourceName: string,
-    params: Record<string, any>
-  ) {
+  public async validateParams(tenantId: number, resourceName: string, params: Record<string, any>) {
     const ImportableRegistry = this.importable.registry;
     const importable = ImportableRegistry.getImportable(resourceName);
 

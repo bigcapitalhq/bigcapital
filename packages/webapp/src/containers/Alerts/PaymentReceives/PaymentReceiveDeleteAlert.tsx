@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeletePaymentReceive } from '@/hooks/query';
@@ -33,8 +29,7 @@ function PaymentReceiveDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deletePaymentReceiveMutate, isLoading } =
-    useDeletePaymentReceive();
+  const { mutateAsync: deletePaymentReceiveMutate, isLoading } = useDeletePaymentReceive();
 
   // Handle cancel payment Receive.
   const handleCancelDeleteAlert = () => {
@@ -46,9 +41,7 @@ function PaymentReceiveDeleteAlert({
     deletePaymentReceiveMutate(paymentReceiveId)
       .then(() => {
         AppToaster.show({
-          message: intl.get(
-            'the_payment_receive_has_been_deleted_successfully',
-          ),
+          message: intl.get('the_payment_receive_has_been_deleted_successfully'),
           intent: Intent.SUCCESS,
         });
         closeDrawer(DRAWERS.PAYMENT_RECEIVE_DETAILS);
@@ -71,16 +64,10 @@ function PaymentReceiveDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_payment_receive_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_payment_receive_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(PaymentReceiveDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(PaymentReceiveDeleteAlert);

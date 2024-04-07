@@ -1,9 +1,9 @@
-import { pick, first } from 'lodash';
-import { ObjectId } from 'mongodb';
-import { Service, Inject } from 'typedi';
-import { JobTransformer } from './JobTransformer';
 import { IJobMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { first, pick } from 'lodash';
+import { ObjectId } from 'mongodb';
+import { Inject, Service } from 'typedi';
+import { JobTransformer } from './JobTransformer';
 
 @Service()
 export default class JobsService {
@@ -15,7 +15,7 @@ export default class JobsService {
 
   /**
    * Retrieve job details of the given job id.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @param {string} jobId -
    * @returns {Promise<IJobMeta>}
    */

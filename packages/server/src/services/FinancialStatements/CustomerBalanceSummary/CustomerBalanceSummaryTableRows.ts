@@ -1,13 +1,13 @@
-import * as R from 'ramda';
 import {
-  ICustomerBalanceSummaryData,
-  ICustomerBalanceSummaryCustomer,
-  ICustomerBalanceSummaryTotal,
-  ITableRow,
   IColumnMapperMeta,
+  ICustomerBalanceSummaryCustomer,
+  ICustomerBalanceSummaryData,
   ICustomerBalanceSummaryQuery,
+  ICustomerBalanceSummaryTotal,
   ITableColumn,
+  ITableRow,
 } from '@/interfaces';
+import * as R from 'ramda';
 import { tableMapper, tableRowMapper } from 'utils';
 
 enum TABLE_ROWS_TYPES {
@@ -23,11 +23,7 @@ export class CustomerBalanceSummaryTable {
   /**
    * Constructor method.
    */
-  constructor(
-    report: ICustomerBalanceSummaryData,
-    query: ICustomerBalanceSummaryQuery,
-    i18n
-  ) {
+  constructor(report: ICustomerBalanceSummaryData, query: ICustomerBalanceSummaryQuery, i18n) {
     this.report = report;
     this.i18n = i18n;
     this.query = query;
@@ -57,10 +53,7 @@ export class CustomerBalanceSummaryTable {
     ];
     return R.compose(
       R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+      R.when(R.always(this.query.percentageColumn), R.concat(this.getPercentageColumnsAccessor())),
     )([]);
   };
 
@@ -69,9 +62,7 @@ export class CustomerBalanceSummaryTable {
    * @param   {ICustomerBalanceSummaryCustomer[]} customers
    * @returns {ITableRow[]}
    */
-  private customersTransformer(
-    customers: ICustomerBalanceSummaryCustomer[]
-  ): ITableRow[] {
+  private customersTransformer(customers: ICustomerBalanceSummaryCustomer[]): ITableRow[] {
     const columns = this.getCustomerColumnsAccessor();
 
     return tableMapper(customers, columns, {
@@ -90,10 +81,7 @@ export class CustomerBalanceSummaryTable {
     ];
     return R.compose(
       R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+      R.when(R.always(this.query.percentageColumn), R.concat(this.getPercentageColumnsAccessor())),
     )([]);
   };
 
@@ -102,9 +90,7 @@ export class CustomerBalanceSummaryTable {
    * @param   {ICustomerBalanceSummaryTotal} total
    * @returns {ITableRow}
    */
-  private totalTransformer = (
-    total: ICustomerBalanceSummaryTotal
-  ): ITableRow => {
+  private totalTransformer = (total: ICustomerBalanceSummaryTotal): ITableRow => {
     const columns = this.getTotalColumnsAccessor();
 
     return tableRowMapper(total, columns, {
@@ -128,7 +114,7 @@ export class CustomerBalanceSummaryTable {
    * Retrieve the report statement columns
    * @returns {ITableColumn[]}
    */
-   public tableColumns = (): ITableColumn[] => {
+  public tableColumns = (): ITableColumn[] => {
     const columns = [
       {
         key: 'name',
@@ -142,9 +128,9 @@ export class CustomerBalanceSummaryTable {
         R.append({
           key: 'percentage_of_column',
           label: this.i18n.__('contact_summary_balance.percentage_column'),
-        })
+        }),
       ),
-      R.concat(columns)
+      R.concat(columns),
     )([]);
   };
 }

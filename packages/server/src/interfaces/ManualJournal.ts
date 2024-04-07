@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
+import { IAccount } from './Account';
 import { IDynamicListFilterDTO } from './DynamicFilter';
 import { ISystemUser } from './User';
-import { IAccount } from './Account';
 
 export interface IManualJournal {
   id?: number;
@@ -28,7 +28,7 @@ export interface IManualJournalEntry {
   accountId: number;
   note: string;
   contactId?: number;
-  account?: IAccount
+  account?: IAccount;
 
   branchId?: number;
   projectId?: number;
@@ -41,7 +41,7 @@ export interface IManualJournalEntryDTO {
   accountId: number;
   note: string;
   contactId?: number;
-  branchId?: number
+  branchId?: number;
   projectId?: number;
 }
 
@@ -68,26 +68,23 @@ export interface IManualJournalsService {
   makeJournalEntries(
     tenantId: number,
     manualJournalDTO: IManualJournalDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{ manualJournal: IManualJournal }>;
 
   editJournalEntries(
     tenantId: number,
     manualJournalId: number,
     manualJournalDTO: IManualJournalDTO,
-    authorizedUser
+    authorizedUser,
   ): Promise<{ manualJournal: IManualJournal }>;
 
   deleteManualJournal(tenantId: number, manualJournalId: number): Promise<void>;
 
-  deleteManualJournals(
-    tenantId: number,
-    manualJournalsIds: number[]
-  ): Promise<void>;
+  deleteManualJournals(tenantId: number, manualJournalsIds: number[]): Promise<void>;
 
   publishManualJournals(
     tenantId: number,
-    manualJournalsIds: number[]
+    manualJournalsIds: number[],
   ): Promise<{
     meta: {
       alreadyPublished: number;
@@ -96,14 +93,11 @@ export interface IManualJournalsService {
     };
   }>;
 
-  publishManualJournal(
-    tenantId: number,
-    manualJournalId: number
-  ): Promise<void>;
+  publishManualJournal(tenantId: number, manualJournalId: number): Promise<void>;
 
   getManualJournals(
     tenantId: number,
-    filter: IManualJournalsFilter
+    filter: IManualJournalsFilter,
   ): Promise<{
     manualJournals: IManualJournal;
     pagination: IPaginationMeta;

@@ -1,14 +1,6 @@
 import moment from 'moment';
-import {
-  request,
-  expect,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-import { iteratee } from 'lodash';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 let creditAccount;
 let debitAccount;
@@ -37,15 +29,23 @@ describe('routes: `/financial_statements`', () => {
     const accountTransactionMixied = { date: '2020-1-10' };
 
     // Expense --
-    // 1000 Credit  - Credit account 
+    // 1000 Credit  - Credit account
     //    1000 Debit - expense account.
     await tenantFactory.create('account_transaction', {
-      credit: 1000, debit: 0, account_id: debitAccount.id, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      credit: 1000,
+      debit: 0,
+      account_id: debitAccount.id,
+      referenceType: 'Expense',
+      referenceId: 1,
+      ...accountTransactionMixied,
     });
     await tenantFactory.create('account_transaction', {
-      credit: 0, debit: 1000, account_id: expenseAccount.id, referenceType: 'Expense',
-      referenceId: 1, ...accountTransactionMixied,
+      credit: 0,
+      debit: 1000,
+      account_id: expenseAccount.id,
+      referenceType: 'Expense',
+      referenceId: 1,
+      ...accountTransactionMixied,
     });
 
     // Jounral
@@ -53,23 +53,37 @@ describe('routes: `/financial_statements`', () => {
     //     2000 Debit - Asset account
     //     2000 Debit - Asset account
     await tenantFactory.create('account_transaction', {
-      credit: 4000, debit: 0, account_id: creditAccount.id, ...accountTransactionMixied,
+      credit: 4000,
+      debit: 0,
+      account_id: creditAccount.id,
+      ...accountTransactionMixied,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000,
+      credit: 0,
+      account_id: debitAccount.id,
+      ...accountTransactionMixied,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000,
+      credit: 0,
+      account_id: debitAccount.id,
+      ...accountTransactionMixied,
     });
 
     // Income Journal.
     // 2000 Credit - Income account.
     //    2000 Debit - Asset account.
     await tenantFactory.create('account_transaction', {
-      credit: 2000, account_id: incomeAccount.id, ...accountTransactionMixied
+      credit: 2000,
+      account_id: incomeAccount.id,
+      ...accountTransactionMixied,
     });
     await tenantFactory.create('account_transaction', {
-      debit: 2000, credit: 0, account_id: debitAccount.id, ...accountTransactionMixied,
+      debit: 2000,
+      credit: 0,
+      account_id: debitAccount.id,
+      ...accountTransactionMixied,
     });
 
     // -----------------------------------------
@@ -77,12 +91,9 @@ describe('routes: `/financial_statements`', () => {
     // Expense account balance = 1000  |  Income account balance   = 2000
   });
 
-
   describe('routes: `/financial_statements/journal`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
-      const res = await request()
-        .get('/api/financial_statements/journal')
-        .send();
+      const res = await request().get('/api/financial_statements/journal').send();
 
       expect(res.status).equals(401);
     });
@@ -167,9 +178,7 @@ describe('routes: `/financial_statements`', () => {
       });
     });
 
-    it('Should format credit and debit to no cents of retrieved transactions.', async () => {
-
-    });
+    it('Should format credit and debit to no cents of retrieved transactions.', async () => {});
 
     it('Should divide credit/debit amount on 1000', async () => {
       const res = await request()
@@ -192,9 +201,7 @@ describe('routes: `/financial_statements`', () => {
 
   describe('routes: `/financial_statements/general_ledger`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
-      const res = await request()
-        .get('/api/financial_statements/general_ledger')
-        .send();
+      const res = await request().get('/api/financial_statements/general_ledger').send();
 
       expect(res.status).equals(401);
     });
@@ -246,10 +253,14 @@ describe('routes: `/financial_statements`', () => {
 
       expect(targetAccount).to.be.an('object');
       expect(targetAccount.opening).to.deep.equal({
-        amount: 0, formatted_amount: 0, date: '2020-01-01',
+        amount: 0,
+        formatted_amount: 0,
+        date: '2020-01-01',
       });
       expect(targetAccount.closing).to.deep.equal({
-        amount: 4000, formatted_amount: 4000, date: '2020-12-31',
+        amount: 4000,
+        formatted_amount: 4000,
+        date: '2020-12-31',
       });
     });
 
@@ -269,10 +280,14 @@ describe('routes: `/financial_statements`', () => {
 
       expect(targetAccount).to.be.an('object');
       expect(targetAccount.opening).to.deep.equal({
-        amount: 0, formatted_amount: 0, date: '2018-01-01',
+        amount: 0,
+        formatted_amount: 0,
+        date: '2018-01-01',
       });
       expect(targetAccount.closing).to.deep.equal({
-        amount: 4000, formatted_amount: 4000, date: '2020-03-30',
+        amount: 4000,
+        formatted_amount: 4000,
+        date: '2020-03-30',
       });
     });
 
@@ -285,9 +300,8 @@ describe('routes: `/financial_statements`', () => {
           none_zero: true,
         })
         .send();
+    });
 
-    })
- 
     it('Should retrieve accounts transactions only that between date range.', async () => {
       const res = await request()
         .get('/api/financial_statements/general_ledger')
@@ -299,7 +313,6 @@ describe('routes: `/financial_statements`', () => {
           none_zero: true,
         })
         .send();
-
 
       // console.log(res.body.accounts);
     });
@@ -331,8 +344,8 @@ describe('routes: `/financial_statements`', () => {
         })
         .send();
 
-      const accountsNoTransactions = res.body.accounts.filter(a => a.transactions.length === 0);
-      const accountsWithTransactions = res.body.accounts.filter(a => a.transactions.length > 0);
+      const accountsNoTransactions = res.body.accounts.filter((a) => a.transactions.length === 0);
+      const accountsWithTransactions = res.body.accounts.filter((a) => a.transactions.length > 0);
 
       expect(accountsNoTransactions.length).equals(0);
       expect(accountsWithTransactions.length).not.equals(0);
@@ -356,7 +369,7 @@ describe('routes: `/financial_statements`', () => {
       expect(res.body.accounts).include.something.deep.equals({
         id: creditAccount.id,
         name: creditAccount.name,
-        code: creditAccount.code, 
+        code: creditAccount.code,
         index: null,
         parentAccountId: null,
         children: [],
@@ -371,16 +384,19 @@ describe('routes: `/financial_statements`', () => {
             createdAt: null,
             formatted_amount: 4,
             amount: 4000,
-          }
+          },
         ],
         opening: { date: '2020-01-01', formatted_amount: 0, amount: 0 },
-        closing: { date: '2020-03-30', formatted_amount: 4, amount: 4000 }
+        closing: { date: '2020-03-30', formatted_amount: 4, amount: 4000 },
       });
     });
 
     it('Should amount transactions rounded with no decimals when `number_format.no_cents` is `true`.', async () => {
       await tenantFactory.create('account_transaction', {
-        debit: 0.25, credit: 0, account_id: debitAccount.id, date: '2020-1-10',
+        debit: 0.25,
+        credit: 0,
+        account_id: debitAccount.id,
+        date: '2020-1-10',
       });
 
       const res = await request()
@@ -394,7 +410,7 @@ describe('routes: `/financial_statements`', () => {
             divide_1000: true,
             no_cents: true,
           },
-          accounts_ids: [debitAccount.id]
+          accounts_ids: [debitAccount.id],
         })
         .send();
 
@@ -420,7 +436,7 @@ describe('routes: `/financial_statements`', () => {
     it('Should retrieve accounts in nested array structure as parent/children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: debitAccount.id,
-        account_type_id: 1
+        account_type_id: 1,
       });
 
       const res = await request()
@@ -439,9 +455,7 @@ describe('routes: `/financial_statements`', () => {
 
   describe('routes: `/financial_statements/trial_balance`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
-      const res = await request()
-        .get('/api/financial_statements/trial_balance_sheet')
-        .send();
+      const res = await request().get('/api/financial_statements/trial_balance_sheet').send();
 
       expect(res.status).equals(401);
     });
@@ -531,7 +545,7 @@ describe('routes: `/financial_statements`', () => {
         formatted_debit: 0,
         formatted_balance: 4000,
 
-        children: []
+        children: [],
       });
     });
 
@@ -585,14 +599,12 @@ describe('routes: `/financial_statements`', () => {
         .send();
     });
 
-    it('Should retrieve associated account details in accounts list.', async () => {
-
-    });
+    it('Should retrieve associated account details in accounts list.', async () => {});
 
     it('Should retrieve account with nested array structure as parent/children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: debitAccount.id,
-        account_type_id: 1
+        account_type_id: 1,
       });
 
       const res = await request()
@@ -611,9 +623,7 @@ describe('routes: `/financial_statements`', () => {
 
   describe('routes: `/api/financial_statements/profit_loss_sheet`', () => {
     it('Should response unauthorized in case the user was not authorized.', async () => {
-      const res = await request()
-        .get('/api/financial_statements/profit_loos_sheet')
-        .send();
+      const res = await request().get('/api/financial_statements/profit_loos_sheet').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -634,12 +644,18 @@ describe('routes: `/financial_statements`', () => {
 
       expect(res.body.columns.length).equals(12);
       expect(res.body.columns).deep.equals([
-        '2020-01', '2020-02',
-        '2020-03', '2020-04',
-        '2020-05', '2020-06',
-        '2020-07', '2020-08',
-        '2020-09', '2020-10',
-        '2020-11', '2020-12',
+        '2020-01',
+        '2020-02',
+        '2020-03',
+        '2020-04',
+        '2020-05',
+        '2020-06',
+        '2020-07',
+        '2020-08',
+        '2020-09',
+        '2020-10',
+        '2020-11',
+        '2020-12',
       ]);
     });
 
@@ -657,9 +673,7 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.columns.length).equals(4);
-      expect(res.body.columns).deep.equals([
-        '2020-03', '2020-06', '2020-09', '2020-12',
-      ]);
+      expect(res.body.columns).deep.equals(['2020-03', '2020-06', '2020-09', '2020-12']);
     });
 
     it('Should retrieve columns when display type `date_periods` and columns by `day` between date range.', async () => {
@@ -677,16 +691,36 @@ describe('routes: `/financial_statements`', () => {
 
       expect(res.body.columns.length).equals(31);
       expect(res.body.columns).deep.equals([
-        '2020-01-01', '2020-01-02', '2020-01-03',
-        '2020-01-04', '2020-01-05', '2020-01-06',
-        '2020-01-07', '2020-01-08', '2020-01-09',
-        '2020-01-10', '2020-01-11', '2020-01-12',
-        '2020-01-13', '2020-01-14', '2020-01-15',
-        '2020-01-16', '2020-01-17', '2020-01-18',
-        '2020-01-19', '2020-01-20', '2020-01-21',
-        '2020-01-22', '2020-01-23', '2020-01-24',
-        '2020-01-25', '2020-01-26', '2020-01-27',
-        '2020-01-28', '2020-01-29', '2020-01-30',
+        '2020-01-01',
+        '2020-01-02',
+        '2020-01-03',
+        '2020-01-04',
+        '2020-01-05',
+        '2020-01-06',
+        '2020-01-07',
+        '2020-01-08',
+        '2020-01-09',
+        '2020-01-10',
+        '2020-01-11',
+        '2020-01-12',
+        '2020-01-13',
+        '2020-01-14',
+        '2020-01-15',
+        '2020-01-16',
+        '2020-01-17',
+        '2020-01-18',
+        '2020-01-19',
+        '2020-01-20',
+        '2020-01-21',
+        '2020-01-22',
+        '2020-01-23',
+        '2020-01-24',
+        '2020-01-25',
+        '2020-01-26',
+        '2020-01-27',
+        '2020-01-28',
+        '2020-01-29',
+        '2020-01-30',
         '2020-01-31',
       ]);
     });
@@ -718,7 +752,7 @@ describe('routes: `/financial_statements`', () => {
       });
     });
 
-    it('Should retrieve total of each income account when display columns by `total`.',  async () => {
+    it('Should retrieve total of each income account when display columns by `total`.', async () => {
       const toDate = moment('2020-01-01').endOf('month').format('YYYY-MM-DD');
       const res = await request()
         .get('/api/financial_statements/profit_loss_sheet')
@@ -846,8 +880,8 @@ describe('routes: `/financial_statements`', () => {
           { date: '2020-03', amount: 1000, formatted_amount: 1000 },
           { date: '2020-06', amount: 1000, formatted_amount: 1000 },
           { date: '2020-09', amount: 1000, formatted_amount: 1000 },
-          { date: '2020-12', amount: 1000, formatted_amount: 1000 }
-        ],      
+          { date: '2020-12', amount: 1000, formatted_amount: 1000 },
+        ],
       });
     });
 
@@ -871,7 +905,7 @@ describe('routes: `/financial_statements`', () => {
     it('Should retrieve accounts in nested array structure as parent/children accounts.', async () => {
       const childAccount = await tenantFactory.create('account', {
         parent_account_id: incomeAccount.id,
-        account_type_id: 7
+        account_type_id: 7,
       });
 
       const res = await request()
@@ -894,7 +928,10 @@ describe('routes: `/financial_statements`', () => {
         account_type_id: 7,
       });
       await tenantFactory.create('account_transaction', {
-        credit: 1000, debit: 0, account_id: childAccount.id, date: '2020-2-10'
+        credit: 1000,
+        debit: 0,
+        account_id: childAccount.id,
+        date: '2020-2-10',
       });
 
       const res = await request()
@@ -909,7 +946,9 @@ describe('routes: `/financial_statements`', () => {
         .send();
 
       expect(res.body.profitLoss.income.accounts[0].total).deep.equals({
-        amount: 3000, date: '2020-12-12', formatted_amount: 3000
+        amount: 3000,
+        date: '2020-12-12',
+        formatted_amount: 3000,
       });
     });
 
@@ -919,7 +958,10 @@ describe('routes: `/financial_statements`', () => {
         account_type_id: 7,
       });
       await tenantFactory.create('account_transaction', {
-        credit: 1000, debit: 0, account_id: childAccount.id, date: '2020-2-10'
+        credit: 1000,
+        debit: 0,
+        account_id: childAccount.id,
+        date: '2020-2-10',
       });
 
       const res = await request()
@@ -947,7 +989,7 @@ describe('routes: `/financial_statements`', () => {
         { date: '2020-09', amount: 3000, formatted_amount: 3000 },
         { date: '2020-10', amount: 3000, formatted_amount: 3000 },
         { date: '2020-11', amount: 3000, formatted_amount: 3000 },
-        { date: '2020-12', amount: 3000, formatted_amount: 3000 }
+        { date: '2020-12', amount: 3000, formatted_amount: 3000 },
       ];
       expect(res.body.profitLoss.income.accounts[0].periods).deep.equals(periods);
       expect(res.body.profitLoss.income.total_periods).deep.equals(periods);

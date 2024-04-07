@@ -15,10 +15,7 @@ export default function QuickPaymentReceiveFormDialogContent({
   invoice,
 }) {
   return (
-    <QuickPaymentReceiveFormProvider
-      invoiceId={invoice}
-      dialogName={dialogName}
-    >
+    <QuickPaymentReceiveFormProvider invoiceId={invoice} dialogName={dialogName}>
       <QuickPaymentReceiveForm />
     </QuickPaymentReceiveFormProvider>
   );

@@ -1,5 +1,5 @@
-import { IFinancialSheetCommonMeta } from "./FinancialStatements";
-import { IFinancialTable } from "./Table";
+import { IFinancialSheetCommonMeta } from './FinancialStatements';
+import { IFinancialTable } from './Table';
 
 export interface SalesTaxLiabilitySummaryQuery {
   fromDate: Date;
@@ -38,17 +38,11 @@ export interface SalesTaxLiabilitySummaryReportData {
   total: SalesTaxLiabilitySummaryTotal;
 }
 
-export type SalesTaxLiabilitySummaryPayableById = Record<
-  string,
-  { taxRateId: number; credit: number; debit: number }
->;
+export type SalesTaxLiabilitySummaryPayableById = Record<string, { taxRateId: number; credit: number; debit: number }>;
 
-export type SalesTaxLiabilitySummarySalesById = Record<
-  string,
-  { taxRateId: number; credit: number; debit: number }
->;
+export type SalesTaxLiabilitySummarySalesById = Record<string, { taxRateId: number; credit: number; debit: number }>;
 
-export interface SalesTaxLiabilitySummaryMeta extends IFinancialSheetCommonMeta  {
+export interface SalesTaxLiabilitySummaryMeta extends IFinancialSheetCommonMeta {
   formattedFromDate: string;
   formattedToDate: string;
   formattedDateRange: string;

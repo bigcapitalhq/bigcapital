@@ -19,12 +19,7 @@ export interface IModelMetaDefaultSort {
   sortField: string;
 }
 
-export type IModelColumnType =
-  | 'text'
-  | 'number'
-  | 'enumeration'
-  | 'boolean'
-  | 'relation';
+export type IModelColumnType = 'text' | 'number' | 'enumeration' | 'boolean' | 'relation';
 
 export type ISortOrder = 'DESC' | 'ASC';
 
@@ -92,8 +87,7 @@ export interface IModelMetaRelationEnumerationField {
   relationEntityKey: string;
 }
 
-export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
-  IModelMetaRelationEnumerationField;
+export type IModelMetaRelationField = IModelMetaRelationFieldCommon & IModelMetaRelationEnumerationField;
 
 export interface IModelMeta {
   defaultFilterField: string;

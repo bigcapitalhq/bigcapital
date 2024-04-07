@@ -45,10 +45,7 @@ export const useSalesTaxLiabilitySummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const parsedQuery = React.useMemo(
-    () => parseSalesTaxLiabilitySummaryQuery(locationQuery),
-    [locationQuery],
-  );
+  const parsedQuery = React.useMemo(() => parseSalesTaxLiabilitySummaryQuery(locationQuery), [locationQuery]);
   return [parsedQuery, setLocationQuery];
 };
 
@@ -70,10 +67,7 @@ export const getSalesTaxLiabilitySummaryQueryValidation = () =>
   Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('toDate')),
   });
 
 /**

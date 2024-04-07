@@ -1,12 +1,9 @@
+import { ITransactionsByCustomersFilter, ITransactionsByCustomersStatement } from '@/interfaces';
 import { Inject, Service } from 'typedi';
-import {
-  ITransactionsByCustomersFilter,
-  ITransactionsByCustomersStatement,
-} from '@/interfaces';
-import { TransactionsByCustomersTableInjectable } from './TransactionsByCustomersTableInjectable';
 import { TransactionsByCustomersExportInjectable } from './TransactionsByCustomersExportInjectable';
-import { TransactionsByCustomersSheet } from './TransactionsByCustomersService';
 import { TransactionsByCustomersPdf } from './TransactionsByCustomersPdf';
+import { TransactionsByCustomersSheet } from './TransactionsByCustomersService';
+import { TransactionsByCustomersTableInjectable } from './TransactionsByCustomersTableInjectable';
 
 @Service()
 export class TransactionsByCustomerApplication {
@@ -28,14 +25,8 @@ export class TransactionsByCustomerApplication {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<ITransactionsByCustomersStatement>}
    */
-  public sheet(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<ITransactionsByCustomersStatement> {
-    return this.transactionsByCustomersSheet.transactionsByCustomers(
-      tenantId,
-      query
-    );
+  public sheet(tenantId: number, query: ITransactionsByCustomersFilter): Promise<ITransactionsByCustomersStatement> {
+    return this.transactionsByCustomersSheet.transactionsByCustomers(tenantId, query);
   }
 
   /**
@@ -54,10 +45,7 @@ export class TransactionsByCustomerApplication {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<string>}
    */
-  public csv(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<string> {
+  public csv(tenantId: number, query: ITransactionsByCustomersFilter): Promise<string> {
     return this.transactionsByCustomersExport.csv(tenantId, query);
   }
 
@@ -67,10 +55,7 @@ export class TransactionsByCustomerApplication {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: ITransactionsByCustomersFilter): Promise<Buffer> {
     return this.transactionsByCustomersExport.xlsx(tenantId, query);
   }
 
@@ -80,10 +65,7 @@ export class TransactionsByCustomerApplication {
    * @param {ITransactionsByCustomersFilter} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    tenantId: number,
-    query: ITransactionsByCustomersFilter
-  ): Promise<Buffer> {
+  public pdf(tenantId: number, query: ITransactionsByCustomersFilter): Promise<Buffer> {
     return this.transactionsByCustomersPdf.pdf(tenantId, query);
   }
 }

@@ -36,10 +36,7 @@ export const useForeignAccount = () => {
   const { values } = useFormikContext();
   const { account } = useMoneyInFieldsContext();
 
-  return (
-    !isEqual(account.currency_code, values.currency_code) &&
-    !isNull(account.currency_code)
-  );
+  return !isEqual(account.currency_code, values.currency_code) && !isNull(account.currency_code);
 };
 
 export const BranchRowDivider = styled.div`

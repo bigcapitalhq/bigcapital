@@ -68,10 +68,7 @@ const isMatchesDateRange = (r) => R.match(/^date-range/g, r).length > 0;
 export const dynamicColumns = (columns, data) => {
   const mapper = (column, index) => {
     return R.compose(
-      R.when(
-        R.pathSatisfies(isMatchesDateRange, ['key']),
-        R.curry(dateRangeMapper)(data, index),
-      ),
+      R.when(R.pathSatisfies(isMatchesDateRange, ['key']), R.curry(dateRangeMapper)(data, index)),
       R.when(R.pathEq(['key'], 'name'), accountNameMapper),
       R.when(R.pathEq(['key'], 'total'), R.curry(totalMapper)(data, index)),
     )(column);

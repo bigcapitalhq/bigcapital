@@ -8,9 +8,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const JournalPdfDialogContent = lazy(
-  () => import('./JournalPdfDialogContent'),
-);
+const JournalPdfDialogContent = lazy(() => import('./JournalPdfDialogContent'));
 
 /**
  * Journal sheet pdf preview dialog.
@@ -34,6 +32,4 @@ function JournalPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const JournalPdfDialog = compose(withDialogRedux())(
-  JournalPdfDialogRoot,
-);
+export const JournalPdfDialog = compose(withDialogRedux())(JournalPdfDialogRoot);

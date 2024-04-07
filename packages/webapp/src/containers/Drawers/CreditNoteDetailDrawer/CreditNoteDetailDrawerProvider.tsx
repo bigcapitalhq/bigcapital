@@ -1,12 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  useCreditNote,
-  useRefundCreditNote,
-  useReconcileCreditNote,
-  useReconcileCreditNotes,
-} from '@/hooks/query';
+import { useCreditNote, useRefundCreditNote, useReconcileCreditNote, useReconcileCreditNotes } from '@/hooks/query';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -20,14 +15,11 @@ const CreditNoteDetailDrawerContext = React.createContext();
 function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
-  
+
   // Handle fetch vendor credit details.
-  const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
-    creditNoteId,
-    {
-      enabled: !!creditNoteId,
-    },
-  );
+  const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(creditNoteId, {
+    enabled: !!creditNoteId,
+  });
 
   // Handle fetch refund credit note.
   const {
@@ -39,18 +31,17 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
   });
 
   // Handle fetch refund credit note.
-  const {
-    data: reconcileCreditNotes,
-    isLoading: isReconcileCreditNoteLoading,
-  } = useReconcileCreditNotes(creditNoteId, {
-    enabled: !!creditNoteId,
-  });
+  const { data: reconcileCreditNotes, isLoading: isReconcileCreditNoteLoading } = useReconcileCreditNotes(
+    creditNoteId,
+    {
+      enabled: !!creditNoteId,
+    },
+  );
 
   // Handle fetch reconcile credit note details.
-  const { isLoading: isReconcileCreditLoading, data: reconcileCreditNote } =
-    useReconcileCreditNote(creditNoteId, {
-      enabled: !!creditNoteId,
-    });
+  const { isLoading: isReconcileCreditLoading, data: reconcileCreditNote } = useReconcileCreditNote(creditNoteId, {
+    enabled: !!creditNoteId,
+  });
 
   const provider = {
     creditNote,
@@ -66,10 +57,7 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
   return (
     <DrawerLoading
       loading={
-        isCreditNoteLoading ||
-        isRefundCreditNoteLoading ||
-        isReconcileCreditNoteLoading ||
-        isReconcileCreditLoading
+        isCreditNoteLoading || isRefundCreditNoteLoading || isReconcileCreditNoteLoading || isReconcileCreditLoading
       }
     >
       <DrawerHeaderContent
@@ -90,7 +78,6 @@ function CreditNoteDetailDrawerProvider({ creditNoteId, ...props }) {
   );
 }
 
-const useCreditNoteDetailDrawerContext = () =>
-  React.useContext(CreditNoteDetailDrawerContext);
+const useCreditNoteDetailDrawerContext = () => React.useContext(CreditNoteDetailDrawerContext);
 
 export { CreditNoteDetailDrawerProvider, useCreditNoteDetailDrawerContext };

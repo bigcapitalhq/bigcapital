@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
+import { ISaleInvoiceCreatedPayload } from '@/interfaces';
 import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import { ConvertSaleEstimate } from '@/services/Sales/Estimates/ConvetSaleEstimate';
-import { ISaleInvoiceCreatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleInvoiceConvertFromEstimateSubscriber extends EventSubscriber {
@@ -13,10 +13,7 @@ export default class SaleInvoiceConvertFromEstimateSubscriber extends EventSubsc
    * Constructor method.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleMarkEstimateConvertOnceInvoiceCreated
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.handleMarkEstimateConvertOnceInvoiceCreated);
   }
 
   /**
@@ -34,7 +31,7 @@ export default class SaleInvoiceConvertFromEstimateSubscriber extends EventSubsc
         tenantId,
         saleInvoiceDTO.fromEstimateId,
         saleInvoiceId,
-        trx
+        trx,
       );
     }
   };

@@ -54,19 +54,16 @@ export function useEditVendor(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`vendors/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific vendor.
-        queryClient.invalidateQueries([t.VENDOR, id]);
+  return useMutation(([id, values]) => apiRequest.post(`vendors/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific vendor.
+      queryClient.invalidateQueries([t.VENDOR, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -123,19 +120,16 @@ export function useEditVendorOpeningBalance(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`vendors/${id}/opening_balance`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific vendor.
-        queryClient.invalidateQueries([t.VENDOR, id]);
+  return useMutation(([id, values]) => apiRequest.post(`vendors/${id}/opening_balance`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific vendor.
+      queryClient.invalidateQueries([t.VENDOR, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useRefreshVendors() {

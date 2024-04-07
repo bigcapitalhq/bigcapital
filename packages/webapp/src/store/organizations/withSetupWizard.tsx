@@ -3,11 +3,7 @@ import { connect } from 'react-redux';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
-    const {
-      isOrganizationSetupCompleted,
-      isOrganizationReady,
-      isOrganizationBuildRunning
-    } = props;
+    const { isOrganizationSetupCompleted, isOrganizationReady, isOrganizationBuildRunning } = props;
 
     const condits = {
       isCongratsStep: isOrganizationSetupCompleted,

@@ -1,8 +1,8 @@
 import FormData from 'form-data';
-import { IConverter, PageProperties, PdfFormat, ChromiumRoute } from './_types';
 import { ConverterUtils } from './ConvertUtils';
 import { Converter } from './Converter';
 import { GotenbergUtils } from './GotenbergUtils';
+import { ChromiumRoute, IConverter, PageProperties, PdfFormat } from './_types';
 
 export class UrlConverter extends Converter implements IConverter {
   constructor() {

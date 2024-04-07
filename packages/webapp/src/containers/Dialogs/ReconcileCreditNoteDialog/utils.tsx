@@ -11,14 +11,11 @@ import { MoneyFieldCell, FormatDateCell, AppToaster, T } from '@/components';
 export const transformErrors = (errors, { setErrors }) => {
   if (errors.some((e) => e.type === 'INVOICES_HAS_NO_REMAINING_AMOUNT')) {
     AppToaster.show({
-      message:
-        'The amount credit from the given invoice has no remaining amount.',
+      message: 'The amount credit from the given invoice has no remaining amount.',
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find((error) => error.type === 'CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT')
-  ) {
+  if (errors.find((error) => error.type === 'CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT')) {
     AppToaster.show({
       message: 'The total amount bigger than from remaining credit note amount',
       intent: Intent.DANGER,
@@ -35,9 +32,7 @@ export function EmptyStatuCallout() {
     <div className={Classes.DIALOG_BODY}>
       <Callout intent={Intent.PRIMARY}>
         <p>
-          <T
-            id={'reconcile_credit_note.alert.there_is_no_open_sale_invoices'}
-          />
+          <T id={'reconcile_credit_note.alert.there_is_no_open_sale_invoices'} />
         </p>
       </Callout>
     </div>
@@ -113,9 +108,7 @@ export const maxCreditNoteAmountEntries = R.curry((total, entries) => {
 
     return {
       ...entry,
-      amount: entry.amount
-        ? Math.max(Math.min(entry.amount, oldBalance), 0)
-        : '',
+      amount: entry.amount ? Math.max(Math.min(entry.amount, oldBalance), 0) : '',
     };
   });
 });

@@ -1,7 +1,7 @@
-import { Inject } from 'typedi';
 import { IItem } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject } from 'typedi';
 import ItemTransformer from './ItemTransformer';
 
 @Inject()

@@ -4,21 +4,9 @@ import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
 
-import {
-  Row,
-  Col,
-  FieldHint,
-  FormattedMessage as T,
-  FFormGroup,
-  VendorsMultiSelect,
-} from '@/components';
+import { Row, Col, FieldHint, FormattedMessage as T, FFormGroup, VendorsMultiSelect } from '@/components';
 import { filterVendorsOptions } from '../constants';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { useVendorsBalanceSummaryGeneralPanelContext } from './VendorsBalanceSummaryHeaderGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 

@@ -42,9 +42,7 @@ export default function InventoryValuationTable({
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
         styleName={TableStyle.Constrant}
-        noResults={intl.get(
-          'there_were_no_inventory_transactions_during_the_selected_date_range',
-        )}
+        noResults={intl.get('there_were_no_inventory_transactions_during_the_selected_date_range')}
       />
     </InventoryValuationSheet>
   );

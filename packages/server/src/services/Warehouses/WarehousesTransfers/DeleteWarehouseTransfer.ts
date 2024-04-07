@@ -1,13 +1,10 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
+import { IWarehouseTransferDeletePayload, IWarehouseTransferDeletedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import {
-  IWarehouseTransferDeletedPayload,
-  IWarehouseTransferDeletePayload,
-} from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CRUDWarehouseTransfer } from './CRUDWarehouseTransfer';
 
 @Service()
@@ -27,17 +24,11 @@ export class DeleteWarehouseTransfer extends CRUDWarehouseTransfer {
    * @param   {number} warehouseTransferId
    * @returns {Promise<void>}
    */
-  public deleteWarehouseTransfer = async (
-    tenantId: number,
-    warehouseTransferId: number
-  ): Promise<void> => {
-    const { WarehouseTransfer, WarehouseTransferEntry } =
-      this.tenancy.models(tenantId);
+  public deleteWarehouseTransfer = async (tenantId: number, warehouseTransferId: number): Promise<void> => {
+    const { WarehouseTransfer, WarehouseTransferEntry } = this.tenancy.models(tenantId);
 
     // Retrieve the old warehouse transfer or throw not found service error.
-    const oldWarehouseTransfer = await WarehouseTransfer.query()
-      .findById(warehouseTransferId)
-      .throwIfNotFound();
+    const oldWarehouseTransfer = await WarehouseTransfer.query().findById(warehouseTransferId).throwIfNotFound();
 
     // Deletes the warehouse transfer under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -49,9 +40,7 @@ export class DeleteWarehouseTransfer extends CRUDWarehouseTransfer {
       } as IWarehouseTransferDeletePayload);
 
       // Delete warehouse transfer entries.
-      await WarehouseTransferEntry.query(trx)
-        .where('warehouseTransferId', warehouseTransferId)
-        .delete();
+      await WarehouseTransferEntry.query(trx).where('warehouseTransferId', warehouseTransferId).delete();
 
       // Delete warehouse transfer.
       await WarehouseTransfer.query(trx).findById(warehouseTransferId).delete();

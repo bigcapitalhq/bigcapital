@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import {
   ICustomer,
   IPaymentReceive,
@@ -8,13 +6,15 @@ import {
   IPaymentReceiveEditingPayload,
   ISystemUser,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
 import { PaymentReceiveValidators } from './PaymentReceiveValidators';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TenantMetadata } from '@/system/models';
 
 @Service()
 export class EditPaymentReceive {
@@ -52,7 +52,7 @@ export class EditPaymentReceive {
     tenantId: number,
     paymentReceiveId: number,
     paymentReceiveDTO: IPaymentReceiveEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) {
     const { PaymentReceive, Contact } = this.tenancy.models(tenantId);
 
@@ -68,60 +68,50 @@ export class EditPaymentReceive {
     this.validators.validatePaymentExistance(oldPaymentReceive);
 
     // Validate customer existance.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(paymentReceiveDTO.customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(paymentReceiveDTO.customerId).throwIfNotFound();
 
     // Transformes the payment receive DTO to model.
     const paymentReceiveObj = await this.transformEditDTOToModel(
       tenantId,
       customer,
       paymentReceiveDTO,
-      oldPaymentReceive
+      oldPaymentReceive,
     );
     // Validate customer whether modified.
-    this.validators.validateCustomerNotModified(
-      paymentReceiveDTO,
-      oldPaymentReceive
-    );
+    this.validators.validateCustomerNotModified(paymentReceiveDTO, oldPaymentReceive);
     // Validate payment receive number uniquiness.
     if (paymentReceiveDTO.paymentReceiveNo) {
       await this.validators.validatePaymentReceiveNoExistance(
         tenantId,
         paymentReceiveDTO.paymentReceiveNo,
-        paymentReceiveId
+        paymentReceiveId,
       );
     }
     // Validate the deposit account existance and type.
     const depositAccount = await this.validators.getDepositAccountOrThrowError(
       tenantId,
-      paymentReceiveDTO.depositAccountId
+      paymentReceiveDTO.depositAccountId,
     );
     // Validate the entries ids existance on payment receive type.
-    await this.validators.validateEntriesIdsExistance(
-      tenantId,
-      paymentReceiveId,
-      paymentReceiveDTO.entries
-    );
+    await this.validators.validateEntriesIdsExistance(tenantId, paymentReceiveId, paymentReceiveDTO.entries);
     // Validate payment receive invoices IDs existance and associated
     // to the given customer id.
     await this.validators.validateInvoicesIDsExistance(
       tenantId,
       oldPaymentReceive.customerId,
-      paymentReceiveDTO.entries
+      paymentReceiveDTO.entries,
     );
     // Validate invoice payment amount.
     await this.validators.validateInvoicesPaymentsAmount(
       tenantId,
       paymentReceiveDTO.entries,
-      oldPaymentReceive.entries
+      oldPaymentReceive.entries,
     );
     // Validates the payment account currency code.
     this.validators.validatePaymentAccountCurrency(
       depositAccount.currencyCode,
       customer.currencyCode,
-      tenantMeta.baseCurrency
+      tenantMeta.baseCurrency,
     );
     // Creates payment receive transaction under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -134,9 +124,7 @@ export class EditPaymentReceive {
       } as IPaymentReceiveEditingPayload);
 
       // Update the payment receive transaction.
-      const paymentReceive = await PaymentReceive.query(
-        trx
-      ).upsertGraphAndFetch({
+      const paymentReceive = await PaymentReceive.query(trx).upsertGraphAndFetch({
         id: paymentReceiveId,
         ...paymentReceiveObj,
       });
@@ -166,13 +154,8 @@ export class EditPaymentReceive {
     tenantId: number,
     customer: ICustomer,
     paymentReceiveDTO: IPaymentReceiveEditDTO,
-    oldPaymentReceive: IPaymentReceive
+    oldPaymentReceive: IPaymentReceive,
   ) => {
-    return this.transformer.transformPaymentReceiveDTOToModel(
-      tenantId,
-      customer,
-      paymentReceiveDTO,
-      oldPaymentReceive
-    );
+    return this.transformer.transformPaymentReceiveDTOToModel(tenantId, customer, paymentReceiveDTO, oldPaymentReceive);
   };
 }

@@ -32,13 +32,9 @@ function EstimateMailDialogFormRoot({
   closeDialog,
 }) {
   const { mutateAsync: sendEstimateMail } = useSendSaleEstimateMail();
-  const { mailOptions, saleEstimateId, redirectToEstimatesList } =
-    useEstimateMailDialogBoot();
+  const { mailOptions, saleEstimateId, redirectToEstimatesList } = useEstimateMailDialogBoot();
 
-  const initialValues = transformMailFormToInitialValues(
-    mailOptions,
-    initialFormValues,
-  );
+  const initialValues = transformMailFormToInitialValues(mailOptions, initialFormValues);
   // Handle the form submitting.
   const handleSubmit = (values: EstimateMailFormValues, { setSubmitting }) => {
     const reqValues = transformMailFormToRequest(values);
@@ -76,6 +72,4 @@ function EstimateMailDialogFormRoot({
   );
 }
 
-export const EstimateMailDialogForm = R.compose(withDialogActions)(
-  EstimateMailDialogFormRoot,
-);
+export const EstimateMailDialogForm = R.compose(withDialogActions)(EstimateMailDialogFormRoot);

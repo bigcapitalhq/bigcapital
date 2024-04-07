@@ -62,22 +62,11 @@ function ProfitLossHeader({
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
-    <ProfitLossSheetHeader
-      isOpen={profitLossDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-      >
+    <ProfitLossSheetHeader isOpen={profitLossDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<ProfitLossSheetHeaderGeneralPane />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<ProfitLossSheetHeaderGeneralPane />} />
             <Tab
               id="comparison"
               title={<T id={'profit_loss_sheet.comparisons'} />}

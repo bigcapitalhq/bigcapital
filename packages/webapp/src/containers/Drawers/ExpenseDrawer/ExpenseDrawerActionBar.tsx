@@ -1,19 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  Classes,
-  NavbarGroup,
-  Intent,
-  NavbarDivider,
-} from '@blueprintjs/core';
-import {
-  Icon,
-  DrawerActionsBar,
-  Can,
-  FormattedMessage as T,
-} from '@/components';
+import { Button, Classes, NavbarGroup, Intent, NavbarDivider } from '@blueprintjs/core';
+import { Icon, DrawerActionsBar, Can, FormattedMessage as T } from '@/components';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 
@@ -75,7 +64,4 @@ function ExpenseDrawerActionBar({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(ExpenseDrawerActionBar);
+export default compose(withAlertsActions, withDrawerActions)(ExpenseDrawerActionBar);

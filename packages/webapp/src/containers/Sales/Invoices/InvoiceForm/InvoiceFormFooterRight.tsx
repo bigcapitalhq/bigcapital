@@ -3,24 +3,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
 
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useInvoiceAggregatedTaxRates, useInvoiceTotals } from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
 
 export function InvoiceFormFooterRight() {
   // Calculate the total due amount of invoice entries.
-  const {
-    formattedSubtotal,
-    formattedTotal,
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useInvoiceTotals();
+  const { formattedSubtotal, formattedTotal, formattedDueTotal, formattedPaymentTotal } = useInvoiceTotals();
 
   const {
     values: { inclusive_exclusive_tax, currency_code },
@@ -31,13 +20,7 @@ export function InvoiceFormFooterRight() {
   return (
     <InvoiceTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={
-          <>
-            {inclusive_exclusive_tax === TaxType.Inclusive
-              ? 'Subtotal (Tax Inclusive)'
-              : 'Subtotal'}
-          </>
-        }
+        title={<>{inclusive_exclusive_tax === TaxType.Inclusive ? 'Subtotal (Tax Inclusive)' : 'Subtotal'}</>}
         value={formattedSubtotal}
       />
       {taxEntries.map((tax, index) => (

@@ -4,19 +4,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const InvoiceNumberDialogContent = lazy(
-  () => import('./InvoiceNumberDialogContent'),
-);
+const InvoiceNumberDialogContent = lazy(() => import('./InvoiceNumberDialogContent'));
 
 /**
  * Invoice number dialog.
  */
-function InvoiceNumberDialog({
-  dialogName,
-  payload: { initialFormValues },
-  isOpen,
-  onConfirm,
-}) {
+function InvoiceNumberDialog({ dialogName, payload: { initialFormValues }, isOpen, onConfirm }) {
   const handleConfirm = (values) => {
     saveInvoke(onConfirm, values);
   };
@@ -30,10 +23,7 @@ function InvoiceNumberDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <InvoiceNumberDialogContent
-          initialValues={{ ...initialFormValues }}
-          onConfirm={handleConfirm}
-        />
+        <InvoiceNumberDialogContent initialValues={{ ...initialFormValues }} onConfirm={handleConfirm} />
       </DialogSuspense>
     </Dialog>
   );

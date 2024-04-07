@@ -26,8 +26,7 @@ function RefundVendorCreditDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deleteRefundVendorCreditMutate, isLoading } =
-    useDeleteRefundVendorCredit();
+  const { mutateAsync: deleteRefundVendorCreditMutate, isLoading } = useDeleteRefundVendorCredit();
 
   // Handle cancel delete.
   const handleCancelAlert = () => {
@@ -39,9 +38,7 @@ function RefundVendorCreditDeleteAlert({
     deleteRefundVendorCreditMutate(vendorCreditId)
       .then(() => {
         AppToaster.show({
-          message: intl.get(
-            'refund_vendor_credit_transactions.alert.delete_message',
-          ),
+          message: intl.get('refund_vendor_credit_transactions.alert.delete_message'),
           intent: Intent.SUCCESS,
         });
         closeDrawer(DRAWERS.REFUND_VENDOR_CREDIT_DETAILS);
@@ -64,16 +61,10 @@ function RefundVendorCreditDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <T
-          id={`refund_vendor_credit_transactions.once_your_delete_this_refund_vendor_credit`}
-        />
+        <T id={`refund_vendor_credit_transactions.once_your_delete_this_refund_vendor_credit`} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(RefundVendorCreditDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(RefundVendorCreditDeleteAlert);

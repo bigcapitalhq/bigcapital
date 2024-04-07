@@ -88,8 +88,5 @@ export default compose(
   withDashboardActions,
   withBillingActions,
   withSubscriptionPlansActions,
-  withSubscriptions(
-    ({ isSubscriptionInactive }) => ({ isSubscriptionInactive }),
-    'main',
-  ),
+  withSubscriptions(({ isSubscriptionInactive }) => ({ isSubscriptionInactive }), 'main'),
 )(BillingForm);

@@ -18,10 +18,7 @@ export function ImportFileMapping() {
     <ImportFileMapBootProvider importId={importId}>
       <ImportFileMappingForm>
         <ImportFileContainer>
-          <p>
-            Review and map the column headers in your csv/xlsx file with the
-            Bigcapital fields.
-          </p>
+          <p>Review and map the column headers in your csv/xlsx file with the Bigcapital fields.</p>
 
           <table className={clsx('bp4-html-table', styles.table)}>
             <thead>
@@ -45,28 +42,16 @@ export function ImportFileMapping() {
 function ImportFileMappingFields() {
   const { entityColumns, sheetColumns } = useImportFileContext();
 
-  const items = useMemo(
-    () => sheetColumns.map((column) => ({ value: column, text: column })),
-    [sheetColumns],
-  );
+  const items = useMemo(() => sheetColumns.map((column) => ({ value: column, text: column })), [sheetColumns]);
   const columnMapper = (column: EntityColumn, index: number) => (
     <tr key={index}>
       <td className={styles.label}>
-        {column.name}{' '}
-        {column.required && <span className={styles.requiredSign}>*</span>}
+        {column.name} {column.required && <span className={styles.requiredSign}>*</span>}
       </td>
       <td className={styles.field}>
         <Group spacing={4}>
-          <FSelect
-            name={column.key}
-            items={items}
-            popoverProps={{ minimal: true }}
-            minimal={true}
-            fill={true}
-          />
-          {column.hint && (
-            <Hint content={column.hint} position={Position.BOTTOM} />
-          )}
+          <FSelect name={column.key} items={items} popoverProps={{ minimal: true }} minimal={true} fill={true} />
+          {column.hint && <Hint content={column.hint} position={Position.BOTTOM} />}
         </Group>
       </td>
     </tr>

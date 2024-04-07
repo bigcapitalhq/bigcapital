@@ -19,7 +19,7 @@ export default function CustomersImport() {
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCancelBtnClick}
         exampleTitle="Customers Example"
-        />
+      />
     </DashboardInsider>
   );
 }

@@ -1,4 +1,4 @@
-import * as R from 'ramda';
+import { ITableColumn, ITableRow } from '@/interfaces';
 import {
   SalesTaxLiabilitySummaryQuery,
   SalesTaxLiabilitySummaryRate,
@@ -6,16 +6,13 @@ import {
   SalesTaxLiabilitySummaryTotal,
 } from '@/interfaces/SalesTaxLiabilitySummary';
 import { tableRowMapper } from '@/utils';
-import { ITableColumn, ITableRow } from '@/interfaces';
+import * as R from 'ramda';
+import AgingReport from '../AgingSummary/AgingReport';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
-import AgingReport from '../AgingSummary/AgingReport';
 import { IROW_TYPE } from './_constants';
 
-export class SalesTaxLiabilitySummaryTable extends R.compose(
-  FinancialSheetStructure,
-  FinancialTable
-)(AgingReport) {
+export class SalesTaxLiabilitySummaryTable extends R.compose(FinancialSheetStructure, FinancialTable)(AgingReport) {
   private data: SalesTaxLiabilitySummaryReportData;
   private query: SalesTaxLiabilitySummaryQuery;
 
@@ -24,10 +21,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    * @param {SalesTaxLiabilitySummaryReportData} data
    * @param {SalesTaxLiabilitySummaryQuery} query
    */
-  constructor(
-    data: SalesTaxLiabilitySummaryReportData,
-    query: SalesTaxLiabilitySummaryQuery
-  ) {
+  constructor(data: SalesTaxLiabilitySummaryReportData, query: SalesTaxLiabilitySummaryQuery) {
     super();
 
     this.data = data;
@@ -67,9 +61,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    * @param {SalesTaxLiabilitySummaryRate} node
    * @returns {ITableRow}
    */
-  private taxRateTableRowMapper = (
-    node: SalesTaxLiabilitySummaryRate
-  ): ITableRow => {
+  private taxRateTableRowMapper = (node: SalesTaxLiabilitySummaryRate): ITableRow => {
     const columns = this.taxRateRowAccessor;
     const meta = {
       rowTypes: [IROW_TYPE.TaxRate],
@@ -83,9 +75,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    * @param {SalesTaxLiabilitySummaryRate[]} nodes
    * @returns {ITableRow[]}
    */
-  private taxRatesTableRowsMapper = (
-    nodes: SalesTaxLiabilitySummaryRate[]
-  ): ITableRow[] => {
+  private taxRatesTableRowsMapper = (nodes: SalesTaxLiabilitySummaryRate[]): ITableRow[] => {
     return nodes.map(this.taxRateTableRowMapper);
   };
 
@@ -124,10 +114,7 @@ export class SalesTaxLiabilitySummaryTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows(): ITableRow[] {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.taxRateTotalRow)),
-      R.concat(this.taxRatesRows)
-    )([]);
+    return R.compose(R.unless(R.isEmpty, R.append(this.taxRateTotalRow)), R.concat(this.taxRatesRows))([]);
   }
 
   /**

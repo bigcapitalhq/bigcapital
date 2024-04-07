@@ -34,7 +34,4 @@ const reducerInstance = createReducer(initialState, {
   },
 });
 
-export default persistReducer(
-  CONFIG,
-  reducerInstance,
-);
+export default persistReducer(CONFIG, reducerInstance);

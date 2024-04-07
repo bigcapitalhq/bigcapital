@@ -5,9 +5,7 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { compose } from '@/utils';
 
-const WarehouseActivateDialogContent = React.lazy(
-  () => import('./WarehouseActivateDialogContent'),
-);
+const WarehouseActivateDialogContent = React.lazy(() => import('./WarehouseActivateDialogContent'));
 
 /**
  * Warehouse activate dialog.

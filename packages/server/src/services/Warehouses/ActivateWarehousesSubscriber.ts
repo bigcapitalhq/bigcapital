@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import { IWarehousesActivatedPayload } from '@/interfaces';
-import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { CreateInitialWarehousesItemsQuantity } from './CreateInitialWarehousesitemsQuantity';
+import { UpdateInventoryTransactionsWithWarehouse } from './UpdateInventoryTransactionsWithWarehouse';
 
 @Service()
 export class ActivateWarehousesSubscriber {
@@ -16,14 +16,8 @@ export class ActivateWarehousesSubscriber {
    * Attaches events with handlers.
    */
   attach(bus) {
-    bus.subscribe(
-      events.warehouse.onActivated,
-      this.updateInventoryTransactionsWithWarehouseOnActivating
-    );
-    bus.subscribe(
-      events.warehouse.onActivated,
-      this.createInitialWarehousesItemsQuantityOnActivating
-    );
+    bus.subscribe(events.warehouse.onActivated, this.updateInventoryTransactionsWithWarehouseOnActivating);
+    bus.subscribe(events.warehouse.onActivated, this.createInitialWarehousesItemsQuantityOnActivating);
     return bus;
   }
 
@@ -36,10 +30,7 @@ export class ActivateWarehousesSubscriber {
     tenantId,
     primaryWarehouse,
   }: IWarehousesActivatedPayload) => {
-    await this.updateInventoryTransactionsWithWarehouse.run(
-      tenantId,
-      primaryWarehouse.id
-    );
+    await this.updateInventoryTransactionsWithWarehouse.run(tenantId, primaryWarehouse.id);
   };
 
   /**
@@ -50,9 +41,6 @@ export class ActivateWarehousesSubscriber {
     tenantId,
     primaryWarehouse,
   }: IWarehousesActivatedPayload) => {
-    await this.createInitialWarehousesItemsQuantity.run(
-      tenantId,
-      primaryWarehouse.id
-    );
+    await this.createInitialWarehousesItemsQuantity.run(tenantId, primaryWarehouse.id);
   };
 }

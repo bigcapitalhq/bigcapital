@@ -2,10 +2,7 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
-import {
-  ProjectProfitabilitySummaryAlerts,
-  ProjectProfitabilitySummaryLoadingBar,
-} from './components';
+import { ProjectProfitabilitySummaryAlerts, ProjectProfitabilitySummaryLoadingBar } from './components';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 
 import ProjectProfitabilitySummaryHeader from './ProjectProfitabilitySummaryHeader';
@@ -62,10 +59,7 @@ function ProjectProfitabilitySummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <ProjectProfitabilitySummaryHeader
-            pageFilter={query}
-            onFilterSubmit={handleFilterSubmit}
-          />
+          <ProjectProfitabilitySummaryHeader pageFilter={query} onFilterSubmit={handleFilterSubmit} />
           <ProjectProfitabilitySummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
@@ -73,6 +67,4 @@ function ProjectProfitabilitySummary({
   );
 }
 
-export default compose(withProjectProfitabilitySummaryActions)(
-  ProjectProfitabilitySummary,
-);
+export default compose(withProjectProfitabilitySummaryActions)(ProjectProfitabilitySummary);

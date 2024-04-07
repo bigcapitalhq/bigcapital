@@ -5,11 +5,7 @@ import { FormGroup, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import styled from 'styled-components';
 
-import {
-  ListSelect,
-  FieldRequiredHint,
-  FormattedMessage as T,
-} from '@/components';
+import { ListSelect, FieldRequiredHint, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 
@@ -50,11 +46,7 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'customer_name'} />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              disabled={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} disabled={true} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -67,16 +59,9 @@ export default function NotifyViaSMSFormFields({ notificationTypes }) {
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="customer_phone_number" />}
-            className={classNames(
-              'form-group--customer_phone_number',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--customer_phone_number', CLASSES.FILL)}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              disabled={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} disabled={true} {...field} />
           </FormGroup>
         )}
       </FastField>

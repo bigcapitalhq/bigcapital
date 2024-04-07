@@ -1,18 +1,18 @@
-import * as R from 'ramda';
-import { sumBy, mapValues, get } from 'lodash';
 import { ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
-import { accumSum, dateRangeFromToCollection } from 'utils';
 import {
   ICashFlowDatePeriod,
-  ICashFlowStatementNetIncomeSection,
-  ICashFlowStatementAccountSection,
-  ICashFlowStatementSection,
   ICashFlowSchemaTotalSection,
-  IFormatNumberSettings,
+  ICashFlowStatementAccountSection,
+  ICashFlowStatementNetIncomeSection,
+  ICashFlowStatementQuery,
+  ICashFlowStatementSection,
   ICashFlowStatementTotalSection,
   IDateRange,
-  ICashFlowStatementQuery,
+  IFormatNumberSettings,
 } from '@/interfaces';
+import { get, mapValues, sumBy } from 'lodash';
+import * as R from 'ramda';
+import { accumSum, dateRangeFromToCollection } from 'utils';
 
 export const CashFlowStatementDatePeriods = (Base) =>
   class extends Base {
@@ -23,11 +23,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * Initialize date range set.
      */
     private initDateRangeCollection() {
-      this.dateRangeSet = dateRangeFromToCollection(
-        this.query.fromDate,
-        this.query.toDate,
-        this.comparatorDateType
-      );
+      this.dateRangeSet = dateRangeFromToCollection(this.query.fromDate, this.query.toDate, this.comparatorDateType);
     }
 
     /**
@@ -41,7 +37,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings: IFormatNumberSettings = {}
+      overrideSettings: IFormatNumberSettings = {},
     ): ICashFlowDatePeriod => {
       return this.getDatePeriodMeta(total, fromDate, toDate, {
         money: true,
@@ -60,7 +56,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings?: IFormatNumberSettings
+      overrideSettings?: IFormatNumberSettings,
     ): ICashFlowDatePeriod => {
       return {
         fromDate: this.getDateMeta(fromDate),
@@ -78,27 +74,15 @@ export const CashFlowStatementDatePeriods = (Base) =>
      */
     private getNetIncomeDateRange = (fromDate: Date, toDate: Date) => {
       // Mapping income/expense accounts ids.
-      const incomeAccountsIds = this.getAccountsIdsByType(
-        ACCOUNT_ROOT_TYPE.INCOME
-      );
-      const expenseAccountsIds = this.getAccountsIdsByType(
-        ACCOUNT_ROOT_TYPE.EXPENSE
-      );
+      const incomeAccountsIds = this.getAccountsIdsByType(ACCOUNT_ROOT_TYPE.INCOME);
+      const expenseAccountsIds = this.getAccountsIdsByType(ACCOUNT_ROOT_TYPE.EXPENSE);
       // Income closing balance.
       const incomeClosingBalance = accumSum(incomeAccountsIds, (id) =>
-        this.netIncomeLedger
-          .whereFromDate(fromDate)
-          .whereToDate(toDate)
-          .whereAccountId(id)
-          .getClosingBalance()
+        this.netIncomeLedger.whereFromDate(fromDate).whereToDate(toDate).whereAccountId(id).getClosingBalance(),
       );
       // Expense closing balance.
       const expenseClosingBalance = accumSum(expenseAccountsIds, (id) =>
-        this.netIncomeLedger
-          .whereToDate(toDate)
-          .whereFromDate(fromDate)
-          .whereAccountId(id)
-          .getClosingBalance()
+        this.netIncomeLedger.whereToDate(toDate).whereFromDate(fromDate).whereAccountId(id).getClosingBalance(),
       );
       // Net income = income - expenses.
       const netIncome = incomeClosingBalance - expenseClosingBalance;
@@ -112,15 +96,8 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @retrun {ICashFlowDatePeriod}
      */
     private getNetIncomeDatePeriod = (dateRange): ICashFlowDatePeriod => {
-      const total = this.getNetIncomeDateRange(
-        dateRange.fromDate,
-        dateRange.toDate
-      );
-      return this.getDatePeriodMeta(
-        total,
-        dateRange.fromDate,
-        dateRange.toDate
-      );
+      const total = this.getNetIncomeDateRange(dateRange.fromDate, dateRange.toDate);
+      return this.getDatePeriodMeta(total, dateRange.fromDate, dateRange.toDate);
     };
 
     /**
@@ -129,9 +106,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {Date} toDate
      * @returns {ICashFlowDatePeriod[]}
      */
-    private getNetIncomeDatePeriods = (
-      section: ICashFlowStatementNetIncomeSection
-    ): ICashFlowDatePeriod[] => {
+    private getNetIncomeDatePeriods = (section: ICashFlowStatementNetIncomeSection): ICashFlowDatePeriod[] => {
       return this.dateRangeSet.map(this.getNetIncomeDatePeriod.bind(this));
     };
 
@@ -141,7 +116,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @returns {ICashFlowStatementNetIncomeSection}
      */
     protected assocPeriodsToNetIncomeNode = (
-      section: ICashFlowStatementNetIncomeSection
+      section: ICashFlowStatementNetIncomeSection,
     ): ICashFlowStatementNetIncomeSection => {
       const incomeDatePeriods = this.getNetIncomeDatePeriods(section);
       return R.assoc('periods', incomeDatePeriods, section);
@@ -157,7 +132,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     private getAccountTotalDateRange = (
       node: ICashFlowStatementAccountSection,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ): number => {
       const closingBalance = this.ledger
         .whereFromDate(fromDate)
@@ -178,7 +153,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     private getAccountTotalDatePeriod = (
       node: ICashFlowStatementAccountSection,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ): ICashFlowDatePeriod => {
       const total = this.getAccountTotalDateRange(node, fromDate, toDate);
       return this.getDatePeriodMeta(total, fromDate, toDate);
@@ -189,14 +164,9 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementAccountSection} node -
      * @return {ICashFlowDatePeriod[]}
      */
-    private getAccountDatePeriods = (
-      node: ICashFlowStatementAccountSection
-    ): ICashFlowDatePeriod[] => {
-      return this.getNodeDatePeriods(
-        node,
-        this.getAccountTotalDatePeriod.bind(this)
-      );
-    }
+    private getAccountDatePeriods = (node: ICashFlowStatementAccountSection): ICashFlowDatePeriod[] => {
+      return this.getNodeDatePeriods(node, this.getAccountTotalDatePeriod.bind(this));
+    };
 
     /**
      * Writes `periods` property to account node.
@@ -204,23 +174,20 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @return {ICashFlowStatementAccountSection}
      */
     protected assocPeriodsToAccountNode = (
-      node: ICashFlowStatementAccountSection
+      node: ICashFlowStatementAccountSection,
     ): ICashFlowStatementAccountSection => {
       const datePeriods = this.getAccountDatePeriods(node);
       return R.assoc('periods', datePeriods, node);
-    }
+    };
 
     // Aggregate node -------------------------
     /**
      * Retrieve total of the given period index for node that has children nodes.
      * @return {number}
      */
-    private getChildrenTotalPeriodByIndex = (
-      node: ICashFlowStatementSection,
-      index: number
-    ): number => {
+    private getChildrenTotalPeriodByIndex = (node: ICashFlowStatementSection, index: number): number => {
       return sumBy(node.children, `periods[${index}].total.amount`);
-    }
+    };
 
     /**
      * Retrieve date period meta of the given node index.
@@ -233,7 +200,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
       node: ICashFlowStatementSection,
       index: number,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ) {
       const total = this.getChildrenTotalPeriodByIndex(node, index);
       return this.getDatePeriodTotalMeta(total, fromDate, toDate);
@@ -244,16 +211,10 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementSection} node
      */
     private getAggregateNodeDatePeriods(node: ICashFlowStatementSection) {
-      const getChildrenTotalPeriodMetaByIndex = R.curry(
-        this.getChildrenTotalPeriodMetaByIndex.bind(this)
-      )(node);
+      const getChildrenTotalPeriodMetaByIndex = R.curry(this.getChildrenTotalPeriodMetaByIndex.bind(this))(node);
 
       return this.dateRangeSet.map((dateRange, index) =>
-        getChildrenTotalPeriodMetaByIndex(
-          index,
-          dateRange.fromDate,
-          dateRange.toDate
-        )
+        getChildrenTotalPeriodMetaByIndex(index, dateRange.fromDate, dateRange.toDate),
       );
     }
 
@@ -262,23 +223,15 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementSection} node -
      * @return {ICashFlowStatementSection}
      */
-    protected assocPeriodsToAggregateNode = (
-      node: ICashFlowStatementSection
-    ): ICashFlowStatementSection => {
+    protected assocPeriodsToAggregateNode = (node: ICashFlowStatementSection): ICashFlowStatementSection => {
       const datePeriods = this.getAggregateNodeDatePeriods(node);
       return R.assoc('periods', datePeriods, node);
     };
 
     // Total equation node --------------------
 
-    private sectionsMapToTotalPeriod = (
-      mappedSections: { [key: number]: any },
-      index
-    ) => {
-      return mapValues(
-        mappedSections,
-        (node) => get(node, `periods[${index}].total.amount`) || 0
-      );
+    private sectionsMapToTotalPeriod = (mappedSections: { [key: number]: any }, index) => {
+      return mapValues(mappedSections, (node) => get(node, `periods[${index}].total.amount`) || 0);
     };
 
     /**
@@ -290,7 +243,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
     private getTotalEquationDatePeriods = (
       node: ICashFlowSchemaTotalSection,
       equation: string,
-      nodesTable
+      nodesTable,
     ): ICashFlowDatePeriod[] => {
       return this.getNodeDatePeriods(node, (node, fromDate, toDate, index) => {
         const periodScope = this.sectionsMapToTotalPeriod(nodesTable, index);
@@ -308,13 +261,9 @@ export const CashFlowStatementDatePeriods = (Base) =>
     protected assocTotalEquationDatePeriods = (
       nodesTable: any,
       equation: string,
-      node: ICashFlowSchemaTotalSection
+      node: ICashFlowSchemaTotalSection,
     ): ICashFlowStatementTotalSection => {
-      const datePeriods = this.getTotalEquationDatePeriods(
-        node,
-        equation,
-        nodesTable
-      );
+      const datePeriods = this.getTotalEquationDatePeriods(node, equation, nodesTable);
 
       return R.assoc('periods', datePeriods, node);
     };
@@ -341,17 +290,10 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {Date} toDate - To date.
      * @return {number}
      */
-    private getBeginningCashAccountDateRange = (
-      node: ICashFlowStatementSection,
-      fromDate: Date,
-      toDate: Date
-    ) => {
+    private getBeginningCashAccountDateRange = (node: ICashFlowStatementSection, fromDate: Date, toDate: Date) => {
       const cashToDate = this.beginningCashFrom(fromDate);
 
-      return this.cashLedger
-        .whereToDate(cashToDate)
-        .whereAccountId(node.id)
-        .getClosingBalance();
+      return this.cashLedger.whereToDate(cashToDate).whereAccountId(node.id).getClosingBalance();
     };
 
     /**
@@ -361,16 +303,8 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {Date} toDate - To date.
      * @return {ICashFlowDatePeriod}
      */
-    private getBeginningCashDatePeriod = (
-      node: ICashFlowStatementSection,
-      fromDate: Date,
-      toDate: Date
-    ) => {
-      const total = this.getBeginningCashAccountDateRange(
-        node,
-        fromDate,
-        toDate
-      );
+    private getBeginningCashDatePeriod = (node: ICashFlowStatementSection, fromDate: Date, toDate: Date) => {
+      const total = this.getBeginningCashAccountDateRange(node, fromDate, toDate);
       return this.getDatePeriodTotalMeta(total, fromDate, toDate);
     };
 
@@ -379,9 +313,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementSection} node
      * @return {ICashFlowDatePeriod}
      */
-    private getBeginningCashAccountPeriods = (
-      node: ICashFlowStatementSection
-    ): ICashFlowDatePeriod => {
+    private getBeginningCashAccountPeriods = (node: ICashFlowStatementSection): ICashFlowDatePeriod => {
       return this.getNodeDatePeriods(node, this.getBeginningCashDatePeriod);
     };
 
@@ -390,9 +322,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementSection} section -
      * @return {ICashFlowStatementSection}
      */
-    protected assocCashAtBeginningDatePeriods = (
-      node: ICashFlowStatementSection
-    ): ICashFlowStatementSection => {
+    protected assocCashAtBeginningDatePeriods = (node: ICashFlowStatementSection): ICashFlowStatementSection => {
       const datePeriods = this.getAggregateNodeDatePeriods(node);
       return R.assoc('periods', datePeriods, node);
     };
@@ -402,9 +332,7 @@ export const CashFlowStatementDatePeriods = (Base) =>
      * @param {ICashFlowStatementSection} node -
      * @return {ICashFlowStatementSection}
      */
-    protected assocCashAtBeginningAccountDatePeriods = (
-      node: ICashFlowStatementSection
-    ): ICashFlowStatementSection => {
+    protected assocCashAtBeginningAccountDatePeriods = (node: ICashFlowStatementSection): ICashFlowStatementSection => {
       const datePeriods = this.getBeginningCashAccountPeriods(node);
       return R.assoc('periods', datePeriods, node);
     };

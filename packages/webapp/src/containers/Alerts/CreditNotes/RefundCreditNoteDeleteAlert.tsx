@@ -27,8 +27,7 @@ function RefundCreditNoteDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deleteRefundCreditMutate, isLoading } =
-    useDeleteRefundCreditNote();
+  const { mutateAsync: deleteRefundCreditMutate, isLoading } = useDeleteRefundCreditNote();
 
   // Handle cancel delete.
   const handleCancelAlert = () => {
@@ -63,16 +62,10 @@ function RefundCreditNoteDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <T
-          id={`refund_credit_transactions.once_your_delete_this_refund_credit_note`}
-        />
+        <T id={`refund_credit_transactions.once_your_delete_this_refund_credit_note`} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(RefundCreditNoteDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(RefundCreditNoteDeleteAlert);

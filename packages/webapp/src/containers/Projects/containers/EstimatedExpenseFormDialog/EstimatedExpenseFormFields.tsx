@@ -4,16 +4,8 @@ import styled from 'styled-components';
 import intl from 'react-intl-universal';
 import { Classes, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
-import {
-  FFormGroup,
-  FInputGroup,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  ExpenseSelect,
-  FInputGroupComponent,
-  ProjectTaskChargeTypeSelect,
-} from '../../components';
+import { FFormGroup, FInputGroup, FormattedMessage as T } from '@/components';
+import { ExpenseSelect, FInputGroupComponent, ProjectTaskChargeTypeSelect } from '../../components';
 import { useEstimatedExpenseFormContext } from './EstimatedExpenseFormProvider';
 import EstimatedExpenseFormChargeFields from './EstimatedExpenseFormChargeFields';
 import { expenseChargeOption } from '../common/modalChargeOptions';
@@ -31,18 +23,11 @@ export default function EstimatedExpenseFormFields() {
         label={intl.get('estimated_expenses.dialog.estimated_expense')}
         className={classNames('form-group--select-list', Classes.FILL)}
       >
-        <ExpenseSelect
-          name={'estimatedExpense'}
-          popoverProps={{ minimal: true }}
-          expenses={[]}
-        />
+        <ExpenseSelect name={'estimatedExpense'} popoverProps={{ minimal: true }} expenses={[]} />
       </FFormGroup>
 
       {/*------------ Quantity -----------*/}
-      <FFormGroup
-        label={intl.get('estimated_expenses.dialog.quantity')}
-        name={'quantity'}
-      >
+      <FFormGroup label={intl.get('estimated_expenses.dialog.quantity')} name={'quantity'}>
         <FInputGroupComponent name="quantity" />
       </FFormGroup>
 
@@ -51,16 +36,10 @@ export default function EstimatedExpenseFormFields() {
       </MetaLineLabel>
       {/*------------ Unit Price -----------*/}
       <ControlGroup className={Classes.FILL}>
-        <FFormGroup
-          name={'unitPrice'}
-          label={intl.get('estimated_expenses.dialog.unit_price')}
-        >
+        <FFormGroup name={'unitPrice'} label={intl.get('estimated_expenses.dialog.unit_price')}>
           <FInputGroupComponent name="unitPrice" />
         </FFormGroup>
-        <FFormGroup
-          name={'unitPrice'}
-          label={intl.get('estimated_expenses.dialog.total')}
-        >
+        <FFormGroup name={'unitPrice'} label={intl.get('estimated_expenses.dialog.total')}>
           <FInputGroup name="expenseTotal" />
         </FFormGroup>
       </ControlGroup>

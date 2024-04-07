@@ -12,12 +12,7 @@ function BalanceSheetProvider({ filter, ...props }) {
   const httpQuery = useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // Fetches the balance sheet report.
-  const {
-    data: balanceSheet,
-    isFetching,
-    isLoading,
-    refetch,
-  } = useBalanceSheet(httpQuery, { keepPreviousData: true });
+  const { data: balanceSheet, isFetching, isLoading, refetch } = useBalanceSheet(httpQuery, { keepPreviousData: true });
 
   const provider = {
     balanceSheet,

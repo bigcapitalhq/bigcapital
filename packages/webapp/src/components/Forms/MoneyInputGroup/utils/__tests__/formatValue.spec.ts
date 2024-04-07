@@ -6,7 +6,7 @@ describe('formatValue', () => {
     expect(
       formatValue({
         value: '',
-      })
+      }),
     ).toEqual('');
   });
 
@@ -14,7 +14,7 @@ describe('formatValue', () => {
     expect(
       formatValue({
         value: '1234567',
-      })
+      }),
     ).toEqual('1,234,567');
   });
 
@@ -24,7 +24,7 @@ describe('formatValue', () => {
         value: '1234567',
         decimalSeparator: '.',
         groupSeparator: '.',
-      })
+      }),
     ).toEqual('1.234.567');
   });
 
@@ -34,7 +34,7 @@ describe('formatValue', () => {
         value: '1234567,89',
         decimalSeparator: '.',
         groupSeparator: '.',
-      })
+      }),
     ).toEqual('1.234.567,89');
   });
 
@@ -44,7 +44,7 @@ describe('formatValue', () => {
         value: '1234567-89',
         decimalSeparator: '-',
         groupSeparator: '.',
-      })
+      }),
     ).toEqual('1.234.567-89');
   });
 
@@ -54,7 +54,7 @@ describe('formatValue', () => {
         value: '1234567-89',
         decimalSeparator: '',
         groupSeparator: '.',
-      })
+      }),
     ).toEqual('1.234.567-89');
   });
 
@@ -63,7 +63,7 @@ describe('formatValue', () => {
       formatValue({
         value: '1234567',
         turnOffSeparators: true,
-      })
+      }),
     ).toEqual('1234567');
   });
 
@@ -74,7 +74,7 @@ describe('formatValue', () => {
         decimalSeparator: '.',
         groupSeparator: ',',
         turnOffSeparators: true,
-      })
+      }),
     ).toEqual('1234567');
   });
 
@@ -83,7 +83,7 @@ describe('formatValue', () => {
       formatValue({
         value: '123',
         prefix: '£',
-      })
+      }),
     ).toEqual('£123');
   });
 
@@ -91,7 +91,7 @@ describe('formatValue', () => {
     expect(
       formatValue({
         value: '1234567.',
-      })
+      }),
     ).toEqual('1,234,567.');
   });
 
@@ -99,7 +99,7 @@ describe('formatValue', () => {
     expect(
       formatValue({
         value: '1234.567',
-      })
+      }),
     ).toEqual('1,234.567');
   });
 
@@ -108,7 +108,7 @@ describe('formatValue', () => {
       formatValue({
         value: '1234567.89',
         prefix: '£',
-      })
+      }),
     ).toEqual('£1,234,567.89');
   });
 
@@ -117,7 +117,7 @@ describe('formatValue', () => {
       formatValue({
         value: '0',
         prefix: '£',
-      })
+      }),
     ).toEqual('£0');
   });
 
@@ -127,7 +127,7 @@ describe('formatValue', () => {
         formatValue({
           value: '-1234',
           prefix: '£',
-        })
+        }),
       ).toEqual('-£1,234');
     });
 
@@ -136,7 +136,7 @@ describe('formatValue', () => {
         formatValue({
           value: '-',
           prefix: '£',
-        })
+        }),
       ).toEqual('-');
     });
   });
@@ -147,7 +147,7 @@ describe('formatValue', () => {
         value: '-1234',
         groupSeparator: '-',
         prefix: '£',
-      })
+      }),
     ).toEqual('-£1-234');
   });
 
@@ -157,7 +157,7 @@ describe('formatValue', () => {
         value: '-12-34',
         decimalSeparator: '-',
         prefix: '£',
-      })
+      }),
     ).toEqual('-£12-34');
   });
 
@@ -167,7 +167,7 @@ describe('formatValue', () => {
         value: '-123456',
         groupSeparator: '-',
         prefix: '£',
-      })
+      }),
     ).toEqual('-£123-456');
   });
 });

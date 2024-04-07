@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IInventoryCostLotsGLEntriesWriteEvent } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { SaleInvoiceCostGLEntries } from '../SaleInvoiceCostGLEntries';
 
 @Service()
@@ -12,10 +12,7 @@ export class InvoiceCostGLEntriesSubscriber {
    * Attaches events.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.inventory.onCostLotsGLEntriesWrite,
-      this.writeInvoicesCostEntriesOnCostLotsWritten
-    );
+    bus.subscribe(events.inventory.onCostLotsGLEntriesWrite, this.writeInvoicesCostEntriesOnCostLotsWritten);
   }
 
   /**
@@ -27,10 +24,6 @@ export class InvoiceCostGLEntriesSubscriber {
     startingDate,
     tenantId,
   }: IInventoryCostLotsGLEntriesWriteEvent) => {
-    await this.invoiceCostEntries.writeInventoryCostJournalEntries(
-      tenantId,
-      startingDate,
-      trx
-    );
+    await this.invoiceCostEntries.writeInventoryCostJournalEntries(tenantId, startingDate, trx);
   };
 }

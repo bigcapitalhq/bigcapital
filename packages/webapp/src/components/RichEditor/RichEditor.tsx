@@ -29,12 +29,7 @@ export interface RichEditorProps {
   onChange?: (value: string) => void;
   className?: string;
 }
-export const RichEditor = ({
-  value,
-  initialValue,
-  onChange,
-  className,
-}: RichEditorProps) => {
+export const RichEditor = ({ value, initialValue, onChange, className }: RichEditorProps) => {
   const [content, handleChange] = useUncontrolled({
     value,
     initialValue,
@@ -48,11 +43,7 @@ export const RichEditor = ({
 
   return (
     <Box className={className}>
-      <EditorProvider
-        extensions={extensions}
-        content={content}
-        onBlur={handleBlur}
-      />
+      <EditorProvider extensions={extensions} content={content} onBlur={handleBlur} />
     </Box>
   );
 };

@@ -1,6 +1,5 @@
-import { Container } from 'typedi';
 import { Request, Response } from 'express';
-
+import { Container } from 'typedi';
 
 export default (req: Request, res: Response, next: Function) => {
   const Logger = Container.get('logger');
@@ -11,11 +10,10 @@ export default (req: Request, res: Response, next: Function) => {
   }
   if (!req.tenant.initializedAt) {
     Logger.info('[ensure_tenant_initialized_middleware] tenant database not initalized.');
-    
-    return res.boom.badRequest(
-      'Tenant database is not migrated with application schema yut.',
-      { errors: [{ type: 'TENANT.DATABASE.NOT.INITALIZED' }] },
-    );
+
+    return res.boom.badRequest('Tenant database is not migrated with application schema yut.', {
+      errors: [{ type: 'TENANT.DATABASE.NOT.INITALIZED' }],
+    });
   }
   next();
 };

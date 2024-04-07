@@ -13,8 +13,10 @@ export default function TableFooter() {
   } = useContext(TableContext);
 
   // Can't contiunue if the footer is disabled.
-  if (!footer) { return null; }
-  
+  if (!footer) {
+    return null;
+  }
+
   return (
     <div class="tfooter">
       {footerGroups.map((group) => (
@@ -25,9 +27,7 @@ export default function TableFooter() {
                 className: classNames(column.className || '', 'td'),
               })}
             >
-              <div className={'cell-inner'}>
-                {column.render('Footer')}
-              </div>
+              <div className={'cell-inner'}>{column.render('Footer')}</div>
             </div>
           ))}
         </div>

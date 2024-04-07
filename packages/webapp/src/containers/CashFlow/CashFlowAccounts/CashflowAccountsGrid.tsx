@@ -8,16 +8,9 @@ import { Link } from 'react-router-dom';
 import { ContextMenu2 } from '@blueprintjs/popover2';
 import { Menu, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 
-import {
-  AccountAction,
-  CashflowAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { AccountAction, CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 import { DialogsName } from '@/constants/dialogs';
-import {
-  getAddMoneyInOptions,
-  getAddMoneyOutOptions,
-} from '@/constants/cashflowOptions';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants/cashflowOptions';
 
 import { BankAccountsList, BankAccount, If, Icon, T, Can } from '@/components';
 import { useCashFlowAccountsContext } from './CashFlowAccountsProvider';
@@ -37,13 +30,7 @@ const CASHFLOW_SKELETON_N = 4;
  */
 function CashflowAccountsSkeleton() {
   return [...Array(CASHFLOW_SKELETON_N)].map((e, i) => (
-    <BankAccount
-      title={'XXXXX'}
-      code={'XXXXX'}
-      balance={'XXXXXX'}
-      cash={'cash'}
-      loading={true}
-    />
+    <BankAccount title={'XXXXX'} code={'XXXXX'} balance={'XXXXXX'} cash={'cash'} loading={true} />
   ));
 }
 
@@ -115,9 +102,7 @@ function CashflowBankAccount({
         />
       }
     >
-      <CashflowAccountAnchor
-        to={`/cashflow-accounts/${account.id}/transactions`}
-      >
+      <CashflowAccountAnchor to={`/cashflow-accounts/${account.id}/transactions`}>
         <BankAccount
           title={account.name}
           code={account.code}
@@ -144,9 +129,7 @@ function getUpdatedBeforeText(createdAt) {
  * Cashflow accounts grid items.
  */
 function CashflowAccountsGridItems({ accounts }) {
-  return accounts.map((account) => (
-    <CashflowBankAccountEnhanced account={account} />
-  ));
+  return accounts.map((account) => <CashflowBankAccountEnhanced account={account} />);
 }
 
 /**
@@ -167,8 +150,7 @@ function CashflowAccountsEmptyState() {
  */
 export default function CashflowAccountsGrid() {
   // Retrieve list context.
-  const { cashflowAccounts, isCashFlowAccountsLoading } =
-    useCashFlowAccountsContext();
+  const { cashflowAccounts, isCashFlowAccountsLoading } = useCashFlowAccountsContext();
 
   return (
     <CashflowAccountsGridWrap>
@@ -195,9 +177,7 @@ function CashflowAccountMoneyInContextMenu({ onClick }) {
   // Retreives the add money in button options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
 
-  return addMoneyInOptions.map((option) => (
-    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
-  ));
+  return addMoneyInOptions.map((option) => <MenuItem text={option.name} onClick={handleItemClick(option.value)} />);
 }
 
 /**
@@ -210,9 +190,7 @@ function CashflowAccountMoneyOutContextMenu({ onClick }) {
   // Retreives the add money out button options.
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
-  return addMoneyOutOptions.map((option) => (
-    <MenuItem text={option.name} onClick={handleItemClick(option.value)} />
-  ));
+  return addMoneyOutOptions.map((option) => <MenuItem text={option.name} onClick={handleItemClick(option.value)} />);
 }
 
 /**
@@ -230,35 +208,21 @@ function CashflowAccountContextMenu({
 }) {
   return (
     <Menu>
-      <MenuItem
-        icon={<Icon icon="reader-18" />}
-        text={intl.get('view_details')}
-        onClick={safeCallback(onViewClick)}
-      />
+      <MenuItem icon={<Icon icon="reader-18" />} text={intl.get('view_details')} onClick={safeCallback(onViewClick)} />
       <Can I={CashflowAction.Create} a={AbilitySubject.Cashflow}>
         <MenuDivider />
-        <MenuItem
-          text={<T id={'cash_flow_money_in'} />}
-          icon={<Icon icon={'arrow-downward'} iconSize={16} />}
-        >
+        <MenuItem text={<T id={'cash_flow_money_in'} />} icon={<Icon icon={'arrow-downward'} iconSize={16} />}>
           <CashflowAccountMoneyInContextMenu onClick={onMoneyInClick} />
         </MenuItem>
 
-        <MenuItem
-          text={<T id={'cash_flow_money_out'} />}
-          icon={<Icon icon={'arrow-upward'} iconSize={16} />}
-        >
+        <MenuItem text={<T id={'cash_flow_money_out'} />} icon={<Icon icon={'arrow-upward'} iconSize={16} />}>
           <CashflowAccountMoneyOutContextMenu onClick={onMoneyOutClick} />
         </MenuItem>
       </Can>
       <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
         <MenuDivider />
 
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_account')}
-          onClick={safeCallback(onEditClick)}
-        />
+        <MenuItem icon={<Icon icon="pen-18" />} text={intl.get('edit_account')} onClick={safeCallback(onEditClick)} />
       </Can>
       <Can I={AccountAction.Edit} a={AbilitySubject.Account}>
         <MenuDivider />

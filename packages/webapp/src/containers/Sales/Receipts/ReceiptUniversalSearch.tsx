@@ -28,9 +28,7 @@ function ReceiptUniversalSearchSelectComponent({
   return null;
 }
 
-export const ReceiptUniversalSearchSelect = withDrawerActions(
-  ReceiptUniversalSearchSelectComponent,
-);
+export const ReceiptUniversalSearchSelect = withDrawerActions(ReceiptUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -56,10 +54,7 @@ function ReceiptStatus({ receipt }) {
 /**
  * Receipt universal search item.
  */
-export function ReceiptUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function ReceiptUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -67,8 +62,7 @@ export function ReceiptUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.receipt_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.receipt_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_receipt_date}
           </span>
         </div>

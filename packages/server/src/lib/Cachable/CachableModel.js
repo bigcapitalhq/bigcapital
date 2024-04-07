@@ -1,8 +1,7 @@
-import BaseModel from 'models/Model';
 import CacheService from '@/services/Cache';
 
 export default (Model) => {
-  return class CachableModel extends Model{
+  return class CachableModel extends Model {
     static flushCache(key) {
       const modelName = this.name;
 
@@ -13,4 +12,4 @@ export default (Model) => {
       }
     }
   };
-} 
+};

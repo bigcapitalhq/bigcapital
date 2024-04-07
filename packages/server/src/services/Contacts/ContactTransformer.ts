@@ -1,7 +1,7 @@
-import { isNull } from 'lodash';
-import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
 import { IContact } from '@/interfaces';
+import { Transformer } from '@/lib/Transformer/Transformer';
+import { isNull } from 'lodash';
+import { formatNumber } from 'utils';
 
 export default class ContactTransfromer extends Transformer {
   /**
@@ -34,8 +34,6 @@ export default class ContactTransfromer extends Transformer {
    * @returns {string}
    */
   protected formattedOpeningBalanceAt = (contact: IContact): string => {
-    return !isNull(contact.openingBalanceAt)
-      ? this.formatDate(contact.openingBalanceAt)
-      : '';
+    return !isNull(contact.openingBalanceAt) ? this.formatDate(contact.openingBalanceAt) : '';
   };
 }

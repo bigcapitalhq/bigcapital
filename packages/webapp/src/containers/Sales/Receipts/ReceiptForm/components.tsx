@@ -74,16 +74,8 @@ export const ReceiptSyncIncrementSettingsToForm = R.compose(
     // Do not update if the receipt auto-increment mode is disabled.
     if (!receiptAutoIncrement) return;
 
-    setFieldValue(
-      'receipt_number',
-      transactionNumber(receiptNumberPrefix, receiptNextNumber),
-    );
-  }, [
-    setFieldValue,
-    receiptNumberPrefix,
-    receiptAutoIncrement,
-    receiptNextNumber,
-  ]);
+    setFieldValue('receipt_number', transactionNumber(receiptNumberPrefix, receiptNextNumber));
+  }, [setFieldValue, receiptNumberPrefix, receiptAutoIncrement, receiptNextNumber]);
 
   return null;
 });

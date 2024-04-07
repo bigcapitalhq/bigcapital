@@ -1,23 +1,23 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
+import { ServiceError } from '@/exceptions';
+import {
+  ICustomer,
+  ISaleInvoice,
+  ISaleInvoiceSmsDetails,
+  ISaleInvoiceSmsDetailsDTO,
+  InvoiceNotificationType,
+  SMS_NOTIFICATION_KEY,
+} from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import {
-  ISaleInvoice,
-  ISaleInvoiceSmsDetailsDTO,
-  ISaleInvoiceSmsDetails,
-  SMS_NOTIFICATION_KEY,
-  InvoiceNotificationType,
-  ICustomer,
-} from '@/interfaces';
-import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
-import { formatSmsMessage, formatNumber } from 'utils';
 import { TenantMetadata } from '@/system/models';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { formatNumber, formatSmsMessage } from 'utils';
 import SaleNotifyBySms from '../SaleNotifyBySms';
-import { ServiceError } from '@/exceptions';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { ERRORS } from './constants';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { ERRORS } from './constants';
 
 @Service()
 export class SaleInvoiceNotifyBySms {
@@ -44,26 +44,20 @@ export class SaleInvoiceNotifyBySms {
   public notifyBySms = async (
     tenantId: number,
     saleInvoiceId: number,
-    invoiceNotificationType: InvoiceNotificationType
+    invoiceNotificationType: InvoiceNotificationType,
   ) => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('customer');
+    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId).withGraphFetched('customer');
 
     // Validates the givne invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);
 
     // Validate the customer phone number existance and number validation.
-    this.saleSmsNotification.validateCustomerPhoneNumber(
-      saleInvoice.customer.personalPhone
-    );
+    this.saleSmsNotification.validateCustomerPhoneNumber(saleInvoice.customer.personalPhone);
     // Transformes the invoice notification key to sms notification key.
-    const notificationKey = this.transformDTOKeyToNotificationKey(
-      invoiceNotificationType
-    );
+    const notificationKey = this.transformDTOKeyToNotificationKey(invoiceNotificationType);
     // Triggers `onSaleInvoiceNotifySms` event.
     await this.eventPublisher.emitAsync(events.saleInvoice.onNotifySms, {
       tenantId,
@@ -86,13 +80,10 @@ export class SaleInvoiceNotifyBySms {
    * @param {number} saleInvoiceId
    * @returns {Promise<void>}
    */
-  public notifyDetailsBySmsAfterCreation = async (
-    tenantId: number,
-    saleInvoiceId: number
-  ): Promise<void> => {
+  public notifyDetailsBySmsAfterCreation = async (tenantId: number, saleInvoiceId: number): Promise<void> => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
       tenantId,
-      SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
+      SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS,
     );
     // Can't continue if the sms auto-notification is not enabled.
     if (!notification.isNotificationEnabled) return;
@@ -108,21 +99,14 @@ export class SaleInvoiceNotifyBySms {
    */
   private sendSmsNotification = async (
     tenantId: number,
-    notificationType:
-      | SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
-      | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER,
-    invoice: ISaleInvoice & { customer: ICustomer }
+    notificationType: SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER,
+    invoice: ISaleInvoice & { customer: ICustomer },
   ): Promise<void> => {
     const smsClient = this.tenancy.smsClient(tenantId);
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Formates the given sms message.
-    const message = this.formattedInvoiceDetailsMessage(
-      tenantId,
-      notificationType,
-      invoice,
-      tenantMetadata
-    );
+    const message = this.formattedInvoiceDetailsMessage(tenantId, notificationType, invoice, tenantMetadata);
     const phoneNumber = invoice.customer.personalPhone;
 
     // Run the send sms notification message job.
@@ -138,21 +122,12 @@ export class SaleInvoiceNotifyBySms {
    */
   private formattedInvoiceDetailsMessage = (
     tenantId: number,
-    notificationKey:
-      | SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
-      | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER,
+    notificationKey: SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER,
     invoice: ISaleInvoice,
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ): string => {
-    const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
-      tenantId,
-      notificationKey
-    );
-    return this.formatInvoiceDetailsMessage(
-      notification.smsMessage,
-      invoice,
-      tenantMetadata
-    );
+    const notification = this.smsNotificationsSettings.getSmsNotificationMeta(tenantId, notificationKey);
+    return this.formatInvoiceDetailsMessage(notification.smsMessage, invoice, tenantMetadata);
   };
 
   /**
@@ -165,7 +140,7 @@ export class SaleInvoiceNotifyBySms {
   private formatInvoiceDetailsMessage = (
     smsMessage: string,
     invoice: ISaleInvoice & { customer: ICustomer },
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ) => {
     const formattedDueAmount = formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
@@ -193,14 +168,12 @@ export class SaleInvoiceNotifyBySms {
   public smsDetails = async (
     tenantId: number,
     saleInvoiceId: number,
-    invoiceSmsDetailsDTO: ISaleInvoiceSmsDetailsDTO
+    invoiceSmsDetailsDTO: ISaleInvoiceSmsDetailsDTO,
   ): Promise<ISaleInvoiceSmsDetails> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const saleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphFetched('customer');
+    const saleInvoice = await SaleInvoice.query().findById(saleInvoiceId).withGraphFetched('customer');
 
     // Validates the sale invoice existance.
     this.validateSaleInvoiceExistance(saleInvoice);
@@ -209,16 +182,9 @@ export class SaleInvoiceNotifyBySms {
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Transformes the invoice notification key to sms notification key.
-    const notificationKey = this.transformDTOKeyToNotificationKey(
-      invoiceSmsDetailsDTO.notificationKey
-    );
+    const notificationKey = this.transformDTOKeyToNotificationKey(invoiceSmsDetailsDTO.notificationKey);
     // Formates the given sms message.
-    const smsMessage = this.formattedInvoiceDetailsMessage(
-      tenantId,
-      notificationKey,
-      saleInvoice,
-      tenantMetadata
-    );
+    const smsMessage = this.formattedInvoiceDetailsMessage(tenantId, notificationKey, saleInvoice, tenantMetadata);
 
     return {
       customerName: saleInvoice.customer.displayName,
@@ -234,18 +200,13 @@ export class SaleInvoiceNotifyBySms {
    *   | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER}
    */
   private transformDTOKeyToNotificationKey = (
-    invoiceNotifKey: string
-  ):
-    | SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
-    | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER => {
+    invoiceNotifKey: string,
+  ): SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS | SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER => {
     const invoiceNotifKeyPairs = {
       details: SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS,
       reminder: SMS_NOTIFICATION_KEY.SALE_INVOICE_REMINDER,
     };
-    return (
-      invoiceNotifKeyPairs[invoiceNotifKey] ||
-      SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS
-    );
+    return invoiceNotifKeyPairs[invoiceNotifKey] || SMS_NOTIFICATION_KEY.SALE_INVOICE_DETAILS;
   };
 
   /**

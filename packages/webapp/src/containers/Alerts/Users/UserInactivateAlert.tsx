@@ -41,14 +41,9 @@ function UserInactivateAlert({
             data: { errors },
           },
         }) => {
-          if (
-            errors.find(
-              (e) => e.type === 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER',
-            )
-          ) {
+          if (errors.find((e) => e.type === 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER')) {
             AppToaster.show({
-              message:
-                'You could not activate/inactivate the same authorized user.',
+              message: 'You could not activate/inactivate the same authorized user.',
               intent: Intent.DANGER,
             });
           }
@@ -77,7 +72,4 @@ function UserInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(UserInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(UserInactivateAlert);

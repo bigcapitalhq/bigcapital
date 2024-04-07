@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { query, check, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import { WarehouseTransferApplication } from '@/services/Warehouses/WarehousesTransfers/WarehouseTransferApplication';
-import {
-  Features,
-  ICreateWarehouseTransferDTO,
-  IEditWarehouseTransferDTO,
-} from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
+import { ServiceError } from '@/exceptions';
+import { Features, ICreateWarehouseTransferDTO, IEditWarehouseTransferDTO } from '@/interfaces';
+import { WarehouseTransferApplication } from '@/services/Warehouses/WarehousesTransfers/WarehouseTransferApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class WarehousesTransfers extends BaseController {
@@ -44,7 +40,7 @@ export class WarehousesTransfers extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.createWarehouseTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
@@ -71,21 +67,21 @@ export class WarehousesTransfers extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.editWarehouseTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.put(
       '/:id/initiate',
       FeatureActivationGuard(Features.WAREHOUSES),
       [param('id').exists().isInt().toInt()],
       this.asyncMiddleware(this.initiateTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.put(
       '/:id/transferred',
       FeatureActivationGuard(Features.WAREHOUSES),
       [param('id').exists().isInt().toInt()],
       this.asyncMiddleware(this.deliverTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
@@ -104,14 +100,14 @@ export class WarehousesTransfers extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.getWarehousesTransfers),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/:id',
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getWarehouseTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.delete(
       '/:id',
@@ -119,7 +115,7 @@ export class WarehousesTransfers extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteWarehouseTransfer),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -131,25 +127,18 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private createWarehouseTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private createWarehouseTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
-    const createWareouseTransfer: ICreateWarehouseTransferDTO =
-      this.matchedBodyData(req);
+    const createWareouseTransfer: ICreateWarehouseTransferDTO = this.matchedBodyData(req);
 
     try {
-      const warehouse =
-        await this.warehouseTransferApplication.createWarehouseTransfer(
-          tenantId,
-          createWareouseTransfer
-        );
+      const warehouse = await this.warehouseTransferApplication.createWarehouseTransfer(
+        tenantId,
+        createWareouseTransfer,
+      );
       return res.status(200).send({
         id: warehouse.id,
-        message:
-          'The warehouse transfer transaction has been created successfully.',
+        message: 'The warehouse transfer transaction has been created successfully.',
       });
     } catch (error) {
       next(error);
@@ -163,27 +152,20 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private editWarehouseTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private editWarehouseTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseTransferId } = req.params;
-    const editWarehouseTransferDTO: IEditWarehouseTransferDTO =
-      this.matchedBodyData(req);
+    const editWarehouseTransferDTO: IEditWarehouseTransferDTO = this.matchedBodyData(req);
 
     try {
-      const warehouseTransfer =
-        await this.warehouseTransferApplication.editWarehouseTransfer(
-          tenantId,
-          warehouseTransferId,
-          editWarehouseTransferDTO
-        );
+      const warehouseTransfer = await this.warehouseTransferApplication.editWarehouseTransfer(
+        tenantId,
+        warehouseTransferId,
+        editWarehouseTransferDTO,
+      );
       return res.status(200).send({
         id: warehouseTransfer.id,
-        message:
-          'The warehouse transfer transaction has been edited successfully.',
+        message: 'The warehouse transfer transaction has been edited successfully.',
       });
     } catch (error) {
       next(error);
@@ -197,22 +179,14 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private deleteWarehouseTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteWarehouseTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseTransferId } = req.params;
 
     try {
-      await this.warehouseTransferApplication.deleteWarehouseTransfer(
-        tenantId,
-        warehouseTransferId
-      );
+      await this.warehouseTransferApplication.deleteWarehouseTransfer(tenantId, warehouseTransferId);
       return res.status(200).send({
-        message:
-          'The warehouse transfer transaction has been deleted successfully.',
+        message: 'The warehouse transfer transaction has been deleted successfully.',
       });
     } catch (error) {
       next(error);
@@ -226,20 +200,15 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private getWarehouseTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getWarehouseTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseTransferId } = req.params;
 
     try {
-      const warehouseTransfer =
-        await this.warehouseTransferApplication.getWarehouseTransfer(
-          tenantId,
-          warehouseTransferId
-        );
+      const warehouseTransfer = await this.warehouseTransferApplication.getWarehouseTransfer(
+        tenantId,
+        warehouseTransferId,
+      );
       return res.status(200).send({ data: warehouseTransfer });
     } catch (error) {
       next(error);
@@ -253,11 +222,7 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private getWarehousesTransfers = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getWarehousesTransfers = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const filterDTO = {
       sortOrder: 'desc',
@@ -268,10 +233,7 @@ export class WarehousesTransfers extends BaseController {
     };
     try {
       const { warehousesTransfers, pagination, filter } =
-        await this.warehouseTransferApplication.getWarehousesTransfers(
-          tenantId,
-          filterDTO
-        );
+        await this.warehouseTransferApplication.getWarehousesTransfers(tenantId, filterDTO);
 
       return res.status(200).send({
         data: warehousesTransfers,
@@ -290,19 +252,12 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private initiateTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private initiateTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseTransferId } = req.params;
 
     try {
-      await this.warehouseTransferApplication.initiateWarehouseTransfer(
-        tenantId,
-        warehouseTransferId
-      );
+      await this.warehouseTransferApplication.initiateWarehouseTransfer(tenantId, warehouseTransferId);
       return res.status(200).send({
         id: warehouseTransferId,
         message: 'The given warehouse transfer has been initialized.',
@@ -319,19 +274,12 @@ export class WarehousesTransfers extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  private deliverTransfer = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deliverTransfer = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseTransferId } = req.params;
 
     try {
-      await this.warehouseTransferApplication.transferredWarehouseTransfer(
-        tenantId,
-        warehouseTransferId
-      );
+      await this.warehouseTransferApplication.transferredWarehouseTransfer(tenantId, warehouseTransferId);
       return res.status(200).send({
         id: warehouseTransferId,
         message: 'The given warehouse transfer has been delivered.',
@@ -348,18 +296,11 @@ export class WarehousesTransfers extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME') {
         return res.status(400).send({
-          errors: [
-            { type: 'WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME', code: 100 },
-          ],
+          errors: [{ type: 'WAREHOUSES_TRANSFER_SHOULD_NOT_BE_SAME', code: 100 }],
         });
       }
       if (error.errorType === 'FROM_WAREHOUSE_NOT_FOUND') {
@@ -379,16 +320,12 @@ export class WarehousesTransfers extends BaseController {
       }
       if (error.errorType === 'WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY') {
         return res.status(400).send({
-          errors: [
-            { type: 'WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY', code: 500 },
-          ],
+          errors: [{ type: 'WAREHOUSE_TRANSFER_ITEMS_SHOULD_BE_INVENTORY', code: 500 }],
         });
       }
       if (error.errorType === 'WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED') {
         return res.status(400).send({
-          errors: [
-            { type: 'WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED', code: 600 },
-          ],
+          errors: [{ type: 'WAREHOUSE_TRANSFER_ALREADY_TRANSFERRED', code: 600 }],
         });
       }
       if (error.errorType === 'WAREHOUSE_TRANSFER_ALREADY_INITIATED') {

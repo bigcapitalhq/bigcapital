@@ -37,20 +37,19 @@ export function universalSearchResetResourceType() {
   };
 }
 
-
 export function universalSearchSetSelectedItem(resourceType, resourceId) {
   return {
     type: t.UNIVERSAL_SEARCH_SET_ITEM_SELECT,
     payload: {
       resourceType,
-      resourceId
-    }
+      resourceId,
+    },
   };
 }
 
 export function universalSearchResetSelectedItem() {
   return {
     type: t.UNIVERSAL_SEARCH_RESET_ITEM_SELECT,
-    payload: {}
+    payload: {},
   };
 }

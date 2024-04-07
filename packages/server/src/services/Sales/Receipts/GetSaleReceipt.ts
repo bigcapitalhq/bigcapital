@@ -1,7 +1,7 @@
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { SaleReceiptTransformer } from './SaleReceiptTransformer';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
@@ -33,10 +33,6 @@ export class GetSaleReceipt {
     // Valdiates the sale receipt existance.
     this.validators.validateReceiptExistance(saleReceipt);
 
-    return this.transformer.transform(
-      tenantId,
-      saleReceipt,
-      new SaleReceiptTransformer()
-    );
+    return this.transformer.transform(tenantId, saleReceipt, new SaleReceiptTransformer());
   }
 }

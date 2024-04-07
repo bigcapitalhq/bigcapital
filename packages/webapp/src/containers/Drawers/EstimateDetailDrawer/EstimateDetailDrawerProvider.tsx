@@ -17,10 +17,7 @@ function EstimateDetailDrawerProvider({ estimateId, ...props }) {
   const { featureCan } = useFeatureCan();
 
   // Fetches the estimate by the given id.
-  const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
-    estimateId,
-    { enabled: !!estimateId },
-  );
+  const { data: estimate, isLoading: isEstimateLoading } = useEstimate(estimateId, { enabled: !!estimateId });
 
   const provider = {
     estimateId,
@@ -47,7 +44,6 @@ function EstimateDetailDrawerProvider({ estimateId, ...props }) {
   );
 }
 
-const useEstimateDetailDrawerContext = () =>
-  React.useContext(EstimateDetailDrawerContext);
+const useEstimateDetailDrawerContext = () => React.useContext(EstimateDetailDrawerContext);
 
 export { EstimateDetailDrawerProvider, useEstimateDetailDrawerContext };

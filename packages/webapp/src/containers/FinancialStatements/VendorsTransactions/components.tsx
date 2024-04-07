@@ -1,24 +1,14 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
 import intl from 'react-intl-universal';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
 
 import { AppToaster, If, Stack } from '@/components';
 import { useVendorsTransactionsContext } from './VendorsTransactionsProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { getColumnWidth } from '@/utils';
-import {
-  useVendorsTransactionsCsvExport,
-  useVendorsTransactionsXlsxExport,
-} from '@/hooks/query';
+import { useVendorsTransactionsCsvExport, useVendorsTransactionsXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve vendors transactions columns.
@@ -176,10 +166,7 @@ export function VendorTransactionsExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

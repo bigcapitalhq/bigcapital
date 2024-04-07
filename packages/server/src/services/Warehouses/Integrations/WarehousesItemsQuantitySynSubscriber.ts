@@ -1,11 +1,8 @@
+import { IInventoryTransactionsCreatedPayload, IInventoryTransactionsDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import { Service, Inject } from 'typedi';
-import { WarehousesItemsQuantitySync } from './WarehousesItemsQuantitySync';
-import {
-  IInventoryTransactionsCreatedPayload,
-  IInventoryTransactionsDeletedPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { WarehousesSettings } from '../WarehousesSettings';
+import { WarehousesItemsQuantitySync } from './WarehousesItemsQuantitySync';
 
 @Service()
 export class WarehousesItemsQuantitySyncSubscriber {
@@ -21,11 +18,11 @@ export class WarehousesItemsQuantitySyncSubscriber {
   public attach(bus) {
     bus.subscribe(
       events.inventory.onInventoryTransactionsCreated,
-      this.syncWarehousesItemsQuantityOnInventoryTransCreated
+      this.syncWarehousesItemsQuantityOnInventoryTransCreated,
     );
     bus.subscribe(
       events.inventory.onInventoryTransactionsDeleted,
-      this.syncWarehousesItemsQuantityOnInventoryTransDeleted
+      this.syncWarehousesItemsQuantityOnInventoryTransDeleted,
     );
     return bus;
   }
@@ -47,7 +44,7 @@ export class WarehousesItemsQuantitySyncSubscriber {
     await this.warehousesItemsQuantitySync.mutateWarehousesItemsQuantityFromTransactions(
       tenantId,
       inventoryTransactions,
-      trx
+      trx,
     );
   };
 
@@ -68,7 +65,7 @@ export class WarehousesItemsQuantitySyncSubscriber {
     await this.warehousesItemsQuantitySync.reverseWarehousesItemsQuantityFromTransactions(
       tenantId,
       oldInventoryTransactions,
-      trx
+      trx,
     );
   };
 }

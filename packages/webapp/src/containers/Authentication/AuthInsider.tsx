@@ -7,17 +7,10 @@ import { AuthInsiderContent, AuthInsiderCopyright } from './_components';
 /**
  * Authentication insider page.
  */
-export default function AuthInsider({
-  logo = true,
-  copyright = true,
-  children,
-  classNames,
-}) {
+export default function AuthInsider({ logo = true, copyright = true, children, classNames }) {
   return (
     <AuthInsiderContent>
-      <AuthInsiderContentWrap className={classNames?.content}>
-        {children}
-      </AuthInsiderContentWrap>
+      <AuthInsiderContentWrap className={classNames?.content}>{children}</AuthInsiderContentWrap>
 
       {copyright && (
         <AuthInsiderCopyright className={classNames?.copyrightWrap}>

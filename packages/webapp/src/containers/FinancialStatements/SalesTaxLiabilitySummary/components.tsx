@@ -1,21 +1,11 @@
 // @ts-nocheck
 import { useRef } from 'react';
 import classNames from 'classnames';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import { useSalesTaxLiabilitySummaryContext } from './SalesTaxLiabilitySummaryBoot';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { AppToaster, Stack } from '@/components';
-import {
-  useSalesTaxLiabilitySummaryCsvExport,
-  useSalesTaxLiabilitySummaryXlsxExport,
-} from '@/hooks/query';
+import { useSalesTaxLiabilitySummaryCsvExport, useSalesTaxLiabilitySummaryXlsxExport } from '@/hooks/query';
 import { useSalesByItemsContext } from '../SalesByItems/SalesByItemProvider';
 
 /**
@@ -58,49 +48,43 @@ export function SalesTaxLiabilityExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useSalesTaxLiabilitySummaryXlsxExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useSalesTaxLiabilitySummaryXlsxExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useSalesTaxLiabilitySummaryCsvExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: csvExport } = useSalesTaxLiabilitySummaryCsvExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
     csvExport();
@@ -112,10 +96,7 @@ export function SalesTaxLiabilityExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

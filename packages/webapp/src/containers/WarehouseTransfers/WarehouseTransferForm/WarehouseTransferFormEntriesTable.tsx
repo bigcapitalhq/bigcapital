@@ -25,8 +25,7 @@ export default function WarehouseTransferFormEntriesTable({
   sourceWarehouseId,
 }) {
   // Fetch the table row.
-  const { newRowMeta, setTableRow, resetTableRow, cellsLoading } =
-    useFetchItemWarehouseQuantity();
+  const { newRowMeta, setTableRow, resetTableRow, cellsLoading } = useFetchItemWarehouseQuantity();
 
   // Warehouse transfer provider context.
   const { isItemsCostFetching } = useWarehouseTransferFormContext();
@@ -67,14 +66,7 @@ export default function WarehouseTransferFormEntriesTable({
 
       saveInvoke(onUpdateData, newRows);
     },
-    [
-      entries,
-      defaultEntry,
-      onUpdateData,
-      destinationWarehouseId,
-      sourceWarehouseId,
-      setTableRow,
-    ],
+    [entries, defaultEntry, onUpdateData, destinationWarehouseId, sourceWarehouseId, setTableRow],
   );
   // Handles click remove datatable row.
   const handleRemoveRow = React.useCallback(

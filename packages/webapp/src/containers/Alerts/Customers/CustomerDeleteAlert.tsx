@@ -2,11 +2,7 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { transformErrors } from '@/containers/Customers/utils';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
@@ -76,16 +72,10 @@ function CustomerDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_customer_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_customer_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(CustomerDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(CustomerDeleteAlert);

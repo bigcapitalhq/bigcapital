@@ -1,16 +1,12 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import { Knex } from 'knex';
-import {
-  IManualJournal,
-  IManualJournalEventPublishedPayload,
-  IManualJournalPublishingPayload,
-} from '@/interfaces';
+import { IManualJournal, IManualJournalEventPublishedPayload, IManualJournalPublishingPayload } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import UnitOfWork from '@/services/UnitOfWork';
 import { CommandManualJournalValidators } from './CommandManualJournalValidators';
 
 @Service()
@@ -42,16 +38,11 @@ export class PublishManualJournal {
    * @param {number} tenantId - Tenant id.
    * @param {number} manualJournalId - Manual journal id.
    */
-  public async publishManualJournal(
-    tenantId: number,
-    manualJournalId: number
-  ): Promise<void> {
+  public async publishManualJournal(tenantId: number, manualJournalId: number): Promise<void> {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
     // Find the old manual journal or throw not found error.
-    const oldManualJournal = await ManualJournal.query()
-      .findById(manualJournalId)
-      .throwIfNotFound();
+    const oldManualJournal = await ManualJournal.query().findById(manualJournalId).throwIfNotFound();
 
     // Authorize the manual journal publishing.
     await this.authorize(tenantId, oldManualJournal);
@@ -70,9 +61,7 @@ export class PublishManualJournal {
         publishedAt: moment().toMySqlDateTime(),
       });
       // Retrieve the manual journal with enrties after modification.
-      const manualJournal = await ManualJournal.query()
-        .findById(manualJournalId)
-        .withGraphFetched('entries');
+      const manualJournal = await ManualJournal.query().findById(manualJournalId).withGraphFetched('entries');
 
       // Triggers `onManualJournalPublishedBulk` event.
       await this.eventPublisher.emitAsync(events.manualJournals.onPublished, {

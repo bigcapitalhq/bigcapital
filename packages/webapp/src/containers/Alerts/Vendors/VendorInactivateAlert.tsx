@@ -55,14 +55,9 @@ function VendorInactivateAlert({
       onConfirm={handleConfirmVendorInactive}
       loading={isLoading}
     >
-      <p>
-        {intl.get('vendor.alert.are_you_sure_want_to_inactivate_this_vendor')}
-      </p>
+      <p>{intl.get('vendor.alert.are_you_sure_want_to_inactivate_this_vendor')}</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(VendorInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(VendorInactivateAlert);

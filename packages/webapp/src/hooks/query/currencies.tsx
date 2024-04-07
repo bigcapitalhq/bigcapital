@@ -27,17 +27,13 @@ export function useEditCurrency(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([currencyCode, values]) =>
-      apiRequest.post(`currencies/${currencyCode}`, values),
-    {
-      onSuccess: () => {
-        // Invalidate currencies.
-        queryClient.invalidateQueries(t.CURRENCIES);
-      },
-      ...props,
+  return useMutation(([currencyCode, values]) => apiRequest.post(`currencies/${currencyCode}`, values), {
+    onSuccess: () => {
+      // Invalidate currencies.
+      queryClient.invalidateQueries(t.CURRENCIES);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -47,16 +43,13 @@ export function useDeleteCurrency(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (currencyCode) => apiRequest.delete(`currencies/${currencyCode}`),
-    {
-      onSuccess: () => {
-        // Invalidate currencies.
-        queryClient.invalidateQueries(t.CURRENCIES);
-      },
-      ...props,
+  return useMutation((currencyCode) => apiRequest.delete(`currencies/${currencyCode}`), {
+    onSuccess: () => {
+      // Invalidate currencies.
+      queryClient.invalidateQueries(t.CURRENCIES);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -69,7 +62,7 @@ export function useCurrencies(props) {
     {
       select: (res) => res.data.currencies,
       defaultData: [],
-      ...props
+      ...props,
     },
   );
 }

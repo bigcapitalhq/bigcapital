@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
 import { ISaleReceipt } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { Service } from 'typedi';
 import { formatNumber } from 'utils';
 import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
 
@@ -11,13 +11,7 @@ export class SaleReceiptTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedSubtotal',
-      'formattedAmount',
-      'formattedReceiptDate',
-      'formattedClosedAtDate',
-      'entries',
-    ];
+    return ['formattedSubtotal', 'formattedAmount', 'formattedReceiptDate', 'formattedClosedAtDate', 'entries'];
   };
 
   /**

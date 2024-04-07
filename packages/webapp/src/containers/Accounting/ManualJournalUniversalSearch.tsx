@@ -24,9 +24,7 @@ function JournalUniversalSearchSelectComponent({
   return null;
 }
 
-export const JournalUniversalSearchSelectAction = withDrawerActions(
-  JournalUniversalSearchSelectComponent,
-);
+export const JournalUniversalSearchSelectAction = withDrawerActions(JournalUniversalSearchSelectComponent);
 
 /**
  * Mappes the manual journal item to search item.

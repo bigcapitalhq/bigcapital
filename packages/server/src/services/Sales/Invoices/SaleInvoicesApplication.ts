@@ -16,18 +16,18 @@ import {
 import { Inject, Service } from 'typedi';
 import { CreateSaleInvoice } from './CreateSaleInvoice';
 import { DeleteSaleInvoice } from './DeleteSaleInvoice';
-import { GetSaleInvoice } from './GetSaleInvoice';
-import { EditSaleInvoice } from './EditSaleInvoice';
-import { GetSaleInvoices } from './GetSaleInvoices';
 import { DeliverSaleInvoice } from './DeliverSaleInvoice';
-import { GetSaleInvoicesPayable } from './GetSaleInvoicesPayable';
-import { WriteoffSaleInvoice } from './WriteoffSaleInvoice';
-import { SaleInvoicePdf } from './SaleInvoicePdf';
+import { EditSaleInvoice } from './EditSaleInvoice';
 import { GetInvoicePaymentsService } from './GetInvoicePaymentsService';
-import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
-import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
-import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
+import { GetSaleInvoice } from './GetSaleInvoice';
 import { GetSaleInvoiceMailReminder } from './GetSaleInvoiceMailReminder';
+import { GetSaleInvoices } from './GetSaleInvoices';
+import { GetSaleInvoicesPayable } from './GetSaleInvoicesPayable';
+import { SaleInvoiceNotifyBySms } from './SaleInvoiceNotifyBySms';
+import { SaleInvoicePdf } from './SaleInvoicePdf';
+import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
+import { SendInvoiceMailReminder } from './SendSaleInvoiceMailReminder';
+import { WriteoffSaleInvoice } from './WriteoffSaleInvoice';
 
 @Service()
 export class SaleInvoiceApplication {
@@ -83,13 +83,9 @@ export class SaleInvoiceApplication {
   public createSaleInvoice(
     tenantId: number,
     saleInvoiceDTO: ISaleInvoiceCreateDTO,
-    authorizedUser: ITenantUser
+    authorizedUser: ITenantUser,
   ): Promise<ISaleInvoice> {
-    return this.createSaleInvoiceService.createSaleInvoice(
-      tenantId,
-      saleInvoiceDTO,
-      authorizedUser
-    );
+    return this.createSaleInvoiceService.createSaleInvoice(tenantId, saleInvoiceDTO, authorizedUser);
   }
 
   /**
@@ -104,14 +100,9 @@ export class SaleInvoiceApplication {
     tenantId: number,
     saleInvoiceId: number,
     saleInvoiceDTO: ISaleInvoiceEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) {
-    return this.editSaleInvoiceService.editSaleInvoice(
-      tenantId,
-      saleInvoiceId,
-      saleInvoiceDTO,
-      authorizedUser
-    );
+    return this.editSaleInvoiceService.editSaleInvoice(tenantId, saleInvoiceId, saleInvoiceDTO, authorizedUser);
   }
 
   /**
@@ -121,16 +112,8 @@ export class SaleInvoiceApplication {
    * @param {ISystemUser} authorizedUser
    * @returns {Promise<void>}
    */
-  public deleteSaleInvoice(
-    tenantId: number,
-    saleInvoiceId: number,
-    authorizedUser: ISystemUser
-  ): Promise<void> {
-    return this.deleteSaleInvoiceService.deleteSaleInvoice(
-      tenantId,
-      saleInvoiceId,
-      authorizedUser
-    );
+  public deleteSaleInvoice(tenantId: number, saleInvoiceId: number, authorizedUser: ISystemUser): Promise<void> {
+    return this.deleteSaleInvoiceService.deleteSaleInvoice(tenantId, saleInvoiceId, authorizedUser);
   }
 
   /**
@@ -141,7 +124,7 @@ export class SaleInvoiceApplication {
    */
   public getSaleInvoices(
     tenantId: number,
-    filterDTO: ISalesInvoicesFilter
+    filterDTO: ISalesInvoicesFilter,
   ): Promise<{
     salesInvoices: ISaleInvoice[];
     pagination: IPaginationMeta;
@@ -157,16 +140,8 @@ export class SaleInvoiceApplication {
    * @param {ISystemUser} authorizedUser -
    * @return {Promise<ISaleInvoice>}
    */
-  public getSaleInvoice(
-    tenantId: number,
-    saleInvoiceId: number,
-    authorizedUser: ISystemUser
-  ) {
-    return this.getSaleInvoiceService.getSaleInvoice(
-      tenantId,
-      saleInvoiceId,
-      authorizedUser
-    );
+  public getSaleInvoice(tenantId: number, saleInvoiceId: number, authorizedUser: ISystemUser) {
+    return this.getSaleInvoiceService.getSaleInvoice(tenantId, saleInvoiceId, authorizedUser);
   }
 
   /**
@@ -176,16 +151,8 @@ export class SaleInvoiceApplication {
    * @param {ISystemUser} authorizedUser
    * @returns {}
    */
-  public deliverSaleInvoice(
-    tenantId: number,
-    saleInvoiceId: number,
-    authorizedUser: ISystemUser
-  ) {
-    return this.deliverSaleInvoiceService.deliverSaleInvoice(
-      tenantId,
-      saleInvoiceId,
-      authorizedUser
-    );
+  public deliverSaleInvoice(tenantId: number, saleInvoiceId: number, authorizedUser: ISystemUser) {
+    return this.deliverSaleInvoiceService.deliverSaleInvoice(tenantId, saleInvoiceId, authorizedUser);
   }
 
   /**
@@ -195,10 +162,7 @@ export class SaleInvoiceApplication {
    * @returns
    */
   public getReceivableSaleInvoices(tenantId: number, customerId?: number) {
-    return this.getReceivableSaleInvoicesService.getPayableInvoices(
-      tenantId,
-      customerId
-    );
+    return this.getReceivableSaleInvoicesService.getPayableInvoices(tenantId, customerId);
   }
 
   /**
@@ -211,13 +175,9 @@ export class SaleInvoiceApplication {
   public writeOff = async (
     tenantId: number,
     saleInvoiceId: number,
-    writeoffDTO: ISaleInvoiceWriteoffDTO
+    writeoffDTO: ISaleInvoiceWriteoffDTO,
   ): Promise<ISaleInvoice> => {
-    return this.writeoffInvoiceService.writeOff(
-      tenantId,
-      saleInvoiceId,
-      writeoffDTO
-    );
+    return this.writeoffInvoiceService.writeOff(tenantId, saleInvoiceId, writeoffDTO);
   };
 
   /**
@@ -226,14 +186,8 @@ export class SaleInvoiceApplication {
    * @param {number} saleInvoiceId
    * @returns {Promise<ISaleInvoice>}
    */
-  public cancelWrittenoff = (
-    tenantId: number,
-    saleInvoiceId: number
-  ): Promise<ISaleInvoice> => {
-    return this.writeoffInvoiceService.cancelWrittenoff(
-      tenantId,
-      saleInvoiceId
-    );
+  public cancelWrittenoff = (tenantId: number, saleInvoiceId: number): Promise<ISaleInvoice> => {
+    return this.writeoffInvoiceService.cancelWrittenoff(tenantId, saleInvoiceId);
   };
 
   /**
@@ -242,10 +196,7 @@ export class SaleInvoiceApplication {
    * @param {number} invoiceId - Invoice id.
    */
   public getInvoicePayments = async (tenantId: number, invoiceId: number) => {
-    return this.getInvoicePaymentsService.getInvoicePayments(
-      tenantId,
-      invoiceId
-    );
+    return this.getInvoicePaymentsService.getInvoicePayments(tenantId, invoiceId);
   };
 
   /**
@@ -267,13 +218,9 @@ export class SaleInvoiceApplication {
   public notifySaleInvoiceBySms = async (
     tenantId: number,
     saleInvoiceId: number,
-    invoiceNotificationType: InvoiceNotificationType
+    invoiceNotificationType: InvoiceNotificationType,
   ) => {
-    return this.invoiceSms.notifyBySms(
-      tenantId,
-      saleInvoiceId,
-      invoiceNotificationType
-    );
+    return this.invoiceSms.notifyBySms(tenantId, saleInvoiceId, invoiceNotificationType);
   };
 
   /**
@@ -284,13 +231,9 @@ export class SaleInvoiceApplication {
   public getSaleInvoiceSmsDetails = async (
     tenantId: number,
     saleInvoiceId: number,
-    invoiceSmsDetailsDTO: ISaleInvoiceSmsDetailsDTO
+    invoiceSmsDetailsDTO: ISaleInvoiceSmsDetailsDTO,
   ): Promise<ISaleInvoiceSmsDetails> => {
-    return this.invoiceSms.smsDetails(
-      tenantId,
-      saleInvoiceId,
-      invoiceSmsDetailsDTO
-    );
+    return this.invoiceSms.smsDetails(tenantId, saleInvoiceId, invoiceSmsDetailsDTO);
   };
 
   /**
@@ -300,10 +243,7 @@ export class SaleInvoiceApplication {
    * @returns {}
    */
   public getSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number) {
-    return this.sendInvoiceReminderService.getMailOption(
-      tenantId,
-      saleInvoiceId
-    );
+    return this.sendInvoiceReminderService.getMailOption(tenantId, saleInvoiceId);
   }
 
   /**
@@ -312,16 +252,8 @@ export class SaleInvoiceApplication {
    * @param {number} saleInvoiceId
    * @returns {}
    */
-  public sendSaleInvoiceMailReminder(
-    tenantId: number,
-    saleInvoiceId: number,
-    messageDTO: SendInvoiceMailDTO
-  ) {
-    return this.sendInvoiceReminderService.triggerMail(
-      tenantId,
-      saleInvoiceId,
-      messageDTO
-    );
+  public sendSaleInvoiceMailReminder(tenantId: number, saleInvoiceId: number, messageDTO: SendInvoiceMailDTO) {
+    return this.sendInvoiceReminderService.triggerMail(tenantId, saleInvoiceId, messageDTO);
   }
 
   /**
@@ -331,16 +263,8 @@ export class SaleInvoiceApplication {
    * @param {SendInvoiceMailDTO} messageDTO
    * @returns {Promise<void>}
    */
-  public sendSaleInvoiceMail(
-    tenantId: number,
-    saleInvoiceId: number,
-    messageDTO: SendInvoiceMailDTO
-  ) {
-    return this.sendSaleInvoiceMailService.triggerMail(
-      tenantId,
-      saleInvoiceId,
-      messageDTO
-    );
+  public sendSaleInvoiceMail(tenantId: number, saleInvoiceId: number, messageDTO: SendInvoiceMailDTO) {
+    return this.sendSaleInvoiceMailService.triggerMail(tenantId, saleInvoiceId, messageDTO);
   }
 
   /**
@@ -350,9 +274,6 @@ export class SaleInvoiceApplication {
    * @returns {Promise<SendInvoiceMailDTO>}
    */
   public getSaleInvoiceMail(tenantId: number, saleInvoiceid: number) {
-    return this.sendSaleInvoiceMailService.getMailOption(
-      tenantId,
-      saleInvoiceid
-    );
+    return this.sendSaleInvoiceMailService.getMailOption(tenantId, saleInvoiceid);
   }
 }

@@ -1,16 +1,10 @@
-import { request, expect, createUser } from '~/testInit';
-import { hashPassword } from 'utils';
 import knex from '@/database/knex';
-import {
-  tenantWebsite,
-  tenantFactory,
-  systemFactory,
-  loginRes
-} from '~/dbInit';
-import TenantUser from 'models/TenantUser';
 import PasswordReset from '@/system/models/PasswordReset';
 import SystemUser from '@/system/models/SystemUser';
-
+import TenantUser from 'models/TenantUser';
+import { hashPassword } from 'utils';
+import { systemFactory, tenantWebsite } from '~/dbInit';
+import { createUser, expect, request } from '~/testInit';
 
 describe('routes: /auth/', () => {
   describe('POST `/api/auth/login`', () => {
@@ -64,7 +58,8 @@ describe('routes: /auth/', () => {
         password: 'admin',
       });
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'INVALID_DETAILS', code: 100,
+        type: 'INVALID_DETAILS',
+        code: 100,
       });
     });
 
@@ -80,7 +75,8 @@ describe('routes: /auth/', () => {
       });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'USER_INACTIVE', code: 110,
+        type: 'USER_INACTIVE',
+        code: 110,
       });
     });
 
@@ -117,11 +113,12 @@ describe('routes: /auth/', () => {
         crediential: user.email,
         password: 'admin',
       });
-      const foundUserAfterUpdate = await TenantUser.tenant().query()
+      const foundUserAfterUpdate = await TenantUser.tenant()
+        .query()
         .where('email', user.email)
         .where('first_name', user.first_name)
         .first();
- 
+
       expect(res.status).equals(200);
       expect(foundUserAfterUpdate.lastLoginAt).to.not.be.null;
     });
@@ -151,7 +148,8 @@ describe('routes: /auth/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'EMAIL.NOT.REGISTERED', code: 200,
+        type: 'EMAIL.NOT.REGISTERED',
+        code: 200,
       });
     });
 
@@ -196,9 +194,7 @@ describe('routes: /auth/', () => {
 
     // });
 
-    it('Should response forbidden if the token was expired.', () => {
-
-    });
+    it('Should response forbidden if the token was expired.', () => {});
 
     it('Should `password` be required.', async () => {
       const user = await createUser(tenantWebsite);
@@ -206,9 +202,7 @@ describe('routes: /auth/', () => {
         email: user.email,
       });
 
-      const res = await request()
-        .post(`/api/auth/reset/${passwordReset.token}`)
-        .send();
+      const res = await request().post(`/api/auth/reset/${passwordReset.token}`).send();
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -223,11 +217,9 @@ describe('routes: /auth/', () => {
         email: user.email,
       });
 
-      const res = await request()
-        .post(`/api/auth/reset/${passwordReset.token}`)
-        .send({
-          password: '123123',
-        });
+      const res = await request().post(`/api/auth/reset/${passwordReset.token}`).send({
+        password: '123123',
+      });
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
@@ -242,12 +234,10 @@ describe('routes: /auth/', () => {
         email: user.email,
       });
 
-      const res = await request()
-        .post(`/api/auth/reset/${passwordReset.token}`)
-        .send({
-          password: '123123',
-          confirm_password: '123123',
-        });
+      const res = await request().post(`/api/auth/reset/${passwordReset.token}`).send({
+        password: '123123',
+        confirm_password: '123123',
+      });
       expect(res.status).equals(200);
     });
 
@@ -256,12 +246,10 @@ describe('routes: /auth/', () => {
       const passwordReset = await systemFactory.create('password_reset', {
         email: user.email,
       });
-      await request()
-        .post(`/api/auth/reset/${passwordReset.token}`)
-        .send({
-          password: '123123',
-          confirm_password: '123123',
-        });
+      await request().post(`/api/auth/reset/${passwordReset.token}`).send({
+        password: '123123',
+        confirm_password: '123123',
+      });
 
       const foundTokens = await PasswordReset.query().where('email', passwordReset.email);
 
@@ -278,8 +266,7 @@ describe('routes: /auth/', () => {
         password: '123123',
         confirm_password: '123123',
       });
-      const systemUserPasswordUpdated = await SystemUser.query()
-        .where('id', user.id).first();
+      const systemUserPasswordUpdated = await SystemUser.query().where('id', user.id).first();
 
       expect(systemUserPasswordUpdated.id).equals(user.id);
       expect(systemUserPasswordUpdated.password).not.equals(user.password);

@@ -1,17 +1,17 @@
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { CURDBranch } from './CRUDBranch';
 
 @Service()
-export class GetBranch extends CURDBranch{
+export class GetBranch extends CURDBranch {
   @Inject()
   tenancy: HasTenancyService;
 
   /**
-   * 
-   * @param {number} tenantId 
-   * @param {number} branchId 
-   * @returns 
+   *
+   * @param {number} tenantId
+   * @param {number} branchId
+   * @returns
    */
   public getBranch = async (tenantId: number, branchId: number) => {
     const { Branch } = this.tenancy.models(tenantId);

@@ -1,16 +1,11 @@
-import { Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
+import { ICommonLandedCostEntry, ICommonLandedCostEntryDTO } from '@/interfaces';
+import { Service } from 'typedi';
 import { transformToMap } from 'utils';
-import {
-  ICommonLandedCostEntry,
-  ICommonLandedCostEntryDTO
-} from '@/interfaces';
 
 const ERRORS = {
-  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
-    'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
-  LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES:
-    'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
+  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+  LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES: 'LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES',
 };
 
 @Service()
@@ -22,7 +17,7 @@ export default class EntriesService {
    */
   public getLandedCostEntriesDeleted(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): ICommonLandedCostEntry[] {
     const newBillEntriesById = transformToMap(newCommonEntriesDTO, 'id');
 
@@ -43,12 +38,9 @@ export default class EntriesService {
    */
   public validateLandedCostEntriesNotDeleted(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): void {
-    const entriesDeleted = this.getLandedCostEntriesDeleted(
-      oldCommonEntries,
-      newCommonEntriesDTO
-    );
+    const entriesDeleted = this.getLandedCostEntriesDeleted(oldCommonEntries, newCommonEntriesDTO);
     if (entriesDeleted.length > 0) {
       throw new ServiceError(ERRORS.ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED);
     }
@@ -61,7 +53,7 @@ export default class EntriesService {
    */
   public validateLocatedCostEntriesSmallerThanNewEntries(
     oldCommonEntries: ICommonLandedCostEntry[],
-    newCommonEntriesDTO: ICommonLandedCostEntryDTO[]
+    newCommonEntriesDTO: ICommonLandedCostEntryDTO[],
   ): void {
     const oldBillEntriesById = transformToMap(oldCommonEntries, 'id');
 
@@ -69,9 +61,7 @@ export default class EntriesService {
       const oldEntry = oldBillEntriesById.get(entry.id);
 
       if (oldEntry && oldEntry.allocatedCostAmount > entry.amount) {
-        throw new ServiceError(
-          ERRORS.LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES
-        );
+        throw new ServiceError(ERRORS.LOCATED_COST_ENTRIES_SHOULD_BIGGE_THAN_NEW_ENTRIES);
       }
     });
   }

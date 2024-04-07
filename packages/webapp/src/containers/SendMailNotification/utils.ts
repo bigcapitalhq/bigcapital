@@ -15,9 +15,7 @@ export interface MailNotificationFormValues {
   body: string;
 }
 
-export const transformMailFormToRequest = (
-  values: MailNotificationFormValues,
-) => {
+export const transformMailFormToRequest = (values: MailNotificationFormValues) => {
   return {
     ...values,
     from: first(values.from),

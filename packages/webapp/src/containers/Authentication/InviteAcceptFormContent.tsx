@@ -7,13 +7,7 @@ import { Link } from 'react-router-dom';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import styled from 'styled-components';
 
-import {
-  Col,
-  FFormGroup,
-  FInputGroup,
-  Row,
-  FormattedMessage as T,
-} from '@/components';
+import { Col, FFormGroup, FInputGroup, Row, FormattedMessage as T } from '@/components';
 import { useInviteAcceptContext } from './InviteAcceptProvider';
 import { AuthSubmitButton } from './_components';
 
@@ -80,13 +74,7 @@ export default function InviteUserFormContent() {
         </p>
       </InviteAcceptFooterParagraphs>
 
-      <InviteAuthSubmitButton
-        intent={Intent.PRIMARY}
-        type="submit"
-        fill={true}
-        large={true}
-        loading={isSubmitting}
-      >
+      <InviteAuthSubmitButton intent={Intent.PRIMARY} type="submit" fill={true} large={true} loading={isSubmitting}>
         <T id={'create_account'} />
       </InviteAuthSubmitButton>
     </Form>

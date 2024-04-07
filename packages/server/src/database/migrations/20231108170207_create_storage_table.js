@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('storage', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('storage', (table) => {
     table.increments('id').primary();
     table.string('key').notNullable();
     table.string('path').notNullable();
@@ -7,8 +7,5 @@ exports.up = function (knex) {
     table.integer('expire_in');
     table.timestamps();
   });
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('storage');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('storage');

@@ -24,10 +24,10 @@ export class CashflowTransactionTransformer extends Transformer {
 
   /**
    * Formatted transaction type.
-   * @param transaction 
+   * @param transaction
    * @returns {string}
    */
   protected transactionTypeFormatted = (transaction) => {
     return this.context.i18n.__(transaction.transactionTypeFormatted);
-  }
+  };
 }

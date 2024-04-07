@@ -1,24 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-  Tag,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Tag, Intent } from '@blueprintjs/core';
 import { getColumnWidth } from '@/utils';
-import {
-  Icon,
-  FormattedMessage as T,
-  TextOverviewTooltipCell,
-  FormatNumberCell,
-  Choose,
-} from '@/components';
+import { Icon, FormattedMessage as T, TextOverviewTooltipCell, FormatNumberCell, Choose } from '@/components';
 import { useVendorCreditDetailDrawerContext } from './VendorCreditDetailDrawerProvider';
 
 /**
@@ -100,10 +85,7 @@ export const VendorCreditMenuItem = ({ payload: { onReconcile } }) => {
       }}
       content={
         <Menu>
-          <MenuItem
-            onClick={onReconcile}
-            text={intl.get('vendor_credits.action.reconcile_with_bills')}
-          />
+          <MenuItem onClick={onReconcile} text={intl.get('vendor_credits.action.reconcile_with_bills')} />
         </Menu>
       }
     >

@@ -1,15 +1,15 @@
-import { sumBy, isEmpty } from 'lodash';
-import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
 import {
-  IContactBalanceSummaryContact,
-  IContactBalanceSummaryTotal,
   IContactBalanceSummaryAmount,
+  IContactBalanceSummaryContact,
   IContactBalanceSummaryPercentage,
-  ILedger,
   IContactBalanceSummaryQuery,
+  IContactBalanceSummaryTotal,
+  ILedger,
 } from '@/interfaces';
+import { isEmpty, sumBy } from 'lodash';
+import * as R from 'ramda';
 import { allPassedConditionsPass } from 'utils';
+import FinancialSheet from '../FinancialSheet';
 
 export class ContactBalanceSummaryReport extends FinancialSheet {
   readonly baseCurrency: string;
@@ -22,10 +22,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {number} totalBalance - Total contacts balance.
    * @returns {number}
    */
-  protected getContactPercentageOfColumn = (
-    customerBalance: number,
-    totalBalance: number
-  ): number => {
+  protected getContactPercentageOfColumn = (customerBalance: number, totalBalance: number): number => {
     return totalBalance / customerBalance;
   };
 
@@ -34,13 +31,8 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {IContactBalanceSummaryContact} contacts
    * @returns {number}
    */
-  protected getContactsTotal = (
-    contacts: IContactBalanceSummaryContact[]
-  ): number => {
-    return sumBy(
-      contacts,
-      (contact: IContactBalanceSummaryContact) => contact.total.amount
-    );
+  protected getContactsTotal = (contacts: IContactBalanceSummaryContact[]): number => {
+    return sumBy(contacts, (contact: IContactBalanceSummaryContact) => contact.total.amount);
   };
 
   /**
@@ -48,9 +40,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param {IContactBalanceSummaryTotal} node
    * @returns {IContactBalanceSummaryTotal}
    */
-  protected assocTotalPercentageOfColumn = (
-    node: IContactBalanceSummaryTotal
-  ): IContactBalanceSummaryTotal => {
+  protected assocTotalPercentageOfColumn = (node: IContactBalanceSummaryTotal): IContactBalanceSummaryTotal => {
     return R.assoc('percentageOfColumn', this.getPercentageMeta(1), node);
   };
 
@@ -59,19 +49,12 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {IContactBalanceSummaryContact[]} contacts
    * @returns {IContactBalanceSummaryTotal}
    */
-  protected getContactsTotalSection = (
-    contacts: IContactBalanceSummaryContact[]
-  ): IContactBalanceSummaryTotal => {
+  protected getContactsTotalSection = (contacts: IContactBalanceSummaryContact[]): IContactBalanceSummaryTotal => {
     const customersTotal = this.getContactsTotal(contacts);
     const node = {
       total: this.getTotalFormat(customersTotal),
     };
-    return R.compose(
-      R.when(
-        R.always(this.filter.percentageColumn),
-        this.assocTotalPercentageOfColumn
-      )
-    )(node);
+    return R.compose(R.when(R.always(this.filter.percentageColumn), this.assocTotalPercentageOfColumn))(node);
   };
 
   /**
@@ -82,12 +65,9 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    */
   private contactCamparsionPercentageOfColumnMapper = (
     total: number,
-    contact: IContactBalanceSummaryContact
+    contact: IContactBalanceSummaryContact,
   ): IContactBalanceSummaryContact => {
-    const amount = this.getContactPercentageOfColumn(
-      total,
-      contact.total.amount
-    );
+    const amount = this.getContactPercentageOfColumn(total, contact.total.amount);
     return {
       ...contact,
       percentageOfColumn: this.getPercentageMeta(amount),
@@ -100,12 +80,10 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @return {IContactBalanceSummaryContact[]}
    */
   protected contactCamparsionPercentageOfColumn = (
-    contacts: IContactBalanceSummaryContact[]
+    contacts: IContactBalanceSummaryContact[],
   ): IContactBalanceSummaryContact[] => {
     const customersTotal = this.getContactsTotal(contacts);
-    const camparsionPercentageOfColummn = R.curry(
-      this.contactCamparsionPercentageOfColumnMapper
-    )(customersTotal);
+    const camparsionPercentageOfColummn = R.curry(this.contactCamparsionPercentageOfColumnMapper)(customersTotal);
 
     return contacts.map(camparsionPercentageOfColummn);
   };
@@ -115,9 +93,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param  {number} amount -
    * @return {IContactBalanceSummaryAmount}
    */
-  protected getContactTotalFormat = (
-    amount: number
-  ): IContactBalanceSummaryAmount => {
+  protected getContactTotalFormat = (amount: number): IContactBalanceSummaryAmount => {
     return {
       amount,
       formattedAmount: this.formatNumber(amount, { money: true }),
@@ -143,9 +119,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {number} amount
    * @returns {IContactBalanceSummaryPercentage}
    */
-  protected getPercentageMeta = (
-    amount: number
-  ): IContactBalanceSummaryPercentage => {
+  protected getPercentageMeta = (amount: number): IContactBalanceSummaryPercentage => {
     return {
       amount,
       formattedAmount: this.formatPercentage(amount),
@@ -157,9 +131,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param {ICustomerBalanceSummaryCustomer} customer -
    * @returns {boolean}
    */
-  private filterContactNoneTransactions = (
-    contact: IContactBalanceSummaryContact
-  ): boolean => {
+  private filterContactNoneTransactions = (contact: IContactBalanceSummaryContact): boolean => {
     const entries = this.ledger.whereContactId(contact.id).getEntries();
 
     return !isEmpty(entries);
@@ -170,9 +142,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {ICustomerBalanceSummaryCustomer} customer
    * @returns {boolean}
    */
-  private filterContactNoneZero = (
-    node: IContactBalanceSummaryContact
-  ): boolean => {
+  private filterContactNoneZero = (node: IContactBalanceSummaryContact): boolean => {
     return node.total.amount !== 0;
   };
 
@@ -196,9 +166,7 @@ export class ContactBalanceSummaryReport extends FinancialSheet {
    * @param   {ICustomerBalanceSummaryCustomer[]} nodes
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
-  protected contactsFilter = (
-    nodes: IContactBalanceSummaryContact[]
-  ): IContactBalanceSummaryContact[] => {
+  protected contactsFilter = (nodes: IContactBalanceSummaryContact[]): IContactBalanceSummaryContact[] => {
     return nodes.filter(this.contactNodeFilter);
   };
 }

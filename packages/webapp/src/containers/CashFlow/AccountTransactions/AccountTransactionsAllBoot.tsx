@@ -18,9 +18,7 @@ interface AccountTransactionsAllPoviderProps {
 /**
  * Account transctions all provider.
  */
-function AccountTransactionsAllProvider({
-  children,
-}: AccountTransactionsAllPoviderProps) {
+function AccountTransactionsAllProvider({ children }: AccountTransactionsAllPoviderProps) {
   const { accountId } = useAccountTransactionsContext();
 
   // Fetch cashflow account transactions list
@@ -38,10 +36,7 @@ function AccountTransactionsAllProvider({
   });
   // Memorized the cashflow account transactions.
   const cashflowTransactions = React.useMemo(
-    () =>
-      isCashflowTransactionsSuccess
-        ? flattenInfinityPages(cashflowTransactionsPages)
-        : [],
+    () => (isCashflowTransactionsSuccess ? flattenInfinityPages(cashflowTransactionsPages) : []),
     [cashflowTransactionsPages, isCashflowTransactionsSuccess],
   );
   // Handle the observer ineraction.
@@ -49,11 +44,7 @@ function AccountTransactionsAllProvider({
     if (!isCashFlowTransactionsFetching && hasCashflowTransactionsNextPgae) {
       fetchNextTransactionsPage();
     }
-  }, [
-    isCashFlowTransactionsFetching,
-    hasCashflowTransactionsNextPgae,
-    fetchNextTransactionsPage,
-  ]);
+  }, [isCashFlowTransactionsFetching, hasCashflowTransactionsNextPgae, fetchNextTransactionsPage]);
   // Provider payload.
   const provider = {
     cashflowTransactions,
@@ -64,15 +55,11 @@ function AccountTransactionsAllProvider({
   return (
     <AccountTransactionsAllBootContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isCashflowTransactionsFetchingNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} enabled={!isCashflowTransactionsFetchingNextPage} />
     </AccountTransactionsAllBootContext.Provider>
   );
 }
 
-const useAccountTransactionsAllContext = () =>
-  React.useContext(AccountTransactionsAllBootContext);
+const useAccountTransactionsAllContext = () => React.useContext(AccountTransactionsAllBootContext);
 
 export { AccountTransactionsAllProvider, useAccountTransactionsAllContext };

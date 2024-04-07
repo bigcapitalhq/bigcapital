@@ -1,4 +1,4 @@
-import { IModel, ISortOrder } from "./Model";
+import { IModel, ISortOrder } from './Model';
 
 export interface IDynamicFilter {
   setModel(model: IModel): void;
@@ -23,11 +23,7 @@ export interface IDynamicListFilter {
 }
 
 export interface IDynamicListService {
-  dynamicList(
-    tenantId: number,
-    model: any,
-    filter: IDynamicListFilter
-  ): Promise<any>;
+  dynamicList(tenantId: number, model: any, filter: IDynamicListFilter): Promise<any>;
   handlerErrorsToResponse(error, req, res, next): void;
 }
 

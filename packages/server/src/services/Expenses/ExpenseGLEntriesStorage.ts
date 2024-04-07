@@ -1,7 +1,7 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ExpenseGLEntries } from './ExpenseGLEntries';
 
 @Service()
@@ -21,16 +21,10 @@ export class ExpenseGLEntriesStorage {
    * @param {number} expenseId
    * @param {Knex.Transaction} trx
    */
-  public writeExpenseGLEntries = async (
-    tenantId: number,
-    expenseId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public writeExpenseGLEntries = async (tenantId: number, expenseId: number, trx?: Knex.Transaction) => {
     const { Expense } = await this.tenancy.models(tenantId);
 
-    const expense = await Expense.query(trx)
-      .findById(expenseId)
-      .withGraphFetched('categories');
+    const expense = await Expense.query(trx).findById(expenseId).withGraphFetched('categories');
 
     // Retrieves the given expense ledger.
     const expenseLedger = this.expenseGLEntries.getExpenseLedger(expense);
@@ -45,17 +39,8 @@ export class ExpenseGLEntriesStorage {
    * @param {number} expenseId
    * @param {Knex.Transaction} trx
    */
-  public revertExpenseGLEntries = async (
-    tenantId: number,
-    expenseId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      expenseId,
-      'Expense',
-      trx
-    );
+  public revertExpenseGLEntries = async (tenantId: number, expenseId: number, trx?: Knex.Transaction) => {
+    await this.ledgerStorage.deleteByReference(tenantId, expenseId, 'Expense', trx);
   };
 
   /**
@@ -64,11 +49,7 @@ export class ExpenseGLEntriesStorage {
    * @param {number} expenseId
    * @param {Knex.Transaction} trx
    */
-  public rewriteExpenseGLEntries = async (
-    tenantId: number,
-    expenseId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewriteExpenseGLEntries = async (tenantId: number, expenseId: number, trx?: Knex.Transaction) => {
     // Reverts the expense GL entries.
     await this.revertExpenseGLEntries(tenantId, expenseId, trx);
 

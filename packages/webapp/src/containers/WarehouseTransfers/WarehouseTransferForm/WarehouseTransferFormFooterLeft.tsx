@@ -8,14 +8,8 @@ export function WarehouseTransferFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'warehouse_transfer.form.reason.label'} />}
-        name={'reason'}
-      >
-        <FEditableText
-          name={'reason'}
-          placeholder={intl.get('warehouse_transfer.form.reason.placeholder')}
-        />
+      <TermsConditsFormGroup label={<T id={'warehouse_transfer.form.reason.label'} />} name={'reason'}>
+        <FEditableText name={'reason'} placeholder={intl.get('warehouse_transfer.form.reason.placeholder')} />
       </TermsConditsFormGroup>
     </React.Fragment>
   );

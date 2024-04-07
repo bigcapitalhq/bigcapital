@@ -1,17 +1,13 @@
-import { Inject, Service } from 'typedi';
+import { NextFunction, Request, Response, Router } from 'express';
 import { check, oneOf, param } from 'express-validator';
-import { Router, Response, Request, NextFunction } from 'express';
+import { Inject, Service } from 'typedi';
 
 import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import BaseController from '../BaseController';
 
-import { ServiceError } from '@/exceptions';
-import {
-  AbilitySubject,
-  PreferencesAction,
-  IEditSmsNotificationDTO,
-} from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, IEditSmsNotificationDTO, PreferencesAction } from '@/interfaces';
 
 @Service()
 export default class SettingsController extends BaseController {
@@ -29,28 +25,25 @@ export default class SettingsController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.smsNotifications),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/sms-notification/:notification_key',
       [param('notification_key').exists().isString()],
       this.validationResult,
       this.asyncMiddleware(this.smsNotification),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/sms-notification',
       CheckPolicies(PreferencesAction.Mutate, AbilitySubject.Preferences),
       [
         check('notification_key').exists(),
-        oneOf([
-          check('message_text').exists(),
-          check('is_notification_enabled').exists().isBoolean().toBoolean(),
-        ]),
+        oneOf([check('message_text').exists(), check('is_notification_enabled').exists().isBoolean().toBoolean()]),
       ],
       this.validationResult,
       this.asyncMiddleware(this.updateSmsNotification),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -61,16 +54,11 @@ export default class SettingsController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private smsNotifications = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private smsNotifications = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
-      const notifications =
-        await this.smsNotificationsSettings.smsNotificationsList(tenantId);
+      const notifications = await this.smsNotificationsSettings.smsNotificationsList(tenantId);
 
       return res.status(200).send({ notifications });
     } catch (error) {
@@ -84,20 +72,12 @@ export default class SettingsController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private smsNotification = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private smsNotification = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { notification_key: notificationKey } = req.params;
 
     try {
-      const notification =
-        await this.smsNotificationsSettings.getSmsNotificationMeta(
-          tenantId,
-          notificationKey
-        );
+      const notification = await this.smsNotificationsSettings.getSmsNotificationMeta(tenantId, notificationKey);
 
       return res.status(200).send({ notification });
     } catch (error) {
@@ -111,19 +91,12 @@ export default class SettingsController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private updateSmsNotification = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private updateSmsNotification = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const editDTO: IEditSmsNotificationDTO = this.matchedBodyData(req);
 
     try {
-      await this.smsNotificationsSettings.editSmsNotificationMessage(
-        tenantId,
-        editDTO
-      );
+      await this.smsNotificationsSettings.editSmsNotificationMessage(tenantId, editDTO);
       return res.status(200).send({
         message: 'Sms notification settings has been updated successfully.',
       });
@@ -139,12 +112,7 @@ export default class SettingsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors = (
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private handleServiceErrors = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
       if (error.errorType === 'SMS_NOTIFICATION_KEY_NOT_FOUND') {
         return res.boom.badRequest(null, {

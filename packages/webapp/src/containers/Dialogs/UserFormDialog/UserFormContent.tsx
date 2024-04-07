@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Intent,
-  Classes,
-  Button,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Intent, Classes, Button } from '@blueprintjs/core';
 import { FastField, Form, useFormikContext, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 
@@ -41,29 +35,17 @@ function UserFormContent({
         <UserFormCalloutAlerts calloutCodes={calloutCode} />
 
         {/* ----------- Email ----------- */}
-        <FFormGroup
-          name={'email'}
-          label={<T id={'email'} />}
-          labelInfo={<FieldRequiredHint />}
-        >
+        <FFormGroup name={'email'} label={<T id={'email'} />} labelInfo={<FieldRequiredHint />}>
           <FInputGroup name={'email'} />
         </FFormGroup>
 
         {/* ----------- First name ----------- */}
-        <FFormGroup
-          name={'first_name'}
-          label={<T id={'first_name'} />}
-          labelInfo={<FieldRequiredHint />}
-        >
+        <FFormGroup name={'first_name'} label={<T id={'first_name'} />} labelInfo={<FieldRequiredHint />}>
           <FInputGroup name={'first_name'} />
         </FFormGroup>
 
         {/* ----------- Last name ----------- */}
-        <FFormGroup
-          name={'last_name'}
-          label={<T id={'last_name'} />}
-          labelInfo={<FieldRequiredHint />}
-        >
+        <FFormGroup name={'last_name'} label={<T id={'last_name'} />} labelInfo={<FieldRequiredHint />}>
           <FInputGroup name={'last_name'} />
         </FFormGroup>
 

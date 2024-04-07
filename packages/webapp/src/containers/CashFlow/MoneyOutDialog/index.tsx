@@ -5,9 +5,7 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from 'redux';
 
-const MoneyOutDialogContent = React.lazy(() =>
-  import('./MoneyOutDialogContent'),
-);
+const MoneyOutDialogContent = React.lazy(() => import('./MoneyOutDialogContent'));
 
 /**
  * Money out dialog.

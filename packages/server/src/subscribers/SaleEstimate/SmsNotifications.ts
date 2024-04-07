@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { SaleEstimateNotifyBySms } from '@/services/Sales/Estimates/SaleEstimateSmsNotify';
 import { ISaleEstimateCreatedPayload } from '@/interfaces';
+import { SaleEstimateNotifyBySms } from '@/services/Sales/Estimates/SaleEstimateSmsNotify';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleEstimateSmsNotificationSubscriber {
@@ -13,10 +13,7 @@ export default class SaleEstimateSmsNotificationSubscriber {
    * Attaches events to handles.events.saleEstimate.onCreated
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleEstimate.onCreated,
-      this.handleNotifySmSNotificationAfterCreation
-    );
+    bus.subscribe(events.saleEstimate.onCreated, this.handleNotifySmSNotificationAfterCreation);
   }
 
   /**
@@ -33,10 +30,7 @@ export default class SaleEstimateSmsNotificationSubscriber {
 
     runAfterTransaction(trx, async () => {
       try {
-        await this.saleEstimateNotifyBySms.notifyViaSmsNotificationAfterCreation(
-          tenantId,
-          saleEstimateId
-        );
+        await this.saleEstimateNotifyBySms.notifyViaSmsNotificationAfterCreation(tenantId, saleEstimateId);
       } catch (error) {}
     });
   };

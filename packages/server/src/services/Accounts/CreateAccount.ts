@@ -1,17 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { kebabCase } from 'lodash';
-import { Knex } from 'knex';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  IAccount,
-  IAccountEventCreatedPayload,
-  IAccountEventCreatingPayload,
-  IAccountCreateDTO,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IAccount, IAccountCreateDTO, IAccountEventCreatedPayload, IAccountEventCreatingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
 import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { kebabCase } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { CommandAccountValidators } from './CommandAccountValidators';
 
 @Service()
@@ -33,48 +28,28 @@ export class CreateAccount {
    * @param  {number} tenantId
    * @param  {IAccountCreateDTO} accountDTO
    */
-  private authorize = async (
-    tenantId: number,
-    accountDTO: IAccountCreateDTO,
-    baseCurrency: string
-  ) => {
+  private authorize = async (tenantId: number, accountDTO: IAccountCreateDTO, baseCurrency: string) => {
     // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
-      tenantId,
-      accountDTO.name
-    );
+    await this.validator.validateAccountNameUniquiness(tenantId, accountDTO.name);
     // Validate the account code uniquiness.
     if (accountDTO.code) {
-      await this.validator.isAccountCodeUniqueOrThrowError(
-        tenantId,
-        accountDTO.code
-      );
+      await this.validator.isAccountCodeUniqueOrThrowError(tenantId, accountDTO.code);
     }
     // Retrieve the account type meta or throw service error if not found.
     this.validator.getAccountTypeOrThrowError(accountDTO.accountType);
 
     // Ingore the parent account validation if not presented.
     if (accountDTO.parentAccountId) {
-      const parentAccount = await this.validator.getParentAccountOrThrowError(
-        tenantId,
-        accountDTO.parentAccountId
-      );
+      const parentAccount = await this.validator.getParentAccountOrThrowError(tenantId, accountDTO.parentAccountId);
       this.validator.throwErrorIfParentHasDiffType(accountDTO, parentAccount);
 
       // Inherit active status from parent account.
       accountDTO.active = parentAccount.active;
 
       // Validate should currency code be the same currency of parent account.
-      this.validator.validateCurrentSameParentAccount(
-        accountDTO,
-        parentAccount,
-        baseCurrency
-      );
+      this.validator.validateCurrentSameParentAccount(accountDTO, parentAccount, baseCurrency);
       // Validates the max depth level of accounts chart.
-      await this.validator.validateMaxParentAccountDepthLevels(
-        tenantId,
-        accountDTO.parentAccountId
-      );
+      await this.validator.validateMaxParentAccountDepthLevels(tenantId, accountDTO.parentAccountId);
     }
     // Validates the given account type supports the multi-currency.
     this.validator.validateAccountTypeSupportCurrency(accountDTO, baseCurrency);
@@ -84,10 +59,7 @@ export class CreateAccount {
    * Transformes the create account DTO to input model.
    * @param   {IAccountCreateDTO} createAccountDTO
    */
-  private transformDTOToModel = (
-    createAccountDTO: IAccountCreateDTO,
-    baseCurrency: string
-  ) => {
+  private transformDTOToModel = (createAccountDTO: IAccountCreateDTO, baseCurrency: string) => {
     return {
       ...createAccountDTO,
       slug: kebabCase(createAccountDTO.name),
@@ -104,7 +76,7 @@ export class CreateAccount {
   public createAccount = async (
     tenantId: number,
     accountDTO: IAccountCreateDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<IAccount> => {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -115,10 +87,7 @@ export class CreateAccount {
     await this.authorize(tenantId, accountDTO, tenantMeta.baseCurrency);
 
     // Transformes the DTO to model.
-    const accountInputModel = this.transformDTOToModel(
-      accountDTO,
-      tenantMeta.baseCurrency
-    );
+    const accountInputModel = this.transformDTOToModel(accountDTO, tenantMeta.baseCurrency);
     // Creates a new account with associated transactions under unit-of-work envirement.
     return this.uow.withTransaction(
       tenantId,
@@ -144,7 +113,7 @@ export class CreateAccount {
 
         return account;
       },
-      trx
+      trx,
     );
   };
 }

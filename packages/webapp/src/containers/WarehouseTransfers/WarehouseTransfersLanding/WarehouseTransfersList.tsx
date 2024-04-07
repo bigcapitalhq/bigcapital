@@ -43,10 +43,8 @@ function WarehouseTransfersList({
 
 export default compose(
   withWarehouseTransfersActions,
-  withWarehouseTransfers(
-    ({ warehouseTransferTableState, warehouseTransferTableStateChanged }) => ({
-      warehouseTransferTableState,
-      warehouseTransferTableStateChanged,
-    }),
-  ),
+  withWarehouseTransfers(({ warehouseTransferTableState, warehouseTransferTableStateChanged }) => ({
+    warehouseTransferTableState,
+    warehouseTransferTableStateChanged,
+  })),
 )(WarehouseTransfersList);

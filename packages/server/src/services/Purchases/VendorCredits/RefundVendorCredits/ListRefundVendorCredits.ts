@@ -21,7 +21,7 @@ export default class ListVendorCreditRefunds extends RefundVendorCredit {
    */
   public getVendorCreditRefunds = async (
     tenantId: number,
-    vendorCreditId: number
+    vendorCreditId: number,
   ): Promise<IRefundVendorCreditPOJO[]> => {
     const { RefundVendorCredit } = this.tenancy.models(tenantId);
 
@@ -32,10 +32,6 @@ export default class ListVendorCreditRefunds extends RefundVendorCredit {
       .withGraphFetched('depositAccount');
 
     // Transformes refund vendor credit models to POJO objects.
-    return this.transformer.transform(
-      tenantId,
-      refundVendorTransactions,
-      new RefundVendorCreditTransformer()
-    );
+    return this.transformer.transform(tenantId, refundVendorTransactions, new RefundVendorCreditTransformer());
   };
 }

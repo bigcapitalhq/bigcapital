@@ -5,18 +5,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const RefundCreditNoteDialogContent = React.lazy(() =>
-  import('./RefundCreditNoteDialogContent'),
-);
+const RefundCreditNoteDialogContent = React.lazy(() => import('./RefundCreditNoteDialogContent'));
 
 /**
  * Refund credit note dialog.
  */
-function RefundCreditNoteDialog({
-  dialogName,
-  payload: { creditNoteId },
-  isOpen,
-}) {
+function RefundCreditNoteDialog({ dialogName, payload: { creditNoteId }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -28,10 +22,7 @@ function RefundCreditNoteDialog({
       style={{ width: '450px' }}
     >
       <DialogSuspense>
-        <RefundCreditNoteDialogContent
-          dialogName={dialogName}
-          creditNoteId={creditNoteId}
-        />
+        <RefundCreditNoteDialogContent dialogName={dialogName} creditNoteId={creditNoteId} />
       </DialogSuspense>
     </Dialog>
   );

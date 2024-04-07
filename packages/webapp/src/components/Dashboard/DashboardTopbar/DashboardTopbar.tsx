@@ -1,15 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router';
-import {
-  Navbar,
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-  Tooltip,
-  Position,
-} from '@blueprintjs/core';
+import { Navbar, NavbarGroup, NavbarDivider, Button, Classes, Tooltip, Position } from '@blueprintjs/core';
 import { FormattedMessage as T, Icon, Hint, If } from '@/components';
 
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
@@ -57,13 +49,7 @@ function DashboardTopbar({
       <div class="dashboard__topbar-left">
         <div class="dashboard__topbar-sidebar-toggle">
           <Tooltip
-            content={
-              !sidebarExpended ? (
-                <T id={'open_sidebar'} />
-              ) : (
-                <T id={'close_sidebar'} />
-              )
-            }
+            content={!sidebarExpended ? <T id={'open_sidebar'} /> : <T id={'close_sidebar'} />}
             position={Position.RIGHT}
           >
             <DashboardHamburgerButton onClick={handleSidebarToggleBtn} />
@@ -97,19 +83,11 @@ function DashboardTopbar({
       <div class="dashboard__topbar-right">
         <Navbar class="dashboard__topbar-navbar">
           <NavbarGroup>
-            <DashboardQuickSearchButton
-              onClick={() => openGlobalSearch(true)}
-            />
+            <DashboardQuickSearchButton onClick={() => openGlobalSearch(true)} />
             <QuickNewDropdown />
 
-            <Tooltip
-              content={<T id={'notifications'} />}
-              position={Position.BOTTOM}
-            >
-              <Button
-                className={Classes.MINIMAL}
-                icon={<Icon icon={'notification-24'} iconSize={20} />}
-              />
+            <Tooltip content={<T id={'notifications'} />} position={Position.BOTTOM}>
+              <Button className={Classes.MINIMAL} icon={<Icon icon={'notification-24'} iconSize={20} />} />
             </Tooltip>
 
             <Button

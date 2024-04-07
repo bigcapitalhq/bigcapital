@@ -1,16 +1,12 @@
-import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import { formatNumber } from 'utils';
-import ModelSetting from './ModelSetting';
-import ManualJournalSettings from './ManualJournal.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/ManualJournals/constants';
+import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
+import { formatNumber } from 'utils';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ManualJournalSettings from './ManualJournal.Settings';
 import ModelSearchable from './ModelSearchable';
-export default class ManualJournal extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+import ModelSetting from './ModelSetting';
+export default class ManualJournal extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name.
    */

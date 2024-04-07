@@ -1,5 +1,4 @@
-export const DEFAULT_INVOICE_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} from {CompanyName}';
+export const DEFAULT_INVOICE_MAIL_SUBJECT = 'Invoice {InvoiceNumber} from {CompanyName}';
 export const DEFAULT_INVOICE_MAIL_CONTENT = `
 <p>Dear {CustomerName}</p>
 <p>Thank you for your business, You can view or print your invoice from attachements.</p>
@@ -15,8 +14,7 @@ Amount   : <strong>{InvoiceAmount}</strong></br />
 </p>
 `;
 
-export const DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT =
-  'Invoice {InvoiceNumber} reminder from {CompanyName}';
+export const DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT = 'Invoice {InvoiceNumber} reminder from {CompanyName}';
 export const DEFAULT_INVOICE_REMINDER_MAIL_CONTENT = `
 <p>Dear {CustomerName}</p>
 <p>You might have missed the payment date and the invoice is now overdue by {OverdueDays} days.</p>
@@ -37,14 +35,11 @@ export const ERRORS = {
   ENTRIES_ITEMS_IDS_NOT_EXISTS: 'ENTRIES_ITEMS_IDS_NOT_EXISTS',
   NOT_SELLABLE_ITEMS: 'NOT_SELLABLE_ITEMS',
   SALE_INVOICE_NO_NOT_UNIQUE: 'SALE_INVOICE_NO_NOT_UNIQUE',
-  INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT:
-    'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT',
-  INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES:
-    'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
+  INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT: 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT',
+  INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES: 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
   SALE_INVOICE_NO_IS_REQUIRED: 'SALE_INVOICE_NO_IS_REQUIRED',
   CUSTOMER_HAS_SALES_INVOICES: 'CUSTOMER_HAS_SALES_INVOICES',
-  SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES:
-    'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES',
+  SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES: 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES',
   PAYMENT_ACCOUNT_CURRENCY_INVALID: 'PAYMENT_ACCOUNT_CURRENCY_INVALID',
   SALE_INVOICE_ALREADY_WRITTEN_OFF: 'SALE_INVOICE_ALREADY_WRITTEN_OFF',
   SALE_INVOICE_NOT_WRITTEN_OFF: 'SALE_INVOICE_NOT_WRITTEN_OFF',
@@ -57,9 +52,7 @@ export const DEFAULT_VIEWS = [
     name: 'Draft',
     slug: 'draft',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
@@ -80,9 +73,7 @@ export const DEFAULT_VIEWS = [
     name: 'Unpaid',
     slug: 'unpaid',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'unpaid' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'unpaid' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
@@ -103,9 +94,7 @@ export const DEFAULT_VIEWS = [
     name: 'Paid',
     slug: 'paid',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'paid' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'paid' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
 ];

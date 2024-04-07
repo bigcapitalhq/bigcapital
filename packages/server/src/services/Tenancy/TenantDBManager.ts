@@ -1,11 +1,11 @@
-import { Container } from 'typedi';
-import Knex from 'knex';
-import { knexSnakeCaseMappers } from 'objection';
-import { tenantKnexConfig, tenantSeedConfig } from '@/config/knexConfig';
 import config from '@/config';
+import { tenantKnexConfig, tenantSeedConfig } from '@/config/knexConfig';
+import { TenantDBAlreadyExists } from '@/exceptions';
 import { ITenant, ITenantDBManager } from '@/interfaces';
 import SystemService from '@/services/Tenancy/SystemService';
-import { TenantDBAlreadyExists } from '@/exceptions';
+import Knex from 'knex';
+import { knexSnakeCaseMappers } from 'objection';
+import { Container } from 'typedi';
 
 export default class TenantDBManager implements ITenantDBManager {
   static knexCache: { [key: string]: Knex } = {};
@@ -43,9 +43,7 @@ export default class TenantDBManager implements ITenantDBManager {
     const databaseName = this.getDatabaseName(tenant);
 
     const results = await this.sysKnex.raw(
-      'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' +
-        databaseName +
-        '"'
+      'SELECT * FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = "' + databaseName + '"',
     );
     return results[0].length > 0;
   }
@@ -132,7 +130,7 @@ export default class TenantDBManager implements ITenantDBManager {
    */
   public getKnexInstance(tenantId: number) {
     const key: string = `${tenantId}`;
-    let knexInstance = TenantDBManager.knexCache[key];
+    const knexInstance = TenantDBManager.knexCache[key];
 
     if (!knexInstance) {
       throw new Error('Knex instance is not initialized yut.');

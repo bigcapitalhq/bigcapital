@@ -28,16 +28,11 @@ export function ListSelect({
   );
 
   const selectedInitialItem = useMemo(
-    () =>
-      selectProps.items.find(
-        (i) => i[selectedItemProp] === initialSelectedItem,
-      ),
+    () => selectProps.items.find((i) => i[selectedItemProp] === initialSelectedItem),
     [initialSelectedItem],
   );
 
-  const [currentItem, setCurrentItem] = useState(
-    (initialSelectedItem && selectedInitialItem) || null,
-  );
+  const [currentItem, setCurrentItem] = useState((initialSelectedItem && selectedInitialItem) || null);
 
   useEffect(() => {
     if (selectedItemObj) {
@@ -45,20 +40,11 @@ export function ListSelect({
     }
   }, [selectedItemObj, setCurrentItem]);
 
-  const noResults = isLoading ? (
-    'loading'
-  ) : (
-    <MenuItem disabled={true} text={noResultsText} />
-  );
+  const noResults = isLoading ? 'loading' : <MenuItem disabled={true} text={noResultsText} />;
 
   const itemRenderer = (item, { handleClick, modifiers, query }) => {
     return (
-      <MenuItem
-        text={item[textProp]}
-        key={item[selectedItemProp]}
-        label={item[labelProp]}
-        onClick={handleClick}
-      />
+      <MenuItem text={item[textProp]} key={item[selectedItemProp]} label={item[labelProp]} onClick={handleClick} />
     );
   };
 
@@ -87,10 +73,7 @@ export function ListSelect({
       {...selectProps}
       noResults={noResults}
       disabled={disabled}
-      className={classNames(
-        CLASSES.FORM_GROUP_LIST_SELECT,
-        selectProps.className,
-      )}
+      className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, selectProps.className)}
     >
       <Button
         text={currentItem ? currentItem[textProp] : defaultText}

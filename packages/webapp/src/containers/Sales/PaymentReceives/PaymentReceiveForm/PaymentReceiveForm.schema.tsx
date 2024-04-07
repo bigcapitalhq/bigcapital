@@ -6,14 +6,9 @@ import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 const Schema = Yup.object().shape({
   customer_id: Yup.string().label(intl.get('customer_name_')).required(),
   payment_date: Yup.date().required().label(intl.get('payment_date_')),
-  deposit_account_id: Yup.number()
-    .required()
-    .label(intl.get('deposit_account_')),
+  deposit_account_id: Yup.number().required().label(intl.get('deposit_account_')),
   full_amount: Yup.number().nullable(),
-  payment_receive_no: Yup.string()
-    .nullable()
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('payment_receive_no_')),
+  payment_receive_no: Yup.string().nullable().max(DATATYPES_LENGTH.STRING).label(intl.get('payment_receive_no_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
   // statement: Yup.string().nullable().max(DATATYPES_LENGTH.TEXT),
   branch_id: Yup.string(),

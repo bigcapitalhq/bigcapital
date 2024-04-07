@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { chain, difference } from 'lodash';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { chain, difference } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class ValidateWarehouseExistance {
@@ -16,7 +16,7 @@ export class ValidateWarehouseExistance {
    */
   public validateWarehouseIdExistance = (
     transDTO: { warehouseId?: number },
-    entries: { warehouseId?: number }[] = []
+    entries: { warehouseId?: number }[] = [],
   ) => {
     const notAssignedWarehouseEntries = entries.filter((e) => !e.warehouseId);
 
@@ -33,10 +33,7 @@ export class ValidateWarehouseExistance {
    * @param {number} tenantId
    * @param {number} warehouseId
    */
-  public validateWarehouseExistance = (
-    tenantId: number,
-    warehouseId: number
-  ) => {
+  public validateWarehouseExistance = (tenantId: number, warehouseId: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const warehouse = Warehouse.query().findById(warehouseId);
@@ -51,10 +48,7 @@ export class ValidateWarehouseExistance {
    * @param {number} tenantId
    * @param {{ warehouseId?: number }[]} entries
    */
-  public validateItemEntriesWarehousesExistance = async (
-    tenantId: number,
-    entries: { warehouseId?: number }[]
-  ) => {
+  public validateItemEntriesWarehousesExistance = async (tenantId: number, entries: { warehouseId?: number }[]) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const entriesWarehousesIds = chain(entries)
@@ -63,15 +57,9 @@ export class ValidateWarehouseExistance {
       .uniq()
       .value();
 
-    const warehouses = await Warehouse.query().whereIn(
-      'id',
-      entriesWarehousesIds
-    );
+    const warehouses = await Warehouse.query().whereIn('id', entriesWarehousesIds);
     const warehousesIds = warehouses.map((e) => e.id);
-    const notFoundWarehousesIds = difference(
-      entriesWarehousesIds,
-      warehousesIds
-    );
+    const notFoundWarehousesIds = difference(entriesWarehousesIds, warehousesIds);
     if (notFoundWarehousesIds.length > 0) {
       throw new ServiceError(ERRORS.WAREHOUSE_ID_NOT_FOUND);
     }

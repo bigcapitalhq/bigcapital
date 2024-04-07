@@ -5,9 +5,7 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { compose } from '@/utils';
 
-const BranchActivateDialogContent = React.lazy(
-  () => import('./BranchActivateDialogContent'),
-);
+const BranchActivateDialogContent = React.lazy(() => import('./BranchActivateDialogContent'));
 
 /**
  * Branch activate dialog.

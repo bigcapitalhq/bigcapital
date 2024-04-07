@@ -1,14 +1,10 @@
-import { mixin, Model } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import ModelSetting from './ModelSetting';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class Project extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Project extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   costEstimate!: number;
   deadline!: Date;
 
@@ -39,15 +35,13 @@ export default class Project extends mixin(TenantModel, [
   static get modifiers() {
     return {
       totalExpensesDetails(builder) {
-        builder
-          .withGraphFetched('expenses')
-          .modifyGraph('expenses', (builder) => {
-            builder.select(['projectId']);
-            builder.groupBy('projectId');
+        builder.withGraphFetched('expenses').modifyGraph('expenses', (builder) => {
+          builder.select(['projectId']);
+          builder.groupBy('projectId');
 
-            builder.sum('totalAmount as totalExpenses');
-            builder.sum('invoicedAmount as totalInvoicedExpenses');
-          });
+          builder.sum('totalAmount as totalExpenses');
+          builder.sum('invoicedAmount as totalInvoicedExpenses');
+        });
       },
 
       totalBillsDetails(builder) {

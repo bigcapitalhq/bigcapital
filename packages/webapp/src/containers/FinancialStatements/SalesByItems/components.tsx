@@ -7,10 +7,7 @@ import { AppToaster, If, Stack } from '@/components';
 import { useSalesByItemsContext } from './SalesByItemProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
-import {
-  useSalesByItemsCsvExport,
-  useSalesByItemsXlsxExport,
-} from '@/hooks/query';
+import { useSalesByItemsCsvExport, useSalesByItemsXlsxExport } from '@/hooks/query';
 
 /**
  * sales by items progress loading bar.
@@ -30,7 +27,7 @@ export function SalesByItemsLoadingBar() {
  */
 export const SalesByItemsSheetExportMenu = () => {
   const toastKey = useRef(null);
-  const commonToastConfig = { isCloseButtonShown: true, timeout: 2000, };
+  const commonToastConfig = { isCloseButtonShown: true, timeout: 2000 };
   const { httpQuery } = useSalesByItemsContext();
 
   const openProgressToast = (amount: number) => {
@@ -96,10 +93,7 @@ export const SalesByItemsSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

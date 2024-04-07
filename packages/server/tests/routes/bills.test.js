@@ -1,12 +1,5 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: `/api/purchases/bills`', () => {
   describe('POST: `/api/purchases/bills`', () => {
@@ -76,15 +69,13 @@ describe('route: `/api/purchases/bills`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          entries: [{
-
-          }]
+          entries: [{}],
         });
       expect(res.status).equals(422);
       expecvt(res.body.errors).include.something.deep.equals({
         msg: 'Invalid value',
         param: 'entries[0].item_id',
-        location: 'body'
+        location: 'body',
       });
     });
 
@@ -94,26 +85,19 @@ describe('route: `/api/purchases/bills`', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          entries: [{
-
-          }]
+          entries: [{}],
         });
       expect(res.status).equals(422);
       expecvt(res.body.errors).include.something.deep.equals({
         msg: 'Invalid value',
         param: 'entries[0].rate',
-        location: 'body'
+        location: 'body',
       });
     });
 
-    it('Should `entries.*.discount` be required.', () => {
+    it('Should `entries.*.discount` be required.', () => {});
 
-    });
-
-    it('Should entries.*.quantity be required.', () => {
-
-    });
-
+    it('Should entries.*.quantity be required.', () => {});
 
     it('Should vendor_id be exists on the storage.', async () => {
       const vendor = await tenantFactory.create('vendor');
@@ -125,17 +109,20 @@ describe('route: `/api/purchases/bills`', () => {
           vendor_id: vendor.id,
           bill_number: '123',
           bill_date: '2020-02-02',
-          entries: [{
-            item_id: 1,
-            rate: 1,
-            quantity: 1,
-          }]
+          entries: [
+            {
+              item_id: 1,
+              rate: 1,
+              quantity: 1,
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'VENDOR.ID.NOT.FOUND', code: 300,
-      })
+        type: 'VENDOR.ID.NOT.FOUND',
+        code: 300,
+      });
     });
 
     it('Should entries.*.item_id be exists on the storage.', async () => {
@@ -149,15 +136,18 @@ describe('route: `/api/purchases/bills`', () => {
           vendor_id: vendor.id,
           bill_number: '123',
           bill_date: '2020-02-02',
-          entries: [{
-            item_id: 123123,
-            rate: 1,
-            quantity: 1,
-          }]
+          entries: [
+            {
+              item_id: 123123,
+              rate: 1,
+              quantity: 1,
+            },
+          ],
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEMS.IDS.NOT.FOUND', code: 400,
+        type: 'ITEMS.IDS.NOT.FOUND',
+        code: 400,
       });
     });
 
@@ -174,18 +164,21 @@ describe('route: `/api/purchases/bills`', () => {
           vendor_id: vendor.id,
           bill_number: '123',
           bill_date: '2020-02-02',
-          entries: [{
-            item_id: item.id,
-            rate: 1,
-            quantity: 1,
-          }]
-        }); 
-      
+          entries: [
+            {
+              item_id: item.id,
+              rate: 1,
+              quantity: 1,
+            },
+          ],
+        });
+
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'BILL.NUMBER.EXISTS', code: 500,
-      })
-    })
+        type: 'BILL.NUMBER.EXISTS',
+        code: 500,
+      });
+    });
 
     it('Should store the given bill details with associated entries to the storage.', async () => {
       const item = await tenantFactory.create('item');
@@ -198,20 +191,18 @@ describe('route: `/api/purchases/bills`', () => {
           vendor_id: vendor.id,
           bill_number: '123',
           bill_date: '2020-02-02',
-          entries: [{
-            item_id: item.id,
-            rate: 1,
-            quantity: 1,
-          }]
+          entries: [
+            {
+              item_id: item.id,
+              rate: 1,
+              quantity: 1,
+            },
+          ],
         });
 
       expect(res.status).equals(200);
     });
-
-    
   });
 
-  describe('DELETE: `/api/purchases/bills/:id`', () => {
-
-  });
+  describe('DELETE: `/api/purchases/bills/:id`', () => {});
 });

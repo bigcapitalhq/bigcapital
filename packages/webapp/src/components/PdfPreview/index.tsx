@@ -7,11 +7,7 @@ import classNames from 'classnames';
  * Previews the pdf document of the given object url.
  */
 export function PdfDocumentPreview({ url, height, width, isLoading }) {
-  const content = isLoading ? (
-    <Spinner size={30} />
-  ) : (
-    <embed src={url} height={height} width={width} />
-  );
+  const content = isLoading ? <Spinner size={30} /> : <embed src={url} height={height} width={width} />;
 
   return (
     <div

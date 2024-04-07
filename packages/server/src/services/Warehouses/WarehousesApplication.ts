@@ -41,14 +41,8 @@ export class WarehousesApplication {
    * @param   {ICreateWarehouseDTO} createWarehouseDTO
    * @returns
    */
-  public createWarehouse = (
-    tenantId: number,
-    createWarehouseDTO: ICreateWarehouseDTO
-  ) => {
-    return this.createWarehouseService.createWarehouse(
-      tenantId,
-      createWarehouseDTO
-    );
+  public createWarehouse = (tenantId: number, createWarehouseDTO: ICreateWarehouseDTO) => {
+    return this.createWarehouseService.createWarehouse(tenantId, createWarehouseDTO);
   };
 
   /**
@@ -58,16 +52,8 @@ export class WarehousesApplication {
    * @param   {IEditWarehouseDTO} editWarehouseDTO
    * @returns {Promise<void>}
    */
-  public editWarehouse = (
-    tenantId: number,
-    warehouseId: number,
-    editWarehouseDTO: IEditWarehouseDTO
-  ) => {
-    return this.editWarehouseService.editWarehouse(
-      tenantId,
-      warehouseId,
-      editWarehouseDTO
-    );
+  public editWarehouse = (tenantId: number, warehouseId: number, editWarehouseDTO: IEditWarehouseDTO) => {
+    return this.editWarehouseService.editWarehouse(tenantId, warehouseId, editWarehouseDTO);
   };
 
   /**
@@ -112,26 +98,17 @@ export class WarehousesApplication {
    * @param   {number} tenantId -
    * @returns {Promise<IWarehouse>}
    */
-  public markWarehousePrimary = (
-    tenantId: number,
-    warehouseId: number
-  ): Promise<IWarehouse> => {
-    return this.markWarehousePrimaryService.markAsPrimary(
-      tenantId,
-      warehouseId
-    );
+  public markWarehousePrimary = (tenantId: number, warehouseId: number): Promise<IWarehouse> => {
+    return this.markWarehousePrimaryService.markAsPrimary(tenantId, warehouseId);
   };
 
   /**
-   * Retrieves the specific item warehouses quantity. 
-   * @param {number} tenantId 
-   * @param {number} itemId 
-   * @returns 
+   * Retrieves the specific item warehouses quantity.
+   * @param {number} tenantId
+   * @param {number} itemId
+   * @returns
    */
-  public getItemWarehouses = (
-    tenantId: number,
-    itemId: number
-  ): Promise<any> => {
+  public getItemWarehouses = (tenantId: number, itemId: number): Promise<any> => {
     return this.getItemWarehousesService.getItemWarehouses(tenantId, itemId);
   };
 }

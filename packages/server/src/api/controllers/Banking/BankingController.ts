@@ -1,6 +1,6 @@
-import Container, { Inject, Service } from 'typedi';
-import { Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
+import { Router } from 'express';
+import Container, { Service } from 'typedi';
 import { PlaidBankingController } from './PlaidBankingController';
 
 @Service()

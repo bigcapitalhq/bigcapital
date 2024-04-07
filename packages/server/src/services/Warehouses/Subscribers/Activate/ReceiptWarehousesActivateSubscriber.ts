@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { IWarehousesActivatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ReceiptActivateWarehouses } from '../../Activate/ReceiptWarehousesActivate';
 
 @Service()
@@ -12,10 +12,7 @@ export class ReceiptsActivateWarehousesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.warehouse.onActivated,
-      this.updateInventoryTransactionsWithWarehouseOnActivated
-    );
+    bus.subscribe(events.warehouse.onActivated, this.updateInventoryTransactionsWithWarehouseOnActivated);
     return bus;
   }
 
@@ -28,9 +25,6 @@ export class ReceiptsActivateWarehousesSubscriber {
     tenantId,
     primaryWarehouse,
   }: IWarehousesActivatedPayload) => {
-    await this.receiptsActivateWarehouses.updateReceiptsWithWarehouse(
-      tenantId,
-      primaryWarehouse
-    );
+    await this.receiptsActivateWarehouses.updateReceiptsWithWarehouse(tenantId, primaryWarehouse);
   };
 }

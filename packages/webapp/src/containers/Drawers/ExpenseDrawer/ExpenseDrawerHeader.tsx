@@ -49,22 +49,13 @@ export default function ExpenseDrawerHeader() {
               {defaultTo(expense.reference_no, '-')}
             </DetailItem>
 
-            <DetailItem label={<T id={'description'} />}>
-              {defaultTo(expense.description, '—')}
-            </DetailItem>
-            <ExchangeRateDetailItem
-              exchangeRate={expense?.exchange_rate}
-              toCurrency={expense?.currency_code}
-            />
+            <DetailItem label={<T id={'description'} />}>{defaultTo(expense.description, '—')}</DetailItem>
+            <ExchangeRateDetailItem exchangeRate={expense?.exchange_rate} toCurrency={expense?.currency_code} />
           </DetailsMenu>
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            textAlign={'right'}
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-          >
+          <DetailsMenu textAlign={'right'} direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem label={<T id={'published_at'} />}>
               <FormatDate value={expense.published_at} />
             </DetailItem>

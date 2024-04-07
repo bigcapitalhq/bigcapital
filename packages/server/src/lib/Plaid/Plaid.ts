@@ -1,7 +1,6 @@
+import config from '@/config';
 import { forEach } from 'lodash';
 import { Configuration, PlaidApi, PlaidEnvironments } from 'plaid';
-import { createPlaidApiEvent } from './PlaidApiEventsDBSync';
-import config from '@/config';
 
 const OPTIONS = { clientApp: 'Plaid-Pattern' };
 
@@ -34,13 +33,8 @@ const defaultLogger = async (clientMethod, clientMethodArgs, response) => {
  * @param {Array} clientMethodArgs the arguments passed to the Plaid client method.
  * @param {Object} response the response from the Plaid client.
  */
-const noAccessTokenLogger = async (
-  clientMethod,
-  clientMethodArgs,
-  response
-) => {
+const noAccessTokenLogger = async (clientMethod, clientMethodArgs, response) => {
   // console.log(response);
-
   // await createPlaidApiEvent(
   //   undefined,
   //   undefined,
@@ -71,9 +65,7 @@ export class PlaidClientWrapper {
         headers: {
           'PLAID-CLIENT-ID': config.plaid.clientId,
           'PLAID-SECRET':
-            config.plaid.env === 'development'
-              ? config.plaid.secretDevelopment
-              : config.plaid.secretSandbox,
+            config.plaid.env === 'development' ? config.plaid.secretDevelopment : config.plaid.secretSandbox,
           'Plaid-Version': '2020-09-14',
         },
       },

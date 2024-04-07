@@ -1,16 +1,11 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ISaleReceiptEventClosedPayload, ISaleReceiptEventClosingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import {
-  ISaleReceiptEventClosedPayload,
-  ISaleReceiptEventClosingPayload,
-} from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
@@ -33,10 +28,7 @@ export class CloseSaleReceipt {
    * @param {number} saleReceiptId
    * @return {Promise<void>}
    */
-  public async closeSaleReceipt(
-    tenantId: number,
-    saleReceiptId: number
-  ): Promise<void> {
+  public async closeSaleReceipt(tenantId: number, saleReceiptId: number): Promise<void> {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Retrieve sale receipt or throw not found service error.
@@ -58,12 +50,9 @@ export class CloseSaleReceipt {
       } as ISaleReceiptEventClosingPayload);
 
       // Mark the sale receipt as closed on the storage.
-      const saleReceipt = await SaleReceipt.query(trx).patchAndFetchById(
-        saleReceiptId,
-        {
-          closedAt: moment().toMySqlDateTime(),
-        }
-      );
+      const saleReceipt = await SaleReceipt.query(trx).patchAndFetchById(saleReceiptId, {
+        closedAt: moment().toMySqlDateTime(),
+      });
       // Triggers `onSaleReceiptClosed` event.
       await this.eventPublisher.emitAsync(events.saleReceipt.onClosed, {
         saleReceiptId,

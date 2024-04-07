@@ -77,27 +77,18 @@ function AccountsSuggestFieldRoot({
 
   ...suggestProps
 }) {
-  const flattenAccounts = useMemo(
-    () => nestedArrayToflatten(accounts),
-    [accounts],
-  );
+  const flattenAccounts = useMemo(() => nestedArrayToflatten(accounts), [accounts]);
 
   // Filters accounts based on filter props.
   const filteredAccounts = useMemo(() => {
-    let filteredAccounts = filterAccountsByQuery(flattenAccounts, {
+    const filteredAccounts = filterAccountsByQuery(flattenAccounts, {
       filterByRootTypes,
       filterByParentTypes,
       filterByTypes,
       filterByNormal,
     });
     return filteredAccounts;
-  }, [
-    flattenAccounts,
-    filterByRootTypes,
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-  ]);
+  }, [flattenAccounts, filterByRootTypes, filterByParentTypes, filterByTypes, filterByNormal]);
 
   // Find initial account object to set it as default account in initial render.
   const initialAccount = useMemo(
@@ -105,15 +96,11 @@ function AccountsSuggestFieldRoot({
     [initialAccountId, filteredAccounts],
   );
 
-  const [selectedAccount, setSelectedAccount] = useState(
-    initialAccount || null,
-  );
+  const [selectedAccount, setSelectedAccount] = useState(initialAccount || null);
 
   useEffect(() => {
     if (typeof selectedAccountId !== 'undefined') {
-      const account = selectedAccountId
-        ? filteredAccounts.find((a) => a.id === selectedAccountId)
-        : null;
+      const account = selectedAccountId ? filteredAccounts.find((a) => a.id === selectedAccountId) : null;
       setSelectedAccount(account);
     }
   }, [selectedAccountId, filteredAccounts, setSelectedAccount]);
@@ -144,9 +131,7 @@ function AccountsSuggestFieldRoot({
 
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   return (
     <Suggest
@@ -171,6 +156,4 @@ function AccountsSuggestFieldRoot({
   );
 }
 
-export const AccountsSuggestField = R.compose(withDialogActions)(
-  AccountsSuggestFieldRoot,
-);
+export const AccountsSuggestField = R.compose(withDialogActions)(AccountsSuggestFieldRoot);

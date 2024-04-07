@@ -166,4 +166,3 @@ export const useDashboardMeta = (props) => {
   }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
   return state;
 };
-

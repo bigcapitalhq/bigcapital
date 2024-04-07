@@ -20,10 +20,7 @@ export default class JournalCommands {
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */
-  async revertJournalEntries(
-    referenceId: number | number[],
-    referenceType: string | string[]
-  ) {
+  async revertJournalEntries(referenceId: number | number[], referenceType: string | string[]) {
     const { AccountTransaction } = this.models;
 
     const transactions = await AccountTransaction.query()
@@ -40,9 +37,7 @@ export default class JournalCommands {
    * @param {Date|string} startingDate
    * @return {Promise<void>}
    */
-  async revertInventoryCostJournalEntries(
-    startingDate: Date | string
-  ): Promise<void> {
+  async revertInventoryCostJournalEntries(startingDate: Date | string): Promise<void> {
     const { AccountTransaction } = this.models;
 
     this.journal.fromTransactions(transactions);

@@ -1,13 +1,10 @@
-import { Service, Inject } from 'typedi';
-import {
-  IItemEventDeletedPayload,
-  IItemEventDeletingPayload,
-} from '@/interfaces';
-import { Knex } from 'knex';
+import { IItemEventDeletedPayload, IItemEventDeletingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 @Service()
@@ -31,12 +28,9 @@ export class DeleteItem {
     const { Item } = this.tenancy.models(tenantId);
 
     // Retreive the given item or throw not found service error.
-    const oldItem = await Item.query()
-      .findById(itemId)
-      .throwIfNotFound()
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+    const oldItem = await Item.query().findById(itemId).throwIfNotFound().queryAndThrowIfHasRelations({
+      type: ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTIONS,
+    });
     // Delete item in unit of work.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onItemDeleting` event.

@@ -1,10 +1,7 @@
-import {
-  IGeneralLedgerSheetQuery,
-  IGeneralLedgerTableData,
-} from '@/interfaces';
+import { IGeneralLedgerSheetQuery, IGeneralLedgerTableData } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { GeneralLedgerService } from './GeneralLedgerService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { GeneralLedgerTable } from './GeneralLedgerTable';
 
 @Service()
@@ -21,15 +18,8 @@ export class GeneralLedgerTableInjectable {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<IGeneralLedgerTableData>}
    */
-  public async table(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<IGeneralLedgerTableData> {
-    const {
-      data: sheetData,
-      query: sheetQuery,
-      meta: sheetMeta,
-    } = await this.GLSheet.generalLedger(tenantId, query);
+  public async table(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<IGeneralLedgerTableData> {
+    const { data: sheetData, query: sheetQuery, meta: sheetMeta } = await this.GLSheet.generalLedger(tenantId, query);
 
     const table = new GeneralLedgerTable(sheetData, sheetQuery, sheetMeta);
 

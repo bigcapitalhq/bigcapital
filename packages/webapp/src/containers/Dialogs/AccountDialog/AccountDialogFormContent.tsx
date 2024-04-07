@@ -37,8 +37,7 @@ function AccountFormDialogFields({
   const accountNameFieldRef = useAutofocus();
 
   // Account form context.
-  const { fieldsDisabled, accounts, accountsTypes, currencies } =
-    useAccountDialogContext();
+  const { fieldsDisabled, accounts, accountsTypes, currencies } = useAccountDialogContext();
 
   return (
     <Form>
@@ -89,18 +88,8 @@ function AccountFormDialogFields({
           <FInputGroup medium={true} name={'code'} fastField={true} />
         </FFormGroup>
 
-        <FFormGroup
-          label={' '}
-          name={'subaccount'}
-          inline={true}
-          fastField={true}
-        >
-          <FCheckbox
-            inline={true}
-            label={<T id={'sub_account'} />}
-            name={'subaccount'}
-            fastField={true}
-          />
+        <FFormGroup label={' '} name={'subaccount'} inline={true} fastField={true}>
+          <FCheckbox inline={true} label={<T id={'sub_account'} />} name={'subaccount'} fastField={true} />
         </FFormGroup>
 
         {values.subaccount && (
@@ -127,12 +116,7 @@ function AccountFormDialogFields({
 
         <If condition={FOREIGN_CURRENCY_ACCOUNTS.includes(values.account_type)}>
           {/*------------ Currency  -----------*/}
-          <FFormGroup
-            label={<T id={'currency'} />}
-            name={'currency_code'}
-            inline={true}
-            fastField={true}
-          >
+          <FFormGroup label={<T id={'currency'} />} name={'currency_code'} inline={true} fastField={true}>
             <CurrencySelect
               name={'currency_code'}
               currencies={currencies}
@@ -143,38 +127,18 @@ function AccountFormDialogFields({
           </FFormGroup>
         </If>
 
-        <FFormGroup
-          label={<T id={'description'} />}
-          name={'description'}
-          inline={true}
-          fastField={true}
-        >
-          <FTextArea
-            name={'description'}
-            growVertically={true}
-            height={280}
-            fill={true}
-            fastField={true}
-          />
+        <FFormGroup label={<T id={'description'} />} name={'description'} inline={true} fastField={true}>
+          <FTextArea name={'description'} growVertically={true} height={280} fill={true} fastField={true} />
         </FFormGroup>
       </div>
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button
-            disabled={isSubmitting}
-            onClick={onClose}
-            style={{ minWidth: '75px' }}
-          >
+          <Button disabled={isSubmitting} onClick={onClose} style={{ minWidth: '75px' }}>
             <T id={'close'} />
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '95px' }}
-            type="submit"
-          >
+          <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '95px' }} type="submit">
             {action === 'edit' ? <T id={'edit'} /> : <T id={'submit'} />}
           </Button>
         </div>

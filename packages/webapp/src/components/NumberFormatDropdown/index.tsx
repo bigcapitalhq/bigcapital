@@ -10,11 +10,7 @@ import NumberFormatFooter from './NumberFormatFooter';
 /**
  * Number format form popover content.
  */
-export default function NumberFormatDropdown({
-  numberFormat = {},
-  onSubmit,
-  submitDisabled = false,
-}) {
+export default function NumberFormatDropdown({ numberFormat = {}, onSubmit, submitDisabled = false }) {
   const initialValues = {
     formatMoney: 'total',
     showZero: false,
@@ -22,7 +18,7 @@ export default function NumberFormatDropdown({
     divideOn1000: false,
     negativeFormat: 'mines',
     precision: 2,
-    ...numberFormat
+    ...numberFormat,
   };
   // Handle cancel button click.
   const handleCancelClick = useCallback(() => {}, []);

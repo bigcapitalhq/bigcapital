@@ -3,23 +3,11 @@ import React from 'react';
 import { FastField } from 'formik';
 import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import {
-  FormattedMessage as T,
-  Row,
-  Col,
-  FieldHint,
-  FFormGroup,
-  VendorsMultiSelect,
-} from '@/components';
+import { FormattedMessage as T, Row, Col, FieldHint, FFormGroup, VendorsMultiSelect } from '@/components';
 import { useAPAgingSummaryGeneralContext } from './APAgingSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 import { filterVendorsOptions } from './constants';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 
 /**
  * AP Aging Summary - Drawer Header - General panel - Content.
@@ -75,11 +63,7 @@ export default function APAgingSummaryHeaderGeneralContent() {
         <Col xs={5}>
           <FastField name={'agingPeriods'}>
             {({ field, meta: { error } }) => (
-              <FormGroup
-                label={<T id={'aging_periods'} />}
-                labelInfo={<FieldHint />}
-                intent={inputIntent({ error })}
-              >
+              <FormGroup label={<T id={'aging_periods'} />} labelInfo={<FieldHint />} intent={inputIntent({ error })}>
                 <InputGroup intent={error && Intent.DANGER} {...field} />
               </FormGroup>
             )}

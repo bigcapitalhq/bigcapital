@@ -10,21 +10,11 @@ const AccountDialogContent = lazy(() => import('./AccountDialogContent'));
 /**
  * Account form dialog.
  */
-function AccountFormDialog({
-  dialogName,
-  payload = { action: '', id: null },
-  isOpen,
-}) {
+function AccountFormDialog({ dialogName, payload = { action: '', id: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
-      title={
-        payload.action === 'edit' ? (
-          <T id={'edit_account'} />
-        ) : (
-          <T id={'new_account'} />
-        )
-      }
+      title={payload.action === 'edit' ? <T id={'edit_account'} /> : <T id={'new_account'} />}
       className={'dialog--account-form'}
       autoFocus={true}
       canEscapeKeyClose={true}

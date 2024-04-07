@@ -5,18 +5,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const QuickPaymentReceiveFormDialogContent = lazy(
-  () => import('./QuickPaymentReceiveFormDialogContent'),
-);
+const QuickPaymentReceiveFormDialogContent = lazy(() => import('./QuickPaymentReceiveFormDialogContent'));
 
 /**
  * Quick payment receive form dialog.
  */
-function QuickPaymentReceiveFormDialog({
-  dialogName,
-  payload = { invoiceId: null },
-  isOpen,
-}) {
+function QuickPaymentReceiveFormDialog({ dialogName, payload = { invoiceId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -27,10 +21,7 @@ function QuickPaymentReceiveFormDialog({
       className={'dialog--quick-payment-receive'}
     >
       <DialogSuspense>
-        <QuickPaymentReceiveFormDialogContent
-          dialogName={dialogName}
-          invoice={payload.invoiceId}
-        />
+        <QuickPaymentReceiveFormDialogContent dialogName={dialogName} invoice={payload.invoiceId} />
       </DialogSuspense>
     </Dialog>
   );

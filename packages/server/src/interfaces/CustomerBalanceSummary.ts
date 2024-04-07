@@ -1,22 +1,19 @@
 import {
-  IContactBalanceSummaryQuery,
   IContactBalanceSummaryAmount,
   IContactBalanceSummaryPercentage,
+  IContactBalanceSummaryQuery,
   IContactBalanceSummaryTotal,
 } from './ContactBalanceSummary';
 import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
-export interface ICustomerBalanceSummaryQuery
-  extends IContactBalanceSummaryQuery {
+export interface ICustomerBalanceSummaryQuery extends IContactBalanceSummaryQuery {
   customersIds?: number[];
 }
 
-export interface ICustomerBalanceSummaryAmount
-  extends IContactBalanceSummaryAmount {}
+export interface ICustomerBalanceSummaryAmount extends IContactBalanceSummaryAmount {}
 
-export interface ICustomerBalanceSummaryPercentage
-  extends IContactBalanceSummaryPercentage {}
+export interface ICustomerBalanceSummaryPercentage extends IContactBalanceSummaryPercentage {}
 
 export interface ICustomerBalanceSummaryCustomer {
   id: number;
@@ -25,8 +22,7 @@ export interface ICustomerBalanceSummaryCustomer {
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }
 
-export interface ICustomerBalanceSummaryTotal
-  extends IContactBalanceSummaryTotal {
+export interface ICustomerBalanceSummaryTotal extends IContactBalanceSummaryTotal {
   total: ICustomerBalanceSummaryAmount;
   percentageOfColumn?: ICustomerBalanceSummaryPercentage;
 }
@@ -50,7 +46,7 @@ export interface ICustomerBalanceSummaryStatement {
 export interface ICustomerBalanceSummaryService {
   customerBalanceSummary(
     tenantId: number,
-    query: ICustomerBalanceSummaryQuery
+    query: ICustomerBalanceSummaryQuery,
   ): Promise<ICustomerBalanceSummaryStatement>;
 }
 

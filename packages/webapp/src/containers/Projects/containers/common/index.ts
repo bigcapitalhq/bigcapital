@@ -1,1 +1,1 @@
-export * from './modalChargeOptions'
+export * from './modalChargeOptions';

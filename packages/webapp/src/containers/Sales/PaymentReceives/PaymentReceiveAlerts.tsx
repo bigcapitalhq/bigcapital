@@ -8,6 +8,4 @@ const PaymentReceiveDeleteAlert = React.lazy(
 /**
  * PaymentReceives alert.
  */
-export default [
-  { name: 'payment-receive-delete', component: PaymentReceiveDeleteAlert },
-];
+export default [{ name: 'payment-receive-delete', component: PaymentReceiveDeleteAlert }];

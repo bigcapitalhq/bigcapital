@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
+import { Request, Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class PlaidBankingController extends BaseController {

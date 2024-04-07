@@ -21,8 +21,7 @@ function SMSMessagesDataTable({
   openDialog,
 }) {
   // Edit SMS message notification mutations.
-  const { mutateAsync: editSMSNotificationMutate } =
-    useSettingEditSMSNotification();
+  const { mutateAsync: editSMSNotificationMutate } = useSettingEditSMSNotification();
 
   const toggleSmsNotification = (notificationKey, value) => {
     editSMSNotificationMutate({
@@ -30,9 +29,7 @@ function SMSMessagesDataTable({
       is_notification_enabled: value,
     }).then(() => {
       AppToaster.show({
-        message: intl.get(
-          'sms_messages.notification_switch_change_success_message',
-        ),
+        message: intl.get('sms_messages.notification_switch_change_success_message'),
         intent: Intent.SUCCESS,
       });
     });
@@ -51,11 +48,7 @@ function SMSMessagesDataTable({
     onSwitchChange: handleNotificationSwitchChange,
   });
 
-  const {
-    notifications,
-    isSMSNotificationsLoading,
-    isSMSNotificationsFetching,
-  } = useSMSIntegrationContext();
+  const { notifications, isSMSNotificationsLoading, isSMSNotificationsFetching } = useSMSIntegrationContext();
 
   // handle edit message link click
   const handleEditMessageText = ({ key }) => {

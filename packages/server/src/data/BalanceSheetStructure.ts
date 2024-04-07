@@ -1,7 +1,5 @@
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { IBalanceSheetStructureSection } from '@/interfaces';
-import {
-  ACCOUNT_TYPE
-} from '@/data/AccountTypes';
 
 const balanceSheetStructure: IBalanceSheetStructureSection[] = [
   {
@@ -46,7 +44,7 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
         name: 'Non-Current Assets',
         type: 'accounts_section',
         accountsTypes: [ACCOUNT_TYPE.NON_CURRENT_ASSET],
-      }
+      },
     ],
     alwaysShow: true,
   },
@@ -79,7 +77,7 @@ const balanceSheetStructure: IBalanceSheetStructureSection[] = [
             name: 'Non-Current Liabilities',
             type: 'accounts_section',
             accountsTypes: [ACCOUNT_TYPE.NON_CURRENT_LIABILITY],
-          }
+          },
         ],
       },
       {

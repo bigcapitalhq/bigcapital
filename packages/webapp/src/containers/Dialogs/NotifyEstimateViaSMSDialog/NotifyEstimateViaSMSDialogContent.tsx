@@ -9,10 +9,7 @@ export default function NotifyEstimateViaSMSDialogContent({
   estimate,
 }) {
   return (
-    <NotifyEstimateViaSMSFormProvider
-      estimateId={estimate}
-      dialogName={dialogName}
-    >
+    <NotifyEstimateViaSMSFormProvider estimateId={estimate} dialogName={dialogName}>
       <NotifyEstimateViaSMSForm />
     </NotifyEstimateViaSMSFormProvider>
   );

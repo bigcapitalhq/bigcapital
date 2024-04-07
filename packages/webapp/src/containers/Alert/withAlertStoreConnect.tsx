@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  isAlertOpenFactory,
-  getAlertPayloadFactory,
-} from '@/store/dashboard/dashboard.selectors';
+import { isAlertOpenFactory, getAlertPayloadFactory } from '@/store/dashboard/dashboard.selectors';
 
 export default (mapState) => {
   const isAlertOpen = isAlertOpenFactory();
@@ -17,4 +14,4 @@ export default (mapState) => {
     return mapState ? mapState(mapped) : mapped;
   };
   return connect(mapStateToProps);
-}
+};

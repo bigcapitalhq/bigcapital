@@ -19,4 +19,3 @@ export const resetCashflowAccountsTableState = () => {
     type: t.CASHFLOW_ACCOUNTS_TABLE_STATE_RESET,
   };
 };
- 

@@ -1,13 +1,12 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import bluebird from 'bluebird';
-import { isUndefined, get, chain, toArray, pickBy, castArray } from 'lodash';
-import { Knex } from 'knex';
-import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
-import { trimObject, parseBoolean } from './_utils';
-import { Account, Item } from '@/models';
-import ResourceService from '../Resource/ResourceService';
 import { multiNumberParse } from '@/utils/multi-number-parse';
+import bluebird from 'bluebird';
+import { Knex } from 'knex';
+import { castArray, get, isUndefined, pickBy } from 'lodash';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import ResourceService from '../Resource/ResourceService';
+import { parseBoolean, trimObject } from './_utils';
+import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
 
 const CurrencyParsingDTOs = 10;
 
@@ -27,27 +26,16 @@ export class ImportFileDataTransformer {
     importFile: any,
     importableFields: any,
     data: Record<string, unknown>[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     // Sanitize the sheet data.
     const sanitizedData = this.sanitizeSheetData(data);
 
     // Map the sheet columns key with the given map.
-    const mappedDTOs = this.mapSheetColumns(
-      sanitizedData,
-      importFile.mappingParsed
-    );
-    const resourceModel = this.resource.getResourceModel(
-      tenantId,
-      importFile.resource
-    );
+    const mappedDTOs = this.mapSheetColumns(sanitizedData, importFile.mappingParsed);
+    const resourceModel = this.resource.getResourceModel(tenantId, importFile.resource);
     // Parse the mapped sheet values.
-    return this.parseExcelValues(
-      importableFields,
-      mappedDTOs,
-      resourceModel,
-      trx
-    );
+    return this.parseExcelValues(importableFields, mappedDTOs, resourceModel, trx);
   }
 
   /**
@@ -65,10 +53,7 @@ export class ImportFileDataTransformer {
    * @param {ImportMappingAttr[]} map - The mapping attributes.
    * @returns {Record<string, any>[]} - The mapped data objects.
    */
-  public mapSheetColumns(
-    body: Record<string, any>[],
-    map: ImportMappingAttr[]
-  ): Record<string, any>[] {
+  public mapSheetColumns(body: Record<string, any>[], map: ImportMappingAttr[]): Record<string, any>[] {
     return body.map((item) => {
       const newItem = {};
       map
@@ -90,9 +75,9 @@ export class ImportFileDataTransformer {
     fields: ResourceMetaFieldsMap,
     valueDTOs: Record<string, any>[],
     resourceModel: any,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<Record<string, any>> {
-    // Prases the given object value based on the field key type. 
+    // Prases the given object value based on the field key type.
     const parser = async (value, key) => {
       let _value = value;
       const field = fields[key];
@@ -104,9 +89,7 @@ export class ImportFileDataTransformer {
         // Parses the enumeration value.
       } else if (field.fieldType === 'enumeration') {
         const field = fields[key];
-        const option = get(field, 'options', []).find(
-          (option) => option.label === value
-        );
+        const option = get(field, 'options', []).find((option) => option.label === value);
         _value = get(option, 'key');
         // Parses the numeric value.
       } else if (fields[key].fieldType === 'number') {
@@ -146,10 +129,7 @@ export class ImportFileDataTransformer {
     };
     const parseAsync = async (valueDTO) => {
       // Remove the undefined fields.
-      const _valueDTO = pickBy(
-        valueDTO,
-        (value, key) => !isUndefined(fields[key])
-      );
+      const _valueDTO = pickBy(valueDTO, (value, key) => !isUndefined(fields[key]));
       const keys = Object.keys(_valueDTO);
 
       // Map the object values.
@@ -161,7 +141,7 @@ export class ImportFileDataTransformer {
           acc[parsedKey] = parsedValue;
           return acc;
         },
-        {}
+        {},
       );
     };
     return bluebird.map(valueDTOs, parseAsync, {

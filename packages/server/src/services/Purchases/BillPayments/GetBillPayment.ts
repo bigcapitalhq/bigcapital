@@ -1,8 +1,8 @@
 import { IBillPayment } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import { BillPaymentTransformer } from './BillPaymentTransformer';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export class GetBillPayment {
@@ -18,10 +18,7 @@ export class GetBillPayment {
    * @param {number} billPyamentId
    * @return {Promise<IBillPayment>}
    */
-  public async getBillPayment(
-    tenantId: number,
-    billPyamentId: number
-  ): Promise<IBillPayment> {
+  public async getBillPayment(tenantId: number, billPyamentId: number): Promise<IBillPayment> {
     const { BillPayment } = this.tenancy.models(tenantId);
 
     const billPayment = await BillPayment.query()
@@ -33,10 +30,6 @@ export class GetBillPayment {
       .findById(billPyamentId)
       .throwIfNotFound();
 
-    return this.transformer.transform(
-      tenantId,
-      billPayment,
-      new BillPaymentTransformer()
-    );
+    return this.transformer.transform(tenantId, billPayment, new BillPaymentTransformer());
   }
 }

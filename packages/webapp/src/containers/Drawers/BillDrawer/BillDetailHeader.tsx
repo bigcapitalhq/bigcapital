@@ -47,36 +47,19 @@ export default function BillDetailHeader() {
               <FormatDate value={bill.due_date} />
             </DetailItem>
             <DetailItem label={intl.get('vendor_name')}>
-              <VendorDrawerLink vendorId={bill.vendor_id}>
-                {bill.vendor?.display_name}
-              </VendorDrawerLink>
+              <VendorDrawerLink vendorId={bill.vendor_id}>{bill.vendor?.display_name}</VendorDrawerLink>
             </DetailItem>
-            <DetailItem label={intl.get('bill.details.bill_number')}>
-              {defaultTo(bill.bill_number, '-')}
-            </DetailItem>
-            <ExchangeRateDetailItem
-              exchangeRate={bill?.exchange_rate}
-              toCurrency={bill?.currency_code}
-            />
+            <DetailItem label={intl.get('bill.details.bill_number')}>{defaultTo(bill.bill_number, '-')}</DetailItem>
+            <ExchangeRateDetailItem exchangeRate={bill?.exchange_rate} toCurrency={bill?.currency_code} />
           </DetailsMenu>
         </Col>
         <Col xs={6}>
-          <DetailsMenu
-            direction={'horizantal'}
-            minLabelSize={'140px'}
-            textAlign={'right'}
-          >
+          <DetailsMenu direction={'horizantal'} minLabelSize={'140px'} textAlign={'right'}>
             <DetailItem label={intl.get('due_amount')}>
               <strong>{bill.formatted_due_amount}</strong>
             </DetailItem>
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(bill.reference_no, '--')}
-            />
-            <DetailItem
-              label={intl.get('bill.details.created_at')}
-              children={<FormatDate value={bill.created_at} />}
-            />
+            <DetailItem label={intl.get('reference')} children={defaultTo(bill.reference_no, '--')} />
+            <DetailItem label={intl.get('bill.details.created_at')} children={<FormatDate value={bill.created_at} />} />
           </DetailsMenu>
         </Col>
       </Row>

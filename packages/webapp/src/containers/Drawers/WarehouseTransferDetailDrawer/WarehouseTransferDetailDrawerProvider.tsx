@@ -10,15 +10,11 @@ const WarehouseTransferDetailDrawerContext = React.createContext();
 /**
  * Warehouse transfer detail drawer provider.
  */
-function WarehouseTransferDetailDrawerProvider({
-  warehouseTransferId,
-  ...props
-}) {
+function WarehouseTransferDetailDrawerProvider({ warehouseTransferId, ...props }) {
   // Handle fetch warehouse transfer detail.
-  const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } =
-    useWarehouseTransfer(warehouseTransferId, {
-      enabled: !!warehouseTransferId,
-    });
+  const { data: warehouseTransfer, isLoading: isWarehouseTransferLoading } = useWarehouseTransfer(warehouseTransferId, {
+    enabled: !!warehouseTransferId,
+  });
 
   const provider = {
     warehouseTransfer,
@@ -30,23 +26,14 @@ function WarehouseTransferDetailDrawerProvider({
       <DrawerHeaderContent
         name={DRAWERS.WAREHOUSE_TRANSFER_DETAILS}
         title={intl.get('warehouse_transfer.drawer.title', {
-          number: warehouseTransfer.transaction_number
-            ? `(${warehouseTransfer.transaction_number})`
-            : null,
+          number: warehouseTransfer.transaction_number ? `(${warehouseTransfer.transaction_number})` : null,
         })}
       />
-      <WarehouseTransferDetailDrawerContext.Provider
-        value={provider}
-        {...props}
-      />
+      <WarehouseTransferDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );
 }
 
-const useWarehouseDetailDrawerContext = () =>
-  React.useContext(WarehouseTransferDetailDrawerContext);
+const useWarehouseDetailDrawerContext = () => React.useContext(WarehouseTransferDetailDrawerContext);
 
-export {
-  WarehouseTransferDetailDrawerProvider,
-  useWarehouseDetailDrawerContext,
-};
+export { WarehouseTransferDetailDrawerProvider, useWarehouseDetailDrawerContext };

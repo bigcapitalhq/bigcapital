@@ -1,6 +1,6 @@
+import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { includes, isFunction, isObject, isUndefined, omit } from 'lodash';
 import { formatNumber, sortObjectKeysAlphabetically } from 'utils';
 
 export class Transformer {
@@ -84,7 +84,7 @@ export class Transformer {
       sortObjectKeysAlphabetically,
       this.transform,
       R.when(this.hasExcludeAttributes, this.excludeAttributesTransformed),
-      this.includeAttributesTransformed
+      this.includeAttributesTransformed,
     )(normlizedItem);
   };
 
@@ -113,14 +113,9 @@ export class Transformer {
     const attributes = this.includeAttributes();
 
     return attributes
-      .filter(
-        (attribute) =>
-          isFunction(this[attribute]) || !isUndefined(item[attribute])
-      )
+      .filter((attribute) => isFunction(this[attribute]) || !isUndefined(item[attribute]))
       .reduce((acc, attribute: string) => {
-        acc[attribute] = isFunction(this[attribute])
-          ? this[attribute](item)
-          : item[attribute];
+        acc[attribute] = isFunction(this[attribute]) ? this[attribute](item) : item[attribute];
 
         return acc;
       }, {});
@@ -186,11 +181,7 @@ export class Transformer {
    * @param transformer
    * @param options
    */
-  public item(
-    obj: Record<string, any>,
-    transformer: Transformer,
-    options?: any
-  ) {
+  public item(obj: Record<string, any>, transformer: Transformer, options?: any) {
     transformer.setOptions(options);
     transformer.setContext(this.context);
 

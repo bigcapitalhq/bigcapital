@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query, ValidationChain } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ServiceError } from '@/exceptions';
-import { IItemDTO, ItemAction, AbilitySubject } from '@/interfaces';
-import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import CheckAbilities from '@/api/middleware/CheckPolicies';
+import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, IItemDTO, ItemAction } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ItemsApplication } from '@/services/Items/ItemsApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ItemsController extends BaseController {
@@ -29,7 +29,7 @@ export default class ItemsController extends BaseController {
       this.validateItemSchema,
       this.validationResult,
       this.asyncMiddleware(this.newItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/activate',
@@ -37,7 +37,7 @@ export default class ItemsController extends BaseController {
       this.validateSpecificItemSchema,
       this.validationResult,
       this.asyncMiddleware(this.activateItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/inactivate',
@@ -45,7 +45,7 @@ export default class ItemsController extends BaseController {
       [...this.validateSpecificItemSchema],
       this.validationResult,
       this.asyncMiddleware(this.inactivateItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
@@ -53,7 +53,7 @@ export default class ItemsController extends BaseController {
       [...this.validateItemSchema, ...this.validateSpecificItemSchema],
       this.validationResult,
       this.asyncMiddleware(this.editItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.delete(
       '/:id',
@@ -61,7 +61,7 @@ export default class ItemsController extends BaseController {
       [...this.validateSpecificItemSchema],
       this.validationResult,
       this.asyncMiddleware(this.deleteItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/:id',
@@ -69,7 +69,7 @@ export default class ItemsController extends BaseController {
       [...this.validateSpecificItemSchema],
       this.validationResult,
       this.asyncMiddleware(this.getItem.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
@@ -78,7 +78,7 @@ export default class ItemsController extends BaseController {
       this.validationResult,
       this.asyncMiddleware(this.getItemsList.bind(this)),
       this.dynamicListService.handlerErrorsToResponse,
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -88,24 +88,14 @@ export default class ItemsController extends BaseController {
    */
   get validateItemSchema(): ValidationChain[] {
     return [
-      check('name')
-        .exists()
-        .isString()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('type')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .isIn(['service', 'non-inventory', 'inventory']),
-      check('code')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('name').exists().isString().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('type').exists().isString().trim().escape().isIn(['service', 'non-inventory', 'inventory']),
+      check('code').optional({ nullable: true }).isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
       // Purchase attributes.
-      check('purchasable').optional().isBoolean().toBoolean(),
+      check('purchasable')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       check('cost_price')
         .optional({ nullable: true })
         .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
@@ -113,12 +103,12 @@ export default class ItemsController extends BaseController {
         .if(check('purchasable').equals('true'))
         .exists(),
       check('cost_account_id').if(check('purchasable').equals('true')).exists(),
-      check('cost_account_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
+      check('cost_account_id').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 }).toInt(),
       // Sell attributes.
-      check('sellable').optional().isBoolean().toBoolean(),
+      check('sellable')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       check('sell_price')
         .optional({ nullable: true })
         .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
@@ -126,13 +116,8 @@ export default class ItemsController extends BaseController {
         .if(check('sellable').equals('true'))
         .exists(),
       check('sell_account_id').if(check('sellable').equals('true')).exists(),
-      check('sell_account_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
-      check('inventory_account_id')
-        .if(check('type').equals('inventory'))
-        .exists(),
+      check('sell_account_id').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('inventory_account_id').if(check('type').equals('inventory')).exists(),
       check('inventory_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
@@ -150,20 +135,9 @@ export default class ItemsController extends BaseController {
         .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('sell_tax_rate_id').optional({ nullable: true }).isInt().toInt(),
-      check('purchase_tax_rate_id')
-        .optional({ nullable: true })
-        .isInt()
-        .toInt(),
-      check('category_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
-      check('note')
-        .optional()
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.TEXT }),
+      check('purchase_tax_rate_id').optional({ nullable: true }).isInt().toInt(),
+      check('category_id').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('note').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
 
       check('media_ids').optional().isArray(),
@@ -208,10 +182,7 @@ export default class ItemsController extends BaseController {
     const itemDTO: IItemDTO = this.matchedBodyData(req);
 
     try {
-      const storedItem = await this.itemsApplication.createItem(
-        tenantId,
-        itemDTO
-      );
+      const storedItem = await this.itemsApplication.createItem(tenantId, itemDTO);
 
       return res.status(200).send({
         id: storedItem.id,
@@ -272,11 +243,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async inactivateItem(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async inactivateItem(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const itemId: number = req.params.id;
 
@@ -352,8 +319,7 @@ export default class ItemsController extends BaseController {
     };
 
     try {
-      const { items, pagination, filterMeta } =
-        await this.itemsApplication.getItems(tenantId, filter);
+      const { items, pagination, filterMeta } = await this.itemsApplication.getItems(tenantId, filter);
 
       return res.status(200).send({
         items: this.transfromToResponse(items),
@@ -372,12 +338,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'NOT_FOUND') {
         return res.status(400).send({
@@ -461,9 +422,7 @@ export default class ItemsController extends BaseController {
       }
       if (error.errorType === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT') {
         return res.status(400).send({
-          errors: [
-            { type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 },
-          ],
+          errors: [{ type: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT', code: 330 }],
         });
       }
       if (error.errorType === 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE') {
@@ -482,8 +441,7 @@ export default class ItemsController extends BaseController {
           errors: [
             {
               type: 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
-              message:
-                'Cannot change item type to inventory with item has associated transactions.',
+              message: 'Cannot change item type to inventory with item has associated transactions.',
               code: 350,
             },
           ],
@@ -494,8 +452,7 @@ export default class ItemsController extends BaseController {
           errors: [
             {
               type: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
-              message:
-                'Cannot change item inventory account while the item has transactions.',
+              message: 'Cannot change item inventory account while the item has transactions.',
               code: 360,
             },
           ],
@@ -507,8 +464,7 @@ export default class ItemsController extends BaseController {
             {
               type: 'ITEM_HAS_ASSOCIATED_TRANSACTIONS',
               code: 370,
-              message:
-                'Could not delete item that has associated transactions.',
+              message: 'Could not delete item that has associated transactions.',
             },
           ],
         });

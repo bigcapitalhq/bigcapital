@@ -1,31 +1,29 @@
-
-
 export interface ITransactionsByReferenceQuery {
   referenceType: string;
   referenceId: string;
 }
 
 export interface ITransactionsByReferenceAmount {
-    amount: number;
-    formattedAmount: string;
-    currencyCode: string;
+  amount: number;
+  formattedAmount: string;
+  currencyCode: string;
 }
 
-export interface ITransactionsByReferenceTransaction{
-    credit: ITransactionsByReferenceAmount;
-    debit: ITransactionsByReferenceAmount;
+export interface ITransactionsByReferenceTransaction {
+  credit: ITransactionsByReferenceAmount;
+  debit: ITransactionsByReferenceAmount;
 
-    contactType: string;
-    formattedContactType: string;
+  contactType: string;
+  formattedContactType: string;
 
-    contactId: number;
+  contactId: number;
 
-    referenceType: string;
-    formattedReferenceType: string;
+  referenceType: string;
+  formattedReferenceType: string;
 
-    referenceId: number;
+  referenceId: number;
 
-    accountName: string;
-    accountCode: string;
-    accountId: number;
+  accountName: string;
+  accountCode: string;
+  accountId: number;
 }

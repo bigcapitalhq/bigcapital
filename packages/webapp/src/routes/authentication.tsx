@@ -33,5 +33,5 @@ export default [
     component: LazyLoader({
       loader: () => import('@/containers/Authentication/Register'),
     }),
-  }
+  },
 ];

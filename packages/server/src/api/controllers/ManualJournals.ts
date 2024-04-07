@@ -1,14 +1,14 @@
-import { Inject, Service } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import { ServiceError } from '@/exceptions';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { ServiceError } from '@/exceptions';
 import { AbilitySubject, ManualJournalAction } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ManualJournalsApplication } from '@/services/ManualJournals/ManualJournalsApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ManualJournalsController extends BaseController {
@@ -31,13 +31,13 @@ export default class ManualJournalsController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getManualJournalsList),
       this.dynamicListService.handlerErrorsToResponse,
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/:id',
       CheckPolicies(ManualJournalAction.View, AbilitySubject.ManualJournal),
       asyncMiddleware(this.getManualJournal),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/:id/publish',
@@ -45,7 +45,7 @@ export default class ManualJournalsController extends BaseController {
       [...this.manualJournalParamSchema],
       this.validationResult,
       asyncMiddleware(this.publishManualJournal),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/:id',
@@ -53,7 +53,7 @@ export default class ManualJournalsController extends BaseController {
       [...this.manualJournalValidationSchema, ...this.manualJournalParamSchema],
       this.validationResult,
       asyncMiddleware(this.editManualJournal),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.delete(
       '/:id',
@@ -61,7 +61,7 @@ export default class ManualJournalsController extends BaseController {
       [...this.manualJournalParamSchema],
       this.validationResult,
       asyncMiddleware(this.deleteManualJournal),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/',
@@ -69,7 +69,7 @@ export default class ManualJournalsController extends BaseController {
       [...this.manualJournalValidationSchema],
       this.validationResult,
       asyncMiddleware(this.makeJournalEntries),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -90,12 +90,7 @@ export default class ManualJournalsController extends BaseController {
       check('currency_code').optional(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
-      check('journal_number')
-        .optional()
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('journal_number').optional().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
       check('journal_type')
         .optional({ nullable: true })
         .isString()
@@ -117,10 +112,7 @@ export default class ManualJournalsController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('publish').optional().isBoolean().toBoolean(),
       check('entries').isArray({ min: 2 }),
-      check('entries.*.index')
-        .exists()
-        .isInt({ max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
+      check('entries.*.index').exists().isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('entries.*.credit')
         .optional({ nullable: true })
         .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
@@ -129,25 +121,11 @@ export default class ManualJournalsController extends BaseController {
         .optional({ nullable: true })
         .isFloat({ min: 0, max: DATATYPES_LENGTH.DECIMAL_13_3 })
         .toFloat(),
-      check('entries.*.account_id')
-        .isInt({ max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
-      check('entries.*.note')
-        .optional({ nullable: true })
-        .isString()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('entries.*.contact_id')
-        .optional({ nullable: true })
-        .isInt({ max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
-      check('entries.*.branch_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
-      check('entries.*.project_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.account_id').isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('entries.*.note').optional({ nullable: true }).isString().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('entries.*.contact_id').optional({ nullable: true }).isInt({ max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('entries.*.branch_id').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.project_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -174,21 +152,16 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private makeJournalEntries = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private makeJournalEntries = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
     const manualJournalDTO = this.matchedBodyData(req);
 
     try {
-      const { manualJournal } =
-        await this.manualJournalsApplication.createManualJournal(
-          tenantId,
-          manualJournalDTO,
-          user
-        );
+      const { manualJournal } = await this.manualJournalsApplication.createManualJournal(
+        tenantId,
+        manualJournalDTO,
+        user,
+      );
       return res.status(200).send({
         id: manualJournal.id,
         message: 'The manual journal has been created successfully.',
@@ -204,23 +177,18 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private editManualJournal = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private editManualJournal = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
     const { id: manualJournalId } = req.params;
     const manualJournalDTO = this.matchedBodyData(req);
 
     try {
-      const { manualJournal } =
-        await this.manualJournalsApplication.editManualJournal(
-          tenantId,
-          manualJournalId,
-          manualJournalDTO,
-          user
-        );
+      const { manualJournal } = await this.manualJournalsApplication.editManualJournal(
+        tenantId,
+        manualJournalId,
+        manualJournalDTO,
+        user,
+      );
       return res.status(200).send({
         id: manualJournal.id,
         message: 'The manual journal has been edited successfully.',
@@ -236,20 +204,12 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getManualJournal = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getManualJournal = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: manualJournalId } = req.params;
 
     try {
-      const manualJournal =
-        await this.manualJournalsApplication.getManualJournal(
-          tenantId,
-          manualJournalId
-        );
+      const manualJournal = await this.manualJournalsApplication.getManualJournal(tenantId, manualJournalId);
       return res.status(200).send({
         manual_journal: this.transfromToResponse(manualJournal),
       });
@@ -264,19 +224,12 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private publishManualJournal = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private publishManualJournal = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: manualJournalId } = req.params;
 
     try {
-      await this.manualJournalsApplication.publishManualJournal(
-        tenantId,
-        manualJournalId
-      );
+      await this.manualJournalsApplication.publishManualJournal(tenantId, manualJournalId);
       return res.status(200).send({
         id: manualJournalId,
         message: 'The manual journal has been published successfully.',
@@ -292,19 +245,12 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private deleteManualJournal = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteManualJournal = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
     const { id: manualJournalId } = req.params;
 
     try {
-      await this.manualJournalsApplication.deleteManualJournal(
-        tenantId,
-        manualJournalId
-      );
+      await this.manualJournalsApplication.deleteManualJournal(tenantId, manualJournalId);
       return res.status(200).send({
         id: manualJournalId,
         message: 'Manual journal has been deleted successfully.',
@@ -320,11 +266,7 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  getManualJournalsList = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  getManualJournalsList = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -334,11 +276,10 @@ export default class ManualJournalsController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const { manualJournals, pagination, filterMeta } =
-        await this.manualJournalsApplication.getManualJournals(
-          tenantId,
-          filter
-        );
+      const { manualJournals, pagination, filterMeta } = await this.manualJournalsApplication.getManualJournals(
+        tenantId,
+        filter,
+      );
 
       return res.status(200).send({
         manual_journals: this.transfromToResponse(manualJournals),
@@ -357,12 +298,7 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  catchServiceErrors = (
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  catchServiceErrors = (error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
       if (error.errorType === 'manual_journal_not_found') {
         res.boom.badRequest('Manual journal not found.', {
@@ -370,17 +306,14 @@ export default class ManualJournalsController extends BaseController {
         });
       }
       if (error.errorType === 'credit_debit_not_equal_zero') {
-        return res.boom.badRequest(
-          'Credit and debit should not be equal zero.',
-          {
-            errors: [
-              {
-                type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
-                code: 200,
-              },
-            ],
-          }
-        );
+        return res.boom.badRequest('Credit and debit should not be equal zero.', {
+          errors: [
+            {
+              type: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+              code: 200,
+            },
+          ],
+        });
       }
       if (error.errorType === 'credit_debit_not_equal') {
         return res.boom.badRequest('Credit and debit should be equal.', {
@@ -388,10 +321,9 @@ export default class ManualJournalsController extends BaseController {
         });
       }
       if (error.errorType === 'accounts_ids_not_found') {
-        return res.boom.badRequest(
-          'Journal entries some of accounts ids not exists.',
-          { errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 400 }] }
-        );
+        return res.boom.badRequest('Journal entries some of accounts ids not exists.', {
+          errors: [{ type: 'ACCOUNTS.IDS.NOT.FOUND', code: 400 }],
+        });
       }
       if (error.errorType === 'journal_number_exists') {
         return res.boom.badRequest('Journal number should be unique.', {
@@ -452,9 +384,7 @@ export default class ManualJournalsController extends BaseController {
           ],
         });
       }
-      if (
-        error.errorType === 'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS'
-      ) {
+      if (error.errorType === 'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS') {
         return res.boom.badRequest(null, {
           errors: [
             {
@@ -466,9 +396,7 @@ export default class ManualJournalsController extends BaseController {
       }
       if (error.errorType === 'MANUAL_JOURNAL_ENTRIES_HAVE_NO_BRANCH_ID') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'MANUAL_JOURNAL_ENTRIES_HAVE_NO_BRANCH_ID', code: 1200 },
-          ],
+          errors: [{ type: 'MANUAL_JOURNAL_ENTRIES_HAVE_NO_BRANCH_ID', code: 1200 }],
         });
       }
     }

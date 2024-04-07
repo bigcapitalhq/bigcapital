@@ -1,8 +1,8 @@
-import { Inject, Service } from "typedi";
-import { ICashFlowStatementQuery, ICashFlowStatementTable } from "@/interfaces";
-import HasTenancyService from "@/services/Tenancy/TenancyService";
-import CashFlowTable from "./CashFlowTable";
-import CashFlowStatementService from "./CashFlowService";
+import { ICashFlowStatementQuery, ICashFlowStatementTable } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import CashFlowStatementService from './CashFlowService';
+import CashFlowTable from './CashFlowTable';
 
 @Service()
 export class CashflowTableInjectable {
@@ -16,10 +16,7 @@ export class CashflowTableInjectable {
    * Retrieves the cash flow table.
    * @returns {Promise<ICashFlowStatementTable>}
    */
-  public async table(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<ICashFlowStatementTable> {
+  public async table(tenantId: number, query: ICashFlowStatementQuery): Promise<ICashFlowStatementTable> {
     const i18n = this.tenancy.i18n(tenantId);
 
     const cashflowDOO = await this.cashflowSheet.cashFlow(tenantId, query);

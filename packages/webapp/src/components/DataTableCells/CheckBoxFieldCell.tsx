@@ -30,10 +30,7 @@ const CheckboxEditableCell = ({
   const disabled = disabledAccessor ? get(original, disabledAccessor) : false;
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames(Classes.FILL)}
-    >
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames(Classes.FILL)}>
       <Checkbox
         value={value}
         onChange={onChange}

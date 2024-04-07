@@ -1,10 +1,6 @@
-import { Inject, Service } from 'typedi';
-import {
-  ISaleInvoiceCreatedPayload,
-  ISaleInvoiceDeletedPayload,
-  ISaleInvoiceEditedPayload,
-} from '@/interfaces';
+import { ISaleInvoiceCreatedPayload, ISaleInvoiceDeletedPayload, ISaleInvoiceEditedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { WriteTaxTransactionsItemEntries } from '../WriteTaxTransactionsItemEntries';
 
 @Service()
@@ -16,18 +12,9 @@ export class WriteInvoiceTaxTransactionsSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.writeInvoiceTaxTransactionsOnCreated
-    );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.rewriteInvoiceTaxTransactionsOnEdited
-    );
-    bus.subscribe(
-      events.saleInvoice.onDelete,
-      this.removeInvoiceTaxTransactionsOnDeleted
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.writeInvoiceTaxTransactionsOnCreated);
+    bus.subscribe(events.saleInvoice.onEdited, this.rewriteInvoiceTaxTransactionsOnEdited);
+    bus.subscribe(events.saleInvoice.onDelete, this.removeInvoiceTaxTransactionsOnDeleted);
     return bus;
   }
 
@@ -35,33 +22,21 @@ export class WriteInvoiceTaxTransactionsSubscriber {
    * Writes the invoice tax transactions on invoice created.
    * @param {ISaleInvoiceCreatingPaylaod}
    */
-  private writeInvoiceTaxTransactionsOnCreated = async ({
-    tenantId,
-    saleInvoice,
-    trx
-  }: ISaleInvoiceCreatedPayload) => {
-    await this.writeTaxTransactions.writeTaxTransactionsFromItemEntries(
-      tenantId,
-      saleInvoice.entries,
-      trx
-    );
+  private writeInvoiceTaxTransactionsOnCreated = async ({ tenantId, saleInvoice, trx }: ISaleInvoiceCreatedPayload) => {
+    await this.writeTaxTransactions.writeTaxTransactionsFromItemEntries(tenantId, saleInvoice.entries, trx);
   };
 
   /**
    * Rewrites the invoice tax transactions on invoice edited.
    * @param {ISaleInvoiceEditedPayload} payload -
    */
-  private rewriteInvoiceTaxTransactionsOnEdited = async ({
-    tenantId,
-    saleInvoice,
-    trx,
-  }: ISaleInvoiceEditedPayload) => {
+  private rewriteInvoiceTaxTransactionsOnEdited = async ({ tenantId, saleInvoice, trx }: ISaleInvoiceEditedPayload) => {
     await this.writeTaxTransactions.rewriteTaxRateTransactionsFromItemEntries(
       tenantId,
       saleInvoice.entries,
       'SaleInvoice',
       saleInvoice.id,
-      trx
+      trx,
     );
   };
 
@@ -72,13 +47,13 @@ export class WriteInvoiceTaxTransactionsSubscriber {
   private removeInvoiceTaxTransactionsOnDeleted = async ({
     tenantId,
     oldSaleInvoice,
-    trx
+    trx,
   }: ISaleInvoiceDeletedPayload) => {
     await this.writeTaxTransactions.removeTaxTransactionsFromItemEntries(
       tenantId,
       oldSaleInvoice.id,
       'SaleInvoice',
-      trx
+      trx,
     );
   };
 }

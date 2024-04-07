@@ -25,11 +25,7 @@ function WarehousesEmptyStatus({
       }
       action={
         <React.Fragment>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={handleActivateWarehouse}
-          >
+          <Button intent={Intent.PRIMARY} large={true} onClick={handleActivateWarehouse}>
             <T id={'warehouses.activate_button'} />
           </Button>
         </React.Fragment>

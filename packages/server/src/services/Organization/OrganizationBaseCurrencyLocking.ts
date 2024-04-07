@@ -1,7 +1,6 @@
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { isEmpty } from 'lodash';
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TimeoutSettings } from 'puppeteer';
 
 interface MutateBaseCurrencyLockMeta {
   modelName: string;
@@ -19,9 +18,7 @@ export default class OrganizationBaseCurrencyLocking {
   private getModelsPreventsMutate = (tenantId: number) => {
     const Models = this.tenancy.models(tenantId);
 
-    const filteredEntries = Object.entries(Models).filter(
-      ([key, Model]) => !!Model.preventMutateBaseCurrency
-    );
+    const filteredEntries = Object.entries(Models).filter(([key, Model]) => !!Model.preventMutateBaseCurrency);
     return Object.fromEntries(filteredEntries);
   };
 
@@ -30,9 +27,7 @@ export default class OrganizationBaseCurrencyLocking {
    * @param   {Model} Model
    * @returns {Promise<MutateBaseCurrencyLockMeta | false>}
    */
-  private isModelMutateLocked = async (
-    Model
-  ): Promise<MutateBaseCurrencyLockMeta | false> => {
+  private isModelMutateLocked = async (Model): Promise<MutateBaseCurrencyLockMeta | false> => {
     const validateQuery = Model.query();
 
     if (typeof Model?.modifiers?.preventMutateBaseCurrency !== 'undefined') {
@@ -56,19 +51,13 @@ export default class OrganizationBaseCurrencyLocking {
    * @param   {number} tenantId
    * @returns {Promise<MutateBaseCurrencyLockMeta[]>}
    */
-  public async baseCurrencyMutateLocks(
-    tenantId: number
-  ): Promise<MutateBaseCurrencyLockMeta[]> {
+  public async baseCurrencyMutateLocks(tenantId: number): Promise<MutateBaseCurrencyLockMeta[]> {
     const PreventedModels = this.getModelsPreventsMutate(tenantId);
 
-    const opers = Object.entries(PreventedModels).map(([ModelName, Model]) =>
-      this.isModelMutateLocked(Model)
-    );
+    const opers = Object.entries(PreventedModels).map(([ModelName, Model]) => this.isModelMutateLocked(Model));
     const results = await Promise.all(opers);
 
-    return results.filter(
-      (result) => result !== false
-    ) as MutateBaseCurrencyLockMeta[];
+    return results.filter((result) => result !== false) as MutateBaseCurrencyLockMeta[];
   }
 
   /**

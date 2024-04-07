@@ -10,5 +10,5 @@ export default function FinancialLoadingBar() {
     <div className={'financial-progressbar'}>
       <MaterialProgressBar />
     </div>
-  )
+  );
 }

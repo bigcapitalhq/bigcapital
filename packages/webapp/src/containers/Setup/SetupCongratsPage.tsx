@@ -36,12 +36,7 @@ function SetupCongratsPage({ setOrganizationSetupCompleted }) {
           <T id={'setup.congrats.description'} />
         </p>
 
-        <Button
-          intent={Intent.PRIMARY}
-          type="submit"
-          loading={isReloading}
-          onClick={handleBtnClick}
-        >
+        <Button intent={Intent.PRIMARY} type="submit" loading={isReloading} onClick={handleBtnClick}>
           <T id={'setup.congrats.go_to_dashboard'} />
         </Button>
       </div>

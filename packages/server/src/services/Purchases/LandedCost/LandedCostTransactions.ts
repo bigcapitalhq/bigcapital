@@ -1,15 +1,15 @@
-import { Inject, Service } from 'typedi';
-import { ref } from 'objection';
-import * as R from 'ramda';
 import {
-  ILandedCostTransactionsQueryDTO,
   ILandedCostTransaction,
   ILandedCostTransactionDOJO,
   ILandedCostTransactionEntry,
   ILandedCostTransactionEntryDOJO,
+  ILandedCostTransactionsQueryDTO,
 } from '@/interfaces';
-import TransactionLandedCost from './TransctionLandedCost';
+import { ref } from 'objection';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { formatNumber } from 'utils';
+import TransactionLandedCost from './TransctionLandedCost';
 
 @Service()
 export default class LandedCostTranasctions {
@@ -24,13 +24,10 @@ export default class LandedCostTranasctions {
    */
   public getLandedCostTransactions = async (
     tenantId: number,
-    query: ILandedCostTransactionsQueryDTO
+    query: ILandedCostTransactionsQueryDTO,
   ): Promise<ILandedCostTransaction[]> => {
     const { transactionType } = query;
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      query.transactionType
-    );
+    const Model = this.transactionLandedCost.getModel(tenantId, query.transactionType);
     // Retrieve the model entities.
     const transactions = await Model.query().onBuild((q) => {
       q.where('allocated_cost_amount', '<', ref('landed_cost_amount'));
@@ -41,13 +38,9 @@ export default class LandedCostTranasctions {
         q.withGraphFetched('categories.expenseAccount');
       }
     });
-    const transformLandedCost =
-      this.transactionLandedCost.transformToLandedCost(transactionType);
+    const transformLandedCost = this.transactionLandedCost.transformToLandedCost(transactionType);
 
-    return R.compose(
-      this.transformLandedCostTransactions,
-      R.map(transformLandedCost)
-    )(transactions);
+    return R.compose(this.transformLandedCostTransactions, R.map(transformLandedCost))(transactions);
   };
 
   /**
@@ -55,9 +48,7 @@ export default class LandedCostTranasctions {
    * @param transactions
    * @returns
    */
-  public transformLandedCostTransactions = (
-    transactions: ILandedCostTransaction[]
-  ) => {
+  public transformLandedCostTransactions = (transactions: ILandedCostTransaction[]) => {
     return R.map(this.transformLandedCostTransaction)(transactions);
   };
 
@@ -65,33 +56,23 @@ export default class LandedCostTranasctions {
    * Transformes the landed cost transaction.
    * @param {ILandedCostTransaction} transaction
    */
-  public transformLandedCostTransaction = (
-    transaction: ILandedCostTransaction
-  ): ILandedCostTransactionDOJO => {
+  public transformLandedCostTransaction = (transaction: ILandedCostTransaction): ILandedCostTransactionDOJO => {
     const { currencyCode } = transaction;
 
     // Formatted transaction amount.
     const formattedAmount = formatNumber(transaction.amount, { currencyCode });
 
     // Formatted transaction unallocated cost amount.
-    const formattedUnallocatedCostAmount = formatNumber(
-      transaction.unallocatedCostAmount,
-      { currencyCode }
-    );
+    const formattedUnallocatedCostAmount = formatNumber(transaction.unallocatedCostAmount, { currencyCode });
     // Formatted transaction allocated cost amount.
-    const formattedAllocatedCostAmount = formatNumber(
-      transaction.allocatedCostAmount,
-      { currencyCode }
-    );
+    const formattedAllocatedCostAmount = formatNumber(transaction.allocatedCostAmount, { currencyCode });
 
     return {
       ...transaction,
       formattedAmount,
       formattedUnallocatedCostAmount,
       formattedAllocatedCostAmount,
-      entries: R.map(this.transformLandedCostEntry(transaction))(
-        transaction.entries
-      ),
+      entries: R.map(this.transformLandedCostEntry(transaction))(transaction.entries),
     };
   };
 
@@ -102,31 +83,22 @@ export default class LandedCostTranasctions {
    * @returns {ILandedCostTransactionEntryDOJO}
    */
   public transformLandedCostEntry = R.curry(
-    (
-      transaction: ILandedCostTransaction,
-      entry: ILandedCostTransactionEntry
-    ): ILandedCostTransactionEntryDOJO => {
+    (transaction: ILandedCostTransaction, entry: ILandedCostTransactionEntry): ILandedCostTransactionEntryDOJO => {
       const { currencyCode } = transaction;
 
       // Formatted entry amount.
       const formattedAmount = formatNumber(entry.amount, { currencyCode });
 
       // Formatted entry unallocated cost amount.
-      const formattedUnallocatedCostAmount = formatNumber(
-        entry.unallocatedCostAmount,
-        { currencyCode }
-      );
+      const formattedUnallocatedCostAmount = formatNumber(entry.unallocatedCostAmount, { currencyCode });
       // Formatted entry allocated cost amount.
-      const formattedAllocatedCostAmount = formatNumber(
-        entry.allocatedCostAmount,
-        { currencyCode }
-      );
+      const formattedAllocatedCostAmount = formatNumber(entry.allocatedCostAmount, { currencyCode });
       return {
         ...entry,
         formattedAmount,
         formattedUnallocatedCostAmount,
         formattedAllocatedCostAmount,
       };
-    }
+    },
   );
 }

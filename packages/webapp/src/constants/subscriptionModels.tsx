@@ -1,10 +1,6 @@
 // @ts-nocheck
 // Subscription plans.
-export const plans = [
-  
-];
+export const plans = [];
 
 // Payment methods.
-export const paymentMethods = [
-  
-];
+export const paymentMethods = [];

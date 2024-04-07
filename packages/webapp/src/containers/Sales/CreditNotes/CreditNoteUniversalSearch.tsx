@@ -29,9 +29,7 @@ function CreditNoteUniversalSearchSelectComponent({
   return null;
 }
 
-export const CreditNoteUniversalSearchSelect = withDrawerActions(
-  CreditNoteUniversalSearchSelectComponent,
-);
+export const CreditNoteUniversalSearchSelect = withDrawerActions(CreditNoteUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -63,10 +61,7 @@ function CreditNoteUniversalSearchStatus({ receipt }) {
 /**
  * Credit note universal search item.
  */
-export function CreditNoteUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function CreditNoteUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -74,8 +69,7 @@ export function CreditNoteUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.credit_note_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.credit_note_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_credit_note_date}
           </span>
         </div>

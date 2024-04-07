@@ -55,10 +55,7 @@ export const useInventoryValuationQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseInventoryValuationQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseInventoryValuationQuery(locationQuery), [locationQuery]);
 
   return {
     query,

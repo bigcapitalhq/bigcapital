@@ -1,14 +1,14 @@
+import {
+  IColumnMapperMeta,
+  ITableColumn,
+  ITableRow,
+  IVendorBalanceSummaryData,
+  IVendorBalanceSummaryQuery,
+  IVendorBalanceSummaryTotal,
+  IVendorBalanceSummaryVendor,
+} from '@/interfaces';
 import * as R from 'ramda';
 import { tableMapper, tableRowMapper } from 'utils';
-import {
-  IVendorBalanceSummaryData,
-  IVendorBalanceSummaryVendor,
-  IVendorBalanceSummaryTotal,
-  ITableRow,
-  IColumnMapperMeta,
-  IVendorBalanceSummaryQuery,
-  ITableColumn,
-} from '@/interfaces';
 
 enum TABLE_ROWS_TYPES {
   VENDOR = 'VENDOR',
@@ -25,11 +25,7 @@ export class VendorBalanceSummaryTable {
    * @param {IVendorBalanceSummaryData} report
    * @param i18n
    */
-  constructor(
-    report: IVendorBalanceSummaryData,
-    query: IVendorBalanceSummaryQuery,
-    i18n
-  ) {
+  constructor(report: IVendorBalanceSummaryData, query: IVendorBalanceSummaryQuery, i18n) {
     this.report = report;
     this.query = query;
     this.i18n = i18n;
@@ -59,10 +55,7 @@ export class VendorBalanceSummaryTable {
     ];
     return R.compose(
       R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+      R.when(R.always(this.query.percentageColumn), R.concat(this.getPercentageColumnsAccessor())),
     )([]);
   };
 
@@ -71,9 +64,7 @@ export class VendorBalanceSummaryTable {
    * @param   {IVendorBalanceSummaryVendor[]} vendors
    * @returns {ITableRow[]}
    */
-  private vendorsTransformer = (
-    vendors: IVendorBalanceSummaryVendor[]
-  ): ITableRow[] => {
+  private vendorsTransformer = (vendors: IVendorBalanceSummaryVendor[]): ITableRow[] => {
     const columns = this.getVendorColumnsAccessor();
 
     return tableMapper(vendors, columns, {
@@ -92,10 +83,7 @@ export class VendorBalanceSummaryTable {
     ];
     return R.compose(
       R.concat(columns),
-      R.when(
-        R.always(this.query.percentageColumn),
-        R.concat(this.getPercentageColumnsAccessor())
-      )
+      R.when(R.always(this.query.percentageColumn), R.concat(this.getPercentageColumnsAccessor())),
     )([]);
   };
 
@@ -142,9 +130,9 @@ export class VendorBalanceSummaryTable {
         R.append({
           key: 'percentage_of_column',
           label: this.i18n.__('contact_summary_balance.percentage_column'),
-        })
+        }),
       ),
-      R.concat(columns)
+      R.concat(columns),
     )([]);
   };
 }

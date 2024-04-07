@@ -26,15 +26,7 @@ function EstimateFormDeliverDialogContentRoot({
     history.push('/estimates');
   };
 
-  return (
-    <EstimateMailDialogContent
-      estimateId={estimateId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancel}
-    />
-  );
+  return <EstimateMailDialogContent estimateId={estimateId} onFormSubmit={handleSubmit} onCancelClick={handleCancel} />;
 }
 
-export default R.compose(withDialogActions)(
-  EstimateFormDeliverDialogContentRoot,
-);
+export default R.compose(withDialogActions)(EstimateFormDeliverDialogContentRoot);

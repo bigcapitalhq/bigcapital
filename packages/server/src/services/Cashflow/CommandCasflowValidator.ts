@@ -1,14 +1,10 @@
-import { Service } from 'typedi';
-import { includes, camelCase, upperFirst } from 'lodash';
-import { IAccount, IUncategorizedCashflowTransaction } from '@/interfaces';
-import { getCashflowTransactionType } from './utils';
 import { ServiceError } from '@/exceptions';
-import {
-  CASHFLOW_DIRECTION,
-  CASHFLOW_TRANSACTION_TYPE,
-  ERRORS,
-} from './constants';
+import { IAccount, IUncategorizedCashflowTransaction } from '@/interfaces';
 import CashflowTransaction from '@/models/CashflowTransaction';
+import { camelCase, includes, upperFirst } from 'lodash';
+import { Service } from 'typedi';
+import { CASHFLOW_DIRECTION, CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
+import { getCashflowTransactionType } from './utils';
 
 @Service()
 export class CommandCashflowValidator {
@@ -18,15 +14,10 @@ export class CommandCashflowValidator {
    */
   public validateCreditAccountWithCashflowType = (
     creditAccount: IAccount,
-    cashflowTransactionType: CASHFLOW_TRANSACTION_TYPE
+    cashflowTransactionType: CASHFLOW_TRANSACTION_TYPE,
   ): void => {
-    const transactionTypeMeta = getCashflowTransactionType(
-      cashflowTransactionType
-    );
-    const noneCashflowAccount = !includes(
-      transactionTypeMeta.creditType,
-      creditAccount.accountType
-    );
+    const transactionTypeMeta = getCashflowTransactionType(cashflowTransactionType);
+    const noneCashflowAccount = !includes(transactionTypeMeta.creditType, creditAccount.accountType);
     if (noneCashflowAccount) {
       throw new ServiceError(ERRORS.CREDIT_ACCOUNTS_HAS_INVALID_TYPE);
     }
@@ -38,9 +29,7 @@ export class CommandCashflowValidator {
    * @returns {string}
    */
   public validateCashflowTransactionType = (transactionType: string) => {
-    const transformedType = upperFirst(
-      camelCase(transactionType)
-    ) as CASHFLOW_TRANSACTION_TYPE;
+    const transformedType = upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE;
 
     // Retrieve the given transaction type meta.
     const transactionTypeMeta = getCashflowTransactionType(transformedType);
@@ -56,9 +45,7 @@ export class CommandCashflowValidator {
    * Validate the given transaction should be categorized.
    * @param {CashflowTransaction} cashflowTransaction
    */
-  public validateTransactionShouldCategorized(
-    cashflowTransaction: CashflowTransaction
-  ) {
+  public validateTransactionShouldCategorized(cashflowTransaction: CashflowTransaction) {
     if (!cashflowTransaction.uncategorize) {
       throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
     }
@@ -68,9 +55,7 @@ export class CommandCashflowValidator {
    * Validate the given transcation shouldn't be categorized.
    * @param {CashflowTransaction} cashflowTransaction
    */
-  public validateTransactionShouldNotCategorized(
-    cashflowTransaction: CashflowTransaction
-  ) {
+  public validateTransactionShouldNotCategorized(cashflowTransaction: CashflowTransaction) {
     if (cashflowTransaction.uncategorize) {
       throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
     }
@@ -84,16 +69,12 @@ export class CommandCashflowValidator {
    */
   public validateUncategorizeTransactionType(
     uncategorizeTransaction: IUncategorizedCashflowTransaction,
-    transactionType: string
+    transactionType: string,
   ) {
-    const type = getCashflowTransactionType(
-      upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE
-    );
+    const type = getCashflowTransactionType(upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE);
     if (
-      (type.direction === CASHFLOW_DIRECTION.IN &&
-        uncategorizeTransaction.isDepositTransaction) ||
-      (type.direction === CASHFLOW_DIRECTION.OUT &&
-        uncategorizeTransaction.isWithdrawalTransaction)
+      (type.direction === CASHFLOW_DIRECTION.IN && uncategorizeTransaction.isDepositTransaction) ||
+      (type.direction === CASHFLOW_DIRECTION.OUT && uncategorizeTransaction.isWithdrawalTransaction)
     ) {
       return;
     }

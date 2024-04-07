@@ -24,9 +24,7 @@ function VendorUniversalSearchSelectComponent({
   return null;
 }
 
-const VendorUniversalSearchSelectAction = withDrawerActions(
-  VendorUniversalSearchSelectComponent,
-);
+const VendorUniversalSearchSelectAction = withDrawerActions(VendorUniversalSearchSelectComponent);
 
 /**
  * Transformes vendor resource item to search.

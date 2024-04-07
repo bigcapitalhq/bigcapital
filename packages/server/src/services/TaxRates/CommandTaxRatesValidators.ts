@@ -1,9 +1,9 @@
 import { ServiceError } from '@/exceptions';
+import { IItemEntryDTO, ITaxRate } from '@/interfaces';
+import { difference } from 'lodash';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { IItemEntryDTO, ITaxRate } from '@/interfaces';
 import { ERRORS } from './constants';
-import { difference } from 'lodash';
 
 @Service()
 export class CommandTaxRatesValidators {
@@ -61,10 +61,7 @@ export class CommandTaxRatesValidators {
    * @param {IItemEntryDTO[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  public async validateItemEntriesTaxCode(
-    tenantId: number,
-    itemEntriesDTO: IItemEntryDTO[]
-  ) {
+  public async validateItemEntriesTaxCode(tenantId: number, itemEntriesDTO: IItemEntryDTO[]) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxCode);
@@ -89,10 +86,7 @@ export class CommandTaxRatesValidators {
    * @param {IItemEntryDTO[]} itemEntriesDTO
    * @throws {ServiceError}
    */
-  public async validateItemEntriesTaxCodeId(
-    tenantId: number,
-    itemEntriesDTO: IItemEntryDTO[]
-  ) {
+  public async validateItemEntriesTaxCodeId(tenantId: number, itemEntriesDTO: IItemEntryDTO[]) {
     const filteredTaxEntries = itemEntriesDTO.filter((e) => e.taxRateId);
     const taxRatesIds = filteredTaxEntries.map((e) => e.taxRateId);
 

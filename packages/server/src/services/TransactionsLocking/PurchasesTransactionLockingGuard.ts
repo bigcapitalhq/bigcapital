@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import TransactionsLockingGuard from './TransactionsLockingGuard';
 import { TransactionsLockingGroup } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import TransactionsLockingGuard from './TransactionsLockingGuard';
 
 @Service()
 export default class PurchasesTransactionLocking {
@@ -12,14 +12,11 @@ export default class PurchasesTransactionLocking {
    * @param {number} tenantId
    * @param {Date} transactionDate
    */
-  public transactionLockingGuard = async (
-    tenantId: number,
-    transactionDate: Date
-  ) => {
+  public transactionLockingGuard = async (tenantId: number, transactionDate: Date) => {
     this.transactionLockingGuardService.transactionsLockingGuard(
-      tenantId, 
+      tenantId,
       transactionDate,
-      TransactionsLockingGroup.Purchases
+      TransactionsLockingGroup.Purchases,
     );
   };
 }

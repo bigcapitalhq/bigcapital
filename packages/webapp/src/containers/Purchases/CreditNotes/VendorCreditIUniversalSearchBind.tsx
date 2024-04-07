@@ -30,9 +30,7 @@ function VendorCreditUniversalSearchSelectComponent({
   return null;
 }
 
-export const VendorCreditUniversalSearchSelect = withDrawerActions(
-  VendorCreditUniversalSearchSelectComponent,
-);
+export const VendorCreditUniversalSearchSelect = withDrawerActions(VendorCreditUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -64,10 +62,7 @@ function VendorCreditUniversalSearchStatus({ receipt }) {
 /**
  * Credit note universal search item.
  */
-export function VendorCreditUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function VendorCreditUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -75,8 +70,7 @@ export function VendorCreditUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.vendor_credit_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.vendor_credit_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_vendor_credit_date}
           </span>
         </div>

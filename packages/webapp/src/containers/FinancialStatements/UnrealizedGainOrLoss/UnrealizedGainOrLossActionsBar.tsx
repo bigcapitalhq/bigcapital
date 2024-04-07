@@ -9,7 +9,7 @@ import {
   PopoverInteractionKind,
   Position,
 } from '@blueprintjs/core';
-import { DashboardActionsBar,FormattedMessage as T, Icon } from '@/components';
+import { DashboardActionsBar, FormattedMessage as T, Icon } from '@/components';
 import classNames from 'classnames';
 
 import NumberFormatDropdown from '@/components/NumberFormatDropdown';
@@ -43,8 +43,7 @@ function UnrealizedGainOrLossActionsBar({
   const handleRecalculateReport = () => {};
 
   // handle number format form submit.
-  const handleNumberFormatSubmit = (values) =>
-    saveInvoke(onNumberFormatSubmit, values);
+  const handleNumberFormatSubmit = (values) => saveInvoke(onNumberFormatSubmit, values);
 
   return (
     <DashboardActionsBar>
@@ -61,13 +60,7 @@ function UnrealizedGainOrLossActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            isFilterDrawerOpen ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={isFilterDrawerOpen ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />
@@ -99,11 +92,7 @@ function UnrealizedGainOrLossActionsBar({
         />
         <NavbarDivider />
 
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon="print-16" iconSize={16} />} text={<T id={'print'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}

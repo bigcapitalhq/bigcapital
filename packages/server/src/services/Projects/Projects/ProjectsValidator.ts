@@ -15,9 +15,6 @@ export class ProjectsValidator {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Validate customer existance.
-    await Contact.query()
-      .modify('customer')
-      .findById(contactId)
-      .throwIfNotFound();
+    await Contact.query().modify('customer').findById(contactId).throwIfNotFound();
   }
 }

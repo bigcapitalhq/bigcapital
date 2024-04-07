@@ -1,20 +1,17 @@
-import * as R from 'ramda';
 import { ITableColumn, ITableColumnAccessor, ITableRow } from '@/interfaces';
-import { ROW_TYPE } from './_types';
-import { tableRowMapper } from '@/utils';
-import { FinancialTable } from '../FinancialTable';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
-import FinancialSheet from '../FinancialSheet';
 import {
   IPurchasesByItemsItem,
   IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from '@/interfaces/PurchasesByItemsSheet';
+import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
+import FinancialSheet from '../FinancialSheet';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
+import { ROW_TYPE } from './_types';
 
-export class PurchasesByItemsTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class PurchasesByItemsTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   private data: IPurchasesByItemsSheetData;
 
   /**
@@ -104,8 +101,6 @@ export class PurchasesByItemsTable extends R.compose(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalNodeMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
-    )(itemsRows) as ITableRow[];
+    return R.compose(R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)))(itemsRows) as ITableRow[];
   }
 }

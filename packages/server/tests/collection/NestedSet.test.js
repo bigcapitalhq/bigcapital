@@ -1,8 +1,8 @@
-import { expect } from '~/testInit';
 import NestedSet from '@/collection/NestedSet';
+import { expect } from '~/testInit';
 
 describe('NestedSet', () => {
-  describe('linkChildren()', () => {  
+  describe('linkChildren()', () => {
     it('Should link parent and children nodes.', () => {
       const flattenArray = [
         { id: 10 },
@@ -26,24 +26,30 @@ describe('NestedSet', () => {
       expect(treeGroups['1']).deep.equals({
         id: 1,
         children: {
-          '2': { id: 2, parent_id: 1, children: {} },
-          '3': {
-            id: 3, parent_id: 1, children: {
-              '4': { id: 4, parent_id: 3, children: {} }
-            }
-          }
-        }
+          2: { id: 2, parent_id: 1, children: {} },
+          3: {
+            id: 3,
+            parent_id: 1,
+            children: {
+              4: { id: 4, parent_id: 3, children: {} },
+            },
+          },
+        },
       });
       expect(treeGroups['2']).deep.equals({
-        id: 2, parent_id: 1, children: {},
+        id: 2,
+        parent_id: 1,
+        children: {},
       });
-      expect(treeGroups['3']).deep.equals({      
+      expect(treeGroups['3']).deep.equals({
         id: 3,
         parent_id: 1,
-        children: { '4': { id: 4, parent_id: 3, children: {} } }
+        children: { 4: { id: 4, parent_id: 3, children: {} } },
       });
       expect(treeGroups['4']).deep.equals({
-        id: 4, parent_id: 3, children: {},
+        id: 4,
+        parent_id: 3,
+        children: {},
       });
     });
   });
@@ -70,16 +76,25 @@ describe('NestedSet', () => {
       const treeArray = nestSet.toArray();
 
       expect(treeArray[0]).deep.equals({
-        id: 10, children: [],
+        id: 10,
+        children: [],
       });
       expect(treeArray[1]).deep.equals({
         id: 1,
         children: [
           { id: 2, parent_id: 1, children: [] },
-          { id: 3, parent_id: 1, children: [{
-            id: 4, parent_id: 3, children: []
-          }] }
-        ]
+          {
+            id: 3,
+            parent_id: 1,
+            children: [
+              {
+                id: 4,
+                parent_id: 3,
+                children: [],
+              },
+            ],
+          },
+        ],
       });
     });
   });
@@ -104,27 +119,28 @@ describe('NestedSet', () => {
       ];
       const nestSet = new NestedSet(flattenArray);
       const parentNodes = nestSet.getParents(4);
-    
+
       expect(parentNodes).deep.equals([
         { id: 4, parent_id: 3, children: {} },
-        {      
+        {
           id: 3,
           parent_id: 1,
-          children: { '4': { id: 4, parent_id: 3, children: {} } } 
+          children: { 4: { id: 4, parent_id: 3, children: {} } },
         },
         {
           id: 1,
           children: {
-            '2': { id: 2, parent_id: 1, children: {} },
-            '3': {
-              id: 3, parent_id: 1, children: {
-                '4': { id: 4, parent_id: 3, children: {} }
-              }
-            }
-          }
-        }
+            2: { id: 2, parent_id: 1, children: {} },
+            3: {
+              id: 3,
+              parent_id: 1,
+              children: {
+                4: { id: 4, parent_id: 3, children: {} },
+              },
+            },
+          },
+        },
       ]);
     });
-  })
-
+  });
 });

@@ -12,10 +12,7 @@ import { useAppQueryString } from '@/hooks';
 export const getVendorTransactionsQuerySchema = () => {
   return Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('toDate')),
   });
 };
 
@@ -49,9 +46,6 @@ const parseVendorsTransactionsQuery = (query) => {
 export const useVendorsTransactionsQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  const query = useMemo(
-    () => parseVendorsTransactionsQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseVendorsTransactionsQuery(locationQuery), [locationQuery]);
   return [query, setLocationQuery];
 };

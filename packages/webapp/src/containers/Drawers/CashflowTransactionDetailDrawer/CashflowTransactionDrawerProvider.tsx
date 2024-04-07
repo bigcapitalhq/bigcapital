@@ -43,10 +43,6 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   );
 }
 
-const useCashflowTransactionDrawerContext = () =>
-  React.useContext(CashflowTransactionDrawerContext);
+const useCashflowTransactionDrawerContext = () => React.useContext(CashflowTransactionDrawerContext);
 
-export {
-  CashflowTransactionDrawerProvider,
-  useCashflowTransactionDrawerContext,
-};
+export { CashflowTransactionDrawerProvider, useCashflowTransactionDrawerContext };

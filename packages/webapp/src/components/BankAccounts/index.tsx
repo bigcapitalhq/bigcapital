@@ -55,24 +55,12 @@ function BankAccountTypeIcon({ type }) {
   );
 }
 
-export function BankAccount({
-  title,
-  code,
-  type,
-  balance,
-  loading = false,
-  updatedBeforeText,
-  ...restProps
-}) {
+export function BankAccount({ title, code, type, balance, loading = false, updatedBeforeText, ...restProps }) {
   return (
     <BankAccountWrap {...restProps}>
       <BankAccountHeader>
-        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>
-          {title}
-        </BankAccountTitle>
-        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>
-          {code}
-        </BnakAccountCode>
+        <BankAccountTitle className={clsx({ [Classes.SKELETON]: loading })}>{title}</BankAccountTitle>
+        <BnakAccountCode className={clsx({ [Classes.SKELETON]: loading })}>{code}</BnakAccountCode>
         {!loading && <BankAccountTypeIcon type={type} />}
       </BankAccountHeader>
 
@@ -84,10 +72,7 @@ export function BankAccount({
             className={clsx({ [Classes.SKELETON]: loading })}
           />
         )}
-        <BankAccountMetaLine
-          title={updatedBeforeText}
-          className={clsx({ [Classes.SKELETON]: loading })}
-        />
+        <BankAccountMetaLine title={updatedBeforeText} className={clsx({ [Classes.SKELETON]: loading })} />
       </BankAccountMeta>
 
       <BankAccountBalance amount={balance} loading={loading} />

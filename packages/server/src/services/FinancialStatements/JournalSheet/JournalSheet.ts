@@ -1,15 +1,14 @@
-import { sumBy, chain, get, head } from 'lodash';
 import {
+  IContact,
   IJournalEntry,
   IJournalPoster,
   IJournalReportEntriesGroup,
   IJournalReportQuery,
-  IJournalReport,
-  IContact,
   IJournalTableData,
 } from '@/interfaces';
-import FinancialSheet from '../FinancialSheet';
+import { chain, get, head, sumBy } from 'lodash';
 import moment from 'moment';
+import FinancialSheet from '../FinancialSheet';
 
 export default class JournalSheet extends FinancialSheet {
   readonly tenantId: number;
@@ -30,7 +29,7 @@ export default class JournalSheet extends FinancialSheet {
     accountsGraph: any,
     contactsById: Map<number | string, IContact>,
     baseCurrency: string,
-    i18n
+    i18n,
   ) {
     super();
 
@@ -46,7 +45,7 @@ export default class JournalSheet extends FinancialSheet {
 
   /**
    * Entry mapper.
-   * @param {IJournalEntry} entry 
+   * @param {IJournalEntry} entry
    */
   entryMapper(entry: IJournalEntry) {
     const account = this.accountsGraph.getNodeData(entry.accountId);
@@ -89,10 +88,7 @@ export default class JournalSheet extends FinancialSheet {
    * @param {string} key -
    * @return {IJournalReportEntriesGroup}
    */
-  entriesGroupsMapper(
-    entriesGroup: IJournalEntry[],
-    groupEntry: IJournalEntry
-  ): IJournalReportEntriesGroup {
+  entriesGroupsMapper(entriesGroup: IJournalEntry[], groupEntry: IJournalEntry): IJournalReportEntriesGroup {
     const totalCredit = sumBy(entriesGroup, 'credit');
     const totalDebit = sumBy(entriesGroup, 'debit');
 

@@ -34,10 +34,7 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
   const { mutateAsync: exchangeAccessToken } = usePlaidExchangeToken();
 
   // define onSuccess, onExit and onEvent functions as configs for Plaid Link creation
-  const onSuccess = async (
-    publicToken: string,
-    metadata: PlaidLinkOnSuccessMetadata,
-  ) => {
+  const onSuccess = async (publicToken: string, metadata: PlaidLinkOnSuccessMetadata) => {
     // log and save metatdata
     logSuccess(metadata);
     if (props.itemId != null) {
@@ -57,10 +54,7 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
   };
 
   // Handle other error codes, see https://plaid.com/docs/errors/
-  const onExit = async (
-    error: PlaidLinkError | null,
-    metadata: PlaidLinkOnExitMetadata,
-  ) => {
+  const onExit = async (error: PlaidLinkError | null, metadata: PlaidLinkOnExitMetadata) => {
     // log and save error and metatdata
     logExit(error, metadata, props.userId);
     if (error != null) {
@@ -69,10 +63,7 @@ export function LaunchLink(props: PlaidLaunchLinkProps) {
     resetPlaidToken();
   };
 
-  const onEvent = async (
-    eventName: PlaidLinkStableEvent | string,
-    metadata: PlaidLinkOnEventMetadata,
-  ) => {
+  const onEvent = async (eventName: PlaidLinkStableEvent | string, metadata: PlaidLinkOnEventMetadata) => {
     // handle errors in the event end-user does not exit with onExit function error enabled.
     if (eventName === 'ERROR' && metadata.error_code != null) {
       // setError(metadata.error_code, ' ');

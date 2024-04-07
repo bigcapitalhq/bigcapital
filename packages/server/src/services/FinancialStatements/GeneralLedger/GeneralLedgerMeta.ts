@@ -13,10 +13,7 @@ export class GeneralLedgerMeta {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  public async meta(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<IGeneralLedgerMeta> {
+  public async meta(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<IGeneralLedgerMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');

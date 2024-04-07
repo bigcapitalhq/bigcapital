@@ -31,7 +31,6 @@ export default {
       column: 'code',
       fieldType: 'text',
       importable: true,
-      
     },
     sellable: {
       name: 'item.field.sellable',

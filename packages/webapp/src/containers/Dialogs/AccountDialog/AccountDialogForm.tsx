@@ -8,16 +8,9 @@ import { AppToaster } from '@/components';
 import AccountDialogFormContent from './AccountDialogFormContent';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import {
-  EditAccountFormSchema,
-  CreateAccountFormSchema,
-} from './AccountForm.schema';
+import { EditAccountFormSchema, CreateAccountFormSchema } from './AccountForm.schema';
 import { compose, transformToForm } from '@/utils';
-import {
-  transformApiErrors,
-  transformAccountToForm,
-  transformFormToReq,
-} from './utils';
+import { transformApiErrors, transformAccountToForm, transformFormToReq } from './utils';
 
 import '@/style/pages/Accounts/AccountFormDialog.scss';
 import { useAccountDialogContext } from './AccountDialogProvider';
@@ -52,16 +45,12 @@ function AccountFormDialogContent({
   } = useAccountDialogContext();
 
   // Form validation schema in create and edit mode.
-  const validationSchema = isNewMode
-    ? CreateAccountFormSchema
-    : EditAccountFormSchema;
+  const validationSchema = isNewMode ? CreateAccountFormSchema : EditAccountFormSchema;
 
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     const form = transformFormToReq(values);
-    const toastAccountName = values.code
-      ? `${values.code} - ${values.name}`
-      : values.name;
+    const toastAccountName = values.code ? `${values.code} - ${values.name}` : values.name;
 
     // Handle request success.
     const handleSuccess = () => {
@@ -69,9 +58,7 @@ function AccountFormDialogContent({
 
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'service_has_been_created_successfully'
-            : 'service_has_been_edited_successfully',
+          isNewMode ? 'service_has_been_created_successfully' : 'service_has_been_edited_successfully',
           {
             name: toastAccountName,
             service: intl.get('account'),
@@ -93,9 +80,7 @@ function AccountFormDialogContent({
       setSubmitting(false);
     };
     if (payload.accountId) {
-      editAccountMutate([payload.accountId, form])
-        .then(handleSuccess)
-        .catch(handleError);
+      editAccountMutate([payload.accountId, form]).then(handleSuccess).catch(handleError);
     } else {
       createAccountMutate({ ...form })
         .then(handleSuccess)
@@ -110,10 +95,7 @@ function AccountFormDialogContent({
      * values such as `notes` come back from the API as null, so remove those
      * as well.
      */
-    ...transformToForm(
-      transformAccountToForm(account, payload),
-      defaultInitialValues,
-    ),
+    ...transformToForm(transformAccountToForm(account, payload), defaultInitialValues),
   };
   // Handles dialog close.
   const handleClose = useCallback(() => {
@@ -121,16 +103,8 @@ function AccountFormDialogContent({
   }, [closeDialog, dialogName]);
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
-      <AccountDialogFormContent
-        dialogName={dialogName}
-        action={payload?.action}
-        onClose={handleClose}
-      />
+    <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
+      <AccountDialogFormContent dialogName={dialogName} action={payload?.action} onClose={handleClose} />
     </Formik>
   );
 }

@@ -31,20 +31,8 @@ export const getDefaultARAgingSummaryQuery = () => {
 export const getARAgingSummaryQuerySchema = () => {
   return Yup.object().shape({
     asDate: Yup.date().required().label('asDate'),
-    agingDaysBefore: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('Aging days before')
-      .min(1)
-      .max(500),
-    agingPeriods: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .max(12)
-      .min(1)
-      .label('Aging periods'),
+    agingDaysBefore: Yup.number().required().integer().positive().label('Aging days before').min(1).max(500),
+    agingPeriods: Yup.number().required().integer().positive().max(12).min(1).label('Aging periods'),
   });
 };
 
@@ -70,9 +58,6 @@ const parseARAgingSummaryQuery = (locationQuery) => {
 export const useARAgingSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  const query = useMemo(
-    () => parseARAgingSummaryQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseARAgingSummaryQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

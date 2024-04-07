@@ -2,20 +2,8 @@
 import { FastField } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
 import { FormGroup, Position, Checkbox } from '@blueprintjs/core';
-import {
-  FormattedMessage as T,
-  Row,
-  Col,
-  FieldHint,
-  CustomersMultiSelect,
-  FFormGroup,
-} from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { FormattedMessage as T, Row, Col, FieldHint, CustomersMultiSelect, FFormGroup } from '@/components';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { filterCustomersOptions } from '../constants';
 import { useCustomersBalanceSummaryGeneralContext } from './CustomersBalanceSummaryGeneralProvider';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
@@ -84,10 +72,7 @@ export default function CustomersBalanceSummaryGeneralPanelContent() {
 
       <Row>
         <Col xs={5}>
-          <FFormGroup
-            name={'customersIds'}
-            label={<T id={'specific_customers'} />}
-          >
+          <FFormGroup name={'customersIds'} label={<T id={'specific_customers'} />}>
             <CustomersMultiSelect name={'customersIds'} items={customers} />
           </FFormGroup>
         </Col>

@@ -1,12 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-  DashboardContentTable,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader, DashboardContentTable } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useWarehouseTransfersTableColumns, ActionsMenu } from './components';
@@ -45,20 +40,14 @@ function WarehouseTransfersDataTable({
   const history = useHistory();
 
   // Warehouse transfers list context.
-  const {
-    warehousesTransfers,
-    pagination,
-    isEmptyStatus,
-    isWarehouseTransfersLoading,
-    isWarehouseTransfersFetching,
-  } = useWarehouseTranfersListContext();
+  const { warehousesTransfers, pagination, isEmptyStatus, isWarehouseTransfersLoading, isWarehouseTransfersFetching } =
+    useWarehouseTranfersListContext();
 
   // Invoices table columns.
   const columns = useWarehouseTransfersTableColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.WAREHOUSE_TRANSFERS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.WAREHOUSE_TRANSFERS);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(

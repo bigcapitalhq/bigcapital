@@ -11,7 +11,6 @@ const commonInvalidateQueries = (queryClient) => {
   queryClient.invalidateQueries(t.BRANCH);
 
   queryClient.invalidateQueries(t.DASHBOARD_META);
-
 };
 
 /**
@@ -37,19 +36,16 @@ export function useEditBranch(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`branches/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific branch.
-        queryClient.invalidateQueries([t.BRANCH, id]);
+  return useMutation(([id, values]) => apiRequest.post(`branches/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific branch.
+      queryClient.invalidateQueries([t.BRANCH, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

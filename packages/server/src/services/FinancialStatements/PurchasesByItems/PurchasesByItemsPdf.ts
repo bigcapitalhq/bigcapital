@@ -1,7 +1,7 @@
+import { IPurchasesByItemsReportQuery } from '@/interfaces/PurchasesByItemsSheet';
 import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { PurchasesByItemsTableInjectable } from './PurchasesByItemsTableInjectable';
-import { IPurchasesByItemsReportQuery } from '@/interfaces/PurchasesByItemsSheet';
 import { HtmlTableCustomCss } from './_types';
 
 @Service()
@@ -18,10 +18,7 @@ export class PurchasesByItemsPdf {
    * @param {IBalanceSheetQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<Buffer> {
     const table = await this.purchasesByItemsTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class PurchasesByItemsPdf {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

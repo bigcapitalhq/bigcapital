@@ -1,9 +1,6 @@
-import * as R from 'ramda';
 import { get } from 'lodash';
-import {
-  IBalanceSheetDataNode,
-  BALANCE_SHEET_NODE_TYPE,
-} from '../../../interfaces';
+import * as R from 'ramda';
+import { BALANCE_SHEET_NODE_TYPE, IBalanceSheetDataNode } from '../../../interfaces';
 import { FinancialFilter } from '../FinancialFilter';
 
 export const BalanceSheetFiltering = (Base) =>
@@ -16,14 +13,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param  {IBalanceSheetDataNode} node - Balance sheet node.
      * @return {boolean}
      */
-    private accountNoneZeroNodesFilterDetarminer = (
-      node: IBalanceSheetDataNode
-    ): boolean => {
-      return R.ifElse(
-        this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
-        this.isNodeNoneZero,
-        R.always(true)
-      )(node);
+    private accountNoneZeroNodesFilterDetarminer = (node: IBalanceSheetDataNode): boolean => {
+      return R.ifElse(this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT), this.isNodeNoneZero, R.always(true))(node);
     };
 
     /**
@@ -31,14 +22,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    private accountNoneTransFilterDetarminer = (
-      node: IBalanceSheetDataNode
-    ): boolean => {
-      return R.ifElse(
-        this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT),
-        this.isNodeNoneZero,
-        R.always(true)
-      )(node);
+    private accountNoneTransFilterDetarminer = (node: IBalanceSheetDataNode): boolean => {
+      return R.ifElse(this.isNodeType(BALANCE_SHEET_NODE_TYPE.ACCOUNT), this.isNodeNoneZero, R.always(true))(node);
     };
 
     /**
@@ -46,13 +31,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param  {IBalanceSheetSection[]} nodes -
      * @return {IBalanceSheetSection[]}
      */
-    private accountsNoneZeroNodesFilter = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
-      return this.filterNodesDeep(
-        nodes,
-        this.accountNoneZeroNodesFilterDetarminer
-      );
+    private accountsNoneZeroNodesFilter = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
+      return this.filterNodesDeep(nodes, this.accountNoneZeroNodesFilterDetarminer);
     };
 
     /**
@@ -60,9 +40,7 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private accountsNoneTransactionsNodesFilter = (
-      nodes: IBalanceSheetDataNode[]
-    ) => {
+    private accountsNoneTransactionsNodesFilter = (nodes: IBalanceSheetDataNode[]) => {
       return this.filterNodesDeep(nodes, this.accountNoneTransFilterDetarminer);
     };
 
@@ -74,9 +52,7 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    private aggregateNoneChildrenFilterDetarminer = (
-      node: IBalanceSheetDataNode
-    ): boolean => {
+    private aggregateNoneChildrenFilterDetarminer = (node: IBalanceSheetDataNode): boolean => {
       // Detarmines whether the given node is aggregate or accounts node.
       const isAggregateOrAccounts =
         this.isNodeType(BALANCE_SHEET_NODE_TYPE.AGGREGATE, node) ||
@@ -88,9 +64,7 @@ export const BalanceSheetFiltering = (Base) =>
       // Detarmines if the schema node is always should show.
       const isSchemaAlwaysShow = get(schemaNode, 'alwaysShow', false);
 
-      return isAggregateOrAccounts && !isSchemaAlwaysShow
-        ? this.isNodeHasChildren(node)
-        : true;
+      return isAggregateOrAccounts && !isSchemaAlwaysShow ? this.isNodeHasChildren(node) : true;
     };
 
     /**
@@ -98,13 +72,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private aggregateNoneChildrenFilter = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
-      return this.filterNodesDeep2(
-        this.aggregateNoneChildrenFilterDetarminer,
-        nodes
-      );
+    private aggregateNoneChildrenFilter = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
+      return this.filterNodesDeep2(this.aggregateNoneChildrenFilterDetarminer, nodes);
     };
 
     // -----------------------
@@ -115,13 +84,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private filterNoneZeroNodesCompose = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
-        this.accountsNoneZeroNodesFilter
-      )(nodes);
+    private filterNoneZeroNodesCompose = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
+      return R.compose(this.aggregateNoneChildrenFilter, this.accountsNoneZeroNodesFilter)(nodes);
     };
 
     /**
@@ -129,13 +93,8 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private filterNoneTransNodesCompose = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
-      return R.compose(
-        this.aggregateNoneChildrenFilter,
-        this.accountsNoneTransactionsNodesFilter
-      )(nodes);
+    private filterNoneTransNodesCompose = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
+      return R.compose(this.aggregateNoneChildrenFilter, this.accountsNoneTransactionsNodesFilter)(nodes);
     };
 
     /**
@@ -143,9 +102,7 @@ export const BalanceSheetFiltering = (Base) =>
      * @param   {IBalanceSheetDataNode[]} nodes
      * @returns {IBalanceSheetDataNode[]}
      */
-    private supressNodesWhenAccountsTransactionsEmpty = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
+    private supressNodesWhenAccountsTransactionsEmpty = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
       return this.repository.totalAccountsLedger.isEmpty() ? [] : nodes;
     };
 
@@ -158,10 +115,7 @@ export const BalanceSheetFiltering = (Base) =>
       return R.compose(
         this.supressNodesWhenAccountsTransactionsEmpty,
         R.when(R.always(this.query.noneZero), this.filterNoneZeroNodesCompose),
-        R.when(
-          R.always(this.query.noneTransactions),
-          this.filterNoneTransNodesCompose
-        )
+        R.when(R.always(this.query.noneTransactions), this.filterNoneTransNodesCompose),
       )(nodes);
     };
   };

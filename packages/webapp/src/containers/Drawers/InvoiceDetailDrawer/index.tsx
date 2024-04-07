@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const InvoiceDetailDrawerContent = React.lazy(() =>
-  import('./InvoiceDetailDrawerContent'),
-);
+const InvoiceDetailDrawerContent = React.lazy(() => import('./InvoiceDetailDrawerContent'));
 
 /**
  * Invoice Detail drawer.
@@ -19,12 +17,7 @@ function InvoiceDetailDrawer({
   payload: { invoiceId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '1000px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '1000px' }} size={'65%'}>
       <DrawerSuspense>
         <InvoiceDetailDrawerContent invoiceId={invoiceId} />
       </DrawerSuspense>

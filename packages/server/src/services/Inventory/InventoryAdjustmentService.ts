@@ -1,39 +1,38 @@
-import { Inject, Service } from 'typedi';
+import { ServiceError } from '@/exceptions';
+import {
+  IInventoryAdjustment,
+  IInventoryAdjustmentCreatingPayload,
+  IInventoryAdjustmentDeletingPayload,
+  IInventoryAdjustmentEventCreatedPayload,
+  IInventoryAdjustmentEventDeletedPayload,
+  IInventoryAdjustmentEventPublishedPayload,
+  IInventoryAdjustmentPublishingPayload,
+  IInventoryAdjustmentsFilter,
+  IInventoryTransaction,
+  IPaginationMeta,
+  IQuickInventoryAdjustmentDTO,
+  ISystemUser,
+} from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { omit } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { Knex } from 'knex';
-import { ServiceError } from '@/exceptions';
-import {
-  IQuickInventoryAdjustmentDTO,
-  IInventoryAdjustment,
-  IPaginationMeta,
-  IInventoryAdjustmentsFilter,
-  ISystemUser,
-  IInventoryTransaction,
-  IInventoryAdjustmentEventCreatedPayload,
-  IInventoryAdjustmentEventPublishedPayload,
-  IInventoryAdjustmentEventDeletedPayload,
-  IInventoryAdjustmentCreatingPayload,
-  IInventoryAdjustmentDeletingPayload,
-  IInventoryAdjustmentPublishingPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import InventoryService from './Inventory';
-import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import InventoryAdjustmentTransformer from './InventoryAdjustmentTransformer';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 const ERRORS = {
   INVENTORY_ADJUSTMENT_NOT_FOUND: 'INVENTORY_ADJUSTMENT_NOT_FOUND',
   ITEM_SHOULD_BE_INVENTORY_TYPE: 'ITEM_SHOULD_BE_INVENTORY_TYPE',
-  INVENTORY_ADJUSTMENT_ALREADY_PUBLISHED:
-    'INVENTORY_ADJUSTMENT_ALREADY_PUBLISHED',
+  INVENTORY_ADJUSTMENT_ALREADY_PUBLISHED: 'INVENTORY_ADJUSTMENT_ALREADY_PUBLISHED',
 };
 
 @Service()
@@ -70,7 +69,7 @@ export default class InventoryAdjustmentService {
   private transformQuickAdjToModel(
     tenantId: number,
     adjustmentDTO: IQuickInventoryAdjustmentDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): IInventoryAdjustment {
     const entries = [
       {
@@ -101,7 +100,7 @@ export default class InventoryAdjustmentService {
     };
     return R.compose(
       this.warehouseDTOTransform.transformDTO<IInventoryAdjustment>(tenantId),
-      this.branchDTOTransform.transformDTO<IInventoryAdjustment>(tenantId)
+      this.branchDTOTransform.transformDTO<IInventoryAdjustment>(tenantId),
     )(initialDTO);
   }
 
@@ -120,15 +119,10 @@ export default class InventoryAdjustmentService {
    * @param {number} tenantId -
    * @param {number} adjustmentId -
    */
-  async getInventoryAdjustmentOrThrowError(
-    tenantId: number,
-    adjustmentId: number
-  ) {
+  async getInventoryAdjustmentOrThrowError(tenantId: number, adjustmentId: number) {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
-    const inventoryAdjustment = await InventoryAdjustment.query()
-      .findById(adjustmentId)
-      .withGraphFetched('entries');
+    const inventoryAdjustment = await InventoryAdjustment.query().findById(adjustmentId).withGraphFetched('entries');
 
     if (!inventoryAdjustment) {
       throw new ServiceError(ERRORS.INVENTORY_ADJUSTMENT_NOT_FOUND);
@@ -144,58 +138,41 @@ export default class InventoryAdjustmentService {
   public async createQuickAdjustment(
     tenantId: number,
     quickAdjustmentDTO: IQuickInventoryAdjustmentDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IInventoryAdjustment> {
-    const { InventoryAdjustment, Account, Item } =
-      this.tenancy.models(tenantId);
+    const { InventoryAdjustment, Account, Item } = this.tenancy.models(tenantId);
 
     // Retrieve the adjustment account or throw not found error.
-    const adjustmentAccount = await Account.query()
-      .findById(quickAdjustmentDTO.adjustmentAccountId)
-      .throwIfNotFound();
+    const adjustmentAccount = await Account.query().findById(quickAdjustmentDTO.adjustmentAccountId).throwIfNotFound();
 
     // Retrieve the item model or throw not found service error.
-    const item = await Item.query()
-      .findById(quickAdjustmentDTO.itemId)
-      .throwIfNotFound();
+    const item = await Item.query().findById(quickAdjustmentDTO.itemId).throwIfNotFound();
 
     // Validate item inventory type.
     this.validateItemInventoryType(item);
 
     // Transform the DTO to inventory adjustment model.
-    const invAdjustmentObject = this.transformQuickAdjToModel(
-      tenantId,
-      quickAdjustmentDTO,
-      authorizedUser
-    );
+    const invAdjustmentObject = this.transformQuickAdjToModel(tenantId, quickAdjustmentDTO, authorizedUser);
     // Writes inventory adjustment transaction with associated transactions
     // under unit-of-work envirment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onInventoryAdjustmentCreating` event.
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onQuickCreating,
-        {
-          tenantId,
-          trx,
-          quickAdjustmentDTO,
-        } as IInventoryAdjustmentCreatingPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onQuickCreating, {
+        tenantId,
+        trx,
+        quickAdjustmentDTO,
+      } as IInventoryAdjustmentCreatingPayload);
       // Saves the inventory adjustment with associated entries to the storage.
-      const inventoryAdjustment = await InventoryAdjustment.query(
-        trx
-      ).upsertGraph({
+      const inventoryAdjustment = await InventoryAdjustment.query(trx).upsertGraph({
         ...invAdjustmentObject,
       });
       // Triggers `onInventoryAdjustmentQuickCreated` event.
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onQuickCreated,
-        {
-          tenantId,
-          inventoryAdjustment,
-          inventoryAdjustmentId: inventoryAdjustment.id,
-          trx,
-        } as IInventoryAdjustmentEventCreatedPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onQuickCreated, {
+        tenantId,
+        inventoryAdjustment,
+        inventoryAdjustmentId: inventoryAdjustment.id,
+        trx,
+      } as IInventoryAdjustmentEventCreatedPayload);
       return inventoryAdjustment;
     });
   }
@@ -205,52 +182,34 @@ export default class InventoryAdjustmentService {
    * @param {number} tenantId - Tenant id.
    * @param {number} inventoryAdjustmentId - Inventory adjustment id.
    */
-  public async deleteInventoryAdjustment(
-    tenantId: number,
-    inventoryAdjustmentId: number
-  ): Promise<void> {
-    const { InventoryAdjustmentEntry, InventoryAdjustment } =
-      this.tenancy.models(tenantId);
+  public async deleteInventoryAdjustment(tenantId: number, inventoryAdjustmentId: number): Promise<void> {
+    const { InventoryAdjustmentEntry, InventoryAdjustment } = this.tenancy.models(tenantId);
 
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment =
-      await this.getInventoryAdjustmentOrThrowError(
-        tenantId,
-        inventoryAdjustmentId
-      );
+    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(tenantId, inventoryAdjustmentId);
     // Deletes the inventory adjustment transaction and associated transactions
     // under unit-of-work env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onInventoryAdjustmentDeleting` event.
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onDeleting,
-        {
-          trx,
-          oldInventoryAdjustment,
-          tenantId,
-        } as IInventoryAdjustmentDeletingPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onDeleting, {
+        trx,
+        oldInventoryAdjustment,
+        tenantId,
+      } as IInventoryAdjustmentDeletingPayload);
 
       // Deletes the inventory adjustment entries.
-      await InventoryAdjustmentEntry.query(trx)
-        .where('adjustment_id', inventoryAdjustmentId)
-        .delete();
+      await InventoryAdjustmentEntry.query(trx).where('adjustment_id', inventoryAdjustmentId).delete();
 
       // Deletes the inventory adjustment transaction.
-      await InventoryAdjustment.query(trx)
-        .findById(inventoryAdjustmentId)
-        .delete();
+      await InventoryAdjustment.query(trx).findById(inventoryAdjustmentId).delete();
 
       // Triggers `onInventoryAdjustmentDeleted` event.
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onDeleted,
-        {
-          tenantId,
-          inventoryAdjustmentId,
-          oldInventoryAdjustment,
-          trx,
-        } as IInventoryAdjustmentEventDeletedPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onDeleted, {
+        tenantId,
+        inventoryAdjustmentId,
+        oldInventoryAdjustment,
+        trx,
+      } as IInventoryAdjustmentEventDeletedPayload);
     });
   }
 
@@ -259,18 +218,11 @@ export default class InventoryAdjustmentService {
    * @param {number} tenantId
    * @param {number} inventoryAdjustmentId
    */
-  public async publishInventoryAdjustment(
-    tenantId: number,
-    inventoryAdjustmentId: number
-  ): Promise<void> {
+  public async publishInventoryAdjustment(tenantId: number, inventoryAdjustmentId: number): Promise<void> {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
     // Retrieve the inventory adjustment or throw not found service error.
-    const oldInventoryAdjustment =
-      await this.getInventoryAdjustmentOrThrowError(
-        tenantId,
-        inventoryAdjustmentId
-      );
+    const oldInventoryAdjustment = await this.getInventoryAdjustmentOrThrowError(tenantId, inventoryAdjustmentId);
 
     // Validate adjustment not already published.
     this.validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment);
@@ -278,14 +230,11 @@ export default class InventoryAdjustmentService {
     // Publishes inventory adjustment with associated inventory transactions
     // under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onPublishing,
-        {
-          trx,
-          tenantId,
-          oldInventoryAdjustment,
-        } as IInventoryAdjustmentPublishingPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onPublishing, {
+        trx,
+        tenantId,
+        oldInventoryAdjustment,
+      } as IInventoryAdjustmentPublishingPayload);
 
       // Publish the inventory adjustment transaction.
       await InventoryAdjustment.query().findById(inventoryAdjustmentId).patch({
@@ -297,16 +246,13 @@ export default class InventoryAdjustmentService {
         .withGraphFetched('entries');
 
       // Triggers `onInventoryAdjustmentDeleted` event.
-      await this.eventPublisher.emitAsync(
-        events.inventoryAdjustment.onPublished,
-        {
-          tenantId,
-          inventoryAdjustmentId,
-          inventoryAdjustment,
-          oldInventoryAdjustment,
-          trx,
-        } as IInventoryAdjustmentEventPublishedPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventoryAdjustment.onPublished, {
+        tenantId,
+        inventoryAdjustmentId,
+        inventoryAdjustment,
+        oldInventoryAdjustment,
+        trx,
+      } as IInventoryAdjustmentEventPublishedPayload);
     });
   }
 
@@ -325,7 +271,7 @@ export default class InventoryAdjustmentService {
    */
   public async getInventoryAdjustments(
     tenantId: number,
-    filterDTO: IInventoryAdjustmentsFilter
+    filterDTO: IInventoryAdjustmentsFilter,
   ): Promise<{
     inventoryAdjustments: IInventoryAdjustment[];
     pagination: IPaginationMeta;
@@ -336,11 +282,7 @@ export default class InventoryAdjustmentService {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      InventoryAdjustment,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, InventoryAdjustment, filter);
     const { results, pagination } = await InventoryAdjustment.query()
       .onBuild((query) => {
         query.withGraphFetched('entries.item');
@@ -354,7 +296,7 @@ export default class InventoryAdjustmentService {
     const inventoryAdjustments = await this.transfromer.transform(
       tenantId,
       results,
-      new InventoryAdjustmentTransformer()
+      new InventoryAdjustmentTransformer(),
     );
     return {
       inventoryAdjustments,
@@ -373,8 +315,8 @@ export default class InventoryAdjustmentService {
   public async writeInventoryTransactions(
     tenantId: number,
     inventoryAdjustment: IInventoryAdjustment,
-    override: boolean = false,
-    trx?: Knex.Transaction
+    override = false,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const commonTransaction = {
       direction: inventoryAdjustment.inventoryDirection,
@@ -398,12 +340,7 @@ export default class InventoryAdjustmentService {
       });
     });
     // Saves the given inventory transactions to the storage.
-    await this.inventoryService.recordInventoryTransactions(
-      tenantId,
-      inventoryTransactions,
-      override,
-      trx
-    );
+    await this.inventoryService.recordInventoryTransactions(tenantId, inventoryTransactions, override, trx);
   }
 
   /**
@@ -414,13 +351,13 @@ export default class InventoryAdjustmentService {
   async revertInventoryTransactions(
     tenantId: number,
     inventoryAdjustmentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<{ oldInventoryTransactions: IInventoryTransaction[] }> {
     return this.inventoryService.deleteInventoryTransactions(
       tenantId,
       inventoryAdjustmentId,
       'InventoryAdjustment',
-      trx
+      trx,
     );
   }
 
@@ -429,10 +366,7 @@ export default class InventoryAdjustmentService {
    * @param {number} tenantId
    * @param {number} inventoryAdjustmentId
    */
-  async getInventoryAdjustment(
-    tenantId: number,
-    inventoryAdjustmentId: number
-  ) {
+  async getInventoryAdjustment(tenantId: number, inventoryAdjustmentId: number) {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
     // Retrieve inventory adjustment transation with associated models.
@@ -444,11 +378,7 @@ export default class InventoryAdjustmentService {
     // Throw not found if the given adjustment transaction not exists.
     this.throwIfAdjustmentNotFound(inventoryAdjustment);
 
-    return this.transfromer.transform(
-      tenantId,
-      inventoryAdjustment,
-      new InventoryAdjustmentTransformer()
-    );
+    return this.transfromer.transform(tenantId, inventoryAdjustment, new InventoryAdjustmentTransformer());
   }
 
   /**
@@ -465,9 +395,7 @@ export default class InventoryAdjustmentService {
    * Validates the adjustment transaction is not already published.
    * @param {IInventoryAdjustment} oldInventoryAdjustment
    */
-  private validateAdjustmentTransactionsNotPublished(
-    oldInventoryAdjustment: IInventoryAdjustment
-  ) {
+  private validateAdjustmentTransactionsNotPublished(oldInventoryAdjustment: IInventoryAdjustment) {
     if (oldInventoryAdjustment.isPublished) {
       throw new ServiceError(ERRORS.INVENTORY_ADJUSTMENT_ALREADY_PUBLISHED);
     }

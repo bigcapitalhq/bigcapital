@@ -1,13 +1,9 @@
-import {
-  ICreditNoteEditDTO,
-  ICreditNoteEditedPayload,
-  ICreditNoteEditingPayload,
-} from '@/interfaces';
-import { Knex } from 'knex';
+import { ICreditNoteEditDTO, ICreditNoteEditedPayload, ICreditNoteEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import BaseCreditNotes from './CreditNotes';
 
@@ -27,47 +23,31 @@ export default class EditCreditNote extends BaseCreditNotes {
    * @param {number} tenantId -
    * @param {ICreditNoteEditDTO} creditNoteEditDTO -
    */
-  public editCreditNote = async (
-    tenantId: number,
-    creditNoteId: number,
-    creditNoteEditDTO: ICreditNoteEditDTO
-  ) => {
+  public editCreditNote = async (tenantId: number, creditNoteId: number, creditNoteEditDTO: ICreditNoteEditDTO) => {
     const { CreditNote, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const oldCreditNote = await this.getCreditNoteOrThrowError(
-      tenantId,
-      creditNoteId
-    );
+    const oldCreditNote = await this.getCreditNoteOrThrowError(tenantId, creditNoteId);
     // Validate customer existance.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(creditNoteEditDTO.customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(creditNoteEditDTO.customerId).throwIfNotFound();
 
     // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      creditNoteEditDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, creditNoteEditDTO.entries);
     // Validate non-sellable entries items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      creditNoteEditDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, creditNoteEditDTO.entries);
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       tenantId,
       creditNoteId,
       'CreditNote',
-      creditNoteEditDTO.entries
+      creditNoteEditDTO.entries,
     );
     // Transformes the given DTO to storage layer data.
     const creditNoteModel = this.transformCreateEditDTOToModel(
       tenantId,
       creditNoteEditDTO,
       customer.currencyCode,
-      oldCreditNote
+      oldCreditNote,
     );
     // Sales the credit note transactions with associated entries.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

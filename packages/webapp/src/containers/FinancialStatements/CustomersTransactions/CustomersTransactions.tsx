@@ -59,10 +59,7 @@ function CustomersTransactions({
       <CustomersTransactionsLoadingBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <CustomersTransactionsHeader
-            pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <CustomersTransactionsHeader pageFilter={filter} onSubmitFilter={handleFilterSubmit} />
           <CustomersTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>

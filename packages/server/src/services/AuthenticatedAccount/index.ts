@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import { ISystemUser } from '@/interfaces';
+import { Service } from 'typedi';
 
 @Service()
 export default class AuthenticatedAccount {

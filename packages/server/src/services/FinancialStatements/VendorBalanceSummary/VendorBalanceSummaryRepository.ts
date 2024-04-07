@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { isEmpty, map } from 'lodash';
-import { IVendor, IAccount } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { IAccount, IVendor } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { isEmpty, map } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class VendorBalanceSummaryRepository {
@@ -15,10 +15,7 @@ export default class VendorBalanceSummaryRepository {
    * @param {number[]} vendorsIds - Vendors ids.
    * @returns {IVendor[]}
    */
-  public getVendors(
-    tenantId: number,
-    vendorsIds?: number[]
-  ): Promise<IVendor[]> {
+  public getVendors(tenantId: number, vendorsIds?: number[]): Promise<IVendor[]> {
     const { Vendor } = this.tenancy.models(tenantId);
 
     const vendorQuery = Vendor.query().orderBy('displayName');
@@ -54,16 +51,14 @@ export default class VendorBalanceSummaryRepository {
     const payableAccountsIds = map(payableAccounts, 'id');
 
     // Retrieve the customers transactions of A/R accounts.
-    const customersTranasctions = await AccountTransaction.query().onBuild(
-      (query) => {
-        query.whereIn('accountId', payableAccountsIds);
-        query.modify('filterDateRange', null, asDate);
-        query.groupBy('contactId');
-        query.sum('credit as credit');
-        query.sum('debit as debit');
-        query.select('contactId');
-      }
-    );
+    const customersTranasctions = await AccountTransaction.query().onBuild((query) => {
+      query.whereIn('accountId', payableAccountsIds);
+      query.modify('filterDateRange', null, asDate);
+      query.groupBy('contactId');
+      query.sum('credit as credit');
+      query.sum('debit as debit');
+      query.select('contactId');
+    });
     return customersTranasctions;
   }
 }

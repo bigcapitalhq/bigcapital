@@ -22,11 +22,7 @@ function EstimateMailDialogBodyRoot({
   };
 
   return (
-    <EstimateMailDialogContent
-      estimateId={estimateId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancelClick}
-    />
+    <EstimateMailDialogContent estimateId={estimateId} onFormSubmit={handleSubmit} onCancelClick={handleCancelClick} />
   );
 }
 

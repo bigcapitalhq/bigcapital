@@ -30,7 +30,6 @@ function APAgingSummaryGeneralProvider({ filter, ...props }) {
   );
 }
 
-const useAPAgingSummaryGeneralContext = () =>
-  useContext(APAgingSummaryGeneralContext);
+const useAPAgingSummaryGeneralContext = () => useContext(APAgingSummaryGeneralContext);
 
 export { APAgingSummaryGeneralProvider, useAPAgingSummaryGeneralContext };

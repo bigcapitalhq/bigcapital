@@ -18,11 +18,7 @@ export default function VendorsCreditNoteEmptyStatus() {
       action={
         <>
           <Can I={VendorCreditAction.Create} a={AbilitySubject.VendorCredit}>
-            <Button
-              intent={Intent.PRIMARY}
-              large={true}
-              onClick={() => history.push('/vendor-credits/new')}
-            >
+            <Button intent={Intent.PRIMARY} large={true} onClick={() => history.push('/vendor-credits/new')}>
               <T id={'vendor_credits.label.new_vendor_credit'} />
             </Button>
 

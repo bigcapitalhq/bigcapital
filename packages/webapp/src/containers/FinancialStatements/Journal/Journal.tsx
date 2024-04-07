@@ -52,10 +52,7 @@ function Journal({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <JournalHeader
-            onSubmitFilter={handleFilterSubmit}
-            pageFilter={query}
-          />
+          <JournalHeader onSubmitFilter={handleFilterSubmit} pageFilter={query} />
           <JournalSheetLoadingBar />
           <JournalSheetAlerts />
           <JournalBody />

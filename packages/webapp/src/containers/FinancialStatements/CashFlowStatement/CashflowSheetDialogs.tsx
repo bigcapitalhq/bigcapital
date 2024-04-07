@@ -4,9 +4,7 @@ import { CashflowSheetPdfDialog } from './CashflowSheetPdfDialog';
 export function CashflowSheetDialogs() {
   return (
     <>
-      <CashflowSheetPdfDialog
-        dialogName={DialogsName.CashflowSheetPdfPreview}
-      />
+      <CashflowSheetPdfDialog dialogName={DialogsName.CashflowSheetPdfPreview} />
     </>
   );
 }

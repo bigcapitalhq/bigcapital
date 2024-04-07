@@ -1,18 +1,10 @@
-import * as Yup from 'yup';
-import moment from 'moment';
-import {
-  defaultTo,
-  upperFirst,
-  camelCase,
-  first,
-  isUndefined,
-  pickBy,
-  isEmpty,
-} from 'lodash';
-import pluralize from 'pluralize';
-import { ResourceMetaFieldsMap } from './interfaces';
-import { IModelMetaField } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
+import { IModelMetaField } from '@/interfaces';
+import { camelCase, defaultTo, first, isEmpty, isUndefined, pickBy, upperFirst } from 'lodash';
+import moment from 'moment';
+import pluralize from 'pluralize';
+import * as Yup from 'yup';
+import { ResourceMetaFieldsMap } from './interfaces';
 
 export const ERRORS = {
   RESOURCE_NOT_IMPORTABLE: 'RESOURCE_NOT_IMPORTABLE',
@@ -47,16 +39,10 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
 
     if (field.fieldType === 'text') {
       if (!isUndefined(field.minLength)) {
-        fieldSchema = fieldSchema.min(
-          field.minLength,
-          `Minimum length is ${field.minLength} characters`
-        );
+        fieldSchema = fieldSchema.min(field.minLength, `Minimum length is ${field.minLength} characters`);
       }
       if (!isUndefined(field.maxLength)) {
-        fieldSchema = fieldSchema.max(
-          field.maxLength,
-          `Maximum length is ${field.maxLength} characters`
-        );
+        fieldSchema = fieldSchema.max(field.maxLength, `Maximum length is ${field.maxLength} characters`);
       }
     } else if (field.fieldType === 'number') {
       fieldSchema = Yup.number().label(field.name);
@@ -85,7 +71,7 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
             return true;
           }
           return moment(val, 'YYYY-MM-DD', true).isValid();
-        }
+        },
       );
     } else if (field.fieldType === 'url') {
       fieldSchema = fieldSchema.url();
@@ -113,9 +99,7 @@ const parseFieldName = (fieldName: string, field: IModelMetaField) => {
 };
 
 export const getUnmappedSheetColumns = (columns, mapping) => {
-  return columns.filter(
-    (column) => !mapping.some((map) => map.from === column)
-  );
+  return columns.filter((column) => !mapping.some((map) => map.from === column));
 };
 
 export const sanitizeResourceName = (resourceName: string) => {
@@ -135,12 +119,9 @@ export const getSheetColumns = (sheetData: unknown[]) => {
  */
 export const getUniqueImportableValue = (
   importableFields: { [key: string]: IModelMetaField },
-  objectDTO: Record<string, any>
+  objectDTO: Record<string, any>,
 ) => {
-  const uniqueImportableValue = pickBy(
-    importableFields,
-    (field) => field.unique
-  );
+  const uniqueImportableValue = pickBy(importableFields, (field) => field.unique);
   const uniqueImportableKeys = Object.keys(uniqueImportableValue);
   const uniqueImportableKey = first(uniqueImportableKeys);
 
@@ -155,25 +136,22 @@ export const validateSheetEmpty = (sheetData: Array<any>) => {
   if (isEmpty(sheetData)) {
     throw new ServiceError(ERRORS.IMPORTED_SHEET_EMPTY);
   }
-}
+};
 
 const booleanValuesRepresentingTrue: string[] = ['true', 'yes', 'y', 't', '1'];
 const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
 
 /**
  * Parses the given string value to boolean.
- * @param {string} value 
- * @returns {string|null} 
+ * @param {string} value
+ * @returns {string|null}
  */
 export const parseBoolean = (value: string): boolean | null => {
-  const normalizeValue = (value: string): string =>
-    value.toString().trim().toLowerCase();
+  const normalizeValue = (value: string): string => value.toString().trim().toLowerCase();
 
   const normalizedValue = normalizeValue(value);
-  const valuesRepresentingTrue =
-    booleanValuesRepresentingTrue.map(normalizeValue);
-  const valueRepresentingFalse =
-    booleanValuesRepresentingFalse.map(normalizeValue);
+  const valuesRepresentingTrue = booleanValuesRepresentingTrue.map(normalizeValue);
+  const valueRepresentingFalse = booleanValuesRepresentingFalse.map(normalizeValue);
 
   if (valuesRepresentingTrue.includes(normalizedValue)) {
     return true;

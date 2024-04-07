@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   IAgingPeriod,
   IAgingSummaryContact,
@@ -10,14 +9,15 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
 import AgingReport from './AgingReport';
 import { AgingSummaryRowType } from './_constants';
-import { FinancialTable } from '../FinancialTable';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
 
 export default abstract class AgingSummaryTable extends R.compose(
   FinancialSheetStructure,
-  FinancialTable
+  FinancialTable,
 )(AgingReport) {
   protected readonly report: IAgingSummaryData;
   protected readonly query: IAgingSummaryQuery;
@@ -37,11 +37,7 @@ export default abstract class AgingSummaryTable extends R.compose(
     this.i18n = i18n;
     this.query = query;
 
-    this.agingPeriods = this.agingRangePeriods(
-      this.query.asDate,
-      this.query.agingDaysBefore,
-      this.query.agingPeriods
-    );
+    this.agingPeriods = this.agingRangePeriods(this.query.asDate, this.query.agingDaysBefore, this.query.agingPeriods);
   }
 
   // -------------------------
@@ -52,9 +48,7 @@ export default abstract class AgingSummaryTable extends R.compose(
    * @param {IAgingSummaryContact | IAgingSummaryTotal} node
    * @returns {ITableColumnAccessor[]}
    */
-  protected agingNodeAccessors = (
-    node: IAgingSummaryContact | IAgingSummaryTotal
-  ): ITableColumnAccessor[] => {
+  protected agingNodeAccessors = (node: IAgingSummaryContact | IAgingSummaryTotal): ITableColumnAccessor[] => {
     return node.aging.map((aging, index) => ({
       key: 'aging_period',
       accessor: `aging[${index}].total.formattedAmount`,
@@ -74,16 +68,14 @@ export default abstract class AgingSummaryTable extends R.compose(
    * @param {IAgingSummaryContact}
    * @returns {ITableColumnAccessor[]}
    */
-  protected contactNodeAccessors = (
-    node: IAgingSummaryContact
-  ): ITableColumnAccessor[] => {
+  protected contactNodeAccessors = (node: IAgingSummaryContact): ITableColumnAccessor[] => {
     return R.compose(
       R.concat([
         this.contactNameNodeAccessor,
         { key: 'current', accessor: 'current.formattedAmount' },
         ...this.agingNodeAccessors(node),
         { key: 'total', accessor: 'total.formattedAmount' },
-      ])
+      ]),
     )([]);
   };
 
@@ -114,16 +106,14 @@ export default abstract class AgingSummaryTable extends R.compose(
    * @param {IAgingSummaryTotal}
    * @returns {ITableColumnAccessor[]}
    */
-  protected totalNodeAccessors = (
-    node: IAgingSummaryTotal
-  ): ITableColumnAccessor[] => {
+  protected totalNodeAccessors = (node: IAgingSummaryTotal): ITableColumnAccessor[] => {
     return R.compose(
       R.concat([
         { key: 'blank', value: '' },
         { key: 'current', accessor: 'current.formattedAmount' },
         ...this.agingNodeAccessors(node),
         { key: 'total', accessor: 'total.formattedAmount' },
-      ])
+      ]),
     )([]);
   };
 
@@ -164,10 +154,7 @@ export default abstract class AgingSummaryTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.totalRow)),
-      R.concat(this.contactsRows)
-    )([]);
+    return R.compose(R.unless(R.isEmpty, R.append(this.totalRow)), R.concat(this.contactsRows))([]);
   };
 
   // -------------------------
@@ -180,9 +167,7 @@ export default abstract class AgingSummaryTable extends R.compose(
   protected agingTableColumns = (): ITableColumn[] => {
     return this.agingPeriods.map((agingPeriod) => {
       return {
-        label: `${agingPeriod.beforeDays} - ${
-          agingPeriod.toDays || 'And Over'
-        }`,
+        label: `${agingPeriod.beforeDays} - ${agingPeriod.toDays || 'And Over'}`,
         key: 'aging_period',
       };
     });

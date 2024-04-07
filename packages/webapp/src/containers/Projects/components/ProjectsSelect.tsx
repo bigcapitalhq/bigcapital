@@ -32,14 +32,7 @@ const projectsItemPredicate = (query, project, _index, exactMatch) => {
  * @returns
  */
 const projectsItemRenderer = (project, { handleClick, modifiers, query }) => {
-  return (
-    <MenuItem
-      disabled={modifiers.disabled}
-      key={project.id}
-      onClick={handleClick}
-      text={project.name}
-    />
-  );
+  return <MenuItem disabled={modifiers.disabled} key={project.id} onClick={handleClick} text={project.name} />;
 };
 
 const projectSelectProps = {
@@ -73,10 +66,5 @@ export function ProjectsSelect({ projects, popoverFill, ...rest }) {
  * @returns
  */
 export function ProjectSelectButton({ label, ...rest }) {
-  return (
-    <Button
-      text={label ? label : intl.get('find_or_choose_a_project')}
-      {...rest}
-    />
-  );
+  return <Button text={label ? label : intl.get('find_or_choose_a_project')} {...rest} />;
 }

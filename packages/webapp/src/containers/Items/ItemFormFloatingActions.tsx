@@ -57,11 +57,7 @@ export default function ItemFormFloatingActions({ onCancel }) {
         <T id={'save_new'} />
       </Button>
 
-      <Button
-        disabled={isSubmitting}
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-      >
+      <Button disabled={isSubmitting} className={'ml1'} onClick={handleCancelBtnClick}>
         <T id={'close'} />
       </Button>
 
@@ -69,12 +65,7 @@ export default function ItemFormFloatingActions({ onCancel }) {
       <FastField name={'active'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup inline={true} className={'form-group--active'}>
-            <Checkbox
-              inline={true}
-              label={<T id={'active'} />}
-              name={'active'}
-              {...field}
-            />
+            <Checkbox inline={true} label={<T id={'active'} />} name={'active'} {...field} />
           </FormGroup>
         )}
       </FastField>

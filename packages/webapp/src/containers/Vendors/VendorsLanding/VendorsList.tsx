@@ -35,10 +35,7 @@ function VendorsList({
   );
 
   return (
-    <VendorsListProvider
-      tableState={vendorsTableState}
-      tableStateChanged={vendorsTableStateChanged}
-    >
+    <VendorsListProvider tableState={vendorsTableState} tableStateChanged={vendorsTableStateChanged}>
       <VendorActionsBar />
 
       <DashboardPageContent>

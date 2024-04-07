@@ -65,10 +65,7 @@ function CurrenciesDataTable({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
-)(CurrenciesDataTable);
+export default compose(withDialogActions, withAlertActions)(CurrenciesDataTable);
 
 const CurrencieDataTable = styled(DataTable)`
   .table .th,

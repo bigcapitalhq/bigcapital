@@ -2,12 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
-import {
-  BranchMultiSelect,
-  WarehouseMultiSelect,
-  Row,
-  Col,
-} from '@/components';
+import { BranchMultiSelect, WarehouseMultiSelect, Row, Col } from '@/components';
 import {
   InventoryItemDetailsHeaderDimensionsProvider,
   useInventoryItemDetailsHeaderDimensionsPanelContext,
@@ -30,8 +25,7 @@ export default function InventoryItemDetailsHeaderDimensionsPanel() {
  * @returns {JSX.Element}
  */
 function InventoryItemDetailsHeaderDimensionsPanelContent() {
-  const { warehouses, branches } =
-    useInventoryItemDetailsHeaderDimensionsPanelContext();
+  const { warehouses, branches } = useInventoryItemDetailsHeaderDimensionsPanelContext();
 
   // Detarmines the given feature whether is enabled.
   const { featureCan } = useFeatureCan();
@@ -43,22 +37,13 @@ function InventoryItemDetailsHeaderDimensionsPanelContent() {
     <Row>
       <Col xs={4}>
         {isBranchesFeatureCan && (
-          <FormGroup
-            label={intl.get('branches_multi_select.label')}
-            className={Classes.FILL}
-          >
+          <FormGroup label={intl.get('branches_multi_select.label')} className={Classes.FILL}>
             <BranchMultiSelect name={'branchesIds'} branches={branches} />
           </FormGroup>
         )}
         {isWarehousesFeatureCan && (
-          <FormGroup
-            label={intl.get('warehouses_multi_select.label')}
-            className={Classes.FILL}
-          >
-            <WarehouseMultiSelect
-              name={'warehousesIds'}
-              warehouses={warehouses}
-            />
+          <FormGroup label={intl.get('warehouses_multi_select.label')} className={Classes.FILL}>
+            <WarehouseMultiSelect name={'warehousesIds'} warehouses={warehouses} />
           </FormGroup>
         )}
       </Col>

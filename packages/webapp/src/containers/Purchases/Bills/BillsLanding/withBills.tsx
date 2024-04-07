@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getBillsTableStateFactory,
-  billsTableStateChangedFactory,
-} from '@/store/Bills/bills.selectors';
+import { getBillsTableStateFactory, billsTableStateChangedFactory } from '@/store/Bills/bills.selectors';
 
 export default (mapState) => {
   const getBillsTableState = getBillsTableStateFactory();

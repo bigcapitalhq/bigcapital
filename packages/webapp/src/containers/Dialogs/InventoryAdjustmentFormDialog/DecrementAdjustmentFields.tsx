@@ -24,12 +24,7 @@ function DecrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="quantity_on_hand" />}
             >
-              <InputGroup
-                disabled={true}
-                medium={'true'}
-                intent={inputIntent({ error, touched })}
-                {...field}
-              />
+              <InputGroup disabled={true} medium={'true'} intent={inputIntent({ error, touched })} {...field} />
             </FormGroup>
           )}
         </FastField>
@@ -42,11 +37,7 @@ function DecrementAdjustmentFields() {
       {/*------------ Decrement -----------*/}
       <Col className={'col--decrement'}>
         <Field name={'quantity'}>
-          {({
-            form: { values, setFieldValue },
-            field,
-            meta: { error, touched },
-          }) => (
+          {({ form: { values, setFieldValue }, field, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'decrement'} />}
               intent={inputIntent({ error, touched })}
@@ -64,10 +55,7 @@ function DecrementAdjustmentFields() {
                 onBlurValue={(value) => {
                   setFieldValue(
                     'new_quantity',
-                    decrementQuantity(
-                      toSafeNumber(value),
-                      toSafeNumber(values.quantity_on_hand),
-                    ),
+                    decrementQuantity(toSafeNumber(value), toSafeNumber(values.quantity_on_hand)),
                   );
                 }}
                 intent={inputIntent({ error, touched })}
@@ -83,11 +71,7 @@ function DecrementAdjustmentFields() {
       {/*------------ New quantity -----------*/}
       <Col className={'col--quantity'}>
         <Field name={'new_quantity'}>
-          {({
-            form: { values, setFieldValue },
-            field,
-            meta: { error, touched },
-          }) => (
+          {({ form: { values, setFieldValue }, field, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'new_quantity'} />}
               intent={inputIntent({ error, touched })}
@@ -103,10 +87,7 @@ function DecrementAdjustmentFields() {
                 onBlurValue={(value) => {
                   setFieldValue(
                     'quantity',
-                    decrementQuantity(
-                      toSafeNumber(value),
-                      toSafeNumber(values.quantity_on_hand),
-                    ),
+                    decrementQuantity(toSafeNumber(value), toSafeNumber(values.quantity_on_hand)),
                   );
                 }}
                 intent={inputIntent({ error, touched })}

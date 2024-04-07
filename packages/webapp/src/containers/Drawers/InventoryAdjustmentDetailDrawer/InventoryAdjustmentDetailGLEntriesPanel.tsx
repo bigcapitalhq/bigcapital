@@ -6,9 +6,7 @@ import { Card } from '@/components';
 import { useTransactionsByReference } from '@/hooks/query';
 import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawerProvider';
 
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Inentory adjustment detail GL entries panel.
@@ -32,10 +30,7 @@ export default function InventoryAdjustmentDetailGLEntriesPanel() {
   return (
     <InventoryAdjustmentGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <JournalEntriesTable
-        loading={isTransactionLoading}
-        transactions={transactions}
-      />
+      <JournalEntriesTable loading={isTransactionLoading} transactions={transactions} />
     </InventoryAdjustmentGLEntriesRoot>
   );
 }

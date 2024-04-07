@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import {
-  IBill,
-  IBillsFilter,
-  IFilterMeta,
-  IPaginationMeta,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { PurchaseInvoiceTransformer } from './PurchaseInvoiceTransformer';
+import { IBill, IBillsFilter, IFilterMeta, IPaginationMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { PurchaseInvoiceTransformer } from './PurchaseInvoiceTransformer';
 
 @Service()
 export class GetBills {
@@ -29,7 +24,7 @@ export class GetBills {
    */
   public async getBills(
     tenantId: number,
-    filterDTO: IBillsFilter
+    filterDTO: IBillsFilter,
   ): Promise<{
     bills: IBill;
     pagination: IPaginationMeta;
@@ -41,11 +36,7 @@ export class GetBills {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      Bill,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, Bill, filter);
     const { results, pagination } = await Bill.query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
@@ -54,11 +45,7 @@ export class GetBills {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Tranform the bills to POJO.
-    const bills = await this.transformer.transform(
-      tenantId,
-      results,
-      new PurchaseInvoiceTransformer()
-    );
+    const bills = await this.transformer.transform(tenantId, results, new PurchaseInvoiceTransformer());
     return {
       bills,
       pagination,

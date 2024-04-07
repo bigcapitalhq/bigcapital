@@ -32,18 +32,12 @@ function AccountUncategorizedTransactionsBoot({ children }) {
   });
   // Memorized the cashflow account transactions.
   const uncategorizedTransactions = React.useMemo(
-    () =>
-      isUncategorizedTransactionsSuccess
-        ? flattenInfinityPagesData(uncategorizedTransactionsPage)
-        : [],
+    () => (isUncategorizedTransactionsSuccess ? flattenInfinityPagesData(uncategorizedTransactionsPage) : []),
     [uncategorizedTransactionsPage, isUncategorizedTransactionsSuccess],
   );
   // Handle the observer ineraction.
   const handleObserverInteract = React.useCallback(() => {
-    if (
-      !isUncategorizedTransactionFetching &&
-      hasUncategorizedTransactionsNextPage
-    ) {
+    if (!isUncategorizedTransactionFetching && hasUncategorizedTransactionsNextPage) {
       fetchNextUncategorizedTransactionsPage();
     }
   }, [
@@ -61,18 +55,11 @@ function AccountUncategorizedTransactionsBoot({ children }) {
   return (
     <AccountUncategorizedTransactionsContext.Provider value={provider}>
       {children}
-      <IntersectionObserver
-        onIntersect={handleObserverInteract}
-        enabled={!isUncategorizedTransactionFetchNextPage}
-      />
+      <IntersectionObserver onIntersect={handleObserverInteract} enabled={!isUncategorizedTransactionFetchNextPage} />
     </AccountUncategorizedTransactionsContext.Provider>
   );
 }
 
-const useAccountUncategorizedTransactionsContext = () =>
-  React.useContext(AccountUncategorizedTransactionsContext);
+const useAccountUncategorizedTransactionsContext = () => React.useContext(AccountUncategorizedTransactionsContext);
 
-export {
-  AccountUncategorizedTransactionsBoot,
-  useAccountUncategorizedTransactionsContext,
-};
+export { AccountUncategorizedTransactionsBoot, useAccountUncategorizedTransactionsContext };

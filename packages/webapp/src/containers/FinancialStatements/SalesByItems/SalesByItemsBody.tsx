@@ -21,11 +21,7 @@ function SalesByItemsBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <SalesByItemsTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <SalesByItemsTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

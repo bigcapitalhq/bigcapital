@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import { Importable } from '@/services/Import/Importable';
 import { IItemCreateDTO } from '@/interfaces';
+import { Importable } from '@/services/Import/Importable';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CreateItem } from './CreateItem';
 
 @Service()
@@ -19,7 +19,7 @@ export class ItemsImportable extends Importable {
   public async importable(
     tenantId: number,
     createDTO: IItemCreateDTO,
-    trx?: Knex.Transaction<any, any[]>
+    trx?: Knex.Transaction<any, any[]>,
   ): Promise<void> {
     console.log(createDTO, tenantId, 'XX');
     await this.createItemService.createItem(tenantId, createDTO, trx);

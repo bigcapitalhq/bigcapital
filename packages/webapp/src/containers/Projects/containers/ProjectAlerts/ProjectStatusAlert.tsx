@@ -70,7 +70,4 @@ function ProjectStatusAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ProjectStatusAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ProjectStatusAlert);

@@ -50,4 +50,4 @@ export const getFiscalYear = () => [
     name: `${intl.get('december')} - ${intl.get('november')}`,
     key: 'december',
   },
-]
+];

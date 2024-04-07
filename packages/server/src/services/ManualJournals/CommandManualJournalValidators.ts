@@ -1,14 +1,10 @@
-import { difference } from 'lodash';
-import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import {
-  IManualJournalDTO,
-  IManualJournalEntry,
-  IManualJournal,
-} from '@/interfaces';
+import { IManualJournal, IManualJournalDTO, IManualJournalEntry } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
+import { difference } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { AutoIncrementManualJournal } from './AutoIncrementManualJournal';
+import { ERRORS } from './constants';
 
 @Service()
 export class CommandManualJournalValidators {
@@ -47,10 +43,7 @@ export class CommandManualJournalValidators {
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO -
    */
-  public async validateAccountsExistance(
-    tenantId: number,
-    manualJournalDTO: IManualJournalDTO
-  ) {
+  public async validateAccountsExistance(tenantId: number, manualJournalDTO: IManualJournalDTO) {
     const { Account } = this.tenancy.models(tenantId);
     const manualAccountsIds = manualJournalDTO.entries.map((e) => e.accountId);
 
@@ -68,11 +61,7 @@ export class CommandManualJournalValidators {
    * @param {number} tenantId
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public async validateManualJournalNoUnique(
-    tenantId: number,
-    journalNumber: string,
-    notId?: number
-  ) {
+  public async validateManualJournalNoUnique(tenantId: number, journalNumber: string, notId?: number) {
     const { ManualJournal } = this.tenancy.models(tenantId);
     const journals = await ManualJournal.query()
       .where('journal_number', journalNumber)
@@ -97,7 +86,7 @@ export class CommandManualJournalValidators {
     tenantId: number,
     entriesDTO: IManualJournalEntry[],
     accountBySlug: string,
-    contactType: string
+    contactType: string,
   ): Promise<void | ServiceError> {
     const { Account } = this.tenancy.models(tenantId);
     const { contactRepository } = this.tenancy.repositories(tenantId);
@@ -108,19 +97,13 @@ export class CommandManualJournalValidators {
     // Retrieve all stored contacts on the storage from contacts entries.
     const storedContacts = await contactRepository.findWhereIn(
       'id',
-      entriesDTO
-        .filter((entry) => entry.contactId)
-        .map((entry) => entry.contactId)
+      entriesDTO.filter((entry) => entry.contactId).map((entry) => entry.contactId),
     );
     // Converts the stored contacts to map with id as key and entry as value.
-    const storedContactsMap = new Map(
-      storedContacts.map((contact) => [contact.id, contact])
-    );
+    const storedContactsMap = new Map(storedContacts.map((contact) => [contact.id, contact]));
 
     // Filter all entries of the given account.
-    const accountEntries = entriesDTO.filter(
-      (entry) => entry.accountId === account.id
-    );
+    const accountEntries = entriesDTO.filter((entry) => entry.accountId === account.id);
     // Can't continue if there is no entry that associate to the given account.
     if (accountEntries.length === 0) {
       return;
@@ -149,32 +132,18 @@ export class CommandManualJournalValidators {
    */
   public async dynamicValidateAccountsWithContactType(
     tenantId: number,
-    entriesDTO: IManualJournalEntry[]
+    entriesDTO: IManualJournalEntry[],
   ): Promise<any> {
     return Promise.all([
-      this.validateAccountWithContactType(
-        tenantId,
-        entriesDTO,
-        'accounts-receivable',
-        'customer'
-      ),
-      this.validateAccountWithContactType(
-        tenantId,
-        entriesDTO,
-        'accounts-payable',
-        'vendor'
-      ),
+      this.validateAccountWithContactType(tenantId, entriesDTO, 'accounts-receivable', 'customer'),
+      this.validateAccountWithContactType(tenantId, entriesDTO, 'accounts-payable', 'vendor'),
     ]).then((results) => {
       const metadataErrors = results
         .filter((result) => result instanceof ServiceError)
         .map((result: ServiceError) => result.payload);
 
       if (metadataErrors.length > 0) {
-        throw new ServiceError(
-          ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT,
-          '',
-          metadataErrors
-        );
+        throw new ServiceError(ERRORS.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT, '', metadataErrors);
       }
 
       return results;
@@ -186,30 +155,18 @@ export class CommandManualJournalValidators {
    * @param {number} tenantId -
    * @param {IManualJournalDTO} manualJournalDTO
    */
-  public async validateContactsExistance(
-    tenantId: number,
-    manualJournalDTO: IManualJournalDTO
-  ) {
+  public async validateContactsExistance(tenantId: number, manualJournalDTO: IManualJournalDTO) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     // Filters the entries that have contact only.
-    const entriesContactPairs = manualJournalDTO.entries.filter(
-      (entry) => entry.contactId
-    );
+    const entriesContactPairs = manualJournalDTO.entries.filter((entry) => entry.contactId);
 
     if (entriesContactPairs.length > 0) {
-      const entriesContactsIds = entriesContactPairs.map(
-        (entry) => entry.contactId
-      );
+      const entriesContactsIds = entriesContactPairs.map((entry) => entry.contactId);
       // Retrieve all stored contacts on the storage from contacts entries.
-      const storedContacts = await contactRepository.findWhereIn(
-        'id',
-        entriesContactsIds
-      );
+      const storedContacts = await contactRepository.findWhereIn('id', entriesContactsIds);
       // Converts the stored contacts to map with id as key and entry as value.
-      const storedContactsMap = new Map(
-        storedContacts.map((contact) => [contact.id, contact])
-      );
+      const storedContactsMap = new Map(storedContacts.map((contact) => [contact.id, contact]));
       const notFoundContactsIds = [];
 
       entriesContactPairs.forEach((contactEntry) => {
@@ -242,13 +199,9 @@ export class CommandManualJournalValidators {
    * Validates the manual journal number require.
    * @param {string} journalNumber
    */
-  public validateJournalNoRequireWhenAutoNotEnabled = (
-    tenantId: number,
-    journalNumber: string
-  ) => {
+  public validateJournalNoRequireWhenAutoNotEnabled = (tenantId: number, journalNumber: string) => {
     // Retrieve the next manual journal number.
-    const autoIncrmenetEnabled =
-      this.autoIncrement.autoIncrementEnabled(tenantId);
+    const autoIncrmenetEnabled = this.autoIncrement.autoIncrementEnabled(tenantId);
 
     if (!journalNumber || !autoIncrmenetEnabled) {
       throw new ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED);
@@ -260,9 +213,7 @@ export class CommandManualJournalValidators {
    * @param {IManualJournal[]} manualJournal - Manual journal.
    * @return {IManualJournal[]}
    */
-  public getNonePublishedManualJournals(
-    manualJournals: IManualJournal[]
-  ): IManualJournal[] {
+  public getNonePublishedManualJournals(manualJournals: IManualJournal[]): IManualJournal[] {
     return manualJournals.filter((manualJournal) => !manualJournal.publishedAt);
   }
 
@@ -271,9 +222,7 @@ export class CommandManualJournalValidators {
    * @param {IManualJournal[]} manualJournal - Manual journal.
    * @return {IManualJournal[]}
    */
-  public getPublishedManualJournals(
-    manualJournals: IManualJournal[]
-  ): IManualJournal[] {
+  public getPublishedManualJournals(manualJournals: IManualJournal[]): IManualJournal[] {
     return manualJournals.filter((expense) => expense.publishedAt);
   }
 
@@ -285,7 +234,7 @@ export class CommandManualJournalValidators {
   public validateJournalCurrencyWithAccountsCurrency = async (
     tenantId: number,
     manualJournalDTO: IManualJournalDTO,
-    baseCurrency: string
+    baseCurrency: string,
   ) => {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -294,18 +243,13 @@ export class CommandManualJournalValidators {
 
     // Filters the accounts that has no base currency or DTO currency.
     const notSupportedCurrency = accounts.filter((account) => {
-      if (
-        account.currencyCode === baseCurrency ||
-        account.currencyCode === manualJournalDTO.currencyCode
-      ) {
+      if (account.currencyCode === baseCurrency || account.currencyCode === manualJournalDTO.currencyCode) {
         return false;
       }
       return true;
     });
     if (notSupportedCurrency.length > 0) {
-      throw new ServiceError(
-        ERRORS.COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS
-      );
+      throw new ServiceError(ERRORS.COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS);
     }
   };
 }

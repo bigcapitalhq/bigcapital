@@ -2,13 +2,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
@@ -16,12 +10,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  DashboardActionsBar,
-  Can,
-  Icon,
-  FormattedMessage as T,
-} from '@/components';
+import { DashboardActionsBar, Can, Icon, FormattedMessage as T } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -77,8 +66,4 @@ function PaymentMadeDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-  withAlertsActions,
-)(PaymentMadeDetailActionsBar);
+export default compose(withDialogActions, withDrawerActions, withAlertsActions)(PaymentMadeDetailActionsBar);

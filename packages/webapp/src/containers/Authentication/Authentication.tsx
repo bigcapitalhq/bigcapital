@@ -42,19 +42,10 @@ function AuthenticationRoutes() {
 
   return (
     <TransitionGroup>
-      <CSSTransition
-        timeout={500}
-        key={locationKey}
-        classNames="authTransition"
-      >
+      <CSSTransition timeout={500} key={locationKey} classNames="authTransition">
         <Switch>
           {authenticationRoutes.map((route, index) => (
-            <Route
-              key={index}
-              path={route.path}
-              exact={route.exact}
-              component={route.component}
-            />
+            <Route key={index} path={route.path} exact={route.exact} component={route.component} />
           ))}
         </Switch>
       </CSSTransition>

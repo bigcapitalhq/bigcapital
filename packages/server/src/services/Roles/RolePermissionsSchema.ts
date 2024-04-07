@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
 import * as qim from 'qim';
+import { Inject, Service } from 'typedi';
 
+import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { AbilitySchema } from './AbilitySchema';
-import I18nService from '@/services/I18n/I18nService';
 
 @Service()
 export default class RolePermissionsSchema {

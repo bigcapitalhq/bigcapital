@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { isEmpty, map } from 'lodash';
-import { IVendor, IAccount, IAccountTransaction } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { IAccount, IAccountTransaction, IVendor } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { isEmpty, map } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class TransactionsByVendorRepository {
@@ -14,10 +14,7 @@ export default class TransactionsByVendorRepository {
    * @param {number} tenantId
    * @returns {Promise<IVendor[]>}
    */
-  public getVendors(
-    tenantId: number,
-    vendorsIds?: number[]
-  ): Promise<IVendor[]> {
+  public getVendors(tenantId: number, vendorsIds?: number[]): Promise<IVendor[]> {
     const { Vendor } = this.tenancy.models(tenantId);
 
     return Vendor.query().onBuild((q) => {
@@ -37,10 +34,7 @@ export default class TransactionsByVendorRepository {
   private async getPayableAccounts(tenantId: number): Promise<IAccount[]> {
     const { Account } = this.tenancy.models(tenantId);
 
-    const accounts = await Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_PAYABLE
-    );
+    const accounts = await Account.query().where('accountType', ACCOUNT_TYPE.ACCOUNTS_PAYABLE);
     return accounts;
   }
 
@@ -54,7 +48,7 @@ export default class TransactionsByVendorRepository {
   public async getVendorsOpeningBalance(
     tenantId: number,
     openingDate: Date,
-    customersIds?: number[]
+    customersIds?: number[],
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
@@ -65,7 +59,7 @@ export default class TransactionsByVendorRepository {
       'contactsOpeningBalance',
       openingDate,
       payableAccountsIds,
-      customersIds
+      customersIds,
     );
     return openingTransactions;
   }
@@ -79,7 +73,7 @@ export default class TransactionsByVendorRepository {
   public async getVendorsPeriodTransactions(
     tenantId: number,
     fromDate: Date,
-    toDate: Date
+    toDate: Date,
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 

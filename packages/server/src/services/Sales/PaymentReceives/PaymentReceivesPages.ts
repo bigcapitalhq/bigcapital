@@ -1,13 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import {
-  ISaleInvoice,
-  IPaymentReceivePageEntry,
-  IPaymentReceive,
-  ISystemUser,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
+import { IPaymentReceive, IPaymentReceivePageEntry, ISaleInvoice } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 /**
@@ -74,9 +69,7 @@ export default class PaymentReceivesPages {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
 
     // Retrieve payment receive.
-    const paymentReceive = await PaymentReceive.query()
-      .findById(paymentReceiveId)
-      .withGraphFetched('entries.invoice');
+    const paymentReceive = await PaymentReceive.query().findById(paymentReceiveId).withGraphFetched('entries.invoice');
 
     // Throw not found the payment receive.
     if (!paymentReceive) {
@@ -95,13 +88,11 @@ export default class PaymentReceivesPages {
       .where('customer_id', paymentReceive.customerId)
       .whereNotIn(
         'id',
-        paymentReceive.entries.map((entry) => entry.invoiceId)
+        paymentReceive.entries.map((entry) => entry.invoiceId),
       )
       .orderBy('invoice_date', 'ASC');
 
-    const restReceivableEntries = restReceivableInvoices.map(
-      this.invoiceToPageEntry
-    );
+    const restReceivableEntries = restReceivableInvoices.map(this.invoiceToPageEntry);
     const entries = [...paymentEntries, ...restReceivableEntries];
 
     return {

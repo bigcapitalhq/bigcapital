@@ -1,15 +1,15 @@
-import { sumBy, get, isEmpty } from 'lodash';
-import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
 import {
-  IItem,
-  IInventoryValuationReportQuery,
   IInventoryValuationItem,
-  InventoryCostLotTracker,
+  IInventoryValuationReportQuery,
   IInventoryValuationStatement,
   IInventoryValuationTotal,
+  IItem,
+  InventoryCostLotTracker,
 } from '@/interfaces';
+import { get, isEmpty, sumBy } from 'lodash';
+import * as R from 'ramda';
 import { allPassedConditionsPass, transformToMap } from 'utils';
+import FinancialSheet from '../FinancialSheet';
 
 export class InventoryValuationSheet extends FinancialSheet {
   readonly query: IInventoryValuationReportQuery;
@@ -31,7 +31,7 @@ export class InventoryValuationSheet extends FinancialSheet {
     items: IItem[],
     INInventoryCostLots: Map<number, InventoryCostLotTracker[]>,
     OUTInventoryCostLots: Map<number, InventoryCostLotTracker[]>,
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
 
@@ -51,7 +51,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    */
   private getItemTransaction(
     transactionsMap: Map<number, InventoryCostLotTracker[]>,
-    itemId: number
+    itemId: number,
   ): { cost: number; quantity: number } {
     const meta = transactionsMap.get(itemId);
 
@@ -144,9 +144,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IInventoryValuationItem} valuationItem -
    * @return {boolean}
    */
-  private filterNoneTransactions = (
-    valuationItem: IInventoryValuationItem
-  ): boolean => {
+  private filterNoneTransactions = (valuationItem: IInventoryValuationItem): boolean => {
     const transactionIN = this.INInventoryCostLots.get(valuationItem.id);
     const transactionOUT = this.OUTInventoryCostLots.get(valuationItem.id);
 
@@ -158,14 +156,8 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IInventoryValuationItem} valuationItem -
    * @returns {boolean}
    */
-  private filterActiveOnly = (
-    valuationItem: IInventoryValuationItem
-  ): boolean => {
-    return (
-      valuationItem.average !== 0 ||
-      valuationItem.quantity !== 0 ||
-      valuationItem.valuation !== 0
-    );
+  private filterActiveOnly = (valuationItem: IInventoryValuationItem): boolean => {
+    return valuationItem.average !== 0 || valuationItem.quantity !== 0 || valuationItem.valuation !== 0;
   };
 
   /**
@@ -208,9 +200,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IInventoryValuationItem[]} nodes -
    * @returns {IInventoryValuationItem[]}
    */
-  private itemsFilter = (
-    nodes: IInventoryValuationItem[]
-  ): IInventoryValuationItem[] => {
+  private itemsFilter = (nodes: IInventoryValuationItem[]): IInventoryValuationItem[] => {
     return nodes.filter(this.itemFilter);
   };
 
@@ -226,10 +216,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @returns {IInventoryValuationItem[]}
    */
   private itemsSection(): IInventoryValuationItem[] {
-    return R.compose(
-      R.when(this.isItemsPostFilter, this.itemsFilter),
-      this.itemsMapper
-    )(this.items);
+    return R.compose(R.when(this.isItemsPostFilter, this.itemsFilter), this.itemsMapper)(this.items);
   }
 
   /**
@@ -237,9 +224,7 @@ export class InventoryValuationSheet extends FinancialSheet {
    * @param {IInventoryValuationItem[]} items
    * @returns {IInventoryValuationTotal}
    */
-  private totalSection(
-    items: IInventoryValuationItem[]
-  ): IInventoryValuationTotal {
+  private totalSection(items: IInventoryValuationItem[]): IInventoryValuationTotal {
     const valuation = sumBy(items, (item) => item.valuation);
     const quantity = sumBy(items, (item) => item.quantity);
 

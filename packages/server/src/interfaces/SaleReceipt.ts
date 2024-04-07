@@ -28,7 +28,7 @@ export interface ISaleReceipt {
   entries?: IItemEntry[];
 }
 
-export interface ISalesReceiptsFilter {}
+export type ISalesReceiptsFilter = {};
 
 export interface ISaleReceiptDTO {
   customerId: number;
@@ -46,10 +46,7 @@ export interface ISaleReceiptDTO {
 }
 
 export interface ISalesReceiptsService {
-  createSaleReceipt(
-    tenantId: number,
-    saleReceiptDTO: ISaleReceiptDTO
-  ): Promise<void>;
+  createSaleReceipt(tenantId: number, saleReceiptDTO: ISaleReceiptDTO): Promise<void>;
 
   editSaleReceipt(tenantId: number, saleReceiptId: number): Promise<void>;
 
@@ -57,17 +54,14 @@ export interface ISalesReceiptsService {
 
   salesReceiptsList(
     tennatid: number,
-    salesReceiptsFilter: ISalesReceiptsFilter
+    salesReceiptsFilter: ISalesReceiptsFilter,
   ): Promise<{
     salesReceipts: ISaleReceipt[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }>;
 
-  validateCustomerHasNoReceipts(
-    tenantId: number,
-    customerId: number
-  ): Promise<void>;
+  validateCustomerHasNoReceipts(tenantId: number, customerId: number): Promise<void>;
 }
 
 export interface ISaleReceiptSmsDetails {

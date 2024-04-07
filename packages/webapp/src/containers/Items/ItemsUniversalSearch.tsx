@@ -27,9 +27,7 @@ function ItemUniversalSearchSelectComponent({
   return null;
 }
 
-export const ItemUniversalSearchSelectAction = withDrawerActions(
-  ItemUniversalSearchSelectComponent,
-);
+export const ItemUniversalSearchSelectAction = withDrawerActions(ItemUniversalSearchSelectComponent);
 
 /**
  * Transformes items to search.

@@ -29,8 +29,7 @@ function PaymentMadeDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deletePaymentMadeMutate, isLoading } =
-    useDeletePaymentMade();
+  const { mutateAsync: deletePaymentMadeMutate, isLoading } = useDeletePaymentMade();
 
   // Handle cancel payment made.
   const handleCancelPaymentMadeDelete = () => {
@@ -70,8 +69,4 @@ function PaymentMadeDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(PaymentMadeDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(PaymentMadeDeleteAlert);

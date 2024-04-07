@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
+import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import Ledger from '@/services/Accounting/Ledger';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class InventoryCostGLStorage {
@@ -21,7 +21,7 @@ export class InventoryCostGLStorage {
   public revertInventoryCostGLEntries = async (
     tenantId: number,
     startingDate: Date,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 

@@ -10,16 +10,12 @@ const accountsTableStateSelector = (state, props) => state.accounts.tableState;
 
 // Get accounts table state marged with location query.
 export const getAccountsTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    accountsTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, accountsTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 export const accountsTableStateChangedFactory = () =>
   createDeepEqualSelector(accountsTableStateSelector, (tableState) => {

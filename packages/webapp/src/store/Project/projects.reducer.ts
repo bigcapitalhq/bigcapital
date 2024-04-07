@@ -25,7 +25,7 @@ const CONFIG = {
 };
 const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('PROJECTS', defaultTableQuery),
- 
+
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
   },

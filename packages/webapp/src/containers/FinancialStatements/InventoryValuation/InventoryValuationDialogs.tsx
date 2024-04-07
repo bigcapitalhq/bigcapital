@@ -4,9 +4,7 @@ import { InventoryValuationPdfDialog } from './dialogs/InventoryValuationPdfDial
 export function InventoryValuationDialogs() {
   return (
     <>
-      <InventoryValuationPdfDialog
-        dialogName={DialogsName.InventoryValuationPdfPreview}
-      />
+      <InventoryValuationPdfDialog dialogName={DialogsName.InventoryValuationPdfPreview} />
     </>
   );
 }

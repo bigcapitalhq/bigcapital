@@ -1,32 +1,32 @@
-import * as R from 'ramda';
 import {
-  IBalanceSheetStatementData,
-  ITableColumnAccessor,
-  IBalanceSheetQuery,
-  ITableColumn,
-  ITableRow,
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetDataNode,
-  IBalanceSheetSchemaNode,
-  IBalanceSheetNetIncomeNode,
   IBalanceSheetAccountNode,
   IBalanceSheetAccountsNode,
   IBalanceSheetAggregateNode,
+  IBalanceSheetDataNode,
+  IBalanceSheetNetIncomeNode,
+  IBalanceSheetQuery,
+  IBalanceSheetSchemaNode,
+  IBalanceSheetStatementData,
+  ITableColumn,
+  ITableColumnAccessor,
+  ITableRow,
 } from '@/interfaces';
+import * as R from 'ramda';
 import { tableRowMapper } from 'utils';
 import FinancialSheet from '../FinancialSheet';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
-import { IROW_TYPE, DISPLAY_COLUMNS_BY } from './constants';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { BalanceSheetPercentage } from './BalanceSheetPercentage';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
-import { BalanceSheetBase } from './BalanceSheetBase';
-import { BalanceSheetTablePercentage } from './BalanceSheetTablePercentage';
-import { BalanceSheetTablePreviousYear } from './BalanceSheetTablePreviousYear';
-import { BalanceSheetTablePreviousPeriod } from './BalanceSheetTablePreviousPeriod';
 import { FinancialTable } from '../FinancialTable';
+import { BalanceSheetBase } from './BalanceSheetBase';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
+import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
+import { BalanceSheetPercentage } from './BalanceSheetPercentage';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetTableDatePeriods } from './BalanceSheetTableDatePeriods';
+import { BalanceSheetTablePercentage } from './BalanceSheetTablePercentage';
+import { BalanceSheetTablePreviousPeriod } from './BalanceSheetTablePreviousPeriod';
+import { BalanceSheetTablePreviousYear } from './BalanceSheetTablePreviousYear';
+import { DISPLAY_COLUMNS_BY, IROW_TYPE } from './constants';
 
 export default class BalanceSheetTable extends R.compose(
   BalanceSheetTablePreviousPeriod,
@@ -38,7 +38,7 @@ export default class BalanceSheetTable extends R.compose(
   BalanceSheetPercentage,
   FinancialSheetStructure,
   FinancialTable,
-  BalanceSheetBase
+  BalanceSheetBase,
 )(FinancialSheet) {
   /**
    * Balance sheet data.
@@ -57,11 +57,7 @@ export default class BalanceSheetTable extends R.compose(
    * @param {IBalanceSheetStatementData} reportData -
    * @param {IBalanceSheetQuery} query -
    */
-  constructor(
-    reportData: IBalanceSheetStatementData,
-    query: IBalanceSheetQuery,
-    i18n: any
-  ) {
+  constructor(reportData: IBalanceSheetStatementData, query: IBalanceSheetQuery, i18n: any) {
     super();
 
     this.reportData = reportData;
@@ -75,11 +71,9 @@ export default class BalanceSheetTable extends R.compose(
    * @param  {string} type -
    * @return {boolean}
    */
-  protected isNodeType = R.curry(
-    (type: string, node: IBalanceSheetSchemaNode): boolean => {
-      return node.nodeType === type;
-    }
-  );
+  protected isNodeType = R.curry((type: string, node: IBalanceSheetSchemaNode): boolean => {
+    return node.nodeType === type;
+  });
 
   // -------------------------
   // # Accessors.
@@ -94,8 +88,8 @@ export default class BalanceSheetTable extends R.compose(
       R.ifElse(
         R.always(this.isDisplayColumnsBy(DISPLAY_COLUMNS_BY.DATE_PERIODS)),
         R.concat(this.datePeriodsColumnsAccessors()),
-        R.concat(this.totalColumnAccessor())
-      )
+        R.concat(this.totalColumnAccessor()),
+      ),
     )([]);
   };
 
@@ -108,7 +102,7 @@ export default class BalanceSheetTable extends R.compose(
       R.concat(this.previousPeriodColumnAccessor()),
       R.concat(this.previousYearColumnAccessor()),
       R.concat(this.percentageColumnsAccessor()),
-      R.concat([{ key: 'total', accessor: 'total.formattedAmount' }])
+      R.concat([{ key: 'total', accessor: 'total.formattedAmount' }]),
     )([]);
   };
 
@@ -117,9 +111,7 @@ export default class BalanceSheetTable extends R.compose(
    * @param {IBalanceSheetAggregateNode} node
    * @returns {ITableRow}
    */
-  private aggregateNodeTableRowsMapper = (
-    node: IBalanceSheetAggregateNode
-  ): ITableRow => {
+  private aggregateNodeTableRowsMapper = (node: IBalanceSheetAggregateNode): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.AGGREGATE],
@@ -133,9 +125,7 @@ export default class BalanceSheetTable extends R.compose(
    * @param {IBalanceSheetAccountsNode} node
    * @returns {ITableRow}
    */
-  private accountsNodeTableRowsMapper = (
-    node: IBalanceSheetAccountsNode
-  ): ITableRow => {
+  private accountsNodeTableRowsMapper = (node: IBalanceSheetAccountsNode): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.ACCOUNTS],
@@ -149,9 +139,7 @@ export default class BalanceSheetTable extends R.compose(
    * @param {IBalanceSheetAccountNode} node
    * @returns {ITableRow}
    */
-  private accountNodeTableRowsMapper = (
-    node: IBalanceSheetAccountNode
-  ): ITableRow => {
+  private accountNodeTableRowsMapper = (node: IBalanceSheetAccountNode): ITableRow => {
     const columns = this.commonColumnsAccessors();
 
     const meta = {
@@ -166,9 +154,7 @@ export default class BalanceSheetTable extends R.compose(
    * @param {IBalanceSheetNetIncomeNode} node
    * @returns {ITableRow}
    */
-  private netIncomeNodeTableRowsMapper = (
-    node: IBalanceSheetNetIncomeNode
-  ): ITableRow => {
+  private netIncomeNodeTableRowsMapper = (node: IBalanceSheetNetIncomeNode): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.NET_INCOME],
@@ -184,22 +170,10 @@ export default class BalanceSheetTable extends R.compose(
    */
   private nodeToTableRowsMapper = (node: IBalanceSheetDataNode): ITableRow => {
     return R.cond([
-      [
-        this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE),
-        this.aggregateNodeTableRowsMapper,
-      ],
-      [
-        this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
-        this.accountsNodeTableRowsMapper,
-      ],
-      [
-        this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNT),
-        this.accountNodeTableRowsMapper,
-      ],
-      [
-        this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
-        this.netIncomeNodeTableRowsMapper,
-      ],
+      [this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE), this.aggregateNodeTableRowsMapper],
+      [this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS), this.accountsNodeTableRowsMapper],
+      [this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNT), this.accountNodeTableRowsMapper],
+      [this.isNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME), this.netIncomeNodeTableRowsMapper],
     ])(node);
   };
 
@@ -208,25 +182,20 @@ export default class BalanceSheetTable extends R.compose(
    * @param  {IBalanceSheetDataNode[]} nodes -
    * @return {ITableRow}
    */
-  private nodesToTableRowsMapper = (
-    nodes: IBalanceSheetDataNode[]
-  ): ITableRow[] => {
+  private nodesToTableRowsMapper = (nodes: IBalanceSheetDataNode[]): ITableRow[] => {
     return this.mapNodesDeep(nodes, this.nodeToTableRowsMapper);
   };
 
   /**
    * Retrieves the total children columns.
- * @returns {ITableColumn[]}
+   * @returns {ITableColumn[]}
    */
   private totalColumnChildren = (): ITableColumn[] => {
     return R.compose(
-      R.unless(
-        R.isEmpty,
-        R.concat([{ key: 'total', label: this.i18n.__('balance_sheet.total') }])
-      ),
+      R.unless(R.isEmpty, R.concat([{ key: 'total', label: this.i18n.__('balance_sheet.total') }])),
       R.concat(this.percentageColumns()),
       R.concat(this.getPreviousYearColumns()),
-      R.concat(this.previousPeriodColumns())
+      R.concat(this.previousPeriodColumns()),
     )([]);
   };
 
@@ -249,10 +218,7 @@ export default class BalanceSheetTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      this.addTotalRows,
-      this.nodesToTableRowsMapper
-    )(this.reportData);
+    return R.compose(this.addTotalRows, this.nodesToTableRowsMapper)(this.reportData);
   };
 
   // -------------------------
@@ -265,14 +231,8 @@ export default class BalanceSheetTable extends R.compose(
   public tableColumns = (): ITableColumn[] => {
     return R.compose(
       this.tableColumnsCellIndexing,
-      R.concat([
-        { key: 'name', label: this.i18n.__('balance_sheet.account_name') },
-      ]),
-      R.ifElse(
-        this.query.isDatePeriodsColumnsType,
-        R.concat(this.datePeriodsColumns()),
-        R.concat(this.totalColumn())
-      )
+      R.concat([{ key: 'name', label: this.i18n.__('balance_sheet.account_name') }]),
+      R.ifElse(this.query.isDatePeriodsColumnsType, R.concat(this.datePeriodsColumns()), R.concat(this.totalColumn())),
     )([]);
   };
 }

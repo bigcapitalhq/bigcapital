@@ -8,14 +8,8 @@ export function MakeJournalFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
-      <DescriptionFormGroup
-        label={<T id={'description'} />}
-        name={'description'}
-      >
-        <FEditableText
-          name={'description'}
-          placeholder={intl.get('make_jorunal.decscrption.placeholder')}
-        />
+      <DescriptionFormGroup label={<T id={'description'} />} name={'description'}>
+        <FEditableText name={'description'} placeholder={intl.get('make_jorunal.decscrption.placeholder')} />
       </DescriptionFormGroup>
     </React.Fragment>
   );

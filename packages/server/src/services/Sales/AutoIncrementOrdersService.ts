@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import { transactionIncrement, parseBoolean } from 'utils';
+import { Inject, Service } from 'typedi';
+import { parseBoolean, transactionIncrement } from 'utils';
 
 /**
  * Auto increment orders service.
@@ -18,7 +18,7 @@ export default class AutoIncrementOrdersService {
     const autoIncrement = settings.get({ group, key: 'auto_increment' }, false);
 
     return parseBoolean(autoIncrement, false);
-  }
+  };
 
   /**
    * Retrieve the next service transaction number.
@@ -53,12 +53,11 @@ export default class AutoIncrementOrdersService {
     const autoIncrement = settings.get({ group, key: 'auto_increment' });
 
     // Can't continue if the auto-increment of the service was disabled.
-    if (!autoIncrement) { return; }
+    if (!autoIncrement) {
+      return;
+    }
 
-    settings.set(
-      { group, key: 'next_number' },
-      transactionIncrement(settingNo)
-    );
+    settings.set({ group, key: 'next_number' }, transactionIncrement(settingNo));
     await settings.save();
   }
 }

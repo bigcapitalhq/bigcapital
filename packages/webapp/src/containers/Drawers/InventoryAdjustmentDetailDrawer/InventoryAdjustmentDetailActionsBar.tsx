@@ -6,16 +6,8 @@ import { useInventoryAdjustmentDrawerContext } from './InventoryAdjustmentDrawer
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 
-import {
-  Icon,
-  DrawerActionsBar,
-  FormattedMessage as T,
-  Can,
-} from '@/components';
-import {
-  InventoryAdjustmentAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from '@/components';
+import { InventoryAdjustmentAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 
@@ -34,10 +26,7 @@ function InventoryAdjustmentDetailActionsBar({
   };
 
   return (
-    <Can
-      I={InventoryAdjustmentAction.Delete}
-      a={AbilitySubject.InventoryAdjustment}
-    >
+    <Can I={InventoryAdjustmentAction.Delete} a={AbilitySubject.InventoryAdjustment}>
       <DrawerActionsBar>
         <NavbarGroup>
           <Button

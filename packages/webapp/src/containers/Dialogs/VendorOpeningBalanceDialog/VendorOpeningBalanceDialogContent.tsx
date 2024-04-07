@@ -16,10 +16,7 @@ export default function VendorOpeningBalanceDialogContent({
   vendorId,
 }) {
   return (
-    <VendorOpeningBalanceFormProvider
-      vendorId={vendorId}
-      dialogName={dialogName}
-    >
+    <VendorOpeningBalanceFormProvider vendorId={vendorId} dialogName={dialogName}>
       <VendorOpeningBalanceForm />
     </VendorOpeningBalanceFormProvider>
   );

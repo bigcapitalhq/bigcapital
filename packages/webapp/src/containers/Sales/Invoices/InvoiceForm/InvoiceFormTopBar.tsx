@@ -1,16 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  Alignment,
-  NavbarGroup,
-  NavbarDivider,
-  Classes,
-} from '@blueprintjs/core';
-import {
-  useSetPrimaryWarehouseToForm,
-  useSetPrimaryBranchToForm,
-} from './utils';
+import { Alignment, NavbarGroup, NavbarDivider, Classes } from '@blueprintjs/core';
+import { useSetPrimaryWarehouseToForm, useSetPrimaryBranchToForm } from './utils';
 
 import { Features } from '@/constants';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
@@ -48,9 +40,7 @@ export default function InvoiceFormTopBar() {
         <FeatureCan feature={Features.Branches}>
           <InvoiceFormSelectBranch />
         </FeatureCan>
-        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
-          <NavbarDivider />
-        )}
+        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && <NavbarDivider />}
         <FeatureCan feature={Features.Warehouses}>
           <InvoiceFormSelectWarehouse />
         </FeatureCan>

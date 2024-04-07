@@ -1,21 +1,15 @@
-import { defaultTo } from 'lodash';
-import * as R from 'ramda';
 import { Knex } from 'knex';
+import { defaultTo } from 'lodash';
 import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 
-import { transformToMapBy } from 'utils';
-import {
-  IProfitLossSheetQuery,
-  IAccount,
-  IAccountTransactionsGroupBy,
-} from '@/interfaces';
+import { IAccount, IAccountTransactionsGroupBy, IProfitLossSheetQuery } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
-import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
+import { transformToMapBy } from 'utils';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
+import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 
-export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
-  class {}
-) {
+export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(class {}) {
   /**
    *
    */
@@ -35,8 +29,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * Transactions group type.
    * @param {IAccountTransactionsGroupBy}
    */
-  public transactionsGroupType: IAccountTransactionsGroupBy =
-    IAccountTransactionsGroupBy.Month;
+  public transactionsGroupType: IAccountTransactionsGroupBy = IAccountTransactionsGroupBy.Month;
 
   /**
    * @param {IProfitLossSheetQuery}
@@ -125,9 +118,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     this.models = models;
     this.query = new ProfitLossSheetQuery(query);
 
-    this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(
-      this.query.displayColumnsBy
-    );
+    this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(this.query.displayColumnsBy);
   }
 
   /**
@@ -145,20 +136,14 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     if (this.query.isPreviousPeriodActive()) {
       await this.initTotalPreviousPeriod();
     }
-    if (
-      this.query.isPreviousPeriodActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
+    if (this.query.isPreviousPeriodActive() && this.query.isDatePeriodsColumnsType()) {
       await this.initPeriodsPreviousPeriod();
     }
     // Previous Year (PY).
     if (this.query.isPreviousYearActive()) {
       await this.initTotalPreviousYear();
     }
-    if (
-      this.query.isPreviousYearActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
+    if (this.query.isPreviousYearActive() && this.query.isDatePeriodsColumnsType()) {
       await this.initPeriodsPreviousYear();
     }
   };
@@ -184,10 +169,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * Initialize accounts closing total based on the given query.
    */
   private initAccountsTotalLedger = async (): Promise<void> => {
-    const totalByAccount = await this.accountsTotal(
-      this.query.fromDate,
-      this.query.toDate
-    );
+    const totalByAccount = await this.accountsTotal(this.query.fromDate, this.query.toDate);
     // Inject to the repository.
     this.totalAccountsLedger = Ledger.fromTransactions(totalByAccount);
   };
@@ -203,7 +185,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     const periodsByAccount = await this.accountsDatePeriods(
       this.query.fromDate,
       this.query.toDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
 
     // Inject to the repository.
@@ -217,10 +199,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * Initialize total of previous period (PP).
    */
   private initTotalPreviousPeriod = async (): Promise<void> => {
-    const PPTotalsByAccounts = await this.accountsTotal(
-      this.query.PPFromDate,
-      this.query.PPToDate
-    );
+    const PPTotalsByAccounts = await this.accountsTotal(this.query.PPFromDate, this.query.PPToDate);
     // Inject to the repository.
     this.PPTotalAccountsLedger = Ledger.fromTransactions(PPTotalsByAccounts);
   };
@@ -233,7 +212,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     const periodsByAccount = await this.accountsDatePeriods(
       this.query.PPFromDate,
       this.query.PPToDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
     // Inject to the repository.
     this.PPPeriodsAccountsLedger = Ledger.fromTransactions(periodsByAccount);
@@ -246,10 +225,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * Initialize total of previous year (PY).
    */
   private initTotalPreviousYear = async (): Promise<void> => {
-    const PYTotalsByAccounts = await this.accountsTotal(
-      this.query.PYFromDate,
-      this.query.PYToDate
-    );
+    const PYTotalsByAccounts = await this.accountsTotal(this.query.PYFromDate, this.query.PYToDate);
     // Inject to the repository.
     this.PYTotalAccountsLedger = Ledger.fromTransactions(PYTotalsByAccounts);
   };
@@ -262,7 +238,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     const periodsByAccount = await this.accountsDatePeriods(
       this.query.PYFromDate,
       this.query.PYToDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
     // Inject to the repository.
     this.PYPeriodsAccountsLedger = Ledger.fromTransactions(periodsByAccount);
@@ -296,11 +272,7 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * @param datePeriodsType
    * @returns
    */
-  public accountsDatePeriods = async (
-    fromDate: Date,
-    toDate: Date,
-    datePeriodsType
-  ) => {
+  public accountsDatePeriods = async (fromDate: Date, toDate: Date, datePeriodsType) => {
     const { AccountTransaction } = this.models;
 
     return AccountTransaction.query().onBuild((query) => {

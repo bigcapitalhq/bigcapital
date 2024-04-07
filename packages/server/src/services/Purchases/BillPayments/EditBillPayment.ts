@@ -1,17 +1,13 @@
-import { Inject, Service } from 'typedi';
+import { IBillPayment, IBillPaymentEditingPayload, IBillPaymentEventEditedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { BillPaymentValidators } from './BillPaymentValidators';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import {
-  IBillPayment,
-  IBillPaymentEditingPayload,
-  IBillPaymentEventEditedPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { Knex } from 'knex';
 import UnitOfWork from '@/services/UnitOfWork';
-import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransformer';
+import events from '@/subscribers/events';
 import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { BillPaymentValidators } from './BillPaymentValidators';
+import { CommandBillPaymentDTOTransformer } from './CommandBillPaymentDTOTransformer';
 
 @Service()
 export class EditBillPayment {
@@ -48,11 +44,7 @@ export class EditBillPayment {
    * @param {BillPaymentDTO} billPayment
    * @param {IBillPayment} oldBillPayment
    */
-  public async editBillPayment(
-    tenantId: number,
-    billPaymentId: number,
-    billPaymentDTO
-  ): Promise<IBillPayment> {
+  public async editBillPayment(tenantId: number, billPaymentId: number, billPaymentDTO): Promise<IBillPayment> {
     const { BillPayment, Contact } = this.tenancy.models(tenantId);
 
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
@@ -63,57 +55,33 @@ export class EditBillPayment {
       .throwIfNotFound();
 
     // Retrieves the bill payment vendor or throw not found error.
-    const vendor = await Contact.query()
-      .modify('vendor')
-      .findById(billPaymentDTO.vendorId)
-      .throwIfNotFound();
+    const vendor = await Contact.query().modify('vendor').findById(billPaymentDTO.vendorId).throwIfNotFound();
 
     // Transform bill payment DTO to model object.
-    const billPaymentObj = await this.transformer.transformDTOToModel(
-      tenantId,
-      billPaymentDTO,
-      vendor,
-      oldBillPayment
-    );
+    const billPaymentObj = await this.transformer.transformDTOToModel(tenantId, billPaymentDTO, vendor, oldBillPayment);
     // Validate vendor not modified.
     this.validators.validateVendorNotModified(billPaymentDTO, oldBillPayment);
 
     // Validate the payment account existance and type.
     const paymentAccount = await this.validators.getPaymentAccountOrThrowError(
       tenantId,
-      billPaymentObj.paymentAccountId
+      billPaymentObj.paymentAccountId,
     );
     // Validate the items entries IDs existance on the storage.
-    await this.validators.validateEntriesIdsExistance(
-      tenantId,
-      billPaymentId,
-      billPaymentObj.entries
-    );
+    await this.validators.validateEntriesIdsExistance(tenantId, billPaymentId, billPaymentObj.entries);
     // Validate the bills existance and associated to the given vendor.
-    await this.validators.validateBillsExistance(
-      tenantId,
-      billPaymentObj.entries,
-      billPaymentDTO.vendorId
-    );
+    await this.validators.validateBillsExistance(tenantId, billPaymentObj.entries, billPaymentDTO.vendorId);
     // Validates the bills due payment amount.
-    await this.validators.validateBillsDueAmount(
-      tenantId,
-      billPaymentObj.entries,
-      oldBillPayment.entries
-    );
+    await this.validators.validateBillsDueAmount(tenantId, billPaymentObj.entries, oldBillPayment.entries);
     // Validate the payment number uniquiness.
     if (billPaymentObj.paymentNumber) {
-      await this.validators.validatePaymentNumber(
-        tenantId,
-        billPaymentObj.paymentNumber,
-        billPaymentId
-      );
+      await this.validators.validatePaymentNumber(tenantId, billPaymentObj.paymentNumber, billPaymentId);
     }
     // Validates the withdrawal account currency code.
     this.validators.validateWithdrawalAccountCurrency(
       paymentAccount.currencyCode,
       vendor.currencyCode,
-      tenantMeta.baseCurrency
+      tenantMeta.baseCurrency,
     );
     // Edits the bill transactions with associated transactions
     // under unit-of-work envirement.

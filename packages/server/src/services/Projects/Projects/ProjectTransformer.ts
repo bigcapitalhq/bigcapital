@@ -8,12 +8,7 @@ export class ProjectTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'costEstimateFormatted',
-      'deadlineFormatted',
-      'contactDisplayName',
-      'statusFormatted',
-    ];
+    return ['costEstimateFormatted', 'deadlineFormatted', 'contactDisplayName', 'statusFormatted'];
   };
 
   /**

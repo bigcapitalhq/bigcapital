@@ -4,18 +4,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const UnlockingTransactionsDialogContent = React.lazy(() =>
-  import('./UnlockingTransactionsDialogContent'),
-);
+const UnlockingTransactionsDialogContent = React.lazy(() => import('./UnlockingTransactionsDialogContent'));
 
 /**
  * Unlocking transactions dialog.
  */
-function UnlockingTransactionsDialog({
-  dialogName,
-  payload: { module },
-  isOpen,
-}) {
+function UnlockingTransactionsDialog({ dialogName, payload: { module }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -26,10 +20,7 @@ function UnlockingTransactionsDialog({
       className={'dialog--transaction--locking'}
     >
       <DialogSuspense>
-        <UnlockingTransactionsDialogContent
-          moduleName={module}
-          dialogName={dialogName}
-        />
+        <UnlockingTransactionsDialogContent moduleName={module} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

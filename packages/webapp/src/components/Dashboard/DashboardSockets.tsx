@@ -11,7 +11,7 @@ export function DashboardSockets() {
 
   useEffect(() => {
     socket.current = io('/', { path: '/socket' });
-  
+
     socket.current.on('NEW_TRANSACTIONS_DATA', () => {
       client.invalidateQueries(t.ACCOUNTS);
       client.invalidateQueries(t.ACCOUNT_TRANSACTION);

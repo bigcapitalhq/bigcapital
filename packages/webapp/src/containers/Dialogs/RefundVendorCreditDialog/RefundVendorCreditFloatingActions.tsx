@@ -31,12 +31,7 @@ function RefundVendorCreditFloatingActions({
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
           <T id={'cancel'} />
         </Button>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '120px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '120px' }} type="submit">
           <T id={'refund'} />
         </Button>
       </div>

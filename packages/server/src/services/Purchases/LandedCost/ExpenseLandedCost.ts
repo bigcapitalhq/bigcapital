@@ -1,13 +1,12 @@
-import { Service } from 'typedi';
-import { isEmpty } from 'lodash';
-import * as R from 'ramda';
 import {
-  IExpense,
-  ILandedCostTransactionEntry,
-  IExpenseCategory,
   IAccount,
+  IExpense,
+  IExpenseCategory,
   ILandedCostTransaction,
+  ILandedCostTransactionEntry,
 } from '@/interfaces';
+import { isEmpty } from 'lodash';
+import { Service } from 'typedi';
 
 @Service()
 export default class ExpenseLandedCost {
@@ -16,9 +15,7 @@ export default class ExpenseLandedCost {
    * @param {IExpense} expense
    * @returns {ILandedCostTransaction}
    */
-  public transformToLandedCost = (
-    expense: IExpense
-  ): ILandedCostTransaction => {
+  public transformToLandedCost = (expense: IExpense): ILandedCostTransaction => {
     const name = 'EXP-100';
 
     return {
@@ -43,7 +40,7 @@ export default class ExpenseLandedCost {
    * @return {ILandedCostTransactionEntry}
    */
   public transformToLandedCostEntry = (
-    expenseEntry: IExpenseCategory & { expenseAccount: IAccount }
+    expenseEntry: IExpenseCategory & { expenseAccount: IAccount },
   ): ILandedCostTransactionEntry => {
     return {
       id: expenseEntry.id,

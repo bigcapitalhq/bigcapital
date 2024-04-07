@@ -2,14 +2,7 @@
 import React, { useState, createContext } from 'react';
 import { omit } from 'lodash';
 import { useLocation } from 'react-router-dom';
-import {
-  useVendor,
-  useContact,
-  useCurrencies,
-  useCreateVendor,
-  useEditVendor,
-  useBranches,
-} from '@/hooks/query';
+import { useVendor, useContact, useCurrencies, useCreateVendor, useEditVendor, useBranches } from '@/hooks/query';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 
@@ -35,10 +28,7 @@ function VendorFormProvider({ query, vendorId, ...props }) {
   });
 
   // Handle fetch contact duplicate details.
-  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(
-    contactId,
-    { enabled: !!contactId },
-  );
+  const { data: contactDuplicate, isLoading: isContactLoading } = useContact(contactId, { enabled: !!contactId });
 
   // Fetches the branches list.
   const {
@@ -57,11 +47,7 @@ function VendorFormProvider({ query, vendorId, ...props }) {
   // determines whether the form new or duplicate mode.
   const isNewMode = contactId || !vendorId;
 
-  const isFormLoading =
-    isVendorLoading ||
-    isContactLoading ||
-    isCurrenciesLoading ||
-    isBranchesLoading;
+  const isFormLoading = isVendorLoading || isContactLoading || isCurrenciesLoading || isBranchesLoading;
 
   const provider = {
     vendorId,

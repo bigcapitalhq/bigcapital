@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
+import { IBranchDeletePayload, IBranchDeletedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { Knex } from 'knex';
 import events from '@/subscribers/events';
-import { IBranchDeletedPayload, IBranchDeletePayload } from '@/interfaces';
-import { CURDBranch } from './CRUDBranch';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { BranchValidator } from './BranchValidate';
+import { CURDBranch } from './CRUDBranch';
 import { ERRORS } from './constants';
 
 @Service()
@@ -39,19 +39,13 @@ export class DeleteBranch extends CURDBranch {
    * @param   {number} branchId
    * @returns {Promise<void>}
    */
-  public deleteBranch = async (
-    tenantId: number,
-    branchId: number
-  ): Promise<void> => {
+  public deleteBranch = async (tenantId: number, branchId: number): Promise<void> => {
     const { Branch } = this.tenancy.models(tenantId);
 
     // Retrieves the old branch or throw not found service error.
-    const oldBranch = await Branch.query()
-      .findById(branchId)
-      .throwIfNotFound()
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+    const oldBranch = await Branch.query().findById(branchId).throwIfNotFound().queryAndThrowIfHasRelations({
+      type: ERRORS.BRANCH_HAS_ASSOCIATED_TRANSACTIONS,
+    });
     // Authorize the branch before deleting.
     await this.authorize(tenantId, branchId);
 

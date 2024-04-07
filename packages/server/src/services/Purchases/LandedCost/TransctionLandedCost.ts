@@ -1,16 +1,11 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import { Model } from 'objection';
-import {
-  IBill,
-  IExpense,
-  ILandedCostTransaction,
-  ILandedCostTransactionEntry,
-} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
+import { IBill, IExpense, ILandedCostTransaction, ILandedCostTransactionEntry } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Model } from 'objection';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import BillLandedCost from './BillLandedCost';
 import ExpenseLandedCost from './ExpenseLandedCost';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './utils';
 
 @Service()
@@ -47,21 +42,12 @@ export default class TransactionLandedCost {
    * @returns {ILandedCostTransaction}
    */
   public transformToLandedCost = R.curry(
-    (
-      transactionType: string,
-      transaction: IBill | IExpense
-    ): ILandedCostTransaction => {
+    (transactionType: string, transaction: IBill | IExpense): ILandedCostTransaction => {
       return R.compose(
-        R.when(
-          R.always(transactionType === 'Bill'),
-          this.billLandedCost.transformToLandedCost
-        ),
-        R.when(
-          R.always(transactionType === 'Expense'),
-          this.expenseLandedCost.transformToLandedCost
-        )
+        R.when(R.always(transactionType === 'Bill'), this.billLandedCost.transformToLandedCost),
+        R.when(R.always(transactionType === 'Expense'), this.expenseLandedCost.transformToLandedCost),
       )(transaction);
-    }
+    },
   );
 
   /**
@@ -72,17 +58,11 @@ export default class TransactionLandedCost {
    */
   public transformToLandedCostEntry = (
     transactionType: 'Bill' | 'Expense',
-    transactionEntry
+    transactionEntry,
   ): ILandedCostTransactionEntry => {
     return R.compose(
-      R.when(
-        R.always(transactionType === 'Bill'),
-        this.billLandedCost.transformToLandedCostEntry
-      ),
-      R.when(
-        R.always(transactionType === 'Expense'),
-        this.expenseLandedCost.transformToLandedCostEntry
-      )
+      R.when(R.always(transactionType === 'Bill'), this.billLandedCost.transformToLandedCostEntry),
+      R.when(R.always(transactionType === 'Expense'), this.expenseLandedCost.transformToLandedCostEntry),
     )(transactionEntry);
   };
 }

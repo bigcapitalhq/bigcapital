@@ -62,7 +62,4 @@ function BillOpenAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(BillOpenAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(BillOpenAlert);

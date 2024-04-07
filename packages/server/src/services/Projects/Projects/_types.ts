@@ -1,8 +1,4 @@
-import {
-  ProjectBillableEntriesQuery,
-  ProjectBillableEntry,
-  ProjectBillableType,
-} from '@/interfaces';
+import { ProjectBillableEntriesQuery, ProjectBillableEntry, ProjectBillableType } from '@/interfaces';
 import { Knex } from 'knex';
 
 export interface IncreaseInvoicedTaskQueuePayload {
@@ -14,9 +10,5 @@ export interface IncreaseInvoicedTaskQueuePayload {
 
 export interface ProjectBillableGetter {
   type: ProjectBillableType;
-  getter: (
-    tenantId: number,
-    projectId: number,
-    query: ProjectBillableEntriesQuery
-  ) => Promise<ProjectBillableEntry[]>;
+  getter: (tenantId: number, projectId: number, query: ProjectBillableEntriesQuery) => Promise<ProjectBillableEntry[]>;
 }

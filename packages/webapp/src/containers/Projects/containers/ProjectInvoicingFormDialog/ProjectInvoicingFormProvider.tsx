@@ -25,7 +25,6 @@ function ProjectInvoicingFormProvider({
   );
 }
 
-const useProjectInvoicingFormContext = () =>
-  React.useContext(ProjectInvoicingFormContext);
+const useProjectInvoicingFormContext = () => React.useContext(ProjectInvoicingFormContext);
 
 export { ProjectInvoicingFormProvider, useProjectInvoicingFormContext };

@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   ISalesByItemsItem,
   ISalesByItemsSheetStatement,
@@ -7,15 +6,13 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
 import { ROW_TYPE } from './constants';
 
-export class SalesByItemsTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class SalesByItemsTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   private readonly data: ISalesByItemsSheetStatement;
 
   /**
@@ -83,9 +80,7 @@ export class SalesByItemsTable extends R.compose(
     const itemsRows = this.itemsMap(this.data.items);
     const totalRow = this.totalMap(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
-    )([...itemsRows]) as ITableRow[];
+    return R.compose(R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)))([...itemsRows]) as ITableRow[];
   }
 
   /**

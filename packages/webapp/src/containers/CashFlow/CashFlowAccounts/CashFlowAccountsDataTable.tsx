@@ -2,12 +2,7 @@
 import React from 'react';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  TableFastCell,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, TableFastCell, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 
 import withSettings from '@/containers/Settings/withSettings';
 
@@ -24,18 +19,13 @@ function CashFlowAccountsDataTable({
   cashflowTableSize,
 }) {
   // Retrieve list context.
-  const {
-    cashflowAccounts,
-    isCashFlowAccountsFetching,
-    isCashFlowAccountsLoading,
-  } = useCashFlowAccountsContext();
+  const { cashflowAccounts, isCashFlowAccountsFetching, isCashFlowAccountsLoading } = useCashFlowAccountsContext();
 
   // Retrieve table columns.
   const columns = useCashFlowAccountsTableColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CASHFLOW_ACCOUNTS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.CASHFLOW_ACCOUNTS);
 
   return (
     <DataTable

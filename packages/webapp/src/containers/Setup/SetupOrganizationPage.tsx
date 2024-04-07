@@ -64,6 +64,4 @@ function SetupOrganizationPage({ wizard }) {
   );
 }
 
-export default compose(
-  withSettingsActions,
-)(SetupOrganizationPage);
+export default compose(withSettingsActions)(SetupOrganizationPage);

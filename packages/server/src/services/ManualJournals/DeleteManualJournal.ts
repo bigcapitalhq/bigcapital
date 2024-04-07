@@ -1,14 +1,10 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  IManualJournal,
-  IManualJournalEventDeletedPayload,
-  IManualJournalDeletingPayload,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IManualJournal, IManualJournalDeletingPayload, IManualJournalEventDeletedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class DeleteManualJournal {
@@ -29,16 +25,14 @@ export class DeleteManualJournal {
    */
   public deleteManualJournal = async (
     tenantId: number,
-    manualJournalId: number
+    manualJournalId: number,
   ): Promise<{
     oldManualJournal: IManualJournal;
   }> => {
     const { ManualJournal, ManualJournalEntry } = this.tenancy.models(tenantId);
 
     // Validate the manual journal exists on the storage.
-    const oldManualJournal = await ManualJournal.query()
-      .findById(manualJournalId)
-      .throwIfNotFound();
+    const oldManualJournal = await ManualJournal.query().findById(manualJournalId).throwIfNotFound();
 
     // Deletes the manual journal with associated transactions under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -50,9 +44,7 @@ export class DeleteManualJournal {
       } as IManualJournalDeletingPayload);
 
       // Deletes the manual journal entries.
-      await ManualJournalEntry.query(trx)
-        .where('manualJournalId', manualJournalId)
-        .delete();
+      await ManualJournalEntry.query(trx).where('manualJournalId', manualJournalId).delete();
 
       // Deletes the manual journal transaction.
       await ManualJournal.query(trx).findById(manualJournalId).delete();

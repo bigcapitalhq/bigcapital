@@ -2,12 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Spinner } from '@blueprintjs/core';
 
-export function LoadingIndicator({
-  loading,
-  spinnerSize = 40,
-  children,
-  mount = false,
-}) {
+export function LoadingIndicator({ loading, spinnerSize = 40, children, mount = false }) {
   const [rendered, setRendered] = useState(mount);
 
   useEffect(() => {
@@ -38,10 +33,7 @@ export function LoadingIndicator({
 
   // Render children component or not in loading and in mount mode rendering
   // anyway.
-  const renderComponent = useMemo(
-    () => (!loading || mount ? renderChildren : null),
-    [renderChildren, loading, mount],
-  );
+  const renderComponent = useMemo(() => (!loading || mount ? renderChildren : null), [renderChildren, loading, mount]);
   const maybeRenderComponent = rendered && children && renderComponent;
   const maybeRenderLoadingSpinner = loading && loadingComponent;
 

@@ -38,31 +38,19 @@ export function ItemHeaderCell() {
 /**
  * Actions cell renderer component.
  */
-export function ActionsCellRenderer({
-  row: { index },
-  payload: { removeRow },
-}) {
+export function ActionsCellRenderer({ row: { index }, payload: { removeRow } }) {
   const onRemoveRole = () => {
     removeRow(index);
   };
   const exampleMenu = (
     <Menu>
-      <MenuItem
-        intent={Intent.DANGER}
-        onClick={onRemoveRole}
-        text={<T id={'item_entries.remove_row'} />}
-      />
+      <MenuItem intent={Intent.DANGER} onClick={onRemoveRole} text={<T id={'item_entries.remove_row'} />} />
     </Menu>
   );
 
   return (
     <Popover2 content={exampleMenu} placement="left-start">
-      <Button
-        icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
-        className="m12"
-        minimal={true}
-      />
+      <Button icon={<Icon icon={'more-13'} iconSize={13} />} iconSize={14} className="m12" minimal={true} />
     </Popover2>
   );
 }

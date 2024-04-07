@@ -1,6 +1,5 @@
-import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
-
+import { Model } from 'objection';
 
 export default class Role extends TenantModel {
   /**

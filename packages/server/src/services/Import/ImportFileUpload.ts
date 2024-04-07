@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { sanitizeResourceName, validateSheetEmpty } from './_utils';
-import ResourceService from '../Resource/ResourceService';
 import { IModelMetaField } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import ResourceService from '../Resource/ResourceService';
+import HasTenancyService from '../Tenancy/TenancyService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
+import { sanitizeResourceName, validateSheetEmpty } from './_utils';
 import { ImportFileUploadPOJO } from './interfaces';
 
 @Service()
@@ -33,15 +33,12 @@ export class ImportFileUploadService {
     tenantId: number,
     resourceName: string,
     filename: string,
-    params: Record<string, number | string>
+    params: Record<string, number | string>,
   ): Promise<ImportFileUploadPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
     const resource = sanitizeResourceName(resourceName);
-    const resourceMeta = this.resourceService.getResourceMeta(
-      tenantId,
-      resource
-    );
+    const resourceMeta = this.resourceService.getResourceMeta(tenantId, resource);
     // Throw service error if the resource does not support importing.
     this.importValidator.validateResourceImportable(resourceMeta);
 
@@ -77,10 +74,7 @@ export class ImportFileUploadService {
       columns: coumnsStringified,
       params: paramsStringified,
     });
-    const resourceColumnsMap = this.resourceService.getResourceImportableFields(
-      tenantId,
-      resource
-    );
+    const resourceColumnsMap = this.resourceService.getResourceImportableFields(tenantId, resource);
     const resourceColumns = this.getResourceColumns(resourceColumnsMap);
 
     return {
@@ -95,20 +89,13 @@ export class ImportFileUploadService {
 
   getResourceColumns(resourceColumns: { [key: string]: IModelMetaField }) {
     return Object.entries(resourceColumns)
-      .map(
-        ([key, { name, importHint, required, order }]: [
-          string,
-          IModelMetaField
-        ]) => ({
-          key,
-          name,
-          required,
-          hint: importHint,
-          order,
-        })
-      )
-      .sort((a, b) =>
-        a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0
-      );
+      .map(([key, { name, importHint, required, order }]: [string, IModelMetaField]) => ({
+        key,
+        name,
+        required,
+        hint: importHint,
+        order,
+      }))
+      .sort((a, b) => (a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0));
   }
 }

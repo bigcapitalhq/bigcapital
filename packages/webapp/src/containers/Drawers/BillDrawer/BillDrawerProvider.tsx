@@ -22,10 +22,9 @@ function BillDrawerProvider({ billId, ...props }) {
   });
 
   // Handle fetch bill located landed cost transaction.
-  const { isLoading: isLandedCostLoading, data: transactions } =
-    useBillLocatedLandedCost(billId, {
-      enabled: !!billId,
-    });
+  const { isLoading: isLandedCostLoading, data: transactions } = useBillLocatedLandedCost(billId, {
+    enabled: !!billId,
+  });
 
   //provider.
   const provider = {

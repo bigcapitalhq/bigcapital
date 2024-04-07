@@ -54,9 +54,7 @@ export default function ManualJournalDrawerHeader() {
               {manualJournal.currency_code}
             </DetailItem>
 
-            <DetailItem label={<T id={'description'} />}>
-              {defaultTo(manualJournal.description, '—')}
-            </DetailItem>
+            <DetailItem label={<T id={'description'} />}>{defaultTo(manualJournal.description, '—')}</DetailItem>
           </DetailsMenu>
         </Col>
       </Row>

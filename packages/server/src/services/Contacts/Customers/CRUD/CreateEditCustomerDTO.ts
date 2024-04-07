@@ -1,13 +1,8 @@
-import moment from 'moment';
-import { defaultTo, omit, isEmpty } from 'lodash';
-import { Service } from 'typedi';
-import {
-  ContactService,
-  ICustomer,
-  ICustomerEditDTO,
-  ICustomerNewDTO,
-} from '@/interfaces';
+import { ContactService, ICustomer, ICustomerEditDTO, ICustomerNewDTO } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
+import { defaultTo, isEmpty, omit } from 'lodash';
+import moment from 'moment';
+import { Service } from 'typedi';
 
 @Service()
 export class CreateEditCustomerDTO {
@@ -16,9 +11,7 @@ export class CreateEditCustomerDTO {
    * @param   {ICustomerNewDTO | ICustomerEditDTO} customerDTO
    * @returns
    */
-  private transformCommonDTO = (
-    customerDTO: ICustomerNewDTO | ICustomerEditDTO
-  ): Partial<ICustomer> => {
+  private transformCommonDTO = (customerDTO: ICustomerNewDTO | ICustomerEditDTO): Partial<ICustomer> => {
     return {
       ...omit(customerDTO, ['customerType']),
       contactType: customerDTO.customerType,
@@ -30,10 +23,7 @@ export class CreateEditCustomerDTO {
    * @param   {ICustomerNewDTO} customerDTO
    * @returns {}
    */
-  public transformCreateDTO = async (
-    tenantId: number,
-    customerDTO: ICustomerNewDTO
-  ) => {
+  public transformCreateDTO = async (tenantId: number, customerDTO: ICustomerNewDTO) => {
     const commonDTO = this.transformCommonDTO(customerDTO);
 
     // Retrieves the tenant metadata.
@@ -46,15 +36,10 @@ export class CreateEditCustomerDTO {
       contactService: ContactService.Customer,
       ...(!isEmpty(customerDTO.openingBalanceAt)
         ? {
-            openingBalanceAt: moment(
-              customerDTO?.openingBalanceAt
-            ).toMySqlDateTime(),
+            openingBalanceAt: moment(customerDTO?.openingBalanceAt).toMySqlDateTime(),
           }
         : {}),
-      openingBalanceExchangeRate: defaultTo(
-        customerDTO.openingBalanceExchangeRate,
-        1
-      ),
+      openingBalanceExchangeRate: defaultTo(customerDTO.openingBalanceExchangeRate, 1),
     };
   };
 

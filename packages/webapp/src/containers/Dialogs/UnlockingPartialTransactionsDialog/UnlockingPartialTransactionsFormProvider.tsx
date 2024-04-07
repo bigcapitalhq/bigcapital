@@ -8,14 +8,9 @@ const UnlockingPartialTransactionsContext = React.createContext();
 /**
  * Unlocking partial transactions form provider.
  */
-function UnlockingPartialTransactionsFormProvider({
-  moduleName,
-  dialogName,
-  ...props
-}) {
+function UnlockingPartialTransactionsFormProvider({ moduleName, dialogName, ...props }) {
   // Create unlocking partial transactions mutations.
-  const { mutateAsync: createUnlockingPartialTransactionsMutate } =
-    useCreateUnlockingPartialTransactions();
+  const { mutateAsync: createUnlockingPartialTransactionsMutate } = useCreateUnlockingPartialTransactions();
 
   // State provider.
   const provider = {
@@ -26,18 +21,11 @@ function UnlockingPartialTransactionsFormProvider({
 
   return (
     <DialogContent>
-      <UnlockingPartialTransactionsContext.Provider
-        value={provider}
-        {...props}
-      />
+      <UnlockingPartialTransactionsContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useUnlockingPartialTransactionsContext = () =>
-  React.useContext(UnlockingPartialTransactionsContext);
+const useUnlockingPartialTransactionsContext = () => React.useContext(UnlockingPartialTransactionsContext);
 
-export {
-  UnlockingPartialTransactionsFormProvider,
-  useUnlockingPartialTransactionsContext,
-};
+export { UnlockingPartialTransactionsFormProvider, useUnlockingPartialTransactionsContext };

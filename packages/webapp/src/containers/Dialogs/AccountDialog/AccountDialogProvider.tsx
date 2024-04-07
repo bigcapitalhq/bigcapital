@@ -25,17 +25,12 @@ function AccountDialogProvider({ dialogName, payload, ...props }) {
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Fetches accounts types.
-  const { data: accountsTypes, isLoading: isAccountsTypesLoading } =
-    useAccountsTypes();
+  const { data: accountsTypes, isLoading: isAccountsTypesLoading } = useAccountsTypes();
 
   // Fetches the specific account details.
-  const { data: account, isLoading: isAccountLoading } = useAccount(
-    payload.accountId,
-    {
-      enabled:
-        !!payload.accountId && payload.action === AccountDialogAction.Edit,
-    },
-  );
+  const { data: account, isLoading: isAccountLoading } = useAccount(payload.accountId, {
+    enabled: !!payload.accountId && payload.action === AccountDialogAction.Edit,
+  });
 
   // Handle fetch Currencies data table
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
@@ -43,10 +38,7 @@ function AccountDialogProvider({ dialogName, payload, ...props }) {
   const isNewMode = !payload?.action;
 
   // Retrieves the disabled fields of the form.
-  const fieldsDisabled = React.useMemo(
-    () => getDisabledFormFields(account, payload),
-    [account, payload],
-  );
+  const fieldsDisabled = React.useMemo(() => getDisabledFormFields(account, payload), [account, payload]);
 
   // Provider payload.
   const provider = {
@@ -67,11 +59,7 @@ function AccountDialogProvider({ dialogName, payload, ...props }) {
     isNewMode,
   };
 
-  const isLoading =
-    isAccountsLoading ||
-    isAccountsTypesLoading ||
-    isAccountLoading ||
-    isCurrenciesLoading;
+  const isLoading = isAccountsLoading || isAccountsTypesLoading || isAccountLoading || isCurrenciesLoading;
 
   return (
     <DialogContent isLoading={isLoading}>

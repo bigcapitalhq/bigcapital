@@ -24,8 +24,7 @@ function WarehouseGridItem({
 
   warehouse,
 }) {
-  const { mutateAsync: markWarehouseAsPrimaryMutate } =
-    useMarkWarehouseAsPrimary();
+  const { mutateAsync: markWarehouseAsPrimaryMutate } = useMarkWarehouseAsPrimary();
 
   // Handle edit warehouse.
   const handleEditWarehouse = () => {
@@ -69,16 +68,11 @@ function WarehouseGridItem({
   );
 }
 
-const WarehousesGridItem = compose(
-  withAlertsActions,
-  withDialogActions,
-)(WarehouseGridItem);
+const WarehousesGridItem = compose(withAlertsActions, withDialogActions)(WarehouseGridItem);
 
 /**
  * warehouses grid items,
  */
 export default function WarehousesGridItems({ warehouses }) {
-  return warehouses.map((warehouse) => (
-    <WarehousesGridItem warehouse={warehouse} />
-  ));
+  return warehouses.map((warehouse) => <WarehousesGridItem warehouse={warehouse} />);
 }

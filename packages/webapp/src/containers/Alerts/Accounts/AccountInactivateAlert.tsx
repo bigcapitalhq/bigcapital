@@ -60,7 +60,4 @@ function AccountInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(AccountInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(AccountInactivateAlert);

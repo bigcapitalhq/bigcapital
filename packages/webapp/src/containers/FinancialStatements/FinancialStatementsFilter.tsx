@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
-import {
-  PopoverInteractionKind,
-  Tooltip,
-  MenuItem,
-  Position,
-  FormGroup,
-} from '@blueprintjs/core';
+import { PopoverInteractionKind, Tooltip, MenuItem, Position, FormGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { ListSelect, MODIFIER, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -19,13 +13,11 @@ const SUBMENU_POPOVER_MODIFIERS = {
   preventOverflow: { boundariesElement: 'viewport', padding: 40 },
 };
 
-
 export default function FinancialStatementsFilter({
   items = filterAccountsOptions,
   label = <T id={'filter_accounts'} />,
   ...restProps
 }) {
-
   const filterRenderer = (item, { handleClick, modifiers, query }) => {
     return (
       <Tooltip
@@ -45,11 +37,7 @@ export default function FinancialStatementsFilter({
   return (
     <FastField name={'filterByOption'}>
       {({ form: { setFieldValue }, field: { value } }) => (
-        <FormGroup
-          label={label}
-          className="form-group--select-list bp4-fill"
-          inline={false}
-        >
+        <FormGroup label={label} className="form-group--select-list bp4-fill" inline={false}>
           <ListSelect
             items={items}
             itemRenderer={filterRenderer}

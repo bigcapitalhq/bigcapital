@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class GetWarehouses {
@@ -8,8 +8,8 @@ export class GetWarehouses {
 
   /**
    * Retrieves warehouses list.
-   * @param  {number} tenantId 
-   * @returns 
+   * @param  {number} tenantId
+   * @returns
    */
   public getWarehouses = async (tenantId: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);

@@ -29,16 +29,8 @@ export default function ReceiptDetail() {
 function ReceiptDetailsTabs() {
   return (
     <DrawerMainTabs defaultSelectedTabId="details">
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<ReceiptDetailTab />}
-      />
-      <Tab
-        title={intl.get('journal_entries')}
-        id={'journal_entries'}
-        panel={<ReceiptDetailsGLEntriesPanel />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<ReceiptDetailTab />} />
+      <Tab title={intl.get('journal_entries')} id={'journal_entries'} panel={<ReceiptDetailsGLEntriesPanel />} />
     </DrawerMainTabs>
   );
 }

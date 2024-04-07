@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { AccountNormal, ILedgerEntry, IRefundCreditNote } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import Ledger from '@/services/Accounting/Ledger';
+import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class RefundCreditNoteGLEntries {
@@ -18,9 +18,7 @@ export default class RefundCreditNoteGLEntries {
    * @param {IRefundCreditNote} refundCreditNote
    * @returns
    */
-  private getRefundCreditCommonGLEntry = (
-    refundCreditNote: IRefundCreditNote
-  ) => {
+  private getRefundCreditCommonGLEntry = (refundCreditNote: IRefundCreditNote) => {
     return {
       currencyCode: refundCreditNote.currencyCode,
       exchangeRate: refundCreditNote.exchangeRate,
@@ -51,7 +49,7 @@ export default class RefundCreditNoteGLEntries {
    */
   private getRefundCreditGLReceivableEntry = (
     refundCreditNote: IRefundCreditNote,
-    ARAccountId: number
+    ARAccountId: number,
   ): ILedgerEntry => {
     const commonEntry = this.getRefundCreditCommonGLEntry(refundCreditNote);
 
@@ -70,9 +68,7 @@ export default class RefundCreditNoteGLEntries {
    * @param   {number} refundCreditNote
    * @returns {ILedgerEntry}
    */
-  private getRefundCreditGLWithdrawalEntry = (
-    refundCreditNote: IRefundCreditNote
-  ): ILedgerEntry => {
+  private getRefundCreditGLWithdrawalEntry = (refundCreditNote: IRefundCreditNote): ILedgerEntry => {
     const commonEntry = this.getRefundCreditCommonGLEntry(refundCreditNote);
 
     return {
@@ -90,16 +86,9 @@ export default class RefundCreditNoteGLEntries {
    * @param {number} receivableAccount
    * @returns {ILedgerEntry[]}
    */
-  public getRefundCreditGLEntries(
-    refundCreditNote: IRefundCreditNote,
-    ARAccountId: number
-  ): ILedgerEntry[] {
-    const receivableEntry = this.getRefundCreditGLReceivableEntry(
-      refundCreditNote,
-      ARAccountId
-    );
-    const withdrawalEntry =
-      this.getRefundCreditGLWithdrawalEntry(refundCreditNote);
+  public getRefundCreditGLEntries(refundCreditNote: IRefundCreditNote, ARAccountId: number): ILedgerEntry[] {
+    const receivableEntry = this.getRefundCreditGLReceivableEntry(refundCreditNote, ARAccountId);
+    const withdrawalEntry = this.getRefundCreditGLWithdrawalEntry(refundCreditNote);
 
     return [receivableEntry, withdrawalEntry];
   }
@@ -110,11 +99,7 @@ export default class RefundCreditNoteGLEntries {
    * @param {IRefundCreditNote} refundCreditNote
    * @param {Knex.Transaction} trx
    */
-  public createRefundCreditGLEntries = async (
-    tenantId: number,
-    refundCreditNoteId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public createRefundCreditGLEntries = async (tenantId: number, refundCreditNoteId: number, trx?: Knex.Transaction) => {
     const { Account, RefundCreditNote } = this.tenancy.models(tenantId);
 
     // Retrieve the refund with associated credit note.
@@ -123,15 +108,9 @@ export default class RefundCreditNoteGLEntries {
       .withGraphFetched('creditNote');
 
     // Receivable account A/R.
-    const receivableAccount = await Account.query().findOne(
-      'slug',
-      'accounts-receivable'
-    );
+    const receivableAccount = await Account.query().findOne('slug', 'accounts-receivable');
     // Retrieve refund credit GL entries.
-    const refundGLEntries = this.getRefundCreditGLEntries(
-      refundCreditNote,
-      receivableAccount.id
-    );
+    const refundGLEntries = this.getRefundCreditGLEntries(refundCreditNote, receivableAccount.id);
     const ledger = new Ledger(refundGLEntries);
 
     // Saves refund ledger entries.
@@ -145,16 +124,7 @@ export default class RefundCreditNoteGLEntries {
    * @param {number} receivableAccount
    * @param {Knex.Transaction} trx
    */
-  public revertRefundCreditGLEntries = async (
-    tenantId: number,
-    refundCreditNoteId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      refundCreditNoteId,
-      'RefundCreditNote',
-      trx
-    );
+  public revertRefundCreditGLEntries = async (tenantId: number, refundCreditNoteId: number, trx?: Knex.Transaction) => {
+    await this.ledgerStorage.deleteByReference(tenantId, refundCreditNoteId, 'RefundCreditNote', trx);
   };
 }

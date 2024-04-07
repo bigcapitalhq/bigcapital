@@ -4,13 +4,7 @@ import { Form, useFormikContext } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  AccountsSelect,
-  FieldRequiredHint,
-  FormattedMessage as T,
-  FFormGroup,
-  CardFooterActions,
-} from '@/components';
+import { AccountsSelect, FieldRequiredHint, FormattedMessage as T, FFormGroup, CardFooterActions } from '@/components';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/constants/accountTypes';
 
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
@@ -38,13 +32,7 @@ export default function ItemForm() {
             <T id={'preferred_sell_account'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >
@@ -64,13 +52,7 @@ export default function ItemForm() {
             <T id={'preferred_cost_account'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >
@@ -90,13 +72,7 @@ export default function ItemForm() {
             <T id={'preferred_inventory_account'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >

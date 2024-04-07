@@ -78,16 +78,8 @@ export const EstimateIncrementSyncSettingsToForm = R.compose(
     // Do not update if the estimate auto-increment mode is disabled.
     if (!estimateAutoIncrement) return null;
 
-    setFieldValue(
-      'estimate_number',
-      transactionNumber(estimateNumberPrefix, estimateNextNumber),
-    );
-  }, [
-    setFieldValue,
-    estimateNumberPrefix,
-    estimateNextNumber,
-    estimateAutoIncrement,
-  ]);
+    setFieldValue('estimate_number', transactionNumber(estimateNumberPrefix, estimateNextNumber));
+  }, [setFieldValue, estimateNumberPrefix, estimateNextNumber, estimateAutoIncrement]);
 
   return null;
 });

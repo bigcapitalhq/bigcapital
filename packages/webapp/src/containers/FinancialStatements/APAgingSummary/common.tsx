@@ -32,20 +32,8 @@ export const getDefaultAPAgingSummaryQuery = () => {
 export const getAPAgingSummaryQuerySchema = () => {
   return Yup.object({
     asDate: Yup.date().required().label('asDate'),
-    agingDaysBefore: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .label('Aging days before')
-      .min(1)
-      .max(500),
-    agingPeriods: Yup.number()
-      .required()
-      .integer()
-      .positive()
-      .max(12)
-      .min(1)
-      .label('Aging periods'),
+    agingDaysBefore: Yup.number().required().integer().positive().label('Aging days before').min(1).max(500),
+    agingPeriods: Yup.number().required().integer().positive().max(12).min(1).label('Aging periods'),
   });
 };
 
@@ -76,9 +64,6 @@ export const useAPAgingSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = useMemo(
-    () => parseAPAgingSummaryQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseAPAgingSummaryQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

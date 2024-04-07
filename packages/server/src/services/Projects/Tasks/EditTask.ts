@@ -1,16 +1,16 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
   IEditTaskDTO,
   IProjectTaskEditPOJO,
-  ITaskEditedEventPayload,
   ITaskEditEventPayload,
+  ITaskEditedEventPayload,
   ITaskEditingEventPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class EditTaskService {
@@ -30,11 +30,7 @@ export class EditTaskService {
    * @param {IEditTaskDTO} taskDTO -
    * @returns {IProjectTaskEditPOJO}
    */
-  public editTask = async (
-    tenantId: number,
-    taskId: number,
-    taskDTO: IEditTaskDTO
-  ): Promise<IProjectTaskEditPOJO> => {
+  public editTask = async (tenantId: number, taskId: number, taskDTO: IEditTaskDTO): Promise<IProjectTaskEditPOJO> => {
     const { Task } = this.tenancy.models(tenantId);
 
     // Validate task existance.

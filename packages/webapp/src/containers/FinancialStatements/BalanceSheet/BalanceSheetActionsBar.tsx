@@ -57,8 +57,8 @@ function BalanceSheetActionsBar({
 
   // Handles the pdf print button click.
   const handlePdfPrintBtnSubmit = () => {
-    openDialog(DialogsName.BalanceSheetPdfPreview)
-  }
+    openDialog(DialogsName.BalanceSheetPdfPreview);
+  };
 
   return (
     <DashboardActionsBar>
@@ -74,13 +74,7 @@ function BalanceSheetActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            !balanceSheetDrawerFilter ? (
-              <T id={'customize_report'} />
-            ) : (
-              <T id={'hide_customizer'} />
-            )
-          }
+          text={!balanceSheetDrawerFilter ? <T id={'customize_report'} /> : <T id={'hide_customizer'} />}
           onClick={handleFilterToggleClick}
           active={balanceSheetDrawerFilter}
         />
@@ -145,5 +139,5 @@ export default compose(
     balanceSheetDrawerFilter,
   })),
   withBalanceSheetActions,
-  withDialogActions
+  withDialogActions,
 )(BalanceSheetActionsBar);

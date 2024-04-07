@@ -12,14 +12,7 @@ import { compose } from '@/utils';
  * Drawer header content.
  */
 function DrawerHeaderContentRoot(props) {
-  const {
-    icon,
-    title = <T id={'view_paper'} />,
-    subTitle,
-    onClose,
-    name,
-    closeDrawer,
-  } = props;
+  const { icon, title = <T id={'view_paper'} />, subTitle, onClose, name, closeDrawer } = props;
 
   if (title == null) {
     return null;
@@ -49,9 +42,7 @@ function DrawerHeaderContentRoot(props) {
   );
 }
 
-export const DrawerHeaderContent = compose(withDrawerActions)(
-  DrawerHeaderContentRoot,
-);
+export const DrawerHeaderContent = compose(withDrawerActions)(DrawerHeaderContentRoot);
 
 /**
  * SubTitle Drawer header.

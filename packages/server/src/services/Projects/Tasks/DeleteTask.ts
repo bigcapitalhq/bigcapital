@@ -1,14 +1,10 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import {
-  ITaskDeletedEventPayload,
-  ITaskDeleteEventPayload,
-  ITaskDeletingEventPayload,
-} from '@/interfaces';
+import { ITaskDeleteEventPayload, ITaskDeletedEventPayload, ITaskDeletingEventPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class DeleteTaskService {
@@ -26,10 +22,7 @@ export class DeleteTaskService {
    * @param   {number} projectId -
    * @returns {Promise<void>}
    */
-  public deleteTask = async (
-    tenantId: number,
-    taskId: number
-  ): Promise<void> => {
+  public deleteTask = async (tenantId: number, taskId: number): Promise<void> => {
     const { Task } = this.tenancy.models(tenantId);
 
     // Validate customer existance.

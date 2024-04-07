@@ -50,10 +50,9 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   } = useVendors({ page_size: 10000 });
 
   // Handle fetch vendor credit details.
-  const { data: vendorCredit, isLoading: isVendorCreditLoading } =
-    useVendorCredit(vendorCreditId, {
-      enabled: !!vendorCreditId,
-    });
+  const { data: vendorCredit, isLoading: isVendorCreditLoading } = useVendorCredit(vendorCreditId, {
+    enabled: !!vendorCreditId,
+  });
 
   // Handle fetch bill details.
   const { isLoading: isBillLoading, data: bill } = useBill(billId, {
@@ -116,13 +115,7 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isVendorCreditLoading ||
-        isItemsLoading ||
-        isVendorsLoading ||
-        isVendorCreditLoading ||
-        isBillLoading
-      }
+      loading={isVendorCreditLoading || isItemsLoading || isVendorsLoading || isVendorCreditLoading || isBillLoading}
       name={'vendor-credit-form'}
     >
       <VendorCreditNoteFormContext.Provider value={provider} {...props} />
@@ -130,7 +123,6 @@ function VendorCreditNoteFormProvider({ vendorCreditId, ...props }) {
   );
 }
 
-const useVendorCreditNoteFormContext = () =>
-  React.useContext(VendorCreditNoteFormContext);
+const useVendorCreditNoteFormContext = () => React.useContext(VendorCreditNoteFormContext);
 
 export { VendorCreditNoteFormProvider, useVendorCreditNoteFormContext };

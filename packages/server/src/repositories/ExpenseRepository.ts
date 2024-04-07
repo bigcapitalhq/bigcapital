@@ -1,6 +1,6 @@
-import TenantRepository from "./TenantRepository";
-import moment from "moment";
 import { Expense } from 'models';
+import moment from 'moment';
+import TenantRepository from './TenantRepository';
 
 export default class ExpenseRepository extends TenantRepository {
   /**
@@ -12,7 +12,7 @@ export default class ExpenseRepository extends TenantRepository {
 
   /**
    * Publish the given expense.
-   * @param {number} expenseId 
+   * @param {number} expenseId
    */
   publish(expenseId: number): Promise<void> {
     return super.update({
@@ -23,7 +23,7 @@ export default class ExpenseRepository extends TenantRepository {
 
   /**
    * Publishes the given expenses in bulk.
-   * @param  {number[]} expensesIds 
+   * @param  {number[]} expensesIds
    * @return {Promise<void>}
    */
   async whereIdInPublish(expensesIds: number): Promise<void> {

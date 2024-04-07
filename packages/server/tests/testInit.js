@@ -1,15 +1,14 @@
+import createTenantFactory from '@/database/factories';
+import createSystemFactory from '@/database/factories/system';
+import systemDb from '@/database/knex';
+import TenantsManager from '@/system/TenantsManager';
+import app from 'app';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiThings from 'chai-things';
-import systemDb from '@/database/knex';
-import app from 'app';
-import createTenantFactory from '@/database/factories';
-import TenantsManager from '@/system/TenantsManager';
 import faker from 'faker';
-import { hashPassword } from 'utils';
 import TenantModel from 'models/TenantModel';
-import createSystemFactory from '@/database/factories/system';
-
+import { hashPassword } from 'utils';
 
 const { expect } = chai;
 const request = () => chai.request(app);
@@ -20,14 +19,13 @@ beforeEach(async () => {
   await systemDb.migrate.latest();
 });
 
-afterEach(async () => {
-});
+afterEach(async () => {});
 
 chai.use(chaiHttp);
 chai.use(chaiThings);
 
 // Create tenant database.
-const createTenant = () => {  
+const createTenant = () => {
   return TenantsManager.createTenant();
 };
 
@@ -38,7 +36,7 @@ const dropTenant = async (tenantWebsite) => {
 
 // Create a new user that associate to the given tenant Db.
 const createUser = async (tenantWebsite, givenUser) => {
-  const userPassword = (givenUser && givenUser.password) ? givenUser.password : 'admin'
+  const userPassword = givenUser?.password ?? 'admin';
   const hashedPassword = await hashPassword(userPassword);
 
   const userInfo = {
@@ -61,12 +59,10 @@ const login = async (tenantWebsite, givenUser) => {
     const createdUser = await createUser(tenantWebsite, givenUser);
     user = createdUser;
   }
-  return request()
-    .post('/api/auth/login')
-    .send({
-      crediential: user.email,
-      password: 'admin',
-    });
+  return request().post('/api/auth/login').send({
+    crediential: user.email,
+    password: 'admin',
+  });
 };
 
 const bindTenantModel = (tenantDb) => {
@@ -78,7 +74,7 @@ const systemFactory = createSystemFactory();
 export {
   login,
   systemFactory,
-  createTenantFactory, 
+  createTenantFactory,
   createTenant,
   createUser,
   dropTenant,

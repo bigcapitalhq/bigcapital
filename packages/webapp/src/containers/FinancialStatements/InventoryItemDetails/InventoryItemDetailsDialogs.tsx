@@ -4,9 +4,7 @@ import { InventoryItemDetailsPdfDialog } from './dialogs/InventoryItemDetailsPdf
 export function InventoryItemDetailsDialogs() {
   return (
     <>
-      <InventoryItemDetailsPdfDialog
-        dialogName={DialogsName.InventoryItemDetailsPdfPreview}
-      />
+      <InventoryItemDetailsPdfDialog dialogName={DialogsName.InventoryItemDetailsPdfPreview} />
     </>
   );
 }

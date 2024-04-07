@@ -1,14 +1,9 @@
-import { Inject, Service } from 'typedi';
-import {
-  ICurrencyEditDTO,
-  ICurrencyDTO,
-  ICurrenciesService,
-  ICurrency,
-} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
+import { ICurrenciesService, ICurrency, ICurrencyDTO, ICurrencyEditDTO } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { Inject, Service } from 'typedi';
 import { CurrencyTransformer } from './CurrencyTransformer';
 
 const ERRORS = {
@@ -32,11 +27,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {string} currencyCode
    * @param {number} currencyId
    */
-  private async validateCurrencyCodeUniquiness(
-    tenantId: number,
-    currencyCode: string,
-    currencyId?: number
-  ) {
+  private async validateCurrencyCodeUniquiness(tenantId: number, currencyCode: string, currencyId?: number) {
     const { Currency } = this.tenancy.models(tenantId);
 
     const foundCurrency = await Currency.query().onBuild((query) => {
@@ -56,16 +47,10 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {number} tenantId
    * @param {string} currencyCode
    */
-  private async getCurrencyByCodeOrThrowError(
-    tenantId: number,
-    currencyCode: string
-  ) {
+  private async getCurrencyByCodeOrThrowError(tenantId: number, currencyCode: string) {
     const { Currency } = this.tenancy.models(tenantId);
 
-    const foundCurrency = await Currency.query().findOne(
-      'currency_code',
-      currencyCode
-    );
+    const foundCurrency = await Currency.query().findOne('currency_code', currencyCode);
 
     if (!foundCurrency) {
       throw new ServiceError(ERRORS.CURRENCY_NOT_FOUND);
@@ -78,10 +63,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {number} tenantId
    * @param {number} currencyId
    */
-  private async getCurrencyIdOrThrowError(
-    tenantId: number,
-    currencyId: number
-  ) {
+  private async getCurrencyIdOrThrowError(tenantId: number, currencyId: number) {
     const { Currency } = this.tenancy.models(tenantId);
 
     const foundCurrency = await Currency.query().findOne('id', currencyId);
@@ -101,10 +83,7 @@ export default class CurrenciesService implements ICurrenciesService {
     const { Currency } = this.tenancy.models(tenantId);
 
     // Validate currency code uniquiness.
-    await this.validateCurrencyCodeUniquiness(
-      tenantId,
-      currencyDTO.currencyCode
-    );
+    await this.validateCurrencyCodeUniquiness(tenantId, currencyDTO.currencyCode);
 
     await Currency.query().insert({ ...currencyDTO });
   }
@@ -115,11 +94,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {number} currencyId
    * @param {ICurrencyDTO} currencyDTO
    */
-  public async editCurrency(
-    tenantId: number,
-    currencyId: number,
-    currencyDTO: ICurrencyEditDTO
-  ): Promise<ICurrency> {
+  public async editCurrency(tenantId: number, currencyId: number, currencyDTO: ICurrencyEditDTO): Promise<ICurrency> {
     const { Currency } = this.tenancy.models(tenantId);
 
     await this.getCurrencyIdOrThrowError(tenantId, currencyId);
@@ -135,13 +110,8 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {number} tenantId
    * @param {string} currencyCode
    */
-  private async validateCannotDeleteBaseCurrency(
-    tenantId: number,
-    currencyCode: string
-  ) {
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+  private async validateCannotDeleteBaseCurrency(tenantId: number, currencyCode: string) {
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     if (tenant.metadata.baseCurrency === currencyCode) {
       throw new ServiceError(ERRORS.CANNOT_DELETE_BASE_CURRENCY);
@@ -154,10 +124,7 @@ export default class CurrenciesService implements ICurrenciesService {
    * @param {string} currencyCode
    * @return {Promise<void>}
    */
-  public async deleteCurrency(
-    tenantId: number,
-    currencyCode: string
-  ): Promise<void> {
+  public async deleteCurrency(tenantId: number, currencyCode: string): Promise<void> {
     const { Currency } = this.tenancy.models(tenantId);
 
     await this.getCurrencyByCodeOrThrowError(tenantId, currencyCode);
@@ -179,10 +146,6 @@ export default class CurrenciesService implements ICurrenciesService {
     const currencies = await Currency.query().onBuild((query) => {
       query.orderBy('createdAt', 'ASC');
     });
-    return this.transformer.transform(
-      tenantId,
-      currencies,
-      new CurrencyTransformer()
-    );
+    return this.transformer.transform(tenantId, currencies, new CurrencyTransformer());
   }
 }

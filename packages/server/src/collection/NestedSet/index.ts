@@ -1,4 +1,3 @@
-
 export default class NestedSet {
   /**
    * Constructor method.
@@ -26,17 +25,17 @@ export default class NestedSet {
     if (this.items.length <= 0) return false;
 
     const map = {};
-    this.items.forEach((item) => {
+    for (const item of this.items) {
       map[item.id] = item;
       map[item.id].children = {};
-    });
+    }
 
-    this.items.forEach((item) => {
+    for (const item of this.items) {
       const parentNodeId = item[this.options.parentId];
       if (parentNodeId) {
         map[parentNodeId].children[item.id] = item;
       }
-    });
+    }
     return map;
   }
 
@@ -45,18 +44,17 @@ export default class NestedSet {
     const treeNodes = this.items.map((i) => ({ ...i }));
 
     const walk = (nodes) => {
-      nodes.forEach((node) => {
+      for (const node of nodes) {
         if (!node[this.options.parentId]) {
           stack.push(node);
         }
         if (node.children) {
-          const childrenNodes = Object.values(node.children)
-            .map((i) => ({ ...i }));
+          const childrenNodes = Object.values(node.children).map((i) => Object.assign({}, i));
 
           node.children = childrenNodes;
           walk(childrenNodes);
         }
-      });
+      }
     };
     walk(treeNodes);
     return stack;
@@ -67,7 +65,7 @@ export default class NestedSet {
   }
 
   getElementById(id) {
-    return this.tree[id] || null
+    return this.tree[id] || null;
   }
 
   getParents(id) {
@@ -82,11 +80,11 @@ export default class NestedSet {
         parents.push(_item);
       }
       if (_item[this.options.parentId]) {
-        const parentItem = this.getElementById(_item[this.options.parentId]);  
+        const parentItem = this.getElementById(_item[this.options.parentId]);
 
         index++;
         walk(parentItem);
-      }      
+      }
     };
     walk(item);
     return parents;
@@ -96,7 +94,7 @@ export default class NestedSet {
     const flattenTree = [];
 
     const traversal = (nodes, parentNode) => {
-      nodes.forEach((node) => {
+      for (const node of nodes) {
         let nodeMapped = node;
 
         if (typeof nodeMapper === 'function') {
@@ -107,7 +105,7 @@ export default class NestedSet {
         if (node.children && node.children.length > 0) {
           traversal(node.children, node);
         }
-      });
+      }
     };
     traversal(this.collection);
 

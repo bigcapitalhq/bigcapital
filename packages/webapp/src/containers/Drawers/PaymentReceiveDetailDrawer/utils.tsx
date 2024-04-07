@@ -2,14 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu } from '@blueprintjs/core';
 import { Icon } from '@/components';
 import { getColumnWidth } from '@/utils';
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
@@ -81,10 +74,7 @@ export function PaymentReceiveMoreMenuItems({ payload: { onNotifyViaSMS } }) {
       minimal={true}
       content={
         <Menu>
-          <MenuItem
-            onClick={onNotifyViaSMS}
-            text={intl.get('notify_via_sms.dialog.notify_via_sms')}
-          />
+          <MenuItem onClick={onNotifyViaSMS} text={intl.get('notify_via_sms.dialog.notify_via_sms')} />
         </Menu>
       }
       interactionKind={PopoverInteractionKind.CLICK}

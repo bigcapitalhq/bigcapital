@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import Currencies from 'js-money/lib/currency';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { IOrganizationSetupDTO, ITenant } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import Currencies from 'js-money/lib/currency';
+import { Inject, Service } from 'typedi';
 
+import { ServiceError } from '@/exceptions';
 import CurrenciesService from '@/services/Currencies/CurrenciesService';
 import TenantsManagerService from '@/services/Tenancy/TenantsManager';
-import { ServiceError } from '@/exceptions';
 
 const ERRORS = {
   TENANT_IS_ALREADY_SETUPED: 'TENANT_IS_ALREADY_SETUPED',
@@ -45,14 +45,13 @@ export default class SetupService {
    * @param {number} tenantId
    * @param {IOrganizationSetupDTO} organizationSetupDTO
    */
-  private setOrganizationSetupSettings(
-    tenantId: number,
-    organizationSetupDTO: IOrganizationSetupDTO
-  ) {
+  private setOrganizationSetupSettings(tenantId: number, organizationSetupDTO: IOrganizationSetupDTO) {
     const settings = this.tenancy.settings(tenantId);
 
     // Can't continue if app is already configured.
-    if (settings.get('app_configured')) { return; }
+    if (settings.get('app_configured')) {
+      return;
+    }
 
     settings.set([
       ...this.transformSetupDTOToOptions(organizationSetupDTO)
@@ -67,7 +66,7 @@ export default class SetupService {
 
   /**
    * Validates the base currency code.
-   * @param {string} baseCurrency 
+   * @param {string} baseCurrency
    */
   public validateBaseCurrencyCode(baseCurrency: string) {
     if (typeof Currencies[baseCurrency] === 'undefined') {
@@ -80,10 +79,7 @@ export default class SetupService {
    * @param {IOrganizationSetupDTO} organizationSetupDTO
    * @return {Promise<void>}
    */
-  public async organizationSetup(
-    tenantId: number,
-    organizationSetupDTO: IOrganizationSetupDTO,
-  ): Promise<void> {
+  public async organizationSetup(tenantId: number, organizationSetupDTO: IOrganizationSetupDTO): Promise<void> {
     const { tenantRepository } = this.sysRepositories;
 
     // Find tenant model by the given id.
@@ -96,10 +92,7 @@ export default class SetupService {
     this.validateTenantNotSeeded(tenant);
 
     // Seeds the base currency to the currencies list.
-    this.currenciesService.seedBaseCurrency(
-      tenantId,
-      organizationSetupDTO.baseCurrency
-    );
+    this.currenciesService.seedBaseCurrency(tenantId, organizationSetupDTO.baseCurrency);
     // Sets organization setup settings.
     await this.setOrganizationSetupSettings(tenantId, organizationSetupDTO);
 

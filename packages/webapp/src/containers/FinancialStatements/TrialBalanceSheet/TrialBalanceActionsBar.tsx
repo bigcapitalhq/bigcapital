@@ -56,7 +56,7 @@ function TrialBalanceActionsBar({
   // Handle print button click.
   const handlePrintBtnClick = () => {
     openDialog(DialogsName.TrialBalanceSheetPdfPreview);
-  }
+  };
 
   return (
     <DashboardActionsBar>
@@ -72,13 +72,7 @@ function TrialBalanceActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            trialBalanceDrawerFilter ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={trialBalanceDrawerFilter ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           active={trialBalanceDrawerFilter}
           onClick={handleFilterToggleClick}
         />

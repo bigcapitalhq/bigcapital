@@ -1,6 +1,6 @@
-import { isEmpty, castArray } from 'lodash';
-import { AccountTransaction } from 'models';
 import TenantRepository from '@/repositories/TenantRepository';
+import { castArray, isEmpty } from 'lodash';
+import { AccountTransaction } from 'models';
 
 interface IJournalTransactionsFilter {
   fromDate: string | Date;
@@ -84,10 +84,7 @@ export default class AccountTransactionsRepository extends TenantRepository {
    * @param {number|number[]} referenceId - Reference id.
    * @param {string} referenceType - Reference type.
    */
-  public getTransactionsByReference = async (
-    referenceId: number | number[],
-    referenceType: string | string[]
-  ) => {
+  public getTransactionsByReference = async (referenceId: number | number[], referenceType: string | string[]) => {
     const transactions = await this.model
       .query()
       .whereIn('reference_type', castArray(referenceType))

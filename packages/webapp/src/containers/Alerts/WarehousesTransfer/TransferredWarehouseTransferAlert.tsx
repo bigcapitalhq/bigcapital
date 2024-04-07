@@ -25,8 +25,7 @@ function TransferredWarehouseTransferAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: transferredWarehouseTransferMutate, isLoading } =
-    useTransferredWarehouseTransfer();
+  const { mutateAsync: transferredWarehouseTransferMutate, isLoading } = useTransferredWarehouseTransfer();
 
   // handle cancel alert.
   const handleCancelAlert = () => {
@@ -65,7 +64,4 @@ function TransferredWarehouseTransferAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(TransferredWarehouseTransferAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(TransferredWarehouseTransferAlert);
