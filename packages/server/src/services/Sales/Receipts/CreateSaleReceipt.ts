@@ -4,6 +4,7 @@ import {
   ISaleReceipt,
   ISaleReceiptCreatedPayload,
   ISaleReceiptCreatingPayload,
+  ISaleReceiptDTO,
 } from '@/interfaces';
 import events from '@/subscribers/events';
 import TenancyService from '@/services/Tenancy/TenancyService';
@@ -41,7 +42,7 @@ export class CreateSaleReceipt {
    */
   public async createSaleReceipt(
     tenantId: number,
-    saleReceiptDTO: any,
+    saleReceiptDTO: ISaleReceiptDTO,
     trx?: Knex.Transaction
   ): Promise<ISaleReceipt> {
     const { SaleReceipt, Contact } = this.tenancy.models(tenantId);

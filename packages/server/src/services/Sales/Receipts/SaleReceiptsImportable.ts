@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
-import { IAccountCreateDTO } from '@/interfaces';
+import { IAccountCreateDTO, ISaleReceiptDTO } from '@/interfaces';
 import { CreateSaleReceipt } from './CreateSaleReceipt';
 import { Importable } from '@/services/Import/Importable';
 import { SaleReceiptsSampleData } from './constants';
@@ -18,7 +18,7 @@ export class SaleReceiptsImportable extends Importable {
    */
   public importable(
     tenantId: number,
-    createAccountDTO: IAccountCreateDTO,
+    createAccountDTO: ISaleReceiptDTO,
     trx?: Knex.Transaction
   ) {
     return this.createReceiptService.createSaleReceipt(

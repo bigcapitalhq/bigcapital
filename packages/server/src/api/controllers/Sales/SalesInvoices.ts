@@ -459,7 +459,7 @@ export default class SaleInvoicesController extends BaseController {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
-      columnSortBy: 'createdAt',
+      columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

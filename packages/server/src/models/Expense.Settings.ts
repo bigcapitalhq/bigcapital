@@ -55,7 +55,7 @@ export default {
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
-    createdAt: {
+    created_at: {
       name: 'expense.field.created_at',
       column: 'created_at',
       fieldType: 'date',
@@ -66,7 +66,7 @@ export default {
       name: 'expense.field.payment_account',
       fieldType: 'relation',
       relationModel: 'Account',
-      relationImportMatch: ['name', 'code'], 
+      relationImportMatch: ['name', 'code'],
       required: true,
     },
     referenceNo: {

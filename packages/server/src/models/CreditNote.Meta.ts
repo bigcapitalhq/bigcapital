@@ -12,6 +12,10 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  importable: true,
+  importAggregator: 'group',
+  importAggregateOn: 'entries',
+  importAggregateBy: 'creditNoteNumber',
   fields: {
     customer: {
       name: 'credit_note.field.customer',
@@ -77,10 +81,6 @@ export default {
       fieldType: 'date',
     },
   },
-  importable: true,
-  importAggregator: 'group',
-  importAggregateOn: 'entries',
-  importAggregateBy: 'creditNoteNumber',
   fields2: {
     customerId: {
       name: 'Customer',
@@ -125,7 +125,7 @@ export default {
       collectionMinLength: 1,
       fields: {
         itemId: {
-        name: 'Item',
+          name: 'Item',
           fieldType: 'relation',
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],

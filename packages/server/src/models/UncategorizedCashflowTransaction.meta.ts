@@ -2,7 +2,7 @@ export default {
   defaultFilterField: 'createdAt',
   defaultSort: {
     sortOrder: 'DESC',
-    sortField: 'createdAt',
+    sortField: 'created_at',
   },
   importable: true,
   fields: {
@@ -10,33 +10,27 @@ export default {
       name: 'Date',
       column: 'date',
       fieldType: 'date',
-      importable: true,
-      required: true,
     },
     payee: {
       name: 'Payee',
       column: 'payee',
       fieldType: 'text',
-      importable: true,
     },
     description: {
       name: 'Description',
       column: 'description',
       fieldType: 'text',
-      importable: true,
     },
     referenceNo: {
       name: 'Reference No.',
       column: 'reference_no',
       fieldType: 'text',
-      importable: true,
     },
     amount: {
       name: 'Amount',
       column: 'Amount',
       fieldType: 'numeric',
       required: true,
-      importable: true,
     },
     account: {
       name: 'Account',
@@ -78,6 +72,5 @@ export default {
       fieldType: 'numeric',
       required: true,
     },
-   
-  }
+  },
 };

@@ -33,7 +33,12 @@ export const ERRORS = {
   IMPORTED_SHEET_EMPTY: 'IMPORTED_SHEET_EMPTY',
 };
 
-export function trimObject(obj) {
+/**
+ * Trimms the imported object string values before parsing.
+ * @param {Record<string, string | number>} obj
+ * @returns {<Record<string, string | number>}
+ */
+export function trimObject(obj: Record<string, string | number>) {
   return Object.entries(obj).reduce((acc, [key, value]) => {
     // Trim the key
     const trimmedKey = key.trim();
@@ -46,6 +51,11 @@ export function trimObject(obj) {
   }, {});
 }
 
+/**
+ * Generates the Yup validation schema based on the given resource fields.
+ * @param {ResourceMetaFieldsMap} fields
+ * @returns {Yup}
+ */
 export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
   const yupSchema = {};
 
@@ -123,15 +133,18 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
 const parseFieldName = (fieldName: string, field: IModelMetaField) => {
   let _key = fieldName;
 
-  // if (field.fieldType === 'relation') {
-  //   _key = `${fieldName}Id`;
-  // }
   if (field.dataTransferObjectKey) {
     _key = field.dataTransferObjectKey;
   }
   return _key;
 };
 
+/**
+ * Retrieves the unmapped sheet columns.
+ * @param columns 
+ * @param mapping 
+ * @returns 
+ */
 export const getUnmappedSheetColumns = (columns, mapping) => {
   return columns.filter(
     (column) => !mapping.some((map) => map.from === column)
@@ -315,13 +328,13 @@ export const valueParser =
     return _value;
   };
 
+/**
+ * Parses the field key and detarmines the key path.
+ * @param {{ [key: string]: IModelMetaField2 }} fields
+ * @param {string} key - Mapped key path. formats: `group.key` or `key`.
+ * @returns {string}
+ */
 export const parseKey = R.curry(
-  /**
-   *
-   * @param {{ [key: string]: IModelMetaField2 }} fields
-   * @param {string} key - Mapped key path. formats: `group.key` or `key`.
-   * @returns {string}
-   */
   (fields: { [key: string]: IModelMetaField2 }, key: string) => {
     const fieldKey = getFieldKey(key);
     const field = fields[fieldKey];
@@ -344,6 +357,11 @@ export const parseKey = R.curry(
   }
 );
 
+/**
+ * Retrieves the field root key, for instance: I -> entries.itemId O -> entries.
+ * @param {string} input
+ * @returns {string}
+ */
 export const getFieldKey = (input: string) => {
   const keys = split(input, '.');
   const firstKey = head(keys).split('[')[0]; // Split by "[" in case of array notation

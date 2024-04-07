@@ -2,7 +2,7 @@ export default {
   defaultFilterField: 'customer',
   defaultSort: {
     sortOrder: 'DESC',
-    sortField: 'createdAt',
+    sortField: 'created_at',
   },
   importable: true,
   importAggregator: 'group',
@@ -81,7 +81,7 @@ export default {
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
-    createdAt: {
+    created_at: {
       name: 'invoice.field.created_at',
       column: 'created_at',
       fieldType: 'date',

@@ -13,23 +13,18 @@ export default {
       name: 'manual_journal.field.date',
       column: 'date',
       fieldType: 'date',
-      importable: true,
-      required: true,
     },
-    journalNumber: {
+    journal_number: {
       name: 'manual_journal.field.journal_number',
       column: 'journal_number',
       fieldType: 'text',
-      importable: true,
-      required: true,
     },
     reference: {
       name: 'manual_journal.field.reference',
       column: 'reference',
       fieldType: 'text',
-      importable: true,
     },
-    journalType: {
+    journal_type: {
       name: 'manual_journal.field.journal_type',
       column: 'journal_type',
       fieldType: 'text',
@@ -43,63 +38,6 @@ export default {
       name: 'manual_journal.field.description',
       column: 'description',
       fieldType: 'text',
-      importable: true,
-    },
-    entries: {
-      name: 'Entries',
-      fieldType: 'collection',
-      collectionOf: 'object',
-      collectionMinLength: 2,
-      required: true,
-      importable: true,
-      filterable: false,
-      fields: {
-        credit: {
-          name: 'Credit',
-          fieldType: 'number',
-          importable: true,
-          required: true,
-        },
-        debit: {
-          name: 'Debit',
-          fieldType: 'number',
-          importable: true,
-          required: true,
-        },
-        accountId: {
-          name: 'Account',
-          fieldType: 'relation',
-
-          relationKey: 'account',
-          relationModel: 'Account',
-
-          importable: true,
-          required: true,
-          importableRelationLabel: ['name', 'code'],
-        },
-        contactId: {
-          name: 'Contact',
-          fieldType: 'relation',
-
-          relationKey: 'contact',
-          relationModel: 'Contact',
-
-          required: false,
-
-          importable: true,
-          importableRelationLabel: 'displayName',
-        },
-        note: {
-          name: 'Note',
-          fieldType: 'text',
-          importable: true,
-        },
-      },
-    },
-    publish: {
-      name: 'Publish',
-      fieldType: 'boolean',
-      importable: true,
     },
     status: {
       name: 'manual_journal.field.status',
@@ -112,7 +50,7 @@ export default {
       filterCustomQuery: StatusFieldFilterQuery,
       sortCustomQuery: StatusFieldSortQuery,
     },
-    createdAt: {
+    created_at: {
       name: 'manual_journal.field.created_at',
       column: 'created_at',
       fieldType: 'date',
@@ -132,7 +70,6 @@ export default {
     reference: {
       name: 'manual_journal.field.reference',
       fieldType: 'text',
-      importable: true,
     },
     journalType: {
       name: 'manual_journal.field.journal_type',
