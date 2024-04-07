@@ -1,8 +1,11 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { sanitizeResourceName, validateSheetEmpty } from './_utils';
+import {
+  getResourceColumns,
+  sanitizeResourceName,
+  validateSheetEmpty,
+} from './_utils';
 import ResourceService from '../Resource/ResourceService';
-import { IModelMetaField } from '@/interfaces';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
@@ -77,11 +80,11 @@ export class ImportFileUploadService {
       columns: coumnsStringified,
       params: paramsStringified,
     });
-    const resourceColumnsMap = this.resourceService.getResourceImportableFields(
+    const resourceColumnsMap = this.resourceService.getResourceFields2(
       tenantId,
       resource
     );
-    const resourceColumns = this.getResourceColumns(resourceColumnsMap);
+    const resourceColumns = getResourceColumns(resourceColumnsMap);
 
     return {
       import: {
@@ -91,24 +94,5 @@ export class ImportFileUploadService {
       sheetColumns,
       resourceColumns,
     };
-  }
-
-  getResourceColumns(resourceColumns: { [key: string]: IModelMetaField }) {
-    return Object.entries(resourceColumns)
-      .map(
-        ([key, { name, importHint, required, order }]: [
-          string,
-          IModelMetaField
-        ]) => ({
-          key,
-          name,
-          required,
-          hint: importHint,
-          order,
-        })
-      )
-      .sort((a, b) =>
-        a.order && b.order ? a.order - b.order : a.order ? -1 : b.order ? 1 : 0
-      );
   }
 }

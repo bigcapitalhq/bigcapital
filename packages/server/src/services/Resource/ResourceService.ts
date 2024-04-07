@@ -2,7 +2,7 @@ import { Service, Inject } from 'typedi';
 import { camelCase, upperFirst, pickBy } from 'lodash';
 import * as qim from 'qim';
 import pluralize from 'pluralize';
-import { IModelMeta, IModelMetaField } from '@/interfaces';
+import { IModelMeta, IModelMetaField, IModelMetaField2 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import I18nService from '@/services/I18n/I18nService';
@@ -74,11 +74,20 @@ export default class ResourceService {
     return meta.fields;
   }
 
+  public getResourceFields2(
+    tenantId: number,
+    modelName: string
+  ): { [key: string]: IModelMetaField2 } {
+    const meta = this.getResourceMeta(tenantId, modelName);
+
+    return meta.fields2;
+  }
+
   /**
-   * 
-   * @param {number} tenantId 
-   * @param {string} modelName 
-   * @returns 
+   *
+   * @param {number} tenantId
+   * @param {string} modelName
+   * @returns
    */
   public getResourceImportableFields(
     tenantId: number,
@@ -96,9 +105,14 @@ export default class ResourceService {
     const $enumerationType = (field) =>
       field.fieldType === 'enumeration' ? field : undefined;
 
+    const $hasFields = (field) => 'undefined' !== typeof field.fields ? field : undefined;
+
     const naviagations = [
       ['fields', qim.$each, 'name'],
       ['fields', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
+      ['fields2', qim.$each, 'name'],
+      ['fields2', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
+      ['fields2', qim.$each, $hasFields, 'fields', qim.$each, 'name'],
     ];
     return this.i18nService.i18nApply(naviagations, meta, tenantId);
   }

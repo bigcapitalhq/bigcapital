@@ -272,7 +272,7 @@ export default class VendorsController extends ContactsController {
     const vendorsFilter: IVendorsFilter = {
       inactiveMode: false,
       sortOrder: 'desc',
-      columnSortBy: 'createdAt',
+      columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

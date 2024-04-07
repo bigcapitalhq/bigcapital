@@ -289,7 +289,7 @@ export default class CustomersController extends ContactsController {
     const filter = {
       inactiveMode: false,
       sortOrder: 'desc',
-      columnSortBy: 'createdAt',
+      columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

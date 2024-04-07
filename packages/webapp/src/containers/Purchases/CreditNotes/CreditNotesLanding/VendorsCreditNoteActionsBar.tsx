@@ -75,6 +75,11 @@ function VendorsCreditNoteActionsBar({
     addSetting('vendorCredit', 'tableSize', size);
   };
 
+  // Handle import button click.
+  const handleImportBtnClick = () => {
+    history.push('/vendor-credits/import')
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -117,6 +122,7 @@ function VendorsCreditNoteActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

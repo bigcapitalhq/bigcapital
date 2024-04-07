@@ -21,7 +21,6 @@ export class ItemsImportable extends Importable {
     createDTO: IItemCreateDTO,
     trx?: Knex.Transaction<any, any[]>
   ): Promise<void> {
-    console.log(createDTO, tenantId, 'XX');
     await this.createItemService.createItem(tenantId, createDTO, trx);
   }
 

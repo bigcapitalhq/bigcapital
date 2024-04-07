@@ -72,6 +72,10 @@ function ManualJournalActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
+  // Handle import button click.
+  const handleImportBtnClick = () => {
+    history.push('/manual-journals/import');
+  }
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
@@ -130,6 +134,7 @@ function ManualJournalActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

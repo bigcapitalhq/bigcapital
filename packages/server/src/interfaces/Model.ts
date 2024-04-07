@@ -69,6 +69,7 @@ export type IModelMetaField = IModelMetaFieldCommon &
     | IModelMetaFieldUrl
     | IModelMetaEnumerationField
     | IModelMetaRelationField
+    | IModelMetaCollectionField
   );
 
 export interface IModelMetaEnumerationOption {
@@ -92,12 +93,71 @@ export interface IModelMetaRelationEnumerationField {
   relationEntityKey: string;
 }
 
+export interface IModelMetaFieldWithFields {
+  fields: IModelMetaFieldCommon2 &
+    (
+      | IModelMetaFieldText
+      | IModelMetaFieldNumber
+      | IModelMetaFieldBoolean
+      | IModelMetaFieldDate
+      | IModelMetaFieldUrl
+      | IModelMetaEnumerationField
+      | IModelMetaRelationField
+    );
+}
+
+interface IModelMetaCollectionObjectField extends IModelMetaFieldWithFields {
+  collectionOf: 'object';
+}
+
+export interface IModelMetaCollectionFieldCommon {
+  fieldType: 'collection';
+  collectionMinLength?: number;
+  collectionMaxLength?: number;
+}
+
+export type IModelMetaCollectionField = IModelMetaCollectionFieldCommon &
+  IModelMetaCollectionObjectField;
+
 export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
   IModelMetaRelationEnumerationField;
 
 export interface IModelMeta {
   defaultFilterField: string;
   defaultSort: IModelMetaDefaultSort;
+
   importable?: boolean;
+
+  importAggregator?: string;
+  importAggregateOn?: string;
+  importAggregateBy?: string;
+
   fields: { [key: string]: IModelMetaField };
 }
+
+// ----
+export interface IModelMetaFieldCommon2 {
+  name: string;
+  required?: boolean;
+  importHint?: string;
+  order?: number;
+  unique?: number;
+}
+
+export interface IModelMetaRelationField2 {
+  fieldType: 'relation';
+  relationModel: string;
+  importableRelationLabel: string | string[];
+}
+
+export type IModelMetaField2 = IModelMetaFieldCommon2 &
+  (
+    | IModelMetaFieldText
+    | IModelMetaFieldNumber
+    | IModelMetaFieldBoolean
+    | IModelMetaFieldDate
+    | IModelMetaFieldUrl
+    | IModelMetaEnumerationField
+    | IModelMetaRelationField2
+    | IModelMetaCollectionField
+  );

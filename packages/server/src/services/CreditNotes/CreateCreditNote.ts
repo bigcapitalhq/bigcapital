@@ -34,7 +34,7 @@ export default class CreateCreditNote extends BaseCreditNotes {
   public newCreditNote = async (
     tenantId: number,
     creditNoteDTO: ICreditNoteNewDTO,
-    authorizedUser: ISystemUser
+    trx?: Knex.Transaction
   ) => {
     const { CreditNote, Contact } = this.tenancy.models(tenantId);
 
@@ -66,28 +66,32 @@ export default class CreateCreditNote extends BaseCreditNotes {
       customer.currencyCode
     );
     // Creates a new credit card transactions under unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onCreditNoteCreating` event.
-      await this.eventPublisher.emitAsync(events.creditNote.onCreating, {
-        tenantId,
-        creditNoteDTO,
-        trx,
-      } as ICreditNoteCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onCreditNoteCreating` event.
+        await this.eventPublisher.emitAsync(events.creditNote.onCreating, {
+          tenantId,
+          creditNoteDTO,
+          trx,
+        } as ICreditNoteCreatingPayload);
 
-      // Upsert the credit note graph.
-      const creditNote = await CreditNote.query(trx).upsertGraph({
-        ...creditNoteModel,
-      });
-      // Triggers `onCreditNoteCreated` event.
-      await this.eventPublisher.emitAsync(events.creditNote.onCreated, {
-        tenantId,
-        creditNoteDTO,
-        creditNote,
-        creditNoteId: creditNote.id,
-        trx,
-      } as ICreditNoteCreatedPayload);
+        // Upsert the credit note graph.
+        const creditNote = await CreditNote.query(trx).upsertGraph({
+          ...creditNoteModel,
+        });
+        // Triggers `onCreditNoteCreated` event.
+        await this.eventPublisher.emitAsync(events.creditNote.onCreated, {
+          tenantId,
+          creditNoteDTO,
+          creditNote,
+          creditNoteId: creditNote.id,
+          trx,
+        } as ICreditNoteCreatedPayload);
 
-      return creditNote;
-    });
+        return creditNote;
+      },
+      trx
+    );
   };
 }

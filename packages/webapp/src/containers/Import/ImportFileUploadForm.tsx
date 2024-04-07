@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { useImportFileContext } from './ImportFileProvider';
 import { ImportAlert, ImportStepperStep } from './_types';
 import { useAlertsManager } from './AlertsManager';
+import { transformToCamelCase } from '@/utils';
 
 const initialValues = {
   file: null,
@@ -55,9 +56,11 @@ export function ImportFileUploadForm({
 
     uploadImportFile(formData)
       .then(({ data }) => {
-        setImportId(data.import.import_id);
-        setSheetColumns(data.sheet_columns);
-        setEntityColumns(data.resource_columns);
+        const _data = transformToCamelCase(data);
+
+        setImportId(_data.import.importId);
+        setSheetColumns(_data.sheetColumns);
+        setEntityColumns(_data.resourceColumns);
         setStep(ImportStepperStep.Mapping);
         setSubmitting(false);
       })

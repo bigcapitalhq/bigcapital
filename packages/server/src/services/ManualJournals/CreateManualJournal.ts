@@ -73,9 +73,7 @@ export class CreateManualJournalService {
     return R.compose(
       // Omits the `branchId` from entries if multiply branches feature not active.
       this.branchesDTOTransformer.transformDTO(tenantId)
-    )(
-      initialDTO
-    );
+    )(initialDTO);
   }
 
   /**
@@ -133,7 +131,8 @@ export class CreateManualJournalService {
   public makeJournalEntries = async (
     tenantId: number,
     manualJournalDTO: IManualJournalDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    trx?: Knex.Transaction
   ): Promise<{ manualJournal: IManualJournal }> => {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
@@ -156,27 +155,31 @@ export class CreateManualJournalService {
     );
     // Creates a manual journal transactions with associated transactions
     // under unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onManualJournalCreating` event.
-      await this.eventPublisher.emitAsync(events.manualJournals.onCreating, {
-        tenantId,
-        manualJournalDTO,
-        trx,
-      } as IManualJournalCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onManualJournalCreating` event.
+        await this.eventPublisher.emitAsync(events.manualJournals.onCreating, {
+          tenantId,
+          manualJournalDTO,
+          trx,
+        } as IManualJournalCreatingPayload);
 
-      // Upsert the manual journal object.
-      const manualJournal = await ManualJournal.query(trx).upsertGraph({
-        ...manualJournalObj,
-      });
-      // Triggers `onManualJournalCreated` event.
-      await this.eventPublisher.emitAsync(events.manualJournals.onCreated, {
-        tenantId,
-        manualJournal,
-        manualJournalId: manualJournal.id,
-        trx,
-      } as IManualJournalEventCreatedPayload);
+        // Upsert the manual journal object.
+        const manualJournal = await ManualJournal.query(trx).upsertGraph({
+          ...manualJournalObj,
+        });
+        // Triggers `onManualJournalCreated` event.
+        await this.eventPublisher.emitAsync(events.manualJournals.onCreated, {
+          tenantId,
+          manualJournal,
+          manualJournalId: manualJournal.id,
+          trx,
+        } as IManualJournalEventCreatedPayload);
 
-      return { manualJournal };
-    });
+        return { manualJournal };
+      },
+      trx
+    );
   };
 }

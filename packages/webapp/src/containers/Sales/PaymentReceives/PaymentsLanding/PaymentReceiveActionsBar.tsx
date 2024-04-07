@@ -26,7 +26,10 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
+import {
+  PaymentReceiveAction,
+  AbilitySubject,
+} from '@/constants/abilityOption';
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
 import { compose } from '@/utils';
@@ -74,6 +77,10 @@ function PaymentReceiveActionsBar({
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('paymentReceives', 'tableSize', size);
+  };
+  // Handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/payment-receives/import');
   };
 
   return (
@@ -126,6 +133,7 @@ function PaymentReceiveActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

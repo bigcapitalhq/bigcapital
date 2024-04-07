@@ -41,7 +41,10 @@ export class SaleEstimateValidators {
         }
       });
     if (foundSaleEstimate) {
-      throw new ServiceError(ERRORS.SALE_ESTIMATE_NUMBER_EXISTANCE);
+      throw new ServiceError(
+        ERRORS.SALE_ESTIMATE_NUMBER_EXISTANCE,
+        'The given sale estimate is not unique.'
+      );
     }
   }
 

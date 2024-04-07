@@ -52,6 +52,17 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
+    path: `/manual-journals/import`,
+    component: lazy(
+      () => import('@/containers/Accounting/ManualJournalsImport'),
+    ),
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Manual Journals Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.MANUAL_JOURNAL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/manual-journals`,
     component: lazy(
       () =>
@@ -496,6 +507,16 @@ export const getDashboardRoutes = () => [
   },
   // Expenses.
   {
+    path: `/expenses/import`,
+    component: lazy(() => import('@/containers/Expenses/ExpensesImport')),
+    breadcrumb: 'Expenses Import',
+    hotkey: 'ctrl+shift+x',
+    pageTitle: 'Expenses Import',
+    sidebarExpand: false,
+    backLink: true,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/expenses/new`,
     component: lazy(
       () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
@@ -646,6 +667,18 @@ export const getDashboardRoutes = () => [
 
   // Estimates
   {
+    path: `/estimates/import`,
+    component: lazy(
+      () => import('@/containers/Sales/Estimates/EstimatesImport'),
+    ),
+    name: 'estimate-edit',
+    breadcrumb: 'Estimates Import',
+    pageTitle: 'Estimates Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.ESTIMATE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/estimates/:id/edit`,
     component: lazy(
       () =>
@@ -704,6 +737,16 @@ export const getDashboardRoutes = () => [
 
   // Invoices.
   {
+    path: `/invoices/import`,
+    component: lazy(() => import('@/containers/Sales/Invoices/InvoicesImport')),
+    name: 'invoice-edit',
+    breadcrumb: 'Invoices Import',
+    pageTitle: 'Invoices Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.INVOICE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/invoices/:id/edit`,
     component: lazy(
       () => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
@@ -741,8 +784,19 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.INVOICE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Sales Receipts.
+  {
+    path: `/receipts/import`,
+    component: lazy(
+      () => import('@/containers/Sales/Receipts/SaleReceiptsImport'),
+    ),
+    name: 'receipt-import',
+    breadcrumb: 'Receipts Import',
+    pageTitle: 'Receipts Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.RECEIPT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/receipts/:id/edit`,
     component: lazy(
@@ -783,6 +837,18 @@ export const getDashboardRoutes = () => [
   },
 
   // Sales Credit notes.
+  {
+    path: `/credit-notes/import`,
+    component: lazy(
+      () => import('@/containers/Sales/CreditNotes/CreditNotesImport'),
+    ),
+    name: 'credit-note-import',
+    breadcrumb: 'Credit Notes Import',
+    pageTitle: 'Credit Notes Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/credit-notes/:id/edit`,
     component: lazy(
@@ -844,8 +910,19 @@ export const getDashboardRoutes = () => [
     defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
-
   // Payment receives
+  {
+    path: `/payment-receives/import`,
+    component: lazy(
+      () => import('@/containers/Sales/PaymentReceives/PaymentReceivesImport'),
+    ),
+    name: 'payment-receive-import',
+    breadcrumb: 'Payments Receive Import',
+    pageTitle: 'Payments Receive Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/payment-receives/:id/edit`,
     component: lazy(
@@ -894,6 +971,16 @@ export const getDashboardRoutes = () => [
 
   // Bills
   {
+    path: `/bills/import`,
+    component: lazy(() => import('@/containers/Purchases/Bills/BillImport')),
+    name: 'bill-edit',
+    // breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.BILL,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/bills/:id/edit`,
     component: lazy(
       () => import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
@@ -932,6 +1019,18 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   //  Purchases Credit note.
+  {
+    path: `/vendor-credits/import`,
+    component: lazy(
+      () => import('@/containers/Purchases/CreditNotes/VendorCreditsImport'),
+    ),
+    name: 'vendor-credits-edit',
+    breadcrumb: 'Vendor Credits Import',
+    pageTitle: 'Vendor Credits Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   {
     path: `/vendor-credits/:id/edit`,
     component: lazy(
@@ -1003,6 +1102,18 @@ export const getDashboardRoutes = () => [
   },
   // Payment modes.
   {
+    path: `/payment-mades/import`,
+    component: lazy(
+      () => import('@/containers/Purchases/PaymentMades/PaymentMadesImport'),
+    ),
+    name: 'payment-made-edit',
+    breadcrumb: intl.get('edit'),
+    pageTitle: 'Bills Payments Import',
+    backLink: true,
+    defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
+  {
     path: `/payment-mades/:id/edit`,
     component: lazy(
       () =>
@@ -1071,6 +1182,7 @@ export const getDashboardRoutes = () => [
         ),
     ),
     backLink: true,
+    sidebarExpand: false,
     pageTitle: 'Bank Transactions Import',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
