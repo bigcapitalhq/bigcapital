@@ -2,8 +2,8 @@
 import t from '@/store/types';
 
 /**
- * Sets global table state of the table. 
- * @param {object} queries 
+ * Sets global table state of the table.
+ * @param {object} queries
  */
 export const setExpensesTableState = (queries) => {
   return {
@@ -17,4 +17,3 @@ export const resetExpensesTableState = () => {
     type: t.EXPENSES_TABLE_STATE_RESET,
   };
 };
-

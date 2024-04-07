@@ -4,18 +4,12 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const InventoryAdjustmentFormDialogContent = lazy(
-  () => import('./InventoryAdjustmentFormDialogContent'),
-);
+const InventoryAdjustmentFormDialogContent = lazy(() => import('./InventoryAdjustmentFormDialogContent'));
 
 /**
  * Inventory adjustments form dialog.
  */
-function InventoryAdjustmentFormDialog({
-  dialogName,
-  payload = { action: '', itemId: null },
-  isOpen,
-}) {
+function InventoryAdjustmentFormDialog({ dialogName, payload = { action: '', itemId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -26,10 +20,7 @@ function InventoryAdjustmentFormDialog({
       className={'dialog--adjustment-item'}
     >
       <DialogSuspense>
-        <InventoryAdjustmentFormDialogContent
-          dialogName={dialogName}
-          itemId={payload.itemId}
-        />
+        <InventoryAdjustmentFormDialogContent dialogName={dialogName} itemId={payload.itemId} />
       </DialogSuspense>
     </Dialog>
   );

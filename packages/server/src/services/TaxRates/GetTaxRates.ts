@@ -1,6 +1,6 @@
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { TaxRateTransformer } from './TaxRateTransformer';
 
 @Service()
@@ -23,10 +23,6 @@ export class GetTaxRatesService {
     const taxRates = await TaxRate.query().orderBy('name', 'ASC');
 
     // Transforms the tax rates.
-    return this.transformer.transform(
-      tenantId,
-      taxRates,
-      new TaxRateTransformer()
-    );
+    return this.transformer.transform(tenantId, taxRates, new TaxRateTransformer());
   }
 }

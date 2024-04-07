@@ -1,17 +1,11 @@
-import { Service, Inject } from 'typedi';
-import {
-  IItem,
-  IItemCreateDTO,
-  IItemDTO,
-  IItemEditDTO,
-  IItemsFilter,
-} from '@/interfaces';
+import { IItem, IItemCreateDTO, IItemEditDTO, IItemsFilter } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { ActivateItem } from './ActivateItem';
 import { CreateItem } from './CreateItem';
-import { EditItem } from './EditItem';
 import { DeleteItem } from './DeleteItem';
+import { EditItem } from './EditItem';
 import { GetItem } from './GetItem';
 import { GetItems } from './GetItems';
-import { ActivateItem } from './ActivateItem';
 import { InactivateItem } from './InactivateItem';
 
 @Service()
@@ -43,10 +37,7 @@ export class ItemsApplication {
    * @param   {IItemCreateDTO} itemDTO
    * @returns {Promise<IItem>}
    */
-  public async createItem(
-    tenantId: number,
-    itemDTO: IItemCreateDTO
-  ): Promise<IItem> {
+  public async createItem(tenantId: number, itemDTO: IItemCreateDTO): Promise<IItem> {
     return this.createItemService.createItem(tenantId, itemDTO);
   }
 

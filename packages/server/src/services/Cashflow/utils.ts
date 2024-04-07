@@ -1,15 +1,10 @@
-import { upperFirst, camelCase, omit } from 'lodash';
-import {
-  CASHFLOW_TRANSACTION_TYPE,
-  CASHFLOW_TRANSACTION_TYPE_META,
-  ICashflowTransactionTypeMeta,
-} from './constants';
 import {
   ICashflowNewCommandDTO,
-  ICashflowTransaction,
   ICategorizeCashflowTransactioDTO,
   IUncategorizedCashflowTransaction,
 } from '@/interfaces';
+import { camelCase, upperFirst } from 'lodash';
+import { CASHFLOW_TRANSACTION_TYPE, CASHFLOW_TRANSACTION_TYPE_META, ICashflowTransactionTypeMeta } from './constants';
 
 /**
  * Ensures the given transaction type to transformed to appropriate format.
@@ -25,9 +20,7 @@ export const transformCashflowTransactionType = (type) => {
  * @param {CASHFLOW_TRANSACTION_TYPE} transactionType
  * @returns {ICashflowTransactionTypeMeta}
  */
-export function getCashflowTransactionType(
-  transactionType: CASHFLOW_TRANSACTION_TYPE
-): ICashflowTransactionTypeMeta {
+export function getCashflowTransactionType(transactionType: CASHFLOW_TRANSACTION_TYPE): ICashflowTransactionTypeMeta {
   return CASHFLOW_TRANSACTION_TYPE_META[transactionType];
 }
 
@@ -42,13 +35,13 @@ export const getCashflowAccountTransactionsTypes = () => {
 /**
  * Tranasformes the given uncategorized transaction and categorized DTO
  * to cashflow create DTO.
- * @param {IUncategorizedCashflowTransaction} uncategorizeModel 
- * @param {ICategorizeCashflowTransactioDTO} categorizeDTO 
+ * @param {IUncategorizedCashflowTransaction} uncategorizeModel
+ * @param {ICategorizeCashflowTransactioDTO} categorizeDTO
  * @returns {ICashflowNewCommandDTO}
  */
 export const transformCategorizeTransToCashflow = (
   uncategorizeModel: IUncategorizedCashflowTransaction,
-  categorizeDTO: ICategorizeCashflowTransactioDTO
+  categorizeDTO: ICategorizeCashflowTransactioDTO,
 ): ICashflowNewCommandDTO => {
   return {
     date: uncategorizeModel.date,

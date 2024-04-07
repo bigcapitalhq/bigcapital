@@ -1,9 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { CreateTimeService } from './CreateTime';
-import { EditTimeService } from './EditTime';
-import { GetTimelineService } from './GetTimes';
-import { GetTimeService } from './GetTime';
-import { DeleteTimeService } from './DeleteTime';
 import {
   IProjectTimeCreateDTO,
   IProjectTimeCreatePOJO,
@@ -11,6 +5,12 @@ import {
   IProjectTimeEditPOJO,
   IProjectTimeGetPOJO,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { CreateTimeService } from './CreateTime';
+import { DeleteTimeService } from './DeleteTime';
+import { EditTimeService } from './EditTime';
+import { GetTimeService } from './GetTime';
+import { GetTimelineService } from './GetTimes';
 
 @Service()
 export class TimesApplication {
@@ -38,7 +38,7 @@ export class TimesApplication {
   public createTime = (
     tenantId: number,
     taskId: number,
-    timeDTO: IProjectTimeCreateDTO
+    timeDTO: IProjectTimeCreateDTO,
   ): Promise<IProjectTimeCreatePOJO> => {
     return this.createTimeService.createTime(tenantId, taskId, timeDTO);
   };
@@ -50,11 +50,7 @@ export class TimesApplication {
    * @param {IProjectCreateDTO} projectDTO - Create project DTO.
    * @returns {Promise<IProjectTimeEditPOJO>}
    */
-  public editTime = (
-    tenantId: number,
-    timeId: number,
-    taskDTO: IProjectTimeEditDTO
-  ): Promise<IProjectTimeEditPOJO> => {
+  public editTime = (tenantId: number, timeId: number, taskDTO: IProjectTimeEditDTO): Promise<IProjectTimeEditPOJO> => {
     return this.editTimeService.editTime(tenantId, timeId, taskDTO);
   };
 
@@ -74,10 +70,7 @@ export class TimesApplication {
    * @param {number} timeId
    * @returns {Promise<IProjectTimeGetPOJO>}
    */
-  public getTime = (
-    tenantId: number,
-    timeId: number
-  ): Promise<IProjectTimeGetPOJO> => {
+  public getTime = (tenantId: number, timeId: number): Promise<IProjectTimeGetPOJO> => {
     return this.getTimeService.getTime(tenantId, timeId);
   };
 
@@ -87,10 +80,7 @@ export class TimesApplication {
    * @param {IVendorsFilter} filterDTO
    * @returns {Promise<IProjectTimeGetPOJO[]>}
    */
-  public getTimeline = (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectTimeGetPOJO[]> => {
+  public getTimeline = (tenantId: number, projectId: number): Promise<IProjectTimeGetPOJO[]> => {
     return this.getTimelineService.getTimeline(tenantId, projectId);
   };
 }

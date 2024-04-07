@@ -3,11 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { TableStyle } from '@/constants';
-import {
-  ReportDataTable,
-  FinancialSheet,
-  FormattedMessage as T,
-} from '@/components';
+import { ReportDataTable, FinancialSheet, FormattedMessage as T } from '@/components';
 
 import { useProfitLossSheetColumns } from './hooks';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
@@ -26,10 +22,7 @@ export default function ProfitLossSheetTable({
   const columns = useProfitLossSheetColumns();
 
   // Retrieve default expanded rows of balance sheet.
-  const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table?.rows || [], 3),
-    [table],
-  );
+  const expandedRows = React.useMemo(() => defaultExpanderReducer(table?.rows || [], 3), [table]);
 
   return (
     <FinancialSheet

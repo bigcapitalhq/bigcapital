@@ -6,21 +6,13 @@ import { defaultTo } from 'lodash';
 import { DataTableEditable } from '@/components';
 import { compose, updateTableCell } from '@/utils';
 import { useDeepCompareEffect } from '@/hooks/utils';
-import {
-  useReconcileCreditNoteTableColumns,
-  maxAmountCreditFromRemaining,
-  maxCreditNoteAmountEntries,
-} from './utils';
+import { useReconcileCreditNoteTableColumns, maxAmountCreditFromRemaining, maxCreditNoteAmountEntries } from './utils';
 import { useReconcileCreditNoteContext } from './ReconcileCreditNoteFormProvider';
 
 /**
  * Reconcile credit note entries table.
  */
-export default function ReconcileCreditNoteEntriesTable({
-  onUpdateData,
-  entries,
-  errors,
-}) {
+export default function ReconcileCreditNoteEntriesTable({ onUpdateData, entries, errors }) {
   // Retrieve the reconcile credit note table columns.
   const columns = useReconcileCreditNoteTableColumns();
 
@@ -32,9 +24,7 @@ export default function ReconcileCreditNoteEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
-        entries,
-      );
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(entries);
       onUpdateData(newRows);
     },
     [onUpdateData, entries],

@@ -10,12 +10,7 @@ interface PreprocessingAccountsOptions {
 
 export const usePreprocessingAccounts = (
   items: any,
-  {
-    filterByRootTypes,
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-  }: PreprocessingAccountsOptions,
+  { filterByRootTypes, filterByParentTypes, filterByTypes, filterByNormal }: PreprocessingAccountsOptions,
 ) => {
   return useMemo(() => {
     const flattenAccounts = nestedArrayToflatten(items);
@@ -26,11 +21,5 @@ export const usePreprocessingAccounts = (
       filterByNormal,
     });
     return filteredAccounts;
-  }, [
-    items,
-    filterByRootTypes,
-    filterByParentTypes,
-    filterByTypes,
-    filterByNormal,
-  ]);
+  }, [items, filterByRootTypes, filterByParentTypes, filterByTypes, filterByNormal]);
 };

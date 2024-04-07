@@ -1,14 +1,11 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
+import { ICustomerActivatedPayload, ICustomerActivatingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CustomerValidators } from './CustomerValidators';
-import {
-  ICustomerActivatingPayload,
-  ICustomerActivatedPayload,
-} from '@/interfaces';
 
 @Service()
 export class ActivateCustomer {
@@ -30,17 +27,11 @@ export class ActivateCustomer {
    * @param   {number} contactId - Contact id.
    * @returns {Promise<void>}
    */
-  public async activateCustomer(
-    tenantId: number,
-    customerId: number
-  ): Promise<void> {
+  public async activateCustomer(tenantId: number, customerId: number): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieves the customer or throw not found error.
-    const oldCustomer = await Contact.query()
-      .findById(customerId)
-      .modify('customer')
-      .throwIfNotFound();
+    const oldCustomer = await Contact.query().findById(customerId).modify('customer').throwIfNotFound();
 
     this.validators.validateNotAlreadyPublished(oldCustomer);
 
@@ -54,9 +45,7 @@ export class ActivateCustomer {
       } as ICustomerActivatingPayload);
 
       // Update the given customer details.
-      const customer = await Contact.query(trx)
-        .findById(customerId)
-        .update({ active: true });
+      const customer = await Contact.query(trx).findById(customerId).update({ active: true });
 
       // Triggers `onCustomerActivated` event.
       await this.eventPublisher.emitAsync(events.customers.onActivated, {

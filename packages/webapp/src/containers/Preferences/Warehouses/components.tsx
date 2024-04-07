@@ -2,13 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Intent,
-  Classes,
-} from '@blueprintjs/core';
+import { Menu, MenuItem, MenuDivider, Intent, Classes } from '@blueprintjs/core';
 
 import { Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
@@ -19,12 +13,7 @@ const WAREHOUSES_SKELETON_N = 4;
  * Warehouse grid item box context menu.
  * @returns {JSX.Element}
  */
-export function WarehouseContextMenu({
-  onEditClick,
-  onDeleteClick,
-  onMarkPrimary,
-  warehouse,
-}) {
+export function WarehouseContextMenu({ onEditClick, onDeleteClick, onMarkPrimary, warehouse }) {
   return (
     <Menu>
       <MenuItem
@@ -74,15 +63,7 @@ function WarehouseGridItemSkeletonBox() {
  * Warehouse grid item box.
  * @returns {JSX.Element}
  */
-export function WarehousesGridItemBox({
-  title,
-  code,
-  city,
-  country,
-  email,
-  phoneNumber,
-  primary,
-}) {
+export function WarehousesGridItemBox({ title, code, city, country, email, phoneNumber, primary }) {
   return (
     <WarehouseBoxRoot>
       <WarehouseHeader>
@@ -105,9 +86,7 @@ export function WarehousesGridItemBox({
 }
 
 export function WarehousesSkeleton() {
-  return [...Array(WAREHOUSES_SKELETON_N)].map((key, value) => (
-    <WarehouseGridItemSkeletonBox />
-  ));
+  return [...Array(WAREHOUSES_SKELETON_N)].map((key, value) => <WarehouseGridItemSkeletonBox />);
 }
 
 export const WarehousesList = styled.div`

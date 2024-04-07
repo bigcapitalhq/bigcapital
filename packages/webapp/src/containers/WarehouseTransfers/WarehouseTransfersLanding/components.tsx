@@ -3,13 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Choose,
-  If,
-  Icon,
-} from '@/components';
+import { FormatDateCell, FormattedMessage as T, Choose, If, Icon } from '@/components';
 
 export function ActionsMenu({
   payload: { onEdit, onDelete, onViewDetails, onInitate, onTransfer },
@@ -61,16 +55,12 @@ export function ActionsMenu({
 export function StatusAccessor(warehouse) {
   return (
     <Choose>
-      <Choose.When
-        condition={warehouse.is_initiated && !warehouse.is_transferred}
-      >
+      <Choose.When condition={warehouse.is_initiated && !warehouse.is_transferred}>
         <Tag minimal={true} intent={Intent.WARNING} round={true}>
           <T id={'warehouse_transfer.label.transfer_initiated'} />
         </Tag>
       </Choose.When>
-      <Choose.When
-        condition={warehouse.is_initiated && warehouse.is_transferred}
-      >
+      <Choose.When condition={warehouse.is_initiated && warehouse.is_transferred}>
         <Tag minimal={true} intent={Intent.SUCCESS} round={true}>
           <T id={'warehouse_transfer.label.transferred'} />
         </Tag>

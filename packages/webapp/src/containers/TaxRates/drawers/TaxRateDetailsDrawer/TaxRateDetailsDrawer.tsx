@@ -5,9 +5,7 @@ import { Drawer, DrawerHeaderContent, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 import { DRAWERS } from '@/constants/drawers';
 
-const TaxRateDetailsDrawerContent = React.lazy(
-  () => import('./TaxRateDetailsContent'),
-);
+const TaxRateDetailsDrawerContent = React.lazy(() => import('./TaxRateDetailsContent'));
 
 /**
  * Tax rate details drawer.
@@ -19,12 +17,7 @@ function TaxRateDetailsDrawer({
   payload: { taxRateId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '650px', maxWidth: '650px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '650px', maxWidth: '650px' }} size={'65%'}>
       <DrawerSuspense>
         <TaxRateDetailsDrawerContent name={name} taxRateId={taxRateId} />
       </DrawerSuspense>

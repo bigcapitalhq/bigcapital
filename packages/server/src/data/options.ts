@@ -223,12 +223,7 @@ export default {
     'locking-type': {
       type: 'string',
     },
-    ...getTransactionsLockingSettingsSchema([
-      'all',
-      'sales',
-      'purchases',
-      'financial',
-    ]),
+    ...getTransactionsLockingSettingsSchema(['all', 'sales', 'purchases', 'financial']),
   },
   features: {
     'multi-warehouses': {

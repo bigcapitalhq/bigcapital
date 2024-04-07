@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const ManualJournalDrawerContent = lazy(() =>
-  import('./ManualJournalDrawerContent'),
-);
+const ManualJournalDrawerContent = lazy(() => import('./ManualJournalDrawerContent'));
 
 /**
  * Manual journal drawer.
@@ -20,12 +18,7 @@ function ManualJournalDrawer({
   payload: { manualJournalId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      size={'65%'}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-    >
+    <Drawer isOpen={isOpen} name={name} size={'65%'} style={{ minWidth: '700px', maxWidth: '900px' }}>
       <DrawerSuspense>
         <ManualJournalDrawerContent manualJournalId={manualJournalId} />
       </DrawerSuspense>

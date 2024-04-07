@@ -1,12 +1,6 @@
 // @ts-nocheck
 import { Position } from '@blueprintjs/core';
-import {
-  AccountsSelect,
-  FDateInput,
-  FFormGroup,
-  FInputGroup,
-  FTextArea,
-} from '@/components';
+import { AccountsSelect, FDateInput, FFormGroup, FInputGroup, FTextArea } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
 
 export default function CategorizeTransactionOtherIncome() {
@@ -24,28 +18,11 @@ export default function CategorizeTransactionOtherIncome() {
         />
       </FFormGroup>
 
-      <FFormGroup
-        name={'debitAccountId'}
-        label={'To Account'}
-        fastField={true}
-        inline
-      >
-        <AccountsSelect
-          name={'debitAccountId'}
-          items={accounts}
-          fastField
-          fill
-          allowCreate
-          disabled
-        />
+      <FFormGroup name={'debitAccountId'} label={'To Account'} fastField={true} inline>
+        <AccountsSelect name={'debitAccountId'} items={accounts} fastField fill allowCreate disabled />
       </FFormGroup>
 
-      <FFormGroup
-        name={'creditAccountId'}
-        label={'Income Account'}
-        fastField
-        inline
-      >
+      <FFormGroup name={'creditAccountId'} label={'Income Account'} fastField inline>
         <AccountsSelect
           name={'creditAccountId'}
           items={accounts}
@@ -61,12 +38,7 @@ export default function CategorizeTransactionOtherIncome() {
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </>
   );

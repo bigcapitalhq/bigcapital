@@ -7,9 +7,7 @@ import withUniversalSearchActions from './withUniversalSearchActions';
 /**
  * Universal search hotkey.
  */
-function DashboardUniversalSearchHotkey({
-  openGlobalSearch,
-}) {
+function DashboardUniversalSearchHotkey({ openGlobalSearch }) {
   useHotkeys('shift+p', (event, handle) => {
     openGlobalSearch();
   });
@@ -17,6 +15,4 @@ function DashboardUniversalSearchHotkey({
   return null;
 }
 
-export default R.compose(
-  withUniversalSearchActions
-)(DashboardUniversalSearchHotkey);
+export default R.compose(withUniversalSearchActions)(DashboardUniversalSearchHotkey);

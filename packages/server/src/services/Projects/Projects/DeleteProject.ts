@@ -1,14 +1,10 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import {
-  IProjectDeletedEventPayload,
-  IProjectDeleteEventPayload,
-  IProjectDeletingEventPayload,
-} from '@/interfaces';
+import { IProjectDeleteEventPayload, IProjectDeletedEventPayload, IProjectDeletingEventPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class DeleteProject {

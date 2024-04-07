@@ -3,12 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FastField, ErrorMessage } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { inputIntent } from '@/utils';
 
 import { FieldRequiredHint, FormattedMessage as T } from '@/components';
@@ -63,9 +58,7 @@ export default function WarehouseFormFields() {
           >
             <InputGroup
               intent={inputIntent({ error, touched })}
-              placeholder={intl.get(
-                'warehouse.dialog.label.warehouse_address_1',
-              )}
+              placeholder={intl.get('warehouse.dialog.label.warehouse_address_1')}
               {...field}
             />
           </FormGroup>

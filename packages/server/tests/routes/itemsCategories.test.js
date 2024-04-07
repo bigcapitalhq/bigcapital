@@ -1,13 +1,6 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
 import ItemCategory from 'models/ItemCategory';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: /item_categories/', () => {
   describe('POST `/items_categories``', async () => {
@@ -41,7 +34,8 @@ describe('routes: /item_categories/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'PARENT_CATEGORY_NOT_FOUND', code: 100,
+        type: 'PARENT_CATEGORY_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -76,9 +70,7 @@ describe('routes: /item_categories/', () => {
 
       expect(res.status).equals(200);
 
-      const storedCategory = await ItemCategory.tenant().query()
-        .where('id', res.body.category.id)
-        .first();
+      const storedCategory = await ItemCategory.tenant().query().where('id', res.body.category.id).first();
 
       expect(storedCategory.name).equals('Clothes');
       expect(storedCategory.description).equals('Here is description');
@@ -90,9 +82,7 @@ describe('routes: /item_categories/', () => {
   describe('POST `/items_category/{id}`', () => {
     it('Should not update a item category if the user was not authorized.', async () => {
       const category = await tenantFactory.create('item_category');
-      const res = await request()
-        .post(`/api/item_categories/${category.id}`)
-        .send();
+      const res = await request().post(`/api/item_categories/${category.id}`).send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -123,7 +113,8 @@ describe('routes: /item_categories/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'PARENT_CATEGORY_NOT_FOUND', code: 100,
+        type: 'PARENT_CATEGORY_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -158,9 +149,7 @@ describe('routes: /item_categories/', () => {
           description: 'updated description',
         });
 
-      const storedCategory = await ItemCategory.tenant().query()
-        .where('id', res.body.id)
-        .first();
+      const storedCategory = await ItemCategory.tenant().query().where('id', res.body.id).first();
 
       expect(storedCategory.name).equals('Name');
       expect(storedCategory.description).equals('updated description');
@@ -210,15 +199,13 @@ describe('routes: /item_categories/', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const categories = await ItemCategory.tenant().query()
-        .where('id', category.id);
+      const categories = await ItemCategory.tenant().query().where('id', category.id);
 
       expect(categories).to.have.lengthOf(0);
     });
   });
 
   describe('GET: `/item_categories`', () => {
-
     it('Should retrieve list of item categories.', async () => {
       const category1 = await tenantFactory.create('item_category');
       const category2 = await tenantFactory.create('item_category', { parent_category_id: category1.id });
@@ -231,7 +218,7 @@ describe('routes: /item_categories/', () => {
 
       expect(res.body.categories).to.be.a('array');
       expect(res.body.categories.length).equals(2);
-      
+
       expect(res.body.categories[0].id).to.be.a('number');
       expect(res.body.categories[0].name).to.be.a('string');
       expect(res.body.categories[0].parent_category_id).to.be.a('null');
@@ -239,7 +226,6 @@ describe('routes: /item_categories/', () => {
 
       expect(res.body.categories[1].parent_category_id).to.be.a('number');
     });
-
 
     it('Should retrieve of related items.', async () => {
       const category1 = await tenantFactory.create('item_category');
@@ -259,17 +245,11 @@ describe('routes: /item_categories/', () => {
   });
 
   describe('GET `/items_category/{id}', () => {
-    it('Should response not found with incorrect item category ID.', () => {
+    it('Should response not found with incorrect item category ID.', () => {});
 
-    });
+    it('Should response success with exist item category.', () => {});
 
-    it('Should response success with exist item category.', () => {
-
-    });
-
-    it('Should response data of item category.', () => {
-
-    });
+    it('Should response data of item category.', () => {});
   });
 
   describe('DELETE: `/items_cateogires`', () => {
@@ -285,7 +265,8 @@ describe('routes: /item_categories/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEM.CATEGORIES.IDS.NOT.FOUND', code: 200
+        type: 'ITEM.CATEGORIES.IDS.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -302,7 +283,8 @@ describe('routes: /item_categories/', () => {
         })
         .send();
 
-      const deleteItemCategories = await ItemCategory.tenant().query()
+      const deleteItemCategories = await ItemCategory.tenant()
+        .query()
         .whereIn('id', [itemCategory.id, itemCategory2.id]);
 
       expect(deleteItemCategories.length).equals(0);

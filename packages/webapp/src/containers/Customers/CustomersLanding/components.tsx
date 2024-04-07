@@ -1,15 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
-import {
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Intent,
-  Tooltip,
-  Position,
-  Classes,
-} from '@blueprintjs/core';
+import { Menu, MenuItem, MenuDivider, Intent, Tooltip, Position, Classes } from '@blueprintjs/core';
 
 import { Can, Icon, Money, If, AvatarCell } from '@/components';
 import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
@@ -20,14 +12,7 @@ import { safeCallback } from '@/utils';
  */
 export function ActionsMenu({
   row: { original },
-  payload: {
-    onEdit,
-    onDelete,
-    onDuplicate,
-    onInactivate,
-    onActivate,
-    onViewDetails,
-  },
+  payload: { onEdit, onDelete, onDuplicate, onInactivate, onActivate, onViewDetails },
 }) {
   return (
     <Menu>

@@ -12,10 +12,7 @@ export default function ReconcileCreditNoteDialogContent({
   creditNoteId,
 }) {
   return (
-    <ReconcileCreditNoteFormProvider
-      creditNoteId={creditNoteId}
-      dialogName={dialogName}
-    >
+    <ReconcileCreditNoteFormProvider creditNoteId={creditNoteId} dialogName={dialogName}>
       <ReconcileCreditNoteForm />
     </ReconcileCreditNoteFormProvider>
   );

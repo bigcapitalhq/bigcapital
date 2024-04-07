@@ -38,10 +38,7 @@ function AccountDrawerTable({ closeDrawer }) {
 
         <If condition={accounts.length > 0}>
           <TableFooter>
-            <Link
-              to={`/financial-reports/general-ledger`}
-              onClick={handleLinkClick}
-            >
+            <Link to={`/financial-reports/general-ledger`} onClick={handleLinkClick}>
               {isRTL ? '→' : '←'} {intl.get('view_more_transactions')}
             </Link>
           </TableFooter>
@@ -57,14 +54,7 @@ function AccountDrawerDataTable() {
   // Account read-only entries table columns.
   const columns = useAccountReadEntriesColumns();
 
-  return (
-    <DataTable
-      columns={columns}
-      data={accounts}
-      payload={{ account }}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <DataTable columns={columns} data={accounts} payload={{ account }} styleName={TableStyle.Constrant} />;
 }
 
 export default compose(withDrawerActions)(AccountDrawerTable);

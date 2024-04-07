@@ -1,11 +1,6 @@
 import { IAccount, IAccountsStructureType } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import {
-  assocDepthLevelToObjectTree,
-  flatToNestedArray,
-  formatNumber,
-  nestedArrayToFlatten,
-} from 'utils';
+import { assocDepthLevelToObjectTree, flatToNestedArray, formatNumber, nestedArrayToFlatten } from 'utils';
 
 export class AccountTransformer extends Transformer {
   /**
@@ -22,9 +17,7 @@ export class AccountTransformer extends Transformer {
    * @returns {string}
    */
   public flattenName = (account: IAccount): string => {
-    const parentDependantsIds = this.options.accountsGraph.dependantsOf(
-      account.id
-    );
+    const parentDependantsIds = this.options.accountsGraph.dependantsOf(account.id);
     const prefixAccounts = parentDependantsIds.map((dependId) => {
       const node = this.options.accountsGraph.getNodeData(dependId);
       return `${node.name}: `;
@@ -64,13 +57,7 @@ export class AccountTransformer extends Transformer {
       parentId: 'parentAccountId',
     });
     // Associate `accountLevel` attr to indicate object depth.
-    const transformed2 = assocDepthLevelToObjectTree(
-      transformed,
-      1,
-      'accountLevel'
-    );
-    return this.options.structure === IAccountsStructureType.Flat
-      ? nestedArrayToFlatten(transformed2)
-      : transformed2;
+    const transformed2 = assocDepthLevelToObjectTree(transformed, 1, 'accountLevel');
+    return this.options.structure === IAccountsStructureType.Flat ? nestedArrayToFlatten(transformed2) : transformed2;
   };
 }

@@ -1,12 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { castArray } from 'lodash';
-import { query, oneOf } from 'express-validator';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { JournalSheetApplication } from '@/services/FinancialStatements/JournalSheet/JournalSheetApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { oneOf, query } from 'express-validator';
+import { castArray } from 'lodash';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class JournalSheetController extends BaseFinancialReportController {
@@ -24,7 +24,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       CheckPolicies(ReportsAction.READ_JOURNAL, AbilitySubject.Report),
       this.journalValidationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.journal.bind(this))
+      this.asyncMiddleware(this.journal.bind(this)),
     );
     return router;
   }
@@ -39,11 +39,8 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       query('transaction_type').optional().trim().escape(),
       query('transaction_id').optional().isInt().toInt(),
       oneOf(
-        [
-          query('account_ids').optional().isArray({ min: 1 }),
-          query('account_ids.*').optional().isNumeric().toInt(),
-        ],
-        [query('account_ids').optional().isNumeric().toInt()]
+        [query('account_ids').optional().isArray({ min: 1 }), query('account_ids.*').optional().isNumeric().toInt()],
+        [query('account_ids').optional().isNumeric().toInt()],
       ),
       query('from_range').optional().isNumeric().toInt(),
       query('to_range').optional().isNumeric().toInt(),
@@ -82,7 +79,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       // Retrieves the csv format.
     } else if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
       const buffer = await this.journalSheetApp.csv(tenantId, filter);
-  
+
       res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
       res.setHeader('Content-Type', 'text/csv');
 
@@ -92,10 +89,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
       const buffer = await this.journalSheetApp.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       return res.send(buffer);
       // Retrieves the json format.
     } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

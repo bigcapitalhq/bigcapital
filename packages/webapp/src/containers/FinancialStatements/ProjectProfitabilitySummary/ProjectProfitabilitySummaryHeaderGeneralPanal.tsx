@@ -26,19 +26,13 @@ export default function ProjectProfitabilitySummaryHeaderGeneralPanal() {
           <FinancialStatementsFilter
             items={filterProjectProfitabilityOptions}
             initialSelectedItem={'with-transactions'}
-            label={
-              <T id={'project_profitability_summary.filter_options.label'} />
-            }
+            label={<T id={'project_profitability_summary.filter_options.label'} />}
           />
         </Col>
       </Row>
       <Row>
         <Col xs={4}>
-          <FFormGroup
-            name={'projectsIds'}
-            label={<T id={'projects_multi_select.label'} />}
-            className={Classes.FILL}
-          >
+          <FFormGroup name={'projectsIds'} label={<T id={'projects_multi_select.label'} />} className={Classes.FILL}>
             <ProjectMultiSelect name={'projectsIds'} projects={projects} />
           </FFormGroup>
         </Col>

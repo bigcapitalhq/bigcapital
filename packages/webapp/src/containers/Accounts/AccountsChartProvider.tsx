@@ -11,8 +11,7 @@ const AccountsChartContext = createContext();
  */
 function AccountsChartProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: resourceViews, isLoading: isViewsLoading } =
-    useResourceViews('accounts');
+  const { data: resourceViews, isLoading: isViewsLoading } = useResourceViews('accounts');
 
   // Fetch the accounts resource fields.
   const {
@@ -45,10 +44,7 @@ function AccountsChartProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading}
-      name={'accounts-chart'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceMetaLoading} name={'accounts-chart'}>
       <AccountsChartContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

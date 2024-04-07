@@ -64,10 +64,7 @@ export const useProfitLossSheetQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default query with location query.
-  const query = React.useMemo(
-    () => parseProfitLossQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseProfitLossQuery(locationQuery), [locationQuery]);
   return {
     query,
     locationQuery,
@@ -82,10 +79,7 @@ export const useProfitLossSheetQuery = () => {
 export const useProfitLossHeaderValidationSchema = () => {
   return Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('to_date')),
     filterByOption: Yup.string(),
     displayColumnsType: Yup.string(),
   });
@@ -134,41 +128,35 @@ export const handlePreviousYearChangeCheckboxChange = R.curry((form, event) => {
 /**
  * Handle previous year percentage checkbox change.
  */
-export const handlePreviousYearPercentageCheckboxChange = R.curry(
-  (form, event) => {
-    const isChecked = event.currentTarget.checked;
+export const handlePreviousYearPercentageCheckboxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
 
-    if (isChecked) {
-      form.setFieldValue('previousYear', isChecked);
-    }
-    form.setFieldValue('previousYearPercentageChange', isChecked);
-  },
-);
+  if (isChecked) {
+    form.setFieldValue('previousYear', isChecked);
+  }
+  form.setFieldValue('previousYearPercentageChange', isChecked);
+});
 
 /**
  * Handles previous period change amount checkbox change.
  */
-export const handlePreviousPeriodChangeCheckboxChange = R.curry(
-  (form, event) => {
-    const isChecked = event.currentTarget.checked;
+export const handlePreviousPeriodChangeCheckboxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
 
-    if (isChecked) {
-      form.setFieldValue('previousPeriod', isChecked);
-    }
-    form.setFieldValue('previousPeriodAmountChange', isChecked);
-  },
-);
+  if (isChecked) {
+    form.setFieldValue('previousPeriod', isChecked);
+  }
+  form.setFieldValue('previousPeriodAmountChange', isChecked);
+});
 
 /**
  * Handles previous period percentage checkbox change.
  */
-export const handlePreviousPeriodPercentageCheckboxChange = R.curry(
-  (form, event) => {
-    const isChecked = event.currentTarget.checked;
+export const handlePreviousPeriodPercentageCheckboxChange = R.curry((form, event) => {
+  const isChecked = event.currentTarget.checked;
 
-    if (isChecked) {
-      form.setFieldValue('previousPeriod', isChecked);
-    }
-    form.setFieldValue('previousPeriodPercentageChange', isChecked);
-  },
-);
+  if (isChecked) {
+    form.setFieldValue('previousPeriod', isChecked);
+  }
+  form.setFieldValue('previousPeriodPercentageChange', isChecked);
+});

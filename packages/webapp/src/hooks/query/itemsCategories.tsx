@@ -35,19 +35,16 @@ export function useEditItemCategory(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`item_categories/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific item category.
-        queryClient.invalidateQueries([t.ITEM_CATEGORY, id]);
+  return useMutation(([id, values]) => apiRequest.post(`item_categories/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific item category.
+      queryClient.invalidateQueries([t.ITEM_CATEGORY, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -69,10 +66,9 @@ export function useDeleteItemCategory(props) {
   });
 }
 
-
 const transformCategories = (res) => ({
   itemsCategories: res.data.item_categories,
-  pagination: res.data.pagination,  
+  pagination: res.data.pagination,
 });
 
 /**
@@ -86,7 +82,7 @@ export function useItemsCategories(query, props) {
       select: transformCategories,
       defaultData: {
         itemsCategories: [],
-        pagination: {}
+        pagination: {},
       },
       ...props,
     },

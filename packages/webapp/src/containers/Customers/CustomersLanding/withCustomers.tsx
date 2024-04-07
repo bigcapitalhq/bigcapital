@@ -5,7 +5,6 @@ import {
   customersTableStateChangedFactory,
 } from '@/store/customers/customers.selectors';
 
-
 export default (mapState) => {
   const getCustomersTableState = getCustomersTableStateFactory();
   const customersTableStateChanged = customersTableStateChangedFactory();

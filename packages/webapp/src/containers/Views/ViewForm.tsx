@@ -4,18 +4,7 @@ import { useFormik } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
 import { useHistory } from 'react-router-dom';
-import {
-  InputGroup,
-  FormGroup,
-  Intent,
-  Button,
-  MenuItem,
-  Classes,
-  HTMLSelect,
-  Menu,
-  H5,
-  H6,
-} from '@blueprintjs/core';
+import { InputGroup, FormGroup, Intent, Button, MenuItem, Classes, HTMLSelect, Menu, H5, H6 } from '@blueprintjs/core';
 import { Row, Col } from 'react-grid-system';
 import { ReactSortable } from 'react-sortablejs';
 import * as Yup from 'yup';
@@ -49,20 +38,13 @@ function ViewForm({
     };
   }, [changePageSubtitle, resourceMetadata.label]);
 
-  const [draggedColumns, setDraggedColumn] = useState([
-    ...(viewMeta && viewMeta.columns ? viewMeta.columns : []),
-  ]);
+  const [draggedColumns, setDraggedColumn] = useState([...(viewMeta && viewMeta.columns ? viewMeta.columns : [])]);
 
-  const draggedColumnsIds = useMemo(
-    () => draggedColumns.map((c) => c.id),
-    [draggedColumns],
-  );
+  const draggedColumnsIds = useMemo(() => draggedColumns.map((c) => c.id), [draggedColumns]);
 
   const [availableColumns, setAvailableColumns] = useState([
     ...(viewMeta && viewMeta.columns
-      ? resourceColumns.filter(
-          (column) => draggedColumnsIds.indexOf(column.id) === -1,
-        )
+      ? resourceColumns.filter((column) => draggedColumnsIds.indexOf(column.id) === -1)
       : resourceColumns),
   ]);
 
@@ -124,15 +106,7 @@ function ViewForm({
     [initialEmptyForm, viewMeta, resourceName],
   );
 
-  const {
-    values,
-    errors,
-    touched,
-    setFieldValue,
-    getFieldProps,
-    handleSubmit,
-    isSubmitting,
-  } = useFormik({
+  const { values, errors, touched, setFieldValue, getFieldProps, handleSubmit, isSubmitting } = useFormik({
     enableReinitialize: true,
     validationSchema: validationSchema,
     initialValues: {
@@ -155,9 +129,7 @@ function ViewForm({
             message: 'the_view_has_been_edited',
             intent: Intent.SUCCESS,
           });
-          history.push(
-            `${resourceMetadata.baseRoute}/${viewMeta.id}/custom_view`,
-          );
+          history.push(`${resourceMetadata.baseRoute}/${viewMeta.id}/custom_view`);
           setSubmitting(false);
         });
       } else {
@@ -166,9 +138,7 @@ function ViewForm({
             message: 'the_view_has_been_submit',
             intent: Intent.SUCCESS,
           });
-          history.push(
-            `${resourceMetadata.baseRoute}/${viewMeta.id}/custom_view`,
-          );
+          history.push(`${resourceMetadata.baseRoute}/${viewMeta.id}/custom_view`);
           setSubmitting(false);
         });
       }
@@ -193,10 +163,7 @@ function ViewForm({
     [],
   );
 
-  const whenConditionalsItems = useMemo(
-    () => [{ value: '', label: 'When' }],
-    [],
-  );
+  const whenConditionalsItems = useMemo(() => [{ value: '', label: 'When' }], []);
 
   // Compatotors items.
   const compatatorsItems = useMemo(
@@ -240,7 +207,7 @@ function ViewForm({
   // Handle click remove view role button.
   const onClickRemoveRole = useCallback(
     (viewRole, index) => {
-      let viewRoles = [...values.roles];
+      const viewRoles = [...values.roles];
 
       // Can't continue if view roles equals or less than 1.
       if (viewRoles.length > 1) {
@@ -277,9 +244,7 @@ function ViewForm({
                 label={<T id={'view_name'} />}
                 className={'form-group--name'}
                 intent={errors.name && touched.name && Intent.DANGER}
-                helperText={
-                  <ErrorMessage {...{ errors, touched }} name={'name'} />
-                }
+                helperText={<ErrorMessage {...{ errors, touched }} name={'name'} />}
                 inline={true}
                 fill={true}
               >
@@ -300,22 +265,14 @@ function ViewForm({
             <Col sm={2} class="flex">
               <div class="mr2 pt1 condition-number">{index + 1}</div>
               {index === 0 ? (
-                <HTMLSelect
-                  options={whenConditionalsItems}
-                  className={Classes.FILL}
-                />
+                <HTMLSelect options={whenConditionalsItems} className={Classes.FILL} />
               ) : (
-                <HTMLSelect
-                  options={conditionalsItems}
-                  className={Classes.FILL}
-                />
+                <HTMLSelect options={conditionalsItems} className={Classes.FILL} />
               )}
             </Col>
 
             <Col sm={2}>
-              <FormGroup
-                intent={hasError(`roles[${index}].field_key`) && Intent.DANGER}
-              >
+              <FormGroup intent={hasError(`roles[${index}].field_key`) && Intent.DANGER}>
                 <HTMLSelect
                   options={resourceFieldsOptions}
                   value={role.field_key}
@@ -326,9 +283,7 @@ function ViewForm({
             </Col>
 
             <Col sm={2}>
-              <FormGroup
-                intent={hasError(`roles[${index}].comparator`) && Intent.DANGER}
-              >
+              <FormGroup intent={hasError(`roles[${index}].comparator`) && Intent.DANGER}>
                 <HTMLSelect
                   options={compatatorsItems}
                   value={role.comparator}
@@ -339,13 +294,8 @@ function ViewForm({
             </Col>
 
             <Col sm={5} class="flex">
-              <FormGroup
-                intent={hasError(`roles[${index}].value`) && Intent.DANGER}
-              >
-                <InputGroup
-                  placeholder={intl.get('value')}
-                  {...getFieldProps(`roles[${index}].value`)}
-                />
+              <FormGroup intent={hasError(`roles[${index}].value`) && Intent.DANGER}>
+                <InputGroup placeholder={intl.get('value')} {...getFieldProps(`roles[${index}].value`)} />
               </FormGroup>
 
               <Button
@@ -361,11 +311,7 @@ function ViewForm({
         ))}
 
         <div className={'view-form__role-conditions-actions'}>
-          <Button
-            minimal={true}
-            intent={Intent.PRIMARY}
-            onClick={onClickNewRole}
-          >
+          <Button minimal={true} intent={Intent.PRIMARY} onClick={onClickNewRole}>
             <T id={'new_conditional'} />
           </Button>
         </div>
@@ -376,26 +322,13 @@ function ViewForm({
               <FormGroup
                 label={intl.get('Logic Expression')}
                 className={'form-group--logic-expression'}
-                intent={
-                  errors.logic_expression &&
-                  touched.logic_expression &&
-                  Intent.DANGER
-                }
-                helperText={
-                  <ErrorMessage
-                    {...{ errors, touched }}
-                    name="logic_expression"
-                  />
-                }
+                intent={errors.logic_expression && touched.logic_expression && Intent.DANGER}
+                helperText={<ErrorMessage {...{ errors, touched }} name="logic_expression" />}
                 inline={true}
                 fill={true}
               >
                 <InputGroup
-                  intent={
-                    errors.logic_expression &&
-                    touched.logic_expression &&
-                    Intent.DANGER
-                  }
+                  intent={errors.logic_expression && touched.logic_expression && Intent.DANGER}
                   fill={true}
                   {...getFieldProps('logic_expression')}
                 />
@@ -415,11 +348,7 @@ function ViewForm({
 
               <div class="dragable-columns__items">
                 <Menu>
-                  <ReactSortable
-                    list={availableColumns}
-                    setList={setAvailableColumns}
-                    group="shared-group-name"
-                  >
+                  <ReactSortable list={availableColumns} setList={setAvailableColumns} group="shared-group-name">
                     {availableColumns.map((field) => (
                       <MenuItem key={field.id} text={field.label} />
                     ))}
@@ -431,18 +360,10 @@ function ViewForm({
             <Col sm={1}>
               <div class="dragable-columns__arrows">
                 <div>
-                  <Icon
-                    icon="arrow-circle-left"
-                    iconSize={30}
-                    color="#cecece"
-                  />
+                  <Icon icon="arrow-circle-left" iconSize={30} color="#cecece" />
                 </div>
                 <div class="mt2">
-                  <Icon
-                    icon="arrow-circle-right"
-                    iconSize={30}
-                    color="#cecece"
-                  />
+                  <Icon icon="arrow-circle-right" iconSize={30} color="#cecece" />
                 </div>
               </div>
             </Col>
@@ -453,11 +374,7 @@ function ViewForm({
 
               <div class="dragable-columns__items">
                 <Menu>
-                  <ReactSortable
-                    list={draggedColumns}
-                    setList={setDraggedColumn}
-                    group="shared-group-name"
-                  >
+                  <ReactSortable list={draggedColumns} setList={setDraggedColumn} group="shared-group-name">
                     {draggedColumns.map((field) => (
                       <MenuItem key={field.id} text={field.label} />
                     ))}
@@ -473,20 +390,12 @@ function ViewForm({
             <T id={'submit'} />
           </Button>
 
-          <Button
-            intent={Intent.NONE}
-            className="ml1"
-            onClick={handleClickCancelBtn}
-          >
+          <Button intent={Intent.NONE} className="ml1" onClick={handleClickCancelBtn}>
             <T id={'cancel'} />
           </Button>
 
           <If condition={viewMeta && viewMeta.id}>
-            <Button
-              intent={Intent.DANGER}
-              onClick={onClickDeleteView}
-              className={'right mr2'}
-            >
+            <Button intent={Intent.DANGER} onClick={onClickDeleteView} className={'right mr2'}>
               <T id={'delete'} />
             </Button>
           </If>

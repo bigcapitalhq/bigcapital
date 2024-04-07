@@ -1,13 +1,13 @@
-import { isEmpty } from 'lodash';
-import * as R from 'ramda';
 import {
-  ILedger,
   ICustomer,
   ICustomerBalanceSummaryCustomer,
-  ICustomerBalanceSummaryQuery,
   ICustomerBalanceSummaryData,
+  ICustomerBalanceSummaryQuery,
+  ILedger,
   INumberFormatQuery,
 } from '@/interfaces';
+import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBalanceSummary';
 
 export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
@@ -24,12 +24,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param {ICustomerBalanceSummaryQuery} filter
    * @param {string} baseCurrency
    */
-  constructor(
-    ledger: ILedger,
-    customers: ICustomer[],
-    filter: ICustomerBalanceSummaryQuery,
-    baseCurrency: string
-  ) {
+  constructor(ledger: ILedger, customers: ICustomer[], filter: ICustomerBalanceSummaryQuery, baseCurrency: string) {
     super();
 
     this.ledger = ledger;
@@ -44,12 +39,8 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param   {ICustomer} customer
    * @returns {ICustomerBalanceSummaryCustomer}
    */
-  private customerMapper = (
-    customer: ICustomer
-  ): ICustomerBalanceSummaryCustomer => {
-    const closingBalance = this.ledger
-      .whereContactId(customer.id)
-      .getClosingBalance();
+  private customerMapper = (customer: ICustomer): ICustomerBalanceSummaryCustomer => {
+    const closingBalance = this.ledger.whereContactId(customer.id).getClosingBalance();
 
     return {
       id: customer.id,
@@ -63,9 +54,7 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param   {ICustomer[]} customers - Customers.
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
-  private customersMapper = (
-    customers: ICustomer[]
-  ): ICustomerBalanceSummaryCustomer[] => {
+  private customersMapper = (customers: ICustomer[]): ICustomerBalanceSummaryCustomer[] => {
     return customers.map(this.customerMapper);
   };
 
@@ -82,16 +71,11 @@ export class CustomerBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param   {ICustomer} customers
    * @returns {ICustomerBalanceSummaryCustomer[]}
    */
-  private getCustomersSection = (
-    customers: ICustomer[]
-  ): ICustomerBalanceSummaryCustomer[] => {
+  private getCustomersSection = (customers: ICustomer[]): ICustomerBalanceSummaryCustomer[] => {
     return R.compose(
       R.when(this.isCustomersPostFilter, this.contactsFilter),
-      R.when(
-        R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
-      ),
-      this.customersMapper
+      R.when(R.always(this.filter.percentageColumn), this.contactCamparsionPercentageOfColumn),
+      this.customersMapper,
     )(customers);
   };
 

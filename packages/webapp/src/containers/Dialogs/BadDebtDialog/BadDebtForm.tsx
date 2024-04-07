@@ -32,8 +32,7 @@ function BadDebtForm({
   // #withCurrentOrganization
   organization: { base_currency },
 }) {
-  const { invoice, dialogName, createBadDebtMutate, cancelBadDebtMutate } =
-    useBadDebtContext();
+  const { invoice, dialogName, createBadDebtMutate, cancelBadDebtMutate } = useBadDebtContext();
 
   // Initial form values
   const initialValues = {
@@ -80,7 +79,4 @@ function BadDebtForm({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withCurrentOrganization(),
-)(BadDebtForm);
+export default compose(withDialogActions, withCurrentOrganization())(BadDebtForm);

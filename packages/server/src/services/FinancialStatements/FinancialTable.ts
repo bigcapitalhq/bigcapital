@@ -1,9 +1,9 @@
-import * as R from 'ramda';
 import { ITableColumn } from '@/interfaces';
-import { isEmpty, clone, cloneDeep, omit } from 'lodash';
-import { increment } from 'utils';
 import { ITableRow } from '@/interfaces';
-import { IROW_TYPE, DISPLAY_COLUMNS_BY } from './BalanceSheet/constants';
+import { clone, cloneDeep, isEmpty, omit } from 'lodash';
+import * as R from 'ramda';
+import { increment } from 'utils';
+import { IROW_TYPE } from './BalanceSheet/constants';
 
 export const FinancialTable = (Base) =>
   class extends Base {
@@ -12,15 +12,11 @@ export const FinancialTable = (Base) =>
      * @param   {ITableColumn[]} columns
      * @returns {ITableColumn[]}
      */
-    public tableColumnsCellIndexing = (
-      columns: ITableColumn[]
-    ): ITableColumn[] => {
+    public tableColumnsCellIndexing = (columns: ITableColumn[]): ITableColumn[] => {
       const cellIndex = increment(-1);
 
       return this.mapNodesDeep(columns, (column) => {
-        return isEmpty(column.children)
-          ? R.assoc('cellIndex', cellIndex(), column)
-          : column;
+        return isEmpty(column.children) ? R.assoc('cellIndex', cellIndex(), column) : column;
       });
     };
 

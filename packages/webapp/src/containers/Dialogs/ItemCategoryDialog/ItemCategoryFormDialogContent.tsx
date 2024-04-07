@@ -14,10 +14,7 @@ export default function ItemCategoryFormDialogContent({
   dialogName,
 }) {
   return (
-    <ItemCategoryProvider
-      itemCategoryId={itemCategoryId}
-      dialogName={dialogName}
-    >
+    <ItemCategoryProvider itemCategoryId={itemCategoryId} dialogName={dialogName}>
       <ItemCategoryForm />
     </ItemCategoryProvider>
   );

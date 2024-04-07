@@ -3,13 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { ListSelect } from './ListSelect';
 
-export function DisplayNameList({
-  salutation,
-  firstName,
-  lastName,
-  company,
-  ...restProps
-}) {
+export function DisplayNameList({ salutation, firstName, lastName, company, ...restProps }) {
   const formats = [
     {
       format: '{1} {2} {3}',

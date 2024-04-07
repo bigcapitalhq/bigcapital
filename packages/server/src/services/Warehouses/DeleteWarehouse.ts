@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
+import { IWarehouseDeletePayload, IWarehouseDeletedPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { IWarehouseDeletedPayload, IWarehouseDeletePayload } from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CRUDWarehouse } from './CRUDWarehouse';
 import { WarehouseValidator } from './WarehouseValidator';
 import { ERRORS } from './contants';
@@ -30,10 +30,7 @@ export class DeleteWarehouse extends CRUDWarehouse {
    * @returns {Promise<void>}
    */
   public authorize = async (tenantId: number, warehouseId: number) => {
-    await this.validator.validateWarehouseNotOnlyWarehouse(
-      tenantId,
-      warehouseId
-    );
+    await this.validator.validateWarehouseNotOnlyWarehouse(tenantId, warehouseId);
   };
 
   /**
@@ -42,19 +39,13 @@ export class DeleteWarehouse extends CRUDWarehouse {
    * @param   {number} warehouseId
    * @returns {Promise<void>}
    */
-  public deleteWarehouse = async (
-    tenantId: number,
-    warehouseId: number
-  ): Promise<void> => {
+  public deleteWarehouse = async (tenantId: number, warehouseId: number): Promise<void> => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     // Retrieves the old warehouse or throw not found service error.
-    const oldWarehouse = await Warehouse.query()
-      .findById(warehouseId)
-      .throwIfNotFound()
-      .queryAndThrowIfHasRelations({
-        type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
-      });
+    const oldWarehouse = await Warehouse.query().findById(warehouseId).throwIfNotFound().queryAndThrowIfHasRelations({
+      type: ERRORS.WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS,
+    });
 
     // Validates the given warehouse before deleting.
     await this.authorize(tenantId, warehouseId);
@@ -69,18 +60,12 @@ export class DeleteWarehouse extends CRUDWarehouse {
       } as IWarehouseDeletePayload | IWarehouseDeletedPayload;
 
       // Triggers `onWarehouseCreate`.
-      await this.eventPublisher.emitAsync(
-        events.warehouse.onDelete,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.warehouse.onDelete, eventPayload);
       // Delets the given warehouse from the storage.
       await Warehouse.query().findById(warehouseId).delete();
 
       // Triggers `onWarehouseCreated`.
-      await this.eventPublisher.emitAsync(
-        events.warehouse.onDeleted,
-        eventPayload as IWarehouseDeletedPayload
-      );
+      await this.eventPublisher.emitAsync(events.warehouse.onDeleted, eventPayload as IWarehouseDeletedPayload);
     });
   };
 }

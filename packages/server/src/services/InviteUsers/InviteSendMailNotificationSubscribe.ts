@@ -12,19 +12,14 @@ export default class InviteSendMainNotificationSubscribe {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.inviteUser.sendInviteTenantSynced,
-      this.sendMailNotification
-    );
+    bus.subscribe(events.inviteUser.sendInviteTenantSynced, this.sendMailNotification);
   }
 
   /**
    * Sends mail notification.
    * @param {IUserInvitedEventPayload} payload
    */
-  private sendMailNotification = (
-    payload: IUserInviteTenantSyncedEventPayload
-  ) => {
+  private sendMailNotification = (payload: IUserInviteTenantSyncedEventPayload) => {
     const { invite, authorizedUser, tenantId } = payload;
 
     this.agenda.now('user-invite-mail', {

@@ -5,7 +5,7 @@ import clsx from 'classnames';
 import { Callout, Intent, Classes } from '@blueprintjs/core';
 
 import { CLASSES } from '@/constants/classes';
-import {T , MoneyFieldCell, FormatDateCell } from '@/components';
+import { T, MoneyFieldCell, FormatDateCell } from '@/components';
 
 export const transformErrors = (errors, { setErrors }) => {};
 

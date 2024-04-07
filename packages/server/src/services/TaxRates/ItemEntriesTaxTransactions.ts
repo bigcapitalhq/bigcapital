@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { keyBy, sumBy } from 'lodash';
+import { IItemEntry } from '@/interfaces';
 import { ItemEntry } from '@/models';
+import { keyBy, sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { IItem, IItemEntry, IItemEntryDTO } from '@/interfaces';
 
 @Service()
 export class ItemEntriesTaxTransactions {
@@ -29,44 +29,42 @@ export class ItemEntriesTaxTransactions {
    * @param {number} tenantId
    * @param {} model
    */
-  public assocTaxRateIdFromCodeToEntries =
-    (tenantId: number) => async (entries: any) => {
-      const entriesWithCode = entries.filter((entry) => entry.taxCode);
-      const taxCodes = entriesWithCode.map((entry) => entry.taxCode);
+  public assocTaxRateIdFromCodeToEntries = (tenantId: number) => async (entries: any) => {
+    const entriesWithCode = entries.filter((entry) => entry.taxCode);
+    const taxCodes = entriesWithCode.map((entry) => entry.taxCode);
 
-      const { TaxRate } = this.tenancy.models(tenantId);
-      const foundTaxCodes = await TaxRate.query().whereIn('code', taxCodes);
+    const { TaxRate } = this.tenancy.models(tenantId);
+    const foundTaxCodes = await TaxRate.query().whereIn('code', taxCodes);
 
-      const taxCodesMap = keyBy(foundTaxCodes, 'code');
+    const taxCodesMap = keyBy(foundTaxCodes, 'code');
 
-      return entries.map((entry) => {
-        if (entry.taxCode) {
-          entry.taxRateId = taxCodesMap[entry.taxCode]?.id;
-        }
-        return entry;
-      });
-    };
+    return entries.map((entry) => {
+      if (entry.taxCode) {
+        entry.taxRateId = taxCodesMap[entry.taxCode]?.id;
+      }
+      return entry;
+    });
+  };
 
   /**
    * Associates tax rate from tax id to entries.
    * @param {number} tenantId
    * @returns {Promise<IItemEntry[]>}
    */
-  public assocTaxRateFromTaxIdToEntries =
-    (tenantId: number) => async (entries: IItemEntry[]) => {
-      const entriesWithId = entries.filter((e) => e.taxRateId);
-      const taxRateIds = entriesWithId.map((e) => e.taxRateId);
+  public assocTaxRateFromTaxIdToEntries = (tenantId: number) => async (entries: IItemEntry[]) => {
+    const entriesWithId = entries.filter((e) => e.taxRateId);
+    const taxRateIds = entriesWithId.map((e) => e.taxRateId);
 
-      const { TaxRate } = this.tenancy.models(tenantId);
-      const foundTaxes = await TaxRate.query().whereIn('id', taxRateIds);
+    const { TaxRate } = this.tenancy.models(tenantId);
+    const foundTaxes = await TaxRate.query().whereIn('id', taxRateIds);
 
-      const taxRatesMap = keyBy(foundTaxes, 'id');
+    const taxRatesMap = keyBy(foundTaxes, 'id');
 
-      return entries.map((entry) => {
-        if (entry.taxRateId) {
-          entry.taxRate = taxRatesMap[entry.taxRateId]?.rate;
-        }
-        return entry;
-      });
-    };
+    return entries.map((entry) => {
+      if (entry.taxRateId) {
+        entry.taxRate = taxRatesMap[entry.taxRateId]?.rate;
+      }
+      return entry;
+    });
+  };
 }

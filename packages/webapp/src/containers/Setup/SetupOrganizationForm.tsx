@@ -4,12 +4,7 @@ import { FastField, Form, ErrorMessage } from 'formik';
 import { Button, Intent, FormGroup, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { TimezonePicker } from '@blueprintjs/timezone';
-import {
-  FFormGroup,
-  FInputGroup,
-  FSelect,
-  FormattedMessage as T,
-} from '@/components';
+import { FFormGroup, FInputGroup, FSelect, FormattedMessage as T } from '@/components';
 
 import { Col, Row } from '@/components';
 import { inputIntent } from '@/utils';
@@ -35,20 +30,12 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
         <T id={'organization_details'} />
       </h3>
       {/* ---------- Organization name ----------  */}
-      <FFormGroup
-        name={'name'}
-        label={<T id={'legal_organization_name'} />}
-        fastField={true}
-      >
+      <FFormGroup name={'name'} label={<T id={'legal_organization_name'} />} fastField={true}>
         <FInputGroup name={'name'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
-      <FFormGroup
-        name={'location'}
-        label={<T id={'business_location'} />}
-        fastField={true}
-      >
+      <FFormGroup name={'location'} label={<T id={'business_location'} />} fastField={true}>
         <FSelect
           name={'location'}
           items={countries}
@@ -63,11 +50,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       <Row>
         <Col xs={6}>
           {/* ----------  Base currency ----------  */}
-          <FFormGroup
-            name={'baseCurrency'}
-            label={<T id={'base_currency'} />}
-            fastField={true}
-          >
+          <FFormGroup name={'baseCurrency'} label={<T id={'base_currency'} />} fastField={true}>
             <FSelect
               name={'baseCurrency'}
               items={currencies}
@@ -82,11 +65,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
 
         {/* ---------- Language ---------- */}
         <Col xs={6}>
-          <FFormGroup
-            name={'language'}
-            label={<T id={'language'} />}
-            fastField={true}
-          >
+          <FFormGroup name={'language'} label={<T id={'language'} />} fastField={true}>
             <FSelect
               name={'language'}
               items={Languages}
@@ -101,11 +80,7 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
       </Row>
 
       {/* --------- Fiscal Year ----------- */}
-      <FFormGroup
-        name={'fiscalYear'}
-        label={<T id={'fiscal_year'} />}
-        fastField={true}
-      >
+      <FFormGroup name={'fiscalYear'} label={<T id={'fiscal_year'} />} fastField={true}>
         <FSelect
           name={'fiscalYear'}
           items={FiscalYear}
@@ -119,18 +94,10 @@ export default function SetupOrganizationForm({ isSubmitting, values }) {
 
       {/* ----------  Time zone ----------  */}
       <FastField name={'timezone'}>
-        {({
-          form: { setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'time_zone'} />}
-            className={classNames(
-              'form-group--time-zone',
-              'form-group--select-list',
-              Classes.FILL,
-            )}
+            className={classNames('form-group--time-zone', 'form-group--select-list', Classes.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'timezone'} />}
           >

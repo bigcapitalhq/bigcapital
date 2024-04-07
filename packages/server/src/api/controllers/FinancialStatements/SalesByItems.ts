@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain, ValidationSchema } from 'express-validator';
-import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { SalesByItemsApplication } from '@/services/FinancialStatements/SalesByItems/SalesByItemsApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class SalesByItemsReportController extends BaseFinancialReportController {
@@ -24,7 +24,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       CheckPolicies(ReportsAction.READ_SALES_BY_ITEMS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.salesByItems.bind(this))
+      asyncMiddleware(this.salesByItems.bind(this)),
     );
     return router;
   }
@@ -39,19 +39,29 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       query('to_date').optional().isISO8601(),
 
       // Specific items.
-      query('items_ids').optional().isArray(),
+      query('items_ids')
+        .optional()
+        .isArray(),
       query('items_ids.*').optional().isInt().toInt(),
 
       // Number format.
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
+      query('number_format.no_cents')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
 
       // Filters items.
-      query('none_transactions').default(true).isBoolean().toBoolean(),
+      query('none_transactions')
+        .default(true)
+        .isBoolean()
+        .toBoolean(),
       query('only_active').default(false).isBoolean().toBoolean(),
 
       // Order by.
-      query('orderBy').optional().isIn(['created_at', 'name', 'code']),
+      query('orderBy')
+        .optional()
+        .isIn(['created_at', 'name', 'code']),
       query('order').optional().isIn(['desc', 'asc']),
     ];
   }
@@ -91,10 +101,7 @@ export default class SalesByItemsReportController extends BaseFinancialReportCon
       const buffer = this.salesByItemsApp.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       return res.send(buffer);
       // Retrieves the json format.
     } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

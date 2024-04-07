@@ -17,7 +17,6 @@ function UnrealizedGainOrLossProvider({ filter, ...props }) {
   );
 }
 
-const useUnrealizedGainOrLossContext = () =>
-  React.useContext(UnrealizedGainOrLossContext);
+const useUnrealizedGainOrLossContext = () => React.useContext(UnrealizedGainOrLossContext);
 
 export { UnrealizedGainOrLossProvider, useUnrealizedGainOrLossContext };

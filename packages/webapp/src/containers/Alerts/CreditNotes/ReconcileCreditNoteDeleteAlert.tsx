@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -31,8 +27,7 @@ function ReconcileCreditNoteDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { isLoading, mutateAsync: deleteReconcileCreditMutate } =
-    useDeleteReconcileCredit();
+  const { isLoading, mutateAsync: deleteReconcileCreditMutate } = useDeleteReconcileCredit();
 
   // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
@@ -73,18 +68,10 @@ function ReconcileCreditNoteDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={
-            'reconcile_credit_note.once_you_delete_this_reconcile_credit_note'
-          }
-        />
+        <FormattedHTMLMessage id={'reconcile_credit_note.once_you_delete_this_reconcile_credit_note'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(ReconcileCreditNoteDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(ReconcileCreditNoteDeleteAlert);

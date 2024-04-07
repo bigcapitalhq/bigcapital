@@ -1,14 +1,11 @@
-import * as R from 'ramda';
 import { IDateRange, ITableColumn, ITableColumnAccessor } from '@/interfaces';
-import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
-import { FinancialTablePreviousYear } from '../FinancialTablePreviousYear';
+import * as R from 'ramda';
 import { FinancialDateRanges } from '../FinancialDateRanges';
+import { FinancialTablePreviousYear } from '../FinancialTablePreviousYear';
+import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 
 export const ProfitLossTablePreviousYear = (Base) =>
-  class extends R.compose(
-    FinancialTablePreviousYear,
-    FinancialDateRanges
-  )(Base) {
+  class extends R.compose(FinancialTablePreviousYear, FinancialDateRanges)(Base) {
     query: ProfitLossSheetQuery;
 
     // ------------------------------------
@@ -18,20 +15,12 @@ export const ProfitLossTablePreviousYear = (Base) =>
      * Retrieves pervious year comparison columns.
      * @returns {ITableColumn[]}
      */
-    protected getPreviousYearColumns = (
-      dateRange?: IDateRange
-    ): ITableColumn[] => {
+    protected getPreviousYearColumns = (dateRange?: IDateRange): ITableColumn[] => {
       return R.pipe(
         // Previous year columns.
         R.append(this.getPreviousYearTotalColumn(dateRange)),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeColumn())
-        ),
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageColumn())
-        )
+        R.when(this.query.isPreviousYearChangeActive, R.append(this.getPreviousYearChangeColumn())),
+        R.when(this.query.isPreviousYearPercentageActive, R.append(this.getPreviousYearPercentageColumn())),
       )([]);
     };
 
@@ -40,13 +29,8 @@ export const ProfitLossTablePreviousYear = (Base) =>
      * @param   {IDateRange} dateRange
      * @returns {ITableColumn[]}
      */
-    private previousYearDatePeriodColumnCompose = (
-      dateRange: IDateRange
-    ): ITableColumn[] => {
-      const PYDateRange = this.getPreviousYearDateRange(
-        dateRange.fromDate,
-        dateRange.toDate
-      );
+    private previousYearDatePeriodColumnCompose = (dateRange: IDateRange): ITableColumn[] => {
+      const PYDateRange = this.getPreviousYearDateRange(dateRange.fromDate, dateRange.toDate);
       return this.getPreviousYearColumns(PYDateRange);
     };
 
@@ -55,9 +39,7 @@ export const ProfitLossTablePreviousYear = (Base) =>
      * @param   {IDateRange} dateRange
      * @returns {ITableColumn[]}
      */
-    protected getPreviousYearDatePeriodColumnPlugin = (
-      dateRange: IDateRange
-    ): ITableColumn[] => {
+    protected getPreviousYearDatePeriodColumnPlugin = (dateRange: IDateRange): ITableColumn[] => {
       return this.previousYearDatePeriodColumnCompose(dateRange);
     };
 
@@ -72,14 +54,8 @@ export const ProfitLossTablePreviousYear = (Base) =>
       return R.pipe(
         // Previous year columns.
         R.append(this.getPreviousYearTotalAccessor()),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeAccessor())
-        ),
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageAccessor())
-        )
+        R.when(this.query.isPreviousYearChangeActive, R.append(this.getPreviousYearChangeAccessor())),
+        R.when(this.query.isPreviousYearPercentageActive, R.append(this.getPreviousYearPercentageAccessor())),
       )([]);
     };
 
@@ -88,20 +64,12 @@ export const ProfitLossTablePreviousYear = (Base) =>
      * @param   {number} index
      * @returns {ITableColumn[]}
      */
-    protected previousYearHorizontalColumnAccessors = (
-      index: number
-    ): ITableColumnAccessor[] => {
+    protected previousYearHorizontalColumnAccessors = (index: number): ITableColumnAccessor[] => {
       return R.pipe(
         // Previous year columns.
         R.append(this.getPreviousYearTotalHorizAccessor(index)),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          R.append(this.getPreviousYearChangeHorizAccessor(index))
-        ),
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          R.append(this.getPreviousYearPercentageHorizAccessor(index))
-        )
+        R.when(this.query.isPreviousYearChangeActive, R.append(this.getPreviousYearChangeHorizAccessor(index))),
+        R.when(this.query.isPreviousYearPercentageActive, R.append(this.getPreviousYearPercentageHorizAccessor(index))),
       )([]);
     };
   };

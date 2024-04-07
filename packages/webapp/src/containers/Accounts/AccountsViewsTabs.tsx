@@ -19,7 +19,7 @@ function AccountsViewsTabs({
   setAccountsTableState,
 
   // #withAccounts
-  accountsCurrentView
+  accountsCurrentView,
 }) {
   // Accounts chart context.
   const { resourceViews } = useAccountsChartContext();
@@ -55,6 +55,6 @@ function AccountsViewsTabs({
 export default compose(
   withAccountsTableActions,
   withAccounts(({ accountsTableState }) => ({
-    accountsCurrentView: accountsTableState.viewSlug
-  }))
+    accountsCurrentView: accountsTableState.viewSlug,
+  })),
 )(AccountsViewsTabs);

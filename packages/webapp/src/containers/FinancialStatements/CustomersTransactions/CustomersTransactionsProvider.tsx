@@ -37,7 +37,6 @@ function CustomersTransactionsProvider({ filter, ...props }) {
     </FinancialReportPage>
   );
 }
-const useCustomersTransactionsContext = () =>
-  useContext(CustomersTransactionsContext);
+const useCustomersTransactionsContext = () => useContext(CustomersTransactionsContext);
 
 export { CustomersTransactionsProvider, useCustomersTransactionsContext };

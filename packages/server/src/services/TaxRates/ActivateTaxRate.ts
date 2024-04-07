@@ -1,14 +1,11 @@
+import { ITaxRateActivatedPayload, ITaxRateActivatingPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import {
-  ITaxRateActivatedPayload,
-  ITaxRateActivatingPayload,
-} from '@/interfaces';
-import UnitOfWork from '../UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '../Tenancy/TenancyService';
+import UnitOfWork from '../UnitOfWork';
 import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
-import events from '@/subscribers/events';
 
 @Service()
 export class ActivateTaxRateService {
@@ -50,9 +47,7 @@ export class ActivateTaxRateService {
         trx,
       } as ITaxRateActivatingPayload);
 
-      const taxRate = await TaxRate.query(trx)
-        .findById(taxRateId)
-        .patch({ active: 1 });
+      const taxRate = await TaxRate.query(trx).findById(taxRateId).patch({ active: 1 });
 
       // Triggers `onTaxRateCreated` event.
       await this.eventPublisher.emitAsync(events.taxRates.onActivated, {

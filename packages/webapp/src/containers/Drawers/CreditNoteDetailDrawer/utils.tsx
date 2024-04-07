@@ -1,24 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-  Tag,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Tag, Intent } from '@blueprintjs/core';
 import { getColumnWidth } from '@/utils';
-import {
-  Icon,
-  FormattedMessage as T,
-  TextOverviewTooltipCell,
-  FormatNumberCell,
-  Choose,
-} from '@/components';
+import { Icon, FormattedMessage as T, TextOverviewTooltipCell, FormatNumberCell, Choose } from '@/components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
 export const useCreditNoteReadOnlyEntriesColumns = () => {
@@ -100,10 +85,7 @@ export function CreditNoteMenuItem({ payload: { onReconcile } }) {
       }}
       content={
         <Menu>
-          <MenuItem
-            onClick={onReconcile}
-            text={<T id={'credit_note.action.reconcile_with_invoices'} />}
-          />
+          <MenuItem onClick={onReconcile} text={<T id={'credit_note.action.reconcile_with_invoices'} />} />
         </Menu>
       }
     >

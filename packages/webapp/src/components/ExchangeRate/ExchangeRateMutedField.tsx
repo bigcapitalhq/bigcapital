@@ -2,14 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  FormGroup,
-  Position,
-  Classes,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, FormGroup, Position, Classes } from '@blueprintjs/core';
 import { ExchangeRateInputGroup, Icon } from '@/components';
 
 export function ExchangeRateMutedField({
@@ -48,11 +41,7 @@ export function ExchangeRateMutedField({
       >
         <ExchangeRateButton>
           1 {fromCurrency} = {exchangeRate} {toCurrency}
-          <Button
-            className={Classes.MINIMAL}
-            rightIcon={<Icon icon="pen-18" iconSize={14} />}
-            small={true}
-          />
+          <Button className={Classes.MINIMAL} rightIcon={<Icon icon="pen-18" iconSize={14} />} small={true} />
         </ExchangeRateButton>
       </Popover>
     </ExchangeRateFormGroup>

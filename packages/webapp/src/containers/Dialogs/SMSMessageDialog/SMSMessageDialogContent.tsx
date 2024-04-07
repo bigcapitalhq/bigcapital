@@ -14,10 +14,7 @@ export default function SMSMessageDialogContent({
   notificationkey,
 }) {
   return (
-    <SMSMessageDialogProvider
-      dialogName={dialogName}
-      notificationkey={notificationkey}
-    >
+    <SMSMessageDialogProvider dialogName={dialogName} notificationkey={notificationkey}>
       <SMSMessageForm />
     </SMSMessageDialogProvider>
   );

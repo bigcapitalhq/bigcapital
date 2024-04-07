@@ -16,11 +16,7 @@ export function SalesTaxLiabilitySummaryBody() {
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <SalesTaxLiabilitySummaryTable />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <SalesTaxLiabilitySummaryTable />}
     </FinancialReportBody>
   );
 }

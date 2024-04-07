@@ -42,6 +42,6 @@ export interface ICustomerBalanceSummaryStatement {
 export interface ICustomerBalanceSummaryService {
   customerBalanceSummary(
     tenantId: number,
-    query: IContactBalanceSummaryQuery
+    query: IContactBalanceSummaryQuery,
   ): Promise<ICustomerBalanceSummaryStatement>;
 }

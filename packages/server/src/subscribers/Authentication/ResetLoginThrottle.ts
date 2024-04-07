@@ -1,6 +1,6 @@
-import { Container, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IAuthSignedInEventPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Container, Service } from 'typedi';
 
 @Service()
 export default class ResetLoginThrottleSubscriber {
@@ -16,9 +16,7 @@ export default class ResetLoginThrottleSubscriber {
    * Resets the login throttle once the login success.
    * @param {IAuthSignedInEventPayload} payload -
    */
-  private async resetLoginThrottleOnceSuccessLogin(
-    payload: IAuthSignedInEventPayload
-  ) {
+  private async resetLoginThrottleOnceSuccessLogin(payload: IAuthSignedInEventPayload) {
     const { email, user } = payload;
     const loginThrottler = Container.get('rateLimiter.login');
 

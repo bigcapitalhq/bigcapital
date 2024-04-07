@@ -62,22 +62,11 @@ function VendorsBalanceSummaryHeader({
   };
 
   return (
-    <VendorBalanceDrawerHeader
-      isOpen={VendorsSummaryFilterDrawer}
-      drawerProps={{ onClose: handleCancelClick }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <VendorBalanceDrawerHeader isOpen={VendorsSummaryFilterDrawer} drawerProps={{ onClose: handleCancelClick }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id={'general'}
-              title={<T id={'general'} />}
-              panel={<VendorsBalanceSummaryHeaderGeneral />}
-            />
+            <Tab id={'general'} title={<T id={'general'} />} panel={<VendorsBalanceSummaryHeaderGeneral />} />
           </Tabs>
 
           <div className={'financial-header-drawer__footer'}>

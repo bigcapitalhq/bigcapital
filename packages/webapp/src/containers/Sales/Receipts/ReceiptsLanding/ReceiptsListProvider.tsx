@@ -12,8 +12,7 @@ const ReceiptsListContext = createContext();
 // Receipts list provider.
 function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   // Fetch receipts resource views and fields.
-  const { data: receiptsViews, isLoading: isViewsLoading } =
-    useResourceViews('sale_receipt');
+  const { data: receiptsViews, isLoading: isViewsLoading } = useResourceViews('sale_receipt');
 
   // Fetches the sale receipts resource fields.
   const {
@@ -29,8 +28,7 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   } = useReceipts(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(receipts) && !tableStateChanged && !isReceiptsLoading;
+  const isEmptyStatus = isEmpty(receipts) && !tableStateChanged && !isReceiptsLoading;
 
   const provider = {
     receipts,
@@ -50,10 +48,7 @@ function ReceiptsListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'sales_receipts'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'sales_receipts'}>
       <ReceiptsListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

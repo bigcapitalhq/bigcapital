@@ -10,7 +10,6 @@ import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-
 /**
  * General ledger body JSX.
  */
@@ -22,11 +21,7 @@ function GeneralLedgerBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <GeneralLedgerTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <GeneralLedgerTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

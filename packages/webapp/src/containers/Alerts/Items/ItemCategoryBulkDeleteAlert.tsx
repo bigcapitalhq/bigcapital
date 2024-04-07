@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
-import {  FormattedMessage as T, FormattedHTMLMessage } from '@/components';
+import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
 import { AppToaster } from '@/components';
@@ -28,7 +28,6 @@ function ItemCategoryBulkDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
 
   // handle cancel bulk delete alert.
@@ -55,9 +54,7 @@ function ItemCategoryBulkDeleteAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={
-        <T id={'delete_count'} values={{ count: size(itemCategoriesIds) }} />
-      }
+      confirmButtonText={<T id={'delete_count'} values={{ count: size(itemCategoriesIds) }} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -66,11 +63,7 @@ function ItemCategoryBulkDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={
-            'once_delete_these_item_categories_you_will_not_able_restore_them'
-          }
-        />
+        <FormattedHTMLMessage id={'once_delete_these_item_categories_you_will_not_able_restore_them'} />
       </p>
     </Alert>
   );

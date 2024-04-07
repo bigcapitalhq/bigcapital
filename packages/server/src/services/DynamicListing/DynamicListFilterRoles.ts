@@ -1,11 +1,11 @@
-import { Service } from 'typedi';
-import * as R from 'ramda';
-import validator from 'is-my-json-valid';
-import { IFilterRole, IModel } from '@/interfaces';
-import DynamicListAbstract from './DynamicListAbstract';
-import DynamicFilterAdvancedFilter from '@/lib/DynamicFilter/DynamicFilterAdvancedFilter';
-import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
+import { IFilterRole, IModel } from '@/interfaces';
+import DynamicFilterAdvancedFilter from '@/lib/DynamicFilter/DynamicFilterAdvancedFilter';
+import validator from 'is-my-json-valid';
+import * as R from 'ramda';
+import { Service } from 'typedi';
+import DynamicListAbstract from './DynamicListAbstract';
+import { ERRORS } from './constants';
 
 @Service()
 export default class DynamicListFilterRoles extends DynamicListAbstract {
@@ -37,10 +37,7 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
    * @param {IFilterRole} filterRoles
    * @returns {string[]}
    */
-  private getFilterRolesFieldsNotExist = (
-    model,
-    filterRoles: IFilterRole[]
-  ): string[] => {
+  private getFilterRolesFieldsNotExist = (model, filterRoles: IFilterRole[]): string[] => {
     return filterRoles
       .filter((filterRole) => !model.getField(filterRole.fieldKey))
       .map((filterRole) => filterRole.fieldKey);
@@ -52,14 +49,8 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
    * @param  {IFilterRole[]} filterRoles
    * @throws {ServiceError}
    */
-  private validateFilterRolesFieldsExistance = (
-    model: IModel,
-    filterRoles: IFilterRole[]
-  ) => {
-    const invalidFieldsKeys = this.getFilterRolesFieldsNotExist(
-      model,
-      filterRoles
-    );
+  private validateFilterRolesFieldsExistance = (model: IModel, filterRoles: IFilterRole[]) => {
+    const invalidFieldsKeys = this.getFilterRolesFieldsNotExist(model, filterRoles);
     if (invalidFieldsKeys.length > 0) {
       throw new ServiceError(ERRORS.FILTER_ROLES_FIELDS_NOT_FOUND);
     }
@@ -70,9 +61,7 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
    * @param {IFilterRole[]} filterRoles
    * @returns {IFilterRole[]}
    */
-  private incrementFilterRolesIndex = (
-    filterRoles: IFilterRole[]
-  ): IFilterRole[] => {
+  private incrementFilterRolesIndex = (filterRoles: IFilterRole[]): IFilterRole[] => {
     return filterRoles.map((filterRole, index) => ({
       ...filterRole,
       index: index + 1,
@@ -85,13 +74,8 @@ export default class DynamicListFilterRoles extends DynamicListAbstract {
    * @param {IFilterRole[]} filterRoles
    * @returns {DynamicFilterFilterRoles}
    */
-  public dynamicList = (
-    model: IModel,
-    filterRoles: IFilterRole[]
-  ): DynamicFilterAdvancedFilter => {
-    const filterRolesParsed = R.compose(this.incrementFilterRolesIndex)(
-      filterRoles
-    );
+  public dynamicList = (model: IModel, filterRoles: IFilterRole[]): DynamicFilterAdvancedFilter => {
+    const filterRolesParsed = R.compose(this.incrementFilterRolesIndex)(filterRoles);
     // Validate filter roles json schema.
     this.validateFilterRolesSchema(filterRolesParsed);
 

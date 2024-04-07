@@ -6,13 +6,7 @@ import { LoadingIndicator } from '../Indicator';
 /**
  * Drawer inside.
  */
-export function DrawerInsider({
-  loading,
-  children,
-  name,
-  mount = false,
-  className,
-}) {
+export function DrawerInsider({ loading, children, name, mount = false, className }) {
   return (
     <div
       className={classnames(

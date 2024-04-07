@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { usePaymentReceiveDetailContext } from './PaymentReceiveDetailProvider';
 
@@ -15,16 +9,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { PaymentReceiveMoreMenuItems } from './utils';
-import {
-  Can,
-  Icon,
-  FormattedMessage as T,
-  DrawerActionsBar,
-} from '@/components';
-import {
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { Can, Icon, FormattedMessage as T, DrawerActionsBar } from '@/components';
+import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
@@ -109,10 +95,7 @@ function PaymentReceiveActionsBar({
             onClick={handleDeletePaymentReceive}
           />
         </Can>
-        <Can
-          I={PaymentReceiveAction.NotifyBySms}
-          a={AbilitySubject.PaymentReceive}
-        >
+        <Can I={PaymentReceiveAction.NotifyBySms} a={AbilitySubject.PaymentReceive}>
           <NavbarDivider />
           <PaymentReceiveMoreMenuItems
             payload={{
@@ -125,8 +108,4 @@ function PaymentReceiveActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-  withAlertsActions,
-)(PaymentReceiveActionsBar);
+export default compose(withDialogActions, withDrawerActions, withAlertsActions)(PaymentReceiveActionsBar);

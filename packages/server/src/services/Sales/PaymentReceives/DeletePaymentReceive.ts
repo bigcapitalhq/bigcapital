@@ -1,14 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import {
-  IPaymentReceiveDeletedPayload,
-  IPaymentReceiveDeletingPayload,
-  ISystemUser,
-} from '@/interfaces';
-import UnitOfWork from '@/services/UnitOfWork';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
+import { IPaymentReceiveDeletedPayload, IPaymentReceiveDeletingPayload, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class DeletePaymentReceive {
@@ -35,13 +31,8 @@ export class DeletePaymentReceive {
    * @param {Integer} paymentReceiveId - Payment receive id.
    * @param {IPaymentReceive} paymentReceive - Payment receive object.
    */
-  public async deletePaymentReceive(
-    tenantId: number,
-    paymentReceiveId: number,
-    authorizedUser: ISystemUser
-  ) {
-    const { PaymentReceive, PaymentReceiveEntry } =
-      this.tenancy.models(tenantId);
+  public async deletePaymentReceive(tenantId: number, paymentReceiveId: number, authorizedUser: ISystemUser) {
+    const { PaymentReceive, PaymentReceiveEntry } = this.tenancy.models(tenantId);
 
     // Retreive payment receive or throw not found service error.
     const oldPaymentReceive = await PaymentReceive.query()
@@ -59,9 +50,7 @@ export class DeletePaymentReceive {
       } as IPaymentReceiveDeletingPayload);
 
       // Deletes the payment receive associated entries.
-      await PaymentReceiveEntry.query(trx)
-        .where('payment_receive_id', paymentReceiveId)
-        .delete();
+      await PaymentReceiveEntry.query(trx).where('payment_receive_id', paymentReceiveId).delete();
 
       // Deletes the payment receive transaction.
       await PaymentReceive.query(trx).findById(paymentReceiveId).delete();

@@ -57,12 +57,7 @@ interface ContentTabsItemProps {
   active?: boolean;
 }
 
-const ContentTabsItem = ({
-  title,
-  description,
-  active,
-  onClick,
-}: ContentTabsItemProps) => {
+const ContentTabsItem = ({ title, description, active, onClick }: ContentTabsItemProps) => {
   return (
     <ContentTabItemRoot active={active} onClick={onClick}>
       <ContentTabTitle>{title}</ContentTabTitle>
@@ -79,13 +74,7 @@ interface ContentTabsProps {
   className?: string;
 }
 
-export function ContentTabs({
-  initialValue,
-  value,
-  onChange,
-  children,
-  className,
-}: ContentTabsProps) {
+export function ContentTabs({ initialValue, value, onChange, children, className }: ContentTabsProps) {
   const [localValue, handleItemChange] = useUncontrolled<string>({
     initialValue,
     value,

@@ -8,9 +8,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const ARAgingSummaryPdfDialogContent = lazy(
-  () => import('./ARAgingSummaryPdfDialogContent'),
-);
+const ARAgingSummaryPdfDialogContent = lazy(() => import('./ARAgingSummaryPdfDialogContent'));
 
 /**
  * Balance sheet pdf preview dialog.
@@ -34,6 +32,4 @@ function ARAgingSummaryPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const ARAgingSummaryPdfDialog = compose(withDialogRedux())(
-  ARAgingSummaryPdfDialogRoot,
-);
+export const ARAgingSummaryPdfDialog = compose(withDialogRedux())(ARAgingSummaryPdfDialogRoot);

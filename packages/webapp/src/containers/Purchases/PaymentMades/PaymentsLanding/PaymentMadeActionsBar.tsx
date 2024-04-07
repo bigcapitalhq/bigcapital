@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Intent,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Intent, Alignment } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
 
@@ -86,11 +79,7 @@ function PaymentMadeActionsBar({
   return (
     <DashboardActionsBar>
       <NavbarGroup>
-        <DashboardActionViewsList
-          resourceName={'bill_payments'}
-          views={paymentMadesViews}
-          onChange={handleTabChange}
-        />
+        <DashboardActionViewsList resourceName={'bill_payments'} views={paymentMadesViews} onChange={handleTabChange} />
         <NavbarDivider />
         <Can I={PaymentMadeAction.Create} a={AbilitySubject.PaymentMade}>
           <Button
@@ -110,9 +99,7 @@ function PaymentMadeActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={paymentMadesFilterConditions.length}
-          />
+          <DashboardFilterButton conditionsCount={paymentMadesFilterConditions.length} />
         </AdvancedFilterPopover>
 
         <If condition={false}>
@@ -142,10 +129,7 @@ function PaymentMadeActionsBar({
         />
 
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={paymentMadesTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={paymentMadesTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

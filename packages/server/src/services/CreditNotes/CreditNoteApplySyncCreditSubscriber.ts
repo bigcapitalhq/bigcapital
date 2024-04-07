@@ -1,10 +1,7 @@
-import { Service, Inject } from 'typedi';
-import { sumBy } from 'lodash';
+import { IApplyCreditToInvoicesCreatedPayload, IApplyCreditToInvoicesDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  IApplyCreditToInvoicesCreatedPayload,
-  IApplyCreditToInvoicesDeletedPayload,
-} from '@/interfaces';
+import { sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import CreditNoteApplySyncCredit from './CreditNoteApplySyncCredit';
 
 @Service()
@@ -17,14 +14,8 @@ export default class CreditNoteApplySyncCreditSubscriber {
    * @param bus
    */
   attach(bus) {
-    bus.subscribe(
-      events.creditNote.onApplyToInvoicesCreated,
-      this.incrementCreditedAmountOnceApplyToInvoicesCreated
-    );
-    bus.subscribe(
-      events.creditNote.onApplyToInvoicesDeleted,
-      this.decrementCreditedAmountOnceApplyToInvoicesDeleted
-    );
+    bus.subscribe(events.creditNote.onApplyToInvoicesCreated, this.incrementCreditedAmountOnceApplyToInvoicesCreated);
+    bus.subscribe(events.creditNote.onApplyToInvoicesDeleted, this.decrementCreditedAmountOnceApplyToInvoicesDeleted);
   }
 
   /**
@@ -43,7 +34,7 @@ export default class CreditNoteApplySyncCreditSubscriber {
       tenantId,
       creditNote.id,
       totalCredited,
-      trx
+      trx,
     );
   };
 
@@ -61,7 +52,7 @@ export default class CreditNoteApplySyncCreditSubscriber {
       tenantId,
       creditNote.id,
       creditNoteAppliedToInvoice.amount,
-      trx
+      trx,
     );
   };
 }

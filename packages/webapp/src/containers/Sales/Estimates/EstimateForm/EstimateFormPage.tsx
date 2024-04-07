@@ -13,7 +13,7 @@ import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvi
  */
 export default function EstimateFormPage() {
   const { id } = useParams();
-  const idInteger = parseInt(id, 10);
+  const idInteger = Number.parseInt(id, 10);
 
   return (
     <EstimateFormProvider estimateId={idInteger}>

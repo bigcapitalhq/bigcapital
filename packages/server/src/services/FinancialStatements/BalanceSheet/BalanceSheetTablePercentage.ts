@@ -1,5 +1,5 @@
-import * as R from 'ramda';
 import { ITableColumn } from '@/interfaces';
+import * as R from 'ramda';
 
 export const BalanceSheetTablePercentage = (Base) =>
   class extends Base {
@@ -17,15 +17,15 @@ export const BalanceSheetTablePercentage = (Base) =>
           R.append({
             key: 'percentage_of_column',
             label: this.i18n.__('balance_sheet.percentage_of_column'),
-          })
+          }),
         ),
         R.when(
           this.query.isRowsPercentageActive,
           R.append({
             key: 'percentage_of_row',
             label: this.i18n.__('balance_sheet.percentage_of_row'),
-          })
-        )
+          }),
+        ),
       )([]);
     };
 
@@ -43,15 +43,15 @@ export const BalanceSheetTablePercentage = (Base) =>
           R.append({
             key: 'percentage_of_column',
             accessor: 'percentageColumn.formattedAmount',
-          })
+          }),
         ),
         R.when(
           this.query.isRowsPercentageActive,
           R.append({
             key: 'percentage_of_row',
             accessor: 'percentageRow.formattedAmount',
-          })
-        )
+          }),
+        ),
       )([]);
     };
 
@@ -60,24 +60,22 @@ export const BalanceSheetTablePercentage = (Base) =>
      * @param   {number} index
      * @returns {ITableColumn[]}
      */
-    protected percetangeDatePeriodColumnsAccessor = (
-      index: number
-    ): ITableColumn[] => {
+    protected percetangeDatePeriodColumnsAccessor = (index: number): ITableColumn[] => {
       return R.pipe(
         R.when(
           this.query.isColumnsPercentageActive,
           R.append({
             key: `percentage_of_column-${index}`,
             accessor: `horizontalTotals[${index}].percentageColumn.formattedAmount`,
-          })
+          }),
         ),
         R.when(
           this.query.isRowsPercentageActive,
           R.append({
             key: `percentage_of_row-${index}`,
             accessor: `horizontalTotals[${index}].percentageRow.formattedAmount`,
-          })
-        )
+          }),
+        ),
       )([]);
     };
   };

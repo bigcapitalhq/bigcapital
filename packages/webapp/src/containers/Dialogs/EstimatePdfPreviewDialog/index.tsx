@@ -10,18 +10,12 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const PdfPreviewDialogContent = React.lazy(() =>
-  import('./EstimatePdfPreviewDialogContent'),
-);
+const PdfPreviewDialogContent = React.lazy(() => import('./EstimatePdfPreviewDialogContent'));
 
 /**
  * Estimate PDF preview dialog.
  */
-function EstimatePdfPreviewDialog({
-  dialogName,
-  payload = { estimateId: null },
-  isOpen,
-}) {
+function EstimatePdfPreviewDialog({ dialogName, payload = { estimateId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -33,10 +27,7 @@ function EstimatePdfPreviewDialog({
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <PdfPreviewDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <PdfPreviewDialogContent dialogName={dialogName} subscriptionForm={payload} />
       </DialogSuspense>
     </Dialog>
   );

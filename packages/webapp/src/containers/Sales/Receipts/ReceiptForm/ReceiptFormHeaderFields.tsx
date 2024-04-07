@@ -20,18 +20,10 @@ import {
   FeatureCan,
 } from '@/components';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, handleDateChange, inputIntent } from '@/utils';
 import { useReceiptFormContext } from './ReceiptFormProvider';
 import { accountsFieldShouldUpdate, customersFieldShouldUpdate } from './utils';
-import {
-  ReceiptExchangeRateInputField,
-  ReceiptProjectSelectButton,
-} from './components';
+import { ReceiptExchangeRateInputField, ReceiptProjectSelectButton } from './components';
 import { ReceiptFormReceiptNumberField } from './ReceiptFormReceiptNumberField';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
@@ -63,11 +55,7 @@ export default function ReceiptFormHeader() {
           items={accounts}
           name={'deposit_account_id'}
           placeholder={<T id={'select_deposit_account'} />}
-          filterByTypes={[
-            ACCOUNT_TYPE.CASH,
-            ACCOUNT_TYPE.BANK,
-            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-          ]}
+          filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
           allowCreate={true}
           fill={true}
           fastField={true}

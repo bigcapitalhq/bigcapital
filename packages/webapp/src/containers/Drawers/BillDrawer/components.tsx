@@ -6,7 +6,7 @@ import clsx from 'classnames';
 import { Intent, MenuItem, Menu } from '@blueprintjs/core';
 import { safeCallback } from '@/utils';
 import { CLASSES } from '@/constants/classes';
-import {  Icon } from '@/components';
+import { Icon } from '@/components';
 
 /**
  * Actions menu.
@@ -27,10 +27,7 @@ export function ActionsMenu({ row: { original }, payload: { onDelete } }) {
 /**
  * From transaction table cell.
  */
-export function FromTransactionCell({
-  row: { original },
-  payload: { onFromTranscationClick },
-}) {
+export function FromTransactionCell({ row: { original }, payload: { onFromTranscationClick } }) {
   // Handle the link click
   const handleAnchorClick = () => {
     onFromTranscationClick && onFromTranscationClick(original);

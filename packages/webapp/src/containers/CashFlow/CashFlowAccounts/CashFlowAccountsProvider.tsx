@@ -34,7 +34,6 @@ function CashFlowAccountsProvider({ tableState, ...props }) {
   );
 }
 
-const useCashFlowAccountsContext = () =>
-  React.useContext(CashFlowAccountsContext);
+const useCashFlowAccountsContext = () => React.useContext(CashFlowAccountsContext);
 
 export { CashFlowAccountsProvider, useCashFlowAccountsContext };

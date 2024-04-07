@@ -5,16 +5,10 @@ import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
   date: Yup.date().required().label(intl.get('date')),
-  transaction_number: Yup.string()
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('transaction_number')),
+  transaction_number: Yup.string().max(DATATYPES_LENGTH.STRING).label(intl.get('transaction_number')),
   from_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
   to_warehouse_id: Yup.number().required().label(intl.get('from_warehouse')),
-  reason: Yup.string()
-    .trim()
-    .min(1)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('reason')),
+  reason: Yup.string().trim().min(1).max(DATATYPES_LENGTH.STRING).label(intl.get('reason')),
   transfer_initiated: Yup.boolean(),
   transfer_delivered: Yup.boolean(),
   entries: Yup.array().of(

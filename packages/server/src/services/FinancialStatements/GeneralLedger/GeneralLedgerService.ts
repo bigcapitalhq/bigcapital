@@ -1,13 +1,13 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
 import { ServiceError } from '@/exceptions';
-import { difference } from 'lodash';
-import { IGeneralLedgerSheetQuery, IGeneralLedgerMeta } from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import { IGeneralLedgerMeta, IGeneralLedgerSheetQuery } from '@/interfaces';
 import Journal from '@/services/Accounting/JournalPoster';
 import GeneralLedgerSheet from '@/services/FinancialStatements/GeneralLedger/GeneralLedger';
-import { transformToMap } from 'utils';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import { difference } from 'lodash';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { transformToMap } from 'utils';
 import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 
 const ERRORS = {
@@ -64,20 +64,17 @@ export class GeneralLedgerService {
    */
   async generalLedger(
     tenantId: number,
-    query: IGeneralLedgerSheetQuery
+    query: IGeneralLedgerSheetQuery,
   ): Promise<{
     data: any;
     query: IGeneralLedgerSheetQuery;
     meta: IGeneralLedgerMeta;
   }> {
-    const { accountRepository, transactionsRepository, contactRepository } =
-      this.tenancy.repositories(tenantId);
+    const { accountRepository, transactionsRepository, contactRepository } = this.tenancy.repositories(tenantId);
 
     const i18n = this.tenancy.i18n(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -104,17 +101,9 @@ export class GeneralLedgerService {
       branchesIds: filter.branchesIds,
     });
     // Transform array transactions to journal collection.
-    const transactionsJournal = Journal.fromTransactions(
-      transactions,
-      tenantId,
-      accountsGraph
-    );
+    const transactionsJournal = Journal.fromTransactions(transactions, tenantId, accountsGraph);
     // Accounts opening transactions.
-    const openingTransJournal = Journal.fromTransactions(
-      openingBalanceTrans,
-      tenantId,
-      accountsGraph
-    );
+    const openingTransJournal = Journal.fromTransactions(openingBalanceTrans, tenantId, accountsGraph);
     // General ledger report instance.
     const generalLedgerInstance = new GeneralLedgerSheet(
       tenantId,
@@ -124,7 +113,7 @@ export class GeneralLedgerService {
       transactionsJournal,
       openingTransJournal,
       tenant.metadata.baseCurrency,
-      i18n
+      i18n,
     );
     // Retrieve general ledger report data.
     const reportData = generalLedgerInstance.reportData();

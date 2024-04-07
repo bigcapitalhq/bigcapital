@@ -72,7 +72,4 @@ function BillPaymentTransactionTable({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(BillPaymentTransactionTable);
+export default compose(withAlertsActions, withDrawerActions)(BillPaymentTransactionTable);

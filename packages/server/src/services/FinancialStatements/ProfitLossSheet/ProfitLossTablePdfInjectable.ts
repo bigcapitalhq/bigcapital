@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { IProfitLossSheetQuery } from '@/interfaces';
-import { ProfitLossSheetTableInjectable } from './ProfitLossSheetTableInjectable';
+import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
+import { ProfitLossSheetTableInjectable } from './ProfitLossSheetTableInjectable';
 import { HtmlTableCustomCss } from './constants';
 
 @Service()
@@ -18,10 +18,7 @@ export class ProfitLossTablePdfInjectable {
    * @param {number} query
    * @returns {Promise<IBalanceSheetTable>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IProfitLossSheetQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IProfitLossSheetQuery): Promise<Buffer> {
     const table = await this.profitLossTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class ProfitLossTablePdfInjectable {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

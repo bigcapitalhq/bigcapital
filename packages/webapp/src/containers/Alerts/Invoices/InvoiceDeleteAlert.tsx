@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { useDeleteInvoice } from '@/hooks/query';
 
 import { handleDeleteErrors } from '@/containers/Sales/Invoices/InvoicesLanding/components';
@@ -77,16 +73,10 @@ function InvoiceDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_invoice_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_invoice_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(InvoiceDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(InvoiceDeleteAlert);

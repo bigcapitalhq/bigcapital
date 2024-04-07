@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const QuickCreateCustomerDrawerContent = React.lazy(() =>
-  import('./QuickCreateCustomerDrawerContent'),
-);
+const QuickCreateCustomerDrawerContent = React.lazy(() => import('./QuickCreateCustomerDrawerContent'));
 
 /**
  * Quick Create customer
@@ -20,12 +18,7 @@ function QuickCreateCustomerDrawer({
   payload,
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'80%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'80%'}>
       <DrawerSuspense>
         <QuickCreateCustomerDrawerContent displayName={payload.displayName} />
       </DrawerSuspense>

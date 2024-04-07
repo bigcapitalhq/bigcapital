@@ -2,15 +2,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
-import {
-  Button,
-  Classes,
-  ControlGroup,
-  Intent,
-  Popover,
-  Position,
-  Spinner,
-} from '@blueprintjs/core';
+import { Button, Classes, ControlGroup, Intent, Popover, Position, Spinner } from '@blueprintjs/core';
 import { FlagIcon } from '../Tags';
 import { FMoneyInputGroup, FFormGroup } from '../Forms';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
@@ -106,30 +98,17 @@ export function ExchangeRateInputGroup({
 
   const popoverConfirmContent = (
     <PopoverContent>
-      <p>
-        Are you want to re-calculate item prices based on this exchange rate.
-      </p>
+      <p>Are you want to re-calculate item prices based on this exchange rate.</p>
       <div
         style={{
           display: 'flex',
           marginTop: 15,
         }}
       >
-        <Button
-          intent={Intent.WARNING}
-          className={Classes.POPOVER_DISMISS}
-          onClick={handleRecalcConfirmBtn}
-          small
-        >
+        <Button intent={Intent.WARNING} className={Classes.POPOVER_DISMISS} onClick={handleRecalcConfirmBtn} small>
           Calculate
         </Button>
-        <Button
-          className={Classes.POPOVER_DISMISS}
-          style={{ marginRight: 10 }}
-          onClick={handleCancelBtn}
-          small
-          minimal
-        >
+        <Button className={Classes.POPOVER_DISMISS} style={{ marginRight: 10 }} onClick={handleCancelBtn} small minimal>
           Cancel
         </Button>
       </div>
@@ -144,11 +123,7 @@ export function ExchangeRateInputGroup({
         </ExchangeRatePrepend>
 
         {withPopoverRecalcConfirm ? (
-          <Popover
-            isOpen={isOpen}
-            content={popoverConfirmContent}
-            position={Position.RIGHT}
-          >
+          <Popover isOpen={isOpen} content={popoverConfirmContent} position={Position.RIGHT}>
             {exchangeRateField}
           </Popover>
         ) : (

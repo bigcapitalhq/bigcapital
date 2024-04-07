@@ -21,11 +21,7 @@ function CashFlowStatementBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isCashFlowLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <CashFlowStatementTable companyName={organizationName} />
-      )}
+      {isCashFlowLoading ? <FinancialSheetSkeleton /> : <CashFlowStatementTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

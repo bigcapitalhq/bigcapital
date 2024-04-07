@@ -4,9 +4,7 @@ import { VendorTransactionsPdfDialog } from './dialogs/VendorTransactionsPdfDial
 export function VendorTransactionsDialogs() {
   return (
     <>
-      <VendorTransactionsPdfDialog
-        dialogName={DialogsName.VendorTransactionsPdfPreview}
-      />
+      <VendorTransactionsPdfDialog dialogName={DialogsName.VendorTransactionsPdfPreview} />
     </>
   );
 }

@@ -14,14 +14,16 @@ const PercentFieldCell = ({
   const [value, setValue] = useState(initialValue);
 
   const handleBlurChange = (newValue) => {
-    const parsedValue = newValue === '' || newValue === undefined
-      ? '' : parseInt(newValue, 10);
+    const parsedValue = newValue === '' || newValue === undefined ? '' : Number.parseInt(newValue, 10);
     updateData(index, id, parsedValue);
   };
 
-  const handleChange = useCallback((value) => {
-    setValue(value);
-  }, [setValue]);
+  const handleChange = useCallback(
+    (value) => {
+      setValue(value);
+    },
+    [setValue],
+  );
 
   useEffect(() => {
     setValue(initialValue);
@@ -31,12 +33,7 @@ const PercentFieldCell = ({
 
   return (
     <FormGroup intent={error ? Intent.DANGER : null}>
-      <MoneyInputGroup
-        prefix={'%'}
-        value={value}
-        onChange={handleChange}
-        onBlurValue={handleBlurChange}
-      />
+      <MoneyInputGroup prefix={'%'} value={value} onChange={handleChange} onBlurValue={handleBlurChange} />
     </FormGroup>
   );
 };

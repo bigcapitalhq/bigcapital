@@ -1,7 +1,7 @@
 import { IExpense } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { ExpenseTransfromer } from './ExpenseTransformer';
 
 @Service()
@@ -18,10 +18,7 @@ export class GetExpense {
    * @param {number} expenseId
    * @return {Promise<IExpense>}
    */
-  public async getExpense(
-    tenantId: number,
-    expenseId: number
-  ): Promise<IExpense> {
+  public async getExpense(tenantId: number, expenseId: number): Promise<IExpense> {
     const { Expense } = this.tenancy.models(tenantId);
 
     const expense = await Expense.query()
@@ -32,10 +29,6 @@ export class GetExpense {
       .throwIfNotFound();
 
     // Transformes expense model to POJO.
-    return this.transformer.transform(
-      tenantId,
-      expense,
-      new ExpenseTransfromer()
-    );
+    return this.transformer.transform(tenantId, expense, new ExpenseTransfromer());
   }
 }

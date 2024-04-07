@@ -25,10 +25,7 @@ export function InventoryItemDetailsTable({
 
   const columns = useInventoryItemDetailsColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 4),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
 
   return (
     <FinancialSheet

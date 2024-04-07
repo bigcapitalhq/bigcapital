@@ -1,9 +1,4 @@
-
-
 class NestedSetNode {
-
   // Saves
-  appendToNode($parent) {
-    
-  }
+  appendToNode($parent) {}
 }

@@ -53,13 +53,7 @@ function BranchActivateForm({
     activateBranches(form).then(onSuccess).catch(onError);
   };
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-      component={BranchActivateFormContent}
-    />
-  );
+  return <Formik initialValues={initialValues} onSubmit={handleFormSubmit} component={BranchActivateFormContent} />;
 }
 
 export default compose(withDialogActions)(BranchActivateForm);

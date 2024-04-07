@@ -5,10 +5,10 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import '@/services/yup';
 import App from '@/components/App';
 import * as serviceWorker from '@/serviceWorker';
-import { store, persistor } from '@/store/createStore';
+import '@/services/yup';
+import { persistor, store } from '@/store/createStore';
 
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');

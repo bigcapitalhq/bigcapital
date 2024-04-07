@@ -6,10 +6,7 @@ import { DataTable, TableSkeletonRows } from '@/components';
 
 import { useItemAssociatedInvoiceTransactions } from '@/hooks/query';
 import { useItemDetailDrawerContext } from '../../ItemDetailDrawerProvider';
-import {
-  useInvoicePaymentTransactionsColumns,
-  ActionsMenu,
-} from './components';
+import { useInvoicePaymentTransactionsColumns, ActionsMenu } from './components';
 import { TableStyle } from '@/constants';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
@@ -74,7 +71,4 @@ function InvoicePaymentTransactions({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(InvoicePaymentTransactions);
+export default compose(withAlertsActions, withDrawerActions)(InvoicePaymentTransactions);

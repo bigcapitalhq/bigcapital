@@ -1,31 +1,14 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
 import classNames from 'classnames';
-import {
-  Button,
-  Classes,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, Classes, Menu, MenuItem, ProgressBar, Text, Intent } from '@blueprintjs/core';
 
-import {
-  AppToaster,
-  Icon,
-  If,
-  Stack,
-  FormattedMessage as T,
-} from '@/components';
+import { AppToaster, Icon, If, Stack, FormattedMessage as T } from '@/components';
 import { useJournalSheetContext } from './JournalProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 
-import {
-  useJournalSheetCsvExport,
-  useJournalSheetXlsxExport,
-} from '@/hooks/query';
+import { useJournalSheetCsvExport, useJournalSheetXlsxExport } from '@/hooks/query';
 
 /**
  * Journal sheet loading bar.
@@ -145,10 +128,7 @@ export const JournalSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { Container } from 'typedi';
-import jwt from 'jsonwebtoken';
 import config from '@/config';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { Container } from 'typedi';
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');
@@ -16,7 +16,9 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     Logger.info('[auth_middleware] jwt verify success.');
     next();
   };
-  if (!token) { return onError(); }
+  if (!token) {
+    return onError();
+  }
 
   const verify = new Promise((resolve, reject) => {
     jwt.verify(token, config.jwtSecret, async (error, decoded) => {

@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeleteExchangeRate } from '@/hooks/query';
@@ -27,8 +23,7 @@ function ExchangeRateDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deleteExchangeRate, isLoading } =
-    useDeleteExchangeRate();
+  const { mutateAsync: deleteExchangeRate, isLoading } = useDeleteExchangeRate();
 
   // Handle cancel delete exchange rate alert.
   const handleCancelExchangeRateDelete = () => closeAlert(name);
@@ -58,15 +53,10 @@ function ExchangeRateDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_exchange_rate_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_exchange_rate_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExchangeRateDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExchangeRateDeleteAlert);

@@ -1,12 +1,7 @@
+import path from 'node:path';
 import { differenceWith } from 'lodash';
-import path from 'path';
 import { FsMigrations } from './FsMigrations';
-import {
-  getTable,
-  getTableName,
-  getLockTableName,
-  getLockTableNameWithSchema,
-} from './TableUtils';
+import { getLockTableName, getLockTableNameWithSchema, getTable, getTableName } from './TableUtils';
 import { ISeederConfig, MigrateItem } from './interfaces';
 
 /**
@@ -16,9 +11,7 @@ import { ISeederConfig, MigrateItem } from './interfaces';
  * @returns
  */
 function getSchemaBuilder(trxOrKnex, schemaName: string | null = null) {
-  return schemaName
-    ? trxOrKnex.schema.withSchema(schemaName)
-    : trxOrKnex.schema;
+  return schemaName ? trxOrKnex.schema.withSchema(schemaName) : trxOrKnex.schema;
 }
 
 /**
@@ -28,20 +21,13 @@ function getSchemaBuilder(trxOrKnex, schemaName: string | null = null) {
  * @param trxOrKnex
  * @returns
  */
-function createMigrationTable(
-  tableName: string,
-  schemaName: string,
-  trxOrKnex
-) {
-  return getSchemaBuilder(trxOrKnex, schemaName).createTable(
-    getTableName(tableName),
-    (t) => {
-      t.increments();
-      t.string('name');
-      t.integer('batch');
-      t.timestamp('migration_time');
-    }
-  );
+function createMigrationTable(tableName: string, schemaName: string, trxOrKnex) {
+  return getSchemaBuilder(trxOrKnex, schemaName).createTable(getTableName(tableName), (t) => {
+    t.increments();
+    t.string('name');
+    t.integer('batch');
+    t.timestamp('migration_time');
+  });
 }
 
 /**
@@ -51,11 +37,7 @@ function createMigrationTable(
  * @param trxOrKnex
  * @returns
  */
-function createMigrationLockTable(
-  tableName: string,
-  schemaName: string,
-  trxOrKnex
-) {
+function createMigrationLockTable(tableName: string, schemaName: string, trxOrKnex) {
   return getSchemaBuilder(trxOrKnex, schemaName).createTable(tableName, (t) => {
     t.increments('index').primary();
     t.integer('is_locked');
@@ -69,11 +51,7 @@ function createMigrationLockTable(
  * @param trxOrKnex
  * @returns
  */
-export function ensureMigrationTables(
-  tableName: string,
-  schemaName: string,
-  trxOrKnex
-) {
+export function ensureMigrationTables(tableName: string, schemaName: string, trxOrKnex) {
   const lockTable = getLockTableName(tableName);
   const lockTableWithSchema = getLockTableNameWithSchema(tableName, schemaName);
 
@@ -86,18 +64,13 @@ export function ensureMigrationTables(
       return getSchemaBuilder(trxOrKnex, schemaName).hasTable(lockTable);
     })
     .then((exists) => {
-      return (
-        !exists && createMigrationLockTable(lockTable, schemaName, trxOrKnex)
-      );
+      return !exists && createMigrationLockTable(lockTable, schemaName, trxOrKnex);
     })
     .then(() => {
       return getTable(trxOrKnex, lockTable, schemaName).select('*');
     })
     .then((data) => {
-      return (
-        !data.length &&
-        trxOrKnex.into(lockTableWithSchema).insert({ is_locked: 0 })
-      );
+      return !data.length && trxOrKnex.into(lockTableWithSchema).insert({ is_locked: 0 });
     });
 }
 
@@ -107,10 +80,7 @@ export function ensureMigrationTables(
  * @param loadExtensions
  * @returns
  */
-function listAll(
-  migrationSource: FsMigrations,
-  loadExtensions
-): Promise<MigrateItem[]> {
+function listAll(migrationSource: FsMigrations, loadExtensions): Promise<MigrateItem[]> {
   return migrationSource.getMigrations(loadExtensions);
 }
 
@@ -121,15 +91,8 @@ function listAll(
  * @param {} trxOrKnex
  * @returns Promise<string[]>
  */
-export async function listCompleted(
-  tableName: string,
-  schemaName: string,
-  trxOrKnex
-): Promise<string[]> {
-  const completedMigrations = await trxOrKnex
-    .from(getTableName(tableName, schemaName))
-    .orderBy('id')
-    .select('name');
+export async function listCompleted(tableName: string, schemaName: string, trxOrKnex): Promise<string[]> {
+  const completedMigrations = await trxOrKnex.from(getTableName(tableName, schemaName)).orderBy('id').select('name');
 
   return completedMigrations.map((migration) => {
     return migration.name;
@@ -157,12 +120,10 @@ export function listAllAndCompleted(config: ISeederConfig, trxOrKnex) {
 export function getNewMigrations(
   migrationSource: FsMigrations,
   all: MigrateItem[],
-  completed: string[]
+  completed: string[],
 ): MigrateItem[] {
   return differenceWith(all, completed, (allMigration, completedMigration) => {
-    return (
-      completedMigration === migrationSource.getMigrationName(allMigration)
-    );
+    return completedMigration === migrationSource.getMigrationName(allMigration);
   });
 }
 
@@ -176,17 +137,11 @@ function startsWithNumber(str) {
  * @param {string[]} loadExtensions -
  * @returns
  */
-export function filterMigrations(
-  migrationSource: FsMigrations,
-  migrations: MigrateItem[],
-  loadExtensions: string[]
-) {
+export function filterMigrations(migrationSource: FsMigrations, migrations: MigrateItem[], loadExtensions: string[]) {
   return migrations.filter((migration) => {
     const migrationName = migrationSource.getMigrationName(migration);
     const extension = path.extname(migrationName);
 
-    return (
-      loadExtensions.includes(extension) && startsWithNumber(migrationName)
-    );
+    return loadExtensions.includes(extension) && startsWithNumber(migrationName);
   });
 }

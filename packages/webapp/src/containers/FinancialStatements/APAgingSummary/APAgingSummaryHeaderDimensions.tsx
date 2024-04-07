@@ -38,10 +38,7 @@ function APAgingSummaryHeaderDimensionsContent() {
     <Row>
       <Col xs={4}>
         {isBranchesFeatureCan && (
-          <FormGroup
-            label={intl.get('branches_multi_select.label')}
-            className={Classes.FILL}
-          >
+          <FormGroup label={intl.get('branches_multi_select.label')} className={Classes.FILL}>
             <BranchMultiSelect name={'branchesIds'} branches={branches} />
           </FormGroup>
         )}

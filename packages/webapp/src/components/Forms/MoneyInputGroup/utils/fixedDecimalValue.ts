@@ -1,9 +1,5 @@
 // @ts-nocheck
-export const fixedDecimalValue = (
-  value: string,
-  decimalSeparator: string,
-  fixedDecimalLength?: number
-): string => {
+export const fixedDecimalValue = (value: string, decimalSeparator: string, fixedDecimalLength?: number): string => {
   if (fixedDecimalLength && value.length > 1) {
     if (value.includes(decimalSeparator)) {
       const [int, decimals] = value.split(decimalSeparator);
@@ -12,10 +8,7 @@ export const fixedDecimalValue = (
       }
     }
 
-    const reg =
-      value.length > fixedDecimalLength
-        ? new RegExp(`(\\d+)(\\d{${fixedDecimalLength}})`)
-        : new RegExp(`(\\d)(\\d+)`);
+    const reg = value.length > fixedDecimalLength ? new RegExp(`(\\d+)(\\d{${fixedDecimalLength}})`) : /(\d)(\d+)/;
 
     const match = value.match(reg);
     if (match) {

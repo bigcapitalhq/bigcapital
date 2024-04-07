@@ -1,18 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Position, ControlGroup } from '@blueprintjs/core';
 import { FastField, Field, ErrorMessage } from 'formik';
 import { DateInput } from '@blueprintjs/datetime';
-import {
-  FFormGroup,
-  FormattedMessage as T,
-  WarehouseSelect,
-} from '@/components';
+import { FFormGroup, FormattedMessage as T, WarehouseSelect } from '@/components';
 import { momentFormatter, compose, tansformDateValue } from '@/utils';
 import classNames from 'classnames';
 
@@ -58,10 +49,7 @@ function WarehouseTransferFormHeaderFields({
   };
 
   // Syncs transfer number settings with form.
-  useObserveTransferNoSettings(
-    warehouseTransferNumberPrefix,
-    warehouseTransferNextNumber,
-  );
+  useObserveTransferNoSettings(warehouseTransferNumberPrefix, warehouseTransferNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -116,13 +104,7 @@ function WarehouseTransferFormHeaderFields({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: (
-                    <T
-                      id={
-                        'warehouse_transfer.setting_your_auto_generated_transfer_no'
-                      }
-                    />
-                  ),
+                  content: <T id={'warehouse_transfer.setting_your_auto_generated_transfer_no'} />,
                   position: Position.BOTTOM_LEFT,
                 }}
               />

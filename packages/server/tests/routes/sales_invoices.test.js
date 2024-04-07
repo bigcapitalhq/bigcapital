@@ -1,6 +1,6 @@
-import { tenantWebsite, tenantFactory, loginRes } from '~/dbInit';
-import { request, expect } from '~/testInit';
 import { SaleInvoice } from 'models';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 import { SaleInvoiceEntry } from '../../src/models';
 
 describe('route: `/sales/invoices`', () => {
@@ -152,19 +152,18 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.ID.NOT.EXISTS', code: 200,
+        type: 'CUSTOMER.ID.NOT.EXISTS',
+        code: 200,
       });
     });
 
-    it('Should `invoice_date` be bigger than `due_date`.', async () => {
-      
-    });
+    it('Should `invoice_date` be bigger than `due_date`.', async () => {});
 
     it('Should `invoice_no` be unique on the storage.', async () => {
       const saleInvoice = await tenantFactory.create('sale_invoice', {
@@ -189,13 +188,14 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 200
+        type: 'SALE.INVOICE.NUMBER.IS.EXISTS',
+        code: 200,
       });
     });
 
@@ -219,13 +219,14 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEMS.IDS.NOT.EXISTS', code: 300,
+        type: 'ITEMS.IDS.NOT.EXISTS',
+        code: 300,
       });
     });
 
@@ -251,8 +252,8 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
       expect(res.status).equals(200);
     });
@@ -288,7 +289,6 @@ describe('route: `/sales/invoices`', () => {
         location: 'body',
       });
     });
-    
 
     it('Should `status` be required.', async () => {
       const res = await request()
@@ -379,19 +379,18 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.ID.NOT.EXISTS', code: 200,
+        type: 'CUSTOMER.ID.NOT.EXISTS',
+        code: 200,
       });
     });
 
-    it('Should `invoice_date` be bigger than `due_date`.', async () => {
-      
-    });
+    it('Should `invoice_date` be bigger than `due_date`.', async () => {});
 
     it('Should `invoice_no` be unique on the storage.', async () => {
       const saleInvoice = await tenantFactory.create('sale_invoice', {
@@ -416,13 +415,14 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'SALE.INVOICE.NUMBER.IS.EXISTS', code: 200
+        type: 'SALE.INVOICE.NUMBER.IS.EXISTS',
+        code: 200,
       });
     });
 
@@ -450,8 +450,8 @@ describe('route: `/sales/invoices`', () => {
               rate: 1,
               quantity: 1,
               discount: 1,
-            }
-          ]
+            },
+          ],
         });
       expect(res.status).equals(200);
     });
@@ -467,7 +467,8 @@ describe('route: `/sales/invoices`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'SALE.INVOICE.NOT.FOUND', code: 200,
+        type: 'SALE.INVOICE.NOT.FOUND',
+        code: 200,
       });
     });
 

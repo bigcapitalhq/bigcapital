@@ -1,11 +1,5 @@
 export const TellerIcon = () => (
-  <svg
-    height={30}
-    width={30}
-    viewBox="0 0 789 789"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg height={30} width={30} viewBox="0 0 789 789" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g clip-path="url(#clip0_4283_1925)">
       <path
         d="M433.606 360.544C351.138 278.075 351.138 144.366 433.606 61.8977C516.075 -20.5711 649.784 -20.5711 732.252 61.8977C814.721 144.366 814.721 278.075 732.252 360.544C649.784 443.012 516.075 443.012 433.606 360.544Z"
@@ -30,12 +24,7 @@ export const TellerIcon = () => (
     </g>
     <defs>
       <clipPath id="clip0_4283_1925">
-        <rect
-          width="2427.58"
-          height="788.009"
-          fill="white"
-          transform="translate(0.55127 0.0461426)"
-        ></rect>
+        <rect width="2427.58" height="788.009" fill="white" transform="translate(0.55127 0.0461426)"></rect>
       </clipPath>
     </defs>
   </svg>

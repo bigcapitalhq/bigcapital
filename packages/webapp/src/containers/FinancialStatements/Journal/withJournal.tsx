@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getJournalFilterDrawer,
-} from '@/store/financialStatement/financialStatements.selectors';
+import { getJournalFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

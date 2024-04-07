@@ -9,9 +9,7 @@ export interface ISidebarOverlayContainerProps {
 /**
  * Sidebar overlay container.
  */
-export function SidebarOverlayContainer({
-  children,
-}: ISidebarOverlayContainerProps) {
+export function SidebarOverlayContainer({ children }: ISidebarOverlayContainerProps) {
   return (
     <div className={'sidebar-overlay__scroll-wrapper'}>
       <Scrollbar noDefaultStyles={true}>

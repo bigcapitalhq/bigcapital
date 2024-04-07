@@ -1,24 +1,24 @@
-import { Service, Inject } from 'typedi';
-import { pick } from 'lodash';
-import { Knex } from 'knex';
-import * as R from 'ramda';
 import {
+  IAccount,
   ICashflowNewCommandDTO,
   ICashflowTransaction,
+  ICashflowTransactionInput,
   ICommandCashflowCreatedPayload,
   ICommandCashflowCreatingPayload,
-  ICashflowTransactionInput,
-  IAccount,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { pick } from 'lodash';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { CashflowTransactionAutoIncrement } from './CashflowTransactionAutoIncrement';
+import { CommandCashflowValidator } from './CommandCasflowValidator';
 import { CASHFLOW_TRANSACTION_TYPE } from './constants';
 import { transformCashflowTransactionType } from './utils';
-import events from '@/subscribers/events';
-import { CommandCashflowValidator } from './CommandCasflowValidator';
-import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { CashflowTransactionAutoIncrement } from './CashflowTransactionAutoIncrement';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 
 @Service()
 export default class NewCashflowTransactionService {
@@ -48,19 +48,14 @@ export default class NewCashflowTransactionService {
   public authorize = async (
     tenantId: number,
     newCashflowTransactionDTO: ICashflowNewCommandDTO,
-    creditAccount: IAccount
+    creditAccount: IAccount,
   ) => {
-    const transactionType = transformCashflowTransactionType(
-      newCashflowTransactionDTO.transactionType
-    );
+    const transactionType = transformCashflowTransactionType(newCashflowTransactionDTO.transactionType);
     // Validates the cashflow transaction type.
     this.validator.validateCashflowTransactionType(transactionType);
 
     // Retrieve accounts of the cashflow lines object.
-    this.validator.validateCreditAccountWithCashflowType(
-      creditAccount,
-      transactionType as CASHFLOW_TRANSACTION_TYPE
-    );
+    this.validator.validateCreditAccountWithCashflowType(creditAccount, transactionType as CASHFLOW_TRANSACTION_TYPE);
   };
 
   /**
@@ -72,7 +67,7 @@ export default class NewCashflowTransactionService {
     tenantId: number,
     newCashflowTransactionDTO: ICashflowNewCommandDTO,
     cashflowAccount: IAccount,
-    userId: number
+    userId: number,
   ): ICashflowTransactionInput => {
     const amount = newCashflowTransactionDTO.amount;
 
@@ -89,21 +84,17 @@ export default class NewCashflowTransactionService {
       'uncategorizedTransactionId',
     ]);
     // Retreive the next invoice number.
-    const autoNextNumber =
-      this.autoIncrement.getNextTransactionNumber(tenantId);
+    const autoNextNumber = this.autoIncrement.getNextTransactionNumber(tenantId);
 
     // Retrieve the transaction number.
-    const transactionNumber =
-      newCashflowTransactionDTO.transactionNumber || autoNextNumber;
+    const transactionNumber = newCashflowTransactionDTO.transactionNumber || autoNextNumber;
 
     const initialDTO = {
       amount,
       ...fromDTO,
       transactionNumber,
       currencyCode: cashflowAccount.currencyCode,
-      transactionType: transformCashflowTransactionType(
-        fromDTO.transactionType
-      ),
+      transactionType: transformCashflowTransactionType(fromDTO.transactionType),
       userId,
       ...(newCashflowTransactionDTO.publish
         ? {
@@ -111,9 +102,7 @@ export default class NewCashflowTransactionService {
           }
         : {}),
     };
-    return R.compose(
-      this.branchDTOTransform.transformDTO<ICashflowTransactionInput>(tenantId)
-    )(initialDTO);
+    return R.compose(this.branchDTOTransform.transformDTO<ICashflowTransactionInput>(tenantId))(initialDTO);
   };
 
   /**
@@ -125,19 +114,15 @@ export default class NewCashflowTransactionService {
   public newCashflowTransaction = async (
     tenantId: number,
     newTransactionDTO: ICashflowNewCommandDTO,
-    userId?: number
+    userId?: number,
   ): Promise<ICashflowTransaction> => {
     const { CashflowTransaction, Account } = this.tenancy.models(tenantId);
 
     // Retrieves the cashflow account or throw not found error.
-    const cashflowAccount = await Account.query()
-      .findById(newTransactionDTO.cashflowAccountId)
-      .throwIfNotFound();
+    const cashflowAccount = await Account.query().findById(newTransactionDTO.cashflowAccountId).throwIfNotFound();
 
     // Retrieves the credit account or throw not found error.
-    const creditAccount = await Account.query()
-      .findById(newTransactionDTO.creditAccountId)
-      .throwIfNotFound();
+    const creditAccount = await Account.query().findById(newTransactionDTO.creditAccountId).throwIfNotFound();
 
     // Authorize before creating cashflow transaction.
     await this.authorize(tenantId, newTransactionDTO, creditAccount);
@@ -147,34 +132,26 @@ export default class NewCashflowTransactionService {
       tenantId,
       newTransactionDTO,
       cashflowAccount,
-      userId
+      userId,
     );
     // Creates a new cashflow transaction under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onCashflowTransactionCreate` event.
-      await this.eventPublisher.emitAsync(
-        events.cashflow.onTransactionCreating,
-        {
-          trx,
-          tenantId,
-          newTransactionDTO,
-        } as ICommandCashflowCreatingPayload
-      );
+      await this.eventPublisher.emitAsync(events.cashflow.onTransactionCreating, {
+        trx,
+        tenantId,
+        newTransactionDTO,
+      } as ICommandCashflowCreatingPayload);
       // Inserts cashflow owner contribution transaction.
-      const cashflowTransaction = await CashflowTransaction.query(
-        trx
-      ).upsertGraph(cashflowTransactionObj);
+      const cashflowTransaction = await CashflowTransaction.query(trx).upsertGraph(cashflowTransactionObj);
 
       // Triggers `onCashflowTransactionCreated` event.
-      await this.eventPublisher.emitAsync(
-        events.cashflow.onTransactionCreated,
-        {
-          tenantId,
-          newTransactionDTO,
-          cashflowTransaction,
-          trx,
-        } as ICommandCashflowCreatedPayload
-      );
+      await this.eventPublisher.emitAsync(events.cashflow.onTransactionCreated, {
+        tenantId,
+        newTransactionDTO,
+        cashflowTransaction,
+        trx,
+      } as ICommandCashflowCreatedPayload);
       return cashflowTransaction;
     });
   };

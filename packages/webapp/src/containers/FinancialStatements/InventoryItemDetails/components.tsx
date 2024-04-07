@@ -1,29 +1,12 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
-import {
-  AppToaster,
-  Icon,
-  If,
-  Stack,
-  FormattedMessage as T,
-} from '@/components';
+import { AppToaster, Icon, If, Stack, FormattedMessage as T } from '@/components';
 
 import { dynamicColumns } from './utils';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import {
-  useInventoryItemDetailsCsvExport,
-  useInventoryItemDetailsXlsxExport,
-} from '@/hooks/query';
+import { useInventoryItemDetailsCsvExport, useInventoryItemDetailsXlsxExport } from '@/hooks/query';
 import { useInventoryItemDetailsContext } from './InventoryItemDetailsProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import { useInventoryValuationHttpQuery } from './utils2';
@@ -36,10 +19,7 @@ export const useInventoryItemDetailsColumns = () => {
     inventoryItemDetails: { columns, tableRows },
   } = useInventoryItemDetailsContext();
 
-  return React.useMemo(
-    () => dynamicColumns(columns, tableRows),
-    [columns, tableRows],
-  );
+  return React.useMemo(() => dynamicColumns(columns, tableRows), [columns, tableRows]);
 };
 
 /**
@@ -59,11 +39,8 @@ export function InventoryItemDetailsLoadingBar() {
  * inventory item details alerts
  */
 export function InventoryItemDetailsAlerts() {
-  const {
-    inventoryItemDetails,
-    isInventoryItemDetailsLoading,
-    inventoryItemDetailsRefetch,
-  } = useInventoryItemDetailsContext();
+  const { inventoryItemDetails, isInventoryItemDetailsLoading, inventoryItemDetailsRefetch } =
+    useInventoryItemDetailsContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
@@ -119,49 +96,43 @@ export function InventoryItemDetailsExportMenu() {
   };
 
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useInventoryItemDetailsXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useInventoryItemDetailsXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Export the report to csv.
-  const { mutateAsync: csvExport } = useInventoryItemDetailsCsvExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: csvExport } = useInventoryItemDetailsCsvExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Handle csv export button click.
   const handleCsvExportBtnClick = () => {
     csvExport();
@@ -173,10 +144,7 @@ export function InventoryItemDetailsExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

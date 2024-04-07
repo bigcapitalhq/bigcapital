@@ -21,11 +21,7 @@ function PurchasesByItemsBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <PurchasesByItemsTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <PurchasesByItemsTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

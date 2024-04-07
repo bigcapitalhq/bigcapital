@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Intent,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Intent, Alignment } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
 
@@ -112,9 +105,7 @@ function BillActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={billsConditionsRoles.length}
-          />
+          <DashboardFilterButton conditionsCount={billsConditionsRoles.length} />
         </AdvancedFilterPopover>
 
         <If condition={false}>
@@ -144,10 +135,7 @@ function BillActionsBar({
         />
 
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={billsTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={billsTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

@@ -32,16 +32,13 @@ export function useCreateInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('inventory_adjustments/quick', values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.post('inventory_adjustments/quick', values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -97,18 +94,15 @@ export function usePublishInventoryAdjustment(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`inventory_adjustments/${id}/publish`),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate specific inventory adjustment.
-        queryClient.invalidateQueries([t.INVENTORY_ADJUSTMENT, id]);
+  return useMutation((id) => apiRequest.post(`inventory_adjustments/${id}/publish`), {
+    onSuccess: (res, id) => {
+      // Invalidate specific inventory adjustment.
+      queryClient.invalidateQueries([t.INVENTORY_ADJUSTMENT, id]);
 
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

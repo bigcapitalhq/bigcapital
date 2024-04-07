@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import { castArray } from 'lodash';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { BalanceSheetApplication } from '@/services/FinancialStatements/BalanceSheet/BalanceSheetApplication';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { BalanceSheetApplication } from '@/services/FinancialStatements/BalanceSheet/BalanceSheetApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { castArray } from 'lodash';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class BalanceSheetStatementController extends BaseFinancialReportController {
@@ -25,7 +25,7 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       CheckPolicies(ReportsAction.READ_BALANCE_SHEET, AbilitySubject.Report),
       this.balanceSheetValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.balanceSheet.bind(this))
+      asyncMiddleware(this.balanceSheet.bind(this)),
     );
     return router;
   }
@@ -54,26 +54,32 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       query('none_transactions').optional().isBoolean().toBoolean(),
 
       // Percentage of column/row.
-      query('percentage_of_column').optional().isBoolean().toBoolean(),
+      query('percentage_of_column')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('percentage_of_row').optional().isBoolean().toBoolean(),
 
       // Camparsion periods periods.
-      query('previous_period').optional().isBoolean().toBoolean(),
+      query('previous_period')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('previous_period_amount_change').optional().isBoolean().toBoolean(),
-      query('previous_period_percentage_change')
-        .optional()
-        .isBoolean()
-        .toBoolean(),
+      query('previous_period_percentage_change').optional().isBoolean().toBoolean(),
       // Camparsion periods periods.
-      query('previous_year').optional().isBoolean().toBoolean(),
-      query('previous_year_amount_change').optional().isBoolean().toBoolean(),
-      query('previous_year_percentage_change')
+      query('previous_year')
         .optional()
         .isBoolean()
         .toBoolean(),
+      query('previous_year_amount_change').optional().isBoolean().toBoolean(),
+      query('previous_year_percentage_change').optional().isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -120,14 +126,8 @@ export default class BalanceSheetStatementController extends BaseFinancialReport
       } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
         const buffer = await this.balanceSheetApp.xlsx(tenantId, filter);
 
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(buffer);
         // Retrieves the pdf format.
       } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

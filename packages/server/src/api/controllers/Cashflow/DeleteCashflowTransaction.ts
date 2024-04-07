@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { param } from 'express-validator';
-import BaseController from '../BaseController';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
+import { NextFunction, Request, Response, Router } from 'express';
+import { param } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 import { AbilitySubject, CashflowAction } from '@/interfaces';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
@@ -24,7 +24,7 @@ export default class DeleteCashflowTransactionController extends BaseController 
       CheckPolicies(CashflowAction.Delete, AbilitySubject.Cashflow),
       [param('transactionId').exists().isInt().toInt()],
       this.asyncMiddleware(this.deleteCashflowTransaction),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -35,20 +35,12 @@ export default class DeleteCashflowTransactionController extends BaseController 
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private deleteCashflowTransaction = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteCashflowTransaction = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { transactionId } = req.params;
 
     try {
-      const { oldCashflowTransaction } =
-        await this.cashflowApplication.deleteTransaction(
-          tenantId,
-          transactionId
-        );
+      const { oldCashflowTransaction } = await this.cashflowApplication.deleteTransaction(tenantId, transactionId);
 
       return res.status(200).send({
         id: oldCashflowTransaction.id,
@@ -67,20 +59,12 @@ export default class DeleteCashflowTransactionController extends BaseController 
    * @param next
    * @returns
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'CASHFLOW_TRANSACTION_NOT_FOUND') {
-        return res.boom.badRequest(
-          'The given cashflow transaction not found.',
-          {
-            errors: [{ type: 'CASHFLOW_TRANSACTION_NOT_FOUND', code: 100 }],
-          }
-        );
+        return res.boom.badRequest('The given cashflow transaction not found.', {
+          errors: [{ type: 'CASHFLOW_TRANSACTION_NOT_FOUND', code: 100 }],
+        });
       }
       if (error.errorType === 'TRANSACTIONS_DATE_LOCKED') {
         return res.boom.badRequest(null, {
@@ -93,10 +77,7 @@ export default class DeleteCashflowTransactionController extends BaseController 
           ],
         });
       }
-      if (
-        error.errorType ===
-        'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED'
-      ) {
+      if (error.errorType === 'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED') {
         return res.boom.badRequest(null, {
           errors: [
             {

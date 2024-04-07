@@ -1,13 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { PurchasesByItemsService } from '@/services/FinancialStatements/PurchasesByItems/PurchasesByItemsService';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { PurcahsesByItemsApplication } from '@/services/FinancialStatements/PurchasesByItems/PurchasesByItemsApplication';
+import { Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class PurchasesByItemReportController extends BaseFinancialReportController {
@@ -22,13 +21,10 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_PURCHASES_BY_ITEMS,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_PURCHASES_BY_ITEMS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.purchasesByItems.bind(this))
+      asyncMiddleware(this.purchasesByItems.bind(this)),
     );
     return router;
   }
@@ -43,15 +39,23 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
       query('to_date').optional().isISO8601(),
 
       // Filter items.
-      query('number_format.no_cents').optional().isBoolean().toBoolean(),
+      query('number_format.no_cents')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('number_format.divide_1000').optional().isBoolean().toBoolean(),
 
       // Filters items.
-      query('none_transactions').optional().isBoolean().toBoolean(),
+      query('none_transactions')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('only_active').optional().isBoolean().toBoolean(),
 
       // Specific items.
-      query('items_ids').optional().isArray(),
+      query('items_ids')
+        .optional()
+        .isArray(),
       query('items_ids.*').optional().isInt().toInt(),
 
       query('orderBy').optional().isIn(['created_at', 'name', 'code']),
@@ -95,10 +99,7 @@ export default class PurchasesByItemReportController extends BaseFinancialReport
       const buffer = await this.purchasesByItemsApp.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       return res.send(buffer);
       // PDF response format.
     } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

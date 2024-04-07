@@ -1,24 +1,16 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import { sumBy } from 'lodash';
-import {
-  ICreditNote,
-  ICreditNoteAppliedToInvoice,
-  ICreditNoteAppliedToInvoiceModel,
-  ISaleInvoice,
-} from '@/interfaces';
+import { ServiceError } from '@/exceptions';
+import { ICreditNote, ICreditNoteAppliedToInvoice, ICreditNoteAppliedToInvoiceModel, ISaleInvoice } from '@/interfaces';
+import { IApplyCreditToInvoicesCreatedPayload, IApplyCreditToInvoicesDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';
-import { PaymentReceiveValidators } from '../Sales/PaymentReceives/PaymentReceiveValidators';
-import BaseCreditNotes from './CreditNotes';
-import {
-  IApplyCreditToInvoicesDTO,
-  IApplyCreditToInvoicesCreatedPayload,
-} from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import events from '@/subscribers/events';
-import { ERRORS } from './constants';
+import { Knex } from 'knex';
+import { sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { PaymentReceiveValidators } from '../Sales/PaymentReceives/PaymentReceiveValidators';
 import HasTenancyService from '../Tenancy/TenancyService';
+import BaseCreditNotes from './CreditNotes';
+import { ERRORS } from './constants';
 
 @Service()
 export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
@@ -43,54 +35,37 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
   public applyCreditNoteToInvoices = async (
     tenantId: number,
     creditNoteId: number,
-    applyCreditToInvoicesDTO: IApplyCreditToInvoicesDTO
+    applyCreditToInvoicesDTO: IApplyCreditToInvoicesDTO,
   ): Promise<ICreditNoteAppliedToInvoice[]> => {
     const { CreditNoteAppliedInvoice } = this.tenancy.models(tenantId);
 
     // Saves the credit note or throw not found service error.
-    const creditNote = await this.getCreditNoteOrThrowError(
-      tenantId,
-      creditNoteId
-    );
+    const creditNote = await this.getCreditNoteOrThrowError(tenantId, creditNoteId);
     // Retrieve the applied invoices that associated to the credit note customer.
-    const appliedInvoicesEntries =
-      await this.paymentReceiveValidators.validateInvoicesIDsExistance(
-        tenantId,
-        creditNote.customerId,
-        applyCreditToInvoicesDTO.entries
-      );
+    const appliedInvoicesEntries = await this.paymentReceiveValidators.validateInvoicesIDsExistance(
+      tenantId,
+      creditNote.customerId,
+      applyCreditToInvoicesDTO.entries,
+    );
     // Transformes apply DTO to model.
-    const creditNoteAppliedModel = this.transformApplyDTOToModel(
-      applyCreditToInvoicesDTO,
-      creditNote
-    );
+    const creditNoteAppliedModel = this.transformApplyDTOToModel(applyCreditToInvoicesDTO, creditNote);
     // Validate invoices has remaining amount to apply.
-    this.validateInvoicesRemainingAmount(
-      appliedInvoicesEntries,
-      creditNoteAppliedModel.amount
-    );
+    this.validateInvoicesRemainingAmount(appliedInvoicesEntries, creditNoteAppliedModel.amount);
     // Validate the credit note remaining amount.
-    this.validateCreditRemainingAmount(
-      creditNote,
-      creditNoteAppliedModel.amount
-    );
+    this.validateCreditRemainingAmount(creditNote, creditNoteAppliedModel.amount);
     // Creates credit note apply to invoice transaction.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Saves the credit note apply to invoice graph to the storage layer.
-      const creditNoteAppliedInvoices =
-        await CreditNoteAppliedInvoice.query().insertGraph(
-          creditNoteAppliedModel.entries
-        );
-      // Triggers `onCreditNoteApplyToInvoiceCreated` event.
-      await this.eventPublisher.emitAsync(
-        events.creditNote.onApplyToInvoicesCreated,
-        {
-          tenantId,
-          creditNote,
-          creditNoteAppliedInvoices,
-          trx,
-        } as IApplyCreditToInvoicesCreatedPayload
+      const creditNoteAppliedInvoices = await CreditNoteAppliedInvoice.query().insertGraph(
+        creditNoteAppliedModel.entries,
       );
+      // Triggers `onCreditNoteApplyToInvoiceCreated` event.
+      await this.eventPublisher.emitAsync(events.creditNote.onApplyToInvoicesCreated, {
+        tenantId,
+        creditNote,
+        creditNoteAppliedInvoices,
+        trx,
+      } as IApplyCreditToInvoicesCreatedPayload);
       return creditNoteAppliedInvoices;
     });
   };
@@ -103,7 +78,7 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
    */
   private transformApplyDTOToModel = (
     applyDTO: IApplyCreditToInvoicesDTO,
-    creditNote: ICreditNote
+    creditNote: ICreditNote,
   ): ICreditNoteAppliedToInvoiceModel => {
     const entries = applyDTO.entries.map((entry) => ({
       invoiceId: entry.invoiceId,
@@ -121,13 +96,8 @@ export default class CreditNoteApplyToInvoices extends BaseCreditNotes {
    * @param {ISaleInvoice[]} invoices
    * @param {number} amount
    */
-  private validateInvoicesRemainingAmount = (
-    invoices: ISaleInvoice[],
-    amount: number
-  ) => {
-    const invalidInvoices = invoices.filter(
-      (invoice) => invoice.dueAmount < amount
-    );
+  private validateInvoicesRemainingAmount = (invoices: ISaleInvoice[], amount: number) => {
+    const invalidInvoices = invoices.filter((invoice) => invoice.dueAmount < amount);
     if (invalidInvoices.length > 0) {
       throw new ServiceError(ERRORS.INVOICES_HAS_NO_REMAINING_AMOUNT);
     }

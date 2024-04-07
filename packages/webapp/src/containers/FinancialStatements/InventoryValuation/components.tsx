@@ -8,18 +8,8 @@ import { getColumnWidth } from '@/utils';
 import { CellTextSpan } from '@/components/Datatable/Cells';
 import { useInventoryValuationContext } from './InventoryValuationProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
-import {
-  useInventoryValuationCsvExport,
-  useInventoryValuationXlsxExport,
-} from '@/hooks/query';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import { useInventoryValuationCsvExport, useInventoryValuationXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve inventory valuation table columns.
@@ -165,10 +155,7 @@ export const InventoryValuationExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

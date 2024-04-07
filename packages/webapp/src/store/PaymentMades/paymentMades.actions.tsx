@@ -14,4 +14,3 @@ export const resetPaymentMadesTableState = (queries) => {
     payload: { queries },
   };
 };
-

@@ -8,10 +8,7 @@ import styled from 'styled-components';
 
 import { CLASSES } from '@/constants/classes';
 import { AppToaster } from '@/components';
-import {
-  CreateVendorFormSchema,
-  EditVendorFormSchema,
-} from './VendorForm.schema';
+import { CreateVendorFormSchema, EditVendorFormSchema } from './VendorForm.schema';
 
 import VendorTabs from './VendorsTabs';
 import VendorFormPrimarySection from './VendorFormPrimarySection';
@@ -74,9 +71,7 @@ function VendorFormFormik({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_vendor_has_been_created_successfully'
-            : 'the_item_vendor_has_been_edited_successfully',
+          isNewMode ? 'the_vendor_has_been_created_successfully' : 'the_item_vendor_has_been_edited_successfully',
         ),
         intent: Intent.SUCCESS,
       });
@@ -101,17 +96,9 @@ function VendorFormFormik({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_VENDOR,
-        className,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_VENDOR, className)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateVendorFormSchema : EditVendorFormSchema
-        }
+        validationSchema={isNewMode ? CreateVendorFormSchema : EditVendorFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

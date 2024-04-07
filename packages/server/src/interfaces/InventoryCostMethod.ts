@@ -1,6 +1,4 @@
-
-
 interface IInventoryCostMethod {
-  computeItemsCost(fromDate: Date): void,
-  storeInventoryLotsCost(transactions: any[]): void,
+  computeItemsCost(fromDate: Date): void;
+  storeInventoryLotsCost(transactions: any[]): void;
 }

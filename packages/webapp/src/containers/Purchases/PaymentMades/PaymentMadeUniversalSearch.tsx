@@ -27,17 +27,12 @@ function PaymentMadeUniversalSearchSelectComponent({
   return null;
 }
 
-export const PaymentMadeUniversalSearchSelect = withDrawerActions(
-  PaymentMadeUniversalSearchSelectComponent,
-);
+export const PaymentMadeUniversalSearchSelect = withDrawerActions(PaymentMadeUniversalSearchSelectComponent);
 
 /**
  * Payment made universal search item.
  */
-export function PaymentMadeUniversalSearchItem(
-  { text, label, reference },
-  { handleClick, modifiers, query },
-) {
+export function PaymentMadeUniversalSearchItem({ text, label, reference }, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}

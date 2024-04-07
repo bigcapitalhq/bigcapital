@@ -27,10 +27,7 @@ export default function CustomersTransactionsTable({
   // Customers transactions table columns.
   const columns = useCustomersTransactionsColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 4),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
 
   return (
     <FinancialSheet

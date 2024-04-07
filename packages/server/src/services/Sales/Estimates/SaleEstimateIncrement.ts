@@ -12,10 +12,7 @@ export class SaleEstimateIncrement {
    * @return {string}
    */
   public getNextEstimateNumber(tenantId: number): string {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'sales_estimates'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'sales_estimates');
   }
 
   /**
@@ -23,9 +20,6 @@ export class SaleEstimateIncrement {
    * @param {number} tenantId -
    */
   public incrementNextEstimateNumber(tenantId: number) {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'sales_estimates'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'sales_estimates');
   }
 }

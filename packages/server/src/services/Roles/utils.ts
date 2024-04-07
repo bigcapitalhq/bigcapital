@@ -1,5 +1,5 @@
-import { keyBy } from 'lodash';
 import { ISubjectAbilitiesSchema } from '@/interfaces';
+import { keyBy } from 'lodash';
 
 /**
  * Transformes ability schema to map.
@@ -11,20 +11,17 @@ export function transformAbilitySchemaToMap(schema: ISubjectAbilitiesSchema[]) {
       abilities: keyBy(item.abilities, 'key'),
       extraAbilities: keyBy(item.extraAbilities, 'key'),
     })),
-    'subject'
+    'subject',
   );
 }
 
 /**
  * Retrieve the invalid permissions from the given defined schema.
- * @param {ISubjectAbilitiesSchema[]} schema 
- * @param permissions 
- * @returns 
+ * @param {ISubjectAbilitiesSchema[]} schema
+ * @param permissions
+ * @returns
  */
-export function getInvalidPermissions(
-  schema: ISubjectAbilitiesSchema[],
-  permissions
-) {
+export function getInvalidPermissions(schema: ISubjectAbilitiesSchema[], permissions) {
   const schemaMap = transformAbilitySchemaToMap(schema);
 
   return permissions.filter((permission) => {
@@ -32,8 +29,7 @@ export function getInvalidPermissions(
 
     if (
       !schemaMap[subject] ||
-      (!schemaMap[subject].abilities[ability] &&
-        !schemaMap[subject].extraAbilities[ability])
+      (!schemaMap[subject].abilities[ability] && !schemaMap[subject].extraAbilities[ability])
     ) {
       return true;
     }

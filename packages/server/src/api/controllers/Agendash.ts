@@ -1,8 +1,8 @@
+import config from '@/config';
+import agendash from 'agendash';
 import { Router } from 'express';
 import basicAuth from 'express-basic-auth';
-import agendash from 'agendash';
 import { Container } from 'typedi';
-import config from '@/config';
 
 export default class AgendashController {
   static router() {
@@ -17,7 +17,7 @@ export default class AgendashController {
         },
         challenge: true,
       }),
-      agendash(agendaInstance)
+      agendash(agendaInstance),
     );
     return router;
   }

@@ -21,11 +21,7 @@ function TrialBalanceSheetBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <TrialBalanceSheetTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <TrialBalanceSheetTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

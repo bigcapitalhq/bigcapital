@@ -1,22 +1,20 @@
-import { Inject } from 'typedi';
+import {
+  ILedgerEntry,
+  ITransactionsByVendorsFilter,
+  ITransactionsByVendorsService,
+  ITransactionsByVendorsStatement,
+} from '@/interfaces';
+import Ledger from '@/services/Accounting/Ledger';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { Tenant } from '@/system/models';
 import moment from 'moment';
 import * as R from 'ramda';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ITransactionsByVendorsService,
-  ITransactionsByVendorsFilter,
-  ITransactionsByVendorsStatement,
-  ILedgerEntry,
-} from '@/interfaces';
+import { Inject } from 'typedi';
 import TransactionsByVendor from './TransactionsByVendor';
-import Ledger from '@/services/Accounting/Ledger';
-import TransactionsByVendorRepository from './TransactionsByVendorRepository';
-import { Tenant } from '@/system/models';
 import { TransactionsByVendorMeta } from './TransactionsByVendorMeta';
+import TransactionsByVendorRepository from './TransactionsByVendorRepository';
 
-export class TransactionsByVendorsInjectable
-  implements ITransactionsByVendorsService
-{
+export class TransactionsByVendorsInjectable implements ITransactionsByVendorsService {
   @Inject()
   private tenancy: TenancyService;
 
@@ -60,17 +58,16 @@ export class TransactionsByVendorsInjectable
   private async getVendorsOpeningBalanceEntries(
     tenantId: number,
     openingDate: Date,
-    customersIds?: number[]
+    customersIds?: number[],
   ): Promise<ILedgerEntry[]> {
-    const openingTransactions =
-      await this.reportRepository.getVendorsOpeningBalance(
-        tenantId,
-        openingDate,
-        customersIds
-      );
+    const openingTransactions = await this.reportRepository.getVendorsOpeningBalance(
+      tenantId,
+      openingDate,
+      customersIds,
+    );
     return R.compose(
       R.map(R.assoc('date', openingDate)),
-      R.map(R.assoc('accountNormal', 'credit'))
+      R.map(R.assoc('accountNormal', 'credit')),
     )(openingTransactions);
   }
 
@@ -80,23 +77,14 @@ export class TransactionsByVendorsInjectable
    * @param {Date|string} openingDate
    * @param {number[]} customersIds
    */
-  private async getVendorsPeriodEntries(
-    tenantId: number,
-    fromDate: Date,
-    toDate: Date
-  ): Promise<ILedgerEntry[]> {
-    const transactions =
-      await this.reportRepository.getVendorsPeriodTransactions(
-        tenantId,
-        fromDate,
-        toDate
-      );
+  private async getVendorsPeriodEntries(tenantId: number, fromDate: Date, toDate: Date): Promise<ILedgerEntry[]> {
+    const transactions = await this.reportRepository.getVendorsPeriodTransactions(tenantId, fromDate, toDate);
     return R.compose(
       R.map(R.assoc('accountNormal', 'credit')),
       R.map((trans) => ({
         ...trans,
         referenceTypeFormatted: trans.referenceTypeFormatted,
-      }))
+      })),
     )(transactions);
   }
 
@@ -107,18 +95,11 @@ export class TransactionsByVendorsInjectable
    * @param {Date} toDate
    * @returns {Promise<ILedgerEntry[]>}
    */
-  private async getReportEntries(
-    tenantId: number,
-    fromDate: Date,
-    toDate: Date
-  ): Promise<ILedgerEntry[]> {
+  private async getReportEntries(tenantId: number, fromDate: Date, toDate: Date): Promise<ILedgerEntry[]> {
     const openingBalanceDate = moment(fromDate).subtract(1, 'days').toDate();
 
     return [
-      ...(await this.getVendorsOpeningBalanceEntries(
-        tenantId,
-        openingBalanceDate
-      )),
+      ...(await this.getVendorsOpeningBalanceEntries(tenantId, openingBalanceDate)),
       ...(await this.getVendorsPeriodEntries(tenantId, fromDate, toDate)),
     ];
   }
@@ -131,32 +112,23 @@ export class TransactionsByVendorsInjectable
    */
   public async transactionsByVendors(
     tenantId: number,
-    query: ITransactionsByVendorsFilter
+    query: ITransactionsByVendorsFilter,
   ): Promise<ITransactionsByVendorsStatement> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const i18n = this.tenancy.i18n(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = { ...this.defaultQuery, ...query };
 
     // Retrieve the report vendors.
-    const vendors = await this.reportRepository.getVendors(
-      tenantId,
-      filter.vendorsIds
-    );
+    const vendors = await this.reportRepository.getVendors(tenantId, filter.vendorsIds);
     // Retrieve the accounts graph.
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Journal transactions.
-    const reportEntries = await this.getReportEntries(
-      tenantId,
-      filter.fromDate,
-      filter.toDate
-    );
+    const reportEntries = await this.getReportEntries(tenantId, filter.fromDate, filter.toDate);
     // Ledger collection.
     const journal = new Ledger(reportEntries);
 
@@ -167,7 +139,7 @@ export class TransactionsByVendorsInjectable
       journal,
       filter,
       tenant.metadata.baseCurrency,
-      i18n
+      i18n,
     );
     const meta = await this.transactionsByVendorMeta.meta(tenantId, filter);
 

@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
-import { IVendor, AccountNormal, ILedgerEntry } from '@/interfaces';
+import { AccountNormal, ILedgerEntry, IVendor } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
+import { Service } from 'typedi';
 
 @Service()
 export class VendorGLEntries {
@@ -33,10 +33,7 @@ export class VendorGLEntries {
    * @param   {IVendor} vendor
    * @returns {ILedgerEntry}
    */
-  private getOpeningBalanceGLDebitEntry = (
-    costAccountId: number,
-    vendor: IVendor
-  ): ILedgerEntry => {
+  private getOpeningBalanceGLDebitEntry = (costAccountId: number, vendor: IVendor): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
     return {
@@ -55,10 +52,7 @@ export class VendorGLEntries {
    * @param   {IVendor} vendor
    * @returns {ILedgerEntry}
    */
-  private getOpeningBalanceGLCreditEntry = (
-    APAccountId: number,
-    vendor: IVendor
-  ): ILedgerEntry => {
+  private getOpeningBalanceGLCreditEntry = (APAccountId: number, vendor: IVendor): ILedgerEntry => {
     const commonEntry = this.getOpeningBalanceGLCommonEntry(vendor);
 
     return {
@@ -77,19 +71,9 @@ export class VendorGLEntries {
    * @param   {IVendor} vendor
    * @returns {ILedgerEntry[]}
    */
-  public getOpeningBalanceGLEntries = (
-    APAccountId: number,
-    costAccountId: number,
-    vendor: IVendor
-  ): ILedgerEntry[] => {
-    const debitEntry = this.getOpeningBalanceGLDebitEntry(
-      costAccountId,
-      vendor
-    );
-    const creditEntry = this.getOpeningBalanceGLCreditEntry(
-      APAccountId,
-      vendor
-    );
+  public getOpeningBalanceGLEntries = (APAccountId: number, costAccountId: number, vendor: IVendor): ILedgerEntry[] => {
+    const debitEntry = this.getOpeningBalanceGLDebitEntry(costAccountId, vendor);
+    const creditEntry = this.getOpeningBalanceGLCreditEntry(APAccountId, vendor);
     return [debitEntry, creditEntry];
   };
 
@@ -100,16 +84,8 @@ export class VendorGLEntries {
    * @param   {IVendor} vendor
    * @returns {Ledger}
    */
-  public getOpeningBalanceLedger = (
-    APAccountId: number,
-    costAccountId: number,
-    vendor: IVendor
-  ) => {
-    const entries = this.getOpeningBalanceGLEntries(
-      APAccountId,
-      costAccountId,
-      vendor
-    );
+  public getOpeningBalanceLedger = (APAccountId: number, costAccountId: number, vendor: IVendor) => {
+    const entries = this.getOpeningBalanceGLEntries(APAccountId, costAccountId, vendor);
     return new Ledger(entries);
   };
 }

@@ -11,10 +11,7 @@ import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption'
 /**
  * Table actions menu.
  */
-export function ActionsMenu({
-  row: { original },
-  payload: { onEdit, onDelete },
-}) {
+export function ActionsMenu({ row: { original }, payload: { onEdit, onDelete } }) {
   return (
     <Menu>
       <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>

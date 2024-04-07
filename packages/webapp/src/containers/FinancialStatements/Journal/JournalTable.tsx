@@ -4,12 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
 import { TableStyle } from '@/constants';
-import {
-  ReportDataTable,
-  FinancialSheet,
-  TableFastCell,
-  TableVirtualizedListRows,
-} from '@/components';
+import { ReportDataTable, FinancialSheet, TableFastCell, TableVirtualizedListRows } from '@/components';
 
 import { useJournalSheetContext } from './JournalProvider';
 
@@ -47,9 +42,7 @@ export function JournalTable({ companyName }) {
         columns={columns}
         data={table.rows}
         rowClassNames={tableRowTypesToClassnames}
-        noResults={intl.get(
-          'this_report_does_not_contain_any_data_between_date_period',
-        )}
+        noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
         expanded={expandedRows}
         sticky={true}
         TableRowsRenderer={TableVirtualizedListRows}

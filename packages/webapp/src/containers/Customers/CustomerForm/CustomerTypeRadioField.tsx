@@ -13,16 +13,11 @@ import { handleStringChange, saveInvoke } from '@/utils';
  */
 export default function RadioCustomer(props) {
   const { onChange, ...rest } = props;
-  
 
   return (
     <FastField name={'customer_type'}>
       {({ form, field: { value }, meta: { error, touched } }) => (
-        <FormGroup
-          inline={true}
-          label={<T id={'customer_type'} />}
-          className={classNames('form-group--customer_type')}
-        >
+        <FormGroup inline={true} label={<T id={'customer_type'} />} className={classNames('form-group--customer_type')}>
           <RadioGroup
             inline={true}
             onChange={handleStringChange((value) => {
@@ -32,10 +27,7 @@ export default function RadioCustomer(props) {
             selectedValue={value}
           >
             <Radio label={intl.get('business')} value="business" />
-            <Radio
-              label={intl.get('individual')}
-              value="individual"
-            />
+            <Radio label={intl.get('individual')} value="individual" />
           </RadioGroup>
         </FormGroup>
       )}

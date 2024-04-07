@@ -2,14 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  FormatNumber,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, FormatNumber, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
@@ -40,10 +33,7 @@ export function InvoiceDetailTableFooter() {
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
-        <TotalLine
-          title={<T id={'invoice.details.payment_amount'} />}
-          value={invoice.payment_amount_formatted}
-        />
+        <TotalLine title={<T id={'invoice.details.payment_amount'} />} value={invoice.payment_amount_formatted} />
         <TotalLine
           title={<T id={'invoice.details.due_amount'} />}
           value={invoice.due_amount_formatted}

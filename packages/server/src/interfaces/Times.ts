@@ -18,8 +18,8 @@ export interface IProjectTimeCreateDTO extends BaseProjectTimeDTO {}
 export interface IProjectTimeEditDTO extends BaseProjectTimeDTO {}
 
 export interface IProjectTimeCreatePOJO extends IProjectTime {}
-export interface IProjectTimeEditPOJO extends IProjectTime{}
-export interface IProjectTimeGetPOJO extends IProjectTime{}
+export interface IProjectTimeEditPOJO extends IProjectTime {}
+export interface IProjectTimeGetPOJO extends IProjectTime {}
 
 export interface IProjectTimeCreateEventPayload {
   tenantId: number;

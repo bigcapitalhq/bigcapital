@@ -1,28 +1,11 @@
 // @ts-nocheck
 import { useRef } from 'react';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
-import {
-  AppToaster,
-  Icon,
-  If,
-  Stack,
-  FormattedMessage as T,
-} from '@/components';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import { AppToaster, Icon, If, Stack, FormattedMessage as T } from '@/components';
 import { useProfitLossSheetContext } from './ProfitLossProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import {
-  useProfitLossSheetCsvExport,
-  useProfitLossSheetXlsxExport,
-} from '@/hooks/query';
+import { useProfitLossSheetCsvExport, useProfitLossSheetXlsxExport } from '@/hooks/query';
 import classNames from 'classnames';
 
 /**
@@ -42,8 +25,7 @@ export function ProfitLossSheetLoadingBar() {
  * Balance sheet alerts.
  */
 export function ProfitLossSheetAlerts() {
-  const { isLoading, sheetRefetch, profitLossSheet } =
-    useProfitLossSheetContext();
+  const { isLoading, sheetRefetch, profitLossSheet } = useProfitLossSheetContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
@@ -144,10 +126,7 @@ export const ProfitLossSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

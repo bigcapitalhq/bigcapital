@@ -14,15 +14,10 @@ const BillsListContext = createContext();
  */
 function BillsListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: billsViews, isLoading: isViewsLoading } =
-    useResourceViews('bills');
+  const { data: billsViews, isLoading: isViewsLoading } = useResourceViews('bills');
 
   // Fetch the accounts resource fields.
-  const {
-    data: resourceMeta,
-    isLoading: isResourceLoading,
-    isFetching: isResourceFetching,
-  } = useResourceMeta('bills');
+  const { data: resourceMeta, isLoading: isResourceLoading, isFetching: isResourceFetching } = useResourceMeta('bills');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -52,10 +47,7 @@ function BillsListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'bills'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'bills'}>
       <BillsListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

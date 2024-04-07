@@ -6,7 +6,7 @@ import {
   isOrganizationBuiltFactory,
   isOrganizationSubscribedFactory,
   isOrganizationCongratsFactory,
-  isOrganizationBuildRunningFactory
+  isOrganizationBuildRunningFactory,
 } from '@/store/organizations/organizations.selectors';
 
 export default (mapState) => {
@@ -26,9 +26,9 @@ export default (mapState) => {
 
       isOrganizationSubscribed: isOrganizationSubscribed(state, props),
       isOrganizationSetupCompleted: isOrganizationCongrats(state, props),
-      isOrganizationBuildRunning: isOrganizationBuildRunning(state, props)
+      isOrganizationBuildRunning: isOrganizationBuildRunning(state, props),
     };
-    return (mapState) ? mapState(mapped, state, props) : mapped;
+    return mapState ? mapState(mapped, state, props) : mapped;
   };
   return connect(mapStateToProps);
 };

@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
-import {
-  ICreditNoteCreatingPayload,
-  ICreditNoteEditingPayload,
-} from '@/interfaces';
+import { ICreditNoteCreatingPayload, ICreditNoteEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
 
 @Service()
@@ -15,14 +12,8 @@ export class CreditNoteWarehousesValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.creditNote.onCreating,
-      this.validateCreditNoteWarehouseExistanceOnCreating
-    );
-    bus.subscribe(
-      events.creditNote.onEditing,
-      this.validateCreditNoteWarehouseExistanceOnEditing
-    );
+    bus.subscribe(events.creditNote.onCreating, this.validateCreditNoteWarehouseExistanceOnCreating);
+    bus.subscribe(events.creditNote.onEditing, this.validateCreditNoteWarehouseExistanceOnEditing);
     return bus;
   }
 
@@ -34,10 +25,7 @@ export class CreditNoteWarehousesValidateSubscriber {
     creditNoteDTO,
     tenantId,
   }: ICreditNoteCreatingPayload) => {
-    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-      tenantId,
-      creditNoteDTO
-    );
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(tenantId, creditNoteDTO);
   };
 
   /**
@@ -48,9 +36,6 @@ export class CreditNoteWarehousesValidateSubscriber {
     tenantId,
     creditNoteEditDTO,
   }: ICreditNoteEditingPayload) => {
-    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-      tenantId,
-      creditNoteEditDTO
-    );
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(tenantId, creditNoteEditDTO);
   };
 }

@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 @Service()
@@ -8,10 +8,7 @@ export class BranchValidator {
   @Inject()
   tenancy: HasTenancyService;
 
-  public validateBranchNotOnlyWarehouse = async (
-    tenantId: number,
-    branchId: number
-  ) => {
+  public validateBranchNotOnlyWarehouse = async (tenantId: number, branchId: number) => {
     const { Branch } = this.tenancy.models(tenantId);
 
     const warehouses = await Branch.query().whereNot('id', branchId);
@@ -27,11 +24,7 @@ export class BranchValidator {
    * @param {string} code
    * @param {number} exceptBranchId
    */
-  public validateBranchCodeUnique = async (
-    tenantId: number,
-    code: string,
-    exceptBranchId?: number
-  ): Promise<void> => {
+  public validateBranchCodeUnique = async (tenantId: number, code: string, exceptBranchId?: number): Promise<void> => {
     const { Branch } = this.tenancy.models(tenantId);
 
     const branch = await Branch.query()

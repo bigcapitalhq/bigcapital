@@ -55,9 +55,7 @@ function ProjectTimeEntryForm({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'project_time_entry.success_message'
-            : 'project_time_entry.dialog.edit_success_message',
+          isNewMode ? 'project_time_entry.success_message' : 'project_time_entry.dialog.edit_success_message',
         ),
 
         intent: Intent.SUCCESS,
@@ -74,13 +72,9 @@ function ProjectTimeEntryForm({
       setSubmitting(false);
     };
     if (isNewMode) {
-      createProjectTimeEntryMutate([values.task_id, form])
-        .then(onSuccess)
-        .catch(onError);
+      createProjectTimeEntryMutate([values.task_id, form]).then(onSuccess).catch(onError);
     } else {
-      editProjectTimeEntryMutate([timesheetId, form])
-        .then(onSuccess)
-        .catch(onError);
+      editProjectTimeEntryMutate([timesheetId, form]).then(onSuccess).catch(onError);
     }
   };
 

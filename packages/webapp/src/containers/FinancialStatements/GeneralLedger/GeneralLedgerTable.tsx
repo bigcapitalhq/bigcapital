@@ -5,12 +5,7 @@ import styled from 'styled-components';
 
 import { TableStyle } from '@/constants';
 import { defaultExpanderReducer, tableRowTypesToClassnames } from '@/utils';
-import {
-  FinancialSheet,
-  ReportDataTable,
-  TableFastCell,
-  TableVirtualizedListRows,
-} from '@/components';
+import { FinancialSheet, ReportDataTable, TableFastCell, TableVirtualizedListRows } from '@/components';
 
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import { useGeneralLedgerTableColumns } from './dynamicColumns';
@@ -29,10 +24,7 @@ export default function GeneralLedgerTable({ companyName }) {
   const columns = useGeneralLedgerTableColumns();
 
   // Default expanded rows of general ledger table.
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(table.rows, 1),
-    [table.rows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(table.rows, 1), [table.rows]);
 
   return (
     <FinancialSheet
@@ -44,9 +36,7 @@ export default function GeneralLedgerTable({ companyName }) {
       fullWidth={true}
     >
       <GeneralLedgerDataTable
-        noResults={intl.get(
-          'this_report_does_not_contain_any_data_between_date_period',
-        )}
+        noResults={intl.get('this_report_does_not_contain_any_data_between_date_period')}
         columns={columns}
         data={table.rows}
         rowClassNames={tableRowTypesToClassnames}

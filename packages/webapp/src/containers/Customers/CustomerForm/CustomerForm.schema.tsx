@@ -3,18 +3,12 @@ import * as Yup from 'yup';
 import intl from 'react-intl-universal';
 
 const Schema = Yup.object().shape({
-  customer_type: Yup.string()
-    .required()
-    .trim()
-    .label(intl.get('customer_type_')),
+  customer_type: Yup.string().required().trim().label(intl.get('customer_type_')),
   salutation: Yup.string().trim(),
   first_name: Yup.string().trim(),
   last_name: Yup.string().trim(),
   company_name: Yup.string().trim(),
-  display_name: Yup.string()
-    .trim()
-    .required()
-    .label(intl.get('display_name_')),
+  display_name: Yup.string().trim().required().label(intl.get('display_name_')),
 
   email: Yup.string().email().nullable(),
   work_phone: Yup.number(),

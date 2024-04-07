@@ -1,17 +1,11 @@
-import { omit, get, chain } from 'lodash';
-import moment from 'moment';
-import { Container } from 'typedi';
-import async from 'async';
+import { IAccountChange, IAccountsChange, IJournalEntry, IJournalPoster } from '@/interfaces';
 import JournalEntry from '@/services/Accounting/JournalEntry';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  IJournalEntry,
-  IJournalPoster,
-  IAccountChange,
-  IAccountsChange,
-  TEntryType,
-} from '@/interfaces';
+import async from 'async';
 import Knex from 'knex';
+import { chain, get, omit } from 'lodash';
+import moment from 'moment';
+import { Container } from 'typedi';
 
 const CONTACTS_CONFIG = [
   {
@@ -59,10 +53,7 @@ export default class JournalPoster implements IJournalPoster {
       this.accountsDepGraph = accountsGraph;
     }
     this.trx = trx;
-    this.saveContactBalanceQueue = async.queue(
-      this.saveContactBalanceChangeTask.bind(this),
-      10
-    );
+    this.saveContactBalanceQueue = async.queue(this.saveContactBalanceChangeTask.bind(this), 10);
   }
 
   /**
@@ -149,28 +140,26 @@ export default class JournalPoster implements IJournalPoster {
   async saveContactsBalance() {
     await this.initAccountsDepGraph();
 
-    const balanceChanges = Object.entries(this.contactsBalanceTable).map(
-      ([contactId, entries]) => ({
-        contactId,
-        entries: entries.filter((entry) => {
-          const account = this.accountsDepGraph.getNodeData(entry.account);
+    const balanceChanges = Object.entries(this.contactsBalanceTable).map(([contactId, entries]) => ({
+      contactId,
+      entries: entries.filter((entry) => {
+        const account = this.accountsDepGraph.getNodeData(entry.account);
 
-          return (
-            account &&
-            CONTACTS_CONFIG.some((config) => {
-              return config.accountBySlug === account.slug;
-            })
-          );
-        }),
-      })
-    );
+        return (
+          account &&
+          CONTACTS_CONFIG.some((config) => {
+            return config.accountBySlug === account.slug;
+          })
+        );
+      }),
+    }));
 
     const balanceEntries = chain(balanceChanges)
       .map((change) =>
         change.entries.map((entry) => ({
           ...entry,
           contactId: change.contactId,
-        }))
+        })),
       )
       .flatten()
       .value();
@@ -196,12 +185,7 @@ export default class JournalPoster implements IJournalPoster {
       balanceChange += debit - credit;
     }
     // Contact change balance.
-    await contactRepository.changeNumber(
-      { id: contactId },
-      'balance',
-      balanceChange,
-      this.trx
-    );
+    await contactRepository.changeNumber({ id: contactId }, 'balance', balanceChange, this.trx);
   }
 
   /**
@@ -223,15 +207,8 @@ export default class JournalPoster implements IJournalPoster {
    * @param {number} accountId -
    * @param {IAccountChange} accountChange
    */
-  private _setAccountBalanceChange(
-    accountId: number,
-    accountChange: IAccountChange
-  ) {
-    this.balancesChange = this.accountBalanceChangeReducer(
-      this.balancesChange,
-      accountId,
-      accountChange
-    );
+  private _setAccountBalanceChange(accountId: number, accountChange: IAccountChange) {
+    this.balancesChange = this.accountBalanceChangeReducer(this.balancesChange, accountId, accountChange);
   }
 
   /**
@@ -244,7 +221,7 @@ export default class JournalPoster implements IJournalPoster {
   private accountBalanceChangeReducer(
     balancesChange: IAccountsChange,
     accountId: number,
-    accountChange: IAccountChange
+    accountChange: IAccountChange,
   ) {
     const change = { ...balancesChange };
 
@@ -267,12 +244,10 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Promise<{ account: number, change: number }>}
    */
   private async convertBalanceChangesToArr(
-    accountsChange: IAccountsChange
+    accountsChange: IAccountsChange,
   ): Promise<{ account: number; change: number }[]> {
     const mappedList: { account: number; change: number }[] = [];
-    const accountsIds: number[] = Object.keys(accountsChange).map((id) =>
-      parseInt(id, 10)
-    );
+    const accountsIds: number[] = Object.keys(accountsChange).map((id) => Number.parseInt(id, 10));
 
     await Promise.all(
       accountsIds.map(async (account: number) => {
@@ -283,17 +258,13 @@ export default class JournalPoster implements IJournalPoster {
         let change = 0;
 
         if (accountChange.credit) {
-          change +=
-            normal === 'credit'
-              ? accountChange.credit
-              : -1 * accountChange.credit;
+          change += normal === 'credit' ? accountChange.credit : -1 * accountChange.credit;
         }
         if (accountChange.debit) {
-          change +=
-            normal === 'debit' ? accountChange.debit : -1 * accountChange.debit;
+          change += normal === 'debit' ? accountChange.debit : -1 * accountChange.debit;
         }
         mappedList.push({ account, change });
-      })
+      }),
     );
     return mappedList;
   }
@@ -311,26 +282,18 @@ export default class JournalPoster implements IJournalPoster {
     const balancesAccounts = balancesList.map((b) => b.account);
 
     // Ensure the accounts has atleast zero in amount.
-    await Account.query(this.trx)
-      .where('amount', null)
-      .whereIn('id', balancesAccounts)
-      .patch({ amount: 0 });
+    await Account.query(this.trx).where('amount', null).whereIn('id', balancesAccounts).patch({ amount: 0 });
 
     const balanceUpdateOpers: Promise<void>[] = [];
 
     balancesList.forEach((balance: { account: number; change: number }) => {
       const method: string = balance.change < 0 ? 'decrement' : 'increment';
 
-      this.logger.info(
-        '[journal_poster] increment/decrement account balance.',
-        {
-          balance,
-          tenantId: this.tenantId,
-        }
-      );
-      const query = Account.query(this.trx)
-        [method]('amount', Math.abs(balance.change))
-        .where('id', balance.account);
+      this.logger.info('[journal_poster] increment/decrement account balance.', {
+        balance,
+        tenantId: this.tenantId,
+      });
+      const query = Account.query(this.trx)[method]('amount', Math.abs(balance.change)).where('id', balance.account);
 
       balanceUpdateOpers.push(query);
     });
@@ -344,9 +307,7 @@ export default class JournalPoster implements IJournalPoster {
    * @param {IAccountsChange} accountsChange
    * @returns {IAccountsChange}
    */
-  private balanceChangeWithDepends(
-    accountsChange: IAccountsChange
-  ): IAccountsChange {
+  private balanceChangeWithDepends(accountsChange: IAccountsChange): IAccountsChange {
     const accountsIds = Object.keys(accountsChange);
     let changes: IAccountsChange = {};
 
@@ -355,11 +316,7 @@ export default class JournalPoster implements IJournalPoster {
       const depAccountsIds = this.accountsDepGraph.dependantsOf(accountId);
 
       [accountId, ...depAccountsIds].forEach((account) => {
-        changes = this.accountBalanceChangeReducer(
-          changes,
-          account,
-          accountChange
-        );
+        changes = this.accountBalanceChangeReducer(changes, account, accountChange);
       });
     });
     return changes;
@@ -389,7 +346,7 @@ export default class JournalPoster implements IJournalPoster {
           accountId: entry.account,
           ...omit(entry, ['account']),
         },
-        this.trx
+        this.trx,
       );
       saveOperations.push(oper);
     });
@@ -422,9 +379,7 @@ export default class JournalPoster implements IJournalPoster {
    */
   removeEntries(ids: number[] = []) {
     const targetIds = ids.length <= 0 ? this.entries.map((e) => e.id) : ids;
-    const removeEntries = this.entries.filter(
-      (e) => targetIds.indexOf(e.id) !== -1
-    );
+    const removeEntries = this.entries.filter((e) => targetIds.indexOf(e.id) !== -1);
     this.entries = this.entries.filter((e) => targetIds.indexOf(e.id) === -1);
 
     removeEntries.forEach((entry) => {
@@ -445,10 +400,7 @@ export default class JournalPoster implements IJournalPoster {
     const { transactionsRepository } = this.repositories;
 
     if (this.deletedEntriesIds.length > 0) {
-      await transactionsRepository.deleteWhereIdIn(
-        this.deletedEntriesIds,
-        this.trx
-      );
+      await transactionsRepository.deleteWhereIdIn(this.deletedEntriesIds, this.trx);
     }
   }
 
@@ -496,19 +448,14 @@ export default class JournalPoster implements IJournalPoster {
    * @param  {string} dataType? -
    * @return {number}
    */
-  getClosingBalance(
-    accountId: number,
-    closingDate: Date | string,
-    dateType: string = 'day'
-  ): number {
+  getClosingBalance(accountId: number, closingDate: Date | string, dateType = 'day'): number {
     let closingBalance = 0;
     const momentClosingDate = moment(closingDate);
 
     this.entries.forEach((entry) => {
       // Can not continue if not before or event same closing date.
       if (
-        (!momentClosingDate.isAfter(entry.date, dateType) &&
-          !momentClosingDate.isSame(entry.date, dateType)) ||
+        (!momentClosingDate.isAfter(entry.date, dateType) && !momentClosingDate.isSame(entry.date, dateType)) ||
         (entry.account !== accountId && accountId)
       ) {
         return;
@@ -529,25 +476,15 @@ export default class JournalPoster implements IJournalPoster {
    * @param {String} dateType -
    * @return {Number}
    */
-  getAccountBalance(
-    accountId: number,
-    closingDate: Date | string,
-    dateType: string
-  ) {
+  getAccountBalance(accountId: number, closingDate: Date | string, dateType: string) {
     const accountNode = this.accountsDepGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
-    const depAccounts = depAccountsIds.map((id) =>
-      this.accountsDepGraph.getNodeData(id)
-    );
+    const depAccounts = depAccountsIds.map((id) => this.accountsDepGraph.getNodeData(id));
 
-    let balance: number = 0;
+    let balance = 0;
 
     [...depAccounts, accountNode].forEach((account) => {
-      const closingBalance = this.getClosingBalance(
-        account.id,
-        closingDate,
-        dateType
-      );
+      const closingBalance = this.getClosingBalance(account.id, closingDate, dateType);
       this.accountsBalanceTable[account.id] = closingBalance;
       balance += this.accountsBalanceTable[account.id];
     });
@@ -568,8 +505,7 @@ export default class JournalPoster implements IJournalPoster {
     };
     this.entries.forEach((entry) => {
       if (
-        (!momentClosingDate.isAfter(entry.date, 'day') &&
-          !momentClosingDate.isSame(entry.date, 'day')) ||
+        (!momentClosingDate.isAfter(entry.date, 'day') && !momentClosingDate.isSame(entry.date, 'day')) ||
         (entry.account !== accountId && accountId)
       ) {
         return;
@@ -594,24 +530,14 @@ export default class JournalPoster implements IJournalPoster {
    * @return {Number}
    */
 
-  getTrialBalanceWithDepands(
-    accountId: number,
-    closingDate: Date,
-    dateType: string
-  ) {
+  getTrialBalanceWithDepands(accountId: number, closingDate: Date, dateType: string) {
     const accountNode = this.accountsDepGraph.getNodeData(accountId);
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
-    const depAccounts = depAccountsIds.map((id) =>
-      this.accountsDepGraph.getNodeData(id)
-    );
+    const depAccounts = depAccountsIds.map((id) => this.accountsDepGraph.getNodeData(id));
     const trialBalance = { credit: 0, debit: 0, balance: 0 };
 
     [...depAccounts, accountNode].forEach((account) => {
-      const _trialBalance = this.getTrialBalance(
-        account.id,
-        closingDate,
-        dateType
-      );
+      const _trialBalance = this.getTrialBalance(account.id, closingDate, dateType);
 
       trialBalance.credit += _trialBalance.credit;
       trialBalance.debit += _trialBalance.debit;
@@ -625,7 +551,7 @@ export default class JournalPoster implements IJournalPoster {
     contactId: number,
     contactType: string,
     closingDate?: Date | string,
-    openingDate?: Date | string
+    openingDate?: Date | string,
   ) {
     const momentClosingDate = moment(closingDate);
     const momentOpeningDate = moment(openingDate);
@@ -640,9 +566,7 @@ export default class JournalPoster implements IJournalPoster {
         (closingDate &&
           !momentClosingDate.isAfter(entry.date, 'day') &&
           !momentClosingDate.isSame(entry.date, 'day')) ||
-        (openingDate &&
-          !momentOpeningDate.isBefore(entry.date, 'day') &&
-          !momentOpeningDate.isSame(entry.date)) ||
+        (openingDate && !momentOpeningDate.isBefore(entry.date, 'day') && !momentOpeningDate.isSame(entry.date)) ||
         (accountId && entry.account !== accountId) ||
         (contactId && entry.contactId !== contactId) ||
         entry.contactType !== contactType
@@ -668,13 +592,7 @@ export default class JournalPoster implements IJournalPoster {
    * @param {String} contactType
    * @param {Date} closingDate
    */
-  getContactBalance(
-    accountId: number,
-    contactId: number,
-    contactType: string,
-    closingDate: Date,
-    openingDate: Date
-  ) {
+  getContactBalance(accountId: number, contactId: number, contactType: string, closingDate: Date, openingDate: Date) {
     const momentClosingDate = moment(closingDate);
     let balance = 0;
 
@@ -705,15 +623,13 @@ export default class JournalPoster implements IJournalPoster {
 
   /**
    * Retrieve account entries with depents accounts.
-   * @param {number} accountId - 
+   * @param {number} accountId -
    */
   getAccountEntriesWithDepents(accountId: number) {
     const depAccountsIds = this.accountsDepGraph.dependenciesOf(accountId);
     const accountsIds = [accountId, ...depAccountsIds];
 
-    return this.entries.filter(
-      (entry) => accountsIds.indexOf(entry.account) !== -1
-    );
+    return this.entries.filter((entry) => accountsIds.indexOf(entry.account) !== -1);
   }
 
   /**
@@ -746,9 +662,7 @@ export default class JournalPoster implements IJournalPoster {
         (closingDate &&
           !momentClosingDate.isAfter(entry.date, 'day') &&
           !momentClosingDate.isSame(entry.date, 'day')) ||
-        (openingDate &&
-          !momentOpeningDate.isBefore(entry.date, 'day') &&
-          !momentOpeningDate.isSame(entry.date)) ||
+        (openingDate && !momentOpeningDate.isBefore(entry.date, 'day') && !momentOpeningDate.isSame(entry.date)) ||
         entry.contactId === contactId
       ) {
         return true;

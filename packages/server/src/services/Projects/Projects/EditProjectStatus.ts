@@ -1,9 +1,9 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import { IProjectStatus } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class EditProjectStatusService {
@@ -21,17 +21,11 @@ export default class EditProjectStatusService {
    * @param {number} projectId -
    * @param {IProjectStatus} status -
    */
-  public editProjectStatus = async (
-    tenantId: number,
-    projectId: number,
-    status: IProjectStatus
-  ) => {
+  public editProjectStatus = async (tenantId: number, projectId: number, status: IProjectStatus) => {
     const { Project } = this.tenancy.models(tenantId);
 
     // Validate customer existance.
-    const oldProject = await Project.query()
-      .findById(projectId)
-      .throwIfNotFound();
+    const oldProject = await Project.query().findById(projectId).throwIfNotFound();
 
     // Edits the given project under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {

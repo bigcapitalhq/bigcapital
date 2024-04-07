@@ -22,9 +22,7 @@ function VendorsSelectRoot({
 }) {
   // Maybe inject create new item props to suggest component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   // Handles the create item click.
   const handleCreateItemClick = () => {

@@ -15,31 +15,20 @@ export function ConnectBankDialogContent() {
   return (
     <div>
       <TopDesc>
-        Connect your bank accounts and fetch the bank transactions using
-        one of our supported third-party service providers.
+        Connect your bank accounts and fetch the bank transactions using one of our supported third-party service
+        providers.
       </TopDesc>
 
       <Stack>
-        <BankServiceCard
-          title={'Plaid (US, UK & Canada)'}
-          icon={<PlaidIcon />}
-        >
+        <BankServiceCard title={'Plaid (US, UK & Canada)'} icon={<PlaidIcon />}>
           Plaid gives the connection to 12,000 financial institutions across US, UK and Canada.
         </BankServiceCard>
 
-        <BankServiceCard
-          title={'Teller (US) — Soon'}
-          icon={<TellerIcon />}
-          disabled
-        >
+        <BankServiceCard title={'Teller (US) — Soon'} icon={<TellerIcon />} disabled>
           Connect instantly with more than 5,000 financial institutions across US.
         </BankServiceCard>
 
-        <BankServiceCard
-          title={'Yodlee (Global) — Soon'}
-          icon={<YodleeIcon />}
-          disabled
-        >
+        <BankServiceCard title={'Yodlee (Global) — Soon'} icon={<YodleeIcon />} disabled>
           Connect instantly with a global network of financial institutions.
         </BankServiceCard>
       </Stack>

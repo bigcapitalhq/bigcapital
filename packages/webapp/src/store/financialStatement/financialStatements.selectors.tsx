@@ -93,72 +93,51 @@ export const salesTaxLiabilitySummaryFilterDrawerSelector = (state) => {
 /**
  * Retrieve balance sheet filter drawer.
  */
-export const getBalanceSheetFilterDrawer = createSelector(
-  balanceSheetFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getBalanceSheetFilterDrawer = createSelector(balanceSheetFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether trial balance sheet display filter drawer.
  */
-export const getTrialBalanceSheetFilterDrawer = createSelector(
-  trialBalanceFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getTrialBalanceSheetFilterDrawer = createSelector(trialBalanceFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve profit/loss filter drawer.
  */
-export const getProfitLossFilterDrawer = createSelector(
-  profitLossSheetFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getProfitLossFilterDrawer = createSelector(profitLossSheetFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether display general ledger (GL) filter drawer.
  */
-export const getGeneralLedgerFilterDrawer = createSelector(
-  generalLedgerFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getGeneralLedgerFilterDrawer = createSelector(generalLedgerFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether display journal sheet filter drawer.
  */
-export const getJournalFilterDrawer = createSelector(
-  journalFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getJournalFilterDrawer = createSelector(journalFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether display AR aging summary drawer filter.
  */
-export const getARAgingSummaryFilterDrawer = createSelector(
-  ARAgingSummaryFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getARAgingSummaryFilterDrawer = createSelector(ARAgingSummaryFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether display AR aging summary drawer filter.
  */
-export const getAPAgingSummaryFilterDrawer = createSelector(
-  APAgingSummaryFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getAPAgingSummaryFilterDrawer = createSelector(APAgingSummaryFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve financial statement query by the given sheet index.
@@ -171,32 +150,23 @@ export const getFinancialSheetQueryFactory = (sheetType) =>
 /**
  * Retrieve whether purchases by items display filter drawer.
  */
-export const getPurchasesByItemsFilterDrawer = createSelector(
-  purchasesByItemsFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getPurchasesByItemsFilterDrawer = createSelector(purchasesByItemsFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether sales by items display filter drawer.
  */
-export const getSalesByItemsFilterDrawer = createSelector(
-  salesByItemsFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getSalesByItemsFilterDrawer = createSelector(salesByItemsFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve whether sells by items display filter drawer.
  */
-export const getInventoryValuationFilterDrawer = createSelector(
-  inventoryValuationFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getInventoryValuationFilterDrawer = createSelector(inventoryValuationFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve customers balance summary filter drawer.
@@ -230,42 +200,30 @@ export const getCustomersTransactionsFilterDrawer = createSelector(
 /**
  * Retrieve vendors transactions filter drawer.
  */
-export const getVendorsTransactionsFilterDrawer = createSelector(
-  vendorsTransactionsFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getVendorsTransactionsFilterDrawer = createSelector(vendorsTransactionsFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve cash flow statement filter drawer.
  */
-export const getCashFlowStatementFilterDrawer = createSelector(
-  cashFlowStatementFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getCashFlowStatementFilterDrawer = createSelector(cashFlowStatementFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve inventory item details filter drawer.
  */
-export const getInventoryItemDetailsFilterDrawer = createSelector(
-  inventoryItemDetailsDrawerFilter,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getInventoryItemDetailsFilterDrawer = createSelector(inventoryItemDetailsDrawerFilter, (isOpen) => {
+  return isOpen;
+});
 
 /**
  * Retrieve Realized Gain or Loss filter drawer.
  */
-export const getRealizedGainOrLossFilterDrawer = createSelector(
-  realizedGainOrLossFilterDrawerSelector,
-  (isOpen) => {
-    return isOpen;
-  },
-);
+export const getRealizedGainOrLossFilterDrawer = createSelector(realizedGainOrLossFilterDrawerSelector, (isOpen) => {
+  return isOpen;
+});
 /**
  * Retrieve Unrealized Gain or Loss filter drawer.
  */

@@ -1,7 +1,4 @@
-import {
-  IPurchasesByItemsReportQuery,
-  IPurchasesByItemsTable,
-} from '@/interfaces/PurchasesByItemsSheet';
+import { IPurchasesByItemsReportQuery, IPurchasesByItemsTable } from '@/interfaces/PurchasesByItemsSheet';
 import { Inject, Service } from 'typedi';
 import { PurchasesByItemsService } from './PurchasesByItemsService';
 import { PurchasesByItemsTable } from './PurchasesByItemsTable';
@@ -17,12 +14,8 @@ export class PurchasesByItemsTableInjectable {
    * @param {IPurchasesByItemsReportQuery} filter
    * @returns {Promise<IPurchasesByItemsTable>}
    */
-  public async table(
-    tenantId: number,
-    filter: IPurchasesByItemsReportQuery
-  ): Promise<IPurchasesByItemsTable> {
-    const { data, query, meta } =
-      await this.purchasesByItemsSheet.purchasesByItems(tenantId, filter);
+  public async table(tenantId: number, filter: IPurchasesByItemsReportQuery): Promise<IPurchasesByItemsTable> {
+    const { data, query, meta } = await this.purchasesByItemsSheet.purchasesByItems(tenantId, filter);
 
     const table = new PurchasesByItemsTable(data);
 

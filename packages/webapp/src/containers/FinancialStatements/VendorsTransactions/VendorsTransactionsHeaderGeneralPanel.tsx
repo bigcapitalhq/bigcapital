@@ -4,13 +4,7 @@ import React from 'react';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
 
-import {
-  Row,
-  Col,
-  FormattedMessage as T,
-  FFormGroup,
-  VendorsMultiSelect,
-} from '@/components';
+import { Row, Col, FormattedMessage as T, FFormGroup, VendorsMultiSelect } from '@/components';
 import { filterVendorsOptions } from '../constants';
 
 import {

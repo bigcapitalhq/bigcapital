@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import { isNull } from 'lodash';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
+import { isNull } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { Transformer } from './Transformer';
 
 @Service()
@@ -36,7 +36,7 @@ export class TransformerInjectable {
     tenantId: number,
     object: Record<string, any> | Record<string, any>[],
     transformer: Transformer,
-    options?: Record<string, any>
+    options?: Record<string, any>,
   ) {
     if (!isNull(tenantId)) {
       const context = await this.getApplicationContext(tenantId);

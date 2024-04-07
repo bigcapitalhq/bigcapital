@@ -1,5 +1,3 @@
-import * as R from 'ramda';
-import { isEmpty, sumBy } from 'lodash';
 import { ITaxRate } from '@/interfaces';
 import {
   SalesTaxLiabilitySummaryPayableById,
@@ -9,6 +7,8 @@ import {
   SalesTaxLiabilitySummarySalesById,
   SalesTaxLiabilitySummaryTotal,
 } from '@/interfaces/SalesTaxLiabilitySummary';
+import { isEmpty, sumBy } from 'lodash';
+import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 
 export class SalesTaxLiabilitySummary extends FinancialSheet {
@@ -28,7 +28,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
     query: SalesTaxLiabilitySummaryQuery,
     taxRates: ITaxRate[],
     payableTaxesById: SalesTaxLiabilitySummaryPayableById,
-    salesTaxesById: SalesTaxLiabilitySummarySalesById
+    salesTaxesById: SalesTaxLiabilitySummarySalesById,
   ) {
     super();
 
@@ -43,21 +43,15 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
    * @param {ITaxRate} taxRate
    * @returns {SalesTaxLiabilitySummaryRate}
    */
-  private taxRateLiability = (
-    taxRate: ITaxRate
-  ): SalesTaxLiabilitySummaryRate => {
+  private taxRateLiability = (taxRate: ITaxRate): SalesTaxLiabilitySummaryRate => {
     const payableTax = this.payableTaxesById[taxRate.id];
     const salesTax = this.salesTaxesById[taxRate.id];
 
-    const payableTaxAmount = payableTax
-      ? payableTax.credit - payableTax.debit
-      : 0;
+    const payableTaxAmount = payableTax ? payableTax.credit - payableTax.debit : 0;
     const salesTaxAmount = salesTax ? salesTax.credit - salesTax.debit : 0;
 
     // Calculates the tax percentage.
-    const taxPercentage = R.compose(
-      R.unless(R.equals(0), R.divide(R.__, salesTaxAmount))
-    )(payableTaxAmount);
+    const taxPercentage = R.compose(R.unless(R.equals(0), R.divide(R.__, salesTaxAmount)))(payableTaxAmount);
 
     // Calculates the payable tax amount.
     const collectedTaxAmount = payableTax ? payableTax.debit : 0;
@@ -77,9 +71,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
    * @param {SalesTaxLiabilitySummaryRate[]} nodes
    * @returns {SalesTaxLiabilitySummaryRate[]}
    */
-  private filterNonTransactionsTaxRates = (
-    nodes: SalesTaxLiabilitySummaryRate[]
-  ): SalesTaxLiabilitySummaryRate[] => {
+  private filterNonTransactionsTaxRates = (nodes: SalesTaxLiabilitySummaryRate[]): SalesTaxLiabilitySummaryRate[] => {
     return nodes.filter((node) => {
       const salesTrxs = this.salesTaxesById[node.id];
       const payableTrxs = this.payableTaxesById[node.id];
@@ -93,10 +85,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
    * @returns {SalesTaxLiabilitySummaryRate[]}
    */
   private taxRatesLiability = (): SalesTaxLiabilitySummaryRate[] => {
-    return R.compose(
-      this.filterNonTransactionsTaxRates,
-      R.map(this.taxRateLiability)
-    )(this.taxRates);
+    return R.compose(this.filterNonTransactionsTaxRates, R.map(this.taxRateLiability))(this.taxRates);
   };
 
   /**
@@ -104,9 +93,7 @@ export class SalesTaxLiabilitySummary extends FinancialSheet {
    * @param {SalesTaxLiabilitySummaryRate[]} nodes
    * @returns {SalesTaxLiabilitySummaryTotal}
    */
-  private taxRatesTotal = (
-    nodes: SalesTaxLiabilitySummaryRate[]
-  ): SalesTaxLiabilitySummaryTotal => {
+  private taxRatesTotal = (nodes: SalesTaxLiabilitySummaryRate[]): SalesTaxLiabilitySummaryTotal => {
     const taxableAmount = sumBy(nodes, 'taxableAmount.amount');
     const taxAmount = sumBy(nodes, 'taxAmount.amount');
     const collectedTaxAmount = sumBy(nodes, 'collectedTaxAmount.amount');

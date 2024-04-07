@@ -34,6 +34,6 @@ export function BillExchangeRateInputField({ ...props }) {
  * bill project select.
  * @returns {JSX.Element}
  */
- export function BillProjectSelectButton({ label }) {
+export function BillProjectSelectButton({ label }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }

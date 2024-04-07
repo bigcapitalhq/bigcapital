@@ -2,12 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Position, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, ErrorMessage, useFormikContext } from 'formik';
 import { CLASSES } from '@/constants/classes';
@@ -21,20 +16,11 @@ import {
   VendorDrawerLink,
   VendorsSelect,
 } from '@/components';
-import {
-  vendorsFieldShouldUpdate,
-  useObserveVendorCreditNoSettings,
-} from './utils';
+import { vendorsFieldShouldUpdate, useObserveVendorCreditNoSettings } from './utils';
 
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { VendorCreditNoteExchangeRateInputField } from './components';
-import {
-  momentFormatter,
-  compose,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, compose, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -70,10 +56,7 @@ function VendorCreditNoteFormHeaderFields({
     }
   };
   // Syncs vendor credit number settings with form.
-  useObserveVendorCreditNoSettings(
-    vendorcreditNumberPrefix,
-    vendorcreditNextNumber,
-  );
+  useObserveVendorCreditNoSettings(vendorcreditNumberPrefix, vendorcreditNextNumber);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_FIELDS)}>
@@ -81,10 +64,7 @@ function VendorCreditNoteFormHeaderFields({
       <VendorCreditFormVendorSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <VendorCreditNoteExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <VendorCreditNoteExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
       {/* ------- Vendor Credit date ------- */}
       <FastField name={'vendor_credit_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -92,10 +72,7 @@ function VendorCreditNoteFormHeaderFields({
             label={<T id={'credit_note.label_credit_note_date'} />}
             inline={true}
             labelInfo={<FieldRequiredHint />}
-            className={classNames(
-              'form-group--vendor_credit_date',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--vendor_credit_date', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="vendor_credit_date" />}
           >
@@ -139,11 +116,7 @@ function VendorCreditNoteFormHeaderFields({
                 }}
                 tooltip={true}
                 tooltipProps={{
-                  content: (
-                    <T
-                      id={'setting_your_auto_generated_vendor_credit_number'}
-                    />
-                  ),
+                  content: <T id={'setting_your_auto_generated_vendor_credit_number'} />,
                   position: Position.BOTTOM_LEFT,
                 }}
               />

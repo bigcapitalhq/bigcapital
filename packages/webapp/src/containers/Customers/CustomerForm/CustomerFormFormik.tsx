@@ -35,14 +35,8 @@ function CustomerFormFormik({
   onCancel,
   className,
 }) {
-  const {
-    customer,
-    submitPayload,
-    contactDuplicate,
-    editCustomerMutate,
-    createCustomerMutate,
-    isNewMode,
-  } = useCustomerFormContext();
+  const { customer, submitPayload, contactDuplicate, editCustomerMutate, createCustomerMutate, isNewMode } =
+    useCustomerFormContext();
 
   /**
    * Initial values in create and edit mode.
@@ -65,9 +59,7 @@ function CustomerFormFormik({
     const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_customer_has_been_created_successfully'
-            : 'the_item_customer_has_been_edited_successfully',
+          isNewMode ? 'the_customer_has_been_created_successfully' : 'the_item_customer_has_been_edited_successfully',
         ),
         intent: Intent.SUCCESS,
       });
@@ -85,20 +77,12 @@ function CustomerFormFormik({
     if (isNewMode) {
       createCustomerMutate(formValues).then(onSuccess).catch(onError);
     } else {
-      editCustomerMutate([customer.id, formValues])
-        .then(onSuccess)
-        .catch(onError);
+      editCustomerMutate([customer.id, formValues]).then(onSuccess).catch(onError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_CUSTOMER,
-        className,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_CUSTOMER, className)}>
       <Formik
         validationSchema={isNewMode ? CreateCustomerForm : EditCustomerForm}
         initialValues={initialValues}

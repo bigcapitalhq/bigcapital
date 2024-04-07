@@ -1,17 +1,12 @@
-import { Service, Inject } from 'typedi';
+import { ServiceError } from '@/exceptions';
+import { ICustomer, ISaleReceipt, ISaleReceiptSmsDetails, SMS_NOTIFICATION_KEY } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import {
-  ISaleReceiptSmsDetails,
-  ISaleReceipt,
-  SMS_NOTIFICATION_KEY,
-  ICustomer,
-} from '@/interfaces';
-import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
-import { formatNumber, formatSmsMessage } from 'utils';
 import { TenantMetadata } from '@/system/models';
-import { ServiceError } from '@/exceptions';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Inject, Service } from 'typedi';
+import { formatNumber, formatSmsMessage } from 'utils';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { ERRORS } from './constants';
 
@@ -38,17 +33,13 @@ export class SaleReceiptNotifyBySms {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Retrieve the sale receipt or throw not found service error.
-    const saleReceipt = await SaleReceipt.query()
-      .findById(saleReceiptId)
-      .withGraphFetched('customer');
+    const saleReceipt = await SaleReceipt.query().findById(saleReceiptId).withGraphFetched('customer');
 
     // Validates the receipt receipt existance.
     this.validateSaleReceiptExistance(saleReceipt);
 
     // Validate the customer phone number.
-    this.saleSmsNotification.validateCustomerPhoneNumber(
-      saleReceipt.customer.personalPhone
-    );
+    this.saleSmsNotification.validateCustomerPhoneNumber(saleReceipt.customer.personalPhone);
     // Triggers `onSaleReceiptNotifySms` event.
     await this.eventPublisher.emitAsync(events.saleReceipt.onNotifySms, {
       tenantId,
@@ -71,19 +62,12 @@ export class SaleReceiptNotifyBySms {
    * @param {ICustomer} customer
    * @returns
    */
-  public sendSmsNotification = async (
-    tenantId: number,
-    saleReceipt: ISaleReceipt & { customer: ICustomer }
-  ) => {
+  public sendSmsNotification = async (tenantId: number, saleReceipt: ISaleReceipt & { customer: ICustomer }) => {
     const smsClient = this.tenancy.smsClient(tenantId);
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieve formatted sms notification message of receipt details.
-    const formattedSmsMessage = this.formattedReceiptDetailsMessage(
-      tenantId,
-      saleReceipt,
-      tenantMetadata
-    );
+    const formattedSmsMessage = this.formattedReceiptDetailsMessage(tenantId, saleReceipt, tenantMetadata);
     const phoneNumber = saleReceipt.customer.personalPhone;
 
     // Run the send sms notification message job.
@@ -96,13 +80,10 @@ export class SaleReceiptNotifyBySms {
    * @param {number} receiptId
    * @returns {Promise<void>}
    */
-  public notifyViaSmsAfterCreation = async (
-    tenantId: number,
-    receiptId: number
-  ): Promise<void> => {
+  public notifyViaSmsAfterCreation = async (tenantId: number, receiptId: number): Promise<void> => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
       tenantId,
-      SMS_NOTIFICATION_KEY.SALE_RECEIPT_DETAILS
+      SMS_NOTIFICATION_KEY.SALE_RECEIPT_DETAILS,
     );
     // Can't continue if the sms auto-notification is not enabled.
     if (!notification.isNotificationEnabled) return;
@@ -120,17 +101,13 @@ export class SaleReceiptNotifyBySms {
   private formattedReceiptDetailsMessage = (
     tenantId: number,
     saleReceipt: ISaleReceipt & { customer: ICustomer },
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ): string => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
       tenantId,
-      SMS_NOTIFICATION_KEY.SALE_RECEIPT_DETAILS
+      SMS_NOTIFICATION_KEY.SALE_RECEIPT_DETAILS,
     );
-    return this.formatReceiptDetailsMessage(
-      notification.smsMessage,
-      saleReceipt,
-      tenantMetadata
-    );
+    return this.formatReceiptDetailsMessage(notification.smsMessage, saleReceipt, tenantMetadata);
   };
 
   /**
@@ -143,7 +120,7 @@ export class SaleReceiptNotifyBySms {
   private formatReceiptDetailsMessage = (
     smsMessage: string,
     saleReceipt: ISaleReceipt & { customer: ICustomer },
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ): string => {
     // Format the receipt amount.
     const formattedAmount = formatNumber(saleReceipt.amount, {
@@ -164,16 +141,11 @@ export class SaleReceiptNotifyBySms {
    * @param {number} tenantId -
    * @param {number} saleReceiptId - Sale receipt id.
    */
-  public smsDetails = async (
-    tenantId: number,
-    saleReceiptId: number
-  ): Promise<ISaleReceiptSmsDetails> => {
+  public smsDetails = async (tenantId: number, saleReceiptId: number): Promise<ISaleReceiptSmsDetails> => {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     // Retrieve the sale receipt or throw not found service error.
-    const saleReceipt = await SaleReceipt.query()
-      .findById(saleReceiptId)
-      .withGraphFetched('customer');
+    const saleReceipt = await SaleReceipt.query().findById(saleReceiptId).withGraphFetched('customer');
 
     // Validates the receipt receipt existance.
     this.validateSaleReceiptExistance(saleReceipt);
@@ -182,11 +154,7 @@ export class SaleReceiptNotifyBySms {
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieve the sale receipt formatted sms notification message.
-    const formattedSmsMessage = this.formattedReceiptDetailsMessage(
-      tenantId,
-      saleReceipt,
-      tenantMetadata
-    );
+    const formattedSmsMessage = this.formattedReceiptDetailsMessage(tenantId, saleReceipt, tenantMetadata);
     return {
       customerName: saleReceipt.customer.displayName,
       customerPhoneNumber: saleReceipt.customer.personalPhone,

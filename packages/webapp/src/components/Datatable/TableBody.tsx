@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 export default function TableBody({}) {
   return (
     <ScrollSyncPane>

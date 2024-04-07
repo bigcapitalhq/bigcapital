@@ -26,15 +26,7 @@ function ReceiptFormDeliverDialogContentRoot({
     closeDialog(DialogsName.ReceiptFormMailDeliver);
   };
 
-  return (
-    <ReceiptMailDialogContent
-      receiptId={receiptId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancel}
-    />
-  );
+  return <ReceiptMailDialogContent receiptId={receiptId} onFormSubmit={handleSubmit} onCancelClick={handleCancel} />;
 }
 
-export default R.compose(withDialogActions)(
-  ReceiptFormDeliverDialogContentRoot,
-);
+export default R.compose(withDialogActions)(ReceiptFormDeliverDialogContentRoot);

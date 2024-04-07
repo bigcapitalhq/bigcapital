@@ -3,21 +3,15 @@ import React, { createContext, useContext } from 'react';
 import { Box } from '@/components';
 import { useImportFileMeta } from '@/hooks/query/import';
 
-interface ImportFileMapBootContextValue {}
+type ImportFileMapBootContextValue = {};
 
-const ImportFileMapBootContext = createContext<ImportFileMapBootContextValue>(
-  {} as ImportFileMapBootContextValue,
-);
+const ImportFileMapBootContext = createContext<ImportFileMapBootContextValue>({} as ImportFileMapBootContextValue);
 
 export const useImportFileMapBootContext = () => {
-  const context = useContext<ImportFileMapBootContextValue>(
-    ImportFileMapBootContext,
-  );
+  const context = useContext<ImportFileMapBootContextValue>(ImportFileMapBootContext);
 
   if (!context) {
-    throw new Error(
-      'useImportFileMapBootContext must be used within an ImportFileMapBootProvider',
-    );
+    throw new Error('useImportFileMapBootContext must be used within an ImportFileMapBootProvider');
   }
   return context;
 };
@@ -27,10 +21,7 @@ interface ImportFileMapBootProps {
   children: React.ReactNode;
 }
 
-export const ImportFileMapBootProvider = ({
-  importId,
-  children,
-}: ImportFileMapBootProps) => {
+export const ImportFileMapBootProvider = ({ importId, children }: ImportFileMapBootProps) => {
   const {
     data: importFile,
     isLoading: isImportFileLoading,

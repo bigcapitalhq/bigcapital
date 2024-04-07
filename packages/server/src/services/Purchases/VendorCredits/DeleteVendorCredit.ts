@@ -1,16 +1,13 @@
-import { Service, Inject } from 'typedi';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import UnitOfWork from '@/services/UnitOfWork';
-import BaseVendorCredit from './BaseVendorCredit';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import {
-  IVendorCreditDeletedPayload,
-  IVendorCreditDeletingPayload,
-} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
+import { IVendorCreditDeletedPayload, IVendorCreditDeletingPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import BaseVendorCredit from './BaseVendorCredit';
+import { ERRORS } from './constants';
 
 @Service()
 export default class DeleteVendorCredit extends BaseVendorCredit {
@@ -28,27 +25,15 @@ export default class DeleteVendorCredit extends BaseVendorCredit {
    * @param {number} tenantId - Tenant id.
    * @param {number} vendorCreditId - Vendor credit id.
    */
-  public deleteVendorCredit = async (
-    tenantId: number,
-    vendorCreditId: number
-  ) => {
+  public deleteVendorCredit = async (tenantId: number, vendorCreditId: number) => {
     const { VendorCredit, ItemEntry } = this.tenancy.models(tenantId);
 
     // Retrieve the old vendor credit.
-    const oldVendorCredit = await this.getVendorCreditOrThrowError(
-      tenantId,
-      vendorCreditId
-    );
+    const oldVendorCredit = await this.getVendorCreditOrThrowError(tenantId, vendorCreditId);
     // Validates vendor credit has no associate refund transactions.
-    await this.validateVendorCreditHasNoRefundTransactions(
-      tenantId,
-      vendorCreditId
-    );
+    await this.validateVendorCreditHasNoRefundTransactions(tenantId, vendorCreditId);
     // Validates vendor credit has no associated applied to bills transactions.
-    await this.validateVendorCreditHasNoApplyBillsTransactions(
-      tenantId,
-      vendorCreditId
-    );
+    await this.validateVendorCreditHasNoApplyBillsTransactions(tenantId, vendorCreditId);
     // Deletes the vendor credit transactions under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onVendorCreditEditing` event.
@@ -59,10 +44,7 @@ export default class DeleteVendorCredit extends BaseVendorCredit {
       } as IVendorCreditDeletingPayload);
 
       // Deletes the associated credit note entries.
-      await ItemEntry.query(trx)
-        .where('reference_id', vendorCreditId)
-        .where('reference_type', 'VendorCredit')
-        .delete();
+      await ItemEntry.query(trx).where('reference_id', vendorCreditId).where('reference_type', 'VendorCredit').delete();
 
       // Deletes the credit note transaction.
       await VendorCredit.query(trx).findById(vendorCreditId).delete();
@@ -84,14 +66,11 @@ export default class DeleteVendorCredit extends BaseVendorCredit {
    */
   private validateVendorCreditHasNoRefundTransactions = async (
     tenantId: number,
-    vendorCreditId: number
+    vendorCreditId: number,
   ): Promise<void> => {
     const { RefundVendorCredit } = this.tenancy.models(tenantId);
 
-    const refundCredits = await RefundVendorCredit.query().where(
-      'vendorCreditId',
-      vendorCreditId
-    );
+    const refundCredits = await RefundVendorCredit.query().where('vendorCreditId', vendorCreditId);
     if (refundCredits.length > 0) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS);
     }
@@ -104,14 +83,11 @@ export default class DeleteVendorCredit extends BaseVendorCredit {
    */
   private validateVendorCreditHasNoApplyBillsTransactions = async (
     tenantId: number,
-    vendorCreditId: number
+    vendorCreditId: number,
   ): Promise<void> => {
     const { VendorCreditAppliedBill } = this.tenancy.models(tenantId);
 
-    const appliedTransactions = await VendorCreditAppliedBill.query().where(
-      'vendorCreditId',
-      vendorCreditId
-    );
+    const appliedTransactions = await VendorCreditAppliedBill.query().where('vendorCreditId', vendorCreditId);
     if (appliedTransactions.length > 0) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_APPLIED_BILLS);
     }

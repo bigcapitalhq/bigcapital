@@ -1,22 +1,12 @@
 import moment from 'moment';
-import {
-  request,
-  expect,
-} from '~/testInit';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 import ExchangeRate from '../../src/models/ExchangeRate';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
 
 describe('route: /exchange_rates/', () => {
   describe('POST: `/api/exchange_rates`', () => {
     it('Should response unauthorized in case the user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/exchange_rates')
-        .send();
+      const res = await request().post('/api/exchange_rates').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -32,7 +22,9 @@ describe('route: /exchange_rates/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'currency_code', location: 'body',
+        msg: 'Invalid value',
+        param: 'currency_code',
+        location: 'body',
       });
     });
 
@@ -46,7 +38,9 @@ describe('route: /exchange_rates/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'exchange_rate', location: 'body',
+        msg: 'Invalid value',
+        param: 'exchange_rate',
+        location: 'body',
       });
     });
 
@@ -60,7 +54,9 @@ describe('route: /exchange_rates/', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'date', location: 'body',
+        msg: 'Invalid value',
+        param: 'date',
+        location: 'body',
       });
     });
 
@@ -82,7 +78,8 @@ describe('route: /exchange_rates/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXCHANGE.RATE.DATE.PERIOD.DEFINED', code: 200,
+        type: 'EXCHANGE.RATE.DATE.PERIOD.DEFINED',
+        code: 200,
       });
     });
 
@@ -98,13 +95,10 @@ describe('route: /exchange_rates/', () => {
         });
       expect(res.status).equals(200);
 
-      const foundExchangeRate = await ExchangeRate.tenant().query()
-        .where('currency_code', 'USD');
+      const foundExchangeRate = await ExchangeRate.tenant().query().where('currency_code', 'USD');
 
       expect(foundExchangeRate.length).equals(1);
-      expect(
-        moment(foundExchangeRate[0].date).format('YYYY-MM-DD'),
-      ).equals('2020-02-02');
+      expect(moment(foundExchangeRate[0].date).format('YYYY-MM-DD')).equals('2020-02-02');
       expect(foundExchangeRate[0].currencyCode).equals('USD');
       expect(foundExchangeRate[0].exchangeRate).equals(4.4);
     });
@@ -134,14 +128,15 @@ describe('route: /exchange_rates/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
-          date: '2020-02-02', 
+          date: '2020-02-02',
           currency_code: 'USD',
           exchange_rate: 4.4,
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXCHANGE.RATE.NOT.FOUND', code: 200,
+        type: 'EXCHANGE.RATE.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -156,8 +151,7 @@ describe('route: /exchange_rates/', () => {
         });
       expect(res.status).equals(200);
 
-      const foundExchangeRate = await ExchangeRate.tenant().query()
-        .where('id', exRate.id);
+      const foundExchangeRate = await ExchangeRate.tenant().query().where('id', exRate.id);
 
       expect(foundExchangeRate.length).equals(1);
       expect(foundExchangeRate[0].exchangeRate).equals(4.4);
@@ -174,7 +168,8 @@ describe('route: /exchange_rates/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXCHANGE.RATE.NOT.FOUND', code: 200,
+        type: 'EXCHANGE.RATE.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -204,8 +199,10 @@ describe('route: /exchange_rates/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'EXCHANGE.RATES.IS.NOT.FOUND', code: 200, ids: [12332, 32432],
-      })
+        type: 'EXCHANGE.RATES.IS.NOT.FOUND',
+        code: 200,
+        ids: [12332, 32432],
+      });
     });
 
     it('Should delete the given excahnge rates ids.', async () => {
@@ -221,10 +218,9 @@ describe('route: /exchange_rates/', () => {
         })
         .send();
 
-      const foundExchangeRate = await ExchangeRate.tenant().query()
-        .whereIn('id', [exRate.id, exRate2.id]);
+      const foundExchangeRate = await ExchangeRate.tenant().query().whereIn('id', [exRate.id, exRate2.id]);
 
       expect(foundExchangeRate.length).equals(0);
-    })
+    });
   });
 });

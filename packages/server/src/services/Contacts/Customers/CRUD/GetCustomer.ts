@@ -1,7 +1,6 @@
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import CustomerTransfromer from '../CustomerTransformer';
 
 @Service()
@@ -21,16 +20,9 @@ export class GetCustomer {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the customer model or throw not found error.
-    const customer = await Contact.query()
-      .modify('customer')
-      .findById(customerId)
-      .throwIfNotFound();
+    const customer = await Contact.query().modify('customer').findById(customerId).throwIfNotFound();
 
     // Retrieves the transformered customers.
-    return this.transformer.transform(
-      tenantId,
-      customer,
-      new CustomerTransfromer()
-    );
+    return this.transformer.transform(tenantId, customer, new CustomerTransfromer());
   }
 }

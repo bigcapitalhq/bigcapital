@@ -3,13 +3,7 @@ import React from 'react';
 import classnames from 'classnames';
 import { LoadingIndicator } from '../Indicator';
 
-export function DashboardInsider({
-  loading,
-  children,
-  name,
-  mount = false,
-  className,
-}) {
+export function DashboardInsider({ loading, children, name, mount = false, className }) {
   return (
     <div
       className={classnames(

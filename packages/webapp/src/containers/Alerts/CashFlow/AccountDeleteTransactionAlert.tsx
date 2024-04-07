@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import { useDeleteCashflowTransaction } from '@/hooks/query';
 
@@ -33,8 +29,7 @@ function AccountDeleteTransactionAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deleteTransactionMutate, isLoading } =
-    useDeleteCashflowTransaction();
+  const { mutateAsync: deleteTransactionMutate, isLoading } = useDeleteCashflowTransaction();
 
   // handle cancel delete alert
   const handleCancelDeleteAlert = () => {
@@ -57,16 +52,9 @@ function AccountDeleteTransactionAlert({
             data: { errors },
           },
         }) => {
-          if (
-            errors.find(
-              (e) =>
-                e.type ===
-                'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED',
-            )
-          ) {
+          if (errors.find((e) => e.type === 'CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED')) {
             AppToaster.show({
-              message:
-                'Cannot delete transaction converted from uncategorized transaction but you uncategorize it.',
+              message: 'Cannot delete transaction converted from uncategorized transaction but you uncategorize it.',
               intent: Intent.DANGER,
             });
           }
@@ -89,18 +77,10 @@ function AccountDeleteTransactionAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={
-            'cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it'
-          }
-        />
+        <FormattedHTMLMessage id={'cash_flow_transaction_once_delete_this_transaction_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(AccountDeleteTransactionAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(AccountDeleteTransactionAlert);

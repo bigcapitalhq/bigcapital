@@ -63,7 +63,7 @@ const initialState = {
   },
   salesTaxLiabilitySummary: {
     displayFilterDrawer: false,
-  }
+  },
 };
 
 /**
@@ -73,9 +73,7 @@ const financialStatementFilterToggle = (financialName, statePath) => {
   return {
     [`${financialName}/${t.DISPLAY_FILTER_DRAWER_TOGGLE}`]: (state, action) => {
       state[statePath].displayFilterDrawer =
-        typeof action?.payload?.toggle !== 'undefined'
-          ? action.payload.toggle
-          : !state[statePath].displayFilterDrawer;
+        typeof action?.payload?.toggle !== 'undefined' ? action.payload.toggle : !state[statePath].displayFilterDrawer;
     },
   };
 };
@@ -90,45 +88,15 @@ export default createReducer(initialState, {
   ...financialStatementFilterToggle(t.AP_AGING_SUMMARY, 'APAgingSummary'),
   ...financialStatementFilterToggle(t.PURCHASES_BY_ITEMS, 'purchasesByItems'),
   ...financialStatementFilterToggle(t.SALES_BY_ITEMS, 'salesByItems'),
-  ...financialStatementFilterToggle(
-    t.INVENTORY_VALUATION,
-    'inventoryValuation',
-  ),
-  ...financialStatementFilterToggle(
-    t.CUSTOMERS_BALANCE_SUMMARY,
-    'customersBalanceSummary',
-  ),
-  ...financialStatementFilterToggle(
-    t.VENDORS_BALANCE_SUMMARY,
-    'vendorsBalanceSummary',
-  ),
-  ...financialStatementFilterToggle(
-    t.CUSTOMERS_TRANSACTIONS,
-    'customersTransactions',
-  ),
-  ...financialStatementFilterToggle(
-    t.VENDORS_TRANSACTIONS,
-    'vendorsTransactions',
-  ),
+  ...financialStatementFilterToggle(t.INVENTORY_VALUATION, 'inventoryValuation'),
+  ...financialStatementFilterToggle(t.CUSTOMERS_BALANCE_SUMMARY, 'customersBalanceSummary'),
+  ...financialStatementFilterToggle(t.VENDORS_BALANCE_SUMMARY, 'vendorsBalanceSummary'),
+  ...financialStatementFilterToggle(t.CUSTOMERS_TRANSACTIONS, 'customersTransactions'),
+  ...financialStatementFilterToggle(t.VENDORS_TRANSACTIONS, 'vendorsTransactions'),
   ...financialStatementFilterToggle(t.CASH_FLOW_STATEMENT, 'cashFlowStatement'),
-  ...financialStatementFilterToggle(
-    t.INVENTORY_ITEM_DETAILS,
-    'inventoryItemDetails',
-  ),
-  ...financialStatementFilterToggle(
-    t.REALIZED_GAIN_OR_LOSS,
-    'realizedGainOrLoss',
-  ),
-  ...financialStatementFilterToggle(
-    t.UNREALIZED_GAIN_OR_LOSS,
-    'unrealizedGainOrLoss',
-  ),
-  ...financialStatementFilterToggle(
-    t.PROJECT_PROFITABILITY_SUMMARY,
-    'projectProfitabilitySummary',
-  ),
-  ...financialStatementFilterToggle(
-    t.SALES_TAX_LIABILITY_SUMMARY,
-    'salesTaxLiabilitySummary',
-  )
+  ...financialStatementFilterToggle(t.INVENTORY_ITEM_DETAILS, 'inventoryItemDetails'),
+  ...financialStatementFilterToggle(t.REALIZED_GAIN_OR_LOSS, 'realizedGainOrLoss'),
+  ...financialStatementFilterToggle(t.UNREALIZED_GAIN_OR_LOSS, 'unrealizedGainOrLoss'),
+  ...financialStatementFilterToggle(t.PROJECT_PROFITABILITY_SUMMARY, 'projectProfitabilitySummary'),
+  ...financialStatementFilterToggle(t.SALES_TAX_LIABILITY_SUMMARY, 'salesTaxLiabilitySummary'),
 });

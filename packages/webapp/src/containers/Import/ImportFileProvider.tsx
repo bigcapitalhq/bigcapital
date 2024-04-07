@@ -1,11 +1,5 @@
 // @ts-nocheck
-import React, {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useContext,
-  useState,
-} from 'react';
+import React, { Dispatch, SetStateAction, createContext, useContext, useState } from 'react';
 
 export type EntityColumnField = {
   key: string;
@@ -70,17 +64,13 @@ const ExampleDescription =
   'You can download the sample file to obtain detailed information about the data fields used during the import.';
 const ExampleTitle = 'Table Example';
 
-const ImportFileContext = createContext<ImportFileContextValue>(
-  {} as ImportFileContextValue,
-);
+const ImportFileContext = createContext<ImportFileContextValue>({} as ImportFileContextValue);
 
 export const useImportFileContext = () => {
   const context = useContext<ImportFileContextValue>(ImportFileContext);
 
   if (!context) {
-    throw new Error(
-      'useImportFileContext must be used within an ImportFileProvider',
-    );
+    throw new Error('useImportFileContext must be used within an ImportFileProvider');
   }
   return context;
 };
@@ -137,9 +127,5 @@ export const ImportFileProvider = ({
     exampleDescription,
   };
 
-  return (
-    <ImportFileContext.Provider value={value}>
-      {children}
-    </ImportFileContext.Provider>
-  );
+  return <ImportFileContext.Provider value={value}>{children}</ImportFileContext.Provider>;
 };

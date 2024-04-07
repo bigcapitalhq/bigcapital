@@ -24,7 +24,7 @@ export default class DynamicFilterSearch extends DynamicFilterFilterRoles {
 
   /**
    * Retrieve the filter roles from model search roles.
-   * @param {string} searchKeyword 
+   * @param {string} searchKeyword
    * @returns {IFilterRole[]}
    */
   private getModelSearchFilterRoles(searchKeyword: string): IFilterRole[] {
@@ -38,7 +38,7 @@ export default class DynamicFilterSearch extends DynamicFilterFilterRoles {
   }
 
   /**
-   * 
+   *
    */
   setResponseMeta() {
     this.responseMeta = {

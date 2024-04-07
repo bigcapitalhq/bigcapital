@@ -25,15 +25,8 @@ function ProjectTaskForm({
   closeDialog,
 }) {
   // task form dialog context.
-  const {
-    taskId,
-    projectId,
-    isNewMode,
-    dialogName,
-    projectTask,
-    createProjectTaskMutate,
-    editProjectTaskMutate,
-  } = useProjectTaskFormContext();
+  const { taskId, projectId, isNewMode, dialogName, projectTask, createProjectTaskMutate, editProjectTaskMutate } =
+    useProjectTaskFormContext();
 
   // Initial form values
   const initialValues = {
@@ -43,15 +36,13 @@ function ProjectTaskForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const form = {...values};
+    const form = { ...values };
 
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'project_task.dialog.success_message'
-            : 'project_task.dialog.edit_success_message',
+          isNewMode ? 'project_task.dialog.success_message' : 'project_task.dialog.edit_success_message',
         ),
 
         intent: Intent.SUCCESS,

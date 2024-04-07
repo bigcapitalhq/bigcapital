@@ -1,6 +1,5 @@
-import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
+import { Inject, Service } from 'typedi';
 
 interface IEasysmsIntegrateDTO {
   token: string;
@@ -25,10 +24,7 @@ export default class EasySmsIntegration {
    * @param {number} tenantId -
    * @param {IEasysmsIntegrateDTO} easysmsIntegrateDTO -
    */
-  public integrate = (
-    tenantId: number,
-    easysmsIntegrateDTO: IEasysmsIntegrateDTO
-  ) => {
+  public integrate = (tenantId: number, easysmsIntegrateDTO: IEasysmsIntegrateDTO) => {
     const settings = this.tenancy.settings(tenantId);
 
     settings.set({

@@ -5,6 +5,6 @@ export const getAllCountries = () => {
     return {
       ...Countries[countryCode],
       countryCode,
-    }
+    };
   });
 };

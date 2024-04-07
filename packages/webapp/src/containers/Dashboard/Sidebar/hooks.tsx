@@ -13,20 +13,14 @@ import {
   useFeatureCan,
 } from '@/hooks/state';
 import { SidebarMenu } from '@/constants/sidebarMenu';
-import {
-  ISidebarMenuItemType,
-  ISidebarSubscriptionAbility,
-} from './interfaces';
+import { ISidebarMenuItemType, ISidebarSubscriptionAbility } from './interfaces';
 import { filterValuesDeep, deepdash } from '@/utils';
 
 const deepDashConfig = {
   childrenPath: 'children',
   pathFormat: 'array',
 };
-const ingoreTypesEmpty = [
-  ISidebarMenuItemType.Group,
-  ISidebarMenuItemType.Overlay,
-];
+const ingoreTypesEmpty = [ISidebarMenuItemType.Group, ISidebarMenuItemType.Overlay];
 
 /**
  * Removes the all overlay items from the menu to the main-sidebar.
@@ -81,10 +75,7 @@ function useFilterSidebarItemAbilityPredicater() {
   return {
     // Retruns false if the item has `permission` prop and that permission has no ability.
     predicate: (item) => {
-      if (
-        item.permission &&
-        !ability.can(item.permission.ability, item.permission.subject)
-      ) {
+      if (item.permission && !ability.can(item.permission.ability, item.permission.subject)) {
         return false;
       }
       return true;
@@ -103,15 +94,9 @@ function useFilterSidebarItemSubscriptionPredicater() {
       const { subscription } = item;
 
       if (subscription) {
-        const isActive = includes(subscription, [
-          ISidebarSubscriptionAbility.Active,
-        ])
-          ? isSubscriptionActive
-          : true;
+        const isActive = includes(subscription, [ISidebarSubscriptionAbility.Active]) ? isSubscriptionActive : true;
 
-        const isInactive = includes(subscription, [
-          ISidebarSubscriptionAbility.Inactive,
-        ])
+        const isInactive = includes(subscription, [ISidebarSubscriptionAbility.Inactive])
           ? isSubscriptionInactive
           : true;
 
@@ -130,14 +115,9 @@ function useFilterSidebarItemSubscriptionPredicater() {
 function useFilterSidebarMenuAbility(menu) {
   const { predicate: predFeature } = useFilterSidebarItemFeaturePredicater();
   const { predicate: predAbility } = useFilterSidebarItemAbilityPredicater();
-  const { predicate: predSubscription } =
-    useFilterSidebarItemSubscriptionPredicater();
+  const { predicate: predSubscription } = useFilterSidebarItemSubscriptionPredicater();
 
-  return deepdash.filterDeep(
-    menu,
-    (item) => predFeature(item) && predAbility(item),
-    deepDashConfig,
-  );
+  return deepdash.filterDeep(menu, (item) => predFeature(item) && predAbility(item), deepDashConfig);
 }
 
 /**
@@ -201,8 +181,7 @@ function useBindSidebarItemDialogClick() {
  * Binds click action for the sidebar overlay item.
  */
 function useBindSidebarItemOverlayClick() {
-  const { toggleSidebarSubmenu, closeSidebarSubmenu } =
-    useSidebarSubmnuActions();
+  const { toggleSidebarSubmenu, closeSidebarSubmenu } = useSidebarSubmnuActions();
 
   // Handle sidebar item click.
   const onClick = (item) => (event) => {
@@ -232,18 +211,9 @@ function useBindSidebarItemClick(menu) {
       menu,
       (item) => {
         return R.compose(
-          R.when(
-            R.propSatisfies(R.equals(ISidebarMenuItemType.Link), 'type'),
-            bindLinkClickEvt,
-          ),
-          R.when(
-            R.propSatisfies(R.equals(ISidebarMenuItemType.Overlay), 'type'),
-            bindOverlayClickEvt,
-          ),
-          R.when(
-            R.propSatisfies(R.equals(ISidebarMenuItemType.Dialog), 'type'),
-            bindItemDialogEvt,
-          ),
+          R.when(R.propSatisfies(R.equals(ISidebarMenuItemType.Link), 'type'), bindLinkClickEvt),
+          R.when(R.propSatisfies(R.equals(ISidebarMenuItemType.Overlay), 'type'), bindOverlayClickEvt),
+          R.when(R.propSatisfies(R.equals(ISidebarMenuItemType.Dialog), 'type'), bindItemDialogEvt),
         )(item);
       },
       deepDashConfig,
@@ -261,10 +231,7 @@ const findSubmenuBySubmenuId = R.curry((submenuId, menu) => {
   const groupItem = deepdash.findDeep(
     menu,
     (item) => {
-      return (
-        item.type === ISidebarMenuItemType.Overlay &&
-        item.overlayId === submenuId
-      );
+      return item.type === ISidebarMenuItemType.Overlay && item.overlayId === submenuId;
     },
     deepDashConfig,
   );
@@ -337,9 +304,7 @@ export function useObserveSidebarExpendedBodyclass(sidebarExpended) {
  */
 export function useIsSidebarMenuItemActive(item) {
   const { submenuId } = useSidebarSubmenu();
-  return (
-    item.type === ISidebarMenuItemType.Overlay && submenuId === item.overlayId
-  );
+  return item.type === ISidebarMenuItemType.Overlay && submenuId === item.overlayId;
 }
 
 /**

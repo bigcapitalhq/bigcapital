@@ -8,26 +8,15 @@ export function InvoiceFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Invoice message --------- */}
-      <InvoiceMsgFormGroup
-        name={'invoice_message'}
-        label={<T id={'invoice_message'} />}
-      >
-        <FEditableText
-          name={'invoice_message'}
-          placeholder={intl.get('invoice_form.invoice_message.placeholder')}
-        />
+      <InvoiceMsgFormGroup name={'invoice_message'} label={<T id={'invoice_message'} />}>
+        <FEditableText name={'invoice_message'} placeholder={intl.get('invoice_form.invoice_message.placeholder')} />
       </InvoiceMsgFormGroup>
 
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'invoice_form.label.terms_conditions'} />}
-        name={'terms_conditions'}
-      >
+      <TermsConditsFormGroup label={<T id={'invoice_form.label.terms_conditions'} />} name={'terms_conditions'}>
         <FEditableText
           name={'terms_conditions'}
-          placeholder={intl.get(
-            'invoice_form.terms_and_conditions.placeholder',
-          )}
+          placeholder={intl.get('invoice_form.terms_and_conditions.placeholder')}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

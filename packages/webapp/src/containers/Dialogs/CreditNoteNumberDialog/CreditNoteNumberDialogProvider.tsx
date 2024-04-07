@@ -23,7 +23,6 @@ function CreditNoteNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useCreditNoteNumberDialogContext = () =>
-  React.useContext(CreditNoteNumberDialogContext);
+const useCreditNoteNumberDialogContext = () => React.useContext(CreditNoteNumberDialogContext);
 
 export { CreditNoteNumberDialogProvider, useCreditNoteNumberDialogContext };

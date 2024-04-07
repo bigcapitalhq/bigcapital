@@ -31,20 +31,13 @@ export function ContactSelectField({
     [contacts],
   );
 
-  const initialContact = useMemo(
-    () => contacts.find((a) => a.id === initialContactId),
-    [initialContactId, contacts],
-  );
+  const initialContact = useMemo(() => contacts.find((a) => a.id === initialContactId), [initialContactId, contacts]);
 
-  const [selecetedContact, setSelectedContact] = useState(
-    initialContact || null,
-  );
+  const [selecetedContact, setSelectedContact] = useState(initialContact || null);
 
   useEffect(() => {
     if (typeof selectedContactId !== 'undefined') {
-      const account = selectedContactId
-        ? contacts.find((a) => a.id === selectedContactId)
-        : null;
+      const account = selectedContactId ? contacts.find((a) => a.id === selectedContactId) : null;
       setSelectedContact(account);
     }
   }, [selectedContactId, contacts, setSelectedContact]);
@@ -77,9 +70,7 @@ export function ContactSelectField({
     >
       <Button
         disabled={disabled}
-        text={
-          selecetedContact ? selecetedContact.display_name : defaultSelectText
-        }
+        text={selecetedContact ? selecetedContact.display_name : defaultSelectText}
         {...buttonProps}
       />
     </Select>

@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const CreditNoteDetailDrawerContent = React.lazy(() =>
-  import('./CreditNoteDetailDrawerContent'),
-);
+const CreditNoteDetailDrawerContent = React.lazy(() => import('./CreditNoteDetailDrawerContent'));
 
 /**
  * Credit note detail drawer.
@@ -19,12 +17,7 @@ function CreditNoteDetailDrawer({
   payload: { creditNoteId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
         <CreditNoteDetailDrawerContent creditNoteId={creditNoteId} />
       </DrawerSuspense>

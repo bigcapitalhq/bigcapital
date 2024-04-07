@@ -1,16 +1,6 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-import {
-  PaymentReceive,
-  PaymentReceiveEntry,
-} from 'models';
+import { PaymentReceive } from 'models';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: `/sales/payment_receives`', () => {
   describe('POST: `/sales/payment_receives`', () => {
@@ -104,12 +94,13 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: 1,
               payment_amount: 1000,
-            }
+            },
           ],
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.ID.NOT.EXISTS', code: 200,
+        type: 'CUSTOMER.ID.NOT.EXISTS',
+        code: 200,
       });
     });
 
@@ -129,13 +120,14 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: 1,
               payment_amount: 1000,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 300,
+        type: 'DEPOSIT.ACCOUNT.NOT.EXISTS',
+        code: 300,
       });
     });
 
@@ -157,13 +149,14 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: 1,
               payment_amount: 1000,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'DEPOSIT.ACCOUNT.NOT.EXISTS', code: 300,
+        type: 'DEPOSIT.ACCOUNT.NOT.EXISTS',
+        code: 300,
       });
     });
 
@@ -188,20 +181,21 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: 1,
               payment_amount: 1000,
-            }
+            },
           ],
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PAYMENT.RECEIVE.NUMBER.EXISTS', code: 400,
+        type: 'PAYMENT.RECEIVE.NUMBER.EXISTS',
+        code: 400,
       });
     });
-    
+
     it('Should store the payment receive details with associated entries.', async () => {
       const customer = await tenantFactory.create('customer');
       const account = await tenantFactory.create('account');
       const invoice = await tenantFactory.create('sale_invoice');
-      
+
       const res = await request()
         .post('/api/sales/payment_receives')
         .set('x-access-token', loginRes.body.token)
@@ -216,14 +210,14 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: invoice.id,
               payment_amount: 1000,
-            }
+            },
           ],
         });
 
       const storedPaymentReceived = await PaymentReceive.tenant().query().where('id', res.body.id).first();
 
       expect(res.status).equals(200);
-      expect(storedPaymentReceived.customerId).equals(customer.id)
+      expect(storedPaymentReceived.customerId).equals(customer.id);
       expect(storedPaymentReceived.referenceNo).equals('123');
       expect(storedPaymentReceived.paymentReceiveNo).equals('123');
     });
@@ -250,7 +244,7 @@ describe('route: `/sales/payment_receives`', () => {
             {
               invoice_id: invoice.id,
               payment_amount: 1000,
-            }
+            },
           ],
         });
       expect(res.status).equals(200);
@@ -260,14 +254,15 @@ describe('route: `/sales/payment_receives`', () => {
   describe('DELETE: `/sales/payment_receives/:id`', () => {
     it('Should response the given payment receive is not exists on the storage.', async () => {
       const res = await request()
-        .delete(`/api/sales/payment_receives/123`)
+        .delete('/api/sales/payment_receives/123')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'PAYMENT.RECEIVE.NO.EXISTS', code: 600,
+        type: 'PAYMENT.RECEIVE.NO.EXISTS',
+        code: 600,
       });
     });
   });

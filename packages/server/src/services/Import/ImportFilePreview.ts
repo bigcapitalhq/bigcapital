@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { ImportFilePreviewPOJO } from './interfaces';
 import { ImportFileProcess } from './ImportFileProcess';
+import { ImportFilePreviewPOJO } from './interfaces';
 
 @Service()
 export class ImportFilePreview {
@@ -17,10 +17,7 @@ export class ImportFilePreview {
    * @param {number} importId
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async preview(
-    tenantId: number,
-    importId: number
-  ): Promise<ImportFilePreviewPOJO> {
+  public async preview(tenantId: number, importId: number): Promise<ImportFilePreviewPOJO> {
     const knex = this.tenancy.knex(tenantId);
     const trx = await knex.transaction({ isolationLevel: 'read uncommitted' });
 

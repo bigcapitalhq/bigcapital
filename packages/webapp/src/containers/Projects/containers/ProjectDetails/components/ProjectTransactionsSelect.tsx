@@ -1,11 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  MenuItem,
-  Button,
-  Position,
-  PopoverInteractionKind,
-} from '@blueprintjs/core';
+import { MenuItem, Button, Position, PopoverInteractionKind } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/select';
 import { Icon, FormattedMessage as T } from '@/components';
 
@@ -15,17 +10,9 @@ import { Icon, FormattedMessage as T } from '@/components';
  * @param {*} param1
  * @returns
  */
-const projectTransactionItemRenderer = (
-  transaction,
-  { handleClick, modifiers, query },
-) => {
+const projectTransactionItemRenderer = (transaction, { handleClick, modifiers, query }) => {
   return (
-    <MenuItem
-      disabled={modifiers.disabled}
-      key={transaction.path}
-      onClick={handleClick}
-      text={transaction.name}
-    />
+    <MenuItem disabled={modifiers.disabled} key={transaction.path} onClick={handleClick} text={transaction.name} />
   );
 };
 
@@ -50,11 +37,7 @@ const projectTransactionSelectProps = {
 export function ProjectTransactionsSelect({ transactions, ...rest }) {
   return (
     <Select {...projectTransactionSelectProps} items={transactions} {...rest}>
-      <Button
-        minimal={true}
-        icon={<Icon icon={'plus'} />}
-        text={<T id={'projcet_details.action.new_transaction'} />}
-      />
+      <Button minimal={true} icon={<Icon icon={'plus'} />} text={<T id={'projcet_details.action.new_transaction'} />} />
     </Select>
   );
 }

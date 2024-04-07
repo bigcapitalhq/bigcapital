@@ -1,19 +1,12 @@
-import { Inject, Service } from 'typedi';
-import {
-  ISaleInvoiceMailSend,
-  ISaleInvoiceMailSent,
-  SendInvoiceMailDTO,
-} from '@/interfaces';
+import { ISaleInvoiceMailSend, ISaleInvoiceMailSent, SendInvoiceMailDTO } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import Mail from '@/lib/Mail';
+import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { SaleInvoicePdf } from './SaleInvoicePdf';
 import { SendSaleInvoiceMailCommon } from './SendInvoiceInvoiceMailCommon';
-import {
-  DEFAULT_INVOICE_REMINDER_MAIL_CONTENT,
-  DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT,
-} from './constants';
-import { parseAndValidateMailOptions } from '@/services/MailNotification/utils';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
+import { DEFAULT_INVOICE_REMINDER_MAIL_CONTENT, DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT } from './constants';
 
 @Service()
 export class SendInvoiceMailReminder {
@@ -34,11 +27,7 @@ export class SendInvoiceMailReminder {
    * @param {number} tenantId
    * @param {number} saleInvoiceId
    */
-  public async triggerMail(
-    tenantId: number,
-    saleInvoiceId: number,
-    messageOptions: SendInvoiceMailDTO
-  ) {
+  public async triggerMail(tenantId: number, saleInvoiceId: number, messageOptions: SendInvoiceMailDTO) {
     const payload = {
       tenantId,
       saleInvoiceId,
@@ -58,7 +47,7 @@ export class SendInvoiceMailReminder {
       tenantId,
       saleInvoiceId,
       DEFAULT_INVOICE_REMINDER_MAIL_SUBJECT,
-      DEFAULT_INVOICE_REMINDER_MAIL_CONTENT
+      DEFAULT_INVOICE_REMINDER_MAIL_CONTENT,
     );
   }
 
@@ -69,31 +58,16 @@ export class SendInvoiceMailReminder {
    * @param {SendInvoiceMailDTO} messageOptions
    * @returns {Promise<void>}
    */
-  public async sendMail(
-    tenantId: number,
-    saleInvoiceId: number,
-    messageOptions: SendInvoiceMailDTO
-  ) {
+  public async sendMail(tenantId: number, saleInvoiceId: number, messageOptions: SendInvoiceMailDTO) {
     const localMessageOpts = await this.getMailOption(tenantId, saleInvoiceId);
 
-    const messageOpts = parseAndValidateMailOptions(
-      localMessageOpts,
-      messageOptions
-    );
-    const mail = new Mail()
-      .setSubject(messageOpts.subject)
-      .setTo(messageOpts.to)
-      .setContent(messageOpts.body);
+    const messageOpts = parseAndValidateMailOptions(localMessageOpts, messageOptions);
+    const mail = new Mail().setSubject(messageOpts.subject).setTo(messageOpts.to).setContent(messageOpts.body);
 
     if (messageOpts.attachInvoice) {
       // Retrieves document buffer of the invoice pdf document.
-      const invoicePdfBuffer = await this.invoicePdf.saleInvoicePdf(
-        tenantId,
-        saleInvoiceId
-      );
-      mail.setAttachments([
-        { filename: 'invoice.pdf', content: invoicePdfBuffer },
-      ]);
+      const invoicePdfBuffer = await this.invoicePdf.saleInvoicePdf(tenantId, saleInvoiceId);
+      mail.setAttachments([{ filename: 'invoice.pdf', content: invoicePdfBuffer }]);
     }
     // Triggers the event `onSaleInvoiceSend`.
     await this.eventPublisher.emitAsync(events.saleInvoice.onMailReminderSend, {

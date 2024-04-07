@@ -64,7 +64,4 @@ function WarehouseMarkPrimaryAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(WarehouseMarkPrimaryAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(WarehouseMarkPrimaryAlert);

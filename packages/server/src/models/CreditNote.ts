@@ -1,16 +1,12 @@
-import { mixin, Model, raw } from 'objection';
-import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/CreditNotes/constants';
-import ModelSearchable from './ModelSearchable';
+import TenantModel from 'models/TenantModel';
+import { Model, mixin, raw } from 'objection';
 import CreditNoteMeta from './CreditNote.Meta';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class CreditNote extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class CreditNote extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */
@@ -29,15 +25,7 @@ export default class CreditNote extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'localAmount',
-      'isDraft',
-      'isPublished',
-      'isOpen',
-      'isClosed',
-      'creditsRemaining',
-      'creditsUsed',
-    ];
+    return ['localAmount', 'isDraft', 'isPublished', 'isOpen', 'isClosed', 'creditsRemaining', 'creditsUsed'];
   }
 
   /**
@@ -117,7 +105,7 @@ export default class CreditNote extends mixin(TenantModel, [
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) <
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -129,7 +117,7 @@ export default class CreditNote extends mixin(TenantModel, [
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) =
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -159,9 +147,7 @@ export default class CreditNote extends mixin(TenantModel, [
        *
        */
       sortByStatus(query, order) {
-        query.orderByRaw(
-          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${order}`
-        );
+        query.orderByRaw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICES_AMOUNT) = COALESCE(AMOUNT) ${order}`);
       },
     };
   }

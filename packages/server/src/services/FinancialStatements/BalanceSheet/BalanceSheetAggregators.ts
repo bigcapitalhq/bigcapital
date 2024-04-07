@@ -1,7 +1,3 @@
-import * as R from 'ramda';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
-import { FinancialHorizTotals } from '../FinancialHorizTotals';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetAggregateNode,
@@ -10,13 +6,15 @@ import {
   IBalanceSheetSchemaNode,
   INumberFormatQuery,
 } from '@/interfaces';
-import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
+import * as R from 'ramda';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
+import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
 import { BalanceSheetPercentage } from './BalanceSheetPercentage';
-import { BalanceSheetSchema } from './BalanceSheetSchema';
-import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { BalanceSheetSchema } from './BalanceSheetSchema';
 
 export const BalanceSheetAggregators = (Base: any) =>
   class extends R.compose(
@@ -26,7 +24,7 @@ export const BalanceSheetAggregators = (Base: any) =>
     BalanceSheetPercentage,
     BalanceSheetSchema,
     BalanceSheetBase,
-    FinancialSheetStructure
+    FinancialSheetStructure,
   )(Base) {
     /**
      * Balance sheet query.
@@ -56,22 +54,11 @@ export const BalanceSheetAggregators = (Base: any) =>
      * @param {IBalanceSheetSection} node
      * @returns {IBalanceSheetDataNode}
      */
-    private aggregateNodeTotalMapper = (
-      node: IBalanceSheetDataNode
-    ): IBalanceSheetDataNode => {
+    private aggregateNodeTotalMapper = (node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearAggregateNodeComposer
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodAggregateNodeComposer
-        ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocAggregateNodeDatePeriods
-        )
+        R.when(this.query.isPreviousYearActive, this.previousYearAggregateNodeComposer),
+        R.when(this.query.isPreviousPeriodActive, this.previousPeriodAggregateNodeComposer),
+        R.when(this.query.isDatePeriodsColumnsType, this.assocAggregateNodeDatePeriods),
       )(node);
     };
 
@@ -80,9 +67,7 @@ export const BalanceSheetAggregators = (Base: any) =>
      * @param  {IBalanceSheetSchemaAggregateNode} node - Schema node.
      * @return {IBalanceSheetAggregateNode}
      */
-    private reportSchemaAggregateNodeMapper = (
-      node: IBalanceSheetSchemaAggregateNode
-    ): IBalanceSheetAggregateNode => {
+    private reportSchemaAggregateNodeMapper = (node: IBalanceSheetSchemaAggregateNode): IBalanceSheetAggregateNode => {
       const total = this.getTotalOfNodes(node.children);
 
       return {
@@ -100,13 +85,8 @@ export const BalanceSheetAggregators = (Base: any) =>
      * @param   {IBalanceSheetSchemaAggregateNode} node
      * @returns {IBalanceSheetSchemaAggregateNode}
      */
-    private schemaAggregateNodeCompose = (
-      node: IBalanceSheetSchemaAggregateNode
-    ) => {
-      return R.compose(
-        this.aggregateNodeTotalMapper,
-        this.reportSchemaAggregateNodeMapper
-      )(node);
+    private schemaAggregateNodeCompose = (node: IBalanceSheetSchemaAggregateNode) => {
+      return R.compose(this.aggregateNodeTotalMapper, this.reportSchemaAggregateNodeMapper)(node);
     };
 
     /**
@@ -114,18 +94,10 @@ export const BalanceSheetAggregators = (Base: any) =>
      * @param  {IBalanceSheetSchemaNode} node - Schema node.
      * @return {IBalanceSheetDataNode}
      */
-    private reportAggregateSchemaParser = (
-      node: IBalanceSheetSchemaNode
-    ): IBalanceSheetDataNode => {
+    private reportAggregateSchemaParser = (node: IBalanceSheetSchemaNode): IBalanceSheetDataNode => {
       return R.compose(
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE),
-          this.schemaAggregateNodeCompose
-        ),
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS),
-          this.schemaAggregateNodeCompose
-        )
+        R.when(this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.AGGREGATE), this.schemaAggregateNodeCompose),
+        R.when(this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.ACCOUNTS), this.schemaAggregateNodeCompose),
       )(node);
     };
 
@@ -135,7 +107,7 @@ export const BalanceSheetAggregators = (Base: any) =>
      * @return {IBalanceSheetStructureSection[]}
      */
     public aggregatesSchemaParser = (
-      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[]
+      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[],
     ): (IBalanceSheetDataNode | IBalanceSheetSchemaNode)[] => {
       return this.mapNodesDeepReverse(nodes, this.reportAggregateSchemaParser);
     };

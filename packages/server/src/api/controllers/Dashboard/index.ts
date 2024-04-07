@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
 import DashboardService from '@/services/Dashboard/DashboardService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class DashboardMetaController {
@@ -22,22 +22,15 @@ export default class DashboardMetaController {
   /**
    * Retrieve the dashboard boot meta.
    * @param {Request} req -
-   * @param {Response} res - 
+   * @param {Response} res -
    * @param {NextFunction} next -
    */
-  getDashboardBoot = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  getDashboardBoot = async (req: Request, res: Response, next: NextFunction) => {
     const authorizedUser = req.user;
     const { tenantId } = req;
 
     try {
-      const meta = await this.dashboardService.getBootMeta(
-        tenantId,
-        authorizedUser
-      );
+      const meta = await this.dashboardService.getBootMeta(tenantId, authorizedUser);
 
       return res.status(200).send({ meta });
     } catch (error) {

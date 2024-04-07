@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getAccountsTableStateFactory,
-  accountsTableStateChangedFactory,
-} from '@/store/accounts/accounts.selectors';
+import { getAccountsTableStateFactory, accountsTableStateChangedFactory } from '@/store/accounts/accounts.selectors';
 
 export default (mapState) => {
   const getAccountsTableState = getAccountsTableStateFactory();

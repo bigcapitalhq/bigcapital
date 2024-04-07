@@ -1,8 +1,5 @@
-import {
-  IInventoryTransaction,
-  IItemWarehouseQuantityChange,
-} from '@/interfaces';
-import { set, get, chain, toPairs } from 'lodash';
+import { IInventoryTransaction, IItemWarehouseQuantityChange } from '@/interfaces';
+import { chain, get, set, toPairs } from 'lodash';
 
 export class WarehousesItemsQuantity {
   balanceMap: { [warehouseId: number]: { [itemId: number]: number } } = {};
@@ -82,8 +79,8 @@ export class WarehousesItemsQuantity {
         const pairs = toPairs(item);
 
         return pairs.map(([itemId, amount]) => ({
-          itemId: parseInt(itemId),
-          warehouseId: parseInt(warehouseId),
+          itemId: Number.parseInt(itemId),
+          warehouseId: Number.parseInt(warehouseId),
           amount,
         }));
       })
@@ -96,19 +93,13 @@ export class WarehousesItemsQuantity {
    * @param   {IInventoryTransaction[]} inventoryTransactions
    * @returns {WarehousesItemsQuantity}
    */
-  static fromInventoryTransaction = (
-    inventoryTransactions: IInventoryTransaction[]
-  ): WarehousesItemsQuantity => {
-    const warehouseTransactions = inventoryTransactions.filter(
-      (transaction) => transaction.warehouseId
-    );
+  static fromInventoryTransaction = (inventoryTransactions: IInventoryTransaction[]): WarehousesItemsQuantity => {
+    const warehouseTransactions = inventoryTransactions.filter((transaction) => transaction.warehouseId);
     const warehouseItemsQuantity = new WarehousesItemsQuantity();
 
     warehouseTransactions.forEach((transaction: IInventoryTransaction) => {
       const change =
-        transaction.direction === 'IN'
-          ? warehouseItemsQuantity.increment
-          : warehouseItemsQuantity.decrement;
+        transaction.direction === 'IN' ? warehouseItemsQuantity.increment : warehouseItemsQuantity.decrement;
 
       change(transaction.warehouseId, transaction.itemId, transaction.quantity);
     });

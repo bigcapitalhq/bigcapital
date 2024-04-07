@@ -64,8 +64,7 @@ const defaultProps = {
   noGutters: false,
 };
 
-
-export function Col ({
+export function Col({
   bsPrefix,
   className,
   noGutters,
@@ -96,13 +95,7 @@ export function Col ({
   return (
     <Component
       {...props}
-      className={classNames(
-        'col',
-        className,
-        decoratedBsPrefix,
-        noGutters && 'no-gutters',
-        ...classes,
-      )}
+      className={classNames('col', className, decoratedBsPrefix, noGutters && 'no-gutters', ...classes)}
     />
   );
 }
@@ -110,4 +103,3 @@ export function Col ({
 Col.displayName = 'Col';
 Col.propTypes = propTypes;
 Col.defaultProps = defaultProps;
-

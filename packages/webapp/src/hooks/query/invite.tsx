@@ -9,11 +9,8 @@ import useApiRequest from '../useRequest';
 export const useAuthInviteAccept = (props) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([values, token]) => apiRequest.post(`invite/accept/${token}`, values),
-    props,
-  );
-}
+  return useMutation(([values, token]) => apiRequest.post(`invite/accept/${token}`, values), props);
+};
 
 /**
  * Retrieve the invite meta by the given token.
@@ -25,17 +22,13 @@ export const useInviteMetaByToken = (token, props) => {
     { method: 'get', url: `invite/invited/${token}` },
     {
       select: (res) => res.data,
-      ...props
-    }
+      ...props,
+    },
   );
-}
-
+};
 
 export const useResendInvitation = (props) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (userId) => apiRequest.post(`invite/resend/${userId}`),
-    props
-  )
-}
+  return useMutation((userId) => apiRequest.post(`invite/resend/${userId}`), props);
+};

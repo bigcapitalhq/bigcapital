@@ -1,21 +1,11 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
 import Item from 'models/Item';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: `/items`', () => {
   describe('POST: `/items`', () => {
     it('Should not create a new item if the user was not authorized.', async () => {
-      const res = await request()
-        .post('/api/items')
-        .send();
+      const res = await request().post('/api/items').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -31,7 +21,9 @@ describe('routes: `/items`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'name', location: 'body',
+        msg: 'Invalid value',
+        param: 'name',
+        location: 'body',
       });
     });
 
@@ -45,7 +37,9 @@ describe('routes: `/items`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'type', location: 'body',
+        msg: 'Invalid value',
+        param: 'type',
+        location: 'body',
       });
     });
 
@@ -96,7 +90,7 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({ 
+      expect(res.body.errors).include.something.deep.equals({
         value: 'not_numeric',
         msg: 'Invalid value',
         param: 'sell_price',
@@ -142,13 +136,9 @@ describe('routes: `/items`', () => {
       });
     });
 
-    it('Should `cost_account_id` be required if `cost_price` was presented.', async () => {
+    it('Should `cost_account_id` be required if `cost_price` was presented.', async () => {});
 
-    });
-
-    it('Should `buy_account_id` be required if `buy_price` was presented.', async () => {
-
-    });
+    it('Should `buy_account_id` be required if `buy_price` was presented.', async () => {});
 
     it('Should `inventory_account_id` be required if type was `inventory` item.', async () => {
       const res = await request()
@@ -208,7 +198,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'COST_ACCOUNT_NOT_FOUND', code: 100,
+        type: 'COST_ACCOUNT_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -228,7 +219,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'SELL_ACCOUNT_NOT_FOUND', code: 120,
+        type: 'SELL_ACCOUNT_NOT_FOUND',
+        code: 120,
       });
     });
 
@@ -249,7 +241,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ITEM_CATEGORY_NOT_FOUND', code: 140,
+        type: 'ITEM_CATEGORY_NOT_FOUND',
+        code: 140,
       });
     });
 
@@ -293,7 +286,7 @@ describe('routes: `/items`', () => {
           sell_account_id: account.id,
           cost_account_id: anotherAccount.id,
           category_id: itemCategory.id,
-          note: 'note about item'
+          note: 'note about item',
         });
 
       const storedItem = await Item.tenant().query().where('id', res.body.id).first();
@@ -330,7 +323,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEM.NOT.FOUND', code: 100,
+        type: 'ITEM.NOT.FOUND',
+        code: 100,
       });
     });
 
@@ -345,7 +339,9 @@ describe('routes: `/items`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'name', location: 'body',
+        msg: 'Invalid value',
+        param: 'name',
+        location: 'body',
       });
     });
 
@@ -360,7 +356,9 @@ describe('routes: `/items`', () => {
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'type', location: 'body',
+        msg: 'Invalid value',
+        param: 'type',
+        location: 'body',
       });
     });
 
@@ -376,7 +374,7 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({ 
+      expect(res.body.errors).include.something.deep.equals({
         value: 'not_numeric',
         msg: 'Invalid value',
         param: 'sell_price',
@@ -396,7 +394,7 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(422);
       expect(res.body.code).equals('validation_error');
-      expect(res.body.errors).include.something.deep.equals({ 
+      expect(res.body.errors).include.something.deep.equals({
         value: 'not_numeric',
         msg: 'Invalid value',
         param: 'cost_price',
@@ -444,7 +442,7 @@ describe('routes: `/items`', () => {
       });
     });
 
-    it ('Should response bad request in case cost account was not exist.', async () => {
+    it('Should response bad request in case cost account was not exist.', async () => {
       const item = await tenantFactory.create('item');
       const res = await request()
         .post(`/api/items/${item.id}`)
@@ -461,7 +459,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'COST_ACCOUNT_NOT_FOUND', code: 100,
+        type: 'COST_ACCOUNT_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -482,7 +481,8 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'SELL_ACCOUNT_NOT_FOUND', code: 120,
+        type: 'SELL_ACCOUNT_NOT_FOUND',
+        code: 120,
       });
     });
 
@@ -566,7 +566,9 @@ describe('routes: `/items`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ITEMS.NOT.FOUND', code: 200, ids: [100, 200],
+        type: 'ITEMS.NOT.FOUND',
+        code: 200,
+        ids: [100, 200],
       });
     });
 
@@ -586,15 +588,13 @@ describe('routes: `/items`', () => {
       const foundItems = await Item.tenant().query();
 
       expect(res.status).equals(200);
-      expect(foundItems.length).equals(0)
+      expect(foundItems.length).equals(0);
     });
   });
 
   describe('GET: `items`', () => {
     it('Should response unauthorized access in case the user not authenticated.', async () => {
-      const res = await request()
-        .get('/api/items')
-        .send();
+      const res = await request().get('/api/items').send();
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -654,7 +654,7 @@ describe('routes: `/items`', () => {
       expect(res.body.items.results.length).equals(0);
       expect(res.body.items.pagination).to.be.a('object');
       expect(res.body.items.pagination.total).to.be.a('number');
-      expect(res.body.items.pagination.total).equals(0)
+      expect(res.body.items.pagination.total).equals(0);
     });
 
     it('Should retrieve filtered items based on custom view conditions.', async () => {

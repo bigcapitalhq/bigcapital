@@ -1,8 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getARAgingSummaryFilterDrawer,
-} from '@/store/financialStatement/financialStatements.selectors';
+import { getARAgingSummaryFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {

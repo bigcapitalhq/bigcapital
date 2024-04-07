@@ -28,15 +28,14 @@ export const fetchOrganizations = () => (dispatch) =>
       });
   });
 
-export const setOrganizationSetupCompleted =
-  (congrats) => (dispatch, getState) => {
-    const tenantId = getState().authentication.tenantId;
+export const setOrganizationSetupCompleted = (congrats) => (dispatch, getState) => {
+  const tenantId = getState().authentication.tenantId;
 
-    dispatch({
-      type: t.SET_ORGANIZATION_CONGRATS,
-      payload: {
-        tenantId,
-        congrats,
-      },
-    });
-  };
+  dispatch({
+    type: t.SET_ORGANIZATION_CONGRATS,
+    payload: {
+      tenantId,
+      congrats,
+    },
+  });
+};

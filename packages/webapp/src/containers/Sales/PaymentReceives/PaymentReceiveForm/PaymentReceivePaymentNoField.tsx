@@ -5,12 +5,7 @@ import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 
 import { FInputGroup, FormattedMessage as T } from '@/components';
-import {
-  FFormGroup,
-  FieldRequiredHint,
-  Icon,
-  InputPrependButton,
-} from '@/components';
+import { FFormGroup, FieldRequiredHint, Icon, InputPrependButton } from '@/components';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
@@ -43,10 +38,7 @@ export const PaymentReceivePaymentNoField = R.compose(
 
       // Show the confirmation dialog if the value has changed and auto-increment
       // mode is enabled.
-      if (
-        values.payment_receive_no !== newValue &&
-        paymentReceiveAutoIncrement
-      ) {
+      if (values.payment_receive_no !== newValue && paymentReceiveAutoIncrement) {
         openDialog('payment-receive-number-form', {
           initialFormValues: {
             onceManualNumber: newValue,
@@ -84,9 +76,7 @@ export const PaymentReceivePaymentNoField = R.compose(
             }}
             tooltip={true}
             tooltipProps={{
-              content: (
-                <T id={'setting_your_auto_generated_payment_receive_number'} />
-              ),
+              content: <T id={'setting_your_auto_generated_payment_receive_number'} />,
               position: Position.BOTTOM_LEFT,
             }}
           />

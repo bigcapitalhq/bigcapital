@@ -7,10 +7,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { CLASSES } from '@/constants/classes';
-import {
-  CreateCreditNoteFormSchema,
-  EditCreditNoteFormSchema,
-} from './VendorCreditNoteForm.schema';
+import { CreateCreditNoteFormSchema, EditCreditNoteFormSchema } from './VendorCreditNoteForm.schema';
 
 import VendorCreditNoteFormHeader from './VendorCreditNoteFormHeader';
 import VendorCreditNoteItemsEntriesEditor from './VendorCreditNoteItemsEntriesEditor';
@@ -48,20 +45,11 @@ function VendorCreditNoteForm({
   const history = useHistory();
 
   // Vendor Credit note form context.
-  const {
-    isNewMode,
-    submitPayload,
-    vendorCredit,
-    newVendorCredit,
-    createVendorCreditMutate,
-    editVendorCreditMutate,
-  } = useVendorCreditNoteFormContext();
+  const { isNewMode, submitPayload, vendorCredit, newVendorCredit, createVendorCreditMutate, editVendorCreditMutate } =
+    useVendorCreditNoteFormContext();
 
   // Credit number.
-  const vendorCreditNumber = transactionNumber(
-    vendorcreditNumberPrefix,
-    vendorcreditNextNumber,
-  );
+  const vendorCreditNumber = transactionNumber(vendorcreditNumberPrefix, vendorcreditNextNumber);
 
   // Initial values.
   const initialValues = React.useMemo(
@@ -83,10 +71,7 @@ function VendorCreditNoteForm({
   );
 
   // Handles form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
-  ) => {
+  const handleFormSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
 
@@ -105,11 +90,7 @@ function VendorCreditNoteForm({
     // Handle the request success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get(
-          isNewMode
-            ? 'vendor_credits.success_message'
-            : 'vendor_credits.edit_success_message',
-        ),
+        message: intl.get(isNewMode ? 'vendor_credits.success_message' : 'vendor_credits.edit_success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -132,24 +113,14 @@ function VendorCreditNoteForm({
     if (isNewMode) {
       createVendorCreditMutate(form).then(onSuccess).catch(onError);
     } else {
-      editVendorCreditMutate([vendorCredit.id, form])
-        .then(onSuccess)
-        .catch(onError);
+      editVendorCreditMutate([vendorCredit.id, form]).then(onSuccess).catch(onError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_VENDOR_CREDIT_NOTE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_VENDOR_CREDIT_NOTE)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
-        }
+        validationSchema={isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

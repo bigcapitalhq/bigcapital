@@ -20,12 +20,7 @@ import '@/style/pages/Preferences/Topbar.scss';
  */
 function PreferencesTopbar({ preferencesPageTitle }) {
   return (
-    <div
-      className={classNames(
-        CLASSES.PREFERENCES_PAGE_TOPBAR,
-        CLASSES.PREFERENCES_TOPBAR,
-      )}
-    >
+    <div className={classNames(CLASSES.PREFERENCES_PAGE_TOPBAR, CLASSES.PREFERENCES_TOPBAR)}>
       <div class="preferences-topbar__title">
         <h2>{preferencesPageTitle}</h2>
       </div>
@@ -33,21 +28,9 @@ function PreferencesTopbar({ preferencesPageTitle }) {
         <Route pathname="/preferences">
           <Switch>
             <Route exact path={'/preferences/users'} component={UsersActions} />
-            <Route
-              exact
-              path={'/preferences/currencies'}
-              component={CurrenciesActions}
-            />
-            <Route
-              exact
-              path={'/preferences/warehouses'}
-              component={WarehousesActions}
-            />
-            <Route
-              exact
-              path={'/preferences/branches'}
-              component={BranchesActions}
-            />
+            <Route exact path={'/preferences/currencies'} component={CurrenciesActions} />
+            <Route exact path={'/preferences/warehouses'} component={WarehousesActions} />
+            <Route exact path={'/preferences/branches'} component={BranchesActions} />
           </Switch>
         </Route>
       </div>
@@ -59,6 +42,4 @@ function PreferencesTopbar({ preferencesPageTitle }) {
   );
 }
 
-export default compose(
-  withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })),
-)(PreferencesTopbar);
+export default compose(withDashboard(({ preferencesPageTitle }) => ({ preferencesPageTitle })))(PreferencesTopbar);

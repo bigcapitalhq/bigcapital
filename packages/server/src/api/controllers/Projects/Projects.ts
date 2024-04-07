@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
-import { AbilitySubject, IProjectStatus, ProjectAction } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, IProjectStatus, ProjectAction } from '@/interfaces';
 import { ProjectsApplication } from '@/services/Projects/Projects/ProjectsApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ProjectsController extends BaseController {
@@ -30,7 +30,7 @@ export class ProjectsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.createProject.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/:id',
@@ -44,20 +44,18 @@ export class ProjectsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.editProject.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.patch(
       '/:projectId/status',
       CheckPolicies(ProjectAction.EDIT, AbilitySubject.Project),
       [
         param('projectId').exists().isInt().toInt(),
-        check('status')
-          .exists()
-          .isIn([IProjectStatus.InProgress, IProjectStatus.Closed]),
+        check('status').exists().isIn([IProjectStatus.InProgress, IProjectStatus.Closed]),
       ],
       this.validationResult,
       asyncMiddleware(this.editProject.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/:id',
@@ -65,7 +63,7 @@ export class ProjectsController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.getProject.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/:projectId/billable/entries',
@@ -77,7 +75,7 @@ export class ProjectsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.projectBillableEntries.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/',
@@ -85,7 +83,7 @@ export class ProjectsController extends BaseController {
       [],
       this.validationResult,
       asyncMiddleware(this.getProjects.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.delete(
       '/:id',
@@ -93,7 +91,7 @@ export class ProjectsController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.deleteProject.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -109,10 +107,7 @@ export class ProjectsController extends BaseController {
     const projectDTO = this.matchedBodyData(req);
 
     try {
-      const account = await this.projectsApplication.createProject(
-        tenantId,
-        projectDTO
-      );
+      const account = await this.projectsApplication.createProject(tenantId, projectDTO);
       return res.status(200).send({
         id: account.id,
         message: 'The project has been created successfully.',
@@ -135,11 +130,7 @@ export class ProjectsController extends BaseController {
     const editProjectDTO = this.matchedBodyData(req);
 
     try {
-      const account = await this.projectsApplication.editProjectStatus(
-        tenantId,
-        projectId,
-        editProjectDTO.status
-      );
+      const account = await this.projectsApplication.editProjectStatus(tenantId, projectId, editProjectDTO.status);
       return res.status(200).send({
         id: account.id,
         message: 'The project has been edited successfully.',
@@ -160,10 +151,7 @@ export class ProjectsController extends BaseController {
     const { id: projectId } = req.params;
 
     try {
-      const project = await this.projectsApplication.getProject(
-        tenantId,
-        projectId
-      );
+      const project = await this.projectsApplication.getProject(tenantId, projectId);
       return res.status(200).send({ project });
     } catch (error) {
       next(error);
@@ -210,10 +198,7 @@ export class ProjectsController extends BaseController {
     };
 
     try {
-      const projects = await this.projectsApplication.getProjects(
-        tenantId,
-        filter
-      );
+      const projects = await this.projectsApplication.getProjects(tenantId, filter);
       return res.status(200).send({
         projects,
       });
@@ -229,22 +214,13 @@ export class ProjectsController extends BaseController {
    * @param {NextFunction} next
    * @returns {Response}
    */
-  private projectBillableEntries = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private projectBillableEntries = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { projectId } = req.params;
     const query = this.matchedQueryData(req);
 
     try {
-      const billableEntries =
-        await this.projectsApplication.getProjectBillableEntries(
-          tenantId,
-          projectId,
-          query
-        );
+      const billableEntries = await this.projectsApplication.getProjectBillableEntries(tenantId, projectId, query);
       return res.status(200).send({
         billableEntries,
       });
@@ -260,12 +236,7 @@ export class ProjectsController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
     }
     next(error);

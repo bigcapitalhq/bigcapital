@@ -1,7 +1,7 @@
 import { IARAgingSummaryQuery, IARAgingSummaryTable } from '@/interfaces';
 import { Inject, Service } from 'typedi';
-import ARAgingSummaryTable from './ARAgingSummaryTable';
 import ARAgingSummaryService from './ARAgingSummaryService';
+import ARAgingSummaryTable from './ARAgingSummaryTable';
 
 @Service()
 export class ARAgingSummaryTableInjectable {
@@ -14,15 +14,8 @@ export class ARAgingSummaryTableInjectable {
    * @param {IARAgingSummaryQuery} query
    * @returns {Promise<IARAgingSummaryTable>}
    */
-  public async table(
-    tenantId: number,
-    query: IARAgingSummaryQuery
-  ): Promise<IARAgingSummaryTable> {
-    const report = await this.ARAgingSummarySheet.ARAgingSummary(
-      
-      tenantId,
-      query
-    );
+  public async table(tenantId: number, query: IARAgingSummaryQuery): Promise<IARAgingSummaryTable> {
+    const report = await this.ARAgingSummarySheet.ARAgingSummary(tenantId, query);
     const table = new ARAgingSummaryTable(report.data, query, {});
 
     return {

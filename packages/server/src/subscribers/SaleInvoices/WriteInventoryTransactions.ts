@@ -1,5 +1,3 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import {
   ISaleInvoiceCreatedPayload,
   ISaleInvoiceDeletedPayload,
@@ -7,6 +5,8 @@ import {
   ISaleInvoiceEventDeliveredPayload,
 } from '@/interfaces';
 import { InvoiceInventoryTransactions } from '@/services/Sales/Invoices/InvoiceInventoryTransactions';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class WriteInventoryTransactions {
@@ -17,22 +17,10 @@ export default class WriteInventoryTransactions {
    * Attaches events with handles
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleWritingInventoryTransactions
-    );
-    bus.subscribe(
-      events.saleInvoice.onDelivered,
-      this.handleWritingInventoryTransactions
-    );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.handleRewritingInventoryTransactions
-    );
-    bus.subscribe(
-      events.saleInvoice.onDeleted,
-      this.handleDeletingInventoryTransactions
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.handleWritingInventoryTransactions);
+    bus.subscribe(events.saleInvoice.onDelivered, this.handleWritingInventoryTransactions);
+    bus.subscribe(events.saleInvoice.onEdited, this.handleRewritingInventoryTransactions);
+    bus.subscribe(events.saleInvoice.onDeleted, this.handleDeletingInventoryTransactions);
   }
 
   /**
@@ -47,29 +35,15 @@ export default class WriteInventoryTransactions {
     // Can't continue if the sale invoice is not delivered yet.
     if (!saleInvoice.deliveredAt) return null;
 
-    await this.saleInvoiceInventory.recordInventoryTranscactions(
-      tenantId,
-      saleInvoice,
-      false,
-      trx
-    );
+    await this.saleInvoiceInventory.recordInventoryTranscactions(tenantId, saleInvoice, false, trx);
   };
 
   /**
    * Rewriting the inventory transactions once the sale invoice be edited.
    * @param {ISaleInvoiceEditPayload} payload -
    */
-  private handleRewritingInventoryTransactions = async ({
-    tenantId,
-    saleInvoice,
-    trx,
-  }: ISaleInvoiceEditedPayload) => {
-    await this.saleInvoiceInventory.recordInventoryTranscactions(
-      tenantId,
-      saleInvoice,
-      true,
-      trx
-    );
+  private handleRewritingInventoryTransactions = async ({ tenantId, saleInvoice, trx }: ISaleInvoiceEditedPayload) => {
+    await this.saleInvoiceInventory.recordInventoryTranscactions(tenantId, saleInvoice, true, trx);
   };
 
   /**
@@ -82,10 +56,6 @@ export default class WriteInventoryTransactions {
     oldSaleInvoice,
     trx,
   }: ISaleInvoiceDeletedPayload) => {
-    await this.saleInvoiceInventory.revertInventoryTransactions(
-      tenantId,
-      saleInvoiceId,
-      trx
-    );
+    await this.saleInvoiceInventory.revertInventoryTransactions(tenantId, saleInvoiceId, trx);
   };
 }

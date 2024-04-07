@@ -8,10 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 import classNames from 'classnames';
 
-import {
-  CreateWarehouseFormSchema,
-  EditWarehouseFormSchema,
-} from './WarehouseTransferForm.schema';
+import { CreateWarehouseFormSchema, EditWarehouseFormSchema } from './WarehouseTransferForm.schema';
 
 import WarehouseTransferFormHeader from './WarehouseTransferFormHeader';
 import WarehouseTransferEditorField from './WarehouseTransferEditorField';
@@ -25,12 +22,7 @@ import { AppToaster } from '@/components';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
 import { WarehouseTransferObserveItemsCost } from './components';
-import {
-  defaultWarehouseTransfer,
-  transformValueToRequest,
-  transformErrors,
-  transformToEditForm,
-} from './utils';
+import { defaultWarehouseTransfer, transformValueToRequest, transformErrors, transformToEditForm } from './utils';
 
 function WarehouseTransferForm({
   // #withSettings
@@ -40,19 +32,11 @@ function WarehouseTransferForm({
 }) {
   const history = useHistory();
 
-  const {
-    isNewMode,
-    warehouseTransfer,
-    createWarehouseTransferMutate,
-    editWarehouseTransferMutate,
-    submitPayload,
-  } = useWarehouseTransferFormContext();
+  const { isNewMode, warehouseTransfer, createWarehouseTransferMutate, editWarehouseTransferMutate, submitPayload } =
+    useWarehouseTransferFormContext();
 
   // WarehouseTransfer number.
-  const warehouseTransferNumber = transactionNumber(
-    warehouseTransferNumberPrefix,
-    warehouseTransferNextNumber,
-  );
+  const warehouseTransferNumber = transactionNumber(warehouseTransferNumberPrefix, warehouseTransferNextNumber);
 
   // Form initial values.
   const initialValues = React.useMemo(
@@ -83,11 +67,7 @@ function WarehouseTransferForm({
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({
-        message: intl.get(
-          isNewMode
-            ? 'warehouse_transfer.success_message'
-            : 'warehouse_transfer.edit_success_message',
-        ),
+        message: intl.get(isNewMode ? 'warehouse_transfer.success_message' : 'warehouse_transfer.edit_success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -115,24 +95,14 @@ function WarehouseTransferForm({
     if (isNewMode) {
       createWarehouseTransferMutate(form).then(onSuccess).catch(onError);
     } else {
-      editWarehouseTransferMutate([warehouseTransfer.id, form])
-        .then(onSuccess)
-        .catch(onError);
+      editWarehouseTransferMutate([warehouseTransfer.id, form]).then(onSuccess).catch(onError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_WAREHOUSE_TRANSFER,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_WAREHOUSE_TRANSFER)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateWarehouseFormSchema : EditWarehouseFormSchema
-        }
+        validationSchema={isNewMode ? CreateWarehouseFormSchema : EditWarehouseFormSchema}
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >

@@ -1,6 +1,6 @@
+import config from '@/config';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import { Service } from 'typedi';
-import config from '@/config';
 
 @Service()
 export class PlaidLinkTokenService {

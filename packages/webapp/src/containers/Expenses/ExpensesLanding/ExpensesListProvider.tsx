@@ -13,8 +13,7 @@ const ExpensesListContext = createContext();
  */
 function ExpensesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: expensesViews, isLoading: isViewsLoading } =
-    useResourceViews('expenses');
+  const { data: expensesViews, isLoading: isViewsLoading } = useResourceViews('expenses');
 
   // Fetches the expenses with pagination meta.
   const {
@@ -31,8 +30,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
   } = useResourceMeta('expenses');
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(expenses) && !isExpensesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
@@ -53,10 +51,7 @@ function ExpensesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading}
-      name={'expenses'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceMetaLoading} name={'expenses'}>
       <ExpensesListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

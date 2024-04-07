@@ -12,20 +12,18 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
   const [notificationType, setNotificationType] = React.useState('details');
 
   // Retrieve the invoice sms notification message details.
-  const { data: invoiceSMSDetail, isLoading: isInvoiceSMSDetailLoading } =
-    useInvoiceSMSDetail(
-      invoiceId,
-      {
-        notification_key: notificationType,
-      },
-      {
-        enabled: !!invoiceId,
-        keepPreviousData: true,
-      },
-    );
+  const { data: invoiceSMSDetail, isLoading: isInvoiceSMSDetailLoading } = useInvoiceSMSDetail(
+    invoiceId,
+    {
+      notification_key: notificationType,
+    },
+    {
+      enabled: !!invoiceId,
+      keepPreviousData: true,
+    },
+  );
   // Create notfiy invoice by sms mutations.
-  const { mutateAsync: createNotifyInvoiceBySMSMutate } =
-    useCreateNotifyInvoiceBySMS();
+  const { mutateAsync: createNotifyInvoiceBySMSMutate } = useCreateNotifyInvoiceBySMS();
 
   // State provider.
   const provider = {
@@ -45,7 +43,6 @@ function NotifyInvoiceViaSMSFormProvider({ invoiceId, dialogName, ...props }) {
   );
 }
 
-const useNotifyInvoiceViaSMSContext = () =>
-  React.useContext(NotifyInvoiceViaSMSContext);
+const useNotifyInvoiceViaSMSContext = () => React.useContext(NotifyInvoiceViaSMSContext);
 
 export { NotifyInvoiceViaSMSFormProvider, useNotifyInvoiceViaSMSContext };

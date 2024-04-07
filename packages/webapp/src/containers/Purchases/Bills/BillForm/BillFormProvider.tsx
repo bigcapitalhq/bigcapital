@@ -106,11 +106,7 @@ function BillFormProvider({ billId, ...props }) {
   const isNewMode = !billId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading =
-    isWarehouesLoading ||
-    isBranchesLoading ||
-    isProjectsLoading ||
-    isTaxRatesLoading;
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading || isProjectsLoading || isTaxRatesLoading;
 
   const provider = {
     accounts,
@@ -141,9 +137,7 @@ function BillFormProvider({ billId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isVendorsLoading || isItemsLoading || isAccountsLoading || isBillLoading
-      }
+      loading={isVendorsLoading || isItemsLoading || isAccountsLoading || isBillLoading}
       name={'bill-form'}
     >
       <BillFormContext.Provider value={provider} {...props} />

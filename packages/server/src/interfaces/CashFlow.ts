@@ -1,8 +1,5 @@
-import {
-  IFinancialSheetCommonMeta,
-  INumberFormatQuery,
-} from './FinancialStatements';
 import { IAccount } from './Account';
+import { IFinancialSheetCommonMeta, INumberFormatQuery } from './FinancialStatements';
 import { ILedger } from './Ledger';
 import { IFinancialTable, ITableRow } from './Table';
 
@@ -58,30 +55,25 @@ export enum ICashFlowStatementSectionType {
   CASH_AT_BEGINNING = 'CASH_AT_BEGINNING',
 }
 
-export interface ICashFlowStatementAccountSection
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowStatementAccountSection extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.ACCOUNTS;
   children: ICashFlowStatementAccountMeta[];
   total: ICashFlowStatementTotal;
 }
 
-export interface ICashFlowStatementNetIncomeSection
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowStatementNetIncomeSection extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.NET_INCOME;
 }
 
-export interface ICashFlowStatementTotalSection
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowStatementTotalSection extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.TOTAL;
 }
 
-export interface ICashFlowStatementAggregateSection
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowStatementAggregateSection extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.AGGREGATE;
 }
 
-export interface ICashFlowCashBeginningNode
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowCashBeginningNode extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.CASH_AT_BEGINNING;
 }
 
@@ -91,7 +83,7 @@ export type ICashFlowStatementSection =
   | ICashFlowStatementTotalSection
   | ICashFlowStatementCommonSection;
 
-export interface ICashFlowStatementColumn {}
+export type ICashFlowStatementColumn = {};
 export interface ICashFlowStatementMeta extends IFinancialSheetCommonMeta {
   formattedToDate: string;
   formattedFromDate: string;
@@ -110,10 +102,7 @@ export interface ICashFlowStatementTable extends IFinancialTable {
 }
 
 export interface ICashFlowStatementService {
-  cashFlow(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<ICashFlowStatementDOO>;
+  cashFlow(tenantId: number, query: ICashFlowStatementQuery): Promise<ICashFlowStatementDOO>;
 }
 
 // CASH FLOW SCHEMA TYPES.
@@ -146,14 +135,12 @@ export enum CASH_FLOW_SECTION_ID {
   NET_CASH_INCREASE = 'NET_CASH_INCREASE',
 }
 
-export interface ICashFlowSchemaAccountsSection
-  extends ICashFlowSchemaCommonSection {
+export interface ICashFlowSchemaAccountsSection extends ICashFlowSchemaCommonSection {
   sectionType: ICashFlowStatementSectionType.ACCOUNT;
   accountsRelations: ICashFlowSchemaAccountRelation[];
 }
 
-export interface ICashFlowSchemaTotalSection
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowSchemaTotalSection extends ICashFlowStatementCommonSection {
   sectionType: ICashFlowStatementSectionType.TOTAL;
   equation: string;
 }
@@ -170,8 +157,7 @@ export interface ICashFlowSchemaAccountRelation {
   direction: CASH_FLOW_ACCOUNT_RELATION.PLUS;
 }
 
-export interface ICashFlowSchemaSectionAccounts
-  extends ICashFlowStatementCommonSection {
+export interface ICashFlowSchemaSectionAccounts extends ICashFlowStatementCommonSection {
   type: ICashFlowStatementSectionType.ACCOUNT;
   accountsRelations: ICashFlowSchemaAccountRelation[];
 }
@@ -203,7 +189,7 @@ export interface ICashFlowStatement {
     cashLedger: ILedger,
     netIncomeLedger: ILedger,
     query: ICashFlowStatementQuery,
-    baseCurrency: string
+    baseCurrency: string,
   ): void;
 
   reportData(): ICashFlowStatementData;
@@ -256,7 +242,6 @@ export interface IUncategorizedCashflowTransaction {
   categorizeRefId: number;
   categorized: boolean;
 }
-
 
 export interface CreateUncategorizedTransactionDTO {
   date: Date | string;

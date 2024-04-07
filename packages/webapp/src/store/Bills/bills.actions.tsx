@@ -13,4 +13,3 @@ export const resetBillsTableState = () => {
     type: t.BILLS_TABLE_STATE_RESET,
   };
 };
-

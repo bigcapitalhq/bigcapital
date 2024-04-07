@@ -31,8 +31,7 @@ function UserForm({
 }) {
   const [calloutCode, setCalloutCode] = React.useState([]);
 
-  const { dialogName, user, userId, isEditMode, EditUserMutate } =
-    useUserFormContext();
+  const { dialogName, user, userId, isEditMode, EditUserMutate } = useUserFormContext();
 
   const initialFormValues = {
     ...initialValues,
@@ -70,11 +69,7 @@ function UserForm({
   };
 
   return (
-    <Formik
-      validationSchema={UserFormSchema}
-      initialValues={initialFormValues}
-      onSubmit={handleSubmit}
-    >
+    <Formik validationSchema={UserFormSchema} initialValues={initialFormValues} onSubmit={handleSubmit}>
       <UserFormContent calloutCode={calloutCode} />
     </Formik>
   );

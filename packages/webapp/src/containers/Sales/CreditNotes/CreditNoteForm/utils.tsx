@@ -15,10 +15,7 @@ import {
 import { useFormikContext } from 'formik';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
+import { updateItemsEntriesTotal, ensureEntriesHaveEmptyLine } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
 
@@ -61,10 +58,7 @@ export function transformToEditForm(creditNote) {
     ...creditNote.entries.map((creditNote) => ({
       ...transformToForm(creditNote, defaultCreditNoteEntry),
     })),
-    ...repeatValue(
-      defaultCreditNoteEntry,
-      Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
-    ),
+    ...repeatValue(defaultCreditNoteEntry, Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0)),
   ];
   const entries = R.compose(
     ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
@@ -85,10 +79,7 @@ export const transformEntriesToSubmit = (entries) => {
     R.omit(['amount']),
     R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
   );
-  return R.compose(
-    orderingLinesIndexes,
-    R.map(transformCreditNoteEntry),
-  )(entries);
+  return R.compose(orderingLinesIndexes, R.map(transformCreditNoteEntry))(entries);
 };
 
 /**
@@ -125,10 +116,7 @@ export const customerNameFieldShouldUpdate = (newProps, oldProps) => {
  * Determines invoice entries field when should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const useSetPrimaryBranchToForm = () => {
@@ -152,8 +140,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -174,10 +161,7 @@ export const useCreditNoteTotals = () => {
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

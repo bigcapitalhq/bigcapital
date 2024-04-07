@@ -12,7 +12,7 @@ const AccountTransactionsContext = React.createContext();
  */
 function AccountTransactionsProvider({ query, ...props }) {
   const { id } = useParams();
-  const accountId = parseInt(id, 10);
+  const accountId = Number.parseInt(id, 10);
 
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
@@ -28,7 +28,7 @@ function AccountTransactionsProvider({ query, ...props }) {
   } = useCashflowAccounts(query, { keepPreviousData: true });
 
   // Retrieve specific account details.
-  
+
   const {
     data: currentAccount,
     isFetching: isCurrentAccountFetching,
@@ -57,7 +57,6 @@ function AccountTransactionsProvider({ query, ...props }) {
   );
 }
 
-const useAccountTransactionsContext = () =>
-  React.useContext(AccountTransactionsContext);
+const useAccountTransactionsContext = () => React.useContext(AccountTransactionsContext);
 
 export { AccountTransactionsProvider, useAccountTransactionsContext };

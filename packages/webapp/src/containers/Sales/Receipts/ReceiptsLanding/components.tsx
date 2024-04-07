@@ -3,16 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { FormattedMessage as T } from '@/components';
-import {
-  Position,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Intent,
-  Popover,
-  Tag,
-  Button,
-} from '@blueprintjs/core';
+import { Position, Menu, MenuItem, MenuDivider, Intent, Popover, Tag, Button } from '@blueprintjs/core';
 
 import { CLASSES } from '@/constants/classes';
 import { safeCallback } from '@/utils';
@@ -80,10 +71,7 @@ export function ActionsMenu({
  */
 export function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

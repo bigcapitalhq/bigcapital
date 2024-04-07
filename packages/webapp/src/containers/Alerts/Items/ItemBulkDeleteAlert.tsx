@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import {AppToaster, FormattedMessage as T } from '@/components';
+import { AppToaster, FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 import { size } from 'lodash';
@@ -27,7 +27,6 @@ function ItemBulkDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
 
   // handle cancel item bulk delete alert.
@@ -53,9 +52,7 @@ function ItemBulkDeleteAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={
-        <T id={'delete_count'} values={{ count: size(itemsIds) }} />
-      }
+      confirmButtonText={<T id={'delete_count'} values={{ count: size(itemsIds) }} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -70,8 +67,4 @@ function ItemBulkDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withItemsActions,
-)(ItemBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withItemsActions)(ItemBulkDeleteAlert);

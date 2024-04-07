@@ -36,9 +36,6 @@ export const parseVendorsBalanceSummaryQuery = (locationQuery) => {
 export const useVendorsBalanceSummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  const query = useMemo(
-    () => parseVendorsBalanceSummaryQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseVendorsBalanceSummaryQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

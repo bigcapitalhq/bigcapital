@@ -1,4 +1,3 @@
-
 export const ERRORS = {
   NOT_FOUND: 'NOT_FOUND',
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',
@@ -16,8 +15,7 @@ export const ERRORS = {
   ITEMS_HAVE_ASSOCIATED_TRANSACTIONS: 'ITEMS_HAVE_ASSOCIATED_TRANSACTIONS',
   ITEM_HAS_ASSOCIATED_TRANSACTINS: 'ITEM_HAS_ASSOCIATED_TRANSACTINS',
 
-  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT:
-    'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
+  ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT: 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
   ITEM_CANNOT_CHANGE_INVENTORY_TYPE: 'ITEM_CANNOT_CHANGE_INVENTORY_TYPE',
   TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS: 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
   INVENTORY_ACCOUNT_CANNOT_MODIFIED: 'INVENTORY_ACCOUNT_CANNOT_MODIFIED',
@@ -34,27 +32,21 @@ export const DEFAULT_VIEWS = [
     name: 'Services',
     slug: 'services',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'type', comparator: 'equals', value: 'service' },
-    ],
+    roles: [{ index: 1, fieldKey: 'type', comparator: 'equals', value: 'service' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
     name: 'Inventory',
     slug: 'inventory',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'type', comparator: 'equals', value: 'inventory' },
-    ],
+    roles: [{ index: 1, fieldKey: 'type', comparator: 'equals', value: 'inventory' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {
     name: 'Non Inventory',
     slug: 'non-inventory',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'type', comparator: 'equals', value: 'non-inventory' },
-    ],
+    roles: [{ index: 1, fieldKey: 'type', comparator: 'equals', value: 'non-inventory' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
-]
+];

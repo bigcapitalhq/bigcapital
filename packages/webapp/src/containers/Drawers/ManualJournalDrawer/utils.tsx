@@ -3,12 +3,7 @@ import intl from 'react-intl-universal';
 import React from 'react';
 import { Tag, Intent } from '@blueprintjs/core';
 
-import {
-  T,
-  Choose,
-  FormatNumberCell,
-  TextOverviewTooltipCell,
-} from '@/components';
+import { T, Choose, FormatNumberCell, TextOverviewTooltipCell } from '@/components';
 import { Features } from '@/constants';
 import { getColumnWidth } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';

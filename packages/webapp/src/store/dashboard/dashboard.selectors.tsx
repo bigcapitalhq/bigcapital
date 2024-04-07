@@ -1,8 +1,7 @@
 // @ts-nocheck
 import { createSelector } from '@reduxjs/toolkit';
 
-const dialogByNameSelector = (state, props) =>
-  state.dashboard.dialogs?.[props.dialogName];
+const dialogByNameSelector = (state, props) => state.dashboard.dialogs?.[props.dialogName];
 
 export const isDialogOpenFactory = () =>
   createSelector(dialogByNameSelector, (dialog) => {
@@ -14,8 +13,7 @@ export const getDialogPayloadFactory = () =>
     return { ...dialog?.payload };
   });
 
-const alertByNameSelector = (state, props) =>
-  state.dashboard.alerts?.[props.name];
+const alertByNameSelector = (state, props) => state.dashboard.alerts?.[props.name];
 
 export const isAlertOpenFactory = () =>
   createSelector(alertByNameSelector, (alert) => {
@@ -27,8 +25,7 @@ export const getAlertPayloadFactory = () =>
     return { ...alert?.payload };
   });
 
-const drawerByNameSelector = (state, props) =>
-  state.dashboard.drawers?.[props.name];
+const drawerByNameSelector = (state, props) => state.dashboard.drawers?.[props.name];
 
 export const isDrawerOpenFactory = () =>
   createSelector(drawerByNameSelector, (drawer) => {

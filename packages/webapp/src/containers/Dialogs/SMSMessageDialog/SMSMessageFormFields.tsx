@@ -37,23 +37,13 @@ export default function SMSMessageFormFields() {
             helperText={
               <>
                 <ErrorMessage name={'message_text'} />
-                <ResetButton
-                  minimal={true}
-                  small={true}
-                  intent={Intent.PRIMARY}
-                  onClick={handleBtnClick}
-                >
+                <ResetButton minimal={true} small={true} intent={Intent.PRIMARY} onClick={handleBtnClick}>
                   <T id={'sms_message.edit_form.reset_to_default_message'} />
                 </ResetButton>
               </>
             }
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>

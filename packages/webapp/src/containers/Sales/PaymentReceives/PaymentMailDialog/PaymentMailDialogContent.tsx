@@ -12,10 +12,7 @@ export default function PaymentMailDialogContent({
   redirectToPaymentsList,
 }: PaymentMailDialogContentProps) {
   return (
-    <PaymentMailDialogBoot
-      paymentReceiveId={paymentReceiveId}
-      redirectToPaymentsList={redirectToPaymentsList}
-    >
+    <PaymentMailDialogBoot paymentReceiveId={paymentReceiveId} redirectToPaymentsList={redirectToPaymentsList}>
       <PaymentMailDialogForm />
     </PaymentMailDialogBoot>
   );

@@ -7,14 +7,8 @@ export function ExpenseFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- Description --------- */}
-      <DescriptionFormGroup
-        label={<T id={'description'} />}
-        name={'description'}
-      >
-        <FEditableText
-          name={'description'}
-          placeholder={<T id={'expenses.decscrption.placeholder'} />}
-        />
+      <DescriptionFormGroup label={<T id={'description'} />} name={'description'}>
+        <FEditableText name={'description'} placeholder={<T id={'expenses.decscrption.placeholder'} />} />
       </DescriptionFormGroup>
     </React.Fragment>
   );

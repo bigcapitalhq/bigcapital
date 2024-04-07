@@ -1,12 +1,11 @@
-import { Container } from 'typedi';
-import { Request, Response, NextFunction } from 'express';
 import tenantDependencyInjection from '@/api/middleware/TenantDependencyInjection';
 import { Tenant } from '@/system/models';
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
 
 export default async (req: Request, res: Response, next: NextFunction) => {
   const Logger = Container.get('logger');
-  const organizationId =
-    req.headers['organization-id'] || req.query.organization;
+  const organizationId = req.headers['organization-id'] || req.query.organization;
 
   const notFoundOrganization = () => {
     Logger.info('[tenancy_middleware] organization id not found.');
@@ -18,9 +17,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (!organizationId) {
     return notFoundOrganization();
   }
-  const tenant = await Tenant.query()
-    .findOne({ organizationId })
-    .withGraphFetched('metadata');
+  const tenant = await Tenant.query().findOne({ organizationId }).withGraphFetched('metadata');
 
   // When the given organization id not found on the system storage.
   if (!tenant) {

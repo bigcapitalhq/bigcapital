@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { ISaleInvoice, ISystemUser } from '@/interfaces';
-import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
+import { ISaleInvoice } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { SaleInvoiceTransformer } from './SaleInvoiceTransformer';
 
 @Service()
 export class GetSaleInvoice {
@@ -22,10 +22,7 @@ export class GetSaleInvoice {
    * @param {ISystemUser} authorizedUser -
    * @return {Promise<ISaleInvoice>}
    */
-  public async getSaleInvoice(
-    tenantId: number,
-    saleInvoiceId: number
-  ): Promise<ISaleInvoice> {
+  public async getSaleInvoice(tenantId: number, saleInvoiceId: number): Promise<ISaleInvoice> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const saleInvoice = await SaleInvoice.query()
@@ -39,10 +36,6 @@ export class GetSaleInvoice {
     // Validates the given sale invoice existance.
     this.validators.validateInvoiceExistance(saleInvoice);
 
-    return this.transformer.transform(
-      tenantId,
-      saleInvoice,
-      new SaleInvoiceTransformer()
-    );
+    return this.transformer.transform(tenantId, saleInvoice, new SaleInvoiceTransformer());
   }
 }

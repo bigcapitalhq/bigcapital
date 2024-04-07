@@ -3,13 +3,7 @@ import React from 'react';
 import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
-import {
-  BranchSelect,
-  FeatureCan,
-  FormTopbar,
-  DetailsBarSkeletonBase,
-  FormBranchSelectButton,
-} from '@/components';
+import { BranchSelect, FeatureCan, FormTopbar, DetailsBarSkeletonBase, FormBranchSelectButton } from '@/components';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { Features } from '@/constants';
 

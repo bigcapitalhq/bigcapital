@@ -1,11 +1,11 @@
-import { kebabCase } from 'lodash';
 import { ITableRow } from '@/interfaces';
+import { kebabCase } from 'lodash';
 
 export const formatNumber = (balance, { noCents, divideOn1000 }): string => {
-  let formattedBalance: number = parseFloat(balance);
+  let formattedBalance: number = Number.parseFloat(balance);
 
   if (noCents) {
-    formattedBalance = parseInt(formattedBalance, 10);
+    formattedBalance = Number.parseInt(formattedBalance, 10);
   }
   if (divideOn1000) {
     formattedBalance /= 1000;
@@ -15,8 +15,7 @@ export const formatNumber = (balance, { noCents, divideOn1000 }): string => {
 
 export const tableClassNames = (rows: ITableRow[]) => {
   return rows.map((row) => {
-    const classNames =
-      row?.rowTypes?.map((rowType) => `row-type--${kebabCase(rowType)}`) || [];
+    const classNames = row?.rowTypes?.map((rowType) => `row-type--${kebabCase(rowType)}`) || [];
 
     if (row.id) {
       classNames.push(`row-id--${kebabCase(row.id)}`);

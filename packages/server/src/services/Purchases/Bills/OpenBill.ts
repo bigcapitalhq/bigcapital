@@ -1,13 +1,13 @@
-import moment from 'moment';
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
+import { IBillOpenedPayload, IBillOpeningPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { BillsValidators } from './BillsValidators';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { IBillOpenedPayload, IBillOpeningPayload } from '@/interfaces';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { BillsValidators } from './BillsValidators';
+import { ERRORS } from './constants';
 
 @Service()
 export class OpenBill {
@@ -32,9 +32,7 @@ export class OpenBill {
     const { Bill } = this.tenancy.models(tenantId);
 
     // Retrieve the given bill or throw not found error.
-    const oldBill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries');
+    const oldBill = await Bill.query().findById(billId).withGraphFetched('entries');
 
     // Validates the bill existance.
     this.validators.validateBillExistance(oldBill);

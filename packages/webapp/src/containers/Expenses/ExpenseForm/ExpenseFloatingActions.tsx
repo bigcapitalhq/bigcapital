@@ -92,10 +92,7 @@ export default function ExpenseFloatingFooter() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'publish_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'publish_and_new'} />} onClick={handleSubmitPublishAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'publish_continue_editing'} />}
                   onClick={handleSubmitPublishContinueEditingBtnClick}
@@ -124,10 +121,7 @@ export default function ExpenseFloatingFooter() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDraftAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'save_continue_editing'} />}
                   onClick={handleSubmitDraftContinueEditingBtnClick}
@@ -138,10 +132,7 @@ export default function ExpenseFloatingFooter() {
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
           >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
+            <Button disabled={isSubmitting} rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
           </Popover>
         </ButtonGroup>
       </If>
@@ -159,10 +150,7 @@ export default function ExpenseFloatingFooter() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitPublishAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitPublishAndNewBtnClick} />
               </Menu>
             }
             minimal={true}
@@ -185,11 +173,7 @@ export default function ExpenseFloatingFooter() {
         text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
-      <Button
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

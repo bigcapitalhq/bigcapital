@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { IVendorBalanceSummaryQuery } from '@/interfaces';
-import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
+import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
 
 @Service()
 export class VendorBalanceSummaryExportInjectable {
@@ -29,10 +29,7 @@ export class VendorBalanceSummaryExportInjectable {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<string>}
    */
-  public async csv(
-    tenantId: number,
-    query: IVendorBalanceSummaryQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IVendorBalanceSummaryQuery): Promise<string> {
     const table = await this.customerBalanceSummaryTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

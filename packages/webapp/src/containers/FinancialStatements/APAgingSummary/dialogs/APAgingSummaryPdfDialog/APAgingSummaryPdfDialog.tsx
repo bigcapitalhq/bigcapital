@@ -8,9 +8,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const APAgingSummaryPdfDialogContent = lazy(
-  () => import('./APAgingSummaryPdfDialogContent'),
-);
+const APAgingSummaryPdfDialogContent = lazy(() => import('./APAgingSummaryPdfDialogContent'));
 
 /**
  * A/P aging summary pdf preview dialog.
@@ -34,6 +32,4 @@ function APAgingSummaryPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const APAgingSummaryPdfDialog = compose(withDialogRedux())(
-  APAgingSummaryPdfDialogRoot,
-);
+export const APAgingSummaryPdfDialog = compose(withDialogRedux())(APAgingSummaryPdfDialogRoot);

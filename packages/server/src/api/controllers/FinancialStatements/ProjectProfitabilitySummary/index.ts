@@ -1,23 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { query } from 'express-validator';
-import {
-  NextFunction,
-  Router,
-  Request,
-  Response,
-  ValidationChain,
-} from 'express';
-import BaseFinancialReportController from '../BaseFinancialReportController';
-import {
-  ICashFlowStatementDOO,
-  AbilitySubject,
-  ReportsAction,
-  IProjectProfitabilitySummaryPOJO,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { ProjectProfitabilitySummaryTable } from '@/services/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummaryTable';
+import { AbilitySubject, IProjectProfitabilitySummaryPOJO, ReportsAction } from '@/interfaces';
 import { ProjectProfitabilitySummaryService } from '@/services/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummaryService';
+import { ProjectProfitabilitySummaryTable } from '@/services/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummaryTable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from '../BaseFinancialReportController';
 
 @Service()
 export default class ProjectProfitabilityController extends BaseFinancialReportController {
@@ -35,13 +24,10 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_PROJECT_PROFITABILITY_SUMMARY,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_PROJECT_PROFITABILITY_SUMMARY, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.projectProfitabilitySummary.bind(this))
+      this.asyncMiddleware(this.projectProfitabilitySummary.bind(this)),
     );
     return router;
   }
@@ -60,11 +46,17 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
       query('none_transactions').optional().isBoolean().toBoolean(),
 
       // Filtering by projects.
-      query('products_ids').optional().toArray().isArray({ min: 1 }),
+      query('products_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('products_ids.*').isNumeric().toInt(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -87,15 +79,9 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
    * Transformes the report statement to table rows.
    * @param {ITransactionsByVendorsStatement} statement -
    */
-  private transformToTableRows(
-    projectProfitabilityPOJO: IProjectProfitabilitySummaryPOJO,
-    tenantId: number
-  ) {
+  private transformToTableRows(projectProfitabilityPOJO: IProjectProfitabilitySummaryPOJO, tenantId: number) {
     const i18n = this.tenancy.i18n(tenantId);
-    const projectProfitabilityTable = new ProjectProfitabilitySummaryTable(
-      projectProfitabilityPOJO.data,
-      i18n
-    );
+    const projectProfitabilityTable = new ProjectProfitabilitySummaryTable(projectProfitabilityPOJO.data, i18n);
 
     return {
       table: {
@@ -114,35 +100,23 @@ export default class ProjectProfitabilityController extends BaseFinancialReportC
    * @param {NextFunction} next
    * @returns {Response}
    */
-  async projectProfitabilitySummary(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  async projectProfitabilitySummary(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       ...this.matchedQueryData(req),
     };
 
     try {
-      const projectProfitability =
-        await this.projectProfitabilityService.projectProfitabilitySummary(
-          tenantId,
-          filter
-        );
+      const projectProfitability = await this.projectProfitabilityService.projectProfitabilitySummary(tenantId, filter);
       const accept = this.accepts(req);
       const acceptType = accept.types(['json', 'application/json+table']);
 
       switch (acceptType) {
         case 'application/json+table':
-          return res
-            .status(200)
-            .send(this.transformToTableRows(projectProfitability, tenantId));
+          return res.status(200).send(this.transformToTableRows(projectProfitability, tenantId));
         case 'json':
         default:
-          return res
-            .status(200)
-            .send(this.transformJsonResponse(projectProfitability));
+          return res.status(200).send(this.transformJsonResponse(projectProfitability));
       }
     } catch (error) {
       next(error);

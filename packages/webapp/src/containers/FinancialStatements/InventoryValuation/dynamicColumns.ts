@@ -7,12 +7,7 @@ import { useInventoryValuationContext } from './InventoryValuationProvider';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, headerText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    headerText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, headerText);
 };
 
 /**
@@ -52,7 +47,7 @@ const itemNameColumnAccessor = R.curry((data, column) => {
   return {
     ...column,
     width: 240,
-  }
+  };
 });
 
 /**
@@ -75,7 +70,7 @@ const dynamicColumnMapper = R.curry((data, column) => {
 });
 
 /**
- * Composes the fetched dynamic columns from the server to the columns to pass it 
+ * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
 export const dynamicColumns = (columns, data) => {

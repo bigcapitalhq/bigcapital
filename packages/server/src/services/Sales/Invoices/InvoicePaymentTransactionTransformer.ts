@@ -23,7 +23,7 @@ export class InvoicePaymentTransactionTransformer extends Transformer {
 
   /**
    * Formatted payment date.
-   * @param entry 
+   * @param entry
    * @returns {string}
    */
   protected formattedPaymentDate = (entry): string => {

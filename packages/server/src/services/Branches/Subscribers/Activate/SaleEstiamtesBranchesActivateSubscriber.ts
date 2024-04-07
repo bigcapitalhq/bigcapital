@@ -1,6 +1,6 @@
 import { IBranchesActivatedPayload } from '@/interfaces';
-import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { SaleEstimateActivateBranches } from '../../Integrations/Sales/SaleEstimatesBranchesActivate';
 
 @Service()
@@ -12,10 +12,7 @@ export class SaleEstimatesActivateBranchesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateEstimatesWithBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateEstimatesWithBranchOnActivated);
     return bus;
   }
 
@@ -29,10 +26,6 @@ export class SaleEstimatesActivateBranchesSubscriber {
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) => {
-    await this.estimatesActivateBranches.updateEstimatesWithBranch(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+    await this.estimatesActivateBranches.updateEstimatesWithBranch(tenantId, primaryBranch.id, trx);
   };
 }

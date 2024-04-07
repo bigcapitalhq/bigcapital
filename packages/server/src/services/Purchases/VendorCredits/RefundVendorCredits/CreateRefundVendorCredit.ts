@@ -1,6 +1,3 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import * as R from 'ramda';
 import {
   IRefundVendorCredit,
   IRefundVendorCreditCreatedPayload,
@@ -10,11 +7,14 @@ import {
   IVendorCreditCreatePayload,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import RefundVendorCredit from './RefundVendorCredit';
 import events from '@/subscribers/events';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import RefundVendorCredit from './RefundVendorCredit';
 
 @Service()
 export default class CreateRefundVendorCredit extends RefundVendorCredit {
@@ -40,26 +40,18 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
   public createRefund = async (
     tenantId: number,
     vendorCreditId: number,
-    refundVendorCreditDTO: IRefundVendorCreditDTO
+    refundVendorCreditDTO: IRefundVendorCreditDTO,
   ): Promise<IRefundVendorCredit> => {
-    const { RefundVendorCredit, Account, VendorCredit } =
-      this.tenancy.models(tenantId);
+    const { RefundVendorCredit, Account, VendorCredit } = this.tenancy.models(tenantId);
 
     // Retrieve the vendor credit or throw not found service error.
-    const vendorCredit = await VendorCredit.query()
-      .findById(vendorCreditId)
-      .throwIfNotFound();
+    const vendorCredit = await VendorCredit.query().findById(vendorCreditId).throwIfNotFound();
 
     // Retrieve the deposit account or throw not found service error.
-    const depositAccount = await Account.query()
-      .findById(refundVendorCreditDTO.depositAccountId)
-      .throwIfNotFound();
+    const depositAccount = await Account.query().findById(refundVendorCreditDTO.depositAccountId).throwIfNotFound();
 
     // Validate vendor credit has remaining credit.
-    this.validateVendorCreditRemainingCredit(
-      vendorCredit,
-      refundVendorCreditDTO.amount
-    );
+    this.validateVendorCreditRemainingCredit(vendorCredit, refundVendorCreditDTO.amount);
     // Validate refund deposit account type.
     this.validateRefundDepositAccountType(depositAccount);
 
@@ -70,11 +62,7 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
       refundVendorCreditDTO,
     } as IVendorCreditCreatePayload);
 
-    const refundCreditObj = this.transformDTOToModel(
-      tenantId,
-      vendorCredit,
-      refundVendorCreditDTO
-    );
+    const refundCreditObj = this.transformDTOToModel(tenantId, vendorCredit, refundVendorCreditDTO);
     // Saves refund vendor credit with associated transactions.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       const eventPayload = {
@@ -87,13 +75,12 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
       // Triggers `onVendorCreditRefundCreating` event.
       await this.eventPublisher.emitAsync(
         events.vendorCredit.onRefundCreating,
-        eventPayload as IRefundVendorCreditCreatingPayload
+        eventPayload as IRefundVendorCreditCreatingPayload,
       );
       // Inserts refund vendor credit to the storage layer.
-      const refundVendorCredit =
-        await RefundVendorCredit.query().insertAndFetch({
-          ...refundCreditObj,
-        });
+      const refundVendorCredit = await RefundVendorCredit.query().insertAndFetch({
+        ...refundCreditObj,
+      });
       // Triggers `onVendorCreditCreated` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onRefundCreated, {
         ...eventPayload,
@@ -113,7 +100,7 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
   public transformDTOToModel = (
     tenantId: number,
     vendorCredit: IVendorCredit,
-    vendorCreditDTO: IRefundVendorCreditDTO
+    vendorCreditDTO: IRefundVendorCreditDTO,
   ) => {
     const initialDTO = {
       vendorCreditId: vendorCredit.id,
@@ -121,8 +108,6 @@ export default class CreateRefundVendorCredit extends RefundVendorCredit {
       currencyCode: vendorCredit.currencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,
     };
-    return R.compose(this.branchDTOTransform.transformDTO(tenantId))(
-      initialDTO
-    );
+    return R.compose(this.branchDTOTransform.transformDTO(tenantId))(initialDTO);
   };
 }

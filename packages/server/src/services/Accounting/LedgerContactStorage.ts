@@ -1,14 +1,10 @@
-import { Service, Inject } from 'typedi';
-import async from 'async';
-import { Knex } from 'knex';
-import {
-  ILedger,
-  ILedgerEntry,
-  ISaleContactsBalanceQueuePayload,
-} from '@/interfaces';
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { ILedger, ILedgerEntry, ISaleContactsBalanceQueuePayload } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
-import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import async from 'async';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class LedgerContactsBalanceStorage {
@@ -22,16 +18,9 @@ export class LedgerContactsBalanceStorage {
    * @param   {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
-  public saveContactsBalance = async (
-    tenantId: number,
-    ledger: ILedger,
-    trx?: Knex.Transaction
-  ): Promise<void> => {
+  public saveContactsBalance = async (tenantId: number, ledger: ILedger, trx?: Knex.Transaction): Promise<void> => {
     // Save contact balance queue.
-    const saveContactsBalanceQueue = async.queue(
-      this.saveContactBalanceTask,
-      10
-    );
+    const saveContactsBalanceQueue = async.queue(this.saveContactBalanceTask, 10);
     // Retrieves the effected contacts ids.
     const effectedContactsIds = ledger.getContactsIds();
 
@@ -46,9 +35,7 @@ export class LedgerContactsBalanceStorage {
    * @param   {ISaleContactsBalanceQueuePayload} task
    * @returns {Promise<void>}
    */
-  private saveContactBalanceTask = async (
-    task: ISaleContactsBalanceQueuePayload
-  ) => {
+  private saveContactBalanceTask = async (task: ISaleContactsBalanceQueuePayload) => {
     const { tenantId, contactId, ledger, trx } = task;
 
     await this.saveContactBalance(tenantId, ledger, contactId, trx);
@@ -62,7 +49,7 @@ export class LedgerContactsBalanceStorage {
    */
   private filterARAPLedgerEntris = async (
     tenantId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<(entry: ILedgerEntry) => boolean> => {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -88,7 +75,7 @@ export class LedgerContactsBalanceStorage {
     tenantId: number,
     ledger: ILedger,
     contactId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { Contact } = this.tenancy.models(tenantId);
     const contact = await Contact.query(trx).findById(contactId);
@@ -100,10 +87,7 @@ export class LedgerContactsBalanceStorage {
     const isForeignContact = contact.currencyCode !== tenantMeta.baseCurrency;
 
     // Filters the ledger base on the given contact id.
-    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(
-      tenantId,
-      trx
-    );
+    const filterARAPLedgerEntris = await this.filterARAPLedgerEntris(tenantId, trx);
     const contactLedger = ledger
       // Filter entries only that have contact id.
       .whereContactId(contactId)
@@ -111,9 +95,7 @@ export class LedgerContactsBalanceStorage {
       .filter(filterARAPLedgerEntris);
 
     const closingBalance = isForeignContact
-      ? contactLedger
-          .whereCurrencyCode(contact.currencyCode)
-          .getForeignClosingBalance()
+      ? contactLedger.whereCurrencyCode(contact.currencyCode).getForeignClosingBalance()
       : contactLedger.getClosingBalance();
 
     await this.changeContactBalance(tenantId, contactId, closingBalance, trx);
@@ -126,12 +108,7 @@ export class LedgerContactsBalanceStorage {
    * @param {number} change
    * @returns
    */
-  private changeContactBalance = (
-    tenantId: number,
-    contactId: number,
-    change: number,
-    trx?: Knex.Transaction
-  ) => {
+  private changeContactBalance = (tenantId: number, contactId: number, change: number, trx?: Knex.Transaction) => {
     const { Contact } = this.tenancy.models(tenantId);
 
     return Contact.changeAmount({ id: contactId }, 'balance', change, trx);

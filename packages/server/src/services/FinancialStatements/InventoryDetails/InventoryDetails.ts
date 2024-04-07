@@ -1,24 +1,24 @@
-import * as R from 'ramda';
-import { defaultTo, sumBy, get } from 'lodash';
-import moment from 'moment';
 import {
-  IInventoryDetailsQuery,
-  IItem,
-  IInventoryTransaction,
-  TInventoryTransactionDirection,
-  IInventoryDetailsNumber,
-  IInventoryDetailsDate,
-  IInventoryDetailsData,
-  IInventoryDetailsItem,
-  IInventoryDetailsClosing,
-  INumberFormatQuery,
-  IInventoryDetailsOpening,
-  IInventoryDetailsItemTransaction,
   IFormatNumberSettings,
+  IInventoryDetailsClosing,
+  IInventoryDetailsData,
+  IInventoryDetailsDate,
+  IInventoryDetailsItem,
+  IInventoryDetailsItemTransaction,
+  IInventoryDetailsNumber,
+  IInventoryDetailsOpening,
+  IInventoryDetailsQuery,
+  IInventoryTransaction,
+  IItem,
+  INumberFormatQuery,
+  TInventoryTransactionDirection,
 } from '@/interfaces';
-import FinancialSheet from '../FinancialSheet';
+import { defaultTo, get, sumBy } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
 import { transformToMapBy, transformToMapKeyValue } from 'utils';
 import { filterDeep } from 'utils/deepdash';
+import FinancialSheet from '../FinancialSheet';
 
 const MAP_CONFIG = { childrenPath: 'children', pathFormat: 'array' };
 
@@ -50,18 +50,12 @@ export class InventoryDetails extends FinancialSheet {
     inventoryTransactions: IInventoryTransaction[],
     query: IInventoryDetailsQuery,
     baseCurrency: string,
-    i18n: any
+    i18n: any,
   ) {
     super();
 
-    this.inventoryTransactionsByItemId = transformToMapBy(
-      inventoryTransactions,
-      'itemId'
-    );
-    this.openingBalanceTransactions = transformToMapKeyValue(
-      openingBalanceTransactions,
-      'itemId'
-    );
+    this.inventoryTransactionsByItemId = transformToMapBy(inventoryTransactions, 'itemId');
+    this.openingBalanceTransactions = transformToMapKeyValue(openingBalanceTransactions, 'itemId');
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.items = items;
@@ -74,10 +68,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {number} number
    * @returns
    */
-  private getNumberMeta(
-    number: number,
-    settings?: IFormatNumberSettings
-  ): IInventoryDetailsNumber {
+  private getNumberMeta(number: number, settings?: IFormatNumberSettings): IInventoryDetailsNumber {
     return {
       formattedNumber: this.formatNumber(number, {
         excerptZero: true,
@@ -94,10 +85,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IFormatNumberSettings} settings -
    * @retrun {IInventoryDetailsNumber}
    */
-  private getTotalNumberMeta(
-    number: number,
-    settings?: IFormatNumberSettings
-  ): IInventoryDetailsNumber {
+  private getTotalNumberMeta(number: number, settings?: IFormatNumberSettings): IInventoryDetailsNumber {
     return this.getNumberMeta(number, { excerptZero: false, ...settings });
   }
 
@@ -119,11 +107,9 @@ export class InventoryDetails extends FinancialSheet {
    * @param {TInventoryTransactionDirection} direction
    * @returns {number}
    */
-  private adjustAmountMovement = R.curry(
-    (direction: TInventoryTransactionDirection, amount: number): number => {
-      return direction === 'OUT' ? amount * -1 : amount;
-    }
-  );
+  private adjustAmountMovement = R.curry((direction: TInventoryTransactionDirection, amount: number): number => {
+    return direction === 'OUT' ? amount * -1 : amount;
+  });
 
   /**
    * Accumulate and mapping running quantity on transactions.
@@ -131,7 +117,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItemTransaction[]}
    */
   private mapAccumTransactionsRunningQuantity(
-    transactions: IInventoryDetailsItemTransaction[]
+    transactions: IInventoryDetailsItemTransaction[],
   ): IInventoryDetailsItemTransaction[] {
     const initial = this.getNumberMeta(0);
 
@@ -142,11 +128,7 @@ export class InventoryDetails extends FinancialSheet {
 
       return [accum, accum];
     };
-    return R.mapAccum(
-      mapAccumAppender,
-      { runningQuantity: initial },
-      transactions
-    )[1];
+    return R.mapAccum(mapAccumAppender, { runningQuantity: initial }, transactions)[1];
   }
 
   /**
@@ -155,7 +137,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItemTransaction}
    */
   private mapAccumTransactionsRunningValuation(
-    transactions: IInventoryDetailsItemTransaction[]
+    transactions: IInventoryDetailsItemTransaction[],
   ): IInventoryDetailsItemTransaction[] {
     const initial = this.getNumberMeta(0);
 
@@ -167,11 +149,7 @@ export class InventoryDetails extends FinancialSheet {
 
       return [accum, accum];
     };
-    return R.mapAccum(
-      mapAccumAppender,
-      { runningValuation: initial },
-      transactions
-    )[1];
+    return R.mapAccum(mapAccumAppender, { runningValuation: initial }, transactions)[1];
   }
 
   /**
@@ -180,9 +158,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {number}
    */
   private getTransactionTotal = (transaction: IInventoryTransaction) => {
-    return transaction.quantity
-      ? transaction.quantity * transaction.rate
-      : transaction.rate;
+    return transaction.quantity ? transaction.quantity * transaction.rate : transaction.rate;
   };
 
   /**
@@ -191,10 +167,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IInvetoryTransaction} transaction
    * @returns {IInventoryDetailsItemTransaction}
    */
-  private itemTransactionMapper(
-    item: IItem,
-    transaction: IInventoryTransaction
-  ): IInventoryDetailsItemTransaction {
+  private itemTransactionMapper(item: IItem, transaction: IInventoryTransaction): IInventoryDetailsItemTransaction {
     const total = this.getTransactionTotal(transaction);
     const amountMovement = this.adjustAmountMovement(transaction.direction);
 
@@ -240,9 +213,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {number} itemId
    * @returns {IInventoryTransaction[]}
    */
-  private getInventoryTransactionsByItemId(
-    itemId: number
-  ): IInventoryTransaction[] {
+  private getInventoryTransactionsByItemId(itemId: number): IInventoryTransaction[] {
     return defaultTo(this.inventoryTransactionsByItemId.get(itemId + ''), []);
   }
 
@@ -257,7 +228,7 @@ export class InventoryDetails extends FinancialSheet {
     return R.compose(
       this.mapAccumTransactionsRunningQuantity.bind(this),
       this.mapAccumTransactionsRunningValuation.bind(this),
-      R.map(R.curry(this.itemTransactionMapper.bind(this))(item))
+      R.map(R.curry(this.itemTransactionMapper.bind(this))(item)),
     )(transactions);
   }
 
@@ -271,26 +242,18 @@ export class InventoryDetails extends FinancialSheet {
    *  )[]}
    */
   private itemTransactionsMapper(
-    item: IItem
-  ): (
-    | IInventoryDetailsItemTransaction
-    | IInventoryDetailsOpening
-    | IInventoryDetailsClosing
-  )[] {
+    item: IItem,
+  ): (IInventoryDetailsItemTransaction | IInventoryDetailsOpening | IInventoryDetailsClosing)[] {
     const transactions = this.getItemTransactions(item);
     const openingValuation = this.getItemOpeingValuation(item);
-    const closingValuation = this.getItemClosingValuation(
-      item,
-      transactions,
-      openingValuation
-    );
+    const closingValuation = this.getItemClosingValuation(item, transactions, openingValuation);
     const hasTransactions = transactions.length > 0;
     const isItemHasOpeningBalance = this.isItemHasOpeningBalance(item.id);
 
     return R.pipe(
       R.concat(transactions),
       R.when(R.always(isItemHasOpeningBalance), R.prepend(openingValuation)),
-      R.when(R.always(hasTransactions), R.append(closingValuation))
+      R.when(R.always(hasTransactions), R.append(closingValuation)),
     )([]);
   }
 
@@ -329,7 +292,7 @@ export class InventoryDetails extends FinancialSheet {
   private getItemClosingValuation(
     item: IItem,
     transactions: IInventoryDetailsItemTransaction[],
-    openingValuation: IInventoryDetailsOpening
+    openingValuation: IInventoryDetailsOpening,
   ): IInventoryDetailsOpening {
     const value = sumBy(transactions, 'valueMovement.number');
     const quantity = sumBy(transactions, 'quantityMovement.number');
@@ -368,10 +331,7 @@ export class InventoryDetails extends FinancialSheet {
    * @param {IItem} node
    * @returns {boolean}
    */
-  private isNodeTypeEquals(
-    nodeType: string,
-    node: IInventoryDetailsItem
-  ): boolean {
+  private isNodeTypeEquals(nodeType: string, node: IInventoryDetailsItem): boolean {
     return nodeType === node.nodeType;
   }
 
@@ -393,7 +353,7 @@ export class InventoryDetails extends FinancialSheet {
     return R.ifElse(
       R.curry(this.isNodeTypeEquals)(INodeTypes.ITEM),
       this.isItemNodeHasTransactions.bind(this),
-      R.always(true)
+      R.always(true),
     )(item);
   }
 
@@ -403,11 +363,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   private filterItemsNodes(items: IInventoryDetailsItem[]) {
-    const filtered = filterDeep(
-      items,
-      this.isFilterNode.bind(this),
-      MAP_CONFIG
-    );
+    const filtered = filterDeep(items, this.isFilterNode.bind(this), MAP_CONFIG);
     return defaultTo(filtered, []);
   }
 
@@ -417,10 +373,7 @@ export class InventoryDetails extends FinancialSheet {
    * @returns {IInventoryDetailsItem[]}
    */
   private itemsNodes(items: IItem[]): IInventoryDetailsItem[] {
-    return R.compose(
-      this.filterItemsNodes.bind(this),
-      R.map(this.itemsNodeMapper.bind(this))
-    )(items);
+    return R.compose(this.filterItemsNodes.bind(this), R.map(this.itemsNodeMapper.bind(this)))(items);
   }
 
   /**

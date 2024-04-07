@@ -2,11 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 import ProjectsEmptyStatus from './ProjectsEmptyStatus';
 import { useProjectsListContext } from './ProjectsListProvider';
@@ -36,15 +32,13 @@ function ProjectsDataTable({
   const history = useHistory();
 
   // Projects list context.
-  const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } =
-    useProjectsListContext();
+  const { projects, isEmptyStatus, isProjectsLoading, isProjectsFetching } = useProjectsListContext();
 
   // Retrieve projects table columns.
   const columns = useProjectsListColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PROJECTS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.PROJECTS);
 
   // Handle delete project.
   const handleDeleteProject = ({ id }) => {

@@ -33,11 +33,7 @@ export default function TransactionTypeFields() {
       <Row>
         <Col xs={5}>
           {/*------------ Transaction type -----------*/}
-          <FFormGroup
-            name={'transaction_type'}
-            label={<T id={'transaction_type'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'transaction_type'} label={<T id={'transaction_type'} />} labelInfo={<FieldRequiredHint />}>
             <FSelect
               name={'transaction_type'}
               items={addMoneyInOptions}
@@ -58,10 +54,7 @@ export default function TransactionTypeFields() {
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="cashflow_account_id" />}
                 minimal={true}
-                className={classNames(
-                  CLASSES.FILL,
-                  'form-group--cashflow_account_id',
-                )}
+                className={classNames(CLASSES.FILL, 'form-group--cashflow_account_id')}
               >
                 <AccountsSuggestField
                   accounts={cashflowAccounts}

@@ -1,13 +1,8 @@
-import { Service, Inject, Container } from 'typedi';
-import {
-  IRegisterDTO,
-  ISystemUser,
-  IPasswordReset,
-  IAuthGetMetaPOJO,
-} from '@/interfaces';
+import { IAuthGetMetaPOJO, IPasswordReset, IRegisterDTO, ISystemUser } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { AuthSigninService } from './AuthSignin';
 import { AuthSignupService } from './AuthSignup';
-import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { GetAuthMeta } from './GetAuthMeta';
 
 @Service()

@@ -1,32 +1,40 @@
 {
   "name": "bigcapital-monorepo",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "lerna run dev",
     "build": "lerna run build",
-    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
-    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\"",
-    "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
     "build:server": "lerna run build --scope \"@bigcapital/server\"",
+    "build:webapp": "lerna run build --scope \"@bigcapital/webapp\"",
+    "dev": "lerna run dev",
+    "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
+    "dev:webapp": "lerna run dev --scope \"@bigcapital/webapp\"",
+    "format": "lerna run format --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
+    "lint": "lerna run lint --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
+    "lint.server": "lerna run lint:eslint --scope \"@bigcapital/server\"",
+    "prepare": "husky install",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
-    "test:e2e": "playwright test",
-    "prepare": "husky install"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^17.4.2",
-    "@commitlint/config-conventional": "^17.4.2",
-    "@commitlint/config-lerna-scopes": "^17.4.2",
-    "@faker-js/faker": "^8.0.2",
-    "@playwright/test": "^1.32.3",
-    "husky": "^8.0.3",
-    "lerna": "^6.4.1"
-  },
-  "engines": {
-    "node": "16.x || 17.x || 18.x"
+    "test:e2e": "playwright test"
   },
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.6.4",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@commitlint/config-lerna-scopes": "^17.8.1",
+    "@faker-js/faker": "^8.4.1",
+    "@playwright/test": "^1.43.0",
+    "husky": "^9.0.11",
+    "lerna": "^8.1.2",
+    "nx": "^18.2.3"
+  },
+  "engines": {
+    "node": "16.x || 17.x || 18.x || 20.x || 21.x"
   }
 }

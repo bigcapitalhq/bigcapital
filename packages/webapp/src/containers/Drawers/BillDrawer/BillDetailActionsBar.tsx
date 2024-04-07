@@ -2,13 +2,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useBillDrawerContext } from './BillDrawerProvider';
 
@@ -16,18 +10,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  Can,
-  If,
-  Icon,
-  DrawerActionsBar,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  BillAction,
-  PaymentMadeAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { Can, If, Icon, DrawerActionsBar, FormattedMessage as T } from '@/components';
+import { BillAction, PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { BillMenuItem } from './utils';
 
 import { safeCallback, compose } from '@/utils';
@@ -122,8 +106,4 @@ function BillDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-  withAlertsActions,
-)(BillDetailActionsBar);
+export default compose(withDialogActions, withDrawerActions, withAlertsActions)(BillDetailActionsBar);

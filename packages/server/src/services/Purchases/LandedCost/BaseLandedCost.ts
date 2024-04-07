@@ -1,18 +1,18 @@
-import { Inject, Service } from 'typedi';
-import { difference, sumBy } from 'lodash';
 import { ServiceError } from '@/exceptions';
 import {
-  IItemEntry,
   IBill,
-  ILandedCostItemDTO,
-  ILandedCostDTO,
   IBillLandedCostTransaction,
+  IItemEntry,
+  ILandedCostDTO,
+  ILandedCostItemDTO,
   ILandedCostTransaction,
   ILandedCostTransactionEntry,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { difference, sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import TransactionLandedCost from './TransctionLandedCost';
-import { ERRORS, CONFIG } from './utils';
+import { CONFIG, ERRORS } from './utils';
 
 @Service()
 export default class BaseLandedCostService {
@@ -29,17 +29,14 @@ export default class BaseLandedCostService {
    */
   protected validateAllocateCostItems = (
     purchaseInvoiceEntries: IItemEntry[],
-    landedCostItems: ILandedCostItemDTO[]
+    landedCostItems: ILandedCostItemDTO[],
   ): void => {
     // Purchase invoice entries items ids.
     const purchaseInvoiceItems = purchaseInvoiceEntries.map((e) => e.id);
     const landedCostItemsIds = landedCostItems.map((item) => item.entryId);
 
     // Not found items ids.
-    const notFoundItemsIds = difference(
-      purchaseInvoiceItems,
-      landedCostItemsIds
-    );
+    const notFoundItemsIds = difference(purchaseInvoiceItems, landedCostItemsIds);
     // Throw items ids not found service error.
     if (notFoundItemsIds.length > 0) {
       throw new ServiceError(ERRORS.LANDED_COST_ITEMS_IDS_NOT_FOUND);
@@ -58,7 +55,7 @@ export default class BaseLandedCostService {
     landedCostDTO: ILandedCostDTO,
     bill: IBill,
     costTransaction: ILandedCostTransaction,
-    costTransactionEntry: ILandedCostTransactionEntry
+    costTransactionEntry: ILandedCostTransactionEntry,
   ) {
     const amount = sumBy(landedCostDTO.items, 'cost');
 
@@ -87,24 +84,14 @@ export default class BaseLandedCostService {
    * @param {transactionType} transactionType -
    * @param {transactionId} transactionId -
    */
-  public getLandedCostOrThrowError = async (
-    tenantId: number,
-    transactionType: string,
-    transactionId: number
-  ) => {
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      transactionType
-    );
+  public getLandedCostOrThrowError = async (tenantId: number, transactionType: string, transactionId: number) => {
+    const Model = this.transactionLandedCost.getModel(tenantId, transactionType);
     const model = await Model.query().findById(transactionId);
 
     if (!model) {
       throw new ServiceError(ERRORS.LANDED_COST_TRANSACTION_NOT_FOUND);
     }
-    return this.transactionLandedCost.transformToLandedCost(
-      transactionType,
-      model
-    );
+    return this.transactionLandedCost.transformToLandedCost(transactionType, model);
   };
 
   /**
@@ -118,12 +105,9 @@ export default class BaseLandedCostService {
     tenantId: number,
     transactionType: string,
     transactionId: number,
-    transactionEntryId: number
+    transactionEntryId: number,
   ): Promise<any> => {
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      transactionType
-    );
+    const Model = this.transactionLandedCost.getModel(tenantId, transactionType);
     const relation = CONFIG.COST_TYPES[transactionType].entries;
 
     const entry = await Model.relatedQuery(relation)
@@ -141,10 +125,7 @@ export default class BaseLandedCostService {
     if (!entry) {
       throw new ServiceError(ERRORS.LANDED_COST_ENTRY_NOT_FOUND);
     }
-    return this.transactionLandedCost.transformToLandedCostEntry(
-      transactionType,
-      entry
-    );
+    return this.transactionLandedCost.transformToLandedCostEntry(transactionType, entry);
   };
 
   /**
@@ -152,9 +133,7 @@ export default class BaseLandedCostService {
    * @param {ILandedCostDTO} landedCostDTO
    * @returns {number}
    */
-  protected getAllocateItemsCostTotal = (
-    landedCostDTO: ILandedCostDTO
-  ): number => {
+  protected getAllocateItemsCostTotal = (landedCostDTO: ILandedCostDTO): number => {
     return sumBy(landedCostDTO.items, 'cost');
   };
 
@@ -163,10 +142,7 @@ export default class BaseLandedCostService {
    * @param {number} unallocatedCost -
    * @param {number} amount -
    */
-  protected validateLandedCostEntryAmount = (
-    unallocatedCost: number,
-    amount: number
-  ): void => {
+  protected validateLandedCostEntryAmount = (unallocatedCost: number, amount: number): void => {
     if (unallocatedCost < amount) {
       throw new ServiceError(ERRORS.COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT);
     }
@@ -180,7 +156,7 @@ export default class BaseLandedCostService {
    */
   public getBillLandedCostOrThrowError = async (
     tenantId: number,
-    landedCostId: number
+    landedCostId: number,
   ): Promise<IBillLandedCostTransaction> => {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 

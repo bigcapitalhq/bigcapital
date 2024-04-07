@@ -16,11 +16,7 @@ import EstimateDetailPanel from './EstimateDetailPanel';
 function EstimateDetailsTabs() {
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<EstimateDetailPanel />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<EstimateDetailPanel />} />
     </DrawerMainTabs>
   );
 }

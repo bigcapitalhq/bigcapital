@@ -21,12 +21,7 @@ export default function IncrementAdjustmentFields() {
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="quantity_on_hand" />}
             >
-              <InputGroup
-                disabled={true}
-                medium={'true'}
-                intent={inputIntent({ error, touched })}
-                {...field}
-              />
+              <InputGroup disabled={true} medium={'true'} intent={inputIntent({ error, touched })} {...field} />
             </FormGroup>
           )}
         </FastField>
@@ -40,11 +35,7 @@ export default function IncrementAdjustmentFields() {
       {/*------------ Increment -----------*/}
       <Col className={'col--quantity'}>
         <Field name={'quantity'}>
-          {({
-            form: { values, setFieldValue },
-            field,
-            meta: { error, touched },
-          }) => (
+          {({ form: { values, setFieldValue }, field, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'increment'} />}
               intent={inputIntent({ error, touched })}
@@ -62,10 +53,7 @@ export default function IncrementAdjustmentFields() {
                 onBlurValue={(value) => {
                   setFieldValue(
                     'new_quantity',
-                    incrementQuantity(
-                      toSafeNumber(value),
-                      toSafeNumber(values.quantity_on_hand),
-                    ),
+                    incrementQuantity(toSafeNumber(value), toSafeNumber(values.quantity_on_hand)),
                   );
                 }}
                 intent={inputIntent({ error, touched })}
@@ -78,11 +66,7 @@ export default function IncrementAdjustmentFields() {
       {/*------------ Cost -----------*/}
       <Col className={'col--cost'}>
         <FastField name={'cost'}>
-          {({
-            form: { setFieldValue },
-            field: { value },
-            meta: { error, touched },
-          }) => (
+          {({ form: { setFieldValue }, field: { value }, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'cost'} />}
               intent={inputIntent({ error, touched })}
@@ -108,11 +92,7 @@ export default function IncrementAdjustmentFields() {
       {/*------------ New quantity -----------*/}
       <Col className={'col--quantity-on-hand'}>
         <Field name={'new_quantity'}>
-          {({
-            form: { values, setFieldValue },
-            field,
-            meta: { error, touched },
-          }) => (
+          {({ form: { values, setFieldValue }, field, meta: { error, touched } }) => (
             <FormGroup
               label={<T id={'new_quantity'} />}
               intent={inputIntent({ error, touched })}
@@ -128,10 +108,7 @@ export default function IncrementAdjustmentFields() {
                 onBlurValue={(value) => {
                   setFieldValue(
                     'quantity',
-                    decrementQuantity(
-                      toSafeNumber(value),
-                      toSafeNumber(values.quantity_on_hand),
-                    ),
+                    decrementQuantity(toSafeNumber(value), toSafeNumber(values.quantity_on_hand)),
                   );
                 }}
                 intent={inputIntent({ error, touched })}

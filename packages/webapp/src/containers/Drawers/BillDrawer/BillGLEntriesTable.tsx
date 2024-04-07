@@ -7,9 +7,7 @@ import { Card } from '@/components';
 import { useTransactionsByReference } from '@/hooks/query';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Bill GL entries table.
@@ -33,10 +31,7 @@ export default function BillGLEntriesTable() {
   return (
     <BilleGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <BillGLEntriesDatatable
-        loading={isTransactionLoading}
-        transactions={transactions}
-      />
+      <BillGLEntriesDatatable loading={isTransactionLoading} transactions={transactions} />
     </BilleGLEntriesRoot>
   );
 }

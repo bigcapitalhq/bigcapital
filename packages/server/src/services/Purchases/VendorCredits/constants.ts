@@ -17,9 +17,7 @@ export const DEFAULT_VIEWS = [
     name: 'vendor_credit.view.draft',
     slug: 'draft',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {

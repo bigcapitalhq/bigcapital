@@ -1,5 +1,5 @@
-import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { Model } from 'objection';
 
 export default class View extends TenantModel {
   /**
@@ -27,13 +27,13 @@ export default class View extends TenantModel {
 
       specificOrFavourite(query, viewId) {
         if (viewId) {
-          query.where('id', viewId)
+          query.where('id', viewId);
         } else {
           query.where('favourite', true);
         }
         return query;
-      }
-    }
+      },
+    };
   }
 
   /**

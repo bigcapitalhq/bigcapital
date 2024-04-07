@@ -1,7 +1,7 @@
 import { Importable } from '@/services/Import/Importable';
-import { CreateVendor } from './CRUD/CreateVendor';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import { CreateVendor } from './CRUD/CreateVendor';
 import { VendorsSampleData } from './_SampleData';
 
 @Service()
@@ -15,11 +15,7 @@ export class VendorsImportable extends Importable {
    * @param {} createDTO
    * @param {Knex.Transaction} trx
    */
-  public async importable(
-    tenantId: number,
-    createDTO: any,
-    trx?: Knex.Transaction<any, any[]>
-  ): Promise<void> {
+  public async importable(tenantId: number, createDTO: any, trx?: Knex.Transaction<any, any[]>): Promise<void> {
     await this.createVendorService.createVendor(tenantId, createDTO, trx);
   }
 

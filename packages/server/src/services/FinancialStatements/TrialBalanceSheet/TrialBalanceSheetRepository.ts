@@ -46,8 +46,7 @@ export class TrialBalanceSheetRepository {
    */
   public initAccounts = async () => {
     const accounts = await this.getAccounts();
-    const accountsDepGraph =
-      await this.repos.accountRepository.getDependencyGraph();
+    const accountsDepGraph = await this.repos.accountRepository.getDependencyGraph();
 
     this.accountsDepGraph = accountsDepGraph;
     this.accounts = accounts;

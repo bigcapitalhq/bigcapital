@@ -7,12 +7,7 @@ import { useJournalSheetContext } from './JournalProvider';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, headerText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    headerText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, headerText);
 };
 
 /**
@@ -96,14 +91,8 @@ const dynamicColumnMapper = R.curry((data, column) => {
 
   return R.compose(
     R.when(R.pathEq(['key'], 'date'), dateColumnAccessor),
-    R.when(
-      R.pathEq(['key'], 'transaction_type'),
-      transactionTypeColumnAccessor,
-    ),
-    R.when(
-      R.pathEq(['key'], 'transaction_number'),
-      transactionNumberColumnAccessor,
-    ),
+    R.when(R.pathEq(['key'], 'transaction_type'), transactionTypeColumnAccessor),
+    R.when(R.pathEq(['key'], 'transaction_number'), transactionNumberColumnAccessor),
     R.when(R.pathEq(['key'], 'account_code'), accountCodeColumnAccessor),
     R.when(R.pathEq(['key'], 'credit'), _numericColumnAccessor),
     R.when(R.pathEq(['key'], 'debit'), _numericColumnAccessor),
@@ -112,7 +101,7 @@ const dynamicColumnMapper = R.curry((data, column) => {
 });
 
 /**
- * Composes the fetched dynamic columns from the server to the columns to pass it 
+ * Composes the fetched dynamic columns from the server to the columns to pass it
  * to the table component.
  */
 export const dynamicColumns = (columns, data) => {

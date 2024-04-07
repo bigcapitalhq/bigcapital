@@ -1,13 +1,10 @@
-import { Knex } from 'knex';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IBillPaymentDeletingPayload, IBillPaymentEventDeletedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
-import {
-  IBillPaymentDeletingPayload,
-  IBillPaymentEventDeletedPayload,
-} from '@/interfaces';
+import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class DeleteBillPayment {
@@ -46,9 +43,7 @@ export class DeleteBillPayment {
       } as IBillPaymentDeletingPayload);
 
       // Deletes the bill payment assocaited entries.
-      await BillPaymentEntry.query(trx)
-        .where('bill_payment_id', billPaymentId)
-        .delete();
+      await BillPaymentEntry.query(trx).where('bill_payment_id', billPaymentId).delete();
 
       // Deletes the bill payment transaction.
       await BillPayment.query(trx).where('id', billPaymentId).delete();

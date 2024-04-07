@@ -7,12 +7,7 @@ import { useSalesByItemsContext } from './SalesByItemProvider';
 const getTableCellValueAccessor = (index) => `cells[${index}].value`;
 
 const getReportColWidth = (data, accessor, headerText) => {
-  return getColumnWidth(
-    data,
-    accessor,
-    { magicSpacing: 10, minWidth: 100 },
-    headerText,
-  );
+  return getColumnWidth(data, accessor, { magicSpacing: 10, minWidth: 100 }, headerText);
 };
 
 /**
@@ -51,7 +46,7 @@ const itemNameColumnAccessor = R.curry((data, column) => {
   return {
     ...column,
     width: 180,
-  }
+  };
 });
 
 const dynamiColumnMapper = R.curry((data, column) => {

@@ -33,29 +33,26 @@ export const multiNumberParse = (number: number | string, standardDecSep = '.') 
     .slice(negative ? 1 : 0);
 
   // analyze separators
-  const separators = (stripped.match(/[^\d]/g) || []).reduce(
-    (acc, sep, idx) => {
-      const sepChr = `str_${sep.codePointAt(0)}`;
-      const cnt = ((acc[sepChr] || {}).cnt || 0) + 1;
+  const separators = (stripped.match(/[^\d]/g) || []).reduce((acc, sep, idx) => {
+    const sepChr = `str_${sep.codePointAt(0)}`;
+    const cnt = ((acc[sepChr] || {}).cnt || 0) + 1;
 
-      return {
-        ...acc,
-        [sepChr]: {
-          sep,
-          cnt,
-          lastIdx: idx,
-        },
-      };
-    },
-    {}
-  );
+    return {
+      ...acc,
+      [sepChr]: {
+        sep,
+        cnt,
+        lastIdx: idx,
+      },
+    };
+  }, {});
 
   // check correctness of separators
   const sepKeys = Object.keys(separators);
 
   if (!sepKeys.length) {
     // no separator, that's easy-peasy
-    return parseInt(stripped, 10) * (negative ? -1 : 1);
+    return Number.parseInt(stripped, 10) * (negative ? -1 : 1);
   }
 
   if (sepKeys.length > 2) {
@@ -91,10 +88,7 @@ export const multiNumberParse = (number: number | string, standardDecSep = '.') 
     }
 
     // ok, we got here! let's handle it
-    return (
-      parseFloat(stripped.split(sep1.sep).join('').replace(sep2.sep, '.')) *
-      (negative ? -1 : 1)
-    );
+    return Number.parseFloat(stripped.split(sep1.sep).join('').replace(sep2.sep, '.')) * (negative ? -1 : 1);
   }
 
   // ok, only one separator, which is nice
@@ -108,7 +102,7 @@ export const multiNumberParse = (number: number | string, standardDecSep = '.') 
     }
 
     // it's valid, let's return an integer
-    return parseInt(stripped.split(sep.sep).join(''), 10) * (negative ? -1 : 1);
+    return Number.parseInt(stripped.split(sep.sep).join(''), 10) * (negative ? -1 : 1);
   }
 
   // just one separator, let's check last group
@@ -119,12 +113,10 @@ export const multiNumberParse = (number: number | string, standardDecSep = '.') 
 
     if (sep.sep !== standardDecSep) {
       // it's an integer
-      return (
-        parseInt(stripped.split(sep.sep).join(''), 10) * (negative ? -1 : 1)
-      );
+      return Number.parseInt(stripped.split(sep.sep).join(''), 10) * (negative ? -1 : 1);
     }
   }
 
   // well, it looks like it's a simple float
-  return parseFloat(stripped.replace(sep.sep, '.')) * (negative ? -1 : 1);
+  return Number.parseFloat(stripped.replace(sep.sep, '.')) * (negative ? -1 : 1);
 };

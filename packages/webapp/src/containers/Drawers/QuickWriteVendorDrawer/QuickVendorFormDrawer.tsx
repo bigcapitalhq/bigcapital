@@ -4,13 +4,8 @@ import * as R from 'ramda';
 import styled from 'styled-components';
 
 import { Card, DrawerLoading } from '@/components';
-import {
-  VendorFormProvider,
-  useVendorFormContext,
-} from '@/containers/Vendors/VendorForm/VendorFormProvider';
-import VendorFormFormik, {
-  VendorFormHeaderPrimary,
-} from '@/containers/Vendors/VendorForm/VendorFormFormik';
+import { VendorFormProvider, useVendorFormContext } from '@/containers/Vendors/VendorForm/VendorFormProvider';
+import VendorFormFormik, { VendorFormHeaderPrimary } from '@/containers/Vendors/VendorForm/VendorFormFormik';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
@@ -31,12 +26,7 @@ function DrawerVendorFormLoading({ children }) {
 /**
  * Quick vendor form of the drawer.
  */
-function QuickVendorFormDrawer({
-  displayName,
-  closeDrawer,
-  vendorId,
-  addQuickActionEvent,
-}) {
+function QuickVendorFormDrawer({ displayName, closeDrawer, vendorId, addQuickActionEvent }) {
   const { payload } = useDrawerContext();
 
   // Handle the form submit request success.
@@ -70,10 +60,7 @@ function QuickVendorFormDrawer({
   );
 }
 
-export default R.compose(
-  withDrawerActions,
-  withDashboardActions,
-)(QuickVendorFormDrawer);
+export default R.compose(withDrawerActions, withDashboardActions)(QuickVendorFormDrawer);
 
 const VendorFormCard = styled(Card)`
   margin: 15px;

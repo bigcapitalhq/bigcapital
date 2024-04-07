@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import Bluebird from 'bluebird';
 import { IVendorCreditAppliedBill } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import Bluebird from 'bluebird';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ApplyVendorCreditSyncBills {
@@ -18,18 +18,15 @@ export default class ApplyVendorCreditSyncBills {
   public incrementBillsCreditedAmount = async (
     tenantId: number,
     vendorCreditAppliedBills: IVendorCreditAppliedBill[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Bill } = this.tenancy.models(tenantId);
 
-    await Bluebird.each(
-      vendorCreditAppliedBills,
-      (vendorCreditAppliedBill: IVendorCreditAppliedBill) => {
-        return Bill.query(trx)
-          .where('id', vendorCreditAppliedBill.billId)
-          .increment('creditedAmount', vendorCreditAppliedBill.amount);
-      }
-    );
+    await Bluebird.each(vendorCreditAppliedBills, (vendorCreditAppliedBill: IVendorCreditAppliedBill) => {
+      return Bill.query(trx)
+        .where('id', vendorCreditAppliedBill.billId)
+        .increment('creditedAmount', vendorCreditAppliedBill.amount);
+    });
   };
 
   /**
@@ -41,7 +38,7 @@ export default class ApplyVendorCreditSyncBills {
   public decrementBillCreditedAmount = async (
     tenantId: number,
     vendorCreditAppliedBill: IVendorCreditAppliedBill,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Bill } = this.tenancy.models(tenantId);
 

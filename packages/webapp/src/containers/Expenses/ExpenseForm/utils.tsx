@@ -21,8 +21,7 @@ import { useCurrentOrganization } from '@/hooks/state';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
-  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED:
-    'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
+  ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',
 };
 
 export const MIN_LINES_NUMBER = 1;
@@ -74,24 +73,15 @@ export const transformErrors = (errors, { setErrors }) => {
 /**
  * Transformes the expense to form initial values in edit mode.
  */
-export const transformToEditForm = (
-  expense,
-  defaultExpense,
-  linesNumber = 4,
-) => {
+export const transformToEditForm = (expense, defaultExpense, linesNumber = 4) => {
   const expenseEntry = defaultExpense.categories[0];
   const initialEntries = [
     ...expense.categories.map((category) => ({
       ...transformToForm(category, expenseEntry),
     })),
-    ...repeatValue(
-      expenseEntry,
-      Math.max(linesNumber - expense.categories.length, 0),
-    ),
+    ...repeatValue(expenseEntry, Math.max(linesNumber - expense.categories.length, 0)),
   ];
-  const categories = R.compose(
-    ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
-  )(initialEntries);
+  const categories = R.compose(ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry))(initialEntries);
 
   return {
     ...transformToForm(expense, defaultExpense),
@@ -113,19 +103,14 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmine accounts fast-field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
  * Filter expense entries that has no amount or expense account.
  */
 export const filterNonZeroEntries = (categories) => {
-  return categories.filter(
-    (category) => category.amount && category.expense_account_id,
-  );
+  return categories.filter((category) => category.amount && category.expense_account_id);
 };
 
 /**
@@ -166,10 +151,7 @@ export const useExpensesTotals = () => {
   const total = sumBy(categories, 'amount');
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

@@ -1,10 +1,8 @@
 import Container, { Service } from 'typedi';
 import { AccountsImportable } from '../Accounts/AccountsImportable';
-import { ImportableRegistry } from './ImportableRegistry';
 import { UncategorizedTransactionsImportable } from '../Cashflow/UncategorizedTransactionsImportable';
 import { CustomersImportable } from '../Contacts/Customers/CustomersImportable';
 import { VendorsImportable } from '../Contacts/Vendors/VendorsImportable';
-import { ItemsImportable } from '../Items/ItemsImportable';
 import { ItemCategoriesImportable } from '../ItemCategories/ItemCategoriesImportable';
 import { ManualJournalImportable } from '../ManualJournals/ManualJournalsImport';
 import { BillsImportable } from '../Purchases/Bills/BillsImportable';

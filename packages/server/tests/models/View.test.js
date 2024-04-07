@@ -1,14 +1,7 @@
-import { create, expect } from '~/testInit';
-import View from 'models/View';
 import Resource from 'models/Resource';
-import ResourceField from 'models/ResourceField';
-import ViewRole from 'models/ViewRole';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import View from 'models/View';
+import { tenantFactory } from '~/dbInit';
+import { expect } from '~/testInit';
 
 describe('Model: View', () => {
   it('View model may has many associated resource.', async () => {

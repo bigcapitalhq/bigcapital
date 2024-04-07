@@ -1,17 +1,11 @@
-import { Inject, Service } from 'typedi';
-import { query } from 'express-validator';
-import {
-  NextFunction,
-  Router,
-  Request,
-  Response,
-  ValidationChain,
-} from 'express';
-import BaseFinancialReportController from '../BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { CashflowSheetApplication } from '@/services/FinancialStatements/CashFlow/CashflowSheetApplication';
+import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from '../BaseFinancialReportController';
 
 @Service()
 export default class CashFlowController extends BaseFinancialReportController {
@@ -29,7 +23,7 @@ export default class CashFlowController extends BaseFinancialReportController {
       CheckPolicies(ReportsAction.READ_CASHFLOW, AbilitySubject.Report),
       this.cashflowValidationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.cashFlow.bind(this))
+      this.asyncMiddleware(this.cashFlow.bind(this)),
     );
     return router;
   }
@@ -53,7 +47,10 @@ export default class CashFlowController extends BaseFinancialReportController {
       query('none_transactions').optional().isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -79,7 +76,7 @@ export default class CashFlowController extends BaseFinancialReportController {
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
-        ACCEPT_TYPE.APPLICATION_PDF
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves the json table format.
       if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
@@ -98,14 +95,8 @@ export default class CashFlowController extends BaseFinancialReportController {
       } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
         const buffer = await this.cashflowSheetApp.xlsx(tenantId, filter);
 
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(buffer);
         // Retrieves the pdf format.
       } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

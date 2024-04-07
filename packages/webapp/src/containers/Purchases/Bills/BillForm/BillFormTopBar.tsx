@@ -1,15 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Alignment,
-  NavbarGroup,
-  NavbarDivider,
-  Classes,
-} from '@blueprintjs/core';
-import {
-  useSetPrimaryBranchToForm,
-  useSetPrimaryWarehouseToForm,
-} from './utils';
+import { Alignment, NavbarGroup, NavbarDivider, Classes } from '@blueprintjs/core';
+import { useSetPrimaryBranchToForm, useSetPrimaryWarehouseToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import {
   BranchSelect,
@@ -48,9 +40,7 @@ export default function BillFormTopBar() {
         <FeatureCan feature={Features.Branches}>
           <BillFormSelectBranch />
         </FeatureCan>
-        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
-          <NavbarDivider />
-        )}
+        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && <NavbarDivider />}
         <FeatureCan feature={Features.Warehouses}>
           <BillFormSelectWarehouse />
         </FeatureCan>

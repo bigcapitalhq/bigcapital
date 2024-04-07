@@ -1,12 +1,5 @@
-
 export const PlaidIcon = (props: any) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={30}
-    height={30}
-    viewBox={'0 0 48 48'}
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width={30} height={30} viewBox={'0 0 48 48'} {...props}>
     <path
       fill="#111"
       fillRule="evenodd"

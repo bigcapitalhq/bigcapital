@@ -7,20 +7,10 @@ import { Icon } from '@/components';
 /**
  * SMS Message preview.
  */
-export function SMSMessagePreview({
-  message,
-  iconWidth = '265px',
-  iconHeight = '287px',
-  iconColor = '#adadad',
-}) {
+export function SMSMessagePreview({ message, iconWidth = '265px', iconHeight = '287px', iconColor = '#adadad' }) {
   return (
     <SMSMessagePreviewBase>
-      <Icon
-        icon={'sms-message-preview'}
-        width={iconWidth}
-        height={iconHeight}
-        color={iconColor}
-      />
+      <Icon icon={'sms-message-preview'} width={iconWidth} height={iconHeight} color={iconColor} />
       <SMSMessageText>{message}</SMSMessageText>
     </SMSMessagePreviewBase>
   );

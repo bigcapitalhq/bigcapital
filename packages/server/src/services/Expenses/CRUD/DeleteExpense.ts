@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  ISystemUser,
-  IExpenseEventDeletePayload,
-  IExpenseDeletingPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IExpenseDeletingPayload, IExpenseEventDeletePayload, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { CommandExpenseValidator } from './CommandExpenseValidator';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { CommandExpenseValidator } from './CommandExpenseValidator';
 
 @Service()
 export class DeleteExpense {
@@ -31,19 +27,12 @@ export class DeleteExpense {
    * @param {number} expenseId
    * @param {ISystemUser} authorizedUser
    */
-  public deleteExpense = async (
-    tenantId: number,
-    expenseId: number,
-    authorizedUser: ISystemUser
-  ): Promise<void> => {
+  public deleteExpense = async (tenantId: number, expenseId: number, authorizedUser: ISystemUser): Promise<void> => {
     const { Expense, ExpenseCategory } = this.tenancy.models(tenantId);
 
     // Retrieves the expense transaction with associated entries or
     // throw not found error.
-    const oldExpense = await Expense.query()
-      .findById(expenseId)
-      .withGraphFetched('categories')
-      .throwIfNotFound();
+    const oldExpense = await Expense.query().findById(expenseId).withGraphFetched('categories').throwIfNotFound();
 
     // Validates the expense has no associated landed cost.
     await this.validator.validateNoAssociatedLandedCost(tenantId, expenseId);

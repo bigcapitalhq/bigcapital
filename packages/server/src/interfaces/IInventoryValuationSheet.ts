@@ -1,7 +1,4 @@
-import {
-  IFinancialSheetCommonMeta,
-  INumberFormatQuery,
-} from './FinancialStatements';
+import { IFinancialSheetCommonMeta, INumberFormatQuery } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface IInventoryValuationReportQuery {
@@ -16,8 +13,7 @@ export interface IInventoryValuationReportQuery {
   branchesIds?: number[];
 }
 
-export interface IInventoryValuationSheetMeta
-  extends IFinancialSheetCommonMeta {
+export interface IInventoryValuationSheetMeta extends IFinancialSheetCommonMeta {
   formattedAsDate: string;
   formattedDateRange: string;
 }

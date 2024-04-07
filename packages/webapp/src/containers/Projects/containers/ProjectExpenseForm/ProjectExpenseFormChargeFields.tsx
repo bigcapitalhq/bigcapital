@@ -7,10 +7,7 @@ import { useFormikContext } from 'formik';
 
 function PercentageFormField() {
   return (
-    <FFormGroup
-      label={intl.get('expenses.dialog.percentage')}
-      name={'percentage'}
-    >
+    <FFormGroup label={intl.get('expenses.dialog.percentage')} name={'percentage'}>
       <FInputGroup name="percentage" />
     </FFormGroup>
   );
@@ -19,16 +16,10 @@ function PercentageFormField() {
 function CustomPirceField() {
   return (
     <ControlGroup className={Classes.FILL}>
-      <FFormGroup
-        name={'expenseUnitPrice'}
-        label={intl.get('expenses.dialog.unit_price')}
-      >
+      <FFormGroup name={'expenseUnitPrice'} label={intl.get('expenses.dialog.unit_price')}>
         <FInputGroup name="expenseUnitPrice" />
       </FFormGroup>
-      <FFormGroup
-        name={'expenseTotal'}
-        label={intl.get('expenses.dialog.total')}
-      >
+      <FFormGroup name={'expenseTotal'} label={intl.get('expenses.dialog.total')}>
         <FInputGroup name="expenseTotal" />
       </FFormGroup>
     </ControlGroup>

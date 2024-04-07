@@ -85,9 +85,7 @@ export const transformRegisterErrorsToForm = (errors) => {
   const formErrors = {};
 
   if (errors.some((e) => e.type === REGISTER_ERRORS.PHONE_NUMBER_EXISTS)) {
-    formErrors.phone_number = intl.get(
-      'the_phone_number_already_used_in_another_account',
-    );
+    formErrors.phone_number = intl.get('the_phone_number_already_used_in_another_account');
   }
   if (errors.some((e) => e.type === REGISTER_ERRORS.EMAIL_EXISTS)) {
     formErrors.email = intl.get('the_email_already_used_in_another_account');
@@ -100,8 +98,7 @@ export const transformRegisterToastMessages = (errors) => {
 
   if (errors.some((e) => e.type === 'SIGNUP_RESTRICTED_NOT_ALLOWED')) {
     toastErrors.push({
-      message:
-        'The sign-up is restricted, the given email address is not allowed to sign-up.',
+      message: 'The sign-up is restricted, the given email address is not allowed to sign-up.',
       intent: Intent.DANGER,
     });
   } else if (errors.find((e) => e.type === 'SIGNUP_RESTRICTED')) {

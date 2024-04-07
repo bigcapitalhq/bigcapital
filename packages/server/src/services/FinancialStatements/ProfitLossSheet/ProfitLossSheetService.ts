@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import {
-  IProfitLossSheetQuery,
-  IProfitLossSheetMeta,
-  IProfitLossSheetNode,
-} from '@/interfaces';
-import ProfitLossSheet from './ProfitLossSheet';
+import { IProfitLossSheetMeta, IProfitLossSheetNode, IProfitLossSheetQuery } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
-import { mergeQueryWithDefaults } from './utils';
-import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
+import { Inject, Service } from 'typedi';
+import ProfitLossSheet from './ProfitLossSheet';
 import { ProfitLossSheetMeta } from './ProfitLossSheetMeta';
+import { ProfitLossSheetRepository } from './ProfitLossSheetRepository';
+import { mergeQueryWithDefaults } from './utils';
 
 // Profit/Loss sheet service.
 @Service()
@@ -28,7 +24,7 @@ export default class ProfitLossSheetService {
    */
   public profitLossSheet = async (
     tenantId: number,
-    query: IProfitLossSheetQuery
+    query: IProfitLossSheetQuery,
   ): Promise<{
     data: IProfitLossSheetNode[];
     query: IProfitLossSheetQuery;
@@ -40,9 +36,7 @@ export default class ProfitLossSheetService {
     // Merges the given query with default filter query.
     const filter = mergeQueryWithDefaults(query);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const profitLossRepo = new ProfitLossSheetRepository(models, filter);
 
@@ -50,12 +44,7 @@ export default class ProfitLossSheetService {
     await profitLossRepo.asyncInitialize();
 
     // Profit/Loss report instance.
-    const profitLossInstance = new ProfitLossSheet(
-      profitLossRepo,
-      filter,
-      tenant.metadata.baseCurrency,
-      i18n
-    );
+    const profitLossInstance = new ProfitLossSheet(profitLossRepo, filter, tenant.metadata.baseCurrency, i18n);
     // Profit/loss report data and collumns.
     const data = profitLossInstance.reportData();
 

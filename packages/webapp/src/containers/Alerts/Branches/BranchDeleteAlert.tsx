@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeleteBranch } from '@/hooks/query';
@@ -77,7 +73,4 @@ function BranchDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(BranchDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(BranchDeleteAlert);

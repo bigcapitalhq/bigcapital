@@ -1,5 +1,5 @@
-import { Container } from 'typedi';
 import { EventEmitter2 } from 'eventemitter2';
+import { Container } from 'typedi';
 
 interface IEventPublisherArgs {
   subscribers: EventSubscriber[];

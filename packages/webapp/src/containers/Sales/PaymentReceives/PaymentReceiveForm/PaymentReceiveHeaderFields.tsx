@@ -2,31 +2,14 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  Classes,
-  ControlGroup,
-  Button,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Position, Classes, ControlGroup, Button } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { toSafeInteger } from 'lodash';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
-import {
-  FeatureCan,
-  CustomersSelect,
-  FormattedMessage as T,
-} from '@/components';
+import { FeatureCan, CustomersSelect, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  safeSumBy,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
+import { safeSumBy, momentFormatter, tansformDateValue, handleDateChange, inputIntent } from '@/utils';
 import {
   FFormGroup,
   AccountsSelect,
@@ -41,10 +24,7 @@ import {
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  PaymentReceiveExchangeRateInputField,
-  PaymentReceiveProjectSelectButton,
-} from './components';
+import { PaymentReceiveExchangeRateInputField, PaymentReceiveProjectSelectButton } from './components';
 
 import {
   amountPaymentEntries,
@@ -69,10 +49,7 @@ export default function PaymentReceiveHeaderFields() {
   } = useFormikContext();
 
   // Calculates the full-amount received.
-  const totalDueAmount = useMemo(
-    () => safeSumBy(entries, 'due_amount'),
-    [entries],
-  );
+  const totalDueAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [entries]);
   // Handle receive full-amount link click.
   const handleReceiveFullAmountClick = () => {
     const newEntries = fullAmountPaymentEntries(entries);
@@ -93,10 +70,7 @@ export default function PaymentReceiveHeaderFields() {
       <PaymentReceiveCustomerSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <PaymentReceiveExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <PaymentReceiveExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
       {/* ------------- Payment date ------------- */}
       <FastField name={'payment_date'}>
         {({ form, field: { value }, meta: { error, touched } }) => (
@@ -183,11 +157,7 @@ export default function PaymentReceiveHeaderFields() {
           items={accounts}
           labelInfo={<FieldRequiredHint />}
           placeholder={<T id={'select_deposit_account'} />}
-          filterByTypes={[
-            ACCOUNT_TYPE.CASH,
-            ACCOUNT_TYPE.BANK,
-            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-          ]}
+          filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
           shouldUpdate={accountsFieldShouldUpdate}
           fastField={true}
           fill={true}
@@ -204,11 +174,7 @@ export default function PaymentReceiveHeaderFields() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>

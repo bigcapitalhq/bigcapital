@@ -1,11 +1,5 @@
-import {
-  IExpense,
-  IExpenseCreateDTO,
-  IExpenseEditDTO,
-  IExpensesFilter,
-  ISystemUser,
-} from '@/interfaces';
-import { Service, Inject } from 'typedi';
+import { IExpense, IExpenseCreateDTO, IExpenseEditDTO, IExpensesFilter, ISystemUser } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { CreateExpense } from './CRUD/CreateExpense';
 import { DeleteExpense } from './CRUD/DeleteExpense';
 import { EditExpense } from './CRUD/EditExpense';
@@ -43,13 +37,9 @@ export class ExpensesApplication {
   public createExpense = (
     tenantId: number,
     expenseDTO: IExpenseCreateDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IExpense> => {
-    return this.createExpenseService.newExpense(
-      tenantId,
-      expenseDTO,
-      authorizedUser
-    );
+    return this.createExpenseService.newExpense(tenantId, expenseDTO, authorizedUser);
   };
 
   /**
@@ -63,14 +53,9 @@ export class ExpensesApplication {
     tenantId: number,
     expenseId: number,
     expenseDTO: IExpenseEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) => {
-    return this.editExpenseService.editExpense(
-      tenantId,
-      expenseId,
-      expenseDTO,
-      authorizedUser
-    );
+    return this.editExpenseService.editExpense(tenantId, expenseId, expenseDTO, authorizedUser);
   };
 
   /**
@@ -80,16 +65,8 @@ export class ExpensesApplication {
    * @param   {ISystemUser} authorizedUser
    * @returns {Promise<void>}
    */
-  public deleteExpense = (
-    tenantId: number,
-    expenseId: number,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.deleteExpenseService.deleteExpense(
-      tenantId,
-      expenseId,
-      authorizedUser
-    );
+  public deleteExpense = (tenantId: number, expenseId: number, authorizedUser: ISystemUser) => {
+    return this.deleteExpenseService.deleteExpense(tenantId, expenseId, authorizedUser);
   };
 
   /**
@@ -99,16 +76,8 @@ export class ExpensesApplication {
    * @param  {ISystemUser} authorizedUser
    * @return {Promise<void>}
    */
-  public publishExpense = (
-    tenantId: number,
-    expenseId: number,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.publishExpenseService.publishExpense(
-      tenantId,
-      expenseId,
-      authorizedUser
-    );
+  public publishExpense = (tenantId: number, expenseId: number, authorizedUser: ISystemUser) => {
+    return this.publishExpenseService.publishExpense(tenantId, expenseId, authorizedUser);
   };
 
   /**

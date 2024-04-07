@@ -18,8 +18,7 @@ function ProjectProfitabilitySummaryBodyJSX({
   // #withCurrentOrganization
   organizationName,
 }) {
-  const { isProjectProfitabilitySummaryLoading } =
-    useProjectProfitabilitySummaryContext();
+  const { isProjectProfitabilitySummaryLoading } = useProjectProfitabilitySummaryContext();
 
   return (
     <FinancialReportBody>

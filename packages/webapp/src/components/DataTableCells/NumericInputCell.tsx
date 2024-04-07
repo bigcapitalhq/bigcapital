@@ -9,12 +9,7 @@ import { CLASSES } from '@/constants/classes';
 /**
  * Numeric input table cell.
  */
-export default function NumericInputCell({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  payload,
-}) {
+export default function NumericInputCell({ row: { index }, column: { id }, cell: { value: initialValue }, payload }) {
   const [value, setValue] = useState(initialValue);
 
   const handleValueChange = (newValue) => {
@@ -30,10 +25,7 @@ export default function NumericInputCell({
   const error = payload.errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames(CLASSES.FILL)}
-    >
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames(CLASSES.FILL)}>
       <NumericInput
         value={value}
         onValueChange={handleValueChange}

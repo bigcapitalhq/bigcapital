@@ -1,12 +1,9 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import { omit } from 'lodash';
-import {
-  IInventoryTransaction,
-  IItemWarehouseQuantityChange,
-} from '@/interfaces';
-import { WarehousesItemsQuantity } from './WarehousesItemsQuantity';
+import { IInventoryTransaction, IItemWarehouseQuantityChange } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { WarehousesItemsQuantity } from './WarehousesItemsQuantity';
 
 @Service()
 export class WarehousesItemsQuantitySync {
@@ -19,10 +16,9 @@ export class WarehousesItemsQuantitySync {
    * @returns {IItemWarehouseQuantityChange[]}
    */
   public getReverseWarehousesItemsQuantityChanges = (
-    inventoryTransactions: IInventoryTransaction[]
+    inventoryTransactions: IInventoryTransaction[],
   ): IItemWarehouseQuantityChange[] => {
-    const warehouseItemsQuantity =
-      WarehousesItemsQuantity.fromInventoryTransaction(inventoryTransactions);
+    const warehouseItemsQuantity = WarehousesItemsQuantity.fromInventoryTransaction(inventoryTransactions);
 
     return warehouseItemsQuantity.reverse().toArray();
   };
@@ -33,10 +29,9 @@ export class WarehousesItemsQuantitySync {
    * @returns {IItemWarehouseQuantityChange[]}
    */
   public getWarehousesItemsQuantityChange = (
-    inventoryTransactions: IInventoryTransaction[]
+    inventoryTransactions: IInventoryTransaction[],
   ): IItemWarehouseQuantityChange[] => {
-    const warehouseItemsQuantity =
-      WarehousesItemsQuantity.fromInventoryTransaction(inventoryTransactions);
+    const warehouseItemsQuantity = WarehousesItemsQuantity.fromInventoryTransaction(inventoryTransactions);
 
     return warehouseItemsQuantity.toArray();
   };
@@ -50,11 +45,10 @@ export class WarehousesItemsQuantitySync {
   public mutateWarehousesItemsQuantity = async (
     tenantId: number,
     warehousesItemsQuantity: IItemWarehouseQuantityChange[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const mutationsOpers = warehousesItemsQuantity.map(
-      (change: IItemWarehouseQuantityChange) =>
-        this.mutateWarehouseItemQuantity(tenantId, change, trx)
+    const mutationsOpers = warehousesItemsQuantity.map((change: IItemWarehouseQuantityChange) =>
+      this.mutateWarehouseItemQuantity(tenantId, change, trx),
     );
     await Promise.all(mutationsOpers);
   };
@@ -68,7 +62,7 @@ export class WarehousesItemsQuantitySync {
   public mutateWarehouseItemQuantity = async (
     tenantId: number,
     warehouseItemQuantity: IItemWarehouseQuantityChange,
-    trx: Knex.Transaction
+    trx: Knex.Transaction,
   ): Promise<void> => {
     const { ItemWarehouseQuantity } = this.tenancy.models(tenantId);
 
@@ -85,7 +79,7 @@ export class WarehousesItemsQuantitySync {
         },
         'quantityOnHand',
         warehouseItemQuantity.amount,
-        trx
+        trx,
       );
     } else {
       await ItemWarehouseQuantity.query(trx).insert({
@@ -104,11 +98,9 @@ export class WarehousesItemsQuantitySync {
   public mutateWarehousesItemsQuantityFromTransactions = async (
     tenantId: number,
     inventoryTransactions: IInventoryTransaction[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    const changes = this.getWarehousesItemsQuantityChange(
-      inventoryTransactions
-    );
+    const changes = this.getWarehousesItemsQuantityChange(inventoryTransactions);
     await this.mutateWarehousesItemsQuantity(tenantId, changes, trx);
   };
 
@@ -121,11 +113,9 @@ export class WarehousesItemsQuantitySync {
   public reverseWarehousesItemsQuantityFromTransactions = async (
     tenantId: number,
     inventoryTransactions: IInventoryTransaction[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    const changes = this.getReverseWarehousesItemsQuantityChanges(
-      inventoryTransactions
-    );
+    const changes = this.getReverseWarehousesItemsQuantityChanges(inventoryTransactions);
     await this.mutateWarehousesItemsQuantity(tenantId, changes, trx);
   };
 }

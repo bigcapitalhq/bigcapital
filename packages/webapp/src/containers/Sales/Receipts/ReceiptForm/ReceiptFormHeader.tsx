@@ -19,9 +19,7 @@ function ReceiptFormHeader({
 }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
-      <ReceiptFormHeaderFields
-        onReceiptNumberChanged={onReceiptNumberChanged}
-      />
+      <ReceiptFormHeaderFields onReceiptNumberChanged={onReceiptNumberChanged} />
       <ReceiptFormHeaderBigTotal />
     </div>
   );
@@ -39,13 +37,7 @@ function ReceiptFormHeaderBigTotal() {
   // Calculate the total due amount of bill entries.
   const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
-  return (
-    <PageFormBigNumber
-      label={intl.get('due_amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
-  );
+  return <PageFormBigNumber label={intl.get('due_amount')} amount={totalDueAmount} currencyCode={currency_code} />;
 }
 
 export default ReceiptFormHeader;

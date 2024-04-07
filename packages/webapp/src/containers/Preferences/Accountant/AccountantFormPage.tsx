@@ -55,10 +55,7 @@ function AccountantFormPage({
   });
   // Handle the form submitting.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )(values);
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)(values);
     setSubmitting(true);
 
     const onSuccess = () => {

@@ -10,9 +10,7 @@ import {
   useImportFileMappingInitialValues,
 } from './_utils';
 
-export function ImportFileMappingForm({
-  children,
-}: ImportFileMappingFormProps) {
+export function ImportFileMappingForm({ children }: ImportFileMappingFormProps) {
   const { mutateAsync: submitImportFileMapping } = useImportFileMapping();
   const { importId, setStep } = useImportFileContext();
 

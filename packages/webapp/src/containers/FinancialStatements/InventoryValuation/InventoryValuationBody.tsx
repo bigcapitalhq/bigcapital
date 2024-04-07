@@ -21,11 +21,7 @@ function InventoryValuationBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <InventoryValuationTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <InventoryValuationTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

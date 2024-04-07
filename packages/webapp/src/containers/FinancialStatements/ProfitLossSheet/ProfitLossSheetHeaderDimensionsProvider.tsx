@@ -32,17 +32,10 @@ function ProfitLossSheetHeaderDimensionsProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <ProfitLossSheetHeaderDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <ProfitLossSheetHeaderDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useProfitLossSheetPanelContext = () =>
-  React.useContext(ProfitLossSheetHeaderDimensionsPanelContext);
+const useProfitLossSheetPanelContext = () => React.useContext(ProfitLossSheetHeaderDimensionsPanelContext);
 
-export {
-  ProfitLossSheetHeaderDimensionsProvider,
-  useProfitLossSheetPanelContext,
-};
+export { ProfitLossSheetHeaderDimensionsProvider, useProfitLossSheetPanelContext };

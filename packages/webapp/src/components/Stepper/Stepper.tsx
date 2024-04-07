@@ -23,26 +23,17 @@ export interface StepperProps {
   classNames?: Record<string, string>;
 }
 
-export function Stepper({
-  active,
-  onStepClick,
-  children,
-  classNames,
-}: StepperProps) {
+export function Stepper({ active, onStepClick, children, classNames }: StepperProps) {
   const convertedChildren = toArray(children) as React.ReactElement[];
-  const _children = convertedChildren.filter(
-    (child) => child.type !== StepperCompleted,
-  );
-  const completedStep = convertedChildren.find(
-    (item) => item.type === StepperCompleted,
-  );
+  const _children = convertedChildren.filter((child) => child.type !== StepperCompleted);
+  const completedStep = convertedChildren.find((item) => item.type === StepperCompleted);
   const items = _children.reduce<React.ReactElement[]>((acc, item, index) => {
     const state =
       active === index
         ? StepperStepState.Progress
         : active > index
-        ? StepperStepState.Completed
-        : StepperStepState.Inactive;
+          ? StepperStepState.Completed
+          : StepperStepState.Inactive;
 
     const shouldAllowSelect = () => {
       if (typeof onStepClick !== 'function') {
@@ -65,20 +56,14 @@ export function Stepper({
       }),
     );
     if (index !== _children.length - 1) {
-      acc.push(
-        <StepSeparator
-          data-active={index < active || undefined}
-          key={`separator-${index}`}
-        />,
-      );
+      acc.push(<StepSeparator data-active={index < active || undefined} key={`separator-${index}`} />);
     }
     return acc;
   }, []);
 
   const stepContent = _children[active]?.props?.children;
   const completedContent = completedStep?.props?.children;
-  const content =
-    active > _children.length - 1 ? completedContent : stepContent;
+  const content = active > _children.length - 1 ? completedContent : stepContent;
 
   return (
     <Box className={classNames?.root}>

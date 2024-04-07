@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query } from 'express-validator';
-import BaseController from '../BaseController';
 import { InventoryCostApplication } from '@/services/Inventory/InventoryCostApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export class InventoryItemsCostController extends BaseController {
@@ -24,7 +24,7 @@ export class InventoryItemsCostController extends BaseController {
         query('items_ids.*').exists().isInt().toInt(),
       ],
       this.validationResult,
-      this.asyncMiddleware(this.getItemsCosts)
+      this.asyncMiddleware(this.getItemsCosts),
     );
     return router;
   }
@@ -35,11 +35,7 @@ export class InventoryItemsCostController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public getItemsCosts = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getItemsCosts = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const itemsCostQueryDTO = this.matchedQueryData(req);
 
@@ -47,7 +43,7 @@ export class InventoryItemsCostController extends BaseController {
       const costs = await this.inventoryItemCost.getItemsInventoryValuationList(
         tenantId,
         itemsCostQueryDTO.itemsIds,
-        itemsCostQueryDTO.date
+        itemsCostQueryDTO.date,
       );
       return res.status(200).send({ costs });
     } catch (error) {

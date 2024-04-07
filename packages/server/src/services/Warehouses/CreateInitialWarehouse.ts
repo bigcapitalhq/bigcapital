@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { CreateWarehouse } from './CreateWarehouse';
 
 @Service()

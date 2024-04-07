@@ -42,7 +42,7 @@ export const defaultInitialValues = {
   opening_balance: '',
   opening_balance_at: moment(new Date()).format('YYYY-MM-DD'),
   opening_balance_branch_id: '',
-  opening_balance_exchange_rate: ''
+  opening_balance_exchange_rate: '',
 };
 
 export const useSetPrimaryBranchToForm = () => {
@@ -76,8 +76,7 @@ export const useIsVendorForeignCurrency = () => {
  */
 export const openingBalanceFieldShouldUpdate = (newProps, oldProps) => {
   return (
-    newProps.shouldUpdateDeps.currencyCode !==
-      oldProps.shouldUpdateDeps.currencyCode ||
+    newProps.shouldUpdateDeps.currencyCode !== oldProps.shouldUpdateDeps.currencyCode ||
     defaultFastFieldShouldUpdate(newProps, oldProps)
   );
 };

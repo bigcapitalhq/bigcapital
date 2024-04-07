@@ -9,15 +9,8 @@ import { AppToaster, FormattedMessage as T } from '@/components';
 import { useAuthSendResetPassword } from '@/hooks/query';
 
 import SendResetPasswordForm from './SendResetPasswordForm';
-import {
-  AuthFooterLink,
-  AuthFooterLinks,
-  AuthInsiderCard,
-} from './_components';
-import {
-  SendResetPasswordSchema,
-  transformSendResetPassErrorsToToasts,
-} from './utils';
+import { AuthFooterLink, AuthFooterLinks, AuthInsiderCard } from './_components';
+import { SendResetPasswordSchema, transformSendResetPassErrorsToToasts } from './utils';
 import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { useAuthMetaBoot } from './AuthMetaBoot';
 
@@ -82,11 +75,17 @@ function SendResetPasswordFooterLinks() {
     <AuthFooterLinks>
       {!signupDisabled && (
         <AuthFooterLink>
-          <T id={'dont_have_an_account'} /> <Link to={'/auth/register'}><T id={'sign_up'} /></Link>
+          <T id={'dont_have_an_account'} />{' '}
+          <Link to={'/auth/register'}>
+            <T id={'sign_up'} />
+          </Link>
         </AuthFooterLink>
       )}
       <AuthFooterLink>
-        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
+        <T id={'return_to'} />{' '}
+        <Link to={'/auth/login'}>
+          <T id={'sign_in'} />
+        </Link>
       </AuthFooterLink>
     </AuthFooterLinks>
   );

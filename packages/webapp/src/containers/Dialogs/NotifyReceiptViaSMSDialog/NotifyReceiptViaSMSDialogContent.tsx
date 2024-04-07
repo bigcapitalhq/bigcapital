@@ -10,10 +10,7 @@ export default function NotifyReceiptViaSMSDialogContent({
   receipt,
 }) {
   return (
-    <NotifyReceiptViaSMSFormProvider
-      receiptId={receipt}
-      dialogName={dialogName}
-    >
+    <NotifyReceiptViaSMSFormProvider receiptId={receipt} dialogName={dialogName}>
       <NotifyReceiptViaSMSForm />
     </NotifyReceiptViaSMSFormProvider>
   );

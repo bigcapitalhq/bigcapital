@@ -28,8 +28,7 @@ function UncategorizeTransactionAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: uncategorizeTransaction, isLoading } =
-    useUncategorizeTransaction();
+  const { mutateAsync: uncategorizeTransaction, isLoading } = useUncategorizeTransaction();
 
   // handle cancel delete project alert.
   const handleCancelDeleteAlert = () => {
@@ -76,8 +75,4 @@ function UncategorizeTransactionAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(UncategorizeTransactionAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(UncategorizeTransactionAlert);

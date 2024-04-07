@@ -28,6 +28,4 @@ function generateUtilityClasses(componentName, modifiers) {
   return result;
 }
 
-export const EstimateDrawerCls = generateUtilityClasses('estimate-drawer', [
-  'content',
-]);
+export const EstimateDrawerCls = generateUtilityClasses('estimate-drawer', ['content']);

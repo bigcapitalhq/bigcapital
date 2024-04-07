@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import { IPlaidItemCreatedEventPayload } from '@/interfaces/Plaid';
+import { EventSubscriber } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class PlaidUpdateTransactionsOnItemCreatedSubscriber extends EventSubscriber {
@@ -12,10 +12,7 @@ export class PlaidUpdateTransactionsOnItemCreatedSubscriber extends EventSubscri
    * Constructor method.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.plaid.onItemCreated,
-      this.handleUpdateTransactionsOnItemCreated
-    );
+    bus.subscribe(events.plaid.onItemCreated, this.handleUpdateTransactionsOnItemCreated);
   }
 
   /**

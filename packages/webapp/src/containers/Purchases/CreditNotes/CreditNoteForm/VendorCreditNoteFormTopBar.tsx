@@ -1,16 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Alignment,
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-} from '@blueprintjs/core';
-import {
-  useSetPrimaryBranchToForm,
-  useSetPrimaryWarehouseToForm,
-} from './utils';
+import { Alignment, NavbarGroup, NavbarDivider, Button, Classes } from '@blueprintjs/core';
+import { useSetPrimaryBranchToForm, useSetPrimaryWarehouseToForm } from './utils';
 import { useFeatureCan } from '@/hooks/state';
 import {
   Icon,
@@ -50,9 +41,7 @@ export default function VendorCreditNoteFormTopBar() {
         <FeatureCan feature={Features.Branches}>
           <VendorCreditNoteFormSelectBranch />
         </FeatureCan>
-        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
-          <NavbarDivider />
-        )}
+        {featureCan(Features.Warehouses) && featureCan(Features.Branches) && <NavbarDivider />}
         <FeatureCan feature={Features.Warehouses}>
           <VendorCreditFormSelectWarehouse />
         </FeatureCan>

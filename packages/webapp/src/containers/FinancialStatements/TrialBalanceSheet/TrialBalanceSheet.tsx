@@ -9,10 +9,7 @@ import { useTrialBalanceSheetQuery } from './utils';
 import TrialBalanceActionsBar from './TrialBalanceActionsBar';
 import TrialBalanceSheetHeader from './TrialBalanceSheetHeader';
 
-import {
-  TrialBalanceSheetAlerts,
-  TrialBalanceSheetLoadingBar,
-} from './components';
+import { TrialBalanceSheetAlerts, TrialBalanceSheetLoadingBar } from './components';
 
 import withTrialBalanceActions from './withTrialBalanceActions';
 import { compose } from '@/utils';
@@ -56,19 +53,13 @@ function TrialBalanceSheet({
 
   return (
     <TrialBalanceSheetProvider query={query}>
-      <TrialBalanceActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <TrialBalanceActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <TrialBalanceSheetLoadingBar />
       <TrialBalanceSheetAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <TrialBalanceSheetHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <TrialBalanceSheetHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <TrialBalanceSheetBody />
         </FinancialStatement>
       </DashboardPageContent>

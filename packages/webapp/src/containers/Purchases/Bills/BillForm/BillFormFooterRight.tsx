@@ -1,22 +1,12 @@
 // @ts-nocheck
 import styled from 'styled-components';
-import {
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useBillAggregatedTaxRates, useBillTotals } from './utils';
 import { useFormikContext } from 'formik';
 import { TaxType } from '@/interfaces/TaxRates';
 
 export function BillFormFooterRight() {
-  const {
-    formattedSubtotal,
-    formattedTotal,
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useBillTotals();
+  const { formattedSubtotal, formattedTotal, formattedDueTotal, formattedPaymentTotal } = useBillTotals();
 
   const {
     values: { inclusive_exclusive_tax, currency_code },
@@ -27,13 +17,7 @@ export function BillFormFooterRight() {
   return (
     <BillTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
       <TotalLine
-        title={
-          <>
-            {inclusive_exclusive_tax === TaxType.Inclusive
-              ? 'Subtotal (Tax Inclusive)'
-              : 'Subtotal'}
-          </>
-        }
+        title={<>{inclusive_exclusive_tax === TaxType.Inclusive ? 'Subtotal (Tax Inclusive)' : 'Subtotal'}</>}
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
@@ -51,16 +35,8 @@ export function BillFormFooterRight() {
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
-      <TotalLine
-        title={'Paid Amount'}
-        value={formattedPaymentTotal}
-        borderStyle={TotalLineBorderStyle.None}
-      />
-      <TotalLine
-        title={'Due Amount'}
-        value={formattedDueTotal}
-        textStyle={TotalLineTextStyle.Bold}
-      />
+      <TotalLine title={'Paid Amount'} value={formattedPaymentTotal} borderStyle={TotalLineBorderStyle.None} />
+      <TotalLine title={'Due Amount'} value={formattedDueTotal} textStyle={TotalLineTextStyle.Bold} />
     </BillTotalLines>
   );
 }

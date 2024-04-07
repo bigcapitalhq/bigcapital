@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Intent,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Intent, Alignment } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -111,9 +104,7 @@ function EstimateActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={estimatesFilterRoles.length}
-          />
+          <DashboardFilterButton conditionsCount={estimatesFilterRoles.length} />
         </AdvancedFilterPopover>
 
         <If condition={false}>
@@ -143,10 +134,7 @@ function EstimateActionsBar({
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={estimatesTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={estimatesTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
 

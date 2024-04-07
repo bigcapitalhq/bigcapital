@@ -1,5 +1,5 @@
-import * as R from 'ramda';
 import { IBalanceSheetDataNode, IBalanceSheetSchemaNode } from '@/interfaces';
+import * as R from 'ramda';
 
 export const BalanceSheetBase = (Base) =>
   class extends Base {
@@ -9,17 +9,13 @@ export const BalanceSheetBase = (Base) =>
      * @param  {string} type -
      * @return {boolean}
      */
-    protected isSchemaNodeType = R.curry(
-      (type: string, node: IBalanceSheetSchemaNode): boolean => {
-        return node.type === type;
-      }
-    );
+    protected isSchemaNodeType = R.curry((type: string, node: IBalanceSheetSchemaNode): boolean => {
+      return node.type === type;
+    });
 
-    isNodeType = R.curry(
-      (type: string, node: IBalanceSheetDataNode): boolean => {
-        return node.nodeType === type;
-      }
-    );
+    isNodeType = R.curry((type: string, node: IBalanceSheetDataNode): boolean => {
+      return node.nodeType === type;
+    });
 
     /**
      * Detarmines the given display columns by type.

@@ -1,7 +1,4 @@
-import {
-  IFinancialSheetCommonMeta,
-  INumberFormatQuery,
-} from './FinancialStatements';
+import { IFinancialSheetCommonMeta, INumberFormatQuery } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export interface ISalesByItemsReportQuery {

@@ -3,12 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { defaultTo } from 'lodash';
 
-import {
-  CommercialDocHeader,
-  FormatDate,
-  DetailsMenu,
-  DetailItem,
-} from '@/components';
+import { CommercialDocHeader, FormatDate, DetailsMenu, DetailItem } from '@/components';
 
 import { useRefundCreditNoteDrawerContext } from './RefundCreditNoteDrawerProvider';
 
@@ -18,12 +13,7 @@ export default function RefundCreditNoteDetailHeader() {
   return (
     <CommercialDocHeader>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-        <DetailItem
-          label={intl.get('date')}
-          children={
-            <FormatDate value={refundCreditTransaction.formatted_date} />
-          }
-        />
+        <DetailItem label={intl.get('date')} children={<FormatDate value={refundCreditTransaction.formatted_date} />} />
         <DetailItem label={intl.get('refund_credit.drawer.label.amount')}>
           <strong>{refundCreditTransaction.formtted_amount}</strong>
         </DetailItem>

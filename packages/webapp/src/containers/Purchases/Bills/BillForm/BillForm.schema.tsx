@@ -17,15 +17,9 @@ const BillFormSchema = Yup.object().shape({
     )
     .required()
     .label(intl.get('due_date_')),
-  bill_number: Yup.string()
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('bill_number_')),
+  bill_number: Yup.string().max(DATATYPES_LENGTH.STRING).label(intl.get('bill_number_')),
   reference_no: Yup.string().nullable().min(1).max(DATATYPES_LENGTH.STRING),
-  note: Yup.string()
-    .trim()
-    .min(1)
-    .max(DATATYPES_LENGTH.TEXT)
-    .label(intl.get('note')),
+  note: Yup.string().trim().min(1).max(DATATYPES_LENGTH.TEXT).label(intl.get('note')),
   open: Yup.boolean(),
   branch_id: Yup.string(),
   warehouse_id: Yup.string(),

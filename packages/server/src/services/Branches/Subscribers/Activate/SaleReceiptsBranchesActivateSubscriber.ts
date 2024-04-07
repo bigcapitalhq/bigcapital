@@ -1,6 +1,6 @@
 import { IBranchesActivatedPayload } from '@/interfaces';
-import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptActivateBranches } from '../../Integrations/Sales/SaleReceiptBranchesActivate';
 
 @Service()
@@ -12,10 +12,7 @@ export class SaleReceiptsActivateBranchesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateReceiptsWithBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateReceiptsWithBranchOnActivated);
     return bus;
   }
 
@@ -24,15 +21,7 @@ export class SaleReceiptsActivateBranchesSubscriber {
    * the multi-branches is activated.
    * @param {IBranchesActivatedPayload}
    */
-  private updateReceiptsWithBranchOnActivated = async ({
-    tenantId,
-    primaryBranch,
-    trx,
-  }: IBranchesActivatedPayload) => {
-    await this.receiptsActivateBranches.updateReceiptsWithBranch(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+  private updateReceiptsWithBranchOnActivated = async ({ tenantId, primaryBranch, trx }: IBranchesActivatedPayload) => {
+    await this.receiptsActivateBranches.updateReceiptsWithBranch(tenantId, primaryBranch.id, trx);
   };
 }

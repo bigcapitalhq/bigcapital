@@ -14,11 +14,7 @@ export default function ProjectTimeEntryFormDialogContent({
   project,
 }) {
   return (
-    <ProjectTimeEntryFormProvider
-      timesheetId={timeEntry}
-      projectId={project}
-      dialogName={dialogName}
-    >
+    <ProjectTimeEntryFormProvider timesheetId={timeEntry} projectId={project} dialogName={dialogName}>
       <ProjectTimeEntryForm />
     </ProjectTimeEntryFormProvider>
   );

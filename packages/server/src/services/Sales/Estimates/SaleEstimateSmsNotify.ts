@@ -1,19 +1,14 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import SaleNotifyBySms from '../SaleNotifyBySms';
-import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
-import {
-  ICustomer,
-  IPaymentReceiveSmsDetails,
-  ISaleEstimate,
-  SMS_NOTIFICATION_KEY,
-} from '@/interfaces';
-import { Tenant, TenantMetadata } from '@/system/models';
-import { formatNumber, formatSmsMessage } from 'utils';
 import { ServiceError } from '@/exceptions';
+import { ICustomer, IPaymentReceiveSmsDetails, ISaleEstimate, SMS_NOTIFICATION_KEY } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import SmsNotificationsSettingsService from '@/services/Settings/SmsNotificationsSettings';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import { TenantMetadata } from '@/system/models';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { formatNumber, formatSmsMessage } from 'utils';
+import SaleNotifyBySms from '../SaleNotifyBySms';
 
 const ERRORS = {
   SALE_ESTIMATE_NOT_FOUND: 'SALE_ESTIMATE_NOT_FOUND',
@@ -39,24 +34,17 @@ export class SaleEstimateNotifyBySms {
    * @param {number} saleEstimateId
    * @returns {Promise<ISaleEstimate>}
    */
-  public notifyBySms = async (
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<ISaleEstimate> => {
+  public notifyBySms = async (tenantId: number, saleEstimateId: number): Promise<ISaleEstimate> => {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const saleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .withGraphFetched('customer');
+    const saleEstimate = await SaleEstimate.query().findById(saleEstimateId).withGraphFetched('customer');
 
     // Validates the estimate transaction existance.
     this.validateEstimateExistance(saleEstimate);
 
     // Validate the customer phone number existance and number validation.
-    this.saleSmsNotification.validateCustomerPhoneNumber(
-      saleEstimate.customer.personalPhone
-    );
+    this.saleSmsNotification.validateCustomerPhoneNumber(saleEstimate.customer.personalPhone);
     // Triggers `onSaleEstimateNotifySms` event.
     await this.eventPublisher.emitAsync(events.saleEstimate.onNotifySms, {
       tenantId,
@@ -78,19 +66,12 @@ export class SaleEstimateNotifyBySms {
    * @param {ISaleEstimate} saleEstimate
    * @returns
    */
-  private sendSmsNotification = async (
-    tenantId: number,
-    saleEstimate: ISaleEstimate & { customer: ICustomer }
-  ) => {
+  private sendSmsNotification = async (tenantId: number, saleEstimate: ISaleEstimate & { customer: ICustomer }) => {
     const smsClient = this.tenancy.smsClient(tenantId);
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieve the formatted sms notification message for estimate details.
-    const formattedSmsMessage = this.formattedEstimateDetailsMessage(
-      tenantId,
-      saleEstimate,
-      tenantMetadata
-    );
+    const formattedSmsMessage = this.formattedEstimateDetailsMessage(tenantId, saleEstimate, tenantMetadata);
     const phoneNumber = saleEstimate.customer.personalPhone;
 
     // Runs the send message job.
@@ -103,13 +84,10 @@ export class SaleEstimateNotifyBySms {
    * @param {number} saleEstimateId
    * @returns {Promise<void>}
    */
-  public notifyViaSmsNotificationAfterCreation = async (
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> => {
+  public notifyViaSmsNotificationAfterCreation = async (tenantId: number, saleEstimateId: number): Promise<void> => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
       tenantId,
-      SMS_NOTIFICATION_KEY.SALE_ESTIMATE_DETAILS
+      SMS_NOTIFICATION_KEY.SALE_ESTIMATE_DETAILS,
     );
     // Can't continue if the sms auto-notification is not enabled.
     if (!notification.isNotificationEnabled) return;
@@ -127,17 +105,13 @@ export class SaleEstimateNotifyBySms {
   private formattedEstimateDetailsMessage = (
     tenantId: number,
     saleEstimate: ISaleEstimate,
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ): string => {
     const notification = this.smsNotificationsSettings.getSmsNotificationMeta(
       tenantId,
-      SMS_NOTIFICATION_KEY.SALE_ESTIMATE_DETAILS
+      SMS_NOTIFICATION_KEY.SALE_ESTIMATE_DETAILS,
     );
-    return this.formateEstimateDetailsMessage(
-      notification.smsMessage,
-      saleEstimate,
-      tenantMetadata
-    );
+    return this.formateEstimateDetailsMessage(notification.smsMessage, saleEstimate, tenantMetadata);
   };
 
   /**
@@ -150,7 +124,7 @@ export class SaleEstimateNotifyBySms {
   private formateEstimateDetailsMessage = (
     smsMessage: string,
     saleEstimate: ISaleEstimate & { customer: ICustomer },
-    tenantMetadata: TenantMetadata
+    tenantMetadata: TenantMetadata,
   ) => {
     const formattedAmount = formatNumber(saleEstimate.amount, {
       currencyCode: saleEstimate.currencyCode,
@@ -160,9 +134,7 @@ export class SaleEstimateNotifyBySms {
       EstimateNumber: saleEstimate.estimateNumber,
       ReferenceNumber: saleEstimate.reference,
       EstimateDate: moment(saleEstimate.estimateDate).format('YYYY/MM/DD'),
-      ExpirationDate: saleEstimate.expirationDate
-        ? moment(saleEstimate.expirationDate).format('YYYY/MM/DD')
-        : '',
+      ExpirationDate: saleEstimate.expirationDate ? moment(saleEstimate.expirationDate).format('YYYY/MM/DD') : '',
       CustomerName: saleEstimate.customer.displayName,
       Amount: formattedAmount,
       CompanyName: tenantMetadata.name,
@@ -175,16 +147,11 @@ export class SaleEstimateNotifyBySms {
    * @param {number} saleEstimateId
    * @returns {Promise<IPaymentReceiveSmsDetails>}
    */
-  public smsDetails = async (
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
+  public smsDetails = async (tenantId: number, saleEstimateId: number): Promise<IPaymentReceiveSmsDetails> => {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const saleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .withGraphFetched('customer');
+    const saleEstimate = await SaleEstimate.query().findById(saleEstimateId).withGraphFetched('customer');
 
     // Validates the estimate existance.
     this.validateEstimateExistance(saleEstimate);
@@ -193,11 +160,7 @@ export class SaleEstimateNotifyBySms {
     const tenantMetadata = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieve the formatted sms message from the given estimate model.
-    const formattedSmsMessage = this.formattedEstimateDetailsMessage(
-      tenantId,
-      saleEstimate,
-      tenantMetadata
-    );
+    const formattedSmsMessage = this.formattedEstimateDetailsMessage(tenantId, saleEstimate, tenantMetadata);
     return {
       customerName: saleEstimate.customer.displayName,
       customerPhoneNumber: saleEstimate.customer.personalPhone,

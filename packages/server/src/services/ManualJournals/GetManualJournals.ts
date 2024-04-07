@@ -1,15 +1,10 @@
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import {
-  IManualJournalsFilter,
-  IManualJournal,
-  IPaginationMeta,
-  IFilterMeta,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ManualJournalTransfromer } from './ManualJournalTransformer';
+import { IFilterMeta, IManualJournal, IManualJournalsFilter, IPaginationMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { ManualJournalTransfromer } from './ManualJournalTransformer';
 
 @Service()
 export class GetManualJournals {
@@ -37,7 +32,7 @@ export class GetManualJournals {
    */
   public getManualJournals = async (
     tenantId: number,
-    filterDTO: IManualJournalsFilter
+    filterDTO: IManualJournalsFilter,
   ): Promise<{
     manualJournals: IManualJournal;
     pagination: IPaginationMeta;
@@ -49,11 +44,7 @@ export class GetManualJournals {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic service.
-    const dynamicService = await this.dynamicListService.dynamicList(
-      tenantId,
-      ManualJournal,
-      filter
-    );
+    const dynamicService = await this.dynamicListService.dynamicList(tenantId, ManualJournal, filter);
     const { results, pagination } = await ManualJournal.query()
       .onBuild((builder) => {
         dynamicService.buildQuery()(builder);
@@ -62,11 +53,7 @@ export class GetManualJournals {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the manual journals models to POJO.
-    const manualJournals = await this.transformer.transform(
-      tenantId,
-      results,
-      new ManualJournalTransfromer()
-    );
+    const manualJournals = await this.transformer.transform(tenantId, results, new ManualJournalTransfromer());
 
     return {
       manualJournals,

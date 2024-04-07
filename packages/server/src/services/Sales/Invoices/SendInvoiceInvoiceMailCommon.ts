@@ -1,12 +1,9 @@
-import { Inject, Service } from 'typedi';
 import { SaleInvoiceMailOptions } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { GetSaleInvoice } from './GetSaleInvoice';
 import { ContactMailNotification } from '@/services/MailNotification/ContactMailNotification';
-import {
-  DEFAULT_INVOICE_MAIL_CONTENT,
-  DEFAULT_INVOICE_MAIL_SUBJECT,
-} from './constants';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { GetSaleInvoice } from './GetSaleInvoice';
+import { DEFAULT_INVOICE_MAIL_CONTENT, DEFAULT_INVOICE_MAIL_SUBJECT } from './constants';
 
 @Service()
 export class SendSaleInvoiceMailCommon {
@@ -31,13 +28,11 @@ export class SendSaleInvoiceMailCommon {
     tenantId: number,
     invoiceId: number,
     defaultSubject: string = DEFAULT_INVOICE_MAIL_SUBJECT,
-    defaultBody: string = DEFAULT_INVOICE_MAIL_CONTENT
+    defaultBody: string = DEFAULT_INVOICE_MAIL_CONTENT,
   ): Promise<SaleInvoiceMailOptions> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    const saleInvoice = await SaleInvoice.query()
-      .findById(invoiceId)
-      .throwIfNotFound();
+    const saleInvoice = await SaleInvoice.query().findById(invoiceId).throwIfNotFound();
 
     const formatterData = await this.formatText(tenantId, invoiceId);
 
@@ -46,7 +41,7 @@ export class SendSaleInvoiceMailCommon {
       saleInvoice.customerId,
       defaultSubject,
       defaultBody,
-      formatterData
+      formatterData,
     );
     return {
       ...mailOptions,
@@ -61,14 +56,8 @@ export class SendSaleInvoiceMailCommon {
    * @param {string} text - The given text.
    * @returns {Promise<string>}
    */
-  public formatText = async (
-    tenantId: number,
-    invoiceId: number
-  ): Promise<Record<string, string | number>> => {
-    const invoice = await this.getSaleInvoiceService.getSaleInvoice(
-      tenantId,
-      invoiceId
-    );
+  public formatText = async (tenantId: number, invoiceId: number): Promise<Record<string, string | number>> => {
+    const invoice = await this.getSaleInvoiceService.getSaleInvoice(tenantId, invoiceId);
 
     return {
       CustomerName: invoice.customer.displayName,

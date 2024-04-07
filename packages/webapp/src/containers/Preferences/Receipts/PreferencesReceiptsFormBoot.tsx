@@ -32,10 +32,7 @@ function PreferencesReceiptsBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesReceiptsFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesReceiptsFormContext.Provider value={provider} {...props} />
         )}
       </PreferencesReceiptsCard>
     </div>
@@ -50,7 +47,6 @@ const PreferencesReceiptsCard = styled(Card)`
   }
 `;
 
-const usePreferencesReceiptsFormContext = () =>
-  React.useContext(PreferencesReceiptsFormContext);
+const usePreferencesReceiptsFormContext = () => React.useContext(PreferencesReceiptsFormContext);
 
 export { PreferencesReceiptsBoot, usePreferencesReceiptsFormContext };

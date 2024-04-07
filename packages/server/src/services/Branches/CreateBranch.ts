@@ -1,15 +1,10 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  IBranch,
-  IBranchCreatedPayload,
-  IBranchCreatePayload,
-  ICreateBranchDTO,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { IBranch, IBranchCreatePayload, IBranchCreatedPayload, ICreateBranchDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { BranchValidator } from './BranchValidate';
 
 @Service()
@@ -25,17 +20,14 @@ export class CreateBranch {
 
   @Inject()
   private validator: BranchValidator;
-  
+
   /**
    * Creates a new branch.
    * @param   {number} tenantId
    * @param   {ICreateBranchDTO} createBranchDTO
    * @returns {Promise<IBranch>}
    */
-  public createBranch = (
-    tenantId: number,
-    createBranchDTO: ICreateBranchDTO
-  ): Promise<IBranch> => {
+  public createBranch = (tenantId: number, createBranchDTO: ICreateBranchDTO): Promise<IBranch> => {
     const { Branch } = this.tenancy.models(tenantId);
 
     // Creates a new branch under unit-of-work.

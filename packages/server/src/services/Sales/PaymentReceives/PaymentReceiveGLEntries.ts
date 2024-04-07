@@ -1,16 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { sumBy } from 'lodash';
-import { Knex } from 'knex';
+import { AccountNormal, ILedgerEntry, IPaymentReceive, IPaymentReceiveGLCommonEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  IPaymentReceive,
-  ILedgerEntry,
-  AccountNormal,
-  IPaymentReceiveGLCommonEntry,
-} from '@/interfaces';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class PaymentReceiveGLEntries {
@@ -30,7 +25,7 @@ export class PaymentReceiveGLEntries {
   public writePaymentGLEntries = async (
     tenantId: number,
     paymentReceiveId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
@@ -43,12 +38,7 @@ export class PaymentReceiveGLEntries {
       .withGraphFetched('entries.invoice');
 
     // Retrives the payment receive ledger.
-    const ledger = await this.getPaymentReceiveGLedger(
-      tenantId,
-      paymentReceive,
-      tenantMeta.baseCurrency,
-      trx
-    );
+    const ledger = await this.getPaymentReceiveGLedger(tenantId, paymentReceive, tenantMeta.baseCurrency, trx);
     // Commit the ledger entries to the storage.
     await this.ledgerStorage.commit(tenantId, ledger, trx);
   };
@@ -59,17 +49,8 @@ export class PaymentReceiveGLEntries {
    * @param {number} paymentReceiveId
    * @param {Knex.Transaction} trx
    */
-  public revertPaymentGLEntries = async (
-    tenantId: number,
-    paymentReceiveId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      paymentReceiveId,
-      'PaymentReceive',
-      trx
-    );
+  public revertPaymentGLEntries = async (tenantId: number, paymentReceiveId: number, trx?: Knex.Transaction) => {
+    await this.ledgerStorage.deleteByReference(tenantId, paymentReceiveId, 'PaymentReceive', trx);
   };
 
   /**
@@ -78,11 +59,7 @@ export class PaymentReceiveGLEntries {
    * @param {number} paymentReceiveId
    * @param {Knex.Transaction} trx
    */
-  public rewritePaymentGLEntries = async (
-    tenantId: number,
-    paymentReceiveId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewritePaymentGLEntries = async (tenantId: number, paymentReceiveId: number, trx?: Knex.Transaction) => {
     // Reverts the payment GL entries.
     await this.revertPaymentGLEntries(tenantId, paymentReceiveId, trx);
 
@@ -102,26 +79,20 @@ export class PaymentReceiveGLEntries {
     tenantId: number,
     paymentReceive: IPaymentReceive,
     baseCurrencyCode: string,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<Ledger> => {
     const { Account } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the A/R account of the given currency.
-    const receivableAccount =
-      await accountRepository.findOrCreateAccountReceivable(
-        paymentReceive.currencyCode
-      );
+    const receivableAccount = await accountRepository.findOrCreateAccountReceivable(paymentReceive.currencyCode);
     // Exchange gain/loss account.
-    const exGainLossAccount = await Account.query(trx).modify(
-      'findBySlug',
-      'exchange-grain-loss'
-    );
+    const exGainLossAccount = await Account.query(trx).modify('findBySlug', 'exchange-grain-loss');
     const ledgerEntries = this.getPaymentReceiveGLEntries(
       paymentReceive,
       receivableAccount.id,
       exGainLossAccount.id,
-      baseCurrencyCode
+      baseCurrencyCode,
     );
     return new Ledger(ledgerEntries);
   };
@@ -131,12 +102,9 @@ export class PaymentReceiveGLEntries {
    * @param   {IBillPayment} paymentReceive - Payment receive with entries.
    * @returns {number}
    */
-  private getPaymentExGainOrLoss = (
-    paymentReceive: IPaymentReceive
-  ): number => {
+  private getPaymentExGainOrLoss = (paymentReceive: IPaymentReceive): number => {
     return sumBy(paymentReceive.entries, (entry) => {
-      const paymentLocalAmount =
-        entry.paymentAmount * paymentReceive.exchangeRate;
+      const paymentLocalAmount = entry.paymentAmount * paymentReceive.exchangeRate;
       const invoicePayment = entry.paymentAmount * entry.invoice.exchangeRate;
 
       return paymentLocalAmount - invoicePayment;
@@ -148,9 +116,7 @@ export class PaymentReceiveGLEntries {
    * @param   {IPaymentReceive} paymentReceive
    * @returns {}
    */
-  private getPaymentReceiveCommonEntry = (
-    paymentReceive: IPaymentReceive
-  ): IPaymentReceiveGLCommonEntry => {
+  private getPaymentReceiveCommonEntry = (paymentReceive: IPaymentReceive): IPaymentReceiveGLCommonEntry => {
     return {
       debit: 0,
       credit: 0,
@@ -184,7 +150,7 @@ export class PaymentReceiveGLEntries {
     paymentReceive: IPaymentReceive,
     ARAccountId: number,
     exchangeGainOrLossAccountId: number,
-    baseCurrencyCode: string
+    baseCurrencyCode: string,
   ): ILedgerEntry[] => {
     const commonJournal = this.getPaymentReceiveCommonEntry(paymentReceive);
     const gainOrLoss = this.getPaymentExGainOrLoss(paymentReceive);
@@ -222,9 +188,7 @@ export class PaymentReceiveGLEntries {
    * @param   {IPaymentReceive} paymentReceive
    * @returns {ILedgerEntry}
    */
-  private getPaymentDepositGLEntry = (
-    paymentReceive: IPaymentReceive
-  ): ILedgerEntry => {
+  private getPaymentDepositGLEntry = (paymentReceive: IPaymentReceive): ILedgerEntry => {
     const commonJournal = this.getPaymentReceiveCommonEntry(paymentReceive);
 
     return {
@@ -242,10 +206,7 @@ export class PaymentReceiveGLEntries {
    * @param   {number} ARAccountId
    * @returns {ILedgerEntry}
    */
-  private getPaymentReceivableEntry = (
-    paymentReceive: IPaymentReceive,
-    ARAccountId: number
-  ): ILedgerEntry => {
+  private getPaymentReceivableEntry = (paymentReceive: IPaymentReceive, ARAccountId: number): ILedgerEntry => {
     const commonJournal = this.getPaymentReceiveCommonEntry(paymentReceive);
 
     return {
@@ -277,22 +238,19 @@ export class PaymentReceiveGLEntries {
     paymentReceive: IPaymentReceive,
     ARAccountId: number,
     exGainOrLossAccountId: number,
-    baseCurrency: string
+    baseCurrency: string,
   ): ILedgerEntry[] => {
     // Retrieve the payment deposit entry.
     const paymentDepositEntry = this.getPaymentDepositGLEntry(paymentReceive);
 
     // Retrieves the A/R entry.
-    const receivableEntry = this.getPaymentReceivableEntry(
-      paymentReceive,
-      ARAccountId
-    );
+    const receivableEntry = this.getPaymentReceivableEntry(paymentReceive, ARAccountId);
     // Exchange gain/loss entries.
     const gainLossEntries = this.getPaymentExchangeGainLossEntry(
       paymentReceive,
       ARAccountId,
       exGainOrLossAccountId,
-      baseCurrency
+      baseCurrency,
     );
     return [paymentDepositEntry, receivableEntry, ...gainLossEntries];
   };

@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import { PlaywrightTestConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 

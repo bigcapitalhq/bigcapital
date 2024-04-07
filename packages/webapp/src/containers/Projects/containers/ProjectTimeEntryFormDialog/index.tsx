@@ -5,19 +5,13 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectTimeEntryFormDialogContent = React.lazy(
-  () => import('./ProjectTimeEntryFormDialogContent'),
-);
+const ProjectTimeEntryFormDialogContent = React.lazy(() => import('./ProjectTimeEntryFormDialogContent'));
 
 /**
  * Project time entry form dialog.
  * @returns
  */
-function ProjectTimeEntryFormDialog({
-  dialogName,
-  isOpen,
-  payload: { timesheetId = null, projectId = null, action },
-}) {
+function ProjectTimeEntryFormDialog({ dialogName, isOpen, payload: { timesheetId = null, projectId = null, action } }) {
   return (
     <ProjectTimeEntryFormDialogRoot
       name={dialogName}
@@ -34,11 +28,7 @@ function ProjectTimeEntryFormDialog({
       style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <ProjectTimeEntryFormDialogContent
-          dialogName={dialogName}
-          timeEntry={timesheetId}
-          project={projectId}
-        />
+        <ProjectTimeEntryFormDialogContent dialogName={dialogName} timeEntry={timesheetId} project={projectId} />
       </DialogSuspense>
     </ProjectTimeEntryFormDialogRoot>
   );

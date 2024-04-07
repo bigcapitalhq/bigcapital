@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ISaleEstimate } from '@/interfaces';
-import { ERRORS } from './constants';
 import { SaleEstimate } from '@/models';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class SaleEstimateValidators {
@@ -26,11 +26,7 @@ export class SaleEstimateValidators {
    * @param {Response} res
    * @param {Function} next
    */
-  public async validateEstimateNumberExistance(
-    tenantId: number,
-    estimateNumber: string,
-    notEstimateId?: number
-  ) {
+  public async validateEstimateNumberExistance(tenantId: number, estimateNumber: string, notEstimateId?: number) {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     const foundSaleEstimate = await SaleEstimate.query()
@@ -73,16 +69,10 @@ export class SaleEstimateValidators {
    * @param {number} tenantId
    * @param {number} customerId - Customer id.
    */
-  public async validateCustomerHasNoEstimates(
-    tenantId: number,
-    customerId: number
-  ) {
+  public async validateCustomerHasNoEstimates(tenantId: number, customerId: number) {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
-    const estimates = await SaleEstimate.query().where(
-      'customer_id',
-      customerId
-    );
+    const estimates = await SaleEstimate.query().where('customer_id', customerId);
     if (estimates.length > 0) {
       throw new ServiceError(ERRORS.CUSTOMER_HAS_SALES_ESTIMATES);
     }

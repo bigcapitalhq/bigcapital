@@ -1,7 +1,7 @@
+import BaseModel from 'models/Model';
 import moment from 'moment';
 import { Model } from 'objection';
 import uniqid from 'uniqid';
-import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
 
 export default class Tenant extends BaseModel {

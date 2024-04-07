@@ -18,11 +18,5 @@ export default function ExpenseDrawerTable() {
   // Expense drawer context.
   const { expense } = useExpenseDrawerContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={expense.categories}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={expense.categories} styleName={TableStyle.Constrant} />;
 }

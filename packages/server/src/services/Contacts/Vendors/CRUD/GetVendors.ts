@@ -1,15 +1,10 @@
-import * as R from 'ramda';
-import { Service, Inject } from 'typedi';
-import {
-  IFilterMeta,
-  IPaginationMeta,
-  IVendor,
-  IVendorsFilter,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import VendorTransfromer from '../VendorTransformer';
+import { IFilterMeta, IPaginationMeta, IVendor, IVendorsFilter } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import VendorTransfromer from '../VendorTransformer';
 
 @Service()
 export class GetVendors {
@@ -29,7 +24,7 @@ export class GetVendors {
    */
   public async getVendorsList(
     tenantId: number,
-    filterDTO: IVendorsFilter
+    filterDTO: IVendorsFilter,
   ): Promise<{
     vendors: IVendor[];
     pagination: IPaginationMeta;
@@ -41,11 +36,7 @@ export class GetVendors {
     const filter = this.parseVendorsListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      Vendor,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Vendor, filter);
     // Vendors list.
     const { results, pagination } = await Vendor.query()
       .onBuild((builder) => {
@@ -57,11 +48,7 @@ export class GetVendors {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transform the vendors.
-    const transformedVendors = await this.transformer.transform(
-      tenantId,
-      results,
-      new VendorTransfromer()
-    );
+    const transformedVendors = await this.transformer.transform(tenantId, results, new VendorTransfromer());
     return {
       vendors: transformedVendors,
       pagination,

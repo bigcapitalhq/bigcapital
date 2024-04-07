@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_PARENT_TYPE } from '@/data/AccountTypes';
+import { ServiceError } from '@/exceptions';
+import { SaleReceipt } from '@/models';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
-import { SaleEstimate, SaleReceipt } from '@/models';
 
 @Service()
 export class SaleReceiptValidators {
@@ -35,10 +35,7 @@ export class SaleReceiptValidators {
    * @param {number} tenantId - Tenant id.
    * @param {number} accountId - Account id.
    */
-  public async validateReceiptDepositAccountExistance(
-    tenantId: number,
-    accountId: number
-  ) {
+  public async validateReceiptDepositAccountExistance(tenantId: number, accountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const depositAccount = await accountRepository.findOneById(accountId);
 
@@ -56,11 +53,7 @@ export class SaleReceiptValidators {
    * @param {string} receiptNumber -
    * @param {number} notReceiptId -
    */
-  public async validateReceiptNumberUnique(
-    tenantId: number,
-    receiptNumber: string,
-    notReceiptId?: number
-  ) {
+  public async validateReceiptNumberUnique(tenantId: number, receiptNumber: string, notReceiptId?: number) {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     const saleReceipt = await SaleReceipt.query()
@@ -91,10 +84,7 @@ export class SaleReceiptValidators {
    * @param {number} tenantId
    * @param {number} customerId - Customer id.
    */
-  public async validateCustomerHasNoReceipts(
-    tenantId: number,
-    customerId: number
-  ) {
+  public async validateCustomerHasNoReceipts(tenantId: number, customerId: number) {
     const { SaleReceipt } = this.tenancy.models(tenantId);
 
     const receipts = await SaleReceipt.query().where('customer_id', customerId);

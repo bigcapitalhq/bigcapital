@@ -12,9 +12,7 @@ export default function WarehouseActivateFormContent() {
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <p class="paragraph">
-          {intl.getHTML('warehouse_activate.dialog_paragraph')}
-        </p>
+        <p class="paragraph">{intl.getHTML('warehouse_activate.dialog_paragraph')}</p>
 
         <ul class="paragraph list">
           <li>{intl.get('warehouse_activate.dialog_paragraph.line_1')}</li>

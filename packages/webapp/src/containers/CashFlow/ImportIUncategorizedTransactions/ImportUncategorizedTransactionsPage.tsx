@@ -8,14 +8,10 @@ export default function ImportUncategorizedTransactions() {
   const params = useParams();
 
   const handleImportSuccess = () => {
-    history.push(
-      `/cashflow-accounts/${params.id}/transactions?filter=uncategorized`,
-    );
+    history.push(`/cashflow-accounts/${params.id}/transactions?filter=uncategorized`);
   };
   const handleCnacelBtnClick = () => {
-    history.push(
-      `/cashflow-accounts/${params.id}/transactions?filter=uncategorized`,
-    );
+    history.push(`/cashflow-accounts/${params.id}/transactions?filter=uncategorized`);
   };
 
   return (

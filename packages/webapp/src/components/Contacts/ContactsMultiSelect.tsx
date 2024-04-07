@@ -11,9 +11,7 @@ import { DRAWERS } from '@/constants/drawers';
 export function ContactsMultiSelect({ allowCreate, ...multiSelectProps }) {
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   return (
     <FMultiSelect
@@ -41,12 +39,7 @@ function CustomersMultiSelectRoot({
   const handleCreateItemClick = () => {
     openDrawer(DRAWERS.QUICK_CREATE_CUSTOMER);
   };
-  return (
-    <ContactsMultiSelect
-      onCreateItemSelect={handleCreateItemClick}
-      {...props}
-    />
-  );
+  return <ContactsMultiSelect onCreateItemSelect={handleCreateItemClick} {...props} />;
 }
 
 /**
@@ -61,18 +54,9 @@ function VendorsMultiSelectRoot({
   const handleCreateItemClick = () => {
     openDrawer(DRAWERS.QUICK_WRITE_VENDOR);
   };
-  return (
-    <ContactsMultiSelect
-      onCreateItemSelect={handleCreateItemClick}
-      {...props}
-    />
-  );
+  return <ContactsMultiSelect onCreateItemSelect={handleCreateItemClick} {...props} />;
 }
 
-export const CustomersMultiSelect = R.compose(withDrawerActions)(
-  CustomersMultiSelectRoot,
-);
+export const CustomersMultiSelect = R.compose(withDrawerActions)(CustomersMultiSelectRoot);
 
-export const VendorsMultiSelect = R.compose(withDrawerActions)(
-  VendorsMultiSelectRoot,
-);
+export const VendorsMultiSelect = R.compose(withDrawerActions)(VendorsMultiSelectRoot);

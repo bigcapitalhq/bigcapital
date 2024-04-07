@@ -1,29 +1,12 @@
 // @ts-nocheck
 import { useRef } from 'react';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
-import {
-  If,
-  Icon,
-  FormattedMessage as T,
-  Stack,
-  AppToaster,
-} from '@/components';
+import { If, Icon, FormattedMessage as T, Stack, AppToaster } from '@/components';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import FinancialLoadingBar from '../FinancialLoadingBar';
-import {
-  useTrialBalanceSheetCsvExport,
-  useTrialBalanceSheetXlsxExport,
-} from '@/hooks/query';
+import { useTrialBalanceSheetCsvExport, useTrialBalanceSheetXlsxExport } from '@/hooks/query';
 import { useTrialBalanceSheetHttpQuery } from './utils';
 
 /**
@@ -43,8 +26,7 @@ export function TrialBalanceSheetLoadingBar() {
  * Trial balance sheet alerts.
  */
 export function TrialBalanceSheetAlerts() {
-  const { trialBalanceSheet, isLoading, refetchSheet } =
-    useTrialBalanceSheetContext();
+  const { trialBalanceSheet, isLoading, refetchSheet } = useTrialBalanceSheetContext();
 
   // Handle refetch the sheet.
   const handleRecalcReport = () => {
@@ -97,27 +79,24 @@ export const TrialBalanceSheetExportMenu = () => {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useTrialBalanceSheetXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Export the report to csv.
   const { mutateAsync: csvExport } = useTrialBalanceSheetCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
@@ -148,10 +127,7 @@ export const TrialBalanceSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

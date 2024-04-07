@@ -1,11 +1,7 @@
-import { Service, Inject } from 'typedi';
+import { ICreditNoteCreatedPayload, ICreditNoteDeletedPayload, ICreditNoteEditedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import CreditNoteInventoryTransactions from './CreditNotesInventoryTransactions';
-import {
-  ICreditNoteCreatedPayload,
-  ICreditNoteDeletedPayload,
-  ICreditNoteEditedPayload,
-} from '@/interfaces';
 
 @Service()
 export default class CreditNoteInventoryTransactionsSubscriber {
@@ -16,22 +12,10 @@ export default class CreditNoteInventoryTransactionsSubscriber {
    * Attaches events with publisher.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.creditNote.onCreated,
-      this.writeInventoryTranscationsOnceCreated
-    );
-    bus.subscribe(
-      events.creditNote.onEdited,
-      this.rewriteInventoryTransactionsOnceEdited
-    );
-    bus.subscribe(
-      events.creditNote.onDeleted,
-      this.revertInventoryTransactionsOnceDeleted
-    );
-    bus.subscribe(
-      events.creditNote.onOpened,
-      this.writeInventoryTranscationsOnceCreated
-    );
+    bus.subscribe(events.creditNote.onCreated, this.writeInventoryTranscationsOnceCreated);
+    bus.subscribe(events.creditNote.onEdited, this.rewriteInventoryTransactionsOnceEdited);
+    bus.subscribe(events.creditNote.onDeleted, this.revertInventoryTransactionsOnceDeleted);
+    bus.subscribe(events.creditNote.onOpened, this.writeInventoryTranscationsOnceCreated);
   }
 
   /**
@@ -39,19 +23,11 @@ export default class CreditNoteInventoryTransactionsSubscriber {
    * @param {ICreditNoteCreatedPayload} payload -
    * @returns {Promise<void>}
    */
-  public writeInventoryTranscationsOnceCreated = async ({
-    tenantId,
-    creditNote,
-    trx,
-  }: ICreditNoteCreatedPayload) => {
+  public writeInventoryTranscationsOnceCreated = async ({ tenantId, creditNote, trx }: ICreditNoteCreatedPayload) => {
     // Can't continue if the credit note is open yet.
     if (!creditNote.isOpen) return;
 
-    await this.inventoryTransactions.createInventoryTransactions(
-      tenantId,
-      creditNote,
-      trx
-    );
+    await this.inventoryTransactions.createInventoryTransactions(tenantId, creditNote, trx);
   };
 
   /**
@@ -68,12 +44,7 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     // Can't continue if the credit note is open yet.
     if (!creditNote.isOpen) return;
 
-    await this.inventoryTransactions.editInventoryTransactions(
-      tenantId,
-      creditNoteId,
-      creditNote,
-      trx
-    );
+    await this.inventoryTransactions.editInventoryTransactions(tenantId, creditNoteId, creditNote, trx);
   };
 
   /**
@@ -89,10 +60,6 @@ export default class CreditNoteInventoryTransactionsSubscriber {
     // Can't continue if the credit note is open yet.
     if (!oldCreditNote.isOpen) return;
 
-    await this.inventoryTransactions.deleteInventoryTransactions(
-      tenantId,
-      creditNoteId,
-      trx
-    );
+    await this.inventoryTransactions.deleteInventoryTransactions(tenantId, creditNoteId, trx);
   };
 }

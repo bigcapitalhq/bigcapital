@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useRef } from 'react';
-import {
-  FormGroup,
-  InputGroup,
-  RadioGroup,
-  Classes,
-  Radio,
-  Position,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, RadioGroup, Classes, Radio, Position } from '@blueprintjs/core';
 import { ErrorMessage, FastField } from 'formik';
 import { CLASSES } from '@/constants/classes';
 import {
@@ -63,10 +56,7 @@ export default function ItemFormPrimarySection() {
             labelInfo={
               <span>
                 <FieldRequiredHint />
-                <Hint
-                  content={itemTypeHintContent}
-                  position={Position.BOTTOM_LEFT}
-                />
+                <Hint content={itemTypeHintContent} position={Position.BOTTOM_LEFT} />
               </span>
             }
             className={'form-group--item-type'}
@@ -122,21 +112,13 @@ export default function ItemFormPrimarySection() {
                 helperText={<ErrorMessage name={'code'} />}
                 inline={true}
               >
-                <InputGroup
-                  medium={true}
-                  intent={inputIntent({ error, touched })}
-                  {...field}
-                />
+                <InputGroup medium={true} intent={inputIntent({ error, touched })} {...field} />
               </FormGroup>
             )}
           </FastField>
 
           {/*----------- Item category ----------*/}
-          <FastField
-            name={'category_id'}
-            categories={itemsCategories}
-            shouldUpdate={categoriesFieldShouldUpdate}
-          >
+          <FastField name={'category_id'} categories={itemsCategories} shouldUpdate={categoriesFieldShouldUpdate}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'category'} />}

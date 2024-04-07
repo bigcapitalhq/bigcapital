@@ -10,10 +10,7 @@ const VendorsBalanceSummaryContext = React.createContext();
  * Vendors balance summary provider.
  */
 function VendorsBalanceSummaryProvider({ filter, ...props }) {
-  const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
-  );
+  const httpQuery = React.useMemo(() => transformFilterFormToQuery(filter), [filter]);
   // Fetching vendors balance summary report based on the given query.
   const {
     data: VendorBalanceSummary,
@@ -38,7 +35,6 @@ function VendorsBalanceSummaryProvider({ filter, ...props }) {
   );
 }
 
-const useVendorsBalanceSummaryContext = () =>
-  React.useContext(VendorsBalanceSummaryContext);
+const useVendorsBalanceSummaryContext = () => React.useContext(VendorsBalanceSummaryContext);
 
 export { VendorsBalanceSummaryProvider, useVendorsBalanceSummaryContext };

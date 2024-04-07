@@ -31,10 +31,7 @@ function PaymentMadeViewTabs({
     setPaymentMadesTableState({ viewSlug });
   };
   // Transformes payment views to tabs.
-  const tabs = React.useMemo(
-    () => transformPaymentViewsToTabs(paymentMadesViews),
-    [paymentMadesViews],
-  );
+  const tabs = React.useMemo(() => transformPaymentViewsToTabs(paymentMadesViews), [paymentMadesViews]);
 
   const handleClickNewView = () => {
     history.push('/custom_views/payment-mades/new');

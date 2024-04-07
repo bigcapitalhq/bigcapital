@@ -1,8 +1,4 @@
-import {
-  ACCOUNT_PARENT_TYPE,
-  ACCOUNT_ROOT_TYPE,
-  ACCOUNT_TYPE,
-} from '@/data/AccountTypes';
+import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { ServiceError } from '@/exceptions';
 import { IItem, IItemDTO } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -21,11 +17,7 @@ export class ItemsValidators {
    * @param  {number} notItemId
    * @return {Promise<void>}
    */
-  public async validateItemNameUniquiness(
-    tenantId: number,
-    itemName: string,
-    notItemId?: number
-  ): Promise<void> {
+  public async validateItemNameUniquiness(tenantId: number, itemName: string, notItemId?: number): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
 
     const foundItems: [] = await Item.query().onBuild((builder: any) => {
@@ -35,10 +27,7 @@ export class ItemsValidators {
       }
     });
     if (foundItems.length > 0) {
-      throw new ServiceError(
-        ERRORS.ITEM_NAME_EXISTS,
-        'The item name is already exist.'
-      );
+      throw new ServiceError(ERRORS.ITEM_NAME_EXISTS, 'The item name is already exist.');
     }
   }
 
@@ -48,10 +37,7 @@ export class ItemsValidators {
    * @param {number} costAccountId
    * @return {Promise<void>}
    */
-  public async validateItemCostAccountExistance(
-    tenantId: number,
-    costAccountId: number
-  ): Promise<void> {
+  public async validateItemCostAccountExistance(tenantId: number, costAccountId: number): Promise<void> {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const foundAccount = await accountRepository.findOneById(costAccountId);
@@ -70,10 +56,7 @@ export class ItemsValidators {
    * @param {number} tenantId - Tenant id.
    * @param {number} sellAccountId - Sell account id.
    */
-  public async validateItemSellAccountExistance(
-    tenantId: number,
-    sellAccountId: number
-  ) {
+  public async validateItemSellAccountExistance(tenantId: number, sellAccountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     const foundAccount = await accountRepository.findOneById(sellAccountId);
@@ -90,15 +73,10 @@ export class ItemsValidators {
    * @param {number} tenantId
    * @param {number} inventoryAccountId
    */
-  public async validateItemInventoryAccountExistance(
-    tenantId: number,
-    inventoryAccountId: number
-  ) {
+  public async validateItemInventoryAccountExistance(tenantId: number, inventoryAccountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const foundAccount = await accountRepository.findOneById(
-      inventoryAccountId
-    );
+    const foundAccount = await accountRepository.findOneById(inventoryAccountId);
 
     if (!foundAccount) {
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
@@ -112,10 +90,7 @@ export class ItemsValidators {
    * @param {number} tenantId
    * @param {number} itemCategoryId
    */
-  public async validateItemCategoryExistance(
-    tenantId: number,
-    itemCategoryId: number
-  ) {
+  public async validateItemCategoryExistance(tenantId: number, itemCategoryId: number) {
     const { ItemCategory } = this.tenancy.models(tenantId);
     const foundCategory = await ItemCategory.query().findById(itemCategoryId);
 
@@ -130,10 +105,7 @@ export class ItemsValidators {
    * @param  {number|number[]} itemId - Item id.
    * @throws {ServiceError}
    */
-  public async validateHasNoInvoicesOrBills(
-    tenantId: number,
-    itemId: number[] | number
-  ) {
+  public async validateHasNoInvoicesOrBills(tenantId: number, itemId: number[] | number) {
     const { ItemEntry } = this.tenancy.models(tenantId);
 
     const ids = Array.isArray(itemId) ? itemId : [itemId];
@@ -141,9 +113,7 @@ export class ItemsValidators {
 
     if (foundItemEntries.length > 0) {
       throw new ServiceError(
-        ids.length > 1
-          ? ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS
-          : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS
+        ids.length > 1 ? ERRORS.ITEMS_HAVE_ASSOCIATED_TRANSACTIONS : ERRORS.ITEM_HAS_ASSOCIATED_TRANSACTINS,
       );
     }
   }
@@ -153,17 +123,11 @@ export class ItemsValidators {
    * @param {number} tenantId -
    * @param {number} itemId -
    */
-  public async validateHasNoInventoryAdjustments(
-    tenantId: number,
-    itemId: number[] | number
-  ): Promise<void> {
+  public async validateHasNoInventoryAdjustments(tenantId: number, itemId: number[] | number): Promise<void> {
     const { InventoryAdjustmentEntry } = this.tenancy.models(tenantId);
     const itemsIds = Array.isArray(itemId) ? itemId : [itemId];
 
-    const inventoryAdjEntries = await InventoryAdjustmentEntry.query().whereIn(
-      'item_id',
-      itemsIds
-    );
+    const inventoryAdjEntries = await InventoryAdjustmentEntry.query().whereIn('item_id', itemsIds);
     if (inventoryAdjEntries.length > 0) {
       throw new ServiceError(ERRORS.ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT);
     }
@@ -175,11 +139,7 @@ export class ItemsValidators {
    * @param {number} tenantId - Tenant id.
    * @param {number} itemId - Item id.
    */
-  public async validateEditItemTypeToInventory(
-    tenantId: number,
-    oldItem: IItem,
-    newItemDTO: IItemDTO
-  ) {
+  public async validateEditItemTypeToInventory(tenantId: number, oldItem: IItem, newItemDTO: IItemDTO) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
     // We have no problem in case the item type not modified.
@@ -193,9 +153,7 @@ export class ItemsValidators {
       .first();
 
     if (itemTransactionsCount.transactions > 0) {
-      throw new ServiceError(
-        ERRORS.TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS
-      );
+      throw new ServiceError(ERRORS.TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS);
     }
   }
 
@@ -207,17 +165,10 @@ export class ItemsValidators {
    * @param {IItemDTO} newItemDTO
    * @returns
    */
-  async validateItemInvnetoryAccountModified(
-    tenantId: number,
-    oldItem: IItem,
-    newItemDTO: IItemDTO
-  ) {
+  async validateItemInvnetoryAccountModified(tenantId: number, oldItem: IItem, newItemDTO: IItemDTO) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
-    if (
-      newItemDTO.type !== 'inventory' ||
-      oldItem.inventoryAccountId === newItemDTO.inventoryAccountId
-    ) {
+    if (newItemDTO.type !== 'inventory' || oldItem.inventoryAccountId === newItemDTO.inventoryAccountId) {
       return;
     }
     // Inventory transactions associated to the given item id.
@@ -236,11 +187,7 @@ export class ItemsValidators {
    * @param {IItem} oldItem - Old item.
    */
   public validateEditItemFromInventory(itemDTO: IItemDTO, oldItem: IItem) {
-    if (
-      itemDTO.type &&
-      oldItem.type === 'inventory' &&
-      itemDTO.type !== oldItem.type
-    ) {
+    if (itemDTO.type && oldItem.type === 'inventory' && itemDTO.type !== oldItem.type) {
       throw new ServiceError(ERRORS.ITEM_CANNOT_CHANGE_INVENTORY_TYPE);
     }
   }
@@ -250,10 +197,7 @@ export class ItemsValidators {
    * @param {number} tenantId -
    * @param {number} taxRateId -
    */
-  public async validatePurchaseTaxRateExistance(
-    tenantId: number,
-    taxRateId: number
-  ) {
+  public async validatePurchaseTaxRateExistance(tenantId: number, taxRateId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const foundTaxRate = await TaxRate.query().findById(taxRateId);
@@ -268,10 +212,7 @@ export class ItemsValidators {
    * @param {number} tenantId
    * @param {number} taxRateId
    */
-  public async validateSellTaxRateExistance(
-    tenantId: number,
-    taxRateId: number
-  ) {
+  public async validateSellTaxRateExistance(tenantId: number, taxRateId: number) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const foundTaxRate = await TaxRate.query().findById(taxRateId);

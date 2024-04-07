@@ -58,22 +58,11 @@ function JournalHeader({
   };
 
   return (
-    <JournalDrawerHeader
-      isOpen={journalSheetDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={validationSchema}
-      >
+    <JournalDrawerHeader isOpen={journalSheetDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<JournalSheetHeaderGeneral />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<JournalSheetHeaderGeneral />} />
           </Tabs>
 
           <div class="financial-header-drawer__footer">

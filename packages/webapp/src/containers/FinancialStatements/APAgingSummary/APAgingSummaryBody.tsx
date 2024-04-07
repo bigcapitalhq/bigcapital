@@ -9,7 +9,6 @@ import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-
 /**
  * AP aging summary body.
  * @returns {JSX.Element}
@@ -22,11 +21,7 @@ function APAgingSummaryBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isAPAgingLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <APAgingSummaryTable organizationName={organizationName} />
-      )}
+      {isAPAgingLoading ? <FinancialSheetSkeleton /> : <APAgingSummaryTable organizationName={organizationName} />}
     </FinancialReportBody>
   );
 }

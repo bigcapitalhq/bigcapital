@@ -5,29 +5,17 @@ import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectDialogContent = React.lazy(
-  () => import('./ProjectFormDialogContent'),
-);
+const ProjectDialogContent = React.lazy(() => import('./ProjectFormDialogContent'));
 
 /**
  * Project form dialog.
  * @returns
  */
-function ProjectFormDialog({
-  dialogName,
-  payload: { projectId = null, action },
-  isOpen,
-}) {
+function ProjectFormDialog({ dialogName, payload: { projectId = null, action }, isOpen }) {
   return (
     <ProjectFormDialogRoot
       name={dialogName}
-      title={
-        action === 'edit' ? (
-          <T id="projects.dialog.edit_project" />
-        ) : (
-          <T id={'projects.dialog.new_project'} />
-        )
-      }
+      title={action === 'edit' ? <T id="projects.dialog.edit_project" /> : <T id={'projects.dialog.new_project'} />}
       isOpen={isOpen}
       autoFocus={true}
       canEscapeKeyClose={true}

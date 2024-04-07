@@ -1,22 +1,8 @@
 // @ts-nocheck
 import React from 'react';
 import { useFormikContext, FastField, ErrorMessage } from 'formik';
-import {
-  FormGroup,
-  Classes,
-  TextArea,
-  Checkbox,
-  ControlGroup,
-} from '@blueprintjs/core';
-import {
-  AccountsSelect,
-  MoneyInputGroup,
-  Col,
-  Row,
-  Hint,
-  InputPrependText,
-  FFormGroup,
-} from '@/components';
+import { FormGroup, Classes, TextArea, Checkbox, ControlGroup } from '@blueprintjs/core';
+import { AccountsSelect, MoneyInputGroup, Col, Row, Hint, InputPrependText, FFormGroup } from '@/components';
 import { FormattedMessage as T } from '@/components';
 
 import { useItemFormContext } from './ItemFormProvider';
@@ -64,11 +50,7 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Selling price ------------- */}
-          <FastField
-            name={'sell_price'}
-            sellable={values.sellable}
-            shouldUpdate={sellPriceFieldShouldUpdate}
-          >
+          <FastField name={'sell_price'} sellable={values.sellable} shouldUpdate={sellPriceFieldShouldUpdate}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'selling_price'} />}
@@ -96,9 +78,7 @@ function ItemFormBody({ organization: { base_currency } }) {
           <FFormGroup
             label={<T id={'account'} />}
             name={'sell_account_id'}
-            labelInfo={
-              <Hint content={<T id={'item.field.sell_account.hint'} />} />
-            }
+            labelInfo={<Hint content={<T id={'item.field.sell_account.hint'} />} />}
             inline={true}
             items={accounts}
             sellable={values.sellable}
@@ -118,16 +98,8 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FFormGroup>
 
           {/*------------- Sell Tax Rate ------------- */}
-          <FFormGroup
-            name={'sell_tax_rate_id'}
-            label={'Tax Rate'}
-            inline={true}
-          >
-            <TaxRatesSelect
-              name={'sell_tax_rate_id'}
-              items={taxRates}
-              allowCreate
-            />
+          <FFormGroup name={'sell_tax_rate_id'} label={'Tax Rate'} inline={true}>
+            <TaxRatesSelect name={'sell_tax_rate_id'} items={taxRates} allowCreate />
           </FFormGroup>
 
           <FastField
@@ -143,12 +115,7 @@ function ItemFormBody({ organization: { base_currency } }) {
                 helperText={<ErrorMessage name={'description'} />}
                 inline={true}
               >
-                <TextArea
-                  growVertically={true}
-                  height={280}
-                  {...field}
-                  disabled={!values.sellable}
-                />
+                <TextArea growVertically={true} height={280} {...field} disabled={!values.sellable} />
               </FormGroup>
             )}
           </FastField>
@@ -173,11 +140,7 @@ function ItemFormBody({ organization: { base_currency } }) {
           </FastField>
 
           {/*------------- Cost price ------------- */}
-          <FastField
-            name={'cost_price'}
-            purchasable={values.purchasable}
-            shouldUpdate={costPriceFieldShouldUpdate}
-          >
+          <FastField name={'cost_price'} purchasable={values.purchasable} shouldUpdate={costPriceFieldShouldUpdate}>
             {({ field, form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'cost_price'} />}
@@ -208,9 +171,7 @@ function ItemFormBody({ organization: { base_currency } }) {
             items={accounts}
             shouldUpdate={costAccountFieldShouldUpdate}
             label={<T id={'account'} />}
-            labelInfo={
-              <Hint content={<T id={'item.field.cost_account.hint'} />} />
-            }
+            labelInfo={<Hint content={<T id={'item.field.cost_account.hint'} />} />}
             inline={true}
             fastField={true}
           >
@@ -259,12 +220,7 @@ function ItemFormBody({ organization: { base_currency } }) {
                 helperText={<ErrorMessage name={'description'} />}
                 inline={true}
               >
-                <TextArea
-                  growVertically={true}
-                  height={280}
-                  {...field}
-                  disabled={!values.purchasable}
-                />
+                <TextArea growVertically={true} height={280} {...field} disabled={!values.purchasable} />
               </FormGroup>
             )}
           </FastField>

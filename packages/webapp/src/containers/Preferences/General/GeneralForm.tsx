@@ -8,13 +8,7 @@ import { TimezonePicker } from '@blueprintjs/timezone';
 import { ErrorMessage, FastField } from 'formik';
 import { useHistory } from 'react-router-dom';
 
-import {
-  FieldRequiredHint,
-  FormattedMessage as T,
-  FFormGroup,
-  FInputGroup,
-  FSelect,
-} from '@/components';
+import { FieldRequiredHint, FormattedMessage as T, FFormGroup, FInputGroup, FSelect } from '@/components';
 import { inputIntent } from '@/utils';
 import { CLASSES } from '@/constants/classes';
 import { getAllCurrenciesOptions } from '@/constants/currencies';
@@ -71,22 +65,12 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
       </FFormGroup>
 
       {/* ---------- Industry ----------  */}
-      <FFormGroup
-        name={'industry'}
-        label={<T id={'organization_industry'} />}
-        inline={true}
-        fastField={true}
-      >
+      <FFormGroup name={'industry'} label={<T id={'organization_industry'} />} inline={true} fastField={true}>
         <FInputGroup name={'industry'} medium={'true'} fastField={true} />
       </FFormGroup>
 
       {/* ---------- Location ---------- */}
-      <FFormGroup
-        name={'location'}
-        label={<T id={'business_location'} />}
-        inline={true}
-        fastField={true}
-      >
+      <FFormGroup name={'location'} label={<T id={'business_location'} />} inline={true} fastField={true}>
         <FSelect
           name={'location'}
           items={Countries}
@@ -106,11 +90,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
         label={<T id={'base_currency'} />}
         labelInfo={<FieldRequiredHint />}
         inline={true}
-        helperText={
-          <T
-            id={'you_can_t_change_the_base_currency_as_there_are_transactions'}
-          />
-        }
+        helperText={<T id={'you_can_t_change_the_base_currency_as_there_are_transactions'} />}
         fastField={true}
         shouldUpdate={shouldBaseCurrencyUpdate}
       >
@@ -175,11 +155,7 @@ export default function PreferencesGeneralForm({ isSubmitting }) {
             label={<T id={'time_zone'} />}
             labelInfo={<FieldRequiredHint />}
             inline={true}
-            className={classNames(
-              'form-group--time-zone',
-              CLASSES.FORM_GROUP_LIST_SELECT,
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--time-zone', CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="timezone" />}
           >

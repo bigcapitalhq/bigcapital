@@ -1,5 +1,5 @@
-import XLSX from 'xlsx';
 import { Inject, Service } from 'typedi';
+import XLSX from 'xlsx';
 import { ImportableResources } from './ImportableResources';
 import { sanitizeResourceName } from './_utils';
 
@@ -10,16 +10,12 @@ export class ImportSampleService {
 
   /**
    * Retrieves the sample sheet of the given resource.
-   * @param {number} tenantId 
-   * @param {string} resource 
-   * @param {string} format 
+   * @param {number} tenantId
+   * @param {string} resource
+   * @param {string} format
    * @returns {Buffer | string}
    */
-  public sample(
-    tenantId: number,
-    resource: string,
-    format: 'csv' | 'xlsx'
-  ): Buffer | string {
+  public sample(tenantId: number, resource: string, format: 'csv' | 'xlsx'): Buffer | string {
     const _resource = sanitizeResourceName(resource);
 
     const ImportableRegistry = this.importable.registry;

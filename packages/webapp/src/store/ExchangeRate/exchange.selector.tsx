@@ -7,13 +7,9 @@ const exchangeRateTableState = (state) => {
 };
 
 export const getExchangeRatesTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    exchangeRateTableState,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, exchangeRateTableState, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });

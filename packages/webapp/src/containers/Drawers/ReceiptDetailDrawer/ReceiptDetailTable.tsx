@@ -20,11 +20,5 @@ export default function ReceiptDetailTable() {
   // Receipt readonly entries table columns.
   const columns = useReceiptReadonlyEntriesTableColumns();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

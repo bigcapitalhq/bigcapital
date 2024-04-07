@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { AccountNormal, ILedgerEntry } from '@/interfaces';
 import { IRefundVendorCredit } from '@/interfaces';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
 import LedgerRepository from '@/services/Ledger/LedgerRepository';
+import JournalPosterService from '@/services/Sales/JournalPosterService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class RefundVendorCreditGLEntries {
@@ -21,9 +21,7 @@ export default class RefundVendorCreditGLEntries {
    * Retrieves the refund credit common GL entry.
    * @param   {IRefundVendorCredit} refundCredit
    */
-  private getRefundCreditGLCommonEntry = (
-    refundCredit: IRefundVendorCredit
-  ) => {
+  private getRefundCreditGLCommonEntry = (refundCredit: IRefundVendorCredit) => {
     return {
       exchangeRate: refundCredit.exchangeRate,
       currencyCode: refundCredit.currencyCode,
@@ -51,10 +49,7 @@ export default class RefundVendorCreditGLEntries {
    * @param   {number} APAccountId
    * @returns {ILedgerEntry}
    */
-  private getRefundCreditGLPayableEntry = (
-    refundCredit: IRefundVendorCredit,
-    APAccountId: number
-  ): ILedgerEntry => {
+  private getRefundCreditGLPayableEntry = (refundCredit: IRefundVendorCredit, APAccountId: number): ILedgerEntry => {
     const commonEntry = this.getRefundCreditGLCommonEntry(refundCredit);
 
     return {
@@ -72,9 +67,7 @@ export default class RefundVendorCreditGLEntries {
    * @param   {IRefundVendorCredit} refundCredit
    * @returns {ILedgerEntry}
    */
-  private getRefundCreditGLDepositEntry = (
-    refundCredit: IRefundVendorCredit
-  ): ILedgerEntry => {
+  private getRefundCreditGLDepositEntry = (refundCredit: IRefundVendorCredit): ILedgerEntry => {
     const commonEntry = this.getRefundCreditGLCommonEntry(refundCredit);
 
     return {
@@ -92,14 +85,8 @@ export default class RefundVendorCreditGLEntries {
    * @param {number} APAccountId
    * @returns {ILedgerEntry[]}
    */
-  public getRefundCreditGLEntries = (
-    refundCredit: IRefundVendorCredit,
-    APAccountId: number
-  ): ILedgerEntry[] => {
-    const payableEntry = this.getRefundCreditGLPayableEntry(
-      refundCredit,
-      APAccountId
-    );
+  public getRefundCreditGLEntries = (refundCredit: IRefundVendorCredit, APAccountId: number): ILedgerEntry[] => {
+    const payableEntry = this.getRefundCreditGLPayableEntry(refundCredit, APAccountId);
     const depositEntry = this.getRefundCreditGLDepositEntry(refundCredit);
 
     return [payableEntry, depositEntry];
@@ -115,24 +102,16 @@ export default class RefundVendorCreditGLEntries {
   public saveRefundCreditGLEntries = async (
     tenantId: number,
     refundCreditId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { Account, RefundVendorCredit } = this.tenancy.models(tenantId);
 
     // Retireve refund with associated vendor credit entity.
-    const refundCredit = await RefundVendorCredit.query()
-      .findById(refundCreditId)
-      .withGraphFetched('vendorCredit');
+    const refundCredit = await RefundVendorCredit.query().findById(refundCreditId).withGraphFetched('vendorCredit');
 
-    const payableAccount = await Account.query().findOne(
-      'slug',
-      'accounts-payable'
-    );
+    const payableAccount = await Account.query().findOne('slug', 'accounts-payable');
     // Generates the GL entries of the given refund credit.
-    const entries = this.getRefundCreditGLEntries(
-      refundCredit,
-      payableAccount.id
-    );
+    const entries = this.getRefundCreditGLEntries(refundCredit, payableAccount.id);
     // Saves the ledegr to the storage.
     await this.ledgerRepository.saveLedgerEntries(tenantId, entries, trx);
   };
@@ -144,16 +123,7 @@ export default class RefundVendorCreditGLEntries {
    * @param {Knex.Transaction} trx
    * @return {Promise<void>}
    */
-  public revertRefundCreditGLEntries = async (
-    tenantId: number,
-    refundCreditId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.journalService.revertJournalTransactions(
-      tenantId,
-      refundCreditId,
-      'RefundVendorCredit',
-      trx
-    );
+  public revertRefundCreditGLEntries = async (tenantId: number, refundCreditId: number, trx?: Knex.Transaction) => {
+    await this.journalService.revertJournalTransactions(tenantId, refundCreditId, 'RefundVendorCredit', trx);
   };
 }

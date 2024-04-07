@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import BillAllocatedCostTransactions from '@/services/Purchases/LandedCost/BillAllocatedLandedCostTransactions';
-import BaseController from '../BaseController';
 import AllocateLandedCost from '@/services/Purchases/LandedCost/AllocateLandedCost';
-import RevertAllocatedLandedCost from '@/services/Purchases/LandedCost/RevertAllocatedLandedCost';
+import BillAllocatedCostTransactions from '@/services/Purchases/LandedCost/BillAllocatedLandedCostTransactions';
 import LandedCostTranasctions from '@/services/Purchases/LandedCost/LandedCostTransactions';
+import RevertAllocatedLandedCost from '@/services/Purchases/LandedCost/RevertAllocatedLandedCost';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export default class BillAllocateLandedCost extends BaseController {
@@ -44,28 +44,28 @@ export default class BillAllocateLandedCost extends BaseController {
       ],
       this.validationResult,
       this.calculateLandedCost,
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:allocatedLandedCostId',
       [param('allocatedLandedCostId').exists().isInt()],
       this.validationResult,
       this.deleteAllocatedLandedCost,
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/transactions',
       [query('transaction_type').exists().isIn(['Expense', 'Bill'])],
       this.validationResult,
       this.getLandedCostTransactions,
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/bills/:billId/transactions',
       [param('billId').exists()],
       this.validationResult,
       this.getBillLandedCostTransactions,
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -76,20 +76,12 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {Response} res - Response.
    * @param {NextFunction} next - Next function.
    */
-  private getLandedCostTransactions = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getLandedCostTransactions = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const query = this.matchedQueryData(req);
 
     try {
-      const transactions =
-        await this.landedCostTranasctions.getLandedCostTransactions(
-          tenantId,
-          query
-        );
+      const transactions = await this.landedCostTranasctions.getLandedCostTransactions(tenantId, query);
 
       return res.status(200).send({ transactions });
     } catch (error) {
@@ -104,11 +96,7 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {NextFunction} next
    * @returns {Response}
    */
-  public calculateLandedCost = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public calculateLandedCost = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { billId: purchaseInvoiceId } = req.params;
     const landedCostDTO = this.matchedBodyData(req);
@@ -117,7 +105,7 @@ export default class BillAllocateLandedCost extends BaseController {
       const billLandedCost = await this.allocateLandedCost.allocateLandedCost(
         tenantId,
         landedCostDTO,
-        purchaseInvoiceId
+        purchaseInvoiceId,
       );
       return res.status(200).send({
         id: billLandedCost.id,
@@ -135,19 +123,12 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {NextFunction} next
    * @returns {Response}
    */
-  public deleteAllocatedLandedCost = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> => {
+  public deleteAllocatedLandedCost = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     const { tenantId } = req;
     const { allocatedLandedCostId } = req.params;
 
     try {
-      await this.revertAllocatedLandedCost.deleteAllocatedLandedCost(
-        tenantId,
-        allocatedLandedCostId
-      );
+      await this.revertAllocatedLandedCost.deleteAllocatedLandedCost(tenantId, allocatedLandedCostId);
 
       return res.status(200).send({
         id: allocatedLandedCostId,
@@ -164,20 +145,12 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public listLandedCosts = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public listLandedCosts = async (req: Request, res: Response, next: NextFunction) => {
     const query = this.matchedQueryData(req);
     const { tenantId } = req;
 
     try {
-      const transactions =
-        await this.landedCostTranasctions.getLandedCostTransactions(
-          tenantId,
-          query
-        );
+      const transactions = await this.landedCostTranasctions.getLandedCostTransactions(tenantId, query);
 
       return res.status(200).send({ transactions });
     } catch (error) {
@@ -191,20 +164,12 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public getBillLandedCostTransactions = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<Response> => {
+  public getBillLandedCostTransactions = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     const { tenantId } = req;
     const { billId } = req.params;
 
     try {
-      const transactions =
-        await this.billAllocatedCostTransactions.getBillLandedCostTransactions(
-          tenantId,
-          billId
-        );
+      const transactions = await this.billAllocatedCostTransactions.getBillLandedCostTransactions(tenantId, billId);
 
       return res.status(200).send({
         billId,
@@ -222,12 +187,7 @@ export default class BillAllocateLandedCost extends BaseController {
    * @param {NextFunction} next
    * @param {Error} error
    */
-  public handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'BILL_NOT_FOUND') {
         return res.status(400).send({

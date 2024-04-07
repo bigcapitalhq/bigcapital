@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
+import { AccountNormal, IItemEntry, ILedgerEntry, IVendorCredit } from '@/interfaces';
+import Ledger from '@/services/Accounting/Ledger';
+import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
 import * as R from 'ramda';
-import {
-  IVendorCredit,
-  ILedgerEntry,
-  AccountNormal,
-  IItemEntry,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
-import Ledger from '@/services/Accounting/Ledger';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class VendorCreditGLEntries {
@@ -48,10 +43,7 @@ export default class VendorCreditGLEntries {
    * @param   {number} APAccountId
    * @returns {ILedgerEntry}
    */
-  public getVendorCreditPayableGLEntry = (
-    vendorCredit: IVendorCredit,
-    APAccountId: number
-  ): ILedgerEntry => {
+  public getVendorCreditPayableGLEntry = (vendorCredit: IVendorCredit, APAccountId: number): ILedgerEntry => {
     const commonEntity = this.getVendorCreditGLCommonEntry(vendorCredit);
 
     return {
@@ -71,11 +63,7 @@ export default class VendorCreditGLEntries {
    * @returns {ILedgerEntry}
    */
   public getVendorCreditGLItemEntry = R.curry(
-    (
-      vendorCredit: IVendorCredit,
-      entry: IItemEntry,
-      index: number
-    ): ILedgerEntry => {
+    (vendorCredit: IVendorCredit, entry: IItemEntry, index: number): ILedgerEntry => {
       const commonEntity = this.getVendorCreditGLCommonEntry(vendorCredit);
       const localAmount = entry.amount * vendorCredit.exchangeRate;
 
@@ -91,7 +79,7 @@ export default class VendorCreditGLEntries {
             : entry.costAccountId || entry.item.costAccountId,
         accountNormal: AccountNormal.DEBIT,
       };
-    }
+    },
   );
 
   /**
@@ -100,14 +88,8 @@ export default class VendorCreditGLEntries {
    * @param  {number} receivableAccount -
    * @return {ILedgerEntry[]}
    */
-  public getVendorCreditGLEntries = (
-    vendorCredit: IVendorCredit,
-    payableAccountId: number
-  ): ILedgerEntry[] => {
-    const payableEntry = this.getVendorCreditPayableGLEntry(
-      vendorCredit,
-      payableAccountId
-    );
+  public getVendorCreditGLEntries = (vendorCredit: IVendorCredit, payableAccountId: number): ILedgerEntry[] => {
+    const payableEntry = this.getVendorCreditPayableGLEntry(vendorCredit, payableAccountId);
     const getItemEntry = this.getVendorCreditGLItemEntry(vendorCredit);
     const itemsEntries = vendorCredit.entries.map(getItemEntry);
 
@@ -123,14 +105,9 @@ export default class VendorCreditGLEntries {
   public revertVendorCreditGLEntries = async (
     tenantId: number,
     vendorCreditId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      vendorCreditId,
-      'VendorCredit',
-      trx
-    );
+    await this.ledgerStorage.deleteByReference(tenantId, vendorCreditId, 'VendorCredit', trx);
   };
 
   /**
@@ -139,30 +116,17 @@ export default class VendorCreditGLEntries {
    * @param {number} vendorCreditId
    * @param {Knex.Transaction} trx
    */
-  public writeVendorCreditGLEntries = async (
-    tenantId: number,
-    vendorCreditId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public writeVendorCreditGLEntries = async (tenantId: number, vendorCreditId: number, trx?: Knex.Transaction) => {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const { VendorCredit } = this.tenancy.models(tenantId);
 
     // Vendor credit with entries items.
-    const vendorCredit = await VendorCredit.query(trx)
-      .findById(vendorCreditId)
-      .withGraphFetched('entries.item');
+    const vendorCredit = await VendorCredit.query(trx).findById(vendorCreditId).withGraphFetched('entries.item');
 
     // Retrieve the payable account (A/P) account.
-    const APAccount = await accountRepository.findOrCreateAccountsPayable(
-      vendorCredit.currencyCode,
-      {},
-      trx
-    );
+    const APAccount = await accountRepository.findOrCreateAccountsPayable(vendorCredit.currencyCode, {}, trx);
     // Saves the vendor credit GL entries.
-    const ledgerEntries = this.getVendorCreditGLEntries(
-      vendorCredit,
-      APAccount.id
-    );
+    const ledgerEntries = this.getVendorCreditGLEntries(vendorCredit, APAccount.id);
     const ledger = new Ledger(ledgerEntries);
 
     // Commits the ledger entries to the storage.
@@ -175,11 +139,7 @@ export default class VendorCreditGLEntries {
    * @param {number} vendorCreditId
    * @param {Knex.Transaction} trx
    */
-  public rewriteVendorCreditGLEntries = async (
-    tenantId: number,
-    vendorCreditId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewriteVendorCreditGLEntries = async (tenantId: number, vendorCreditId: number, trx?: Knex.Transaction) => {
     // Reverts the GL entries.
     await this.revertVendorCreditGLEntries(tenantId, vendorCreditId, trx);
 

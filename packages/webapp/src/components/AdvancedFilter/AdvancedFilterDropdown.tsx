@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Formik, FastField, FieldArray } from 'formik';
-import {
-  Button,
-  FormGroup,
-  Classes,
-  InputGroup,
-  MenuItem,
-} from '@blueprintjs/core';
+import { Button, FormGroup, Classes, InputGroup, MenuItem } from '@blueprintjs/core';
 import { get, first, defaultTo, isEqual, isEmpty } from 'lodash';
 import intl from 'react-intl-universal';
 import { Choose, Icon, FormattedMessage as T, ListSelect } from '@/components';
@@ -124,11 +118,7 @@ function FilterCompatatorFilter() {
  * Changes default value of comparator field in the condition row once the
  * field option changing.
  */
-function useDefaultComparatorFieldValue({
-  getConditionValue,
-  setConditionValue,
-  fieldMeta,
-}) {
+function useDefaultComparatorFieldValue({ getConditionValue, setConditionValue, fieldMeta }) {
   const fieldKeyValue = getConditionValue('fieldKey');
 
   const comparatorsOptions = React.useMemo(
@@ -148,12 +138,7 @@ function useDefaultComparatorFieldValue({
  * Resource fields field.
  */
 function FilterFieldsField() {
-  const {
-    getConditionFieldPath,
-    getConditionValue,
-    setConditionValue,
-    fieldMeta,
-  } = useFilterCondition();
+  const { getConditionFieldPath, getConditionValue, setConditionValue, fieldMeta } = useFilterCondition();
 
   const { fields } = useAdvancedFilterContext();
 
@@ -198,8 +183,7 @@ function FilterFieldsField() {
  * Advanced filter value field.
  */
 function FilterValueField() {
-  const { conditionIndex, fieldMeta, getConditionFieldPath } =
-    useFilterCondition();
+  const { conditionIndex, fieldMeta, getConditionFieldPath } = useFilterCondition();
 
   // Can't continue if the given field key is not selected yet.
   if (!fieldMeta) {
@@ -288,10 +272,7 @@ function AdvancedFilterDropdownConditions({ push, remove, replace, form }) {
     <div className="filter-dropdonw__conditions-wrap">
       <div className={'filter-dropdown__conditions'}>
         {form.values.conditions.map((condition, index) => (
-          <AdvancedFilterDropdownCondition
-            conditionIndex={index}
-            onRemoveClick={handleClickRemoveCondition}
-          />
+          <AdvancedFilterDropdownCondition conditionIndex={index} onRemoveClick={handleClickRemoveCondition} />
         ))}
       </div>
       <AdvancedFilterDropdownFooter onClick={handleNewConditionBtnClick} />
@@ -310,9 +291,7 @@ function AdvancedFilterDropdownForm() {
     <div className="filter-dropdown__form">
       <FieldArray
         name={'conditions'}
-        render={({ ...fieldArrayProps }) => (
-          <AdvancedFilterDropdownConditions {...fieldArrayProps} />
-        )}
+        render={({ ...fieldArrayProps }) => <AdvancedFilterDropdownConditions {...fieldArrayProps} />}
       />
     </div>
   );
@@ -355,9 +334,7 @@ export function AdvancedFilterDropdown({
     value: defaultTo(defaultValue, ''),
   };
   // Initial conditions.
-  const initialConditions = !isEmpty(conditions)
-    ? conditions
-    : [initialCondition, initialCondition];
+  const initialConditions = !isEmpty(conditions) ? conditions : [initialCondition, initialCondition];
 
   const [prevConditions, setPrevConditions] = React.useState(initialConditions);
 
@@ -382,10 +359,7 @@ export function AdvancedFilterDropdown({
 
   return (
     <div className="filter-dropdown">
-      <AdvancedFilterDropdownProvider
-        initialCondition={initialCondition}
-        fields={fields}
-      >
+      <AdvancedFilterDropdownProvider initialCondition={initialCondition} fields={fields}>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

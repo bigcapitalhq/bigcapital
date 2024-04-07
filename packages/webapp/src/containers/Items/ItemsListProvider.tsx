@@ -1,14 +1,10 @@
 // @ts-nocheck
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
-import {
-  getFieldsFromResourceMeta,
-  transformTableQueryToParams,
-} from '@/utils';
+import { getFieldsFromResourceMeta, transformTableQueryToParams } from '@/utils';
 import { transformItemsTableState } from './utils';
 import { DashboardInsider } from '@/components';
 import { useResourceViews, useResourceMeta, useItems } from '@/hooks/query';
-
 
 const ItemsContext = createContext();
 
@@ -19,15 +15,10 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
   const tableQuery = transformItemsTableState(tableState);
 
   // Fetch accounts resource views and fields.
-  const { data: itemsViews, isLoading: isViewsLoading } =
-    useResourceViews('items');
+  const { data: itemsViews, isLoading: isViewsLoading } = useResourceViews('items');
 
   // Fetch the accounts resource fields.
-  const {
-    data: resourceMeta,
-    isLoading: isResourceLoading,
-    isFetching: isResourceFetching,
-  } = useResourceMeta('items');
+  const { data: resourceMeta, isLoading: isResourceLoading, isFetching: isResourceFetching } = useResourceMeta('items');
 
   // Handle fetching the items table based on the given query.
   const {
@@ -61,10 +52,7 @@ function ItemsListProvider({ tableState, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'items-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'items-list'}>
       <ItemsContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

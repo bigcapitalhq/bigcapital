@@ -4,18 +4,12 @@ import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ReconcileVendorCreditDialogContent = React.lazy(() =>
-  import('./ReconcileVendorCreditDialogContent'),
-);
+const ReconcileVendorCreditDialogContent = React.lazy(() => import('./ReconcileVendorCreditDialogContent'));
 
 /**
  * Reconcile vendor credit dialog.
  */
-function ReconcileVendorCreditDialog({
-  dialogName,
-  payload: { vendorCreditId },
-  isOpen,
-}) {
+function ReconcileVendorCreditDialog({ dialogName, payload: { vendorCreditId }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -25,10 +19,7 @@ function ReconcileVendorCreditDialog({
       className="dialog--reconcile-vendor-credit-form"
     >
       <DialogSuspense>
-        <ReconcileVendorCreditDialogContent
-          vendorCreditId={vendorCreditId}
-          dialogName={dialogName}
-        />
+        <ReconcileVendorCreditDialogContent vendorCreditId={vendorCreditId} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

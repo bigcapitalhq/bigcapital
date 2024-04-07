@@ -6,7 +6,7 @@ import { chain } from 'lodash';
  * @returns
  */
 export function groupInventoryTransactionsByTypeId(
-  transactions: { transactionType: string; transactionId: number }[]
+  transactions: { transactionType: string; transactionId: number }[],
 ): { transactionType: string; transactionId: number }[][] {
   return chain(transactions)
     .groupBy((t) => `${t.transactionType}-${t.transactionId}`)

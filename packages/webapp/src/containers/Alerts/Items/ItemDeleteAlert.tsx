@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import { handleDeleteErrors } from '@/containers/Items/utils';
 import { useDeleteItem } from '@/hooks/query';
@@ -83,17 +79,10 @@ function ItemDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_item_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_item_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withItemsActions,
-  withDrawerActions,
-)(ItemDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withItemsActions, withDrawerActions)(ItemDeleteAlert);

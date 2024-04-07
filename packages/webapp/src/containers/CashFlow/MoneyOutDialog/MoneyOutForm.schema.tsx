@@ -13,10 +13,7 @@ const Schema = Yup.object().shape({
   cashflow_account_id: Yup.string().required(),
   branch_id: Yup.string(),
   exchange_rate: Yup.number(),
-  description: Yup.string()
-    .min(3)
-    .max(DATATYPES_LENGTH.TEXT)
-    .label(intl.get('description')),
+  description: Yup.string().min(3).max(DATATYPES_LENGTH.TEXT).label(intl.get('description')),
   publish: Yup.boolean(),
 });
 

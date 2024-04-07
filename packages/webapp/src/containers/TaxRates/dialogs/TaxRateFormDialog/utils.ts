@@ -37,8 +37,8 @@ export const transformFormToReq = (form) => {
 
 /**
  * Detarmines whether the tax rate changed.
- * @param initialValues 
- * @param formValues 
+ * @param initialValues
+ * @param formValues
  * @returns {boolean}
  */
 export const isTaxRateChange = (initialValues, formValues) => {

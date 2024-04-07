@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
 import { IProfitLossSheetQuery } from '@/interfaces';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { ProfitLossSheetTableInjectable } from './ProfitLossSheetTableInjectable';
 
 @Service()
@@ -29,10 +29,7 @@ export class ProfitLossSheetExportInjectable {
    * @param {IProfitLossSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IProfitLossSheetQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IProfitLossSheetQuery): Promise<string> {
     const table = await this.profitLossSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

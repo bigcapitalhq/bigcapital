@@ -42,7 +42,6 @@ function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
   );
 }
 
-const useManualJournalDrawerContext = () =>
-  React.useContext(ManualJournalDrawerContext);
+const useManualJournalDrawerContext = () => React.useContext(ManualJournalDrawerContext);
 
 export { ManualJournalDrawerProvider, useManualJournalDrawerContext };

@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { query } from 'express-validator';
-import { Inject } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { APAgingSummaryApplication } from '@/services/FinancialStatements/AgingSummary/APAgingSummaryApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { query } from 'express-validator';
+import { Inject } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 export default class APAgingSummaryReportController extends BaseFinancialReportController {
   @Inject()
@@ -22,7 +22,7 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
       '/',
       CheckPolicies(ReportsAction.READ_AP_AGING_SUMMARY, AbilitySubject.Report),
       this.validationSchema,
-      asyncMiddleware(this.payableAgingSummary.bind(this))
+      asyncMiddleware(this.payableAgingSummary.bind(this)),
     );
     return router;
   }
@@ -45,7 +45,10 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
       query('none_zero').default(true).isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -56,11 +59,7 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private async payableAgingSummary(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async payableAgingSummary(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
@@ -71,7 +70,7 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
-        ACCEPT_TYPE.APPLICATION_PDF
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves the json table format.
       if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {
@@ -90,14 +89,8 @@ export default class APAgingSummaryReportController extends BaseFinancialReportC
       } else if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
         const buffer = await this.APAgingSummaryApp.xlsx(tenantId, filter);
 
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(buffer);
         // Retrieves the pdf format.
       } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {

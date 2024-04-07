@@ -14,18 +14,8 @@ import {
 } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 
-import {
-  Can,
-  FormattedMessage as T,
-  Choose,
-  Money,
-  If,
-  Icon,
-} from '@/components';
-import {
-  ManualJournalAction,
-  AbilitySubject,
-} from "@/constants/abilityOption";
+import { Can, FormattedMessage as T, Choose, Money, If, Icon } from '@/components';
+import { ManualJournalAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 /**
@@ -33,12 +23,7 @@ import { safeCallback } from '@/utils';
  */
 export const AmountAccessor = (r) => (
   <Tooltip
-    content={
-      <AmountPopoverContent
-        journalEntries={r.entries}
-        currencyCode={r.currency_code}
-      />
-    }
+    content={<AmountPopoverContent journalEntries={r.entries} currencyCode={r.currency_code} />}
     position={Position.RIGHT_TOP}
     boundary={'viewport'}
   >
@@ -58,15 +43,15 @@ export const AmountPopoverContentLine = ({ journalEntry, currencyCode }) => {
     <Choose>
       <Choose.When condition={isDebit}>
         <div>
-          C. <Money amount={journalEntry.debit} currency={currencyCode} /> -{' '}
-          {account.name} <If condition={account.code}>({account.code})</If>
+          C. <Money amount={journalEntry.debit} currency={currencyCode} /> - {account.name}{' '}
+          <If condition={account.code}>({account.code})</If>
         </div>
       </Choose.When>
 
       <Choose.When condition={isCredit}>
         <div>
-          D. <Money amount={journalEntry.credit} currency={currencyCode} /> -{' '}
-          {account.name} <If condition={account.code}>({account.code})</If>
+          D. <Money amount={journalEntry.credit} currency={currencyCode} /> - {account.name}{' '}
+          <If condition={account.code}>({account.code})</If>
         </div>
       </Choose.When>
     </Choose>
@@ -85,11 +70,7 @@ export function AmountPopoverContent({ journalEntries, currencyCode }) {
   return (
     <div>
       {journalLinesProps.map(({ journalEntry, accountId }) => (
-        <AmountPopoverContentLine
-          journalEntry={journalEntry}
-          accountId={accountId}
-          currencyCode={currencyCode}
-        />
+        <AmountPopoverContentLine journalEntry={journalEntry} accountId={accountId} currencyCode={currencyCode} />
       ))}
     </div>
   );
@@ -139,10 +120,7 @@ export function NoteAccessor(row) {
  */
 export const ActionsCell = (props) => {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );
@@ -151,10 +129,7 @@ export const ActionsCell = (props) => {
 /**
  * Actions menu of the table.
  */
-export const ActionsMenu = ({
-  payload: { onPublish, onEdit, onDelete, onViewDetails },
-  row: { original },
-}) => {
+export const ActionsMenu = ({ payload: { onPublish, onEdit, onDelete, onViewDetails }, row: { original } }) => {
   return (
     <Menu>
       <MenuItem

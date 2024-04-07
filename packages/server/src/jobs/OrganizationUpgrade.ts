@@ -1,16 +1,12 @@
-import { Container } from 'typedi';
 import OrganizationUpgrade from '@/services/Organization/OrganizationUpgrade';
+import { Container } from 'typedi';
 
 export default class OrganizationUpgradeJob {
   /**
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'organization-upgrade',
-      { priority: 'high', concurrency: 1 },
-      this.handler
-    );
+    agenda.define('organization-upgrade', { priority: 'high', concurrency: 1 }, this.handler);
   }
 
   /**

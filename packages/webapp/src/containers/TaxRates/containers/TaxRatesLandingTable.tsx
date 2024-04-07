@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
-  AppToaster,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonHeader, TableSkeletonRows, AppToaster } from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
@@ -23,10 +17,7 @@ import { TaxRatesTableActionsMenu } from './_components';
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
 import { DialogsName } from '@/constants/dialogs';
-import {
-  useActivateTaxRate,
-  useInactivateTaxRate,
-} from '@/hooks/query/taxRates';
+import { useActivateTaxRate, useInactivateTaxRate } from '@/hooks/query/taxRates';
 
 /**
  * Invoices datatable.
@@ -42,8 +33,7 @@ function TaxRatesDataTable({
   openDialog,
 }) {
   // Invoices list context.
-  const { taxRates, isTaxRatesLoading, isEmptyStatus } =
-    useTaxRatesLandingContext();
+  const { taxRates, isTaxRatesLoading, isEmptyStatus } = useTaxRatesLandingContext();
 
   // Invoices table columns.
   const columns = useTaxRatesTableColumns();

@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Intent,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Intent, Alignment } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
 import {
@@ -110,9 +103,7 @@ function PaymentReceiveActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={paymentFilterConditions.length}
-          />
+          <DashboardFilterButton conditionsCount={paymentFilterConditions.length} />
         </AdvancedFilterPopover>
 
         <If condition={false}>
@@ -142,10 +133,7 @@ function PaymentReceiveActionsBar({
         />
 
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={paymentReceivesTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={paymentReceivesTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

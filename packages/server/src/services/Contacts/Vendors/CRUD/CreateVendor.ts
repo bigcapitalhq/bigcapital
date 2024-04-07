@@ -1,15 +1,10 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import {
-  ISystemUser,
-  IVendorEventCreatedPayload,
-  IVendorEventCreatingPayload,
-  IVendorNewDTO,
-} from '@/interfaces';
+import { IVendorEventCreatedPayload, IVendorEventCreatingPayload, IVendorNewDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CreateEditVendorDTO } from './CreateEditVendorDTO';
 
 @Service()
@@ -32,18 +27,11 @@ export class CreateVendor {
    * @param  {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public async createVendor(
-    tenantId: number,
-    vendorDTO: IVendorNewDTO,
-    trx?: Knex.Transaction
-  ) {
+  public async createVendor(tenantId: number, vendorDTO: IVendorNewDTO, trx?: Knex.Transaction) {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Transformes create DTO to customer object.
-    const vendorObject = await this.transformDTO.transformCreateDTO(
-      tenantId,
-      vendorDTO
-    );
+    const vendorObject = await this.transformDTO.transformCreateDTO(tenantId, vendorDTO);
     // Creates vendor contact under unit-of-work evnirement.
     return this.uow.withTransaction(
       tenantId,
@@ -69,7 +57,7 @@ export class CreateVendor {
 
         return vendor;
       },
-      trx
+      trx,
     );
   }
 }

@@ -53,17 +53,11 @@ function InventoryValuation({
 
   return (
     <InventoryValuationProvider query={query}>
-      <InventoryValuationActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <InventoryValuationActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <InventoryValuationLoadingBar />
 
       <DashboardPageContent>
-        <InventoryValuationHeader
-          pageFilter={query}
-          onSubmitFilter={handleFilterSubmit}
-        />
+        <InventoryValuationHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
         <InventoryValuationBody />
       </DashboardPageContent>
 

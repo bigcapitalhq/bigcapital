@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import BaseFinancialReportController from './BaseFinancialReportController';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { ProfitLossSheetApplication } from '@/services/FinancialStatements/ProfitLossSheet/ProfitLossSheetApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 @Service()
 export default class ProfitLossSheetController extends BaseFinancialReportController {
   @Inject()
@@ -22,7 +22,7 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
       CheckPolicies(ReportsAction.READ_PROFIT_LOSS, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.profitLossSheet.bind(this))
+      this.asyncMiddleware(this.profitLossSheet.bind(this)),
     );
     return router;
   }
@@ -50,28 +50,33 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
         .isIn(['year', 'month', 'week', 'day', 'quarter']),
 
       // Percentage options.
-      query('percentage_column').optional().isBoolean().toBoolean(),
+      query('percentage_column')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('percentage_row').optional().isBoolean().toBoolean(),
       query('percentage_expense').optional().isBoolean().toBoolean(),
       query('percentage_income').optional().isBoolean().toBoolean(),
 
       // Camparsion periods periods.
-      query('previous_period').optional().isBoolean().toBoolean(),
+      query('previous_period')
+        .optional()
+        .isBoolean()
+        .toBoolean(),
       query('previous_period_amount_change').optional().isBoolean().toBoolean(),
-      query('previous_period_percentage_change')
-        .optional()
-        .isBoolean()
-        .toBoolean(),
+      query('previous_period_percentage_change').optional().isBoolean().toBoolean(),
       // Camparsion periods periods.
-      query('previous_year').optional().isBoolean().toBoolean(),
-      query('previous_year_amount_change').optional().isBoolean().toBoolean(),
-      query('previous_year_percentage_change')
+      query('previous_year')
         .optional()
         .isBoolean()
         .toBoolean(),
+      query('previous_year_amount_change').optional().isBoolean().toBoolean(),
+      query('previous_year_percentage_change').optional().isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -81,11 +86,7 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
    * @param {Request} req -
    * @param {Response} res -
    */
-  private async profitLossSheet(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async profitLossSheet(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = this.matchedQueryData(req);
 
@@ -116,14 +117,8 @@ export default class ProfitLossSheetController extends BaseFinancialReportContro
       } else if (acceptType === ACCEPT_TYPE.APPLICATION_XLSX) {
         const sheet = await this.profitLossSheetApp.xlsx(tenantId, filter);
 
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(sheet);
         // Retrieves the json format.
       } else if (acceptType === ACCEPT_TYPE.APPLICATION_PDF) {

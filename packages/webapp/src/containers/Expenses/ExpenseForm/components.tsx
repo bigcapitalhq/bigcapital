@@ -5,12 +5,7 @@ import { Button, Intent, Menu, MenuItem } from '@blueprintjs/core';
 import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 
-import {
-  Icon,
-  Hint,
-  ExchangeRateInputGroup,
-  FormattedMessage as T,
-} from '@/components';
+import { Icon, Hint, ExchangeRateInputGroup, FormattedMessage as T } from '@/components';
 import {
   InputGroupCell,
   MoneyFieldCell,
@@ -38,33 +33,18 @@ const ExpenseCategoryHeaderCell = () => {
 /**
  * Actions cell renderer.
  */
-const ActionsCellRenderer = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  data,
-  payload,
-}) => {
+const ActionsCellRenderer = ({ row: { index }, column: { id }, cell: { value: initialValue }, data, payload }) => {
   const handleClickRemoveRole = () => {
     payload.removeRow(index);
   };
   const exampleMenu = (
     <Menu>
-      <MenuItem
-        intent={Intent.DANGER}
-        onClick={handleClickRemoveRole}
-        text={intl.get('expense.entries.remove_row')}
-      />
+      <MenuItem intent={Intent.DANGER} onClick={handleClickRemoveRole} text={intl.get('expense.entries.remove_row')} />
     </Menu>
   );
   return (
     <Popover2 content={exampleMenu} placement="left-start">
-      <Button
-        icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
-        className="m12"
-        minimal={true}
-      />
+      <Button icon={<Icon icon={'more-13'} iconSize={13} />} iconSize={14} className="m12" minimal={true} />
     </Popover2>
   );
 };

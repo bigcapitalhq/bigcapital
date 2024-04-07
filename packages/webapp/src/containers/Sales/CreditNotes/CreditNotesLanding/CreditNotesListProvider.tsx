@@ -3,12 +3,7 @@ import React from 'react';
 import { isEmpty } from 'lodash';
 
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceMeta,
-  useCreditNotes,
-  useRefreshCreditNotes,
-} from '@/hooks/query';
+import { useResourceViews, useResourceMeta, useCreditNotes, useRefreshCreditNotes } from '@/hooks/query';
 
 import { getFieldsFromResourceMeta } from '@/utils';
 
@@ -22,8 +17,7 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
   const { refresh } = useRefreshCreditNotes();
 
   // Fetch create notes resource views and fields.
-  const { data: CreditNotesView, isLoading: isViewsLoading } =
-    useResourceViews('credit_notes');
+  const { data: CreditNotesView, isLoading: isViewsLoading } = useResourceViews('credit_notes');
 
   // Fetch the accounts resource fields.
   const {
@@ -40,8 +34,7 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
   } = useCreditNotes(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.S
-  const isEmptyStatus =
-    isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(creditNotes) && !isCreditNotesLoading && !tableStateChanged;
 
   // Provider payload.
   const provider = {
@@ -63,10 +56,7 @@ function CreditNotesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'credit-notes-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'credit-notes-list'}>
       <CreditNoteListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

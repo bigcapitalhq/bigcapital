@@ -1,7 +1,7 @@
+import { get, mapValues, omit } from 'lodash';
+import { compose } from 'lodash/fp';
 import * as mathjs from 'mathjs';
 import * as R from 'ramda';
-import { compose } from 'lodash/fp';
-import { omit, get, mapValues } from 'lodash';
 import { FinancialSheetStructure } from './FinancialSheetStructure';
 
 export const FinancialEvaluateEquation = (Base) =>
@@ -12,10 +12,7 @@ export const FinancialEvaluateEquation = (Base) =>
      * @param {{ [key: string]: number }} scope -
      * @return {number}
      */
-    protected evaluateEquation = (
-      equation: string,
-      scope: { [key: string | number]: number }
-    ): number => {
+    protected evaluateEquation = (equation: string, scope: { [key: string | number]: number }): number => {
       return mathjs.evaluate(equation, scope);
     };
 
@@ -33,7 +30,7 @@ export const FinancialEvaluateEquation = (Base) =>
           }
           return acc;
         },
-        {}
+        {},
       );
     };
 
@@ -42,21 +39,14 @@ export const FinancialEvaluateEquation = (Base) =>
      * @param nodesById
      * @returns
      */
-    private mapNodesToTotal = R.curry(
-      (path: string, nodesById: { [key: number]: any }) => {
-        return mapValues(nodesById, (node) => get(node, path, 0));
-      }
-    );
+    private mapNodesToTotal = R.curry((path: string, nodesById: { [key: number]: any }) => {
+      return mapValues(nodesById, (node) => get(node, path, 0));
+    });
 
     /**
      *
      */
-    protected getNodesTableForEvaluating = R.curry(
-      (path = 'total.amount', nodes) => {
-        return R.compose(
-          this.mapNodesToTotal(path),
-          this.transformNodesToMap
-        )(nodes);
-      }
-    );
+    protected getNodesTableForEvaluating = R.curry((path = 'total.amount', nodes) => {
+      return R.compose(this.mapNodesToTotal(path), this.transformNodesToMap)(nodes);
+    });
   };

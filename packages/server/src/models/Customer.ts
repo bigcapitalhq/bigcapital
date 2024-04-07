@@ -1,11 +1,11 @@
-import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import PaginationQueryBuilder from './Pagination';
-import ModelSetting from './ModelSetting';
-import CustomerSettings from './Customer.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Contacts/Customers/constants';
+import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import CustomerSettings from './Customer.Settings';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
+import PaginationQueryBuilder from './Pagination';
 
 class CustomerQueryBuilder extends PaginationQueryBuilder {
   constructor(...args) {
@@ -19,11 +19,7 @@ class CustomerQueryBuilder extends PaginationQueryBuilder {
   }
 }
 
-export default class Customer extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Customer extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   email: string;
   displayName: string;
 
@@ -67,9 +63,7 @@ export default class Customer extends mixin(TenantModel, [
    * @returns {number}
    */
   get localOpeningBalance() {
-    return this.openingBalance
-      ? this.openingBalance * this.openingBalanceExchangeRate
-      : 0;
+    return this.openingBalance ? this.openingBalance * this.openingBalanceExchangeRate : 0;
   }
 
   /**
@@ -87,7 +81,7 @@ export default class Customer extends mixin(TenantModel, [
       {
         mail: this.email,
         label: this.displayName,
-        primary: true
+        primary: true,
       },
     ].filter((c) => c.mail);
   }
@@ -120,12 +114,7 @@ export default class Customer extends mixin(TenantModel, [
        * Filters the customers that have overdue invoices.
        */
       overdue(query) {
-        query.select(
-          '*',
-          Customer.relatedQuery('overDueInvoices', query.knex())
-            .count()
-            .as('countOverdue')
-        );
+        query.select('*', Customer.relatedQuery('overDueInvoices', query.knex()).count().as('countOverdue'));
         query.having('countOverdue', '>', 0);
       },
       /**

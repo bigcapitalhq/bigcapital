@@ -10,9 +10,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const TrialBalanceSheetPdfDialogContent = lazy(
-  () => import('./TrialBalanceSheetPdfDialogContent'),
-);
+const TrialBalanceSheetPdfDialogContent = lazy(() => import('./TrialBalanceSheetPdfDialogContent'));
 
 /**
  * Trial balance sheet pdf preview dialog.
@@ -30,15 +28,10 @@ function TrialBalanceSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <TrialBalanceSheetPdfDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <TrialBalanceSheetPdfDialogContent dialogName={dialogName} subscriptionForm={payload} />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export const TrialBalanceSheetPdfDialog = compose(withDialogRedux())(
-  TrialBalanceSheetPdfDialogRoot,
-);
+export const TrialBalanceSheetPdfDialog = compose(withDialogRedux())(TrialBalanceSheetPdfDialogRoot);

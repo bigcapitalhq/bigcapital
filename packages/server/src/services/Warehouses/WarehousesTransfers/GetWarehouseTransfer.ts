@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { IWarehouseTransfer } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { CRUDWarehouseTransfer } from './CRUDWarehouseTransfer';
 import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export class GetWarehouseTransfer extends CRUDWarehouseTransfer {
@@ -20,10 +20,7 @@ export class GetWarehouseTransfer extends CRUDWarehouseTransfer {
    * @param   {IEditWarehouseTransferDTO} editWarehouseDTO
    * @returns {Promise<IWarehouseTransfer>}
    */
-  public getWarehouseTransfer = async (
-    tenantId: number,
-    warehouseTransferId: number
-  ): Promise<IWarehouseTransfer> => {
+  public getWarehouseTransfer = async (tenantId: number, warehouseTransferId: number): Promise<IWarehouseTransfer> => {
     const { WarehouseTransfer } = this.tenancy.models(tenantId);
 
     // Retrieves the old warehouse transfer transaction.
@@ -36,10 +33,6 @@ export class GetWarehouseTransfer extends CRUDWarehouseTransfer {
     this.throwIfTransferNotFound(warehouseTransfer);
 
     // Retrieves the transfromed warehouse transfers.
-    return this.transformer.transform(
-      tenantId,
-      warehouseTransfer,
-      new WarehouseTransferTransformer()
-    );
+    return this.transformer.transform(tenantId, warehouseTransfer, new WarehouseTransferTransformer());
   };
 }

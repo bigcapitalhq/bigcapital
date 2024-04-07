@@ -1,12 +1,11 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
 
-
 const mapDispatchToProps = (dispatch, props) => {
   return {
     addQuery: (key, value) => {
-      let pathname = props.location.pathname;
-      let searchParams = new URLSearchParams(props.location.search);
+      const pathname = props.location.pathname;
+      const searchParams = new URLSearchParams(props.location.search);
 
       searchParams.set(key, value);
 
@@ -17,8 +16,8 @@ const mapDispatchToProps = (dispatch, props) => {
     },
 
     removeQuery: (key) => {
-      let pathname = props.location.pathname;
-      let searchParams = new URLSearchParams(props.location.search);
+      const pathname = props.location.pathname;
+      const searchParams = new URLSearchParams(props.location.search);
       // returns the existing query string: '?type=fiction&author=fahid'
       searchParams.delete(key);
       props.history.push({
@@ -26,7 +25,7 @@ const mapDispatchToProps = (dispatch, props) => {
         search: searchParams.toString(),
       });
     },
-  }
-}
+  };
+};
 
-export default connect(null, mapDispatchToProps)  
+export default connect(null, mapDispatchToProps);

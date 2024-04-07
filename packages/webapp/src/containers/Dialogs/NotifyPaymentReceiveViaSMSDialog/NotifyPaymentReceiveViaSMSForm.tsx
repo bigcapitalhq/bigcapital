@@ -24,12 +24,8 @@ function NotifyPaymentReceiveViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    paymentReceiveId,
-    paymentReceiveMSDetail,
-    createNotifyPaymentReceivetBySMSMutate,
-  } = useNotifyPaymentReceiveViaSMSContext();
+  const { dialogName, paymentReceiveId, paymentReceiveMSDetail, createNotifyPaymentReceivetBySMSMutate } =
+    useNotifyPaymentReceiveViaSMSContext();
 
   const [calloutCode, setCalloutCode] = React.useState([]);
 
@@ -38,9 +34,7 @@ function NotifyPaymentReceiveViaSMSForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get(
-          'notify_payment_receive_via_sms.dialog.success_message',
-        ),
+        message: intl.get('notify_payment_receive_via_sms.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
@@ -57,9 +51,7 @@ function NotifyPaymentReceiveViaSMSForm({
       }
       setSubmitting(false);
     };
-    createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyPaymentReceivetBySMSMutate([paymentReceiveId, values]).then(onSuccess).catch(onError);
   };
   // Handle the form cancel.
   const handleFormCancel = () => {

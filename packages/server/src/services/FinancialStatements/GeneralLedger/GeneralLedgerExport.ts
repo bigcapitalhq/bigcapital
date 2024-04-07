@@ -29,10 +29,7 @@ export class GeneralLedgerExportInjectable {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<string> {
     const table = await this.generalLedgerTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

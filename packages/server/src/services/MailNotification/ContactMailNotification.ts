@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
 import { CommonMailOptions } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { MailTenancy } from '@/services/MailTenancy/MailTenancy';
-import { formatSmsMessage } from '@/utils';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import { formatSmsMessage } from '@/utils';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ContactMailNotification {
@@ -24,13 +24,11 @@ export class ContactMailNotification {
   public async getDefaultMailOptions(
     tenantId: number,
     contactId: number,
-    subject: string = '',
-    body: string = ''
+    subject = '',
+    body = '',
   ): Promise<CommonMailOptions> {
     const { Customer } = this.tenancy.models(tenantId);
-    const contact = await Customer.query()
-      .findById(contactId)
-      .throwIfNotFound();
+    const contact = await Customer.query().findById(contactId).throwIfNotFound();
 
     const toAddresses = contact.contactAddresses;
     const fromAddresses = await this.mailTenancy.senders(tenantId);
@@ -64,14 +62,9 @@ export class ContactMailNotification {
     contactId: number,
     defaultSubject?: string,
     defaultBody?: string,
-    formatterData?: Record<string, any>
+    formatterData?: Record<string, any>,
   ): Promise<CommonMailOptions> {
-    const mailOpts = await this.getDefaultMailOptions(
-      tenantId,
-      contactId,
-      defaultSubject,
-      defaultBody
-    );
+    const mailOpts = await this.getDefaultMailOptions(tenantId, contactId, defaultSubject, defaultBody);
     const commonFormatArgs = await this.getCommonFormatArgs(tenantId);
     const formatArgs = {
       ...commonFormatArgs,
@@ -92,12 +85,8 @@ export class ContactMailNotification {
    * @param {number} tenantId
    * @returns {Promise<Record<string, string>>}
    */
-  public async getCommonFormatArgs(
-    tenantId: number
-  ): Promise<Record<string, string>> {
-    const organization = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+  public async getCommonFormatArgs(tenantId: number): Promise<Record<string, string>> {
+    const organization = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     return {
       CompanyName: organization.metadata.name,

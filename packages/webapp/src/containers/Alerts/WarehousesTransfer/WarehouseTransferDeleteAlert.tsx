@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { useDeleteWarehouseTransfer } from '@/hooks/query';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
@@ -33,8 +29,7 @@ function WarehouseTransferDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deleteWarehouseTransferMutate, isLoading } =
-    useDeleteWarehouseTransfer();
+  const { mutateAsync: deleteWarehouseTransferMutate, isLoading } = useDeleteWarehouseTransfer();
 
   // handle cancel delete warehouse alert.
   const handleCancelDeleteAlert = () => {
@@ -75,16 +70,10 @@ function WarehouseTransferDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'warehouse_transfer.once_delete_this_warehouse_transfer'}
-        />
+        <FormattedHTMLMessage id={'warehouse_transfer.once_delete_this_warehouse_transfer'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(WarehouseTransferDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(WarehouseTransferDeleteAlert);

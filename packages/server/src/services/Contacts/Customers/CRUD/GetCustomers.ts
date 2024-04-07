@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import {
-  ICustomer,
-  ICustomersFilter,
-  IFilterMeta,
-  IPaginationMeta,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import CustomerTransfromer from '../CustomerTransformer';
+import { ICustomer, ICustomersFilter, IFilterMeta, IPaginationMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import CustomerTransfromer from '../CustomerTransformer';
 
 @Service()
 export class GetCustomers {
@@ -37,7 +32,7 @@ export class GetCustomers {
    */
   public async getCustomersList(
     tenantId: number,
-    filterDTO: ICustomersFilter
+    filterDTO: ICustomersFilter,
   ): Promise<{
     customers: ICustomer[];
     pagination: IPaginationMeta;
@@ -49,11 +44,7 @@ export class GetCustomers {
     const filter = this.parseCustomersListFilterDTO(filterDTO);
 
     // Dynamic list.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      Customer,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Customer, filter);
     // Customers.
     const { results, pagination } = await Customer.query()
       .onBuild((builder) => {
@@ -63,11 +54,7 @@ export class GetCustomers {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed customers.
-    const customers = await this.transformer.transform(
-      tenantId,
-      results,
-      new CustomerTransfromer()
-    );
+    const customers = await this.transformer.transform(tenantId, results, new CustomerTransfromer());
     return {
       customers,
       pagination,

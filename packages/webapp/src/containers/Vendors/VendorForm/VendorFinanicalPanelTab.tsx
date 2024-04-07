@@ -17,11 +17,7 @@ import {
   ExchangeRateInputGroup,
   FDateInput,
 } from '@/components';
-import {
-  openingBalanceFieldShouldUpdate,
-  useIsVendorForeignCurrency,
-  useSetPrimaryBranchToForm,
-} from './utils';
+import { openingBalanceFieldShouldUpdate, useIsVendorForeignCurrency, useSetPrimaryBranchToForm } from './utils';
 import { useVendorFormContext } from './VendorFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
 
@@ -43,11 +39,7 @@ export default function VendorFinanicalPanelTab() {
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'currency'} />}
-                className={classNames(
-                  'form-group--select-list',
-                  'form-group--balance-currency',
-                  Classes.FILL,
-                )}
+                className={classNames('form-group--select-list', 'form-group--balance-currency', Classes.FILL)}
                 inline={true}
               >
                 <CurrencySelectList
@@ -75,11 +67,7 @@ export default function VendorFinanicalPanelTab() {
               name={'opening_balance_branch_id'}
               inline={true}
             >
-              <BranchSelect
-                name={'opening_balance_branch_id'}
-                branches={branches}
-                popoverProps={{ minimal: true }}
-              />
+              <BranchSelect name={'opening_balance_branch_id'} branches={branches} popoverProps={{ minimal: true }} />
             </FFormGroup>
           </FeatureCan>
         </Col>
@@ -110,10 +98,7 @@ function VendorOpeningBalanceField() {
     >
       <ControlGroup>
         <InputPrependText text={values.currency_code} />
-        <FMoneyInputGroup
-          name={'opening_balance'}
-          inputGroupProps={{ fill: true }}
-        />
+        <FMoneyInputGroup name={'opening_balance'} inputGroupProps={{ fill: true }} />
       </ControlGroup>
     </FFormGroup>
   );
@@ -163,11 +148,7 @@ function VendorOpeningBalanceExchangeRateField() {
     return null;
   }
   return (
-    <FFormGroup
-      label={' '}
-      name={'opening_balance_exchange_rate'}
-      inline={true}
-    >
+    <FFormGroup label={' '} name={'opening_balance_exchange_rate'} inline={true}>
       <ExchangeRateInputGroup
         fromCurrency={values.currency_code}
         toCurrency={currentOrganization.base_currency}

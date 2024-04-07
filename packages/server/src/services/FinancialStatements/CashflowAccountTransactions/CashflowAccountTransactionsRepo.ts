@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ICashflowAccountTransactionsQuery, IPaginationMeta } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CashflowAccountTransactionsRepo {
@@ -12,10 +12,7 @@ export default class CashflowAccountTransactionsRepo {
    * @param {number} tenantId -
    * @param {ICashflowAccountTransactionsQuery} query -
    */
-  async getCashflowAccountTransactions(
-    tenantId: number,
-    query: ICashflowAccountTransactionsQuery
-  ) {
+  async getCashflowAccountTransactions(tenantId: number, query: ICashflowAccountTransactionsQuery) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
     return AccountTransaction.query()
@@ -37,7 +34,7 @@ export default class CashflowAccountTransactionsRepo {
   async getCashflowAccountOpeningBalance(
     tenantId: number,
     accountId: number,
-    pagination: IPaginationMeta
+    pagination: IPaginationMeta,
   ): Promise<number> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 

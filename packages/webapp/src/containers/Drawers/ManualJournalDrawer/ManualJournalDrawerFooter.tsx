@@ -3,14 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useManualJournalDrawerContext } from './ManualJournalDrawerProvider';
-import {
-  TRDarkSingleLine,
-  TRDarkDoubleLines,
-  T,
-  FormatNumber,
-  Table,
-  TD,
-} from '@/components';
+import { TRDarkSingleLine, TRDarkDoubleLines, T, FormatNumber, Table, TD } from '@/components';
 
 /**
  * Manual journal readonly details footer.

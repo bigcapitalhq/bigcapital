@@ -1,6 +1,6 @@
-import { Service } from 'typedi';
-import { ISaleInvoice, AccountNormal, ILedgerEntry, ILedger } from '@/interfaces';
+import { AccountNormal, ILedger, ILedgerEntry, ISaleInvoice } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
+import { Service } from 'typedi';
 
 @Service()
 export class SaleInvoiceWriteoffGLEntries {
@@ -30,10 +30,7 @@ export class SaleInvoiceWriteoffGLEntries {
    * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry}
    */
-  private getInvoiceWriteoffGLReceivableEntry = (
-    ARAccountId: number,
-    saleInvoice: ISaleInvoice
-  ): ILedgerEntry => {
+  private getInvoiceWriteoffGLReceivableEntry = (ARAccountId: number, saleInvoice: ISaleInvoice): ILedgerEntry => {
     const commontEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
 
     return {
@@ -53,9 +50,7 @@ export class SaleInvoiceWriteoffGLEntries {
    * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry}
    */
-  private getInvoiceWriteoffGLExpenseEntry = (
-    saleInvoice: ISaleInvoice
-  ): ILedgerEntry => {
+  private getInvoiceWriteoffGLExpenseEntry = (saleInvoice: ISaleInvoice): ILedgerEntry => {
     const commontEntry = this.getInvoiceWriteoffGLCommonEntry(saleInvoice);
 
     return {
@@ -75,15 +70,9 @@ export class SaleInvoiceWriteoffGLEntries {
    * @param {ISaleInvoice} saleInvoice
    * @returns {ILedgerEntry[]}
    */
-  public getInvoiceWriteoffGLEntries = (
-    ARAccountId: number,
-    saleInvoice: ISaleInvoice
-  ): ILedgerEntry[] => {
+  public getInvoiceWriteoffGLEntries = (ARAccountId: number, saleInvoice: ISaleInvoice): ILedgerEntry[] => {
     const creditEntry = this.getInvoiceWriteoffGLExpenseEntry(saleInvoice);
-    const debitEntry = this.getInvoiceWriteoffGLReceivableEntry(
-      ARAccountId,
-      saleInvoice
-    );
+    const debitEntry = this.getInvoiceWriteoffGLReceivableEntry(ARAccountId, saleInvoice);
     return [debitEntry, creditEntry];
   };
 
@@ -93,10 +82,7 @@ export class SaleInvoiceWriteoffGLEntries {
    * @param {ISaleInvoice} saleInvoice
    * @returns {Ledger}
    */
-  public getInvoiceWriteoffLedger = (
-    ARAccountId: number,
-    saleInvoice: ISaleInvoice
-  ): ILedger => {
+  public getInvoiceWriteoffLedger = (ARAccountId: number, saleInvoice: ISaleInvoice): ILedger => {
     const entries = this.getInvoiceWriteoffGLEntries(ARAccountId, saleInvoice);
 
     return new Ledger(entries);

@@ -2,13 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
 
 /**

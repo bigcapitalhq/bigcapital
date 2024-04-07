@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { Router, NextFunction, Response } from 'express';
+import EasySmsIntegration from '@/services/SmsIntegration/EasySmsIntegration';
+import { NextFunction, Response, Router } from 'express';
 import { check } from 'express-validator';
 import { Request } from 'express-validator/src/base';
-import EasySmsIntegration from '@/services/SmsIntegration/EasySmsIntegration';
+import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';
 
 @Service()
@@ -16,15 +16,8 @@ export default class EasySmsIntegrationController extends BaseController {
   public router = () => {
     const router = Router();
 
-    router.post(
-      '/easysms/integrate',
-      [check('token').exists()],
-      this.integrationEasySms
-    );
-    router.post(
-      '/easysms/disconnect',
-      this.disconnectEasysms
-    )
+    router.post('/easysms/integrate', [check('token').exists()], this.integrationEasySms);
+    router.post('/easysms/disconnect', this.disconnectEasysms);
     router.get('/easysms', this.getIntegrationMeta);
 
     return router;
@@ -36,22 +29,14 @@ export default class EasySmsIntegrationController extends BaseController {
    * @param {Response} res - Response object.
    * @param {NextFunction} next - Next function.
    */
-  private integrationEasySms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private integrationEasySms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const easysmsIntegrateDTO = this.matchedBodyData(req);
 
     try {
-      await this.easySmsIntegrationService.integrate(
-        tenantId,
-        easysmsIntegrateDTO
-      );
+      await this.easySmsIntegrationService.integrate(tenantId, easysmsIntegrateDTO);
       return res.status(200).send({
-        message:
-          'The system has been integrated with Easysms sms gateway successfully.',
+        message: 'The system has been integrated with Easysms sms gateway successfully.',
       });
     } catch (error) {
       next(error);
@@ -65,17 +50,11 @@ export default class EasySmsIntegrationController extends BaseController {
    * @param next
    * @returns
    */
-  private getIntegrationMeta = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getIntegrationMeta = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
-      const data = await this.easySmsIntegrationService.getIntegrationMeta(
-        tenantId
-      );
+      const data = await this.easySmsIntegrationService.getIntegrationMeta(tenantId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -83,28 +62,22 @@ export default class EasySmsIntegrationController extends BaseController {
   };
 
   /**
-   * 
-   * @param req 
-   * @param res 
-   * @param next 
-   * @returns 
+   *
+   * @param req
+   * @param res
+   * @param next
+   * @returns
    */
-  private disconnectEasysms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction    
-  ) => {
+  private disconnectEasysms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
-      await this.easySmsIntegrationService.disconnect(
-        tenantId,
-      );
+      await this.easySmsIntegrationService.disconnect(tenantId);
       return res.status(200).send({
         message: 'The sms gateway integration has been disconnected successfully.',
       });
     } catch (error) {
       next(error);
     }
-  }
+  };
 }

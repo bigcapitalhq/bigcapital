@@ -1,24 +1,24 @@
 import {
-  ReportsAction,
-  ISubjectAbilitiesSchema,
-  ISubjectAbilitySchema,
   AbilitySubject,
-  ManualJournalAction,
   AccountAction,
-  SaleInvoiceAction,
-  ItemAction,
-  VendorAction,
+  BillAction,
+  CashflowAction,
+  CreditNoteAction,
   CustomerAction,
   ExpenseAction,
-  PaymentReceiveAction,
-  InventoryAdjustmentAction,
-  SaleEstimateAction,
-  BillAction,
-  SaleReceiptAction,
   IPaymentMadeAction,
-  CashflowAction,
+  ISubjectAbilitiesSchema,
+  ISubjectAbilitySchema,
+  InventoryAdjustmentAction,
+  ItemAction,
+  ManualJournalAction,
+  PaymentReceiveAction,
   PreferencesAction,
-  CreditNoteAction,
+  ReportsAction,
+  SaleEstimateAction,
+  SaleInvoiceAction,
+  SaleReceiptAction,
+  VendorAction,
   VendorCreditAction,
 } from '@/interfaces';
 
@@ -317,9 +317,7 @@ export const AbilitySchema: ISubjectAbilitiesSchema[] = [
  * @param {string} key
  * @returns {ISubjectAbilitiesSchema | null}
  */
-export const getPermissionsSubject = (
-  key: string
-): ISubjectAbilitiesSchema | null => {
+export const getPermissionsSubject = (key: string): ISubjectAbilitiesSchema | null => {
   return AbilitySchema.find((subject) => subject.subject === key);
 };
 
@@ -329,10 +327,7 @@ export const getPermissionsSubject = (
  * @param {string} abilityKey
  * @returns
  */
-export const getPermissionAbility = (
-  subjectKey: string,
-  abilityKey: string
-): ISubjectAbilitySchema | null => {
+export const getPermissionAbility = (subjectKey: string, abilityKey: string): ISubjectAbilitySchema | null => {
   const subject = getPermissionsSubject(subjectKey);
 
   return subject?.abilities.find((ability) => ability.key === abilityKey);

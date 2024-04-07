@@ -24,8 +24,7 @@ function VendorCreditOpenedAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: openVendorCreditMutate, isLoading } =
-    useOpenVendorCredit();
+  const { mutateAsync: openVendorCreditMutate, isLoading } = useOpenVendorCredit();
 
   // Handle cancel opened credit note alert.
   const handleAlertCancel = () => {
@@ -63,7 +62,4 @@ function VendorCreditOpenedAlert({
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(VendorCreditOpenedAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(VendorCreditOpenedAlert);

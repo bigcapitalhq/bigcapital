@@ -5,8 +5,7 @@ import { getSalesTaxLiabilitySummaryFilterDrawer } from '@/store/financialStatem
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      salesTaxLiabilitySummaryFilter:
-        getSalesTaxLiabilitySummaryFilterDrawer(state),
+      salesTaxLiabilitySummaryFilter: getSalesTaxLiabilitySummaryFilterDrawer(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -1,5 +1,4 @@
 import Container, { Service } from 'typedi';
-import events from '@/subscribers/events';
 import { SendSaleInvoiceMail } from './SendSaleInvoiceMail';
 
 @Service()
@@ -8,11 +7,7 @@ export class SendSaleInvoiceMailJob {
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'sale-invoice-mail-send',
-      { priority: 'high', concurrency: 2 },
-      this.handler
-    );
+    agenda.define('sale-invoice-mail-send', { priority: 'high', concurrency: 2 }, this.handler);
   }
 
   /**

@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  AccountsSelect,
-  FFormGroup,
-  FormattedMessage as T,
-  Col,
-  Row,
-} from '@/components';
+import { AccountsSelect, FFormGroup, FormattedMessage as T, Col, Row } from '@/components';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { accountsFieldShouldUpdate } from './utils';

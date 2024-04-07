@@ -23,9 +23,7 @@ function AccountUniversalSearchItemSelectComponent({
   return null;
 }
 
-export const AccountUniversalSearchItemSelect = withDrawerActions(
-  AccountUniversalSearchItemSelectComponent,
-);
+export const AccountUniversalSearchItemSelect = withDrawerActions(AccountUniversalSearchItemSelectComponent);
 
 /**
  * Transformes account item to search item.

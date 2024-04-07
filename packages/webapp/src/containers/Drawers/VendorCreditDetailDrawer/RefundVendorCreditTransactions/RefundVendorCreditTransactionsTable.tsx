@@ -6,10 +6,7 @@ import { TableStyle } from '@/constants';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useVendorCreditDetailDrawerContext } from '../VendorCreditDetailDrawerProvider';
-import {
-  useRefundCreditTransactionsTableColumns,
-  ActionsMenu,
-} from './components';
+import { useRefundCreditTransactionsTableColumns, ActionsMenu } from './components';
 
 import { compose } from '@/utils';
 

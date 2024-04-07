@@ -5,12 +5,7 @@ import { useHistory } from 'react-router-dom';
 import CustomersEmptyStatus from './CustomersEmptyStatus';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { ActionsMenu, useCustomersTableColumns } from './components';
 
 import withCustomers from './withCustomers';
@@ -54,17 +49,10 @@ function CustomersTable({
   const columns = useCustomersTableColumns();
 
   // Customers list context.
-  const {
-    isEmptyStatus,
-    customers,
-    pagination,
-    isCustomersLoading,
-    isCustomersFetching,
-  } = useCustomersListContext();
+  const { isEmptyStatus, customers, pagination, isCustomersLoading, isCustomersFetching } = useCustomersListContext();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CUSTOMERS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.CUSTOMERS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(

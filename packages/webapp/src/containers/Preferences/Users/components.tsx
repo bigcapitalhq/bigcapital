@@ -2,16 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, Icon, If } from '@/components';
-import {
-  Intent,
-  Button,
-  Popover,
-  Menu,
-  MenuDivider,
-  Tag,
-  MenuItem,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Button, Popover, Menu, MenuDivider, Tag, MenuItem, Position } from '@blueprintjs/core';
 import { safeCallback, firstLettersArgs } from '@/utils';
 
 /**
@@ -31,11 +22,7 @@ export function ActionsMenu({
   return (
     <Menu>
       <If condition={original.invite_accepted_at}>
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_user')}
-          onClick={safeCallback(onEdit, original)}
-        />
+        <MenuItem icon={<Icon icon="pen-18" />} text={intl.get('edit_user')} onClick={safeCallback(onEdit, original)} />
         <MenuDivider />
 
         {original.active ? (
@@ -95,10 +82,7 @@ function StatusAccessor(user) {
  */
 function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

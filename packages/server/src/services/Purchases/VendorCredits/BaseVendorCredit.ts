@@ -1,19 +1,15 @@
-import { Inject, Service } from 'typedi';
-import moment from 'moment';
-import { omit } from 'lodash';
-import * as R from 'ramda';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
-import {
-  IVendorCredit,
-  IVendorCreditCreateDTO,
-  IVendorCreditEditDTO,
-} from '@/interfaces';
+import { IVendorCredit, IVendorCreditCreateDTO, IVendorCreditEditDTO } from '@/interfaces';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import { omit } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export default class BaseVendorCredit {
@@ -44,12 +40,10 @@ export default class BaseVendorCredit {
     tenantId: number,
     vendorCreditDTO: IVendorCreditCreateDTO | IVendorCreditEditDTO,
     vendorCurrencyCode: string,
-    oldVendorCredit?: IVendorCredit
+    oldVendorCredit?: IVendorCredit,
   ): IVendorCredit => {
     // Calculates the total amount of items entries.
-    const amount = this.itemsEntriesService.getTotalItemsEntries(
-      vendorCreditDTO.entries
-    );
+    const amount = this.itemsEntriesService.getTotalItemsEntries(vendorCreditDTO.entries);
     const entries = vendorCreditDTO.entries.map((entry) => ({
       ...entry,
       referenceType: 'VendorCredit',
@@ -59,9 +53,7 @@ export default class BaseVendorCredit {
 
     // Detarmines the credit note number.
     const vendorCreditNumber =
-      vendorCreditDTO.vendorCreditNumber ||
-      oldVendorCredit?.vendorCreditNumber ||
-      autoNextNumber;
+      vendorCreditDTO.vendorCreditNumber || oldVendorCredit?.vendorCreditNumber || autoNextNumber;
 
     const initialDTO = {
       ...omit(vendorCreditDTO, ['open']),
@@ -77,7 +69,7 @@ export default class BaseVendorCredit {
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<IVendorCredit>(tenantId),
-      this.warehouseDTOTransform.transformDTO<IVendorCredit>(tenantId)
+      this.warehouseDTOTransform.transformDTO<IVendorCredit>(tenantId),
     )(initialDTO);
   };
 
@@ -86,10 +78,7 @@ export default class BaseVendorCredit {
    * @param {number} tenantId
    * @param {number} vendorCreditId
    */
-  public getVendorCreditOrThrowError = async (
-    tenantId: number,
-    vendorCreditId: number
-  ): Promise<IVendorCredit> => {
+  public getVendorCreditOrThrowError = async (tenantId: number, vendorCreditId: number): Promise<IVendorCredit> => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
     const vendorCredit = await VendorCredit.query().findById(vendorCreditId);
@@ -106,10 +95,7 @@ export default class BaseVendorCredit {
    * @return {string}
    */
   private getNextCreditNumber = (tenantId: number): string => {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'vendor_credit'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'vendor_credit');
   };
 
   /**
@@ -117,10 +103,7 @@ export default class BaseVendorCredit {
    * @param {number} tenantId -
    */
   public incrementSerialNumber = (tenantId: number) => {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'vendor_credit'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'vendor_credit');
   };
 
   /**
@@ -128,10 +111,7 @@ export default class BaseVendorCredit {
    * @param {ICreditNote} creditNote
    * @param {number} amount
    */
-  public validateCreditRemainingAmount = (
-    vendorCredit: IVendorCredit,
-    amount: number
-  ) => {
+  public validateCreditRemainingAmount = (vendorCredit: IVendorCredit, amount: number) => {
     if (vendorCredit.creditsRemaining < amount) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT);
     }

@@ -17,20 +17,10 @@ const Schema = Yup.object().shape({
       }),
     )
     .label(intl.get('expiration_date_')),
-  estimate_number: Yup.string()
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('estimate_number_')),
+  estimate_number: Yup.string().max(DATATYPES_LENGTH.STRING).label(intl.get('estimate_number_')),
   reference: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
-  note: Yup.string()
-    .trim()
-    .min(1)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('note')),
-  terms_conditions: Yup.string()
-    .trim()
-    .min(1)
-    .max(DATATYPES_LENGTH.TEXT)
-    .label(intl.get('note')),
+  note: Yup.string().trim().min(1).max(DATATYPES_LENGTH.STRING).label(intl.get('note')),
+  terms_conditions: Yup.string().trim().min(1).max(DATATYPES_LENGTH.TEXT).label(intl.get('note')),
   delivered: Yup.boolean(),
   branch_id: Yup.string(),
   warehouse_id: Yup.string(),

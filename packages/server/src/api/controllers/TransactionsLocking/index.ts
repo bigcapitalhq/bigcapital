@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { check, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import TransactionsLockingService from '@/services/TransactionsLocking/CommandTransactionsLockingService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, AccountAction } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
+import { AbilitySubject, AccountAction } from '@/interfaces';
+import TransactionsLockingService from '@/services/TransactionsLocking/CommandTransactionsLockingService';
 import QueryTransactionsLocking from '@/services/TransactionsLocking/QueryTransactionsLocking';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class TransactionsLockingController extends BaseController {
@@ -26,15 +26,13 @@ export default class TransactionsLockingController extends BaseController {
       '/lock',
       CheckPolicies(AccountAction.TransactionsLocking, AbilitySubject.Account),
       [
-        check('module')
-          .exists()
-          .isIn(['all', 'sales', 'purchases', 'financial']),
+        check('module').exists().isIn(['all', 'sales', 'purchases', 'financial']),
         check('lock_to_date').exists().isISO8601().toDate(),
         check('reason').exists().trim(),
       ],
       this.validationResult,
       this.asyncMiddleware(this.commandTransactionsLocking),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.put(
       '/cancel-lock',
@@ -42,7 +40,7 @@ export default class TransactionsLockingController extends BaseController {
       [check('module').exists(), check('reason').exists().trim()],
       this.validationResult,
       this.asyncMiddleware(this.cancelTransactionsLocking),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.put(
       '/unlock-partial',
@@ -55,31 +53,28 @@ export default class TransactionsLockingController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.unlockTransactionsLockingBetweenPeriod),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.put(
       '/cancel-unlock-partial',
       CheckPolicies(AccountAction.TransactionsLocking, AbilitySubject.Account),
-      [
-        check('module').exists(),
-        check('reason').optional({ nullable: true }).trim(),
-      ],
+      [check('module').exists(), check('reason').optional({ nullable: true }).trim()],
       this.validationResult,
       this.asyncMiddleware(this.cancelPartialUnlocking),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
       this.validationResult,
       this.asyncMiddleware(this.getTransactionLockingMetaList),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:module',
       [param('module').exists()],
       this.validationResult,
       this.asyncMiddleware(this.getTransactionLockingMeta),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -90,21 +85,16 @@ export default class TransactionsLockingController extends BaseController {
    * @param {Response} res - Response.
    * @return {Response}
    */
-  private commandTransactionsLocking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private commandTransactionsLocking = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { module, ...allTransactionsDTO } = this.matchedBodyData(req);
 
     try {
-      const transactionMeta =
-        await this.transactionsLockingService.commandTransactionsLocking(
-          tenantId,
-          module,
-          allTransactionsDTO
-        );
+      const transactionMeta = await this.transactionsLockingService.commandTransactionsLocking(
+        tenantId,
+        module,
+        allTransactionsDTO,
+      );
       return res.status(200).send({
         message: 'All transactions locking has been submit successfully.',
         data: transactionMeta,
@@ -120,24 +110,18 @@ export default class TransactionsLockingController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private unlockTransactionsLockingBetweenPeriod = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private unlockTransactionsLockingBetweenPeriod = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { module, ...unlockDTO } = this.matchedBodyData(req);
 
     try {
-      const transactionMeta =
-        await this.transactionsLockingService.unlockTransactionsLockingPartially(
-          tenantId,
-          module,
-          unlockDTO
-        );
+      const transactionMeta = await this.transactionsLockingService.unlockTransactionsLockingPartially(
+        tenantId,
+        module,
+        unlockDTO,
+      );
       return res.status(200).send({
-        message:
-          'Transactions locking haas been unlocked partially successfully.',
+        message: 'Transactions locking haas been unlocked partially successfully.',
         data: transactionMeta,
       });
     } catch (error) {
@@ -151,21 +135,12 @@ export default class TransactionsLockingController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private cancelTransactionsLocking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private cancelTransactionsLocking = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { module, ...cancelLockingDTO } = this.matchedBodyData(req);
 
     try {
-      const data =
-        await this.transactionsLockingService.cancelTransactionLocking(
-          tenantId,
-          module,
-          cancelLockingDTO
-        );
+      const data = await this.transactionsLockingService.cancelTransactionLocking(tenantId, module, cancelLockingDTO);
       return res.status(200).send({
         message: 'Transactions locking has been canceled successfully.',
         data,
@@ -182,23 +157,14 @@ export default class TransactionsLockingController extends BaseController {
    * @param next
    * @returns
    */
-  private cancelPartialUnlocking = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private cancelPartialUnlocking = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { module } = this.matchedBodyData(req);
 
     try {
-      const transactionMeta =
-        await this.transactionsLockingService.cancelPartialTransactionsUnlock(
-          tenantId,
-          module
-        );
+      const transactionMeta = await this.transactionsLockingService.cancelPartialTransactionsUnlock(tenantId, module);
       return res.status(200).send({
-        message:
-          'Partial transaction unlocking has been canceled successfully.',
+        message: 'Partial transaction unlocking has been canceled successfully.',
         data: transactionMeta,
       });
     } catch (error) {
@@ -206,20 +172,12 @@ export default class TransactionsLockingController extends BaseController {
     }
   };
 
-  private getTransactionLockingMeta = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getTransactionLockingMeta = async (req: Request, res: Response, next: NextFunction) => {
     const { module } = req.params;
     const { tenantId } = req;
 
     try {
-      const data =
-        await this.queryTransactionsLocking.getTransactionsLockingModuleMeta(
-          tenantId,
-          module
-        );
+      const data = await this.queryTransactionsLocking.getTransactionsLockingModuleMeta(tenantId, module);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -232,19 +190,12 @@ export default class TransactionsLockingController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getTransactionLockingMetaList = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getTransactionLockingMetaList = async (req: Request, res: Response, next: NextFunction) => {
     const { module } = req.params;
     const { tenantId } = req;
 
     try {
-      const data =
-        await this.queryTransactionsLocking.getTransactionsLockingList(
-          tenantId
-        );
+      const data = await this.queryTransactionsLocking.getTransactionsLockingList(tenantId);
 
       return res.status(200).send({ data });
     } catch (error) {
@@ -259,12 +210,7 @@ export default class TransactionsLockingController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  private handleServiceErrors = (
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private handleServiceErrors = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
       if (error.errorType === 'TRANSACTION_LOCKING_ALL') {
         return res.boom.badRequest(null, {
@@ -273,9 +219,7 @@ export default class TransactionsLockingController extends BaseController {
       }
       if (error.errorType === 'TRANSACTIONS_LOCKING_MODULE_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'TRANSACTIONS_LOCKING_MODULE_NOT_FOUND', code: 100 },
-          ],
+          errors: [{ type: 'TRANSACTIONS_LOCKING_MODULE_NOT_FOUND', code: 100 }],
         });
       }
     }

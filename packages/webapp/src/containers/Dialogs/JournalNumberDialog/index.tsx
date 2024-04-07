@@ -7,14 +7,9 @@ import { saveInvoke, compose } from '@/utils';
 
 const JournalNumberDialogContent = lazy(() => import('./JournalNumberDialogContent'));
 
-function JournalNumberDialog({
-  dialogName,
-  payload: { initialFormValues },
-  isOpen,
-  onConfirm
-}) {
+function JournalNumberDialog({ dialogName, payload: { initialFormValues }, isOpen, onConfirm }) {
   const handleConfirm = (values) => {
-    saveInvoke(onConfirm, values)
+    saveInvoke(onConfirm, values);
   };
 
   return (
@@ -27,15 +22,10 @@ function JournalNumberDialog({
       className={'dialog--journal-number-settings'}
     >
       <DialogSuspense>
-        <JournalNumberDialogContent
-          initialValues={{ ...initialFormValues }}
-          onConfirm={handleConfirm}
-        />
+        <JournalNumberDialogContent initialValues={{ ...initialFormValues }} onConfirm={handleConfirm} />
       </DialogSuspense>
     </Dialog>
   );
 }
 
-export default compose(
-  withDialogRedux(),
-)(JournalNumberDialog);
+export default compose(withDialogRedux())(JournalNumberDialog);

@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ManualJournalsActivateBranches {
@@ -13,11 +13,7 @@ export class ManualJournalsActivateBranches {
    * @param   {number} primaryBranchId
    * @returns {Promise<void>}
    */
-  public updateManualJournalsWithBranch = async (
-    tenantId: number,
-    primaryBranchId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public updateManualJournalsWithBranch = async (tenantId: number, primaryBranchId: number, trx?: Knex.Transaction) => {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
     // Updates the manual journal with primary branch.

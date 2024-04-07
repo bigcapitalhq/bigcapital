@@ -8,21 +8,14 @@ import { useDeepCompareEffect } from '@/hooks/utils';
 
 import { DataTableEditable } from '@/components';
 import { compose, updateTableCell } from '@/utils';
-import {
-  useReconcileVendorCreditTableColumns,
-  maxAmountCreditFromRemaining,
-} from './utils';
+import { useReconcileVendorCreditTableColumns, maxAmountCreditFromRemaining } from './utils';
 import { maxCreditNoteAmountEntries } from '@/containers/Dialogs/ReconcileCreditNoteDialog/utils';
 import { useReconcileVendorCreditContext } from './ReconcileVendorCreditFormProvider';
 
 /**
  * Reconcile vendor credit entries table.
  */
-export default function ReconcileVendorCreditEntriesTable({
-  onUpdateData,
-  entries,
-  errors,
-}) {
+export default function ReconcileVendorCreditEntriesTable({ onUpdateData, entries, errors }) {
   // Reconcile vendor credit table columns.
   const columns = useReconcileVendorCreditTableColumns();
 
@@ -34,9 +27,7 @@ export default function ReconcileVendorCreditEntriesTable({
   // Handle update data.
   const handleUpdateData = React.useCallback(
     (rowIndex, columnId, value) => {
-      const newRows = compose(updateTableCell(rowIndex, columnId, value))(
-        entries,
-      );
+      const newRows = compose(updateTableCell(rowIndex, columnId, value))(entries);
       onUpdateData(newRows);
     },
     [onUpdateData, entries],

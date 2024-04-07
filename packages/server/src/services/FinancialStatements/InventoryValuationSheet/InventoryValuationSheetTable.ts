@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   IInventoryValuationItem,
   IInventoryValuationSheetData,
@@ -8,15 +7,13 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
 import { ROW_TYPE } from './_constants';
 
-export class InventoryValuationSheetTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class InventoryValuationSheetTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   private readonly data: IInventoryValuationSheetData;
 
   /**
@@ -84,9 +81,7 @@ export class InventoryValuationSheetTable extends R.compose(
     const itemsRows = this.itemsRowsMapper(this.data.items);
     const totalRow = this.totalRowMapper(this.data.total);
 
-    return R.compose(
-      R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow))
-    )([...itemsRows]) as ITableRow[];
+    return R.compose(R.when(R.always(R.not(R.isEmpty(itemsRows))), R.append(totalRow)))([...itemsRows]) as ITableRow[];
   }
 
   /**

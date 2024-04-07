@@ -19,7 +19,7 @@ export default function ItemsImportpage() {
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCancelBtnClick}
         exampleTitle="Items Example"
-        />
+      />
     </DashboardInsider>
   );
 }

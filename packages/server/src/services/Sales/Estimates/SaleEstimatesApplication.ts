@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { CreateSaleEstimate } from './CreateSaleEstimate';
 import {
   IFilterMeta,
   IPaginationMeta,
@@ -10,12 +8,14 @@ import {
   SaleEstimateMailOptions,
   SaleEstimateMailOptionsDTO,
 } from '@/interfaces';
-import { EditSaleEstimate } from './EditSaleEstimate';
+import { Inject, Service } from 'typedi';
+import { ApproveSaleEstimate } from './ApproveSaleEstimate';
+import { CreateSaleEstimate } from './CreateSaleEstimate';
 import { DeleteSaleEstimate } from './DeleteSaleEstimate';
+import { DeliverSaleEstimate } from './DeliverSaleEstimate';
+import { EditSaleEstimate } from './EditSaleEstimate';
 import { GetSaleEstimate } from './GetSaleEstimate';
 import { GetSaleEstimates } from './GetSaleEstimates';
-import { DeliverSaleEstimate } from './DeliverSaleEstimate';
-import { ApproveSaleEstimate } from './ApproveSaleEstimate';
 import { RejectSaleEstimate } from './RejectSaleEstimate';
 import { SaleEstimateNotifyBySms } from './SaleEstimateSmsNotify';
 import { SaleEstimatesPdf } from './SaleEstimatesPdf';
@@ -62,10 +62,7 @@ export class SaleEstimatesApplication {
    * @param {EstimateDTO} estimate
    * @return {Promise<ISaleEstimate>}
    */
-  public createSaleEstimate(
-    tenantId: number,
-    estimateDTO: ISaleEstimateDTO
-  ): Promise<ISaleEstimate> {
+  public createSaleEstimate(tenantId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
     return this.createSaleEstimateService.createEstimate(tenantId, estimateDTO);
   }
 
@@ -76,16 +73,8 @@ export class SaleEstimatesApplication {
    * @param {EstimateDTO} estimate
    * @return {Promise<ISaleEstimate>}
    */
-  public editSaleEstimate(
-    tenantId: number,
-    estimateId: number,
-    estimateDTO: ISaleEstimateDTO
-  ): Promise<ISaleEstimate> {
-    return this.editSaleEstimateService.editEstimate(
-      tenantId,
-      estimateId,
-      estimateDTO
-    );
+  public editSaleEstimate(tenantId: number, estimateId: number, estimateDTO: ISaleEstimateDTO): Promise<ISaleEstimate> {
+    return this.editSaleEstimateService.editEstimate(tenantId, estimateId, estimateDTO);
   }
 
   /**
@@ -94,10 +83,7 @@ export class SaleEstimatesApplication {
    * @param {number} estimateId -
    * @return {Promise<void>}
    */
-  public deleteSaleEstimate(
-    tenantId: number,
-    estimateId: number
-  ): Promise<void> {
+  public deleteSaleEstimate(tenantId: number, estimateId: number): Promise<void> {
     return this.deleteSaleEstimateService.deleteEstimate(tenantId, estimateId);
   }
 
@@ -118,7 +104,7 @@ export class SaleEstimatesApplication {
    */
   public getSaleEstimates(
     tenantId: number,
-    filterDTO: ISalesEstimatesFilter
+    filterDTO: ISalesEstimatesFilter,
   ): Promise<{
     salesEstimates: ISaleEstimate[];
     pagination: IPaginationMeta;
@@ -134,10 +120,7 @@ export class SaleEstimatesApplication {
    * @returns {Promise<void>}
    */
   public deliverSaleEstimate(tenantId: number, saleEstimateId: number) {
-    return this.deliverSaleEstimateService.deliverSaleEstimate(
-      tenantId,
-      saleEstimateId
-    );
+    return this.deliverSaleEstimateService.deliverSaleEstimate(tenantId, saleEstimateId);
   }
 
   /**
@@ -146,14 +129,8 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId
    * @returns {Promise<void>}
    */
-  public approveSaleEstimate(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> {
-    return this.approveSaleEstimateService.approveSaleEstimate(
-      tenantId,
-      saleEstimateId
-    );
+  public approveSaleEstimate(tenantId: number, saleEstimateId: number): Promise<void> {
+    return this.approveSaleEstimateService.approveSaleEstimate(tenantId, saleEstimateId);
   }
 
   /**
@@ -161,14 +138,8 @@ export class SaleEstimatesApplication {
    * @param {number} tenantId
    * @param {number} saleEstimateId
    */
-  public async rejectSaleEstimate(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> {
-    return this.rejectSaleEstimateService.rejectSaleEstimate(
-      tenantId,
-      saleEstimateId
-    );
+  public async rejectSaleEstimate(tenantId: number, saleEstimateId: number): Promise<void> {
+    return this.rejectSaleEstimateService.rejectSaleEstimate(tenantId, saleEstimateId);
   }
 
   /**
@@ -177,14 +148,8 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId
    * @returns {Promise<ISaleEstimate>}
    */
-  public notifySaleEstimateBySms = async (
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<ISaleEstimate> => {
-    return this.saleEstimateNotifyBySmsService.notifyBySms(
-      tenantId,
-      saleEstimateId
-    );
+  public notifySaleEstimateBySms = async (tenantId: number, saleEstimateId: number): Promise<ISaleEstimate> => {
+    return this.saleEstimateNotifyBySmsService.notifyBySms(tenantId, saleEstimateId);
   };
 
   /**
@@ -193,14 +158,8 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId
    * @returns {Promise<IPaymentReceiveSmsDetails>}
    */
-  public getSaleEstimateSmsDetails = (
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<IPaymentReceiveSmsDetails> => {
-    return this.saleEstimateNotifyBySmsService.smsDetails(
-      tenantId,
-      saleEstimateId
-    );
+  public getSaleEstimateSmsDetails = (tenantId: number, saleEstimateId: number): Promise<IPaymentReceiveSmsDetails> => {
+    return this.saleEstimateNotifyBySmsService.smsDetails(tenantId, saleEstimateId);
   };
 
   /**
@@ -210,10 +169,7 @@ export class SaleEstimatesApplication {
    * @returns
    */
   public getSaleEstimatePdf(tenantId: number, saleEstimateId: number) {
-    return this.saleEstimatesPdfService.getSaleEstimatePdf(
-      tenantId,
-      saleEstimateId
-    );
+    return this.saleEstimatesPdfService.getSaleEstimatePdf(tenantId, saleEstimateId);
   }
 
   /**
@@ -225,13 +181,9 @@ export class SaleEstimatesApplication {
   public sendSaleEstimateMail(
     tenantId: number,
     saleEstimateId: number,
-    saleEstimateMailOpts: SaleEstimateMailOptionsDTO
+    saleEstimateMailOpts: SaleEstimateMailOptionsDTO,
   ): Promise<void> {
-    return this.sendEstimateMailService.triggerMail(
-      tenantId,
-      saleEstimateId,
-      saleEstimateMailOpts
-    );
+    return this.sendEstimateMailService.triggerMail(tenantId, saleEstimateId, saleEstimateMailOpts);
   }
 
   /**
@@ -240,13 +192,7 @@ export class SaleEstimatesApplication {
    * @param {number} saleEstimateId
    * @returns {Promise<SaleEstimateMailOptions>}
    */
-  public getSaleEstimateMail(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<SaleEstimateMailOptions> {
-    return this.sendEstimateMailService.getMailOptions(
-      tenantId,
-      saleEstimateId
-    );
+  public getSaleEstimateMail(tenantId: number, saleEstimateId: number): Promise<SaleEstimateMailOptions> {
+    return this.sendEstimateMailService.getMailOptions(tenantId, saleEstimateId);
   }
 }

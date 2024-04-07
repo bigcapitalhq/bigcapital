@@ -1,18 +1,13 @@
-
-import { Router, Request, Response, NextFunction } from 'express';
-import {
-  param,
-  query,
-  check,
-} from 'express-validator';
+import fs from 'node:fs';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { IMediaLinkDTO } from '@/interfaces';
+import MediaService from '@/services/Media/MediaService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
 import { camelCase, upperFirst } from 'lodash';
 import { Inject, Service } from 'typedi';
-import { IMediaLinkDTO } from '@/interfaces';
-import fs from 'fs';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from './BaseController';
-import MediaService from '@/services/Media/MediaService';
-import { ServiceError } from '@/exceptions';
 
 const fsPromises = fs.promises;
 
@@ -27,31 +22,30 @@ export default class MediaController extends BaseController {
   router() {
     const router = Router();
 
-    router.post('/upload', [
-      ...this.uploadValidationSchema,
-    ],
+    router.post(
+      '/upload',
+      [...this.uploadValidationSchema],
       this.validationResult,
       asyncMiddleware(this.uploadMedia.bind(this)),
       this.handlerServiceErrors,
     );
-    router.post('/:id/link', [
-      ...this.mediaIdParamSchema,
-      ...this.linkValidationSchema,
-    ],
+    router.post(
+      '/:id/link',
+      [...this.mediaIdParamSchema, ...this.linkValidationSchema],
       this.validationResult,
       asyncMiddleware(this.linkMedia.bind(this)),
       this.handlerServiceErrors,
     );
-    router.delete('/', [
-      ...this.deleteValidationSchema,
-    ],
+    router.delete(
+      '/',
+      [...this.deleteValidationSchema],
       this.validationResult,
       asyncMiddleware(this.deleteMedia.bind(this)),
       this.handlerServiceErrors,
     );
-    router.get('/:id', [
-      ...this.mediaIdParamSchema,
-    ],
+    router.get(
+      '/:id',
+      [...this.mediaIdParamSchema],
       this.validationResult,
       asyncMiddleware(this.getMedia.bind(this)),
       this.handlerServiceErrors,
@@ -62,36 +56,31 @@ export default class MediaController extends BaseController {
   get uploadValidationSchema() {
     return [
       // check('attachment'),
-      check('model_name').optional().trim().escape(),
+      check('model_name')
+        .optional()
+        .trim()
+        .escape(),
       check('model_id').optional().isNumeric().toInt(),
     ];
   }
 
   get linkValidationSchema() {
-    return [
-      check('model_name').exists().trim().escape(),
-      check('model_id').exists().isNumeric().toInt(),
-    ]
+    return [check('model_name').exists().trim().escape(), check('model_id').exists().isNumeric().toInt()];
   }
 
   get deleteValidationSchema() {
-    return [
-      query('ids').exists().isArray(),
-      query('ids.*').exists().isNumeric().toInt(),
-    ];
+    return [query('ids').exists().isArray(), query('ids.*').exists().isNumeric().toInt()];
   }
 
   get mediaIdParamSchema() {
-    return [
-      param('id').exists().isNumeric().toInt(),
-    ];
+    return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Retrieve all or the given attachment ids.
-   * @param {Request} req - 
-   * @param {Response} req - 
-   * @param {NextFunction} req - 
+   * @param {Request} req -
+   * @param {Response} req -
+   * @param {NextFunction} req -
    */
   async getMedia(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -107,17 +96,16 @@ export default class MediaController extends BaseController {
 
   /**
    * Uploads media.
-   * @param {Request} req - 
-   * @param {Response} req - 
-   * @param {NextFunction} req - 
+   * @param {Request} req -
+   * @param {Response} req -
+   * @param {NextFunction} req -
    */
   async uploadMedia(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const { attachment } = req.files
-   
+    const { attachment } = req.files;
+
     const linkMediaDTO: IMediaLinkDTO = this.matchedBodyData(req);
-    const modelName = linkMediaDTO.modelName
-      ? upperFirst(camelCase(linkMediaDTO.modelName)) : '';
+    const modelName = linkMediaDTO.modelName ? upperFirst(camelCase(linkMediaDTO.modelName)) : '';
 
     try {
       const media = await this.mediaService.upload(tenantId, attachment, modelName, linkMediaDTO.modelId);
@@ -129,9 +117,9 @@ export default class MediaController extends BaseController {
 
   /**
    * Deletes the given attachment ids from file system and database.
-   * @param {Request} req - 
-   * @param {Response} req - 
-   * @param {NextFunction} req - 
+   * @param {Request} req -
+   * @param {Response} req -
+   * @param {NextFunction} req -
    */
   async deleteMedia(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -139,8 +127,8 @@ export default class MediaController extends BaseController {
 
     try {
       await this.mediaService.deleteMedia(tenantId, mediaIds);
-      return res.status(200).send({ 
-        media_ids: mediaIds
+      return res.status(200).send({
+        media_ids: mediaIds,
       });
     } catch (error) {
       next(error);
@@ -149,9 +137,9 @@ export default class MediaController extends BaseController {
 
   /**
    * Links the given media to the specific resource model.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   async linkMedia(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
@@ -169,31 +157,31 @@ export default class MediaController extends BaseController {
 
   /**
    * Handler service errors.
-   * @param {Error} error 
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Error} error
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
   handlerServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'MINETYPE_NOT_SUPPORTED') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'MINETYPE_NOT_SUPPORTED', code: 100, }]
+          errors: [{ type: 'MINETYPE_NOT_SUPPORTED', code: 100 }],
         });
       }
       if (error.errorType === 'MEDIA_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'MEDIA_NOT_FOUND', code: 200 }]
+          errors: [{ type: 'MEDIA_NOT_FOUND', code: 200 }],
         });
       }
       if (error.errorType === 'MODEL_NAME_HAS_NO_MEDIA') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'MODEL_NAME_HAS_NO_MEDIA', code: 300 }]
+          errors: [{ type: 'MODEL_NAME_HAS_NO_MEDIA', code: 300 }],
         });
       }
       if (error.errorType === 'MODEL_ID_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [{ type: 'MODEL_ID_NOT_FOUND', code: 400 }]
+          errors: [{ type: 'MODEL_ID_NOT_FOUND', code: 400 }],
         });
       }
       if (error.errorType === 'MEDIA_IDS_NOT_FOUND') {
@@ -209,4 +197,4 @@ export default class MediaController extends BaseController {
     }
     next(error);
   }
-};
+}

@@ -7,7 +7,6 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-
   [t.SET_PLAN_SUBSCRIPTIONS_LIST]: (state, action) => {
     const { subscriptions } = action.payload;
     const _data = {};

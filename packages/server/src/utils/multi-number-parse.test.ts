@@ -31,7 +31,7 @@ const incorrectNumbers = [
 ];
 
 describe('Test numbers', () => {
-  correctNumbers.forEach((item) => {
+  for (const item of correctNumbers) {
     it(`"${item.actual}" should return ${item.expected}`, (done) => {
       const parsed = multiNumberParse(item.actual);
       assert.isNotNaN(parsed);
@@ -39,13 +39,13 @@ describe('Test numbers', () => {
 
       done();
     });
-  });
+  }
 
-  incorrectNumbers.forEach((item) => {
+  for (const item of incorrectNumbers) {
     it(`"${item}" should return NaN`, (done) => {
-      assert.isNaN(numberParse(item));
+      assert.isNaN(multiNumberParse(item));
 
       done();
     });
-  });
+  }
 });

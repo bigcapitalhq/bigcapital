@@ -34,10 +34,7 @@ function ItemsList({
   );
 
   return (
-    <ItemsListProvider
-      tableState={itemsTableState}
-      tableStateChanged={itemsTableStateChanged}
-    >
+    <ItemsListProvider tableState={itemsTableState} tableStateChanged={itemsTableStateChanged}>
       <ItemsActionsBar />
 
       <DashboardPageContent>

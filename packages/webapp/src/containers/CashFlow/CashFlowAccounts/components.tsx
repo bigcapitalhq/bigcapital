@@ -22,11 +22,7 @@ export const AccountCodeAccessor = (row) =>
 export const BalanceCell = ({ cell }) => {
   const account = cell.row.original;
 
-  return account.amount !== null ? (
-    <span>{account.formatted_amount}</span>
-  ) : (
-    <span class="placeholder">—</span>
-  );
+  return account.amount !== null ? <span>{account.formatted_amount}</span> : <span class="placeholder">—</span>;
 };
 
 /**

@@ -1,13 +1,7 @@
+import { AccountNormal, IExpense, IExpenseCategory, ILedger, ILedgerEntry } from '@/interfaces';
+import Ledger from '@/services/Accounting/Ledger';
 import * as R from 'ramda';
 import { Service } from 'typedi';
-import {
-  AccountNormal,
-  IExpense,
-  IExpenseCategory,
-  ILedger,
-  ILedgerEntry,
-} from '@/interfaces';
-import Ledger from '@/services/Accounting/Ledger';
 
 @Service()
 export class ExpenseGLEntries {
@@ -59,11 +53,7 @@ export class ExpenseGLEntries {
    * @returns {ILedgerEntry}
    */
   private getExpenseGLCategoryEntry = R.curry(
-    (
-      expense: IExpense,
-      category: IExpenseCategory,
-      index: number
-    ): ILedgerEntry => {
+    (expense: IExpense, category: IExpenseCategory, index: number): ILedgerEntry => {
       const commonEntry = this.getExpenseGLCommonEntry(expense);
       const localAmount = category.amount * expense.exchangeRate;
 
@@ -76,7 +66,7 @@ export class ExpenseGLEntries {
         index: index + 2,
         projectId: category.projectId,
       };
-    }
+    },
   );
 
   /**

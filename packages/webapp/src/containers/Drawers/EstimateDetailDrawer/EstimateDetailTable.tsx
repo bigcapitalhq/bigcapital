@@ -19,11 +19,5 @@ export default function EstimateDetailTable() {
   // Estimate entries table columns.
   const columns = useEstimateReadonlyEntriesColumns();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

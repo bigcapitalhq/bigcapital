@@ -42,8 +42,7 @@ function RealizedGainOrLossActionsBar({
   const handleRecalculateReport = () => {};
 
   // handle number format form submit.
-  const handleNumberFormatSubmit = (values) =>
-    saveInvoke(onNumberFormatSubmit, values);
+  const handleNumberFormatSubmit = (values) => saveInvoke(onNumberFormatSubmit, values);
 
   return (
     <DashboardActionsBar>
@@ -60,13 +59,7 @@ function RealizedGainOrLossActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            isFilterDrawerOpen ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={isFilterDrawerOpen ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />
@@ -98,11 +91,7 @@ function RealizedGainOrLossActionsBar({
         />
         <NavbarDivider />
 
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon="print-16" iconSize={16} />} text={<T id={'print'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}

@@ -5,15 +5,7 @@ import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants/classes';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Money,
-  Choose,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { FormatDateCell, FormattedMessage as T, Money, Choose, Icon, If, Can } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
@@ -64,7 +56,7 @@ export function ActionsMenu({
     onConvert,
     onViewDetails,
     onPrint,
-    onSendMail
+    onSendMail,
   },
 }) {
   return (
@@ -97,18 +89,14 @@ export function ActionsMenu({
           />
         </If>
         <Choose>
-          <Choose.When
-            condition={original.is_delivered && original.is_approved}
-          >
+          <Choose.When condition={original.is_delivered && original.is_approved}>
             <MenuItem
               icon={<Icon icon={'close-black'} />}
               text={intl.get('mark_as_rejected')}
               onClick={safeCallback(onReject, original)}
             />
           </Choose.When>
-          <Choose.When
-            condition={original.is_delivered && original.is_rejected}
-          >
+          <Choose.When condition={original.is_delivered && original.is_rejected}>
             <MenuItem
               icon={<Icon icon={'check'} iconSize={18} />}
               text={intl.get('mark_as_approved')}
@@ -193,8 +181,7 @@ export function useEstiamtesTableColumns() {
       {
         id: 'estimate_number',
         Header: intl.get('estimate_number'),
-        accessor: (row) =>
-          row.estimate_number ? `${row.estimate_number}` : null,
+        accessor: (row) => (row.estimate_number ? `${row.estimate_number}` : null),
         width: 140,
         className: 'estimate_number',
         clickable: true,

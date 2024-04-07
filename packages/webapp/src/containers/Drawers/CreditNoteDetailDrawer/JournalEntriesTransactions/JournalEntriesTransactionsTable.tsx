@@ -35,11 +35,7 @@ export function CreditNoteGLEntriesTable() {
     <Card>
       <AmountDisplayedBaseCurrencyMessage />
 
-      <JournalEntriesTable
-        columns={columns}
-        data={transactions}
-        loading={isTransactionLoading}
-      />
+      <JournalEntriesTable columns={columns} data={transactions} loading={isTransactionLoading} />
     </Card>
   );
 }

@@ -10,9 +10,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const SalesTaxLiabilityPdfDialogContent = lazy(
-  () => import('./SalesTaxLiabilityPdfDialogContent'),
-);
+const SalesTaxLiabilityPdfDialogContent = lazy(() => import('./SalesTaxLiabilityPdfDialogContent'));
 
 /**
  * Cashflow sheet pdf preview dialog.
@@ -36,6 +34,4 @@ function SalesTaxLiabilityPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const SalesTaxLiabiltiyPdfDialog = compose(withDialogRedux())(
-  SalesTaxLiabilityPdfDialogRoot,
-);
+export const SalesTaxLiabiltiyPdfDialog = compose(withDialogRedux())(SalesTaxLiabilityPdfDialogRoot);

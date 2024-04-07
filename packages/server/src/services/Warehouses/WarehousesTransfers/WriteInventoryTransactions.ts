@@ -1,11 +1,7 @@
-import { Knex } from 'knex';
-import {
-  IWarehouseTransfer,
-  IInventoryTransaction,
-  IWarehouseTransferEntry,
-} from '@/interfaces';
-import { Inject, Service } from 'typedi';
+import { IInventoryTransaction, IWarehouseTransfer, IWarehouseTransferEntry } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class WarehouseTransferInventoryTransactions {
@@ -24,17 +20,11 @@ export class WarehouseTransferInventoryTransactions {
     tenantId: number,
     warehouseTransfer: IWarehouseTransfer,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const inventoryTransactions =
-      this.getWarehouseTransferInventoryTransactions(warehouseTransfer);
+    const inventoryTransactions = this.getWarehouseTransferInventoryTransactions(warehouseTransfer);
 
-    await this.inventory.recordInventoryTransactions(
-      tenantId,
-      inventoryTransactions,
-      override,
-      trx
-    );
+    await this.inventory.recordInventoryTransactions(tenantId, inventoryTransactions, override, trx);
   };
 
   /**
@@ -49,17 +39,11 @@ export class WarehouseTransferInventoryTransactions {
     tenantId: number,
     warehouseTransfer: IWarehouseTransfer,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const inventoryTransactions =
-      this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
+    const inventoryTransactions = this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
 
-    await this.inventory.recordInventoryTransactions(
-      tenantId,
-      inventoryTransactions,
-      override,
-      trx
-    );
+    await this.inventory.recordInventoryTransactions(tenantId, inventoryTransactions, override, trx);
   };
 
   /**
@@ -74,17 +58,11 @@ export class WarehouseTransferInventoryTransactions {
     tenantId: number,
     warehouseTransfer: IWarehouseTransfer,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const inventoryTransactions =
-      this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
+    const inventoryTransactions = this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
 
-    await this.inventory.recordInventoryTransactions(
-      tenantId,
-      inventoryTransactions,
-      override,
-      trx
-    );
+    await this.inventory.recordInventoryTransactions(tenantId, inventoryTransactions, override, trx);
   };
 
   /**
@@ -97,14 +75,9 @@ export class WarehouseTransferInventoryTransactions {
   public revertInventoryTransactions = async (
     tenantId: number,
     warehouseTransferId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.inventory.deleteInventoryTransactions(
-      tenantId,
-      warehouseTransferId,
-      'WarehouseTransfer',
-      trx
-    );
+    await this.inventory.deleteInventoryTransactions(tenantId, warehouseTransferId, 'WarehouseTransfer', trx);
   };
 
   /**
@@ -113,7 +86,7 @@ export class WarehouseTransferInventoryTransactions {
    * @returns {IInventoryTransaction[]}
    */
   private getWarehouseFromTransferInventoryTransactions = (
-    warehouseTransfer: IWarehouseTransfer
+    warehouseTransfer: IWarehouseTransfer,
   ): IInventoryTransaction[] => {
     const commonEntry = {
       date: warehouseTransfer.date,
@@ -137,7 +110,7 @@ export class WarehouseTransferInventoryTransactions {
    * @returns {IInventoryTransaction[]}
    */
   private getWarehouseToTransferInventoryTransactions = (
-    warehouseTransfer: IWarehouseTransfer
+    warehouseTransfer: IWarehouseTransfer,
   ): IInventoryTransaction[] => {
     const commonEntry = {
       date: warehouseTransfer.date,
@@ -161,15 +134,13 @@ export class WarehouseTransferInventoryTransactions {
    * @returns {IInventoryTransaction[]}
    */
   private getWarehouseTransferInventoryTransactions = (
-    warehouseTransfer: IWarehouseTransfer
+    warehouseTransfer: IWarehouseTransfer,
   ): IInventoryTransaction[] => {
     // Retrieve the to inventory transactions of warehouse transfer.
-    const toTransactions =
-      this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
+    const toTransactions = this.getWarehouseToTransferInventoryTransactions(warehouseTransfer);
 
     // Retrieve the from inventory transactions of warehouse transfer.
-    const fromTransactions =
-      this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
+    const fromTransactions = this.getWarehouseFromTransferInventoryTransactions(warehouseTransfer);
 
     return [...toTransactions, ...fromTransactions];
   };

@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from '@/interfaces';
-import TrialBalanceSheet from './TrialBalanceSheet';
-import FinancialSheet from '../FinancialSheet';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
-import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import FinancialSheet from '../FinancialSheet';
+import TrialBalanceSheet from './TrialBalanceSheet';
 import { TrialBalanceSheetMeta } from './TrialBalanceSheetMeta';
+import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 
 @Service()
 export default class TrialBalanceSheetService extends FinancialSheet {
@@ -45,26 +45,17 @@ export default class TrialBalanceSheetService extends FinancialSheet {
    * @param {IBalanceSheetQuery} query
    * @return {IBalanceSheetStatement}
    */
-  public async trialBalanceSheet(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<ITrialBalanceStatement> {
+  public async trialBalanceSheet(tenantId: number, query: ITrialBalanceSheetQuery): Promise<ITrialBalanceStatement> {
     const filter = {
       ...this.defaultQuery,
       ...query,
     };
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const models = this.tenancy.models(tenantId);
     const repos = this.tenancy.repositories(tenantId);
 
-    const trialBalanceSheetRepos = new TrialBalanceSheetRepository(
-      models,
-      repos,
-      filter
-    );
+    const trialBalanceSheetRepos = new TrialBalanceSheetRepository(models, repos, filter);
     // Loads the resources.
     await trialBalanceSheetRepos.asyncInitialize();
 
@@ -73,7 +64,7 @@ export default class TrialBalanceSheetService extends FinancialSheet {
       tenantId,
       filter,
       trialBalanceSheetRepos,
-      tenant.metadata.baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // Trial balance sheet data.
     const trialBalanceSheetData = trialBalanceInstance.reportData();

@@ -1,16 +1,16 @@
-import { Container } from 'typedi';
-import LoggerInstance from '@/loaders/logger';
+import config from '@/config';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import agendaFactory from '@/loaders/agenda';
-import SmsClientLoader from '@/loaders/smsClient';
-import mailInstance from '@/loaders/mail';
 import dbManagerFactory from '@/loaders/dbManager';
 import i18n from '@/loaders/i18n';
+import LoggerInstance from '@/loaders/logger';
+import mailInstance from '@/loaders/mail';
+import SmsClientLoader from '@/loaders/smsClient';
 import repositoriesLoader from '@/loaders/systemRepositories';
 import Cache from '@/services/Cache';
-import config from '@/config'
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import rateLimiterLoaders from './rateLimiterLoader';
+import { Container } from 'typedi';
 import eventEmitter, { susbcribers } from './eventEmitter';
+import rateLimiterLoaders from './rateLimiterLoader';
 
 export default ({ mongoConnection, knex }) => {
   try {
@@ -23,11 +23,9 @@ export default ({ mongoConnection, knex }) => {
     Container.set('knex', knex);
     Container.set('SMSClient', smsClientInstance);
     Container.set('mail', mailInstance);
-  
+
     Container.set('dbManager', dbManager);
-    LoggerInstance.info(
-      '[DI] Database manager has been injected into container.'
-    );
+    LoggerInstance.info('[DI] Database manager has been injected into container.');
 
     Container.set('agenda', agendaInstance);
     LoggerInstance.info('[DI] Agenda has been injected into container');
@@ -49,7 +47,6 @@ export default ({ mongoConnection, knex }) => {
     const emitter = Container.get(EventPublisher);
 
     emitter.loadSubscribers(susbcribers());
-
 
     return { agenda: agendaInstance };
   } catch (e) {

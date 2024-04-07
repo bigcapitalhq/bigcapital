@@ -2,9 +2,9 @@ import { ServiceError } from '@/exceptions';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { ERRORS } from './constants';
-import BaseCreditNotes from './CreditNotes';
 import { CreditNoteTransformer } from './CreditNoteTransformer';
+import BaseCreditNotes from './CreditNotes';
+import { ERRORS } from './constants';
 
 @Service()
 export default class GetCreditNote extends BaseCreditNotes {
@@ -34,10 +34,6 @@ export default class GetCreditNote extends BaseCreditNotes {
       throw new ServiceError(ERRORS.CREDIT_NOTE_NOT_FOUND);
     }
     // Transforms the credit note model to POJO.
-    return this.transformer.transform(
-      tenantId,
-      creditNote,
-      new CreditNoteTransformer(),
-    );
+    return this.transformer.transform(tenantId, creditNote, new CreditNoteTransformer());
   };
 }

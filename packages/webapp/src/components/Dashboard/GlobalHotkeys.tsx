@@ -59,8 +59,4 @@ function GlobalHotkeys({
   return <div></div>;
 }
 
-export default compose(
-  withDashboardActions,
-  withDialogActions,
-  withUniversalSearchActions,
-)(GlobalHotkeys);
+export default compose(withDashboardActions, withDialogActions, withUniversalSearchActions)(GlobalHotkeys);

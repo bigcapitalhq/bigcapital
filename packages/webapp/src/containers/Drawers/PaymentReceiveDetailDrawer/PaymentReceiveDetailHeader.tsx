@@ -48,10 +48,7 @@ export default function PaymentReceiveDetailHeader() {
               </CustomerDrawerLink>
             </DetailItem>
 
-            <DetailItem
-              label={intl.get('deposit_account')}
-              children={paymentReceive.deposit_account?.name}
-            />
+            <DetailItem label={intl.get('deposit_account')} children={paymentReceive.deposit_account?.name} />
             <ExchangeRateDetailItem
               exchangeRate={paymentReceive?.exchange_rate}
               toCurrency={paymentReceive?.currency_code}
@@ -60,19 +57,9 @@ export default function PaymentReceiveDetailHeader() {
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            textAlign={'right'}
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-          >
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(paymentReceive.reference_no, '-')}
-            />
-            <DetailItem
-              label={intl.get('created_at')}
-              children={<FormatDate value={paymentReceive.created_at} />}
-            />
+          <DetailsMenu textAlign={'right'} direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem label={intl.get('reference')} children={defaultTo(paymentReceive.reference_no, '-')} />
+            <DetailItem label={intl.get('created_at')} children={<FormatDate value={paymentReceive.created_at} />} />
           </DetailsMenu>
         </Col>
       </Row>

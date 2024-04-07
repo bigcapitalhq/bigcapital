@@ -106,7 +106,6 @@ export interface IAdvancedFilterPopover {
   children: JSX.Element | JSX.Element[];
 }
 
-
 export interface IDynamicFilterCompatatorFieldProps {
   dataType: string;
 }

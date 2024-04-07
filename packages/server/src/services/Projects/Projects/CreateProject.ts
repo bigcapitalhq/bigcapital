@@ -1,17 +1,17 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
-  IProjectCreatedEventPayload,
   IProjectCreateDTO,
   IProjectCreatePOJO,
+  IProjectCreatedEventPayload,
   IProjectCreatingEventPayload,
   IProjectStatus,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { ProjectsValidator } from './ProjectsValidator';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ProjectsValidator } from './ProjectsValidator';
 
 @Service()
 export default class CreateProject {
@@ -31,10 +31,7 @@ export default class CreateProject {
    * Creates a new credit note.
    * @param {IProjectCreateDTO} creditNoteDTO
    */
-  public createProject = async (
-    tenantId: number,
-    projectDTO: IProjectCreateDTO
-  ): Promise<IProjectCreatePOJO> => {
+  public createProject = async (tenantId: number, projectDTO: IProjectCreateDTO): Promise<IProjectCreatePOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
     // Validate customer existance.

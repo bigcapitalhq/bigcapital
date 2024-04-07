@@ -18,24 +18,19 @@ import { compose, objectKeysTransform } from '@/utils';
 
 const initialValues = {
   email: '',
-  role_id: ''
-}
+  role_id: '',
+};
 
 function InviteUserForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, isEditMode, inviteUserMutate, userId } =
-    useInviteUserFormContext();
+  const { dialogName, isEditMode, inviteUserMutate, userId } = useInviteUserFormContext();
 
   const initialFormValues = {
     ...initialValues,
     status: 1,
-    ...(isEditMode &&
-      pick(
-        objectKeysTransform(userId, snakeCase),
-        Object.keys(InviteUserFormSchema.fields),
-      )),
+    ...(isEditMode && pick(objectKeysTransform(userId, snakeCase), Object.keys(InviteUserFormSchema.fields))),
   };
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
@@ -70,11 +65,7 @@ function InviteUserForm({
   };
 
   return (
-    <Formik
-      validationSchema={InviteUserFormSchema}
-      initialValues={initialFormValues}
-      onSubmit={handleSubmit}
-    >
+    <Formik validationSchema={InviteUserFormSchema} initialValues={initialFormValues} onSubmit={handleSubmit}>
       <InviteUserFormContent />
     </Formik>
   );

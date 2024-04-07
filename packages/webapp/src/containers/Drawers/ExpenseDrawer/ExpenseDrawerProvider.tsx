@@ -51,7 +51,6 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
     </DrawerLoading>
   );
 }
-const useExpenseDrawerContext = () =>
-  React.useContext(ExpenseDrawerDrawerContext);
+const useExpenseDrawerContext = () => React.useContext(ExpenseDrawerDrawerContext);
 
 export { ExpenseDrawerProvider, useExpenseDrawerContext };

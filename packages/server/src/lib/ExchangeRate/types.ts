@@ -13,5 +13,4 @@ export enum EchangeRateErrors {
   EX_RATE_INVALID_BASE_CURRENCY = 'EX_RATE_INVALID_BASE_CURRENCY',
 }
 
-export const OPEN_EXCHANGE_RATE_LATEST_URL =
-  'https://openexchangerates.org/api/latest.json';
+export const OPEN_EXCHANGE_RATE_LATEST_URL = 'https://openexchangerates.org/api/latest.json';

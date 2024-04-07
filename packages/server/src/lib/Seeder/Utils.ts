@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'node:fs';
 
 const { promisify } = require('util');
 const readFile = promisify(fs.readFile);
@@ -11,9 +11,7 @@ const readFile = promisify(fs.readFile);
 async function isModuleType(filepath: string): boolean {
   if (process.env.npm_package_json) {
     // npm >= 7.0.0
-    const packageJson = JSON.parse(
-      await readFile(process.env.npm_package_json, 'utf-8')
-    );
+    const packageJson = JSON.parse(await readFile(process.env.npm_package_json, 'utf-8'));
     if (packageJson.type === 'module') {
       return true;
     }
@@ -27,9 +25,7 @@ async function isModuleType(filepath: string): boolean {
  * @returns
  */
 export async function importFile(filepath: string): any {
-  return (await isModuleType(filepath))
-    ? import(require('url').pathToFileURL(filepath))
-    : require(filepath);
+  return (await isModuleType(filepath)) ? import(require('url').pathToFileURL(filepath)) : require(filepath);
 }
 
 /**

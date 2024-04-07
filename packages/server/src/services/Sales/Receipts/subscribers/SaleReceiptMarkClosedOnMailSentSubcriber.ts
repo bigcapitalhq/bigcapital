@@ -1,8 +1,8 @@
+import { ServiceError } from '@/exceptions';
 import { ISaleReceiptMailPresend } from '@/interfaces';
 import events from '@/subscribers/events';
-import { CloseSaleReceipt } from '../CloseSaleReceipt';
 import { Inject, Service } from 'typedi';
-import { ServiceError } from '@/exceptions';
+import { CloseSaleReceipt } from '../CloseSaleReceipt';
 import { ERRORS } from '../constants';
 
 @Service()
@@ -21,18 +21,11 @@ export class SaleReceiptMarkClosedOnMailSentSubcriber {
    * Marks the sale receipt closed on submitting mail.
    * @param {ISaleReceiptMailPresend}
    */
-  private markReceiptClosed = async ({
-    tenantId,
-    saleReceiptId,
-    messageOptions,
-  }: ISaleReceiptMailPresend) => {
+  private markReceiptClosed = async ({ tenantId, saleReceiptId, messageOptions }: ISaleReceiptMailPresend) => {
     try {
       await this.closeReceiptService.closeSaleReceipt(tenantId, saleReceiptId);
     } catch (error) {
-      if (
-        error instanceof ServiceError &&
-        error.errorType === ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED
-      ) {
+      if (error instanceof ServiceError && error.errorType === ERRORS.SALE_RECEIPT_IS_ALREADY_CLOSED) {
       } else {
         throw error;
       }

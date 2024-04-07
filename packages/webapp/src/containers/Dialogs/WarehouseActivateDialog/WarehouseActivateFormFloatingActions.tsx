@@ -32,12 +32,7 @@ function WarehouseActivateFormFloatingActions({
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '95px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '95px' }} type="submit">
           {<T id={'warehouses.activate_button'} />}
         </Button>
       </div>

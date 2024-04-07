@@ -1,8 +1,8 @@
-import { Model, raw } from 'objection';
-import { castArray } from 'lodash';
-import moment from 'moment';
-import TenantModel from 'models/TenantModel';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
+import { castArray } from 'lodash';
+import TenantModel from 'models/TenantModel';
+import moment from 'moment';
+import { Model, raw } from 'objection';
 
 export default class InventoryTransaction extends TenantModel {
   transactionId: number;

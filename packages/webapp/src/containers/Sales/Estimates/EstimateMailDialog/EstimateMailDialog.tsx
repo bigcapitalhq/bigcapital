@@ -4,18 +4,12 @@ import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const EstimateMailDialogBody = React.lazy(
-  () => import('./EstimateMailDialogBody'),
-);
+const EstimateMailDialogBody = React.lazy(() => import('./EstimateMailDialogBody'));
 
 /**
  * Estimate mail dialog.
  */
-function EstimateMailDialog({
-  dialogName,
-  payload: { estimateId = null },
-  isOpen,
-}) {
+function EstimateMailDialog({ dialogName, payload: { estimateId = null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}

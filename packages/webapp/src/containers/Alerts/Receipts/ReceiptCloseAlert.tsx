@@ -63,7 +63,4 @@ function ReceiptCloseAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ReceiptCloseAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ReceiptCloseAlert);

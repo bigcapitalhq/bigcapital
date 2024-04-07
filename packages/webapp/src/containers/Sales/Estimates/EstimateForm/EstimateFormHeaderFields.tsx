@@ -14,20 +14,12 @@ import {
   CustomerDrawerLink,
   CustomersSelect,
 } from '@/components';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { customersFieldShouldUpdate } from './utils';
 import { CLASSES } from '@/constants/classes';
 import { Features } from '@/constants';
 import { ProjectsSelect } from '@/containers/Projects/components';
-import {
-  EstimateExchangeRateInputField,
-  EstimateProjectSelectButton,
-} from './components';
+import { EstimateExchangeRateInputField, EstimateProjectSelectButton } from './components';
 import { EstimateFormEstimateNumberField } from './EstimateFormEstimateNumberField';
 import { useEstimateFormContext } from './EstimateFormProvider';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
@@ -79,11 +71,7 @@ export default function EstimateFormHeader() {
             label={<T id={'expiration_date'} />}
             labelInfo={<FieldRequiredHint />}
             inline={true}
-            className={classNames(
-              CLASSES.FORM_GROUP_LIST_SELECT,
-              CLASSES.FILL,
-              'form-group--expiration-date',
-            )}
+            className={classNames(CLASSES.FORM_GROUP_LIST_SELECT, CLASSES.FILL, 'form-group--expiration-date')}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="expiration_date" />}
           >

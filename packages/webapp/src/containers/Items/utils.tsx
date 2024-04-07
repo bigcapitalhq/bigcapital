@@ -5,11 +5,7 @@ import { Intent } from '@blueprintjs/core';
 import { defaultTo, includes } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { AppToaster } from '@/components';
-import {
-  transformToForm,
-  transformTableStateToQuery,
-  defaultFastFieldShouldUpdate,
-} from '@/utils';
+import { transformToForm, transformTableStateToQuery, defaultFastFieldShouldUpdate } from '@/utils';
 import { useSettingsSelector } from '@/hooks/state';
 import { transformItemFormData } from './ItemForm.schema';
 import { useWatch } from '@/hooks/utils';
@@ -44,19 +40,13 @@ export const useItemFormInitialValues = (item, initialValues) => {
       ...defaultInitialValues,
       cost_account_id: defaultTo(itemsSettings?.preferredCostAccount, ''),
       sell_account_id: defaultTo(itemsSettings?.preferredSellAccount, ''),
-      inventory_account_id: defaultTo(
-        itemsSettings?.preferredInventoryAccount,
-        '',
-      ),
+      inventory_account_id: defaultTo(itemsSettings?.preferredInventoryAccount, ''),
       /**
        * We only care about the fields in the form. Previously unfilled optional
        * values such as `notes` come back from the API as null, so remove those
        * as well.
        */
-      ...transformToForm(
-        transformItemFormData(item, defaultInitialValues),
-        defaultInitialValues,
-      ),
+      ...transformToForm(transformItemFormData(item, defaultInitialValues), defaultInitialValues),
       ...initialValues,
     }),
     [item, itemsSettings, initialValues],
@@ -73,42 +63,26 @@ export const transitionItemTypeKeyToLabel = (itemTypeKey) => {
 
 // handle delete errors.
 export const handleDeleteErrors = (errors) => {
-  if (
-    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')
-  ) {
+  if (errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTINS')) {
     AppToaster.show({
       message: intl.get('the_item_has_associated_transactions'),
       intent: Intent.DANGER,
     });
   }
 
-  if (
-    errors.find(
-      (error) => error.type === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_INVENTORY_ADJUSTMENT')) {
     AppToaster.show({
-      message: intl.get(
-        'you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions',
-      ),
+      message: intl.get('you_could_not_delete_item_that_has_associated_inventory_adjustments_transacions'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find(
-      (error) => error.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS')) {
     AppToaster.show({
-      message: intl.get(
-        'cannot_change_item_type_to_inventory_with_item_has_associated_transactions',
-      ),
+      message: intl.get('cannot_change_item_type_to_inventory_with_item_has_associated_transactions'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')
-  ) {
+  if (errors.find((error) => error.type === 'ITEM_HAS_ASSOCIATED_TRANSACTIONS')) {
     AppToaster.show({
       message: intl.get('item.error.you_could_not_delete_item_has_associated'),
       intent: Intent.DANGER,
@@ -120,30 +94,21 @@ export const handleDeleteErrors = (errors) => {
  * Detarmines accounts fast field should update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
  * Detarmines categories fast field should update.
  */
 export const categoriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.categories !== oldProps.categories ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.categories !== oldProps.categories || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
  * Sell price fast field should update.
  */
 export const sellPriceFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.sellable !== oldProps.sellable ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.sellable !== oldProps.sellable || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
@@ -161,10 +126,7 @@ export const sellAccountFieldShouldUpdate = (newProps, oldProps) => {
  * Sell description fast field should update.
  */
 export const sellDescriptionFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.sellable !== oldProps.sellable ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.sellable !== oldProps.sellable || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const costAccountFieldShouldUpdate = (newProps, oldProps) => {
@@ -176,17 +138,11 @@ export const costAccountFieldShouldUpdate = (newProps, oldProps) => {
 };
 
 export const costPriceFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.purchasable !== oldProps.purchasable ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.purchasable !== oldProps.purchasable || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const purchaseDescFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.purchasable !== oldProps.purchasable ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.purchasable !== oldProps.purchasable || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const taxRateFieldShouldUpdate = (newProps, oldProps) => {
@@ -223,15 +179,9 @@ export const transformSubmitRequestErrors = (error) => {
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find(
-      (e) => e.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS',
-    )
-  ) {
+  if (errors.find((e) => e.type === 'TYPE_CANNOT_CHANGE_WITH_ITEM_HAS_TRANSACTIONS')) {
     AppToaster.show({
-      message: intl.get(
-        'item.error.type_cannot_change_with_item_has_transactions',
-      ),
+      message: intl.get('item.error.type_cannot_change_with_item_has_transactions'),
       intent: Intent.DANGER,
     });
   }

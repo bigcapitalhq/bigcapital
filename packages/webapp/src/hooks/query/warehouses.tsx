@@ -40,19 +40,16 @@ export function useEditWarehouse(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`warehouses/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific sale invoice.
-        queryClient.invalidateQueries([t.WAREHOUSE, id]);
+  return useMutation(([id, values]) => apiRequest.post(`warehouses/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific sale invoice.
+      queryClient.invalidateQueries([t.WAREHOUSE, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

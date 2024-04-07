@@ -6,7 +6,6 @@ import { useFormikContext } from 'formik';
 import { FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 
-
 import ExpenseFormHeaderFields from './ExpenseFormHeaderFields';
 import { PageFormBigNumber } from '@/components';
 
@@ -17,19 +16,12 @@ export default function ExpenseFormHeader() {
   } = useFormikContext();
 
   // Calculates the expense entries amount.
-  const totalExpenseAmount = useMemo(
-    () => sumBy(categories, 'amount'),
-    [categories],
-  );
+  const totalExpenseAmount = useMemo(() => sumBy(categories, 'amount'), [categories]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
       <ExpenseFormHeaderFields />
-      <PageFormBigNumber
-        label={<T id={'expense_amount'} />}
-        amount={totalExpenseAmount}
-        currencyCode={currency_code}
-      />
+      <PageFormBigNumber label={<T id={'expense_amount'} />} amount={totalExpenseAmount} currencyCode={currency_code} />
     </div>
   );
 }

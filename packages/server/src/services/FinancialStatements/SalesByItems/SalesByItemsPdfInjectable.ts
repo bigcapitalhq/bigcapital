@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { ISalesByItemsReportQuery } from '@/interfaces';
-import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
+import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
+import { SalesByItemsTableInjectable } from './SalesByItemsTableInjectable';
 import { HtmlTableCustomCss } from './constants';
 
 @Service()
@@ -18,10 +18,7 @@ export class SalesByItemsPdfInjectable {
    * @param {number} query
    * @returns {Promise<IBalanceSheetTable>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ISalesByItemsReportQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: ISalesByItemsReportQuery): Promise<Buffer> {
     const table = await this.salesByItemsTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class SalesByItemsPdfInjectable {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

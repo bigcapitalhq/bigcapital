@@ -1,15 +1,15 @@
-import { Inject, Service } from 'typedi';
-import { map, head } from 'lodash';
-import events from '@/subscribers/events';
-import InventoryItemsQuantitySync from '@/services/Inventory/InventoryItemsQuantitySync';
-import InventoryService from '@/services/Inventory/Inventory';
 import {
   IComputeItemCostJobCompletedPayload,
   IInventoryTransactionsCreatedPayload,
   IInventoryTransactionsDeletedPayload,
 } from '@/interfaces';
-import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+import InventoryService from '@/services/Inventory/Inventory';
+import InventoryItemsQuantitySync from '@/services/Inventory/InventoryItemsQuantitySync';
 import { SaleInvoicesCost } from '@/services/Sales/Invoices/SalesInvoicesCost';
+import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+import events from '@/subscribers/events';
+import { head, map } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class InventorySubscriber {
@@ -31,31 +31,22 @@ export default class InventorySubscriber {
   public attach(bus) {
     bus.subscribe(
       events.inventory.onInventoryTransactionsCreated,
-      this.handleScheduleItemsCostOnInventoryTransactionsCreated
+      this.handleScheduleItemsCostOnInventoryTransactionsCreated,
     );
     bus.subscribe(
       events.inventory.onInventoryTransactionsCreated,
-      this.syncItemsQuantityOnceInventoryTransactionsCreated
+      this.syncItemsQuantityOnceInventoryTransactionsCreated,
     );
+    bus.subscribe(events.inventory.onComputeItemCostJobScheduled, this.markGlobalSettingsComputeItems);
+    bus.subscribe(events.inventory.onInventoryCostEntriesWritten, this.markGlobalSettingsComputeItemsCompeted);
+    bus.subscribe(events.inventory.onComputeItemCostJobCompleted, this.onComputeItemCostJobFinished);
     bus.subscribe(
-      events.inventory.onComputeItemCostJobScheduled,
-      this.markGlobalSettingsComputeItems
-    );
-    bus.subscribe(
-      events.inventory.onInventoryCostEntriesWritten,
-      this.markGlobalSettingsComputeItemsCompeted
-    );
-    bus.subscribe(
-      events.inventory.onComputeItemCostJobCompleted,
-      this.onComputeItemCostJobFinished
+      events.inventory.onInventoryTransactionsDeleted,
+      this.handleScheduleItemsCostOnInventoryTransactionsDeleted,
     );
     bus.subscribe(
       events.inventory.onInventoryTransactionsDeleted,
-      this.handleScheduleItemsCostOnInventoryTransactionsDeleted
-    );
-    bus.subscribe(
-      events.inventory.onInventoryTransactionsDeleted,
-      this.syncItemsQuantityOnceInventoryTransactionsDeleted
+      this.syncItemsQuantityOnceInventoryTransactionsDeleted,
     );
   }
 
@@ -68,15 +59,9 @@ export default class InventorySubscriber {
     inventoryTransactions,
     trx,
   }: IInventoryTransactionsCreatedPayload) => {
-    const itemsQuantityChanges = this.itemsQuantitySync.getItemsQuantityChanges(
-      inventoryTransactions
-    );
+    const itemsQuantityChanges = this.itemsQuantitySync.getItemsQuantityChanges(inventoryTransactions);
 
-    await this.itemsQuantitySync.changeItemsQuantity(
-      tenantId,
-      itemsQuantityChanges,
-      trx
-    );
+    await this.itemsQuantitySync.changeItemsQuantity(tenantId, itemsQuantityChanges, trx);
   };
 
   /**
@@ -86,16 +71,13 @@ export default class InventorySubscriber {
   private handleScheduleItemsCostOnInventoryTransactionsCreated = async ({
     tenantId,
     inventoryTransactions,
-    trx
+    trx,
   }: IInventoryTransactionsCreatedPayload) => {
     const inventoryItemsIds = map(inventoryTransactions, 'itemId');
 
     runAfterTransaction(trx, async () => {
       try {
-        await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(
-          tenantId,
-          inventoryTransactions
-        );
+        await this.saleInvoicesCost.computeItemsCostByInventoryTransactions(tenantId, inventoryTransactions);
       } catch (error) {
         console.error(error);
       }
@@ -131,10 +113,7 @@ export default class InventorySubscriber {
     });
     // There is no scheduled compute jobs waiting.
     if (dependsComputeJobs.length === 0) {
-      await this.saleInvoicesCost.scheduleWriteJournalEntries(
-        tenantId,
-        startingDate
-      );
+      await this.saleInvoicesCost.scheduleWriteJournalEntries(tenantId, startingDate);
     }
   };
 
@@ -146,15 +125,8 @@ export default class InventorySubscriber {
     oldInventoryTransactions,
     trx,
   }: IInventoryTransactionsDeletedPayload) => {
-    const itemsQuantityChanges =
-      this.itemsQuantitySync.getReverseItemsQuantityChanges(
-        oldInventoryTransactions
-      );
-    await this.itemsQuantitySync.changeItemsQuantity(
-      tenantId,
-      itemsQuantityChanges,
-      trx
-    );
+    const itemsQuantityChanges = this.itemsQuantitySync.getReverseItemsQuantityChanges(oldInventoryTransactions);
+    await this.itemsQuantitySync.changeItemsQuantity(tenantId, itemsQuantityChanges, trx);
   };
 
   /**
@@ -179,11 +151,7 @@ export default class InventorySubscriber {
 
     runAfterTransaction(trx, async () => {
       try {
-        await this.saleInvoicesCost.scheduleComputeCostByItemsIds(
-          tenantId,
-          inventoryItemsIds,
-          startingDate
-        );
+        await this.saleInvoicesCost.scheduleComputeCostByItemsIds(tenantId, inventoryItemsIds, startingDate);
       } catch (error) {
         console.error(error);
       }

@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
 import { ICreateTaxRateDTO, IEditTaxRateDTO } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { ActivateTaxRateService } from './ActivateTaxRate';
 import { CreateTaxRate } from './CreateTaxRate';
 import { DeleteTaxRateService } from './DeleteTaxRate';
 import { EditTaxRateService } from './EditTaxRate';
 import { GetTaxRateService } from './GetTaxRate';
 import { GetTaxRatesService } from './GetTaxRates';
-import { ActivateTaxRateService } from './ActivateTaxRate';
 import { InactivateTaxRateService } from './InactivateTaxRate';
 
 @Service()
@@ -48,16 +48,8 @@ export class TaxRatesApplication {
    * @param {IEditTaxRateDTO} taxRateEditDTO
    * @returns {Promise<ITaxRate>}
    */
-  public editTaxRate(
-    tenantId: number,
-    taxRateId: number,
-    editTaxRateDTO: IEditTaxRateDTO
-  ) {
-    return this.editTaxRateService.editTaxRate(
-      tenantId,
-      taxRateId,
-      editTaxRateDTO
-    );
+  public editTaxRate(tenantId: number, taxRateId: number, editTaxRateDTO: IEditTaxRateDTO) {
+    return this.editTaxRateService.editTaxRate(tenantId, taxRateId, editTaxRateDTO);
   }
 
   /**

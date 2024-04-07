@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import { InventoryTransactionsWarehouses } from './AccountsTransactionsWarehouses';
 import { IBranchesActivatedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { InventoryTransactionsWarehouses } from './AccountsTransactionsWarehouses';
 
 @Service()
 export class AccountsTransactionsWarehousesSubscribe {
@@ -12,10 +12,7 @@ export class AccountsTransactionsWarehousesSubscribe {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateGLTransactionsToPrimaryBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateGLTransactionsToPrimaryBranchOnActivated);
     return bus;
   };
 
@@ -29,10 +26,6 @@ export class AccountsTransactionsWarehousesSubscribe {
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) => {
-    await this.accountsTransactionsWarehouses.updateTransactionsWithWarehouse(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+    await this.accountsTransactionsWarehouses.updateTransactionsWithWarehouse(tenantId, primaryBranch.id, trx);
   };
 }

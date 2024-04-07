@@ -8,43 +8,30 @@ const AccountContentTabs = styled(ContentTabs)`
 `;
 
 export function AccountTransactionsFilterTabs() {
-  const { filterTab, setFilterTab, currentAccount } =
-    useAccountTransactionsContext();
+  const { filterTab, setFilterTab, currentAccount } = useAccountTransactionsContext();
 
   const handleChange = (value) => {
     setFilterTab(value);
   };
 
-  const hasUncategorizedTransx = Boolean(
-    currentAccount.uncategorized_transactions,
-  );
+  const hasUncategorizedTransx = Boolean(currentAccount.uncategorized_transactions);
 
   return (
     <AccountContentTabs value={filterTab} onChange={handleChange}>
-      <ContentTabs.Tab
-        id={'dashboard'}
-        title={'Dashboard'}
-        description={'Account Summary'}
-      />
+      <ContentTabs.Tab id={'dashboard'} title={'Dashboard'} description={'Account Summary'} />
       {hasUncategorizedTransx && (
         <ContentTabs.Tab
           id={'uncategorized'}
           title={
             <>
-              <span style={{ color: '#ff0000' }}>
-                {currentAccount.uncategorized_transactions}
-              </span>{' '}
-              Uncategorized Transactions
+              <span style={{ color: '#ff0000' }}>{currentAccount.uncategorized_transactions}</span> Uncategorized
+              Transactions
             </>
           }
           description={'For Bank Statement'}
         />
       )}
-      <ContentTabs.Tab
-        id="all"
-        title={'All Transactions'}
-        description={'In Bigcapital'}
-      />
+      <ContentTabs.Tab id="all" title={'All Transactions'} description={'In Bigcapital'} />
     </AccountContentTabs>
   );
 }

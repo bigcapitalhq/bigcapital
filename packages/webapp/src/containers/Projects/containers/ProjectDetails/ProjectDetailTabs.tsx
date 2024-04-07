@@ -15,32 +15,11 @@ import ProjectSalesTable from './ProjectSalesTable';
 export default function ProjectDetailTabs() {
   return (
     <ProjectTabsContent>
-      <Tabs
-        animate={true}
-        large={true}
-        renderActiveTabPanelOnly={true}
-        defaultSelectedTabId={'tasks'}
-      >
-        <Tab
-          id="tasks"
-          title={intl.get('project_details.label.tasks')}
-          panel={<ProjectTasks />}
-        />
-        <Tab
-          id="timesheet"
-          title={intl.get('project_details.label.timesheet')}
-          panel={<ProjectTimeSheets />}
-        />
-        <Tab
-          id="purchases"
-          title={intl.get('project_details.label.purchases')}
-          panel={<ProjectPurchasesTable />}
-        />
-        <Tab
-          id="sales"
-          title={intl.get('project_details.label.sales')}
-          panel={<ProjectSalesTable />}
-        />
+      <Tabs animate={true} large={true} renderActiveTabPanelOnly={true} defaultSelectedTabId={'tasks'}>
+        <Tab id="tasks" title={intl.get('project_details.label.tasks')} panel={<ProjectTasks />} />
+        <Tab id="timesheet" title={intl.get('project_details.label.timesheet')} panel={<ProjectTimeSheets />} />
+        <Tab id="purchases" title={intl.get('project_details.label.purchases')} panel={<ProjectPurchasesTable />} />
+        <Tab id="sales" title={intl.get('project_details.label.sales')} panel={<ProjectSalesTable />} />
         <Tab id="journals" title={intl.get('project_details.label.journals')} />
       </Tabs>
     </ProjectTabsContent>

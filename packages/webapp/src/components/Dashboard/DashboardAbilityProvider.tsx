@@ -19,9 +19,5 @@ export function DashboardAbilityProvider({ children }) {
   // Ability instance.
   const ability = new Ability(abilities);
 
-  return (
-    <AbilityContext.Provider value={ability}>
-      {children}
-    </AbilityContext.Provider>
-  );
+  return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>;
 }

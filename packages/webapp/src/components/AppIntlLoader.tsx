@@ -91,10 +91,7 @@ function useAppLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the value to start/stop splash screen.
-  useWatchImmediate(
-    (value) => (value ? startLoading() : stopLoading()),
-    isLoading,
-  );
+  useWatchImmediate((value) => (value ? startLoading() : stopLoading()), isLoading);
   return { isLoading };
 }
 
@@ -117,10 +114,7 @@ function useAppYupLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the valiue to start/stop splash screen.
-  useWatchImmediate(
-    (value) => (value ? startLoading() : stopLoading()),
-    isLoading,
-  );
+  useWatchImmediate((value) => (value ? startLoading() : stopLoading()), isLoading);
   return { isLoading };
 }
 
@@ -138,8 +132,7 @@ function AppIntlLoader({ children }) {
   useDocumentDirectionModifier(currentLocale, isRTL);
 
   // Loads yup localization of the given locale.
-  const { isLoading: isAppYupLocalesLoading } =
-    useAppYupLoadLocales(currentLocale);
+  const { isLoading: isAppYupLocalesLoading } = useAppYupLoadLocales(currentLocale);
 
   // Loads application locales of the given locale.
   const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);

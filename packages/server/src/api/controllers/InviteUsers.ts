@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, body, param } from 'express-validator';
-import { IInviteUserInput } from '@/interfaces';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import BaseController from './BaseController';
-import InviteTenantUserService from '@/services/InviteUsers/TenantInviteUser';
+import { IInviteUserInput } from '@/interfaces';
 import AcceptInviteUserService from '@/services/InviteUsers/AcceptInviteUser';
+import InviteTenantUserService from '@/services/InviteUsers/TenantInviteUser';
+import { NextFunction, Request, Response, Router } from 'express';
+import { body, check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from './BaseController';
 
 @Service()
 export default class InviteUsersController extends BaseController {
@@ -24,20 +24,17 @@ export default class InviteUsersController extends BaseController {
 
     router.post(
       '/send',
-      [
-        body('email').exists().trim().escape(),
-        body('role_id').exists().isNumeric().toInt(),
-      ],
+      [body('email').exists().trim().escape(), body('role_id').exists().isNumeric().toInt()],
       this.validationResult,
       asyncMiddleware(this.sendInvite.bind(this)),
-      this.handleServicesError
+      this.handleServicesError,
     );
     router.post(
       '/resend/:userId',
       [param('userId').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.resendInvite.bind(this)),
-      this.handleServicesError
+      this.handleServicesError,
     );
     return router;
   }
@@ -53,14 +50,14 @@ export default class InviteUsersController extends BaseController {
       [...this.inviteUserDTO],
       this.validationResult,
       asyncMiddleware(this.accept.bind(this)),
-      this.handleServicesError
+      this.handleServicesError,
     );
     router.get(
       '/invited/:token',
       [param('token').exists().trim().escape()],
       this.validationResult,
       asyncMiddleware(this.invited.bind(this)),
-      this.handleServicesError
+      this.handleServicesError,
     );
 
     return router;
@@ -162,8 +159,7 @@ export default class InviteUsersController extends BaseController {
     const { token } = req.params;
 
     try {
-      const { inviteToken, orgName } =
-        await this.acceptInviteService.checkInvite(token);
+      const { inviteToken, orgName } = await this.acceptInviteService.checkInvite(token);
 
       return res.status(200).send({
         inviteToken: inviteToken.token,
@@ -178,12 +174,7 @@ export default class InviteUsersController extends BaseController {
   /**
    * Handles the service error.
    */
-  private handleServicesError(
-    error,
-    req: Request,
-    res: Response,
-    next: Function
-  ) {
+  private handleServicesError(error, req: Request, res: Response, next: Function) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'EMAIL_EXISTS') {
         return res.status(400).send({
@@ -224,8 +215,7 @@ export default class InviteUsersController extends BaseController {
             {
               type: 'PHONE_NUMBER.EXISTS',
               code: 400,
-              message:
-                'Phone number is already invited, please try another unique one.',
+              message: 'Phone number is already invited, please try another unique one.',
             },
           ],
         });
@@ -236,8 +226,7 @@ export default class InviteUsersController extends BaseController {
             {
               type: 'USER_RECENTLY_INVITED',
               code: 500,
-              message:
-                'This person was recently invited. No need to invite them again just yet.',
+              message: 'This person was recently invited. No need to invite them again just yet.',
             },
           ],
         });

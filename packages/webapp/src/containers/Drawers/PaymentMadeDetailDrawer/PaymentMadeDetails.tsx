@@ -18,16 +18,8 @@ import PaymentMadeGLEntriesPanel from './PaymentMadeGLEntriesPanel';
 function PaymentMadeDetailsTabs() {
   return (
     <DrawerMainTabs defaultSelectedTabId="details">
-      <Tab
-        id={'details'}
-        title={intl.get('details')}
-        panel={<PaymentMadeDetailTab />}
-      />
-      <Tab
-        id={'journal_entries'}
-        title={intl.get('journal_entries')}
-        panel={<PaymentMadeGLEntriesPanel />}
-      />
+      <Tab id={'details'} title={intl.get('details')} panel={<PaymentMadeDetailTab />} />
+      <Tab id={'journal_entries'} title={intl.get('journal_entries')} panel={<PaymentMadeGLEntriesPanel />} />
     </DrawerMainTabs>
   );
 }

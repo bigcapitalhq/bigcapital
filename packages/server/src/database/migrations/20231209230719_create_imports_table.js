@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('imports', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('imports', (table) => {
     table.increments();
     table.string('filename');
     table.string('import_id');
@@ -9,8 +9,5 @@ exports.up = function (knex) {
     table.json('params');
     table.timestamps();
   });
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('imports');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('imports');

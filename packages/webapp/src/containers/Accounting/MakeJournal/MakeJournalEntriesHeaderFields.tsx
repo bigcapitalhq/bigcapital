@@ -6,19 +6,8 @@ import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
-import {
-  momentFormatter,
-  inputIntent,
-  handleDateChange,
-  tansformDateValue,
-} from '@/utils';
-import {
-  Hint,
-  FieldRequiredHint,
-  Icon,
-  CurrencySelectList,
-  FormattedMessage as T,
-} from '@/components';
+import { momentFormatter, inputIntent, handleDateChange, tansformDateValue } from '@/utils';
+import { Hint, FieldRequiredHint, Icon, CurrencySelectList, FormattedMessage as T } from '@/components';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { JournalExchangeRateInputField } from './components';
 import { currenciesFieldShouldUpdate } from './utils';
@@ -70,12 +59,7 @@ export default function MakeJournalEntriesHeader({}) {
         {({ form, field, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'reference'} />}
-            labelInfo={
-              <Hint
-                content={<T id={'journal_reference_hint'} />}
-                position={Position.RIGHT}
-              />
-            }
+            labelInfo={<Hint content={<T id={'journal_reference_hint'} />} position={Position.RIGHT} />}
             className={'form-group--reference'}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
@@ -95,21 +79,13 @@ export default function MakeJournalEntriesHeader({}) {
             className={classNames('form-group--account-type', CLASSES.FILL)}
             inline={true}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              fill={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} fill={true} {...field} />
           </FormGroup>
         )}
       </FastField>
 
       {/*------------ Currency  -----------*/}
-      <FastField
-        name={'currency_code'}
-        currencies={currencies}
-        shouldUpdate={currenciesFieldShouldUpdate}
-      >
+      <FastField name={'currency_code'} currencies={currencies} shouldUpdate={currenciesFieldShouldUpdate}>
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'currency'} />}
@@ -130,10 +106,7 @@ export default function MakeJournalEntriesHeader({}) {
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <JournalExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <JournalExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
     </div>
   );
 }

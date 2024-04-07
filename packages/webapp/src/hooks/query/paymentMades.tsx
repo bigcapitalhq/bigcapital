@@ -66,16 +66,13 @@ export function useCreatePaymentMade(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('purchases/bill_payments', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidation queries.
-        commonInvalidateQueries(client);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.post('purchases/bill_payments', values), {
+    onSuccess: (res, values) => {
+      // Common invalidation queries.
+      commonInvalidateQueries(client);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -85,19 +82,16 @@ export function useEditPaymentMade(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`purchases/bill_payments/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidation queries.
-        commonInvalidateQueries(client);
+  return useMutation(([id, values]) => apiRequest.post(`purchases/bill_payments/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidation queries.
+      commonInvalidateQueries(client);
 
-        // Invalidate specific payment made.
-        client.invalidateQueries([t.PAYMENT_MADE, id]);
-      },
-      ...props,
+      // Invalidate specific payment made.
+      client.invalidateQueries([t.PAYMENT_MADE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -107,19 +101,16 @@ export function useDeletePaymentMade(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.delete(`purchases/bill_payments/${id}`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidation queries.
-        commonInvalidateQueries(client);
+  return useMutation((id) => apiRequest.delete(`purchases/bill_payments/${id}`), {
+    onSuccess: (res, id) => {
+      // Common invalidation queries.
+      commonInvalidateQueries(client);
 
-        // Invalidate specific payment made.
-        client.invalidateQueries([t.PAYMENT_MADE, id]);
-      },
-      ...props,
+      // Invalidate specific payment made.
+      client.invalidateQueries([t.PAYMENT_MADE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**

@@ -7,12 +7,7 @@ export class ItemInvoicesTransactionsTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedAmount',
-      'formattedInvoiceDate',
-      'formattedRate',
-      'formattedCost',
-    ];
+    return ['formattedAmount', 'formattedInvoiceDate', 'formattedRate', 'formattedCost'];
   };
 
   /**

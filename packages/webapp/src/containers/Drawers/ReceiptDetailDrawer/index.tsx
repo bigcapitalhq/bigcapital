@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const ReceiptDetailDrawerContent = React.lazy(() =>
-  import('./ReceiptDetailDrawerContent'),
-);
+const ReceiptDetailDrawerContent = React.lazy(() => import('./ReceiptDetailDrawerContent'));
 
 /**
  * Receipt Detail drawer.
@@ -19,12 +17,7 @@ function ReceiptDetailDrawer({
   payload: { receiptId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-      size={'65%'}
-    >
+    <Drawer isOpen={isOpen} name={name} style={{ minWidth: '700px', maxWidth: '900px' }} size={'65%'}>
       <DrawerSuspense>
         <ReceiptDetailDrawerContent receiptId={receiptId} />
       </DrawerSuspense>

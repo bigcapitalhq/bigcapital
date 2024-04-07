@@ -1,7 +1,7 @@
 import { IBranchesActivatedPayload } from '@/interfaces';
-import { Service, Inject } from 'typedi';
-import { CreditNoteActivateBranches } from '../../Integrations/Sales/CreditNoteBranchesActivate';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { CreditNoteActivateBranches } from '../../Integrations/Sales/CreditNoteBranchesActivate';
 
 @Service()
 export class CreditNoteActivateBranchesSubscriber {
@@ -12,10 +12,7 @@ export class CreditNoteActivateBranchesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateCreditNoteWithBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateCreditNoteWithBranchOnActivated);
     return bus;
   }
 
@@ -29,10 +26,6 @@ export class CreditNoteActivateBranchesSubscriber {
     primaryBranch,
     trx,
   }: IBranchesActivatedPayload) => {
-    await this.creditNotesActivateBranches.updateCreditsWithBranch(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+    await this.creditNotesActivateBranches.updateCreditsWithBranch(tenantId, primaryBranch.id, trx);
   };
 }

@@ -13,11 +13,7 @@ export default function ProjectTaskFormDialogContent({
   project,
 }) {
   return (
-    <ProjectTaskFormProvider
-      taskId={task}
-      projectId={project}
-      dialogName={dialogName}
-    >
+    <ProjectTaskFormProvider taskId={task} projectId={project} dialogName={dialogName}>
       <ProjectTaskForm />
     </ProjectTaskFormProvider>
   );

@@ -12,19 +12,12 @@ function calculateProject(costEstiate, totalAmount) {
 
 export const useCalculateProject = () => {
   const { project } = useProjectDetailContext();
-  const percentageOfInvoice = calculateProject(
-    project?.total_invoiced,
-    project?.cost_estimate,
-  );
+  const percentageOfInvoice = calculateProject(project?.total_invoiced, project?.cost_estimate);
 
-  const percentageOfExpense = calculateProject(
-    project?.total_expenses,
-    project?.cost_estimate,
-  );
+  const percentageOfExpense = calculateProject(project?.total_expenses, project?.cost_estimate);
 
   return {
     percentageOfInvoice,
     percentageOfExpense,
   };
 };
-

@@ -51,27 +51,16 @@ export default function InvoiceDetailHeader() {
             </DetailItem>
 
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={invoice.customer_id}>
-                {invoice.customer?.display_name}
-              </CustomerDrawerLink>
+              <CustomerDrawerLink customerId={invoice.customer_id}>{invoice.customer?.display_name}</CustomerDrawerLink>
             </DetailItem>
 
-            <DetailItem label={intl.get('invoice.details.invoice_no')}>
-              {invoice.invoice_no}
-            </DetailItem>
-            <ExchangeRateDetailItem
-              exchangeRate={invoice?.exchange_rate}
-              toCurrency={invoice?.currency_code}
-            />
+            <DetailItem label={intl.get('invoice.details.invoice_no')}>{invoice.invoice_no}</DetailItem>
+            <ExchangeRateDetailItem exchangeRate={invoice?.exchange_rate} toCurrency={invoice?.currency_code} />
           </DetailsMenu>
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-            textAlign={'right'}
-          >
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'} textAlign={'right'}>
             <DetailItem label={intl.get('due_amount')}>
               <strong>{invoice.due_amount_formatted}</strong>
             </DetailItem>
@@ -80,10 +69,7 @@ export default function InvoiceDetailHeader() {
               <strong>{invoice.payment_amount_formatted}</strong>
             </DetailItem>
 
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(invoice.reference_no, '--')}
-            />
+            <DetailItem label={intl.get('reference')} children={defaultTo(invoice.reference_no, '--')} />
             <DetailItem
               label={intl.get('invoice.details.created_at')}
               children={<FormatDate value={invoice.created_at} />}

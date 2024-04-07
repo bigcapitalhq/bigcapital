@@ -5,7 +5,7 @@ export default class Import extends TenantModel {
   mapping!: string;
   columns!: string;
   params!: Record<string, any>;
-  
+
   /**
    * Table name.
    */
@@ -49,7 +49,6 @@ export default class Import extends TenantModel {
       return [];
     }
   }
-
 
   public get paramsParsed() {
     try {

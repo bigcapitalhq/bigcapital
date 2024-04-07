@@ -66,16 +66,10 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
 
     if (field.fieldType === 'text') {
       if (!isUndefined(field.minLength)) {
-        fieldSchema = fieldSchema.min(
-          field.minLength,
-          `Minimum length is ${field.minLength} characters`
-        );
+        fieldSchema = fieldSchema.min(field.minLength, `Minimum length is ${field.minLength} characters`);
       }
       if (!isUndefined(field.maxLength)) {
-        fieldSchema = fieldSchema.max(
-          field.maxLength,
-          `Maximum length is ${field.maxLength} characters`
-        );
+        fieldSchema = fieldSchema.max(field.maxLength, `Maximum length is ${field.maxLength} characters`);
       }
     } else if (field.fieldType === 'number') {
       fieldSchema = Yup.number().label(field.name);
@@ -104,7 +98,7 @@ export const convertFieldsToYupValidation = (fields: ResourceMetaFieldsMap) => {
             return true;
           }
           return moment(val, 'YYYY-MM-DD', true).isValid();
-        }
+        },
       );
     } else if (field.fieldType === 'url') {
       fieldSchema = fieldSchema.url();
@@ -146,9 +140,7 @@ const parseFieldName = (fieldName: string, field: IModelMetaField) => {
  * @returns 
  */
 export const getUnmappedSheetColumns = (columns, mapping) => {
-  return columns.filter(
-    (column) => !mapping.some((map) => map.from === column)
-  );
+  return columns.filter((column) => !mapping.some((map) => map.from === column));
 };
 
 export const sanitizeResourceName = (resourceName: string) => {
@@ -170,10 +162,7 @@ export const getUniqueImportableValue = (
   importableFields: { [key: string]: IModelMetaField2 },
   objectDTO: Record<string, any>
 ) => {
-  const uniqueImportableValue = pickBy(
-    importableFields,
-    (field) => field.unique
-  );
+  const uniqueImportableValue = pickBy(importableFields, (field) => field.unique);
   const uniqueImportableKeys = Object.keys(uniqueImportableValue);
   const uniqueImportableKey = first(uniqueImportableKeys);
 
@@ -199,14 +188,11 @@ const booleanValuesRepresentingFalse: string[] = ['false', 'no', 'n', 'f', '0'];
  * @returns {string|null}
  */
 export const parseBoolean = (value: string): boolean | null => {
-  const normalizeValue = (value: string): string =>
-    value.toString().trim().toLowerCase();
+  const normalizeValue = (value: string): string => value.toString().trim().toLowerCase();
 
   const normalizedValue = normalizeValue(value);
-  const valuesRepresentingTrue =
-    booleanValuesRepresentingTrue.map(normalizeValue);
-  const valueRepresentingFalse =
-    booleanValuesRepresentingFalse.map(normalizeValue);
+  const valuesRepresentingTrue = booleanValuesRepresentingTrue.map(normalizeValue);
+  const valueRepresentingFalse = booleanValuesRepresentingFalse.map(normalizeValue);
 
   if (valuesRepresentingTrue.includes(normalizedValue)) {
     return true;

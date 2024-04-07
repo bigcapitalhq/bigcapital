@@ -1,9 +1,9 @@
-import { Container, Service, Inject } from 'typedi';
-import TenantsManagerService from '@/services/Tenancy/TenantsManager';
+import SmsClientLoader from '@/loaders/smsClient';
+import tenantCacheLoader from '@/loaders/tenantCache';
 import tenantModelsLoader from '@/loaders/tenantModels';
 import tenantRepositoriesLoader from '@/loaders/tenantRepositories';
-import tenantCacheLoader from '@/loaders/tenantCache';
-import SmsClientLoader from '@/loaders/smsClient';
+import TenantsManagerService from '@/services/Tenancy/TenantsManager';
+import { Container, Inject, Service } from 'typedi';
 
 @Service()
 export default class HasTenancyService {

@@ -1,17 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { difference, upperFirst, omit } from 'lodash';
+import { ServiceError } from '@/exceptions';
+import { IContact, IContactEditDTO, IContactNewDTO, IContactsAutoCompleteFilter } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { difference, omit, upperFirst } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { Knex } from 'knex';
-import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import {
-  IContact,
-  IContactNewDTO,
-  IContactEditDTO,
-  IContactsAutoCompleteFilter,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import JournalPoster from '../Accounting/JournalPoster';
 import { ERRORS } from './constants';
 
@@ -35,11 +30,7 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<IContact>}
    */
-  public async getContactByIdOrThrowError(
-    tenantId: number,
-    contactId: number,
-    contactService?: TContactService
-  ) {
+  public async getContactByIdOrThrowError(tenantId: number, contactId: number, contactService?: TContactService) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     const contact = await contactRepository.findOne({
@@ -57,16 +48,9 @@ export default class ContactsService {
    * Converts contact DTO object to model object attributes to insert or update.
    * @param {IContactNewDTO | IContactEditDTO} contactDTO
    */
-  private commonTransformContactObj(
-    contactDTO: IContactNewDTO | IContactEditDTO
-  ) {
+  private commonTransformContactObj(contactDTO: IContactNewDTO | IContactEditDTO) {
     return {
-      ...omit(contactDTO, [
-        'billingAddress1',
-        'billingAddress2',
-        'shippingAddress1',
-        'shippingAddress2',
-      ]),
+      ...omit(contactDTO, ['billingAddress1', 'billingAddress2', 'shippingAddress1', 'shippingAddress2']),
       billing_address_1: contactDTO?.billingAddress1,
       billing_address_2: contactDTO?.billingAddress2,
       shipping_address_1: contactDTO?.shippingAddress1,
@@ -80,10 +64,7 @@ export default class ContactsService {
    */
   private transformNewContactDTO(contactDTO: IContactNewDTO) {
     const baseCurrency = 'USD';
-    const currencyCode =
-      typeof contactDTO.currencyCode !== 'undefined'
-        ? contactDTO.currencyCode
-        : baseCurrency;
+    const currencyCode = typeof contactDTO.currencyCode !== 'undefined' ? contactDTO.currencyCode : baseCurrency;
 
     return {
       ...this.commonTransformContactObj(contactDTO),
@@ -111,7 +92,7 @@ export default class ContactsService {
     tenantId: number,
     contactDTO: IContactNewDTO,
     contactService: TContactService,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
     const contactObj = this.transformNewContactDTO(contactDTO);
@@ -121,7 +102,7 @@ export default class ContactsService {
         contactService,
         ...contactObj,
       },
-      trx
+      trx,
     );
     return contact;
   }
@@ -138,17 +119,13 @@ export default class ContactsService {
     contactId: number,
     contactDTO: IContactEditDTO,
     contactService: TContactService,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
     const contactObj = this.transformEditContactDTO(contactDTO);
 
     // Retrieve the given contact by id or throw not found service error.
-    const contact = await this.getContactByIdOrThrowError(
-      tenantId,
-      contactId,
-      contactService
-    );
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
     return contactRepository.update({ ...contactObj }, { id: contactId }, trx);
   }
 
@@ -159,19 +136,10 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<void>}
    */
-  async deleteContact(
-    tenantId: number,
-    contactId: number,
-    contactService: TContactService,
-    trx?: Knex.Transaction
-  ) {
+  async deleteContact(tenantId: number, contactId: number, contactService: TContactService, trx?: Knex.Transaction) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
-    const contact = await this.getContactByIdOrThrowError(
-      tenantId,
-      contactId,
-      contactService
-    );
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
     // Deletes contact of the given id.
     await contactRepository.deleteById(contactId, trx);
   }
@@ -183,11 +151,7 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @returns {Promise<IContact>}
    */
-  async getContact(
-    tenantId: number,
-    contactId: number,
-    contactService?: TContactService
-  ) {
+  async getContact(tenantId: number, contactId: number, contactService?: TContactService) {
     return this.getContactByIdOrThrowError(tenantId, contactId, contactService);
   }
 
@@ -205,10 +169,7 @@ export default class ContactsService {
    * @param {IContactsAutoCompleteFilter} contactsFilter -
    * @return {IContactAutoCompleteItem}
    */
-  async autocompleteContacts(
-    tenantId: number,
-    query: IContactsAutoCompleteFilter
-  ) {
+  async autocompleteContacts(tenantId: number, query: IContactsAutoCompleteFilter) {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Parses auto-complete list filter DTO.
@@ -239,15 +200,9 @@ export default class ContactsService {
    * @param {TContactService} contactService
    * @return {Promise<IContact>}
    */
-  async getContactsOrThrowErrorNotFound(
-    tenantId: number,
-    contactsIds: number[],
-    contactService: TContactService
-  ) {
+  async getContactsOrThrowErrorNotFound(tenantId: number, contactsIds: number[], contactService: TContactService) {
     const { Contact } = this.tenancy.models(tenantId);
-    const contacts = await Contact.query()
-      .whereIn('id', contactsIds)
-      .where('contact_service', contactService);
+    const contacts = await Contact.query().whereIn('id', contactsIds).where('contact_service', contactService);
 
     const storedContactsIds = contacts.map((contact: IContact) => contact.id);
     const notFoundCustomers = difference(contactsIds, storedContactsIds);
@@ -265,11 +220,7 @@ export default class ContactsService {
    * @param  {TContactService} contactService
    * @return {Promise<void>}
    */
-  async deleteBulkContacts(
-    tenantId: number,
-    contactsIds: number[],
-    contactService: TContactService
-  ) {
+  async deleteBulkContacts(tenantId: number, contactsIds: number[], contactService: TContactService) {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the given contacts or throw not found service error.
@@ -288,7 +239,7 @@ export default class ContactsService {
     tenantId: number,
     contactsIds: number[],
     contactService: TContactService,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     const { AccountTransaction } = this.tenancy.models(tenantId);
     const journal = new JournalPoster(tenantId, null, trx);
@@ -316,16 +267,12 @@ export default class ContactsService {
     contactId: number,
     contactService: string,
     openingBalance: number,
-    openingBalanceAt?: Date | string
+    openingBalanceAt?: Date | string,
   ): Promise<void> {
     const { contactRepository } = this.tenancy.repositories(tenantId);
 
     // Retrieve the given contact details or throw not found service error.
-    const contact = await this.getContactByIdOrThrowError(
-      tenantId,
-      contactId,
-      contactService
-    );
+    const contact = await this.getContactByIdOrThrowError(tenantId, contactId, contactService);
     // Should the opening balance date be required.
     if (!contact.openingBalanceAt && !openingBalanceAt) {
       throw new ServiceError(ERRORS.OPENING_BALANCE_DATE_REQUIRED);
@@ -342,7 +289,7 @@ export default class ContactsService {
       {
         id: contactId,
         contactService,
-      }
+      },
     );
   }
 

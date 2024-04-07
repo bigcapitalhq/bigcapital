@@ -1,21 +1,9 @@
-import { Service, Inject } from 'typedi';
-
-
 export class WarehousesTransfersService {
-  createWarehouseTranser = (
-    tenantId: number,
-    createWarehouseTransfer: ICreateWarehouseTransferDTO
-  ) => {};
+  createWarehouseTranser = (tenantId: number, createWarehouseTransfer: ICreateWarehouseTransferDTO) => {};
 
-  editWarehouseTranser = (
-    tenantId: number,
-    editWarehouseTransfer: IEditWarehouseTransferDTO
-  ) => {};
+  editWarehouseTranser = (tenantId: number, editWarehouseTransfer: IEditWarehouseTransferDTO) => {};
 
-  deleteWarehouseTranser = (
-    tenantId: number,
-    warehouseTransferId: number
-  ) => {};
+  deleteWarehouseTranser = (tenantId: number, warehouseTransferId: number) => {};
 
   getWarehouseTransfer = (tenantId: number, warehouseTransferId: number) => {};
 

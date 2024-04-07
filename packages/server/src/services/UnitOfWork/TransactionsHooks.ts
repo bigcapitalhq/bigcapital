@@ -31,6 +31,6 @@ export function runAfterTransaction(trx, callback) {
     },
     () => {
       // Ignore transaction error
-    }
+    },
   );
 }

@@ -46,7 +46,6 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
   );
 }
 
-const useInvoiceDetailDrawerContext = () =>
-  React.useContext(InvoiceDetailDrawerContext);
+const useInvoiceDetailDrawerContext = () => React.useContext(InvoiceDetailDrawerContext);
 
 export { InvoiceDetailDrawerProvider, useInvoiceDetailDrawerContext };

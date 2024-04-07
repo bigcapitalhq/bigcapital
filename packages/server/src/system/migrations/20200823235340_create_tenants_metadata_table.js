@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('tenants_metadata', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('tenants_metadata', (table) => {
     table.bigIncrements();
     table.integer('tenant_id').unsigned();
 
@@ -15,8 +15,5 @@ exports.up = function (knex) {
 
     table.string('fiscal_year');
   });
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('tenants_metadata');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('tenants_metadata');

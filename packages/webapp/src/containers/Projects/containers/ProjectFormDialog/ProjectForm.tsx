@@ -29,14 +29,7 @@ function ProjectForm({
   closeDialog,
 }) {
   // project form dialog context.
-  const {
-    dialogName,
-    project,
-    isNewMode,
-    projectId,
-    createProjectMutate,
-    editProjectMutate,
-  } = useProjectFormContext();
+  const { dialogName, project, isNewMode, projectId, createProjectMutate, editProjectMutate } = useProjectFormContext();
 
   // Initial form values
   const initialValues = {
@@ -52,11 +45,7 @@ function ProjectForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get(
-          isNewMode
-            ? 'projects.dialog.success_message'
-            : 'projects.dialog.edit_success_message',
-        ),
+        message: intl.get(isNewMode ? 'projects.dialog.success_message' : 'projects.dialog.edit_success_message'),
 
         intent: Intent.SUCCESS,
       });

@@ -3,7 +3,6 @@ import * as Yup from 'yup';
 import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 import { defaultTo } from 'lodash';
 
-
 const Schema = Yup.object().shape({
   format_money: Yup.string(),
   show_zero: Yup.boolean(),

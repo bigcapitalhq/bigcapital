@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ProjectBillableBill {
@@ -12,16 +12,10 @@ export class ProjectBillableBill {
    * @param {number} billId - Bill id.
    * @param {number} invoicedAmount - Invoiced amount.
    */
-  public increaseInvoicedBill = async (
-    tenantId: number,
-    billId: number,
-    invoicedAmount: number
-  ) => {
+  public increaseInvoicedBill = async (tenantId: number, billId: number, invoicedAmount: number) => {
     const { Bill } = this.tenancy.models(tenantId);
 
-    await Bill.query()
-      .findById(billId)
-      .increment('projectInvoicedAmount', invoicedAmount);
+    await Bill.query().findById(billId).increment('projectInvoicedAmount', invoicedAmount);
   };
 
   /**
@@ -31,15 +25,9 @@ export class ProjectBillableBill {
    * @param {number} invoiceHours - Invoiced amount.
    * @returns {}
    */
-  public decreaseInvoicedBill = async (
-    tenantId: number,
-    billId: number,
-    invoiceHours: number
-  ) => {
+  public decreaseInvoicedBill = async (tenantId: number, billId: number, invoiceHours: number) => {
     const { Bill } = this.tenancy.models(tenantId);
 
-    await Bill.query()
-      .findById(billId)
-      .decrement('projectInvoicedAmount', invoiceHours);
+    await Bill.query().findById(billId).decrement('projectInvoicedAmount', invoiceHours);
   };
 }

@@ -16,12 +16,9 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   const { featureCan } = useFeatureCan();
 
   // Handle fetch specific payment made details.
-  const { data: paymentMade, isLoading: isPaymentMadeLoading } = usePaymentMade(
-    paymentMadeId,
-    {
-      enabled: !!paymentMadeId,
-    },
-  );
+  const { data: paymentMade, isLoading: isPaymentMadeLoading } = usePaymentMade(paymentMadeId, {
+    enabled: !!paymentMadeId,
+  });
   // Provider state.
   const provider = {
     paymentMadeId,
@@ -35,9 +32,7 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
       <DrawerHeaderContent
         name="payment-made-detail-drawer"
         title={intl.get('payment_made.drawer.title', {
-          number: paymentMade.payment_number
-            ? `(${paymentMade.payment_number})`
-            : '',
+          number: paymentMade.payment_number ? `(${paymentMade.payment_number})` : '',
         })}
         subTitle={
           featureCan(Features.Branches)
@@ -52,6 +47,5 @@ function PaymentMadeDetailProvider({ paymentMadeId, ...props }) {
   );
 }
 
-const usePaymentMadeDetailContext = () =>
-  React.useContext(PaymentMadeDetailContext);
+const usePaymentMadeDetailContext = () => React.useContext(PaymentMadeDetailContext);
 export { PaymentMadeDetailProvider, usePaymentMadeDetailContext };

@@ -13,10 +13,7 @@ export default function InvoiceMailDialogContent({
 }: InvoiceMailDialogContentProps) {
   return (
     <InvoiceMailDialogBoot invoiceId={invoiceId}>
-      <InvoiceMailDialogForm
-        onFormSubmit={onFormSubmit}
-        onCancelClick={onCancelClick}
-      />
+      <InvoiceMailDialogForm onFormSubmit={onFormSubmit} onCancelClick={onCancelClick} />
     </InvoiceMailDialogBoot>
   );
 }

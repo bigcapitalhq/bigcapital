@@ -16,7 +16,7 @@ function ClearPaymentTransactionAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: {  },
+  payload: {},
 
   // #withAlertActions
   closeAlert,
@@ -27,9 +27,7 @@ function ClearPaymentTransactionAlert({
   };
 
   // Handle confirm delete manual journal.
-  const handleConfirm = () => {
-     
-  };
+  const handleConfirm = () => {};
 
   return (
     <Alert
@@ -49,7 +47,4 @@ function ClearPaymentTransactionAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ClearPaymentTransactionAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ClearPaymentTransactionAlert);

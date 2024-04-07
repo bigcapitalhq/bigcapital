@@ -1,8 +1,8 @@
-import { forEach, uniqBy } from 'lodash';
-import DynamicFilterAbstractor from './DynamicFilterAbstractor';
 import { IDynamicFilter, IFilterRole, IModel } from '@/interfaces';
+import { forEach } from 'lodash';
+import DynamicFilterAbstractor from './DynamicFilterAbstractor';
 
-export default class DynamicFilter extends DynamicFilterAbstractor{
+export default class DynamicFilter extends DynamicFilterAbstractor {
   private model: IModel;
   private tableName: string;
   private dynamicFilters: IDynamicFilter[];
@@ -29,17 +29,17 @@ export default class DynamicFilter extends DynamicFilterAbstractor{
     dynamicFilter.onInitialize();
 
     this.dynamicFilters.push(dynamicFilter);
-  }
+  };
 
   /**
    * Retrieve dynamic filter build queries.
-   * @returns 
+   * @returns
    */
   private dynamicFiltersBuildQuery = () => {
     return this.dynamicFilters.map((filter) => {
-      return filter.buildQuery()
+      return filter.buildQuery();
     });
-  }
+  };
 
   /**
    * Retrieve dynamic filter roles.
@@ -51,12 +51,10 @@ export default class DynamicFilter extends DynamicFilterAbstractor{
     this.dynamicFilters.forEach((dynamicFilter) => {
       const { filterRoles } = dynamicFilter;
 
-      localFilterRoles.push(
-        ...(Array.isArray(filterRoles) ? filterRoles : [filterRoles])
-      );
+      localFilterRoles.push(...(Array.isArray(filterRoles) ? filterRoles : [filterRoles]));
     });
     return localFilterRoles;
-  }
+  };
 
   /**
    * Builds queries of filter roles.
@@ -71,7 +69,7 @@ export default class DynamicFilter extends DynamicFilterAbstractor{
       });
       this.buildFilterRolesJoins(builder);
     };
-  }
+  };
 
   /**
    * Retrieve response metadata from all filters adapters.
@@ -87,5 +85,5 @@ export default class DynamicFilter extends DynamicFilterAbstractor{
       });
     });
     return responseMeta;
-  }
+  };
 }

@@ -11,16 +11,12 @@ const vendorsTableStateSelector = (state) => state.vendors.tableState;
  * Retrieve vendors table state.
  */
 export const getVendorsTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    vendorsTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, vendorsTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 export const vendorsTableStateChangedFactory = () =>
   createDeepEqualSelector(vendorsTableStateSelector, (tableState) => {

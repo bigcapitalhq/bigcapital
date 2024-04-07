@@ -1,11 +1,5 @@
 // @ts-nocheck
-import {
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-  Intent,
-} from '@blueprintjs/core';
+import { NavbarGroup, NavbarDivider, Button, Classes, Intent } from '@blueprintjs/core';
 import {
   If,
   Icon,
@@ -80,9 +74,7 @@ function ItemsCategoryActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={categoriesFilterConditions.length}
-          />
+          <DashboardFilterButton conditionsCount={categoriesFilterConditions.length} />
         </AdvancedFilterPopover>
 
         <If condition={itemCategoriesSelectedRows.length}>
@@ -113,12 +105,10 @@ function ItemsCategoryActionsBar({
 
 export default compose(
   withDialogActions,
-  withItemCategories(
-    ({ itemCategoriesSelectedRows, itemsCategoriesTableState }) => ({
-      itemCategoriesSelectedRows,
-      categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
-    }),
-  ),
+  withItemCategories(({ itemCategoriesSelectedRows, itemsCategoriesTableState }) => ({
+    itemCategoriesSelectedRows,
+    categoriesFilterConditions: itemsCategoriesTableState.filterRoles,
+  })),
   withAlertActions,
   withItemCategoriesActions,
 )(ItemsCategoryActionsBar);

@@ -20,11 +20,5 @@ export default function InvoiceDetailTable() {
     invoice: { entries },
   } = useInvoiceDetailDrawerContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

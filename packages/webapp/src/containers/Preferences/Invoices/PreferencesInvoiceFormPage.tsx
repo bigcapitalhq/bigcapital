@@ -44,10 +44,7 @@ function PreferencesInvoiceFormPage({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )({ salesInvoices: { ...values } });
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)({ salesInvoices: { ...values } });
 
     // Handle request success.
     const onSuccess = () => {

@@ -2,12 +2,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 
 import ManualJournalsEmptyStatus from './ManualJournalsEmptyStatus';
@@ -50,13 +45,8 @@ function ManualJournalsDataTable({
   manualJournalsTableSize,
 }) {
   // Manual journals context.
-  const {
-    manualJournals,
-    pagination,
-    isManualJournalsLoading,
-    isManualJournalsFetching,
-    isEmptyStatus,
-  } = useManualJournalsContext();
+  const { manualJournals, pagination, isManualJournalsLoading, isManualJournalsFetching, isEmptyStatus } =
+    useManualJournalsContext();
 
   const history = useHistory();
 
@@ -93,8 +83,7 @@ function ManualJournalsDataTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.MANUAL_JOURNALS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.MANUAL_JOURNALS);
 
   // Handle fetch data once the page index, size or sort by of the table change.
   const handleFetchData = React.useCallback(

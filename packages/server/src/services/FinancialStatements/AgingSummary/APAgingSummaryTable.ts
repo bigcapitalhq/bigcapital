@@ -1,10 +1,4 @@
-import {
-  IAPAgingSummaryData,
-  IAgingSummaryQuery,
-  ITableColumn,
-  ITableColumnAccessor,
-  ITableRow,
-} from '@/interfaces';
+import { IAPAgingSummaryData, IAgingSummaryQuery, ITableColumn, ITableColumnAccessor, ITableRow } from '@/interfaces';
 import AgingSummaryTable from './AgingSummaryTable';
 
 export default class APAgingSummaryTable extends AgingSummaryTable {

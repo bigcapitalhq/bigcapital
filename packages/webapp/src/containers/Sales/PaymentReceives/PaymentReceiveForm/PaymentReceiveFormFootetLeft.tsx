@@ -8,16 +8,10 @@ export function PaymentReceiveFormFootetLeft() {
   return (
     <React.Fragment>
       {/* --------- Internal Note--------- */}
-      <TermsConditsFormGroup
-        name={'statement'}
-        label={<T id={'payment_receive_form.label.note'} />}
-        fastField={true}
-      >
+      <TermsConditsFormGroup name={'statement'} label={<T id={'payment_receive_form.label.note'} />} fastField={true}>
         <FEditableText
           name={'statement'}
-          placeholder={intl.get(
-            'payment_receive_form.internal_note.placeholder',
-          )}
+          placeholder={intl.get('payment_receive_form.internal_note.placeholder')}
           fastField={true}
         />
       </TermsConditsFormGroup>

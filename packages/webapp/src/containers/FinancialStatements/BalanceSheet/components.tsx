@@ -1,39 +1,21 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import classNames from 'classnames';
 
-import {
-  FormattedMessage as T,
-  Icon,
-  If,
-  Stack,
-  AppToaster,
-} from '@/components';
+import { FormattedMessage as T, Icon, If, Stack, AppToaster } from '@/components';
 
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useBalanceSheetContext } from './BalanceSheetProvider';
 import { FinancialComputeAlert } from '../FinancialReportPage';
 import { dynamicColumns } from './dynamicColumns';
-import {
-  useBalanceSheetCsvExport,
-  useBalanceSheetXlsxExport,
-} from '@/hooks/query';
+import { useBalanceSheetCsvExport, useBalanceSheetXlsxExport } from '@/hooks/query';
 
 /**
  * Balance sheet alerts.
  */
 export function BalanceSheetAlerts() {
-  const { isLoading, refetchBalanceSheet, balanceSheet } =
-    useBalanceSheetContext();
+  const { isLoading, refetchBalanceSheet, balanceSheet } = useBalanceSheetContext();
 
   // Handle refetch the report sheet.
   const handleRecalcReport = () => {
@@ -49,8 +31,7 @@ export function BalanceSheetAlerts() {
   }
   return (
     <FinancialComputeAlert>
-      <Icon icon="info-block" iconSize={12} />{' '}
-      <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
+      <Icon icon="info-block" iconSize={12} /> <T id={'just_a_moment_we_re_calculating_your_cost_transactions'} />
       <Button onClick={handleRecalcReport} minimal={true} small={true}>
         <T id={'report.compute_running.refresh'} />
       </Button>
@@ -80,10 +61,7 @@ export const useBalanceSheetColumns = () => {
     balanceSheet: { table },
   } = useBalanceSheetContext();
 
-  return React.useMemo(
-    () => dynamicColumns(table.columns, table.rows),
-    [table],
-  );
+  return React.useMemo(() => dynamicColumns(table.columns, table.rows), [table]);
 };
 
 /**
@@ -163,10 +141,7 @@ export const BalanceSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

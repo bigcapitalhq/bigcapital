@@ -19,27 +19,14 @@ const getSchema = () =>
       )
       .required()
       .label(intl.get('due_date_')),
-    invoice_no: Yup.string()
-      .max(DATATYPES_LENGTH.STRING)
-      .label(intl.get('invoice_no_')),
+    invoice_no: Yup.string().max(DATATYPES_LENGTH.STRING).label(intl.get('invoice_no_')),
     reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING),
     delivered: Yup.boolean(),
     from_estimate_id: Yup.string(),
-    invoice_message: Yup.string()
-      .trim()
-      .min(1)
-      .max(DATATYPES_LENGTH.TEXT)
-      .label(intl.get('note')),
-    terms_conditions: Yup.string()
-      .trim()
-      .min(1)
-      .max(DATATYPES_LENGTH.TEXT)
-      .label(intl.get('note')),
+    invoice_message: Yup.string().trim().min(1).max(DATATYPES_LENGTH.TEXT).label(intl.get('note')),
+    terms_conditions: Yup.string().trim().min(1).max(DATATYPES_LENGTH.TEXT).label(intl.get('note')),
     exchange_rate: Yup.number(),
-    inclusive_exclusive_tax: Yup.string().oneOf([
-      TaxType.Inclusive,
-      TaxType.Exclusive,
-    ]),
+    inclusive_exclusive_tax: Yup.string().oneOf([TaxType.Inclusive, TaxType.Exclusive]),
     branch_id: Yup.string(),
     warehouse_id: Yup.string(),
     project_id: Yup.string(),

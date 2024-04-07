@@ -4,24 +4,12 @@ import { FastField, ErrorMessage } from 'formik';
 import { FormattedMessage as T } from '@/components';
 
 import { useAutofocus } from '@/hooks';
-import {
-  Classes,
-  FormGroup,
-  TextArea,
-  ControlGroup,
-  Callout,
-  Intent,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, TextArea, ControlGroup, Callout, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
 import { inputIntent } from '@/utils';
-import {
-  AccountsSuggestField,
-  InputPrependText,
-  MoneyInputGroup,
-  FieldRequiredHint,
-} from '@/components';
+import { AccountsSuggestField, InputPrependText, MoneyInputGroup, FieldRequiredHint } from '@/components';
 
 import { useBadDebtContext } from './BadDebtFormProvider';
 
@@ -31,7 +19,7 @@ import { useBadDebtContext } from './BadDebtFormProvider';
 function BadDebtFormFields() {
   const amountfieldRef = useAutofocus();
 
-  const { accounts ,invoice } = useBadDebtContext();
+  const { accounts, invoice } = useBadDebtContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -43,11 +31,7 @@ function BadDebtFormFields() {
 
       {/*------------ Written-off amount -----------*/}
       <FastField name={'amount'}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'bad_debt.dialog.written_off_amount'} />}
             labelInfo={<FieldRequiredHint />}
@@ -76,11 +60,7 @@ function BadDebtFormFields() {
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'expense_account_id'} />}
-            className={classNames(
-              'form-group--expense_account_id',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--expense_account_id', 'form-group--select-list', CLASSES.FILL)}
             labelInfo={<FieldRequiredHint />}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'expense_account_id'} />}
@@ -88,9 +68,7 @@ function BadDebtFormFields() {
             <AccountsSuggestField
               selectedAccountId={value}
               accounts={accounts}
-              onAccountSelected={({ id }) =>
-                form.setFieldValue('expense_account_id', id)
-              }
+              onAccountSelected={({ id }) => form.setFieldValue('expense_account_id', id)}
               filterByTypes={[ACCOUNT_TYPE.EXPENSE]}
             />
           </FormGroup>
@@ -106,12 +84,7 @@ function BadDebtFormFields() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'reason'} />}
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>

@@ -115,9 +115,7 @@ export function useInactivateItem(props) {
 const transformItemsResponse = (response) => {
   return {
     items: response.data.items,
-    pagination: transformPagination(
-      transformResponse(response.data.pagination),
-    ),
+    pagination: transformPagination(transformResponse(response.data.pagination)),
     filterMeta: transformResponse(response.data.filter_meta),
   };
 };
@@ -249,11 +247,11 @@ export function useItemWarehouseLocation(id, props) {
 }
 
 /**
- * 
- * @param {*} id 
- * @param {*} query 
- * @param {*} props 
- * @returns 
+ *
+ * @param {*} id
+ * @param {*} query
+ * @param {*} props
+ * @returns
  */
 export function useItemInventoryCost(query, props) {
   return useRequestQuery(
@@ -268,5 +266,5 @@ export function useItemInventoryCost(query, props) {
       defaultData: [],
       ...props,
     },
-  ); 
+  );
 }

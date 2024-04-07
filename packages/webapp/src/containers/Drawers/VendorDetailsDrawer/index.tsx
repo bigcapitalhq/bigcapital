@@ -5,9 +5,7 @@ import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const VendorDetailsDrawerContent = React.lazy(() =>
-  import('./VendorDetailsDrawerContent'),
-);
+const VendorDetailsDrawerContent = React.lazy(() => import('./VendorDetailsDrawerContent'));
 
 /**
  * Vendor details drawer.

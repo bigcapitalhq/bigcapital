@@ -5,17 +5,9 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import { useFormikContext } from 'formik';
 import { omit, first } from 'lodash';
-import {
-  defaultFastFieldShouldUpdate,
-  repeatValue,
-  transformToForm,
-  formattedAmount,
-} from '@/utils';
+import { defaultFastFieldShouldUpdate, repeatValue, transformToForm, formattedAmount } from '@/utils';
 import { useEstimateFormContext } from './EstimateFormProvider';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
+import { updateItemsEntriesTotal, ensureEntriesHaveEmptyLine } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
 
@@ -68,15 +60,9 @@ export const transformToEditForm = (estimate) => {
     ...estimate.entries.map((estimate) => ({
       ...transformToForm(estimate, defaultEstimateEntry),
     })),
-    ...repeatValue(
-      defaultEstimateEntry,
-      Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0),
-    ),
+    ...repeatValue(defaultEstimateEntry, Math.max(MIN_LINES_NUMBER - estimate.entries.length, 0)),
   ];
-  const entries = R.compose(
-    ensureEntriesHaveEmptyLine(defaultEstimateEntry),
-    updateItemsEntriesTotal,
-  )(initialEntries);
+  const entries = R.compose(ensureEntriesHaveEmptyLine(defaultEstimateEntry), updateItemsEntriesTotal)(initialEntries);
 
   return {
     ...transformToForm(estimate, defaultEstimate),
@@ -98,10 +84,7 @@ export const customersFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const ITEMS_FILTER_ROLES = JSON.stringify([
@@ -132,13 +115,9 @@ export const handleErrors = (errors, { setErrors }) => {
       estimate_number: intl.get('estimate_number_is_not_unqiue'),
     });
   }
-  if (
-    errors.some((error) => error.type === ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED)
-  ) {
+  if (errors.some((error) => error.type === ERRORS.SALE_ESTIMATE_NO_IS_REQUIRED)) {
     setErrors({
-      estimate_number: intl.get(
-        'estimate.field.error.estimate_number_required',
-      ),
+      estimate_number: intl.get('estimate.field.error.estimate_number_required'),
     });
   }
 };
@@ -147,9 +126,7 @@ export const handleErrors = (errors, { setErrors }) => {
  * Transform the form values to request body.
  */
 export const transfromsFormValuesToRequest = (values) => {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
+  const entries = values.entries.filter((item) => item.item_id && item.quantity);
   return {
     ...omit(values, ['estimate_number_manually', 'estimate_number']),
     // The `estimate_number_manually` will be presented just if the auto-increment
@@ -169,8 +146,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -206,10 +182,7 @@ export const useEstimateTotals = () => {
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

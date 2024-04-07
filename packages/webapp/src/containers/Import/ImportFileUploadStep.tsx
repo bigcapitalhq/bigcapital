@@ -30,13 +30,9 @@ export function ImportFileUploadStep() {
     <AlertsManager>
       <ImportFileUploadForm>
         <ImportFileContainer>
-          <p
-            className={Classes.TEXT_MUTED}
-            style={{ marginBottom: 18, lineHeight: 1.6 }}
-          >
-            Download a sample file and compare it with your import file to
-            ensure it is properly formatted. It's not necessary for the columns
-            to be in the same order, you can map them later.
+          <p className={Classes.TEXT_MUTED} style={{ marginBottom: 18, lineHeight: 1.6 }}>
+            Download a sample file and compare it with your import file to ensure it is properly formatted. It's not
+            necessary for the columns to be in the same order, you can map them later.
           </p>
 
           <Stack>

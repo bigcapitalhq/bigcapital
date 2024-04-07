@@ -1,19 +1,15 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
+import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { ISaleReceiptDTO, SaleReceiptMailOptsDTO } from '@/interfaces/SaleReceipt';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
+import { NextFunction, Request, Response, Router } from 'express';
 import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '../BaseController';
-import {
-  ISaleReceiptDTO,
-  SaleReceiptMailOpts,
-  SaleReceiptMailOptsDTO,
-} from '@/interfaces/SaleReceipt';
-import { ServiceError } from '@/exceptions';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, SaleReceiptAction } from '@/interfaces';
-import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
-import { ACCEPT_TYPE } from '@/interfaces/Http';
 
 @Service()
 export default class SalesReceiptsController extends BaseController {
@@ -35,21 +31,21 @@ export default class SalesReceiptsController extends BaseController {
       [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.closeSaleReceipt.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/notify-by-sms',
       CheckPolicies(SaleReceiptAction.NotifyBySms, AbilitySubject.SaleReceipt),
       [param('id').exists().isInt().toInt()],
       this.asyncMiddleware(this.saleReceiptNotifyBySms),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/sms-details',
       CheckPolicies(SaleReceiptAction.NotifyBySms, AbilitySubject.SaleReceipt),
       [param('id').exists().isInt().toInt()],
       this.saleReceiptSmsDetails,
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/mail',
@@ -63,25 +59,22 @@ export default class SalesReceiptsController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleReceiptMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/mail',
       [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getSaleReceiptMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
       CheckPolicies(SaleReceiptAction.Edit, AbilitySubject.SaleReceipt),
-      [
-        ...this.specificReceiptValidationSchema,
-        ...this.salesReceiptsValidationSchema,
-      ],
+      [...this.specificReceiptValidationSchema, ...this.salesReceiptsValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editSaleReceipt.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/',
@@ -89,7 +82,7 @@ export default class SalesReceiptsController extends BaseController {
       this.salesReceiptsValidationSchema,
       this.validationResult,
       asyncMiddleware(this.newSaleReceipt.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
@@ -97,7 +90,7 @@ export default class SalesReceiptsController extends BaseController {
       this.specificReceiptValidationSchema,
       this.validationResult,
       asyncMiddleware(this.deleteSaleReceipt.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
@@ -106,7 +99,7 @@ export default class SalesReceiptsController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getSalesReceipts.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.get(
       '/:id',
@@ -114,7 +107,7 @@ export default class SalesReceiptsController extends BaseController {
       [...this.specificReceiptValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getSaleReceipt.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -144,18 +137,9 @@ export default class SalesReceiptsController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toInt(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
       check('receipt_message').optional().trim().escape(),
       check('statement').optional().trim().escape(),
     ];
@@ -188,21 +172,13 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async newSaleReceipt(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async newSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const saleReceiptDTO: ISaleReceiptDTO = this.matchedBodyData(req);
 
     try {
       // Store the given sale receipt details with associated entries.
-      const storedSaleReceipt =
-        await this.saleReceiptsApplication.createSaleReceipt(
-          tenantId,
-          saleReceiptDTO
-        );
+      const storedSaleReceipt = await this.saleReceiptsApplication.createSaleReceipt(tenantId, saleReceiptDTO);
       return res.status(200).send({
         id: storedSaleReceipt.id,
         message: 'Sale receipt has been created successfully.',
@@ -217,20 +193,13 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async deleteSaleReceipt(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deleteSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
     try {
       // Deletes the sale receipt.
-      await this.saleReceiptsApplication.deleteSaleReceipt(
-        tenantId,
-        saleReceiptId
-      );
+      await this.saleReceiptsApplication.deleteSaleReceipt(tenantId, saleReceiptId);
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been deleted successfully.',
@@ -246,22 +215,14 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req -
    * @param {Response} res -
    */
-  private async editSaleReceipt(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async editSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
     const saleReceipt = this.matchedBodyData(req);
 
     try {
       // Update the given sale receipt details.
-      await this.saleReceiptsApplication.editSaleReceipt(
-        tenantId,
-        saleReceiptId,
-        saleReceipt
-      );
+      await this.saleReceiptsApplication.editSaleReceipt(tenantId, saleReceiptId, saleReceipt);
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been edited successfully.',
@@ -277,20 +238,13 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async closeSaleReceipt(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async closeSaleReceipt(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: saleReceiptId } = req.params;
 
     try {
       // Update the given sale receipt details.
-      await this.saleReceiptsApplication.closeSaleReceipt(
-        tenantId,
-        saleReceiptId
-      );
+      await this.saleReceiptsApplication.closeSaleReceipt(tenantId, saleReceiptId);
       return res.status(200).send({
         id: saleReceiptId,
         message: 'Sale receipt has been closed successfully.',
@@ -305,11 +259,7 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async getSalesReceipts(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getSalesReceipts(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -319,8 +269,7 @@ export default class SalesReceiptsController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const salesReceiptsWithPagination =
-        await this.saleReceiptsApplication.getSaleReceipts(tenantId, filter);
+      const salesReceiptsWithPagination = await this.saleReceiptsApplication.getSaleReceipts(tenantId, filter);
 
       return res.status(200).send(salesReceiptsWithPagination);
     } catch (error) {
@@ -340,16 +289,10 @@ export default class SalesReceiptsController extends BaseController {
 
     const accept = this.accepts(req);
 
-    const acceptType = accept.types([
-      ACCEPT_TYPE.APPLICATION_JSON,
-      ACCEPT_TYPE.APPLICATION_PDF,
-    ]);
+    const acceptType = accept.types([ACCEPT_TYPE.APPLICATION_JSON, ACCEPT_TYPE.APPLICATION_PDF]);
     // Retrieves receipt in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleReceiptsApplication.getSaleReceiptPdf(
-        tenantId,
-        saleReceiptId
-      );
+      const pdfContent = await this.saleReceiptsApplication.getSaleReceiptPdf(tenantId, saleReceiptId);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
@@ -357,10 +300,7 @@ export default class SalesReceiptsController extends BaseController {
       res.send(pdfContent);
       // Retrieves receipt in json format.
     } else {
-      const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(
-        tenantId,
-        saleReceiptId
-      );
+      const saleReceipt = await this.saleReceiptsApplication.getSaleReceipt(tenantId, saleReceiptId);
       return res.status(200).send({ saleReceipt });
     }
   }
@@ -371,24 +311,15 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public saleReceiptNotifyBySms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public saleReceiptNotifyBySms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: receiptId } = req.params;
 
     try {
-      const saleReceipt =
-        await this.saleReceiptsApplication.saleReceiptNotifyBySms(
-          tenantId,
-          receiptId
-        );
+      const saleReceipt = await this.saleReceiptsApplication.saleReceiptNotifyBySms(tenantId, receiptId);
       return res.status(200).send({
         id: saleReceipt.id,
-        message:
-          'The sale receipt notification via sms has been sent successfully.',
+        message: 'The sale receipt notification via sms has been sent successfully.',
       });
     } catch (error) {
       next(error);
@@ -401,20 +332,12 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public saleReceiptSmsDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public saleReceiptSmsDetails = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: receiptId } = req.params;
 
     try {
-      const smsDetails =
-        await this.saleReceiptsApplication.getSaleReceiptSmsDetails(
-          tenantId,
-          receiptId
-        );
+      const smsDetails = await this.saleReceiptsApplication.getSaleReceiptSmsDetails(tenantId, receiptId);
       return res.status(200).send({
         data: smsDetails,
       });
@@ -429,11 +352,7 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public sendSaleReceiptMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public sendSaleReceiptMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: receiptId } = req.params;
     const receiptMailDTO: SaleReceiptMailOptsDTO = this.matchedBodyData(req, {
@@ -441,15 +360,10 @@ export default class SalesReceiptsController extends BaseController {
     });
 
     try {
-      await this.saleReceiptsApplication.sendSaleReceiptMail(
-        tenantId,
-        receiptId,
-        receiptMailDTO
-      );
+      await this.saleReceiptsApplication.sendSaleReceiptMail(tenantId, receiptId, receiptMailDTO);
       return res.status(200).send({
         code: 200,
-        message:
-          'The sale receipt notification via sms has been sent successfully.',
+        message: 'The sale receipt notification via sms has been sent successfully.',
       });
     } catch (error) {
       next(error);
@@ -462,19 +376,12 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public getSaleReceiptMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getSaleReceiptMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: receiptId } = req.params;
 
     try {
-      const data = await this.saleReceiptsApplication.getSaleReceiptMail(
-        tenantId,
-        receiptId
-      );
+      const data = await this.saleReceiptsApplication.getSaleReceiptMail(tenantId, receiptId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -488,12 +395,7 @@ export default class SalesReceiptsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'SALE_RECEIPT_NOT_FOUND') {
         return res.boom.badRequest(null, {

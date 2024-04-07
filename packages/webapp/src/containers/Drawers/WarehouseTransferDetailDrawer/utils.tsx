@@ -5,12 +5,7 @@ import { Intent, Tag } from '@blueprintjs/core';
 import { getColumnWidth } from '@/utils';
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 
-import {
-  FormattedMessage as T,
-  FormatNumberCell,
-  TextOverviewTooltipCell,
-  Choose,
-} from '@/components';
+import { FormattedMessage as T, FormatNumberCell, TextOverviewTooltipCell, Choose } from '@/components';
 
 /**
  * Retrieves the readonly warehouse transfer entries columns.
@@ -62,20 +57,12 @@ export const useWarehouseTransferReadOnlyEntriesColumns = () => {
 export function WarehouseTransferDetailsStatus({ warehouseTransfer }) {
   return (
     <Choose>
-      <Choose.When
-        condition={
-          warehouseTransfer.is_initiated && warehouseTransfer.is_transferred
-        }
-      >
+      <Choose.When condition={warehouseTransfer.is_initiated && warehouseTransfer.is_transferred}>
         <Tag minimal={false} intent={Intent.SUCCESS} round={true}>
           <T id={'warehouse_transfer.label.transferred'} />
         </Tag>
       </Choose.When>
-      <Choose.When
-        condition={
-          warehouseTransfer.is_initiated && !warehouseTransfer.is_transferred
-        }
-      >
+      <Choose.When condition={warehouseTransfer.is_initiated && !warehouseTransfer.is_transferred}>
         <Tag minimal={false} intent={Intent.WARNING} round={true}>
           <T id={'warehouse_transfer.label.transfer_initiated'} />
         </Tag>

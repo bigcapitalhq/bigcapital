@@ -12,10 +12,9 @@ const ProjectBillableEntriesContext = React.createContext();
  */
 function ProjectBillableEntriesProvider({ projectId, ...props }) {
   // Handle fetch project billable entries.
-  const { data: billableEntries, isLoading: isProjectBillableEntriesLoading } =
-    useProjectBillableEntries(projectId, {
-      enabled: !!projectId,
-    });
+  const { data: billableEntries, isLoading: isProjectBillableEntriesLoading } = useProjectBillableEntries(projectId, {
+    enabled: !!projectId,
+  });
 
   //state provider.
   const provider = {
@@ -30,7 +29,6 @@ function ProjectBillableEntriesProvider({ projectId, ...props }) {
   );
 }
 
-const useProjectBillableEntriesContext = () =>
-  React.useContext(ProjectBillableEntriesContext);
+const useProjectBillableEntriesContext = () => React.useContext(ProjectBillableEntriesContext);
 
 export { ProjectBillableEntriesProvider, useProjectBillableEntriesContext };

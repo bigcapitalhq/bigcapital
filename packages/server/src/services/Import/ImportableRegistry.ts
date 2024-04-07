@@ -22,8 +22,8 @@ export class ImportableRegistry {
 
   /**
    * Registers the given importable service.
-   * @param {string} resource 
-   * @param {Importable} importable 
+   * @param {string} resource
+   * @param {Importable} importable
    */
   public registerImportable(resource: string, importable: Importable): void {
     const _resource = this.sanitizeResourceName(resource);
@@ -32,7 +32,7 @@ export class ImportableRegistry {
 
   /**
    * Retrieves the importable service instance of the given resource name.
-   * @param {string} name 
+   * @param {string} name
    * @returns {Importable}
    */
   public getImportable(name: string): Importable {

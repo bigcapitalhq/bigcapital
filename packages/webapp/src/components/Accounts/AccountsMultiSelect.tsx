@@ -22,11 +22,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
  * Default account item renderer of the list.
  * @returns {JSX.Element}
  */
-const accountRenderer = (
-  item,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
+const accountRenderer = (item, { handleClick, modifiers, query }, { isSelected }) => {
   if (!modifiers.matchesPredicate) {
     return null;
   }
@@ -69,9 +65,7 @@ export function AccountsMultiSelect({
   });
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   // Handles the create item click.
   const handleCreateItemClick = () => {

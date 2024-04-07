@@ -1,9 +1,9 @@
-import { sumBy, difference, map } from 'lodash';
-import { Inject, Service } from 'typedi';
-import { IItemEntry, IItemEntryDTO, IItem } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import { IItem, IItemEntry, IItemEntryDTO } from '@/interfaces';
 import { ItemEntry } from '@/models';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { difference, map, sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { entriesAmountDiff } from 'utils';
 
 const ERRORS = {
@@ -28,7 +28,7 @@ export default class ItemsEntriesService {
   public async getInventoryEntries(
     tenantId: number,
     referenceType: string,
-    referenceId: number
+    referenceId: number,
   ): Promise<IItemEntry[]> {
     const { Item, ItemEntry } = this.tenancy.models(tenantId);
 
@@ -37,16 +37,14 @@ export default class ItemsEntriesService {
       .where('reference_id', referenceId);
 
     // Inventory items.
-    const inventoryItems = await Item.query()
-      .whereIn('id', map(itemsEntries, 'itemId'))
-      .where('type', 'inventory');
+    const inventoryItems = await Item.query().whereIn('id', map(itemsEntries, 'itemId')).where('type', 'inventory');
 
     // Inventory items ids.
     const inventoryItemsIds = map(inventoryItems, 'id');
 
     // Filtering the inventory items entries.
     const inventoryItemsEntries = itemsEntries.filter(
-      (itemEntry) => inventoryItemsIds.indexOf(itemEntry.itemId) !== -1
+      (itemEntry) => inventoryItemsIds.indexOf(itemEntry.itemId) !== -1,
     );
     return inventoryItemsEntries;
   }
@@ -56,21 +54,14 @@ export default class ItemsEntriesService {
    * @param {IItemEntry[]} entries -
    * @returns {IItemEntry[]}
    */
-  public async filterInventoryEntries(
-    tenantId: number,
-    entries: IItemEntry[]
-  ): Promise<IItemEntry[]> {
+  public async filterInventoryEntries(tenantId: number, entries: IItemEntry[]): Promise<IItemEntry[]> {
     const { Item } = this.tenancy.models(tenantId);
     const entriesItemsIds = entries.map((e) => e.itemId);
 
     // Retrieve entries inventory items.
-    const inventoryItems = await Item.query()
-      .whereIn('id', entriesItemsIds)
-      .where('type', 'inventory');
+    const inventoryItems = await Item.query().whereIn('id', entriesItemsIds).where('type', 'inventory');
 
-    const inventoryEntries = entries.filter((entry) =>
-      inventoryItems.some((item) => item.id === entry.itemId)
-    );
+    const inventoryEntries = entries.filter((entry) => inventoryItems.some((item) => item.id === entry.itemId));
     return inventoryEntries;
   }
 
@@ -80,10 +71,7 @@ export default class ItemsEntriesService {
    * @param {number} tenantId -
    * @param {IItemEntryDTO} itemEntries -
    */
-  public async validateItemsIdsExistance(
-    tenantId: number,
-    itemEntries: IItemEntryDTO[]
-  ) {
+  public async validateItemsIdsExistance(tenantId: number, itemEntries: IItemEntryDTO[]) {
     const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e) => e.itemId);
 
@@ -108,12 +96,10 @@ export default class ItemsEntriesService {
     tenantId: number,
     referenceId: number,
     referenceType: string,
-    billEntries: IItemEntryDTO[]
+    billEntries: IItemEntryDTO[],
   ) {
     const { ItemEntry } = this.tenancy.models(tenantId);
-    const entriesIds = billEntries
-      .filter((e: IItemEntry) => e.id)
-      .map((e: IItemEntry) => e.id);
+    const entriesIds = billEntries.filter((e: IItemEntry) => e.id).map((e: IItemEntry) => e.id);
 
     const storedEntries = await ItemEntry.query()
       .whereIn('reference_id', [referenceId])
@@ -130,16 +116,11 @@ export default class ItemsEntriesService {
   /**
    * Validate the entries items that not purchase-able.
    */
-  public async validateNonPurchasableEntriesItems(
-    tenantId: number,
-    itemEntries: IItemEntryDTO[]
-  ) {
+  public async validateNonPurchasableEntriesItems(tenantId: number, itemEntries: IItemEntryDTO[]) {
     const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const purchasbleItems = await Item.query()
-      .where('purchasable', true)
-      .whereIn('id', itemsIds);
+    const purchasbleItems = await Item.query().where('purchasable', true).whereIn('id', itemsIds);
 
     const purchasbleItemsIds = purchasbleItems.map((item: IItem) => item.id);
     const notPurchasableItems = difference(itemsIds, purchasbleItemsIds);
@@ -152,16 +133,11 @@ export default class ItemsEntriesService {
   /**
    * Validate the entries items that not sell-able.
    */
-  public async validateNonSellableEntriesItems(
-    tenantId: number,
-    itemEntries: IItemEntryDTO[]
-  ) {
+  public async validateNonSellableEntriesItems(tenantId: number, itemEntries: IItemEntryDTO[]) {
     const { Item } = this.tenancy.models(tenantId);
     const itemsIds = itemEntries.map((e: IItemEntryDTO) => e.itemId);
 
-    const sellableItems = await Item.query()
-      .where('sellable', true)
-      .whereIn('id', itemsIds);
+    const sellableItems = await Item.query().where('sellable', true).whereIn('id', itemsIds);
 
     const sellableItemsIds = sellableItems.map((item: IItem) => item.id);
     const nonSellableItems = difference(itemsIds, sellableItemsIds);
@@ -177,25 +153,16 @@ export default class ItemsEntriesService {
    * @param {IItemEntry} entries - Items entries.
    * @param {IItemEntry} oldEntries - Old items entries.
    */
-  public async changeItemsQuantity(
-    tenantId: number,
-    entries: IItemEntry[],
-    oldEntries?: IItemEntry[]
-  ): Promise<void> {
+  public async changeItemsQuantity(tenantId: number, entries: IItemEntry[], oldEntries?: IItemEntry[]): Promise<void> {
     const { itemRepository } = this.tenancy.repositories(tenantId);
     const opers = [];
 
-    const diffEntries = entriesAmountDiff(
-      entries,
-      oldEntries,
-      'quantity',
-      'itemId'
-    );
+    const diffEntries = entriesAmountDiff(entries, oldEntries, 'quantity', 'itemId');
     diffEntries.forEach((entry: IItemEntry) => {
       const changeQuantityOper = itemRepository.changeNumber(
         { id: entry.itemId, type: 'inventory' },
         'quantityOnHand',
-        entry.quantity
+        entry.quantity,
       );
       opers.push(changeQuantityOper);
     });
@@ -207,10 +174,7 @@ export default class ItemsEntriesService {
    * @param {number} tenantId - Tenant id.
    * @param {IItemEntry} entries - Items entries.
    */
-  public async incrementItemsEntries(
-    tenantId: number,
-    entries: IItemEntry[]
-  ): Promise<void> {
+  public async incrementItemsEntries(tenantId: number, entries: IItemEntry[]): Promise<void> {
     return this.changeItemsQuantity(tenantId, entries);
   }
 
@@ -219,16 +183,13 @@ export default class ItemsEntriesService {
    * @param {number} tenantId - Tenant id.
    * @param {IItemEntry} entries - Items entries.
    */
-  public async decrementItemsQuantity(
-    tenantId: number,
-    entries: IItemEntry[]
-  ): Promise<void> {
+  public async decrementItemsQuantity(tenantId: number, entries: IItemEntry[]): Promise<void> {
     return this.changeItemsQuantity(
       tenantId,
       entries.map((entry) => ({
         ...entry,
         quantity: entry.quantity * -1,
-      }))
+      })),
     );
   }
 

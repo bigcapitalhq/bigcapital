@@ -13,33 +13,18 @@ interface StepperStepProps {
   allowStepClick?: boolean;
 }
 
-export function StepperStep({
-  label,
-  description,
-  step,
-  active,
-  state,
-  children,
-}: StepperStepProps) {
+export function StepperStep({ label, description, step, active, state, children }: StepperStepProps) {
   return (
     <StepButton>
       <StepIconWrap>
-        <StepIcon
-          isCompleted={state === StepperStepState.Completed}
-          isActive={state === StepperStepState.Progress}
-        >
-          {state === StepperStepState.Completed && (
-            <Icon icon={'done'} iconSize={24} />
-          )}
+        <StepIcon isCompleted={state === StepperStepState.Completed} isActive={state === StepperStepState.Progress}>
+          {state === StepperStepState.Completed && <Icon icon={'done'} iconSize={24} />}
           <StepIconText>{step}</StepIconText>
         </StepIcon>
       </StepIconWrap>
 
       <StepTextWrap>
-        <StepTitle
-          isCompleted={state === StepperStepState.Completed}
-          isActive={state === StepperStepState.Progress}
-        >
+        <StepTitle isCompleted={state === StepperStepState.Completed} isActive={state === StepperStepState.Progress}>
           {label}
         </StepTitle>
         {description && (
@@ -73,22 +58,19 @@ const StepIcon = styled.span`
   line-height: 24px;
   border-radius: 24px;
   text-align: center;
-  background-color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#9e9e9e'};
+  background-color: ${(props) => (props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#9e9e9e')};
   color: #fff;
   margin: auto;
   font-size: 12px;
 `;
 
 const StepTitle = styled.div`
-  color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091'};
+  color: ${(props) => (props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091')};
 `;
 const StepDescription = styled.div`
   font-size: 12px;
   margin-top: 10px;
-  color: ${(props) =>
-    props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091'};
+  color: ${(props) => (props.isCompleted || props.isActive ? 'rgb(0, 82, 204)' : '#738091')};
 `;
 
 const StepIconWrap = styled.div`

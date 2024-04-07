@@ -1,21 +1,13 @@
+import { IBill, IBillDTO, IBillEditDTO, IBillsFilter, IFilterMeta, IPaginationMeta, ISystemUser } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreateBill } from './CreateBill';
+import { DeleteBill } from './DeleteBill';
 import { EditBill } from './EditBill';
 import { GetBill } from './GetBill';
+import { GetBillPayments } from './GetBillPayments';
 import { GetBills } from './GetBills';
-import { DeleteBill } from './DeleteBill';
-import {
-  IBill,
-  IBillDTO,
-  IBillEditDTO,
-  IBillsFilter,
-  IFilterMeta,
-  IPaginationMeta,
-  ISystemUser,
-} from '@/interfaces';
 import { GetDueBills } from './GetDueBills';
 import { OpenBill } from './OpenBill';
-import { GetBillPayments } from './GetBillPayments';
 
 @Service()
 export class BillsApplication {
@@ -50,11 +42,7 @@ export class BillsApplication {
    * @param {ISystemUser} authorizedUser
    * @returns
    */
-  public createBill(
-    tenantId: number,
-    billDTO: IBillDTO,
-    authorizedUser: ISystemUser
-  ): Promise<IBill> {
+  public createBill(tenantId: number, billDTO: IBillDTO, authorizedUser: ISystemUser): Promise<IBill> {
     return this.createBillService.createBill(tenantId, billDTO, authorizedUser);
   }
 
@@ -70,14 +58,9 @@ export class BillsApplication {
     tenantId: number,
     billId: number,
     billDTO: IBillEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IBill> {
-    return this.editBillService.editBill(
-      tenantId,
-      billId,
-      billDTO,
-      authorizedUser
-    );
+    return this.editBillService.editBill(tenantId, billId, billDTO, authorizedUser);
   }
 
   /**
@@ -97,7 +80,7 @@ export class BillsApplication {
    */
   public getBills(
     tenantId: number,
-    filterDTO: IBillsFilter
+    filterDTO: IBillsFilter,
   ): Promise<{
     bills: IBill;
     pagination: IPaginationMeta;

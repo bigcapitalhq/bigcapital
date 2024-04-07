@@ -11,7 +11,7 @@ import { WarehouseTransferFormProvider } from './WarehouseTransferFormProvider';
  */
 export default function WarehouseTransferFormPage() {
   const { id } = useParams();
-  const idAsInteger = parseInt(id, 10);
+  const idAsInteger = Number.parseInt(id, 10);
   return (
     <WarehouseTransferFormProvider warehouseTransferId={idAsInteger}>
       <WarehouseTransferForm />

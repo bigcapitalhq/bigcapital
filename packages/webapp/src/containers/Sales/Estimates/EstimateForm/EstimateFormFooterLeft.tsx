@@ -13,17 +13,11 @@ export function EstimateFormFooterLeft() {
         label={<T id={'estimate_form.label.customer_note'} />}
         hintText={'Will be displayed on the invoice'}
       >
-        <FEditableText
-          name={'note'}
-          placeholder={intl.get('estimate_form.customer_note.placeholder')}
-        />
+        <FEditableText name={'note'} placeholder={intl.get('estimate_form.customer_note.placeholder')} />
       </EstimateMsgFormGroup>
 
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'estimate_form.label.terms_conditions'} />}
-        name={'terms_conditions'}
-      >
+      <TermsConditsFormGroup label={<T id={'estimate_form.label.terms_conditions'} />} name={'terms_conditions'}>
         <FEditableText
           name={'terms_conditions'}
           placeholder={intl.get('estimate_form.terms_and_conditions.placeholder')}

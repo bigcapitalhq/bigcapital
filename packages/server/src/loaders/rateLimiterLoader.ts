@@ -1,7 +1,7 @@
-import RateLimiter from '@/services/Authentication/RateLimiter';
-import { Container } from 'typedi';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 import config from '@/config';
+import RateLimiter from '@/services/Authentication/RateLimiter';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+import { Container } from 'typedi';
 
 export default () => {
   const rateLimiterRequestsMemory = new RateLimiterMemory({
@@ -16,7 +16,7 @@ export default () => {
   });
 
   const rateLimiterRequest = new RateLimiter(rateLimiterRequestsMemory);
-  const rateLimiterLogin = new RateLimiter(rateLimiterMemoryLogin)
+  const rateLimiterLogin = new RateLimiter(rateLimiterMemoryLogin);
 
   // Inject the rate limiter of the global requests and login into the container.
   Container.set('rateLimiter.request', rateLimiterRequest);

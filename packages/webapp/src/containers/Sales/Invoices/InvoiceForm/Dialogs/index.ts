@@ -2,9 +2,7 @@
 import { DialogsName } from '@/constants/dialogs';
 import React from 'react';
 
-const InvoiceExchangeRateChangeAlert = React.lazy(
-  () => import('./InvoiceExchangeRateChangeDialog'),
-);
+const InvoiceExchangeRateChangeAlert = React.lazy(() => import('./InvoiceExchangeRateChangeDialog'));
 
 const Dialogs = [
   {

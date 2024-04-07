@@ -1,15 +1,10 @@
-import { Service, Inject } from 'typedi';
-import { sumBy, difference } from 'lodash';
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from '../constants';
-import {
-  IAccount,
-  IExpense,
-  IExpenseCreateDTO,
-  IExpenseEditDTO,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ACCOUNT_PARENT_TYPE, ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
+import { ServiceError } from '@/exceptions';
+import { IAccount, IExpense, IExpenseCreateDTO, IExpenseEditDTO } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { difference, sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from '../constants';
 
 @Service()
 export class CommandExpenseValidator {
@@ -21,9 +16,7 @@ export class CommandExpenseValidator {
    * @param  {IExpenseCreateDTO | IExpenseEditDTO} expenseDTO
    * @throws {ServiceError}
    */
-  public validateCategoriesNotEqualZero = (
-    expenseDTO: IExpenseCreateDTO | IExpenseEditDTO
-  ) => {
+  public validateCategoriesNotEqualZero = (expenseDTO: IExpenseCreateDTO | IExpenseEditDTO) => {
     const totalAmount = sumBy(expenseDTO.categories, 'amount') || 0;
 
     if (totalAmount <= 0) {
@@ -39,16 +32,10 @@ export class CommandExpenseValidator {
    * @throws  {ServiceError}
    * @returns {Promise<IAccount[]>}
    */
-  public validateExpensesAccountsExistance(
-    expenseAccounts: IAccount[],
-    DTOAccountsIds: number[]
-  ) {
+  public validateExpensesAccountsExistance(expenseAccounts: IAccount[], DTOAccountsIds: number[]) {
     const storedExpenseAccountsIds = expenseAccounts.map((a: IAccount) => a.id);
 
-    const notStoredAccountsIds = difference(
-      DTOAccountsIds,
-      storedExpenseAccountsIds
-    );
+    const notStoredAccountsIds = difference(DTOAccountsIds, storedExpenseAccountsIds);
     if (notStoredAccountsIds.length > 0) {
       throw new ServiceError(ERRORS.SOME_ACCOUNTS_NOT_FOUND);
     }
@@ -90,10 +77,7 @@ export class CommandExpenseValidator {
    * @param {number} tenantId
    * @param {number} expenseId
    */
-  public async validateNoAssociatedLandedCost(
-    tenantId: number,
-    expenseId: number
-  ) {
+  public async validateNoAssociatedLandedCost(tenantId: number, expenseId: number) {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 
     const associatedLandedCosts = await BillLandedCost.query()

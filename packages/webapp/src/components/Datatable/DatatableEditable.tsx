@@ -7,12 +7,7 @@ import { DataTable } from './DataTable';
 /**
  * Editable datatable.
  */
-export function DataTableEditable({
-  totalRow = false,
-  actions,
-  name,
-  ...tableProps
-}) {
+export function DataTableEditable({ totalRow = false, actions, name, ...tableProps }) {
   return (
     <DatatableEditableRoot>
       <DataTable {...tableProps} />

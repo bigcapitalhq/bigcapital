@@ -13,10 +13,7 @@ function DashboardBackLink({ dashboardBackLink, breadcrumbs }) {
   const crumb = breadcrumbs[breadcrumbs.length - 2];
 
   const handleClick = (event) => {
-    const url =
-      typeof dashboardBackLink === 'string'
-        ? dashboardBackLink
-        : crumb.match.url;
+    const url = typeof dashboardBackLink === 'string' ? dashboardBackLink : crumb.match.url;
     history.push(url);
     event.preventDefault();
   };

@@ -4,13 +4,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { FastField, Field, ErrorMessage } from 'formik';
-import {
-  Hint,
-  FieldRequiredHint,
-  SalutationList,
-  DisplayNameList,
-  FormattedMessage as T,
-} from '@/components';
+import { Hint, FieldRequiredHint, SalutationList, DisplayNameList, FormattedMessage as T } from '@/components';
 import CustomerTypeRadioField from './CustomerTypeRadioField';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
@@ -28,11 +22,7 @@ export default function CustomerFormPrimarySection({}) {
       <CustomerTypeRadioField />
 
       {/**----------- Contact name -----------*/}
-      <FormGroup
-        className={classNames('form-group--contact_name')}
-        label={<T id={'contact_name'} />}
-        inline={true}
-      >
+      <FormGroup className={classNames('form-group--contact_name')} label={<T id={'contact_name'} />} inline={true}>
         <ControlGroup>
           <FastField name={'salutation'}>
             {({ form, field: { value }, meta: { error, touched } }) => (

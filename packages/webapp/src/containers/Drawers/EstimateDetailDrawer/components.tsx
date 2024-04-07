@@ -78,15 +78,10 @@ export const EstimateMoreMenuItems = R.compose(withAlertsActions)(
         minimal={true}
         content={
           <Menu>
-            <MenuItem
-              onClick={onNotifyViaSMS}
-              text={<T id={'notify_via_sms.dialog.notify_via_sms'} />}
-            />
+            <MenuItem onClick={onNotifyViaSMS} text={<T id={'notify_via_sms.dialog.notify_via_sms'} />} />
             <MenuDivider />
             <Choose>
-              <Choose.When
-                condition={estimate.is_delivered && estimate.is_rejected}
-              >
+              <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
                 <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
                   <MenuItem
                     className={Classes.MINIMAL}
@@ -95,9 +90,7 @@ export const EstimateMoreMenuItems = R.compose(withAlertsActions)(
                   />
                 </Can>
               </Choose.When>
-              <Choose.When
-                condition={estimate.is_delivered && estimate.is_approved}
-              >
+              <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
                 <Can I={SaleEstimateAction.Edit} a={AbilitySubject.Estimate}>
                   <MenuItem
                     className={Classes.MINIMAL}

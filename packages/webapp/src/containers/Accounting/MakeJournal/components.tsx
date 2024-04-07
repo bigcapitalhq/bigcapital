@@ -6,12 +6,7 @@ import { Popover2 } from '@blueprintjs/popover2';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
 
-import {
-  ExchangeRateInputGroup,
-  Icon,
-  Hint,
-  FormattedMessage as T,
-} from '@/components';
+import { ExchangeRateInputGroup, Icon, Hint, FormattedMessage as T } from '@/components';
 import {
   AccountsListFieldCell,
   MoneyFieldCell,
@@ -36,10 +31,7 @@ export function ContactHeaderCell() {
   return (
     <>
       <T id={'contact'} />
-      <Hint
-        content={<T id={'contact_column_hint'} />}
-        position={Position.LEFT_BOTTOM}
-      />
+      <Hint content={<T id={'contact_column_hint'} />} position={Position.LEFT_BOTTOM} />
     </>
   );
 }
@@ -82,12 +74,7 @@ export const ActionsCellRenderer = ({
   );
   return (
     <Popover2 content={exampleMenu} placement="left-start">
-      <Button
-        icon={<Icon icon={'more-13'} iconSize={13} />}
-        iconSize={14}
-        className="m12"
-        minimal={true}
-      />
+      <Button icon={<Icon icon={'more-13'} iconSize={13} />} iconSize={14} className="m12" minimal={true} />
     </Popover2>
   );
 };
@@ -222,19 +209,10 @@ export const JournalSyncIncrementSettingsToForm = R.compose(
     // Do not update if the journal auto-increment mode is disabled.
     if (!journalAutoIncrement) return null;
 
-    setFieldValue(
-      'journal_number',
-      transactionNumber(journalNumberPrefix, journalNextNumber),
-    );
-  }, [
-    setFieldValue,
-    journalNumberPrefix,
-    journalNextNumber,
-    journalAutoIncrement,
-  ]);
+    setFieldValue('journal_number', transactionNumber(journalNumberPrefix, journalNextNumber));
+  }, [setFieldValue, journalNumberPrefix, journalNextNumber, journalAutoIncrement]);
 
   return null;
 });
 
-JournalSyncIncrementSettingsToForm.displayName =
-  'JournalSyncIncrementSettingsToForm';
+JournalSyncIncrementSettingsToForm.displayName = 'JournalSyncIncrementSettingsToForm';

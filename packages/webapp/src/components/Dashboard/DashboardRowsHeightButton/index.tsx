@@ -36,14 +36,8 @@ export function DashboardRowsHeightButton({ initialValue, value, onChange }) {
       content={
         <Menu className={Style.menu}>
           <MenuDivider title={<T id={'dashboard.rows_height'} />} />
-          <MenuItem
-            onClick={handleItemClick('small')}
-            text={<T id={'dashboard.row_small'} />}
-          />
-          <MenuItem
-            onClick={handleItemClick('medium')}
-            text={<T id={'dashboard.row_medium'} />}
-          />
+          <MenuItem onClick={handleItemClick('small')} text={<T id={'dashboard.row_small'} />} />
+          <MenuItem onClick={handleItemClick('medium')} text={<T id={'dashboard.row_medium'} />} />
         </Menu>
       }
       placement="bottom-start"
@@ -52,15 +46,8 @@ export function DashboardRowsHeightButton({ initialValue, value, onChange }) {
       }}
       interactionKind={PopoverInteractionKind.CLICK}
     >
-      <Tooltip
-        content={<T id={'dashboard.rows_height'} />}
-        minimal={true}
-        position={Position.BOTTOM}
-      >
-        <Button
-          className={clsx(Classes.MINIMAL, Style.button)}
-          icon={<Icon icon={btnIcon} iconSize={16} />}
-        />
+      <Tooltip content={<T id={'dashboard.rows_height'} />} minimal={true} position={Position.BOTTOM}>
+        <Button className={clsx(Classes.MINIMAL, Style.button)} icon={<Icon icon={btnIcon} iconSize={16} />} />
       </Tooltip>
     </Popover>
   );

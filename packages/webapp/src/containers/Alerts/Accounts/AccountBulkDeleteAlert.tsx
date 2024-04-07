@@ -31,7 +31,6 @@ function AccountBulkDeleteAlert({
   // #withAccountsActions
   requestDeleteBulkAccounts,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
 
   const selectedRowsCount = 0;
@@ -77,8 +76,4 @@ function AccountBulkDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkDeleteAlert);

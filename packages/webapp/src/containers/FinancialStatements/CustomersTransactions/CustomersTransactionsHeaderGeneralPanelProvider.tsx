@@ -27,16 +27,9 @@ function CustomersTransactionsGeneralPanelProvider({ ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <CustomersTransactionsGeneralPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <CustomersTransactionsGeneralPanelContext.Provider value={provider} {...props} />
   );
 }
-const useCustomersTransactionsGeneralPanelContext = () =>
-  useContext(CustomersTransactionsGeneralPanelContext);
+const useCustomersTransactionsGeneralPanelContext = () => useContext(CustomersTransactionsGeneralPanelContext);
 
-export {
-  CustomersTransactionsGeneralPanelProvider,
-  useCustomersTransactionsGeneralPanelContext,
-};
+export { CustomersTransactionsGeneralPanelProvider, useCustomersTransactionsGeneralPanelContext };

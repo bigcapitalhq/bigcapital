@@ -1,16 +1,16 @@
-import { isEmpty, get, last, sumBy } from 'lodash';
 import {
-  IGeneralLedgerSheetQuery,
+  IAccount,
+  IContact,
   IGeneralLedgerSheetAccount,
   IGeneralLedgerSheetAccountBalance,
   IGeneralLedgerSheetAccountTransaction,
-  IAccount,
-  IJournalPoster,
+  IGeneralLedgerSheetQuery,
   IJournalEntry,
-  IContact,
+  IJournalPoster,
 } from '@/interfaces';
-import FinancialSheet from '../FinancialSheet';
+import { get, isEmpty, last, sumBy } from 'lodash';
 import moment from 'moment';
+import FinancialSheet from '../FinancialSheet';
 
 /**
  * General ledger sheet.
@@ -41,7 +41,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     transactions: IJournalPoster,
     openingBalancesJournal: IJournalPoster,
     baseCurrency: string,
-    i18n
+    i18n,
   ) {
     super();
 
@@ -74,18 +74,13 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   entryReducer(
     entries: IGeneralLedgerSheetAccountTransaction[],
     entry: IJournalEntry,
-    openingBalance: number
+    openingBalance: number,
   ): IGeneralLedgerSheetAccountTransaction[] {
     const lastEntry = last(entries);
 
     const contact = this.contactsMap.get(entry.contactId);
-    const amount = this.getAmount(
-      entry.credit,
-      entry.debit,
-      entry.accountNormal
-    );
-    const runningBalance =
-      amount + (!isEmpty(entries) ? lastEntry.runningBalance : openingBalance);
+    const amount = this.getAmount(entry.credit, entry.debit, entry.accountNormal);
+    const runningBalance = amount + (!isEmpty(entries) ? lastEntry.runningBalance : openingBalance);
 
     const newEntry = {
       date: entry.date,
@@ -128,19 +123,13 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    */
   private accountTransactionsMapper(
     account: IAccount,
-    openingBalance: number
+    openingBalance: number,
   ): IGeneralLedgerSheetAccountTransaction[] {
     const entries = this.transactions.getAccountEntries(account.id);
 
-    return entries.reduce(
-      (
-        entries: IGeneralLedgerSheetAccountTransaction[],
-        entry: IJournalEntry
-      ) => {
-        return this.entryReducer(entries, entry, openingBalance);
-      },
-      []
-    );
+    return entries.reduce((entries: IGeneralLedgerSheetAccountTransaction[], entry: IJournalEntry) => {
+      return this.entryReducer(entries, entry, openingBalance);
+    }, []);
   }
 
   /**
@@ -148,9 +137,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @param {IAccount} account
    * @return {IGeneralLedgerSheetAccountBalance}
    */
-  private accountOpeningBalance(
-    account: IAccount
-  ): IGeneralLedgerSheetAccountBalance {
+  private accountOpeningBalance(account: IAccount): IGeneralLedgerSheetAccountBalance {
     const amount = this.openingBalancesJournal.getAccountBalance(account.id);
     const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
@@ -166,7 +153,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    */
   private accountClosingBalance(
     openingBalance: number,
-    transactions: IGeneralLedgerSheetAccountTransaction[]
+    transactions: IGeneralLedgerSheetAccountTransaction[],
   ): IGeneralLedgerSheetAccountBalance {
     const amount = this.calcClosingBalance(openingBalance, transactions);
     const formattedAmount = this.formatTotalNumber(amount);
@@ -176,10 +163,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     return { amount, formattedAmount, currencyCode, date };
   }
 
-  private calcClosingBalance(
-    openingBalance: number,
-    transactions: IGeneralLedgerSheetAccountTransaction[]
-  ) {
+  private calcClosingBalance(openingBalance: number, transactions: IGeneralLedgerSheetAccountTransaction[]) {
     return openingBalance + sumBy(transactions, (trans) => trans.amount);
   }
 
@@ -191,14 +175,8 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   private accountMapper(account: IAccount): IGeneralLedgerSheetAccount {
     const openingBalance = this.accountOpeningBalance(account);
 
-    const transactions = this.accountTransactionsMapper(
-      account,
-      openingBalance.amount
-    );
-    const closingBalance = this.accountClosingBalance(
-      openingBalance.amount,
-      transactions
-    );
+    const transactions = this.accountTransactionsMapper(account, openingBalance.amount);
+    const closingBalance = this.accountClosingBalance(openingBalance.amount, transactions);
 
     return {
       id: account.id,
@@ -225,10 +203,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
         // when`noneTransactions` is on.
         .filter(
           (generalLedgerAccount: IGeneralLedgerSheetAccount) =>
-            !(
-              generalLedgerAccount.transactions.length === 0 &&
-              this.query.noneTransactions
-            )
+            !(generalLedgerAccount.transactions.length === 0 && this.query.noneTransactions),
         )
     );
   }

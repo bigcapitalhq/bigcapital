@@ -31,17 +31,16 @@ export const FetchOptions = ({ form }) => {
     });
 };
 
-
 export const setSettings = (settings) => {
   return {
     type: t.SETTING_SET,
     options: settings,
   };
-}
+};
 
 export const addSettings = (group, key, value) => {
-  return  {
+  return {
     type: t.SETTING_ADD,
-    payload: { group, key, value }
+    payload: { group, key, value },
   };
-}
+};

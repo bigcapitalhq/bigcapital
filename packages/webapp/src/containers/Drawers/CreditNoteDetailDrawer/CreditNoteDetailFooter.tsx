@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  CommercialDocFooter,
-  T,
-  If,
-  DetailsMenu,
-  DetailItem,
-} from '@/components';
+import { CommercialDocFooter, T, If, DetailsMenu, DetailItem } from '@/components';
 
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';
 
@@ -25,9 +19,7 @@ export default function CreditNoteDetailFooter() {
         </If>
 
         <If condition={creditNote.terms_conditions}>
-          <DetailItem label={<T id={'terms_conditions'} />}>
-            {creditNote.terms_conditions}
-          </DetailItem>
+          <DetailItem label={<T id={'terms_conditions'} />}>{creditNote.terms_conditions}</DetailItem>
         </If>
       </DetailsMenu>
     </CommercialDocFooter>

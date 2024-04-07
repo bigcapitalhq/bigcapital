@@ -23,9 +23,7 @@ function ItemFormDashboardTitle() {
 
   // Changes the page title in new and edit mode.
   React.useEffect(() => {
-    isNewMode
-      ? changePageTitle(intl.get('new_item'))
-      : changePageTitle(intl.get('edit_item_details'));
+    isNewMode ? changePageTitle(intl.get('new_item')) : changePageTitle(intl.get('edit_item_details'));
   }, [changePageTitle, isNewMode]);
 
   return null;
@@ -70,10 +68,7 @@ export default function ItemForm({ itemId }) {
 
       <ItemFormPageLoading>
         <DashboardCard page>
-          <ItemFormPageFormik
-            onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleFormCancel}
-          />
+          <ItemFormPageFormik onSubmitSuccess={handleSubmitSuccess} onCancel={handleFormCancel} />
         </DashboardCard>
       </ItemFormPageLoading>
     </ItemFormProvider>

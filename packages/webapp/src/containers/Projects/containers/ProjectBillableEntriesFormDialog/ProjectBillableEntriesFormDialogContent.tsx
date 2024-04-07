@@ -13,10 +13,7 @@ export default function ProjectEntriesFormDialogContent({
   projectId,
 }) {
   return (
-    <ProjectBillableEntriesFormProvider
-      dialogName={dialogName}
-      projectId={projectId}
-    >
+    <ProjectBillableEntriesFormProvider dialogName={dialogName} projectId={projectId}>
       <ProjectBillableEntriesForm />
     </ProjectBillableEntriesFormProvider>
   );

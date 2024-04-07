@@ -1,11 +1,6 @@
-import * as R from 'ramda';
+import { ICashFlowDateRange, IDateRange, ITableColumn, ITableColumnAccessor } from '@/interfaces';
 import moment from 'moment';
-import {
-  ITableColumn,
-  IDateRange,
-  ICashFlowDateRange,
-  ITableColumnAccessor,
-} from '@/interfaces';
+import * as R from 'ramda';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
 
 export const BalanceSheetTableDatePeriods = (Base) =>
@@ -15,11 +10,7 @@ export const BalanceSheetTableDatePeriods = (Base) =>
      * @returns {IDateRange[]}
      */
     get datePeriods() {
-      return this.getDateRanges(
-        this.query.fromDate,
-        this.query.toDate,
-        this.query.displayColumnsBy
-      );
+      return this.getDateRanges(this.query.fromDate, this.query.toDate, this.query.displayColumnsBy);
     }
 
     /**
@@ -40,11 +31,8 @@ export const BalanceSheetTableDatePeriods = (Base) =>
         ['week', dayFormat],
       ];
       const conditionsPairs = R.map(
-        ([type, formatFn]) => [
-          R.always(this.query.isDisplayColumnsBy(type)),
-          formatFn,
-        ],
-        conditions
+        ([type, formatFn]) => [R.always(this.query.isDisplayColumnsBy(type)), formatFn],
+        conditions,
       );
       return R.compose(R.cond(conditionsPairs))(dateRange);
     };
@@ -57,31 +45,26 @@ export const BalanceSheetTableDatePeriods = (Base) =>
      * @param {IDateRange} dateRange -
      * @param {number} index -
      */
-    private datePeriodColumnsAccessor = R.curry(
-      (dateRange: IDateRange, index: number) => {
-        return R.pipe(
-          R.concat(this.previousPeriodHorizColumnAccessors(index)),
-          R.concat(this.previousYearHorizontalColumnAccessors(index)),
-          R.concat(this.percetangeDatePeriodColumnsAccessor(index)),
-          R.concat([
-            {
-              key: `date-range-${index}`,
-              accessor: `horizontalTotals[${index}].total.formattedAmount`,
-            },
-          ])
-        )([]);
-      }
-    );
+    private datePeriodColumnsAccessor = R.curry((dateRange: IDateRange, index: number) => {
+      return R.pipe(
+        R.concat(this.previousPeriodHorizColumnAccessors(index)),
+        R.concat(this.previousYearHorizontalColumnAccessors(index)),
+        R.concat(this.percetangeDatePeriodColumnsAccessor(index)),
+        R.concat([
+          {
+            key: `date-range-${index}`,
+            accessor: `horizontalTotals[${index}].total.formattedAmount`,
+          },
+        ]),
+      )([]);
+    });
 
     /**
      * Retrieve the date periods columns accessors.
      * @returns {ITableColumnAccessor[]}
      */
     protected datePeriodsColumnsAccessors = (): ITableColumnAccessor[] => {
-      return R.compose(
-        R.flatten,
-        R.addIndex(R.map)(this.datePeriodColumnsAccessor)
-      )(this.datePeriods);
+      return R.compose(R.flatten, R.addIndex(R.map)(this.datePeriodColumnsAccessor))(this.datePeriods);
     };
 
     // -------------------------
@@ -93,20 +76,12 @@ export const BalanceSheetTableDatePeriods = (Base) =>
      * @param {} dateRange
      * @returns {}
      */
-    private datePeriodChildrenColumns = (
-      index: number,
-      dateRange: IDateRange
-    ) => {
+    private datePeriodChildrenColumns = (index: number, dateRange: IDateRange) => {
       return R.compose(
-        R.unless(
-          R.isEmpty,
-          R.concat([
-            { key: `total`, label: this.i18n.__('balance_sheet.total') },
-          ])
-        ),
+        R.unless(R.isEmpty, R.concat([{ key: `total`, label: this.i18n.__('balance_sheet.total') }])),
         R.concat(this.percentageColumns()),
         R.concat(this.getPreviousYearHorizontalColumns(dateRange)),
-        R.concat(this.previousPeriodHorizontalColumns(dateRange))
+        R.concat(this.previousPeriodHorizontalColumns(dateRange)),
       )([]);
     };
 
@@ -116,10 +91,7 @@ export const BalanceSheetTableDatePeriods = (Base) =>
      * @param index
      * @returns
      */
-    private datePeriodColumn = (
-      dateRange: IDateRange,
-      index: number
-    ): ITableColumn => {
+    private datePeriodColumn = (dateRange: IDateRange, index: number): ITableColumn => {
       return {
         key: `date-range-${index}`,
         label: this.formatColumnLabel(dateRange),

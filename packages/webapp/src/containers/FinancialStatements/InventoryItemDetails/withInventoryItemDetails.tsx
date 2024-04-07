@@ -5,10 +5,7 @@ import { getInventoryItemDetailsFilterDrawer } from '@/store/financialStatement/
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      inventoryItemDetailDrawerFilter: getInventoryItemDetailsFilterDrawer(
-        state,
-        props,
-      ),
+      inventoryItemDetailDrawerFilter: getInventoryItemDetailsFilterDrawer(state, props),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

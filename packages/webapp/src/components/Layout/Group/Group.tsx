@@ -50,7 +50,6 @@ const GroupStyled = styled(Box)`
   flex-direction: row;
   align-items: center;
   flex-wrap: ${(props: GroupProps) => (props.noWrap ? 'nowrap' : 'wrap')};
-  justify-content: ${(props: GroupProps) =>
-    GROUP_POSITIONS[props.position || 'left']};
+  justify-content: ${(props: GroupProps) => GROUP_POSITIONS[props.position || 'left']};
   gap: ${(props: GroupProps) => props.spacing}px;
 `;

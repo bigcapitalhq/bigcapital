@@ -1,8 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { IAccountsTypesService, IAccountType } from '@/interfaces';
+import { IAccountType, IAccountsTypesService } from '@/interfaces';
 import AccountTypesUtils from '@/lib/AccountTypes';
 import I18nService from '@/services/I18n/I18nService';
-
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class AccountsTypesService implements IAccountsTypesService {
@@ -11,7 +10,7 @@ export default class AccountsTypesService implements IAccountsTypesService {
 
   /**
    * Retrieve all accounts types.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @return {IAccountType}
    */
   public getAccountsTypes(tenantId: number): IAccountType[] {

@@ -41,19 +41,16 @@ export function useEditEstimate(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
+  return useMutation(([id, values]) => apiRequest.post(`sales/estimates/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
 
-        // Invalidate specific sale estimate.
-        queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
-      },
-      ...props,
+      // Invalidate specific sale estimate.
+      queryClient.invalidateQueries([t.SALE_ESTIMATE, id]);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -203,20 +200,16 @@ export function useCreateNotifyEstimateBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate
-        queryClient.invalidateQueries([t.NOTIFY_SALE_ESTIMATE_BY_SMS, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/estimates/${id}/notify-by-sms`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.NOTIFY_SALE_ESTIMATE_BY_SMS, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -246,16 +239,13 @@ export function useSendSaleEstimateMail(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`sales/estimates/${id}/mail`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useSaleEstimateDefaultOptions(estimateId, props) {

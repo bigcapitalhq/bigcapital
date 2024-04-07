@@ -15,11 +15,7 @@ export function ProjectBillableEntriesCell() {
   const content = <ProjectBillableEntries />;
   return (
     <Popover2 content={content}>
-      <Button
-        icon={<Icon icon={'info'} iconSize={14} />}
-        className="m12"
-        minimal={true}
-      />
+      <Button icon={<Icon icon={'info'} iconSize={14} />} className="m12" minimal={true} />
     </Popover2>
   );
 }

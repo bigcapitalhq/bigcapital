@@ -1,4 +1,3 @@
-import { Service, Inject } from 'typedi';
 import {
   IAccount,
   IAccountCreateDTO,
@@ -9,14 +8,15 @@ import {
   IFilterMeta,
   IGetAccountTransactionPOJO,
 } from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ActivateAccount } from './ActivateAccount';
 import { CreateAccount } from './CreateAccount';
 import { DeleteAccount } from './DeleteAccount';
 import { EditAccount } from './EditAccount';
-import { ActivateAccount } from './ActivateAccount';
-import { GetAccounts } from './GetAccounts';
 import { GetAccount } from './GetAccount';
 import { GetAccountTransactions } from './GetAccountTransactions';
-import { Knex } from 'knex';
+import { GetAccounts } from './GetAccounts';
 
 @Service()
 export class AccountsApplication {
@@ -50,7 +50,7 @@ export class AccountsApplication {
   public createAccount = (
     tenantId: number,
     accountDTO: IAccountCreateDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<IAccount> => {
     return this.createAccountService.createAccount(tenantId, accountDTO, trx);
   };
@@ -72,11 +72,7 @@ export class AccountsApplication {
    * @param {IAccountEditDTO} accountDTO
    * @returns
    */
-  public editAccount = (
-    tenantId: number,
-    accountId: number,
-    accountDTO: IAccountEditDTO
-  ) => {
+  public editAccount = (tenantId: number, accountId: number, accountDTO: IAccountEditDTO) => {
     return this.editAccountService.editAccount(tenantId, accountId, accountDTO);
   };
 
@@ -86,11 +82,7 @@ export class AccountsApplication {
    * @param {number} accountId -
    */
   public activateAccount = (tenantId: number, accountId: number) => {
-    return this.activateAccountService.activateAccount(
-      tenantId,
-      accountId,
-      true
-    );
+    return this.activateAccountService.activateAccount(tenantId, accountId, true);
   };
 
   /**
@@ -99,11 +91,7 @@ export class AccountsApplication {
    * @param {number} accountId -
    */
   public inactivateAccount = (tenantId: number, accountId: number) => {
-    return this.activateAccountService.activateAccount(
-      tenantId,
-      accountId,
-      false
-    );
+    return this.activateAccountService.activateAccount(tenantId, accountId, false);
   };
 
   /**
@@ -124,7 +112,7 @@ export class AccountsApplication {
    */
   public getAccounts = (
     tenantId: number,
-    filterDTO: IAccountsFilter
+    filterDTO: IAccountsFilter,
   ): Promise<{ accounts: IAccountResponse[]; filterMeta: IFilterMeta }> => {
     return this.getAccountsService.getAccountsList(tenantId, filterDTO);
   };
@@ -137,11 +125,8 @@ export class AccountsApplication {
    */
   public getAccountsTransactions = (
     tenantId: number,
-    filter: IAccountsTransactionsFilter
+    filter: IAccountsTransactionsFilter,
   ): Promise<IGetAccountTransactionPOJO[]> => {
-    return this.getAccountTransactionsService.getAccountsTransactions(
-      tenantId,
-      filter
-    );
+    return this.getAccountTransactionsService.getAccountsTransactions(tenantId, filter);
   };
 }

@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  TextArea,
-  Position,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, TextArea, Position, ControlGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import {
   FormattedMessage as T,
@@ -28,12 +22,7 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
 
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
@@ -109,11 +98,7 @@ export default function OtherIncomeFormFields() {
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
-          <FFormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'amount'} label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -139,13 +124,8 @@ export default function OtherIncomeFormFields() {
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.INCOME,
-                    ACCOUNT_TYPE.OTHER_INCOME,
-                  ]}
+                  onAccountSelected={({ id }) => form.setFieldValue('credit_account_id', id)}
+                  filterByTypes={[ACCOUNT_TYPE.INCOME, ACCOUNT_TYPE.OTHER_INCOME]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -165,12 +145,7 @@ export default function OtherIncomeFormFields() {
 
       {/*------------ Description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </React.Fragment>
   );

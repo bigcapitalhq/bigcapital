@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
 import { SaleInvoice } from '@/models';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 @Service()
@@ -25,11 +25,7 @@ export class CommandSaleInvoiceValidators {
    * @param {string} invoiceNumber -
    * @param {number} notInvoiceId -
    */
-  public async validateInvoiceNumberUnique(
-    tenantId: number,
-    invoiceNumber: string,
-    notInvoiceId?: number
-  ) {
+  public async validateInvoiceNumberUnique(tenantId: number, invoiceNumber: string, notInvoiceId?: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const saleInvoice = await SaleInvoice.query()
@@ -50,10 +46,7 @@ export class CommandSaleInvoiceValidators {
    * @param {number} saleInvoiceAmount
    * @param {number} paymentAmount
    */
-  public validateInvoiceAmountBiggerPaymentAmount(
-    saleInvoiceAmount: number,
-    paymentAmount: number
-  ) {
+  public validateInvoiceAmountBiggerPaymentAmount(saleInvoiceAmount: number, paymentAmount: number) {
     if (saleInvoiceAmount < paymentAmount) {
       throw new ServiceError(ERRORS.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT);
     }
@@ -74,10 +67,7 @@ export class CommandSaleInvoiceValidators {
    * @param {number} tenantId
    * @param {number} customerId - Customer id.
    */
-  public async validateCustomerHasNoInvoices(
-    tenantId: number,
-    customerId: number
-  ) {
+  public async validateCustomerHasNoInvoices(tenantId: number, customerId: number) {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const invoices = await SaleInvoice.query().where('customer_id', customerId);

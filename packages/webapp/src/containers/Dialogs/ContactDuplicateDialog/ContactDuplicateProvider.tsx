@@ -21,7 +21,6 @@ function ContactDuplicateProvider({ contactId, dialogName, ...props }) {
   );
 }
 
-const useContactDuplicateFromContext = () =>
-  React.useContext(ContactDuplicateContext);
+const useContactDuplicateFromContext = () => React.useContext(ContactDuplicateContext);
 
 export { ContactDuplicateProvider, useContactDuplicateFromContext };

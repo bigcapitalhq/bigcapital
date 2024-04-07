@@ -30,8 +30,7 @@ function RefundVendorCreditForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { vendorCredit, dialogName, createRefundVendorCreditMutate } =
-    useRefundVendorCreditContext();
+  const { vendorCredit, dialogName, createRefundVendorCreditMutate } = useRefundVendorCreditContext();
 
   // Initial form values
   const initialValues = {
@@ -62,9 +61,7 @@ function RefundVendorCreditForm({
       setSubmitting(false);
     };
 
-    createRefundVendorCreditMutate([vendorCredit.id, form])
-      .then(onSaved)
-      .catch(onError);
+    createRefundVendorCreditMutate([vendorCredit.id, form]).then(onSaved).catch(onError);
   };
 
   return (

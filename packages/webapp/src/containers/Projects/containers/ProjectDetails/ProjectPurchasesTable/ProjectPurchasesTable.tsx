@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { ActionMenu } from './components';
@@ -29,8 +25,7 @@ function ProjectPurchasesTableRoot({
   const handleDeletePurchase = () => {};
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PURCHASES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.PURCHASES);
 
   return (
     <DataTable

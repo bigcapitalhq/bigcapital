@@ -54,18 +54,12 @@ function ProfitLossSheet({
 
   return (
     <ProfitLossSheetProvider query={query}>
-      <ProfitLossActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <ProfitLossActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <ProfitLossSheetLoadingBar />
       <ProfitLossSheetAlerts />
 
       <DashboardPageContent>
-        <ProfitLossSheetHeader
-          pageFilter={query}
-          onSubmitFilter={handleSubmitFilter}
-        />
+        <ProfitLossSheetHeader pageFilter={query} onSubmitFilter={handleSubmitFilter} />
         <ProfitLossBody />
       </DashboardPageContent>
 
@@ -74,7 +68,4 @@ function ProfitLossSheet({
   );
 }
 
-export default R.compose(
-  withDashboardActions,
-  withProfitLossActions,
-)(ProfitLossSheet);
+export default R.compose(withDashboardActions, withProfitLossActions)(ProfitLossSheet);

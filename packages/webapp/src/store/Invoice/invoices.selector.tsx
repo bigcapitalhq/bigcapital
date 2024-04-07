@@ -10,24 +10,17 @@ const invoicesTableStateSelector = (state) => state.salesInvoices.tableState;
  * Retrieve invoices table state.
  */
 export const getInvoicesTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    invoicesTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, invoicesTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 /**
  * Retrieve invoices table state.
  */
 export const isInvoicesTableStateChangedFactory = () =>
-  createDeepEqualSelector(
-    invoicesTableStateSelector,
-    (tableState) => {
-      return !isEqual(tableState, defaultTableQuery);
-    },
-  );
+  createDeepEqualSelector(invoicesTableStateSelector, (tableState) => {
+    return !isEqual(tableState, defaultTableQuery);
+  });

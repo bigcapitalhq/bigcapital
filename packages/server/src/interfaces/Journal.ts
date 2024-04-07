@@ -35,11 +35,7 @@ export interface IJournalPoster {
   saveBalance(): void;
   deleteEntries(): void;
 
-  getAccountBalance(
-    accountId: number,
-    closingDate?: Date | string,
-    dateType?: string
-  ): number;
+  getAccountBalance(accountId: number, closingDate?: Date | string, dateType?: string): number;
   getAccountEntries(accountId: number): IJournalEntry[];
 }
 

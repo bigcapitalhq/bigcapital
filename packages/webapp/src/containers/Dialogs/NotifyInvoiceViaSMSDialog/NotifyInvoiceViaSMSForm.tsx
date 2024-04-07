@@ -74,9 +74,7 @@ function NotifyInvoiceViaSMSForm({
     const requestValues = transformFormValuesToRequest(values);
 
     // Submits invoice SMS notification.
-    createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyInvoiceBySMSMutate([invoiceId, requestValues]).then(onSuccess).catch(onError);
   };
   // Handle the form cancel.
   const handleFormCancel = React.useCallback(() => {

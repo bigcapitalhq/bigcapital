@@ -24,15 +24,10 @@ function NotifyReceiptViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    receiptId,
-    receiptSMSDetail,
-    createNotifyReceiptBySMSMutate,
-  } = useNotifyReceiptViaSMSContext();
+  const { dialogName, receiptId, receiptSMSDetail, createNotifyReceiptBySMSMutate } = useNotifyReceiptViaSMSContext();
 
   const [calloutCode, setCalloutCode] = React.useState([]);
-  
+
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
     // Handle request response success.
@@ -55,9 +50,7 @@ function NotifyReceiptViaSMSForm({
       }
       setSubmitting(false);
     };
-    createNotifyReceiptBySMSMutate([receiptId, values])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyReceiptBySMSMutate([receiptId, values]).then(onSuccess).catch(onError);
   };
   // Handle the form cancel.
   const handleFormCancel = () => {

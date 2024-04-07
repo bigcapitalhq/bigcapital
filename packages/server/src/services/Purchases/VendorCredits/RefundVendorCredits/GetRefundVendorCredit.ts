@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { RefundVendorCreditTransformer } from './RefundVendorCreditTransformer';
-import RefundVendorCredit from './RefundVendorCredit';
 import { IRefundVendorCredit } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import RefundVendorCredit from './RefundVendorCredit';
+import { RefundVendorCreditTransformer } from './RefundVendorCreditTransformer';
 
 @Service()
 export default class GetRefundVendorCredit extends RefundVendorCredit {
@@ -19,10 +19,7 @@ export default class GetRefundVendorCredit extends RefundVendorCredit {
    * @param {number} refundId
    * @returns {Promise<IRefundVendorCredit>}
    */
-  public getRefundCreditTransaction = async (
-    tenantId: number,
-    refundId: number
-  ): Promise<IRefundVendorCredit> => {
+  public getRefundCreditTransaction = async (tenantId: number, refundId: number): Promise<IRefundVendorCredit> => {
     const { RefundVendorCredit } = this.tenancy.models(tenantId);
 
     await this.getRefundVendorCreditOrThrowError(tenantId, refundId);
@@ -34,10 +31,6 @@ export default class GetRefundVendorCredit extends RefundVendorCredit {
       .withGraphFetched('depositAccount');
 
     // Transformes refund vendor credit models to POJO objects.
-    return this.transformer.transform(
-      tenantId,
-      refundVendorTransactions,
-      new RefundVendorCreditTransformer()
-    );
+    return this.transformer.transform(tenantId, refundVendorTransactions, new RefundVendorCreditTransformer());
   };
 }

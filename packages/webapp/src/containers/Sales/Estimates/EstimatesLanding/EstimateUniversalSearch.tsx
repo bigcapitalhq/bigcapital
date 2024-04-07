@@ -27,9 +27,7 @@ function EstimateUniversalSearchSelectComponent({
   return null;
 }
 
-export const EstimateUniversalSearchSelect = withDrawerActions(
-  EstimateUniversalSearchSelectComponent,
-);
+export const EstimateUniversalSearchSelect = withDrawerActions(EstimateUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -46,11 +44,7 @@ export const EstimateStatus = ({ estimate }) => (
         <T id={'rejected'} />
       </span>
     </Choose.When>
-    <Choose.When
-      condition={
-        estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved
-      }
-    >
+    <Choose.When condition={estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved}>
       <span class="delivered">
         <T id={'delivered'} />
       </span>
@@ -66,10 +60,7 @@ export const EstimateStatus = ({ estimate }) => (
 /**
  * Estimate universal search item.
  */
-export function EstimateUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function EstimateUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -77,8 +68,7 @@ export function EstimateUniversalSearchItem(
         <div>
           <div>{item.text}</div>
           <span class="bp4-text-muted">
-            {item.reference.estimate_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {item.reference.estimate_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_estimate_date}
           </span>
         </div>

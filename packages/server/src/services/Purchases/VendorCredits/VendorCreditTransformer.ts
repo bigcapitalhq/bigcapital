@@ -1,4 +1,3 @@
-import { IVendorCredit } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { formatNumber } from 'utils';

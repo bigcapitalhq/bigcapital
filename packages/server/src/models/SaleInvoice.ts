@@ -1,18 +1,14 @@
-import { mixin, Model, raw } from 'objection';
-import { castArray, takeWhile } from 'lodash';
-import moment from 'moment';
+import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
+import { castArray } from 'lodash';
 import TenantModel from 'models/TenantModel';
+import moment from 'moment';
+import { Model, mixin, raw } from 'objection';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ModelSearchable from './ModelSearchable';
 import ModelSetting from './ModelSetting';
 import SaleInvoiceMeta from './SaleInvoice.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/Invoices/constants';
-import ModelSearchable from './ModelSearchable';
 
-export default class SaleInvoice extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class SaleInvoice extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   public taxAmountWithheld: number;
   public balance: number;
   public paymentAmount: number;
@@ -112,9 +108,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number}
    */
   get subtotalExludingTax() {
-    return this.isInclusiveTax
-      ? this.subtotal - this.taxAmountWithheld
-      : this.subtotal;
+    return this.isInclusiveTax ? this.subtotal - this.taxAmountWithheld : this.subtotal;
   }
 
   /**
@@ -130,9 +124,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+    return this.isInclusiveTax ? this.subtotal : this.subtotal + this.taxAmountWithheld;
   }
 
   /**
@@ -245,7 +237,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
             COALESCE(PAYMENT_AMOUNT, 0) -
             COALESCE(WRITTENOFF_AMOUNT, 0) -
             COALESCE(CREDITED_AMOUNT, 0) > 0
-        `)
+        `),
         );
       },
       /**
@@ -534,9 +526,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
   static async changePaymentAmount(invoiceId, amount, trx) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    await this.query(trx)
-      .where('id', invoiceId)
-      [changeMethod]('payment_amount', Math.abs(amount));
+    await this.query(trx).where('id', invoiceId)[changeMethod]('payment_amount', Math.abs(amount));
   }
 
   /**

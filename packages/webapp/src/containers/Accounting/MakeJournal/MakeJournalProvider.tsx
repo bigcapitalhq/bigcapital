@@ -30,19 +30,15 @@ function MakeJournalProvider({ journalId, query, ...props }) {
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts();
 
   // Load the customers list.
-  const { data: contacts, isLoading: isContactsLoading } =
-    useAutoCompleteContacts();
+  const { data: contacts, isLoading: isContactsLoading } = useAutoCompleteContacts();
 
   // Load the currencies list.
   const { data: currencies, isLoading: isCurrenciesLoading } = useCurrencies();
 
   // Load the details of the given manual journal.
-  const { data: manualJournal, isLoading: isJournalLoading } = useJournal(
-    journalId,
-    {
-      enabled: !!journalId,
-    },
-  );
+  const { data: manualJournal, isLoading: isJournalLoading } = useJournal(journalId, {
+    enabled: !!journalId,
+  });
   // Create and edit journal mutations.
   const { mutateAsync: createJournalMutate } = useCreateJournal();
   const { mutateAsync: editJournalMutate } = useEditJournal();
@@ -110,7 +106,6 @@ function MakeJournalProvider({ journalId, query, ...props }) {
   );
 }
 
-const useMakeJournalFormContext = () =>
-  React.useContext(MakeJournalFormContext);
+const useMakeJournalFormContext = () => React.useContext(MakeJournalFormContext);
 
 export { MakeJournalProvider, useMakeJournalFormContext };

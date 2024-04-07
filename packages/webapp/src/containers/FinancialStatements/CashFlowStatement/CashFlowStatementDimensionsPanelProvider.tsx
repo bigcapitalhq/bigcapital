@@ -30,17 +30,10 @@ function CashFlowStatementDimensionsPanelProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <CashFlowStatementDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <CashFlowStatementDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useCashFlowStatementDimensionsPanelContext = () =>
-  React.useContext(CashFlowStatementDimensionsPanelContext);
+const useCashFlowStatementDimensionsPanelContext = () => React.useContext(CashFlowStatementDimensionsPanelContext);
 
-export {
-  CashFlowStatementDimensionsPanelProvider,
-  useCashFlowStatementDimensionsPanelContext,
-};
+export { CashFlowStatementDimensionsPanelProvider, useCashFlowStatementDimensionsPanelContext };

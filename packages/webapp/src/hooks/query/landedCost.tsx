@@ -21,17 +21,13 @@ export function useCreateLandedCost(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`purchases/landed-cost/bills/${id}/allocate`, values),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`purchases/landed-cost/bills/${id}/allocate`, values), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -41,17 +37,13 @@ export function useDeleteLandedCost(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (landedCostId) =>
-      apiRequest.delete(`purchases/landed-cost/${landedCostId}`),
-    {
-      onSuccess: (res, id) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((landedCostId) => apiRequest.delete(`purchases/landed-cost/${landedCostId}`), {
+    onSuccess: (res, id) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

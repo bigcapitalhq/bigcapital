@@ -60,7 +60,4 @@ function UserActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(UserActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(UserActivateAlert);

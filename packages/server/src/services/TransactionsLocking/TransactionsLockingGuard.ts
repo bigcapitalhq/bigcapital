@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError, ServiceErrors } from '@/exceptions';
+import { ServiceError } from '@/exceptions';
 import { TransactionsLockingGroup } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import TransactionsLockingRepository from './TransactionsLockingRepository';
 import { ERRORS } from './constants';
 
@@ -24,13 +24,12 @@ export default class TransactionsLockingGuard {
   public isTransactionsLocking = (
     tenantId: number,
     transactionDate: Date,
-    lockingGroup: string = TransactionsLockingGroup.All
+    lockingGroup: string = TransactionsLockingGroup.All,
   ): boolean => {
-    const { isEnabled, unlockFromDate, unlockToDate, lockToDate } =
-      this.transactionsLockingRepo.getTransactionsLocking(
-        tenantId,
-        lockingGroup
-      );
+    const { isEnabled, unlockFromDate, unlockToDate, lockToDate } = this.transactionsLockingRepo.getTransactionsLocking(
+      tenantId,
+      lockingGroup,
+    );
     // Returns false anyway in case if the transaction locking is disabled.
     if (!isEnabled) return false;
 
@@ -58,13 +57,9 @@ export default class TransactionsLockingGuard {
   public validateTransactionsLocking = (
     tenantId: number,
     transactionDate: Date,
-    lockingGroup: TransactionsLockingGroup
+    lockingGroup: TransactionsLockingGroup,
   ) => {
-    const isLocked = this.isTransactionsLocking(
-      tenantId,
-      transactionDate,
-      lockingGroup
-    );
+    const isLocked = this.isTransactionsLocking(tenantId, transactionDate, lockingGroup);
     if (isLocked) {
       this.throwTransactionsLockError(tenantId, lockingGroup);
     }
@@ -75,14 +70,8 @@ export default class TransactionsLockingGuard {
    * @param {number} tenantId
    * @param {TransactionsLockingGroup} lockingGroup
    */
-  public throwTransactionsLockError = (
-    tenantId: number,
-    lockingGroup: TransactionsLockingGroup
-  ) => {
-    const { lockToDate } = this.transactionsLockingRepo.getTransactionsLocking(
-      tenantId,
-      lockingGroup
-    );
+  public throwTransactionsLockError = (tenantId: number, lockingGroup: TransactionsLockingGroup) => {
+    const { lockToDate } = this.transactionsLockingRepo.getTransactionsLocking(tenantId, lockingGroup);
     throw new ServiceError(ERRORS.TRANSACTIONS_DATE_LOCKED, null, {
       lockedToDate: lockToDate,
       formattedLockedToDate: moment(lockToDate).format('YYYY/MM/DD'),
@@ -95,27 +84,14 @@ export default class TransactionsLockingGuard {
    * @param {TransactionsLockingGroup} lockingGroup - transaction group
    * @param {Date} fromDate -
    */
-  public transactionsLockingGuard = (
-    tenantId: number,
-    transactionDate: Date,
-    moduleType: TransactionsLockingGroup
-  ) => {
-    const lockingType =
-      this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
+  public transactionsLockingGuard = (tenantId: number, transactionDate: Date, moduleType: TransactionsLockingGroup) => {
+    const lockingType = this.transactionsLockingRepo.getTransactionsLockingType(tenantId);
 
     //
     if (lockingType === TransactionsLockingGroup.All) {
-      return this.validateTransactionsLocking(
-        tenantId,
-        transactionDate,
-        TransactionsLockingGroup.All
-      );
+      return this.validateTransactionsLocking(tenantId, transactionDate, TransactionsLockingGroup.All);
     }
     //
-    return this.validateTransactionsLocking(
-      tenantId,
-      transactionDate,
-      moduleType
-    );
+    return this.validateTransactionsLocking(tenantId, transactionDate, moduleType);
   };
 }

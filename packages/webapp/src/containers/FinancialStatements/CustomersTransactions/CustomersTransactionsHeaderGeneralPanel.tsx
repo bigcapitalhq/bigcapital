@@ -2,13 +2,7 @@
 import React from 'react';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';
-import {
-  Row,
-  Col,
-  FormattedMessage as T,
-  CustomersMultiSelect,
-  FFormGroup,
-} from '@/components';
+import { Row, Col, FormattedMessage as T, CustomersMultiSelect, FFormGroup } from '@/components';
 import { filterCustomersOptions } from '../constants';
 
 import {
@@ -49,10 +43,7 @@ function CustomersTransactionsHeaderGeneralPanelContent() {
 
       <Row>
         <Col xs={4}>
-          <FFormGroup
-            label={<T id={'specific_customers'} />}
-            name={'customersIds'}
-          >
+          <FFormGroup label={<T id={'specific_customers'} />} name={'customersIds'}>
             <CustomersMultiSelect name={'customersIds'} items={customers} />
           </FFormGroup>
         </Col>

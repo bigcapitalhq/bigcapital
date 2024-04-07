@@ -25,8 +25,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);

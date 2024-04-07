@@ -1,12 +1,12 @@
-import { cloneDeep, forOwn, isString } from 'lodash';
 import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
+import { cloneDeep, forOwn, isString } from 'lodash';
 
 function applyGraphFetched(withRelations, builder) {
   const relations = Array.isArray(withRelations)
     ? withRelations
     : typeof withRelations === 'string'
-    ? withRelations.split(',').map((relation) => relation.trim())
-    : [];
+      ? withRelations.split(',').map((relation) => relation.trim())
+      : [];
 
   relations.forEach((relation) => {
     builder.withGraphFetched(relation);
@@ -87,10 +87,7 @@ export default class EntityRepository {
       applyGraphFetched(withRelations, builder);
     };
     if (isString(searchParam)) {
-      return this.model
-        .query()
-        .whereIn(searchParam, attributeValues)
-        .onBuild(commonBuilder);
+      return this.model.query().whereIn(searchParam, attributeValues).onBuild(commonBuilder);
     } else {
       const builder = this.model.query(this.knex).onBuild(commonBuilder);
 
@@ -154,17 +151,12 @@ export default class EntityRepository {
     const identityClause = {};
 
     if (Array.isArray(this.idColumn)) {
-      this.idColumn.forEach(
-        (idColumn) => (identityClause[idColumn] = entityDto[idColumn])
-      );
+      this.idColumn.forEach((idColumn) => (identityClause[idColumn] = entityDto[idColumn]));
     } else {
       identityClause[this.idColumn] = entityDto[this.idColumn];
     }
     const whereConditions = whereAttributes || identityClause;
-    const modifiedEntitiesCount = await this.model
-      .query(trx)
-      .where(whereConditions)
-      .update(entityDto);
+    const modifiedEntitiesCount = await this.model.query(trx).where(whereConditions).update(entityDto);
 
     if (modifiedEntitiesCount === 0) {
       throw new ModelEntityNotFound(entityDto[this.idColumn]);
@@ -191,7 +183,7 @@ export default class EntityRepository {
       {
         [this.idColumn]: id,
       },
-      trx
+      trx,
     );
   }
 
@@ -233,9 +225,6 @@ export default class EntityRepository {
   changeNumber(whereAttributes, field: string, amount: number, trx) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    return this.model
-      .query(trx)
-      .where(whereAttributes)
-      [changeMethod](field, Math.abs(amount));
+    return this.model.query(trx).where(whereAttributes)[changeMethod](field, Math.abs(amount));
   }
 }

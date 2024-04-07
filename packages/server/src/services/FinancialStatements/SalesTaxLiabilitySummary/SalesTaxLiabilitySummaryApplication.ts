@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
 import { SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
-import { SalesTaxLiabilitySummaryTableInjectable } from './SalesTaxLiabilitySummaryTableInjectable';
+import { Inject, Service } from 'typedi';
 import { SalesTaxLiabilitySummaryExportInjectable } from './SalesTaxLiabilitySummaryExportInjectable';
 import { SalesTaxLiabilitySummaryService } from './SalesTaxLiabilitySummaryService';
+import { SalesTaxLiabilitySummaryTableInjectable } from './SalesTaxLiabilitySummaryTableInjectable';
 import { SalesTaxLiabiltiySummaryPdf } from './SalesTaxLiabiltiySummaryPdf';
 
 @Service()
@@ -45,10 +45,7 @@ export class SalesTaxLiabilitySummaryApplication {
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<Buffer> {
     return this.salesTaxLiabilityExport.xlsx(tenantId, query);
   }
 
@@ -58,23 +55,17 @@ export class SalesTaxLiabilitySummaryApplication {
    * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns {Promise<string>}
    */
-  public csv(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<string> {
+  public csv(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<string> {
     return this.salesTaxLiabilityExport.csv(tenantId, query);
   }
 
   /**
    * Retrieves the sales tax liability summary in PDF format.
-   * @param {number} tenantId 
-   * @param {SalesTaxLiabilitySummaryQuery} query 
+   * @param {number} tenantId
+   * @param {SalesTaxLiabilitySummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    tenantId: number,
-    query: SalesTaxLiabilitySummaryQuery
-  ): Promise<Buffer> {
+  public pdf(tenantId: number, query: SalesTaxLiabilitySummaryQuery): Promise<Buffer> {
     return this.salesTaxLiabiltiyPdf.pdf(tenantId, query);
   }
 }

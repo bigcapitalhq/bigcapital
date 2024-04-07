@@ -2,13 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useContactDetailDrawerContext } from './ContactDetailDrawerProvider';
 
@@ -32,16 +26,14 @@ function ContactDetailActionsBar({
   // Handle edit contact.
   const onEditContact = () => {
     return contactId
-      ? (history.push(`/${contact?.contact_service}s/${contactId}/edit`),
-        closeDrawer('contact-detail-drawer'))
+      ? (history.push(`/${contact?.contact_service}s/${contactId}/edit`), closeDrawer('contact-detail-drawer'))
       : null;
   };
 
   // Handle delete contact.
   const onDeleteContact = () => {
     return contactId
-      ? (openAlert(`${contact?.contact_service}-delete`, { contactId }),
-        closeDrawer('contact-detail-drawer'))
+      ? (openAlert(`${contact?.contact_service}-delete`, { contactId }), closeDrawer('contact-detail-drawer'))
       : null;
   };
 
@@ -67,7 +59,4 @@ function ContactDetailActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertsActions,
-)(ContactDetailActionsBar);
+export default compose(withDrawerActions, withAlertsActions)(ContactDetailActionsBar);

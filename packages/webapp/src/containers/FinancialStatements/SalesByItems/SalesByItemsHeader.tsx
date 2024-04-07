@@ -13,10 +13,7 @@ import withSalesByItems from './withSalesByItems';
 import withSalesByItemsActions from './withSalesByItemsActions';
 
 import { compose, transformToForm } from '@/utils';
-import {
-  getDefaultSalesByItemsQuery,
-  getSalesByItemsQueryShema,
-} from './utils';
+import { getDefaultSalesByItemsQuery, getSalesByItemsQueryShema } from './utils';
 
 /**
  * Sales by items header.
@@ -66,22 +63,11 @@ function SalesByItemsHeader({
   };
 
   return (
-    <SalesByItemsDrawerHeader
-      isOpen={salesByItemsDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <SalesByItemsDrawerHeader isOpen={salesByItemsDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<SalesByItemsHeaderGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<SalesByItemsHeaderGeneralPanel />} />
           </Tabs>
           <div class="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>

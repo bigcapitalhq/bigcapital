@@ -45,26 +45,16 @@ export default function AccountantForm() {
         <FFormGroup inline={true} name={'accounts.accountCodeRequired'}>
           <FCheckbox
             inline={true}
-            label={
-              <T id={'make_account_code_required_when_create_a_new_accounts'} />
-            }
+            label={<T id={'make_account_code_required_when_create_a_new_accounts'} />}
             name={'accounts.accountCodeRequired'}
           />
         </FFormGroup>
 
         {/*------------ Account Code (unique) -----------*/}
-        <FFormGroup
-          name={'accounts.accountCodeUnique'}
-          type={'checkbox'}
-          inline={true}
-        >
+        <FFormGroup name={'accounts.accountCodeUnique'} type={'checkbox'} inline={true}>
           <FCheckbox
             inline={true}
-            label={
-              <T
-                id={'should_account_code_be_unique_when_create_a_new_account'}
-              />
-            }
+            label={<T id={'should_account_code_be_unique_when_create_a_new_account'} />}
             name={'accounts.accountCodeUnique'}
           />
         </FFormGroup>
@@ -94,13 +84,7 @@ export default function AccountantForm() {
             <T id={'deposit_customer_account'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >
@@ -108,11 +92,7 @@ export default function AccountantForm() {
           name={'paymentReceives.preferredDepositAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
-          filterByTypes={[
-            ACCOUNT_TYPE.CASH,
-            ACCOUNT_TYPE.BANK,
-            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-          ]}
+          filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
           fastField={true}
         />
       </AccountantFormGroup>
@@ -125,13 +105,7 @@ export default function AccountantForm() {
             <T id={'withdrawal_vendor_account'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_after_customer_make_payment'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >
@@ -139,11 +113,7 @@ export default function AccountantForm() {
           name={'billPayments.withdrawalAccount'}
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
-          filterByTypes={[
-            ACCOUNT_TYPE.CASH,
-            ACCOUNT_TYPE.BANK,
-            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-          ]}
+          filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
           fastField={true}
         />
       </AccountantFormGroup>
@@ -156,13 +126,7 @@ export default function AccountantForm() {
             <T id={'customer_advance_deposit'} />
           </strong>
         }
-        helperText={
-          <T
-            id={
-              'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'
-            }
-          />
-        }
+        helperText={<T id={'select_a_preferred_account_to_deposit_into_it_vendor_advanced_deposits'} />}
         labelInfo={<FieldRequiredHint />}
         fastField={true}
       >

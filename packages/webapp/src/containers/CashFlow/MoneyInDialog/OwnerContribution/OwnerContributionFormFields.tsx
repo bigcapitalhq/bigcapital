@@ -20,17 +20,9 @@ import {
   FInputGroup,
 } from '@/components';
 import { ACCOUNT_TYPE, CLASSES, Features } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyInDialog/utils';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../../MoneyInDialog/utils';
 import { MoneyInOutTransactionNoField } from '../../_components';
 import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
 import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
@@ -103,11 +95,7 @@ export default function OwnerContributionFormFields() {
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
-          <FFormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'amount'} label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account?.currency_code || '--'} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -157,12 +145,7 @@ export default function OwnerContributionFormFields() {
 
       {/*------------ Description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </React.Fragment>
   );

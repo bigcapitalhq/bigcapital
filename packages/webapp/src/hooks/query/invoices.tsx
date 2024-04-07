@@ -76,22 +76,19 @@ export function useEditInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific sale invoice.
-        queryClient.invalidateQueries([t.SALE_INVOICE, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/invoices/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific sale invoice.
+      queryClient.invalidateQueries([t.SALE_INVOICE, id]);
 
-        // Invalidate invoice customer.
-        queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
+      // Invalidate invoice customer.
+      queryClient.invalidateQueries([t.CUSTOMER, values.customer_id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -153,19 +150,16 @@ export function useDeliverInvoice(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (invoiceId) => apiRequest.post(`sales/invoices/${invoiceId}/deliver`),
-    {
-      onSuccess: (res, invoiceId) => {
-        // Invalidate specific invoice.
-        queryClient.invalidateQueries([t.SALE_INVOICE, invoiceId]);
+  return useMutation((invoiceId) => apiRequest.post(`sales/invoices/${invoiceId}/deliver`), {
+    onSuccess: (res, invoiceId) => {
+      // Invalidate specific invoice.
+      queryClient.invalidateQueries([t.SALE_INVOICE, invoiceId]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -227,58 +221,48 @@ export function useCreateBadDebt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate
-        queryClient.invalidateQueries([t.BAD_DEBT, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/invoices/${id}/writeoff`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.BAD_DEBT, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useCancelBadDebt(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate
-        queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
+  return useMutation((id) => apiRequest.post(`sales/invoices/${id}/writeoff/cancel`), {
+    onSuccess: (res, id) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.CANCEL_BAD_DEBT, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useCreateNotifyInvoiceBySMS(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate
-        queryClient.invalidateQueries([t.NOTIFY_SALE_INVOICE_BY_SMS, id]);
+  return useMutation(([id, values]) => apiRequest.post(`sales/invoices/${id}/notify-by-sms`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate
+      queryClient.invalidateQueries([t.NOTIFY_SALE_INVOICE_BY_SMS, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useInvoiceSMSDetail(invoiceId, query, props) {
@@ -316,16 +300,13 @@ export function useSendSaleInvoiceMail(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`sales/invoices/${id}/mail`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useSaleInvoiceDefaultOptions(invoiceId, props) {

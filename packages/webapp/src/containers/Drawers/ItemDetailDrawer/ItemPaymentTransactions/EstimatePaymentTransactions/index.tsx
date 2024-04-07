@@ -72,7 +72,4 @@ function EstimatePaymentTransactions({
     />
   );
 }
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(EstimatePaymentTransactions);
+export default compose(withAlertsActions, withDrawerActions)(EstimatePaymentTransactions);

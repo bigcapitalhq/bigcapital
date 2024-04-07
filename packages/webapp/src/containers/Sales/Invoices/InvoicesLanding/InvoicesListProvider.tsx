@@ -13,8 +13,7 @@ const InvoicesListContext = createContext();
  */
 function InvoicesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: invoicesViews, isLoading: isViewsLoading } =
-    useResourceViews('sale_invoices');
+  const { data: invoicesViews, isLoading: isViewsLoading } = useResourceViews('sale_invoices');
 
   // Fetch resource fields of the sale invoices.
   const {
@@ -31,8 +30,7 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
   } = useInvoices(query, { keepPreviousData: true });
 
   // Detarmines whether the table should show empty state.
-  const isEmptyStatus =
-    isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
+  const isEmptyStatus = isEmpty(invoices) && !tableStateChanged && !isInvoicesLoading;
 
   // Provider payload.
   const provider = {
@@ -52,10 +50,7 @@ function InvoicesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'sales-invoices-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'sales-invoices-list'}>
       <InvoicesListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

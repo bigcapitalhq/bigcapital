@@ -8,12 +8,7 @@ import { Dragzone, FormattedMessage as T } from '@/components';
 function VendorAttachmentTab() {
   return (
     <div>
-      <Dragzone
-        initialFiles={[]}
-        onDrop={null}
-        onDeleteFile={[]}
-        hint={<T id={'attachments_maximum'} />}
-      />
+      <Dragzone initialFiles={[]} onDrop={null} onDeleteFile={[]} hint={<T id={'attachments_maximum'} />} />
     </div>
   );
 }

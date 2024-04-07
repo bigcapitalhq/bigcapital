@@ -1,6 +1,5 @@
 // @ts-nocheck
 
-
 export default {
   RESOURCE_COLUMNS_SET: 'RESOURCE_COLUMNS_SET',
   RESOURCE_FIELDS_SET: 'RESOURCE_FIELDS_SET',

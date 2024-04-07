@@ -24,13 +24,8 @@ export default function InvoiceFormDialogs() {
 
   return (
     <>
-      <InvoiceNumberDialog
-        dialogName={DialogsName.InvoiceNumberSettings}
-        onConfirm={handleInvoiceNumberFormConfirm}
-      />
-      <InvoiceFormMailDeliverDialog
-        dialogName={DialogsName.InvoiceFormMailDeliver}
-      />
+      <InvoiceNumberDialog dialogName={DialogsName.InvoiceNumberSettings} onConfirm={handleInvoiceNumberFormConfirm} />
+      <InvoiceFormMailDeliverDialog dialogName={DialogsName.InvoiceFormMailDeliver} />
     </>
   );
 }

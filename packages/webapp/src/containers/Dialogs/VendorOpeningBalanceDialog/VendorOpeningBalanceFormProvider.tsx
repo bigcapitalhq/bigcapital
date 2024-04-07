@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useBranches,
-  useVendor,
-  useEditVendorOpeningBalance,
-} from '@/hooks/query';
+import { useBranches, useVendor, useEditVendorOpeningBalance } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { transfromVendorToForm } from './utils';
@@ -16,18 +12,12 @@ const VendorOpeningBalanceContext = React.createContext();
  * Vendor Opening balance provider.
  * @returns
  */
-function VendorOpeningBalanceFormProvider({
-  query,
-  vendorId,
-  dialogName,
-  ...props
-}) {
+function VendorOpeningBalanceFormProvider({ query, vendorId, dialogName, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
-  const { mutateAsync: editVendorOpeningBalanceMutate } =
-    useEditVendorOpeningBalance();
+  const { mutateAsync: editVendorOpeningBalanceMutate } = useEditVendorOpeningBalance();
 
   // Fetches the branches list.
   const {
@@ -58,7 +48,6 @@ function VendorOpeningBalanceFormProvider({
   );
 }
 
-const useVendorOpeningBalanceContext = () =>
-  React.useContext(VendorOpeningBalanceContext);
+const useVendorOpeningBalanceContext = () => React.useContext(VendorOpeningBalanceContext);
 
 export { VendorOpeningBalanceFormProvider, useVendorOpeningBalanceContext };

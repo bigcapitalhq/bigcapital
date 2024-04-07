@@ -1,5 +1,5 @@
-import DynamicFilterRoleAbstractor from './DynamicFilterRoleAbstractor';
 import { IFilterRole } from '@/interfaces';
+import DynamicFilterRoleAbstractor from './DynamicFilterRoleAbstractor';
 
 export default class FilterRoles extends DynamicFilterRoleAbstractor {
   private filterRoles: IFilterRole[];
@@ -20,8 +20,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstractor {
     let expression = '';
 
     this.filterRoles.forEach((role, index) => {
-      expression +=
-        index === 0 ? `${role.index} ` : `${role.condition} ${role.index} `;
+      expression += index === 0 ? `${role.index} ` : `${role.condition} ${role.index} `;
     });
     return expression.trim();
   }
@@ -33,11 +32,7 @@ export default class FilterRoles extends DynamicFilterRoleAbstractor {
     const logicExpression = this.buildLogicExpression();
 
     return (builder) => {
-      this.buildFilterQuery(
-        this.model,
-        this.filterRoles,
-        logicExpression
-      )(builder);
+      this.buildFilterQuery(this.model, this.filterRoles, logicExpression)(builder);
     };
   }
 

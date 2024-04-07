@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { createReducer } from "@reduxjs/toolkit";
+import { createReducer } from '@reduxjs/toolkit';
 import t from '@/store/types';
 
 const initialState = {
@@ -12,25 +12,25 @@ const initialState = {
   resourceColumns: {},
 
   metadata: {
-    'accounts': {
+    accounts: {
       label: 'Accounts',
       baseRoute: '/accounts',
     },
-    'items': {
+    items: {
       label: 'Items',
       baseRoute: '/items',
     },
-    'manual_journals': {
+    manual_journals: {
       label: 'Journals',
       baseRoute: '/manual-journals',
-    }
-  }
+    },
+  },
 };
 
 export default createReducer(initialState, {
   [t.RESOURCE_COLUMNS_SET]: (state, action) => {
     const _columns = {};
-    
+
     action.columns.forEach((column) => {
       _columns[column.id] = column;
     });
@@ -38,7 +38,7 @@ export default createReducer(initialState, {
       ...state.columns,
       ..._columns,
     };
-    state.resourceColumns[action.resource_slug] = action.columns.map(c => c.id);
+    state.resourceColumns[action.resource_slug] = action.columns.map((c) => c.id);
   },
 
   [t.RESOURCE_FIELDS_SET]: (state, action) => {
@@ -51,7 +51,7 @@ export default createReducer(initialState, {
       ...state.fields,
       ..._fields,
     };
-    state.resourceFields[action.resource_slug] = action.fields.map(f => f.key);
+    state.resourceFields[action.resource_slug] = action.fields.map((f) => f.key);
   },
 
   [t.RESOURCE_DATA_SET]: (state, action) => {

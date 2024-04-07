@@ -1,16 +1,13 @@
+import { IBalanceSheetNetIncomeNode, IBalanceSheetTotalPeriod } from '@/interfaces';
 import * as R from 'ramda';
-import {
-  IBalanceSheetNetIncomeNode,
-  IBalanceSheetTotalPeriod,
-} from '@/interfaces';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
-import BalanceSheetRepository from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
+import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetNetIncomePP } from './BalanceSheetNetIncomePP';
 import { BalanceSheetNetIncomePY } from './BalanceSheetNetIncomePY';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
   class extends R.compose(
@@ -19,7 +16,7 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
     BalanceSheetComparsionPreviousYear,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
-    FinancialHorizTotals
+    FinancialHorizTotals,
   )(Base) {
     private repository: BalanceSheetRepository;
     private query: BalanceSheetQuery;
@@ -34,12 +31,9 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
      * @returns {number}
      */
     private getIncomeDatePeriodTotal = (toDate: Date): number => {
-      const periodTotalBetween = this.repository.incomePeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const periodTotalBetween = this.repository.incomePeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const periodOpening =
-        this.repository.incomePeriodsOpeningAccountsLedger.getClosingBalance();
+      const periodOpening = this.repository.incomePeriodsOpeningAccountsLedger.getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
@@ -51,12 +45,9 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
      * @returns {number}
      */
     private getExpensesDatePeriodTotal = (toDate: Date): number => {
-      const periodTotalBetween = this.repository.expensesPeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const periodTotalBetween = this.repository.expensesPeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const periodOpening =
-        this.repository.expensesOpeningAccountLedger.getClosingBalance();
+      const periodOpening = this.repository.expensesOpeningAccountLedger.getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
@@ -84,7 +75,7 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
     private getNetIncomeDatePeriodNode = (
       node: IBalanceSheetNetIncomeNode,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ): IBalanceSheetTotalPeriod => {
       const periodTotal = this.getNetIncomeDatePeriodTotal(toDate);
 
@@ -96,13 +87,8 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
      * @param {IBalanceSheetNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    private getNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetTotalPeriod[] => {
-      return this.getReportNodeDatePeriods(
-        node,
-        this.getNetIncomeDatePeriodNode
-      );
+    private getNetIncomeDatePeriodsNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetTotalPeriod[] => {
+      return this.getReportNodeDatePeriods(node, this.getNetIncomeDatePeriodNode);
     };
 
     /**
@@ -110,9 +96,7 @@ export const BalanceSheetNetIncomeDatePeriods = (Base: any) =>
      * @param {IBalanceSheetNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    public assocNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    public assocNetIncomeDatePeriodsNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
       return R.assoc('horizontalTotals', datePeriods, node);

@@ -22,11 +22,6 @@ export const useSetPrimaryBranchToForm = () => {
 
 export function transfromVendorToForm(values) {
   return {
-    ...pick(values, [
-      'id',
-      'opening_balance',
-      'opening_balance_exchange_rate',
-      'currency_code',
-    ]),
+    ...pick(values, ['id', 'opening_balance', 'opening_balance_exchange_rate', 'currency_code']),
   };
 }

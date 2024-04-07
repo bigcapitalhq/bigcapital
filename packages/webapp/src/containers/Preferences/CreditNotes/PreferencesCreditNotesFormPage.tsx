@@ -44,10 +44,7 @@ function PreferencesCreditNotesFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )({ creditNote: { ...values } });
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)({ creditNote: { ...values } });
 
     // Handle request success.
     const onSuccess = () => {

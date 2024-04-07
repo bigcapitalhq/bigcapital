@@ -49,19 +49,12 @@ const taskSelectProps = {
 };
 
 /**
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export function ProjectTaskSelect({ tasks, ...rest }) {
-  return (
-    <FSelect
-      items={tasks}
-      {...taskSelectProps}
-      {...rest}
-      input={TaskSelectButton}
-    />
-  );
+  return <FSelect items={tasks} {...taskSelectProps} {...rest} input={TaskSelectButton} />;
 }
 
 function TaskSelectButton({ label }) {

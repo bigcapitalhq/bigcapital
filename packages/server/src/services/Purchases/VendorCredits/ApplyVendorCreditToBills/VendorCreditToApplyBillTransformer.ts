@@ -8,13 +8,7 @@ export class VendorCreditToApplyBillTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedBillDate',
-      'formattedDueDate',
-      'formattedAmount',
-      'formattedDueAmount',
-      'formattedPaymentAmount',
-    ];
+    return ['formattedBillDate', 'formattedDueDate', 'formattedAmount', 'formattedDueAmount', 'formattedPaymentAmount'];
   };
 
   /**

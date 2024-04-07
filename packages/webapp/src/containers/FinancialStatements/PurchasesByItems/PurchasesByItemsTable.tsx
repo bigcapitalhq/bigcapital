@@ -38,9 +38,7 @@ export default function PurchasesByItemsTable({ companyName }) {
         expandColumnSpace={1}
         sticky={true}
         rowClassNames={tableRowTypesToClassnames}
-        noResults={intl.get(
-          'there_were_no_purchases_during_the_selected_date_range',
-        )}
+        noResults={intl.get('there_were_no_purchases_during_the_selected_date_range')}
         styleName={TableStyle.Constrant}
       />
     </PurchasesByItemsSheet>

@@ -17,7 +17,7 @@ function ExpenseDeleteEntriesAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: {  },
+  payload: {},
 
   // #withAlertActions
   closeAlert,
@@ -30,7 +30,7 @@ function ExpenseDeleteEntriesAlert({
   // Handle confirm the alert.
   const handleConfirm = (event) => {
     closeAlert(name);
-    saveInvoke(onConfirm, event)
+    saveInvoke(onConfirm, event);
   };
 
   return (
@@ -43,14 +43,9 @@ function ExpenseDeleteEntriesAlert({
       onConfirm={handleConfirm}
       loading={false}
     >
-      <p>
-        Clearing the table lines will delete all expense amounts were applied, Is this okay?
-      </p>
+      <p>Clearing the table lines will delete all expense amounts were applied, Is this okay?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExpenseDeleteEntriesAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExpenseDeleteEntriesAlert);

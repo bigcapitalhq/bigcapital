@@ -16,20 +16,11 @@ function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleClose}
-          style={{ minWidth: '75px' }}
-        >
+        <Button disabled={isSubmitting} onClick={handleClose} style={{ minWidth: '75px' }}>
           Close
         </Button>
 
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '95px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '95px' }} type="submit">
           Submit
         </Button>
       </div>
@@ -37,6 +28,4 @@ function TaxRateFormDialogFormFooterRoot({ closeDialog }) {
   );
 }
 
-export const TaxRateFormDialogFormFooter = R.compose(withDialogActions)(
-  TaxRateFormDialogFormFooterRoot,
-);
+export const TaxRateFormDialogFormFooter = R.compose(withDialogActions)(TaxRateFormDialogFormFooterRoot);

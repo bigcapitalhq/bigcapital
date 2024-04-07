@@ -21,8 +21,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
   } = useVendors(tableQuery, { keepPreviousData: true });
 
   // Fetch vendors resource views and fields.
-  const { data: vendorsViews, isLoading: isVendorsViewsLoading } =
-    useResourceViews('vendors');
+  const { data: vendorsViews, isLoading: isVendorsViewsLoading } = useResourceViews('vendors');
 
   // Fetch the vendors resource fields.
   const {
@@ -32,8 +31,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
   } = useResourceMeta('vendors');
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(vendors) && !isVendorsLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(vendors) && !isVendorsLoading && !tableStateChanged;
 
   const provider = {
     vendors,
@@ -53,10 +51,7 @@ function VendorsListProvider({ tableState, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isVendorsViewsLoading || isResourceMetaLoading}
-      name={'vendors-list'}
-    >
+    <DashboardInsider loading={isVendorsViewsLoading || isResourceMetaLoading} name={'vendors-list'}>
       <VendorsListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

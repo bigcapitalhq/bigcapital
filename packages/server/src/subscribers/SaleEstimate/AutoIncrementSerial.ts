@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import SettingsService from '@/services/Settings/SettingsService';
 import { ISaleEstimateCreatedPayload } from '@/interfaces';
+import SettingsService from '@/services/Settings/SettingsService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleEstimateAutoSerialSubscriber {
@@ -16,10 +16,7 @@ export default class SaleEstimateAutoSerialSubscriber {
    * Attaches events to handles.events.saleEstimate.onCreated
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleEstimate.onCreated,
-      this.handleEstimateNextNumberIncrement
-    );
+    bus.subscribe(events.saleEstimate.onCreated, this.handleEstimateNextNumberIncrement);
   }
 
   /**

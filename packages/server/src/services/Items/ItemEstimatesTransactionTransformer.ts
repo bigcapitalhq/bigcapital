@@ -7,12 +7,7 @@ export class ItemEstimateTransactionTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedAmount',
-      'formattedEstimateDate',
-      'formattedRate',
-      'formattedCost',
-    ];
+    return ['formattedAmount', 'formattedEstimateDate', 'formattedRate', 'formattedCost'];
   };
 
   /**

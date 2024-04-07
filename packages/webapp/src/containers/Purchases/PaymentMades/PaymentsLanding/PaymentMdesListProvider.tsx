@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceFields,
-  usePaymentMades,
-} from '@/hooks/query';
+import { useResourceViews, useResourceFields, usePaymentMades } from '@/hooks/query';
 
 const PaymentMadesContext = createContext();
 
@@ -14,12 +10,10 @@ const PaymentMadesContext = createContext();
  */
 function PaymentMadesProvider({ query, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: paymentsViews, isLoading: isViewsLoading } =
-    useResourceViews('bill_payments');
+  const { data: paymentsViews, isLoading: isViewsLoading } = useResourceViews('bill_payments');
 
   // Fetch the accounts resource fields.
-  const { data: paymentsFields, isLoading: isFieldsLoading } =
-    useResourceFields('bill_payments');
+  const { data: paymentsFields, isLoading: isFieldsLoading } = useResourceFields('bill_payments');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -40,10 +34,7 @@ function PaymentMadesProvider({ query, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isFieldsLoading}
-      name={'payment_made'}
-    >
+    <DashboardInsider loading={isViewsLoading || isFieldsLoading} name={'payment_made'}>
       <PaymentMadesContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

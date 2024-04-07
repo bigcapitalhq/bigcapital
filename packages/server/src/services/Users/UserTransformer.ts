@@ -23,9 +23,7 @@ export class UserTransformer extends Transformer {
    * @returns {string}
    */
   public roleName(user) {
-    return user.role.predefined
-      ? this.context.i18n.__(user.role.name)
-      : user.role.name;
+    return user.role.predefined ? this.context.i18n.__(user.role.name) : user.role.name;
   }
 
   /**
@@ -34,9 +32,7 @@ export class UserTransformer extends Transformer {
    * @returns {string}
    */
   public roleDescription(user) {
-    return user.role.predefined
-      ? this.context.i18n.__(user.role.description)
-      : user.role.description;
+    return user.role.predefined ? this.context.i18n.__(user.role.description) : user.role.description;
   }
 
   /**

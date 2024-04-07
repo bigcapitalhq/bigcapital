@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { ISaleInvoiceCreatingPaylaod, ISaleInvoiceEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  ISaleInvoiceCreatingPaylaod,
-  ISaleInvoiceEditingPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -15,14 +12,8 @@ export class InvoiceBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.validateBranchExistanceOnInvoiceCreating
-    );
-    bus.subscribe(
-      events.saleInvoice.onEditing,
-      this.validateBranchExistanceOnInvoiceEditing
-    );
+    bus.subscribe(events.saleInvoice.onCreating, this.validateBranchExistanceOnInvoiceCreating);
+    bus.subscribe(events.saleInvoice.onEditing, this.validateBranchExistanceOnInvoiceEditing);
     return bus;
   };
 
@@ -34,10 +25,7 @@ export class InvoiceBranchValidateSubscriber {
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceCreatingPaylaod) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      saleInvoiceDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, saleInvoiceDTO.branchId);
   };
 
   /**
@@ -48,9 +36,6 @@ export class InvoiceBranchValidateSubscriber {
     saleInvoiceDTO,
     tenantId,
   }: ISaleInvoiceEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      saleInvoiceDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, saleInvoiceDTO.branchId);
   };
 }

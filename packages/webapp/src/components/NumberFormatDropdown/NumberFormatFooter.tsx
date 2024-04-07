@@ -11,24 +11,15 @@ import { FormattedMessage as T } from '@/components';
 export default function NumberFormatFooter({
   // #ownProps
   onCancelClick,
-  submitDisabled
+  submitDisabled,
 }) {
   return (
     <div className={classNames('number-format-dropdown__footer')}>
-      <Button
-        className={classNames('mr1', Classes.POPOVER_DISMISS)}
-        onClick={onCancelClick}
-        small={true}
-      >
+      <Button className={classNames('mr1', Classes.POPOVER_DISMISS)} onClick={onCancelClick} small={true}>
         <T id={'cancel'} />
       </Button>
 
-      <Button
-        intent={Intent.PRIMARY}
-        disabled={submitDisabled}
-        small={true}
-        type="submit"
-      >
+      <Button intent={Intent.PRIMARY} disabled={submitDisabled} small={true} type="submit">
         <T id={'run'} />
       </Button>
     </div>

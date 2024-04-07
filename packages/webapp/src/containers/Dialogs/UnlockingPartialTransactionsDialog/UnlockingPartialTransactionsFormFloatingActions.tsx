@@ -28,12 +28,7 @@ function UnlockingPartialTransactionsFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button
-          intent={Intent.PRIMARY}
-          style={{ minWidth: '95px' }}
-          type="submit"
-          loading={isSubmitting}
-        >
+        <Button intent={Intent.PRIMARY} style={{ minWidth: '95px' }} type="submit" loading={isSubmitting}>
           {<T id={'save'} />}
         </Button>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
@@ -44,6 +39,4 @@ function UnlockingPartialTransactionsFormFloatingActions({
   );
 }
 
-export default compose(withDialogActions)(
-  UnlockingPartialTransactionsFormFloatingActions,
-);
+export default compose(withDialogActions)(UnlockingPartialTransactionsFormFloatingActions);

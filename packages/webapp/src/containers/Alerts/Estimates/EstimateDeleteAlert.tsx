@@ -2,11 +2,7 @@
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import { useDeleteEstimate } from '@/hooks/query';
 
@@ -56,14 +52,10 @@ function EstimateDeleteAlert({
             data: { errors },
           },
         }) => {
-          if (
-            errors.find((e) => e.type === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE')
-          ) {
+          if (errors.find((e) => e.type === 'SALE_ESTIMATE_CONVERTED_TO_INVOICE')) {
             AppToaster.show({
               intent: Intent.DANGER,
-              message: intl.get(
-                'estimate.delete.error.estimate_converted_to_invoice',
-              ),
+              message: intl.get('estimate.delete.error.estimate_converted_to_invoice'),
             });
           }
         },
@@ -85,16 +77,10 @@ function EstimateDeleteAlert({
       onConfirm={handleAlertConfirm}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_estimate_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_estimate_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(EstimateDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(EstimateDeleteAlert);

@@ -8,17 +8,17 @@ export default class MetableConfig {
   }
 
   /**
-   * Sets config. 
+   * Sets config.
    */
   setConfig(config) {
     this.config = config;
   }
- 
+
   /**
-   * 
-   * @param {string} key 
-   * @param {string} group 
-   * @param {string} accessor 
+   *
+   * @param {string} key
+   * @param {string} group
+   * @param {string} accessor
    * @returns {object|string}
    */
   getMetaConfig(key: string, group?: string, accessor?: string) {
@@ -29,9 +29,9 @@ export default class MetableConfig {
   }
 
   /**
-   * 
-   * @param {string} key 
-   * @param {string} group 
+   *
+   * @param {string} key
+   * @param {string} group
    * @returns {string}
    */
   getMetaType(key: string, group?: string) {

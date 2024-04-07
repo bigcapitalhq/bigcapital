@@ -1,9 +1,3 @@
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import UnitOfWork from '@/services/UnitOfWork';
-import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import {
   ICustomer,
   ISaleInvoice,
@@ -13,9 +7,15 @@ import {
   ISystemUser,
   ITenantUser,
 } from '@/interfaces';
-import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
-import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { CommandSaleInvoiceDTOTransformer } from './CommandSaleInvoiceDTOTransformer';
+import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 
 @Service()
 export class EditSaleInvoice {
@@ -49,40 +49,29 @@ export class EditSaleInvoice {
     tenantId: number,
     saleInvoiceId: number,
     saleInvoiceDTO: ISaleInvoiceEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<ISaleInvoice> {
     const { SaleInvoice, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const oldSaleInvoice = await SaleInvoice.query()
-      .findById(saleInvoiceId)
-      .withGraphJoined('entries');
+    const oldSaleInvoice = await SaleInvoice.query().findById(saleInvoiceId).withGraphJoined('entries');
 
     // Validates the given invoice existance.
     this.validators.validateInvoiceExistance(oldSaleInvoice);
 
     // Validate customer existance.
-    const customer = await Contact.query()
-      .findById(saleInvoiceDTO.customerId)
-      .modify('customer')
-      .throwIfNotFound();
+    const customer = await Contact.query().findById(saleInvoiceDTO.customerId).modify('customer').throwIfNotFound();
 
     // Validate items ids existance.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleInvoiceDTO.entries);
     // Validate non-sellable entries items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleInvoiceDTO.entries);
     // Validate the items entries existance.
     await this.itemsEntriesService.validateEntriesIdsExistance(
       tenantId,
       saleInvoiceId,
       'SaleInvoice',
-      saleInvoiceDTO.entries
+      saleInvoiceDTO.entries,
     );
     // Transform DTO object to model object.
     const saleInvoiceObj = await this.tranformEditDTOToModel(
@@ -90,21 +79,14 @@ export class EditSaleInvoice {
       customer,
       saleInvoiceDTO,
       oldSaleInvoice,
-      authorizedUser
+      authorizedUser,
     );
     // Validate sale invoice number uniquiness.
     if (saleInvoiceObj.invoiceNo) {
-      await this.validators.validateInvoiceNumberUnique(
-        tenantId,
-        saleInvoiceObj.invoiceNo,
-        saleInvoiceId
-      );
+      await this.validators.validateInvoiceNumberUnique(tenantId, saleInvoiceObj.invoiceNo, saleInvoiceId);
     }
     // Validate the invoice amount is not smaller than the invoice payment amount.
-    this.validators.validateInvoiceAmountBiggerPaymentAmount(
-      saleInvoiceObj.balance,
-      oldSaleInvoice.paymentAmount
-    );
+    this.validators.validateInvoiceAmountBiggerPaymentAmount(saleInvoiceObj.balance, oldSaleInvoice.paymentAmount);
     // Edit sale invoice transaction in UOW envirment.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceEditing` event.
@@ -116,11 +98,10 @@ export class EditSaleInvoice {
       } as ISaleInvoiceEditingPayload);
 
       // Upsert the the invoice graph to the storage.
-      const saleInvoice: ISaleInvoice =
-        await SaleInvoice.query().upsertGraphAndFetch({
-          id: saleInvoiceId,
-          ...saleInvoiceObj,
-        });
+      const saleInvoice: ISaleInvoice = await SaleInvoice.query().upsertGraphAndFetch({
+        id: saleInvoiceId,
+        ...saleInvoiceObj,
+      });
       // Edit event payload.
       const editEventPayload: ISaleInvoiceEditedPayload = {
         tenantId,
@@ -132,10 +113,7 @@ export class EditSaleInvoice {
         trx,
       };
       // Triggers `onSaleInvoiceEdited` event.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onEdited,
-        editEventPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onEdited, editEventPayload);
       return saleInvoice;
     });
   }
@@ -152,14 +130,8 @@ export class EditSaleInvoice {
     customer: ICustomer,
     saleInvoiceDTO: ISaleInvoiceEditDTO,
     oldSaleInvoice: ISaleInvoice,
-    authorizedUser: ITenantUser
+    authorizedUser: ITenantUser,
   ) => {
-    return this.transformerDTO.transformDTOToModel(
-      tenantId,
-      customer,
-      saleInvoiceDTO,
-      authorizedUser,
-      oldSaleInvoice
-    );
+    return this.transformerDTO.transformDTOToModel(tenantId, customer, saleInvoiceDTO, authorizedUser, oldSaleInvoice);
   };
 }

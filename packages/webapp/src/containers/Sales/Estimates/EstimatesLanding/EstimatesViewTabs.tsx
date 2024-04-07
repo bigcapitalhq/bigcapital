@@ -22,7 +22,7 @@ function EstimateViewTabs({
 }) {
   // Estimates list context.
   const { estimatesViews } = useEstimatesListContext();
- 
+
   // Estimates views.
   const tabs = transfromViewsToTabs(estimatesViews);
 
@@ -48,6 +48,6 @@ function EstimateViewTabs({
 export default compose(
   withEstimatesActions,
   withEstimates(({ estimatesTableState }) => ({
-    estimatesCurrentView: estimatesTableState.viewSlug
+    estimatesCurrentView: estimatesTableState.viewSlug,
   })),
 )(EstimateViewTabs);

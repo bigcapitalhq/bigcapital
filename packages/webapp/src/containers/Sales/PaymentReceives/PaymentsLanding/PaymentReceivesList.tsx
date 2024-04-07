@@ -49,11 +49,9 @@ function PaymentReceiveList({
 }
 
 export default compose(
-  withPaymentReceives(
-    ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
-      paymentReceivesTableState,
-      paymentsTableStateChanged,
-    }),
-  ),
+  withPaymentReceives(({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
+    paymentReceivesTableState,
+    paymentsTableStateChanged,
+  })),
   withPaymentReceivesActions,
 )(PaymentReceiveList);

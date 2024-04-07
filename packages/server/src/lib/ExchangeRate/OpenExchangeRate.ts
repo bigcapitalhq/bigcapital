@@ -1,11 +1,7 @@
-import Axios, { AxiosError } from 'axios';
-import {
-  EchangeRateErrors,
-  IExchangeRateService,
-  OPEN_EXCHANGE_RATE_LATEST_URL,
-} from './types';
 import config from '@/config';
 import { ServiceError } from '@/exceptions';
+import Axios from 'axios';
+import { EchangeRateErrors, IExchangeRateService, OPEN_EXCHANGE_RATE_LATEST_URL } from './types';
 
 export class OpenExchangeRate implements IExchangeRateService {
   /**
@@ -14,10 +10,7 @@ export class OpenExchangeRate implements IExchangeRateService {
    * @param {string} toCurrency
    * @returns {Promise<number}
    */
-  public async latest(
-    baseCurrency: string,
-    toCurrency: string
-  ): Promise<number> {
+  public async latest(baseCurrency: string, toCurrency: string): Promise<number> {
     // Vaclidates the Open Exchange Rate api id early.
     this.validateApiIdExistance();
 
@@ -45,7 +38,7 @@ export class OpenExchangeRate implements IExchangeRateService {
     if (!apiId) {
       throw new ServiceError(
         EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED,
-        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.'
+        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.',
       );
     }
   }
@@ -59,23 +52,20 @@ export class OpenExchangeRate implements IExchangeRateService {
     if (error.response.data?.message === 'missing_app_id') {
       throw new ServiceError(
         EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED,
-        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.'
+        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.',
       );
     } else if (error.response.data?.message === 'invalid_app_id') {
       throw new ServiceError(
         EchangeRateErrors.EX_RATE_SERVICE_API_KEY_REQUIRED,
-        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.'
+        'Invalid App ID provided. Please sign up at https://openexchangerates.org/signup, or contact support@openexchangerates.org.',
       );
     } else if (error.response.data?.message === 'not_allowed') {
       throw new ServiceError(
         EchangeRateErrors.EX_RATE_SERVICE_NOT_ALLOWED,
-        'Getting the exchange rate from the given base currency to the given currency is not allowed.'
+        'Getting the exchange rate from the given base currency to the given currency is not allowed.',
       );
     } else if (error.response.data?.message === 'invalid_base') {
-      throw new ServiceError(
-        EchangeRateErrors.EX_RATE_INVALID_BASE_CURRENCY,
-        'The given base currency is invalid.'
-      );
+      throw new ServiceError(EchangeRateErrors.EX_RATE_INVALID_BASE_CURRENCY, 'The given base currency is invalid.');
     }
   }
 }

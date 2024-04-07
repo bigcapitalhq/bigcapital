@@ -2,7 +2,6 @@
 
 import intl from 'react-intl-universal';
 
-
 export const displayColumnsByOptions = [
   { key: 'total', name: intl.get('total'), type: 'total', by: '' },
   {
@@ -60,9 +59,7 @@ export const filterAccountsOptions = [
   {
     key: 'with-transactions',
     name: intl.get('accounts_with_transactions'),
-    hint: intl.get(
-      'include_accounts_once_has_transactions_on_given_date_period',
-    ),
+    hint: intl.get('include_accounts_once_has_transactions_on_given_date_period'),
   },
 ];
 
@@ -139,4 +136,4 @@ export const filterInventoryValuationOptions = [
     key: 'with-only-active',
     name: intl.get('items.option.only_active'),
   },
-]
+];

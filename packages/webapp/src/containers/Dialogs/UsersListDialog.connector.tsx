@@ -9,14 +9,8 @@ export const mapStateToProps = (state, props) => {
   return {
     name: 'userList-form',
     payload: { action: 'new', id: null },
-    userDetails:
-      dialogPayload.action === 'edit'
-        ? getUserDetails(state, dialogPayload.user.id)
-        : {},
-    editUser:
-      dialogPayload && dialogPayload.action === 'edit'
-        ? state.users.list.results[dialogPayload.user.id]
-        : {},
+    userDetails: dialogPayload.action === 'edit' ? getUserDetails(state, dialogPayload.user.id) : {},
+    editUser: dialogPayload && dialogPayload.action === 'edit' ? state.users.list.results[dialogPayload.user.id] : {},
   };
 };
 

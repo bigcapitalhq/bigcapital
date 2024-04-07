@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { Container, Service } from 'typedi';
-import SalesInvoices from './SalesInvoices'
-import SalesEstimates from './SalesEstimates';
-import SalesReceipts from './SalesReceipts';
 import CreditNotes from './CreditNotes';
 import PaymentReceives from './PaymentReceives';
+import SalesEstimates from './SalesEstimates';
+import SalesInvoices from './SalesInvoices';
+import SalesReceipts from './SalesReceipts';
 @Service()
 export default class SalesController {
   /**
@@ -17,7 +17,7 @@ export default class SalesController {
     router.use('/estimates', Container.get(SalesEstimates).router());
     router.use('/receipts', Container.get(SalesReceipts).router());
     router.use('/payment_receives', Container.get(PaymentReceives).router());
-    router.use('/credit_notes', Container.get(CreditNotes).router())
+    router.use('/credit_notes', Container.get(CreditNotes).router());
 
     return router;
   }

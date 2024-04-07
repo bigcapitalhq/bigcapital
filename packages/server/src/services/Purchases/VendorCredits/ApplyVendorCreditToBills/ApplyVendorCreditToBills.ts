@@ -1,20 +1,20 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import { sumBy } from 'lodash';
+import { ServiceError } from '@/exceptions';
 import {
+  IBill,
   IVendorCredit,
   IVendorCreditApplyToBillsCreatedPayload,
   IVendorCreditApplyToInvoicesDTO,
   IVendorCreditApplyToInvoicesModel,
-  IBill,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import VendorCredit from '../BaseVendorCredit';
-import { ServiceError } from '@/exceptions';
+import { Knex } from 'knex';
+import { sumBy } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { BillPaymentValidators } from '../../BillPayments/BillPaymentValidators';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import VendorCredit from '../BaseVendorCredit';
 import { ERRORS } from '../constants';
 
 @Service()
@@ -40,54 +40,37 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
   public applyVendorCreditToBills = async (
     tenantId: number,
     vendorCreditId: number,
-    applyCreditToBillsDTO: IVendorCreditApplyToInvoicesDTO
+    applyCreditToBillsDTO: IVendorCreditApplyToInvoicesDTO,
   ): Promise<void> => {
     const { VendorCreditAppliedBill } = this.tenancy.models(tenantId);
 
     // Retrieves the vendor credit or throw not found service error.
-    const vendorCredit = await this.getVendorCreditOrThrowError(
-      tenantId,
-      vendorCreditId
-    );
+    const vendorCredit = await this.getVendorCreditOrThrowError(tenantId, vendorCreditId);
     // Transfomes credit apply to bills DTO to model object.
-    const vendorCreditAppliedModel = this.transformApplyDTOToModel(
-      applyCreditToBillsDTO,
-      vendorCredit
-    );
+    const vendorCreditAppliedModel = this.transformApplyDTOToModel(applyCreditToBillsDTO, vendorCredit);
     // Validate bills entries existance.
-    const appliedBills =
-      await this.billPaymentValidators.validateBillsExistance(
-        tenantId,
-        vendorCreditAppliedModel.entries,
-        vendorCredit.vendorId
-      );
+    const appliedBills = await this.billPaymentValidators.validateBillsExistance(
+      tenantId,
+      vendorCreditAppliedModel.entries,
+      vendorCredit.vendorId,
+    );
     // Validate bills has remaining amount to apply.
-    this.validateBillsRemainingAmount(
-      appliedBills,
-      vendorCreditAppliedModel.amount
-    );
+    this.validateBillsRemainingAmount(appliedBills, vendorCreditAppliedModel.amount);
     // Validate vendor credit remaining credit amount.
-    this.validateCreditRemainingAmount(
-      vendorCredit,
-      vendorCreditAppliedModel.amount
-    );
+    this.validateCreditRemainingAmount(vendorCredit, vendorCreditAppliedModel.amount);
     // Saves vendor credit applied to bills under unit-of-work envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Inserts vendor credit applied to bills graph to the storage layer.
-      const vendorCreditAppliedBills =
-        await VendorCreditAppliedBill.query().insertGraph(
-          vendorCreditAppliedModel.entries
-        );
-      // Triggers `IVendorCreditApplyToBillsCreatedPayload` event.
-      await this.eventPublisher.emitAsync(
-        events.vendorCredit.onApplyToInvoicesCreated,
-        {
-          trx,
-          tenantId,
-          vendorCredit,
-          vendorCreditAppliedBills,
-        } as IVendorCreditApplyToBillsCreatedPayload
+      const vendorCreditAppliedBills = await VendorCreditAppliedBill.query().insertGraph(
+        vendorCreditAppliedModel.entries,
       );
+      // Triggers `IVendorCreditApplyToBillsCreatedPayload` event.
+      await this.eventPublisher.emitAsync(events.vendorCredit.onApplyToInvoicesCreated, {
+        trx,
+        tenantId,
+        vendorCredit,
+        vendorCreditAppliedBills,
+      } as IVendorCreditApplyToBillsCreatedPayload);
     });
   };
 
@@ -99,7 +82,7 @@ export default class ApplyVendorCreditToBills extends VendorCredit {
    */
   private transformApplyDTOToModel = (
     applyDTO: IVendorCreditApplyToInvoicesDTO,
-    vendorCredit: IVendorCredit
+    vendorCredit: IVendorCredit,
   ): IVendorCreditApplyToInvoicesModel => {
     const entries = applyDTO.entries.map((entry) => ({
       billId: entry.billId,

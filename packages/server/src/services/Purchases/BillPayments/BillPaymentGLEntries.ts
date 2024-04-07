@@ -1,12 +1,12 @@
-import moment from 'moment';
-import { sumBy } from 'lodash';
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import { AccountNormal, IBillPayment, ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import { sumBy } from 'lodash';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class BillPaymentGLEntries {
@@ -25,37 +25,23 @@ export class BillPaymentGLEntries {
   public writePaymentGLEntries = async (
     tenantId: number,
     billPaymentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const { BillPayment, Account } = this.tenancy.models(tenantId);
 
     // Retrieves the bill payment details with associated entries.
-    const payment = await BillPayment.query(trx)
-      .findById(billPaymentId)
-      .withGraphFetched('entries.bill');
+    const payment = await BillPayment.query(trx).findById(billPaymentId).withGraphFetched('entries.bill');
 
     // Retrieves the given tenant metadata.
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Finds or creates a new A/P account of the given currency.
-    const APAccount = await accountRepository.findOrCreateAccountsPayable(
-      payment.currencyCode,
-      {},
-      trx
-    );
+    const APAccount = await accountRepository.findOrCreateAccountsPayable(payment.currencyCode, {}, trx);
     // Exchange gain or loss account.
-    const EXGainLossAccount = await Account.query(trx).modify(
-      'findBySlug',
-      'exchange-grain-loss'
-    );
+    const EXGainLossAccount = await Account.query(trx).modify('findBySlug', 'exchange-grain-loss');
     // Retrieves the bill payment ledger.
-    const ledger = this.getBillPaymentLedger(
-      payment,
-      APAccount.id,
-      EXGainLossAccount.id,
-      tenantMeta.baseCurrency
-    );
+    const ledger = this.getBillPaymentLedger(payment, APAccount.id, EXGainLossAccount.id, tenantMeta.baseCurrency);
     // Commits the ledger on the storage.
     await this.ledgerStorage.commit(tenantId, ledger, trx);
   };
@@ -69,7 +55,7 @@ export class BillPaymentGLEntries {
   public rewritePaymentGLEntries = async (
     tenantId: number,
     billPaymentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     // Revert payment GL entries.
     await this.revertPaymentGLEntries(tenantId, billPaymentId, trx);
@@ -87,14 +73,9 @@ export class BillPaymentGLEntries {
   public revertPaymentGLEntries = async (
     tenantId: number,
     billPaymentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    await this.ledgerStorage.deleteByReference(
-      tenantId,
-      billPaymentId,
-      'BillPayment',
-      trx
-    );
+    await this.ledgerStorage.deleteByReference(tenantId, billPaymentId, 'BillPayment', trx);
   };
 
   /**
@@ -151,7 +132,7 @@ export class BillPaymentGLEntries {
     billPayment: IBillPayment,
     APAccountId: number,
     gainLossAccountId: number,
-    baseCurrency: string
+    baseCurrency: string,
   ): ILedgerEntry[] => {
     const commonEntry = this.getPaymentCommonEntry(billPayment);
     const totalExGainOrLoss = this.getPaymentExGainOrLoss(billPayment);
@@ -207,10 +188,7 @@ export class BillPaymentGLEntries {
    * @param {number} APAccountId
    * @returns {ILedgerEntry}
    */
-  private getPaymentGLPayableEntry = (
-    billPayment: IBillPayment,
-    APAccountId: number
-  ): ILedgerEntry => {
+  private getPaymentGLPayableEntry = (billPayment: IBillPayment, APAccountId: number): ILedgerEntry => {
     const commonEntry = this.getPaymentCommonEntry(billPayment);
 
     return {
@@ -234,22 +212,19 @@ export class BillPaymentGLEntries {
     billPayment: IBillPayment,
     APAccountId: number,
     gainLossAccountId: number,
-    baseCurrency: string
+    baseCurrency: string,
   ): ILedgerEntry[] => {
     // Retrieves the payment deposit entry.
     const paymentEntry = this.getPaymentGLEntry(billPayment);
 
     // Retrieves the payment debit A/R entry.
-    const payableEntry = this.getPaymentGLPayableEntry(
-      billPayment,
-      APAccountId
-    );
+    const payableEntry = this.getPaymentGLPayableEntry(billPayment, APAccountId);
     // Retrieves the exchange gain/loss entries.
     const exGainLossEntries = this.getPaymentExGainOrLossEntries(
       billPayment,
       APAccountId,
       gainLossAccountId,
-      baseCurrency
+      baseCurrency,
     );
     return [paymentEntry, payableEntry, ...exGainLossEntries];
   };
@@ -264,14 +239,9 @@ export class BillPaymentGLEntries {
     billPayment: IBillPayment,
     APAccountId: number,
     gainLossAccountId: number,
-    baseCurrency: string
+    baseCurrency: string,
   ): Ledger => {
-    const entries = this.getPaymentGLEntries(
-      billPayment,
-      APAccountId,
-      gainLossAccountId,
-      baseCurrency
-    );
+    const entries = this.getPaymentGLEntries(billPayment, APAccountId, gainLossAccountId, baseCurrency);
     return new Ledger(entries);
   };
 }

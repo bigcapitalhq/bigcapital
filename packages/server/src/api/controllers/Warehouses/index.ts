@@ -1,12 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import { Request, Response, Router, NextFunction } from 'express';
-import { check, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import { WarehousesApplication } from '@/services/Warehouses/WarehousesApplication';
-import { Features, ICreateWarehouseDTO, IEditWarehouseDTO } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
+import { ServiceError } from '@/exceptions';
+import { Features, ICreateWarehouseDTO, IEditWarehouseDTO } from '@/interfaces';
+import { WarehousesApplication } from '@/services/Warehouses/WarehousesApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class WarehousesController extends BaseController {
@@ -25,7 +24,7 @@ export class WarehousesController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.activateWarehouses),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/',
@@ -44,7 +43,7 @@ export class WarehousesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.createWarehouse),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
@@ -64,14 +63,14 @@ export class WarehousesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.editWarehouse),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/mark-primary',
       FeatureActivationGuard(Features.WAREHOUSES),
       [check('id').exists().isInt().toInt()],
       this.validationResult,
-      this.asyncMiddleware(this.markPrimaryWarehouse)
+      this.asyncMiddleware(this.markPrimaryWarehouse),
     );
     router.delete(
       '/:id',
@@ -79,7 +78,7 @@ export class WarehousesController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteWarehouse),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/:id',
@@ -87,7 +86,7 @@ export class WarehousesController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getWarehouse),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
@@ -95,7 +94,7 @@ export class WarehousesController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.getWarehouses),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -107,19 +106,12 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public createWarehouse = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public createWarehouse = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const createWarehouseDTO: ICreateWarehouseDTO = this.matchedBodyData(req);
 
     try {
-      const warehouse = await this.warehouseApplication.createWarehouse(
-        tenantId,
-        createWarehouseDTO
-      );
+      const warehouse = await this.warehouseApplication.createWarehouse(tenantId, createWarehouseDTO);
       return res.status(200).send({
         id: warehouse.id,
         message: 'The warehouse has been created successfully.',
@@ -136,21 +128,13 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public editWarehouse = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public editWarehouse = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseId } = req.params;
     const editWarehouseDTO: IEditWarehouseDTO = this.matchedBodyData(req);
 
     try {
-      const warehouse = await this.warehouseApplication.editWarehouse(
-        tenantId,
-        warehouseId,
-        editWarehouseDTO
-      );
+      const warehouse = await this.warehouseApplication.editWarehouse(tenantId, warehouseId, editWarehouseDTO);
 
       return res.status(200).send({
         id: warehouse.id,
@@ -168,11 +152,7 @@ export class WarehousesController extends BaseController {
    * @param next
    * @returns
    */
-  public deleteWarehouse = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public deleteWarehouse = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseId } = req.params;
 
@@ -193,19 +173,12 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public getWarehouse = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getWarehouse = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseId } = req.params;
 
     try {
-      const warehouse = await this.warehouseApplication.getWarehouse(
-        tenantId,
-        warehouseId
-      );
+      const warehouse = await this.warehouseApplication.getWarehouse(tenantId, warehouseId);
       return res.status(200).send({ warehouse });
     } catch (error) {
       next(error);
@@ -219,17 +192,11 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public getWarehouses = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getWarehouses = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
-      const warehouses = await this.warehouseApplication.getWarehouses(
-        tenantId
-      );
+      const warehouses = await this.warehouseApplication.getWarehouses(tenantId);
       return res.status(200).send({ warehouses });
     } catch (error) {
       next(error);
@@ -243,11 +210,7 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public activateWarehouses = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public activateWarehouses = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
@@ -268,19 +231,12 @@ export class WarehousesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public markPrimaryWarehouse = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public markPrimaryWarehouse = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: warehouseId } = req.params;
 
     try {
-      const warehouse = await this.warehouseApplication.markWarehousePrimary(
-        tenantId,
-        warehouseId
-      );
+      const warehouse = await this.warehouseApplication.markWarehousePrimary(tenantId, warehouseId);
       return res.status(200).send({
         id: warehouse.id,
         message: 'The given warehouse has been marked as primary.',
@@ -297,12 +253,7 @@ export class WarehousesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'WAREHOUSE_NOT_FOUND') {
         return res.status(400).send({
@@ -326,9 +277,7 @@ export class WarehousesController extends BaseController {
       }
       if (error.errorType === 'WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS') {
         return res.status(400).send({
-          errors: [
-            { type: 'WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS', code: 500 },
-          ],
+          errors: [{ type: 'WAREHOUSE_HAS_ASSOCIATED_TRANSACTIONS', code: 500 }],
         });
       }
     }

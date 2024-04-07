@@ -93,10 +93,7 @@ export class ImportFileDataTransformer {
    * @param {ImportMappingAttr[]} map - The mapping attributes.
    * @returns {Record<string, any>[]} - The mapped data objects.
    */
-  public mapSheetColumns(
-    body: Record<string, any>[],
-    map: ImportMappingAttr[]
-  ): Record<string, any>[] {
+  public mapSheetColumns(body: Record<string, any>[], map: ImportMappingAttr[]): Record<string, any>[] {
     return body.map((item) => {
       const newItem = {};
       map
@@ -144,7 +141,7 @@ export class ImportFileDataTransformer {
           set(acc, parsedKey, parsedValue);
           return acc;
         },
-        {}
+        {},
       );
     };
     return bluebird.map(valueDTOs, parseAsync, {

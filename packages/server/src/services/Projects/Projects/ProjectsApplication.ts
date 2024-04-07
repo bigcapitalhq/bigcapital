@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import {
   IProjectCreateDTO,
   IProjectCreatePOJO,
@@ -9,13 +8,14 @@ import {
   ProjectBillableEntriesQuery,
   ProjectBillableEntry,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import CreateProject from './CreateProject';
 import DeleteProject from './DeleteProject';
-import GetProject from './GetProject';
 import EditProjectService from './EditProject';
-import GetProjects from './GetProjects';
 import EditProjectStatusService from './EditProjectStatus';
+import GetProject from './GetProject';
 import GetProjectBillableEntries from './GetProjectBillableEntries';
+import GetProjects from './GetProjects';
 
 @Service()
 export class ProjectsApplication {
@@ -46,10 +46,7 @@ export class ProjectsApplication {
    * @param {IProjectCreateDTO} projectDTO - Create project DTO.
    * @return {Promise<IProjectCreatePOJO>}
    */
-  public createProject = (
-    tenantId: number,
-    projectDTO: IProjectCreateDTO
-  ): Promise<IProjectCreatePOJO> => {
+  public createProject = (tenantId: number, projectDTO: IProjectCreateDTO): Promise<IProjectCreatePOJO> => {
     return this.createProjectService.createProject(tenantId, projectDTO);
   };
 
@@ -63,7 +60,7 @@ export class ProjectsApplication {
   public editProject = (
     tenantId: number,
     projectId: number,
-    projectDTO: IProjectCreateDTO
+    projectDTO: IProjectCreateDTO,
   ): Promise<IProjectEditPOJO> => {
     return this.editProjectService.editProject(tenantId, projectId, projectDTO);
   };
@@ -74,10 +71,7 @@ export class ProjectsApplication {
    * @param {number} vendorId
    * @return {Promise<void>}
    */
-  public deleteProject = (
-    tenantId: number,
-    projectId: number
-  ): Promise<void> => {
+  public deleteProject = (tenantId: number, projectId: number): Promise<void> => {
     return this.deleteProjectService.deleteProject(tenantId, projectId);
   };
 
@@ -87,10 +81,7 @@ export class ProjectsApplication {
    * @param {number} projectId
    * @returns {Promise<IProjectGetPOJO>}
    */
-  public getProject = (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectGetPOJO> => {
+  public getProject = (tenantId: number, projectId: number): Promise<IProjectGetPOJO> => {
     return this.getProjectService.getProject(tenantId, projectId);
   };
 
@@ -100,10 +91,7 @@ export class ProjectsApplication {
    * @param {IVendorsFilter} filterDTO
    * @returns {Promise<IProjectGetPOJO[]>}
    */
-  public getProjects = (
-    tenantId: number,
-    filterDTO: IVendorsFilter
-  ): Promise<IProjectGetPOJO[]> => {
+  public getProjects = (tenantId: number, filterDTO: IVendorsFilter): Promise<IProjectGetPOJO[]> => {
     return this.getProjectsService.getProjects(tenantId);
   };
 
@@ -114,16 +102,8 @@ export class ProjectsApplication {
    * @param {IProjectStatus} status
    * @returns {Promise<IProject>}
    */
-  public editProjectStatus = (
-    tenantId: number,
-    projectId: number,
-    status: IProjectStatus
-  ) => {
-    return this.editProjectStatusService.editProjectStatus(
-      tenantId,
-      projectId,
-      status
-    );
+  public editProjectStatus = (tenantId: number, projectId: number, status: IProjectStatus) => {
+    return this.editProjectStatusService.editProjectStatus(tenantId, projectId, status);
   };
 
   /**
@@ -136,12 +116,8 @@ export class ProjectsApplication {
   public getProjectBillableEntries = (
     tenantId: number,
     projectId: number,
-    query?: ProjectBillableEntriesQuery
+    query?: ProjectBillableEntriesQuery,
   ): Promise<ProjectBillableEntry[]> => {
-    return this.getProjectBillable.getProjectBillableEntries(
-      tenantId,
-      projectId,
-      query
-    );
+    return this.getProjectBillable.getProjectBillableEntries(tenantId, projectId, query);
   };
 }

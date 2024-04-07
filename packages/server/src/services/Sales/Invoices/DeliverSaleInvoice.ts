@@ -1,17 +1,14 @@
-import { Knex } from 'knex';
-import moment from 'moment';
 import { ServiceError } from '@/exceptions';
-import {
-  ISaleInvoiceDeliveringPayload,
-  ISaleInvoiceEventDeliveredPayload,
-} from '@/interfaces';
-import { ERRORS } from './constants';
-import { Inject, Service } from 'typedi';
+import { ISaleInvoiceDeliveringPayload, ISaleInvoiceEventDeliveredPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeliverSaleInvoice {
@@ -33,10 +30,7 @@ export class DeliverSaleInvoice {
    * @param  {number} saleInvoiceId - Sale invoice id.
    * @return {Promise<void>}
    */
-  public async deliverSaleInvoice(
-    tenantId: number,
-    saleInvoiceId: number
-  ): Promise<void> {
+  public async deliverSaleInvoice(tenantId: number, saleInvoiceId: number): Promise<void> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale invoice id.

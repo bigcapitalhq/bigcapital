@@ -22,25 +22,15 @@ export function CurrenciesSelectList({ selectProps, onItemSelect, className }) {
   );
 
   // Filters currencies list.
-  const filterCurrenciesPredicator = useCallback(
-    (query, currency, _index, exactMatch) => {
-      const normalizedTitle = currency.name.toLowerCase();
-      const normalizedQuery = query.toLowerCase();
-      return `${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
-    },
-    [],
-  );
+  const filterCurrenciesPredicator = useCallback((query, currency, _index, exactMatch) => {
+    const normalizedTitle = currency.name.toLowerCase();
+    const normalizedQuery = query.toLowerCase();
+    return `${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
+  }, []);
 
   // Currency item of select currencies field.
   const currencyItem = (item, { handleClick, modifiers, query }) => {
-    return (
-      <MenuItem
-        text={item.name}
-        label={item.code}
-        key={item.id}
-        onClick={handleClick}
-      />
-    );
+    return <MenuItem text={item.name} label={item.code} key={item.id} onClick={handleClick} />;
   };
 
   return (

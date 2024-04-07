@@ -9,10 +9,7 @@ import { Icon, If } from '@/components';
 /**
  * Context menu of Branches.
  */
-export function ActionsMenu({
-  payload: { onEdit, onDelete, onMarkPrimary },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onEdit, onDelete, onMarkPrimary }, row: { original } }) {
   return (
     <Menu>
       <MenuItem

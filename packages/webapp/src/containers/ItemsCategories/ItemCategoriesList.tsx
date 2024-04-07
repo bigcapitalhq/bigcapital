@@ -16,7 +16,7 @@ import withItemsCategories from './withItemCategories';
  */
 function ItemCategoryList({
   // #withItemsCategories
-  itemsCategoriesTableState
+  itemsCategoriesTableState,
 }) {
   return (
     <ItemsCategoriesProvider tableState={itemsCategoriesTableState}>

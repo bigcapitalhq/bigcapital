@@ -21,8 +21,7 @@ function AllocateLandedCostForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, bill, billId, createLandedCostMutate } =
-    useAllocateLandedConstDialogContext();
+  const { dialogName, bill, billId, createLandedCostMutate } = useAllocateLandedConstDialogContext();
 
   // Initial form values.
   const initialValues = {
@@ -67,15 +66,9 @@ function AllocateLandedCostForm({
       const { errors } = res.response.data;
       setSubmitting(false);
 
-      if (
-        errors.some(
-          (e) => e.type === 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT',
-        )
-      ) {
+      if (errors.some((e) => e.type === 'COST_AMOUNT_BIGGER_THAN_UNALLOCATED_AMOUNT')) {
         AppToaster.show({
-          message: intl.get(
-            'landed_cost.error.the_total_located_cost_is_bigger_than_the_transaction_line',
-          ),
+          message: intl.get('landed_cost.error.the_total_located_cost_is_bigger_than_the_transaction_line'),
           intent: Intent.DANGER,
         });
       } else {

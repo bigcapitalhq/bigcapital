@@ -27,9 +27,7 @@ function ProjectBillableEntriesLinkComponent({
   );
 }
 
-export const ProjectBillableEntriesLink = R.compose(withDialogActions)(
-  ProjectBillableEntriesLinkComponent,
-);
+export const ProjectBillableEntriesLink = R.compose(withDialogActions)(ProjectBillableEntriesLinkComponent);
 
 const BillableEntriesLink = styled(ButtonLink)`
   font-size: 11px;

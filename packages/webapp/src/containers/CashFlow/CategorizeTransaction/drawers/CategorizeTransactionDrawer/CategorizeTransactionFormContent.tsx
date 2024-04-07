@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormGroup } from '@blueprintjs/core';
-import { FFormGroup, FSelect, } from '@/components';
+import { FFormGroup, FSelect } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 import { useFormikContext } from 'formik';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
@@ -20,9 +20,7 @@ const Title = styled('h3')`
 export function CategorizeTransactionFormContent() {
   const { uncategorizedTransaction } = useCategorizeTransactionBoot();
 
-  const transactionTypes = uncategorizedTransaction?.is_deposit_transaction
-    ? MoneyInOptions
-    : MoneyOutOptions;
+  const transactionTypes = uncategorizedTransaction?.is_deposit_transaction ? MoneyInOptions : MoneyOutOptions;
 
   return (
     <>
@@ -46,29 +44,19 @@ export function CategorizeTransactionFormContent() {
   );
 }
 
-const CategorizeTransactionOtherIncome = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionOtherIncome'),
-);
+const CategorizeTransactionOtherIncome = React.lazy(() => import('./MoneyIn/CategorizeTransactionOtherIncome'));
 
 const CategorizeTransactionOwnerContribution = React.lazy(
   () => import('./MoneyIn/CategorizeTransactionOwnerContribution'),
 );
 
-const CategorizeTransactionTransferFrom = React.lazy(
-  () => import('./MoneyIn/CategorizeTransactionTransferFrom'),
-);
+const CategorizeTransactionTransferFrom = React.lazy(() => import('./MoneyIn/CategorizeTransactionTransferFrom'));
 
-const CategorizeTransactionOtherExpense = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOtherExpense'),
-);
+const CategorizeTransactionOtherExpense = React.lazy(() => import('./MoneyOut/CategorizeTransactionOtherExpense'));
 
-const CategorizeTransactionToAccount = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionToAccount'),
-);
+const CategorizeTransactionToAccount = React.lazy(() => import('./MoneyOut/CategorizeTransactionToAccount'));
 
-const CategorizeTransactionOwnerDrawings = React.lazy(
-  () => import('./MoneyOut/CategorizeTransactionOwnerDrawings'),
-);
+const CategorizeTransactionOwnerDrawings = React.lazy(() => import('./MoneyOut/CategorizeTransactionOwnerDrawings'));
 
 function CategorizeTransactionFormSubContent() {
   const { values } = useFormikContext();

@@ -18,12 +18,7 @@ export function buildSortColumnJoin(model: IModel, sortColumnKey: string) {
 
     if (fieldColumn.relation) {
       const joinTable = getTableFromRelationColumn(fieldColumn.relation);
-      builder.join(
-        joinTable,
-        `${model.tableName}.${fieldColumn.column}`,
-        '=',
-        fieldColumn.relation
-      );
+      builder.join(joinTable, `${model.tableName}.${fieldColumn.column}`, '=', fieldColumn.relation);
     }
   };
 }
@@ -57,14 +52,9 @@ export function mapFilterRolesToDynamicFilter(roles) {
  * @param {String} columnKey -
  * @param {String} sortDirection -
  */
-export function buildSortColumnQuery(
-  model: IModel,
-  columnKey: string,
-  sortDirection: string
-) {
+export function buildSortColumnQuery(model: IModel, columnKey: string, sortDirection: string) {
   const fieldRelation = getRoleFieldColumn(model, columnKey);
-  const sortColumn =
-    fieldRelation.relation || `${model.tableName}.${fieldRelation.column}`;
+  const sortColumn = fieldRelation.relation || `${model.tableName}.${fieldRelation.column}`;
 
   return (builder) => {
     builder.orderBy(sortColumn, sortDirection);
@@ -72,30 +62,23 @@ export function buildSortColumnQuery(
   };
 }
 
-export function validateFilterLogicExpression(
-  logicExpression: string,
-  indexes
-) {
+export function validateFilterLogicExpression(logicExpression: string, indexes) {
   const logicExpIndexes = logicExpression.match(/\d+/g) || [];
   const diff = difference(logicExpIndexes.map(Number), indexes);
 
   return diff.length > 0 ? false : true;
 }
 
-export function validateRolesLogicExpression(
-  logicExpression: string,
-  roles: IFilterRole[]
-) {
+export function validateRolesLogicExpression(logicExpression: string, roles: IFilterRole[]) {
   return validateFilterLogicExpression(
     logicExpression,
-    roles.map((r) => r.index)
+    roles.map((r) => r.index),
   );
 }
 
 export function validateFieldKeyExistance(model: any, fieldKey: string) {
   return model?.fields?.[fieldKey] || false;
 }
-
 
 /**
  * Retrieve model fields keys.

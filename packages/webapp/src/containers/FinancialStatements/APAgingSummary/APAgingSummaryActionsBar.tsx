@@ -75,13 +75,7 @@ function APAgingSummaryActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            isFilterDrawerOpen ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={isFilterDrawerOpen ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />
@@ -105,11 +99,7 @@ function APAgingSummaryActionsBar({
           />
         </Popover>
 
-        <Button
-          className={Classes.MINIMAL}
-          text={<T id={'filter'} />}
-          icon={<Icon icon="filter-16" iconSize={16} />}
-        />
+        <Button className={Classes.MINIMAL} text={<T id={'filter'} />} icon={<Icon icon="filter-16" iconSize={16} />} />
         <NavbarDivider />
 
         <Button
@@ -140,5 +130,5 @@ export default compose(
   withAPAgingSummary(({ APAgingSummaryFilterDrawer }) => ({
     isFilterDrawerOpen: APAgingSummaryFilterDrawer,
   })),
-  withDialogActions
+  withDialogActions,
 )(APAgingSummaryActionsBar);

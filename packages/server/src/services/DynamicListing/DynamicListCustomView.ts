@@ -1,10 +1,10 @@
+import { ServiceError } from '@/exceptions';
+import { IModel } from '@/interfaces';
+import DynamicFilterViews from '@/lib/DynamicFilter/DynamicFilterViews';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
 import DynamicListAbstract from './DynamicListAbstract';
-import DynamicFilterViews from '@/lib/DynamicFilter/DynamicFilterViews';
-import { ServiceError } from '@/exceptions';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
-import { IModel } from '@/interfaces';
 
 @Service()
 export default class DynamicListCustomView extends DynamicListAbstract {
@@ -17,11 +17,7 @@ export default class DynamicListCustomView extends DynamicListAbstract {
    * @param  {number} viewId
    * @return {Promise<IView>}
    */
-  private getCustomViewOrThrowError = async (
-    tenantId: number,
-    viewSlug: string,
-    model: IModel
-  ) => {
+  private getCustomViewOrThrowError = async (tenantId: number, viewSlug: string, model: IModel) => {
     const { View } = this.tenancy.models(tenantId);
 
     // Finds the default view by the given view slug.
@@ -39,19 +35,11 @@ export default class DynamicListCustomView extends DynamicListAbstract {
    * @param {number} customViewId
    * @returns
    */
-  public dynamicListCustomView = async (
-    dynamicFilter: any,
-    customViewSlug: string,
-    tenantId: number
-  ) => {
+  public dynamicListCustomView = async (dynamicFilter: any, customViewSlug: string, tenantId: number) => {
     const model = dynamicFilter.getModel();
 
     // Retrieve the custom view or throw not found.
-    const view = await this.getCustomViewOrThrowError(
-      tenantId,
-      customViewSlug,
-      model,
-    );
+    const view = await this.getCustomViewOrThrowError(tenantId, customViewSlug, model);
     return new DynamicFilterViews(view);
   };
 }

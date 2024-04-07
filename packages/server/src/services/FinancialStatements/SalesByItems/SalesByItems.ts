@@ -1,16 +1,16 @@
 import { get, sumBy } from 'lodash';
 
-import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
-import { allPassedConditionsPass, transformToMap } from 'utils';
 import {
-  ISalesByItemsReportQuery,
   IAccountTransaction,
-  ISalesByItemsItem,
-  ISalesByItemsTotal,
-  ISalesByItemsSheetData,
   IItem,
+  ISalesByItemsItem,
+  ISalesByItemsReportQuery,
+  ISalesByItemsSheetData,
+  ISalesByItemsTotal,
 } from '@/interfaces';
+import * as R from 'ramda';
+import { allPassedConditionsPass, transformToMap } from 'utils';
+import FinancialSheet from '../FinancialSheet';
 
 export default class SalesByItemsReport extends FinancialSheet {
   readonly baseCurrency: string;
@@ -29,7 +29,7 @@ export default class SalesByItemsReport extends FinancialSheet {
     query: ISalesByItemsReportQuery,
     items: IItem[],
     itemsTransactions: IAccountTransaction[],
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
 

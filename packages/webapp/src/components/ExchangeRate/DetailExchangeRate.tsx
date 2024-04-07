@@ -30,6 +30,4 @@ function DetailExchangeRate({
   );
 }
 
-export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(
-  DetailExchangeRate,
-);
+export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(DetailExchangeRate);

@@ -3,12 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import { FastField, ErrorMessage, Field } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  ControlGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
 import { inputIntent } from '@/utils';
 import { FieldRequiredHint, FormattedMessage as T } from '@/components';
 

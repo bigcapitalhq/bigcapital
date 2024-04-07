@@ -15,8 +15,7 @@ const EstimatesListContext = createContext();
  */
 function EstimatesListProvider({ query, tableStateChanged, ...props }) {
   // Fetches estimates resource views and fields.
-  const { data: estimatesViews, isLoading: isViewsLoading } =
-    useResourceViews('sale_estimates');
+  const { data: estimatesViews, isLoading: isViewsLoading } = useResourceViews('sale_estimates');
 
   // Fetches the estimates resource fields.
   const {
@@ -33,8 +32,7 @@ function EstimatesListProvider({ query, tableStateChanged, ...props }) {
   } = useEstimates(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    !isEstimatesLoading && !tableStateChanged && isEmpty(estimates);
+  const isEmptyStatus = !isEstimatesLoading && !tableStateChanged && isEmpty(estimates);
 
   // Provider payload.
   const provider = {
@@ -55,10 +53,7 @@ function EstimatesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'sale_estimate'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'sale_estimate'}>
       <EstimatesListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

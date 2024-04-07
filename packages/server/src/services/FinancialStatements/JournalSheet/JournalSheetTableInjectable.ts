@@ -1,7 +1,7 @@
+import { IJournalReportQuery, IJournalTable } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject } from 'typedi';
 import { JournalSheetService } from './JournalSheetService';
-import { IJournalReportQuery, IJournalTable } from '@/interfaces';
 import { JournalSheetTable } from './JournalSheetTable';
 
 export class JournalSheetTableInjectable {
@@ -17,14 +17,8 @@ export class JournalSheetTableInjectable {
    * @param {IJournalReportQuery} query
    * @returns {Promise<IJournalTable>}
    */
-  public async table(
-    tenantId: number,
-    query: IJournalReportQuery
-  ): Promise<IJournalTable> {
-    const journal = await this.journalSheetService.journalSheet(
-      tenantId,
-      query
-    );
+  public async table(tenantId: number, query: IJournalReportQuery): Promise<IJournalTable> {
+    const journal = await this.journalSheetService.journalSheet(tenantId, query);
     const table = new JournalSheetTable(journal.data, journal.query, {});
 
     return {

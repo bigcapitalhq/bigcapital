@@ -1,5 +1,5 @@
-import { Knex } from 'knex';
 import { ProjectTaskChargeType } from '@/services/Projects/Tasks/constants';
+import { Knex } from 'knex';
 
 export interface IProjectTask {
   id?: number;
@@ -12,7 +12,7 @@ export interface IProjectTask {
   projectId: number;
 
   billableAmount?: number;
-  createdAt?: Date|string;
+  createdAt?: Date | string;
 }
 
 export interface BaseTaskDTO {

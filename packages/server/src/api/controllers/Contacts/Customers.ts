@@ -1,19 +1,13 @@
-import { Request, Response, Router, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
-import { check, query } from 'express-validator';
 import ContactsController from '@/api/controllers/Contacts/Contacts';
-import CustomersService from '@/services/Contacts/CustomersService';
-import { ServiceError } from '@/exceptions';
-import {
-  ICustomerNewDTO,
-  ICustomerEditDTO,
-  AbilitySubject,
-  CustomerAction,
-} from '@/interfaces';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, CustomerAction, ICustomerEditDTO, ICustomerNewDTO } from '@/interfaces';
 import { CustomersApplication } from '@/services/Contacts/Customers/CustomersApplication';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CustomersController extends ContactsController {
@@ -40,7 +34,7 @@ export default class CustomersController extends ContactsController {
       ],
       this.validationResult,
       asyncMiddleware(this.newCustomer.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/opening_balance',
@@ -49,30 +43,20 @@ export default class CustomersController extends ContactsController {
         ...this.specificContactSchema,
         check('opening_balance').exists().isNumeric().toFloat(),
         check('opening_balance_at').optional().isISO8601(),
-        check('opening_balance_exchange_rate')
-          .default(1)
-          .isFloat({ gt: 0 })
-          .toFloat(),
-        check('opening_balance_branch_id')
-          .optional({ nullable: true })
-          .isNumeric()
-          .toInt(),
+        check('opening_balance_exchange_rate').default(1).isFloat({ gt: 0 }).toFloat(),
+        check('opening_balance_branch_id').optional({ nullable: true }).isNumeric().toInt(),
       ],
       this.validationResult,
       asyncMiddleware(this.editOpeningBalanceCustomer.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
       CheckPolicies(CustomerAction.Edit, AbilitySubject.Customer),
-      [
-        ...this.contactDTOSchema,
-        ...this.contactEditDTOSchema,
-        ...this.customerDTOSchema,
-      ],
+      [...this.contactDTOSchema, ...this.contactEditDTOSchema, ...this.customerDTOSchema],
       this.validationResult,
       asyncMiddleware(this.editCustomer.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.delete(
       '/:id',
@@ -80,7 +64,7 @@ export default class CustomersController extends ContactsController {
       [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.deleteCustomer.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
@@ -88,7 +72,7 @@ export default class CustomersController extends ContactsController {
       [...this.validateListQuerySchema],
       this.validationResult,
       asyncMiddleware(this.getCustomersList.bind(this)),
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.get(
       '/:id',
@@ -96,7 +80,7 @@ export default class CustomersController extends ContactsController {
       [...this.specificContactSchema],
       this.validationResult,
       asyncMiddleware(this.getCustomer.bind(this)),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -105,27 +89,14 @@ export default class CustomersController extends ContactsController {
    * Customer DTO schema.
    */
   get customerDTOSchema() {
-    return [
-      check('customer_type')
-        .exists()
-        .isIn(['business', 'individual'])
-        .trim()
-        .escape(),
-    ];
+    return [check('customer_type').exists().isIn(['business', 'individual']).trim().escape()];
   }
 
   /**
    * Create customer DTO schema.
    */
   get createCustomerDTOSchema() {
-    return [
-      check('currency_code')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: 3 }),
-    ];
+    return [check('currency_code').optional({ nullable: true }).isString().trim().escape().isLength({ max: 3 })];
   }
 
   /**
@@ -158,10 +129,7 @@ export default class CustomersController extends ContactsController {
     const { tenantId, user } = req;
 
     try {
-      const contact = await this.customersApplication.createCustomer(
-        tenantId,
-        contactDTO
-      );
+      const contact = await this.customersApplication.createCustomer(tenantId, contactDTO);
       return res.status(200).send({
         id: contact.id,
         message: 'The customer has been created successfully.',
@@ -183,12 +151,7 @@ export default class CustomersController extends ContactsController {
     const { id: contactId } = req.params;
 
     try {
-      await this.customersApplication.editCustomer(
-        tenantId,
-        contactId,
-        contactDTO,
-        user
-      );
+      await this.customersApplication.editCustomer(tenantId, contactId, contactDTO, user);
 
       return res.status(200).send({
         id: contactId,
@@ -205,25 +168,16 @@ export default class CustomersController extends ContactsController {
    * @param {Response} res -
    * @param {NextFunction} next -
    */
-  async editOpeningBalanceCustomer(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  async editOpeningBalanceCustomer(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: customerId } = req.params;
     const openingBalanceEditDTO = this.matchedBodyData(req);
 
     try {
-      await this.customersApplication.editOpeningBalance(
-        tenantId,
-        customerId,
-        openingBalanceEditDTO
-      );
+      await this.customersApplication.editOpeningBalance(tenantId, customerId, openingBalanceEditDTO);
       return res.status(200).send({
         id: customerId,
-        message:
-          'The opening balance of the given customer has been changed successfully.',
+        message: 'The opening balance of the given customer has been changed successfully.',
       });
     } catch (error) {
       next(error);
@@ -241,11 +195,7 @@ export default class CustomersController extends ContactsController {
     const { id: contactId } = req.params;
 
     try {
-      const customer = await this.customersApplication.getCustomer(
-        tenantId,
-        contactId,
-        user
-      );
+      const customer = await this.customersApplication.getCustomer(tenantId, contactId, user);
 
       return res.status(200).send({
         customer: this.transfromToResponse(customer),
@@ -296,8 +246,7 @@ export default class CustomersController extends ContactsController {
     };
 
     try {
-      const { customers, pagination, filterMeta } =
-        await this.customersApplication.getCustomers(tenantId, filter);
+      const { customers, pagination, filterMeta } = await this.customersApplication.getCustomers(tenantId, filter);
 
       return res.status(200).send({
         customers: this.transfromToResponse(customers),
@@ -316,12 +265,7 @@ export default class CustomersController extends ContactsController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'contact_not_found') {
         return res.boom.badRequest(null, {

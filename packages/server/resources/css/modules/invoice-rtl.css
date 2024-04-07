@@ -526,6 +526,10 @@ html[lang^=en] body {
   border-top: 3px double #666;
   font-weight: bold;
 }
+.invoice__table-total table tbody tr.total td {
+  border-top: 1px solid #666;
+  font-weight: bold;
+}
 .invoice__due-amount {
   margin-bottom: 18px;
 }

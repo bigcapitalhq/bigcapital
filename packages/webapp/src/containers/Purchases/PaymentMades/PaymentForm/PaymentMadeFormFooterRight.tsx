@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { usePaymentMadeTotals } from './utils';
 
 export function PaymentMadeFormFooterRight() {

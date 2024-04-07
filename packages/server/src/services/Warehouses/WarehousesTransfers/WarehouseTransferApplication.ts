@@ -4,7 +4,7 @@ import {
   IGetWarehousesTransfersFilterDTO,
   IWarehouseTransfer,
 } from '@/interfaces';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { CreateWarehouseTransfer } from './CreateWarehouseTransfer';
 import { DeleteWarehouseTransfer } from './DeleteWarehouseTransfer';
 import { EditWarehouseTransfer } from './EditWarehouseTransfer';
@@ -44,12 +44,9 @@ export class WarehouseTransferApplication {
    */
   public createWarehouseTransfer = (
     tenantId: number,
-    createWarehouseTransferDTO: ICreateWarehouseTransferDTO
+    createWarehouseTransferDTO: ICreateWarehouseTransferDTO,
   ): Promise<IWarehouseTransfer> => {
-    return this.createWarehouseTransferService.createWarehouseTransfer(
-      tenantId,
-      createWarehouseTransferDTO
-    );
+    return this.createWarehouseTransferService.createWarehouseTransfer(tenantId, createWarehouseTransferDTO);
   };
 
   /**
@@ -61,12 +58,12 @@ export class WarehouseTransferApplication {
   public editWarehouseTransfer = (
     tenantId: number,
     warehouseTransferId: number,
-    editWarehouseTransferDTO: IEditWarehouseTransferDTO
+    editWarehouseTransferDTO: IEditWarehouseTransferDTO,
   ): Promise<IWarehouseTransfer> => {
     return this.editWarehouseTransferService.editWarehouseTransfer(
       tenantId,
       warehouseTransferId,
-      editWarehouseTransferDTO
+      editWarehouseTransferDTO,
     );
   };
 
@@ -76,14 +73,8 @@ export class WarehouseTransferApplication {
    * @param   {number} warehouseTransferId
    * @returns {Promise<void>}
    */
-  public deleteWarehouseTransfer = (
-    tenantId: number,
-    warehouseTransferId: number
-  ): Promise<void> => {
-    return this.deleteWarehouseTransferService.deleteWarehouseTransfer(
-      tenantId,
-      warehouseTransferId
-    );
+  public deleteWarehouseTransfer = (tenantId: number, warehouseTransferId: number): Promise<void> => {
+    return this.deleteWarehouseTransferService.deleteWarehouseTransfer(tenantId, warehouseTransferId);
   };
 
   /**
@@ -92,14 +83,8 @@ export class WarehouseTransferApplication {
    * @param   {number} warehouseTransferId
    * @returns {Promise<IWarehouseTransfer>}
    */
-  public getWarehouseTransfer = (
-    tenantId: number,
-    warehouseTransferId: number
-  ): Promise<IWarehouseTransfer> => {
-    return this.getWarehouseTransferService.getWarehouseTransfer(
-      tenantId,
-      warehouseTransferId
-    );
+  public getWarehouseTransfer = (tenantId: number, warehouseTransferId: number): Promise<IWarehouseTransfer> => {
+    return this.getWarehouseTransferService.getWarehouseTransfer(tenantId, warehouseTransferId);
   };
 
   /**
@@ -108,14 +93,8 @@ export class WarehouseTransferApplication {
    * @param   {IGetWarehousesTransfersFilterDTO} filterDTO
    * @returns {Promise<IWarehouseTransfer>}
    */
-  public getWarehousesTransfers = (
-    tenantId: number,
-    filterDTO: IGetWarehousesTransfersFilterDTO
-  ) => {
-    return this.getWarehousesTransfersService.getWarehouseTransfers(
-      tenantId,
-      filterDTO
-    );
+  public getWarehousesTransfers = (tenantId: number, filterDTO: IGetWarehousesTransfersFilterDTO) => {
+    return this.getWarehousesTransfersService.getWarehouseTransfers(tenantId, filterDTO);
   };
 
   /**
@@ -126,12 +105,9 @@ export class WarehouseTransferApplication {
    */
   public transferredWarehouseTransfer = (
     tenantId: number,
-    warehouseTransferId: number
+    warehouseTransferId: number,
   ): Promise<IWarehouseTransfer> => {
-    return this.transferredWarehouseTransferService.transferredWarehouseTransfer(
-      tenantId,
-      warehouseTransferId
-    );
+    return this.transferredWarehouseTransferService.transferredWarehouseTransfer(tenantId, warehouseTransferId);
   };
 
   /**
@@ -140,13 +116,7 @@ export class WarehouseTransferApplication {
    * @param   {number} warehouseTransferId
    * @returns {Promise<IWarehouseTransfer>}
    */
-  public initiateWarehouseTransfer = (
-    tenantId: number,
-    warehouseTransferId: number
-  ): Promise<IWarehouseTransfer> => {
-    return this.initiateWarehouseTransferService.initiateWarehouseTransfer(
-      tenantId,
-      warehouseTransferId
-    );
+  public initiateWarehouseTransfer = (tenantId: number, warehouseTransferId: number): Promise<IWarehouseTransfer> => {
+    return this.initiateWarehouseTransferService.initiateWarehouseTransfer(tenantId, warehouseTransferId);
   };
 }

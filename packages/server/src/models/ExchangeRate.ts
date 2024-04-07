@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-import { Model } from 'objection';
 import TenantModel from 'models/TenantModel';
 
 export default class ExchangeRate extends TenantModel {
@@ -20,11 +18,11 @@ export default class ExchangeRate extends TenantModel {
   /**
    * Model defined fields.
    */
-  static get fields(){
+  static get fields() {
     return {
       currency_code: {
         label: 'Currency',
-        column: 'currency_code'
+        column: 'currency_code',
       },
       exchange_rate: {
         label: 'Exchange rate',
@@ -35,10 +33,10 @@ export default class ExchangeRate extends TenantModel {
         column: 'date',
       },
       created_at: {
-        label: "Created at",
-        column: "created_at",
-        columnType: "date",
+        label: 'Created at',
+        column: 'created_at',
+        columnType: 'date',
       },
-    }
+    };
   }
 }

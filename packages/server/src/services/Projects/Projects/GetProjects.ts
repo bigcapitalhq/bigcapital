@@ -29,10 +29,6 @@ export default class GetProjects {
       .modify('totalTasksDetails');
 
     // Transformes and returns object.
-    return this.transformer.transform(
-      tenantId,
-      projects,
-      new ProjectDetailedTransformer()
-    );
+    return this.transformer.transform(tenantId, projects, new ProjectDetailedTransformer());
   };
 }

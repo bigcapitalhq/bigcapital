@@ -1,13 +1,9 @@
-import { Inject, Service } from 'typedi';
-import moment from 'moment';
+import { IAccount, IAccountTransaction, ICashFlowStatementQuery } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
-import {
-  ICashFlowStatementQuery,
-  IAccountTransaction,
-  IAccount,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CashFlowRepository {
@@ -50,12 +46,10 @@ export default class CashFlowRepository {
    */
   public cashAtBeginningTotalTransactions(
     tenantId: number,
-    filter: ICashFlowStatementQuery
+    filter: ICashFlowStatementQuery,
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
-    const cashBeginningPeriod = moment(filter.fromDate)
-      .subtract(1, 'day')
-      .toDate();
+    const cashBeginningPeriod = moment(filter.fromDate).subtract(1, 'day').toDate();
 
     return AccountTransaction.query().onBuild((query) => {
       query.modify('creditDebitSummation');
@@ -76,14 +70,9 @@ export default class CashFlowRepository {
    * @param {ICashFlowStatementQuery} filter
    * @return {Promise<IAccountTransaction>}
    */
-  public getAccountsTransactions(
-    tenantId: number,
-    filter: ICashFlowStatementQuery
-  ): Promise<IAccountTransaction[]> {
+  public getAccountsTransactions(tenantId: number, filter: ICashFlowStatementQuery): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
-    const groupByDateType = this.getGroupTypeFromPeriodsType(
-      filter.displayColumnsBy
-    );
+    const groupByDateType = this.getGroupTypeFromPeriodsType(filter.displayColumnsBy);
 
     return AccountTransaction.query().onBuild((query) => {
       query.modify('creditDebitSummation');
@@ -106,14 +95,9 @@ export default class CashFlowRepository {
    * @param {ICashFlowStatementQuery} query -
    * @return {Promise<IAccountTransaction[]>}
    */
-  public getNetIncomeTransactions(
-    tenantId: number,
-    filter: ICashFlowStatementQuery
-  ): Promise<IAccountTransaction[]> {
+  public getNetIncomeTransactions(tenantId: number, filter: ICashFlowStatementQuery): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
-    const groupByDateType = this.getGroupTypeFromPeriodsType(
-      filter.displayColumnsBy
-    );
+    const groupByDateType = this.getGroupTypeFromPeriodsType(filter.displayColumnsBy);
 
     return AccountTransaction.query().onBuild((query) => {
       query.modify('creditDebitSummation');
@@ -137,12 +121,10 @@ export default class CashFlowRepository {
    */
   public cashAtBeginningPeriodTransactions(
     tenantId: number,
-    filter: ICashFlowStatementQuery
+    filter: ICashFlowStatementQuery,
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
-    const groupByDateType = this.getGroupTypeFromPeriodsType(
-      filter.displayColumnsBy
-    );
+    const groupByDateType = this.getGroupTypeFromPeriodsType(filter.displayColumnsBy);
 
     return AccountTransaction.query().onBuild((query) => {
       query.modify('creditDebitSummation');
@@ -162,10 +144,7 @@ export default class CashFlowRepository {
    * Common branches filter query.
    * @param {Knex.QueryBuilder} query
    */
-  private commonFilterBranchesQuery = (
-    query: ICashFlowStatementQuery,
-    knexQuery: Knex.QueryBuilder
-  ) => {
+  private commonFilterBranchesQuery = (query: ICashFlowStatementQuery, knexQuery: Knex.QueryBuilder) => {
     if (!isEmpty(query.branchesIds)) {
       knexQuery.modify('filterByBranches', query.branchesIds);
     }

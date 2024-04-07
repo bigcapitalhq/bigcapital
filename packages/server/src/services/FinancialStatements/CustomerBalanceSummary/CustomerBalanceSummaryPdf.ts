@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { ICustomerBalanceSummaryQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 
 import { TableSheetPdf } from '../TableSheetPdf';
 import { CustomerBalanceSummaryTableInjectable } from './CustomerBalanceSummaryTableInjectable';
@@ -19,10 +19,7 @@ export class CustomerBalanceSummaryPdf {
    * @param {IAPAgingSummaryQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: ICustomerBalanceSummaryQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: ICustomerBalanceSummaryQuery): Promise<Buffer> {
     const table = await this.customerBalanceSummaryTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -30,7 +27,7 @@ export class CustomerBalanceSummaryPdf {
       table.table,
       table.meta.sheetName,
       table.meta.formattedDateRange,
-      HtmlTableCustomCss
+      HtmlTableCustomCss,
     );
   }
 }

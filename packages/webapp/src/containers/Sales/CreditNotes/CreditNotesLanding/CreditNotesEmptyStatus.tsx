@@ -18,11 +18,7 @@ export default function CreditNotesEmptyStatus() {
       action={
         <>
           <Can I={CreditNoteAction.Create} a={AbilitySubject.CreditNote}>
-            <Button
-              intent={Intent.PRIMARY}
-              large={true}
-              onClick={() => history.push('/credit-notes/new')}
-            >
+            <Button intent={Intent.PRIMARY} large={true} onClick={() => history.push('/credit-notes/new')}>
               <T id={'credit_note.label.new_credit_note'} />
             </Button>
 

@@ -11,8 +11,7 @@ export default function TableNoResultsRow() {
     props: { noResults },
   } = useContext(TableContext);
 
-  const noResultText =
-    noResults || intl.get('there_is_no_results_in_the_table');
+  const noResultText = noResults || intl.get('there_is_no_results_in_the_table');
 
   return (
     <div className={'tr no-results'}>

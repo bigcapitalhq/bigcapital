@@ -7,10 +7,7 @@ import { Formik } from 'formik';
 import { AppToaster } from '@/components';
 import { useItemCategoryContext } from './ItemCategoryProvider';
 import { compose, transformToForm } from '@/utils';
-import {
-  CreateItemCategoryFormSchema,
-  EditItemCategoryFormSchema,
-} from './itemCategoryForm.schema';
+import { CreateItemCategoryFormSchema, EditItemCategoryFormSchema } from './itemCategoryForm.schema';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import ItemCategoryFormContent from './ItemCategoryFormContent';
@@ -30,14 +27,8 @@ function ItemCategoryForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    isNewMode,
-    itemCategory,
-    itemCategoryId,
-    dialogName,
-    createItemCategoryMutate,
-    editItemCategoryMutate,
-  } = useItemCategoryContext();
+  const { isNewMode, itemCategory, itemCategoryId, dialogName, createItemCategoryMutate, editItemCategoryMutate } =
+    useItemCategoryContext();
 
   // Initial values.
   const initialValues = useMemo(
@@ -92,17 +83,13 @@ function ItemCategoryForm({
     if (isNewMode) {
       createItemCategoryMutate(form).then(onSuccess).catch(onError);
     } else {
-      editItemCategoryMutate([itemCategoryId, form])
-        .then(onSuccess)
-        .catch(onError);
+      editItemCategoryMutate([itemCategoryId, form]).then(onSuccess).catch(onError);
     }
   };
 
   return (
     <Formik
-      validationSchema={
-        isNewMode ? CreateItemCategoryFormSchema : EditItemCategoryFormSchema
-      }
+      validationSchema={isNewMode ? CreateItemCategoryFormSchema : EditItemCategoryFormSchema}
       initialValues={initialValues}
       onSubmit={handleFormSubmit}
     >

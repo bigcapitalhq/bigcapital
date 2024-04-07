@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { PaymentReceiveInvoiceSync } from '@/services/Sales/PaymentReceives/PaymentReceiveInvoiceSync';
 import {
   IPaymentReceiveCreatedPayload,
   IPaymentReceiveDeletedPayload,
   IPaymentReceiveEditedPayload,
 } from '@/interfaces';
+import { PaymentReceiveInvoiceSync } from '@/services/Sales/PaymentReceives/PaymentReceiveInvoiceSync';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class PaymentReceiveSyncInvoicesSubscriber {
@@ -17,18 +17,9 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.paymentReceive.onCreated,
-      this.handleInvoiceIncrementPaymentOnceCreated
-    );
-    bus.subscribe(
-      events.paymentReceive.onEdited,
-      this.handleInvoiceIncrementPaymentOnceEdited
-    );
-    bus.subscribe(
-      events.paymentReceive.onDeleted,
-      this.handleInvoiceDecrementPaymentAmount
-    );
+    bus.subscribe(events.paymentReceive.onCreated, this.handleInvoiceIncrementPaymentOnceCreated);
+    bus.subscribe(events.paymentReceive.onEdited, this.handleInvoiceIncrementPaymentOnceEdited);
+    bus.subscribe(events.paymentReceive.onDeleted, this.handleInvoiceDecrementPaymentAmount);
   }
 
   /**
@@ -40,12 +31,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
     paymentReceive,
     trx,
   }: IPaymentReceiveCreatedPayload) => {
-    await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(
-      tenantId,
-      paymentReceive.entries,
-      null,
-      trx
-    );
+    await this.paymentSyncInvoice.saveChangeInvoicePaymentAmount(tenantId, paymentReceive.entries, null, trx);
   };
 
   /**
@@ -62,7 +48,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
       tenantId,
       paymentReceive.entries,
       oldPaymentReceive?.entries || null,
-      trx
+      trx,
     );
   };
 
@@ -82,7 +68,7 @@ export default class PaymentReceiveSyncInvoicesSubscriber {
         paymentAmount: 0,
       })),
       oldPaymentReceive.entries,
-      trx
+      trx,
     );
   };
 }

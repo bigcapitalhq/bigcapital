@@ -12,11 +12,7 @@ function CurrenciesActions({ openDialog }) {
 
   return (
     <div class="users-actions">
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={handleClickNewCurrency}
-        intent={Intent.PRIMARY}
-      >
+      <Button icon={<Icon icon="plus" iconSize={12} />} onClick={handleClickNewCurrency} intent={Intent.PRIMARY}>
         <T id={'new_currency'} />
       </Button>
     </div>

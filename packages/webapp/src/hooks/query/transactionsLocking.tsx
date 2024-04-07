@@ -18,16 +18,13 @@ export function useCreateLockingTransactoin(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.put('transactions-locking/lock', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.put('transactions-locking/lock', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -37,16 +34,13 @@ export function useCancelLockingTransaction(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.put('transactions-locking/cancel-lock', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.put('transactions-locking/cancel-lock', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -55,16 +49,13 @@ export function useCancelLockingTransaction(props) {
 export function useCreateUnlockingPartialTransactions(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
-  return useMutation(
-    (values) => apiRequest.put('transactions-locking/unlock-partial', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.put('transactions-locking/unlock-partial', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -73,17 +64,13 @@ export function useCreateUnlockingPartialTransactions(props) {
 export function useCancelUnlockingPartialTransactions(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
-  return useMutation(
-    (values) =>
-      apiRequest.put('transactions-locking/cancel-unlock-partial', values),
-    {
-      onSuccess: (res, values) => {
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+  return useMutation((values) => apiRequest.put('transactions-locking/cancel-unlock-partial', values), {
+    onSuccess: (res, values) => {
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

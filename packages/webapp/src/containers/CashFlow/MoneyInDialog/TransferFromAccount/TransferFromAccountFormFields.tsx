@@ -22,18 +22,10 @@ import {
 import { MoneyInOutTransactionNoField } from '../../_components';
 import { MoneyInExchangeRateField } from '../MoneyInExchangeRateField';
 import { CLASSES, ACCOUNT_TYPE, Features } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { useMoneyInDailogContext } from '../MoneyInDialogProvider';
 import { useMoneyInFieldsContext } from '../MoneyInFieldsProvider';
-import {
-  useSetPrimaryBranchToForm,
-  BranchRowDivider,
-} from '../../MoneyInDialog/utils';
+import { useSetPrimaryBranchToForm, BranchRowDivider } from '../../MoneyInDialog/utils';
 
 /**
  * Transfer from account form fields.
@@ -100,10 +92,7 @@ export default function TransferFromAccountFormFields() {
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
-          <FormGroup
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FormGroup label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account.currency_code || '--'} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -121,9 +110,7 @@ export default function TransferFromAccountFormFields() {
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={
-                  <T id={'cash_flow_transaction.label_transfer_from_account'} />
-                }
+                label={<T id={'cash_flow_transaction.label_transfer_from_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -131,14 +118,8 @@ export default function TransferFromAccountFormFields() {
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CREDIT_CARD,
-                  ]}
+                  onAccountSelected={({ id }) => form.setFieldValue('credit_account_id', id)}
+                  filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.CREDIT_CARD]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -158,12 +139,7 @@ export default function TransferFromAccountFormFields() {
 
       {/*------------ Description -----------*/}
       <FormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FormGroup>
     </React.Fragment>
   );

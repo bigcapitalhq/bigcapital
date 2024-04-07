@@ -1,20 +1,12 @@
 // @ts-nocheck
 import { AppToaster, Box, Group } from '@/components';
-import {
-  Button,
-  Intent,
-  Menu,
-  MenuItem,
-  Popover,
-  PopoverInteractionKind,
-} from '@blueprintjs/core';
+import { Button, Intent, Menu, MenuItem, Popover, PopoverInteractionKind } from '@blueprintjs/core';
 import styles from './ImportSampleDownload.module.scss';
 import { useSampleSheetImport } from '@/hooks/query/import';
 import { useImportFileContext } from './ImportFileProvider';
 
 export function ImportSampleDownload() {
-  const { resource, sampleFileName, exampleTitle, exampleDescription } =
-    useImportFileContext();
+  const { resource, sampleFileName, exampleTitle, exampleDescription } = useImportFileContext();
   const { mutateAsync: downloadSample } = useSampleSheetImport();
 
   // Handle download button click.
@@ -45,10 +37,7 @@ export function ImportSampleDownload() {
           content={
             <Menu>
               <MenuItem onClick={handleDownloadBtnClick('csv')} text={'CSV'} />
-              <MenuItem
-                onClick={handleDownloadBtnClick('xlsx')}
-                text={'XLSX'}
-              />
+              <MenuItem onClick={handleDownloadBtnClick('xlsx')} text={'XLSX'} />
             </Menu>
           }
           interactionKind={PopoverInteractionKind.CLICK}

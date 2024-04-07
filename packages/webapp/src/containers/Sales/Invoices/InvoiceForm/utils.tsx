@@ -6,26 +6,13 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
 import { omit, first, sumBy, round } from 'lodash';
-import {
-  compose,
-  transformToForm,
-  repeatValue,
-  formattedAmount,
-  defaultFastFieldShouldUpdate,
-} from '@/utils';
+import { compose, transformToForm, repeatValue, formattedAmount, defaultFastFieldShouldUpdate } from '@/utils';
 import { ERROR } from '@/constants/errors';
 import { AppToaster } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import {
-  aggregateItemEntriesTaxRates,
-  assignEntriesTaxAmount,
-  getEntriesTotal,
-} from '@/containers/Entries/utils';
+import { aggregateItemEntriesTaxRates, assignEntriesTaxAmount, getEntriesTotal } from '@/containers/Entries/utils';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
+import { updateItemsEntriesTotal, ensureEntriesHaveEmptyLine } from '@/containers/Entries/utils';
 import { TaxType } from '@/interfaces/TaxRates';
 
 export const MIN_LINES_NUMBER = 1;
@@ -73,21 +60,13 @@ export function transformToEditForm(invoice) {
     ...invoice.entries.map((invoice) => ({
       ...transformToForm(invoice, defaultInvoiceEntry),
     })),
-    ...repeatValue(
-      defaultInvoiceEntry,
-      Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0),
-    ),
+    ...repeatValue(defaultInvoiceEntry, Math.max(MIN_LINES_NUMBER - invoice.entries.length, 0)),
   ];
-  const entries = compose(
-    ensureEntriesHaveEmptyLine(defaultInvoiceEntry),
-    updateItemsEntriesTotal,
-  )(initialEntries);
+  const entries = compose(ensureEntriesHaveEmptyLine(defaultInvoiceEntry), updateItemsEntriesTotal)(initialEntries);
 
   return {
     ...transformToForm(invoice, defaultInvoice),
-    inclusive_exclusive_tax: invoice.is_inclusive_tax
-      ? TaxType.Inclusive
-      : TaxType.Exclusive,
+    inclusive_exclusive_tax: invoice.is_inclusive_tax ? TaxType.Inclusive : TaxType.Exclusive,
     entries,
   };
 }
@@ -101,30 +80,19 @@ export const transformErrors = (errors, { setErrors }) => {
       invoice_no: intl.get('sale_invoice_number_is_exists'),
     });
   }
-  if (
-    errors.some(
-      ({ type }) =>
-        type === ERROR.SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE,
-    )
-  ) {
+  if (errors.some(({ type }) => type === ERROR.SALE_ESTIMATE_IS_ALREADY_CONVERTED_TO_INVOICE)) {
     AppToaster.show({
       message: intl.get('sale_estimate_is_already_converted_to_invoice'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.some(
-      ({ type }) => type === ERROR.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT,
-    )
-  ) {
+  if (errors.some(({ type }) => type === ERROR.INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT)) {
     AppToaster.show({
       message: intl.get('sale_invoice.total_smaller_than_paid_amount'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)
-  ) {
+  if (errors.some((error) => error.type === ERROR.SALE_INVOICE_NO_IS_REQUIRED)) {
     setErrors({
       invoice_no: intl.get('invoice.field.error.invoice_no_required'),
     });
@@ -173,15 +141,9 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
  * Transformes the form values to request body values.
  */
 export function transformValueToRequest(values) {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
+  const entries = values.entries.filter((item) => item.item_id && item.quantity);
   return {
-    ...omit(values, [
-      'invoice_no',
-      'invoice_no_manually',
-      'inclusive_exclusive_tax',
-    ]),
+    ...omit(values, ['invoice_no', 'invoice_no_manually', 'inclusive_exclusive_tax']),
     // The `invoice_no_manually` will be presented just if the auto-increment
     // is disable, always both attributes hold the same value in manual mode.
     ...(values.invoice_no_manually && {
@@ -201,8 +163,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -253,10 +214,7 @@ export const useInvoiceTotals = () => {
   const total_ = useInvoiceTotal();
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total_, currencyCode),
-    [total_, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total_, currencyCode), [total_, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),
@@ -271,15 +229,9 @@ export const useInvoiceTotals = () => {
     [paymentTotal, currencyCode],
   );
   // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
-  );
+  const dueTotal = React.useMemo(() => total - paymentTotal, [total, paymentTotal]);
   // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
+  const formattedDueTotal = React.useMemo(() => formattedAmount(dueTotal, currencyCode), [dueTotal, currencyCode]);
 
   return {
     total,
@@ -325,13 +277,8 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
  * Re-calcualte the entries tax amount when editing.
  * @returns {string}
  */
-export const composeEntriesOnEditInclusiveTax = (
-  inclusiveExclusiveTax: string,
-  entries,
-) => {
-  return R.compose(
-    assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'),
-  )(entries);
+export const composeEntriesOnEditInclusiveTax = (inclusiveExclusiveTax: string, entries) => {
+  return R.compose(assignEntriesTaxAmount(inclusiveExclusiveTax === 'inclusive'))(entries);
 };
 
 /**
@@ -374,9 +321,7 @@ export const useInvoiceTotal = () => {
   const totalTaxAmount = useInvoiceTotalTaxAmount();
   const isExclusiveTax = useIsInvoiceTaxExclusive();
 
-  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(
-    subtotal,
-  );
+  return R.compose(R.when(R.always(isExclusiveTax), R.add(totalTaxAmount)))(subtotal);
 };
 
 /**

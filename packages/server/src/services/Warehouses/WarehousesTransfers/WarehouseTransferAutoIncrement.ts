@@ -12,10 +12,7 @@ export class WarehouseTransferAutoIncrement {
    * @return {string}
    */
   public getNextTransferNumber(tenantId: number): string {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'warehouse_transfers'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'warehouse_transfers');
   }
 
   /**
@@ -23,9 +20,6 @@ export class WarehouseTransferAutoIncrement {
    * @param {number} tenantId -
    */
   public incrementNextTransferNumber(tenantId: number) {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'warehouse_transfers'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'warehouse_transfers');
   }
 }

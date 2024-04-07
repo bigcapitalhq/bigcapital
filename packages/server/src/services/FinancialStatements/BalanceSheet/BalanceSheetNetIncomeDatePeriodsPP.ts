@@ -1,17 +1,13 @@
-import * as R from 'ramda';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
-import { FinancialHorizTotals } from '../FinancialHorizTotals';
 import { IBalanceSheetNetIncomeNode, IBalanceSheetTotal } from '@/interfaces';
+import * as R from 'ramda';
+import { FinancialHorizTotals } from '../FinancialHorizTotals';
+import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
-  class extends R.compose(
-    BalanceSheetComparsionPreviousPeriod,
-    FinancialPreviousPeriod,
-    FinancialHorizTotals
-  )(Base) {
+  class extends R.compose(BalanceSheetComparsionPreviousPeriod, FinancialPreviousPeriod, FinancialHorizTotals)(Base) {
     query: BalanceSheetQuery;
     repository: BalanceSheetRepository;
 
@@ -22,12 +18,9 @@ export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
      * @return {number}
      */
     private getPPIncomeDatePeriodTotal = R.curry((toDate: Date) => {
-      const PYPeriodsTotal = this.repository.incomePPPeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const PYPeriodsTotal = this.repository.incomePPPeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const PYPeriodsOpeningTotal =
-        this.repository.incomePPPeriodsOpeningAccountLedger.getClosingBalance();
+      const PYPeriodsOpeningTotal = this.repository.incomePPPeriodsOpeningAccountLedger.getClosingBalance();
 
       return PYPeriodsOpeningTotal + PYPeriodsTotal;
     });
@@ -39,12 +32,9 @@ export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
      * @returns {number}
      */
     private getPPExpenseDatePeriodTotal = R.curry((toDate: Date) => {
-      const PYPeriodsTotal = this.repository.expensePPPeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const PYPeriodsTotal = this.repository.expensePPPeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const PYPeriodsOpeningTotal =
-        this.repository.expensePPPeriodsOpeningAccountLedger.getClosingBalance();
+      const PYPeriodsOpeningTotal = this.repository.expensePPPeriodsOpeningAccountLedger.getClosingBalance();
 
       return PYPeriodsOpeningTotal + PYPeriodsTotal;
     });
@@ -67,14 +57,10 @@ export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
      * @param {IBalanceSheetAccountNode} node
      * @returns {}
      */
-    private assocPreviousPeriodNetIncomeHorizTotal = R.curry(
-      (node: IBalanceSheetNetIncomeNode, totalNode) => {
-        const total = this.getPPNetIncomeDatePeriodTotal(
-          totalNode.previousPeriodToDate.date
-        );
-        return R.assoc('previousPeriod', this.getAmountMeta(total), totalNode);
-      }
-    );
+    private assocPreviousPeriodNetIncomeHorizTotal = R.curry((node: IBalanceSheetNetIncomeNode, totalNode) => {
+      const total = this.getPPNetIncomeDatePeriodTotal(totalNode.previousPeriodToDate.date);
+      return R.assoc('previousPeriod', this.getAmountMeta(total), totalNode);
+    });
 
     /**
      * Compose previous period to aggregate horizontal nodes.
@@ -82,31 +68,17 @@ export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
      * @returns {IBalanceSheetTotal}
      */
     private previousPeriodNetIncomeHorizNodeComposer = R.curry(
-      (
-        node: IBalanceSheetNetIncomeNode,
-        horiontalTotalNode: IBalanceSheetTotal
-      ): IBalanceSheetTotal => {
+      (node: IBalanceSheetNetIncomeNode, horiontalTotalNode: IBalanceSheetTotal): IBalanceSheetTotal => {
         return R.compose(
-          R.when(
-            this.query.isPreviousPeriodPercentageActive,
-            this.assocPreviousPeriodTotalPercentageNode
-          ),
-          R.when(
-            this.query.isPreviousPeriodChangeActive,
-            this.assocPreviousPeriodTotalChangeNode
-          ),
+          R.when(this.query.isPreviousPeriodPercentageActive, this.assocPreviousPeriodTotalPercentageNode),
+          R.when(this.query.isPreviousPeriodChangeActive, this.assocPreviousPeriodTotalChangeNode),
+          R.when(this.query.isPreviousPeriodActive, this.assocPreviousPeriodNetIncomeHorizTotal(node)),
           R.when(
             this.query.isPreviousPeriodActive,
-            this.assocPreviousPeriodNetIncomeHorizTotal(node)
+            this.assocPreviousPeriodHorizNodeFromToDates(this.query.displayColumnsBy),
           ),
-          R.when(
-            this.query.isPreviousPeriodActive,
-            this.assocPreviousPeriodHorizNodeFromToDates(
-              this.query.displayColumnsBy
-            )
-          )
         )(horiontalTotalNode);
-      }
+      },
     );
 
     /**
@@ -114,12 +86,10 @@ export const BalanceSheetNetIncomeDatePeriodsPP = (Base: any) =>
      * @param   {IBalanceSheetCommonNode} node
      * @returns {IBalanceSheetCommonNode}
      */
-    public assocPreviousPeriodNetIncomeHorizNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    public assocPreviousPeriodNetIncomeHorizNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       const horizontalTotals = R.addIndex(R.map)(
         this.previousPeriodNetIncomeHorizNodeComposer(node),
-        node.horizontalTotals
+        node.horizontalTotals,
       ) as IBalanceSheetTotal[];
 
       return R.assoc('horizontalTotals', horizontalTotals, node);

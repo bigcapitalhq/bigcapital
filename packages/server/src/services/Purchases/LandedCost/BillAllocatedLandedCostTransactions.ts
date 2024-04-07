@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import * as R from 'ramda';
-import * as qim from 'qim';
 import { IBillLandedCostTransaction } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { formatNumber } from 'utils';
 import I18nService from '@/services/I18n/I18nService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { omit } from 'lodash';
+import * as qim from 'qim';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { formatNumber } from 'utils';
 
 @Service()
 export default class BillAllocatedLandedCostTransactions {
@@ -23,7 +23,7 @@ export default class BillAllocatedLandedCostTransactions {
    */
   public getBillLandedCostTransactions = async (
     tenantId: number,
-    billId: number
+    billId: number,
   ): Promise<IBillLandedCostTransaction> => {
     const { BillLandedCost, Bill } = this.tenancy.models(tenantId);
 
@@ -41,7 +41,7 @@ export default class BillAllocatedLandedCostTransactions {
     const transactionsJson = this.i18nService.i18nApply(
       [[qim.$each, 'allocationMethodFormatted']],
       landedCostTransactions.map((a) => a.toJSON()),
-      tenantId
+      tenantId,
     );
     return this.transformBillLandedCostTransactions(transactionsJson);
   };
@@ -51,9 +51,7 @@ export default class BillAllocatedLandedCostTransactions {
    * @param {IBillLandedCostTransaction[]} landedCostTransactions
    * @returns
    */
-  private transformBillLandedCostTransactions = (
-    landedCostTransactions: IBillLandedCostTransaction[]
-  ) => {
+  private transformBillLandedCostTransactions = (landedCostTransactions: IBillLandedCostTransaction[]) => {
     return landedCostTransactions.map(this.transformBillLandedCostTransaction);
   };
 
@@ -62,24 +60,15 @@ export default class BillAllocatedLandedCostTransactions {
    * @param {IBillLandedCostTransaction} transaction
    * @returns
    */
-  private transformBillLandedCostTransaction = (
-    transaction: IBillLandedCostTransaction
-  ) => {
-    const getTransactionName = R.curry(this.condBillLandedTransactionName)(
-      transaction.fromTransactionType
-    );
-    const getTransactionDesc = R.curry(
-      this.condBillLandedTransactionDescription
-    )(transaction.fromTransactionType);
+  private transformBillLandedCostTransaction = (transaction: IBillLandedCostTransaction) => {
+    const getTransactionName = R.curry(this.condBillLandedTransactionName)(transaction.fromTransactionType);
+    const getTransactionDesc = R.curry(this.condBillLandedTransactionDescription)(transaction.fromTransactionType);
 
     return {
       formattedAmount: formatNumber(transaction.amount, {
         currencyCode: transaction.currencyCode,
       }),
-      ...omit(transaction, [
-        'allocatedFromBillEntry',
-        'allocatedFromExpenseEntry',
-      ]),
+      ...omit(transaction, ['allocatedFromBillEntry', 'allocatedFromExpenseEntry']),
       name: getTransactionName(transaction),
       description: getTransactionDesc(transaction),
       formattedLocalAmount: formatNumber(transaction.localAmount, {
@@ -94,19 +83,10 @@ export default class BillAllocatedLandedCostTransactions {
    * @param transaction
    * @returns
    */
-  private condBillLandedTransactionName = (
-    transactionType: string,
-    transaction
-  ) => {
+  private condBillLandedTransactionName = (transactionType: string, transaction) => {
     return R.cond([
-      [
-        R.always(R.equals(transactionType, 'Bill')),
-        this.getLandedBillTransactionName,
-      ],
-      [
-        R.always(R.equals(transactionType, 'Expense')),
-        this.getLandedExpenseTransactionName,
-      ],
+      [R.always(R.equals(transactionType, 'Bill')), this.getLandedBillTransactionName],
+      [R.always(R.equals(transactionType, 'Expense')), this.getLandedExpenseTransactionName],
     ])(transaction);
   };
 
@@ -152,19 +132,10 @@ export default class BillAllocatedLandedCostTransactions {
    * @param transaction
    * @returns
    */
-  private condBillLandedTransactionDescription = (
-    tranasctionType: string,
-    transaction
-  ) => {
+  private condBillLandedTransactionDescription = (tranasctionType: string, transaction) => {
     return R.cond([
-      [
-        R.always(R.equals(tranasctionType, 'Bill')),
-        this.getLandedBillTransactionDescription,
-      ],
-      [
-        R.always(R.equals(tranasctionType, 'Expense')),
-        this.getLandedExpenseTransactionDescription,
-      ],
+      [R.always(R.equals(tranasctionType, 'Bill')), this.getLandedBillTransactionDescription],
+      [R.always(R.equals(tranasctionType, 'Expense')), this.getLandedExpenseTransactionDescription],
     ])(transaction);
   };
 }

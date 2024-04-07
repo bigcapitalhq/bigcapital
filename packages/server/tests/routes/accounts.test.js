@@ -1,14 +1,6 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
 import Account from 'models/Account';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: /accounts/', () => {
   describe('POST `/accounts`', () => {
@@ -60,7 +52,8 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'NOT_EXIST_ACCOUNT_TYPE', code: 200,
+        type: 'NOT_EXIST_ACCOUNT_TYPE',
+        code: 200,
       });
     });
 
@@ -79,7 +72,8 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'NOT_UNIQUE_CODE', code: 100,
+        type: 'NOT_UNIQUE_CODE',
+        code: 100,
       });
     });
 
@@ -103,7 +97,8 @@ describe('routes: /accounts/', () => {
     it('Should store account data in the storage.', async () => {
       const account = await tenantFactory.create('account');
 
-      const res = await request().post('/api/accounts')
+      const res = await request()
+        .post('/api/accounts')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send({
@@ -113,9 +108,7 @@ describe('routes: /accounts/', () => {
           parent_account_id: account.id,
         });
 
-      const accountModel = await Account.tenant().query()
-        .where('name', 'Account Name')
-        .first();
+      const accountModel = await Account.tenant().query().where('name', 'Account Name').first();
 
       expect(accountModel).a.an('object');
       expect(accountModel.description).equals('desc here');
@@ -186,7 +179,8 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'NOT_UNIQUE_CODE', code: 100,
+        type: 'NOT_UNIQUE_CODE',
+        code: 100,
       });
     });
 
@@ -226,7 +220,7 @@ describe('routes: /accounts/', () => {
 
     it('Should retrieve accounts based on view roles conditionals of the custom view.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
-      
+
       const accountTypeField = await tenantFactory.create('resource_field', {
         label_name: 'Account type',
         key: 'type',
@@ -273,7 +267,7 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          custom_view_id: accountsView.id
+          custom_view_id: accountsView.id,
         })
         .send();
 
@@ -281,12 +275,12 @@ describe('routes: /accounts/', () => {
       expect(res.body.accounts[0].name).equals('account-1');
       expect(res.body.accounts[1].name).equals('account-2');
       expect(res.body.accounts[0].account_type_id).equals(accountType.id);
-      expect(res.body.accounts[1].account_type_id).equals(accountType.id); 
+      expect(res.body.accounts[1].account_type_id).equals(accountType.id);
     });
 
     it('Should retrieve accounts based on view roles conditionals with relation join column.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
-      
+
       const accountTypeField = await tenantFactory.create('resource_field', {
         label_name: 'Account type',
         key: 'type',
@@ -318,7 +312,7 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          custom_view_id: accountsView.id
+          custom_view_id: accountsView.id,
         })
         .send();
 
@@ -341,16 +335,14 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(200);
 
-      const foundAccount = res.body.accounts.find(a => a.id === account1.id);
+      const foundAccount = res.body.accounts.find((a) => a.id === account1.id);
 
       expect(foundAccount.id).equals(account1.id);
       expect(foundAccount.children[0].id).equals(account2.id);
       expect(foundAccount.children[0].children[0].id).equals(account3.id);
     });
 
-    it('Should retrieve bad request when `filter_roles.*.comparator` not associated to `field_key`.', () => {
-
-    });
+    it('Should retrieve bad request when `filter_roles.*.comparator` not associated to `field_key`.', () => {});
 
     it('Should retrieve bad request when `filter_roles.*.field_key` not found in accounts resource.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
@@ -364,27 +356,29 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          stringified_filter_roles: JSON.stringify([{
-            condition: 'AND',
-            field_key: 'not_found',
-            comparator: 'equals',
-            value: 'ahmed',
-          }, { 
-            condition: 'AND',
-            field_key: 'mybe_found',
-            comparator: 'equals',
-            value: 'ahmed',
-          }]),
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: 'AND',
+              field_key: 'not_found',
+              comparator: 'equals',
+              value: 'ahmed',
+            },
+            {
+              condition: 'AND',
+              field_key: 'mybe_found',
+              comparator: 'equals',
+              value: 'ahmed',
+            },
+          ]),
         });
 
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS', code: 500,
+        type: 'ACCOUNTS.RESOURCE.HAS.NO.GIVEN.FIELDS',
+        code: 500,
       });
     });
 
-    it('Should retrieve bad request when `filter_roles.*.condition` is invalid.', async () => {
-
-    });
+    it('Should retrieve bad request when `filter_roles.*.condition` is invalid.', async () => {});
 
     it('Should retrieve filtered accounts according to the given account type filter condition.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
@@ -400,7 +394,7 @@ describe('routes: /accounts/', () => {
 
       const account1 = await tenantFactory.create('account', {
         name: 'ahmed',
-        account_type_id: accountType.id
+        account_type_id: accountType.id,
       });
       const account2 = await tenantFactory.create('account');
       const account3 = await tenantFactory.create('account');
@@ -410,17 +404,20 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          stringified_filter_roles: JSON.stringify([{
-            condition: '&&',
-            field_key: 'type',
-            comparator: 'equals',
-            value: accountType.name,
-          }, {
-            condition: '&&',
-            field_key: 'name',
-            comparator: 'equals',
-            value: 'ahmed', 
-          }]),
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: '&&',
+              field_key: 'type',
+              comparator: 'equals',
+              value: accountType.name,
+            },
+            {
+              condition: '&&',
+              field_key: 'name',
+              comparator: 'equals',
+              value: 'ahmed',
+            },
+          ]),
         });
 
       expect(res.body.accounts.length).equals(1);
@@ -442,12 +439,14 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          stringified_filter_roles: JSON.stringify([{
-            condition: 'AND',
-            field_key: resourceField.key,
-            comparator: 'contain',
-            value: 'here',
-          }]),
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: 'AND',
+              field_key: resourceField.key,
+              comparator: 'contain',
+              value: 'here',
+            },
+          ]),
         });
 
       expect(res.body.accounts.length).equals(1);
@@ -475,17 +474,20 @@ describe('routes: /accounts/', () => {
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .query({
-          stringified_filter_roles: JSON.stringify([{
-            condition: '&&',
-            field_key: resourceField.key,
-            comparator: 'contain',
-            value: 'target',
-          }, {
-            condition: '||',
-            field_key: resourceCodeField.key,
-            comparator: 'equals',
-            value: 'ahmed',
-          }]),
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: '&&',
+              field_key: resourceField.key,
+              comparator: 'contain',
+              value: 'target',
+            },
+            {
+              condition: '||',
+              field_key: resourceCodeField.key,
+              comparator: 'equals',
+              value: 'ahmed',
+            },
+          ]),
         });
 
       expect(res.body.accounts.length).equals(2);
@@ -497,16 +499,22 @@ describe('routes: /accounts/', () => {
     it('Should retrieve filtered accounts from custom view and filter roles.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const accountTypeField = await tenantFactory.create('resource_field', {
-        key: 'type', resource_id: resource.id,
+        key: 'type',
+        resource_id: resource.id,
       });
       const accountDescriptionField = await tenantFactory.create('resource_field', {
-        key: 'description', resource_id: resource.id,
+        key: 'description',
+        resource_id: resource.id,
       });
 
       const accountType = await tenantFactory.create('account_type', { name: 'type-name' });
 
       const account1 = await tenantFactory.create('account', { name: 'ahmed-1' });
-      const account2 = await tenantFactory.create('account', { name: 'ahmed-2', account_type_id: accountType.id, description: 'target' });
+      const account2 = await tenantFactory.create('account', {
+        name: 'ahmed-2',
+        account_type_id: accountType.id,
+        description: 'target',
+      });
       const account3 = await tenantFactory.create('account', { name: 'ahmed-3' });
 
       const accountsView = await tenantFactory.create('view', {
@@ -528,12 +536,14 @@ describe('routes: /accounts/', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .query({
           custom_view_id: accountsView.id,
-          stringified_filter_roles: JSON.stringify([{
-            condition: 'AND',
-            field_key: 'description',
-            comparator: 'contain',
-            value: 'target',
-          }]),
+          stringified_filter_roles: JSON.stringify([
+            {
+              condition: 'AND',
+              field_key: 'description',
+              comparator: 'contain',
+              value: 'target',
+            },
+          ]),
         });
 
       expect(res.body.accounts.length).equals(1);
@@ -547,20 +557,22 @@ describe('routes: /accounts/', () => {
         .get('/api/accounts')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .query({ 
+        .query({
           column_sort_by: 'not_found',
           sort_order: 'desc',
         });
-      
+
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'COLUMN.SORT.ORDER.NOT.FOUND', code: 300,
+        type: 'COLUMN.SORT.ORDER.NOT.FOUND',
+        code: 300,
       });
     });
 
     it('Should sorting the given `column_sort_order` column on asc direction,', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const resourceField = await tenantFactory.create('resource_field', {
-        key: 'name', resource_id: resource.id,
+        key: 'name',
+        resource_id: resource.id,
       });
       const accounts1 = await tenantFactory.create('account', { name: 'A' });
       const accounts2 = await tenantFactory.create('account', { name: 'B' });
@@ -574,16 +586,17 @@ describe('routes: /accounts/', () => {
           sort_order: 'asc',
         });
 
-      const AAccountIndex = res.body.accounts.findIndex(a => a.name === 'B');
-      const BAccountIndex = res.body.accounts.findIndex(a => a.name === 'A');
-      
+      const AAccountIndex = res.body.accounts.findIndex((a) => a.name === 'B');
+      const BAccountIndex = res.body.accounts.findIndex((a) => a.name === 'A');
+
       expect(AAccountIndex).above(BAccountIndex);
     });
 
     it('Should sorting the given `column_sort_order` columnw with relation on another table on asc direction.', async () => {
       const resource = await tenantFactory.create('resource', { name: 'accounts' });
       const resourceField = await tenantFactory.create('resource_field', {
-        key: 'type', resource_id: resource.id,
+        key: 'type',
+        resource_id: resource.id,
       });
       const accounts1 = await tenantFactory.create('account', { name: 'A' });
       const accounts2 = await tenantFactory.create('account', { name: 'B' });
@@ -636,7 +649,8 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS', code: 100,
+        type: 'ACCOUNT.HAS.ASSOCIATED.TRANSACTIONS',
+        code: 100,
       });
     });
   });
@@ -654,7 +668,9 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ACCOUNTS.IDS.NOT.FOUND', code: 200, ids: [100, 200],
+        type: 'ACCOUNTS.IDS.NOT.FOUND',
+        code: 200,
+        ids: [100, 200],
       });
     });
 
@@ -693,8 +709,7 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(200);
 
-      const foundAccounts = await Account.tenant().query()
-        .whereIn('id', [account1.id, account2.id]);
+      const foundAccounts = await Account.tenant().query().whereIn('id', [account1.id, account2.id]);
 
       expect(foundAccounts.length).equals(0);
     });
@@ -713,14 +728,15 @@ describe('routes: /accounts/', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'ACCOUNTS.NOT.FOUND', code: 200,
+        type: 'ACCOUNTS.NOT.FOUND',
+        code: 200,
       });
     });
 
     it('Should activate all the given accounts.', async () => {
       const accountA = await tenantFactory.create('account', { active: 1 });
       const accountB = await tenantFactory.create('account', { active: 1 });
-      
+
       const res = await request()
         .post('/api/accounts/bulk/inactivate')
         .set('x-access-token', loginRes.body.token)
@@ -739,7 +755,7 @@ describe('routes: /accounts/', () => {
     it('Should inactivate all the given accounts.', async () => {
       const accountA = await tenantFactory.create('account', { active: 0 });
       const accountB = await tenantFactory.create('account', { active: 0 });
-      
+
       const res = await request()
         .post('/api/accounts/bulk/activate')
         .set('x-access-token', loginRes.body.token)

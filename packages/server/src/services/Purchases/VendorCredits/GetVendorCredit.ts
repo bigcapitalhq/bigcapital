@@ -1,8 +1,8 @@
 import { ServiceError } from '@/exceptions';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { VendorCreditTransformer } from './VendorCreditTransformer';
 import { Inject, Service } from 'typedi';
+import { VendorCreditTransformer } from './VendorCreditTransformer';
 import { ERRORS } from './constants';
 
 @Service()
@@ -31,10 +31,6 @@ export default class GetVendorCredit {
     if (!vendorCredit) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_NOT_FOUND);
     }
-    return this.transformer.transform(
-      tenantId,
-      vendorCredit,
-      new VendorCreditTransformer()
-    );
+    return this.transformer.transform(tenantId, vendorCredit, new VendorCreditTransformer());
   };
 }

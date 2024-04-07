@@ -1,9 +1,5 @@
+import { ICashFlowStatementTotal, IFormatNumberSettings, INumberFormatQuery } from '@/interfaces';
 import moment from 'moment';
-import {
-  ICashFlowStatementTotal,
-  IFormatNumberSettings,
-  INumberFormatQuery,
-} from '@/interfaces';
 import { formatNumber } from 'utils';
 
 export default class FinancialSheet {
@@ -38,10 +34,7 @@ export default class FinancialSheet {
    * @param  {IFormatNumberSettings} overrideSettings -
    * @return {string}
    */
-  protected formatNumber(
-    number,
-    overrideSettings: IFormatNumberSettings = {}
-  ): string {
+  protected formatNumber(number, overrideSettings: IFormatNumberSettings = {}): string {
     const settings = {
       ...this.transfromFormatQueryToSettings(),
       ...overrideSettings,
@@ -54,10 +47,7 @@ export default class FinancialSheet {
    * @param {number} amount -
    * @param {IFormatNumberSettings} settings -
    */
-  protected formatTotalNumber = (
-    amount: number,
-    settings: IFormatNumberSettings = {}
-  ): string => {
+  protected formatTotalNumber = (amount: number, settings: IFormatNumberSettings = {}): string => {
     const { numberFormat } = this;
 
     return this.formatNumber(amount, {
@@ -72,10 +62,7 @@ export default class FinancialSheet {
    * @param   {number} amount
    * @returns {string}
    */
-  protected formatPercentage = (
-    amount: number,
-    overrideSettings: IFormatNumberSettings = {}
-  ): string => {
+  protected formatPercentage = (amount: number, overrideSettings: IFormatNumberSettings = {}): string => {
     const percentage = amount * 100;
     const settings = {
       excerptZero: true,
@@ -91,10 +78,7 @@ export default class FinancialSheet {
    * @param {number} amount -
    * @param {IFormatNumberSettings} settings -
    */
-  protected formatTotalPercentage = (
-    amount: number,
-    settings: IFormatNumberSettings = {}
-  ): string => {
+  protected formatTotalPercentage = (amount: number, settings: IFormatNumberSettings = {}): string => {
     return this.formatPercentage(amount, {
       ...settings,
       excerptZero: false,
@@ -106,10 +90,7 @@ export default class FinancialSheet {
    * @param {number} amount
    * @returns {ICashFlowStatementTotal}
    */
-  protected getAmountMeta(
-    amount: number,
-    overrideSettings?: IFormatNumberSettings
-  ): ICashFlowStatementTotal {
+  protected getAmountMeta(amount: number, overrideSettings?: IFormatNumberSettings): ICashFlowStatementTotal {
     return {
       amount,
       formattedAmount: this.formatNumber(amount, overrideSettings),
@@ -122,10 +103,7 @@ export default class FinancialSheet {
    * @param {number} amount
    * @returns {ICashFlowStatementTotal}
    */
-  protected getTotalAmountMeta(
-    amount: number,
-    title?: string
-  ): ICashFlowStatementTotal {
+  protected getTotalAmountMeta(amount: number, title?: string): ICashFlowStatementTotal {
     return {
       ...(title ? { title } : {}),
       amount,

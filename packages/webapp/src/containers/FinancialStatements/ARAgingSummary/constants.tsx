@@ -10,8 +10,6 @@ export const filterCustomersOptions = [
   {
     key: 'without-zero-balance',
     name: intl.get('AR_aging_summary.filter_customers.without_zero_balance'),
-    hint: intl.get(
-      'AR_aging_summary.filter_customers.without_zero_balance.hint',
-    ),
+    hint: intl.get('AR_aging_summary.filter_customers.without_zero_balance.hint'),
   },
 ];

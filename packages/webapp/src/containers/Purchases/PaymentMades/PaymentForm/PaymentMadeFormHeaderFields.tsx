@@ -2,14 +2,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
-import {
-  FormGroup,
-  InputGroup,
-  Position,
-  Classes,
-  ControlGroup,
-  Button,
-} from '@blueprintjs/core';
+import { FormGroup, InputGroup, Position, Classes, ControlGroup, Button } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T, VendorsSelect } from '@/components';
@@ -57,10 +50,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
   const { accounts } = usePaymentMadeFormContext();
 
   // Sumation of payable full-amount.
-  const payableFullAmount = useMemo(
-    () => safeSumBy(entries, 'due_amount'),
-    [entries],
-  );
+  const payableFullAmount = useMemo(() => safeSumBy(entries, 'due_amount'), [entries]);
 
   // Handle receive full-amount click.
   const handleReceiveFullAmountClick = () => {
@@ -83,10 +73,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       <PaymentFormVendorSelect />
 
       {/* ----------- Exchange rate ----------- */}
-      <PaymentMadeExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <PaymentMadeExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
 
       {/* ------------ Payment date ------------ */}
       <FastField name={'payment_date'}>
@@ -165,11 +152,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="payment_number" />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -189,11 +172,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
           items={accounts}
           placeholder={<T id={'select_payment_account'} />}
           labelInfo={<FieldRequiredHint />}
-          filterByTypes={[
-            ACCOUNT_TYPE.CASH,
-            ACCOUNT_TYPE.BANK,
-            ACCOUNT_TYPE.OTHER_CURRENT_ASSET,
-          ]}
+          filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.OTHER_CURRENT_ASSET]}
           shouldUpdate={accountsFieldShouldUpdate}
           fastField={true}
           fill={true}
@@ -210,11 +189,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="reference" />}
           >
-            <InputGroup
-              intent={inputIntent({ error, touched })}
-              minimal={true}
-              {...field}
-            />
+            <InputGroup intent={inputIntent({ error, touched })} minimal={true} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -231,8 +206,7 @@ function PaymentFormVendorSelect() {
   const { values, setFieldValue } = useFormikContext();
 
   // Payment made form context.
-  const { vendors, isNewMode, setPaymentVendorId } =
-    usePaymentMadeFormContext();
+  const { vendors, isNewMode, setPaymentVendorId } = usePaymentMadeFormContext();
 
   return (
     <FFormGroup

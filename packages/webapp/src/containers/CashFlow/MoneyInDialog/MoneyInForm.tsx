@@ -48,18 +48,10 @@ function MoneyInForm({
   transactionNumberPrefix,
   transactionIncrementMode,
 }) {
-  const {
-    dialogName,
-    accountId,
-    accountType,
-    createCashflowTransactionMutate,
-  } = useMoneyInDailogContext();
+  const { dialogName, accountId, accountType, createCashflowTransactionMutate } = useMoneyInDailogContext();
 
   // transaction number.
-  const transactionNo = transactionNumber(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
+  const transactionNo = transactionNumber(transactionNumberPrefix, transactionNextNumber);
   // Initial form values.
   const initialValues = {
     ...defaultInitialValues,
@@ -93,11 +85,7 @@ function MoneyInForm({
   };
 
   return (
-    <Formik
-      validationSchema={CreateMoneyInFormSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={CreateMoneyInFormSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       <MoneyInFormContent />
     </Formik>
   );

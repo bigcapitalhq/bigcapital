@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useCreateWarehouse,
-  useEditWarehouse,
-  useWarehouse,
-} from '@/hooks/query';
+import { useCreateWarehouse, useEditWarehouse, useWarehouse } from '@/hooks/query';
 
 const WarehouseFormContext = React.createContext();
 
@@ -18,12 +14,9 @@ function WarehouseFormProvider({ dialogName, warehouseId, ...props }) {
   const { mutateAsync: editWarehouseMutate } = useEditWarehouse();
 
   // Handle fetch invoice detail.
-  const { data: warehouse, isLoading: isWarehouseLoading } = useWarehouse(
-    warehouseId,
-    {
-      enabled: !!warehouseId,
-    },
-  );
+  const { data: warehouse, isLoading: isWarehouseLoading } = useWarehouse(warehouseId, {
+    enabled: !!warehouseId,
+  });
 
   // State provider.
   const provider = {

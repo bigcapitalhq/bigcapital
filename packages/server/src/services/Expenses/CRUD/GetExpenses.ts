@@ -1,15 +1,10 @@
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import {
-  IExpensesFilter,
-  IExpense,
-  IPaginationMeta,
-  IFilterMeta,
-} from '@/interfaces';
+import { IExpense, IExpensesFilter, IFilterMeta, IPaginationMeta } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { ExpenseTransfromer } from './ExpenseTransformer';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export class GetExpenses {
@@ -30,7 +25,7 @@ export class GetExpenses {
    */
   public getExpensesList = async (
     tenantId: number,
-    filterDTO: IExpensesFilter
+    filterDTO: IExpensesFilter,
   ): Promise<{
     expenses: IExpense[];
     pagination: IPaginationMeta;
@@ -42,11 +37,7 @@ export class GetExpenses {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      Expense,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, Expense, filter);
     // Retrieves the paginated results.
     const { results, pagination } = await Expense.query()
       .onBuild((builder) => {
@@ -58,11 +49,7 @@ export class GetExpenses {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the expenses models to POJO.
-    const expenses = await this.transformer.transform(
-      tenantId,
-      results,
-      new ExpenseTransfromer()
-    );
+    const expenses = await this.transformer.transform(tenantId, results, new ExpenseTransfromer());
     return {
       expenses,
       pagination,

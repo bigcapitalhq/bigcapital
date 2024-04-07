@@ -52,12 +52,7 @@ interface BankServiceCardProps {
   icon: React.ReactNode;
 }
 
-export function BankServiceCard({
-  title,
-  children,
-  icon,
-  disabled,
-}: BankServiceCardProps) {
+export function BankServiceCard({ title, children, icon, disabled }: BankServiceCardProps) {
   return (
     <BankServiceCardRoot disabled={disabled}>
       <Group>

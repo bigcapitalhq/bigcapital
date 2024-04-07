@@ -15,10 +15,7 @@ import '@/style/pages/Setup/Initializing.scss';
 /**
  * Setup initializing step form.
  */
-function SetupInitializingForm({
-  setOrganizationSetupCompleted,
-  organization,
-}) {
+function SetupInitializingForm({ setOrganizationSetupCompleted, organization }) {
   const { refetch, isSuccess } = useCurrentOrganization({ enabled: false });
 
   // Job done state.
@@ -118,9 +115,7 @@ function SetupInitializingCompleted() {
           <T id={'setup.initializing.waiting_to_redirect'} />
         </h1>
         <p class="paragraph">
-          <T
-            id={'setup.initializing.refresh_the_page_if_redirect_not_worked'}
-          />
+          <T id={'setup.initializing.refresh_the_page_if_redirect_not_worked'} />
         </p>
       </div>
     </div>

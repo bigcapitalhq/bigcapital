@@ -1,6 +1,6 @@
-import { tenantWebsite, tenantFactory, loginRes } from '~/dbInit';
-import { request, expect } from '~/testInit';
 import { SaleReceipt } from 'models';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: `/sales/receipts`', () => {
   describe('POST: `/sales/receipts`', () => {
@@ -154,10 +154,7 @@ describe('route: `/sales/receipts`', () => {
           ],
         });
 
-      const storedSaleReceipt = await SaleReceipt.tenant()
-        .query()
-        .where('id', res.body.id)
-        .first();
+      const storedSaleReceipt = await SaleReceipt.tenant().query().where('id', res.body.id).first();
 
       expect(res.status).equals(200);
       expect(storedSaleReceipt.depositAccountId).equals(account.id);
@@ -186,24 +183,17 @@ describe('route: `/sales/receipts`', () => {
 
     it('Should delete the sale receipt with associated entries and journal transactions.', async () => {
       const saleReceipt = await tenantFactory.create('sale_receipt');
-      const saleReceiptEntry = await tenantFactory.create(
-        'sale_receipt_entry',
-        {
-          sale_receipt_id: saleReceipt.id,
-        }
-      );
+      const saleReceiptEntry = await tenantFactory.create('sale_receipt_entry', {
+        sale_receipt_id: saleReceipt.id,
+      });
       const res = await request()
         .delete(`/api/sales/receipts/${saleReceipt.id}`)
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      const storedSaleReceipt = await SaleReceipt.tenant()
-        .query()
-        .where('id', saleReceipt.id);
-      const storedSaleReceiptEntries = await SaleReceipt.tenant()
-        .query()
-        .where('id', saleReceiptEntry.id);
+      const storedSaleReceipt = await SaleReceipt.tenant().query().where('id', saleReceipt.id);
+      const storedSaleReceiptEntries = await SaleReceipt.tenant().query().where('id', saleReceiptEntry.id);
 
       expect(res.status).equals(200);
       expect(storedSaleReceipt.length).equals(0);
@@ -269,7 +259,8 @@ describe('route: `/sales/receipts`', () => {
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ENTRIES.IDS.NOT.FOUND', code: 500,
+        type: 'ENTRIES.IDS.NOT.FOUND',
+        code: 500,
       });
     });
   });
@@ -280,15 +271,11 @@ describe('route: `/sales/receipts`', () => {
         .get('/api/sales/receipts')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .send({
-          
-        });
+        .send({});
 
       console.log(res.status, res.body);
     });
-    
-    it('Should retrieve all sales receipts on the storage with pagination meta.', () => {
 
-    });
+    it('Should retrieve all sales receipts on the storage with pagination meta.', () => {});
   });
 });

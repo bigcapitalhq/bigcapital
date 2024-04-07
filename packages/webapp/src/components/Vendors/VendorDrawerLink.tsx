@@ -28,6 +28,4 @@ function VendorDrawerLinkComponent({
   );
 }
 
-export const VendorDrawerLink = R.compose(withDrawerActions)(
-  VendorDrawerLinkComponent,
-);
+export const VendorDrawerLink = R.compose(withDrawerActions)(VendorDrawerLinkComponent);

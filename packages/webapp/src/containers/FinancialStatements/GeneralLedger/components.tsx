@@ -1,31 +1,14 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
 import classNames from 'classnames';
-import {
-  Button,
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
-import {
-  FormattedMessage as T,
-  Icon,
-  If,
-  Stack,
-  AppToaster,
-} from '@/components';
+import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import { FormattedMessage as T, Icon, If, Stack, AppToaster } from '@/components';
 
 import { useGeneralLedgerContext } from './GeneralLedgerProvider';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 
 import { FinancialComputeAlert } from '../FinancialReportPage';
-import {
-  useGeneralLedgerSheetCsvExport,
-  useGeneralLedgerSheetXlsxExport,
-} from '@/hooks/query';
+import { useGeneralLedgerSheetCsvExport, useGeneralLedgerSheetXlsxExport } from '@/hooks/query';
 
 /**
  * General ledger sheet alerts.
@@ -96,27 +79,24 @@ export const GeneralLedgerSheetExportMenu = () => {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useGeneralLedgerSheetXlsxExport(
-    httpQuery,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useGeneralLedgerSheetXlsxExport(httpQuery, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Export the report to csv.
   const { mutateAsync: csvExport } = useGeneralLedgerSheetCsvExport(httpQuery, {
     onDownloadProgress: (xlsxExportProgress: number) => {
@@ -147,10 +127,7 @@ export const GeneralLedgerSheetExportMenu = () => {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

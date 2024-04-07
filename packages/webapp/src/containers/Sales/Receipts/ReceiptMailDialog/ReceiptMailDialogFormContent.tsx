@@ -11,9 +11,7 @@ interface SendMailNotificationFormProps {
   onClose?: () => void;
 }
 
-export function ReceiptMailDialogFormContent({
-  onClose,
-}: SendMailNotificationFormProps) {
+export function ReceiptMailDialogFormContent({ onClose }: SendMailNotificationFormProps) {
   const { mailOptions } = useReceiptMailDialogBoot();
   const { isSubmitting } = useFormikContext();
 
@@ -24,10 +22,7 @@ export function ReceiptMailDialogFormContent({
   return (
     <Form>
       <div className={Classes.DIALOG_BODY}>
-        <MailNotificationForm
-          fromAddresses={mailOptions.from_addresses}
-          toAddresses={mailOptions.to_addresses}
-        />
+        <MailNotificationForm fromAddresses={mailOptions.from_addresses} toAddresses={mailOptions.to_addresses} />
         <AttachFormGroup name={'attachReceipt:'} inline>
           <FSwitch name={'attachReceipt:'} label={'Attach Receipt'} />
         </AttachFormGroup>
@@ -35,20 +30,11 @@ export function ReceiptMailDialogFormContent({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '65px' }}
-          >
+          <Button disabled={isSubmitting} onClick={handleClose} style={{ minWidth: '65px' }}>
             Close
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            loading={isSubmitting}
-            style={{ minWidth: '75px' }}
-            type="submit"
-          >
+          <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
             Send
           </Button>
         </div>

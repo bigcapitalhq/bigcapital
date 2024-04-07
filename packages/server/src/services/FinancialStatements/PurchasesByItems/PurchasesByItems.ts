@@ -1,7 +1,3 @@
-import { get, isEmpty, sumBy } from 'lodash';
-import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
-import { allPassedConditionsPass, transformToMap } from 'utils';
 import { IAccountTransaction, IItem } from '@/interfaces';
 import {
   IPurchasesByItemsItem,
@@ -9,6 +5,10 @@ import {
   IPurchasesByItemsSheetData,
   IPurchasesByItemsTotal,
 } from '@/interfaces/PurchasesByItemsSheet';
+import { get, isEmpty, sumBy } from 'lodash';
+import * as R from 'ramda';
+import { allPassedConditionsPass, transformToMap } from 'utils';
+import FinancialSheet from '../FinancialSheet';
 
 export class PurchasesByItems extends FinancialSheet {
   readonly baseCurrency: string;
@@ -27,7 +27,7 @@ export class PurchasesByItems extends FinancialSheet {
     query: IPurchasesByItemsReportQuery,
     items: IItem[],
     itemsTransactions: IAccountTransaction[],
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
     this.baseCurrency = baseCurrency;
@@ -146,10 +146,7 @@ export class PurchasesByItems extends FinancialSheet {
    * @returns {IPurchasesByItemsItem[]}
    */
   private itemsSection = (): IPurchasesByItemsItem[] => {
-    return R.compose(
-      R.when(this.isItemsPostFilter, this.itemsFilter),
-      this.itemsMapper
-    )(this.items);
+    return R.compose(R.when(this.isItemsPostFilter, this.itemsFilter), this.itemsMapper)(this.items);
   };
 
   /**

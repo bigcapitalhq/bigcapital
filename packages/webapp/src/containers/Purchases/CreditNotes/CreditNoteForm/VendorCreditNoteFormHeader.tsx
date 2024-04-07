@@ -9,18 +9,16 @@ import VendorCreditNoteFormHeaderFields from './VendorCreditNoteFormHeaderFields
 import { getEntriesTotal } from '@/containers/Entries/utils';
 import { PageFormBigNumber } from '@/components';
 
-
 /**
  * Vendor Credit note header.
  */
 function VendorCreditNoteFormHeader() {
-  const { values:{entries ,currency_code} } = useFormikContext();
+  const {
+    values: { entries, currency_code },
+  } = useFormikContext();
 
   // Calculate the total amount.
-  const totalAmount = React.useMemo(
-    () => getEntriesTotal(entries),
-    [entries],
-  );
+  const totalAmount = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>

@@ -1,9 +1,6 @@
-import { Service, Inject } from 'typedi';
-import {
-  IAllocatedLandedCostCreatedPayload,
-  IAllocatedLandedCostDeletedPayload,
-} from '@/interfaces';
+import { IAllocatedLandedCostCreatedPayload, IAllocatedLandedCostDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import LandedCostSyncCostTransactions from './LandedCostSyncCostTransactions';
 
 @Service()
@@ -15,14 +12,8 @@ export default class LandedCostSyncCostTransactionsSubscriber {
    * Attaches events with handlers.
    */
   attach(bus) {
-    bus.subscribe(
-      events.billLandedCost.onCreated,
-      this.incrementCostTransactionsOnceCreated
-    );
-    bus.subscribe(
-      events.billLandedCost.onDeleted,
-      this.decrementCostTransactionsOnceDeleted
-    );
+    bus.subscribe(events.billLandedCost.onCreated, this.incrementCostTransactionsOnceCreated);
+    bus.subscribe(events.billLandedCost.onDeleted, this.decrementCostTransactionsOnceDeleted);
   }
 
   /**
@@ -41,7 +32,7 @@ export default class LandedCostSyncCostTransactionsSubscriber {
       billLandedCost.fromTransactionId,
       billLandedCost.fromTransactionEntryId,
       billLandedCost.amount,
-      trx
+      trx,
     );
   };
 
@@ -61,7 +52,7 @@ export default class LandedCostSyncCostTransactionsSubscriber {
       oldBillLandedCost.fromTransactionId,
       oldBillLandedCost.fromTransactionEntryId,
       oldBillLandedCost.amount,
-      trx
+      trx,
     );
   };
 }

@@ -13,22 +13,14 @@ export function ReceiptFormFooterLeft() {
         label={<T id={'receipt_form.label.receipt_message'} />}
         hintText={'Will be displayed on the Receipt'}
       >
-        <FEditableText
-          name={'receipt_message'}
-          placeholder={intl.get('receipt_form.receipt_message.placeholder')}
-        />
+        <FEditableText name={'receipt_message'} placeholder={intl.get('receipt_form.receipt_message.placeholder')} />
       </ReceiptMsgFormGroup>
 
       {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'receipt_form.label.terms_conditions'} />}
-        name={'terms_conditions'}
-      >
+      <TermsConditsFormGroup label={<T id={'receipt_form.label.terms_conditions'} />} name={'terms_conditions'}>
         <FEditableText
           name={'terms_conditions'}
-          placeholder={intl.get(
-            'receipt_form.terms_and_conditions.placeholder',
-          )}
+          placeholder={intl.get('receipt_form.terms_and_conditions.placeholder')}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

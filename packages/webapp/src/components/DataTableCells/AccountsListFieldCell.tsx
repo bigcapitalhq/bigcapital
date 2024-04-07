@@ -12,23 +12,10 @@ import { AccountsSuggestField } from '@/components';
  * Account cell renderer.
  */
 export default function AccountCellRenderer({
-  column: {
-    id,
-    accountsDataProp,
-    filterAccountsByRootTypes,
-    filterAccountsByTypes,
-    fieldProps,
-    formGroupProps,
-  },
+  column: { id, accountsDataProp, filterAccountsByRootTypes, filterAccountsByTypes, fieldProps, formGroupProps },
   row: { index, original },
   cell: { value: initialValue },
-  payload: {
-    accounts: defaultAccounts,
-    updateData,
-    errors,
-    autoFocus,
-    ...restPayloadProps
-  },
+  payload: { accounts: defaultAccounts, updateData, errors, autoFocus, ...restPayloadProps },
 }) {
   const accountRef = useRef();
 
@@ -50,11 +37,7 @@ export default function AccountCellRenderer({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(
-        'form-group--select-list',
-        'form-group--account',
-        Classes.FILL,
-      )}
+      className={classNames('form-group--select-list', 'form-group--account', Classes.FILL)}
       {...formGroupProps}
     >
       <AccountsSuggestField

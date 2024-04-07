@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { GetItemWarehouseTransformer } from './GettItemWarehouseTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { GetItemWarehouseTransformer } from './GettItemWarehouseTransformer';
 
 @Service()
 export class GetItemWarehouses {
@@ -23,15 +23,9 @@ export class GetItemWarehouses {
     // Retrieves specific item or throw not found service error.
     const item = await Item.query().findById(itemId).throwIfNotFound();
 
-    const itemWarehouses = await ItemWarehouseQuantity.query()
-      .where('itemId', itemId)
-      .withGraphFetched('warehouse');
+    const itemWarehouses = await ItemWarehouseQuantity.query().where('itemId', itemId).withGraphFetched('warehouse');
 
     // Retrieves the transformed items warehouses.
-    return this.transformer.transform(
-      tenantId,
-      itemWarehouses,
-      new GetItemWarehouseTransformer()
-    );
+    return this.transformer.transform(tenantId, itemWarehouses, new GetItemWarehouseTransformer());
   };
 }

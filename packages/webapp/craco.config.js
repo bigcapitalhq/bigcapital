@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 
 module.exports = {
   webpack: {
@@ -12,6 +12,6 @@ module.exports = {
     },
   },
   devServer: {
-    allowedHosts: process.env.GITPOD_HOST ? 'all' : 'auto'
+    allowedHosts: process.env.GITPOD_HOST ? 'all' : 'auto',
   },
 };

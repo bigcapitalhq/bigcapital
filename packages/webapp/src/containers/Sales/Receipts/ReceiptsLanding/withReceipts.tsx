@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getReceiptsTableStateFactory,
-  receiptsTableStateChangedFactory,
-} from '@/store/receipts/receipts.selector';
+import { getReceiptsTableStateFactory, receiptsTableStateChangedFactory } from '@/store/receipts/receipts.selector';
 
 export default (mapState) => {
   const getReceiptsTableState = getReceiptsTableStateFactory();

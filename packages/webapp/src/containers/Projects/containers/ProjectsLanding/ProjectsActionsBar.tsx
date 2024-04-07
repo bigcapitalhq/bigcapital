@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Alignment } from '@blueprintjs/core';
 import {
   Icon,
   Can,
@@ -90,21 +84,14 @@ function ProjectsActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
         />
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon={'file-import-16'} />}
-          text={<T id={'import'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon={'file-import-16'} />} text={<T id={'import'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={projectsTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={projectsTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

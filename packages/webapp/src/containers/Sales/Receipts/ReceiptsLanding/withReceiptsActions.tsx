@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  setReceiptsTableState,
-  resetReceiptsTableState,
-} from '@/store/receipts/receipts.actions';
+import { setReceiptsTableState, resetReceiptsTableState } from '@/store/receipts/receipts.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setReceiptsTableState: (queries) => dispatch(setReceiptsTableState(queries)),

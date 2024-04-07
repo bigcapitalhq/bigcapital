@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import { IAccount, IRefundCreditNote } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import BaseCreditNotes from './CreditNotes';
 import { ERRORS } from './constants';
 
@@ -18,13 +18,11 @@ export default class RefundCreditNote extends BaseCreditNotes {
    */
   public getCreditNoteRefundOrThrowError = async (
     tenantId: number,
-    refundCreditId: number
+    refundCreditId: number,
   ): Promise<IRefundCreditNote> => {
     const { RefundCreditNote } = this.tenancy.models(tenantId);
 
-    const refundCreditNote = await RefundCreditNote.query().findById(
-      refundCreditId
-    );
+    const refundCreditNote = await RefundCreditNote.query().findById(refundCreditId);
     if (!refundCreditNote) {
       throw new ServiceError(ERRORS.REFUND_CREDIT_NOTE_NOT_FOUND);
     }

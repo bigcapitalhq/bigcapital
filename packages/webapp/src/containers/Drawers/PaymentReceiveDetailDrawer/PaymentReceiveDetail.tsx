@@ -17,16 +17,8 @@ import { PaymentReceiveGLEntriesPanel } from './PaymentReceiveGLEntriesPanel';
 function PaymentReceiveDetailsTabs() {
   return (
     <DrawerMainTabs defaultSelectedTabId="details">
-      <Tab
-        id={'details'}
-        title={intl.get('details')}
-        panel={<PaymentReceiveDetailTab />}
-      />
-      <Tab
-        id={'journal_entries'}
-        title={intl.get('journal_entries')}
-        panel={<PaymentReceiveGLEntriesPanel />}
-      />
+      <Tab id={'details'} title={intl.get('details')} panel={<PaymentReceiveDetailTab />} />
+      <Tab id={'journal_entries'} title={intl.get('journal_entries')} panel={<PaymentReceiveGLEntriesPanel />} />
     </DrawerMainTabs>
   );
 }

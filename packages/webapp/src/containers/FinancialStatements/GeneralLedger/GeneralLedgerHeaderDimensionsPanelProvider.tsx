@@ -32,17 +32,10 @@ function GeneralLedgerHeaderDimensionsPanelProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <GeneralLedgerHeaderDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <GeneralLedgerHeaderDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useGeneralLedgerHeaderDimensionsContext = () =>
-  React.useContext(GeneralLedgerHeaderDimensionsPanelContext);
+const useGeneralLedgerHeaderDimensionsContext = () => React.useContext(GeneralLedgerHeaderDimensionsPanelContext);
 
-export {
-  GeneralLedgerHeaderDimensionsPanelProvider,
-  useGeneralLedgerHeaderDimensionsContext,
-};
+export { GeneralLedgerHeaderDimensionsPanelProvider, useGeneralLedgerHeaderDimensionsContext };

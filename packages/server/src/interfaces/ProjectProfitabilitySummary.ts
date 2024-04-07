@@ -47,8 +47,7 @@ export interface IProjectProfitabilitySummaryPOJO {
   meta: IProjectProfitabilitySummaryMeta;
 }
 
-
 export enum IProjectProfitabilitySummaryRowType {
   TOTAL = 'TOTAL',
-  PROJECT = 'PROJECT'
+  PROJECT = 'PROJECT',
 }

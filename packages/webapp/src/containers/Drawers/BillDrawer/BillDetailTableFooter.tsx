@@ -1,12 +1,6 @@
 // @ts-nocheck
 import styled from 'styled-components';
-import {
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-  T,
-  TotalLines,
-  TotalLine,
-} from '@/components';
+import { TotalLineBorderStyle, TotalLineTextStyle, T, TotalLines, TotalLine } from '@/components';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
 /**
@@ -37,10 +31,7 @@ export function BillDetailTableFooter() {
           borderStyle={TotalLineBorderStyle.DoubleDark}
           textStyle={TotalLineTextStyle.Bold}
         />
-        <TotalLine
-          title={<T id={'bill.details.payment_amount'} />}
-          value={bill.formatted_payment_amount}
-        />
+        <TotalLine title={<T id={'bill.details.payment_amount'} />} value={bill.formatted_payment_amount} />
         <TotalLine
           title={<T id={'bill.details.due_amount'} />}
           value={bill.formatted_due_amount}

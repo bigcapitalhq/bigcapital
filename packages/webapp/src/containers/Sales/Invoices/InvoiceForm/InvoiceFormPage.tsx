@@ -13,7 +13,7 @@ import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvi
  */
 export default function InvoiceFormPage() {
   const { id } = useParams();
-  const idAsInteger = parseInt(id, 10);
+  const idAsInteger = Number.parseInt(id, 10);
 
   return (
     <InvoiceFormProvider invoiceId={idAsInteger}>

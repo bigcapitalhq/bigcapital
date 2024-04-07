@@ -1,12 +1,10 @@
+import { IFinancialDatePeriodsUnit, IProfitLossSheetQuery } from '@/interfaces';
 import { merge } from 'lodash';
 import * as R from 'ramda';
-import { IProfitLossSheetQuery, IFinancialDatePeriodsUnit } from '@/interfaces';
-import { DISPLAY_COLUMNS_BY } from './constants';
 import { FinancialDateRanges } from '../FinancialDateRanges';
+import { DISPLAY_COLUMNS_BY } from './constants';
 
-export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
-  class {}
-) {
+export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(class {}) {
   /**
    * P&L query.
    * @param {IProfitLossSheetQuery}
@@ -48,10 +46,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
 
     // Previous Period (PP) Dates for total column..
     if (this.isTotalColumnType()) {
-      const { fromDate, toDate } = this.getPPTotalDateRange(
-        this.query.fromDate,
-        this.query.toDate
-      );
+      const { fromDate, toDate } = this.getPPTotalDateRange(this.query.fromDate, this.query.toDate);
       this.PPToDate = toDate;
       this.PPFromDate = fromDate;
 
@@ -60,7 +55,7 @@ export class ProfitLossSheetQuery extends R.compose(FinancialDateRanges)(
       const { fromDate, toDate } = this.getPPDatePeriodDateRange(
         this.query.fromDate,
         this.query.toDate,
-        this.query.displayColumnsBy as IFinancialDatePeriodsUnit
+        this.query.displayColumnsBy as IFinancialDatePeriodsUnit,
       );
       this.PPToDate = toDate;
       this.PPFromDate = fromDate;

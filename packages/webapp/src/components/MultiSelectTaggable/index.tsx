@@ -9,19 +9,11 @@ import { safeInvoke } from '@/utils';
 /**
  * Items multi-select.
  */
-export function MultiSelect({
-  items,
-  initialSelectedItems,
-  onItemSelect,
-  ...multiSelectProps
-}) {
+export function MultiSelect({ items, initialSelectedItems, onItemSelect, ...multiSelectProps }) {
   const [localSelected, setLocalSelected] = useState(initialSelectedItems);
 
   // Detarmines whether the given id is selected.
-  const isItemSelected = useCallback(
-    (item) => includes(localSelected, item),
-    [localSelected],
-  );
+  const isItemSelected = useCallback((item) => includes(localSelected, item), [localSelected]);
 
   // Removes the given item from selected items.
   const removeSelectedItem = React.useCallback(
@@ -30,17 +22,12 @@ export function MultiSelect({
   );
 
   // Adds the given item to selected items.
-  const addSelectedItem = React.useCallback(
-    (item) => [...localSelected, item],
-    [localSelected],
-  );
+  const addSelectedItem = React.useCallback((item) => [...localSelected, item], [localSelected]);
 
   // Handle item selected.
   const handleItemSelect = useCallback(
     (item) => {
-      const selected = isItemSelected(item)
-        ? removeSelectedItem(item)
-        : addSelectedItem(item);
+      const selected = isItemSelected(item) ? removeSelectedItem(item) : addSelectedItem(item);
 
       setLocalSelected(selected);
       safeInvoke(onItemSelect, selected);

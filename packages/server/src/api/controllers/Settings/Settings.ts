@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response } from 'express';
-import { body, query } from 'express-validator';
-import { pick } from 'lodash';
-import { IOptionDTO, IOptionsDTO } from '@/interfaces';
 import BaseController from '@/api/controllers/BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { IOptionDTO, IOptionsDTO } from '@/interfaces';
 import { AbilitySubject, PreferencesAction } from '@/interfaces';
 import SettingsService from '@/services/Settings/SettingsService';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { Request, Response, Router } from 'express';
+import { body, query } from 'express-validator';
+import { pick } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SettingsController extends BaseController {
@@ -25,14 +25,9 @@ export default class SettingsController extends BaseController {
       CheckPolicies(PreferencesAction.Mutate, AbilitySubject.Preferences),
       this.saveSettingsValidationSchema,
       this.validationResult,
-      asyncMiddleware(this.saveSettings.bind(this))
+      asyncMiddleware(this.saveSettings.bind(this)),
     );
-    router.get(
-      '/',
-      this.getSettingsSchema,
-      this.validationResult,
-      asyncMiddleware(this.getSettings.bind(this))
-    );
+    router.get('/', this.getSettingsSchema, this.validationResult, asyncMiddleware(this.getSettings.bind(this)));
     return router;
   }
 
@@ -52,10 +47,7 @@ export default class SettingsController extends BaseController {
    * Retrieve the application options from the storage.
    */
   private get getSettingsSchema() {
-    return [
-      query('key').optional().trim().escape(),
-      query('group').optional().trim().escape(),
-    ];
+    return [query('key').optional().trim().escape(), query('group').optional().trim().escape()];
   }
 
   /**
@@ -69,10 +61,7 @@ export default class SettingsController extends BaseController {
     const { settings } = req;
 
     const errorReasons: { type: string; code: number; keys: [] }[] = [];
-    const notDefinedOptions = this.settingsService.validateNotDefinedSettings(
-      tenantId,
-      optionsDTO.options
-    );
+    const notDefinedOptions = this.settingsService.validateNotDefinedSettings(tenantId, optionsDTO.options);
 
     if (notDefinedOptions.length) {
       errorReasons.push({

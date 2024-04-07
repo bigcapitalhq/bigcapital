@@ -5,12 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { compose } from '@/utils';
 import { useExpensesListContext } from './ExpensesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
-import {
-  DashboardContentTable,
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DashboardContentTable, DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 
 import ExpensesEmptyStatus from './ExpensesEmptyStatus';
@@ -56,8 +51,7 @@ function ExpensesDataTable({
   const columns = useExpensesTableColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.EXPENSES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.EXPENSES);
 
   // Handle fetch data of manual jouranls datatable.
   const handleFetchData = useCallback(

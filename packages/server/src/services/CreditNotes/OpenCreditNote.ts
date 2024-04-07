@@ -1,14 +1,10 @@
 import { ServiceError } from '@/exceptions';
-import {
-  ICreditNote,
-  ICreditNoteOpenedPayload,
-  ICreditNoteOpeningPayload,
-} from '@/interfaces';
-import { Knex } from 'knex';
+import { ICreditNote, ICreditNoteOpenedPayload, ICreditNoteOpeningPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import BaseCreditNotes from './CreditNotes';
 import { ERRORS } from './constants';
@@ -30,17 +26,11 @@ export default class OpenCreditNote extends BaseCreditNotes {
    * @param {ICreditNoteEditDTO} creditNoteEditDTO -
    * @returns {Promise<ICreditNote>}
    */
-  public openCreditNote = async (
-    tenantId: number,
-    creditNoteId: number
-  ): Promise<ICreditNote> => {
+  public openCreditNote = async (tenantId: number, creditNoteId: number): Promise<ICreditNote> => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
     // Retrieve the sale invoice or throw not found service error.
-    const oldCreditNote = await this.getCreditNoteOrThrowError(
-      tenantId,
-      creditNoteId
-    );
+    const oldCreditNote = await this.getCreditNoteOrThrowError(tenantId, creditNoteId);
     // Throw service error if the credit note is already open.
     this.throwErrorIfAlreadyOpen(oldCreditNote);
 
@@ -60,16 +50,11 @@ export default class OpenCreditNote extends BaseCreditNotes {
       } as ICreditNoteOpeningPayload;
 
       // Triggers `onCreditNoteOpening` event.
-      await this.eventPublisher.emitAsync(
-        events.creditNote.onOpening,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.creditNote.onOpening, eventPayload);
       // Saves the credit note graph to the storage.
-      const creditNote = await CreditNote.query(trx)
-        .findById(creditNoteId)
-        .update({
-          openedAt: new Date(),
-        });
+      const creditNote = await CreditNote.query(trx).findById(creditNoteId).update({
+        openedAt: new Date(),
+      });
       // Triggers `onCreditNoteOpened` event.
       await this.eventPublisher.emitAsync(events.creditNote.onOpened, {
         ...eventPayload,

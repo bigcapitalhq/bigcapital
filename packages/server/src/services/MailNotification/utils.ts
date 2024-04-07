@@ -1,6 +1,6 @@
-import { isEmpty } from 'lodash';
 import { ServiceError } from '@/exceptions';
 import { CommonMailOptions, CommonMailOptionsDTO } from '@/interfaces';
+import { isEmpty } from 'lodash';
 import { ERRORS } from './constants';
 
 /**
@@ -11,7 +11,7 @@ import { ERRORS } from './constants';
  */
 export function parseAndValidateMailOptions(
   mailOptions: Partial<CommonMailOptions>,
-  overridedOptions: Partial<CommonMailOptionsDTO>
+  overridedOptions: Partial<CommonMailOptionsDTO>,
 ) {
   const mergedMessageOptions = {
     ...mailOptions,

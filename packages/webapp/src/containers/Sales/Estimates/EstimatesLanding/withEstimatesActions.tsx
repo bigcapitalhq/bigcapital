@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  setEstimatesTableState,
-  resetEstimatesTableState,
-} from '@/store/Estimate/estimates.actions';
+import { setEstimatesTableState, resetEstimatesTableState } from '@/store/Estimate/estimates.actions';
 
 const mapDispatchToProps = (dispatch) => ({
   setEstimatesTableState: (state) => dispatch(setEstimatesTableState(state)),

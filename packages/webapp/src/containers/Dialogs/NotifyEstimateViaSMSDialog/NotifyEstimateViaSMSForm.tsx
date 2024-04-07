@@ -21,12 +21,7 @@ function NotifyEstimateViaSMSForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    estimateId,
-    dialogName,
-    estimateSMSDetail,
-    createNotifyEstimateBySMSMutate,
-  } = useEstimateViaSMSContext();
+  const { estimateId, dialogName, estimateSMSDetail, createNotifyEstimateBySMSMutate } = useEstimateViaSMSContext();
 
   const [calloutCode, setCalloutCode] = React.useState([]);
 
@@ -54,9 +49,7 @@ function NotifyEstimateViaSMSForm({
       }
       setSubmitting(false);
     };
-    createNotifyEstimateBySMSMutate([estimateId, values])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyEstimateBySMSMutate([estimateId, values]).then(onSuccess).catch(onError);
   };
 
   const initialValues = {

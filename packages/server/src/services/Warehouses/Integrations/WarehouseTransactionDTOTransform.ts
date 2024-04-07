@@ -1,6 +1,5 @@
-import { Service, Inject } from 'typedi';
 import { omit } from 'lodash';
-import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { WarehousesSettings } from '../WarehousesSettings';
 
 @Service()
@@ -13,11 +12,9 @@ export class WarehouseTransactionDTOTransform {
    * @param   {number} tenantId
    * @returns {Promise<Omit<T, 'warehouseId'> | T>}
    */
-  private excludeDTOWarehouseIdWhenInactive = <
-    T extends { warehouseId?: number }
-  >(
+  private excludeDTOWarehouseIdWhenInactive = <T extends { warehouseId?: number }>(
     tenantId: number,
-    DTO: T
+    DTO: T,
   ): Omit<T, 'warehouseId'> | T => {
     const isActive = this.warehousesSettings.isMultiWarehousesActive(tenantId);
 

@@ -3,12 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
 import CreditNoteEmptyStatus from './CreditNotesEmptyStatus';
@@ -48,20 +43,14 @@ function CreditNotesDataTable({
   const history = useHistory();
 
   // Credit note list context.
-  const {
-    creditNotes,
-    pagination,
-    isEmptyStatus,
-    isCreditNotesFetching,
-    isCreditNotesLoading,
-  } = useCreditNoteListContext();
+  const { creditNotes, pagination, isEmptyStatus, isCreditNotesFetching, isCreditNotesLoading } =
+    useCreditNoteListContext();
 
   // Credit note table columns.
   const columns = useCreditNoteTableColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.CREDIT_NOTES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.CREDIT_NOTES);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(

@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 const { NormalModuleReplacementPlugin } = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
@@ -7,11 +7,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-exports.getCommonWebpackOptions = ({
-  inputEntry,
-  outputDir,
-  outputFilename,
-}) => {
+exports.getCommonWebpackOptions = ({ inputEntry, outputDir, outputFilename }) => {
   const webpackOptions = {
     entry: ['regenerator-runtime/runtime', inputEntry],
     target: 'node',
@@ -41,10 +37,7 @@ exports.getCommonWebpackOptions = ({
     },
     plugins: [
       // Ignore knex dynamic required dialects that we don't use
-      new NormalModuleReplacementPlugin(
-        /m[sy]sql2?|oracle(db)?|sqlite3|pg-(native|query)/,
-        'noop2'
-      ),
+      new NormalModuleReplacementPlugin(/m[sy]sql2?|oracle(db)?|sqlite3|pg-(native|query)/, 'noop2'),
       new ProgressBarPlugin(),
     ],
     externals: [nodeExternals(), 'aws-sdk', 'prettier'],
@@ -71,9 +64,7 @@ exports.getCommonWebpackOptions = ({
   };
 
   if (isDev) {
-    webpackOptions.plugins.push(
-      new RunScriptWebpackPlugin({ name: outputFilename })
-    );
+    webpackOptions.plugins.push(new RunScriptWebpackPlugin({ name: outputFilename }));
   }
   return webpackOptions;
 };

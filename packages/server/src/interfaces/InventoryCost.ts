@@ -1,6 +1,4 @@
-import { Knex } from "knex";
-
-
+import { Knex } from 'knex';
 
 export interface IInventoryItemCostMeta {
   itemId: number;
@@ -10,7 +8,7 @@ export interface IInventoryItemCostMeta {
 }
 
 export interface IInventoryCostLotsGLEntriesWriteEvent {
-  tenantId: number,
-  startingDate: Date,
-  trx: Knex.Transaction
+  tenantId: number;
+  startingDate: Date;
+  trx: Knex.Transaction;
 }

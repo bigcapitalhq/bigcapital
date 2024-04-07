@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { useDeleteRole } from '@/hooks/query';
@@ -71,17 +67,10 @@ function RoleDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={
-            'roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it'
-          }
-        />
+        <FormattedHTMLMessage id={'roles.permission_schema.once_delete_this_role_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(RoleDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(RoleDeleteAlert);

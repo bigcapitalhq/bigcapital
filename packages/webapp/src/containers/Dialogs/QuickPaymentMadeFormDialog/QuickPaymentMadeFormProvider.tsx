@@ -1,16 +1,10 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useBill,
-  useAccounts,
-  useBranches,
-  useCreatePaymentMade,
-} from '@/hooks/query';
+import { useBill, useAccounts, useBranches, useCreatePaymentMade } from '@/hooks/query';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { pick } from 'lodash';
-
 
 const QuickPaymentMadeContext = React.createContext();
 
@@ -55,15 +49,12 @@ function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
   };
 
   return (
-    <DialogContent
-      isLoading={isAccountsLoading || isBillLoading || isBranchesLoading}
-    >
+    <DialogContent isLoading={isAccountsLoading || isBillLoading || isBranchesLoading}>
       <QuickPaymentMadeContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useQuickPaymentMadeContext = () =>
-  React.useContext(QuickPaymentMadeContext);
+const useQuickPaymentMadeContext = () => React.useContext(QuickPaymentMadeContext);
 
 export { QuickPaymentMadeFormProvider, useQuickPaymentMadeContext };

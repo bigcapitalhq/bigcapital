@@ -1,9 +1,3 @@
-
-
-
-
 export default class TenantDBAlreadyExists {
-  constructor() {
-    
-  }
+  constructor() {}
 }

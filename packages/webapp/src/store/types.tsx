@@ -31,7 +31,7 @@ import inventoryAdjustments from './inventoryAdjustments/inventoryAdjustment.typ
 import creditNote from './CreditNote/creditNote.type';
 import vendorCredit from './VendorCredit/vendorCredit.type';
 import WarehouseTransfer from './WarehouseTransfer/warehouseTransfer.type';
-import projects from './Project/projects.type'
+import projects from './Project/projects.type';
 import plans from './plans/plans.types';
 
 export default {
@@ -68,5 +68,5 @@ export default {
   ...creditNote,
   ...vendorCredit,
   ...WarehouseTransfer,
-  ...projects
+  ...projects,
 };

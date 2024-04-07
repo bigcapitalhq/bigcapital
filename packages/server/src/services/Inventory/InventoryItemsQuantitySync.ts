@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { toSafeInteger } from 'lodash';
 import { IInventoryTransaction, IItemsQuantityChanges } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import Knex from 'knex';
+import { toSafeInteger } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 /**
  * Syncs the inventory transactions with inventory items quantity.
@@ -17,9 +17,7 @@ export default class InventoryItemsQuantitySync {
    * @param {IInventoryTransaction[]} inventroyTransactions
    * @return {IInventoryTransaction[]}
    */
-  reverseInventoryTransactions(
-    inventroyTransactions: IInventoryTransaction[]
-  ): IInventoryTransaction[] {
+  reverseInventoryTransactions(inventroyTransactions: IInventoryTransaction[]): IInventoryTransaction[] {
     return inventroyTransactions.map((transaction) => ({
       ...transaction,
       direction: transaction.direction === 'OUT' ? 'IN' : 'OUT',
@@ -31,12 +29,8 @@ export default class InventoryItemsQuantitySync {
    * @param {IInventoryTransaction[]} inventroyTransactions -
    * @return {IItemsQuantityChanges[]}
    */
-  getReverseItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[]
-  ): IItemsQuantityChanges[] {
-    const reversedTransactions = this.reverseInventoryTransactions(
-      inventroyTransactions
-    );
+  getReverseItemsQuantityChanges(inventroyTransactions: IInventoryTransaction[]): IItemsQuantityChanges[] {
+    const reversedTransactions = this.reverseInventoryTransactions(inventroyTransactions);
     return this.getItemsQuantityChanges(reversedTransactions);
   }
 
@@ -45,22 +39,18 @@ export default class InventoryItemsQuantitySync {
    * @param {IInventoryTransaction[]} inventroyTransactions - Inventory transactions.
    * @return {IItemsQuantityChanges[]}
    */
-  getItemsQuantityChanges(
-    inventroyTransactions: IInventoryTransaction[]
-  ): IItemsQuantityChanges[] {
+  getItemsQuantityChanges(inventroyTransactions: IInventoryTransaction[]): IItemsQuantityChanges[] {
     const balanceMap: { [itemId: number]: number } = {};
 
-    inventroyTransactions.forEach(
-      (inventoryTransaction: IInventoryTransaction) => {
-        const { itemId, direction, quantity } = inventoryTransaction;
+    inventroyTransactions.forEach((inventoryTransaction: IInventoryTransaction) => {
+      const { itemId, direction, quantity } = inventoryTransaction;
 
-        if (!balanceMap[itemId]) {
-          balanceMap[itemId] = 0;
-        }
-        balanceMap[itemId] += direction === 'IN' ? quantity : 0;
-        balanceMap[itemId] -= direction === 'OUT' ? quantity : 0;
+      if (!balanceMap[itemId]) {
+        balanceMap[itemId] = 0;
       }
-    );
+      balanceMap[itemId] += direction === 'IN' ? quantity : 0;
+      balanceMap[itemId] -= direction === 'OUT' ? quantity : 0;
+    });
 
     return Object.entries(balanceMap).map(([itemId, balanceChange]) => ({
       itemId: toSafeInteger(itemId),
@@ -76,7 +66,7 @@ export default class InventoryItemsQuantitySync {
   async changeItemsQuantity(
     tenantId: number,
     itemsQuantity: IItemsQuantityChanges[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const { itemRepository } = this.tenancy.repositories(tenantId);
     const opers = [];
@@ -86,7 +76,7 @@ export default class InventoryItemsQuantitySync {
         { id: itemQuantity.itemId, type: 'inventory' },
         'quantityOnHand',
         itemQuantity.balanceChange,
-        trx
+        trx,
       );
       opers.push(changeQuantityOper);
     });

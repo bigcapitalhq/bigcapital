@@ -15,11 +15,7 @@ function EnsureOrganizationIsReady({
   // #withOrganizationByOrgId
   isOrganizationReady,
 }) {
-  return isOrganizationReady ? (
-    children
-  ) : (
-    <Redirect to={{ pathname: redirectTo }} />
-  );
+  return isOrganizationReady ? children : <Redirect to={{ pathname: redirectTo }} />;
 }
 
 export default compose(

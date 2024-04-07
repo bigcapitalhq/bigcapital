@@ -7,9 +7,7 @@ import { T, SubscriptionPeriods } from '@/components';
 
 import withPlan from '../../Subscriptions/withPlan';
 
-const SubscriptionPeriodsEnhanced = R.compose(
-  withPlan(({ plan }) => ({ plan })),
-)(({ plan, ...restProps }) => {
+const SubscriptionPeriodsEnhanced = R.compose(withPlan(({ plan }) => ({ plan })))(({ plan, ...restProps }) => {
   // Can't continue if the current plan of the form not selected.
   if (!plan) {
     return null;

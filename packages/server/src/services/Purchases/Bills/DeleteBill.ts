@@ -1,14 +1,11 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import {
-  IBIllEventDeletedPayload,
-  IBillEventDeletingPayload,
-} from '@/interfaces';
-import { BillsValidators } from './BillsValidators';
-import UnitOfWork from '@/services/UnitOfWork';
+import { IBIllEventDeletedPayload, IBillEventDeletingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { BillsValidators } from './BillsValidators';
 
 @Service()
 export class DeleteBill {
@@ -33,9 +30,7 @@ export class DeleteBill {
     const { ItemEntry, Bill } = this.tenancy.models(tenantId);
 
     // Retrieve the given bill or throw not found error.
-    const oldBill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries');
+    const oldBill = await Bill.query().findById(billId).withGraphFetched('entries');
 
     // Validates the bill existance.
     this.validators.validateBillExistance(oldBill);
@@ -60,10 +55,7 @@ export class DeleteBill {
       } as IBillEventDeletingPayload);
 
       // Delete all associated bill entries.
-      await ItemEntry.query(trx)
-        .where('reference_type', 'Bill')
-        .where('reference_id', billId)
-        .delete();
+      await ItemEntry.query(trx).where('reference_type', 'Bill').where('reference_id', billId).delete();
 
       // Delete the bill transaction.
       await Bill.query(trx).findById(billId).delete();

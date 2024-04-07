@@ -1,4 +1,3 @@
-
 export default class JournalEntry {
   constructor(entry) {
     const defaults = {

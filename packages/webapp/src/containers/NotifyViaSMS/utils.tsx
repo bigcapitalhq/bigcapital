@@ -11,9 +11,7 @@ export const transformErrors = (errors, { setErrors, setCalloutCode }) => {
   if (errors.find((error) => error.type === 'CUSTOMER_HAS_NO_PHONE_NUMBER')) {
     setCalloutCode([100]);
     setErrors({
-      customer_phone_number: intl.get(
-        'notify_via_sms.dialog.customer_no_phone_error_message',
-      ),
+      customer_phone_number: intl.get('notify_via_sms.dialog.customer_no_phone_error_message'),
     });
   }
 };

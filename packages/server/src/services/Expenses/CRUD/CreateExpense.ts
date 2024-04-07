@@ -1,16 +1,16 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
 import {
   IExpense,
   IExpenseCreateDTO,
-  ISystemUser,
   IExpenseCreatedPayload,
   IExpenseCreatingPayload,
+  ISystemUser,
 } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CommandExpenseValidator } from './CommandExpenseValidator';
 import { ExpenseDTOTransformer } from './ExpenseDTOTransformer';
 
@@ -36,31 +36,18 @@ export class CreateExpense {
    * @param {number} tenantId
    * @param {IExpenseDTO} expenseDTO
    */
-  private authorize = async (
-    tenantId: number,
-    expenseDTO: IExpenseCreateDTO
-  ) => {
+  private authorize = async (tenantId: number, expenseDTO: IExpenseCreateDTO) => {
     const { Account } = await this.tenancy.models(tenantId);
 
     // Validate payment account existance on the storage.
-    const paymentAccount = await Account.query()
-      .findById(expenseDTO.paymentAccountId)
-      .throwIfNotFound();
+    const paymentAccount = await Account.query().findById(expenseDTO.paymentAccountId).throwIfNotFound();
 
     // Retrieves the DTO expense accounts ids.
-    const DTOExpenseAccountsIds = expenseDTO.categories.map(
-      (category) => category.expenseAccountId
-    );
+    const DTOExpenseAccountsIds = expenseDTO.categories.map((category) => category.expenseAccountId);
     // Retrieves the expenses accounts.
-    const expenseAccounts = await Account.query().whereIn(
-      'id',
-      DTOExpenseAccountsIds
-    );
+    const expenseAccounts = await Account.query().whereIn('id', DTOExpenseAccountsIds);
     // Validate expense accounts exist on the storage.
-    this.validator.validateExpensesAccountsExistance(
-      expenseAccounts,
-      DTOExpenseAccountsIds
-    );
+    this.validator.validateExpensesAccountsExistance(expenseAccounts, DTOExpenseAccountsIds);
     // Validate payment account type.
     this.validator.validatePaymentAccountType(paymentAccount);
 
@@ -97,11 +84,7 @@ export class CreateExpense {
     await this.authorize(tenantId, expenseDTO);
 
     // Save the expense to the storage.
-    const expenseObj = await this.transformDTO.expenseCreateDTO(
-      tenantId,
-      expenseDTO,
-      authorizedUser
-    );
+    const expenseObj = await this.transformDTO.expenseCreateDTO(tenantId, expenseDTO, authorizedUser);
     // Writes the expense transaction with associated transactions under
     // unit-of-work envirement.
     return this.uow.withTransaction(

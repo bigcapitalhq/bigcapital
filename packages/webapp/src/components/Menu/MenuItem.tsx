@@ -15,12 +15,12 @@
  * limitations under the License.
  */
 
-import classNames from "classnames";
-import React from "react";
+import classNames from 'classnames';
+import React from 'react';
 
 // import {
-  // ,
-  //  } from "@bluprintjs/core/src/components/common";
+// ,
+//  } from "@bluprintjs/core/src/components/common";
 // import { DISPLAYNAME_PREFIX } from "../../common/props";
 import {
   Icon,
@@ -28,11 +28,12 @@ import {
   PopoverInteractionKind,
   Text,
   Menu,
-  Classes, Position,
+  Classes,
+  Position,
   AbstractPureComponent2,
   DISPLAYNAME_PREFIX,
-  Collapse
-} from "@blueprintjs/core";
+  Collapse,
+} from '@blueprintjs/core';
 
 // export interface IMenuItemProps extends IActionProps, ILinkProps {
 //     // override from IActionProps to make it required
@@ -106,170 +107,171 @@ import {
 // }
 
 export class MenuItem extends AbstractPureComponent2 {
-    static get defaultProps() {
-      return {
-        disabled: false,
-        multiline: false,
-        popoverProps: {},
-        shouldDismissPopover: true,
-        text: "",
-        dropdownType: 'popover',
-      };
+  static get defaultProps() {
+    return {
+      disabled: false,
+      multiline: false,
+      popoverProps: {},
+      shouldDismissPopover: true,
+      text: '',
+      dropdownType: 'popover',
     };
-    static get displayName() {
-      return `${DISPLAYNAME_PREFIX}.MenuItem`;
-    }
-    
-    constructor(props) {
-        super(props);
-        this.state = {
-          isCollapseActive: this.props.callapseActive || false,
-        };
+  }
+  static get displayName() {
+    return `${DISPLAYNAME_PREFIX}.MenuItem`;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isCollapseActive: this.props.callapseActive || false,
+    };
+  }
+
+  render() {
+    const {
+      active,
+      className,
+      children,
+      disabled,
+      icon,
+      intent,
+      labelClassName,
+      labelElement,
+      itemClassName,
+      multiline,
+      popoverProps,
+      shouldDismissPopover,
+      text,
+      textClassName,
+      tagName = 'a',
+      dropdownType,
+      caretIconSize = 16,
+      hasSubmenu,
+      ...htmlProps
+    } = this.props;
+
+    const intentClass = Classes.intentClass(intent);
+    const anchorClasses = classNames(
+      Classes.MENU_ITEM,
+      intentClass,
+      {
+        [Classes.ACTIVE]: active,
+        [Classes.INTENT_PRIMARY]: active && intentClass == null,
+        [Classes.DISABLED]: disabled,
+        // prevent popover from closing when clicking on submenu trigger or disabled item
+        [Classes.POPOVER_DISMISS]: shouldDismissPopover && !disabled && !hasSubmenu,
+      },
+      className,
+    );
+
+    const handleAnchorClick = (event) => {
+      htmlProps.onClick && htmlProps.onClick(event);
+
+      if (dropdownType === 'collapse') {
+        this.setState({ isCollapseActive: !this.state.isCollapseActive });
       }
+    };
+    const target = React.createElement(
+      tagName,
+      {
+        ...htmlProps,
+        ...(disabled ? DISABLED_PROPS : {}),
+        className: anchorClasses,
+        onClick: handleAnchorClick,
+      },
+      <Icon icon={icon} />,
+      <Text className={classNames(Classes.FILL, textClassName)} ellipsize={!multiline}>
+        {text}
+      </Text>,
+      this.maybeRenderLabel(labelElement),
+      hasSubmenu ? <Icon icon="caret-right" iconSize={caretIconSize} /> : undefined,
+    );
 
-    render() {
-        const {
-            active,
-            className,
-            children,
-            disabled,
-            icon,
-            intent,
-            labelClassName,
-            labelElement,
-            itemClassName,
-            multiline,
-            popoverProps,
-            shouldDismissPopover,
-            text,
-            textClassName,
-            tagName = "a",
-            dropdownType,
-            caretIconSize = 16,
-            hasSubmenu,
-            ...htmlProps
-        } = this.props;
-        
+    const liClasses = classNames({ [Classes.MENU_SUBMENU]: hasSubmenu }, itemClassName);
+    return (
+      <li className={liClasses}>
+        {dropdownType === 'collapse'
+          ? this.maybeRenderCollapse(target, children)
+          : this.maybeRenderPopover(target, children)}
+      </li>
+    );
+  }
 
-        const intentClass = Classes.intentClass(intent);
-        const anchorClasses = classNames(
-            Classes.MENU_ITEM,
-            intentClass,
-            {
-                [Classes.ACTIVE]: active,
-                [Classes.INTENT_PRIMARY]: active && intentClass == null,
-                [Classes.DISABLED]: disabled,
-                // prevent popover from closing when clicking on submenu trigger or disabled item
-                [Classes.POPOVER_DISMISS]: shouldDismissPopover && !disabled && !hasSubmenu,
-            },
-            className,
-        );
- 
-        const handleAnchorClick = (event) => {
-          htmlProps.onClick && htmlProps.onClick(event);
-
-          if (dropdownType === 'collapse') {
-            this.setState({ isCollapseActive: !this.state.isCollapseActive });
-          }          
-        };
-        const target = React.createElement(
-            tagName,
-            {
-                ...htmlProps,
-                ...(disabled ? DISABLED_PROPS : {}),
-                className: anchorClasses,
-                onClick: handleAnchorClick,
-            },
-            <Icon icon={icon} />,
-            <Text className={classNames(Classes.FILL, textClassName)} ellipsize={!multiline}>
-                {text}
-            </Text>,
-            this.maybeRenderLabel(labelElement),
-            hasSubmenu ? <Icon icon="caret-right" iconSize={caretIconSize} /> : undefined,
-        );
-
-        const liClasses = classNames({ [Classes.MENU_SUBMENU]: hasSubmenu }, itemClassName);
-        return <li className={liClasses}>{
-          (dropdownType === 'collapse') ?
-            this.maybeRenderCollapse(target, children) :
-            this.maybeRenderPopover(target, children)
-        }</li>;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.callapseActive !== this.props.callapseActive) {
+      //Perform some operation
+      this.setState({ isCollapseActive: nextProps.callapseActive });
     }
+  }
 
-    componentWillReceiveProps(nextProps){
-      if(nextProps.callapseActive!==this.props.callapseActive){
-        //Perform some operation
-        this.setState({ isCollapseActive: nextProps.callapseActive });
-      }
+  maybeRenderLabel(labelElement) {
+    const { label, labelClassName } = this.props;
+    if (label == null && labelElement == null) {
+      return null;
     }
+    return (
+      <span className={classNames(Classes.MENU_ITEM_LABEL, labelClassName)}>
+        {label}
+        {labelElement}
+      </span>
+    );
+  }
 
-    maybeRenderLabel(labelElement) {
-        const { label, labelClassName } = this.props;
-        if (label == null && labelElement == null) {
-            return null;
-        }
-        return (
-            <span className={classNames(Classes.MENU_ITEM_LABEL, labelClassName)}>
-                {label}
-                {labelElement}
-            </span>
-        );
+  maybeRenderCollapse(target, children) {
+    if (children == null) {
+      return target;
     }
+    return (
+      <>
+        {target}
+        <Collapse isOpen={this.state.isCollapseActive} keepChildrenMounted={true}>
+          {children}
+        </Collapse>
+      </>
+    );
+  }
 
-    maybeRenderCollapse(target, children) {
-      if (children == null) {
-        return target;
-      }
-      return (
-        <>
-          {target}
-          <Collapse isOpen={this.state.isCollapseActive} keepChildrenMounted={true}>
-            { children }
-          </Collapse>
-        </>
-       );
+  maybeRenderPopover(target, children) {
+    if (children == null) {
+      return target;
     }
-
-    maybeRenderPopover(target, children) {
-        if (children == null) {
-            return target;
-        }
-        const { disabled, popoverProps } = this.props;
-        return (
-            <Popover
-                autoFocus={false}
-                captureDismiss={false}
-                disabled={disabled}
-                enforceFocus={false}
-                hoverCloseDelay={0}
-                interactionKind={PopoverInteractionKind.HOVER}
-                modifiers={SUBMENU_POPOVER_MODIFIERS}
-                position={Position.RIGHT_TOP}
-                usePortal={false}
-                {...popoverProps}
-                content={<Menu>{children}</Menu>}
-                minimal={true}
-                popoverClassName={classNames(Classes.MENU_SUBMENU, popoverProps.popoverClassName)}
-                target={target}
-            />
-        );
-    }
+    const { disabled, popoverProps } = this.props;
+    return (
+      <Popover
+        autoFocus={false}
+        captureDismiss={false}
+        disabled={disabled}
+        enforceFocus={false}
+        hoverCloseDelay={0}
+        interactionKind={PopoverInteractionKind.HOVER}
+        modifiers={SUBMENU_POPOVER_MODIFIERS}
+        position={Position.RIGHT_TOP}
+        usePortal={false}
+        {...popoverProps}
+        content={<Menu>{children}</Menu>}
+        minimal={true}
+        popoverClassName={classNames(Classes.MENU_SUBMENU, popoverProps.popoverClassName)}
+        target={target}
+      />
+    );
+  }
 }
 
-const SUBMENU_POPOVER_MODIFIERS =  {
-    // 20px padding - scrollbar width + a bit
-    flip: { boundariesElement: "viewport", padding: 20 },
-    // shift popover up 5px so MenuItems align
-    offset: { offset: -5 },
-    preventOverflow: { boundariesElement: "viewport", padding: 20 },
+const SUBMENU_POPOVER_MODIFIERS = {
+  // 20px padding - scrollbar width + a bit
+  flip: { boundariesElement: 'viewport', padding: 20 },
+  // shift popover up 5px so MenuItems align
+  offset: { offset: -5 },
+  preventOverflow: { boundariesElement: 'viewport', padding: 20 },
 };
 
 // props to ignore when disabled
 const DISABLED_PROPS = {
-    href: undefined,
-    onClick: undefined,
-    onMouseDown: undefined,
-    onMouseEnter: undefined,
-    onMouseLeave: undefined,
-    tabIndex: -1,
+  href: undefined,
+  onClick: undefined,
+  onMouseDown: undefined,
+  onMouseEnter: undefined,
+  onMouseLeave: undefined,
+  tabIndex: -1,
 };

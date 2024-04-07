@@ -8,15 +8,11 @@ interface DashboardThemeProviderProps {
   children: React.ReactNode;
 }
 
-export function DashboardThemeProvider({
-  children,
-}: DashboardThemeProviderProps) {
+export function DashboardThemeProvider({ children }: DashboardThemeProviderProps) {
   const { direction } = useAppIntlContext();
 
   return (
-    <StyleSheetManager
-      {...(direction === 'rtl' ? { stylisPlugins: [rtlcss] } : {})}
-    >
+    <StyleSheetManager {...(direction === 'rtl' ? { stylisPlugins: [rtlcss] } : {})}>
       <ThemeProvider theme={{ dir: direction }}>{children}</ThemeProvider>
     </StyleSheetManager>
   );

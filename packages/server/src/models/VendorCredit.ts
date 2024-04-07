@@ -1,17 +1,13 @@
-import { Model, raw, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import BillSettings from './Bill.Settings';
-import ModelSetting from './ModelSetting';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Purchases/VendorCredits/constants';
+import TenantModel from 'models/TenantModel';
+import { Model, mixin, raw } from 'objection';
+import BillSettings from './Bill.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 import VendorCreditMeta from './VendorCredit.Meta';
 
-export default class VendorCredit extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class VendorCredit extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */
@@ -60,7 +56,7 @@ export default class VendorCredit extends mixin(TenantModel, [
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICED_AMOUNT) <
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -72,7 +68,7 @@ export default class VendorCredit extends mixin(TenantModel, [
         query
           .where(
             raw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICED_AMOUNT) =
-            COALESCE(AMOUNT)`)
+            COALESCE(AMOUNT)`),
           )
           .modify('published');
       },
@@ -102,9 +98,7 @@ export default class VendorCredit extends mixin(TenantModel, [
        *
        */
       sortByStatus(query, order) {
-        query.orderByRaw(
-          `COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICED_AMOUNT) = COALESCE(AMOUNT) ${order}`
-        );
+        query.orderByRaw(`COALESCE(REFUNDED_AMOUNT) + COALESCE(INVOICED_AMOUNT) = COALESCE(AMOUNT) ${order}`);
       },
     };
   }

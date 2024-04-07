@@ -28,9 +28,7 @@ function InvoiceUniversalSearchSelectComponent({
   return null;
 }
 
-export const InvoiceUniversalSearchSelect = withDrawerActions(
-  InvoiceUniversalSearchSelectComponent,
-);
+export const InvoiceUniversalSearchSelect = withDrawerActions(InvoiceUniversalSearchSelectComponent);
 
 /**
  * Invoice status.
@@ -52,9 +50,7 @@ function InvoiceStatus({ customer }) {
             </span>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'status status-warning'}>
-              {intl.get('due_in', { due: customer.remaining_days })}
-            </span>
+            <span className={'status status-warning'}>{intl.get('due_in', { due: customer.remaining_days })}</span>
           </Choose.Otherwise>
         </Choose>
       </Choose.When>
@@ -70,10 +66,7 @@ function InvoiceStatus({ customer }) {
 /**
  * Universal search invoice item.
  */
-export function InvoiceUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function InvoiceUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -81,8 +74,7 @@ export function InvoiceUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
           <span class="bp4-text-muted">
-            {highlightText(item.reference.invoice_no, query)}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+            {highlightText(item.reference.invoice_no, query)} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.invoice_date_formatted}
           </span>
         </div>

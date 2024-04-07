@@ -22,9 +22,7 @@ function CustomerUniversalSearchSelectComponent({
   return null;
 }
 
-const CustomerUniversalSearchSelectAction = withDrawerActions(
-  CustomerUniversalSearchSelectComponent,
-);
+const CustomerUniversalSearchSelectAction = withDrawerActions(CustomerUniversalSearchSelectComponent);
 
 /**
  * Transformes customers to search.

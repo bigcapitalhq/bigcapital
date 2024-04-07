@@ -1,5 +1,5 @@
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class UpdateInventoryTransactionsWithWarehouse {

@@ -12,16 +12,12 @@ const vendorCreditsTableStateSelector = (state) => {
  * Retrieve vendor credit table state.
  */
 export const getVendorCreditTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    vendorCreditsTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, vendorCreditsTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 /**
  * Retrieve vendor credit table state.

@@ -24,10 +24,7 @@ export default function CashFlowStatementTable({
 
   const columns = useCashFlowStatementColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 4),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
   return (
     <FinancialSheet
       companyName={companyName}

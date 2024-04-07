@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
-import { Container } from 'typedi';
-import { Ability } from '@casl/ability';
-import LruCache from 'lru-cache';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { IRole, IRolePremission, ISystemUser } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Ability } from '@casl/ability';
+import { NextFunction, Request, Response } from 'express';
+import LruCache from 'lru-cache';
+import { Container } from 'typedi';
 
 // store abilities of 1000 most active users
 export const ABILITIES_CACHE = new LruCache(1000);
@@ -66,9 +66,7 @@ async function getAbilityForUser(user: ISystemUser, tenantId: number) {
   const tenancy = Container.get(HasTenancyService);
   const { User } = tenancy.models(tenantId);
 
-  const tenantUser = await User.query()
-    .findOne('systemUserId', user.id)
-    .withGraphFetched('role.permissions');
+  const tenantUser = await User.query().findOne('systemUserId', user.id).withGraphFetched('role.permissions');
 
   return getAbilityForRole(tenantUser.role);
 }

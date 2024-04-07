@@ -1,12 +1,12 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { query, ValidationChain } from 'express-validator';
-import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { InventoryValuationSheetApplication } from '@/services/FinancialStatements/InventoryValuationSheet/InventoryValuationSheetApplication';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { InventoryValuationSheetApplication } from '@/services/FinancialStatements/InventoryValuationSheet/InventoryValuationSheetApplication';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class InventoryValuationReportController extends BaseFinancialReportController {
@@ -21,13 +21,10 @@ export default class InventoryValuationReportController extends BaseFinancialRep
 
     router.get(
       '/',
-      CheckPolicies(
-        ReportsAction.READ_INVENTORY_VALUATION_SUMMARY,
-        AbilitySubject.Report
-      ),
+      CheckPolicies(ReportsAction.READ_INVENTORY_VALUATION_SUMMARY, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      asyncMiddleware(this.inventoryValuation.bind(this))
+      asyncMiddleware(this.inventoryValuation.bind(this)),
     );
     return router;
   }
@@ -54,11 +51,17 @@ export default class InventoryValuationReportController extends BaseFinancialRep
       query('order').optional().isIn(['desc', 'asc']),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
 
       // Filtering by warehouses.
-      query('warehouses_ids').optional().toArray().isArray({ min: 1 }),
+      query('warehouses_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('warehouses_ids.*').isNumeric().toInt(),
     ];
   }
@@ -100,10 +103,7 @@ export default class InventoryValuationReportController extends BaseFinancialRep
       const buffer = await this.inventoryValuationApp.xlsx(tenantId, filter);
 
       res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      );
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       return res.send(buffer);
       // Retrieves the pdf format.
     } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
@@ -116,10 +116,7 @@ export default class InventoryValuationReportController extends BaseFinancialRep
       return res.status(200).send(pdfContent);
       // Retrieves the json format.
     } else {
-      const { data, query, meta } = await this.inventoryValuationApp.sheet(
-        tenantId,
-        filter
-      );
+      const { data, query, meta } = await this.inventoryValuationApp.sheet(tenantId, filter);
       return res.status(200).send({ meta, data, query });
     }
   }

@@ -1,12 +1,9 @@
-import { pick } from 'lodash';
-import { Knex } from 'knex';
 import { IInventoryTransaction } from '@/interfaces';
 import InventoryCostMethod from '@/services/Inventory/InventoryCostMethod';
+import { Knex } from 'knex';
+import { pick } from 'lodash';
 
-export default class InventoryAverageCostMethod
-  extends InventoryCostMethod
-  implements IInventoryCostMethod
-{
+export default class InventoryAverageCostMethod extends InventoryCostMethod implements IInventoryCostMethod {
   startingDate: Date;
   itemId: number;
   costTransactions: any[];
@@ -18,12 +15,7 @@ export default class InventoryAverageCostMethod
    * @param {Date} startingDate -
    * @param {number} itemId - The given inventory item id.
    */
-  constructor(
-    tenantId: number,
-    startingDate: Date,
-    itemId: number,
-    trx?: Knex.Transaction
-  ) {
+  constructor(tenantId: number, startingDate: Date, itemId: number, trx?: Knex.Transaction) {
     super(tenantId, startingDate, itemId);
 
     this.trx = trx;
@@ -48,25 +40,22 @@ export default class InventoryAverageCostMethod
    */
   public async computeItemCost() {
     const { InventoryTransaction } = this.tenantModels;
-    const { averageCost, openingQuantity, openingCost } =
-      await this.getOpeningAverageCost(this.startingDate, this.itemId);
+    const { averageCost, openingQuantity, openingCost } = await this.getOpeningAverageCost(
+      this.startingDate,
+      this.itemId,
+    );
 
-    const afterInvTransactions: IInventoryTransaction[] =
-      await InventoryTransaction.query()
-        .modify('filterDateRange', this.startingDate)
-        .orderBy('date', 'ASC')
-        .orderByRaw("FIELD(direction, 'IN', 'OUT')")
-        .orderBy('createdAt', 'ASC')
-        .where('item_id', this.itemId)
-        .withGraphFetched('item');
+    const afterInvTransactions: IInventoryTransaction[] = await InventoryTransaction.query()
+      .modify('filterDateRange', this.startingDate)
+      .orderBy('date', 'ASC')
+      .orderByRaw("FIELD(direction, 'IN', 'OUT')")
+      .orderBy('createdAt', 'ASC')
+      .where('item_id', this.itemId)
+      .withGraphFetched('item');
 
     // Tracking inventroy transactions and retrieve cost transactions based on
     // average rate cost method.
-    const costTransactions = this.trackingCostTransactions(
-      afterInvTransactions,
-      openingQuantity,
-      openingCost
-    );
+    const costTransactions = this.trackingCostTransactions(afterInvTransactions, openingQuantity, openingCost);
     // Revert the inveout out lots transactions
     await this.revertTheInventoryOutLotTrans();
 
@@ -103,15 +92,12 @@ export default class InventoryAverageCostMethod
       .onBuild(commonBuilder)
       .where('direction', 'OUT');
 
-    const [inInvSumation, outInvSumation] = await Promise.all([
-      inInvSumationOper,
-      outInvSumationOper,
-    ]);
+    const [inInvSumation, outInvSumation] = await Promise.all([inInvSumationOper, outInvSumationOper]);
     return this.computeItemAverageCost(
       inInvSumation?.cost || 0,
       inInvSumation?.quantity || 0,
       outInvSumation?.cost || 0,
-      outInvSumation?.quantity || 0
+      outInvSumation?.quantity || 0,
     );
   }
 
@@ -128,7 +114,7 @@ export default class InventoryAverageCostMethod
     totalQuantityIn: number,
 
     totalCostOut: number,
-    totalQuantityOut: number
+    totalQuantityOut: number,
   ) {
     const openingCost = totalCostIn - totalCostOut;
     const openingQuantity = totalQuantityIn - totalQuantityOut;
@@ -150,11 +136,7 @@ export default class InventoryAverageCostMethod
    * @param {number} referenceId
    * @param {JournalCommand} journalCommands
    */
-  public trackingCostTransactions(
-    invTransactions: IInventoryTransaction[],
-    openingQuantity: number = 0,
-    openingCost: number = 0
-  ) {
+  public trackingCostTransactions(invTransactions: IInventoryTransaction[], openingQuantity = 0, openingCost = 0) {
     const costTransactions: any[] = [];
 
     // Cumulative item quantity and cost. This will decrement after
@@ -183,10 +165,7 @@ export default class InventoryAverageCostMethod
       };
       switch (invTransaction.direction) {
         case 'IN':
-          const inCost = this.getCost(
-            invTransaction.rate,
-            invTransaction.quantity
-          );
+          const inCost = this.getCost(invTransaction.rate, invTransaction.quantity);
           // Increases the quantity and cost in `IN` inventory transactions.
           accQuantity += invTransaction.quantity;
           accCost += inCost;
@@ -200,10 +179,7 @@ export default class InventoryAverageCostMethod
           // Average cost = Total cost / Total quantity
           const averageCost = accQuantity ? accCost / accQuantity : 0;
 
-          const quantity =
-            accQuantity > 0
-              ? Math.min(invTransaction.quantity, accQuantity)
-              : invTransaction.quantity;
+          const quantity = accQuantity > 0 ? Math.min(invTransaction.quantity, accQuantity) : invTransaction.quantity;
 
           // Cost = the transaction quantity * Average cost.
           const cost = this.getCost(averageCost, quantity);
@@ -219,10 +195,7 @@ export default class InventoryAverageCostMethod
           accCost = Math.max(accCost - cost, 0);
 
           if (invTransaction.quantity > quantity) {
-            const remainingQuantity = Math.max(
-              invTransaction.quantity - quantity,
-              0
-            );
+            const remainingQuantity = Math.max(invTransaction.quantity - quantity, 0);
             const remainingIncome = remainingQuantity * invTransaction.rate;
 
             costTransactions.push({

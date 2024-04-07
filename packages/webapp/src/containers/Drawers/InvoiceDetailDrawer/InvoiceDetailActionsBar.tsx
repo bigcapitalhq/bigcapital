@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
@@ -15,18 +9,8 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  If,
-  Can,
-  Icon,
-  DrawerActionsBar,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  SaleInvoiceAction,
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '../../../constants/abilityOption';
+import { If, Can, Icon, DrawerActionsBar, FormattedMessage as T } from '@/components';
+import { SaleInvoiceAction, PaymentReceiveAction, AbilitySubject } from '../../../constants/abilityOption';
 
 import { compose } from '@/utils';
 import { BadDebtMenuItem } from './utils';
@@ -167,8 +151,4 @@ function InvoiceDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-  withAlertsActions,
-)(InvoiceDetailActionsBar);
+export default compose(withDialogActions, withDrawerActions, withAlertsActions)(InvoiceDetailActionsBar);

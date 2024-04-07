@@ -77,11 +77,7 @@ function PaymentViaLicenseDialogContent({
   };
   // Validation schema.
   const validationSchema = Yup.object().shape({
-    license_code: Yup.string()
-      .required()
-      .min(10)
-      .max(10)
-      .label(intl.get('license_code')),
+    license_code: Yup.string().required().min(10).max(10).label(intl.get('license_code')),
   });
 
   return (

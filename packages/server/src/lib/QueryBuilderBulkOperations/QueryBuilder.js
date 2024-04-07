@@ -1,8 +1,6 @@
-import { QueryBuilder } from "knex"
 import { QueryBuilder } from 'objection';
 
 export default class BulkOperationsQueryBuilder extends QueryBuilder {
-
   bulkInsert(collection) {
     const opers = [];
 
@@ -13,15 +11,9 @@ export default class BulkOperationsQueryBuilder extends QueryBuilder {
     return Promise.all(opers);
   }
 
-  bulkDelete(rowsIds) {
+  bulkDelete(rowsIds) {}
 
-  }
+  bulkUpdate(dataset, whereColumn) {}
 
-  bulkUpdate(dataset, whereColumn) {
-
-  }
-
-  bulkPatch(newDataset, oldDataset) {
-
-  }
+  bulkPatch(newDataset, oldDataset) {}
 }

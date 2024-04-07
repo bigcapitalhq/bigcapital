@@ -1,17 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  ICustomer,
-  ICustomerEventCreatedPayload,
-  ICustomerEventCreatingPayload,
-  ICustomerNewDTO,
-  ISystemUser,
-} from '@/interfaces';
+import { ICustomer, ICustomerEventCreatedPayload, ICustomerEventCreatingPayload, ICustomerNewDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CreateEditCustomerDTO } from './CreateEditCustomerDTO';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class CreateCustomer {
@@ -36,15 +30,12 @@ export class CreateCustomer {
   public async createCustomer(
     tenantId: number,
     customerDTO: ICustomerNewDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<ICustomer> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Transformes the customer DTO to customer object.
-    const customerObj = await this.customerDTO.transformCreateDTO(
-      tenantId,
-      customerDTO
-    );
+    const customerObj = await this.customerDTO.transformCreateDTO(tenantId, customerDTO);
     // Creates a new customer under unit-of-work envirement.
     return this.uow.withTransaction(
       tenantId,
@@ -70,7 +61,7 @@ export class CreateCustomer {
 
         return customer;
       },
-      trx
+      trx,
     );
   }
 }

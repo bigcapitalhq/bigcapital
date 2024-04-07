@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
   IBalanceSheetDataNode,
@@ -7,14 +6,15 @@ import {
   IBalanceSheetSchemaNode,
   IBalanceSheetTotalPeriod,
 } from '@/interfaces';
-import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
-import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import * as R from 'ramda';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
-import BalanceSheetRepository from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
+import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
+import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetNetIncomePP } from './BalanceSheetNetIncomePP';
 import { BalanceSheetNetIncomePY } from './BalanceSheetNetIncomePY';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetNetIncome = (Base: any) =>
   class extends R.compose(
@@ -23,7 +23,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
     BalanceSheetComparsionPreviousYear,
     BalanceSheetComparsionPreviousPeriod,
     FinancialPreviousPeriod,
-    FinancialHorizTotals
+    FinancialHorizTotals,
   )(Base) {
     private repository: BalanceSheetRepository;
     private query: BalanceSheetQuery;
@@ -62,9 +62,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @param  {IBalanceSheetSchemaNetIncomeNode} node - Schema node.
      * @return {IBalanceSheetAggregateNode}
      */
-    protected schemaNetIncomeNodeMapper = (
-      node: IBalanceSheetSchemaNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    protected schemaNetIncomeNodeMapper = (node: IBalanceSheetSchemaNetIncomeNode): IBalanceSheetNetIncomeNode => {
       const total = this.getNetIncomeTotal();
 
       return {
@@ -80,23 +78,12 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @param {IBalanceSheetSchemaNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    protected schemaNetIncomeNodeCompose = (
-      node: IBalanceSheetSchemaNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    protected schemaNetIncomeNodeCompose = (node: IBalanceSheetSchemaNetIncomeNode): IBalanceSheetNetIncomeNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousYearActive,
-          this.previousYearNetIncomeNodeCompose
-        ),
-        R.when(
-          this.query.isPreviousPeriodActive,
-          this.previousPeriodNetIncomeNodeCompose
-        ),
-        R.when(
-          this.query.isDatePeriodsColumnsType,
-          this.assocNetIncomeDatePeriodsNode
-        ),
-        this.schemaNetIncomeNodeMapper
+        R.when(this.query.isPreviousYearActive, this.previousYearNetIncomeNodeCompose),
+        R.when(this.query.isPreviousPeriodActive, this.previousPeriodNetIncomeNodeCompose),
+        R.when(this.query.isDatePeriodsColumnsType, this.assocNetIncomeDatePeriodsNode),
+        this.schemaNetIncomeNodeMapper,
       )(node);
     };
 
@@ -110,12 +97,9 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @returns {number}
      */
     private getIncomeDatePeriodTotal = (toDate: Date): number => {
-      const periodTotalBetween = this.repository.incomePeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const periodTotalBetween = this.repository.incomePeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const periodOpening =
-        this.repository.incomePeriodsOpeningAccountsLedger.getClosingBalance();
+      const periodOpening = this.repository.incomePeriodsOpeningAccountsLedger.getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
@@ -127,12 +111,9 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @returns {number}
      */
     private getExpensesDatePeriodTotal = (toDate: Date): number => {
-      const periodTotalBetween = this.repository.expensesPeriodsAccountsLedger
-        .whereToDate(toDate)
-        .getClosingBalance();
+      const periodTotalBetween = this.repository.expensesPeriodsAccountsLedger.whereToDate(toDate).getClosingBalance();
 
-      const periodOpening =
-        this.repository.expensesOpeningAccountLedger.getClosingBalance();
+      const periodOpening = this.repository.expensesOpeningAccountLedger.getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
@@ -160,7 +141,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
     private getNetIncomeDatePeriodNode = (
       node: IBalanceSheetNetIncomeNode,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ): IBalanceSheetTotalPeriod => {
       const periodTotal = this.getNetIncomeDatePeriodTotal(toDate);
 
@@ -172,13 +153,8 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @param {IBalanceSheetNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    private getNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetTotalPeriod[] => {
-      return this.getReportNodeDatePeriods(
-        node,
-        this.getNetIncomeDatePeriodNode
-      );
+    private getNetIncomeDatePeriodsNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetTotalPeriod[] => {
+      return this.getReportNodeDatePeriods(node, this.getNetIncomeDatePeriodNode);
     };
 
     /**
@@ -186,9 +162,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @param {IBalanceSheetNetIncomeNode} node
      * @returns {IBalanceSheetNetIncomeNode}
      */
-    public assocNetIncomeDatePeriodsNode = (
-      node: IBalanceSheetNetIncomeNode
-    ): IBalanceSheetNetIncomeNode => {
+    public assocNetIncomeDatePeriodsNode = (node: IBalanceSheetNetIncomeNode): IBalanceSheetNetIncomeNode => {
       const datePeriods = this.getNetIncomeDatePeriodsNode(node);
 
       return R.assoc('horizontalTotals', datePeriods, node);
@@ -202,14 +176,9 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @param  {IBalanceSheetSchemaNode} node - Schema node.
      * @return {IBalanceSheetDataNode}
      */
-    private reportNetIncomeNodeSchemaParser = (
-      schemaNode: IBalanceSheetSchemaNode
-    ): IBalanceSheetDataNode => {
+    private reportNetIncomeNodeSchemaParser = (schemaNode: IBalanceSheetSchemaNode): IBalanceSheetDataNode => {
       return R.compose(
-        R.when(
-          this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME),
-          this.schemaNetIncomeNodeCompose
-        )
+        R.when(this.isSchemaNodeType(BALANCE_SHEET_SCHEMA_NODE_TYPE.NET_INCOME), this.schemaNetIncomeNodeCompose),
       )(schemaNode);
     };
 
@@ -219,7 +188,7 @@ export const BalanceSheetNetIncome = (Base: any) =>
      * @return {IBalanceSheetDataNode[]}
      */
     public netIncomeSchemaParser = (
-      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[]
+      nodes: (IBalanceSheetSchemaNode | IBalanceSheetDataNode)[],
     ): IBalanceSheetDataNode[] => {
       return this.mapNodesDeep(nodes, this.reportNetIncomeNodeSchemaParser);
     };

@@ -1,13 +1,13 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import ItemCategoriesService from '@/services/ItemCategories/ItemCategoriesService';
-import { Inject, Service } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import { IItemCategoryOTD } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import BaseController from '@/api/controllers/BaseController';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { ServiceError } from '@/exceptions';
+import { IItemCategoryOTD } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import ItemCategoriesService from '@/services/ItemCategories/ItemCategoriesService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ItemsCategoriesController extends BaseController {
@@ -25,34 +25,31 @@ export default class ItemsCategoriesController extends BaseController {
 
     router.post(
       '/:id',
-      [
-        ...this.categoryValidationSchema,
-        ...this.specificCategoryValidationSchema,
-      ],
+      [...this.categoryValidationSchema, ...this.specificCategoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editCategory.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.post(
       '/',
       [...this.categoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.newCategory.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.delete(
       '/:id',
       [...this.specificCategoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.deleteItem.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.get(
       '/:id',
       [...this.specificCategoryValidationSchema],
       this.validationResult,
       asyncMiddleware(this.getCategory.bind(this)),
-      this.handlerServiceError
+      this.handlerServiceError,
     );
     router.get(
       '/',
@@ -60,7 +57,7 @@ export default class ItemsCategoriesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getList.bind(this)),
       this.handlerServiceError,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -70,25 +67,15 @@ export default class ItemsCategoriesController extends BaseController {
    */
   get categoryValidationSchema() {
     return [
-      check('name')
-        .exists()
-        .trim()
-        .escape()
-        .isLength({ min: 0, max: DATATYPES_LENGTH.STRING }),
+      check('name').exists().trim().escape().isLength({ min: 0, max: DATATYPES_LENGTH.STRING }),
       check('description')
         .optional({ nullable: true })
         .isString()
         .trim()
         .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
-      check('sell_account_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
-      check('cost_account_id')
-        .optional({ nullable: true })
-        .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
-        .toInt(),
+      check('sell_account_id').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 }).toInt(),
+      check('cost_account_id').optional({ nullable: true }).isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 }).toInt(),
       check('inventory_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
@@ -125,11 +112,7 @@ export default class ItemsCategoriesController extends BaseController {
     const itemCategoryOTD: IItemCategoryOTD = this.matchedBodyData(req);
 
     try {
-      const itemCategory = await this.itemCategoriesService.newItemCategory(
-        tenantId,
-        itemCategoryOTD,
-        user
-      );
+      const itemCategory = await this.itemCategoriesService.newItemCategory(tenantId, itemCategoryOTD, user);
       return res.status(200).send({
         id: itemCategory.id,
         message: 'The item category has been created successfully.',
@@ -151,12 +134,7 @@ export default class ItemsCategoriesController extends BaseController {
     const itemCategoryOTD: IItemCategoryOTD = this.matchedBodyData(req);
 
     try {
-      await this.itemCategoriesService.editItemCategory(
-        tenantId,
-        itemCategoryId,
-        itemCategoryOTD,
-        user
-      );
+      await this.itemCategoriesService.editItemCategory(tenantId, itemCategoryId, itemCategoryOTD, user);
       return res.status(200).send({
         id: itemCategoryId,
         message: 'The item category has been edited successfully.',
@@ -177,11 +155,7 @@ export default class ItemsCategoriesController extends BaseController {
     const { tenantId, user } = req;
 
     try {
-      await this.itemCategoriesService.deleteItemCategory(
-        tenantId,
-        itemCategoryId,
-        user
-      );
+      await this.itemCategoriesService.deleteItemCategory(tenantId, itemCategoryId, user);
       return res.status(200).send({
         id: itemCategoryId,
         message: 'The item category has been deleted successfully.',
@@ -207,13 +181,10 @@ export default class ItemsCategoriesController extends BaseController {
     };
 
     try {
-      const {
-        itemCategories,
-        filterMeta,
-      } = await this.itemCategoriesService.getItemCategoriesList(
+      const { itemCategories, filterMeta } = await this.itemCategoriesService.getItemCategoriesList(
         tenantId,
         itemCategoriesFilter,
-        user
+        user,
       );
       return res.status(200).send({
         item_categories: itemCategories,
@@ -235,11 +206,7 @@ export default class ItemsCategoriesController extends BaseController {
     const { tenantId, user } = req;
 
     try {
-      const itemCategory = await this.itemCategoriesService.getItemCategory(
-        tenantId,
-        itemCategoryId,
-        user
-      );
+      const itemCategory = await this.itemCategoriesService.getItemCategory(tenantId, itemCategoryId, user);
       return res.status(200).send({ category: itemCategory });
     } catch (error) {
       next(error);
@@ -253,12 +220,7 @@ export default class ItemsCategoriesController extends BaseController {
    * @param {Response} res -
    * @param {NextFunction} next
    */
-  handlerServiceError(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  handlerServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'CATEGORY_NOT_FOUND') {
         return res.boom.badRequest(null, {

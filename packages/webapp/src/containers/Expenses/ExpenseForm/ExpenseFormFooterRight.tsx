@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  T,
-  TotalLines,
-  TotalLine,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useExpensesTotals } from './utils';
 
 export function ExpenseFormFooterRight() {
@@ -20,11 +14,7 @@ export function ExpenseFormFooterRight() {
         value={formattedSubtotal}
         borderStyle={TotalLineBorderStyle.None}
       />
-      <TotalLine
-        title={<T id={'expense.label.total'} />}
-        value={formattedTotal}
-        textStyle={TotalLineTextStyle.Bold}
-      />
+      <TotalLine title={<T id={'expense.label.total'} />} value={formattedTotal} textStyle={TotalLineTextStyle.Bold} />
     </ExpensesTotalLines>
   );
 }

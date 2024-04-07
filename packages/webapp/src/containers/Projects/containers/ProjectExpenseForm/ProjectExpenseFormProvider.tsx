@@ -26,6 +26,5 @@ function ProjectExpenseFormProvider({
   );
 }
 
-const useProjectExpenseFormContext = () =>
-  React.useContext(ProjectExpenseFormContext);
+const useProjectExpenseFormContext = () => React.useContext(ProjectExpenseFormContext);
 export { ProjectExpenseFormProvider, useProjectExpenseFormContext };

@@ -44,10 +44,7 @@ function PreferencesEstimatesFormPageRoot({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )({ salesEstimates: { ...values } });
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)({ salesEstimates: { ...values } });
 
     // Handle request success.
     const onSuccess = (response) => {

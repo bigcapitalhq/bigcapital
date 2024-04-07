@@ -7,12 +7,7 @@ export class TaskTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'estimateHoursFormatted',
-      'actualHoursFormatted',
-      'invoicedHoursFormatted',
-      'billableHoursFormatted',
-    ];
+    return ['estimateHoursFormatted', 'actualHoursFormatted', 'invoicedHoursFormatted', 'billableHoursFormatted'];
   };
 
   /**

@@ -3,22 +3,12 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { isUndefined } from 'lodash';
-import {
-  Overlay,
-  InputGroup,
-  Tag,
-  MenuItem,
-  Spinner,
-  Intent,
-} from '@blueprintjs/core';
+import { Overlay, InputGroup, Tag, MenuItem, Spinner, Intent } from '@blueprintjs/core';
 import { QueryList } from '@blueprintjs/select';
 import { CLASSES } from '@/constants/classes';
 
 import { Icon, If, ListSelect, FormattedMessage as T } from '@/components';
-import {
-  UniversalSearchProvider,
-  useUniversalSearchContext,
-} from './UniversalSearchProvider';
+import { UniversalSearchProvider, useUniversalSearchContext } from './UniversalSearchProvider';
 import { filterItemsByResourceType } from './utils';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 
@@ -26,8 +16,7 @@ import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
  * Universal search input action.
  */
 function UniversalSearchInputRightElements({ onSearchTypeChange }) {
-  const { isLoading, searchType, defaultSearchResource, searchTypeOptions } =
-    useUniversalSearchContext();
+  const { isLoading, searchType, defaultSearchResource, searchTypeOptions } = useUniversalSearchContext();
 
   // Handle search type option change.
   const handleSearchTypeChange = (option) => {
@@ -67,28 +56,20 @@ function UniversalSearchInputRightElements({ onSearchTypeChange }) {
  * Universal search query list.
  */
 function UniversalSearchQueryList(props) {
-  const { isOpen, isLoading, onSearchTypeChange, searchType, ...restProps } =
-    props;
+  const { isOpen, isLoading, onSearchTypeChange, searchType, ...restProps } = props;
 
   return (
     <QueryList
       {...restProps}
       initialContent={null}
       renderer={(listProps) => (
-        <UniversalSearchBar
-          isOpen={isOpen}
-          onSearchTypeChange={onSearchTypeChange}
-          {...listProps}
-        />
+        <UniversalSearchBar isOpen={isOpen} onSearchTypeChange={onSearchTypeChange} {...listProps} />
       )}
       noResults={
         !isLoading ? (
           <MenuItem disabled={true} text={<T id={'no_results'} />} />
         ) : (
-          <MenuItem
-            disabled={true}
-            text={<T id={'universal_search.loading'} />}
-          />
+          <MenuItem disabled={true} text={<T id={'universal_search.loading'} />} />
         )
       }
     />
@@ -107,8 +88,7 @@ function UniversalQuerySearchActions() {
       </div>
 
       <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTION_CLOSE)}>
-        <Tag>ESC</Tag>{' '}
-        <span class={'text'}>{intl.get('universal_search.close_text')}</span>
+        <Tag>ESC</Tag> <span class={'text'}>{intl.get('universal_search.close_text')}</span>
       </div>
 
       <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTION_ARROWS)}>
@@ -129,29 +109,17 @@ function UniversalQuerySearchActions() {
  */
 function UniversalSearchBar({ isOpen, onSearchTypeChange, ...listProps }) {
   const { handleKeyDown, handleKeyUp } = listProps;
-  const handlers = isOpen
-    ? { onKeyDown: handleKeyDown, onKeyUp: handleKeyUp }
-    : {};
+  const handlers = isOpen ? { onKeyDown: handleKeyDown, onKeyUp: handleKeyUp } : {};
 
   return (
-    <div
-      className={classNames(
-        CLASSES.UNIVERSAL_SEARCH_OMNIBAR,
-        listProps.className,
-      )}
-      {...handlers}
-    >
+    <div className={classNames(CLASSES.UNIVERSAL_SEARCH_OMNIBAR, listProps.className)} {...handlers}>
       <InputGroup
         large={true}
         leftIcon={<Icon icon={'universal-search'} iconSize={20} />}
         placeholder={intl.get('universal_search.placeholder')}
         onChange={listProps.handleQueryChange}
         value={listProps.query}
-        rightElement={
-          <UniversalSearchInputRightElements
-            onSearchTypeChange={onSearchTypeChange}
-          />
-        }
+        rightElement={<UniversalSearchInputRightElements onSearchTypeChange={onSearchTypeChange} />}
         autoFocus={true}
       />
       {listProps.itemList}
@@ -175,15 +143,10 @@ export function UniversalSearch({
   ...queryListProps
 }) {
   // Search type state.
-  const [searchType, setSearchType] = React.useState(
-    defaultSearchResource || RESOURCES_TYPES.CUSTOMER,
-  );
+  const [searchType, setSearchType] = React.useState(defaultSearchResource || RESOURCES_TYPES.CUSTOMER);
   // Handle search resource type controlled mode.
   React.useEffect(() => {
-    if (
-      !isUndefined(searchResource) &&
-      searchResource !== defaultSearchResource
-    ) {
+    if (!isUndefined(searchResource) && searchResource !== defaultSearchResource) {
       setSearchType(searchResource);
     }
   }, [searchResource, defaultSearchResource]);

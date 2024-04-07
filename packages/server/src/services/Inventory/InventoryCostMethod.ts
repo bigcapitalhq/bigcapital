@@ -1,7 +1,7 @@
+import { IInventoryLotCost } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { omit } from 'lodash';
 import { Container } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { IInventoryLotCost } from '@/interfaces';
 
 export default class InventoryCostMethod {
   tenancy: TenancyService;
@@ -22,9 +22,7 @@ export default class InventoryCostMethod {
    * @param  {IInventoryLotCost[]} costLotsTransactions
    * @return {Promise[]}
    */
-  public storeInventoryLotsCost(
-    costLotsTransactions: IInventoryLotCost[]
-  ): Promise<object> {
+  public storeInventoryLotsCost(costLotsTransactions: IInventoryLotCost[]): Promise<object> {
     const { InventoryCostLotTracker } = this.tenantModels;
     const opers: any = [];
 

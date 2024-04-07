@@ -8,9 +8,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const PurchasesByItemsPdfDialogContent = lazy(
-  () => import('./PurchasesByItemsPdfDialogContent'),
-);
+const PurchasesByItemsPdfDialogContent = lazy(() => import('./PurchasesByItemsPdfDialogContent'));
 
 /**
  * Purchases by items sheet pdf preview dialog.
@@ -34,6 +32,4 @@ function PurchasesByItemsPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const PurchasesByItemsPdfDialog = compose(withDialogRedux())(
-  PurchasesByItemsPdfDialogRoot,
-);
+export const PurchasesByItemsPdfDialog = compose(withDialogRedux())(PurchasesByItemsPdfDialogRoot);

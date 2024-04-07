@@ -1,13 +1,13 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
-import { AbilitySubject, AccountAction } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, AccountAction } from '@/interfaces';
 import { TasksApplication } from '@/services/Projects/Tasks/TasksApplication';
 import { ProjectTaskChargeType } from '@/services/Projects/Tasks/constants';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ProjectTasksController extends BaseController {
@@ -25,17 +25,13 @@ export class ProjectTasksController extends BaseController {
       CheckPolicies(AccountAction.CREATE, AbilitySubject.Project),
       [
         check('name').exists(),
-        check('charge_type')
-          .exists()
-          .trim()
-          .toUpperCase()
-          .isIn(Object.values(ProjectTaskChargeType)),
+        check('charge_type').exists().trim().toUpperCase().isIn(Object.values(ProjectTaskChargeType)),
         check('rate').exists(),
         check('estimate_hours').exists(),
       ],
       this.validationResult,
       asyncMiddleware(this.createTask.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/tasks/:taskId',
@@ -49,7 +45,7 @@ export class ProjectTasksController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.editTask.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/tasks/:taskId',
@@ -57,7 +53,7 @@ export class ProjectTasksController extends BaseController {
       [param('taskId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTask.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/projects/:projectId/tasks',
@@ -65,7 +61,7 @@ export class ProjectTasksController extends BaseController {
       [param('projectId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.getTasks.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.delete(
       '/tasks/:taskId',
@@ -73,7 +69,7 @@ export class ProjectTasksController extends BaseController {
       [param('taskId').exists().isInt().toInt()],
       this.validationResult,
       asyncMiddleware(this.deleteTask.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -90,11 +86,7 @@ export class ProjectTasksController extends BaseController {
     const taskDTO = this.matchedBodyData(req);
 
     try {
-      const task = await this.tasksApplication.createTask(
-        tenantId,
-        projectId,
-        taskDTO
-      );
+      const task = await this.tasksApplication.createTask(tenantId, projectId, taskDTO);
       return res.status(200).send({
         id: task.id,
         message: 'The task has been created successfully.',
@@ -117,11 +109,7 @@ export class ProjectTasksController extends BaseController {
     const editTaskDTO = this.matchedBodyData(req);
 
     try {
-      const task = await this.tasksApplication.editTask(
-        tenantId,
-        taskId,
-        editTaskDTO
-      );
+      const task = await this.tasksApplication.editTask(tenantId, taskId, editTaskDTO);
       return res.status(200).send({
         id: task.id,
         message: 'The task has been edited successfully.',
@@ -198,12 +186,7 @@ export class ProjectTasksController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
     }
     next(error);

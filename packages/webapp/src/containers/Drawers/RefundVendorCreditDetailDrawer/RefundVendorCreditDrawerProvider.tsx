@@ -12,12 +12,12 @@ const RefundVendorCreditDrawerContent = React.createContext();
  */
 function RefundVendorCreditDrawerProvider({ refundTransactionId, ...props }) {
   // Handle fetch refund credit note transaction.
-  const {
-    data: refundVendorTransaction,
-    isLoading: isRefundVendorTransaction,
-  } = useRefundVendorCreditTransaction(refundTransactionId, {
-    enabled: !!refundTransactionId,
-  });
+  const { data: refundVendorTransaction, isLoading: isRefundVendorTransaction } = useRefundVendorCreditTransaction(
+    refundTransactionId,
+    {
+      enabled: !!refundTransactionId,
+    },
+  );
 
   // provider
   const provider = {
@@ -36,10 +36,6 @@ function RefundVendorCreditDrawerProvider({ refundTransactionId, ...props }) {
   );
 }
 
-const useRefundVendorCreditNoteDrawerContext = () =>
-  React.useContext(RefundVendorCreditDrawerContent);
+const useRefundVendorCreditNoteDrawerContext = () => React.useContext(RefundVendorCreditDrawerContent);
 
-export {
-  RefundVendorCreditDrawerProvider,
-  useRefundVendorCreditNoteDrawerContext,
-};
+export { RefundVendorCreditDrawerProvider, useRefundVendorCreditNoteDrawerContext };

@@ -6,26 +6,15 @@ import { DATATYPES_LENGTH } from '@/constants/dataTypes';
 
 const Schema = Yup.object().shape({
   active: Yup.boolean(),
-  name: Yup.string()
-    .required()
-    .min(0)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('item_name_')),
-  type: Yup.string()
-    .trim()
-    .required()
-    .min(0)
-    .max(DATATYPES_LENGTH.STRING)
-    .label(intl.get('item_type_')),
+  name: Yup.string().required().min(0).max(DATATYPES_LENGTH.STRING).label(intl.get('item_name_')),
+  type: Yup.string().trim().required().min(0).max(DATATYPES_LENGTH.STRING).label(intl.get('item_type_')),
   code: Yup.string().trim().min(0).max(DATATYPES_LENGTH.STRING),
   cost_price: Yup.number()
     .min(0)
     .max(DATATYPES_LENGTH.DECIMAL_13_3)
     .when(['purchasable'], {
       is: true,
-      then: Yup.number()
-        .required()
-        .label(intl.get('cost_price_')),
+      then: Yup.number().required().label(intl.get('cost_price_')),
       otherwise: Yup.number().nullable(true),
     }),
   sell_price: Yup.number()
@@ -33,9 +22,7 @@ const Schema = Yup.object().shape({
     .max(DATATYPES_LENGTH.DECIMAL_13_3)
     .when(['sellable'], {
       is: true,
-      then: Yup.number()
-        .required()
-        .label(intl.get('sell_price_')),
+      then: Yup.number().required().label(intl.get('sell_price_')),
       otherwise: Yup.number().nullable(true),
     }),
   cost_account_id: Yup.number()

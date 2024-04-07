@@ -48,10 +48,10 @@ export class TimeTransformer extends Transformer {
 
   /**
    * Retrieves the formatted duration.
-   * @param {Time} time 
+   * @param {Time} time
    * @returns {string}
    */
   public durationFormatted = (time: Time) => {
     return formatMinutes(time.duration);
-  }
+  };
 }

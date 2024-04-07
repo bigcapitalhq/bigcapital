@@ -3,22 +3,8 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
 
-import {
-  Menu,
-  MenuDivider,
-  MenuItem,
-  Tag,
-  Intent,
-  ProgressBar,
-} from '@blueprintjs/core';
-import {
-  Icon,
-  FormatDate,
-  Can,
-  Choose,
-  If,
-  FormattedMessage as T,
-} from '@/components';
+import { Menu, MenuDivider, MenuItem, Tag, Intent, ProgressBar } from '@blueprintjs/core';
+import { Icon, FormatDate, Can, Choose, If, FormattedMessage as T } from '@/components';
 import { ProjectAction, AbilitySubject } from '@/constants/abilityOption';
 import { safeCallback, firstLettersArgs, calculateStatus } from '@/utils';
 
@@ -43,9 +29,7 @@ export function ProjectStatus({ row }) {
  * status accessor.
  */
 export const StatusAccessor = (row) => {
-  return (
-    <ProjectStatus row={row} />
-  );
+  return <ProjectStatus row={row} />;
 };
 
 /**
@@ -79,16 +63,10 @@ export const ActionsMenu = ({
     <Can I={ProjectAction.View} a={AbilitySubject.Project}>
       <MenuItem text={'Status'} icon={<Icon icon="plus" />}>
         <If condition={original.status !== 'InProgress'}>
-          <MenuItem
-            text={'InProgress'}
-            onClick={safeCallback(onStatus, original)}
-          />
+          <MenuItem text={'InProgress'} onClick={safeCallback(onStatus, original)} />
         </If>
         <If condition={original.status !== 'Closed'}>
-          <MenuItem
-            text={'Closed'}
-            onClick={safeCallback(onStatus, original)}
-          />
+          <MenuItem text={'Closed'} onClick={safeCallback(onStatus, original)} />
         </If>
       </MenuItem>
     </Can>
@@ -109,15 +87,11 @@ export const ActionsMenu = ({
  */
 export const ProjectsAccessor = (row) => (
   <ProjectName>
-    <ProjectAvatar data-size="medium">
-      {firstLettersArgs(row?.contact_display_name, row?.name)}
-    </ProjectAvatar>
+    <ProjectAvatar data-size="medium">{firstLettersArgs(row?.contact_display_name, row?.name)}</ProjectAvatar>
 
     <ProjectItemsWrap>
       <ProjectItemsHeader>
-        <ProjectItemContactName>
-          {row.contact_display_name}
-        </ProjectItemContactName>
+        <ProjectItemContactName>{row.contact_display_name}</ProjectItemContactName>
         <ProjectItemProjectName>{row.name}</ProjectItemProjectName>
       </ProjectItemsHeader>
 

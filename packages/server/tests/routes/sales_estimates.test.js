@@ -1,6 +1,6 @@
 const { iteratee } = require('lodash');
-import { tenantWebsite, tenantFactory, loginRes } from '~/dbInit';
-import { request, expect } from '~/testInit';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 import { SaleEstimate, SaleEstimateEntry } from '../../src/models';
 
 describe('route: `/sales/estimates`', () => {
@@ -134,13 +134,14 @@ describe('route: `/sales/estimates`', () => {
               item_id: 1,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'CUSTOMER.ID.NOT.FOUND', code: 200,
+        type: 'CUSTOMER.ID.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -161,13 +162,14 @@ describe('route: `/sales/estimates`', () => {
               item_id: 1,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300,
+        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
+        code: 300,
       });
     });
 
@@ -187,13 +189,14 @@ describe('route: `/sales/estimates`', () => {
               item_id: 1,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEMS.IDS.NOT.EXISTS', code: 400,
+        type: 'ITEMS.IDS.NOT.EXISTS',
+        code: 400,
       });
     });
 
@@ -218,8 +221,8 @@ describe('route: `/sales/estimates`', () => {
               item_id: item.id,
               rate: 1,
               quantity: 2,
-              description: 'desc..'
-            }
+              description: 'desc..',
+            },
           ],
         });
 
@@ -230,7 +233,7 @@ describe('route: `/sales/estimates`', () => {
 
       expect(storedEstimate.id).equals(res.body.id);
       expect(storedEstimate.customerId).equals(customer.id);
-      expect(storedEstimate.reference).equals('reference')
+      expect(storedEstimate.reference).equals('reference');
       expect(storedEstimate.note).equals('note here');
       expect(storedEstimate.termsConditions).equals('terms and conditions');
       expect(storedEstimate.estimateNumber).equals('12');
@@ -253,7 +256,8 @@ describe('route: `/sales/estimates`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200
+        type: 'SALE.ESTIMATE.ID.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -298,15 +302,16 @@ describe('route: `/sales/estimates`', () => {
               item_id: item.id,
               rate: 1,
               quantity: 2,
-              description: 'desc..'
-            }
+              description: 'desc..',
+            },
           ],
-        })
+        });
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'SALE.ESTIMATE.ID.NOT.FOUND', code: 200
-      });  
+        type: 'SALE.ESTIMATE.ID.NOT.FOUND',
+        code: 200,
+      });
     });
 
     it('Should `entries.*.item_id` be exists on the storage.', async () => {
@@ -327,13 +332,14 @@ describe('route: `/sales/estimates`', () => {
               item_id: 1,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ITEMS.IDS.NOT.EXISTS', code: 400
+        type: 'ITEMS.IDS.NOT.EXISTS',
+        code: 400,
       });
     });
 
@@ -355,12 +361,13 @@ describe('route: `/sales/estimates`', () => {
               item_id: 1,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE', code: 300,
+        type: 'ESTIMATE.NUMBER.IS.NOT.UNQIUE',
+        code: 300,
       });
     });
 
@@ -384,13 +391,14 @@ describe('route: `/sales/estimates`', () => {
               item_id: item.id,
               rate: 1,
               quantity: 2,
-            }
+            },
           ],
         });
 
       expect(res.status).equals(400);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'ESTIMATE.NOT.FOUND.ENTRIES.IDS', code: 500,
+        type: 'ESTIMATE.NOT.FOUND.ENTRIES.IDS',
+        code: 500,
       });
     });
 
@@ -417,13 +425,12 @@ describe('route: `/sales/estimates`', () => {
               item_id: item.id,
               rate: 100,
               quantity: 200,
-            }
+            },
           ],
         });
       expect(res.status).equals(200);
     });
   });
-
 
   describe('GET: `/sales/estimates`', () => {
     it('Should retrieve sales estimates.', async () => {

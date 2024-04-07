@@ -17,10 +17,7 @@ export const getProjectProfitabilitySummaryValidationSchema = () =>
   Yup.object().shape({
     dateRange: Yup.string().optional(),
     fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('toDate')),
     filterByOption: Yup.string(),
   });
 
@@ -59,10 +56,7 @@ export const useProjectProfitabilitySummaryQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = useMemo(
-    () => parseProjectProfitabilityQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = useMemo(() => parseProjectProfitabilityQuery(locationQuery), [locationQuery]);
   return {
     query,
     locationQuery,

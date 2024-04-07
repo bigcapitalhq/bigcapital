@@ -8,6 +8,7 @@ import {
 import ResourceService from '../Resource/ResourceService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
+import { sanitizeResourceName, validateSheetEmpty } from './_utils';
 import { ImportFileUploadPOJO } from './interfaces';
 
 @Service()
@@ -36,15 +37,12 @@ export class ImportFileUploadService {
     tenantId: number,
     resourceName: string,
     filename: string,
-    params: Record<string, number | string>
+    params: Record<string, number | string>,
   ): Promise<ImportFileUploadPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
     const resource = sanitizeResourceName(resourceName);
-    const resourceMeta = this.resourceService.getResourceMeta(
-      tenantId,
-      resource
-    );
+    const resourceMeta = this.resourceService.getResourceMeta(tenantId, resource);
     // Throw service error if the resource does not support importing.
     this.importValidator.validateResourceImportable(resourceMeta);
 

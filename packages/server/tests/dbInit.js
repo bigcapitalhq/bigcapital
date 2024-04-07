@@ -1,14 +1,5 @@
-import { 
-  request,
-  expect,
-  createTenantFactory,
-  createTenant,
-  bindTenantModel,
-  login,
-  systemFactory,
-  dropTenant,
-} from '~/testInit';
 import CacheService from '@/services/Cache';
+import { bindTenantModel, createTenant, createTenantFactory, dropTenant, login, systemFactory } from '~/testInit';
 
 let tenantWebsite;
 let tenantFactory;
@@ -32,9 +23,4 @@ afterEach(async () => {
   tenantWebsite = null;
 });
 
-export {
-  tenantWebsite,
-  tenantFactory,
-  systemFactory,
-  loginRes,
-};
+export { tenantWebsite, tenantFactory, systemFactory, loginRes };

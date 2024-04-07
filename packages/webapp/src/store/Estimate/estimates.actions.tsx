@@ -12,4 +12,4 @@ export const resetEstimatesTableState = () => {
   return {
     type: t.ESTIMATES_TABLE_STATE_RESET,
   };
-}
+};

@@ -1,14 +1,10 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
-import {
-  ICustomerDeletingPayload,
-  ICustomerEventDeletedPayload,
-  ISystemUser,
-} from '@/interfaces';
+import { ICustomerDeletingPayload, ICustomerEventDeletedPayload, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from '../constants';
 
 @Service()
@@ -28,11 +24,7 @@ export class DeleteCustomer {
    * @param {number} customerId
    * @return {Promise<void>}
    */
-  public async deleteCustomer(
-    tenantId: number,
-    customerId: number,
-    authorizedUser: ISystemUser
-  ): Promise<void> {
+  public async deleteCustomer(tenantId: number, customerId: number, authorizedUser: ISystemUser): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the customer of throw not found service error.

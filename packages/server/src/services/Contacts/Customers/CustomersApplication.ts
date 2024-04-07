@@ -50,10 +50,7 @@ export class CustomersApplication {
    * @param   {ISystemUser} authorizedUser
    * @returns {Promise<ICustomer>}
    */
-  public createCustomer = (
-    tenantId: number,
-    customerDTO: ICustomerNewDTO,
-  ) => {
+  public createCustomer = (tenantId: number, customerDTO: ICustomerNewDTO) => {
     return this.createCustomerService.createCustomer(tenantId, customerDTO);
   };
 
@@ -64,16 +61,8 @@ export class CustomersApplication {
    * @param  {ICustomerEditDTO} customerDTO
    * @return {Promise<ICustomer>}
    */
-  public editCustomer = (
-    tenantId: number,
-    customerId: number,
-    customerDTO: ICustomerEditDTO
-  ) => {
-    return this.editCustomerService.editCustomer(
-      tenantId,
-      customerId,
-      customerDTO
-    );
+  public editCustomer = (tenantId: number, customerId: number, customerDTO: ICustomerEditDTO) => {
+    return this.editCustomerService.editCustomer(tenantId, customerId, customerDTO);
   };
 
   /**
@@ -83,16 +72,8 @@ export class CustomersApplication {
    * @param   {ISystemUser} authorizedUser
    * @returns {Promise<void>}
    */
-  public deleteCustomer = (
-    tenantId: number,
-    customerId: number,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.deleteCustomerService.deleteCustomer(
-      tenantId,
-      customerId,
-      authorizedUser
-    );
+  public deleteCustomer = (tenantId: number, customerId: number, authorizedUser: ISystemUser) => {
+    return this.deleteCustomerService.deleteCustomer(tenantId, customerId, authorizedUser);
   };
 
   /**
@@ -105,13 +86,9 @@ export class CustomersApplication {
   public editOpeningBalance = (
     tenantId: number,
     customerId: number,
-    openingBalanceEditDTO: ICustomerOpeningBalanceEditDTO
+    openingBalanceEditDTO: ICustomerOpeningBalanceEditDTO,
   ): Promise<ICustomer> => {
-    return this.editOpeningBalanceService.changeOpeningBalance(
-      tenantId,
-      customerId,
-      openingBalanceEditDTO
-    );
+    return this.editOpeningBalanceService.changeOpeningBalance(tenantId, customerId, openingBalanceEditDTO);
   };
 
   /**

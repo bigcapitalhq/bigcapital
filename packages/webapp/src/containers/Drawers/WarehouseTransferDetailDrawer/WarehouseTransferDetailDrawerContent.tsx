@@ -13,9 +13,7 @@ export default function WarehouseTransferDetailDrawerContent({
   warehouseTransferId,
 }) {
   return (
-    <WarehouseTransferDetailDrawerProvider
-      warehouseTransferId={warehouseTransferId}
-    >
+    <WarehouseTransferDetailDrawerProvider warehouseTransferId={warehouseTransferId}>
       <DrawerBody>
         <WarehouseTransferDetail />
       </DrawerBody>

@@ -46,12 +46,7 @@ export default function ItemCategoryFormFields() {
             helperText={<ErrorMessage name="description" />}
             inline={true}
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>

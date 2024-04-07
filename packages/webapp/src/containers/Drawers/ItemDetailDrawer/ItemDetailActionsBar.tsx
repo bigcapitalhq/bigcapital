@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useItemDetailDrawerContext } from './ItemDetailDrawerProvider';
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
@@ -15,12 +9,7 @@ import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  DashboardActionsBar,
-  Icon,
-  FormattedMessage as T,
-  Can,
-} from '@/components';
+import { DashboardActionsBar, Icon, FormattedMessage as T, Can } from '@/components';
 import { ItemDetailActionsMoreBtn } from './ItemDetailActionsMoreBtn';
 
 import { compose } from '@/utils';
@@ -79,7 +68,4 @@ function ItemDetailActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertsActions,
-)(ItemDetailActionsBar);
+export default compose(withDrawerActions, withAlertsActions)(ItemDetailActionsBar);

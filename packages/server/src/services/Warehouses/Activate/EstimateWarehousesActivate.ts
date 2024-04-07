@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { IWarehouse } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class EstimatesActivateWarehouses {
@@ -13,10 +13,7 @@ export class EstimatesActivateWarehouses {
    * @param   {number} primaryWarehouse
    * @returns {Promise<void>}
    */
-  public updateEstimatesWithWarehouse = async (
-    tenantId: number,
-    primaryWarehouse: IWarehouse
-  ): Promise<void> => {
+  public updateEstimatesWithWarehouse = async (tenantId: number, primaryWarehouse: IWarehouse): Promise<void> => {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
     // Updates the sale estimates with primary warehouse.

@@ -1,23 +1,13 @@
 // @ts-nocheck
 import React, { useRef } from 'react';
 import classNames from 'classnames';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 
 import { useARAgingSummaryContext } from './ARAgingSummaryProvider';
 import { AppToaster, If, Stack, FormattedMessage as T } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { agingSummaryDynamicColumns } from '../AgingSummary/dynamicColumns';
-import {
-  useARAgingSheetCsvExport,
-  useARAgingSheetXlsxExport,
-} from '@/hooks/query';
+import { useARAgingSheetCsvExport, useARAgingSheetXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve AR aging summary columns.
@@ -119,10 +109,7 @@ export function ARAgingSummaryExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

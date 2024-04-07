@@ -1,30 +1,26 @@
-import { defaultTo, sumBy, get } from 'lodash';
 import {
-  IAgingPeriod,
-  ISaleInvoice,
-  IBill,
-  IAgingPeriodTotal,
   IARAgingSummaryCustomer,
-  IContact,
   IARAgingSummaryQuery,
-  IFormatNumberSettings,
   IAgingAmount,
+  IAgingPeriod,
+  IAgingPeriodTotal,
   IAgingSummaryContact,
+  IBill,
+  IContact,
+  IFormatNumberSettings,
+  ISaleInvoice,
 } from '@/interfaces';
-import AgingReport from './AgingReport';
+import { defaultTo, get, sumBy } from 'lodash';
 import { Dictionary } from 'tsyringe/dist/typings/types';
+import AgingReport from './AgingReport';
 
 export default abstract class AgingSummaryReport extends AgingReport {
   protected readonly contacts: IContact[];
   protected readonly agingPeriods: IAgingPeriod[] = [];
   protected readonly baseCurrency: string;
   protected readonly query: IARAgingSummaryQuery;
-  protected readonly overdueInvoicesByContactId: Dictionary<
-    (ISaleInvoice | IBill)[]
-  >;
-  protected readonly currentInvoicesByContactId: Dictionary<
-    (ISaleInvoice | IBill)[]
-  >;
+  protected readonly overdueInvoicesByContactId: Dictionary<(ISaleInvoice | IBill)[]>;
+  protected readonly currentInvoicesByContactId: Dictionary<(ISaleInvoice | IBill)[]>;
 
   /**
    * Setes initial aging periods to the contact.
@@ -45,17 +41,14 @@ export default abstract class AgingSummaryReport extends AgingReport {
     const unpaidInvoices = this.getUnpaidInvoicesByContactId(contactId);
     const initialAgingPeriods = this.getInitialAgingPeriodsTotal();
 
-    return unpaidInvoices.reduce(
-      (agingPeriods: IAgingPeriodTotal[], unpaidInvoice) => {
-        const newAgingPeriods = this.getContactAgingDueAmount(
-          agingPeriods,
-          unpaidInvoice.dueAmount,
-          unpaidInvoice.overdueDays
-        );
-        return newAgingPeriods;
-      },
-      initialAgingPeriods
-    );
+    return unpaidInvoices.reduce((agingPeriods: IAgingPeriodTotal[], unpaidInvoice) => {
+      const newAgingPeriods = this.getContactAgingDueAmount(
+        agingPeriods,
+        unpaidInvoice.dueAmount,
+        unpaidInvoice.overdueDays,
+      );
+      return newAgingPeriods;
+    }, initialAgingPeriods);
   }
 
   /**
@@ -68,16 +61,13 @@ export default abstract class AgingSummaryReport extends AgingReport {
   protected getContactAgingDueAmount(
     agingPeriods: IAgingPeriodTotal[],
     dueAmount: number,
-    overdueDays: number
+    overdueDays: number,
   ): IAgingPeriodTotal[] {
     const newAgingPeriods = agingPeriods.map((agingPeriod) => {
       const isInAgingPeriod =
-        agingPeriod.beforeDays <= overdueDays &&
-        (agingPeriod.toDays > overdueDays || !agingPeriod.toDays);
+        agingPeriod.beforeDays <= overdueDays && (agingPeriod.toDays > overdueDays || !agingPeriod.toDays);
 
-      const total: number = isInAgingPeriod
-        ? agingPeriod.total.amount + dueAmount
-        : agingPeriod.total.amount;
+      const total: number = isInAgingPeriod ? agingPeriod.total.amount + dueAmount : agingPeriod.total.amount;
 
       return {
         ...agingPeriod,
@@ -93,10 +83,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * @param {IFormatNumberSettings} settings - Override the format number settings.
    * @return {IAgingAmount}
    */
-  protected formatAmount(
-    amount: number,
-    settings: IFormatNumberSettings = {}
-  ): IAgingAmount {
+  protected formatAmount(amount: number, settings: IFormatNumberSettings = {}): IAgingAmount {
     return {
       amount,
       formattedAmount: this.formatNumber(amount, settings),
@@ -110,10 +97,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * @param {IFormatNumberSettings} settings - Override the format number settings.
    * @return {IAgingPeriodTotal}
    */
-  protected formatTotalAmount(
-    amount: number,
-    settings: IFormatNumberSettings = {}
-  ): IAgingAmount {
+  protected formatTotalAmount(amount: number, settings: IFormatNumberSettings = {}): IAgingAmount {
     return this.formatAmount(amount, {
       money: true,
       excerptZero: false,
@@ -126,14 +110,9 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * @param {number} index
    * @return {number}
    */
-  protected getTotalAgingPeriodByIndex(
-    contactsAgingPeriods: any,
-    index: number
-  ): number {
+  protected getTotalAgingPeriodByIndex(contactsAgingPeriods: any, index: number): number {
     return this.contacts.reduce((acc, contact) => {
-      const totalPeriod = contactsAgingPeriods[index]
-        ? contactsAgingPeriods[index].total
-        : 0;
+      const totalPeriod = contactsAgingPeriods[index] ? contactsAgingPeriods[index].total : 0;
 
       return acc + totalPeriod;
     }, 0);
@@ -144,9 +123,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * @param  {number} contactId -
    * @return {(ISaleInvoice | IBill)[]}
    */
-  protected getUnpaidInvoicesByContactId(
-    contactId: number
-  ): (ISaleInvoice | IBill)[] {
+  protected getUnpaidInvoicesByContactId(contactId: number): (ISaleInvoice | IBill)[] {
     return defaultTo(this.overdueInvoicesByContactId[contactId], []);
   }
 
@@ -154,21 +131,16 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * Retrieve total aging periods of the report.
    * @return {(IAgingPeriodTotal & IAgingPeriod)[]}
    */
-  protected getTotalAgingPeriods(
-    contactsAgingPeriods: IARAgingSummaryCustomer[]
-  ): IAgingPeriodTotal[] {
+  protected getTotalAgingPeriods(contactsAgingPeriods: IARAgingSummaryCustomer[]): IAgingPeriodTotal[] {
     return this.agingPeriods.map((agingPeriod, index) => {
-      const total = sumBy(
-        contactsAgingPeriods,
-        (summary: IARAgingSummaryCustomer) => {
-          const aging = summary.aging[index];
+      const total = sumBy(contactsAgingPeriods, (summary: IARAgingSummaryCustomer) => {
+        const aging = summary.aging[index];
 
-          if (!aging) {
-            return 0;
-          }
-          return aging.total.amount;
+        if (!aging) {
+          return 0;
         }
-      );
+        return aging.total.amount;
+      });
 
       return {
         ...agingPeriod,
@@ -182,9 +154,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * @param {number} contactId - Specific contact id.
    * @return {(ISaleInvoice | IBill)[]}
    */
-  protected getCurrentInvoicesByContactId(
-    contactId: number
-  ): (ISaleInvoice | IBill)[] {
+  protected getCurrentInvoicesByContactId(contactId: number): (ISaleInvoice | IBill)[] {
     return get(this.currentInvoicesByContactId, contactId, []);
   }
 
@@ -220,9 +190,7 @@ export default abstract class AgingSummaryReport extends AgingReport {
    * Retrieve total of contacts totals.
    * @param {IAgingSummaryContact[]} contactsSummaries
    */
-  protected getTotalContactsTotals(
-    contactsSummaries: IAgingSummaryContact[]
-  ): number {
+  protected getTotalContactsTotals(contactsSummaries: IAgingSummaryContact[]): number {
     return sumBy(contactsSummaries, (summary) => summary.total.amount);
   }
 }

@@ -20,18 +20,13 @@ export default class LandedCostSyncCostTransactions {
     transactionId: number,
     transactionEntryId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      transactionType
-    );
+    const Model = this.transactionLandedCost.getModel(tenantId, transactionType);
     const relation = CONFIG.COST_TYPES[transactionType].entries;
 
     // Increment the landed cost transaction amount.
-    await Model.query(trx)
-      .where('id', transactionId)
-      .increment('allocatedCostAmount', amount);
+    await Model.query(trx).where('id', transactionId).increment('allocatedCostAmount', amount);
 
     // Increment the landed cost entry.
     await Model.relatedQuery(relation, trx)
@@ -54,18 +49,13 @@ export default class LandedCostSyncCostTransactions {
     transactionId: number,
     transactionEntryId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    const Model = this.transactionLandedCost.getModel(
-      tenantId,
-      transactionType
-    );
+    const Model = this.transactionLandedCost.getModel(tenantId, transactionType);
     const relation = CONFIG.COST_TYPES[transactionType].entries;
 
     // Decrement the allocate cost amount of cost transaction.
-    await Model.query(trx)
-      .where('id', transactionId)
-      .decrement('allocatedCostAmount', amount);
+    await Model.query(trx).where('id', transactionId).decrement('allocatedCostAmount', amount);
 
     // Decrement the allocated cost amount cost transaction entry.
     await Model.relatedQuery(relation, trx)

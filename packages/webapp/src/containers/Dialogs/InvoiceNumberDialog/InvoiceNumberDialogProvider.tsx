@@ -23,7 +23,6 @@ function InvoiceNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useInvoiceNumberDialogContext = () =>
-  useContext(InvoiceNumberDialogContext);
+const useInvoiceNumberDialogContext = () => useContext(InvoiceNumberDialogContext);
 
 export { InvoiceNumberDialogProvider, useInvoiceNumberDialogContext };

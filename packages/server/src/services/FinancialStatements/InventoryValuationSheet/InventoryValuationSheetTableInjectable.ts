@@ -1,9 +1,6 @@
+import { IInventoryValuationReportQuery, IInventoryValuationTable } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { InventoryValuationSheetService } from './InventoryValuationSheetService';
-import {
-  IInventoryValuationReportQuery,
-  IInventoryValuationTable,
-} from '@/interfaces';
 import { InventoryValuationSheetTable } from './InventoryValuationSheetTable';
 
 @Service()
@@ -17,14 +14,8 @@ export class InventoryValuationSheetTableInjectable {
    * @param {IInventoryValuationReportQuery} filter -
    * @returns {Promise<IInventoryValuationTable>}
    */
-  public async table(
-    tenantId: number,
-    filter: IInventoryValuationReportQuery
-  ): Promise<IInventoryValuationTable> {
-    const { data, query, meta } = await this.sheet.inventoryValuationSheet(
-      tenantId,
-      filter
-    );
+  public async table(tenantId: number, filter: IInventoryValuationReportQuery): Promise<IInventoryValuationTable> {
+    const { data, query, meta } = await this.sheet.inventoryValuationSheet(tenantId, filter);
     const table = new InventoryValuationSheetTable(data);
 
     return {

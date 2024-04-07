@@ -1,14 +1,9 @@
 import { fromPairs, isUndefined } from 'lodash';
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
-import {
-  ImportDateFormats,
-  ImportFileMapPOJO,
-  ImportMappingAttr,
-} from './interfaces';
 import ResourceService from '../Resource/ResourceService';
-import { ServiceError } from '@/exceptions';
+import HasTenancyService from '../Tenancy/TenancyService';
 import { ERRORS } from './_utils';
+import { ImportDateFormats, ImportFileMapPOJO, ImportMappingAttr } from './interfaces';
 
 @Service()
 export class ImportFileMapping {
@@ -24,16 +19,10 @@ export class ImportFileMapping {
    * @param {number} importId
    * @param {ImportMappingAttr} maps
    */
-  public async mapping(
-    tenantId: number,
-    importId: number,
-    maps: ImportMappingAttr[]
-  ): Promise<ImportFileMapPOJO> {
+  public async mapping(tenantId: number, importId: number, maps: ImportMappingAttr[]): Promise<ImportFileMapPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
-    const importFile = await Import.query()
-      .findOne('filename', importId)
-      .throwIfNotFound();
+    const importFile = await Import.query().findOne('filename', importId).throwIfNotFound();
 
     // Invalidate the from/to map attributes.
     this.validateMapsAttrs(tenantId, importFile, maps);
@@ -143,14 +132,8 @@ export class ImportFileMapping {
     );
     // @todo Validate date type of the nested fields.
     maps.forEach((map) => {
-      if (
-        typeof fields[map.to] !== 'undefined' &&
-        fields[map.to].fieldType === 'date'
-      ) {
-        if (
-          typeof map.dateFormat !== 'undefined' &&
-          ImportDateFormats.indexOf(map.dateFormat) === -1
-        ) {
+      if (typeof fields[map.to] !== 'undefined' && fields[map.to].fieldType === 'date') {
+        if (typeof map.dateFormat !== 'undefined' && ImportDateFormats.indexOf(map.dateFormat) === -1) {
           throw new ServiceError(ERRORS.INVALID_MAP_DATE_FORMAT);
         }
       }

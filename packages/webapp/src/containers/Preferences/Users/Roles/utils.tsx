@@ -17,15 +17,9 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find(
-      (error) => error.type === 'CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'CANNOT_DELETE_ROLE_ASSOCIATED_TO_USERS')) {
     AppToaster.show({
-      message: intl.get(
-        'roles.error.you_cannot_delete_role_that_associated_to_users',
-      ),
+      message: intl.get('roles.error.you_cannot_delete_role_that_associated_to_users'),
       intent: Intent.DANGER,
     });
   }

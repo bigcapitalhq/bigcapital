@@ -70,4 +70,4 @@ export default class SoftDeleteQueryBuilder extends Model.QueryBuilder {
     // qualify the column name
     return this.where(`${prefix}.${options.columnName}`, options.notDeletedValue);
   }
-}  
+}

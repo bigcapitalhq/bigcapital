@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-import {
-  DataTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { ActionsMenu } from './components';
 import { TABLES } from '@/constants/tables';
 import { useProjectTimesheetColumns } from './hooks';
@@ -45,8 +41,7 @@ function ProjectTimesheetsTableRoot({
     openDialog('project-time-entry-form', { timesheetId: id, action: 'edit' });
   };
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.TIMESHEETS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.TIMESHEETS);
 
   return (
     <ProjectTimesheetDataTable

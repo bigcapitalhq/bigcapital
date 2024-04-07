@@ -18,17 +18,16 @@ function ProjectBillableEntriesFormProvider({
   ...props
 }) {
   // Handle fetch project billable entries.
-  const { data: billableEntries, isLoading: isProjectBillableEntriesLoading } =
-    useProjectBillableEntries(
-      projectId,
-      {
-        enabled: !!projectId,
-      },
-      {
-        // billable_type: '',
-        // to_date: '',
-      },
-    );
+  const { data: billableEntries, isLoading: isProjectBillableEntriesLoading } = useProjectBillableEntries(
+    projectId,
+    {
+      enabled: !!projectId,
+    },
+    {
+      // billable_type: '',
+      // to_date: '',
+    },
+  );
 
   // Detarmines the datatable empty status.
   const isEmptyStatus = isEmpty(billableEntries);
@@ -42,19 +41,12 @@ function ProjectBillableEntriesFormProvider({
   };
 
   return (
-    <DialogContent
-      name={'project-billable-entries'}
-      isLoading={isProjectBillableEntriesLoading}
-    >
+    <DialogContent name={'project-billable-entries'} isLoading={isProjectBillableEntriesLoading}>
       <ProjectBillableEntriesFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useProjectBillableEntriesFormContext = () =>
-  React.useContext(ProjectBillableEntriesFormContext);
+const useProjectBillableEntriesFormContext = () => React.useContext(ProjectBillableEntriesFormContext);
 
-export {
-  ProjectBillableEntriesFormProvider,
-  useProjectBillableEntriesFormContext,
-};
+export { ProjectBillableEntriesFormProvider, useProjectBillableEntriesFormContext };

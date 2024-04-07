@@ -31,9 +31,9 @@ export class BillPaymentTransactionTransformer extends Transformer {
   };
 
   /**
-   * 
-   * @param entry 
-   * @returns 
+   *
+   * @param entry
+   * @returns
    */
   public transform = (entry) => {
     return {

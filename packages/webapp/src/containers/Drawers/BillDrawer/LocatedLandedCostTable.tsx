@@ -1,11 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  DataTable,
-  TableSkeletonRows,
-  Card,
-  FormattedMessage as T,
-} from '@/components';
+import { DataTable, TableSkeletonRows, Card, FormattedMessage as T } from '@/components';
 
 import { useLocatedLandedCostColumns, ActionsMenu } from './components';
 import { useBillDrawerContext } from './BillDrawerProvider';
@@ -74,7 +69,4 @@ function LocatedLandedCostTable({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(LocatedLandedCostTable);
+export default compose(withAlertsActions, withDrawerActions)(LocatedLandedCostTable);

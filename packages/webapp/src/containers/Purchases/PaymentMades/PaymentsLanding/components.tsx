@@ -1,15 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Intent,
-  Button,
-  Popover,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Position,
-} from '@blueprintjs/core';
+import { Intent, Button, Popover, Menu, MenuItem, MenuDivider, Position } from '@blueprintjs/core';
 
 import { Icon, Money, FormatDateCell, Can } from '@/components';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
@@ -23,10 +15,7 @@ export function AmountAccessor(row) {
 /**
  * Actions menu.
  */
-export function ActionsMenu({
-  row: { original },
-  payload: { onEdit, onDelete, onViewDetails },
-}) {
+export function ActionsMenu({ row: { original }, payload: { onEdit, onDelete, onViewDetails } }) {
   return (
     <Menu>
       <MenuItem
@@ -61,10 +50,7 @@ export function ActionsMenu({
  */
 export function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );
@@ -96,8 +82,7 @@ export function usePaymentMadesTableColumns() {
       {
         id: 'payment_number',
         Header: intl.get('payment_number'),
-        accessor: (row) =>
-          row.payment_number ? `${row.payment_number}` : null,
+        accessor: (row) => (row.payment_number ? `${row.payment_number}` : null),
         width: 140,
         className: 'payment_number',
         clickable: true,

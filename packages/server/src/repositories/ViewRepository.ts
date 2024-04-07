@@ -1,5 +1,5 @@
-import { View } from 'models';
 import TenantRepository from '@/repositories/TenantRepository';
+import { View } from 'models';
 
 export default class ViewRepository extends TenantRepository {
   /**

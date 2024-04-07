@@ -47,7 +47,6 @@ function ReceiptDetailDrawerProvider({ receiptId, ...props }) {
     </DrawerLoading>
   );
 }
-const useReceiptDetailDrawerContext = () =>
-  React.useContext(ReceiptDetailDrawerContext);
+const useReceiptDetailDrawerContext = () => React.useContext(ReceiptDetailDrawerContext);
 
 export { ReceiptDetailDrawerProvider, useReceiptDetailDrawerContext };

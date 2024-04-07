@@ -1,7 +1,7 @@
+import { IInventoryDetailsQuery, IInventoryItemDetailMeta } from '@/interfaces';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
-import { IInventoryDetailsQuery, IInventoryItemDetailMeta } from '@/interfaces';
 
 @Service()
 export class InventoryDetailsMetaInjectable {
@@ -13,10 +13,7 @@ export class InventoryDetailsMetaInjectable {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  public async meta(
-    tenantId: number,
-    query: IInventoryDetailsQuery
-  ): Promise<IInventoryItemDetailMeta> {
+  public async meta(tenantId: number, query: IInventoryDetailsQuery): Promise<IInventoryItemDetailMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');
     const formattedToDay = moment(query.toDate).format('YYYY/MM/DD');

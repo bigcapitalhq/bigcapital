@@ -8,18 +8,8 @@ import { AppToaster, If, Stack } from '@/components';
 import { Align } from '@/constants';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useCustomersBalanceSummaryContext } from './CustomersBalanceSummaryProvider';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
-import {
-  useCustomerBalanceSummaryCsvExport,
-  useCustomerBalanceSummaryXlsxExport,
-} from '@/hooks/query';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import { useCustomerBalanceSummaryCsvExport, useCustomerBalanceSummaryXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve customers balance summary columns.
@@ -71,10 +61,7 @@ const dynamicColumns = (columns) => {
     R.compose(
       R.when(R.pathEq(['key'], 'name'), accountNameColumnAccessor),
       R.when(R.pathEq(['key'], 'total'), totalColumnAccessor),
-      R.when(
-        R.pathEq(['key'], 'percentage_of_column'),
-        percentageColumnAccessor,
-      ),
+      R.when(R.pathEq(['key'], 'percentage_of_column'), percentageColumnAccessor),
     ),
   )(columns);
 };
@@ -118,27 +105,24 @@ export function CustomerBalanceSummaryExportMenu() {
     );
   };
   // Export the report to xlsx.
-  const { mutateAsync: xlsxExport } = useCustomerBalanceSummaryXlsxExport(
-    query,
-    {
-      onDownloadProgress: (xlsxExportProgress: number) => {
-        if (!toastKey.current) {
-          toastKey.current = AppToaster.show({
+  const { mutateAsync: xlsxExport } = useCustomerBalanceSummaryXlsxExport(query, {
+    onDownloadProgress: (xlsxExportProgress: number) => {
+      if (!toastKey.current) {
+        toastKey.current = AppToaster.show({
+          message: openProgressToast(xlsxExportProgress),
+          ...commonToastConfig,
+        });
+      } else {
+        AppToaster.show(
+          {
             message: openProgressToast(xlsxExportProgress),
             ...commonToastConfig,
-          });
-        } else {
-          AppToaster.show(
-            {
-              message: openProgressToast(xlsxExportProgress),
-              ...commonToastConfig,
-            },
-            toastKey.current,
-          );
-        }
-      },
+          },
+          toastKey.current,
+        );
+      }
     },
-  );
+  });
   // Export the report to csv.
   const { mutateAsync: csvExport } = useCustomerBalanceSummaryCsvExport(query, {
     onDownloadProgress: (xlsxExportProgress: number) => {
@@ -169,10 +153,7 @@ export function CustomerBalanceSummaryExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

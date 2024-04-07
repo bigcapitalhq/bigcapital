@@ -1,13 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-} from '@blueprintjs/core';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu } from '@blueprintjs/core';
 import { Icon, FormattedMessage as T } from '@/components';
 
 /**
@@ -25,10 +18,7 @@ export function CustomerMoreMenuItem({ payload: { onEditOpeningBalance } }) {
       }}
       content={
         <Menu>
-          <MenuItem
-            text={<T id={'customer.drawer.action.edit_opening_balance'} />}
-            onClick={onEditOpeningBalance}
-          />
+          <MenuItem text={<T id={'customer.drawer.action.edit_opening_balance'} />} onClick={onEditOpeningBalance} />
         </Menu>
       }
     >

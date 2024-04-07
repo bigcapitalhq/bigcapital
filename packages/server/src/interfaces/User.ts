@@ -1,7 +1,5 @@
-import { AnyObject } from '@casl/ability/dist/types/types';
-import { ITenant } from '@/interfaces';
-import { Model } from 'objection';
 import { Tenant } from '@/system/models';
+import { Model } from 'objection';
 
 export interface ISystemUser extends Model {
   id: number;
@@ -65,7 +63,7 @@ export interface IInviteUserService {
   resendInvite(
     tenantId: number,
     userId: number,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{
     user: ITenantUser;
   }>;
@@ -80,7 +78,7 @@ export interface IInviteUserService {
   sendInvite(
     tenantId: number,
     sendInviteDTO: IUserSendInviteDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{
     invitedUser: ITenantUser;
   }>;
@@ -101,12 +99,10 @@ export interface IAcceptInviteUserService {
    * @param {string} token - the given token string.
    * @throws {ServiceError}
    */
-  checkInvite(
-    token: string
-  ): Promise<{ inviteToken: IUserInvite; orgName: object }>;
+  checkInvite(token: string): Promise<{ inviteToken: IUserInvite; orgName: object }>;
 }
 
-export interface ITenantUser {}
+export type ITenantUser = {};
 
 export interface ITenantUserEditedPayload {
   tenantId: number;

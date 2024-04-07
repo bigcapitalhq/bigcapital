@@ -1,7 +1,7 @@
 import { ServiceError } from '@/exceptions';
 import { ISaleInvoiceCreateDTO, ProjectLinkRefType } from '@/interfaces';
-import { difference, isEmpty } from 'lodash';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { difference, isEmpty } from 'lodash';
 import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
@@ -16,17 +16,12 @@ export class ProjectInvoiceValidator {
    * @param {ISaleInvoiceCreateDTO} saleInvoiceDTO
    * @returns {Promise<void>}
    */
-  async validateTasksRefsExistance(
-    tenantId: number,
-    saleInvoiceDTO: ISaleInvoiceCreateDTO
-  ) {
+  async validateTasksRefsExistance(tenantId: number, saleInvoiceDTO: ISaleInvoiceCreateDTO) {
     const { Task } = this.tenancy.models(tenantId);
 
     // Filters the invoice entries that have `Task` type and not empty ref. id.
     const tasksRefs = saleInvoiceDTO.entries.filter(
-      (entry) =>
-        entry?.projectRefType === ProjectLinkRefType.Task &&
-        !isEmpty(entry?.projectRefId)
+      (entry) => entry?.projectRefType === ProjectLinkRefType.Task && !isEmpty(entry?.projectRefId),
     );
     //
     if (!tasksRefs.length || (tasksRefs.length && !saleInvoiceDTO.projectId)) {
@@ -34,9 +29,7 @@ export class ProjectInvoiceValidator {
     }
     const tasksRefsIds = tasksRefs.map((ref) => ref.projectRefId);
 
-    const tasks = await Task.query()
-      .whereIn('id', tasksRefsIds)
-      .where('projectId', saleInvoiceDTO.projectId);
+    const tasks = await Task.query().whereIn('id', tasksRefsIds).where('projectId', saleInvoiceDTO.projectId);
 
     const tasksIds = tasks.map((task) => task.id);
     const notFoundTasksIds = difference(tasksIds, tasksRefsIds);

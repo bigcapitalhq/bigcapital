@@ -16,10 +16,6 @@ export default function InventoryAdjustmentDetailTable() {
   const { inventoryAdjustment } = useInventoryAdjustmentDrawerContext();
 
   return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={inventoryAdjustment.entries}
-      className={'table-constrant'}
-    />
+    <CommercialDocEntriesTable columns={columns} data={inventoryAdjustment.entries} className={'table-constrant'} />
   );
 }

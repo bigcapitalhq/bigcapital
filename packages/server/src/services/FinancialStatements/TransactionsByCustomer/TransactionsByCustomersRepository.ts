@@ -1,8 +1,8 @@
-import { Inject } from 'typedi';
-import { isEmpty, map } from 'lodash';
-import { IAccount, IAccountTransaction } from '@/interfaces';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { IAccount, IAccountTransaction } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { isEmpty, map } from 'lodash';
+import { Inject } from 'typedi';
 
 export default class TransactionsByCustomersRepository {
   @Inject()
@@ -33,10 +33,7 @@ export default class TransactionsByCustomersRepository {
   public async getReceivableAccounts(tenantId: number): Promise<IAccount[]> {
     const { Account } = this.tenancy.models(tenantId);
 
-    const accounts = await Account.query().where(
-      'accountType',
-      ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE
-    );
+    const accounts = await Account.query().where('accountType', ACCOUNT_TYPE.ACCOUNTS_RECEIVABLE);
     return accounts;
   }
 
@@ -50,7 +47,7 @@ export default class TransactionsByCustomersRepository {
   public async getCustomersOpeningBalanceTransactions(
     tenantId: number,
     openingDate: Date,
-    customersIds?: number[]
+    customersIds?: number[],
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
@@ -61,7 +58,7 @@ export default class TransactionsByCustomersRepository {
       'contactsOpeningBalance',
       openingDate,
       receivableAccountsIds,
-      customersIds
+      customersIds,
     );
     return openingTransactions;
   }
@@ -76,7 +73,7 @@ export default class TransactionsByCustomersRepository {
   public async getCustomersPeriodTransactions(
     tenantId: number,
     fromDate: Date,
-    toDate: Date
+    toDate: Date,
   ): Promise<IAccountTransaction[]> {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 

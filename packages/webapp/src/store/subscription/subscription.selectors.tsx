@@ -4,25 +4,18 @@ import { includes } from 'lodash';
 
 const subscriptionSelector = (slug) => (state, props) => {
   const subscriptions = Object.values(state.subscriptions.data);
-  return subscriptions.find(
-    (subscription) => subscription.slug === (slug || props.subscriptionType),
-  );
+  return subscriptions.find((subscription) => subscription.slug === (slug || props.subscriptionType));
 };
 
 const subscriptionsSelector = (state, props) => {
   const subscriptions = Object.values(state.subscriptions.data);
   return subscriptions.filter(
-    (subscription) =>
-      includes(props.subscriptionTypes, subscription.slug) ||
-      !props.subscriptionTypes,
+    (subscription) => includes(props.subscriptionTypes, subscription.slug) || !props.subscriptionTypes,
   );
 };
 
 export const isSubscriptionOnTrialFactory = (slug) =>
-  createSelector(
-    subscriptionSelector(slug),
-    (subscription) => !!subscription?.on_trial,
-  );
+  createSelector(subscriptionSelector(slug), (subscription) => !!subscription?.on_trial);
 
 export const isSubscriptionActiveFactory = (slug) =>
   createSelector(subscriptionSelector(slug), (subscription) => {
@@ -30,10 +23,7 @@ export const isSubscriptionActiveFactory = (slug) =>
   });
 
 export const isSubscriptionInactiveFactory = (slug) =>
-  createSelector(
-    subscriptionSelector(slug),
-    (subscription) => !!subscription?.inactive,
-  );
+  createSelector(subscriptionSelector(slug), (subscription) => !!subscription?.inactive);
 
 export const isSubscriptionsInactiveFactory = () =>
   createSelector(subscriptionsSelector, (subscriptions) =>
@@ -41,6 +31,4 @@ export const isSubscriptionsInactiveFactory = () =>
   );
 
 export const isSubscriptionsActiveFactory = () =>
-  createSelector(subscriptionsSelector, (subscriptions) =>
-    subscriptions.some((subscription) => subscription?.active),
-  );
+  createSelector(subscriptionsSelector, (subscriptions) => subscriptions.some((subscription) => subscription?.active));

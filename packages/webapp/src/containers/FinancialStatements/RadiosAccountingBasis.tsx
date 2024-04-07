@@ -7,14 +7,10 @@ import { RadioGroup, Radio } from '@blueprintjs/core';
 
 export default function RadiosAccountingBasis(props) {
   const { key = 'basis', ...rest } = props;
-  
 
   return (
     <FastField name={'basis'}>
-      {({
-        form: { setFieldValue },
-        field: { value },
-      }) => (
+      {({ form: { setFieldValue }, field: { value } }) => (
         <RadioGroup
           inline={true}
           label={intl.get('accounting_basis')}

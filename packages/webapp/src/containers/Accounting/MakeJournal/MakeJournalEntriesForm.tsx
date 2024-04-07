@@ -9,10 +9,7 @@ import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from '@/constants/classes';
-import {
-  CreateJournalSchema,
-  EditJournalSchema,
-} from './MakeJournalEntries.schema';
+import { CreateJournalSchema, EditJournalSchema } from './MakeJournalEntries.schema';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import MakeJournalEntriesHeader from './MakeJournalEntriesHeader';
 import MakeJournalFormFloatingActions from './MakeJournalFormFloatingActions';
@@ -26,11 +23,7 @@ import withCurrentOrganization from '@/containers/Organization/withCurrentOrgani
 
 import { AppToaster } from '@/components';
 import { compose, orderingLinesIndexes, transactionNumber } from '@/utils';
-import {
-  transformErrors,
-  transformToEditForm,
-  defaultManualJournal,
-} from './utils';
+import { transformErrors, transformToEditForm, defaultManualJournal } from './utils';
 import { JournalSyncIncrementSettingsToForm } from './components';
 
 /**
@@ -46,21 +39,13 @@ function MakeJournalEntriesForm({
   organization: { base_currency },
 }) {
   // Journal form context.
-  const {
-    createJournalMutate,
-    editJournalMutate,
-    isNewMode,
-    manualJournal,
-    submitPayload,
-  } = useMakeJournalFormContext();
+  const { createJournalMutate, editJournalMutate, isNewMode, manualJournal, submitPayload } =
+    useMakeJournalFormContext();
 
   const history = useHistory();
 
   // New journal number.
-  const journalNumber = transactionNumber(
-    journalNumberPrefix,
-    journalNextNumber,
-  );
+  const journalNumber = transactionNumber(journalNumberPrefix, journalNextNumber);
 
   // Form initial values.
   const initialValues = useMemo(
@@ -85,9 +70,7 @@ function MakeJournalEntriesForm({
   // Handle the form submiting.
   const handleSubmit = (values, { setErrors, setSubmitting, resetForm }) => {
     setSubmitting(true);
-    const entries = values.entries.filter(
-      (entry) => entry.debit || entry.credit,
-    );
+    const entries = values.entries.filter((entry) => entry.debit || entry.credit);
     const getTotal = (type = 'credit') => {
       return entries.reduce((total, item) => {
         return item[type] ? item[type] + total : total;
@@ -133,9 +116,7 @@ function MakeJournalEntriesForm({
     const handleSuccess = (errors) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_journal_has_been_created_successfully'
-            : 'the_journal_has_been_edited_successfully',
+          isNewMode ? 'the_journal_has_been_created_successfully' : 'the_journal_has_been_edited_successfully',
           { number: values.journal_number },
         ),
         intent: Intent.SUCCESS,
@@ -152,20 +133,12 @@ function MakeJournalEntriesForm({
     if (isNewMode) {
       createJournalMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      editJournalMutate([manualJournal.id, form])
-        .then(handleSuccess)
-        .catch(handleError);
+      editJournalMutate([manualJournal.id, form]).then(handleSuccess).catch(handleError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_MAKE_JOURNAL,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_MAKE_JOURNAL)}>
       <Formik
         initialValues={initialValues}
         validationSchema={isNewMode ? CreateJournalSchema : EditJournalSchema}

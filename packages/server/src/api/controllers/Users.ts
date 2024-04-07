@@ -1,14 +1,14 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
-import { check, query, param } from 'express-validator';
-import JWTAuth from '@/api/middleware/jwtAuth';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import BaseController from '@/api/controllers/BaseController';
-import UsersService from '@/services/Users/UsersService';
-import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
-import { ServiceError, ServiceErrors } from '@/exceptions';
-import { IEditUserDTO, ISystemUserDTO } from '@/interfaces';
+import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import JWTAuth from '@/api/middleware/jwtAuth';
+import { ServiceError } from '@/exceptions';
+import { IEditUserDTO } from '@/interfaces';
+import UsersService from '@/services/Users/UsersService';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class UsersController extends BaseController {
@@ -30,14 +30,14 @@ export default class UsersController extends BaseController {
       [...this.specificUserSchema],
       this.validationResult,
       asyncMiddleware(this.inactivateUser.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.put(
       '/:id/activate',
       [...this.specificUserSchema],
       this.validationResult,
       asyncMiddleware(this.activateUser.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.post(
       '/:id',
@@ -51,27 +51,22 @@ export default class UsersController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.editUser.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
-    router.get(
-      '/',
-      this.listUsersSchema,
-      this.validationResult,
-      asyncMiddleware(this.listUsers.bind(this))
-    );
+    router.get('/', this.listUsersSchema, this.validationResult, asyncMiddleware(this.listUsers.bind(this)));
     router.get(
       '/:id',
       [...this.specificUserSchema],
       this.validationResult,
       asyncMiddleware(this.getUser.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.delete(
       '/:id',
       [...this.specificUserSchema],
       this.validationResult,
       asyncMiddleware(this.deleteUser.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     return router;
   }
@@ -88,10 +83,7 @@ export default class UsersController extends BaseController {
   }
 
   get listUsersSchema() {
-    return [
-      query('page_size').optional().isNumeric().toInt(),
-      query('page').optional().isNumeric().toInt(),
-    ];
+    return [query('page_size').optional().isNumeric().toInt(), query('page').optional().isNumeric().toInt()];
   }
 
   /**
@@ -106,12 +98,7 @@ export default class UsersController extends BaseController {
     const { id: userId } = req.params;
 
     try {
-      await this.usersService.editUser(
-        tenantId,
-        userId,
-        editUserDTO,
-        authorizedUser
-      );
+      await this.usersService.editUser(tenantId, userId, editUserDTO, authorizedUser);
       return res.status(200).send({
         id: userId,
         message: 'The user has been edited successfully.',
@@ -229,12 +216,7 @@ export default class UsersController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  catchServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  catchServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'USER_NOT_FOUND') {
         return res.boom.badRequest('User not found.', {
@@ -252,20 +234,14 @@ export default class UsersController extends BaseController {
         });
       }
       if (error.errorType === 'USER_SAME_THE_AUTHORIZED_USER') {
-        return res.boom.badRequest(
-          'You could not activate/inactivate the same authorized user.',
-          {
-            errors: [
-              { type: 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER', code: 300 },
-            ],
-          }
-        );
+        return res.boom.badRequest('You could not activate/inactivate the same authorized user.', {
+          errors: [{ type: 'CANNOT.TOGGLE.ACTIVATE.AUTHORIZED.USER', code: 300 }],
+        });
       }
       if (error.errorType === 'CANNOT_DELETE_LAST_USER') {
-        return res.boom.badRequest(
-          'Cannot delete last user in the organization.',
-          { errors: [{ type: 'CANNOT_DELETE_LAST_USER', code: 400 }] }
-        );
+        return res.boom.badRequest('Cannot delete last user in the organization.', {
+          errors: [{ type: 'CANNOT_DELETE_LAST_USER', code: 400 }],
+        });
       }
       if (error.errorType === 'EMAIL_ALREADY_EXISTS') {
         return res.boom.badRequest('Exmail is already exists.', {

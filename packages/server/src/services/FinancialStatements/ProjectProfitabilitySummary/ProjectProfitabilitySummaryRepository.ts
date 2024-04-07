@@ -1,8 +1,8 @@
-import { ACCOUNT_NORMAL, ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
-import { IAccount, ProjectProfitabilitySummaryQuery } from '@/interfaces';
+import { ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
+import { ProjectProfitabilitySummaryQuery } from '@/interfaces';
+import Ledger from '@/services/Accounting/Ledger';
 import { isEmpty, map } from 'lodash';
 import Project from 'models/Project';
-import Ledger from '@/services/Accounting/Ledger';
 
 export class ProjectProfitabilitySummaryRespository {
   /**
@@ -117,10 +117,7 @@ export class ProjectProfitabilitySummaryRespository {
   public getExpensesAccounts = () => {
     const { Account } = this.models;
 
-    return Account.query().modify(
-      'filterByRootType',
-      ACCOUNT_ROOT_TYPE.EXPENSE
-    );
+    return Account.query().modify('filterByRootType', ACCOUNT_ROOT_TYPE.EXPENSE);
   };
 
   /**

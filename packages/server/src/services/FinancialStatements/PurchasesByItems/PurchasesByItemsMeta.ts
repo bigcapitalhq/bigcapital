@@ -1,10 +1,7 @@
+import { IPurchasesByItemsReportQuery, IPurchasesByItemsSheetMeta } from '@/interfaces/PurchasesByItemsSheet';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
-import {
-  IPurchasesByItemsReportQuery,
-  IPurchasesByItemsSheetMeta,
-} from '@/interfaces/PurchasesByItemsSheet';
 
 @Service()
 export class PurchasesByItemsMeta {
@@ -16,10 +13,7 @@ export class PurchasesByItemsMeta {
    * @param {number} tenantId -
    * @returns {IBalanceSheetMeta}
    */
-  public async meta(
-    tenantId: number,
-    query: IPurchasesByItemsReportQuery
-  ): Promise<IPurchasesByItemsSheetMeta> {
+  public async meta(tenantId: number, query: IPurchasesByItemsReportQuery): Promise<IPurchasesByItemsSheetMeta> {
     const commonMeta = await this.financialSheetMeta.meta(tenantId);
     const formattedToDate = moment(query.toDate).format('YYYY/MM/DD');
     const formattedFromDate = moment(query.fromDate).format('YYYY/MM/DD');

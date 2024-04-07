@@ -1,5 +1,5 @@
+import { IDynamicListFilter, IItemEntry } from '@/interfaces';
 import { Knex } from 'knex';
-import { IDynamicListFilter, IItemEntry, IVendorCredit } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 
 export interface ICreditNoteEntryNewDTO {
@@ -58,7 +58,7 @@ export interface ICreditNote {
   localAmount?: number;
   branchId?: number;
   warehouseId: number;
-  createdAt?: Date,
+  createdAt?: Date;
 }
 
 export enum CreditNoteAction {
@@ -127,7 +127,7 @@ export interface ICreditNoteOpenedPayload {
   trx: Knex.Transaction;
 }
 
-export interface ICreditNotesQueryDTO {}
+export type ICreditNotesQueryDTO = {};
 
 export interface ICreditNotesQueryDTO extends IDynamicListFilter {
   page: number;

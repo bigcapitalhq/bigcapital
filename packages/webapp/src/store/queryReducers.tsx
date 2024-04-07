@@ -1,7 +1,6 @@
 // @ts-nocheck
 
-
-export const createTableQueryReducers = 
+export const createTableQueryReducers =
   (resourceName = '', reducer) =>
   (state, action) => {
     const RESOURCE_NAME = resourceName.toUpperCase();
@@ -13,7 +12,7 @@ export const createTableQueryReducers =
           tableQuery: {
             ...state.tableQuery,
             [state.key]: state.value,
-          }
+          },
         };
       case `${RESOURCE_NAME}/TABLE_QUERIES_ADD`:
         return {
@@ -21,9 +20,9 @@ export const createTableQueryReducers =
           tableQuery: {
             ...state.tableQuery,
             ...action.payload.query,
-          }
+          },
         };
       default:
         return reducer(state, action);
     }
-}
+  };

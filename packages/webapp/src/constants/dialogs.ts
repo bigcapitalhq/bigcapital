@@ -73,5 +73,5 @@ export enum DialogsName {
   CustomerTransactionsPdfPreview = 'CustomerTransactionsPdfPreview',
   VendorTransactionsPdfPreview = 'VendorTransactionsPdfPreview',
   GeneralLedgerPdfPreview = 'GeneralLedgerPdfPreview',
-  SalesTaxLiabilitySummaryPdfPreview = 'SalesTaxLiabilitySummaryPdfPreview'
+  SalesTaxLiabilitySummaryPdfPreview = 'SalesTaxLiabilitySummaryPdfPreview',
 }

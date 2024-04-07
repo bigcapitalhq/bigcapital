@@ -1,48 +1,18 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Intent,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  Tag,
-  ProgressBar,
-} from '@blueprintjs/core';
+import { Intent, Menu, MenuItem, MenuDivider, Tag, ProgressBar } from '@blueprintjs/core';
 import clsx from 'classnames';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Icon,
-  If,
-  Choose,
-  Can,
-} from '@/components';
-import {
-  formattedAmount,
-  safeCallback,
-  calculateStatus,
-} from '@/utils';
-import {
-  BillAction,
-  PaymentMadeAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { FormatDateCell, FormattedMessage as T, Icon, If, Choose, Can } from '@/components';
+import { formattedAmount, safeCallback, calculateStatus } from '@/utils';
+import { BillAction, PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 import { CLASSES } from '@/constants';
 
 /**
  * Actions menu.
  */
 export function ActionsMenu({
-  payload: {
-    onEdit,
-    onOpen,
-    onDelete,
-    onQuick,
-    onConvert,
-    onViewDetails,
-    onAllocateLandedCost,
-  },
+  payload: { onEdit, onOpen, onDelete, onQuick, onConvert, onViewDetails, onAllocateLandedCost },
   row: { original },
 }) {
   return (
@@ -54,11 +24,7 @@ export function ActionsMenu({
       />
       <Can I={BillAction.Edit} a={AbilitySubject.Bill}>
         <MenuDivider />
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={intl.get('edit_bill')}
-          onClick={safeCallback(onEdit, original)}
-        />
+        <MenuItem icon={<Icon icon="pen-18" />} text={intl.get('edit_bill')} onClick={safeCallback(onEdit, original)} />
         <MenuItem
           icon={<Icon icon="convert_to" />}
           text={intl.get('bill.convert_to_credit_note')}
@@ -118,14 +84,10 @@ export function StatusAccessor(bill) {
         <Choose.When condition={bill.is_open}>
           <Choose>
             <Choose.When condition={bill.is_overdue}>
-              <span className={'overdue-status'}>
-                {intl.get('overdue_by', { overdue: bill.overdue_days })}
-              </span>
+              <span className={'overdue-status'}>{intl.get('overdue_by', { overdue: bill.overdue_days })}</span>
             </Choose.When>
             <Choose.Otherwise>
-              <span className={'due-status'}>
-                {intl.get('due_in', { due: bill.remaining_days })}
-              </span>
+              <span className={'due-status'}>{intl.get('due_in', { due: bill.remaining_days })}</span>
             </Choose.Otherwise>
           </Choose>
           <If condition={bill.is_partially_paid}>

@@ -39,10 +39,7 @@ function RealizedGainOrLoss({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <RealizedGainOrLossHeader
-            pageFilter={[]}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <RealizedGainOrLossHeader pageFilter={[]} onSubmitFilter={handleFilterSubmit} />
           <RealizedGainOrLossLoadingBar />
         </FinancialStatement>
       </DashboardPageContent>

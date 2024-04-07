@@ -1,18 +1,14 @@
-import { Model, mixin, raw } from 'objection';
-import TenantModel from 'models/TenantModel';
 import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
-import ModelSetting from './ModelSetting';
-import ExpenseSettings from './Expense.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Expenses/constants';
-import ModelSearchable from './ModelSearchable';
+import TenantModel from 'models/TenantModel';
 import moment from 'moment';
+import { Model, mixin, raw } from 'objection';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ExpenseSettings from './Expense.Settings';
+import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class Expense extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Expense extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */
@@ -217,7 +213,7 @@ export default class Expense extends mixin(TenantModel, [
       },
 
       /**
-       * 
+       *
        */
       media: {
         relation: Model.ManyToManyRelation,

@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { ICommandCashflowCreatingPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -12,10 +12,7 @@ export class CashflowBranchDTOValidatorSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.cashflow.onTransactionCreating,
-      this.validateBranchExistanceOnCashflowTransactionCreating
-    );
+    bus.subscribe(events.cashflow.onTransactionCreating, this.validateBranchExistanceOnCashflowTransactionCreating);
     return bus;
   };
 
@@ -27,9 +24,6 @@ export class CashflowBranchDTOValidatorSubscriber {
     tenantId,
     newTransactionDTO,
   }: ICommandCashflowCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      newTransactionDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, newTransactionDTO.branchId);
   };
 }

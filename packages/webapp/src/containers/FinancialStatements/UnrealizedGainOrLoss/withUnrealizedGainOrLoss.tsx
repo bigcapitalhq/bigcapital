@@ -5,8 +5,7 @@ import { getUnrealizedGainOrLossFilterDrawer } from '@/store/financialStatement/
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
     const mapped = {
-      unrealizedGainOrLossDrawerFilter:
-        getUnrealizedGainOrLossFilterDrawer(state),
+      unrealizedGainOrLossDrawerFilter: getUnrealizedGainOrLossFilterDrawer(state),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

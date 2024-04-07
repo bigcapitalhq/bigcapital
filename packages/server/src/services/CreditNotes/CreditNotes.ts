@@ -1,15 +1,15 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import { omit } from 'lodash';
-import * as R from 'ramda';
 import { ServiceError } from '@/exceptions';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
 import { ICreditNote, ICreditNoteEditDTO, ICreditNoteNewDTO } from '@/interfaces';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { omit } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export default class BaseCreditNotes {
@@ -37,12 +37,10 @@ export default class BaseCreditNotes {
     tenantId: number,
     creditNoteDTO: ICreditNoteNewDTO | ICreditNoteEditDTO,
     customerCurrencyCode: string,
-    oldCreditNote?: ICreditNote
+    oldCreditNote?: ICreditNote,
   ): ICreditNote => {
     // Retrieve the total amount of the given items entries.
-    const amount = this.itemsEntriesService.getTotalItemsEntries(
-      creditNoteDTO.entries
-    );
+    const amount = this.itemsEntriesService.getTotalItemsEntries(creditNoteDTO.entries);
     const entries = creditNoteDTO.entries.map((entry) => ({
       ...entry,
       referenceType: 'CreditNote',
@@ -51,10 +49,7 @@ export default class BaseCreditNotes {
     const autoNextNumber = this.getNextCreditNumber(tenantId);
 
     // Detarmines the credit note number.
-    const creditNoteNumber =
-      creditNoteDTO.creditNoteNumber ||
-      oldCreditNote?.creditNoteNumber ||
-      autoNextNumber;
+    const creditNoteNumber = creditNoteDTO.creditNoteNumber || oldCreditNote?.creditNoteNumber || autoNextNumber;
 
     const initialDTO = {
       ...omit(creditNoteDTO, ['open']),
@@ -72,7 +67,7 @@ export default class BaseCreditNotes {
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<ICreditNote>(tenantId),
-      this.warehouseDTOTransform.transformDTO<ICreditNote>(tenantId)
+      this.warehouseDTOTransform.transformDTO<ICreditNote>(tenantId),
     )(initialDTO);
   };
 
@@ -81,10 +76,7 @@ export default class BaseCreditNotes {
    * @param {number} tenantId -
    * @param {number} creditNoteId -
    */
-  protected getCreditNoteOrThrowError = async (
-    tenantId: number,
-    creditNoteId: number
-  ) => {
+  protected getCreditNoteOrThrowError = async (tenantId: number, creditNoteId: number) => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
     const creditNote = await CreditNote.query().findById(creditNoteId);
@@ -101,10 +93,7 @@ export default class BaseCreditNotes {
    * @return {string}
    */
   private getNextCreditNumber = (tenantId: number): string => {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'credit_note'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'credit_note');
   };
 
   /**
@@ -112,10 +101,7 @@ export default class BaseCreditNotes {
    * @param {number} tenantId -
    */
   public incrementSerialNumber = (tenantId: number) => {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'credit_note'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'credit_note');
   };
 
   /**
@@ -123,10 +109,7 @@ export default class BaseCreditNotes {
    * @param {ICreditNote} creditNote
    * @param {number} amount
    */
-  public validateCreditRemainingAmount = (
-    creditNote: ICreditNote,
-    amount: number
-  ) => {
+  public validateCreditRemainingAmount = (creditNote: ICreditNote, amount: number) => {
     if (creditNote.creditsRemaining < amount) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_HAS_NO_REMAINING_AMOUNT);
     }

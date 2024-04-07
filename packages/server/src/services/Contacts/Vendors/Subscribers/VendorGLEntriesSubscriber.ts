@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { VendorGLEntriesStorage } from '../VendorGLEntriesStorage';
 import {
   IVendorEventCreatedPayload,
   IVendorEventDeletedPayload,
   IVendorOpeningBalanceEditedPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { VendorGLEntriesStorage } from '../VendorGLEntriesStorage';
 
 @Service()
 export class VendorsWriteGLOpeningSubscriber {
@@ -16,36 +16,19 @@ export class VendorsWriteGLOpeningSubscriber {
    * Constructor method.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.vendors.onCreated,
-      this.handleWriteOpeningBalanceEntries
-    );
-    bus.subscribe(
-      events.vendors.onDeleted,
-      this.handleRevertOpeningBalanceEntries
-    );
-    bus.subscribe(
-      events.vendors.onOpeningBalanceChanged,
-      this.handleRewriteOpeningEntriesOnChanged
-    );
+    bus.subscribe(events.vendors.onCreated, this.handleWriteOpeningBalanceEntries);
+    bus.subscribe(events.vendors.onDeleted, this.handleRevertOpeningBalanceEntries);
+    bus.subscribe(events.vendors.onOpeningBalanceChanged, this.handleRewriteOpeningEntriesOnChanged);
   }
 
   /**
    * Writes the open balance journal entries once the vendor created.
    * @param {IVendorEventCreatedPayload} payload -
    */
-  private handleWriteOpeningBalanceEntries = async ({
-    tenantId,
-    vendor,
-    trx,
-  }: IVendorEventCreatedPayload) => {
+  private handleWriteOpeningBalanceEntries = async ({ tenantId, vendor, trx }: IVendorEventCreatedPayload) => {
     // Writes the vendor opening balance journal entries.
     if (vendor.openingBalance) {
-      await this.vendorGLEntriesStorage.writeVendorOpeningBalance(
-        tenantId,
-        vendor.id,
-        trx
-      );
+      await this.vendorGLEntriesStorage.writeVendorOpeningBalance(tenantId, vendor.id, trx);
     }
   };
 
@@ -53,16 +36,8 @@ export class VendorsWriteGLOpeningSubscriber {
    * Revert the opening balance journal entries once the vendor deleted.
    * @param {IVendorEventDeletedPayload} payload -
    */
-  private handleRevertOpeningBalanceEntries = async ({
-    tenantId,
-    vendorId,
-    trx,
-  }: IVendorEventDeletedPayload) => {
-    await this.vendorGLEntriesStorage.revertVendorOpeningBalance(
-      tenantId,
-      vendorId,
-      trx
-    );
+  private handleRevertOpeningBalanceEntries = async ({ tenantId, vendorId, trx }: IVendorEventDeletedPayload) => {
+    await this.vendorGLEntriesStorage.revertVendorOpeningBalance(tenantId, vendorId, trx);
   };
 
   /**
@@ -75,17 +50,9 @@ export class VendorsWriteGLOpeningSubscriber {
     trx,
   }: IVendorOpeningBalanceEditedPayload) => {
     if (vendor.openingBalance) {
-      await this.vendorGLEntriesStorage.rewriteVendorOpeningBalance(
-        tenantId,
-        vendor.id,
-        trx
-      );
+      await this.vendorGLEntriesStorage.rewriteVendorOpeningBalance(tenantId, vendor.id, trx);
     } else {
-      await this.vendorGLEntriesStorage.revertVendorOpeningBalance(
-        tenantId,
-        vendor.id,
-        trx
-      );
+      await this.vendorGLEntriesStorage.revertVendorOpeningBalance(tenantId, vendor.id, trx);
     }
   };
 }

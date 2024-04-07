@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import {
-  IBranchEditedPayload,
-  IBranchEditPayload,
-  IEditBranchDTO,
-} from '@/interfaces';
+import { IBranchEditPayload, IBranchEditedPayload, IEditBranchDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { CURDBranch } from './CRUDBranch';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { CURDBranch } from './CRUDBranch';
 
 @Service()
 export class EditBranch extends CURDBranch {
@@ -28,11 +24,7 @@ export class EditBranch extends CURDBranch {
    * @param {number} branchId
    * @param editBranchDTO
    */
-  public editBranch = async (
-    tenantId: number,
-    branchId: number,
-    editBranchDTO: IEditBranchDTO
-  ) => {
+  public editBranch = async (tenantId: number, branchId: number, editBranchDTO: IEditBranchDTO) => {
     const { Branch } = this.tenancy.models(tenantId);
 
     // Retrieves the old branch or throw not found service error.

@@ -1,36 +1,19 @@
 // @ts-nocheck
 import React, { useMemo, useState } from 'react';
 import classNames from 'classnames';
-import {
-  Button,
-  Classes,
-  MenuItem,
-  Menu,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  Divider,
-} from '@blueprintjs/core';
+import { Button, Classes, MenuItem, Menu, Popover, PopoverInteractionKind, Position, Divider } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { Icon } from '@/components';
 
 /**
  * Dashboard action views list.
  */
-export function DashboardActionViewsList({
-  resourceName,
-  allMenuItem,
-  allMenuItemText,
-  views,
-  onChange,
-}) {
+export function DashboardActionViewsList({ resourceName, allMenuItem, allMenuItemText, views, onChange }) {
   const handleClickViewItem = (view) => {
     onChange && onChange(view);
   };
 
-  const viewsMenuItems = views.map((view) => (
-    <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />
-  ));
+  const viewsMenuItems = views.map((view) => <MenuItem onClick={() => handleClickViewItem(view)} text={view.name} />);
 
   const handleAllTabClick = () => {
     handleClickViewItem(null);
@@ -40,10 +23,7 @@ export function DashboardActionViewsList({
     <Menu>
       {allMenuItem && (
         <>
-          <MenuItem
-            onClick={handleAllTabClick}
-            text={allMenuItemText || 'All'}
-          />
+          <MenuItem onClick={handleAllTabClick} text={allMenuItemText || 'All'} />
           <Divider />
         </>
       )}

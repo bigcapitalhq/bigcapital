@@ -17,16 +17,9 @@ function EnsureSubscriptionsIsActive({
   exclude,
   isSubscriptionsActive,
 }) {
-  return !isSubscriptionsActive || includes(exclude, routePath) ? (
-    children
-  ) : (
-    <Redirect to={{ pathname: redirectTo }} />
-  );
+  return !isSubscriptionsActive || includes(exclude, routePath) ? children : <Redirect to={{ pathname: redirectTo }} />;
 }
 
-export default compose(
-  withSubscriptions(
-    ({ isSubscriptionsActive }) => ({ isSubscriptionsActive }),
-    'main',
-  ),
-)(EnsureSubscriptionsIsActive);
+export default compose(withSubscriptions(({ isSubscriptionsActive }) => ({ isSubscriptionsActive }), 'main'))(
+  EnsureSubscriptionsIsActive,
+);

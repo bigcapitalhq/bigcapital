@@ -8,11 +8,7 @@ import { useAuthLogin } from '@/hooks/query';
 
 import LoginForm from './LoginForm';
 import { LoginSchema, transformLoginErrorsToToasts } from './utils';
-import {
-  AuthFooterLinks,
-  AuthFooterLink,
-  AuthInsiderCard,
-} from './_components';
+import { AuthFooterLinks, AuthFooterLink, AuthInsiderCard } from './_components';
 import { useAuthMetaBoot } from './AuthMetaBoot';
 
 const initialValues = {
@@ -70,7 +66,10 @@ function LoginFooterLinks() {
     <AuthFooterLinks>
       {!signupDisabled && (
         <AuthFooterLink>
-          <T id={'dont_have_an_account'} /> <Link to={'/auth/register'}><T id={'sign_up'} /></Link>
+          <T id={'dont_have_an_account'} />{' '}
+          <Link to={'/auth/register'}>
+            <T id={'sign_up'} />
+          </Link>
         </AuthFooterLink>
       )}
       <AuthFooterLink>

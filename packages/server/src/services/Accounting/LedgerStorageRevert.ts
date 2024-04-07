@@ -1,9 +1,9 @@
-import { Inject } from 'typedi';
-import { castArray } from 'lodash';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import LedgerStorageService from './LedgerStorageService';
-import Ledger from './Ledger';
 import { Knex } from 'knex';
+import { castArray } from 'lodash';
+import { Inject } from 'typedi';
+import Ledger from './Ledger';
+import LedgerStorageService from './LedgerStorageService';
 
 export class LedgerRevert {
   @Inject()
@@ -20,7 +20,7 @@ export class LedgerRevert {
   public getTransactionsByReference = async (
     tenantId: number,
     referenceId: number | number[],
-    referenceType: string | string[]
+    referenceType: string | string[],
   ) => {
     const { AccountTransaction } = this.tenancy.models(tenantId);
 
@@ -43,14 +43,10 @@ export class LedgerRevert {
     tenantId: number,
     referenceId: number | number[],
     referenceType: string | string[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     //
-    const transactions = await this.getTransactionsByReference(
-      tenantId,
-      referenceId,
-      referenceType
-    );
+    const transactions = await this.getTransactionsByReference(tenantId, referenceId, referenceType);
     // Creates a new ledger from transaction and reverse the entries.
     const ledger = Ledger.fromTransactions(transactions);
     const reversedLedger = ledger.reverse();

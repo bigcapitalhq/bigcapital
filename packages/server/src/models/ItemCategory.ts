@@ -1,7 +1,7 @@
-import { Model, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
+import { Model, mixin } from 'objection';
 import ItemCategorySettings from './ItemCategory.Settings';
+import ModelSetting from './ModelSetting';
 
 export default class ItemCategory extends mixin(TenantModel, [ModelSetting]) {
   /**

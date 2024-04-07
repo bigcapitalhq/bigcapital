@@ -35,10 +35,7 @@ function CustomersList({
   );
 
   return (
-    <CustomersListProvider
-      tableState={customersTableState}
-      tableStateChanged={customersTableStateChanged}
-    >
+    <CustomersListProvider tableState={customersTableState} tableStateChanged={customersTableStateChanged}>
       <CustomersActionsBar />
 
       <DashboardPageContent>

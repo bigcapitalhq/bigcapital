@@ -14,10 +14,7 @@ import { transformToForm } from '@/utils';
 export const getSalesByItemsQueryShema = () => {
   return Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('to_date')),
   });
 };
 
@@ -55,9 +52,6 @@ export const useSalesByItemsQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseSalesByItemsQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseSalesByItemsQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

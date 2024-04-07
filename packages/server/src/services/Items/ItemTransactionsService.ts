@@ -1,10 +1,10 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ItemInvoicesTransactionsTransformer } from './ItemInvoicesTransactionsTransformer';
-import { ItemEstimateTransactionTransformer } from './ItemEstimatesTransactionTransformer';
-import { ItemBillTransactionTransformer } from './ItemBillsTransactionsTransformer';
-import { ItemReceiptTransactionTransformer } from './ItemReceiptsTransactionsTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { ItemBillTransactionTransformer } from './ItemBillsTransactionsTransformer';
+import { ItemEstimateTransactionTransformer } from './ItemEstimatesTransactionTransformer';
+import { ItemInvoicesTransactionsTransformer } from './ItemInvoicesTransactionsTransformer';
+import { ItemReceiptTransactionTransformer } from './ItemReceiptsTransactionsTransformer';
 
 @Service()
 export default class ItemTransactionsService {
@@ -33,11 +33,7 @@ export default class ItemTransactionsService {
         },
       });
     // Retrieves the transformed invoice entries.
-    return this.transformer.transform(
-      tenantId,
-      invoiceEntries,
-      new ItemInvoicesTransactionsTransformer()
-    );
+    return this.transformer.transform(tenantId, invoiceEntries, new ItemInvoicesTransactionsTransformer());
   }
 
   /**
@@ -60,11 +56,7 @@ export default class ItemTransactionsService {
         },
       });
     // Retrieves the transformed bill entries.
-    return this.transformer.transform(
-      tenantId,
-      billEntries,
-      new ItemBillTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, billEntries, new ItemBillTransactionTransformer());
   }
 
   /**
@@ -87,11 +79,7 @@ export default class ItemTransactionsService {
         },
       });
     // Retrieves the transformed estimates entries.
-    return this.transformer.transform(
-      tenantId,
-      estimatesEntries,
-      new ItemEstimateTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, estimatesEntries, new ItemEstimateTransactionTransformer());
   }
 
   /**
@@ -114,10 +102,6 @@ export default class ItemTransactionsService {
         },
       });
     // Retrieves the transformed receipts entries.
-    return this.transformer.transform(
-      tenantId,
-      receiptsEntries,
-      new ItemReceiptTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, receiptsEntries, new ItemReceiptTransactionTransformer());
   }
 }

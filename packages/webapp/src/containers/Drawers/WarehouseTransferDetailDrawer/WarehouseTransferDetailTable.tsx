@@ -18,11 +18,5 @@ export default function WarehouseTransferDetailTable() {
     warehouseTransfer: { entries },
   } = useWarehouseDetailDrawerContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

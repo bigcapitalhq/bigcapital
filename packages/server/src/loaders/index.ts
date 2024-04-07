@@ -1,11 +1,11 @@
-import Logger from '@/loaders/logger';
-import mongooseLoader from '@/loaders/mongoose';
-import jobsLoader from '@/loaders/jobs';
-import expressLoader from '@/loaders/express';
+import objectionLoader from '@/database/objection';
 import databaseLoader from '@/loaders/database';
 import dependencyInjectorLoader from '@/loaders/dependencyInjector';
-import objectionLoader from '@/database/objection';
+import expressLoader from '@/loaders/express';
 import i18nConfig from '@/loaders/i18n';
+import jobsLoader from '@/loaders/jobs';
+import Logger from '@/loaders/logger';
+import mongooseLoader from '@/loaders/mongoose';
 
 // We have to import at least all the events once so they can be triggered
 // import '@/loaders/events';

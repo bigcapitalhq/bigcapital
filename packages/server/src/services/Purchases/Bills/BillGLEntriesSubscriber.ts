@@ -1,11 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { IBIllEventDeletedPayload, IBillCreatedPayload, IBillEditedPayload, IBillOpenedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  IBillCreatedPayload,
-  IBillEditedPayload,
-  IBIllEventDeletedPayload,
-  IBillOpenedPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { BillGLEntries } from './BillGLEntries';
 
 @Service()
@@ -17,18 +12,9 @@ export class BillGLEntriesSubscriber {
    * Attaches events with handles.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.bill.onCreated,
-      this.handlerWriteJournalEntriesOnCreate
-    );
-    bus.subscribe(
-      events.bill.onOpened,
-      this.handlerWriteJournalEntriesOnCreate
-    );
-    bus.subscribe(
-      events.bill.onEdited,
-      this.handleOverwriteJournalEntriesOnEdit
-    );
+    bus.subscribe(events.bill.onCreated, this.handlerWriteJournalEntriesOnCreate);
+    bus.subscribe(events.bill.onOpened, this.handlerWriteJournalEntriesOnCreate);
+    bus.subscribe(events.bill.onEdited, this.handleOverwriteJournalEntriesOnEdit);
     bus.subscribe(events.bill.onDeleted, this.handlerDeleteJournalEntries);
   }
 
@@ -50,12 +36,7 @@ export class BillGLEntriesSubscriber {
    * Handles the overwriting journal entries once bill edited.
    * @param {IBillEditedPayload} payload -
    */
-  private handleOverwriteJournalEntriesOnEdit = async ({
-    tenantId,
-    billId,
-    bill,
-    trx,
-  }: IBillEditedPayload) => {
+  private handleOverwriteJournalEntriesOnEdit = async ({ tenantId, billId, bill, trx }: IBillEditedPayload) => {
     if (!bill.openedAt) return null;
 
     await this.billGLEntries.rewriteBillGLEntries(tenantId, billId, trx);
@@ -65,11 +46,7 @@ export class BillGLEntriesSubscriber {
    * Handles revert journal entries on bill deleted.
    * @param {IBIllEventDeletedPayload} payload -
    */
-  private handlerDeleteJournalEntries = async ({
-    tenantId,
-    billId,
-    trx,
-  }: IBIllEventDeletedPayload) => {
+  private handlerDeleteJournalEntries = async ({ tenantId, billId, trx }: IBIllEventDeletedPayload) => {
     await this.billGLEntries.revertBillGLEntries(tenantId, billId, trx);
   };
 }

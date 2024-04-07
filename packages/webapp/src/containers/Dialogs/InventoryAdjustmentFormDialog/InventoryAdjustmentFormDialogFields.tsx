@@ -4,13 +4,7 @@ import intl from 'react-intl-universal';
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { FastField, ErrorMessage, Field } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  InputGroup,
-  TextArea,
-  Position,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, InputGroup, TextArea, Position } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { useAutofocus } from '@/hooks';
@@ -25,13 +19,7 @@ import {
   BranchSelectButton,
   AccountsSuggestField,
 } from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-  toSafeNumber,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange, toSafeNumber } from '@/utils';
 import { Features, CLASSES } from '@/constants';
 
 import { useInventoryAdjContext } from './InventoryAdjustmentFormProvider';
@@ -71,10 +59,7 @@ export default function InventoryAdjustmentFormDialogFields() {
       <Row>
         <FeatureCan feature={Features.Branches}>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'branch'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
+            <FormGroup label={<T id={'branch'} />} className={classNames('form-group--select-list', Classes.FILL)}>
               <BranchSelect
                 name={'branch_id'}
                 branches={branches}
@@ -86,23 +71,14 @@ export default function InventoryAdjustmentFormDialogFields() {
         </FeatureCan>
         <FeatureCan feature={Features.Warehouses}>
           <Col xs={5}>
-            <FormGroup
-              label={<T id={'warehouse'} />}
-              className={classNames('form-group--select-list', Classes.FILL)}
-            >
-              <WarehouseSelect
-                name={'warehouse_id'}
-                warehouses={warehouses}
-                popoverProps={{ minimal: true }}
-              />
+            <FormGroup label={<T id={'warehouse'} />} className={classNames('form-group--select-list', Classes.FILL)}>
+              <WarehouseSelect name={'warehouse_id'} warehouses={warehouses} popoverProps={{ minimal: true }} />
             </FormGroup>
           </Col>
         </FeatureCan>
       </Row>
 
-      {featureCan(Features.Warehouses) && featureCan(Features.Branches) && (
-        <FeatureRowDivider />
-      )}
+      {featureCan(Features.Warehouses) && featureCan(Features.Branches) && <FeatureRowDivider />}
 
       <Row>
         <Col xs={5}>
@@ -138,11 +114,7 @@ export default function InventoryAdjustmentFormDialogFields() {
         <Col xs={5}>
           {/*------------ Adjustment type -----------*/}
           <Field name={'type'}>
-            {({
-              form: { values, setFieldValue },
-              field: { value },
-              meta: { error, touched },
-            }) => (
+            {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
               <FormGroup
                 label={<T id={'adjustment_type'} />}
                 labelInfo={<FieldRequiredHint />}
@@ -188,9 +160,7 @@ export default function InventoryAdjustmentFormDialogFields() {
           >
             <AccountsSuggestField
               accounts={accounts}
-              onAccountSelected={({ id }) =>
-                form.setFieldValue('adjustment_account_id', id)
-              }
+              onAccountSelected={({ id }) => form.setFieldValue('adjustment_account_id', id)}
               inputProps={{
                 placeholder: intl.get('select_adjustment_account'),
                 intent: inputIntent({ error, touched }),
@@ -224,12 +194,7 @@ export default function InventoryAdjustmentFormDialogFields() {
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name={'reason'} />}
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>

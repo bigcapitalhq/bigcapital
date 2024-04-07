@@ -3,12 +3,7 @@ import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from '@/utils';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 
 import ReceiptsEmptyStatus from './ReceiptsEmptyStatus';
@@ -51,13 +46,7 @@ function ReceiptsDataTable({
   const history = useHistory();
 
   // Receipts list context.
-  const {
-    receipts,
-    pagination,
-    isReceiptsFetching,
-    isReceiptsLoading,
-    isEmptyStatus,
-  } = useReceiptsListContext();
+  const { receipts, pagination, isReceiptsFetching, isReceiptsLoading, isEmptyStatus } = useReceiptsListContext();
 
   // Receipts table columns.
   const columns = useReceiptsTableColumns();
@@ -93,8 +82,7 @@ function ReceiptsDataTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.RECEIPTS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.RECEIPTS);
 
   // Handles the datable fetch data once the state changing.
   const handleDataTableFetchData = useCallback(

@@ -1,21 +1,11 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import Currency from 'models/Currency';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
 import Vendor from 'models/Vendor';
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: `/vendors`', () => {
   describe('POST: `/vendors`', () => {
     it('Should response unauthorized in case the user was not logged in.', async () => {
-      const res = await request()
-        .post('/api/vendors')
-        .send({});
+      const res = await request().post('/api/vendors').send({});
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
@@ -26,14 +16,14 @@ describe('route: `/vendors`', () => {
         .post('/api/vendors')
         .set('x-access-token', loginRes.body.token)
         .set('organization-id', tenantWebsite.organizationId)
-        .send({
-
-        });
+        .send({});
 
       expect(res.status).equals(422);
       expect(res.body.errors).include.something.deep.equals({
-        msg: 'Invalid value', param: 'display_name', location: 'body',
-      })
+        msg: 'Invalid value',
+        param: 'display_name',
+        location: 'body',
+      });
     });
 
     it('Should store the vendor data to the storage.', async () => {
@@ -64,7 +54,7 @@ describe('route: `/vendors`', () => {
           shipping_address_email: 'a.bouhuolia@live.com',
           shipping_address_state: 'State Tripoli',
           shipping_address_zipcode: '21892',
-          
+
           note: '__desc__',
 
           active: true,
@@ -80,7 +70,7 @@ describe('route: `/vendors`', () => {
       expect(foundVendor[0].displayName).equals('Ahmed Bouhuolia, Bigcapital');
 
       expect(foundVendor[0].email).equals('a.bouhuolia@live.com');
-      
+
       expect(foundVendor[0].workPhone).equals('0927918381');
       expect(foundVendor[0].personalPhone).equals('0925173379');
 
@@ -89,7 +79,7 @@ describe('route: `/vendors`', () => {
       expect(foundVendor[0].billingAddressEmail).equals('a.bouhuolia@live.com');
       expect(foundVendor[0].billingAddressState).equals('State Tripoli');
       expect(foundVendor[0].billingAddressZipcode).equals('21892');
-      
+
       expect(foundVendor[0].shippingAddressCity).equals('Tripoli');
       expect(foundVendor[0].shippingAddressCountry).equals('Libya');
       expect(foundVendor[0].shippingAddressEmail).equals('a.bouhuolia@live.com');
@@ -108,7 +98,8 @@ describe('route: `/vendors`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'VENDOR.NOT.FOUND', code: 200,
+        type: 'VENDOR.NOT.FOUND',
+        code: 200,
       });
     });
   });
@@ -138,7 +129,8 @@ describe('route: `/vendors`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'VENDOR.NOT.FOUND', code: 200,
+        type: 'VENDOR.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -154,7 +146,7 @@ describe('route: `/vendors`', () => {
 
       const foundVendor = await Vendor.tenant().query().where('id', vendor.id);
       expect(foundVendor.length).equals(0);
-    })
+    });
   });
 
   describe('POST: `/vendors/:id`', () => {
@@ -169,7 +161,8 @@ describe('route: `/vendors`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.deep.equals({
-        type: 'VENDOR.NOT.FOUND', code: 200,
+        type: 'VENDOR.NOT.FOUND',
+        code: 200,
       });
     });
 
@@ -188,6 +181,6 @@ describe('route: `/vendors`', () => {
 
       expect(foundVendor.length).equals(1);
       expect(foundVendor[0].displayName).equals('Ahmed Bouhuolia, Bigcapital');
-    })
+    });
   });
 });

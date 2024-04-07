@@ -42,10 +42,7 @@ function DashboardUniversalSearch({
 
   // Sync default search type with default universal resource type.
   React.useEffect(() => {
-    if (
-      !isUndefined(defaultUniversalResourceType) &&
-      defaultSearchType !== defaultUniversalResourceType
-    ) {
+    if (!isUndefined(defaultUniversalResourceType) && defaultSearchType !== defaultUniversalResourceType) {
       setSearchType(defaultUniversalResourceType);
       setDefaultSearchType(defaultUniversalResourceType);
     }

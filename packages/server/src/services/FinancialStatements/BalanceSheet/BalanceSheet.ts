@@ -1,24 +1,24 @@
 import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
 import {
-  IBalanceSheetQuery,
-  INumberFormatQuery,
-  IBalanceSheetSchemaNode,
   IBalanceSheetDataNode,
+  IBalanceSheetQuery,
+  IBalanceSheetSchemaNode,
+  INumberFormatQuery,
 } from '../../../interfaces';
-import { BalanceSheetSchema } from './BalanceSheetSchema';
-import { BalanceSheetPercentage } from './BalanceSheetPercentage';
+import FinancialSheet from '../FinancialSheet';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { BalanceSheetAccounts } from './BalanceSheetAccounts';
+import { BalanceSheetAggregators } from './BalanceSheetAggregators';
+import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetComparsionPreviousPeriod } from './BalanceSheetComparsionPreviousPeriod';
 import { BalanceSheetComparsionPreviousYear } from './BalanceSheetComparsionPreviousYear';
 import { BalanceSheetDatePeriods } from './BalanceSheetDatePeriods';
-import { BalanceSheetBase } from './BalanceSheetBase';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
-import BalanceSheetRepository from './BalanceSheetRepository';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetFiltering } from './BalanceSheetFiltering';
 import { BalanceSheetNetIncome } from './BalanceSheetNetIncome';
-import { BalanceSheetAggregators } from './BalanceSheetAggregators';
-import { BalanceSheetAccounts } from './BalanceSheetAccounts';
+import { BalanceSheetPercentage } from './BalanceSheetPercentage';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
+import BalanceSheetRepository from './BalanceSheetRepository';
+import { BalanceSheetSchema } from './BalanceSheetSchema';
 
 export default class BalanceSheet extends R.compose(
   BalanceSheetAggregators,
@@ -31,7 +31,7 @@ export default class BalanceSheet extends R.compose(
   BalanceSheetPercentage,
   BalanceSheetSchema,
   BalanceSheetBase,
-  FinancialSheetStructure
+  FinancialSheetStructure,
 )(FinancialSheet) {
   /**
    * Balance sheet query.
@@ -62,12 +62,7 @@ export default class BalanceSheet extends R.compose(
    * @param {IAccount[]} accounts -
    * @param {string} baseCurrency -
    */
-  constructor(
-    query: IBalanceSheetQuery,
-    repository: BalanceSheetRepository,
-    baseCurrency: string,
-    i18n
-  ) {
+  constructor(query: IBalanceSheetQuery, repository: BalanceSheetRepository, baseCurrency: string, i18n) {
     super();
 
     this.query = new BalanceSheetQuery(query);
@@ -82,13 +77,11 @@ export default class BalanceSheet extends R.compose(
    * @param {IBalanceSheetSchemaNode[]} schema
    * @returns {IBalanceSheetDataNode[]}
    */
-  public parseSchemaNodes = (
-    schema: IBalanceSheetSchemaNode[]
-  ): IBalanceSheetDataNode[] => {
+  public parseSchemaNodes = (schema: IBalanceSheetSchemaNode[]): IBalanceSheetDataNode[] => {
     return R.compose(
       this.aggregatesSchemaParser,
       this.netIncomeSchemaParser,
-      this.accountsSchemaParser
+      this.accountsSchemaParser,
     )(schema) as IBalanceSheetDataNode[];
   };
 
@@ -99,10 +92,6 @@ export default class BalanceSheet extends R.compose(
   public reportData = () => {
     const balanceSheetSchema = this.getSchema();
 
-    return R.compose(
-      this.reportFilterPlugin,
-      this.reportPercentageCompose,
-      this.parseSchemaNodes
-    )(balanceSheetSchema);
+    return R.compose(this.reportFilterPlugin, this.reportPercentageCompose, this.parseSchemaNodes)(balanceSheetSchema);
   };
 }

@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
+import { IVendorEventDeletingPayload } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import { IVendorEventDeletingPayload } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 
 const ERRORS = {
   VENDOR_HAS_TRANSACTIONS: 'VENDOR_HAS_TRANSACTIONS',
@@ -18,10 +18,7 @@ export default class DeleteVendorAssociatedVendorCredit {
    * @param bus
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.vendors.onDeleting,
-      this.validateVendorHasNoCreditsTransactionsOnceDeleting
-    );
+    bus.subscribe(events.vendors.onDeleting, this.validateVendorHasNoCreditsTransactionsOnceDeleting);
   };
 
   /**
@@ -40,16 +37,10 @@ export default class DeleteVendorAssociatedVendorCredit {
    * @param {number} tenantId
    * @param {number} vendorId
    */
-  public validateVendorHasNoCreditsTransactions = async (
-    tenantId: number,
-    vendorId: number
-  ): Promise<void> => {
+  public validateVendorHasNoCreditsTransactions = async (tenantId: number, vendorId: number): Promise<void> => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
-    const associatedVendors = await VendorCredit.query().where(
-      'vendorId',
-      vendorId
-    );
+    const associatedVendors = await VendorCredit.query().where('vendorId', vendorId);
     if (associatedVendors.length > 0) {
       throw new ServiceError(ERRORS.VENDOR_HAS_TRANSACTIONS);
     }

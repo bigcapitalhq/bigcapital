@@ -9,10 +9,7 @@ import { useGeneralLedgerQuery } from './common';
 import { GeneralLedgerProvider } from './GeneralLedgerProvider';
 import { FinancialStatement, DashboardPageContent } from '@/components';
 
-import {
-  GeneralLedgerSheetAlerts,
-  GeneralLedgerSheetLoadingBar,
-} from './components';
+import { GeneralLedgerSheetAlerts, GeneralLedgerSheetLoadingBar } from './components';
 
 import withGeneralLedgerActions from './withGeneralLedgerActions';
 import { compose } from '@/utils';
@@ -43,10 +40,7 @@ function GeneralLedger({
   );
 
   // Hide the filter drawer once the page unmount.
-  useEffect(
-    () => () => toggleGeneralLedgerFilterDrawer(false),
-    [toggleGeneralLedgerFilterDrawer],
-  );
+  useEffect(() => () => toggleGeneralLedgerFilterDrawer(false), [toggleGeneralLedgerFilterDrawer]);
 
   return (
     <GeneralLedgerProvider query={query}>
@@ -54,19 +48,14 @@ function GeneralLedger({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <GeneralLedgerHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <GeneralLedgerHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <GeneralLedgerSheetLoadingBar />
           <GeneralLedgerSheetAlerts />
           <GeneralLedgerBody />
         </FinancialStatement>
       </DashboardPageContent>
 
-      <GeneralLedgerPdfDialog
-        dialogName={DialogsName.GeneralLedgerPdfPreview}
-      />
+      <GeneralLedgerPdfDialog dialogName={DialogsName.GeneralLedgerPdfPreview} />
     </GeneralLedgerProvider>
   );
 }

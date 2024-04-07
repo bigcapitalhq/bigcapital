@@ -12,14 +12,14 @@ export const FinancialDateRanges = (Base) =>
      */
     protected getPreviousPeriodDate = (
       date: Date,
-      value: number = 1,
-      unit: IFinancialDatePeriodsUnit = IFinancialDatePeriodsUnit.Day
+      value = 1,
+      unit: IFinancialDatePeriodsUnit = IFinancialDatePeriodsUnit.Day,
     ): Date => {
       return moment(date).subtract(value, unit).toDate();
     };
 
     /**
-     * Retrieves the different 
+     * Retrieves the different
      * @param {Date} fromDate
      * @param {Date} toDate
      * @returns
@@ -37,7 +37,7 @@ export const FinancialDateRanges = (Base) =>
       fromDate: Date,
       toDate: Date,
       unit: IFinancialDatePeriodsUnit,
-      amount: number = 1
+      amount = 1,
     ): IDateRange => {
       const PPToDate = this.getPreviousPeriodDate(toDate, amount, unit);
       const PPFromDate = this.getPreviousPeriodDate(fromDate, amount, unit);
@@ -51,18 +51,10 @@ export const FinancialDateRanges = (Base) =>
      * @param   {Date} toDate
      * @returns {IDateRange}
      */
-    protected getPPTotalDateRange = (
-      fromDate: Date,
-      toDate: Date
-    ): IDateRange => {
+    protected getPPTotalDateRange = (fromDate: Date, toDate: Date): IDateRange => {
       const unit = this.getPreviousPeriodDiff(fromDate, toDate);
 
-      return this.getPreviousPeriodDateRange(
-        fromDate,
-        toDate,
-        IFinancialDatePeriodsUnit.Day,
-        unit
-      );
+      return this.getPreviousPeriodDateRange(fromDate, toDate, IFinancialDatePeriodsUnit.Day, unit);
     };
 
     /**
@@ -75,7 +67,7 @@ export const FinancialDateRanges = (Base) =>
     protected getPPDatePeriodDateRange = (
       fromDate: Date,
       toDate: Date,
-      unit: IFinancialDatePeriodsUnit
+      unit: IFinancialDatePeriodsUnit,
     ): IDateRange => {
       return this.getPreviousPeriodDateRange(fromDate, toDate, unit, 1);
     };
@@ -98,10 +90,7 @@ export const FinancialDateRanges = (Base) =>
      * @param   {Date} toDate
      * @returns {IDateRange}
      */
-    protected getPreviousYearDateRange = (
-      fromDate: Date,
-      toDate: Date
-    ): IDateRange => {
+    protected getPreviousYearDateRange = (fromDate: Date, toDate: Date): IDateRange => {
       const PYFromDate = this.getPreviousYearDate(fromDate);
       const PYToDate = this.getPreviousYearDate(toDate);
 

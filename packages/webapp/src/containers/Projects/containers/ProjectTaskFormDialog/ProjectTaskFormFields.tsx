@@ -2,14 +2,7 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Classes, ControlGroup } from '@blueprintjs/core';
-import {
-  FFormGroup,
-  FInputGroup,
-  Col,
-  Row,
-  FormattedMessage as T,
-  InputPrependText,
-} from '@/components';
+import { FFormGroup, FInputGroup, Col, Row, FormattedMessage as T, InputPrependText } from '@/components';
 import { EstimateAmount } from './utils';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { compose } from '@/utils';
@@ -28,19 +21,13 @@ function ProjectTaskFormFields({
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Task Name -----------*/}
-      <FFormGroup
-        label={<T id={'project_task.dialog.task_name'} />}
-        name={'taskName'}
-      >
+      <FFormGroup label={<T id={'project_task.dialog.task_name'} />} name={'taskName'}>
         <FInputGroup name="name" />
       </FFormGroup>
       {/*------------ Estimated Hours -----------*/}
       <Row>
         <Col xs={4}>
-          <FFormGroup
-            label={<T id={'project_task.dialog.estimated_hours'} />}
-            name={'estimate_hours'}
-          >
+          <FFormGroup label={<T id={'project_task.dialog.estimated_hours'} />} name={'estimate_hours'}>
             <FInputGroup name="estimate_hours" />
           </FFormGroup>
         </Col>
@@ -53,10 +40,7 @@ function ProjectTaskFormFields({
           >
             <ControlGroup>
               <InputPrependText text={'Hourly Price'} />
-              <FInputGroup
-                name="rate"
-                disabled={values?.charge_type === 'non_chargable'}
-              />
+              <FInputGroup name="rate" disabled={values?.charge_type === 'non_chargable'} />
             </ControlGroup>
           </FFormGroup>
         </Col>

@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { ICreditNoteCreatingPayload, ICreditNoteEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  ICreditNoteCreatingPayload,
-  ICreditNoteEditingPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -15,14 +12,8 @@ export class CreditNoteBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.creditNote.onCreating,
-      this.validateBranchExistanceOnCreditCreating
-    );
-    bus.subscribe(
-      events.creditNote.onEditing,
-      this.validateBranchExistanceOnCreditEditing
-    );
+    bus.subscribe(events.creditNote.onCreating, this.validateBranchExistanceOnCreditCreating);
+    bus.subscribe(events.creditNote.onEditing, this.validateBranchExistanceOnCreditEditing);
     return bus;
   };
 
@@ -30,14 +21,8 @@ export class CreditNoteBranchValidateSubscriber {
    * Validate branch existance on estimate creating.
    * @param {ICreditNoteCreatingPayload} payload
    */
-  private validateBranchExistanceOnCreditCreating = async ({
-    tenantId,
-    creditNoteDTO,
-  }: ICreditNoteCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      creditNoteDTO.branchId
-    );
+  private validateBranchExistanceOnCreditCreating = async ({ tenantId, creditNoteDTO }: ICreditNoteCreatingPayload) => {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, creditNoteDTO.branchId);
   };
 
   /**
@@ -48,9 +33,6 @@ export class CreditNoteBranchValidateSubscriber {
     creditNoteEditDTO,
     tenantId,
   }: ICreditNoteEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      creditNoteEditDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, creditNoteEditDTO.branchId);
   };
 }

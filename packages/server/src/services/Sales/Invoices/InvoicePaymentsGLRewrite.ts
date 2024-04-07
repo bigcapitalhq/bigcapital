@@ -1,7 +1,7 @@
-import { Knex } from 'knex';
-import async from 'async';
-import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import async from 'async';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { PaymentReceiveGLEntries } from '../PaymentReceives/PaymentReceiveGLEntries';
 
 @Service()
@@ -17,16 +17,8 @@ export class InvoicePaymentsGLEntriesRewrite {
    * @param   {{ tenantId: number, paymentId: number, trx: Knex?.Transaction }}
    * @returns {Promise<void>}
    */
-  public rewritePaymentsGLEntriesTask = async ({
-    tenantId,
-    paymentId,
-    trx,
-  }) => {
-    await this.paymentGLEntries.rewritePaymentGLEntries(
-      tenantId,
-      paymentId,
-      trx
-    );
+  public rewritePaymentsGLEntriesTask = async ({ tenantId, paymentId, trx }) => {
+    await this.paymentGLEntries.rewritePaymentGLEntries(tenantId, paymentId, trx);
   };
 
   /**
@@ -35,11 +27,7 @@ export class InvoicePaymentsGLEntriesRewrite {
    * @param {number[]} paymentsIds
    * @param {Knex.Transaction} trx
    */
-  public rewritePaymentsGLEntriesQueue = async (
-    tenantId: number,
-    paymentsIds: number[],
-    trx?: Knex.Transaction
-  ) => {
+  public rewritePaymentsGLEntriesQueue = async (tenantId: number, paymentsIds: number[], trx?: Knex.Transaction) => {
     // Initiate a new queue for accounts balance mutation.
     const rewritePaymentGL = async.queue(this.rewritePaymentsGLEntriesTask, 10);
 
@@ -58,17 +46,10 @@ export class InvoicePaymentsGLEntriesRewrite {
    * @param   {Knex.Transaction} trx
    * @returns {Promise<void>}
    */
-  public invoicePaymentsGLEntriesRewrite = async (
-    tenantId: number,
-    invoiceId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public invoicePaymentsGLEntriesRewrite = async (tenantId: number, invoiceId: number, trx?: Knex.Transaction) => {
     const { PaymentReceiveEntry } = this.tenancy.models(tenantId);
 
-    const invoicePaymentEntries = await PaymentReceiveEntry.query().where(
-      'invoiceId',
-      invoiceId
-    );
+    const invoicePaymentEntries = await PaymentReceiveEntry.query().where('invoiceId', invoiceId);
     const paymentsIds = invoicePaymentEntries.map((e) => e.paymentReceiveId);
 
     await this.rewritePaymentsGLEntriesQueue(tenantId, paymentsIds, trx);

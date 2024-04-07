@@ -1,12 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  CommercialDocFooter,
-  T,
-  If,
-  DetailsMenu,
-  DetailItem,
-} from '@/components';
+import { CommercialDocFooter, T, If, DetailsMenu, DetailItem } from '@/components';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
 /**
@@ -23,15 +17,11 @@ export function InvoiceDetailFooter() {
     <CommercialDocFooter>
       <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
         <If condition={invoice.terms_conditions}>
-          <DetailItem label={<T id={'terms_conditions'} />}>
-            {invoice.terms_conditions}
-          </DetailItem>
+          <DetailItem label={<T id={'terms_conditions'} />}>{invoice.terms_conditions}</DetailItem>
         </If>
 
         <If condition={invoice.invoice_message}>
-          <DetailItem label={<T id={'invoice.details.invoice_message'} />}>
-            {invoice.invoice_message}
-          </DetailItem>
+          <DetailItem label={<T id={'invoice.details.invoice_message'} />}>{invoice.invoice_message}</DetailItem>
         </If>
       </DetailsMenu>
     </CommercialDocFooter>

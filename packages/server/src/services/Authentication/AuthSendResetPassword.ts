@@ -1,7 +1,5 @@
-import { Inject, Service } from 'typedi';
-import uniqid from 'uniqid';
-import moment from 'moment';
 import config from '@/config';
+import { ServiceError } from '@/exceptions';
 import {
   IAuthResetedPasswordEventPayload,
   IAuthSendedResetPassword,
@@ -12,9 +10,11 @@ import {
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import { PasswordReset } from '@/system/models';
-import { ERRORS } from './_constants';
-import { ServiceError } from '@/exceptions';
 import { hashPassword } from '@/utils';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import uniqid from 'uniqid';
+import { ERRORS } from './_constants';
 
 @Service()
 export class AuthSendResetPassword {
@@ -65,19 +65,13 @@ export class AuthSendResetPassword {
     const { systemUserRepository } = this.sysRepositories;
 
     // Finds the password reset token.
-    const tokenModel: IPasswordReset = await PasswordReset.query().findOne(
-      'token',
-      token
-    );
+    const tokenModel: IPasswordReset = await PasswordReset.query().findOne('token', token);
     // In case the password reset token not found throw token invalid error..
     if (!tokenModel) {
       throw new ServiceError(ERRORS.TOKEN_INVALID);
     }
     // Different between tokne creation datetime and current time.
-    if (
-      moment().diff(tokenModel.createdAt, 'seconds') >
-      config.resetPasswordSeconds
-    ) {
+    if (moment().diff(tokenModel.createdAt, 'seconds') > config.resetPasswordSeconds) {
       // Deletes the expired token by expired token email.
       await this.deletePasswordResetToken(tokenModel.email);
       throw new ServiceError(ERRORS.TOKEN_EXPIRED);
@@ -89,10 +83,7 @@ export class AuthSendResetPassword {
     }
     const hashedPassword = await hashPassword(password);
 
-    await systemUserRepository.update(
-      { password: hashedPassword },
-      { id: user.id }
-    );
+    await systemUserRepository.update({ password: hashedPassword }, { id: user.id });
     // Deletes the used token.
     await this.deletePasswordResetToken(tokenModel.email);
 

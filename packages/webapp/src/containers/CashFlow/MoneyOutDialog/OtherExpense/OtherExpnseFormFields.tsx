@@ -20,12 +20,7 @@ import {
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { Features, ACCOUNT_TYPE } from '@/constants';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { CLASSES } from '@/constants/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
 import { useSetPrimaryBranchToForm, BranchRowDivider } from '../utils';
@@ -101,11 +96,7 @@ export default function OtherExpnseFormFields() {
 
       <Row>
         <Col xs={10}>
-          <FFormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'amount'} label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -131,13 +122,8 @@ export default function OtherExpnseFormFields() {
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.EXPENSE,
-                    ACCOUNT_TYPE.OTHER_EXPENSE,
-                  ]}
+                  onAccountSelected={({ id }) => form.setFieldValue('credit_account_id', id)}
+                  filterByTypes={[ACCOUNT_TYPE.EXPENSE, ACCOUNT_TYPE.OTHER_EXPENSE]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -157,12 +143,7 @@ export default function OtherExpnseFormFields() {
 
       {/*------------ description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </React.Fragment>
   );

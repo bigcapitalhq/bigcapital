@@ -1,9 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  getInvoicesTableStateFactory,
-  isInvoicesTableStateChangedFactory,
-} from '@/store/Invoice/invoices.selector';
+import { getInvoicesTableStateFactory, isInvoicesTableStateChangedFactory } from '@/store/Invoice/invoices.selector';
 
 export default (mapState) => {
   const getInvoicesTableState = getInvoicesTableStateFactory();

@@ -1,5 +1,3 @@
-
-
 export default class ServiceError {
   errorType: string;
   message: string;

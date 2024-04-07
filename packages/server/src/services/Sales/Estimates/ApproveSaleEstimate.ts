@@ -1,16 +1,13 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import {
-  ISaleEstimateApprovedEvent,
-  ISaleEstimateApprovingEvent,
-} from '@/interfaces';
+import { ISaleEstimateApprovedEvent, ISaleEstimateApprovingEvent } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { ERRORS } from './constants';
-import { Knex } from 'knex';
 import events from '@/subscribers/events';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Knex } from 'knex';
 import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class ApproveSaleEstimate {
@@ -28,16 +25,11 @@ export class ApproveSaleEstimate {
    * @param {number} tenantId
    * @param {number} saleEstimateId
    */
-  public async approveSaleEstimate(
-    tenantId: number,
-    saleEstimateId: number
-  ): Promise<void> {
+  public async approveSaleEstimate(tenantId: number, saleEstimateId: number): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate id.
-    const oldSaleEstimate = await SaleEstimate.query()
-      .findById(saleEstimateId)
-      .throwIfNotFound();
+    const oldSaleEstimate = await SaleEstimate.query().findById(saleEstimateId).throwIfNotFound();
 
     // Throws error in case the sale estimate still not delivered to customer.
     if (!oldSaleEstimate.isDelivered) {
@@ -57,12 +49,10 @@ export class ApproveSaleEstimate {
       } as ISaleEstimateApprovingEvent);
 
       // Update estimate as approved.
-      const saleEstimate = await SaleEstimate.query(trx)
-        .where('id', saleEstimateId)
-        .patch({
-          approvedAt: moment().toMySqlDateTime(),
-          rejectedAt: null,
-        });
+      const saleEstimate = await SaleEstimate.query(trx).where('id', saleEstimateId).patch({
+        approvedAt: moment().toMySqlDateTime(),
+        rejectedAt: null,
+      });
       // Triggers `onSaleEstimateApproved` event.
       await this.eventPublisher.emitAsync(events.saleEstimate.onApproved, {
         trx,

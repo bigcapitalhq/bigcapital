@@ -18,11 +18,5 @@ export default function CreditNoteDetailTable() {
   // Credit note entries table columns.
   const columns = useCreditNoteReadOnlyEntriesColumns();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      className={'table-constrant'}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} className={'table-constrant'} />;
 }

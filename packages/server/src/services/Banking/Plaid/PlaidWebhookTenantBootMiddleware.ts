@@ -1,12 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import { SystemPlaidItem, Tenant } from '@/system/models';
 import tenantDependencyInjection from '@/api/middleware/TenantDependencyInjection';
+import { SystemPlaidItem, Tenant } from '@/system/models';
+import { NextFunction, Request, Response } from 'express';
 
-export const PlaidWebhookTenantBootMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const PlaidWebhookTenantBootMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const { item_id: plaidItemId } = req.body;
   const plaidItem = await SystemPlaidItem.query().findOne({ plaidItemId });
 
@@ -19,9 +15,7 @@ export const PlaidWebhookTenantBootMiddleware = async (
   if (!plaidItem) {
     return notFoundOrganization();
   }
-  const tenant = await Tenant.query()
-    .findById(plaidItem.tenantId)
-    .withGraphFetched('metadata');
+  const tenant = await Tenant.query().findById(plaidItem.tenantId).withGraphFetched('metadata');
 
   // When the given organization id not found on the system storage.
   if (!tenant) {

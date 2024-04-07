@@ -29,15 +29,9 @@ export function TableVirtualizedListRows() {
   } = useContext(TableContext);
 
   // Dashboard content pane.
-  const dashboardContentPane = React.useMemo(
-    () => document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`),
-    [],
-  );
+  const dashboardContentPane = React.useMemo(() => document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`), []);
 
-  const rowRenderer = React.useCallback(
-    ({ key, ...args }) => <TableVirtualizedListRow {...args} key={key} />,
-    [],
-  );
+  const rowRenderer = React.useCallback(({ key, ...args }) => <TableVirtualizedListRow {...args} key={key} />, []);
 
   return (
     <WindowScroller scrollElement={dashboardContentPane}>

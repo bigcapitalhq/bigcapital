@@ -1,10 +1,8 @@
-import { mixin, Model, raw } from 'objection';
 import TenantModel from 'models/TenantModel';
+import { Model, mixin } from 'objection';
 import ModelSearchable from './ModelSearchable';
 
-export default class TaxRateTransaction extends mixin(TenantModel, [
-  ModelSearchable,
-]) {
+export default class TaxRateTransaction extends mixin(TenantModel, [ModelSearchable]) {
   /**
    * Table name
    */

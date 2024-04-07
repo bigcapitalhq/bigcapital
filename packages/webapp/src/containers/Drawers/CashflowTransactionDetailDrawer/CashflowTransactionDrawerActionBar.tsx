@@ -1,19 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  Classes,
-  NavbarGroup,
-  Intent,
-  NavbarDivider,
-} from '@blueprintjs/core';
-import {
-  Can,
-  FormattedMessage as T,
-  DrawerActionsBar,
-  Icon,
-  If,
-} from '@/components';
+import { Button, Classes, NavbarGroup, Intent, NavbarDivider } from '@blueprintjs/core';
+import { Can, FormattedMessage as T, DrawerActionsBar, Icon, If } from '@/components';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';
 import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
@@ -26,8 +14,7 @@ function CashflowTransactionDrawerActionBar({
   // #withAlertsDialog
   openAlert,
 }) {
-  const { referenceId, cashflowTransaction } =
-    useCashflowTransactionDrawerContext();
+  const { referenceId, cashflowTransaction } = useCashflowTransactionDrawerContext();
 
   // Handle cashflow transaction delete action.
   const handleDeleteCashflowTransaction = () => {
@@ -37,8 +24,7 @@ function CashflowTransactionDrawerActionBar({
   // Handles the uncategorize button click.
   const handleUncategorizeBtnClick = () => {
     openAlert('cashflow-tranaction-uncategorize', {
-      uncategorizedTransactionId:
-        cashflowTransaction.uncategorized_transaction_id,
+      uncategorizedTransactionId: cashflowTransaction.uncategorized_transaction_id,
     });
   };
 
@@ -55,11 +41,7 @@ function CashflowTransactionDrawerActionBar({
           />
           <If condition={cashflowTransaction.uncategorized_transaction_id}>
             <NavbarDivider />
-            <Button
-              text={'Uncategorize'}
-              onClick={handleUncategorizeBtnClick}
-              className={Classes.MINIMAL}
-            />
+            <Button text={'Uncategorize'} onClick={handleUncategorizeBtnClick} className={Classes.MINIMAL} />
           </If>
         </NavbarGroup>
       </DrawerActionsBar>

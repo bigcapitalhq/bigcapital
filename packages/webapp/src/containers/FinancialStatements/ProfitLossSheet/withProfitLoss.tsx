@@ -1,8 +1,6 @@
 // @ts-nocheck
-import {connect} from 'react-redux';
-import {
-  getProfitLossFilterDrawer,
-} from '@/store/financialStatement/financialStatements.selectors';
+import { connect } from 'react-redux';
+import { getProfitLossFilterDrawer } from '@/store/financialStatement/financialStatements.selectors';
 
 export default (mapState) => {
   const mapStateToProps = (state, props) => {
@@ -12,4 +10,4 @@ export default (mapState) => {
     return mapState ? mapState(mapped, state, props) : mapped;
   };
   return connect(mapStateToProps);
-}
+};

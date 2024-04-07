@@ -6,8 +6,7 @@ const organizationSelector = (state, props) => {
   return state.organizations.data[tenantId];
 };
 
-export const getOrganizationByIdFactory = () =>
-  createSelector(organizationSelector, (organization) => organization);
+export const getOrganizationByIdFactory = () => createSelector(organizationSelector, (organization) => organization);
 
 export const isOrganizationSeededFactory = () =>
   createSelector(organizationSelector, (organization) => {

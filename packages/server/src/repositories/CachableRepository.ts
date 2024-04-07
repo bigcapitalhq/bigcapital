@@ -69,11 +69,7 @@ export default class CachableRepository extends EntityRepository {
    * @returns {Promise<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereNot(attributeValues = {}, withRelations?) {
-    const cacheKey = this.getCacheKey(
-      'findWhereNot',
-      attributeValues,
-      withRelations
-    );
+    const cacheKey = this.getCacheKey('findWhereNot', attributeValues, withRelations);
 
     return this.getByCache(cacheKey, () => {
       return super.findWhereNot(attributeValues, withRelations);
@@ -90,11 +86,7 @@ export default class CachableRepository extends EntityRepository {
    * @returns {PromiseLike<Object[]>} - query builder. You can chain additional methods to it or call "await" or then() on it to execute
    */
   findWhereIn(searchParam, attributeValues, withRelations?) {
-    const cacheKey = this.getCacheKey(
-      'findWhereIn',
-      attributeValues,
-      withRelations
-    );
+    const cacheKey = this.getCacheKey('findWhereIn', attributeValues, withRelations);
 
     return this.getByCache(cacheKey, () => {
       return super.findWhereIn(searchParam, attributeValues, withRelations);
@@ -109,11 +101,7 @@ export default class CachableRepository extends EntityRepository {
    * @returns {Promise<Object>}
    */
   findOne(attributeValues = {}, withRelations?) {
-    const cacheKey = this.getCacheKey(
-      'findOne',
-      attributeValues,
-      withRelations
-    );
+    const cacheKey = this.getCacheKey('findOne', attributeValues, withRelations);
 
     return this.getByCache(cacheKey, () => {
       return super.findOne(attributeValues, withRelations);
@@ -239,12 +227,7 @@ export default class CachableRepository extends EntityRepository {
    * @param {number} amount
    */
   async changeNumber(whereAttributes, field: string, amount: number, trx?) {
-    const result = await super.changeNumber(
-      whereAttributes,
-      field,
-      amount,
-      trx
-    );
+    const result = await super.changeNumber(whereAttributes, field, amount, trx);
 
     // Flushes the repository cache after update operation.
     this.flushCache();

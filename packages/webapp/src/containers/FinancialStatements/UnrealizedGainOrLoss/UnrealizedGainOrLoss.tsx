@@ -38,10 +38,7 @@ function UnrealizedGainOrLoss({
       <UnrealizedGainOrLossActionsBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <UnrealizedGainOrLossHeader
-            pageFilter={[]}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <UnrealizedGainOrLossHeader pageFilter={[]} onSubmitFilter={handleFilterSubmit} />
 
           <UnrealizedGainOrLossLoadingBar />
         </FinancialStatement>

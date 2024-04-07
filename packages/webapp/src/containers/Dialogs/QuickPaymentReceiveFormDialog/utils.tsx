@@ -25,22 +25,13 @@ export const transformErrors = (errors, { setFieldError }) => {
   const getError = (errorType) => errors.find((e) => e.type === errorType);
 
   if (getError('PAYMENT_RECEIVE_NO_EXISTS')) {
-    setFieldError(
-      'payment_receive_no',
-      intl.get('payment_number_is_not_unique'),
-    );
+    setFieldError('payment_receive_no', intl.get('payment_number_is_not_unique'));
   }
   if (getError('PAYMENT_RECEIVE_NO_REQUIRED')) {
-    setFieldError(
-      'payment_receive_no',
-      intl.get('payment_receive_number_required'),
-    );
+    setFieldError('payment_receive_no', intl.get('payment_receive_number_required'));
   }
   if (getError('INVALID_PAYMENT_AMOUNT')) {
-    setFieldError(
-      'payment_amount',
-      intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
-    );
+    setFieldError('payment_amount', intl.get('the_payment_amount_bigger_than_invoice_due_amount'));
   }
   if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
     AppToaster.show({

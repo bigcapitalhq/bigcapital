@@ -9,10 +9,7 @@ import { safeCallback, firstLettersArgs } from '@/utils';
 /**
  * Table actions cell.
  */
-export function ActionsMenu({
-  payload: { onDelete, onEdit },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onDelete, onEdit }, row: { original } }) {
   return (
     <Menu>
       <MenuItem
@@ -41,9 +38,7 @@ export const TimesheetAccessor = (timesheet) => (
     </TimesheetHeader>
     <TimesheetContent>
       <FormatDate value={timesheet.date} />
-      {timesheet.description && (
-        <TimesheetDescription>{timesheet.description}</TimesheetDescription>
-      )}
+      {timesheet.description && <TimesheetDescription>{timesheet.description}</TimesheetDescription>}
     </TimesheetContent>
   </React.Fragment>
 );

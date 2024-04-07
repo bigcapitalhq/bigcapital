@@ -10,16 +10,12 @@ const creditsTableStateSelector = (state) => state.creditNotes.tableState;
  * Retrieve credit notes table state.
  */
 export const getCreditNotesTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    creditsTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, creditsTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 /**
  * Retrieve credit notes table state.

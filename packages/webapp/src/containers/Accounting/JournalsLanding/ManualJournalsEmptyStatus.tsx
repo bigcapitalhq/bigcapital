@@ -3,10 +3,7 @@ import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import { Can, FormattedMessage as T, EmptyStatus } from '@/components';
-import {
-  AbilitySubject,
-  ManualJournalAction,
-} from '@/constants/abilityOption';
+import { AbilitySubject, ManualJournalAction } from '@/constants/abilityOption';
 
 export default function ManualJournalsEmptyStatus() {
   const history = useHistory();

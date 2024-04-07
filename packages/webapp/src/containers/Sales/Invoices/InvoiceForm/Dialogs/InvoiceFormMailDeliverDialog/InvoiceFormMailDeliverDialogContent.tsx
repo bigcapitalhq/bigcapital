@@ -26,15 +26,7 @@ function InvoiceFormDeliverDialogContentRoot({
     closeDialog(DialogsName.InvoiceFormMailDeliver);
   };
 
-  return (
-    <InvoiceMailDialogContent
-      invoiceId={invoiceId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancel}
-    />
-  );
+  return <InvoiceMailDialogContent invoiceId={invoiceId} onFormSubmit={handleSubmit} onCancelClick={handleCancel} />;
 }
 
-export default R.compose(withDialogActions)(
-  InvoiceFormDeliverDialogContentRoot,
-);
+export default R.compose(withDialogActions)(InvoiceFormDeliverDialogContentRoot);

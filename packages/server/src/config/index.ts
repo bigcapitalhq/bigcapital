@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
-import path from 'path';
-import { toInteger } from 'lodash';
+import path from 'node:path';
 import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
+import dotenv from 'dotenv';
+import { toInteger } from 'lodash';
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ module.exports = {
   /**
    * Your favorite port
    */
-  port: parseInt(process.env.PORT, 10),
+  port: Number.parseInt(process.env.PORT, 10),
 
   /**
    * System database configuration.
@@ -55,7 +55,7 @@ module.exports = {
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
-    secure: !!parseInt(process.env.MAIL_SECURE, 10),
+    secure: !!Number.parseInt(process.env.MAIL_SECURE, 10),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
     from: process.env.MAIL_FROM_ADDRESS,
@@ -77,7 +77,7 @@ module.exports = {
   agenda: {
     dbCollection: process.env.AGENDA_DB_COLLECTION,
     pooltime: process.env.AGENDA_POOL_TIME,
-    concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10),
+    concurrency: Number.parseInt(process.env.AGENDA_CONCURRENCY, 10),
   },
 
   /**
@@ -145,12 +145,8 @@ module.exports = {
    */
   signupRestrictions: {
     disabled: parseBoolean<boolean>(process.env.SIGNUP_DISABLED, false),
-    allowedDomains: castCommaListEnvVarToArray(
-      process.env.SIGNUP_ALLOWED_DOMAINS
-    ),
-    allowedEmails: castCommaListEnvVarToArray(
-      process.env.SIGNUP_ALLOWED_EMAILS
-    ),
+    allowedDomains: castCommaListEnvVarToArray(process.env.SIGNUP_ALLOWED_DOMAINS),
+    allowedEmails: castCommaListEnvVarToArray(process.env.SIGNUP_ALLOWED_EMAILS),
   },
 
   /**
@@ -190,6 +186,6 @@ module.exports = {
     secretSandbox: process.env.PLAID_SECRET_SANDBOX,
     redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
     redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
-    linkWebhook: process.env.PLAID_LINK_WEBHOOK
+    linkWebhook: process.env.PLAID_LINK_WEBHOOK,
   },
 };

@@ -36,7 +36,6 @@ function VendorsTransactionsProvider({ filter, ...props }) {
   );
 }
 
-const useVendorsTransactionsContext = () =>
-  useContext(VendorsTransactionsContext);
+const useVendorsTransactionsContext = () => useContext(VendorsTransactionsContext);
 
 export { VendorsTransactionsProvider, useVendorsTransactionsContext };

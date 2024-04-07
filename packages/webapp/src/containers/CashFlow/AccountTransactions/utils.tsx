@@ -1,22 +1,12 @@
 // @ts-nocheck
 import React from 'react';
-import {
-  Button,
-  PopoverInteractionKind,
-  MenuItem,
-  Position,
-} from '@blueprintjs/core';
+import { Button, PopoverInteractionKind, MenuItem, Position } from '@blueprintjs/core';
 
 import { Select } from '@blueprintjs/select';
 import { Icon } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 
-export const CashFlowMenuItems = ({
-  text,
-  items,
-  onItemSelect,
-  buttonProps,
-}) => {
+export const CashFlowMenuItems = ({ text, items, onItemSelect, buttonProps }) => {
   // Menu items renderer.
   const itemsRenderer = (item, { handleClick, modifiers, query }) => (
     <MenuItem text={item.name} label={item.label} onClick={handleClick} />
@@ -41,12 +31,7 @@ export const CashFlowMenuItems = ({
       }}
       filterable={false}
     >
-      <Button
-        text={text}
-        icon={<Icon icon={'plus-24'} iconSize={20} />}
-        minimal={true}
-        {...buttonProps}
-      />
+      <Button text={text} icon={<Icon icon={'plus-24'} iconSize={20} />} minimal={true} {...buttonProps} />
     </Select>
   );
 };

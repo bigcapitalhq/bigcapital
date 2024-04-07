@@ -22,10 +22,7 @@ interface TaxRateFormDialogBootContext {
 /**
  * Money in dialog provider.
  */
-function TaxRateFormDialogBoot({
-  taxRateId,
-  ...props
-}: TaxRateFormDialogBootProps) {
+function TaxRateFormDialogBoot({ taxRateId, ...props }: TaxRateFormDialogBootProps) {
   const {
     data: taxRate,
     isLoading: isTaxRateLoading,
@@ -54,7 +51,6 @@ function TaxRateFormDialogBoot({
   );
 }
 
-const useTaxRateFormDialogContext = () =>
-  React.useContext<TaxRateFormDialogBootContext>(TaxRateFormDialogContext);
+const useTaxRateFormDialogContext = () => React.useContext<TaxRateFormDialogBootContext>(TaxRateFormDialogContext);
 
 export { TaxRateFormDialogBoot, useTaxRateFormDialogContext };

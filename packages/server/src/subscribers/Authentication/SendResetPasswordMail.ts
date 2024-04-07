@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class AuthenticationSubscriber {

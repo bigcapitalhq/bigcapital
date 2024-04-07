@@ -22,12 +22,7 @@ import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
-import {
-  DashboardActionsBar,
-  Can,
-  Icon,
-  FormattedMessage as T,
-} from '@/components';
+import { DashboardActionsBar, Can, Icon, FormattedMessage as T } from '@/components';
 import { CustomerMoreMenuItem } from './utils';
 import {
   AbilitySubject,
@@ -97,32 +92,17 @@ function CustomerDetailsActionsBar({
           content={
             <Menu>
               <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
-                <MenuItem
-                  text={<T id={'customer.drawer.action.new_invoice'} />}
-                  onClick={handleNewInvoiceClick}
-                />
+                <MenuItem text={<T id={'customer.drawer.action.new_invoice'} />} onClick={handleNewInvoiceClick} />
               </Can>
               <Can I={SaleEstimateAction.Create} a={AbilitySubject.Estimate}>
-                <MenuItem
-                  text={<T id={'customer.drawer.action.new_estimate'} />}
-                  onClick={handleNewEstimateClick}
-                />
+                <MenuItem text={<T id={'customer.drawer.action.new_estimate'} />} onClick={handleNewEstimateClick} />
               </Can>
               <Can I={SaleReceiptAction.Create} a={AbilitySubject.Receipt}>
-                <MenuItem
-                  text={<T id={'customer.drawer.action.new_receipt'} />}
-                  onClick={handleNewReceiptClick}
-                />
+                <MenuItem text={<T id={'customer.drawer.action.new_receipt'} />} onClick={handleNewReceiptClick} />
               </Can>
 
-              <Can
-                I={PaymentReceiveAction.Create}
-                a={AbilitySubject.PaymentReceive}
-              >
-                <MenuItem
-                  text={<T id={'customer.drawer.action.new_payment'} />}
-                  onClick={handleNewPaymentClick}
-                />
+              <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
+                <MenuItem text={<T id={'customer.drawer.action.new_payment'} />} onClick={handleNewPaymentClick} />
               </Can>
             </Menu>
           }
@@ -167,8 +147,4 @@ function CustomerDetailsActionsBar({
   );
 }
 
-export default compose(
-  withDrawerActions,
-  withAlertsActions,
-  withDialogActions,
-)(CustomerDetailsActionsBar);
+export default compose(withDrawerActions, withAlertsActions, withDialogActions)(CustomerDetailsActionsBar);

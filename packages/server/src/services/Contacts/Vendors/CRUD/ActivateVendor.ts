@@ -1,11 +1,11 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
+import { IVendorActivatedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { VendorValidators } from './VendorValidators';
-import { IVendorActivatedPayload } from '@/interfaces';
 
 @Service()
 export class ActivateVendor {
@@ -27,17 +27,11 @@ export class ActivateVendor {
    * @param   {number} contactId - Contact id.
    * @returns {Promise<void>}
    */
-  public async activateVendor(
-    tenantId: number,
-    vendorId: number
-  ): Promise<void> {
+  public async activateVendor(tenantId: number, vendorId: number): Promise<void> {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieves the old vendor or throw not found error.
-    const oldVendor = await Contact.query()
-      .findById(vendorId)
-      .modify('vendor')
-      .throwIfNotFound();
+    const oldVendor = await Contact.query().findById(vendorId).modify('vendor').throwIfNotFound();
 
     // Validate whether the vendor is already published.
     this.validators.validateNotAlreadyPublished(oldVendor);

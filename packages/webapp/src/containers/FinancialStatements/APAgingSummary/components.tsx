@@ -6,18 +6,8 @@ import { AppToaster, If, Stack } from '@/components';
 import FinancialLoadingBar from '../FinancialLoadingBar';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 import { agingSummaryDynamicColumns } from '../AgingSummary/dynamicColumns';
-import {
-  Classes,
-  Intent,
-  Menu,
-  MenuItem,
-  ProgressBar,
-  Text,
-} from '@blueprintjs/core';
-import {
-  useAPAgingSheetCsvExport,
-  useAPAgingSheetXlsxExport,
-} from '@/hooks/query';
+import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
+import { useAPAgingSheetCsvExport, useAPAgingSheetXlsxExport } from '@/hooks/query';
 
 /**
  * Retrieve AP aging summary columns.
@@ -115,10 +105,7 @@ export function APAgingSummaryExportMenu() {
 
   return (
     <Menu>
-      <MenuItem
-        text={'XLSX (Microsoft Excel)'}
-        onClick={handleXlsxExportBtnClick}
-      />
+      <MenuItem text={'XLSX (Microsoft Excel)'} onClick={handleXlsxExportBtnClick} />
       <MenuItem text={'CSV'} onClick={handleCsvExportBtnClick} />
     </Menu>
   );

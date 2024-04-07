@@ -1,12 +1,12 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { param, check } from 'express-validator';
-import BaseController from '../BaseController';
+import { ServiceError } from '@/exceptions';
 import ApplyVendorCreditToBills from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/ApplyVendorCreditToBills';
 import DeleteApplyVendorCreditToBill from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/DeleteApplyVendorCreditToBill';
-import { ServiceError } from '@/exceptions';
 import GetAppliedBillsToVendorCredit from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/GetAppliedBillsToVendorCredit';
 import GetVendorCreditToApplyBills from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/GetVendorCreditToApplyBills';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseController from '../BaseController';
 
 @Service()
 export default class VendorCreditApplyToBills extends BaseController {
@@ -40,28 +40,28 @@ export default class VendorCreditApplyToBills extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.applyVendorCreditToBills),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/applied-to-bills/:applyId',
       [param('applyId').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteApplyCreditToBill),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/apply-to-bills',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getVendorCreditAssociatedBillsToApply),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/applied-bills',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getVendorCreditAppliedBills),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -72,11 +72,7 @@ export default class VendorCreditApplyToBills extends BaseController {
    * @param {Response}
    * @param {NextFunction}
    */
-  public applyVendorCreditToBills = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public applyVendorCreditToBills = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: vendorCreditId } = req.params;
     const applyCreditToBillsDTO = this.matchedBodyData(req);
@@ -85,12 +81,11 @@ export default class VendorCreditApplyToBills extends BaseController {
       await this.applyVendorCreditToBillsService.applyVendorCreditToBills(
         tenantId,
         vendorCreditId,
-        applyCreditToBillsDTO
+        applyCreditToBillsDTO,
       );
       return res.status(200).send({
         id: vendorCreditId,
-        message:
-          'The vendor credit has been applied to the given bills successfully',
+        message: 'The vendor credit has been applied to the given bills successfully',
       });
     } catch (error) {
       next(error);
@@ -103,23 +98,15 @@ export default class VendorCreditApplyToBills extends BaseController {
    * @param {Response}
    * @param {NextFunction}
    */
-  public deleteApplyCreditToBill = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public deleteApplyCreditToBill = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { applyId } = req.params;
 
     try {
-      await this.deleteAppliedCreditToBillsService.deleteApplyVendorCreditToBills(
-        tenantId,
-        applyId
-      );
+      await this.deleteAppliedCreditToBillsService.deleteApplyVendorCreditToBills(tenantId, applyId);
       return res.status(200).send({
         id: applyId,
-        message:
-          'The applied vendor credit to bill has been deleted successfully',
+        message: 'The applied vendor credit to bill has been deleted successfully',
       });
     } catch (error) {
       next(error);
@@ -129,20 +116,12 @@ export default class VendorCreditApplyToBills extends BaseController {
   /**
    *
    */
-  public getVendorCreditAssociatedBillsToApply = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getVendorCreditAssociatedBillsToApply = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: vendorCreditId } = req.params;
 
     try {
-      const bills =
-        await this.getCreditToApplyBillsService.getCreditToApplyBills(
-          tenantId,
-          vendorCreditId
-        );
+      const bills = await this.getCreditToApplyBillsService.getCreditToApplyBills(tenantId, vendorCreditId);
       return res.status(200).send({ data: bills });
     } catch (error) {
       next(error);
@@ -152,20 +131,12 @@ export default class VendorCreditApplyToBills extends BaseController {
   /**
    *
    */
-  public getVendorCreditAppliedBills = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getVendorCreditAppliedBills = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: vendorCreditId } = req.params;
 
     try {
-      const appliedBills =
-        await this.getAppliedBillsToCreditService.getAppliedBills(
-          tenantId,
-          vendorCreditId
-        );
+      const appliedBills = await this.getAppliedBillsToCreditService.getAppliedBills(tenantId, vendorCreditId);
       return res.status(200).send({ data: appliedBills });
     } catch (error) {
       next(error);
@@ -179,12 +150,7 @@ export default class VendorCreditApplyToBills extends BaseController {
    * @param {Response} res
    * @param next
    */
-  handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'VENDOR_CREDIT_NOT_FOUND') {
         return res.boom.badRequest(null, {
@@ -208,16 +174,12 @@ export default class VendorCreditApplyToBills extends BaseController {
       }
       if (error.errorType === 'VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT', code: 500 },
-          ],
+          errors: [{ type: 'VENDOR_CREDIT_HAS_NO_REMAINING_AMOUNT', code: 500 }],
         });
       }
       if (error.errorType === 'VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND', code: 600 },
-          ],
+          errors: [{ type: 'VENDOR_CREDIT_APPLY_TO_BILLS_NOT_FOUND', code: 600 }],
         });
       }
     }

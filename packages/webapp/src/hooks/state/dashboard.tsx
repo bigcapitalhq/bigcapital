@@ -31,10 +31,7 @@ export const useDashboardPageTitle = () => {
  * Splash loading screen actions.
  */
 export const useSplashLoading = () => {
-  return [
-    useDispatchAction(splashStartLoading),
-    useDispatchAction(splashStopLoading),
-  ];
+  return [useDispatchAction(splashStartLoading), useDispatchAction(splashStopLoading)];
 };
 
 /**

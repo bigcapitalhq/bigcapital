@@ -10,10 +10,7 @@ import CashFlowStatementHeader from './CashFlowStatementHeader';
 import CashFlowStatementActionsBar from './CashFlowStatementActionsBar';
 
 import withCashFlowStatementActions from './withCashFlowStatementActions';
-import {
-  CashFlowStatementLoadingBar,
-  CashFlowStatementAlerts,
-} from './components';
+import { CashFlowStatementLoadingBar, CashFlowStatementAlerts } from './components';
 
 import { useCashflowStatementQuery } from './utils';
 import { compose } from '@/utils';
@@ -56,19 +53,13 @@ function CashFlowStatement({
 
   return (
     <CashFlowStatementProvider filter={query}>
-      <CashFlowStatementActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <CashFlowStatementActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <CashFlowStatementLoadingBar />
       <CashFlowStatementAlerts />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <CashFlowStatementHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <CashFlowStatementHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <CashFlowStatementBody />
         </FinancialStatement>
       </DashboardPageContent>

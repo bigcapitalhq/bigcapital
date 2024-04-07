@@ -71,8 +71,7 @@ export const ensureEntriesHaveEmptyLine = R.curry((defaultEntry, entries) => {
  * Disable landed cost checkbox once the item type is not service or non-inventorty.
  * @returns {boolean}
  */
-export const isLandedCostDisabled = (item) =>
-  ['service', 'non-inventory'].indexOf(item.type) === -1;
+export const isLandedCostDisabled = (item) => ['service', 'non-inventory'].indexOf(item.type) === -1;
 
 /**
  * Handle fetch item row details and retrieves the new table row.
@@ -108,21 +107,14 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
   React.useEffect(() => {
     if (isItemSuccess && item && itemRow) {
       const { rowIndex } = itemRow;
-      const price =
-        itemType === ITEM_TYPE.PURCHASABLE ? item.cost_price : item.sell_price;
+      const price = itemType === ITEM_TYPE.PURCHASABLE ? item.cost_price : item.sell_price;
 
-      const description =
-        itemType === ITEM_TYPE.PURCHASABLE
-          ? item.purchase_description
-          : item.sell_description;
+      const description = itemType === ITEM_TYPE.PURCHASABLE ? item.purchase_description : item.sell_description;
 
       // Detarmines whether the landed cost checkbox should be disabled.
       const landedCostDisabled = isLandedCostDisabled(item);
 
-      const taxRateId =
-        itemType === ITEM_TYPE.PURCHASABLE
-          ? item.purchase_tax_rate_id
-          : item.sell_tax_rate_id;
+      const taxRateId = itemType === ITEM_TYPE.PURCHASABLE ? item.purchase_tax_rate_id : item.sell_tax_rate_id;
 
       // The new row.
       const newRow = {
@@ -156,11 +148,9 @@ export function useFetchItemRow({ landedCost, itemType, notifyNewRow }) {
 /**
  * Compose table rows when edit specific row index of table rows.
  */
-export const composeRowsOnEditCell = R.curry(
-  (rowIndex, columnId, value, defaultEntry, rows) => {
-    return compose()(rows);
-  },
-);
+export const composeRowsOnEditCell = R.curry((rowIndex, columnId, value, defaultEntry, rows) => {
+  return compose()(rows);
+});
 
 /**
  * Compose table rows when insert a new row to table rows.
@@ -203,20 +193,18 @@ export const assignEntriesTaxRate = R.curry((taxRates, entries) => {
  * @param entries
  * @returns
  */
-export const assignEntriesTaxAmount = R.curry(
-  (isInclusiveTax: boolean, entries) => {
-    return entries.map((entry) => {
-      const taxAmount = isInclusiveTax
-        ? getInclusiveTaxAmount(entry.amount, entry.tax_rate)
-        : getExlusiveTaxAmount(entry.amount, entry.tax_rate);
+export const assignEntriesTaxAmount = R.curry((isInclusiveTax: boolean, entries) => {
+  return entries.map((entry) => {
+    const taxAmount = isInclusiveTax
+      ? getInclusiveTaxAmount(entry.amount, entry.tax_rate)
+      : getExlusiveTaxAmount(entry.amount, entry.tax_rate);
 
-      return {
-        ...entry,
-        tax_amount: taxAmount,
-      };
-    });
-  },
-);
+    return {
+      ...entry,
+      tax_amount: taxAmount,
+    };
+  });
+});
 
 /**
  * Get inclusive tax amount.
@@ -243,8 +231,7 @@ export const getExlusiveTaxAmount = (amount: number, taxRate: number) => {
  * @returns {Function}
  */
 export const useComposeRowsOnEditTableCell = () => {
-  const { taxRates, isInclusiveTax, localValue, defaultEntry } =
-    useItemEntriesTableContext();
+  const { taxRates, isInclusiveTax, localValue, defaultEntry } = useItemEntriesTableContext();
 
   return useCallback(
     (rowIndex, columnId, value) => {
@@ -266,8 +253,7 @@ export const useComposeRowsOnEditTableCell = () => {
  * @returns {Function}
  */
 export const useComposeRowsOnRemoveTableRow = () => {
-  const { minLinesNumber, defaultEntry, localValue } =
-    useItemEntriesTableContext();
+  const { minLinesNumber, defaultEntry, localValue } = useItemEntriesTableContext();
 
   return useCallback(
     (rowIndex) => {
@@ -284,31 +270,29 @@ export const useComposeRowsOnRemoveTableRow = () => {
 
 /**
  * Retrieves the aggregate tax rates from the given item entries.
- * @param {string} currencyCode - 
- * @param {any} taxRates - 
- * @param {any} entries - 
+ * @param {string} currencyCode -
+ * @param {any} taxRates -
+ * @param {any} entries -
  */
-export const aggregateItemEntriesTaxRates = R.curry(
-  (currencyCode, taxRates, entries) => {
-    const taxRatesById = keyBy(taxRates, 'id');
+export const aggregateItemEntriesTaxRates = R.curry((currencyCode, taxRates, entries) => {
+  const taxRatesById = keyBy(taxRates, 'id');
 
-    // Calculate the total tax amount of invoice entries.
-    const filteredEntries = entries.filter((e) => e.tax_rate_id);
-    const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
+  // Calculate the total tax amount of invoice entries.
+  const filteredEntries = entries.filter((e) => e.tax_rate_id);
+  const groupedTaxRates = groupBy(filteredEntries, 'tax_rate_id');
 
-    return Object.keys(groupedTaxRates).map((taxRateId) => {
-      const taxRate = taxRatesById[taxRateId];
-      const taxRates = groupedTaxRates[taxRateId];
-      const totalTaxAmount = sumBy(taxRates, 'tax_amount');
-      const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
+  return Object.keys(groupedTaxRates).map((taxRateId) => {
+    const taxRate = taxRatesById[taxRateId];
+    const taxRates = groupedTaxRates[taxRateId];
+    const totalTaxAmount = sumBy(taxRates, 'tax_amount');
+    const taxAmountFormatted = formattedAmount(totalTaxAmount, currencyCode);
 
-      return {
-        taxRateId,
-        taxRate: taxRate.rate,
-        label: `${taxRate.name} [${taxRate.rate}%]`,
-        taxAmount: totalTaxAmount,
-        taxAmountFormatted,
-      };
-    });
-  },
-);
+    return {
+      taxRateId,
+      taxRate: taxRate.rate,
+      label: `${taxRate.name} [${taxRate.rate}%]`,
+      taxAmount: totalTaxAmount,
+      taxAmountFormatted,
+    };
+  });
+});

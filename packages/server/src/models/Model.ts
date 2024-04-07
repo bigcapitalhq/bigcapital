@@ -1,8 +1,6 @@
-import { Model, mixin } from 'objection';
-import { snakeCase, transform } from 'lodash';
-import { mapKeysDeep } from 'utils';
-import PaginationQueryBuilder from 'models/Pagination';
 import DateSession from 'models/DateSession';
+import PaginationQueryBuilder from 'models/Pagination';
+import { Model, mixin } from 'objection';
 
 export default class ModelBase extends mixin(Model, [DateSession]) {
   get timestamps() {
@@ -41,8 +39,6 @@ export default class ModelBase extends mixin(Model, [DateSession]) {
   static changeAmount(whereAttributes, attribute, amount, trx) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
 
-    return this.query(trx)
-      .where(whereAttributes)
-      [changeMethod](attribute, Math.abs(amount));
+    return this.query(trx).where(whereAttributes)[changeMethod](attribute, Math.abs(amount));
   }
 }

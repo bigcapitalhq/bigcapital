@@ -9,10 +9,7 @@ export default function ReconcileVendorCreditDialogContent({
   vendorCreditId,
 }) {
   return (
-    <ReconcileVendorCreditFormProvider
-      vendorCreditId={vendorCreditId}
-      dialogName={dialogName}
-    >
+    <ReconcileVendorCreditFormProvider vendorCreditId={vendorCreditId} dialogName={dialogName}>
       <ReconcileVendorCreditForm />
     </ReconcileVendorCreditFormProvider>
   );

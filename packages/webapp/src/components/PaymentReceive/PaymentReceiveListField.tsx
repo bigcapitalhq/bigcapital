@@ -14,9 +14,7 @@ export function PaymentReceiveListField({
   });
 
   const handleInvoiceRenderer = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem id={item.id} name={item.name} onClick={handleClick} />
-    ),
+    (item, { handleClick }) => <MenuItem id={item.id} name={item.name} onClick={handleClick} />,
     [],
   );
 

@@ -9,13 +9,7 @@ export class PaymentReceiveTransfromer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'subtotalFormatted',
-      'formattedPaymentDate',
-      'formattedAmount',
-      'formattedExchangeRate',
-      'entries',
-    ];
+    return ['subtotalFormatted', 'formattedPaymentDate', 'formattedAmount', 'formattedExchangeRate', 'entries'];
   };
 
   /**
@@ -29,7 +23,7 @@ export class PaymentReceiveTransfromer extends Transformer {
 
   /**
    * Retrieve the formatted payment subtotal.
-   * @param {IPaymentReceive} payment 
+   * @param {IPaymentReceive} payment
    * @returns {string}
    */
   protected subtotalFormatted = (payment: IPaymentReceive): string => {

@@ -18,12 +18,7 @@ function ExpenseDrawer({
   payload: { expenseId },
 }) {
   return (
-    <Drawer
-      isOpen={isOpen}
-      name={name}
-      size={'65%'}
-      style={{ minWidth: '700px', maxWidth: '900px' }}
-    >
+    <Drawer isOpen={isOpen} name={name} size={'65%'} style={{ minWidth: '700px', maxWidth: '900px' }}>
       <DrawerSuspense>
         <ExpenseDrawerContent expenseId={expenseId} />
       </DrawerSuspense>

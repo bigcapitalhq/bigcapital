@@ -2,23 +2,8 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Button,
-  Popover,
-  PopoverInteractionKind,
-  Position,
-  MenuItem,
-  Menu,
-  Intent,
-  Tag,
-} from '@blueprintjs/core';
-import {
-  FormatNumberCell,
-  TextOverviewTooltipCell,
-  FormattedMessage as T,
-  Choose,
-  Icon,
-} from '@/components';
+import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Intent, Tag } from '@blueprintjs/core';
+import { FormatNumberCell, TextOverviewTooltipCell, FormattedMessage as T, Choose, Icon } from '@/components';
 import { getColumnWidth } from '@/utils';
 import { useBillDrawerContext } from './BillDrawerProvider';
 
@@ -124,9 +109,7 @@ export function BillDetailsStatus({ bill }) {
   );
 }
 
-export const BillMenuItem = ({
-  payload: { onConvert, onAllocateLandedCost },
-}) => {
+export const BillMenuItem = ({ payload: { onConvert, onAllocateLandedCost } }) => {
   return (
     <Popover
       minimal={true}
@@ -137,14 +120,8 @@ export const BillMenuItem = ({
       }}
       content={
         <Menu>
-          <MenuItem
-            onClick={onAllocateLandedCost}
-            text={<T id={'bill.allocate_landed_coast'} />}
-          />
-          <MenuItem
-            onClick={onConvert}
-            text={<T id={'bill.convert_to_credit_note'} />}
-          />
+          <MenuItem onClick={onAllocateLandedCost} text={<T id={'bill.allocate_landed_coast'} />} />
+          <MenuItem onClick={onConvert} text={<T id={'bill.convert_to_credit_note'} />} />
         </Menu>
       }
     >

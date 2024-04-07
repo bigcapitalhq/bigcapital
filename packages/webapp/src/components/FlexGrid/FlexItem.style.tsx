@@ -4,8 +4,7 @@ import { ItemProps } from './interfaces';
 
 export const FlexItem = styled.div<ItemProps>`
   width: 100%;
-  max-width: ${({ col, gap = 1 }) =>
-    col && col < 12 ? `${(100 * col) / 12 - gap}%` : '100%'};
+  max-width: ${({ col, gap = 1 }) => (col && col < 12 ? `${(100 * col) / 12 - gap}%` : '100%')};
   ${({ marginBottom }) =>
     marginBottom &&
     `

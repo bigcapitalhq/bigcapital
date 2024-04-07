@@ -1,20 +1,14 @@
+import { IBill, IBillDTO, IItemEntry, ISystemUser, IVendor } from '@/interfaces';
+import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
+import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
+import composeAsync from 'async/compose';
 import { omit, sumBy } from 'lodash';
 import moment from 'moment';
-import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
-import composeAsync from 'async/compose';
+import { Inject, Service } from 'typedi';
 import { formatDateFields } from 'utils';
-import {
-  IBillDTO,
-  IBill,
-  ISystemUser,
-  IVendor,
-  IItemEntry,
-} from '@/interfaces';
-import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
-import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ItemEntriesTaxTransactions } from '@/services/TaxRates/ItemEntriesTaxTransactions';
 
 @Service()
 export class BillDTOTransformer {
@@ -64,7 +58,7 @@ export class BillDTOTransformer {
     billDTO: IBillDTO,
     vendor: IVendor,
     authorizedUser: ISystemUser,
-    oldBill?: IBill
+    oldBill?: IBill,
   ) {
     const { ItemEntry } = this.tenancy.models(tenantId);
 
@@ -87,19 +81,16 @@ export class BillDTOTransformer {
       // Associate tax rate id from tax code to entries.
       this.taxDTOTransformer.assocTaxRateIdFromCodeToEntries(tenantId),
       // Sets the default cost account to the bill entries.
-      this.setBillEntriesDefaultAccounts(tenantId)
+      this.setBillEntriesDefaultAccounts(tenantId),
     )(initialEntries);
 
     const entries = R.compose(
       // Remove tax code from entries.
-      R.map(R.omit(['taxCode']))
+      R.map(R.omit(['taxCode'])),
     )(asyncEntries);
 
     const initialDTO = {
-      ...formatDateFields(omit(billDTO, ['open', 'entries']), [
-        'billDate',
-        'dueDate',
-      ]),
+      ...formatDateFields(omit(billDTO, ['open', 'entries']), ['billDate', 'dueDate']),
       amount,
       landedCostAmount,
       currencyCode: vendor.currencyCode,
@@ -117,7 +108,7 @@ export class BillDTOTransformer {
       // Associates tax amount withheld to the model.
       this.taxDTOTransformer.assocTaxAmountWithheldFromEntries,
       this.branchDTOTransform.transformDTO(tenantId),
-      this.warehouseDTOTransform.transformDTO(tenantId)
+      this.warehouseDTOTransform.transformDTO(tenantId),
     )(initialDTO);
   }
 

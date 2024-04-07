@@ -1,18 +1,13 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import BaseController from '@/api/controllers/BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { ServiceError } from '@/exceptions';
+import { AbilitySubject, ISaleEstimateDTO, SaleEstimateAction, SaleEstimateMailOptionsDTO } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
+import { NextFunction, Request, Response, Router } from 'express';
 import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
-import {
-  AbilitySubject,
-  ISaleEstimateDTO,
-  SaleEstimateAction,
-  SaleEstimateMailOptionsDTO,
-} from '@/interfaces';
-import BaseController from '@/api/controllers/BaseController';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ServiceError } from '@/exceptions';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { SaleEstimatesApplication } from '@/services/Sales/Estimates/SaleEstimatesApplication';
 
 const ACCEPT_TYPE = {
   APPLICATION_PDF: 'application/pdf',
@@ -38,7 +33,7 @@ export default class SalesEstimatesController extends BaseController {
       [...this.estimateValidationSchema],
       this.validationResult,
       asyncMiddleware(this.newEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/deliver',
@@ -46,7 +41,7 @@ export default class SalesEstimatesController extends BaseController {
       [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.deliverSaleEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/approve',
@@ -54,7 +49,7 @@ export default class SalesEstimatesController extends BaseController {
       [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.approveSaleEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/reject',
@@ -62,40 +57,31 @@ export default class SalesEstimatesController extends BaseController {
       [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.rejectSaleEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/sms-details',
-      CheckPolicies(
-        SaleEstimateAction.NotifyBySms,
-        AbilitySubject.SaleEstimate
-      ),
+      CheckPolicies(SaleEstimateAction.NotifyBySms, AbilitySubject.SaleEstimate),
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.saleEstimateSmsDetails),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id/notify-by-sms',
-      CheckPolicies(
-        SaleEstimateAction.NotifyBySms,
-        AbilitySubject.SaleEstimate
-      ),
+      CheckPolicies(SaleEstimateAction.NotifyBySms, AbilitySubject.SaleEstimate),
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.saleEstimateNotifyBySms),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.post(
       '/:id',
       CheckPolicies(SaleEstimateAction.Edit, AbilitySubject.SaleEstimate),
-      [
-        ...this.validateSpecificEstimateSchema,
-        ...this.estimateValidationSchema,
-      ],
+      [...this.validateSpecificEstimateSchema, ...this.estimateValidationSchema],
       this.validationResult,
       asyncMiddleware(this.editEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.delete(
       '/:id',
@@ -103,7 +89,7 @@ export default class SalesEstimatesController extends BaseController {
       [this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.deleteEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id',
@@ -111,7 +97,7 @@ export default class SalesEstimatesController extends BaseController {
       this.validateSpecificEstimateSchema,
       this.validationResult,
       asyncMiddleware(this.getEstimate.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/',
@@ -120,7 +106,7 @@ export default class SalesEstimatesController extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getEstimates.bind(this)),
       this.handleServiceErrors,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.post(
       '/:id/mail',
@@ -134,14 +120,14 @@ export default class SalesEstimatesController extends BaseController {
       ],
       this.validationResult,
       asyncMiddleware(this.sendSaleEstimateMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     router.get(
       '/:id/mail',
       [...this.validateSpecificEstimateSchema],
       this.validationResult,
       asyncMiddleware(this.getSaleEstimateMail.bind(this)),
-      this.handleServiceErrors
+      this.handleServiceErrors,
     );
     return router;
   }
@@ -168,18 +154,9 @@ export default class SalesEstimatesController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
 
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
@@ -220,11 +197,7 @@ export default class SalesEstimatesController extends BaseController {
     const estimateDTO: ISaleEstimateDTO = this.matchedBodyData(req);
 
     try {
-      const storedEstimate =
-        await this.saleEstimatesApplication.createSaleEstimate(
-          tenantId,
-          estimateDTO
-        );
+      const storedEstimate = await this.saleEstimatesApplication.createSaleEstimate(tenantId, estimateDTO);
 
       return res.status(200).send({
         id: storedEstimate.id,
@@ -247,11 +220,7 @@ export default class SalesEstimatesController extends BaseController {
 
     try {
       // Update estimate with associated estimate entries.
-      await this.saleEstimatesApplication.editSaleEstimate(
-        tenantId,
-        estimateId,
-        estimateDTO
-      );
+      await this.saleEstimatesApplication.editSaleEstimate(tenantId, estimateId, estimateDTO);
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been created successfully.',
@@ -266,19 +235,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async deleteEstimate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deleteEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimatesApplication.deleteSaleEstimate(
-        tenantId,
-        estimateId
-      );
+      await this.saleEstimatesApplication.deleteSaleEstimate(tenantId, estimateId);
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been deleted successfully.',
@@ -293,19 +255,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async deliverSaleEstimate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deliverSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimatesApplication.deliverSaleEstimate(
-        tenantId,
-        estimateId
-      );
+      await this.saleEstimatesApplication.deliverSaleEstimate(tenantId, estimateId);
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been delivered successfully.',
@@ -321,19 +276,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async approveSaleEstimate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async approveSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimatesApplication.approveSaleEstimate(
-        tenantId,
-        estimateId
-      );
+      await this.saleEstimatesApplication.approveSaleEstimate(tenantId, estimateId);
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been approved successfully.',
@@ -349,19 +297,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async rejectSaleEstimate(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async rejectSaleEstimate(req: Request, res: Response, next: NextFunction) {
     const { id: estimateId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.saleEstimatesApplication.rejectSaleEstimate(
-        tenantId,
-        estimateId
-      );
+      await this.saleEstimatesApplication.rejectSaleEstimate(tenantId, estimateId);
       return res.status(200).send({
         id: estimateId,
         message: 'The sale estimate has been rejected successfully.',
@@ -383,16 +324,10 @@ export default class SalesEstimatesController extends BaseController {
 
     const accept = this.accepts(req);
 
-    const acceptType = accept.types([
-      ACCEPT_TYPE.APPLICATION_JSON,
-      ACCEPT_TYPE.APPLICATION_PDF,
-    ]);
+    const acceptType = accept.types([ACCEPT_TYPE.APPLICATION_JSON, ACCEPT_TYPE.APPLICATION_PDF]);
     // Retrieves estimate in pdf format.
     if (ACCEPT_TYPE.APPLICATION_PDF == acceptType) {
-      const pdfContent = await this.saleEstimatesApplication.getSaleEstimatePdf(
-        tenantId,
-        estimateId
-      );
+      const pdfContent = await this.saleEstimatesApplication.getSaleEstimatePdf(tenantId, estimateId);
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Length': pdfContent.length,
@@ -400,10 +335,7 @@ export default class SalesEstimatesController extends BaseController {
       res.send(pdfContent);
       // Retrieves estimates in json format.
     } else {
-      const estimate = await this.saleEstimatesApplication.getSaleEstimate(
-        tenantId,
-        estimateId
-      );
+      const estimate = await this.saleEstimatesApplication.getSaleEstimate(tenantId, estimateId);
       return res.status(200).send({ estimate });
     }
   }
@@ -423,8 +355,7 @@ export default class SalesEstimatesController extends BaseController {
       ...this.matchedQueryData(req),
     };
     try {
-      const salesEstimatesWithPagination =
-        await this.saleEstimatesApplication.getSaleEstimates(tenantId, filter);
+      const salesEstimatesWithPagination = await this.saleEstimatesApplication.getSaleEstimates(tenantId, filter);
 
       return res.status(200).send(salesEstimatesWithPagination);
     } catch (error) {
@@ -432,24 +363,15 @@ export default class SalesEstimatesController extends BaseController {
     }
   }
 
-  private saleEstimateNotifyBySms = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private saleEstimateNotifyBySms = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: estimateId } = req.params;
 
     try {
-      const saleEstimate =
-        await this.saleEstimatesApplication.notifySaleEstimateBySms(
-          tenantId,
-          estimateId
-        );
+      const saleEstimate = await this.saleEstimatesApplication.notifySaleEstimateBySms(tenantId, estimateId);
       return res.status(200).send({
         id: saleEstimate.id,
-        message:
-          'The sale estimate sms notification has been sent successfully.',
+        message: 'The sale estimate sms notification has been sent successfully.',
       });
     } catch (error) {
       next(error);
@@ -462,20 +384,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private saleEstimateSmsDetails = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private saleEstimateSmsDetails = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: estimateId } = req.params;
 
     try {
-      const estimateSmsDetails =
-        await this.saleEstimatesApplication.getSaleEstimateSmsDetails(
-          tenantId,
-          estimateId
-        );
+      const estimateSmsDetails = await this.saleEstimatesApplication.getSaleEstimateSmsDetails(tenantId, estimateId);
       return res.status(200).send({
         data: estimateSmsDetails,
       });
@@ -490,25 +404,14 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private sendSaleEstimateMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private sendSaleEstimateMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
-    const saleEstimateDTO: SaleEstimateMailOptionsDTO = this.matchedBodyData(
-      req,
-      {
-        includeOptionals: false,
-      }
-    );
+    const saleEstimateDTO: SaleEstimateMailOptionsDTO = this.matchedBodyData(req, {
+      includeOptionals: false,
+    });
     try {
-      await this.saleEstimatesApplication.sendSaleEstimateMail(
-        tenantId,
-        invoiceId,
-        saleEstimateDTO
-      );
+      await this.saleEstimatesApplication.sendSaleEstimateMail(tenantId, invoiceId, saleEstimateDTO);
       return res.status(200).send({
         code: 200,
         message: 'The sale estimate mail has been sent successfully.',
@@ -524,19 +427,12 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private getSaleEstimateMail = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getSaleEstimateMail = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: invoiceId } = req.params;
 
     try {
-      const data = await this.saleEstimatesApplication.getSaleEstimateMail(
-        tenantId,
-        invoiceId
-      );
+      const data = await this.saleEstimatesApplication.getSaleEstimateMail(tenantId, invoiceId);
       return res.status(200).send({ data });
     } catch (error) {
       next(error);
@@ -550,12 +446,7 @@ export default class SalesEstimatesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ITEMS_NOT_FOUND') {
         return res.boom.badRequest(null, {

@@ -21,11 +21,7 @@ function ARAgingSummaryBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isARAgingLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <ARAgingSummaryTable organizationName={organizationName} />
-      )}
+      {isARAgingLoading ? <FinancialSheetSkeleton /> : <ARAgingSummaryTable organizationName={organizationName} />}
     </FinancialReportBody>
   );
 }

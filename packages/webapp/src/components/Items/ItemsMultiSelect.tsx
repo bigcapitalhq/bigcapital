@@ -18,9 +18,7 @@ function ItemsMultiSelectRoot({
 }) {
   // Maybe inject new item props to select component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   // Handles the create item click.
   const handleCreateItemClick = () => {
@@ -44,5 +42,4 @@ function ItemsMultiSelectRoot({
   );
 }
 
-export const ItemsMultiSelect =
-  R.compose(withDialogActions)(ItemsMultiSelectRoot);
+export const ItemsMultiSelect = R.compose(withDialogActions)(ItemsMultiSelectRoot);

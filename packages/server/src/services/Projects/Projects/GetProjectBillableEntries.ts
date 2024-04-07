@@ -1,15 +1,11 @@
-import { Inject, Service } from 'typedi';
-import { flatten, includes, isEmpty } from 'lodash';
+import { ProjectBillableEntriesQuery, ProjectBillableEntry, ProjectBillableType } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { flatten, includes, isEmpty } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { ProjectBillableBillTransformer } from './ProjectBillableBillTransformer';
 import { ProjectBillableExpenseTransformer } from './ProjectBillableExpenseTransformer';
 import { ProjectBillableTaskTransformer } from './ProjectBillableTaskTransformer';
-import {
-  ProjectBillableEntriesQuery,
-  ProjectBillableEntry,
-  ProjectBillableType,
-} from '@/interfaces';
 import { ProjectBillableGetter } from './_types';
 
 @Service()
@@ -48,17 +44,11 @@ export default class GetProjectBillableEntries {
     projectId: number,
     query: ProjectBillableEntriesQuery = {
       billableType: [],
-    }
+    },
   ): Promise<ProjectBillableEntry[]> => {
     const gettersOpers = this.billableGetters
-      .filter(
-        (billableGetter) =>
-          includes(query.billableType, billableGetter.type) ||
-          isEmpty(query.billableType)
-      )
-      .map((billableGetter) =>
-        billableGetter.getter(tenantId, projectId, query)
-      );
+      .filter((billableGetter) => includes(query.billableType, billableGetter.type) || isEmpty(query.billableType))
+      .map((billableGetter) => billableGetter.getter(tenantId, projectId, query));
     const gettersResults = await Promise.all(gettersOpers);
 
     return flatten(gettersResults);
@@ -74,17 +64,13 @@ export default class GetProjectBillableEntries {
   private getProjectBillableTasks = async (
     tenantId: number,
     projectId: number,
-    query: ProjectBillableEntriesQuery
+    query: ProjectBillableEntriesQuery,
   ): Promise<ProjectBillableEntry[]> => {
     const { Task } = this.tenancy.models(tenantId);
 
     const billableTasks = await Task.query().where('projectId', projectId);
 
-    return this.transformer.transform(
-      tenantId,
-      billableTasks,
-      new ProjectBillableTaskTransformer()
-    );
+    return this.transformer.transform(tenantId, billableTasks, new ProjectBillableTaskTransformer());
   };
 
   /**
@@ -97,7 +83,7 @@ export default class GetProjectBillableEntries {
   private getProjectBillableExpenses = async (
     tenantId: number,
     projectId: number,
-    query: ProjectBillableEntriesQuery
+    query: ProjectBillableEntriesQuery,
   ) => {
     const { Expense } = this.tenancy.models(tenantId);
 
@@ -106,11 +92,7 @@ export default class GetProjectBillableEntries {
       .modify('filterByDateRange', null, query.toDate)
       .modify('filterByPublished');
 
-    return this.transformer.transform(
-      tenantId,
-      billableExpenses,
-      new ProjectBillableExpenseTransformer()
-    );
+    return this.transformer.transform(tenantId, billableExpenses, new ProjectBillableExpenseTransformer());
   };
 
   /**
@@ -119,21 +101,11 @@ export default class GetProjectBillableEntries {
    * @param {number} projectId
    * @param {ProjectBillableEntriesQuery} query
    */
-  private getProjectBillableBills = async (
-    tenantId: number,
-    projectId: number,
-    query: ProjectBillableEntriesQuery
-  ) => {
+  private getProjectBillableBills = async (tenantId: number, projectId: number, query: ProjectBillableEntriesQuery) => {
     const { Bill } = this.tenancy.models(tenantId);
 
-    const billableBills = await Bill.query()
-      .where('projectId', projectId)
-      .modify('published');
+    const billableBills = await Bill.query().where('projectId', projectId).modify('published');
 
-    return this.transformer.transform(
-      tenantId,
-      billableBills,
-      new ProjectBillableBillTransformer()
-    );
+    return this.transformer.transform(tenantId, billableBills, new ProjectBillableBillTransformer());
   };
 }

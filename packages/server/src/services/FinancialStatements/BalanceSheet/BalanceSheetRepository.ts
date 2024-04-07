@@ -1,24 +1,18 @@
-import { Service } from 'typedi';
-import * as R from 'ramda';
+import { IAccountTransactionsGroupBy, IBalanceSheetQuery, ILedger } from '@/interfaces';
+import Ledger from '@/services/Accounting/Ledger';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
-import {
-  IAccount,
-  IAccountTransactionsGroupBy,
-  IBalanceSheetQuery,
-  ILedger,
-} from '@/interfaces';
+import * as R from 'ramda';
+import { Service } from 'typedi';
 import { transformToMapBy } from 'utils';
-import Ledger from '@/services/Accounting/Ledger';
-import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
+import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 
 @Service()
 export default class BalanceSheetRepository extends R.compose(
   BalanceSheetRepositoryNetIncome,
-  FinancialDatePeriods
+  FinancialDatePeriods,
 )(class {}) {
   /**
    *
@@ -89,8 +83,7 @@ export default class BalanceSheetRepository extends R.compose(
    * Transactions group type.
    * @param {IAccountTransactionsGroupBy}
    */
-  public transactionsGroupType: IAccountTransactionsGroupBy =
-    IAccountTransactionsGroupBy.Month;
+  public transactionsGroupType: IAccountTransactionsGroupBy = IAccountTransactionsGroupBy.Month;
 
   // -----------------------
   // # Date Periods
@@ -152,9 +145,7 @@ export default class BalanceSheetRepository extends R.compose(
     this.query = new BalanceSheetQuery(query);
     this.models = models;
 
-    this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(
-      this.query.displayColumnsBy
-    );
+    this.transactionsGroupType = this.getGroupByFromDisplayColumnsBy(this.query.displayColumnsBy);
   }
 
   /**
@@ -173,20 +164,14 @@ export default class BalanceSheetRepository extends R.compose(
     if (this.query.isPreviousYearActive()) {
       await this.initTotalPreviousYear();
     }
-    if (
-      this.query.isPreviousYearActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
+    if (this.query.isPreviousYearActive() && this.query.isDatePeriodsColumnsType()) {
       await this.initPeriodsPreviousYear();
     }
     // Previous Period (PP).
     if (this.query.isPreviousPeriodActive()) {
       await this.initTotalPreviousPeriod();
     }
-    if (
-      this.query.isPreviousPeriodActive() &&
-      this.query.isDatePeriodsColumnsType()
-    ) {
+    if (this.query.isPreviousPeriodActive() && this.query.isDatePeriodsColumnsType()) {
       await this.initPeriodsPreviousPeriod();
     }
     //
@@ -230,17 +215,13 @@ export default class BalanceSheetRepository extends R.compose(
     const periodsByAccount = await this.accountsDatePeriods(
       this.query.fromDate,
       this.query.toDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
     // Retrieves opening balance of grouped transactions.
-    const periodsOpeningByAccount = await this.closingAccountsTotal(
-      this.query.fromDate
-    );
+    const periodsOpeningByAccount = await this.closingAccountsTotal(this.query.fromDate);
     // Inject to the repository.
     this.periodsAccountsLedger = Ledger.fromTransactions(periodsByAccount);
-    this.periodsOpeningAccountLedger = Ledger.fromTransactions(
-      periodsOpeningByAccount
-    );
+    this.periodsOpeningAccountLedger = Ledger.fromTransactions(periodsOpeningByAccount);
   };
 
   // ----------------------------
@@ -251,9 +232,7 @@ export default class BalanceSheetRepository extends R.compose(
    * @returns {Promise<void>}
    */
   private initTotalPreviousYear = async (): Promise<void> => {
-    const PYTotalsByAccounts = await this.closingAccountsTotal(
-      this.query.PYToDate
-    );
+    const PYTotalsByAccounts = await this.closingAccountsTotal(this.query.PYToDate);
     // Inject to the repository.
     this.PYTotalAccountsLedger = Ledger.fromTransactions(PYTotalsByAccounts);
   };
@@ -266,17 +245,13 @@ export default class BalanceSheetRepository extends R.compose(
     const PYPeriodsBYAccounts = await this.accountsDatePeriods(
       this.query.PYFromDate,
       this.query.PYToDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
     // Retrieves opening balance of grouped transactions.
-    const periodsOpeningByAccount = await this.closingAccountsTotal(
-      this.query.PYFromDate
-    );
+    const periodsOpeningByAccount = await this.closingAccountsTotal(this.query.PYFromDate);
     // Inject to the repository.
     this.PYPeriodsAccountsLedger = Ledger.fromTransactions(PYPeriodsBYAccounts);
-    this.PYPeriodsOpeningAccountLedger = Ledger.fromTransactions(
-      periodsOpeningByAccount
-    );
+    this.PYPeriodsOpeningAccountLedger = Ledger.fromTransactions(periodsOpeningByAccount);
   };
 
   // ----------------------------
@@ -287,9 +262,7 @@ export default class BalanceSheetRepository extends R.compose(
    * @returns {Promise<void>}
    */
   private initTotalPreviousPeriod = async (): Promise<void> => {
-    const PPTotalsByAccounts = await this.closingAccountsTotal(
-      this.query.PPToDate
-    );
+    const PPTotalsByAccounts = await this.closingAccountsTotal(this.query.PPToDate);
     // Inject to the repository.
     this.PPTotalAccountsLedger = Ledger.fromTransactions(PPTotalsByAccounts);
   };
@@ -302,17 +275,13 @@ export default class BalanceSheetRepository extends R.compose(
     const PPPeriodsBYAccounts = await this.accountsDatePeriods(
       this.query.PPFromDate,
       this.query.PPToDate,
-      this.transactionsGroupType
+      this.transactionsGroupType,
     );
     // Retrieves opening balance of grouped transactions.
-    const periodsOpeningByAccount = await this.closingAccountsTotal(
-      this.query.PPFromDate
-    );
+    const periodsOpeningByAccount = await this.closingAccountsTotal(this.query.PPFromDate);
     // Inject to the repository.
     this.PPPeriodsAccountsLedger = Ledger.fromTransactions(PPPeriodsBYAccounts);
-    this.PPPeriodsOpeningAccountLedger = Ledger.fromTransactions(
-      periodsOpeningByAccount
-    );
+    this.PPPeriodsOpeningAccountLedger = Ledger.fromTransactions(periodsOpeningByAccount);
   };
 
   // ----------------------------
@@ -335,11 +304,7 @@ export default class BalanceSheetRepository extends R.compose(
    * @param {string} datePeriodsType
    * @returns
    */
-  public accountsDatePeriods = async (
-    fromDate: Date,
-    toDate: Date,
-    datePeriodsType: string
-  ) => {
+  public accountsDatePeriods = async (fromDate: Date, toDate: Date, datePeriodsType: string) => {
     const { AccountTransaction } = this.models;
 
     return AccountTransaction.query().onBuild((query) => {

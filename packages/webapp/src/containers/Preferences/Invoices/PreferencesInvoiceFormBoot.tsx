@@ -15,7 +15,7 @@ function PreferencesInvoicesBoot({ ...props }) {
 
   // Provider state.
   const provider = {
-    isSettingsLoading
+    isSettingsLoading,
   };
 
   // Detarmines whether if any query is loading.
@@ -29,11 +29,7 @@ function PreferencesInvoicesBoot({ ...props }) {
       )}
     >
       <PreferencesInvoicesCard>
-        {isLoading ? (
-          <PreferencesPageLoader />
-        ) : (
-          <PreferencesInvoiceFormContext.Provider value={provider} {...props} />
-        )}
+        {isLoading ? <PreferencesPageLoader /> : <PreferencesInvoiceFormContext.Provider value={provider} {...props} />}
       </PreferencesInvoicesCard>
     </div>
   );
@@ -47,7 +43,6 @@ const PreferencesInvoicesCard = styled(Card)`
   }
 `;
 
-const usePreferencesInvoiceFormContext = () =>
-  React.useContext(PreferencesInvoiceFormContext);
+const usePreferencesInvoiceFormContext = () => React.useContext(PreferencesInvoiceFormContext);
 
 export { PreferencesInvoicesBoot, usePreferencesInvoiceFormContext };

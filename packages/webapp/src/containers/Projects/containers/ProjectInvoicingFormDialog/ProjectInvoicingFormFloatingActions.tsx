@@ -32,12 +32,7 @@ function ProjectInvoicingFormFloatingActions({
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '85px' }}>
           <T id={'cancel'} />
         </Button>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '75px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
           <T id={'project_invoicing.label.add'} />
         </Button>
       </div>

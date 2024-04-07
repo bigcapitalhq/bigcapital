@@ -1,12 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import {
-  ISaleReceiptCreatedPayload,
-  ISaleReceiptEditedPayload,
-  ISaleReceiptEventDeletedPayload,
-} from '@/interfaces';
+import { ISaleReceiptCreatedPayload, ISaleReceiptEditedPayload, ISaleReceiptEventDeletedPayload } from '@/interfaces';
 import { SaleReceiptGLEntries } from '@/services/Sales/Receipts/SaleReceiptGLEntries';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleReceiptWriteGLEntriesSubscriber {
@@ -17,22 +12,10 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleReceipt.onCreated,
-      this.handleWriteReceiptIncomeJournalEntrieOnCreate
-    );
-    bus.subscribe(
-      events.saleReceipt.onClosed,
-      this.handleWriteReceiptIncomeJournalEntrieOnCreate
-    );
-    bus.subscribe(
-      events.saleReceipt.onEdited,
-      this.handleWriteReceiptIncomeJournalEntrieOnEdited
-    );
-    bus.subscribe(
-      events.saleReceipt.onDeleted,
-      this.handleRevertReceiptJournalEntriesOnDeleted
-    );
+    bus.subscribe(events.saleReceipt.onCreated, this.handleWriteReceiptIncomeJournalEntrieOnCreate);
+    bus.subscribe(events.saleReceipt.onClosed, this.handleWriteReceiptIncomeJournalEntrieOnCreate);
+    bus.subscribe(events.saleReceipt.onEdited, this.handleWriteReceiptIncomeJournalEntrieOnEdited);
+    bus.subscribe(events.saleReceipt.onDeleted, this.handleRevertReceiptJournalEntriesOnDeleted);
   }
 
   /**
@@ -49,11 +32,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
     if (!saleReceipt.closedAt) return null;
 
     // Writes the sale receipt income journal entries.
-    await this.saleReceiptGLEntries.writeIncomeGLEntries(
-      tenantId,
-      saleReceiptId,
-      trx
-    );
+    await this.saleReceiptGLEntries.writeIncomeGLEntries(tenantId, saleReceiptId, trx);
   };
 
   /**
@@ -65,11 +44,7 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
     saleReceiptId,
     trx,
   }: ISaleReceiptEventDeletedPayload) => {
-    await this.saleReceiptGLEntries.revertReceiptGLEntries(
-      tenantId,
-      saleReceiptId,
-      trx
-    );
+    await this.saleReceiptGLEntries.revertReceiptGLEntries(tenantId, saleReceiptId, trx);
   };
 
   /**
@@ -86,10 +61,6 @@ export default class SaleReceiptWriteGLEntriesSubscriber {
     if (!saleReceipt.closedAt) return null;
 
     // Writes the sale receipt income journal entries.
-    await this.saleReceiptGLEntries.rewriteReceiptGLEntries(
-      tenantId,
-      saleReceiptId,
-      trx
-    );
+    await this.saleReceiptGLEntries.rewriteReceiptGLEntries(tenantId, saleReceiptId, trx);
   };
 }

@@ -20,20 +20,9 @@ function BillDetailsTabs() {
   const ability = useAbilityContext();
 
   return (
-    <DrawerMainTabs
-      renderActiveTabPanelOnly={true}
-      defaultSelectedTabId="details"
-    >
-      <Tab
-        title={intl.get('overview')}
-        id={'details'}
-        panel={<BillDetailTab />}
-      />
-      <Tab
-        title={intl.get('journal_entries')}
-        id={'journal_entries'}
-        panel={<BillGLEntriesTable />}
-      />
+    <DrawerMainTabs renderActiveTabPanelOnly={true} defaultSelectedTabId="details">
+      <Tab title={intl.get('overview')} id={'details'} panel={<BillDetailTab />} />
+      <Tab title={intl.get('journal_entries')} id={'journal_entries'} panel={<BillGLEntriesTable />} />
       {ability.can(PaymentMadeAction.View, AbilitySubject.PaymentMade) && (
         <Tab
           title={intl.get('payment_transactions')}
@@ -41,11 +30,7 @@ function BillDetailsTabs() {
           panel={<BillPaymentTransactionTable />}
         />
       )}
-      <Tab
-        title={intl.get('located_landed_cost')}
-        id={'landed_cost'}
-        panel={<LocatedLandedCostTable />}
-      />
+      <Tab title={intl.get('located_landed_cost')} id={'landed_cost'} panel={<LocatedLandedCostTable />} />
     </DrawerMainTabs>
   );
 }

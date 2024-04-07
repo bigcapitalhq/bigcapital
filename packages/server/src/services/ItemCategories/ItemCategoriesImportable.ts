@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import ItemCategoriesService from './ItemCategoriesService';
-import { Importable } from '../Import/Importable';
-import { Knex } from 'knex';
 import { IItemCategoryOTD } from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { Importable } from '../Import/Importable';
+import ItemCategoriesService from './ItemCategoriesService';
 import { ItemCategoriesSampleData } from './constants';
 
 @Service()
@@ -16,17 +16,8 @@ export class ItemCategoriesImportable extends Importable {
    * @param {any} createDTO
    * @param {Knex.Transaction} trx
    */
-  public async importable(
-    tenantId: number,
-    createDTO: IItemCategoryOTD,
-    trx?: Knex.Transaction
-  ) {
-    await this.itemCategoriesService.newItemCategory(
-      tenantId,
-      createDTO,
-      {},
-      trx
-    );
+  public async importable(tenantId: number, createDTO: IItemCategoryOTD, trx?: Knex.Transaction) {
+    await this.itemCategoriesService.newItemCategory(tenantId, createDTO, {}, trx);
   }
 
   /**

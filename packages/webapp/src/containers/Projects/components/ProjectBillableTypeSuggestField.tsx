@@ -13,17 +13,9 @@ import { CLASSES } from '@/constants/classes';
  * @param {*} param1
  * @returns {JSX.Element}
  */
-const billableTypeItemRenderer = (
-  billableType,
-  { handleClick, modifiers, query },
-) => {
+const billableTypeItemRenderer = (billableType, { handleClick, modifiers, query }) => {
   return (
-    <MenuItem
-      disabled={modifiers.disabled}
-      key={billableType.id}
-      text={billableType.name}
-      onClick={handleClick}
-    />
+    <MenuItem disabled={modifiers.disabled} key={billableType.id} text={billableType.name} onClick={handleClick} />
   );
 };
 
@@ -42,9 +34,7 @@ const billableTypeItemPredicate = (query, billableType, _index, exactMatch) => {
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
-    return (
-      `${billableType.name}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-    );
+    return `${billableType.name}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
   }
 };
 
@@ -80,15 +70,11 @@ export function ProjectBillableTypeSuggestField({
     [initialBillableTypeId, billableType],
   );
 
-  const [selectedBillableType, setSelectedBillableType] = React.useState(
-    initialBillableType || null,
-  );
+  const [selectedBillableType, setSelectedBillableType] = React.useState(initialBillableType || null);
 
   React.useEffect(() => {
     if (typeof selectedBillableTypeId !== 'undefined') {
-      const billableType = selectedBillableTypeId
-        ? billableType.find((a) => a.id === selectedBillableTypeId)
-        : null;
+      const billableType = selectedBillableTypeId ? billableType.find((a) => a.id === selectedBillableTypeId) : null;
       setSelectedBillableType(billableType);
     }
   }, [selectedBillableTypeId, billableType, setSelectedBillableType]);

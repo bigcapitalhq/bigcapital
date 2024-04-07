@@ -15,7 +15,7 @@
  */
 function createDFS(edges, leavesOnly, result, circular) {
   var visited = {};
-  return function (start) {
+  return (start) => {
     if (visited[start]) {
       return;
     }
@@ -75,10 +75,7 @@ var DepGraph = (DepGraph = function DepGraph(opts) {
   this.circular = opts && !!opts.circular; // Allows circular deps
 });
 
-DepGraph.fromArray = (
-  items,
-  options = { itemId: 'id', parentItemId: 'parent_id' }
-) => {
+DepGraph.fromArray = (items, options = { itemId: 'id', parentItemId: 'parent_id' }) => {
   const depGraph = new DepGraph();
 
   items.forEach((item) => {
@@ -123,7 +120,7 @@ DepGraph.prototype = {
       delete this.outgoingEdges[node];
       delete this.incomingEdges[node];
       [this.incomingEdges, this.outgoingEdges].forEach(function (edgeList) {
-        Object.keys(edgeList).forEach(function (key) {
+        Object.keys(edgeList).forEach((key) => {
           var idx = edgeList[key].indexOf(node);
           if (idx >= 0) {
             edgeList[key].splice(idx, 1);
@@ -202,13 +199,12 @@ DepGraph.prototype = {
    * to the nodes, it will only be shallow copied.
    */
   clone: function () {
-    var source = this;
     var result = new DepGraph();
-    var keys = Object.keys(source.nodes);
-    keys.forEach(function (n) {
-      result.nodes[n] = source.nodes[n];
-      result.outgoingEdges[n] = source.outgoingEdges[n].slice(0);
-      result.incomingEdges[n] = source.incomingEdges[n].slice(0);
+    var keys = Object.keys(this.nodes);
+    keys.forEach((n) => {
+      result.nodes[n] = this.nodes[n];
+      result.outgoingEdges[n] = this.outgoingEdges[n].slice(0);
+      result.incomingEdges[n] = this.incomingEdges[n].slice(0);
     });
     return result;
   },
@@ -223,12 +219,7 @@ DepGraph.prototype = {
   dependenciesOf: function (node, leavesOnly) {
     if (this.hasNode(node)) {
       var result = [];
-      var DFS = createDFS(
-        this.outgoingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
       DFS(node);
       var idx = result.indexOf(node);
       if (idx >= 0) {
@@ -249,12 +240,7 @@ DepGraph.prototype = {
   dependantsOf: function (node, leavesOnly) {
     if (this.hasNode(node)) {
       var result = [];
-      var DFS = createDFS(
-        this.incomingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.incomingEdges, leavesOnly, result, this.circular);
       DFS(node);
       var idx = result.indexOf(node);
       if (idx >= 0) {
@@ -273,7 +259,6 @@ DepGraph.prototype = {
    * If `leavesOnly` is true, only nodes that do not depend on any other nodes will be returned.
    */
   overallOrder: function (leavesOnly) {
-    var self = this;
     var result = [];
     var keys = Object.keys(this.nodes);
     if (keys.length === 0) {
@@ -283,24 +268,17 @@ DepGraph.prototype = {
         // Look for cycles - we run the DFS starting at all the nodes in case there
         // are several disconnected subgraphs inside this dependency graph.
         var CycleDFS = createDFS(this.outgoingEdges, false, [], this.circular);
-        keys.forEach(function (n) {
+        keys.forEach((n) => {
           CycleDFS(n);
         });
       }
 
-      var DFS = createDFS(
-        this.outgoingEdges,
-        leavesOnly,
-        result,
-        this.circular
-      );
+      var DFS = createDFS(this.outgoingEdges, leavesOnly, result, this.circular);
       // Find all potential starting points (nodes with nothing depending on them) an
       // run a DFS starting at these points to get the order
       keys
-        .filter(function (node) {
-          return self.incomingEdges[node].length === 0;
-        })
-        .forEach(function (n) {
+        .filter((node) => this.incomingEdges[node].length === 0)
+        .forEach((n) => {
           DFS(n);
         });
 
@@ -309,10 +287,8 @@ DepGraph.prototype = {
       // subgraph that does not have a clear starting point)
       if (this.circular) {
         keys
-          .filter(function (node) {
-            return result.indexOf(node) === -1;
-          })
-          .forEach(function (n) {
+          .filter((node) => result.indexOf(node) === -1)
+          .forEach((n) => {
             DFS(n);
           });
       }

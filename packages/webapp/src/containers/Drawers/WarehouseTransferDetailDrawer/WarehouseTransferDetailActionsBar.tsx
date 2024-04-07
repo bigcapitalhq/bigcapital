@@ -1,13 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Button,
-  NavbarGroup,
-  Classes,
-  NavbarDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';
 
 import { useWarehouseDetailDrawerContext } from './WarehouseTransferDetailDrawerProvider';
 import { DrawerActionsBar, Icon, FormattedMessage as T } from '@/components';
@@ -66,8 +60,4 @@ function WarehouseTransferDetailActionsBar({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertsActions,
-  withDrawerActions,
-)(WarehouseTransferDetailActionsBar);
+export default compose(withDialogActions, withAlertsActions, withDrawerActions)(WarehouseTransferDetailActionsBar);

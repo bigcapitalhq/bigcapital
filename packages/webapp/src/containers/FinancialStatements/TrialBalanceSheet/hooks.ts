@@ -11,8 +11,5 @@ export const useTrialBalanceSheetTableColumns = () => {
     trialBalanceSheet: { table },
   } = useTrialBalanceSheetContext();
 
-  return React.useMemo(
-    () => trialBalancesheetDynamicColumns(table.columns, table.rows),
-    [table],
-  );
+  return React.useMemo(() => trialBalancesheetDynamicColumns(table.columns, table.rows), [table]);
 };

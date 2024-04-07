@@ -24,7 +24,7 @@ export default class UserInvite extends SystemModel {
       notExpired(query) {
         const comp = moment().subtract(24, 'hours').toMySqlDateTime();
         query.where('created_at', '>=', comp);
-      }
-    }
+      },
+    };
   }
 }

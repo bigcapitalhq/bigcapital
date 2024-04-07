@@ -1,13 +1,6 @@
 // @ts-nocheck
 import { connect } from 'react-redux';
-import {
-  fetchUsers,
-  fetchUser,
-  deleteUser,
-  inactiveUser,
-  editUser,
-  submitInvite
-} from '@/store/users/users.actions';
+import { fetchUsers, fetchUser, deleteUser, inactiveUser, editUser, submitInvite } from '@/store/users/users.actions';
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchUsers: () => dispatch(fetchUsers({})),
@@ -16,7 +9,6 @@ export const mapDispatchToProps = (dispatch) => ({
   requestInactiveUser: (id) => dispatch(inactiveUser({ id })),
   requestEditUser: (id, form) => dispatch(editUser({ form, id })),
   requestSubmitInvite: (form) => dispatch(submitInvite({ form })),
-
 });
 
 export default connect(null, mapDispatchToProps);

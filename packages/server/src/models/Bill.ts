@@ -1,18 +1,14 @@
-import { Model, raw, mixin } from 'objection';
-import { castArray, difference } from 'lodash';
-import moment from 'moment';
-import TenantModel from 'models/TenantModel';
-import BillSettings from './Bill.Settings';
-import ModelSetting from './ModelSetting';
-import CustomViewBaseModel from './CustomViewBaseModel';
 import { DEFAULT_VIEWS } from '@/services/Purchases/Bills/constants';
+import { castArray, difference } from 'lodash';
+import TenantModel from 'models/TenantModel';
+import moment from 'moment';
+import { Model, mixin, raw } from 'objection';
+import BillSettings from './Bill.Settings';
+import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class Bill extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Bill extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   public amount: number;
   public paymentAmount: number;
   public landedCostAmount: number;
@@ -85,9 +81,7 @@ export default class Bill extends mixin(TenantModel, [
    * @returns {number}
    */
   get subtotalExcludingTax() {
-    return this.isInclusiveTax
-      ? this.subtotal - this.taxAmountWithheld
-      : this.subtotal;
+    return this.isInclusiveTax ? this.subtotal - this.taxAmountWithheld : this.subtotal;
   }
 
   /**
@@ -103,9 +97,7 @@ export default class Bill extends mixin(TenantModel, [
    * @returns {number}
    */
   get total() {
-    return this.isInclusiveTax
-      ? this.subtotal
-      : this.subtotal + this.taxAmountWithheld;
+    return this.isInclusiveTax ? this.subtotal : this.subtotal + this.taxAmountWithheld;
   }
 
   /**
@@ -162,7 +154,7 @@ export default class Bill extends mixin(TenantModel, [
           raw(`COALESCE(AMOUNT, 0) -
             COALESCE(PAYMENT_AMOUNT, 0) -
             COALESCE(CREDITED_AMOUNT, 0) > 0
-          `)
+          `),
         );
       },
       /**
@@ -491,9 +483,7 @@ export default class Bill extends mixin(TenantModel, [
 
   static changePaymentAmount(billId, amount) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
-    return this.query()
-      .where('id', billId)
-      [changeMethod]('payment_amount', Math.abs(amount));
+    return this.query().where('id', billId)[changeMethod]('payment_amount', Math.abs(amount));
   }
 
   /**

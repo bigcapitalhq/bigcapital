@@ -4,12 +4,7 @@ import { useFormikContext } from 'formik';
 import { InputGroup, Position, ControlGroup } from '@blueprintjs/core';
 import * as R from 'ramda';
 
-import {
-  FFormGroup,
-  Icon,
-  InputPrependButton,
-  FormattedMessage as T,
-} from '@/components';
+import { FFormGroup, Icon, InputPrependButton, FormattedMessage as T } from '@/components';
 import { useUpdateEffect } from '@/hooks';
 
 import withSettings from '@/containers/Settings/withSettings';
@@ -39,10 +34,7 @@ export const MoneyInOutSyncIncrementSettingsToForm = R.compose(
       // Do not update if the invoice auto-increment is disabled.
       if (!transactionAutoIncrement) return null;
 
-      const newTransactionNumber = transactionNumber(
-        transactionNumberPrefix,
-        transactionNextNumber,
-      );
+      const newTransactionNumber = transactionNumber(transactionNumberPrefix, transactionNextNumber);
       setFieldValue('transaction_number', newTransactionNumber);
     }, [setFieldValue, transactionNumberPrefix, transactionNextNumber]);
 
@@ -93,10 +85,7 @@ export const MoneyInOutTransactionNoField = R.compose(
     };
 
     return (
-      <FFormGroup
-        name={'transaction_number'}
-        label={<T id={'transaction_number'} />}
-      >
+      <FFormGroup name={'transaction_number'} label={<T id={'transaction_number'} />}>
         <ControlGroup fill={true}>
           <InputGroup
             minimal={true}
@@ -111,13 +100,7 @@ export const MoneyInOutTransactionNoField = R.compose(
             }}
             tooltip={true}
             tooltipProps={{
-              content: (
-                <T
-                  id={
-                    'cash_flow.setting_your_auto_generated_transaction_number'
-                  }
-                />
-              ),
+              content: <T id={'cash_flow.setting_your_auto_generated_transaction_number'} />,
               position: Position.BOTTOM_LEFT,
             }}
           />

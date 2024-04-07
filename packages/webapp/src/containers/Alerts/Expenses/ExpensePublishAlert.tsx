@@ -59,7 +59,4 @@ function ExpensePublishAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExpensePublishAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExpensePublishAlert);

@@ -7,11 +7,7 @@ import { CategorizeTransactionFormFooter } from './CategorizeTransactionFormFoot
 import { useCategorizeTransaction } from '@/hooks/query';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { DRAWERS } from '@/constants/drawers';
-import {
-  transformToCategorizeForm,
-  defaultInitialValues,
-  tranformToRequest,
-} from './_utils';
+import { transformToCategorizeForm, defaultInitialValues, tranformToRequest } from './_utils';
 import { compose } from '@/utils';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
@@ -24,8 +20,7 @@ function CategorizeTransactionFormRoot({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { uncategorizedTransactionId, uncategorizedTransaction } =
-    useCategorizeTransactionBoot();
+  const { uncategorizedTransactionId, uncategorizedTransaction } = useCategorizeTransactionBoot();
   const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
 
   // Callbacks handles form submit.
@@ -37,7 +32,7 @@ function CategorizeTransactionFormRoot({
       .then(() => {
         setSubmitting(false);
         closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
-        
+
         AppToaster.show({
           message: 'The uncategorized transaction has been categorized.',
           intent: Intent.SUCCESS,
@@ -78,9 +73,7 @@ function CategorizeTransactionFormRoot({
   );
 }
 
-export const CategorizeTransactionForm = compose(withDrawerActions)(
-  CategorizeTransactionFormRoot,
-);
+export const CategorizeTransactionForm = compose(withDrawerActions)(CategorizeTransactionFormRoot);
 
 const DivRoot = styled.div`
   .bp4-form-group .bp4-form-content {

@@ -6,7 +6,7 @@ describe('cleanValue', () => {
     expect(
       cleanValue({
         value: '1,000,000',
-      })
+      }),
     ).toEqual('1000000');
   });
 
@@ -16,7 +16,7 @@ describe('cleanValue', () => {
         value: '1.000.000,12',
         decimalSeparator: ',',
         groupSeparator: '.',
-      })
+      }),
     ).toEqual('1000000,12');
   });
 
@@ -25,14 +25,14 @@ describe('cleanValue', () => {
       cleanValue({
         value: '£1000000',
         prefix: '£',
-      })
+      }),
     ).toEqual('1000000');
 
     expect(
       cleanValue({
         value: '$5.5',
         prefix: '$',
-      })
+      }),
     ).toEqual('5.5');
   });
 
@@ -40,7 +40,7 @@ describe('cleanValue', () => {
     expect(
       cleanValue({
         value: '100.0000',
-      })
+      }),
     ).toEqual('100.00');
   });
 
@@ -50,7 +50,7 @@ describe('cleanValue', () => {
         value: '100.0000',
         allowDecimals: false,
         decimalsLimit: 0,
-      })
+      }),
     ).toEqual('100');
   });
 
@@ -60,7 +60,7 @@ describe('cleanValue', () => {
         value: '100.123',
         allowDecimals: true,
         decimalsLimit: 0,
-      })
+      }),
     ).toEqual('100.123');
   });
 
@@ -69,7 +69,7 @@ describe('cleanValue', () => {
       cleanValue({
         value: '£1,234,567.89',
         prefix: '£',
-      })
+      }),
     ).toEqual('1234567.89');
   });
 
@@ -83,7 +83,7 @@ describe('cleanValue', () => {
           allowDecimals: true,
           decimalsLimit: 2,
           prefix: '£',
-        })
+        }),
       ).toEqual('-1000');
     });
 
@@ -96,7 +96,7 @@ describe('cleanValue', () => {
           allowDecimals: true,
           decimalsLimit: 2,
           prefix: '£',
-        })
+        }),
       ).toEqual('-99999.99');
     });
 
@@ -110,7 +110,7 @@ describe('cleanValue', () => {
           decimalsLimit: 2,
           allowNegativeValue: false,
           prefix: '£',
-        })
+        }),
       ).toEqual('1000');
     });
   });
@@ -120,21 +120,21 @@ describe('cleanValue', () => {
       cleanValue({
         value: '2£1',
         prefix: '£',
-      })
+      }),
     ).toEqual('12');
 
     expect(
       cleanValue({
         value: '-2£1',
         prefix: '£',
-      })
+      }),
     ).toEqual('-12');
 
     expect(
       cleanValue({
         value: '2-£1',
         prefix: '£',
-      })
+      }),
     ).toEqual('-12');
 
     expect(
@@ -142,7 +142,7 @@ describe('cleanValue', () => {
         value: '2-£1.99',
         prefix: '£',
         decimalsLimit: 5,
-      })
+      }),
     ).toEqual('-1.992');
   });
 
@@ -152,21 +152,21 @@ describe('cleanValue', () => {
         cleanValue({
           value: 'k',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('');
 
       expect(
         cleanValue({
           value: 'm',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('');
 
       expect(
         cleanValue({
           value: 'b',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('');
     });
 
@@ -176,7 +176,7 @@ describe('cleanValue', () => {
           value: '$k',
           prefix: '$',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('');
 
       expect(
@@ -184,7 +184,7 @@ describe('cleanValue', () => {
           value: '£m',
           prefix: '£',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('');
     });
 
@@ -193,28 +193,28 @@ describe('cleanValue', () => {
         cleanValue({
           value: '1k',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('1');
 
       expect(
         cleanValue({
           value: '-2k',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('-2');
 
       expect(
         cleanValue({
           value: '25.6m',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('25.6');
 
       expect(
         cleanValue({
           value: '9b',
           turnOffAbbreviations: true,
-        })
+        }),
       ).toEqual('9');
     });
   });

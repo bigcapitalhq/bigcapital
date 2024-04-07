@@ -59,7 +59,7 @@ export default class QueryParser {
     if (typeof node !== 'string' && node !== null) {
       return this.parseNode(node);
     }
-    const value = parseFloat(node);
+    const value = Number.parseFloat(node);
 
     if (!isNaN(value)) {
       if (typeof this.queries[node] === 'undefined') {

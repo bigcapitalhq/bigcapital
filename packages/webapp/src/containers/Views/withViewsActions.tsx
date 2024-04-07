@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   fetchView,
   submitView,
@@ -8,7 +8,6 @@ import {
   fetchViewResource,
   fetchResourceViews,
 } from '@/store/customViews/customViews.actions';
-
 
 export const mapDispatchToProps = (dispatch) => ({
   requestFetchView: (id) => dispatch(fetchView({ id })),

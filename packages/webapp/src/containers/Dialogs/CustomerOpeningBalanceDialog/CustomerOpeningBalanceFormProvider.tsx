@@ -1,11 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useBranches,
-  useCustomer,
-  useEditCustomerOpeningBalance,
-} from '@/hooks/query';
+import { useBranches, useCustomer, useEditCustomerOpeningBalance } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { transfromCustomertoForm } from './utils';
@@ -16,18 +12,12 @@ const CustomerOpeningBalanceContext = React.createContext();
  * Customer opening balance provider.
  * @returns
  */
-function CustomerOpeningBalanceFormProvider({
-  query,
-  customerId,
-  dialogName,
-  ...props
-}) {
+function CustomerOpeningBalanceFormProvider({ query, customerId, dialogName, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
-  const { mutateAsync: editCustomerOpeningBalanceMutate } =
-    useEditCustomerOpeningBalance();
+  const { mutateAsync: editCustomerOpeningBalanceMutate } = useEditCustomerOpeningBalance();
 
   // Fetches the branches list.
   const {
@@ -37,10 +27,7 @@ function CustomerOpeningBalanceFormProvider({
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Handle fetch customer details.
-  const { data: customer, isLoading: isCustomerLoading } = useCustomer(
-    customerId,
-    { enabled: !!customerId },
-  );
+  const { data: customer, isLoading: isCustomerLoading } = useCustomer(customerId, { enabled: !!customerId });
 
   // State provider.
   const provider = {
@@ -60,7 +47,6 @@ function CustomerOpeningBalanceFormProvider({
   );
 }
 
-const useCustomerOpeningBalanceContext = () =>
-  React.useContext(CustomerOpeningBalanceContext);
+const useCustomerOpeningBalanceContext = () => React.useContext(CustomerOpeningBalanceContext);
 
 export { CustomerOpeningBalanceFormProvider, useCustomerOpeningBalanceContext };

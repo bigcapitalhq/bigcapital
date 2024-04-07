@@ -39,13 +39,10 @@ function ViewFormPage({
   const fetchHook = useAsync(async () => {
     return Promise.all([
       ...(resourceSlug
-        ? [
-            requestFetchResourceColumns(resourceSlug),
-            requestFetchResourceFields(resourceSlug),
-          ]
+        ? [requestFetchResourceColumns(resourceSlug), requestFetchResourceFields(resourceSlug)]
         : viewId
-        ? [requestFetchViewResource(viewId)]
-        : []),
+          ? [requestFetchViewResource(viewId)]
+          : []),
       ...(viewId ? [requestFetchView(viewId)] : []),
     ]);
   }, []);
@@ -83,18 +80,10 @@ function ViewFormPage({
   }, [requestDeleteView, stateDeleteView]);
 
   return (
-    <DashboardInsider
-      name={'view-form'}
-      loading={fetchHook.loading}
-      mount={false}
-    >
+    <DashboardInsider name={'view-form'} loading={fetchHook.loading} mount={false}>
       <DashboardPageContent>
         <If condition={fetchHook.value}>
-          <ViewForm
-            viewId={viewId}
-            resourceName={resourceSlug}
-            onDelete={handleDeleteView}
-          />
+          <ViewForm viewId={viewId} resourceName={resourceSlug} onDelete={handleDeleteView} />
 
           <Alert
             cancelButtonText={<T id={'cancel'} />}
@@ -106,9 +95,7 @@ function ViewFormPage({
             onConfirm={handleConfirmDeleteView}
           >
             <p>
-              <FormattedHTMLMessage
-                id={'once_delete_these_views_you_will_not_able_restore_them'}
-              />
+              <FormattedHTMLMessage id={'once_delete_these_views_you_will_not_able_restore_them'} />
             </p>
           </Alert>
         </If>
@@ -123,8 +110,4 @@ function ViewFormPage({
   );
 }
 
-export default compose(
-  withDashboardActions,
-  withViewsActions,
-  withResourcesActions,
-)(ViewFormPage);
+export default compose(withDashboardActions, withViewsActions, withResourcesActions)(ViewFormPage);

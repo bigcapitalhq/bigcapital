@@ -1,9 +1,8 @@
-import { QueryBuilder } from 'objection';
 import crypto from 'crypto';
 import CacheService from '@/services/Cache';
+import { QueryBuilder } from 'objection';
 
-export default class CachableQueryBuilder extends QueryBuilder{
-
+export default class CachableQueryBuilder extends QueryBuilder {
   async then(...args) {
     // Flush model cache after insert, delete or update transaction.
     if (this.isInsert() || this.isDelete() || this.isUpdate()) {
@@ -14,11 +13,13 @@ export default class CachableQueryBuilder extends QueryBuilder{
       return this.getOrStoreCache().then(...args);
     } else {
       const promise = this.execute();
-    
-      return promise.then((result) => {
-        this.setCache(result);
-        return result;
-      }).then(...args);
+
+      return promise
+        .then((result) => {
+          this.setCache(result);
+          return result;
+        })
+        .then(...args);
     }
   }
 
@@ -26,8 +27,9 @@ export default class CachableQueryBuilder extends QueryBuilder{
     const storeFunction = () => this.execute();
 
     return new Promise((resolve, reject) => {
-      CacheService.get(this.cacheKey, storeFunction)
-        .then((result) => { resolve(result); });
+      CacheService.get(this.cacheKey, storeFunction).then((result) => {
+        resolve(result);
+      });
     });
   }
 
@@ -37,7 +39,7 @@ export default class CachableQueryBuilder extends QueryBuilder{
 
   generateCacheKey() {
     const knexSql = this.toKnexQuery().toSQL();
-    const hashedQuery = crypto.createHash('md5').update(knexSql.sql).digest("hex");
+    const hashedQuery = crypto.createHash('md5').update(knexSql.sql).digest('hex');
 
     return hashedQuery;
   }
@@ -46,7 +48,7 @@ export default class CachableQueryBuilder extends QueryBuilder{
     const modelName = this.modelClass().name;
 
     this.cacheSeconds = seconds;
-    this.cacheTag = (key) ? `${modelName}.${key}` : modelName;
+    this.cacheTag = key ? `${modelName}.${key}` : modelName;
 
     return this;
   }

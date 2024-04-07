@@ -18,11 +18,5 @@ export default function PaymentReceiveDetailTable() {
     paymentReceive: { entries },
   } = usePaymentReceiveDetailContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

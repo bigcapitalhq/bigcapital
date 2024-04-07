@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { IAPAgingSummaryQuery, IAPAgingSummaryTable } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { APAgingSummaryService } from './APAgingSummaryService';
 import APAgingSummaryTable from './APAgingSummaryTable';
 
@@ -14,14 +14,8 @@ export class APAgingSummaryTableInjectable {
    * @param {IAPAgingSummaryQuery} query
    * @returns {Promise<IAPAgingSummaryTable>}
    */
-  public async table(
-    tenantId: number,
-    query: IAPAgingSummaryQuery
-  ): Promise<IAPAgingSummaryTable> {
-    const report = await this.APAgingSummarySheet.APAgingSummary(
-      tenantId,
-      query
-    );
+  public async table(tenantId: number, query: IAPAgingSummaryQuery): Promise<IAPAgingSummaryTable> {
+    const report = await this.APAgingSummarySheet.APAgingSummary(tenantId, query);
     const table = new APAgingSummaryTable(report.data, query, {});
 
     return {

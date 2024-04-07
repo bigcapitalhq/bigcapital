@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Request, Response, Router, NextFunction } from 'express';
-import { check, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
+import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
+import { ServiceError } from '@/exceptions';
 import { Features, ICreateBranchDTO, IEditBranchDTO } from '@/interfaces';
 import { BranchesApplication } from '@/services/Branches/BranchesApplication';
-import { ServiceError } from '@/exceptions';
-import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
+import { NextFunction, Request, Response, Router } from 'express';
+import { check, param } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class BranchesController extends BaseController {
@@ -24,7 +24,7 @@ export class BranchesController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.activateBranches),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/',
@@ -43,7 +43,7 @@ export class BranchesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.createBranch),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id',
@@ -63,7 +63,7 @@ export class BranchesController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.editBranch),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.post(
       '/:id/mark-primary',
@@ -71,7 +71,7 @@ export class BranchesController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.markBranchAsPrimary),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.delete(
       '/:id',
@@ -79,7 +79,7 @@ export class BranchesController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.deleteBranch),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/:id',
@@ -87,7 +87,7 @@ export class BranchesController extends BaseController {
       [param('id').exists().isInt().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.getBranch),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     router.get(
       '/',
@@ -95,7 +95,7 @@ export class BranchesController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.getBranches),
-      this.handlerServiceErrors
+      this.handlerServiceErrors,
     );
     return router;
   }
@@ -107,19 +107,12 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public createBranch = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public createBranch = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const createBranchDTO: ICreateBranchDTO = this.matchedBodyData(req);
 
     try {
-      const branch = await this.branchesApplication.createBranch(
-        tenantId,
-        createBranchDTO
-      );
+      const branch = await this.branchesApplication.createBranch(tenantId, createBranchDTO);
       return res.status(200).send({
         id: branch.id,
         message: 'The branch has been created successfully.',
@@ -136,21 +129,13 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public editBranch = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public editBranch = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: branchId } = req.params;
     const editBranchDTO: IEditBranchDTO = this.matchedBodyData(req);
 
     try {
-      const branch = await this.branchesApplication.editBranch(
-        tenantId,
-        branchId,
-        editBranchDTO
-      );
+      const branch = await this.branchesApplication.editBranch(tenantId, branchId, editBranchDTO);
       return res.status(200).send({
         id: branch.id,
         message: 'The branch has been edited successfully.',
@@ -167,11 +152,7 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public deleteBranch = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public deleteBranch = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: branchId } = req.params;
 
@@ -194,19 +175,12 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public getBranch = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getBranch = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: branchId } = req.params;
 
     try {
-      const branch = await this.branchesApplication.getBranch(
-        tenantId,
-        branchId
-      );
+      const branch = await this.branchesApplication.getBranch(tenantId, branchId);
       return res.status(200).send({ branch });
     } catch (error) {
       next(error);
@@ -220,11 +194,7 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public getBranches = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public getBranches = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
@@ -243,11 +213,7 @@ export class BranchesController extends BaseController {
    * @param   {NextFunction} next
    * @returns {Response}
    */
-  public activateBranches = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public activateBranches = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
 
     try {
@@ -263,16 +229,12 @@ export class BranchesController extends BaseController {
 
   /**
    * Marks the given branch as primary.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @returns {Response}
    */
-  public markBranchAsPrimary = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  public markBranchAsPrimary = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: branchId } = req.params;
 
@@ -295,12 +257,7 @@ export class BranchesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handlerServiceErrors(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'BRANCH_NOT_FOUND') {
         return res.status(400).send({
@@ -324,9 +281,7 @@ export class BranchesController extends BaseController {
       }
       if (error.errorType === 'BRANCH_HAS_ASSOCIATED_TRANSACTIONS') {
         return res.status(400).send({
-          errors: [
-            { type: 'BRANCH_HAS_ASSOCIATED_TRANSACTIONS', code: 500 },
-          ],
+          errors: [{ type: 'BRANCH_HAS_ASSOCIATED_TRANSACTIONS', code: 500 }],
         });
       }
     }

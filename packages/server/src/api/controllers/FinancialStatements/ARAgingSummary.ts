@@ -1,12 +1,11 @@
-import { Service, Inject } from 'typedi';
-import { Router, Request, Response } from 'express';
-import { query } from 'express-validator';
-import ARAgingSummaryService from '@/services/FinancialStatements/AgingSummary/ARAgingSummaryService';
-import BaseFinancialReportController from './BaseFinancialReportController';
-import { AbilitySubject, ReportsAction } from '@/interfaces';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { ARAgingSummaryApplication } from '@/services/FinancialStatements/AgingSummary/ARAgingSummaryApplication';
+import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { ARAgingSummaryApplication } from '@/services/FinancialStatements/AgingSummary/ARAgingSummaryApplication';
+import { Request, Response, Router } from 'express';
+import { query } from 'express-validator';
+import { Inject, Service } from 'typedi';
+import BaseFinancialReportController from './BaseFinancialReportController';
 
 @Service()
 export default class ARAgingSummaryReportController extends BaseFinancialReportController {
@@ -24,7 +23,7 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
       CheckPolicies(ReportsAction.READ_AR_AGING_SUMMARY, AbilitySubject.Report),
       this.validationSchema,
       this.validationResult,
-      this.asyncMiddleware(this.receivableAgingSummary.bind(this))
+      this.asyncMiddleware(this.receivableAgingSummary.bind(this)),
     );
     return router;
   }
@@ -47,7 +46,10 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
       query('none_zero').default(true).isBoolean().toBoolean(),
 
       // Filtering by branches.
-      query('branches_ids').optional().toArray().isArray({ min: 1 }),
+      query('branches_ids')
+        .optional()
+        .toArray()
+        .isArray({ min: 1 }),
       query('branches_ids.*').isNumeric().toInt(),
     ];
   }
@@ -69,20 +71,14 @@ export default class ARAgingSummaryReportController extends BaseFinancialReportC
         ACCEPT_TYPE.APPLICATION_JSON_TABLE,
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_XLSX,
-        ACCEPT_TYPE.APPLICATION_PDF
+        ACCEPT_TYPE.APPLICATION_PDF,
       ]);
       // Retrieves the xlsx format.
       if (ACCEPT_TYPE.APPLICATION_XLSX === acceptType) {
         const buffer = await this.ARAgingSummaryApp.xlsx(tenantId, filter);
 
-        res.setHeader(
-          'Content-Disposition',
-          'attachment; filename=output.xlsx'
-        );
-        res.setHeader(
-          'Content-Type',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        );
+        res.setHeader('Content-Disposition', 'attachment; filename=output.xlsx');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         return res.send(buffer);
         // Retrieves the table format.
       } else if (ACCEPT_TYPE.APPLICATION_JSON_TABLE === acceptType) {

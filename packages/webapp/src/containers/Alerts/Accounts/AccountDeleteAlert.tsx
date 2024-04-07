@@ -2,11 +2,7 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import { handleDeleteErrors } from '@/containers/Accounts/utils';
 
@@ -75,16 +71,10 @@ function AccountDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'once_delete_this_account_you_will_able_to_restore_it'}
-        />
+        <FormattedHTMLMessage id={'once_delete_this_account_you_will_able_to_restore_it'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(AccountDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(AccountDeleteAlert);

@@ -12,11 +12,10 @@ import { useResourceData } from '../GenericResource';
 function transfromResourceDataToSearch(resource) {
   const selectItem = getUniversalSearchBind(resource._type, 'itemSelect');
 
-  return resource.items
-    .map((item) => ({
-      ...selectItem ? selectItem(item) : {}, 
-      _type: resource._type,
-    }));
+  return resource.items.map((item) => ({
+    ...(selectItem ? selectItem(item) : {}),
+    _type: resource._type,
+  }));
 }
 
 /**

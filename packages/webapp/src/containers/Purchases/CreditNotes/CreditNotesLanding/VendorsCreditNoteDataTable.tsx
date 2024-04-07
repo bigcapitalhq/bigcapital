@@ -3,12 +3,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import VendorsCreditNoteEmptyStatus from './VendorsCreditNoteEmptyStatus';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 
@@ -47,20 +42,14 @@ function VendorsCreditNoteDataTable({
   const history = useHistory();
 
   // Vendor credits context.
-  const {
-    vendorCredits,
-    pagination,
-    isEmptyStatus,
-    isVendorCreditsFetching,
-    isVendorCreditsLoading,
-  } = useVendorsCreditNoteListContext();
+  const { vendorCredits, pagination, isEmptyStatus, isVendorCreditsFetching, isVendorCreditsLoading } =
+    useVendorsCreditNoteListContext();
 
   // Credit note table columns.
   const columns = useVendorsCreditNoteTableColumns();
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.VENDOR_CREDITS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.VENDOR_CREDITS);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = React.useCallback(

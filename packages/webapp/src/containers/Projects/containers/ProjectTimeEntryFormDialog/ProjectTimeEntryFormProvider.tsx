@@ -26,8 +26,7 @@ function ProjectTimeEntryFormProvider({
   const [project, setProjectPayload] = React.useState(projectId);
 
   // Create and edit project time entry mutations.
-  const { mutateAsync: createProjectTimeEntryMutate } =
-    useCreateProjectTimeEntry();
+  const { mutateAsync: createProjectTimeEntryMutate } = useCreateProjectTimeEntry();
   const { mutateAsync: editProjectTimeEntryMutate } = useEditProjectTimeEntry();
 
   // Handle fetch project tasks.
@@ -38,10 +37,9 @@ function ProjectTimeEntryFormProvider({
   });
 
   // Handle fetch project time entry detail.
-  const { data: projectTimeEntry, isLoading: isProjectTimeEntryLoading } =
-    useProjectTimeEntry(timesheetId, {
-      enabled: !!timesheetId,
-    });
+  const { data: projectTimeEntry, isLoading: isProjectTimeEntryLoading } = useProjectTimeEntry(timesheetId, {
+    enabled: !!timesheetId,
+  });
 
   // Fetch project list data table or list
   const {
@@ -66,16 +64,12 @@ function ProjectTimeEntryFormProvider({
   };
 
   return (
-    <DialogContent
-      isLoading={isProjectsLoading || isProjectTimeEntryLoading}
-      name={'project-time-entry-form'}
-    >
+    <DialogContent isLoading={isProjectsLoading || isProjectTimeEntryLoading} name={'project-time-entry-form'}>
       <ProjecctTimeEntryFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useProjectTimeEntryFormContext = () =>
-  React.useContext(ProjecctTimeEntryFormContext);
+const useProjectTimeEntryFormContext = () => React.useContext(ProjecctTimeEntryFormContext);
 
 export { ProjectTimeEntryFormProvider, useProjectTimeEntryFormContext };

@@ -2,7 +2,6 @@ import moment from 'moment';
 
 export default (Model) => {
   return class DateSession extends Model {
-
     get timestamps() {
       return ['createdAt', 'updatedAt'];
     }
@@ -30,5 +29,5 @@ export default (Model) => {
         }
       });
     }
-  }
-}
+  };
+};

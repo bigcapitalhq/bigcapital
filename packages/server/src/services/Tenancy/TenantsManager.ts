@@ -1,18 +1,11 @@
-import { Container, Inject, Service } from 'typedi';
-import { ITenantManager, ITenant, ITenantDBManager } from '@/interfaces';
-import {
-  EventDispatcherInterface,
-  EventDispatcher,
-} from 'decorators/eventDispatcher';
-import {
-  TenantAlreadyInitialized,
-  TenantAlreadySeeded,
-  TenantDatabaseNotBuilt,
-} from '@/exceptions';
+import { TenantAlreadyInitialized, TenantAlreadySeeded, TenantDatabaseNotBuilt } from '@/exceptions';
+import { ITenant, ITenantDBManager, ITenantManager } from '@/interfaces';
+import { SeedMigration } from '@/lib/Seeder/SeedMigration';
 import TenantDBManager from '@/services/Tenancy/TenantDBManager';
 import events from '@/subscribers/events';
 import { Tenant } from '@/system/models';
-import { SeedMigration } from '@/lib/Seeder/SeedMigration';
+import { EventDispatcher, EventDispatcherInterface } from 'decorators/eventDispatcher';
+import { Inject, Service } from 'typedi';
 import i18n from '../../loaders/i18n';
 
 const ERRORS = {

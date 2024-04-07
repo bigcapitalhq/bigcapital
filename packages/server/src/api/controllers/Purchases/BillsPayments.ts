@@ -1,14 +1,14 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { Service, Inject } from 'typedi';
-import { check, param, query, ValidationChain } from 'express-validator';
+import BaseController from '@/api/controllers/BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import BaseController from '@/api/controllers/BaseController';
+import { AbilitySubject, IPaymentMadeAction } from '@/interfaces';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { BillPaymentsApplication } from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import BillPaymentsPages from '@/services/Purchases/BillPayments/BillPaymentsPages';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, IPaymentMadeAction } from '@/interfaces';
+import { NextFunction, Request, Response, Router } from 'express';
+import { ValidationChain, check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 /**
  * Bills payments controller.
@@ -37,18 +37,15 @@ export default class BillsPayments extends BaseController {
       [...this.billPaymentSchemaValidation],
       this.validationResult,
       asyncMiddleware(this.createBillPayment.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.post(
       '/:id',
       CheckPolicies(IPaymentMadeAction.Edit, AbilitySubject.PaymentMade),
-      [
-        ...this.billPaymentSchemaValidation,
-        ...this.specificBillPaymentValidateSchema,
-      ],
+      [...this.billPaymentSchemaValidation, ...this.specificBillPaymentValidateSchema],
       this.validationResult,
       asyncMiddleware(this.editBillPayment.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.delete(
       '/:id',
@@ -56,7 +53,7 @@ export default class BillsPayments extends BaseController {
       [...this.specificBillPaymentValidateSchema],
       this.validationResult,
       asyncMiddleware(this.deleteBillPayment.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/new-page/entries',
@@ -64,7 +61,7 @@ export default class BillsPayments extends BaseController {
       [query('vendor_id').exists()],
       this.validationResult,
       asyncMiddleware(this.getBillPaymentNewPageEntries.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/:id/edit-page',
@@ -72,7 +69,7 @@ export default class BillsPayments extends BaseController {
       this.specificBillPaymentValidateSchema,
       this.validationResult,
       asyncMiddleware(this.getBillPaymentEditPage.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/:id/bills',
@@ -80,7 +77,7 @@ export default class BillsPayments extends BaseController {
       this.specificBillPaymentValidateSchema,
       this.validationResult,
       asyncMiddleware(this.getPaymentBills.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/:id',
@@ -88,7 +85,7 @@ export default class BillsPayments extends BaseController {
       this.specificBillPaymentValidateSchema,
       this.validationResult,
       asyncMiddleware(this.getBillPayment.bind(this)),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/',
@@ -97,7 +94,7 @@ export default class BillsPayments extends BaseController {
       this.validationResult,
       asyncMiddleware(this.getBillsPayments.bind(this)),
       this.handleServiceError,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     return router;
   }
@@ -158,10 +155,7 @@ export default class BillsPayments extends BaseController {
     const { tenantId } = req;
     const { vendorId } = this.matchedQueryData(req);
 
-    const entries = await this.billPaymentsPages.getNewPageEntries(
-      tenantId,
-      vendorId
-    );
+    const entries = await this.billPaymentsPages.getNewPageEntries(tenantId, vendorId);
     return res.status(200).send({ entries });
   }
 
@@ -170,20 +164,15 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async getBillPaymentEditPage(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getBillPaymentEditPage(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: paymentReceiveId } = req.params;
 
     try {
-      const billPaymentsWithEditEntries =
-        await this.billPaymentsPages.getBillPaymentEditPage(
-          tenantId,
-          paymentReceiveId
-        );
+      const billPaymentsWithEditEntries = await this.billPaymentsPages.getBillPaymentEditPage(
+        tenantId,
+        paymentReceiveId,
+      );
       return res.status(200).send(billPaymentsWithEditEntries);
     } catch (error) {
       next(error);
@@ -197,19 +186,12 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {Response} res
    */
-  private async createBillPayment(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async createBillPayment(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const billPaymentDTO = this.matchedBodyData(req);
 
     try {
-      const billPayment = await this.billPaymentsApplication.createBillPayment(
-        tenantId,
-        billPaymentDTO
-      );
+      const billPayment = await this.billPaymentsApplication.createBillPayment(tenantId, billPaymentDTO);
       return res.status(200).send({
         id: billPayment.id,
         message: 'Payment made has been created successfully.',
@@ -224,21 +206,13 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async editBillPayment(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async editBillPayment(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const billPaymentDTO = this.matchedBodyData(req);
     const { id: billPaymentId } = req.params;
 
     try {
-      const paymentMade = await this.billPaymentsApplication.editBillPayment(
-        tenantId,
-        billPaymentId,
-        billPaymentDTO
-      );
+      const paymentMade = await this.billPaymentsApplication.editBillPayment(tenantId, billPaymentId, billPaymentDTO);
       return res.status(200).send({
         id: paymentMade.id,
         message: 'Payment made has been edited successfully.',
@@ -255,19 +229,12 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response} res -
    */
-  private async deleteBillPayment(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async deleteBillPayment(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      await this.billPaymentsApplication.deleteBillPayment(
-        tenantId,
-        billPaymentId
-      );
+      await this.billPaymentsApplication.deleteBillPayment(tenantId, billPaymentId);
 
       return res.status(200).send({
         id: billPaymentId,
@@ -283,19 +250,12 @@ export default class BillsPayments extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async getBillPayment(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getBillPayment(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      const billPayment = await this.billPaymentsApplication.getBillPayment(
-        tenantId,
-        billPaymentId
-      );
+      const billPayment = await this.billPaymentsApplication.getBillPayment(tenantId, billPaymentId);
       return res.status(200).send({ billPayment });
     } catch (error) {
       next(error);
@@ -308,19 +268,12 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async getPaymentBills(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getPaymentBills(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: billPaymentId } = req.params;
 
     try {
-      const bills = await this.billPaymentsApplication.getPaymentBills(
-        tenantId,
-        billPaymentId
-      );
+      const bills = await this.billPaymentsApplication.getPaymentBills(tenantId, billPaymentId);
       return res.status(200).send({ bills });
     } catch (error) {
       next(error);
@@ -333,11 +286,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  private async getBillsPayments(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getBillsPayments(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const billPaymentsFilter = {
       page: 1,
@@ -349,11 +298,10 @@ export default class BillsPayments extends BaseController {
     };
 
     try {
-      const billPaymentsWithPagination =
-        await this.billPaymentsApplication.getBillPayments(
-          tenantId,
-          billPaymentsFilter
-        );
+      const billPaymentsWithPagination = await this.billPaymentsApplication.getBillPayments(
+        tenantId,
+        billPaymentsFilter,
+      );
       return res.status(200).send(billPaymentsWithPagination);
     } catch (error) {
       next(error);
@@ -367,12 +315,7 @@ export default class BillsPayments extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceError(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'PAYMENT_MADE_NOT_FOUND') {
         return res.status(404).send({
@@ -387,9 +330,7 @@ export default class BillsPayments extends BaseController {
       }
       if (error.errorType === 'PAYMENT_ACCOUNT_NOT_CURRENT_ASSET_TYPE') {
         return res.status(400).send({
-          errors: [
-            { type: 'PAYMENT_ACCOUNT.NOT.CURRENT_ASSET.TYPE', code: 300 },
-          ],
+          errors: [{ type: 'PAYMENT_ACCOUNT.NOT.CURRENT_ASSET.TYPE', code: 300 }],
         });
       }
       if (error.errorType === 'BILL_PAYMENT_NUMBER_NOT_UNQIUE') {

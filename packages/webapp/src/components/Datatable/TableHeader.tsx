@@ -53,10 +53,7 @@ function TableHeaderCell({ column, index }) {
       </div>
 
       {column.canResize && (
-        <div
-          {...column.getResizerProps()}
-          className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
-        >
+        <div {...column.getResizerProps()} className={`resizer ${column.isResizing ? 'isResizing' : ''}`}>
           <div class="inner-resizer" />
         </div>
       )}
@@ -80,12 +77,7 @@ function TableHeaderGroup({ headerGroup }) {
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
-    props: {
-      TableHeaderSkeletonRenderer,
-      headerLoading,
-      progressBarLoading,
-      hideTableHeader,
-    },
+    props: { TableHeaderSkeletonRenderer, headerLoading, progressBarLoading, hideTableHeader },
   } = useContext(TableContext);
 
   // Can't contiunue if the thead is disabled.

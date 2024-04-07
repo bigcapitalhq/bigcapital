@@ -6,21 +6,11 @@ import { isBlank } from '@/utils';
 
 const Schema = Yup.object().shape({
   beneficiary: Yup.string().label(intl.get('beneficiary')),
-  payment_account_id: Yup.number()
-    .required()
-    .label(intl.get('payment_account_')),
+  payment_account_id: Yup.number().required().label(intl.get('payment_account_')),
   payment_date: Yup.date().required().label(intl.get('payment_date_')),
   reference_no: Yup.string().min(1).max(DATATYPES_LENGTH.STRING).nullable(),
-  currency_code: Yup.string()
-    .nullable()
-    .max(3)
-    .label(intl.get('currency_code')),
-  description: Yup.string()
-    .trim()
-    .min(1)
-    .max(DATATYPES_LENGTH.TEXT)
-    .nullable()
-    .label(intl.get('description')),
+  currency_code: Yup.string().nullable().max(3).label(intl.get('currency_code')),
+  description: Yup.string().trim().min(1).max(DATATYPES_LENGTH.TEXT).nullable().label(intl.get('description')),
   publish: Yup.boolean(),
   categories: Yup.array().of(
     Yup.object().shape({

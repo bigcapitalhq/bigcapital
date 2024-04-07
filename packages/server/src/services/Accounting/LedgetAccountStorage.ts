@@ -1,10 +1,10 @@
-import { Service, Inject } from 'typedi';
-import async from 'async';
-import { Knex } from 'knex';
-import { uniq } from 'lodash';
 import { ILedger, ISaveAccountsBalanceQueuePayload } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
+import async from 'async';
+import { Knex } from 'knex';
+import { uniq } from 'lodash';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class LedegrAccountsStorage {
@@ -17,10 +17,7 @@ export class LedegrAccountsStorage {
    * @param   depGraph
    * @returns {number[]}
    */
-  private getDependantsAccountsIds = (
-    accountsIds: number[],
-    depGraph
-  ): number[] => {
+  private getDependantsAccountsIds = (accountsIds: number[], depGraph): number[] => {
     const depAccountsIds = [];
 
     accountsIds.forEach((accountId: number) => {
@@ -39,7 +36,7 @@ export class LedegrAccountsStorage {
   private findDependantsAccountsIds = async (
     tenantId: number,
     accountsIds: number[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<number[]> => {
     const { accountRepository } = this.tenancy.repositories(tenantId);
     const accountsGraph = await accountRepository.getDependencyGraph(null, trx);
@@ -54,22 +51,11 @@ export class LedegrAccountsStorage {
    * @param   {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
-  public saveAccountsBalance = async (
-    tenantId: number,
-    ledger: ILedger,
-    trx?: Knex.Transaction
-  ): Promise<void> => {
+  public saveAccountsBalance = async (tenantId: number, ledger: ILedger, trx?: Knex.Transaction): Promise<void> => {
     // Initiate a new queue for accounts balance mutation.
-    const saveAccountsBalanceQueue = async.queue(
-      this.saveAccountBalanceTask,
-      10
-    );
+    const saveAccountsBalanceQueue = async.queue(this.saveAccountBalanceTask, 10);
     const effectedAccountsIds = ledger.getAccountsIds();
-    const dependAccountsIds = await this.findDependantsAccountsIds(
-      tenantId,
-      effectedAccountsIds,
-      trx
-    );
+    const dependAccountsIds = await this.findDependantsAccountsIds(tenantId, effectedAccountsIds, trx);
     dependAccountsIds.forEach((accountId: number) => {
       saveAccountsBalanceQueue.push({ tenantId, ledger, accountId, trx });
     });
@@ -83,9 +69,7 @@ export class LedegrAccountsStorage {
    * @param   {ISaveAccountsBalanceQueuePayload} task
    * @returns {Promise<void>}
    */
-  private saveAccountBalanceTask = async (
-    task: ISaveAccountsBalanceQueuePayload
-  ): Promise<void> => {
+  private saveAccountBalanceTask = async (task: ISaveAccountsBalanceQueuePayload): Promise<void> => {
     const { tenantId, ledger, accountId, trx } = task;
 
     await this.saveAccountBalanceFromLedger(tenantId, ledger, accountId, trx);
@@ -103,7 +87,7 @@ export class LedegrAccountsStorage {
     tenantId: number,
     ledger: ILedger,
     accountId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { Account } = this.tenancy.models(tenantId);
     const account = await Account.query(trx).findById(accountId);
@@ -120,9 +104,7 @@ export class LedegrAccountsStorage {
     // Calculates the closing foreign balance by the given currency if account was has
     // foreign currency otherwise get closing balance.
     const closingBalance = isAccountForeign
-      ? accountLedger
-          .whereCurrencyCode(account.currencyCode)
-          .getForeignClosingBalance()
+      ? accountLedger.whereCurrencyCode(account.currencyCode).getForeignClosingBalance()
       : accountLedger.getClosingBalance();
 
     await this.saveAccountBalance(tenantId, accountId, closingBalance, trx);
@@ -136,19 +118,11 @@ export class LedegrAccountsStorage {
    * @param   {Knex.Transaction} trx -
    * @returns {Promise<void>}
    */
-  private saveAccountBalance = async (
-    tenantId: number,
-    accountId: number,
-    change: number,
-    trx?: Knex.Transaction
-  ) => {
+  private saveAccountBalance = async (tenantId: number, accountId: number, change: number, trx?: Knex.Transaction) => {
     const { Account } = this.tenancy.models(tenantId);
 
     // Ensure the account has atleast zero in amount.
-    await Account.query(trx)
-      .findById(accountId)
-      .whereNull('amount')
-      .patch({ amount: 0 });
+    await Account.query(trx).findById(accountId).whereNull('amount').patch({ amount: 0 });
 
     await Account.changeAmount({ id: accountId }, 'amount', change, trx);
   };

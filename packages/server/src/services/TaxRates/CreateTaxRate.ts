@@ -1,14 +1,10 @@
-import { Knex } from 'knex';
-import {
-  ICreateTaxRateDTO,
-  ITaxRateCreatedPayload,
-  ITaxRateCreatingPayload,
-} from '@/interfaces';
-import UnitOfWork from '../UnitOfWork';
+import { ICreateTaxRateDTO, ITaxRateCreatedPayload, ITaxRateCreatingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import HasTenancyService from '../Tenancy/TenancyService';
+import UnitOfWork from '../UnitOfWork';
 import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
 
 @Service()
@@ -30,17 +26,11 @@ export class CreateTaxRate {
    * @param {number} tenantId
    * @param {ICreateTaxRateDTO} createTaxRateDTO
    */
-  public async createTaxRate(
-    tenantId: number,
-    createTaxRateDTO: ICreateTaxRateDTO
-  ) {
+  public async createTaxRate(tenantId: number, createTaxRateDTO: ICreateTaxRateDTO) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     // Validates the tax code uniquiness.
-    await this.validators.validateTaxCodeUnique(
-      tenantId,
-      createTaxRateDTO.code
-    );
+    await this.validators.validateTaxCodeUnique(tenantId, createTaxRateDTO.code);
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTaxRateCreating` event.
       await this.eventPublisher.emitAsync(events.taxRates.onCreating, {

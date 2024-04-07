@@ -1,7 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from '@/utils';
 import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
-import { format } from 'mathjs';
 
 export class SaleInvoiceTaxEntryTransformer extends Transformer {
   /**
@@ -9,14 +8,7 @@ export class SaleInvoiceTaxEntryTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'name',
-      'taxRateCode',
-      'taxRate',
-      'taxRateId',
-      'taxRateAmount',
-      'taxRateAmountFormatted',
-    ];
+    return ['name', 'taxRateCode', 'taxRate', 'taxRateId', 'taxRateAmount', 'taxRateAmountFormatted'];
   };
 
   /**
