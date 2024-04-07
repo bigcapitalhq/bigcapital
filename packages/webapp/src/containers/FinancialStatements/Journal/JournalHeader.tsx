@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as Yup from 'yup';
 import styled from 'styled-components';
@@ -65,7 +64,7 @@ function JournalHeader({
             <Tab id="general" title={<T id={'general'} />} panel={<JournalSheetHeaderGeneral />} />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

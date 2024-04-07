@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSettings } from '@/store/settings/settings.actions';

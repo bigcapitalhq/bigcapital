@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React from 'react';
 
 export default function InputPrepend({ children }) {
-  return <div class="input-prepend">{children}</div>;
+  return <div className="input-prepend">{children}</div>;
 }

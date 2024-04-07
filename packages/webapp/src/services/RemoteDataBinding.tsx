@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import ApiService from '@/services/ApiService';
 
 export default class RemoteDataBinding {

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createReducer } from '@reduxjs/toolkit';
 import { omit } from 'lodash';
 import t from '@/store/types';

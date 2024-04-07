@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { AnchorButton } from '@blueprintjs/core';
 
@@ -17,7 +16,7 @@ function ReceiptPdfPreviewDialogContent({
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton href={pdfUrl} target={'__blank'} minimal={true} outlined={true}>
           <T id={'pdf_preview.preview.button'} />
         </AnchorButton>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';

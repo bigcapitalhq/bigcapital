@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -42,13 +41,13 @@ export function PaymentReceiveUniversalSearchItem(item, { handleClick, modifiers
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {highlightText(item.reference.payment_receive_no, query)} <Icon icon={'caret-right-16'} iconSize={16} />
             {highlightText(item.reference.formatted_payment_date, query)}
           </span>
         </div>
       }
-      label={<div class="amount">{item.reference.formatted_amount}</div>}
+      label={<div className="amount">{item.reference.formatted_amount}</div>}
       onClick={handleClick}
       className={'universal-search__item--invoice'}
     />

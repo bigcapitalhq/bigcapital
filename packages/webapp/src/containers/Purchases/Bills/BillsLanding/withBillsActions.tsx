@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setBillsTableState, resetBillsTableState } from '@/store/Bills/bills.actions';
 

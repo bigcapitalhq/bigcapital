@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { fetchCurrencies, submitCurrencies, deleteCurrency, editCurrency } from '@/store/currencies/currencies.actions';
 

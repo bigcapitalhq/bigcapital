@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const ItemDeleteAlert = React.lazy(() => import('@/containers/Alerts/Items/ItemDeleteAlert'));

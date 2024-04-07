@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { Box, Icon, Stack } from '@/components';

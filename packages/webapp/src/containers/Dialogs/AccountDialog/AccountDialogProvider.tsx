@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { DialogContent } from '@/components';
 import {

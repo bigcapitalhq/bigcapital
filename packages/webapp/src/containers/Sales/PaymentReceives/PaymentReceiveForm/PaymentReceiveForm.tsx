@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';

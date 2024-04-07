@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { NavbarGroup, NavbarDivider, Button, Classes, Intent } from '@blueprintjs/core';
 import {
   If,

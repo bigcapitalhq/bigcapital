@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { ListSelect, FormattedMessage as T } from '@/components';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import authentication from './authentication/authentication.types';
 import accounts from './accounts/accounts.types';
 import cashflowAccounts from './CashflowAccounts/CashflowAccounts.types';

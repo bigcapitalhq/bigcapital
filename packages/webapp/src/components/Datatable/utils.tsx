@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 export const isCellLoading = (loading, cellsCoords, rowIndex, columnId) => {

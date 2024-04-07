@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -33,7 +32,7 @@ export default function PreferencesSidebar() {
 
   return (
     <PreferencesSidebarContainer>
-      <div class="preferences-sidebar__head">
+      <div className="preferences-sidebar__head">
         <h2>{<T id={'preferences'} />}</h2>
       </div>
 

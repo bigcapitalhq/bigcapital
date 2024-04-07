@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { Form } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';

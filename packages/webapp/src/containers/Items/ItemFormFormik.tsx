@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
@@ -77,7 +76,7 @@ export default function ItemFormFormik({
   };
 
   return (
-    <div class={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}>
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}>
       <Formik
         enableReinitialize={true}
         validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
@@ -85,7 +84,7 @@ export default function ItemFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
             <ItemFormPrimarySection />
             <ItemFormBody accounts={accounts} />
             <ItemFormInventorySection accounts={accounts} />

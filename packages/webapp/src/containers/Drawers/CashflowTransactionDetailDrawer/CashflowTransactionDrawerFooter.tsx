@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { CommercialDocFooter, DetailsMenu, DetailItem, T } from '@/components';
 import { useCashflowTransactionDrawerContext } from './CashflowTransactionDrawerProvider';

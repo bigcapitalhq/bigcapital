@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isEmpty } from 'lodash';
 import { Button, NavbarGroup, Classes, NavbarDivider, Intent, Switch, Alignment } from '@blueprintjs/core';

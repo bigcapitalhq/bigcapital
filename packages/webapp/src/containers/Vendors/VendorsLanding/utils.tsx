@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';

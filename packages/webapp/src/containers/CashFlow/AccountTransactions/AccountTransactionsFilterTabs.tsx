@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { ContentTabs } from '@/components/ContentTabs/ContentTabs';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';

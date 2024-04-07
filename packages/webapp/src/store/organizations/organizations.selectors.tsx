@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createSelector } from '@reduxjs/toolkit';
 
 const organizationSelector = (state, props) => {

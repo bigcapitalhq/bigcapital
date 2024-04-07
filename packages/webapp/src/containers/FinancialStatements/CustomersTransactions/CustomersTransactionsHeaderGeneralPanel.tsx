@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';
 import FinancialStatementsFilter from '../FinancialStatementsFilter';

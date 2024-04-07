@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { BaseCurrency, BaseCurrencyRoot } from '@/components';
 import { useReceiptFormContext } from './ReceiptFormProvider';

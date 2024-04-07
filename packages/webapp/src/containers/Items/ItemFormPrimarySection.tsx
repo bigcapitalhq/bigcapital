@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import { FormGroup, InputGroup, RadioGroup, Classes, Radio, Position } from '@blueprintjs/core';
 import { ErrorMessage, FastField } from 'formik';
@@ -36,10 +35,10 @@ export default function ItemFormPrimarySection() {
 
   const itemTypeHintContent = (
     <>
-      <div class="mb1">
+      <div className="mb1">
         <FormattedHTMLMessage id={'services_that_you_provide_to_customers'} />
       </div>
-      <div class="mb1">
+      <div className="mb1">
         <FormattedHTMLMessage id={'products_you_buy_and_or_sell'} />
       </div>
     </>

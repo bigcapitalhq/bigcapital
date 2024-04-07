@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useAuthenticatedAccount, useCurrentOrganization, useDashboardMeta } from '@/hooks/query';
 import { useSplashLoading } from '@/hooks/state';

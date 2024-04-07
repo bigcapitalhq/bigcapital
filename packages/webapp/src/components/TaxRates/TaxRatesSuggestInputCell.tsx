@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { Suggest } from '@blueprintjs-formik/select';
 import { FormGroup } from '@blueprintjs/core';

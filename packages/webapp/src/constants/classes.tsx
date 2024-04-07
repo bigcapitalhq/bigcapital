@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Classes } from '@blueprintjs/core';
 
 export const NS = 'bp4';

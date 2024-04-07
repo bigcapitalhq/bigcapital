@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Ability } from '@casl/ability';
 import { createContextualCan } from '@casl/react';

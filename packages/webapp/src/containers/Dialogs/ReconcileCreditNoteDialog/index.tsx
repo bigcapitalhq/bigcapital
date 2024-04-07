@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';

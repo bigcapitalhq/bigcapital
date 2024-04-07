@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { TaskAccessor, TaskTimeAccessor } from './components';
 

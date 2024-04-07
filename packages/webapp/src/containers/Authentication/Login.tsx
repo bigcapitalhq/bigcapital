@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik } from 'formik';
 import { Link } from 'react-router-dom';
 
@@ -35,9 +35,9 @@ export default function Login() {
       }) => {
         const toastBuilders = transformLoginErrorsToToasts(errors);
 
-        toastBuilders.forEach((builder) => {
+        for (const builder of toastBuilders) {
           Toaster.show(builder);
-        });
+        }
         setSubmitting(false);
       },
     );

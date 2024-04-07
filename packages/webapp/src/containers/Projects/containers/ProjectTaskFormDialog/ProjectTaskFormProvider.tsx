@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useCreateProjectTask, useEditProjectTask, useProjectTask } from '../../hooks';
 import { DialogContent } from '@/components';

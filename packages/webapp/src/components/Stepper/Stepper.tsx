@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { cloneElement } from 'react';
 import styled from 'styled-components';
 import { toArray } from 'lodash';

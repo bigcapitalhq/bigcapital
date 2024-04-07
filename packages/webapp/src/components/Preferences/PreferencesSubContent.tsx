@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import preferencesTabs from '@/routes/preferencesTabs';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';

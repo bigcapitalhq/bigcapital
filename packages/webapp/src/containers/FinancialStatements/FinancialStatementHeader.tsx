@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Position, Drawer } from '@blueprintjs/core';

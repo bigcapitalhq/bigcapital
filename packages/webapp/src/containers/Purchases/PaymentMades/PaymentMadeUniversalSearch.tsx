@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -40,7 +39,7 @@ export function PaymentMadeUniversalSearchItem({ text, label, reference }, { han
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {reference.payment_number && (
               <>
                 {highlightText(reference.payment_number, query)}
@@ -51,7 +50,7 @@ export function PaymentMadeUniversalSearchItem({ text, label, reference }, { han
           </span>
         </div>
       }
-      label={<div class="amount">{label}</div>}
+      label={<div className="amount">{label}</div>}
       onClick={handleClick}
       className={'universal-search__item--payment-made'}
     />

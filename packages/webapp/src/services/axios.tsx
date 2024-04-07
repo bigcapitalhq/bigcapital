@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import axios from 'axios';
 import { store } from '@/store/createStore';
 const http = axios.create();

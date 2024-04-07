@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 
 const ItemEntriesTableContext = createContext();

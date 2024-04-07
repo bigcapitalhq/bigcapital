@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { useSaleReceiptDefaultOptions } from '@/hooks/query';
 import { DialogContent } from '@/components';

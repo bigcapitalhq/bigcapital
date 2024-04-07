@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
@@ -101,7 +100,7 @@ function DashboardUniversalSearch({
   }
 
   return (
-    <div class="dashboard__universal-search">
+    <div className="dashboard__universal-search">
       <UniversalSearch
         isOpen={globalSearchShow}
         isLoading={isSearchFetching}

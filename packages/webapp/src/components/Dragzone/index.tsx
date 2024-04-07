@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import classNames from 'classnames';
@@ -71,7 +70,7 @@ export function Dragzone({
 
   return (
     <section className={classNames('dropzone-container', className)}>
-      {hint && <div class="dropzone-hint">{hint}</div>}
+      {hint && <div className="dropzone-hint">{hint}</div>}
 
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />

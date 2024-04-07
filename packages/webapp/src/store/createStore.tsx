@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createStore as createReduxStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { persistStore } from 'redux-persist';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useRef, useState, useEffect } from 'react';
 import { FormattedMessage as T } from '@/components';
 import PropTypes from 'prop-types';
@@ -55,7 +54,7 @@ export function DashboardViewsTabs({
   };
 
   return (
-    <div class="dashboard__views-tabs">
+    <div className="dashboard__views-tabs">
       <Tabs
         id="navbar"
         large={true}

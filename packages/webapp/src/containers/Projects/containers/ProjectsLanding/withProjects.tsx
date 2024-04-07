@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getProjectsTableStateFactory, isProjectsTableStateChangedFactory } from '@/store/Project/projects.selectors';
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setItemsTableState, resetItemsTableState } from '@/store/items/items.actions';
 

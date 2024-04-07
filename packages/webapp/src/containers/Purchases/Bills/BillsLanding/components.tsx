@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuItem, MenuDivider, Tag, ProgressBar } from '@blueprintjs/core';
@@ -77,7 +76,7 @@ export function StatusAccessor(bill) {
           <span className={'fully-paid-icon'}>
             <Icon icon="small-tick" iconSize={18} />
           </span>
-          <span class="fully-paid-text">
+          <span className="fully-paid-text">
             <T id={'paid'} />
           </span>
         </Choose.When>

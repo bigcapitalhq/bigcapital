@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { PreferencesEstimatesBoot } from './PreferencesEstimatesFormBoot';
 import { PreferencesEstimatesFormPage } from './PreferencesEstimatesFormPage';
 

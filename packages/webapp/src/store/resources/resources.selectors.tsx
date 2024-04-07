@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createSelector } from 'reselect';
 import { pickItemsFromIds } from '@/store/selectors';
 

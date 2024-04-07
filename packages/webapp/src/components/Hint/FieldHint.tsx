@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Position, Tooltip } from '@blueprintjs/core';
 import { Icon } from '../Icon';
@@ -18,7 +17,7 @@ interface HintProps {
  */
 export function FieldHint({ content, position, iconSize = 12, tooltipProps }: HintProps) {
   return (
-    <span class="hint">
+    <span className="hint">
       <Tooltip content={content} position={position} {...tooltipProps}>
         <Icon icon="info-circle" iconSize={iconSize} />
       </Tooltip>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { Tag } from '@blueprintjs/core';
 

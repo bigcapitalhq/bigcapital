@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useMemo } from 'react';
 import * as R from 'ramda';
 import { sumBy, isEmpty, last, keyBy, groupBy } from 'lodash';

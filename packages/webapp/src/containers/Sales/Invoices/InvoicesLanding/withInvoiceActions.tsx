@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setInvoicesTableState, resetInvoicesTableState } from '@/store/Invoice/invoices.actions';
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { FormGroup, Position, Classes, ControlGroup } from '@blueprintjs/core';

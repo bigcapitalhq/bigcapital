@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useBranches, useCustomer, useEditCustomerOpeningBalance } from '@/hooks/query';

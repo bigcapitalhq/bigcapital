@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { pick, at, mapValues } from 'lodash';
 
 export const getItemById = (items, id) => {

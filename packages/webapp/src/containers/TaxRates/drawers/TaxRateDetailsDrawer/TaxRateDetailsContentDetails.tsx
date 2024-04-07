@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Card, DetailItem, DetailsMenu } from '@/components';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';

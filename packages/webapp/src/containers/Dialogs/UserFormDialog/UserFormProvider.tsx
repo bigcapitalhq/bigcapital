@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { useEditUser, useUser, useRoles, useAuthenticatedAccount } from '@/hooks/query';
 

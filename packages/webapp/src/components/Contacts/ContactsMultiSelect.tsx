@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import * as R from 'ramda';
 import { FMultiSelect } from '../Forms';

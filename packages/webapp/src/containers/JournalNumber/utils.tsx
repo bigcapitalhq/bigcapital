@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { transformToForm, optionsMapToArray, transfromToSnakeCase, transactionNumber } from '@/utils';
 import { omit } from 'lodash';
 

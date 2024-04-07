@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setPaymentMadesTableState, resetPaymentMadesTableState } from '@/store/PaymentMades/paymentMades.actions';
 

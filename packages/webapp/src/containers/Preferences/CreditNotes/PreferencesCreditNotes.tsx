@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { PreferencesCreditNotesBoot } from './PreferencesCreditNotesFormBoot';
 import { PreferencesCreditNotesFormPage } from './PreferencesCreditNotesFormPage';
 

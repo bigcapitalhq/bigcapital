@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation, useQueryClient, useInfiniteQuery } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';

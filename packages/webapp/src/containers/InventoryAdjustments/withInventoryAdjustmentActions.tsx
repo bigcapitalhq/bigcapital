@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setInventoryAdjustmentsTableState } from '@/store/inventoryAdjustments/inventoryAdjustment.actions';
 

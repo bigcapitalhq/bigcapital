@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 const TYPES = {
   TABLE_STATE_SET: 'TABLE_STATE_SET',

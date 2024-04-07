@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useBill, useAccounts, useBranches, useCreatePaymentMade } from '@/hooks/query';

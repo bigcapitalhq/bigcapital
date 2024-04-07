@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { fetchResourceColumns, fetchResourceFields, fetchResourceData } from '@/store/resources/resources.actions';
 

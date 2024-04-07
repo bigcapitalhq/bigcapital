@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { chain } from 'lodash';
 import intl from 'react-intl-universal';
 import {

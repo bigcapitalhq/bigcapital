@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
@@ -8,7 +7,7 @@ import { inputIntent } from '@/utils';
 
 export default function CustomerFormAfterPrimarySection({}) {
   return (
-    <div class="customer-form__after-primary-section-content">
+    <div className="customer-form__after-primary-section-content">
       {/*------------ Customer email -----------*/}
       <FastField name={'email'}>
         {({ field, meta: { error, touched } }) => (

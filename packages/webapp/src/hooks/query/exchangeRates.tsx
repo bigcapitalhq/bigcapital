@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useQuery } from 'react-query';
 import QUERY_TYPES from './types';
 import useApiRequest from '../useRequest';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import intl from 'react-intl-universal';
@@ -22,7 +21,7 @@ export const AccountCodeAccessor = (row) =>
 export const BalanceCell = ({ cell }) => {
   const account = cell.row.original;
 
-  return account.amount !== null ? <span>{account.formatted_amount}</span> : <span class="placeholder">—</span>;
+  return account.amount !== null ? <span>{account.formatted_amount}</span> : <span className="placeholder">—</span>;
 };
 
 /**

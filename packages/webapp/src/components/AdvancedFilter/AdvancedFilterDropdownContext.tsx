@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { get, keyBy } from 'lodash';
 import { useFormikContext } from 'formik';

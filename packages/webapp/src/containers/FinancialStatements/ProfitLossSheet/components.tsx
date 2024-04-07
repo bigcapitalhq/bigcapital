@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef } from 'react';
 import { Button, Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';
 import { AppToaster, Icon, If, Stack, FormattedMessage as T } from '@/components';

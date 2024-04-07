@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 
@@ -17,7 +16,7 @@ function UniversalSearchItemDetail(item, { handleClick, modifiers, query }) {
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          {item.subText && <span class="bp4-text-muted">{highlightText(item.subText, query)}</span>}
+          {item.subText && <span className="bp4-text-muted">{highlightText(item.subText, query)}</span>}
         </div>
       }
       label={item.label ? highlightText(item.label, query) : ''}

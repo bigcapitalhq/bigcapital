@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useBillAggregatedTaxRates, useBillTotals } from './utils';

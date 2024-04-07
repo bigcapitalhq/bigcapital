@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 
@@ -22,17 +21,17 @@ function SetupCongratsPage({ setOrganizationSetupCompleted }) {
   };
 
   return (
-    <div class="setup-congrats">
-      <div class="setup-congrats__workflow-pic">
+    <div className="setup-congrats">
+      <div className="setup-congrats__workflow-pic">
         <WorkflowIcon width="280" height="330" />
       </div>
 
-      <div class="setup-congrats__text">
+      <div className="setup-congrats__text">
         <h1>
           <T id={'setup.congrats.title'} />
         </h1>
 
-        <p class="paragraph">
+        <p className="paragraph">
           <T id={'setup.congrats.description'} />
         </p>
 

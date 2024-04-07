@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import clsx from 'classnames';
 import { ScrollSync } from 'react-scroll-sync';

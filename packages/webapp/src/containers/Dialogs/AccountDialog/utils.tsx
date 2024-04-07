@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { isUndefined } from 'lodash';

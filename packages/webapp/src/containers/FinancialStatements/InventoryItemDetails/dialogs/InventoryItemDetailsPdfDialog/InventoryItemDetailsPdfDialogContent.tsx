@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DialogContent, PdfDocumentPreview, FormattedMessage as T } from '@/components';
 import { useInventoryItemDetailsPdf } from '@/hooks/query';
 import { AnchorButton } from '@blueprintjs/core';

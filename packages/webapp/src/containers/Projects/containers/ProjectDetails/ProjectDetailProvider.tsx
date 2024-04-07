@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardInsider } from '@/components';
 import { useProject } from '../../hooks';

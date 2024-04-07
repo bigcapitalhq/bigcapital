@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import ItemPreferencesFormPage from './ItemPreferencesFormPage';
 import { ItemPreferencesFormProvider } from './ItemPreferencesFormProvider';

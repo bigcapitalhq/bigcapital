@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const ReceiptDeleteAlert = React.lazy(() => import('@/containers/Alerts/Receipts/ReceiptDeleteAlert'));

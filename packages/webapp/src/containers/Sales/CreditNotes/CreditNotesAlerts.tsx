@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const CreditNoteDeleteAlert = React.lazy(() => import('@/containers/Alerts/CreditNotes/CreditNoteDeleteAlert'));

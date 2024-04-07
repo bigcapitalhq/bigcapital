@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import { AbilitySubject, SaleEstimateAction, SaleReceiptAction, SaleInvoiceAction, BillAction } from './abilityOption';
 import { useAbilitiesFilter } from '../hooks';

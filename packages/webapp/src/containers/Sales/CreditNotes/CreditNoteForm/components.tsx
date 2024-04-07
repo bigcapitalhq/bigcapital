@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';

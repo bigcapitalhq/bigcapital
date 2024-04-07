@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';

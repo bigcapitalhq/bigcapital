@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { AnchorButton } from '@blueprintjs/core';
 import { DialogContent, PdfDocumentPreview, FormattedMessage as T } from '@/components';
 import { useTransactionsByVendorsPdf } from '@/hooks/query';

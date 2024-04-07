@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 
 const mapDispatchToProps = (dispatch, props) => {

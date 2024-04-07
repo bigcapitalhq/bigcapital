@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setCustomersTableState, resetCustomersTableState } from '@/store/customers/customers.actions';
 

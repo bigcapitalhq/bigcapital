@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ItemCategoryProvider } from './ItemCategoryProvider';
 import ItemCategoryForm from './ItemCategoryForm';

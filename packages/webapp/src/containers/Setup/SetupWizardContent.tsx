@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import SetupSteps from './SetupSteps';
@@ -13,10 +12,10 @@ import SetupCongratsPage from './SetupCongratsPage';
  */
 export default function SetupWizardContent({ setupStepIndex, setupStepId }) {
   return (
-    <div class="setup-page__content">
+    <div className="setup-page__content">
       <WizardSetupSteps currentStep={setupStepIndex} />
 
-      <div class="setup-page-form">
+      <div className="setup-page-form">
         <SetupSteps step={{ id: setupStepId }}>
           <SetupOrganizationPage id="organization" />
           <SetupInitializingForm id={'initializing'} />

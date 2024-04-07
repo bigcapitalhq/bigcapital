@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useFormikContext } from 'formik';
 import { useUpdateEntriesOnExchangeRateChange } from './useUpdateEntriesOnExchangeRateChange';
 import { useAutoExRateContext } from './AutoExchangeProvider';

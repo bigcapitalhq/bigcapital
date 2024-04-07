@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useQueryTenant, useRequestQuery } from '../useQueryRequest';

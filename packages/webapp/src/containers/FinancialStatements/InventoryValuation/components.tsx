@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMemo, useRef } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';

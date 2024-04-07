@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { AccountDialogProvider } from './AccountDialogProvider';
 import AccountDialogForm from './AccountDialogForm';

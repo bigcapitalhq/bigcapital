@@ -1,6 +1,5 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
-import { WindowScroller, AutoSizer, List } from 'react-virtualized';
+import { WindowScroller, AutoSizer, List } from 'https://cdn.jsdelivr.net/npm/react-virtualized@9.22.5/+esm';
 import { CLASSES } from '@/constants/classes';
 import TableContext from './TableContext';
 

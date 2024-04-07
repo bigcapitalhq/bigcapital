@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 export const createTableQueryReducers =
   (resourceName = '', reducer) =>

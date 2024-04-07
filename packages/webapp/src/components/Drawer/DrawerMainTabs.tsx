@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Tabs } from '@blueprintjs/core';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { omit } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';

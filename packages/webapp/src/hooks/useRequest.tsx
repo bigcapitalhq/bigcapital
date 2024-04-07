@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import axios from 'axios';
 import { useAuthActions, useAuthOrganizationId, useSetGlobalErrors, useAuthToken } from './state';

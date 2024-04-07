@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 
 import { Icon } from '@/components';
@@ -30,9 +30,9 @@ function SidebarHeadJSX({
           boundary={'window'}
           content={
             <Menu className={'menu--dashboard-organization'}>
-              <div class="org-item">
-                <div class="org-item__logo">{firstLettersArgs(...(organization.name || '').split(' '))} </div>
-                <div class="org-item__name">{organization.name}</div>
+              <div className="org-item">
+                <div className="org-item__logo">{firstLettersArgs(...(organization.name || '').split(' '))} </div>
+                <div className="org-item__name">{organization.name}</div>
               </div>
             </Menu>
           }
@@ -43,7 +43,7 @@ function SidebarHeadJSX({
             {organization.name}
           </Button>
         </Popover>
-        <span class="subtitle">{user.full_name}</span>
+        <span className="subtitle">{user.full_name}</span>
       </div>
 
       <div className="sidebar__head-logo">

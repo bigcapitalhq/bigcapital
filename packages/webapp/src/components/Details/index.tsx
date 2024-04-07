@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 
@@ -54,7 +53,7 @@ export function DetailItem({ label, children, name, align, className }) {
         style={{
           'min-width': minLabelSize,
         }}
-        class="detail-item__label"
+        className="detail-item__label"
       >
         {label}
       </div>

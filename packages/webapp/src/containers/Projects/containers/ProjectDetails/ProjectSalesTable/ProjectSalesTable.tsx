@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DataTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { TABLES } from '@/constants/tables';

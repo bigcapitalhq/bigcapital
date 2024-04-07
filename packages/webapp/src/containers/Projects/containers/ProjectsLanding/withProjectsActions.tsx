@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 
 import { setProjectsTableState, resetProjectsTableState } from '@/store/Project/projects.actions';

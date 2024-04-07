@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useCreditNote, useRefundCreditNote, useReconcileCreditNote, useReconcileCreditNotes } from '@/hooks/query';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -11,7 +10,7 @@ import { BillFormFooterRight } from './BillFormFooterRight';
 // Bill form floating actions.
 export default function BillFormFooter() {
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <BillFooterPaper>
         <Row>
           <Col md={8}>

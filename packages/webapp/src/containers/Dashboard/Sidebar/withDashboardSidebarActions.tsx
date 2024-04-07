@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { closeSidebarSubmenu, openSidebarSubmenu } from '@/store/dashboard/dashboard.actions';
 

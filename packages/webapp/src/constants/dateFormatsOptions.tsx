@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import moment from 'moment';
 import intl from 'react-intl-universal';
 

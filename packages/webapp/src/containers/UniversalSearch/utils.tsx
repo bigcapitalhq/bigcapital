@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { get } from 'lodash';
 import * as R from 'ramda';
 import React from 'react';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { T, TotalLines, TotalLine, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useCreditNoteDetailDrawerContext } from './CreditNoteDetailDrawerProvider';

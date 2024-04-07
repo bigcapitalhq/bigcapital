@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

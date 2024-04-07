@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ProjectTimeEntryFormProvider } from './ProjectTimeEntryFormProvider';
 import ProjectTimeEntryForm from './ProjectTimeEntryForm';

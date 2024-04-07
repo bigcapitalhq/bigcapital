@@ -29,7 +29,7 @@
     "enabled": true,
     "rules": {
       "correctness": {
-        "noUnusedImports": "error",
+        "noUnusedImports": "off",
         "noUnusedVariables": "warn",
         "useExhaustiveDependencies": "warn"
       },

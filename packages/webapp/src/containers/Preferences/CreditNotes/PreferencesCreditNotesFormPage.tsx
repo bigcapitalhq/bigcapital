@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useContext } from 'react';
 import { ContextMenu } from '@/components';
 import classNames from 'classnames';
@@ -28,7 +27,7 @@ function TableRowContextMenu({ children, row }) {
   }, [setVisible]);
 
   return (
-    <div class="tr-context" {...bindTrigger}>
+    <div className="tr-context" {...bindTrigger}>
       {children}
 
       <ContextMenu bindMenu={bindMenu} isOpen={isVisible} coords={coords} onClosed={handleClose}>

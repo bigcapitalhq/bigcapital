@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { TABLES } from '@/constants/tables';

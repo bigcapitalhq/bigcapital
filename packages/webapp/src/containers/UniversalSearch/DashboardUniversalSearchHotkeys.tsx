@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import { useHotkeys } from 'react-hotkeys-hook';
 

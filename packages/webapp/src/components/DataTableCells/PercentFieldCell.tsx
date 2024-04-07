@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useState, useEffect } from 'react';
 import { FormGroup, Intent } from '@blueprintjs/core';
 

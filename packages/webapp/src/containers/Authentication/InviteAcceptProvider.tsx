@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';

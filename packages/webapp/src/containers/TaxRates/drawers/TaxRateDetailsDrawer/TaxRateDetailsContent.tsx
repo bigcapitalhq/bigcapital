@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import TaxRateDetailsContentActionsBar from './TaxRateDetailsContentActionsBar';
 import { TaxRateDetailsContentBoot } from './TaxRateDetailsContentBoot';

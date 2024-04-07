@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Button, MenuItem, Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';

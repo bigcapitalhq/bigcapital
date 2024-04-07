@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Intent } from '@blueprintjs/core';
@@ -69,7 +68,7 @@ export function VendorCreditUniversalSearchItem(item, { handleClick, modifiers, 
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.vendor_credit_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_vendor_credit_date}
           </span>
@@ -77,7 +76,7 @@ export function VendorCreditUniversalSearchItem(item, { handleClick, modifiers, 
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formatted_amount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }

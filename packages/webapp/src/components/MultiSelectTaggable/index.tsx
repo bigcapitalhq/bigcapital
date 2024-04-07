@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useState } from 'react';
 import { includes } from 'lodash';
 import { MenuItem } from '@blueprintjs/core';

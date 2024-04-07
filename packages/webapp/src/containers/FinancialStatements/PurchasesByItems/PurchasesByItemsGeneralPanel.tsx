@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Row, Col, FormattedMessage as T, ItemsMultiSelect, FFormGroup } from '@/components';
 import FinancialStatementDateRange from '../FinancialStatementDateRange';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Alert } from '@/components';
 import { Intent } from '@blueprintjs/core';

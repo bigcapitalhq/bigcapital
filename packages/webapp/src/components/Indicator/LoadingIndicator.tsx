@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useMemo } from 'react';
 import { Spinner } from '@blueprintjs/core';
 
@@ -17,7 +16,7 @@ export function LoadingIndicator({ loading, spinnerSize = 40, children, mount = 
 
   const loadingComponent = useMemo(
     () => (
-      <div class="dashboard__loading-indicator">
+      <div className="dashboard__loading-indicator">
         <Spinner size={spinnerSize} value={null} />
       </div>
     ),

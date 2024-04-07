@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Button, Popover, PopoverInteractionKind, Position, MenuItem, Menu, Tag, Intent } from '@blueprintjs/core';

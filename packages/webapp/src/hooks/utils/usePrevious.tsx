@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef, useEffect } from 'react';
 
 // Hook

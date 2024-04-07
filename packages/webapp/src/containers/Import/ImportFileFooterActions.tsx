@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import clsx from 'classnames';
 import { Group } from '@/components';
 import { CLASSES } from '@/constants';

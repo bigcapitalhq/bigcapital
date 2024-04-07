@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useRef, useCallback } from 'react';
 import { ProgressBar, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';

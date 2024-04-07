@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { Form } from 'formik';

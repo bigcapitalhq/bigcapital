@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';

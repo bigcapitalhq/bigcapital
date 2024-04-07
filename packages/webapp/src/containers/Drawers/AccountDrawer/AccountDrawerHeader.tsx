@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isEmpty } from 'lodash';
 
@@ -15,7 +14,7 @@ export default function AccountDrawerHeader() {
     <div className={'account-drawer__content-header'}>
       <DetailsMenu>
         <DetailItem name={'closing-balance'} label={<T id={'closing_balance'} />}>
-          <h3 class={'big-number'}>{account.formatted_amount}</h3>
+          <h3 className={'big-number'}>{account.formatted_amount}</h3>
         </DetailItem>
 
         <DetailItem name={'account-type'} label={<T id={'account_type'} />}>

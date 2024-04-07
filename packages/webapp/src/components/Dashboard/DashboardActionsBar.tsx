@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import clsx from 'classnames';
 import { Navbar } from '@blueprintjs/core';

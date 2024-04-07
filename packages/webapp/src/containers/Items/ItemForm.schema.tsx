@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as Yup from 'yup';
 import { defaultTo } from 'lodash';
 import intl from 'react-intl-universal';

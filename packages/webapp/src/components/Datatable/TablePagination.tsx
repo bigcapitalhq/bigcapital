@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useContext } from 'react';
 import { If, Pagination } from '@/components';
 import TableContext from './TableContext';

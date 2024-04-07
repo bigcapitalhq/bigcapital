@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import AuthCopyright from './AuthCopyright';
@@ -11,7 +10,6 @@ export default function AuthInsider({ logo = true, copyright = true, children, c
   return (
     <AuthInsiderContent>
       <AuthInsiderContentWrap className={classNames?.content}>{children}</AuthInsiderContentWrap>
-
       {copyright && (
         <AuthInsiderCopyright className={classNames?.copyrightWrap}>
           <AuthCopyright />

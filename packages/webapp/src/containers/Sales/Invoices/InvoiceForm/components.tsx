@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef } from 'react';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';

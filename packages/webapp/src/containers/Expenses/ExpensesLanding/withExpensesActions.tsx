@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setExpensesTableState, resetExpensesTableState } from '@/store/expenses/expenses.actions';
 

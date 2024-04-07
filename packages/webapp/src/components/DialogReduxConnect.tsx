@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { isDialogOpenFactory, getDialogPayloadFactory } from '@/store/dashboard/dashboard.selectors';
 

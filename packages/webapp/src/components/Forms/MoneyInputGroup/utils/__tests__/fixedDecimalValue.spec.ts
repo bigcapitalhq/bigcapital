@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { fixedDecimalValue } from '../fixedDecimalValue';
 
 describe('fixedDecimalValue', () => {

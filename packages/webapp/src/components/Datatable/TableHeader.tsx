@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { ScrollSyncPane } from 'react-scroll-sync';
@@ -54,7 +53,7 @@ function TableHeaderCell({ column, index }) {
 
       {column.canResize && (
         <div {...column.getResizerProps()} className={`resizer ${column.isResizing ? 'isResizing' : ''}`}>
-          <div class="inner-resizer" />
+          <div className="inner-resizer" />
         </div>
       )}
     </div>

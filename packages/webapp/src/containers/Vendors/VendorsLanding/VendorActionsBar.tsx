@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { NavbarGroup, NavbarDivider, Button, Classes, Intent, Switch, Alignment } from '@blueprintjs/core';
 

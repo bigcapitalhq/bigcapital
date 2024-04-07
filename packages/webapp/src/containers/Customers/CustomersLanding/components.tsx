@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Menu, MenuItem, MenuDivider, Intent, Tooltip, Position, Classes } from '@blueprintjs/core';

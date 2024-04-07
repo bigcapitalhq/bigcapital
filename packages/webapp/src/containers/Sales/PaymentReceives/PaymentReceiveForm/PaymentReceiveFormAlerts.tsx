@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import ClearingAllLinesAlert from '@/containers/Alerts/PaymentReceives/ClearingAllLinesAlert';

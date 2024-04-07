@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 const globalStateClassesMapping = {
   active: 'active',
   checked: 'checked',

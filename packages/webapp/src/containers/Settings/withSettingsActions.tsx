@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { FetchOptions, submitOptions, addSettings } from '@/store/settings/settings.actions';
 

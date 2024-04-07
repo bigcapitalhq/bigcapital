@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { transformTableStateToQuery } from '@/utils';
 
 /**

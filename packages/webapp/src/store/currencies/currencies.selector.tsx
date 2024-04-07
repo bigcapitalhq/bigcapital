@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // @flow
 import { createSelector } from 'reselect';
 import { getItemById } from '@/store/selectors';

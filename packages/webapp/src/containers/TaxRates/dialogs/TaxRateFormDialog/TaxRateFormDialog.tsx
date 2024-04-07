@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense } from '@/components';

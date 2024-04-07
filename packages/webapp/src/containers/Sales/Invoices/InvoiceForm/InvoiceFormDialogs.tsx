@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useFormikContext } from 'formik';
 import InvoiceNumberDialog from '@/containers/Dialogs/InvoiceNumberDialog';
 import { DialogsName } from '@/constants/dialogs';

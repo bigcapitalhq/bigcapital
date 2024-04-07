@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { useSaleEstimateDefaultOptions } from '@/hooks/query';
 import { DialogContent } from '@/components';

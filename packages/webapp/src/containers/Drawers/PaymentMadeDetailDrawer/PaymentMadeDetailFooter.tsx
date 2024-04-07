@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { T, CommercialDocFooter, DetailsMenu, If, DetailItem } from '@/components';

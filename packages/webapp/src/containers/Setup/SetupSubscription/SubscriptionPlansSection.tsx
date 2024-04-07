@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Field } from 'formik';
 
@@ -12,11 +11,11 @@ import withPlans from '../../Subscriptions/withPlans';
  */
 function SubscriptionPlansSection({ plans }) {
   return (
-    <section class="billing-plans__section">
-      <h1 class="title">
+    <section className="billing-plans__section">
+      <h1 className="title">
         <T id={'setup.plans.select_plan.title'} />
       </h1>
-      <div class="description">
+      <div className="description">
         <p className="paragraph">
           <T id={'setup.plans.select_plan.description'} />
         </p>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { AppToaster, Box, Group } from '@/components';
 import { Button, Intent, Menu, MenuItem, Popover, PopoverInteractionKind } from '@blueprintjs/core';
 import styles from './ImportSampleDownload.module.scss';

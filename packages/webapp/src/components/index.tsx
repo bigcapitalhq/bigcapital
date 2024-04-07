@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import MODIFIER from './modifiers';
 import ContextMenu from './ContextMenu';
 import AvatarCell from './AvatarCell';

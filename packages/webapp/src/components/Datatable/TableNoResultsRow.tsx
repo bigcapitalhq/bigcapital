@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import intl from 'react-intl-universal';
 import TableContext from './TableContext';
@@ -15,7 +14,7 @@ export default function TableNoResultsRow() {
 
   return (
     <div className={'tr no-results'}>
-      <div class="td">{noResultText}</div>
+      <div className="td">{noResultText}</div>
     </div>
   );
 }

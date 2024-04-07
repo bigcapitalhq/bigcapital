@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, Suspense } from 'react';
 import { CLASSES } from '@/constants/classes';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
@@ -83,7 +82,7 @@ function DashboardPage({
     <div className={CLASSES.DASHBOARD_PAGE}>
       <Suspense
         fallback={
-          <div class="dashboard__fallback-loading">
+          <div className="dashboard__fallback-loading">
             <Spinner size={40} value={null} />
           </div>
         }

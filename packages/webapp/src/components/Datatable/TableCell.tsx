@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { camelCase } from 'lodash';

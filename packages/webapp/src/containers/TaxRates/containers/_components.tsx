@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Can, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';

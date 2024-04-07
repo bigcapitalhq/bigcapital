@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const VendorDeleteAlert = React.lazy(() => import('@/containers/Alerts/Vendors/VendorDeleteAlert'));

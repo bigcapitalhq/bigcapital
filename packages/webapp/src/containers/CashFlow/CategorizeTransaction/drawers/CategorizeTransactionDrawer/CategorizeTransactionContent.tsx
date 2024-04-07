@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { DrawerBody } from '@/components';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';

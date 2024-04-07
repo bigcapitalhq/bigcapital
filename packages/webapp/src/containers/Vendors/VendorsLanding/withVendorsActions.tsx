@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setVendorsTableState, resetVendorsTableState } from '@/store/vendors/vendors.actions';
 

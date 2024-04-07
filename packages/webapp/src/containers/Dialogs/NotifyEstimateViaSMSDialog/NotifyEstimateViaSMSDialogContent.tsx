@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { NotifyEstimateViaSMSFormProvider } from './NotifyEstimateViaSMSFormProvider';
 import NotifyEstimateViaSMSForm from './NotifyEstimateViaSMSForm';

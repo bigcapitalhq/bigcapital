@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { submitMedia, deleteMedia } from '@/store/media/media.actions';
 

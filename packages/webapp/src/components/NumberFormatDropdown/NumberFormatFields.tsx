@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, Checkbox, Switch } from '@blueprintjs/core';

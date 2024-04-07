@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import moment from 'moment';
 import _ from 'lodash';
 import * as R from 'ramda';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const JournalDeleteAlert = React.lazy(() => import('@/containers/Alerts/ManualJournals/JournalDeleteAlert'));

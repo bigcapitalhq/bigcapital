@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext, createContext } from 'react';
 import { pick } from 'lodash';
 import { DialogContent } from '@/components';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { FastField } from 'formik';
 import { useBillFormContext } from './BillFormProvider';

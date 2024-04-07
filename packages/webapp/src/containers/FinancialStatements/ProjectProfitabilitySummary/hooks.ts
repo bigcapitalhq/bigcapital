@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRequestQuery } from '@/hooks/useQueryRequest';
 import t from '@/hooks/query/types';
 

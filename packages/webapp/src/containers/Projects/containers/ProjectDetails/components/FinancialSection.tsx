@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isUndefined } from 'lodash';
 import styled from 'styled-components';

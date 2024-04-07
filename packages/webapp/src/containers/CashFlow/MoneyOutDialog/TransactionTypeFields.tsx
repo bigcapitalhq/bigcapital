@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';

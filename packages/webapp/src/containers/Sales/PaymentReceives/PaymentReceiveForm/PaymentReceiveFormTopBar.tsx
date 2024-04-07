@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Alignment, NavbarGroup, Classes } from '@blueprintjs/core';
 import { useSetPrimaryBranchToForm } from './utils';

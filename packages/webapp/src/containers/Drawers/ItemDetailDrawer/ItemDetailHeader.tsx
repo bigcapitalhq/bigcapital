@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -15,7 +14,7 @@ export default function ItemDetailHeader() {
 
   return (
     <Card>
-      <div class="item-drawer__content">
+      <div className="item-drawer__content">
         <DetailsMenu direction={'vertical'}>
           <DetailItem name={'name'} label={intl.get('item_name')} children={item.name} />
           <DetailItem label={intl.get('sell_price')} children={item.sell_price_formatted} align={'right'} />

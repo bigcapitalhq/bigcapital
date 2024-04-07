@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const ExpenseDeleteAlert = React.lazy(() => import('@/containers/Alerts/Expenses/ExpenseDeleteAlert'));

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import ProjectBillableEntriesContent from './ProjectBillableEntriesContent';
 import { ProjectBillableEntriesProvider } from './ProjectBillableEntriesProvider';

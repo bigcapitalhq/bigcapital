@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // Subscription plans.
 export const plans = [];
 

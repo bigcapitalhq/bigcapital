@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { defaultTo, get } from 'lodash';
 import { DialogContent } from '@/components';

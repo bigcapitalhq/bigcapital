@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const EstimateDeleteAlert = React.lazy(() => import('@/containers/Alerts/Estimates/EstimateDeleteAlert'));

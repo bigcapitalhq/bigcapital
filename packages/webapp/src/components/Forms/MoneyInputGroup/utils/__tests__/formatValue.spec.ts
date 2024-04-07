@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { formatValue } from '../formatValue';
 
 describe('formatValue', () => {

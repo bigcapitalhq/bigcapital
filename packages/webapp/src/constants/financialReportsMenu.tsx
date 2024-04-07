@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import { ReportsAction, AbilitySubject } from '@/constants/abilityOption';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { MoneyInDialogProvider } from './MoneyInDialogProvider';
 import MoneyInForm from './MoneyInForm';
 

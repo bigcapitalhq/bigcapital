@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Box, FFormGroup, FInputGroup, FMultiSelect, FRichEditor } from '@/components';
 import styled from 'styled-components';
 import { SelectOptionProps } from '@blueprintjs-formik/select';

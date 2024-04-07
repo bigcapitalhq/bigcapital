@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, NavbarGroup, Classes, NavbarDivider, Intent } from '@blueprintjs/core';

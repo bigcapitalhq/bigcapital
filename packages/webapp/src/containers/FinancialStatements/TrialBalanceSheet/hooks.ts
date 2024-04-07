@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { trialBalancesheetDynamicColumns } from './dynamicColumns';

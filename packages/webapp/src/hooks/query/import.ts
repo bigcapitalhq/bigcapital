@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';

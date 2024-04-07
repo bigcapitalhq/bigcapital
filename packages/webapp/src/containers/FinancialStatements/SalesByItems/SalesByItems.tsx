@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useCallback } from 'react';
 import moment from 'moment';
 

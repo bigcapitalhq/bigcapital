@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { StepperStepState } from './types';
 import styled from 'styled-components';
 import { Icon } from '../Icon';

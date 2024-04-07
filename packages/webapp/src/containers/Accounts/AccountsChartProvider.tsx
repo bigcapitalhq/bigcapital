@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components';
 import { useResourceViews, useResourceMeta, useAccounts } from '@/hooks/query';

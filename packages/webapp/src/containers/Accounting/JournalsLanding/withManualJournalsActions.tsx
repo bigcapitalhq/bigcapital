@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setManualJournalsTableState } from '@/store/manualJournals/manualJournals.actions';
 

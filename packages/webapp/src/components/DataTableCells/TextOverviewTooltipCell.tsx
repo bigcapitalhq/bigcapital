@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Tooltip, Position } from '@blueprintjs/core';
 

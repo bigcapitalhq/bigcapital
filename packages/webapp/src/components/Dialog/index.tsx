@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 export * from './Dialog';
 export * from './DialogFooterActions';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createSelector } from 'reselect';
 
 const plansSelector = (state) => state.plans.plans;

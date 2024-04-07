@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { chain, isEmpty, castArray, memoize } from 'lodash';
 import * as R from 'ramda';
 import { DepGraph } from 'dependency-graph';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
@@ -49,7 +48,7 @@ function ContactDuplicateForm({
       {({ isSubmitting }) => (
         <Form>
           <div className={Classes.DIALOG_BODY}>
-            <p class="paragraph">
+            <p className="paragraph">
               <T id={'are_you_sure_want_to_duplicate'} />
             </p>
 

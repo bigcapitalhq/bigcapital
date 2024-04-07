@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 // Filters accounts items.
 export const accountPredicate = (query, account, _index, exactMatch) => {

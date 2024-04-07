@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';

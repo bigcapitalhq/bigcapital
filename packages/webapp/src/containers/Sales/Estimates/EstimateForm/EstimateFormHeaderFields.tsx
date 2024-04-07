@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import classNames from 'classnames';
 import { FormGroup, InputGroup, Position, Classes } from '@blueprintjs/core';

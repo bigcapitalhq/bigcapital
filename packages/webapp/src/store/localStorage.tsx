@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 const LOCAL_STORAGE_NAMESPACE = 'application_state';
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { ListSelect } from '@/components';

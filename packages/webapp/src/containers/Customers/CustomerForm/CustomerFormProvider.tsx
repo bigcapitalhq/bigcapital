@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useCustomer, useCurrencies, useCreateCustomer, useEditCustomer, useContact, useBranches } from '@/hooks/query';

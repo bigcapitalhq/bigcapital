@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { getColumnWidth } from '@/utils';
 import * as R from 'ramda';
 import { Align } from '@/constants';

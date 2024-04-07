@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Button, NavbarGroup, Classes, NavbarDivider, Alignment, Switch } from '@blueprintjs/core';
 import { DashboardActionsBar, Can, Icon, FormattedMessage as T } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';

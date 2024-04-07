@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCustomerBalanceSummaryReport } from '@/hooks/query';

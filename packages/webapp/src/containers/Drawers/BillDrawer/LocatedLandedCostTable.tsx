@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DataTable, TableSkeletonRows, Card, FormattedMessage as T } from '@/components';
 

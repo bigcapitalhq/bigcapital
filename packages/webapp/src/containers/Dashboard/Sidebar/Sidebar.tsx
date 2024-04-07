@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { SidebarContainer } from './SidebarContainer';
@@ -34,10 +33,11 @@ export function Sidebar() {
  * @returns {React.JSX}
  */
 function SidebarFooterVersion() {
-  const { REACT_APP_VERSION } = process.env;
+  
+  const { REACT_APP_VERSION } = import.meta.env;
 
   if (!REACT_APP_VERSION) {
     return null;
   }
-  return <div class="sidebar__version">v{REACT_APP_VERSION}</div>;
+  return <div className="sidebar__version">v{REACT_APP_VERSION}</div>;
 }

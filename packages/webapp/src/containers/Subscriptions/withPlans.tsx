@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getPlansSelector } from '@/store/plans/plans.selectors';
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerHeaderContent, DrawerBody, FormattedMessage as T } from '@/components';
 

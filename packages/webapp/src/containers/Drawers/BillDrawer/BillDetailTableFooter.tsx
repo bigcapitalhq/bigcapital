@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { TotalLineBorderStyle, TotalLineTextStyle, T, TotalLines, TotalLine } from '@/components';
 import { useBillDrawerContext } from './BillDrawerProvider';

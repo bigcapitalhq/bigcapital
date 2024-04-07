@@ -1,10 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T, Icon } from '@/components';
 
 export default function DashboardErrorBoundary({}) {
   return (
-    <div class="dashboard__error-boundary">
+    <div className="dashboard__error-boundary">
       <h1>
         <T id={'sorry_about_that_something_went_wrong'} />
       </h1>

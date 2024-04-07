@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 export default function WorkflowIcon({ width = '309.566', height = '356.982' }) {

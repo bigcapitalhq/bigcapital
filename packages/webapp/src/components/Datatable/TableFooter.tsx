@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import TableContext from './TableContext';
@@ -18,7 +17,7 @@ export default function TableFooter() {
   }
 
   return (
-    <div class="tfooter">
+    <div className="tfooter">
       {footerGroups.map((group) => (
         <div {...group.getFooterGroupProps({ className: 'tr' })}>
           {group.headers.map((column) => (

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';

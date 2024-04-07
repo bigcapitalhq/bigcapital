@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import TaxRateFormDialogForm from './TaxRateFormDialogForm';
 import { TaxRateFormDialogBoot } from './TaxRateFormDialogBoot';

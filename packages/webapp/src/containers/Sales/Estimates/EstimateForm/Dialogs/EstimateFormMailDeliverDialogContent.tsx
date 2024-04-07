@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useHistory } from 'react-router-dom';

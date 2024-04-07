@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import { Intent, FormGroup, InputGroup, Position } from '@blueprintjs/core';

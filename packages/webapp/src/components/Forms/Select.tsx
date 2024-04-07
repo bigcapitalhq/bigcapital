@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Select } from '@blueprintjs-formik/select';

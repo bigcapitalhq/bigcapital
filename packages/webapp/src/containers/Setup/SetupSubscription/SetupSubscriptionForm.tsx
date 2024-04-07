@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import SubscriptionPlansSection from './SubscriptionPlansSection';
@@ -7,7 +6,7 @@ import SubscriptionPaymentMethodsSection from './SubscriptionPaymentsMethodsSect
 
 export default function SetupSubscriptionForm() {
   return (
-    <div class="billing-plans">
+    <div className="billing-plans">
       <SubscriptionPlansSection />
       <SubscriptionPeriodsSection />
       <SubscriptionPaymentMethodsSection />

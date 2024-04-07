@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Menu, MenuItem, MenuDivider, Button, Popover, Position } from '@blueprintjs/core';
@@ -41,10 +40,10 @@ function DashboardTopbarUser({
             className={'menu-item--profile'}
             text={
               <div>
-                <div class="person">
+                <div className="person">
                   {user.first_name} {user.last_name}
                 </div>
-                <div class="org">
+                <div className="org">
                   <T id="organization_id" />: {user.tenant_id}
                 </div>
               </div>

@@ -122,8 +122,6 @@
     "@types/ramda": "^0.29.12",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "bun": "^1.1.2",
-    "bun-types": "^1.1.2",
     "chai": "^4.4.1",
     "chai-http": "^4.4.0",
     "chai-things": "^0.2.0",

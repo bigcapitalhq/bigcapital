@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';

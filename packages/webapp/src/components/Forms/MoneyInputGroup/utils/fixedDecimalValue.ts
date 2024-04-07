@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 export const fixedDecimalValue = (value: string, decimalSeparator: string, fixedDecimalLength?: number): string => {
   if (fixedDecimalLength && value.length > 1) {
     if (value.includes(decimalSeparator)) {

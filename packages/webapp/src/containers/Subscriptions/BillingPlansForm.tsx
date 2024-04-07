@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -15,7 +14,7 @@ import withSubscriptions from './withSubscriptions';
  */
 export default function BillingPlansForm() {
   return (
-    <div class="billing-plans">
+    <div className="billing-plans">
       <BillingPlansInput />
       <BillingPeriodsInput />
       <BillingPaymentMethodWhenSubscriptionInactive />

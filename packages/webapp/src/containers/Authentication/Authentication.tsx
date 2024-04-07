@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';

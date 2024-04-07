@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -32,7 +31,7 @@ export default function CreditNoteDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{creditNote.formatted_amount}</span>
+            <span className="big-number">{creditNote.formatted_amount}</span>
           </AmountItem>
 
           <StatusItem>

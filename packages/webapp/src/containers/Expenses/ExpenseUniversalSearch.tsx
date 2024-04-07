@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DRAWERS } from '@/constants/drawers';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';

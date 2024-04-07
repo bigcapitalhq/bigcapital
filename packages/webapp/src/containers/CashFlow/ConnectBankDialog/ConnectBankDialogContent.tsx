@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { Stack } from '@/components';
 import { TellerIcon } from '../Icons/TellerIcon';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const AccountDeleteAlert = React.lazy(() => import('@/containers/Alerts/Accounts/AccountDeleteAlert'));

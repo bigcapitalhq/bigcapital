@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Callout, Classes, Intent } from '@blueprintjs/core';
 import { Stack } from '@/components';
 import { ImportDropzone } from './ImportDropzone';

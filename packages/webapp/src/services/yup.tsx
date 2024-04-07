@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as Yup from 'yup';
 
 Yup.addMethod(Yup.string, 'digits', function () {

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import { PopoverInteractionKind, Tooltip, MenuItem, Position, FormGroup } from '@blueprintjs/core';

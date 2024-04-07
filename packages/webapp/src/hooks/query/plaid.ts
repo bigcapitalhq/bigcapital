@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 

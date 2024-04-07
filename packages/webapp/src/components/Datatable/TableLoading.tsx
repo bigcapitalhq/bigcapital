@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Spinner } from '@blueprintjs/core';
 
@@ -7,7 +6,7 @@ import { Spinner } from '@blueprintjs/core';
  */
 export default function TableLoading({ spinnerProps }) {
   return (
-    <div class="loading">
+    <div className="loading">
       <Spinner {...spinnerProps} />
     </div>
   );

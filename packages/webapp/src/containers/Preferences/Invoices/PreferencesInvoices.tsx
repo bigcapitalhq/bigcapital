@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { PreferencesInvoicesBoot } from './PreferencesInvoiceFormBoot';
 import PreferencesInvoiceFormPage from './PreferencesInvoiceFormPage';
 

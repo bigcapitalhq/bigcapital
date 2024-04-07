@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Formik } from 'formik';
 import { AppToaster } from '@/components';

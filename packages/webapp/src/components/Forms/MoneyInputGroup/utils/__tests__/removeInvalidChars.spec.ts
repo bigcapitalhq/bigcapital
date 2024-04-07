@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { removeInvalidChars } from '../removeInvalidChars';
 
 describe('removeInvalidChars', () => {

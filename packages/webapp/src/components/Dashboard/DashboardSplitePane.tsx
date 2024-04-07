@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useRef } from 'react';
 import SplitPane from 'react-split-pane';
 import { debounce } from 'lodash';

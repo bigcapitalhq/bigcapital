@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { FMultiSelect } from '../Forms';

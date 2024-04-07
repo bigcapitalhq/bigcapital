@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef } from 'react';
 import classNames from 'classnames';
 import { Classes, Intent, Menu, MenuItem, ProgressBar, Text } from '@blueprintjs/core';

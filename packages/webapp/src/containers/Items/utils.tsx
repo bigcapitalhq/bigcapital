@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';

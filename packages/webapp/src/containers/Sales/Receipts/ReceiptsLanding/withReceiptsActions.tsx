@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setReceiptsTableState, resetReceiptsTableState } from '@/store/receipts/receipts.actions';
 

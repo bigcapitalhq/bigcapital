@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { useWarehouses, useBranches } from '@/hooks/query';

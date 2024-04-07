@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useItem } from '@/hooks/query';

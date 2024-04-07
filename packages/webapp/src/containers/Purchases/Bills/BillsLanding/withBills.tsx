@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getBillsTableStateFactory, billsTableStateChangedFactory } from '@/store/Bills/bills.selectors';
 

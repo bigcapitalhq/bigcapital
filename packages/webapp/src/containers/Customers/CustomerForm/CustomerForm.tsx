@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { CustomerFormProvider } from './CustomerFormProvider';
 import CustomerFormFormik from './CustomerFormFormik';

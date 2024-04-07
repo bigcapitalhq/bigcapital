@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';

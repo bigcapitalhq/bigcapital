@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import moment from 'moment';
 import { castArray } from 'lodash';

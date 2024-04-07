@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DialogsName } from '@/constants/dialogs';
 import React from 'react';
 

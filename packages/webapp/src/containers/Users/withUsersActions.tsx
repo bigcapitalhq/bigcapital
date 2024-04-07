@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { fetchUsers, fetchUser, deleteUser, inactiveUser, editUser, submitInvite } from '@/store/users/users.actions';
 

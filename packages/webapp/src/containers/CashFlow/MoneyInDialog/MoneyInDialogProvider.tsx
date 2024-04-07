@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';

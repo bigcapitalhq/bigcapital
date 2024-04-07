@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useNProgress } from '@tanem/react-nprogress';
 import PropTypes from 'prop-types';

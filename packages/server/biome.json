@@ -6,6 +6,9 @@
     "rules": {
       "style": {
         "useImportType": "error"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
       }
     }
   }

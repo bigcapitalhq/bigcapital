@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useLayoutEffect } from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';

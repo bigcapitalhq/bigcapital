@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
@@ -24,8 +23,8 @@ export function TotalLines({ children, amountColWidth, labelColWidth, className 
 export function TotalLine({ title, value, borderStyle, textStyle, className }) {
   return (
     <TotalLineRoot borderStyle={borderStyle} textStyle={textStyle} className={className}>
-      <div class="title">{title}</div>
-      <div class="amount">{value}</div>
+      <div className="title">{title}</div>
+      <div className="amount">{value}</div>
     </TotalLineRoot>
   );
 }

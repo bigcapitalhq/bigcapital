@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 function JournalBulkDeleteAlert({}) {
   // Handle confirm journals bulk delete.

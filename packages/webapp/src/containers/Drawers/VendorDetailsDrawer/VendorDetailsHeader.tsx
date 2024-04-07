@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
@@ -20,7 +19,7 @@ export default function VendorDetailsHeader() {
     <div className={clsx(Style.root_content)}>
       <DetailsMenu direction={'vertical'} className={clsx(Style.root_content_primary)}>
         <DetailItem name={'outstanding-payable'} label={<T id={'vendor.drawer.label.outstanding_payable'} />}>
-          <h3 class="big-number">{vendor.formatted_balance}</h3>
+          <h3 className="big-number">{vendor.formatted_balance}</h3>
         </DetailItem>
 
         <DetailItem label={<T id={'vendor.drawer.label.unused_credits'} />}>0</DetailItem>

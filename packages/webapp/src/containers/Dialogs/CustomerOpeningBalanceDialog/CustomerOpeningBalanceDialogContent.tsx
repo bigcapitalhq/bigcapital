@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/CustomerOpeningBalance/CustomerOpeningBalance.scss';

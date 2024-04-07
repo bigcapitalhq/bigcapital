@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';

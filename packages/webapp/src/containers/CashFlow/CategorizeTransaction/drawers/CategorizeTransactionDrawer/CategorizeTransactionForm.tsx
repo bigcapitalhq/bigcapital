@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik, Form } from 'formik';
 import styled from 'styled-components';
 import { CreateCategorizeTransactionSchema } from './CategorizeTransactionForm.schema';

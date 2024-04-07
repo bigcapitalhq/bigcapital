@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 export default (next) => (reducer, initialState, enhancer) => {
   const resetType = 'RESET';
   const resetData = 'state';

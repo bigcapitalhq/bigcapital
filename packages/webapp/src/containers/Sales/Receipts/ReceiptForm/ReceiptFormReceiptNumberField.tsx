@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // Based on https://github.com/jquense/yup/blob/2973d0a/src/locale.js
 
 import printValue from '../printValue';

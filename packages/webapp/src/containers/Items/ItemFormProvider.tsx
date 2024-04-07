@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useItem, useSettingsItems, useItemsCategories, useCreateItem, useEditItem, useAccounts } from '@/hooks/query';

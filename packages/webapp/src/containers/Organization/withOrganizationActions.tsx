@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setOrganizationSetupCompleted } from '@/store/organizations/organizations.actions';
 

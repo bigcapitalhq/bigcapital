@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';

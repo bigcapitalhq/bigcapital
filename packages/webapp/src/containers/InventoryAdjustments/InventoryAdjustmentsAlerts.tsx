@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const InventoryAdjustmentDeleteAlert = React.lazy(

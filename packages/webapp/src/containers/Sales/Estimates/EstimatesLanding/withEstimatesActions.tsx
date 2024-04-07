@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { setEstimatesTableState, resetEstimatesTableState } from '@/store/Estimate/estimates.actions';
 

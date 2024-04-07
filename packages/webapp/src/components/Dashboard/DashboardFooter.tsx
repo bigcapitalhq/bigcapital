@@ -1,11 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import { getFooterLinks } from '@/constants/footerLinks';
 import { For } from '@/components';
 
 function FooterLinkItem({ title, link }) {
   return (
-    <div class="">
+    <div className="">
       <a href={link} target="_blank" rel="noopener noreferrer">
         {title}
       </a>
@@ -17,8 +16,8 @@ export default function DashboardFooter() {
   const footerLinks = getFooterLinks();
 
   return (
-    <div class="dashboard__footer">
-      <div class="footer-links">
+    <div className="dashboard__footer">
+      <div className="footer-links">
         <For render={FooterLinkItem} of={footerLinks} />
       </div>
     </div>
