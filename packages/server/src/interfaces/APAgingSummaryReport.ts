@@ -24,7 +24,7 @@ export interface IAPAgingSummaryData extends IAgingSummaryData {
 
 export type IAPAgingSummaryColumns = IAgingPeriod[];
 
-export interface IARAgingSummaryMeta extends IFinancialSheetCommonMeta {
+export interface IAPAgingSummaryMeta extends IFinancialSheetCommonMeta {
   formattedAsDate: string;
 }
 

@@ -1,7 +1,7 @@
-import { buildFilterQuery } from '@/lib/ViewRolesBuilder';
+// import { buildFilterQuery } from '@/lib/ViewRolesBuilder';
 import { DEFAULT_VIEWS } from '@/services/Items/constants';
-import TenantModel from 'models/TenantModel';
 import { Model, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ItemSettings from './Item.Settings';
 import ModelSearchable from './ModelSearchable';
@@ -38,7 +38,7 @@ export default class Item extends mixin(TenantModel, [ModelSetting, CustomViewBa
         query.orderBy(columnSort, sortDirection);
       },
       viewRolesBuilder(query, conditions, logicExpression) {
-        buildFilterQuery(Item.tableName, conditions, logicExpression)(query);
+        // buildFilterQuery(Item.tableName, conditions, logicExpression)(query);
       },
 
       /**
@@ -54,14 +54,14 @@ export default class Item extends mixin(TenantModel, [ModelSetting, CustomViewBa
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Media = require('models/Media');
-    const Account = require('models/Account');
-    const ItemCategory = require('models/ItemCategory');
-    const ItemWarehouseQuantity = require('models/ItemWarehouseQuantity');
-    const ItemEntry = require('models/ItemEntry');
-    const WarehouseTransferEntry = require('models/WarehouseTransferEntry');
-    const InventoryAdjustmentEntry = require('models/InventoryAdjustmentEntry');
-    const TaxRate = require('models/TaxRate');
+    const Media = require('../models/Media');
+    const Account = require('../models/Account');
+    const ItemCategory = require('../models/ItemCategory');
+    const ItemWarehouseQuantity = require('../models/ItemWarehouseQuantity');
+    const ItemEntry = require('../models/ItemEntry');
+    const WarehouseTransferEntry = require('../models/WarehouseTransferEntry');
+    const InventoryAdjustmentEntry = require('../models/InventoryAdjustmentEntry');
+    const TaxRate = require('../models/TaxRate');
 
     return {
       /**

@@ -1,5 +1,5 @@
 import DynamicFilterRoleAbstractor from '@/lib/DynamicFilter/DynamicFilterRoleAbstractor';
-import { buildFilterQuery, validateViewRoles } from '@/lib/ViewRolesBuilder';
+// import { buildFilterQuery, validateViewRoles } from '@/lib/ViewRolesBuilder';
 
 export default class ViewRolesDynamicFilter extends DynamicFilterRoleAbstractor {
   /**
@@ -26,16 +26,16 @@ export default class ViewRolesDynamicFilter extends DynamicFilterRoleAbstractor 
   /**
    * Validates filter roles.
    */
-  validateFilterRoles() {
-    return validateViewRoles(this.filterRoles, this.logicExpression);
-  }
+  // validateFilterRoles() {
+  //   return validateViewRoles(this.filterRoles, this.logicExpression);
+  // }
 
   /**
    * Builds database query of view roles.
    */
-  buildQuery() {
-    return (builder) => {
-      buildFilterQuery(this.tableName, this.filterRoles, this.logicExpression)(builder);
-    };
-  }
+  // buildQuery() {
+  //   return (builder) => {
+  //     buildFilterQuery(this.tableName, this.filterRoles, this.logicExpression)(builder);
+  //   };
+  // }
 }

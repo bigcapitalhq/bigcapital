@@ -1,8 +1,8 @@
-import { ITransactionMeta, TransactionsLockingGroup, TransactionsLockingType } from '@/interfaces';
+import { type ITransactionMeta, TransactionsLockingGroup, type TransactionsLockingType } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { isUndefined } from 'lodash';
 import { Inject, Service } from 'typedi';
-import { parseDate } from 'utils';
+import { parseDate } from '../../utils';
 
 @Service()
 export default class TransactionsLockingRepository {

@@ -5,8 +5,8 @@ import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import { ServiceError } from '@/exceptions';
 import { ILoginDTO, IRegisterDTO } from '@/interfaces';
 import AuthenticationApplication from '@/services/Authentication/AuthApplication';
-import { Request, Response, Router } from 'express';
-import { ValidationChain, check } from 'express-validator';
+import { type Request, type Response, Router } from 'express';
+import { type ValidationChain, check } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 @Service()

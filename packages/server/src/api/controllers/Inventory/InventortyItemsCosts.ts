@@ -1,5 +1,5 @@
 import { InventoryCostApplication } from '@/services/Inventory/InventoryCostApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

@@ -3,7 +3,7 @@ import AllocateLandedCost from '@/services/Purchases/LandedCost/AllocateLandedCo
 import BillAllocatedCostTransactions from '@/services/Purchases/LandedCost/BillAllocatedLandedCostTransactions';
 import LandedCostTranasctions from '@/services/Purchases/LandedCost/LandedCostTransactions';
 import RevertAllocatedLandedCost from '@/services/Purchases/LandedCost/RevertAllocatedLandedCost';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

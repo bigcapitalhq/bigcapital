@@ -2,7 +2,7 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
 import { EchangeRateErrors } from '@/lib/ExchangeRate/types';
 import { ExchangeRateApplication } from '@/services/ExchangeRates/ExchangeRateApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { oneOf, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from './BaseController';

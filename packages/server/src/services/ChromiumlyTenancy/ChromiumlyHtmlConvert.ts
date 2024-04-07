@@ -23,7 +23,7 @@ export class ChromiumlyHtmlConvert {
 
     const filename = `document-${Date.now()}.html`;
     const storageDir = getPdfFilesStorageDir(filename);
-    const filePath = path.join(global.__storage_dir, storageDir);
+    const filePath = path.join(process.env.APP_STORAGE_DIR, storageDir);
 
     await fs.writeFile(filePath, content);
     await Attachment.query().insert({

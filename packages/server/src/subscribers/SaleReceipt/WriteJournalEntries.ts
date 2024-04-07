@@ -1,4 +1,8 @@
-import { ISaleReceiptCreatedPayload, ISaleReceiptEditedPayload, ISaleReceiptEventDeletedPayload } from '@/interfaces';
+import {
+  ISaleReceiptCreatedPayload,
+  ISaleReceiptEditedPayload,
+  ISaleReceiptEventDeletedPayload,
+} from '@/interfaces';
 import { SaleReceiptGLEntries } from '@/services/Sales/Receipts/SaleReceiptGLEntries';
 import events from '@/subscribers/events';
 import { Inject, Service } from 'typedi';

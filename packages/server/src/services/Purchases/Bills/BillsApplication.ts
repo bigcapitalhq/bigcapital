@@ -1,4 +1,12 @@
-import { IBill, IBillDTO, IBillEditDTO, IBillsFilter, IFilterMeta, IPaginationMeta, ISystemUser } from '@/interfaces';
+import {
+  IBill,
+  IBillDTO,
+  IBillEditDTO,
+  IBillsFilter,
+  IFilterMeta,
+  IPaginationMeta,
+  ISystemUser,
+} from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreateBill } from './CreateBill';
 import { DeleteBill } from './DeleteBill';

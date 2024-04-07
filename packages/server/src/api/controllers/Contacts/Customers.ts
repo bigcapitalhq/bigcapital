@@ -2,10 +2,10 @@ import ContactsController from '@/api/controllers/Contacts/Contacts';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, CustomerAction, ICustomerEditDTO, ICustomerNewDTO } from '@/interfaces';
+import { AbilitySubject, CustomerAction, type ICustomerEditDTO, type ICustomerNewDTO } from '@/interfaces';
 import { CustomersApplication } from '@/services/Contacts/Customers/CustomersApplication';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

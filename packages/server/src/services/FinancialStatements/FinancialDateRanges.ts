@@ -1,4 +1,4 @@
-import { IDateRange, IFinancialDatePeriodsUnit } from '@/interfaces';
+import { type IDateRange, IFinancialDatePeriodsUnit } from '@/interfaces';
 import moment from 'moment';
 
 export const FinancialDateRanges = (Base) =>

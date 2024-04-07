@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import { IMedia, IMediaService } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from 'exceptions';
 import { difference } from 'lodash';
 import { Inject, Service } from 'typedi';
+import { ServiceError } from '../../exceptions';
 
 const fsPromises = fs.promises;
 

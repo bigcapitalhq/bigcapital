@@ -1,6 +1,6 @@
 import { ISaleEstimate } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
 
 export class SaleEstimateTransfromer extends Transformer {

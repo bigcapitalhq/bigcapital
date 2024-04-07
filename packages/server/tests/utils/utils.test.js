@@ -1,5 +1,5 @@
-import { dateRangeCollection } from 'utils';
 import { expect } from '../testInit';
+import { dateRangeCollection } from '../utils';
 
 describe('utils', () => {
   describe('dateRangeCollection()', () => {

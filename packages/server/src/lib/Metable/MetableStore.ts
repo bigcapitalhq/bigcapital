@@ -1,7 +1,7 @@
 import { IMetaQuery, IMetableStore, IMetadata } from '@/interfaces';
 import { isEmpty, omit } from 'lodash';
 import { Model } from 'objection';
-import { itemsStartWith } from 'utils';
+import { itemsStartWith } from '../../utils';
 
 export default class MetableStore implements IMetableStore {
   metadata: IMetadata[];

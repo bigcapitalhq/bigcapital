@@ -1,11 +1,11 @@
 import {
   AccountNormal,
-  IBill,
-  IBillLandedCost,
-  IBillLandedCostEntry,
-  ILandedCostTransactionEntry,
-  ILedger,
-  ILedgerEntry,
+  type IBill,
+  type IBillLandedCost,
+  type IBillLandedCostEntry,
+  type ILandedCostTransactionEntry,
+  type ILedger,
+  type ILedgerEntry,
 } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerRepository from '@/services/Ledger/LedgerRepository';

@@ -2,7 +2,7 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { ARAgingSummaryApplication } from '@/services/FinancialStatements/AgingSummary/ARAgingSummaryApplication';
-import { Request, Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseFinancialReportController from './BaseFinancialReportController';

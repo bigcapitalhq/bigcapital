@@ -1,7 +1,7 @@
 import {
-  ITransactionLockingMetaPOJO,
-  ITransactionsLockingListPOJO,
-  ITransactionsLockingSchema,
+  type ITransactionLockingMetaPOJO,
+  type ITransactionsLockingListPOJO,
+  type ITransactionsLockingSchema,
   TransactionsLockingGroup,
 } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';

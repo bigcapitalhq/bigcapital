@@ -3,7 +3,7 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { TransactionsByCustomerApplication } from '@/services/FinancialStatements/TransactionsByCustomer/TransactionsByCustomersApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseFinancialReportController from '../BaseFinancialReportController';

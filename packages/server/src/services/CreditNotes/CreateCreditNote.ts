@@ -1,4 +1,9 @@
-import { ICreditNoteCreatedPayload, ICreditNoteCreatingPayload, ICreditNoteNewDTO, ISystemUser } from '@/interfaces';
+import {
+  ICreditNoteCreatedPayload,
+  ICreditNoteCreatingPayload,
+  ICreditNoteNewDTO,
+  ISystemUser,
+} from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';

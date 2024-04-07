@@ -1,6 +1,6 @@
 import { DEFAULT_VIEWS } from '@/services/Contacts/Vendors/constants';
-import TenantModel from 'models/TenantModel';
 import { Model, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
 import ModelSetting from './ModelSetting';
@@ -114,7 +114,7 @@ export default class Vendor extends mixin(TenantModel, [ModelSetting, CustomView
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Bill = require('models/Bill');
+    const Bill = require('../models/Bill');
 
     return {
       bills: {

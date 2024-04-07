@@ -1,4 +1,10 @@
-import { ISystemUser, IVendorEditDTO, IVendorNewDTO, IVendorOpeningBalanceEditDTO, IVendorsFilter } from '@/interfaces';
+import {
+  ISystemUser,
+  IVendorEditDTO,
+  IVendorNewDTO,
+  IVendorOpeningBalanceEditDTO,
+  IVendorsFilter,
+} from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { CreateVendor } from './CRUD/CreateVendor';
 import { DeleteVendor } from './CRUD/DeleteVendor';

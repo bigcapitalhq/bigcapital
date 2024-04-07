@@ -1,7 +1,7 @@
 import 'models/Role';
-import User from 'models/TenantUser';
 import { tenantFactory } from '~/dbInit';
 import { expect } from '~/testInit';
+import User from '../models/TenantUser';
 
 describe('Model: User', () => {
   describe('relations', () => {

@@ -8,13 +8,12 @@ import Ledger from '@/services/Accounting/Ledger';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 import moment from 'moment';
-import * as R from 'ramda';
 import { Inject } from 'typedi';
 import { VendorBalanceSummaryReport } from './VendorBalanceSummary';
+import { VendorBalanceSummaryMeta } from './VendorBalanceSummaryMeta';
 import VendorBalanceSummaryRepository from './VendorBalanceSummaryRepository';
 
-import { VendorBalanceSummaryMeta } from './VendorBalanceSummaryMeta';
-
+const R = require('ramda');
 export class VendorBalanceSummaryService implements IVendorBalanceSummaryService {
   @Inject()
   private tenancy: TenancyService;

@@ -1,4 +1,4 @@
-import { AccountNormal, IExpense, IExpenseCategory, ILedger, ILedgerEntry } from '@/interfaces';
+import { AccountNormal, type IExpense, type IExpenseCategory, type ILedger, type ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import * as R from 'ramda';
 import { Service } from 'typedi';

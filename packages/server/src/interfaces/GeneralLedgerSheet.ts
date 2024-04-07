@@ -60,7 +60,7 @@ export interface IGeneralLedgerSheetAccount {
 
 export type IGeneralLedgerSheetData = IGeneralLedgerSheetAccount[];
 
-export interface IAccountTransaction {
+export interface IAccountTransactionDupe {
   id: number;
   index: number;
   draft: boolean;

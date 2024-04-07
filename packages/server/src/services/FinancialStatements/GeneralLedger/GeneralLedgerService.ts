@@ -7,7 +7,7 @@ import { Tenant } from '@/system/models';
 import { difference } from 'lodash';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { transformToMap } from 'utils';
+import { transformToMap } from '../../../utils';
 import { GeneralLedgerMeta } from './GeneralLedgerMeta';
 
 const ERRORS = {

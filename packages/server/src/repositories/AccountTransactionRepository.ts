@@ -1,6 +1,6 @@
 import TenantRepository from '@/repositories/TenantRepository';
 import { castArray, isEmpty } from 'lodash';
-import { AccountTransaction } from 'models';
+import { AccountTransaction } from '../models';
 
 interface IJournalTransactionsFilter {
   fromDate: string | Date;

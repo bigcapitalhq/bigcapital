@@ -1,7 +1,7 @@
 import 'models/Account';
-import AccountType from 'models/AccountType';
 import { tenantFactory } from '~/dbInit';
 import { expect } from '~/testInit';
+import AccountType from '../models/AccountType';
 
 describe('Model: AccountType', () => {
   it('Shoud account type model has many associated accounts.', async () => {

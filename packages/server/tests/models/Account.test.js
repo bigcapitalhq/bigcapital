@@ -1,7 +1,7 @@
 import DependencyGraph from '@/lib/DependencyGraph';
-import Account from 'models/Account';
 import { tenantFactory } from '~/dbInit';
 import { expect } from '~/testInit';
+import Account from '../models/Account';
 
 describe('Model: Account', () => {
   it('Should account model belongs to the associated account type model.', async () => {

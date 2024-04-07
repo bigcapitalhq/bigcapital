@@ -4,6 +4,6 @@ export default () =>
   new I18n({
     locales: ['en', 'ar'],
     register: global,
-    directory: global.__locales_dir,
+    directory: process.env.APP_LOCALES_DIR,
     updateFiles: false,
   });

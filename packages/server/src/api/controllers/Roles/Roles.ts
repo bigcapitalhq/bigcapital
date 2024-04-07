@@ -1,6 +1,6 @@
 import { ServiceError } from '@/exceptions';
 import RolesService from '@/services/Roles/RolesService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

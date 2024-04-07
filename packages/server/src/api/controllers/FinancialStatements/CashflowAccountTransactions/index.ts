@@ -1,10 +1,10 @@
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, ICashFlowStatementDOO, ReportsAction } from '@/interfaces';
+import { AbilitySubject, type ICashFlowStatementDOO, ReportsAction } from '@/interfaces';
 import CashFlowTable from '@/services/FinancialStatements/CashFlow/CashFlowTable';
 import CashflowAccountTransactionsService from '@/services/FinancialStatements/CashflowAccountTransactions/CashflowAccountTransactionsService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { type NextFunction, type Request, type Response, Router, type ValidationChain } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseFinancialReportController from '../BaseFinancialReportController';

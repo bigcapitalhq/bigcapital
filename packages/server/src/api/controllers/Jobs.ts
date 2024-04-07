@@ -1,7 +1,7 @@
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import JobsService from '@/services/Jobs/JobsService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 
 @Service()

@@ -1,9 +1,9 @@
 import BaseController from '@/api/controllers/BaseController';
 import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
 import { ServiceError } from '@/exceptions';
-import { Features, ICreateWarehouseDTO, IEditWarehouseDTO } from '@/interfaces';
+import { Features, type ICreateWarehouseDTO, type IEditWarehouseDTO } from '@/interfaces';
 import { WarehousesApplication } from '@/services/Warehouses/WarehousesApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

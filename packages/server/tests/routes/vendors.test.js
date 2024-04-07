@@ -1,6 +1,6 @@
-import Vendor from 'models/Vendor';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import Vendor from '../models/Vendor';
 
 describe('route: `/vendors`', () => {
   describe('POST: `/vendors`', () => {

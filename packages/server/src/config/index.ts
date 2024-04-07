@@ -1,17 +1,31 @@
-import path from 'node:path';
-import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
-import dotenv from 'dotenv';
-import { toInteger } from 'lodash';
+const dotenv = require('dotenv');
+const toInteger = require('lodash/toInteger');
+
+const castCommaListEnvVarToArray = require('@/utils').castCommaListEnvVarToArray;
+const parseBoolean = require('@/utils').parseBoolean;
+const path = require('node:path');
 
 dotenv.config();
 
 const API_RATE_LIMIT = process.env.API_RATE_LIMIT?.split(',') || [];
 
+process.env.APP_ROOT_DIR = path.join(__dirname, '..');
+process.env.APP_RESOURCES_DIR = path.join(process.env.APP_ROOT_DIR, 'resources');
+process.env.APP_LOCALES_DIR = path.join(process.env.APP_RESOURCES_DIR, 'locales');
+process.env.APP_VIEWS_DIR = path.join(process.env.APP_ROOT_DIR, 'views');
+process.env.APP_STORAGE_DIR = path.join(process.env.APP_ROOT_DIR, 'storage');
+
+console.log('APP_ROOT_DIR:', process.env.APP_ROOT_DIR);
+console.log('APP_RESOURCES_DIR:', process.env.APP_RESOURCES_DIR);
+console.log('APP_LOCALES_DIR:', process.env.APP_LOCALES_DIR);
+console.log('APP_VIEWS_DIR:', process.env.APP_VIEWS_DIR);
+console.log('APP_STORAGE_DIR:', process.env.APP_STORAGE_DIR);
+
 module.exports = {
   /**
    * Your favorite port
    */
-  port: Number.parseInt(process.env.PORT, 10),
+  port: Number.parseInt(process.env.PORT || '3000', 10),
 
   /**
    * System database configuration.
@@ -23,8 +37,8 @@ module.exports = {
     db_password: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
     db_name: process.env.SYSTEM_DB_NAME,
     charset: process.env.SYSTEM_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir: path.join(global.__root_dir, './src/system/migrations'),
-    seeds_dir: path.join(global.__root_dir, './src/system/seeds'),
+    migrations_dir: path.join(process.env.APP_ROOT_DIR, './src/system/migrations'),
+    seeds_dir: path.join(process.env.APP_ROOT_DIR, './src/system/seeds'),
   },
 
   /**
@@ -37,8 +51,8 @@ module.exports = {
     db_user: process.env.TENANT_DB_USER || process.env.DB_USER,
     db_password: process.env.TENANT_DB_PASSWORD || process.env.DB_PASSWORD,
     charset: process.env.TENANT_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir: path.join(global.__root_dir, './src/database/migrations'),
-    seeds_dir: path.join(global.__root_dir, './src/database/seeds/core'),
+    migrations_dir: path.join(process.env.APP_ROOT_DIR, './src/database/migrations'),
+    seeds_dir: path.join(process.env.APP_ROOT_DIR, './src/database/seeds/core'),
   },
 
   /**

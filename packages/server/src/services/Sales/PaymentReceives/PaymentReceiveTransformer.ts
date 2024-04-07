@@ -1,6 +1,6 @@
 import { IPaymentReceive, IPaymentReceiveEntry } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 import { PaymentReceiveEntryTransfromer } from './PaymentReceiveEntryTransformer';
 
 export class PaymentReceiveTransfromer extends Transformer {

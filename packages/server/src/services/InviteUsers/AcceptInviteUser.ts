@@ -6,7 +6,7 @@ import events from '@/subscribers/events';
 import { Invite, SystemUser, Tenant } from '@/system/models';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { hashPassword } from 'utils';
+import { hashPassword } from '../../utils';
 import { ERRORS } from './constants';
 
 @Service()

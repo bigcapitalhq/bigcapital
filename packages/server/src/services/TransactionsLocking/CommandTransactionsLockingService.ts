@@ -1,11 +1,11 @@
 import { ServiceError } from '@/exceptions';
 import {
-  ICancelTransactionsLockingDTO,
-  ITransactionLockingPartiallyDTO,
-  ITransactionMeta,
-  ITransactionsLockingAllDTO,
-  ITransactionsLockingCanceled,
-  ITransactionsLockingPartialUnlocked,
+  type ICancelTransactionsLockingDTO,
+  type ITransactionLockingPartiallyDTO,
+  type ITransactionMeta,
+  type ITransactionsLockingAllDTO,
+  type ITransactionsLockingCanceled,
+  type ITransactionsLockingPartialUnlocked,
   TransactionsLockingGroup,
   TransactionsLockingType,
 } from '@/interfaces';

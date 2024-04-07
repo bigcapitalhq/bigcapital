@@ -1,4 +1,4 @@
-import { Features, IManualJournalCreatingPayload, IManualJournalEditingPayload } from '@/interfaces';
+import { Features, type IManualJournalCreatingPayload, type IManualJournalEditingPayload } from '@/interfaces';
 import { FeaturesManager } from '@/services/Features/FeaturesManager';
 import events from '@/subscribers/events';
 import { Inject, Service } from 'typedi';

@@ -1,6 +1,6 @@
 import BaseController from '@/api/controllers/BaseController';
 import DateFormatsService from '@/services/Miscellaneous/DateFormats';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 
 @Service()

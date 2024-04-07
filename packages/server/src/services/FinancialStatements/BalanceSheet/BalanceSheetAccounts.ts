@@ -1,12 +1,12 @@
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IAccount,
-  IBalanceSheetAccountNode,
-  IBalanceSheetAccountsNode,
-  IBalanceSheetDataNode,
-  IBalanceSheetSchemaAccountNode,
-  IBalanceSheetSchemaNode,
-  INumberFormatQuery,
+  type IAccount,
+  type IBalanceSheetAccountNode,
+  type IBalanceSheetAccountsNode,
+  type IBalanceSheetDataNode,
+  type IBalanceSheetSchemaAccountNode,
+  type IBalanceSheetSchemaNode,
+  type INumberFormatQuery,
 } from '@/interfaces';
 import { defaultTo, toArray } from 'lodash';
 import * as R from 'ramda';

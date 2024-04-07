@@ -1,12 +1,18 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 import ContactsController from '@/api/controllers/Contacts/Contacts';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, IVendorEditDTO, IVendorNewDTO, IVendorsFilter, VendorAction } from '@/interfaces';
+import {
+  AbilitySubject,
+  type IVendorEditDTO,
+  type IVendorNewDTO,
+  type IVendorsFilter,
+  VendorAction,
+} from '@/interfaces';
 import { VendorsApplication } from '@/services/Contacts/Vendors/VendorsApplication';
 
 @Service()

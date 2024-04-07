@@ -16,7 +16,7 @@ export default class SendInviteUsersMailMessage {
     // Retreive tenant orgnaization name.
     const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
-    const root = path.join(global.__views_dir, '/images/bigcapital.png');
+    const root = path.join(process.env.APP_VIEWS_DIR, '/images/bigcapital.png');
 
     const mail = new Mail()
       .setSubject(`${fromUser.firstName} has invited you to join a Bigcapital`)

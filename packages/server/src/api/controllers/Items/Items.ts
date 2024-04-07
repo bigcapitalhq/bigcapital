@@ -2,11 +2,11 @@ import BaseController from '@/api/controllers/BaseController';
 import CheckAbilities from '@/api/middleware/CheckPolicies';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, IItemDTO, ItemAction } from '@/interfaces';
+import { AbilitySubject, type IItemDTO, ItemAction } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ItemsApplication } from '@/services/Items/ItemsApplication';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 @Service()

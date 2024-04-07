@@ -1,4 +1,9 @@
-import { IAccount, IAccountCreateDTO, IAccountEventCreatedPayload, IAccountEventCreatingPayload } from '@/interfaces';
+import {
+  IAccount,
+  IAccountCreateDTO,
+  IAccountEventCreatedPayload,
+  IAccountEventCreatingPayload,
+} from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';

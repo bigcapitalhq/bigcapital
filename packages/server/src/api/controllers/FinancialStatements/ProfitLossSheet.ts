@@ -2,8 +2,8 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { ProfitLossSheetApplication } from '@/services/FinancialStatements/ProfitLossSheet/ProfitLossSheetApplication';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseFinancialReportController from './BaseFinancialReportController';
 @Service()

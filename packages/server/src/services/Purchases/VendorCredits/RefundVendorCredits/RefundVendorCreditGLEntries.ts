@@ -1,4 +1,4 @@
-import { AccountNormal, ILedgerEntry } from '@/interfaces';
+import { AccountNormal, type ILedgerEntry } from '@/interfaces';
 import { IRefundVendorCredit } from '@/interfaces';
 import LedgerRepository from '@/services/Ledger/LedgerRepository';
 import JournalPosterService from '@/services/Sales/JournalPosterService';

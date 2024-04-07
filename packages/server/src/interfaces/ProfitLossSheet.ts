@@ -1,4 +1,8 @@
-import { IFinancialSheetBranchesQuery, IFinancialSheetCommonMeta, INumberFormatQuery } from './FinancialStatements';
+import {
+  IFinancialSheetBranchesQuery,
+  IFinancialSheetCommonMeta,
+  INumberFormatQuery,
+} from './FinancialStatements';
 import { IFinancialTable } from './Table';
 
 export enum ProfitLossAggregateNodeId {

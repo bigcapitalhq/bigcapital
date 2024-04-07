@@ -1,6 +1,6 @@
 import { getExlusiveTaxAmount, getInclusiveTaxAmount } from '@/utils/taxRate';
-import TenantModel from 'models/TenantModel';
 import { Model } from 'objection';
+import TenantModel from '../models/TenantModel';
 
 export default class ItemEntry extends TenantModel {
   public taxRate: number;
@@ -104,15 +104,15 @@ export default class ItemEntry extends TenantModel {
    * Item entry relations.
    */
   static get relationMappings() {
-    const Item = require('models/Item');
-    const BillLandedCostEntry = require('models/BillLandedCostEntry');
-    const SaleInvoice = require('models/SaleInvoice');
-    const Bill = require('models/Bill');
-    const SaleReceipt = require('models/SaleReceipt');
-    const SaleEstimate = require('models/SaleEstimate');
-    const ProjectTask = require('models/Task');
-    const Expense = require('models/Expense');
-    const TaxRate = require('models/TaxRate');
+    const Item = require('../models/Item');
+    const BillLandedCostEntry = require('../models/BillLandedCostEntry');
+    const SaleInvoice = require('../models/SaleInvoice');
+    const Bill = require('../models/Bill');
+    const SaleReceipt = require('../models/SaleReceipt');
+    const SaleEstimate = require('../models/SaleEstimate');
+    const ProjectTask = require('../models/Task');
+    const Expense = require('../models/Expense');
+    const TaxRate = require('../models/TaxRate');
 
     return {
       item: {

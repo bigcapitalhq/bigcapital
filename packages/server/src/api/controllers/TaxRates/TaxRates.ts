@@ -2,10 +2,11 @@ import BaseController from '@/api/controllers/BaseController';
 import CheckAbilities from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, TaxRateAction } from '@/interfaces';
+import { AbilitySubject } from '@/interfaces';
+import { TaxRateAction } from '@/interfaces/TaxRate';
 import { TaxRatesApplication } from '@/services/TaxRates/TaxRatesApplication';
 import { ERRORS } from '@/services/TaxRates/constants';
-import { Request, Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { body, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

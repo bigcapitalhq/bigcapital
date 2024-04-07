@@ -1,22 +1,22 @@
 import { ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
 import {
-  IAccount,
-  ICashFlowCashBeginningNode,
-  ICashFlowSchemaAccountRelation,
-  ICashFlowSchemaSection,
-  ICashFlowSchemaSectionAccounts,
-  ICashFlowSchemaTotalSection,
-  ICashFlowStatementAccountMeta,
-  ICashFlowStatementAccountSection,
-  ICashFlowStatementAggregateSection,
-  ICashFlowStatementData,
-  ICashFlowStatementNetIncomeSection,
-  ICashFlowStatementQuery,
-  ICashFlowStatementSection,
+  type IAccount,
+  type ICashFlowCashBeginningNode,
+  type ICashFlowSchemaAccountRelation,
+  type ICashFlowSchemaSection,
+  type ICashFlowSchemaSectionAccounts,
+  type ICashFlowSchemaTotalSection,
+  type ICashFlowStatementAccountMeta,
+  type ICashFlowStatementAccountSection,
+  type ICashFlowStatementAggregateSection,
+  type ICashFlowStatementData,
+  type ICashFlowStatementNetIncomeSection,
+  type ICashFlowStatementQuery,
+  type ICashFlowStatementSection,
   ICashFlowStatementSectionType,
-  ICashFlowStatementTotalSection,
-  ILedger,
-  INumberFormatQuery,
+  type ICashFlowStatementTotalSection,
+  type ILedger,
+  type INumberFormatQuery,
 } from '@/interfaces';
 import I18nService from '@/services/I18n/I18nService';
 import { defaultTo, get, isEmpty, map, mapValues, set, sumBy } from 'lodash';
@@ -24,7 +24,7 @@ import { compose } from 'lodash/fp';
 import * as mathjs from 'mathjs';
 import moment from 'moment';
 import * as R from 'ramda';
-import { accumSum, transformToMapBy } from 'utils';
+import { accumSum, transformToMapBy } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { CashFlowStatementDatePeriods } from './CashFlowDatePeriods';

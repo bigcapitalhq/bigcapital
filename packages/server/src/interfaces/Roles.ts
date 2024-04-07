@@ -1,4 +1,4 @@
-import { Ability, ForcedSubject, RawRuleOf } from '@casl/ability';
+import { Ability, type ForcedSubject, type RawRuleOf } from '@casl/ability';
 import { Knex } from 'knex';
 
 export const actions = ['manage', 'create', 'read', 'update', 'delete'] as const;

@@ -1,5 +1,10 @@
 import { ServiceError } from '@/exceptions';
-import { ICreditNote, ICreditNoteAppliedToInvoice, ICreditNoteAppliedToInvoiceModel, ISaleInvoice } from '@/interfaces';
+import {
+  ICreditNote,
+  ICreditNoteAppliedToInvoice,
+  ICreditNoteAppliedToInvoiceModel,
+  ISaleInvoice,
+} from '@/interfaces';
 import { IApplyCreditToInvoicesCreatedPayload, IApplyCreditToInvoicesDTO } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';

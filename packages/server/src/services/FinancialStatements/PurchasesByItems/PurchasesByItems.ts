@@ -7,7 +7,7 @@ import {
 } from '@/interfaces/PurchasesByItemsSheet';
 import { get, isEmpty, sumBy } from 'lodash';
 import * as R from 'ramda';
-import { allPassedConditionsPass, transformToMap } from 'utils';
+import { allPassedConditionsPass, transformToMap } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 
 export class PurchasesByItems extends FinancialSheet {

@@ -1,5 +1,5 @@
 import { OpenExchangeRate } from './OpenExchangeRate';
-import { ExchangeRateServiceType, IExchangeRateService } from './types';
+import { ExchangeRateServiceType, type IExchangeRateService } from './types';
 
 export class ExchangeRate {
   private exchangeRateService: IExchangeRateService;

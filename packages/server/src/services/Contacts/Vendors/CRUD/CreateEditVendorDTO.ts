@@ -1,4 +1,4 @@
-import { ContactService, IVendorEditDTO, IVendorNewDTO } from '@/interfaces';
+import { ContactService, type IVendorEditDTO, type IVendorNewDTO } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
 import { defaultTo, isEmpty } from 'lodash';
 import moment from 'moment';

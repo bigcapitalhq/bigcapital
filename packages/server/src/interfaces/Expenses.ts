@@ -1,9 +1,10 @@
 import { Knex } from 'knex';
 import { IAccount } from './Account';
 import { IFilterRole } from './DynamicFilter';
+import { IFilterMeta } from './Model';
 import { ISystemUser } from './User';
 
-export interface IPaginationMeta {
+export interface IPaginationMetaWithTotal {
   total: number;
   page: number;
   pageSize: number;
@@ -111,7 +112,7 @@ export interface IExpensesService {
     expensesFilter: IExpensesFilter,
   ): Promise<{
     expenses: IExpense[];
-    pagination: IPaginationMeta;
+    pagination: IPaginationMetaWithTotal;
     filterMeta: IFilterMeta;
   }>;
 

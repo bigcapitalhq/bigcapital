@@ -3,13 +3,13 @@ import React from 'react';
 import {
   Card,
   Collapse,
-  type CollapseProps,
+  CollapseProps,
   Elevation,
   Utils,
   DISPLAYNAME_PREFIX,
-  type HTMLDivProps,
-  type MaybeElement,
-  type Props,
+  HTMLDivProps,
+  MaybeElement,
+  Props,
   IconName,
 } from '@blueprintjs/core';
 import { H6 } from '@blueprintjs/core';

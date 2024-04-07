@@ -1,5 +1,5 @@
 import { snakeCase } from 'lodash';
-import { mapKeysDeep } from 'utils';
+import { mapKeysDeep } from '../../utils';
 
 /**
  * Express middleware for intercepting and transforming json responses

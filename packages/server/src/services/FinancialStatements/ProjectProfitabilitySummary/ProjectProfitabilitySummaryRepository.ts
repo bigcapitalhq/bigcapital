@@ -2,7 +2,7 @@ import { ACCOUNT_ROOT_TYPE } from '@/data/AccountTypes';
 import { ProjectProfitabilitySummaryQuery } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import { isEmpty, map } from 'lodash';
-import Project from 'models/Project';
+import Project from '../models/Project';
 
 export class ProjectProfitabilitySummaryRespository {
   /**

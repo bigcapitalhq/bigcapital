@@ -12,7 +12,7 @@ import {
 } from '@/interfaces';
 import { get, mapValues, sumBy } from 'lodash';
 import * as R from 'ramda';
-import { accumSum, dateRangeFromToCollection } from 'utils';
+import { accumSum, dateRangeFromToCollection } from '../../../utils';
 
 export const CashFlowStatementDatePeriods = (Base) =>
   class extends Base {

@@ -1,6 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { GetItemWarehouseTransformer } from '@/services/Warehouses/Items/GettItemWarehouseTransformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../utils';
 
 export default class ItemTransformer extends Transformer {
   /**

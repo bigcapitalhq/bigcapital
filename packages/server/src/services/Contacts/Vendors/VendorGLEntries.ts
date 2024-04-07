@@ -1,4 +1,4 @@
-import { AccountNormal, ILedgerEntry, IVendor } from '@/interfaces';
+import { AccountNormal, type ILedgerEntry, type IVendor } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import { Service } from 'typedi';
 

@@ -1,8 +1,8 @@
 import { IProjectProfitabilitySummaryProjectNode, IProjectProfitabilitySummaryTotal } from '@/interfaces';
 import { sumBy } from 'lodash';
 import { map } from 'lodash/fp';
-import Project from 'models/Project';
 import FinancialSheet from '../FinancialSheet';
+import Project from '../models/Project';
 import { ProjectProfitabilitySummaryRespository } from './ProjectProfitabilitySummaryRepository';
 
 export class ProfitProfitabilitySummary extends FinancialSheet {

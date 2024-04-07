@@ -30,7 +30,7 @@ export default class SystemPlaidItem extends SystemModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
+    const Tenant = require('./Tenant');
 
     return {
       /**

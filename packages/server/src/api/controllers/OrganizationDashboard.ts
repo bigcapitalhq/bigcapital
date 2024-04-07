@@ -1,5 +1,5 @@
 import BaseController from '@/api/controllers/BaseController';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 import { ServiceError } from '../../exceptions';
 import OrganizationService from '../../services/Organization/OrganizationService';

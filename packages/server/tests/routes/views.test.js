@@ -1,9 +1,9 @@
 import 'models/ResourceField';
-import View from 'models/View';
-import ViewRole from 'models/ViewRole';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
 import ViewColumn from '../../src/models/ViewColumn';
+import View from '../models/View';
+import ViewRole from '../models/ViewRole';
 
 describe('routes: `/views`', () => {
   describe('GET: `/views`', () => {

@@ -1,4 +1,4 @@
-import { ITrialBalanceSheetQuery } from '@/interfaces';
+import type { ITrialBalanceSheetQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';

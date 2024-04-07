@@ -327,7 +327,7 @@ const mergeObjectsBykey = (object1, object2, key) => {
 };
 
 function templateRender(filePath, options) {
-  const basePath = path.join(global.__resources_dir, '/views');
+  const basePath = path.join(process.env.APP_RESOURCES_DIR, '/views');
   return pug.renderFile(`${basePath}/${filePath}.pug`, options);
 }
 

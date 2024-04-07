@@ -1,6 +1,6 @@
 import config from '@/data/options';
 import { IMetableStoreStorage, IMetadata } from '@/interfaces';
-import { isBlank, parseBoolean } from 'utils';
+import { isBlank, parseBoolean } from '../../utils';
 import MetableConfig from './MetableConfig';
 import MetableStore from './MetableStore';
 export default class MetableDBStore extends MetableStore implements IMetableStoreStorage {

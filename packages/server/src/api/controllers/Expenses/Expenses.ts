@@ -3,10 +3,10 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, ExpenseAction, IExpenseCreateDTO, IExpenseEditDTO } from '@/interfaces';
+import { AbilitySubject, ExpenseAction, type IExpenseCreateDTO, type IExpenseEditDTO } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { ExpensesApplication } from '@/services/Expenses/ExpensesApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

@@ -1,5 +1,5 @@
 import { ServiceError } from '@/exceptions';
-import { ISaleInvoiceCreateDTO, ProjectLinkRefType } from '@/interfaces';
+import { type ISaleInvoiceCreateDTO, ProjectLinkRefType } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { difference, isEmpty } from 'lodash';
 import { Inject, Service } from 'typedi';

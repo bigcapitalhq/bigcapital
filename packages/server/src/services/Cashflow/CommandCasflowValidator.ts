@@ -3,7 +3,7 @@ import { IAccount, IUncategorizedCashflowTransaction } from '@/interfaces';
 import CashflowTransaction from '@/models/CashflowTransaction';
 import { camelCase, includes, upperFirst } from 'lodash';
 import { Service } from 'typedi';
-import { CASHFLOW_DIRECTION, CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
+import { CASHFLOW_DIRECTION, type CASHFLOW_TRANSACTION_TYPE, ERRORS } from './constants';
 import { getCashflowTransactionType } from './utils';
 
 @Service()

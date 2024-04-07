@@ -1,4 +1,4 @@
-import { AccountNormal, IBillPayment, ILedgerEntry } from '@/interfaces';
+import { AccountNormal, type IBillPayment, type ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';

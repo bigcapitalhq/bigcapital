@@ -4,7 +4,7 @@ import { ItemEntry } from '@/models';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { difference, map, sumBy } from 'lodash';
 import { Inject, Service } from 'typedi';
-import { entriesAmountDiff } from 'utils';
+import { entriesAmountDiff } from '../../utils';
 
 const ERRORS = {
   ITEMS_NOT_FOUND: 'ITEMS_NOT_FOUND',

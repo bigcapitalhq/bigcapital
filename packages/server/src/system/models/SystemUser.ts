@@ -50,14 +50,14 @@ export default class SystemUser extends SystemModel {
    * Full name attribute.
    */
   get fullName() {
-    return (this.firstName + ' ' + this.lastName).trim();
+    return `${this.firstName} ${this.lastName}`.trim();
   }
 
   /**
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
+    const Tenant = require('./Tenant');
 
     return {
       /**

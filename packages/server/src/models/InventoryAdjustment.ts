@@ -1,5 +1,5 @@
-import TenantModel from 'models/TenantModel';
 import { Model, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import InventoryAdjustmentSettings from './InventoryAdjustment.Settings';
 import ModelSetting from './ModelSetting';
 
@@ -72,8 +72,8 @@ export default class InventoryAdjustment extends mixin(TenantModel, [ModelSettin
    * Relationship mapping.
    */
   static get relationMappings() {
-    const InventoryAdjustmentEntry = require('models/InventoryAdjustmentEntry');
-    const Account = require('models/Account');
+    const InventoryAdjustmentEntry = require('../models/InventoryAdjustmentEntry');
+    const Account = require('../models/Account');
 
     return {
       /**

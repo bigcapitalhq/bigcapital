@@ -9,7 +9,7 @@ const rename = require('gulp-rename'); // Renames files E.g. style.css -> style.
 const postcss = require('gulp-postcss'); // Transforming styles with JS plugins
 const rtlcss = require('rtlcss'); // Convert LTR CSS to RTL.
 
-const config = require('./gulpConfig');
+const config = require('./gulpConfig.cjs');
 
 gulp.task('styles', () => {
   const builds = config.style.build.map((build) => {

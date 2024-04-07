@@ -3,7 +3,7 @@ import accepts from 'accepts';
 import { NextFunction, Request, Response } from 'express';
 import { matchedData, validationResult } from 'express-validator';
 import { camelCase, drop, first, get, isArray, omit, set, snakeCase } from 'lodash';
-import { mapKeysDeep } from 'utils';
+import { mapKeysDeep } from '../../utils';
 
 export default class BaseController {
   /**

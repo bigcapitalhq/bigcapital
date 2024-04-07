@@ -3,9 +3,9 @@ import { defaultTo } from 'lodash';
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
 
-import { IAccount, IAccountTransactionsGroupBy, IProfitLossSheetQuery } from '@/interfaces';
+import { type IAccount, IAccountTransactionsGroupBy, type IProfitLossSheetQuery } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
-import { transformToMapBy } from 'utils';
+import { transformToMapBy } from '../../../utils';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
 import { ProfitLossSheetQuery } from './ProfitLossSheetQuery';
 

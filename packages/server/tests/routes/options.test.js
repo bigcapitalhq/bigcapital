@@ -1,6 +1,6 @@
-import Option from 'models/Option';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import Option from '../models/Option';
 
 describe('routes: `/options`', () => {
   describe('POST: `/options/`', () => {

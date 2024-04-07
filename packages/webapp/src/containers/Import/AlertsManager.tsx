@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useState, createContext, useContext } from 'react';
 
 interface AlertsManagerContextValue {

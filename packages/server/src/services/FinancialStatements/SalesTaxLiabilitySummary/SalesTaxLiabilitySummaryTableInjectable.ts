@@ -1,4 +1,7 @@
-import { ISalesTaxLiabilitySummaryTable, SalesTaxLiabilitySummaryQuery } from '@/interfaces/SalesTaxLiabilitySummary';
+import {
+  ISalesTaxLiabilitySummaryTable,
+  SalesTaxLiabilitySummaryQuery,
+} from '@/interfaces/SalesTaxLiabilitySummary';
 import { Inject, Service } from 'typedi';
 import { SalesTaxLiabilitySummaryService } from './SalesTaxLiabilitySummaryService';
 import { SalesTaxLiabilitySummaryTable } from './SalesTaxLiabilitySummaryTable';

@@ -1,6 +1,6 @@
 import { DEFAULT_VIEWS } from '@/services/Contacts/Customers/constants';
-import TenantModel from 'models/TenantModel';
 import { Model, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import CustomerSettings from './Customer.Settings';
 import ModelSearchable from './ModelSearchable';
@@ -130,7 +130,7 @@ export default class Customer extends mixin(TenantModel, [ModelSetting, CustomVi
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleInvoice = require('models/SaleInvoice');
+    const SaleInvoice = require('../models/SaleInvoice');
 
     return {
       salesInvoices: {

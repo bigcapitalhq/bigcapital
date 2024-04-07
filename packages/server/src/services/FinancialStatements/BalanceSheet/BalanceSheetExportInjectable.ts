@@ -1,6 +1,6 @@
-import { IBalanceSheetQuery } from '@/interfaces';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { Inject, Service } from 'typedi';
+import { IBalanceSheetQuery } from '../../../interfaces/BalanceSheet';
 import { BalanceSheetPdfInjectable } from './BalanceSheetPdfInjectable';
 import { BalanceSheetTableInjectable } from './BalanceSheetTableInjectable';
 

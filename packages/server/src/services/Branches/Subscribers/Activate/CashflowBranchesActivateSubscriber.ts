@@ -4,7 +4,7 @@ import { Inject, Service } from 'typedi';
 import { CashflowTransactionsActivateBranches } from '../../Integrations/Cashflow/CashflowActivateBranches';
 
 @Service()
-export class CreditNoteActivateBranchesSubscriber {
+export class CashflowBranchesActivateSubscriber {
   @Inject()
   private cashflowActivateBranches: CashflowTransactionsActivateBranches;
 

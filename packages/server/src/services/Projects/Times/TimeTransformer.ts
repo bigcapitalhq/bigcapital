@@ -1,6 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import Time from 'models/Time';
-import { formatMinutes } from 'utils/formatMinutes';
+import Time from '../../../models/Time';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 export class TimeTransformer extends Transformer {
   /**

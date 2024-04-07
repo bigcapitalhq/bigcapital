@@ -6,9 +6,9 @@ import {
   ISmsNotificationMeta,
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import SMSNotificationsConfig from 'config/smsNotifications';
 import { isUndefined, keyBy, omit } from 'lodash';
 import { Inject, Service } from 'typedi';
+import SMSNotificationsConfig from '../../config/smsNotifications';
 
 const ERRORS = {
   SMS_NOTIFICATION_KEY_NOT_FOUND: 'SMS_NOTIFICATION_KEY_NOT_FOUND',

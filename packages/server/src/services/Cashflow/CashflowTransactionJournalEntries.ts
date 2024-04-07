@@ -3,7 +3,7 @@ import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
-import { AccountNormal, ICashflowTransaction, ILedgerEntry } from '../../interfaces';
+import { AccountNormal, type ICashflowTransaction, type ILedgerEntry } from '../../interfaces';
 import { getCashflowAccountTransactionsTypes, transformCashflowTransactionType } from './utils';
 
 @Service()

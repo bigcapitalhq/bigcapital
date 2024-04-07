@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import { ImportableResources } from './ImportableResources';
 import { sanitizeResourceName } from './_utils';
 

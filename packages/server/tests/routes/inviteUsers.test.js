@@ -1,8 +1,8 @@
 import Invite from '@/system/models/Invite';
 import SystemUser from '@/system/models/SystemUser';
-import TenantUser from 'models/TenantUser';
 import { loginRes, tenantWebsite } from '~/dbInit';
 import { createUser, expect, request } from '~/testInit';
+import TenantUser from '../models/TenantUser';
 
 describe('routes: `/api/invite_users`', () => {
   describe('POST: `/api/invite_users/send`', () => {

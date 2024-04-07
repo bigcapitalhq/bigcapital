@@ -1,5 +1,5 @@
 import TenantRepository from '@/repositories/TenantRepository';
-import { PaymentReceiveEntry } from 'models';
+import { PaymentReceiveEntry } from '../models';
 
 export default class PaymentReceiveEntryRepository extends TenantRepository {
   /**

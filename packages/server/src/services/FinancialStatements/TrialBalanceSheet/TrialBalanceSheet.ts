@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import { sumBy } from 'lodash';
 import * as R from 'ramda';
-import { allPassedConditionsPass, flatToNestedArray } from 'utils';
+import { allPassedConditionsPass, flatToNestedArray } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 import { TrialBalanceSheetRepository } from './TrialBalanceSheetRepository';
 

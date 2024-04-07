@@ -1,6 +1,6 @@
-import Item from 'models/Item';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import Item from '../models/Item';
 
 describe('routes: `/items`', () => {
   describe('POST: `/items`', () => {

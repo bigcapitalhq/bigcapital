@@ -1,4 +1,4 @@
-import { Features, IFeatureConfiugration } from '@/interfaces';
+import { Features, type IFeatureConfiugration } from '@/interfaces';
 
 export const FeaturesConfigure: IFeatureConfiugration[] = [
   {

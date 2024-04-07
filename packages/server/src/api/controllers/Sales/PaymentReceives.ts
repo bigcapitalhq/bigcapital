@@ -2,13 +2,18 @@ import BaseController from '@/api/controllers/BaseController';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, IPaymentReceiveDTO, PaymentReceiveAction, PaymentReceiveMailOptsDTO } from '@/interfaces';
+import {
+  AbilitySubject,
+  type IPaymentReceiveDTO,
+  PaymentReceiveAction,
+  type PaymentReceiveMailOptsDTO,
+} from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { PaymentReceivesApplication } from '@/services/Sales/PaymentReceives/PaymentReceivesApplication';
 import PaymentReceivesPages from '@/services/Sales/PaymentReceives/PaymentReceivesPages';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, body, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 @Service()

@@ -3,13 +3,13 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, AccountAction, IAccountDTO, IAccountsStructureType } from '@/interfaces';
+import { AbilitySubject, AccountAction, type IAccountDTO, IAccountsStructureType } from '@/interfaces';
 import { AccountsApplication } from '@/services/Accounts/AccountsApplication';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
-import { MAX_ACCOUNTS_CHART_DEPTH } from 'services/Accounts/constants';
 import { Inject, Service } from 'typedi';
+import { MAX_ACCOUNTS_CHART_DEPTH } from '../../services/Accounts/constants';
 
 @Service()
 export default class AccountsController extends BaseController {

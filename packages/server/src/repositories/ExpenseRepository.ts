@@ -1,5 +1,5 @@
-import { Expense } from 'models';
 import moment from 'moment';
+import { Expense } from '../models';
 import TenantRepository from './TenantRepository';
 
 export default class ExpenseRepository extends TenantRepository {

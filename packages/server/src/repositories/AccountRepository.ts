@@ -2,7 +2,7 @@ import { TaxPayableAccount } from '@/database/seeds/data/accounts';
 import { IAccount } from '@/interfaces';
 import TenantRepository from '@/repositories/TenantRepository';
 import { Knex } from 'knex';
-import { Account } from 'models';
+import { Account } from '../models';
 
 export default class AccountRepository extends TenantRepository {
   /**

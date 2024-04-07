@@ -1,4 +1,9 @@
-import { AccountNormal, ILedgerEntry, IPaymentReceive, IPaymentReceiveGLCommonEntry } from '@/interfaces';
+import {
+  AccountNormal,
+  type ILedgerEntry,
+  type IPaymentReceive,
+  type IPaymentReceiveGLCommonEntry,
+} from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import TenancyService from '@/services/Tenancy/TenancyService';

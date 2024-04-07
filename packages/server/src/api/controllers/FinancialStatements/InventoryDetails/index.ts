@@ -3,7 +3,7 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { InventortyDetailsApplication } from '@/services/FinancialStatements/InventoryDetails/InventoryDetailsApplication';
-import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { type NextFunction, type Request, type Response, Router, type ValidationChain } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

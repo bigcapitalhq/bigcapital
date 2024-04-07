@@ -1,5 +1,5 @@
 import TenantRepository from '@/repositories/TenantRepository';
-import { InventoryTransaction } from 'models';
+import { InventoryTransaction } from '../models';
 
 export default class InventoryTransactionRepository extends TenantRepository {
   /**

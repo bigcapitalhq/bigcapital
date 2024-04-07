@@ -1,19 +1,19 @@
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetAccountNode,
-  IBalanceSheetAccountsNode,
-  IBalanceSheetAggregateNode,
-  IBalanceSheetDataNode,
-  IBalanceSheetNetIncomeNode,
-  IBalanceSheetQuery,
-  IBalanceSheetSchemaNode,
-  IBalanceSheetStatementData,
-  ITableColumn,
-  ITableColumnAccessor,
-  ITableRow,
+  type IBalanceSheetAccountNode,
+  type IBalanceSheetAccountsNode,
+  type IBalanceSheetAggregateNode,
+  type IBalanceSheetDataNode,
+  type IBalanceSheetNetIncomeNode,
+  type IBalanceSheetQuery,
+  type IBalanceSheetSchemaNode,
+  type IBalanceSheetStatementData,
+  type ITableColumn,
+  type ITableColumnAccessor,
+  type ITableRow,
 } from '@/interfaces';
 import * as R from 'ramda';
-import { tableRowMapper } from 'utils';
+import { tableRowMapper } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';

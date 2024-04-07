@@ -1,9 +1,9 @@
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, IProjectProfitabilitySummaryPOJO, ReportsAction } from '@/interfaces';
+import { AbilitySubject, type IProjectProfitabilitySummaryPOJO, ReportsAction } from '@/interfaces';
 import { ProjectProfitabilitySummaryService } from '@/services/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummaryService';
 import { ProjectProfitabilitySummaryTable } from '@/services/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummaryTable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { NextFunction, Request, Response, Router, ValidationChain } from 'express';
+import { type NextFunction, type Request, type Response, Router, type ValidationChain } from 'express';
 import { query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseFinancialReportController from '../BaseFinancialReportController';

@@ -6,8 +6,8 @@ import { AbilitySubject, IPaymentMadeAction } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { BillPaymentsApplication } from '@/services/Purchases/BillPayments/BillPaymentsApplication';
 import BillPaymentsPages from '@/services/Purchases/BillPayments/BillPaymentsPages';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 /**

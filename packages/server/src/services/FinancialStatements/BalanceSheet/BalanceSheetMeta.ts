@@ -1,6 +1,6 @@
-import { IBalanceSheetMeta, IBalanceSheetQuery } from '@/interfaces';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
+import { IBalanceSheetMeta, IBalanceSheetQuery } from '../../../interfaces/BalanceSheet';
 import { FinancialSheetMeta } from '../FinancialSheetMeta';
 
 @Service()

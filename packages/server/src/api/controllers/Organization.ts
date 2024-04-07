@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check } from 'express-validator';
 import moment from 'moment-timezone';
 import { Inject, Service } from 'typedi';
 

@@ -1,9 +1,9 @@
 import BaseController from '@/api/controllers/BaseController';
 import { FeatureActivationGuard } from '@/api/middleware/FeatureActivationGuard';
 import { ServiceError } from '@/exceptions';
-import { Features, ICreateBranchDTO, IEditBranchDTO } from '@/interfaces';
+import { Features, type ICreateBranchDTO, type IEditBranchDTO } from '@/interfaces';
 import { BranchesApplication } from '@/services/Branches/BranchesApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

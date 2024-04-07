@@ -2,7 +2,7 @@ import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
 import { parseJsonSafe } from '@/utils/parse-json-safe';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { body, param, query } from 'express-validator';
 import { defaultTo } from 'lodash';
 import { Inject, Service } from 'typedi';

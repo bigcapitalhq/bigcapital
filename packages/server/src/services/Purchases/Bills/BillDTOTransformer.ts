@@ -8,7 +8,7 @@ import { omit, sumBy } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import { formatDateFields } from 'utils';
+import { formatDateFields } from '../../../utils';
 
 @Service()
 export class BillDTOTransformer {

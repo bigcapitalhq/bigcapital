@@ -2,10 +2,10 @@ import BaseController from '@/api/controllers/BaseController';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, BillAction, IBillDTO, IBillEditDTO } from '@/interfaces';
+import { AbilitySubject, BillAction, type IBillDTO, type IBillEditDTO } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { BillsApplication } from '@/services/Purchases/Bills/BillsApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

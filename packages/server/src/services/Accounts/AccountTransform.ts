@@ -1,6 +1,6 @@
-import { IAccount, IAccountsStructureType } from '@/interfaces';
+import { type IAccount, IAccountsStructureType } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { assocDepthLevelToObjectTree, flatToNestedArray, formatNumber, nestedArrayToFlatten } from 'utils';
+import { assocDepthLevelToObjectTree, flatToNestedArray, formatNumber, nestedArrayToFlatten } from '../../utils';
 
 export class AccountTransformer extends Transformer {
   /**

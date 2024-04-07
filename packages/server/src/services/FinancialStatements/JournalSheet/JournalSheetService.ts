@@ -4,7 +4,7 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { transformToMap } from 'utils';
+import { transformToMap } from '../../../utils';
 import JournalSheet from './JournalSheet';
 import { JournalSheetMeta } from './JournalSheetMeta';
 

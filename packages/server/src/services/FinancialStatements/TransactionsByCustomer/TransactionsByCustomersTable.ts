@@ -1,6 +1,6 @@
 import { ITableColumn, ITableRow, ITransactionsByCustomersCustomer } from '@/interfaces';
 import * as R from 'ramda';
-import { tableRowMapper } from 'utils';
+import { tableRowMapper } from '../../../utils';
 import TransactionsByContactsTableRows from '../TransactionsByContact/TransactionsByContactTableRows';
 
 enum ROW_TYPE {

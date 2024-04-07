@@ -1,5 +1,5 @@
-import { IBalanceSheetQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
+import { IBalanceSheetQuery } from '../../../interfaces/BalanceSheet';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { BalanceSheetTableInjectable } from './BalanceSheetTableInjectable';
 import { HtmlTableCustomCss } from './constants';

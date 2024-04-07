@@ -1,8 +1,8 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { sumBy } from 'lodash';
-import Project from 'models/Project';
-import { formatNumber } from 'utils';
-import { formatMinutes } from 'utils/formatMinutes';
+import Project from '../../../models/Project';
+import { formatNumber } from '../../../utils';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 export class ProjectDetailedTransformer extends Transformer {
   /**

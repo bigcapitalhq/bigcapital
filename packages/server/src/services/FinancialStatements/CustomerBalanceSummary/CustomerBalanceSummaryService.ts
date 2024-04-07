@@ -7,12 +7,11 @@ import {
 import Ledger from '@/services/Accounting/Ledger';
 import { Tenant } from '@/system/models';
 import moment from 'moment';
-import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
 import { CustomerBalanceSummaryReport } from './CustomerBalanceSummary';
 import { CustomerBalanceSummaryMeta } from './CustomerBalanceSummaryMeta';
 import CustomerBalanceSummaryRepository from './CustomerBalanceSummaryRepository';
-
+const R = require('ramda');
 @Service()
 export class CustomerBalanceSummaryService implements ICustomerBalanceSummaryService {
   @Inject()
@@ -52,7 +51,7 @@ export class CustomerBalanceSummaryService implements ICustomerBalanceSummarySer
     const transactions = await this.reportRepository.getCustomersTransactions(tenantId, asDate);
     const commonProps = { accountNormal: 'debit', date: asDate };
 
-    return R.map(R.merge(commonProps))(transactions);
+    return map(merge(commonProps))(transactions);
   }
 
   /**

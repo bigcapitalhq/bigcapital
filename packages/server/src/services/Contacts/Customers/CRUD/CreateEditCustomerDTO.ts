@@ -1,4 +1,4 @@
-import { ContactService, ICustomer, ICustomerEditDTO, ICustomerNewDTO } from '@/interfaces';
+import { ContactService, type ICustomer, type ICustomerEditDTO, type ICustomerNewDTO } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
 import { defaultTo, isEmpty, omit } from 'lodash';
 import moment from 'moment';

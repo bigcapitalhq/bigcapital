@@ -19,7 +19,7 @@ export default class AuthenticationMailMesssages {
       .setAttachments([
         {
           filename: 'bigcapital.png',
-          path: `${global.__views_dir}/images/bigcapital.png`,
+          path: `${process.env.APP_VIEWS_DIR}/images/bigcapital.png`,
           cid: 'bigcapital_logo',
         },
       ])

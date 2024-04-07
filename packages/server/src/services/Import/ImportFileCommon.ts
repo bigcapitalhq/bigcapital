@@ -1,12 +1,12 @@
+import fs from 'node:fs/promises';
 import { ServiceError } from '@/exceptions';
 import Import from '@/models/Import';
 import bluebird from 'bluebird';
-import fs from 'fs/promises';
 import { Knex } from 'knex';
 import { first } from 'lodash';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { ImportFileDataValidator } from './ImportFileDataValidator';

@@ -1,4 +1,4 @@
-import { ProjectBillableEntriesQuery, ProjectBillableEntry, ProjectBillableType } from '@/interfaces';
+import { type ProjectBillableEntriesQuery, type ProjectBillableEntry, ProjectBillableType } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { flatten, includes, isEmpty } from 'lodash';

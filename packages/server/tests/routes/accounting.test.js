@@ -1,8 +1,8 @@
-import AccountTransaction from 'models/AccountTransaction';
-import ManualJournal from 'models/ManualJournal';
 import moment from 'moment';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import AccountTransaction from '../models/AccountTransaction';
+import ManualJournal from '../models/ManualJournal';
 
 describe('routes: `/accounting`', () => {
   describe('route: `/accounting/make-journal-entries`', async () => {

@@ -2,7 +2,7 @@ import { ITableColumn } from '@/interfaces';
 import { ITableRow } from '@/interfaces';
 import { clone, cloneDeep, isEmpty, omit } from 'lodash';
 import * as R from 'ramda';
-import { increment } from 'utils';
+import { increment } from '../../utils';
 import { IROW_TYPE } from './BalanceSheet/constants';
 
 export const FinancialTable = (Base) =>

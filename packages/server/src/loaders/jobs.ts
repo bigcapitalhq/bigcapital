@@ -5,12 +5,12 @@ import { SendSaleInvoiceReminderMailJob } from '@/services/Sales/Invoices/SendSa
 import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentReceives/PaymentReceiveMailNotificationJob';
 import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleReceiptMailNotificationJob';
 import Agenda from 'agenda';
-import ComputeItemCost from 'jobs/ComputeItemCost';
-import OrganizationSetupJob from 'jobs/OrganizationSetup';
-import OrganizationUpgrade from 'jobs/OrganizationUpgrade';
-import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
-import UserInviteMailJob from 'jobs/UserInviteMail';
-import RewriteInvoicesJournalEntries from 'jobs/WriteInvoicesJEntries';
+import ComputeItemCost from '../jobs/ComputeItemCost';
+import OrganizationSetupJob from '../jobs/OrganizationSetup';
+import OrganizationUpgrade from '../jobs/OrganizationUpgrade';
+import ResetPasswordMailJob from '../jobs/ResetPasswordMail';
+import UserInviteMailJob from '../jobs/UserInviteMail';
+import RewriteInvoicesJournalEntries from '../jobs/WriteInvoicesJEntries';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);

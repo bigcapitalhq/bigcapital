@@ -1,5 +1,5 @@
-import TenantModel from 'models/TenantModel';
 import { Model } from 'objection';
+import TenantModel from '../models/TenantModel';
 
 export default class Warehouse extends TenantModel {
   /**
@@ -36,15 +36,15 @@ export default class Warehouse extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const SaleInvoice = require('models/SaleInvoice');
-    const SaleEstimate = require('models/SaleEstimate');
-    const SaleReceipt = require('models/SaleReceipt');
-    const Bill = require('models/Bill');
-    const VendorCredit = require('models/VendorCredit');
-    const CreditNote = require('models/CreditNote');
-    const InventoryTransaction = require('models/InventoryTransaction');
-    const WarehouseTransfer = require('models/WarehouseTransfer');
-    const InventoryAdjustment = require('models/InventoryAdjustment');
+    const SaleInvoice = require('../models/SaleInvoice');
+    const SaleEstimate = require('../models/SaleEstimate');
+    const SaleReceipt = require('../models/SaleReceipt');
+    const Bill = require('../models/Bill');
+    const VendorCredit = require('../models/VendorCredit');
+    const CreditNote = require('../models/CreditNote');
+    const InventoryTransaction = require('../models/InventoryTransaction');
+    const WarehouseTransfer = require('../models/WarehouseTransfer');
+    const InventoryAdjustment = require('../models/InventoryAdjustment');
 
     return {
       /**

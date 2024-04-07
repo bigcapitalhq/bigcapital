@@ -1,10 +1,10 @@
-import { constants, PathLike, createReadStream, promises } from 'node:fs';
+import { constants, type PathLike, createReadStream, promises } from 'node:fs';
 import FormData from 'form-data';
 import { ConverterUtils } from './ConvertUtils';
 import { Converter } from './Converter';
 import { GotenbergUtils } from './GotenbergUtils';
 import { IConverter, PageProperties } from './_types';
-import { ChromiumRoute, PdfFormat } from './_types';
+import { ChromiumRoute, type PdfFormat } from './_types';
 
 export class HtmlConverter extends Converter implements IConverter {
   constructor() {

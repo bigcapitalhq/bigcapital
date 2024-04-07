@@ -1,6 +1,6 @@
-import Account from 'models/Account';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import Account from '../models/Account';
 
 describe('routes: /accounts/', () => {
   describe('POST `/accounts`', () => {

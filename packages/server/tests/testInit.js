@@ -7,8 +7,8 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import chaiThings from 'chai-things';
 import faker from 'faker';
-import TenantModel from 'models/TenantModel';
-import { hashPassword } from 'utils';
+import TenantModel from '../models/TenantModel';
+import { hashPassword } from '../utils';
 
 const { expect } = chai;
 const request = () => chai.request(app);

@@ -1,10 +1,10 @@
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetAggregateNode,
-  IBalanceSheetDataNode,
-  IBalanceSheetSchemaAggregateNode,
-  IBalanceSheetSchemaNode,
-  INumberFormatQuery,
+  type IBalanceSheetAggregateNode,
+  type IBalanceSheetDataNode,
+  type IBalanceSheetSchemaAggregateNode,
+  type IBalanceSheetSchemaNode,
+  type INumberFormatQuery,
 } from '@/interfaces';
 import * as R from 'ramda';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';

@@ -1,4 +1,8 @@
-import { ISaleReceiptCreatedPayload, ISaleReceiptEditedPayload, ISaleReceiptEventDeletedPayload } from '@/interfaces';
+import {
+  ISaleReceiptCreatedPayload,
+  ISaleReceiptEditedPayload,
+  ISaleReceiptEventDeletedPayload,
+} from '@/interfaces';
 import { SaleReceiptInventoryTransactions } from '@/services/Sales/Receipts/SaleReceiptInventoryTransactions';
 import events from '@/subscribers/events';
 import { EventSubscriber } from 'event-dispatch';

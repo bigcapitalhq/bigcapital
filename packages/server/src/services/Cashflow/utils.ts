@@ -4,7 +4,11 @@ import {
   IUncategorizedCashflowTransaction,
 } from '@/interfaces';
 import { camelCase, upperFirst } from 'lodash';
-import { CASHFLOW_TRANSACTION_TYPE, CASHFLOW_TRANSACTION_TYPE_META, ICashflowTransactionTypeMeta } from './constants';
+import {
+  type CASHFLOW_TRANSACTION_TYPE,
+  CASHFLOW_TRANSACTION_TYPE_META,
+  type ICashflowTransactionTypeMeta,
+} from './constants';
 
 /**
  * Ensures the given transaction type to transformed to appropriate format.

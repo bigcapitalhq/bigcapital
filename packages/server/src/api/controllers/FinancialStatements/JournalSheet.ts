@@ -2,7 +2,7 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, ReportsAction } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { JournalSheetApplication } from '@/services/FinancialStatements/JournalSheet/JournalSheetApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { oneOf, query } from 'express-validator';
 import { castArray } from 'lodash';
 import { Inject, Service } from 'typedi';

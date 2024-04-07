@@ -3,7 +3,7 @@ import ApplyVendorCreditToBills from '@/services/Purchases/VendorCredits/ApplyVe
 import DeleteApplyVendorCreditToBill from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/DeleteApplyVendorCreditToBill';
 import GetAppliedBillsToVendorCredit from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/GetAppliedBillsToVendorCredit';
 import GetVendorCreditToApplyBills from '@/services/Purchases/VendorCredits/ApplyVendorCreditToBills/GetVendorCreditToApplyBills';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

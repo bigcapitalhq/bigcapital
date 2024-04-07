@@ -4,7 +4,8 @@ import {
   IFormatNumberSettings,
   INumberFormatQuery,
 } from './FinancialStatements';
-import { IFinancialTable } from './Table';
+
+// import { IFinancialTable } from './Table';
 
 // Balance sheet schema nodes types.
 export enum BALANCE_SHEET_SCHEMA_NODE_TYPE {
@@ -73,18 +74,18 @@ export interface IBalanceSheetFormatNumberSettings extends IFormatNumberSettings
   type: string;
 }
 
-// Balance sheet service.
-export interface IBalanceSheetStatementService {
-  balanceSheet(tenantId: number, query: IBalanceSheetQuery): Promise<IBalanceSheetDOO>;
-}
+// // Balance sheet service.
+// export interface IBalanceSheetStatementService {
+//   balanceSheet(tenantId: number, query: IBalanceSheetQuery): Promise<IBalanceSheetDOO>;
+// }
 
 export type IBalanceSheetStatementData = IBalanceSheetDataNode[];
 
-export interface IBalanceSheetDOO {
-  query: IBalanceSheetQuery;
-  data: IBalanceSheetStatementData;
-  meta: IBalanceSheetMeta;
-}
+// export interface IBalanceSheetDOO {
+//   query: IBalanceSheetQuery;
+//   data: IBalanceSheetStatementData;
+//   meta: IBalanceSheetMeta;
+// }
 
 export interface IBalanceSheetCommonNode {
   total: IBalanceSheetTotal;
@@ -150,13 +151,13 @@ export interface IBalanceSheetPercentageAmount {
   formattedAmount: string;
 }
 
-export interface IBalanceSheetSchemaAggregateNode {
-  name: string;
-  id: string;
-  type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
-  children: IBalanceSheetSchemaNode[];
-  alwaysShow: boolean;
-}
+// export interface IBalanceSheetSchemaAggregateNode {
+//   name: string;
+//   id: string;
+//   type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
+//   children: IBalanceSheetSchemaNode[];
+//   alwaysShow: boolean;
+// }
 
 export interface IBalanceSheetSchemaAccountNode {
   name: string;
@@ -165,39 +166,39 @@ export interface IBalanceSheetSchemaAccountNode {
   accountsTypes: string[];
 }
 
-export interface IBalanceSheetSchemaNetIncomeNode {
-  id: string;
-  name: string;
-  type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
-}
+// export interface IBalanceSheetSchemaNetIncomeNode {
+//   id: string;
+//   name: string;
+//   type: BALANCE_SHEET_SCHEMA_NODE_TYPE;
+// }
 
-export type IBalanceSheetSchemaNode =
-  | IBalanceSheetSchemaAccountNode
-  | IBalanceSheetSchemaAggregateNode
-  | IBalanceSheetSchemaNetIncomeNode;
+// export type IBalanceSheetSchemaNode =
+//   | IBalanceSheetSchemaAccountNode
+//   | IBalanceSheetSchemaAggregateNode
+//   | IBalanceSheetSchemaNetIncomeNode;
 
-export interface IBalanceSheetDatePeriods {
-  assocAccountNodeDatePeriods(node): any;
-  initDateRangeCollection(): void;
-}
+// export interface IBalanceSheetDatePeriods {
+//   assocAccountNodeDatePeriods(node): any;
+//   initDateRangeCollection(): void;
+// }
 
-export interface IBalanceSheetComparsions {
-  assocPreviousYearAccountNode(node);
-  hasPreviousPeriod(): boolean;
-  hasPreviousYear(): boolean;
-  assocPreviousPeriodAccountNode(node);
-}
+// export interface IBalanceSheetComparsions {
+//   assocPreviousYearAccountNode(node);
+//   hasPreviousPeriod(): boolean;
+//   hasPreviousYear(): boolean;
+//   assocPreviousPeriodAccountNode(node);
+// }
 
-export interface IBalanceSheetTotalPeriod extends IFinancialSheetTotalPeriod {
-  percentageRow?: IBalanceSheetPercentageAmount;
-  percentageColumn?: IBalanceSheetPercentageAmount;
-}
+// export interface IBalanceSheetTotalPeriod extends IFinancialSheetTotalPeriod {
+//   percentageRow?: IBalanceSheetPercentageAmount;
+//   percentageColumn?: IBalanceSheetPercentageAmount;
+// }
 
-export interface IFinancialSheetTotalPeriod {
-  fromDate: any;
-  toDate: any;
-  total: any;
-}
+// export interface IFinancialSheetTotalPeriod {
+//   fromDate: any;
+//   toDate: any;
+//   total: any;
+// }
 
 export enum IFinancialDatePeriodsUnit {
   Day = 'day',
@@ -213,7 +214,7 @@ export enum IAccountTransactionsGroupBy {
   Week = 'week',
 }
 
-export interface IBalanceSheetTable extends IFinancialTable {
-  meta: IBalanceSheetMeta;
-  query: IBalanceSheetQuery;
-}
+// export interface IBalanceSheetTable extends IFinancialTable {
+//   meta: IBalanceSheetMeta;
+//   query: IBalanceSheetQuery;
+// }

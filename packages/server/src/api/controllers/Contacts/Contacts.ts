@@ -3,8 +3,8 @@ import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import { ServiceError } from '@/exceptions';
 import ContactsService from '@/services/Contacts/ContactsService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, body, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
 @Service()

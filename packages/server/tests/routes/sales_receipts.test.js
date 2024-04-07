@@ -1,6 +1,6 @@
-import { SaleReceipt } from 'models';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import { SaleReceipt } from '../models';
 
 describe('route: `/sales/receipts`', () => {
   describe('POST: `/sales/receipts`', () => {

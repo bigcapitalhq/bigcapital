@@ -1,8 +1,8 @@
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
 import { castArray, isEmpty } from 'lodash';
-import TenantModel from 'models/TenantModel';
 import moment from 'moment';
 import { Model, raw } from 'objection';
+import TenantModel from '../models/TenantModel';
 
 export default class AccountTransaction extends TenantModel {
   referenceType: string;
@@ -176,8 +176,8 @@ export default class AccountTransaction extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    const Contact = require('models/Contact');
+    const Account = require('../models/Account');
+    const Contact = require('../models/Contact');
 
     return {
       account: {

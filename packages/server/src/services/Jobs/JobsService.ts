@@ -1,7 +1,8 @@
 import { IJobMeta } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { first, pick } from 'lodash';
-import { ObjectId } from 'mongodb';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
 import { Inject, Service } from 'typedi';
 import { JobTransformer } from './JobTransformer';
 

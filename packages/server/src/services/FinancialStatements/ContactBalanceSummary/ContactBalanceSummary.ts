@@ -8,7 +8,7 @@ import {
 } from '@/interfaces';
 import { isEmpty, sumBy } from 'lodash';
 import * as R from 'ramda';
-import { allPassedConditionsPass } from 'utils';
+import { allPassedConditionsPass } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 
 export class ContactBalanceSummaryReport extends FinancialSheet {

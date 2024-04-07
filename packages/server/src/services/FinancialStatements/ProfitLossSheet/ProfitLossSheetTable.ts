@@ -1,17 +1,17 @@
 import {
-  IProfitLossSheetAccountNode,
-  IProfitLossSheetAccountsNode,
-  IProfitLossSheetEquationNode,
-  IProfitLossSheetNode,
-  IProfitLossSheetQuery,
-  ITableColumn,
-  ITableColumnAccessor,
-  ITableRow,
+  type IProfitLossSheetAccountNode,
+  type IProfitLossSheetAccountsNode,
+  type IProfitLossSheetEquationNode,
+  type IProfitLossSheetNode,
+  type IProfitLossSheetQuery,
+  type ITableColumn,
+  type ITableColumnAccessor,
+  type ITableRow,
   ProfitLossNodeType,
   ProfitLossSheetRowType,
 } from '@/interfaces';
 import * as R from 'ramda';
-import { tableRowMapper } from 'utils';
+import { tableRowMapper } from '../../../utils';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { FinancialTable } from '../FinancialTable';
 import { ProfitLossSheetBase } from './ProfitLossSheetBase';

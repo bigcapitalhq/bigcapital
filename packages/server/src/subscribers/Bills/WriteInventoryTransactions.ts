@@ -1,4 +1,9 @@
-import { IBIllEventDeletedPayload, IBillCreatedPayload, IBillEditedPayload, IBillOpenedPayload } from '@/interfaces';
+import {
+  IBIllEventDeletedPayload,
+  IBillCreatedPayload,
+  IBillEditedPayload,
+  IBillOpenedPayload,
+} from '@/interfaces';
 import { BillInventoryTransactions } from '@/services/Purchases/Bills/BillInventoryTransactions';
 import events from '@/subscribers/events';
 import { Inject, Service } from 'typedi';

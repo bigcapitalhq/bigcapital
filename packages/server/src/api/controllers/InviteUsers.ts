@@ -3,7 +3,7 @@ import { ServiceError } from '@/exceptions';
 import { IInviteUserInput } from '@/interfaces';
 import AcceptInviteUserService from '@/services/InviteUsers/AcceptInviteUser';
 import InviteTenantUserService from '@/services/InviteUsers/TenantInviteUser';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { body, check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from './BaseController';

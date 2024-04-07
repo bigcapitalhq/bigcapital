@@ -6,7 +6,7 @@ import { ACCEPT_TYPE } from '@/interfaces/Http';
 import { ISaleReceiptDTO, SaleReceiptMailOptsDTO } from '@/interfaces/SaleReceipt';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { SaleReceiptApplication } from '@/services/Sales/Receipts/SaleReceiptApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { body, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

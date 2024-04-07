@@ -1,6 +1,6 @@
-import { ServiceError } from 'exceptions';
-import HasTenancyService from 'services/Tenancy/TenancyService';
 import { Inject } from 'typedi';
+import { ServiceError } from '../../exceptions';
+import HasTenancyService from '../../services/Tenancy/TenancyService';
 import { ERRORS } from './constants';
 
 export class CURDBranch {

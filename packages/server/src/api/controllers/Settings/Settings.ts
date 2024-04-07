@@ -4,7 +4,7 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { IOptionDTO, IOptionsDTO } from '@/interfaces';
 import { AbilitySubject, PreferencesAction } from '@/interfaces';
 import SettingsService from '@/services/Settings/SettingsService';
-import { Request, Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { body, query } from 'express-validator';
 import { pick } from 'lodash';
 import { Inject, Service } from 'typedi';

@@ -1,25 +1,33 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "lib": ["es2017", "esnext.asynciterable"],
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
-    "module": "commonjs",
-    "pretty": true,
-    "sourceMap": true,
-    "outDir": "./build",
-    "allowJs": true,
+    "baseUrl": ".",
+    // "moduleDetection": "force",
+    // "allowImportingTsExtensions": true,
     "noEmit": false,
-    "esModuleInterop": true,
-    "baseUrl": "./src",
+    "composite": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "downlevelIteration": true,
+    // "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    // "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["./src/*"],
+      "before": ["./src/before.ts"],
+      "@config/*": ["./src/config/*"],
+      "@utils/*": ["./src/utils/*"]
+    },
+    "types": [
+      "bun-types" // add Bun global
+    ]
   },
-  "include": ["./src/**/*"],
-  "exclude": ["./node_modules", "tests"]
+  "include": ["src/**/*", "server-globals.ts"]
 }

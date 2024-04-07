@@ -1,5 +1,5 @@
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
-import { IProfitLossSchemaNode, ProfitLossAggregateNodeId, ProfitLossNodeType } from '@/interfaces';
+import { type IProfitLossSchemaNode, ProfitLossAggregateNodeId, ProfitLossNodeType } from '@/interfaces';
 import * as R from 'ramda';
 import { FinancialSchema } from '../FinancialSchema';
 

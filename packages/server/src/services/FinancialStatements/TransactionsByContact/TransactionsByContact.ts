@@ -8,7 +8,7 @@ import {
   ITransactionsByContactsTransaction,
 } from '@/interfaces';
 import { defaultTo, sumBy } from 'lodash';
-import { allPassedConditionsPass } from 'utils';
+import { allPassedConditionsPass } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 
 export default class TransactionsByContact extends FinancialSheet {

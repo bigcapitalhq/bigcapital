@@ -1,5 +1,5 @@
-import TenantModel from 'models/TenantModel';
-import { Model, ModelOptions, QueryContext, mixin } from 'objection';
+import { Model, type ModelOptions, type QueryContext, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import Account from './Account';
 import ModelSettings from './ModelSetting';
 import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
@@ -69,7 +69,7 @@ export default class UncategorizedCashflowTransaction extends mixin(TenantModel,
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
+    const Account = require('../models/Account');
 
     return {
       /**

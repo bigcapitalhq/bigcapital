@@ -5,7 +5,7 @@ import { omit } from 'lodash';
 import * as qim from 'qim';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 
 @Service()
 export default class BillAllocatedLandedCostTransactions {

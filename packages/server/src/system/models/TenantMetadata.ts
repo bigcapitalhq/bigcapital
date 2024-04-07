@@ -1,4 +1,4 @@
-import BaseModel from 'models/Model';
+import BaseModel from '../../models/Model';
 
 export default class TenantMetadata extends BaseModel {
   baseCurrency: string;

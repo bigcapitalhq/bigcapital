@@ -1,13 +1,13 @@
 import { ACCOUNT_TYPES, getAccountsSupportsMultiCurrency } from '@/data/AccountTypes';
 import AccountTypesUtils from '@/lib/AccountTypes';
 import DependencyGraph from '@/lib/DependencyGraph';
-import { buildFilterQuery, buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
+import { buildSortColumnQuery } from '@/lib/ViewRolesBuilder';
 import TenantModel from '@/models/TenantModel';
 import { DEFAULT_VIEWS } from '@/services/Accounts/constants';
 import { castArray } from 'lodash';
 /* eslint-disable global-require */
 import { Model, mixin } from 'objection';
-import { flatToNestedArray } from 'utils';
+import { flatToNestedArray } from '../utils';
 import AccountSettings from './Account.Settings';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
@@ -179,14 +179,14 @@ export default class Account extends mixin(TenantModel, [ModelSettings, CustomVi
    * Relationship mapping.
    */
   static get relationMappings() {
-    const AccountTransaction = require('models/AccountTransaction');
-    const Item = require('models/Item');
-    const InventoryAdjustment = require('models/InventoryAdjustment');
-    const ManualJournalEntry = require('models/ManualJournalEntry');
-    const Expense = require('models/Expense');
-    const ExpenseEntry = require('models/ExpenseCategory');
-    const ItemEntry = require('models/ItemEntry');
-    const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
+    const AccountTransaction = require('../models/AccountTransaction');
+    const Item = require('../models/Item');
+    const InventoryAdjustment = require('../models/InventoryAdjustment');
+    const ManualJournalEntry = require('../models/ManualJournalEntry');
+    const Expense = require('../models/Expense');
+    const ExpenseEntry = require('../models/ExpenseCategory');
+    const ItemEntry = require('../models/ItemEntry');
+    const UncategorizedTransaction = require('../models/UncategorizedCashflowTransaction');
 
     return {
       /**

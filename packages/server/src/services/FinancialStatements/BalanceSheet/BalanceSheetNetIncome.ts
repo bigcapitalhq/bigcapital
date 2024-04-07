@@ -1,10 +1,10 @@
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
-  IBalanceSheetDataNode,
-  IBalanceSheetNetIncomeNode,
-  IBalanceSheetSchemaNetIncomeNode,
-  IBalanceSheetSchemaNode,
-  IBalanceSheetTotalPeriod,
+  type IBalanceSheetDataNode,
+  type IBalanceSheetNetIncomeNode,
+  type IBalanceSheetSchemaNetIncomeNode,
+  type IBalanceSheetSchemaNode,
+  type IBalanceSheetTotalPeriod,
 } from '@/interfaces';
 import * as R from 'ramda';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';

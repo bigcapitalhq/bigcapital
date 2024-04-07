@@ -1,8 +1,8 @@
 import {
-  IProjectCreateDTO,
-  IProjectCreatePOJO,
-  IProjectCreatedEventPayload,
-  IProjectCreatingEventPayload,
+  type IProjectCreateDTO,
+  type IProjectCreatePOJO,
+  type IProjectCreatedEventPayload,
+  type IProjectCreatingEventPayload,
   IProjectStatus,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';

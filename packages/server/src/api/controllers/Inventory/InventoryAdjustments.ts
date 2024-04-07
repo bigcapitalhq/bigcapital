@@ -2,7 +2,7 @@ import { ServiceError } from '@/exceptions';
 import { AbilitySubject, InventoryAdjustmentAction } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import InventoryAdjustmentService from '@/services/Inventory/InventoryAdjustmentService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import CheckPolicies from '../../middleware/CheckPolicies';

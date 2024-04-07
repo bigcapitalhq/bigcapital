@@ -9,7 +9,7 @@ import {
   ISalesByItemsTotal,
 } from '@/interfaces';
 import * as R from 'ramda';
-import { allPassedConditionsPass, transformToMap } from 'utils';
+import { allPassedConditionsPass, transformToMap } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
 
 export default class SalesByItemsReport extends FinancialSheet {

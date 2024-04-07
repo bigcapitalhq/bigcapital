@@ -1,5 +1,5 @@
 import definedOptions from '@/data/options';
-import TenantModel from 'models/TenantModel';
+import TenantModel from '../models/TenantModel';
 
 export default class Option extends TenantModel {
   /**

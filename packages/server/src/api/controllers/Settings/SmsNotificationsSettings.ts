@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, oneOf, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 
@@ -7,7 +7,7 @@ import BaseController from '../BaseController';
 
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, IEditSmsNotificationDTO, PreferencesAction } from '@/interfaces';
+import { AbilitySubject, type IEditSmsNotificationDTO, PreferencesAction } from '@/interfaces';
 
 @Service()
 export default class SettingsController extends BaseController {

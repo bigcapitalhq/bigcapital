@@ -1,6 +1,6 @@
 import BaseController from '@/api/controllers/BaseController';
 import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
-import { Request, Response, Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { Inject, Service } from 'typedi';
 
 @Service()

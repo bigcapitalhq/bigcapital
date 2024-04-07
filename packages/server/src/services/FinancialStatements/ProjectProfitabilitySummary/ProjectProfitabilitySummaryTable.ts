@@ -1,14 +1,14 @@
 import {
-  IProjectProfitabilitySummaryData,
-  IProjectProfitabilitySummaryProjectNode,
+  type IProjectProfitabilitySummaryData,
+  type IProjectProfitabilitySummaryProjectNode,
   IProjectProfitabilitySummaryRowType,
-  IProjectProfitabilitySummaryTotalNode,
-  ITableColumn,
-  ITableRow,
+  type IProjectProfitabilitySummaryTotalNode,
+  type ITableColumn,
+  type ITableRow,
 } from '@/interfaces';
 import { map } from 'lodash/fp';
 import * as R from 'ramda';
-import { tableRowMapper } from 'utils';
+import { tableRowMapper } from '../../../utils';
 
 export class ProjectProfitabilitySummaryTable {
   /**

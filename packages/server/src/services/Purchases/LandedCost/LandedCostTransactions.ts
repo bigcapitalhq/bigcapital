@@ -8,7 +8,7 @@ import {
 import { ref } from 'objection';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 import TransactionLandedCost from './TransctionLandedCost';
 
 @Service()

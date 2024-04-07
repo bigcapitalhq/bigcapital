@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

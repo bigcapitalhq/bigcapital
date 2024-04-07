@@ -1,4 +1,4 @@
-import { IProfitLossSheetNode, ProfitLossAggregateNodeId } from '@/interfaces';
+import { type IProfitLossSheetNode, ProfitLossAggregateNodeId } from '@/interfaces';
 import * as R from 'ramda';
 import { FinancialHorizTotals } from '../FinancialHorizTotals';
 

@@ -1,8 +1,8 @@
 import BaseController from '@/api/controllers/BaseController';
 import { ITransactionsByReferenceTransaction } from '@/interfaces';
 import TransactionsByReferenceService from '@/services/FinancialStatements/TransactionsByReference';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 @Service()
 export default class TransactionsByReferenceController extends BaseController {

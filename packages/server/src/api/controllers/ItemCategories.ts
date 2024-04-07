@@ -5,7 +5,7 @@ import { ServiceError } from '@/exceptions';
 import { IItemCategoryOTD } from '@/interfaces';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import ItemCategoriesService from '@/services/ItemCategories/ItemCategoriesService';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

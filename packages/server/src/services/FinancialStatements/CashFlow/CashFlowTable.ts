@@ -1,16 +1,17 @@
 import {
-  ICashFlowStatementDOO,
-  ICashFlowStatementSection,
+  type ICashFlowStatementDOO,
+  type ICashFlowStatementSection,
   ICashFlowStatementSectionType,
-  IDateRange,
-  ITableColumn,
-  ITableRow,
+  type ICashFlowTable,
+  type IDateRange,
+  type ITableColumn,
+  type ITableRow,
 } from '@/interfaces';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
 import * as R from 'ramda';
-import { dateRangeFromToCollection, tableRowMapper } from 'utils';
-import { mapValuesDeep } from 'utils/deepdash';
+import { dateRangeFromToCollection, tableRowMapper } from '../../../utils';
+import { mapValuesDeep } from '../../../utils/deepdash';
 
 enum IROW_TYPE {
   AGGREGATE = 'AGGREGATE',

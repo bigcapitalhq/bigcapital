@@ -1,10 +1,10 @@
 import knex from '@/database/knex';
 import PasswordReset from '@/system/models/PasswordReset';
 import SystemUser from '@/system/models/SystemUser';
-import TenantUser from 'models/TenantUser';
-import { hashPassword } from 'utils';
 import { systemFactory, tenantWebsite } from '~/dbInit';
 import { createUser, expect, request } from '~/testInit';
+import TenantUser from '../models/TenantUser';
+import { hashPassword } from '../utils';
 
 describe('routes: /auth/', () => {
   describe('POST `/api/auth/login`', () => {

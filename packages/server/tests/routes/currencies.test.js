@@ -1,6 +1,6 @@
-import Currency from 'models/Currency';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import Currency from '../models/Currency';
 
 describe('route: /currencies/', () => {
   describe('POST: `/api/currencies`', () => {

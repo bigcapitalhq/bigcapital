@@ -1,10 +1,10 @@
 import { pick } from 'lodash';
-import AccountTransaction from 'models/AccountTransaction';
-import Expense from 'models/Expense';
-import ExpenseCategory from 'models/ExpenseCategory';
 import moment from 'moment';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import AccountTransaction from '../models/AccountTransaction';
+import Expense from '../models/Expense';
+import ExpenseCategory from '../models/ExpenseCategory';
 
 describe('routes: /expenses/', () => {
   describe('POST `/expenses`', () => {

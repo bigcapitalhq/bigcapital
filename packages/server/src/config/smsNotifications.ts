@@ -1,4 +1,4 @@
-import { ISmsNotificationDefined, SMS_NOTIFICATION_KEY } from '@/interfaces';
+import { type ISmsNotificationDefined, SMS_NOTIFICATION_KEY } from '@/interfaces';
 
 export default [
   {

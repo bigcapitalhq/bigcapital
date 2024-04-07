@@ -4,7 +4,7 @@ import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
 import { AbilitySubject, IProjectStatus, ProjectAction } from '@/interfaces';
 import { ProjectsApplication } from '@/services/Projects/Projects/ProjectsApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

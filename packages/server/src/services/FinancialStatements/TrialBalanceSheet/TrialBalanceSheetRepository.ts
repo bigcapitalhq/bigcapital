@@ -1,4 +1,4 @@
-import { ITrialBalanceSheetQuery } from '@/interfaces';
+import type { ITrialBalanceSheetQuery } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';

@@ -1,4 +1,9 @@
-import { ICustomer, ICustomerEditDTO, ICustomerEventEditedPayload, ICustomerEventEditingPayload } from '@/interfaces';
+import {
+  ICustomer,
+  ICustomerEditDTO,
+  ICustomerEventEditedPayload,
+  ICustomerEventEditingPayload,
+} from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';

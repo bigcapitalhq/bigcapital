@@ -1,4 +1,8 @@
-import { IManualJournal, IManualJournalEventPublishedPayload, IManualJournalPublishingPayload } from '@/interfaces';
+import {
+  IManualJournal,
+  IManualJournalEventPublishedPayload,
+  IManualJournalPublishingPayload,
+} from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { Knex } from 'knex';

@@ -4,7 +4,7 @@ import { ServiceError } from '@/exceptions';
 import { AbilitySubject, AccountAction } from '@/interfaces';
 import TransactionsLockingService from '@/services/TransactionsLocking/CommandTransactionsLockingService';
 import QueryTransactionsLocking from '@/services/TransactionsLocking/QueryTransactionsLocking';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param } from 'express-validator';
 import { Inject, Service } from 'typedi';
 

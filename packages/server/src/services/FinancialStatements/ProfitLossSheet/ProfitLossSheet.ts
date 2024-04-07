@@ -1,12 +1,12 @@
 import {
-  IAccount,
-  IProfitLossAccountsSchemaNode,
-  IProfitLossEquationSchemaNode,
-  IProfitLossSchemaNode,
-  IProfitLossSheetAccountNode,
-  IProfitLossSheetAccountsNode,
-  IProfitLossSheetEquationNode,
-  IProfitLossSheetNode,
+  type IAccount,
+  type IProfitLossAccountsSchemaNode,
+  type IProfitLossEquationSchemaNode,
+  type IProfitLossSchemaNode,
+  type IProfitLossSheetAccountNode,
+  type IProfitLossSheetAccountsNode,
+  type IProfitLossSheetEquationNode,
+  type IProfitLossSheetNode,
   ProfitLossNodeType,
 } from '@/interfaces';
 import { IProfitLossSheetQuery } from '@/interfaces/ProfitLossSheet';

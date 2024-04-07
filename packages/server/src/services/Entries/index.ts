@@ -1,7 +1,7 @@
 import { ServiceError } from '@/exceptions';
 import { ICommonLandedCostEntry, ICommonLandedCostEntryDTO } from '@/interfaces';
 import { Service } from 'typedi';
-import { transformToMap } from 'utils';
+import { transformToMap } from '../../utils';
 
 const ERRORS = {
   ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED: 'ENTRIES_ALLOCATED_COST_COULD_NOT_DELETED',

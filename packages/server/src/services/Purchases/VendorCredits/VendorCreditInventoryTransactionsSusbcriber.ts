@@ -1,4 +1,8 @@
-import { IVendorCreditCreatedPayload, IVendorCreditDeletedPayload, IVendorCreditEditedPayload } from '@/interfaces';
+import {
+  IVendorCreditCreatedPayload,
+  IVendorCreditDeletedPayload,
+  IVendorCreditEditedPayload,
+} from '@/interfaces';
 import events from '@/subscribers/events';
 import { Inject, Service } from 'typedi';
 import VendorCreditInventoryTransactions from './VendorCreditInventoryTransactions';

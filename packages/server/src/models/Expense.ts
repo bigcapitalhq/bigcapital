@@ -1,8 +1,8 @@
-import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
+// import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
 import { DEFAULT_VIEWS } from '@/services/Expenses/constants';
-import TenantModel from 'models/TenantModel';
 import moment from 'moment';
 import { Model, mixin, raw } from 'objection';
+import TenantModel from '../models/TenantModel';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ExpenseSettings from './Expense.Settings';
 import ModelSearchable from './ModelSearchable';
@@ -131,9 +131,9 @@ export default class Expense extends mixin(TenantModel, [ModelSetting, CustomVie
           query.where('payment_account_id', accountId);
         }
       },
-      viewRolesBuilder(query, conditionals, expression) {
-        viewRolesBuilder(conditionals, expression)(query);
-      },
+      // viewRolesBuilder(query, conditionals, expression) {
+      //   viewRolesBuilder(conditionals, expression)(query);
+      // },
 
       filterByDraft(query) {
         query.where('published_at', null);
@@ -174,10 +174,10 @@ export default class Expense extends mixin(TenantModel, [ModelSetting, CustomVie
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    const ExpenseCategory = require('models/ExpenseCategory');
-    const Media = require('models/Media');
-    const Branch = require('models/Branch');
+    const Account = require('../models/Account');
+    const ExpenseCategory = require('../models/ExpenseCategory');
+    const Media = require('../models/Media');
+    const Branch = require('../models/Branch');
 
     return {
       paymentAccount: {

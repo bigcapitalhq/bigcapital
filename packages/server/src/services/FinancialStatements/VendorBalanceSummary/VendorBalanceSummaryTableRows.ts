@@ -8,7 +8,7 @@ import {
   IVendorBalanceSummaryVendor,
 } from '@/interfaces';
 import * as R from 'ramda';
-import { tableMapper, tableRowMapper } from 'utils';
+import { tableMapper, tableRowMapper } from '../../../utils';
 
 enum TABLE_ROWS_TYPES {
   VENDOR = 'VENDOR',

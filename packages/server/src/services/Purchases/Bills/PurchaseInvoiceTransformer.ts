@@ -2,7 +2,7 @@ import { IBill } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { SaleInvoiceTaxEntryTransformer } from '@/services/Sales/Invoices/SaleInvoiceTaxEntryTransformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 
 export class PurchaseInvoiceTransformer extends Transformer {
   /**

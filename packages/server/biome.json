@@ -1,4 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
-  "extends": ["../../biome.json"]
+  "extends": ["../../biome.json"],
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "useImportType": "error"
+      }
+    }
+  }
 }

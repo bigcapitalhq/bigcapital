@@ -1,9 +1,9 @@
 import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
 import { getCashflowAccountTransactionsTypes, getCashflowTransactionType } from '@/services/Cashflow/utils';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
-import TenantModel from 'models/TenantModel';
 /* eslint-disable global-require */
 import { Model } from 'objection';
+import TenantModel from '../models/TenantModel';
 export default class CashflowTransaction extends TenantModel {
   transactionType: string;
   amount: number;
@@ -88,9 +88,9 @@ export default class CashflowTransaction extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const CashflowTransactionLine = require('models/CashflowTransactionLine');
-    const AccountTransaction = require('models/AccountTransaction');
-    const Account = require('models/Account');
+    const CashflowTransactionLine = require('../models/CashflowTransactionLine');
+    const AccountTransaction = require('../models/AccountTransaction');
+    const Account = require('../models/Account');
 
     return {
       /**

@@ -1,6 +1,6 @@
-import Expense from 'models/Expense';
 import { tenantFactory } from '~/dbInit';
 import { expect } from '~/testInit';
+import Expense from '../models/Expense';
 
 describe('Model: Expense', () => {
   describe('relations', () => {

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import color from 'colorette';
-import commander from 'commander';
+import * as color from 'colorette';
+import { program as commander } from 'commander';
 import argv from 'getopts';
 import Knex from 'knex';
 import { knexSnakeCaseMappers } from 'objection';

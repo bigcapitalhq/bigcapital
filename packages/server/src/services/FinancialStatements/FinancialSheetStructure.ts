@@ -1,14 +1,14 @@
 import { set, sumBy } from 'lodash';
+import { mapValues } from 'lodash';
 import * as R from 'ramda';
 import {
   filterDeep,
   filterNodesDeep,
   findValueDeep,
-  mapValues,
   mapValuesDeep,
   mapValuesDeepReverse,
   reduceDeep,
-} from 'utils/deepdash';
+} from '../../utils/deepdash';
 
 export const FinancialSheetStructure = (Base: Class) =>
   class extends Base {

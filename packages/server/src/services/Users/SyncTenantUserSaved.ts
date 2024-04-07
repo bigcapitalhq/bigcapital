@@ -1,4 +1,8 @@
-import { ITenantUserActivatedPayload, ITenantUserEditedPayload, ITenantUserInactivatedPayload } from '@/interfaces';
+import {
+  ITenantUserActivatedPayload,
+  ITenantUserEditedPayload,
+  ITenantUserInactivatedPayload,
+} from '@/interfaces';
 import events from '@/subscribers/events';
 import { SystemUser } from '@/system/models';
 import { pick } from 'lodash';

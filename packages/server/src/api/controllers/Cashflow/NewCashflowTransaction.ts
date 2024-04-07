@@ -2,7 +2,7 @@ import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
-import { NextFunction, Request, Response, Router } from 'express';
+import { type NextFunction, type Request, type Response, Router } from 'express';
 import { check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';

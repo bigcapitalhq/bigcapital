@@ -1,8 +1,8 @@
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import { ServiceError } from '@/exceptions';
 import CurrenciesService from '@/services/Currencies/CurrenciesService';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import BaseController from './BaseController';
 

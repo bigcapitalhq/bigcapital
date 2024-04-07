@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import * as R from 'ramda';
-import { BALANCE_SHEET_NODE_TYPE, IBalanceSheetDataNode } from '../../../interfaces';
+import { BALANCE_SHEET_NODE_TYPE, type IBalanceSheetDataNode } from '../../../interfaces';
 import { FinancialFilter } from '../FinancialFilter';
 
 export const BalanceSheetFiltering = (Base) =>

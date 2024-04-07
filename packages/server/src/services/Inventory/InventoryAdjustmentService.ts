@@ -1,5 +1,5 @@
 import { ServiceError } from '@/exceptions';
-import {
+import type {
   IInventoryAdjustment,
   IInventoryAdjustmentCreatingPayload,
   IInventoryAdjustmentDeletingPayload,

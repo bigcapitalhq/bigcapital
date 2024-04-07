@@ -1,6 +1,6 @@
-import ItemCategory from 'models/ItemCategory';
 import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
 import { expect, request } from '~/testInit';
+import ItemCategory from '../models/ItemCategory';
 
 describe('routes: /item_categories/', () => {
   describe('POST `/items_categories``', async () => {

@@ -1,7 +1,7 @@
-import Resource from 'models/Resource';
-import View from 'models/View';
 import { tenantFactory } from '~/dbInit';
 import { expect } from '~/testInit';
+import Resource from '../models/Resource';
+import View from '../models/View';
 
 describe('Model: View', () => {
   it('View model may has many associated resource.', async () => {

@@ -1,9 +1,6 @@
 {
   "name": "bigcapital-monorepo",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "build": "lerna run build",
     "build:server": "lerna run build --scope \"@bigcapital/server\"",
@@ -18,6 +15,7 @@
     "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
     "test:e2e": "playwright test"
   },
+  "workspaces": ["packages/*"],
   "husky": {
     "hooks": {
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
@@ -30,11 +28,18 @@
     "@commitlint/config-lerna-scopes": "^17.8.1",
     "@faker-js/faker": "^8.4.1",
     "@playwright/test": "^1.43.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.12.5",
+    "bun": "^1.1.2",
+    "bun-types": "^1.1.2",
     "husky": "^9.0.11",
     "lerna": "^8.1.2",
     "nx": "^18.2.3"
   },
   "engines": {
     "node": "16.x || 17.x || 18.x || 20.x || 21.x"
+  },
+  "dependencies": {
+    "objection": "^3.1.4"
   }
 }

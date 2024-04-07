@@ -3,7 +3,7 @@ import { Inject, Service } from 'typedi';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { ERRORS } from './_utils';
-import { ImportDateFormats, ImportFileMapPOJO, ImportMappingAttr } from './interfaces';
+import { ImportDateFormats, type ImportFileMapPOJO, type ImportMappingAttr } from './interfaces';
 
 @Service()
 export class ImportFileMapping {

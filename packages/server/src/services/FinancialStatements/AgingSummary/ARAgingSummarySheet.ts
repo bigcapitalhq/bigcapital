@@ -8,7 +8,7 @@ import {
   ICustomer,
   ISaleInvoice,
 } from '@/interfaces';
-import { Dictionary, groupBy, isEmpty, sum } from 'lodash';
+import { type Dictionary, groupBy, isEmpty, sum } from 'lodash';
 import * as R from 'ramda';
 import { allPassedConditionsPass } from '../../../utils';
 import AgingSummaryReport from './AgingSummary';

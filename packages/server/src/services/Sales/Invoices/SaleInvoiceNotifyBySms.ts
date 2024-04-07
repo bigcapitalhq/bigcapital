@@ -1,10 +1,10 @@
 import { ServiceError } from '@/exceptions';
 import {
-  ICustomer,
-  ISaleInvoice,
-  ISaleInvoiceSmsDetails,
-  ISaleInvoiceSmsDetailsDTO,
-  InvoiceNotificationType,
+  type ICustomer,
+  type ISaleInvoice,
+  type ISaleInvoiceSmsDetails,
+  type ISaleInvoiceSmsDetailsDTO,
+  type InvoiceNotificationType,
   SMS_NOTIFICATION_KEY,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -14,7 +14,7 @@ import events from '@/subscribers/events';
 import { TenantMetadata } from '@/system/models';
 import moment from 'moment';
 import { Inject, Service } from 'typedi';
-import { formatNumber, formatSmsMessage } from 'utils';
+import { formatNumber, formatSmsMessage } from '../../../utils';
 import SaleNotifyBySms from '../SaleNotifyBySms';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { ERRORS } from './constants';

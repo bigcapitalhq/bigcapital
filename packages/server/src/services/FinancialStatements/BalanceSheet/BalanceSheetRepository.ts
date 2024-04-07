@@ -1,10 +1,10 @@
-import { IAccountTransactionsGroupBy, IBalanceSheetQuery, ILedger } from '@/interfaces';
+import { IAccountTransactionsGroupBy, type IBalanceSheetQuery, type ILedger } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
 import { Service } from 'typedi';
-import { transformToMapBy } from 'utils';
+import { transformToMapBy } from '../../../utils';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';

@@ -1,5 +1,5 @@
-import ModelEntityNotFound from 'exceptions/ModelEntityNotFound';
 import { cloneDeep, forOwn, isString } from 'lodash';
+import ModelEntityNotFound from '../exceptions/ModelEntityNotFound';
 
 function applyGraphFetched(withRelations, builder) {
   const relations = Array.isArray(withRelations)

@@ -6,15 +6,15 @@ import LoggerMiddleware from '@/api/middleware/LoggerMiddleware';
 import ObjectionErrorHandlerMiddleware from '@/api/middleware/ObjectionErrorHandlerMiddleware';
 import RateLimiterMiddleware from '@/api/middleware/RateLimiterMiddleware';
 import config from '@/config';
-import routes from 'api';
 import bodyParser from 'body-parser';
 import errorHandler from 'errorhandler';
-import { NextFunction, Request, Response, json } from 'express';
+import { type NextFunction, type Request, type Response, json } from 'express';
 import express from 'express';
 import boom from 'express-boom';
 import helmet from 'helmet';
 import { Server } from 'socket.io';
 import Container from 'typedi';
+import routes from '../api';
 
 export default ({ app }) => {
   // Express configuration.
@@ -41,7 +41,7 @@ export default ({ app }) => {
   // Middleware for intercepting and transforming json responses.
   app.use(JSONResponseTransformer(snakecaseResponseTransformer));
 
-  app.use('/public', express.static(path.join(global.__storage_dir)));
+  app.use('/public', express.static(path.join(process.env.APP_STORAGE_DIR)));
 
   // Logger middleware.
   app.use(LoggerMiddleware);

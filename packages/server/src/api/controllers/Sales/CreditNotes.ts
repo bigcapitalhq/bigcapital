@@ -1,7 +1,7 @@
 import BaseController from '@/api/controllers/BaseController';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { ServiceError } from '@/exceptions';
-import { AbilitySubject, CreditNoteAction, ICreditNoteEditDTO, ICreditNoteNewDTO } from '@/interfaces';
+import { AbilitySubject, CreditNoteAction, type ICreditNoteEditDTO, type ICreditNoteNewDTO } from '@/interfaces';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
 import CreateCreditNote from '@/services/CreditNotes/CreateCreditNote';
 import CreateRefundCreditNote from '@/services/CreditNotes/CreateRefundCreditNote';
@@ -18,8 +18,8 @@ import ListCreditNoteRefunds from '@/services/CreditNotes/ListCreditNoteRefunds'
 import ListCreditNotes from '@/services/CreditNotes/ListCreditNotes';
 import OpenCreditNote from '@/services/CreditNotes/OpenCreditNote';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { NextFunction, Request, Response, Router } from 'express';
-import { ValidationChain, check, param, query } from 'express-validator';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { type ValidationChain, check, param, query } from 'express-validator';
 import { Inject, Service } from 'typedi';
 import GetCreditNotePdf from '../../../services/CreditNotes/GetCreditNotePdf';
 /**

@@ -1,4 +1,4 @@
-import { IProfitLossSheetNode, ProfitLossNodeType } from '@/interfaces';
+import { type IProfitLossSheetNode, ProfitLossNodeType } from '@/interfaces';
 import { get } from 'lodash';
 import * as R from 'ramda';
 import { FinancialFilter } from '../FinancialFilter';

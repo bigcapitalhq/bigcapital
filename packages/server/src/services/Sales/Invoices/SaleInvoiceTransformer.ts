@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 
