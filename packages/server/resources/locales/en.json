@@ -295,6 +295,7 @@
   "invoice.field.status.draft": "Draft",
   "invoice.field.created_at": "Created at",
   "invoice.field.currency": "Currency",
+  "invoice.field.entries": "Entries",
   "estimate.field.amount": "Amount",
   "estimate.field.estimate_number": "Estimate number",
   "estimate.field.customer": "Customer",

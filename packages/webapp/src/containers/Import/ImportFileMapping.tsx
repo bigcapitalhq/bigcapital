@@ -27,7 +27,7 @@ export function ImportFileMapping() {
           {entityColumns.map((entityColumn, index) => (
             <ImportFileMappingGroup
               groupKey={entityColumn.groupKey}
-              groupName={entityColumn.groupName}
+              groupLabel={entityColumn.groupLabel}
               fields={entityColumn.fields}
             />
           ))}
@@ -40,7 +40,7 @@ export function ImportFileMapping() {
 
 interface ImportFileMappingGroupProps {
   groupKey: string;
-  groupName: string;
+  groupLabel: string;
   fields: any;
 }
 
@@ -50,12 +50,12 @@ interface ImportFileMappingGroupProps {
  */
 function ImportFileMappingGroup({
   groupKey,
-  groupName,
+  groupLabel,
   fields,
 }: ImportFileMappingGroupProps) {
   return (
-    <Box>
-      {groupName && <h3>{groupName}</h3>}
+    <Box className={styles.group}>
+      {groupLabel && <h3 className={styles.groupTitle}>{groupLabel}</h3>}
 
       <table className={clsx('bp4-html-table', styles.table)}>
         <thead>

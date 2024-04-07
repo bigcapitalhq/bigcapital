@@ -17,7 +17,7 @@ export type EntityColumnField = {
 
 export interface EntityColumn {
   groupKey: string;
-  groupName: string;
+  groupLabel: string;
   fields: EntityColumnField[];
 }
 export type SheetColumn = string;
