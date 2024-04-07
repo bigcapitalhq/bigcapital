@@ -57,9 +57,9 @@ export default {
       fieldDate: 'date',
     },
   },
-  field2: {
+  fields2: {
     customerId: {
-      name: 'payment_receive.field.customer_id',
+      name: 'payment_receive.field.customer',
       fieldType: 'relation',
       relationModel: 'Contact',
       relationImportMatch: ['displayName'],
@@ -79,7 +79,7 @@ export default {
       fieldType: 'text',
     },
     depositAccountId: {
-      name: 'payment_receive.field.deposit_account_id',
+      name: 'payment_receive.field.deposit_account',
       fieldType: 'relation',
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],

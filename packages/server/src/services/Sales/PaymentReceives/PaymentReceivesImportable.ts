@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { IPaymentReceiveCreateDTO } from '@/interfaces';
 import { Importable } from '@/services/Import/Importable';
 import { CreatePaymentReceive } from './CreatePaymentReceive';
+import { PaymentsReceiveSampleData } from './constants';
 
 @Service()
 export class PaymentReceivesImportable extends Importable {
@@ -40,6 +41,6 @@ export class PaymentReceivesImportable extends Importable {
    * Retrieves the sample data that used to download accounts sample sheet.
    */
   public sampleData(): any[] {
-    return [];
+    return PaymentsReceiveSampleData;
   }
 }

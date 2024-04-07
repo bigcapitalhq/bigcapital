@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { ISaleInvoiceCreateDTO } from '@/interfaces';
 import { CreateSaleInvoice } from './CreateSaleInvoice';
 import { Importable } from '@/services/Import/Importable';
+import { SaleInvoicesSampleData } from './constants';
 
 @Service()
 export class SaleInvoicesImportable extends Importable {
@@ -40,6 +41,6 @@ export class SaleInvoicesImportable extends Importable {
    * Retrieves the sample data that used to download accounts sample sheet.
    */
   public sampleData(): any[] {
-    return [];
+    return SaleInvoicesSampleData;
   }
 }
