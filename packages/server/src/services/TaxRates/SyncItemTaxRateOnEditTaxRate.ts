@@ -17,7 +17,7 @@ export class SyncItemTaxRateOnEditTaxRate {
     tenantId: number,
     oldSellTaxRateId: number,
     sellTaxRateId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Item } = this.tenancy.models(tenantId);
 
@@ -39,17 +39,15 @@ export class SyncItemTaxRateOnEditTaxRate {
     tenantId: number,
     oldPurchaseTaxRateId: number,
     purchaseTaxRateId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { Item } = this.tenancy.models(tenantId);
 
     // Can't continue if the old and new sell tax rate id are equal.
     if (oldPurchaseTaxRateId === purchaseTaxRateId) return;
 
-    await Item.query(trx)
-      .where('purchaseTaxRateId', oldPurchaseTaxRateId)
-      .update({
-        purchaseTaxRateId,
-      });
+    await Item.query(trx).where('purchaseTaxRateId', oldPurchaseTaxRateId).update({
+      purchaseTaxRateId,
+    });
   };
 }

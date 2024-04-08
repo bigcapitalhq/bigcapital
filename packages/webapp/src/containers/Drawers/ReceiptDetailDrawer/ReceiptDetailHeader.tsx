@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -31,7 +30,7 @@ export default function ReceiptDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountReceiptItem label={intl.get('amount')}>
-            <h3 class="big-number">{receipt.formatted_amount}</h3>
+            <h3 className="big-number">{receipt.formatted_amount}</h3>
           </AmountReceiptItem>
 
           <StatusReceiptItem>
@@ -48,38 +47,17 @@ export default function ReceiptDetailHeader() {
               children={defaultTo(receipt.receipt_number, '-')}
             />
             <DetailItem label={intl.get('customer_name')}>
-              <CustomerDrawerLink customerId={receipt.customer_id}>
-                {receipt.customer?.display_name}
-              </CustomerDrawerLink>
+              <CustomerDrawerLink customerId={receipt.customer_id}>{receipt.customer?.display_name}</CustomerDrawerLink>
             </DetailItem>
-            <DetailItem
-              label={intl.get('receipt_date')}
-              children={<FormatDate value={receipt.receipt_date} />}
-            />
-            <DetailItem
-              label={intl.get('closed_date')}
-              children={<FormatDate value={receipt.closed_at_date} />}
-            />
-            <ExchangeRateDetailItem
-              exchangeRate={receipt?.exchange_rate}
-              toCurrency={receipt?.currency_code}
-            />
+            <DetailItem label={intl.get('receipt_date')} children={<FormatDate value={receipt.receipt_date} />} />
+            <DetailItem label={intl.get('closed_date')} children={<FormatDate value={receipt.closed_at_date} />} />
+            <ExchangeRateDetailItem exchangeRate={receipt?.exchange_rate} toCurrency={receipt?.currency_code} />
           </DetailsMenu>
         </Col>
         <Col xs={6}>
-          <DetailsMenu
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-            textAlign={'right'}
-          >
-            <DetailItem
-              label={intl.get('deposit_account')}
-              children={receipt.deposit_account?.name}
-            />
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(receipt.reference_no, '--')}
-            />
+          <DetailsMenu direction={'horizantal'} minLabelSize={'180px'} textAlign={'right'}>
+            <DetailItem label={intl.get('deposit_account')} children={receipt.deposit_account?.name} />
+            <DetailItem label={intl.get('reference')} children={defaultTo(receipt.reference_no, '--')} />
             <DetailItem
               label={intl.get('receipt.details.created_at')}
               children={<FormatDate value={receipt.created_at} />}

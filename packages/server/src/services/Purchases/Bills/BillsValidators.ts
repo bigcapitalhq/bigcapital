@@ -1,10 +1,10 @@
 import { ServiceError } from '@/exceptions';
+import { IItemEntryDTO } from '@/interfaces';
+import { Bill } from '@/models';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { transformToMap } from '@/utils';
 import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
-import { IItemEntryDTO } from '@/interfaces';
-import { transformToMap } from '@/utils';
-import { Bill } from '@/models';
 
 @Service()
 export class BillsValidators {
@@ -38,11 +38,7 @@ export class BillsValidators {
   /**
    * Validates the bill number existance.
    */
-  public async validateBillNumberExists(
-    tenantId: number,
-    billNumber: string,
-    notBillId?: number
-  ) {
+  public async validateBillNumberExists(tenantId: number, billNumber: string, notBillId?: number) {
     const { Bill } = this.tenancy.models(tenantId);
     const foundBills = await Bill.query()
       .where('bill_number', billNumber)
@@ -95,10 +91,7 @@ export class BillsValidators {
   public async validateBillHasNoLandedCost(tenantId: number, billId: number) {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 
-    const billLandedCosts = await BillLandedCost.query().where(
-      'billId',
-      billId
-    );
+    const billLandedCosts = await BillLandedCost.query().where('billId', billId);
     if (billLandedCosts.length > 0) {
       throw new ServiceError(ERRORS.BILL_HAS_ASSOCIATED_LANDED_COSTS);
     }
@@ -110,10 +103,7 @@ export class BillsValidators {
    * @param {number} tenantId -
    * @param {IItemEntryDTO[]} newEntriesDTO -
    */
-  public async validateCostEntriesShouldBeInventoryItems(
-    tenantId: number,
-    newEntriesDTO: IItemEntryDTO[]
-  ) {
+  public async validateCostEntriesShouldBeInventoryItems(tenantId: number, newEntriesDTO: IItemEntryDTO[]) {
     const { Item } = this.tenancy.models(tenantId);
 
     const entriesItemsIds = newEntriesDTO.map((e) => e.itemId);
@@ -128,9 +118,7 @@ export class BillsValidators {
       return entry.landedCost && item.type !== 'inventory';
     });
     if (nonInventoryHasCost.length > 0) {
-      throw new ServiceError(
-        ERRORS.LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS
-      );
+      throw new ServiceError(ERRORS.LANDED_COST_ENTRIES_SHOULD_BE_INVENTORY_ITEMS);
     }
   }
 
@@ -139,16 +127,10 @@ export class BillsValidators {
    * @param {number} tenantId
    * @param {number} billId
    */
-  public validateBillHasNoAppliedToCredit = async (
-    tenantId: number,
-    billId: number
-  ) => {
+  public validateBillHasNoAppliedToCredit = async (tenantId: number, billId: number) => {
     const { VendorCreditAppliedBill } = this.tenancy.models(tenantId);
 
-    const appliedTransactions = await VendorCreditAppliedBill.query().where(
-      'billId',
-      billId
-    );
+    const appliedTransactions = await VendorCreditAppliedBill.query().where('billId', billId);
     if (appliedTransactions.length > 0) {
       throw new ServiceError(ERRORS.BILL_HAS_APPLIED_TO_VENDOR_CREDIT);
     }

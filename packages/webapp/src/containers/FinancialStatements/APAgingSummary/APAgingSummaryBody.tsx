@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -8,7 +7,6 @@ import { FinancialSheetSkeleton } from '@/components/FinancialSheet';
 import { useAPAgingSummaryContext } from './APAgingSummaryProvider';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-
 
 /**
  * AP aging summary body.
@@ -22,11 +20,7 @@ function APAgingSummaryBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isAPAgingLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <APAgingSummaryTable organizationName={organizationName} />
-      )}
+      {isAPAgingLoading ? <FinancialSheetSkeleton /> : <APAgingSummaryTable organizationName={organizationName} />}
     </FinancialReportBody>
   );
 }

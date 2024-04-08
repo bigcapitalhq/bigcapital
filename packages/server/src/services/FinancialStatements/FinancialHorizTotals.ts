@@ -1,24 +1,15 @@
-import * as R from 'ramda';
 import { get, isEmpty } from 'lodash';
+import * as R from 'ramda';
 
 export const FinancialHorizTotals = (Base) =>
   class extends Base {
     /**
      *
      */
-    protected assocNodePercentage = R.curry(
-      (assocPath, parentTotal: number, node: any) => {
-        const percentage = this.getPercentageBasis(
-          parentTotal,
-          node.total.amount
-        );
-        return R.assoc(
-          assocPath,
-          this.getPercentageAmountMeta(percentage),
-          node
-        );
-      }
-    );
+    protected assocNodePercentage = R.curry((assocPath, parentTotal: number, node: any) => {
+      const percentage = this.getPercentageBasis(parentTotal, node.total.amount);
+      return R.assoc(assocPath, this.getPercentageAmountMeta(percentage), node);
+    });
 
     /**
      *
@@ -26,20 +17,10 @@ export const FinancialHorizTotals = (Base) =>
      * @param {} horTotalNode -
      * @param {number} index -
      */
-    protected assocPercentageHorizTotal = R.curry(
-      (assocPercentagePath: string, parentNode, horTotalNode, index) => {
-        const parentTotal = get(
-          parentNode,
-          `horizontalTotals[${index}].total.amount`,
-          0
-        );
-        return this.assocNodePercentage(
-          assocPercentagePath,
-          parentTotal,
-          horTotalNode
-        );
-      }
-    );
+    protected assocPercentageHorizTotal = R.curry((assocPercentagePath: string, parentNode, horTotalNode, index) => {
+      const parentTotal = get(parentNode, `horizontalTotals[${index}].total.amount`, 0);
+      return this.assocNodePercentage(assocPercentagePath, parentTotal, horTotalNode);
+    });
 
     /**
      *
@@ -48,47 +29,31 @@ export const FinancialHorizTotals = (Base) =>
      * @param node
      * @returns
      */
-    protected assocPercentageHorizTotals = R.curry(
-      (assocPercentagePath: string, parentNode, node) => {
-        const assocColPerc = this.assocPercentageHorizTotal(
-          assocPercentagePath,
-          parentNode
-        );
-        return R.addIndex(R.map)(assocColPerc)(node.horizontalTotals);
-      }
-    );
+    protected assocPercentageHorizTotals = R.curry((assocPercentagePath: string, parentNode, node) => {
+      const assocColPerc = this.assocPercentageHorizTotal(assocPercentagePath, parentNode);
+      return R.addIndex(R.map)(assocColPerc)(node.horizontalTotals);
+    });
 
     /**
      *
      */
-    assocRowPercentageHorizTotal = R.curry(
-      (assocPercentagePath: string, node, horizTotalNode) => {
-        return this.assocNodePercentage(
-          assocPercentagePath,
-          node.total.amount,
-          horizTotalNode
-        );
-      }
-    );
+    assocRowPercentageHorizTotal = R.curry((assocPercentagePath: string, node, horizTotalNode) => {
+      return this.assocNodePercentage(assocPercentagePath, node.total.amount, horizTotalNode);
+    });
 
     /**
      *
      */
-    protected assocHorizontalPercentageTotals = R.curry(
-      (assocPercentagePath: string, node) => {
-        const assocColPerc = this.assocRowPercentageHorizTotal(
-          assocPercentagePath,
-          node
-        );
+    protected assocHorizontalPercentageTotals = R.curry((assocPercentagePath: string, node) => {
+      const assocColPerc = this.assocRowPercentageHorizTotal(assocPercentagePath, node);
 
-        return R.map(assocColPerc)(node.horizontalTotals);
-      }
-    );
+      return R.map(assocColPerc)(node.horizontalTotals);
+    });
 
     /**
-     * 
-     * @param node 
-     * @returns 
+     *
+     * @param node
+     * @returns
      */
     protected isNodeHasHorizTotals = (node) => {
       return !isEmpty(node.horizontalTotals);

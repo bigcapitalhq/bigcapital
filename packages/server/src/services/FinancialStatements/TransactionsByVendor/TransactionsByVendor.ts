@@ -1,15 +1,15 @@
-import * as R from 'ramda';
-import { isEmpty, sumBy } from 'lodash';
 import {
+  ILedger,
+  INumberFormatQuery,
   ITransactionsByContactsTransaction,
+  ITransactionsByVendorsData,
   ITransactionsByVendorsFilter,
   ITransactionsByVendorsTransaction,
   ITransactionsByVendorsVendor,
-  ITransactionsByVendorsData,
-  ILedger,
-  INumberFormatQuery,
   IVendor,
 } from '@/interfaces';
+import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 import TransactionsByContact from '../TransactionsByContact/TransactionsByContact';
 
 const VENDOR_NORMAL = 'credit';
@@ -35,7 +35,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
     ledger: ILedger,
     filter: ITransactionsByVendorsFilter,
     baseCurrency: string,
-    i18n
+    i18n,
   ) {
     super();
 
@@ -54,10 +54,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
    * @param {number} openingBalance - Opening balance amount.
    * @returns {ITransactionsByVendorsTransaction[]}
    */
-  private vendorTransactions(
-    vendorId: number,
-    openingBalance: number
-  ): ITransactionsByVendorsTransaction[] {
+  private vendorTransactions(vendorId: number, openingBalance: number): ITransactionsByVendorsTransaction[] {
     const openingBalanceLedger = this.ledger
       .whereContactId(vendorId)
       .whereFromDate(this.filter.fromDate)
@@ -67,7 +64,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
 
     return R.compose(
       R.curry(this.contactTransactionRunningBalance)(openingBalance, 'credit'),
-      R.map(this.contactTransactionMapper.bind(this))
+      R.map(this.contactTransactionMapper.bind(this)),
     ).bind(this)(openingEntries);
   }
 
@@ -79,10 +76,7 @@ export default class TransactionsByVendors extends TransactionsByContact {
   private vendorMapper(vendor: IVendor): ITransactionsByVendorsVendor {
     const openingBalance = this.getContactOpeningBalance(vendor.id);
     const transactions = this.vendorTransactions(vendor.id, openingBalance);
-    const closingBalance = this.getVendorClosingBalance(
-      transactions,
-      openingBalance
-    );
+    const closingBalance = this.getVendorClosingBalance(transactions, openingBalance);
     const currencyCode = this.baseCurrency;
 
     return {
@@ -99,15 +93,8 @@ export default class TransactionsByVendors extends TransactionsByContact {
    * @param {number} openingBalance
    * @returns
    */
-  private getVendorClosingBalance(
-    customerTransactions: ITransactionsByContactsTransaction[],
-    openingBalance: number
-  ) {
-    return this.getContactClosingBalance(
-      customerTransactions,
-      VENDOR_NORMAL,
-      openingBalance
-    );
+  private getVendorClosingBalance(customerTransactions: ITransactionsByContactsTransaction[], openingBalance: number) {
+    return this.getContactClosingBalance(customerTransactions, VENDOR_NORMAL, openingBalance);
   }
 
   /**
@@ -124,10 +111,9 @@ export default class TransactionsByVendors extends TransactionsByContact {
    * @returns {ITransactionsByVendorsVendor[]}
    */
   private vendorsMapper(vendors: IVendor[]): ITransactionsByVendorsVendor[] {
-    return R.compose(
-      R.when(this.isVendorsPostFilter, this.contactsFilter),
-      R.map(this.vendorMapper.bind(this))
-    ).bind(this)(vendors);
+    return R.compose(R.when(this.isVendorsPostFilter, this.contactsFilter), R.map(this.vendorMapper.bind(this))).bind(
+      this,
+    )(vendors);
   }
 
   /**

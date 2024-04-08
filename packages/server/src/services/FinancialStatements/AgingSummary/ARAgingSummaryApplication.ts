@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
 import { IARAgingSummaryQuery } from '@/interfaces';
-import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
+import { Inject, Service } from 'typedi';
 import { ARAgingSummaryExportInjectable } from './ARAgingSummaryExportInjectable';
-import ARAgingSummaryService from './ARAgingSummaryService';
 import { ARAgingSummaryPdfInjectable } from './ARAgingSummaryPdfInjectable';
+import ARAgingSummaryService from './ARAgingSummaryService';
+import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
 
 @Service()
 export class ARAgingSummaryApplication {

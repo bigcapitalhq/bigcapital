@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -19,9 +18,7 @@ const warehouseItemPredicate = (query, warehouse, _index, exactMatch) => {
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
-    return (
-      `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-    );
+    return `${warehouse.code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
   }
 };
 
@@ -31,11 +28,7 @@ const warehouseItemPredicate = (query, warehouse, _index, exactMatch) => {
  * @param {*} param1
  * @returns
  */
-const warehouseItemRenderer = (
-  warehouse,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
+const warehouseItemRenderer = (warehouse, { handleClick, modifiers, query }, { isSelected }) => {
   return (
     <MenuItem
       active={modifiers.active}

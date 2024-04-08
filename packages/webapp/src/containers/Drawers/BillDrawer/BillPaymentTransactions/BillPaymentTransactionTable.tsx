@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataTable, Card, TableSkeletonRows } from '@/components';
@@ -72,7 +71,4 @@ function BillPaymentTransactionTable({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(BillPaymentTransactionTable);
+export default compose(withAlertsActions, withDrawerActions)(BillPaymentTransactionTable);

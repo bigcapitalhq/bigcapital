@@ -1,14 +1,14 @@
-import { Inject } from 'typedi';
-import { EventSubscriber } from 'event-dispatch';
 import {
   IManualJournalEventCreatedPayload,
+  IManualJournalEventDeletedPayload,
   IManualJournalEventEditedPayload,
   IManualJournalEventPublishedPayload,
-  IManualJournalEventDeletedPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
-import { ManualJournalGLEntries } from './ManualJournalGLEntries';
+import { EventSubscriber } from 'event-dispatch';
+import { Inject } from 'typedi';
 import { AutoIncrementManualJournal } from './AutoIncrementManualJournal';
+import { ManualJournalGLEntries } from './ManualJournalGLEntries';
 
 @EventSubscriber()
 export class ManualJournalWriteGLSubscriber {
@@ -23,26 +23,11 @@ export class ManualJournalWriteGLSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.manualJournals.onCreated,
-      this.handleWriteJournalEntriesOnCreated
-    );
-    bus.subscribe(
-      events.manualJournals.onCreated,
-      this.handleJournalNumberIncrement
-    );
-    bus.subscribe(
-      events.manualJournals.onEdited,
-      this.handleRewriteJournalEntriesOnEdited
-    );
-    bus.subscribe(
-      events.manualJournals.onPublished,
-      this.handleWriteJournalEntriesOnPublished
-    );
-    bus.subscribe(
-      events.manualJournals.onDeleted,
-      this.handleRevertJournalEntries
-    );
+    bus.subscribe(events.manualJournals.onCreated, this.handleWriteJournalEntriesOnCreated);
+    bus.subscribe(events.manualJournals.onCreated, this.handleJournalNumberIncrement);
+    bus.subscribe(events.manualJournals.onEdited, this.handleRewriteJournalEntriesOnEdited);
+    bus.subscribe(events.manualJournals.onPublished, this.handleWriteJournalEntriesOnPublished);
+    bus.subscribe(events.manualJournals.onDeleted, this.handleRevertJournalEntries);
   }
 
   /**
@@ -58,11 +43,7 @@ export class ManualJournalWriteGLSubscriber {
     // Ingore writing manual journal journal entries in case was not published.
     if (!manualJournal.publishedAt) return;
 
-    await this.manualJournalGLEntries.createManualJournalGLEntries(
-      tenantId,
-      manualJournal.id,
-      trx
-    );
+    await this.manualJournalGLEntries.createManualJournalGLEntries(tenantId, manualJournal.id, trx);
   };
 
   /**
@@ -70,9 +51,7 @@ export class ManualJournalWriteGLSubscriber {
    * @param {IManualJournalEventCreatedPayload} payload -
    * @return {Promise<void>}
    */
-  private handleJournalNumberIncrement = async ({
-    tenantId,
-  }: IManualJournalEventCreatedPayload) => {
+  private handleJournalNumberIncrement = async ({ tenantId }: IManualJournalEventCreatedPayload) => {
     await this.manualJournalAutoIncrement.incrementNextJournalNumber(tenantId);
   };
 
@@ -88,11 +67,7 @@ export class ManualJournalWriteGLSubscriber {
     trx,
   }: IManualJournalEventEditedPayload) => {
     if (manualJournal.publishedAt) {
-      await this.manualJournalGLEntries.editManualJournalGLEntries(
-        tenantId,
-        manualJournal.id,
-        trx
-      );
+      await this.manualJournalGLEntries.editManualJournalGLEntries(tenantId, manualJournal.id, trx);
     }
   };
 
@@ -106,11 +81,7 @@ export class ManualJournalWriteGLSubscriber {
     manualJournal,
     trx,
   }: IManualJournalEventPublishedPayload) => {
-    await this.manualJournalGLEntries.createManualJournalGLEntries(
-      tenantId,
-      manualJournal.id,
-      trx
-    );
+    await this.manualJournalGLEntries.createManualJournalGLEntries(tenantId, manualJournal.id, trx);
   };
 
   /**
@@ -122,10 +93,6 @@ export class ManualJournalWriteGLSubscriber {
     manualJournalId,
     trx,
   }: IManualJournalEventDeletedPayload) => {
-    await this.manualJournalGLEntries.revertManualJournalGLEntries(
-      tenantId,
-      manualJournalId,
-      trx
-    );
+    await this.manualJournalGLEntries.revertManualJournalGLEntries(tenantId, manualJournalId, trx);
   };
 }

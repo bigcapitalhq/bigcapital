@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ItemCategoryProvider } from './ItemCategoryProvider';
 import ItemCategoryForm from './ItemCategoryForm';
@@ -14,10 +13,7 @@ export default function ItemCategoryFormDialogContent({
   dialogName,
 }) {
   return (
-    <ItemCategoryProvider
-      itemCategoryId={itemCategoryId}
-      dialogName={dialogName}
-    >
+    <ItemCategoryProvider itemCategoryId={itemCategoryId} dialogName={dialogName}>
       <ItemCategoryForm />
     </ItemCategoryProvider>
   );

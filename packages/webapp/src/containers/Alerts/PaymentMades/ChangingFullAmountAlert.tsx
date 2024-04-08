@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 
@@ -41,15 +40,9 @@ function ChangingFullAmountAlert({
       onCancel={handleCancel}
       onConfirm={handleConfirm}
     >
-      <p>
-        Changing full amount will change all credit and payment were applied, Is
-        this okay?
-      </p>
+      <p>Changing full amount will change all credit and payment were applied, Is this okay?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ChangingFullAmountAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ChangingFullAmountAlert);

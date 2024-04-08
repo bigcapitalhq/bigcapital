@@ -7,11 +7,7 @@ export class SendSaleInvoiceReminderMailJob {
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'sale-invoice-reminder-mail-send',
-      { priority: 'high', concurrency: 1 },
-      this.handler
-    );
+    agenda.define('sale-invoice-reminder-mail-send', { priority: 'high', concurrency: 1 }, this.handler);
   }
 
   /**

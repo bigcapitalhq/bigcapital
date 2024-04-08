@@ -1,9 +1,9 @@
-import fs from 'fs';
-import { Service, Inject } from 'typedi';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from "exceptions";
+import fs from 'node:fs';
 import { IMedia, IMediaService } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { difference } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { ServiceError } from '../../exceptions';
 
 const fsPromises = fs.promises;
 
@@ -13,8 +13,8 @@ const ERRORS = {
   MODEL_NAME_HAS_NO_MEDIA: 'MODEL_NAME_HAS_NO_MEDIA',
   MODEL_ID_NOT_FOUND: 'MODEL_ID_NOT_FOUND',
   MEDIA_IDS_NOT_FOUND: 'MEDIA_IDS_NOT_FOUND',
-  MEDIA_LINK_EXISTS: 'MEDIA_LINK_EXISTS'
-}
+  MEDIA_LINK_EXISTS: 'MEDIA_LINK_EXISTS',
+};
 const publicPath = 'storage/app/public/';
 const attachmentsMimes = ['image/png', 'image/jpeg'];
 
@@ -31,8 +31,8 @@ export default class MediaService implements IMediaService {
 
   /**
    * Retrieve media model or throw not found error
-   * @param tenantId 
-   * @param mediaId 
+   * @param tenantId
+   * @param mediaId
    */
   async getMediaOrThrowError(tenantId: number, mediaId: number) {
     const { Media } = this.tenancy.models(tenantId);
@@ -46,8 +46,8 @@ export default class MediaService implements IMediaService {
 
   /**
    * Retreive media models by the given ids or throw not found error.
-   * @param {number} tenantId 
-   * @param {number[]} mediaIds 
+   * @param {number} tenantId
+   * @param {number[]} mediaIds
    */
   async getMediaByIdsOrThrowError(tenantId: number, mediaIds: number[]) {
     const { Media } = this.tenancy.models(tenantId);
@@ -64,9 +64,9 @@ export default class MediaService implements IMediaService {
 
   /**
    * Validates the model name and id.
-   * @param {number} tenantId 
-   * @param {string} modelName 
-   * @param {number} modelId 
+   * @param {number} tenantId
+   * @param {string} modelName
+   * @param {number} modelId
    */
   async validateModelNameAndIdExistance(tenantId: number, modelName: string, modelId: number) {
     const models = this.tenancy.models(tenantId);
@@ -91,24 +91,19 @@ export default class MediaService implements IMediaService {
 
   /**
    * Validates the media existance.
-   * @param {number} tenantId 
-   * @param {number} mediaId 
-   * @param {number} modelId 
-   * @param {string} modelName 
+   * @param {number} tenantId
+   * @param {number} mediaId
+   * @param {number} modelId
+   * @param {string} modelName
    */
-  async validateMediaLinkExistance(
-    tenantId: number,
-    mediaId: number,
-    modelId: number,
-    modelName: string
-  ) {
+  async validateMediaLinkExistance(tenantId: number, mediaId: number, modelId: number, modelName: string) {
     const { MediaLink } = this.tenancy.models(tenantId);
 
     const foundMediaLinks = await MediaLink.query()
       .where('media_id', mediaId)
       .where('model_id', modelId)
       .where('model_name', modelName);
-    
+
     if (foundMediaLinks.length > 0) {
       throw new ServiceError(ERRORS.MEDIA_LINK_EXISTS);
     }
@@ -116,10 +111,10 @@ export default class MediaService implements IMediaService {
 
   /**
    * Links the given media to the specific media-able model resource.
-   * @param {number} tenantId 
-   * @param {number} mediaId 
-   * @param {number} modelId 
-   * @param {string} modelType 
+   * @param {number} tenantId
+   * @param {number} mediaId
+   * @param {number} modelId
+   * @param {string} modelType
    */
   async linkMedia(tenantId: number, mediaId: number, modelId: number, modelName: string) {
     this.logger.info('[media] trying to link media.', { tenantId, mediaId, modelId, modelName });
@@ -145,11 +140,11 @@ export default class MediaService implements IMediaService {
 
   /**
    * Deletes the given media.
-   * @param {number} tenantId 
-   * @param {number} mediaId 
+   * @param {number} tenantId
+   * @param {number} mediaId
    * @return {Promise<void>}
    */
-  public async deleteMedia(tenantId: number, mediaId: number|number[]): Promise<void> {
+  public async deleteMedia(tenantId: number, mediaId: number | number[]): Promise<void> {
     const { Media, MediaLink } = this.tenancy.models(tenantId);
     const { tenantRepository } = this.sysRepositories;
 
@@ -171,9 +166,9 @@ export default class MediaService implements IMediaService {
       .then((resolved) => {
         resolved.forEach(() => {
           this.logger.info('[attachment] file has been deleted.');
-        }); 
+        });
       })
-      .catch((errors) => {  
+      .catch((errors) => {
         this.logger.info('[attachment] Delete item attachment file delete failed.', { errors });
       });
     await MediaLink.query().whereIn('media_id', mediaIds).delete();
@@ -182,8 +177,8 @@ export default class MediaService implements IMediaService {
 
   /**
    * Uploads the given attachment.
-   * @param {number} tenantId - 
-   * @param {any} attachment - 
+   * @param {number} tenantId -
+   * @param {any} attachment -
    * @return {Promise<IMedia>}
    */
   public async upload(tenantId: number, attachment: any, modelName?: string, modelId?: number): Promise<IMedia> {
@@ -210,12 +205,16 @@ export default class MediaService implements IMediaService {
     }
     const media = await Media.query().insertGraph({
       attachmentFile: `${fileName}`,
-      ...(modelName && modelId) ? {
-        links: [{
-          modelName,
-          modelId,  
-        }]
-      } : {},
+      ...(modelName && modelId
+        ? {
+            links: [
+              {
+                modelName,
+                modelId,
+              },
+            ],
+          }
+        : {}),
     });
     this.logger.info('[media] uploaded successfully.', { tenantId, fileName, modelName, modelId });
     return media;

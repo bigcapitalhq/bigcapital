@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 export const journalNumberChangedReducer = (type) => ({
   [type]: (state, action) => {
@@ -12,9 +12,9 @@ export const viewPaginationSetReducer = (type) => ({
     const { pagination, customViewId } = action.payload;
 
     const mapped = {
-      pageSize: parseInt(pagination.page_size, 10),
-      page: parseInt(pagination.page, 10),
-      total: parseInt(pagination.total, 10),
+      pageSize: Number.parseInt(pagination.page_size, 10),
+      page: Number.parseInt(pagination.page, 10),
+      total: Number.parseInt(pagination.total, 10),
     };
     const paginationMeta = {
       ...mapped,

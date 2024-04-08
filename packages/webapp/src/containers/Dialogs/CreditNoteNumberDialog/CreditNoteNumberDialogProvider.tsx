@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsCreditNotes } from '@/hooks/query';
@@ -23,7 +22,6 @@ function CreditNoteNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useCreditNoteNumberDialogContext = () =>
-  React.useContext(CreditNoteNumberDialogContext);
+const useCreditNoteNumberDialogContext = () => React.useContext(CreditNoteNumberDialogContext);
 
 export { CreditNoteNumberDialogProvider, useCreditNoteNumberDialogContext };

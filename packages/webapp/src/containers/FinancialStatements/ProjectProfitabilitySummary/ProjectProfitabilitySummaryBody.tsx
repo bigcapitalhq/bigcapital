@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import ProjectProfitabilitySummaryTable from './ProjectProfitabilitySummaryTable';
@@ -18,8 +17,7 @@ function ProjectProfitabilitySummaryBodyJSX({
   // #withCurrentOrganization
   organizationName,
 }) {
-  const { isProjectProfitabilitySummaryLoading } =
-    useProjectProfitabilitySummaryContext();
+  const { isProjectProfitabilitySummaryLoading } = useProjectProfitabilitySummaryContext();
 
   return (
     <FinancialReportBody>

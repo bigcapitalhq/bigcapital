@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import clsx from 'classnames';
 import TableContext from './TableContext';
@@ -33,7 +32,7 @@ export function TableSkeletonHeader({}) {
   } = useContext(TableContext);
 
   return (
-    <div class="thead">
+    <div className="thead">
       {headerGroups.map((headerGroup) => (
         <div
           {...headerGroup.getHeaderGroupProps({

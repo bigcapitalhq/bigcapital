@@ -1,10 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  useCreateProjectTask,
-  useEditProjectTask,
-  useProjectTask,
-} from '../../hooks';
+import { useCreateProjectTask, useEditProjectTask, useProjectTask } from '../../hooks';
 import { DialogContent } from '@/components';
 
 const ProjectTaskFormContext = React.createContext();
@@ -25,12 +20,9 @@ function ProjectTaskFormProvider({
   const { mutateAsync: editProjectTaskMutate } = useEditProjectTask();
 
   // Handle fetch project task detail.
-  const { data: projectTask, isLoading: isProjectTaskLoading } = useProjectTask(
-    taskId,
-    {
-      enabled: !!taskId,
-    },
-  );
+  const { data: projectTask, isLoading: isProjectTaskLoading } = useProjectTask(taskId, {
+    enabled: !!taskId,
+  });
 
   const isNewMode = !taskId;
   // State provider.
@@ -51,7 +43,6 @@ function ProjectTaskFormProvider({
   );
 }
 
-const useProjectTaskFormContext = () =>
-  React.useContext(ProjectTaskFormContext);
+const useProjectTaskFormContext = () => React.useContext(ProjectTaskFormContext);
 
 export { ProjectTaskFormProvider, useProjectTaskFormContext };

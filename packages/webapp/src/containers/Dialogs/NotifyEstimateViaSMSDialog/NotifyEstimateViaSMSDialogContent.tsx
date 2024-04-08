@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { NotifyEstimateViaSMSFormProvider } from './NotifyEstimateViaSMSFormProvider';
 import NotifyEstimateViaSMSForm from './NotifyEstimateViaSMSForm';
@@ -9,10 +8,7 @@ export default function NotifyEstimateViaSMSDialogContent({
   estimate,
 }) {
   return (
-    <NotifyEstimateViaSMSFormProvider
-      estimateId={estimate}
-      dialogName={dialogName}
-    >
+    <NotifyEstimateViaSMSFormProvider estimateId={estimate} dialogName={dialogName}>
       <NotifyEstimateViaSMSForm />
     </NotifyEstimateViaSMSFormProvider>
   );

@@ -1,11 +1,11 @@
-import moment from 'moment';
-import { Inject, Service } from 'typedi';
-import { isEmpty } from 'lodash';
 import { IAPAgingSummaryQuery, IAPAgingSummarySheet } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import APAgingSummarySheet from './APAgingSummarySheet';
 import { Tenant } from '@/system/models';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { APAgingSummaryMeta } from './APAgingSummaryMeta';
+import APAgingSummarySheet from './APAgingSummarySheet';
 
 @Service()
 export class APAgingSummaryService {
@@ -42,10 +42,7 @@ export class APAgingSummaryService {
    * @param {IAPAgingSummaryQuery} query -
    * @returns {Promise<IAPAgingSummarySheet>}
    */
-  public async APAgingSummary(
-    tenantId: number,
-    query: IAPAgingSummaryQuery
-  ): Promise<IAPAgingSummarySheet> {
+  public async APAgingSummary(tenantId: number, query: IAPAgingSummaryQuery): Promise<IAPAgingSummarySheet> {
     const { Bill } = this.tenancy.models(tenantId);
     const { vendorRepository } = this.tenancy.repositories(tenantId);
 
@@ -54,9 +51,7 @@ export class APAgingSummaryService {
       ...query,
     };
     // Settings tenant service.
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Retrieve all vendors from the storage.
     const vendors =
@@ -71,14 +66,10 @@ export class APAgingSummaryService {
       }
     };
     // Retrieve all overdue vendors bills.
-    const overdueBills = await Bill.query()
-      .modify('overdueBillsFromDate', filter.asDate)
-      .onBuild(commonQuery);
+    const overdueBills = await Bill.query().modify('overdueBillsFromDate', filter.asDate).onBuild(commonQuery);
 
     // Retrieve all due vendors bills.
-    const dueBills = await Bill.query()
-      .modify('dueBillsFromDate', filter.asDate)
-      .onBuild(commonQuery);
+    const dueBills = await Bill.query().modify('dueBillsFromDate', filter.asDate).onBuild(commonQuery);
 
     // A/P aging summary report instance.
     const APAgingSummaryReport = new APAgingSummarySheet(
@@ -87,7 +78,7 @@ export class APAgingSummaryService {
       vendors,
       overdueBills,
       dueBills,
-      tenant.metadata.baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // A/P aging summary report data and columns.
     const data = APAgingSummaryReport.reportData();

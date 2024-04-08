@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useItem } from '@/hooks/query';
 
@@ -35,9 +34,7 @@ export const useFetchItemWarehouseQuantity = () => {
   const [tableRow, setTableRow] = React.useState<IItemMeta | null>(null);
 
   // Table cells loading coords.
-  const [cellsLoading, setCellsLoading] = React.useState<CellLoading | null>(
-    null,
-  );
+  const [cellsLoading, setCellsLoading] = React.useState<CellLoading | null>(null);
   // Fetches the item warehouse locations.
   const {
     data: item,

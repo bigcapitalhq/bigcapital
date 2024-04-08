@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -64,7 +63,4 @@ function ContactInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ContactInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ContactInactivateAlert);

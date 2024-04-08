@@ -1,28 +1,18 @@
+import { IAgingPeriod } from '@/interfaces';
 import moment from 'moment';
-import {
-  IAgingPeriod,
-} from '@/interfaces';
-import FinancialSheet from "../FinancialSheet";
+import FinancialSheet from '../FinancialSheet';
 
-
-export default abstract class AgingReport extends FinancialSheet{
+export default abstract class AgingReport extends FinancialSheet {
   /**
    * Retrieve the aging periods range.
    * @param {string} asDay
    * @param {number} agingDaysBefore
    * @param {number} agingPeriodsFreq
    */
-  agingRangePeriods(
-    asDay: Date|string,
-    agingDaysBefore: number,
-    agingPeriodsFreq: number
-  ): IAgingPeriod[] {
+  agingRangePeriods(asDay: Date | string, agingDaysBefore: number, agingPeriodsFreq: number): IAgingPeriod[] {
     const totalAgingDays = agingDaysBefore * agingPeriodsFreq;
     const startAging = moment(asDay).startOf('day');
-    const endAging = startAging
-      .clone()
-      .subtract(totalAgingDays, 'days')
-      .endOf('day');
+    const endAging = startAging.clone().subtract(totalAgingDays, 'days').endOf('day');
 
     const agingPeriods: IAgingPeriod[] = [];
     const startingAging = startAging.clone();

@@ -1,17 +1,31 @@
-import dotenv from 'dotenv';
-import path from 'path';
-import { toInteger } from 'lodash';
-import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
+const dotenv = require('dotenv');
+const toInteger = require('lodash/toInteger');
+
+const castCommaListEnvVarToArray = require('@/utils').castCommaListEnvVarToArray;
+const parseBoolean = require('@/utils').parseBoolean;
+const path = require('node:path');
 
 dotenv.config();
 
 const API_RATE_LIMIT = process.env.API_RATE_LIMIT?.split(',') || [];
 
+process.env.APP_ROOT_DIR = path.join(__dirname, '..');
+process.env.APP_RESOURCES_DIR = path.join(process.env.APP_ROOT_DIR, 'resources');
+process.env.APP_LOCALES_DIR = path.join(process.env.APP_RESOURCES_DIR, 'locales');
+process.env.APP_VIEWS_DIR = path.join(process.env.APP_ROOT_DIR, 'views');
+process.env.APP_STORAGE_DIR = path.join(process.env.APP_ROOT_DIR, 'storage');
+
+console.log('APP_ROOT_DIR:', process.env.APP_ROOT_DIR);
+console.log('APP_RESOURCES_DIR:', process.env.APP_RESOURCES_DIR);
+console.log('APP_LOCALES_DIR:', process.env.APP_LOCALES_DIR);
+console.log('APP_VIEWS_DIR:', process.env.APP_VIEWS_DIR);
+console.log('APP_STORAGE_DIR:', process.env.APP_STORAGE_DIR);
+
 module.exports = {
   /**
    * Your favorite port
    */
-  port: parseInt(process.env.PORT, 10),
+  port: Number.parseInt(process.env.PORT || '3000', 10),
 
   /**
    * System database configuration.
@@ -23,8 +37,8 @@ module.exports = {
     db_password: process.env.SYSTEM_DB_PASSWORD || process.env.DB_PASSWORD,
     db_name: process.env.SYSTEM_DB_NAME,
     charset: process.env.SYSTEM_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir: path.join(global.__root_dir, './src/system/migrations'),
-    seeds_dir: path.join(global.__root_dir, './src/system/seeds'),
+    migrations_dir: path.join(process.env.APP_ROOT_DIR, './src/system/migrations'),
+    seeds_dir: path.join(process.env.APP_ROOT_DIR, './src/system/seeds'),
   },
 
   /**
@@ -37,8 +51,8 @@ module.exports = {
     db_user: process.env.TENANT_DB_USER || process.env.DB_USER,
     db_password: process.env.TENANT_DB_PASSWORD || process.env.DB_PASSWORD,
     charset: process.env.TENANT_DB_CHARSET || process.env.DB_CHARSET,
-    migrations_dir: path.join(global.__root_dir, './src/database/migrations'),
-    seeds_dir: path.join(global.__root_dir, './src/database/seeds/core'),
+    migrations_dir: path.join(process.env.APP_ROOT_DIR, './src/database/migrations'),
+    seeds_dir: path.join(process.env.APP_ROOT_DIR, './src/database/seeds/core'),
   },
 
   /**
@@ -55,7 +69,7 @@ module.exports = {
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
-    secure: !!parseInt(process.env.MAIL_SECURE, 10),
+    secure: !!Number.parseInt(process.env.MAIL_SECURE, 10),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
     from: process.env.MAIL_FROM_ADDRESS,
@@ -77,7 +91,7 @@ module.exports = {
   agenda: {
     dbCollection: process.env.AGENDA_DB_COLLECTION,
     pooltime: process.env.AGENDA_POOL_TIME,
-    concurrency: parseInt(process.env.AGENDA_CONCURRENCY, 10),
+    concurrency: Number.parseInt(process.env.AGENDA_CONCURRENCY, 10),
   },
 
   /**
@@ -145,12 +159,8 @@ module.exports = {
    */
   signupRestrictions: {
     disabled: parseBoolean<boolean>(process.env.SIGNUP_DISABLED, false),
-    allowedDomains: castCommaListEnvVarToArray(
-      process.env.SIGNUP_ALLOWED_DOMAINS
-    ),
-    allowedEmails: castCommaListEnvVarToArray(
-      process.env.SIGNUP_ALLOWED_EMAILS
-    ),
+    allowedDomains: castCommaListEnvVarToArray(process.env.SIGNUP_ALLOWED_DOMAINS),
+    allowedEmails: castCommaListEnvVarToArray(process.env.SIGNUP_ALLOWED_EMAILS),
   },
 
   /**
@@ -190,6 +200,6 @@ module.exports = {
     secretSandbox: process.env.PLAID_SECRET_SANDBOX,
     redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
     redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
-    linkWebhook: process.env.PLAID_LINK_WEBHOOK
+    linkWebhook: process.env.PLAID_LINK_WEBHOOK,
   },
 };

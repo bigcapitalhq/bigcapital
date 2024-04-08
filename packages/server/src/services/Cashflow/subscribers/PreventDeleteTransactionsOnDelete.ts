@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { ICommandCashflowDeletingPayload } from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from '../constants';
+import { ICommandCashflowDeletingPayload } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from '../constants';
 
 @Service()
 export class PreventDeleteTransactionOnDelete {
@@ -16,9 +16,7 @@ export class PreventDeleteTransactionOnDelete {
   public attach = (bus) => {
     bus.subscribe(
       events.cashflow.onTransactionDeleting,
-      this.preventDeleteCashflowTransactionHasUncategorizedTransaction.bind(
-        this
-      )
+      this.preventDeleteCashflowTransactionHasUncategorizedTransaction.bind(this),
     );
   };
 
@@ -33,9 +31,7 @@ export class PreventDeleteTransactionOnDelete {
   }: ICommandCashflowDeletingPayload) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
     if (oldCashflowTransaction.uncategorizedTransactionId) {
-      const foundTransactions = await UncategorizedCashflowTransaction.query(
-        trx
-      ).where({
+      const foundTransactions = await UncategorizedCashflowTransaction.query(trx).where({
         categorized: true,
         categorizeRefId: oldCashflowTransaction.id,
         categorizeRefType: 'CashflowTransaction',
@@ -44,7 +40,7 @@ export class PreventDeleteTransactionOnDelete {
       if (foundTransactions.length > 0) {
         throw new ServiceError(
           ERRORS.CANNOT_DELETE_TRANSACTION_CONVERTED_FROM_UNCATEGORIZED,
-          'Cannot delete cashflow transaction converted from uncategorized transaction.'
+          'Cannot delete cashflow transaction converted from uncategorized transaction.',
         );
       }
     }

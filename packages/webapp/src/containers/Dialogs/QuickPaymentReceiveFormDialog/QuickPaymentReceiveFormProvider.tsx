@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext, createContext } from 'react';
 import { pick } from 'lodash';
 import { DialogContent } from '@/components';
@@ -17,13 +16,7 @@ const QuickPaymentReceiveContext = createContext();
 /**
  * Quick payment receive dialog provider.
  */
-function QuickPaymentReceiveFormProvider({
-  query,
-  invoiceId,
-  dialogName,
-  baseCurrency,
-  ...props
-}) {
+function QuickPaymentReceiveFormProvider({ query, invoiceId, dialogName, baseCurrency, ...props }) {
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
 
@@ -65,15 +58,12 @@ function QuickPaymentReceiveFormProvider({
   };
 
   return (
-    <DialogContent
-      isLoading={isAccountsLoading || isInvoiceLoading || isBranchesLoading}
-    >
+    <DialogContent isLoading={isAccountsLoading || isInvoiceLoading || isBranchesLoading}>
       <QuickPaymentReceiveContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useQuickPaymentReceiveContext = () =>
-  useContext(QuickPaymentReceiveContext);
+const useQuickPaymentReceiveContext = () => useContext(QuickPaymentReceiveContext);
 
 export { QuickPaymentReceiveFormProvider, useQuickPaymentReceiveContext };

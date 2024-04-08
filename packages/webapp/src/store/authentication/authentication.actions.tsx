@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 export const setLogin = () => ({ type: t.LOGIN_SUCCESS });

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import ContactDetailActionsBar from './ContactDetailActionsBar';
 import ContactDetailList from './ContactDetailList';

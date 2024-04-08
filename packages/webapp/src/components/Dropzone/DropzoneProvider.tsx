@@ -6,7 +6,6 @@ export interface DropzoneContextValue {
   reject: boolean;
 }
 
-export const [DropzoneProvider, useDropzoneContext] =
-  createSafeContext<DropzoneContextValue>(
-    'Dropzone component was not found in tree',
-  );
+export const [DropzoneProvider, useDropzoneContext] = createSafeContext<DropzoneContextValue>(
+  'Dropzone component was not found in tree',
+);

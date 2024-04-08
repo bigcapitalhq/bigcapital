@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -31,8 +30,7 @@ function UserForm({
 }) {
   const [calloutCode, setCalloutCode] = React.useState([]);
 
-  const { dialogName, user, userId, isEditMode, EditUserMutate } =
-    useUserFormContext();
+  const { dialogName, user, userId, isEditMode, EditUserMutate } = useUserFormContext();
 
   const initialFormValues = {
     ...initialValues,
@@ -70,11 +68,7 @@ function UserForm({
   };
 
   return (
-    <Formik
-      validationSchema={UserFormSchema}
-      initialValues={initialFormValues}
-      onSubmit={handleSubmit}
-    >
+    <Formik validationSchema={UserFormSchema} initialValues={initialFormValues} onSubmit={handleSubmit}>
       <UserFormContent calloutCode={calloutCode} />
     </Formik>
   );

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 
@@ -21,7 +20,6 @@ function ContactDuplicateProvider({ contactId, dialogName, ...props }) {
   );
 }
 
-const useContactDuplicateFromContext = () =>
-  React.useContext(ContactDuplicateContext);
+const useContactDuplicateFromContext = () => React.useContext(ContactDuplicateContext);
 
 export { ContactDuplicateProvider, useContactDuplicateFromContext };

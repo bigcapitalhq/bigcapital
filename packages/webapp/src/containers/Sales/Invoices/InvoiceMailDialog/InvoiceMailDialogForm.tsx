@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { useInvoiceMailDialogBoot } from './InvoiceMailDialogBoot';
@@ -26,10 +26,7 @@ export function InvoiceMailDialogForm({ onFormSubmit, onCancelClick }) {
   const { mailOptions, saleInvoiceId } = useInvoiceMailDialogBoot();
   const { mutateAsync: sendInvoiceMail } = useSendSaleInvoiceMail();
 
-  const initialValues = transformMailFormToInitialValues(
-    mailOptions,
-    initialFormValues,
-  );
+  const initialValues = transformMailFormToInitialValues(mailOptions, initialFormValues);
   // Handle the form submitting.
   const handleSubmit = (values: InvoiceMailFormValues, { setSubmitting }) => {
     const reqValues = transformMailFormToRequest(values);
@@ -58,11 +55,7 @@ export function InvoiceMailDialogForm({ onFormSubmit, onCancelClick }) {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={InvoiceMailFormSchema}
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={initialValues} validationSchema={InvoiceMailFormSchema} onSubmit={handleSubmit}>
       <InvoiceMailDialogFormContent onClose={handleClose} />
     </Formik>
   );

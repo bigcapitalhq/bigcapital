@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../utils';
 
 export class CashflowTransactionTransformer extends Transformer {
   /**
@@ -24,10 +24,10 @@ export class CashflowTransactionTransformer extends Transformer {
 
   /**
    * Formatted transaction type.
-   * @param transaction 
+   * @param transaction
    * @returns {string}
    */
   protected transactionTypeFormatted = (transaction) => {
     return this.context.i18n.__(transaction.transactionTypeFormatted);
-  }
+  };
 }

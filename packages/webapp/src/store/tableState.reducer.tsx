@@ -1,8 +1,8 @@
-// @ts-nocheck
+
 
 const TYPES = {
   TABLE_STATE_SET: 'TABLE_STATE_SET',
-  TABLE_STATE_RESET: 'TABLE_STATE_RESET'
+  TABLE_STATE_RESET: 'TABLE_STATE_RESET',
 };
 
 export const createTableStateReducers = (RESOURCE_NAME, defaultTableQuery) => ({
@@ -22,5 +22,5 @@ export const createTableStateReducers = (RESOURCE_NAME, defaultTableQuery) => ({
     state.tableState = {
       ...defaultTableQuery,
     };
-  }
+  },
 });

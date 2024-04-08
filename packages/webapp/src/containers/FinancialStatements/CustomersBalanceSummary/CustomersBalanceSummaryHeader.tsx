@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import styled from 'styled-components';
@@ -60,25 +59,14 @@ function CustomersBalanceSummaryHeader({
   };
 
   return (
-    <CustomerBalanceDrawerHeader
-      isOpen={customersBalanceDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <CustomerBalanceDrawerHeader isOpen={customersBalanceDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<CustomersBalanceSummaryGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<CustomersBalanceSummaryGeneralPanel />} />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

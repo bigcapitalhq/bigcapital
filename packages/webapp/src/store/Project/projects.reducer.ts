@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createReducer } from '@reduxjs/toolkit';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -25,7 +25,7 @@ const CONFIG = {
 };
 const reducerInstance = createReducer(initialState, {
   ...createTableStateReducers('PROJECTS', defaultTableQuery),
- 
+
   [t.RESET]: () => {
     purgeStoredState(CONFIG);
   },

@@ -27,7 +27,7 @@ export interface IVendorCredit {
   isDraft: boolean;
   creditsRemaining: number;
   branchId?: number;
-  warehouseId?: number,
+  warehouseId?: number;
 }
 
 export interface IVendorCreditEntryDTO extends IItemEntryDTO {}
@@ -46,7 +46,7 @@ export interface IRefundVendorCredit {
   userId: number;
   branchId?: number;
 
-  vendorCredit?: IVendorCredit
+  vendorCredit?: IVendorCredit;
 }
 
 export interface IVendorCreditDTO {
@@ -86,7 +86,7 @@ export interface IVendorCreditCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IVendorCreditCreatedPayload {}
+export type IVendorCreditCreatedPayload = {};
 export interface IVendorCreditDeletedPayload {
   trx: Knex.Transaction;
   tenantId: number;
@@ -163,7 +163,7 @@ export interface IRefundVendorCreditCreatedPayload {
   trx: Knex.Transaction;
   tenantId: number;
 }
-export interface IRefundVendorCreditPOJO {}
+export type IRefundVendorCreditPOJO = {};
 
 export interface IApplyCreditToBillEntryDTO {
   amount: number;

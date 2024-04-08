@@ -19,10 +19,7 @@ export function ImportFileMapping() {
     <ImportFileMapBootProvider importId={importId}>
       <ImportFileMappingForm>
         <ImportFileContainer>
-          <p>
-            Review and map the column headers in your csv/xlsx file with the
-            Bigcapital fields.
-          </p>
+          <p>Review and map the column headers in your csv/xlsx file with the Bigcapital fields.</p>
 
           {entityColumns.map((entityColumn, index) => (
             <ImportFileMappingGroup

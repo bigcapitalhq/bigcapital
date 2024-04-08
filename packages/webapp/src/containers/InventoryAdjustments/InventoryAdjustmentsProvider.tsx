@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useInventoryAdjustments } from '@/hooks/query';
@@ -25,16 +24,12 @@ function InventoryAdjustmentsProvider({ query, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isAdjustmentsLoading}
-      name={'inventory_adjustments'}
-    >
+    <DashboardInsider loading={isAdjustmentsLoading} name={'inventory_adjustments'}>
       <InventoryAdjustmentsContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const useInventoryAdjustmentsContext = () =>
-  React.useContext(InventoryAdjustmentsContext);
+const useInventoryAdjustmentsContext = () => React.useContext(InventoryAdjustmentsContext);
 
 export { InventoryAdjustmentsProvider, useInventoryAdjustmentsContext };

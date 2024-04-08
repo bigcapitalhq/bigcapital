@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -63,7 +62,4 @@ function InvoiceDeliverAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(InvoiceDeliverAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(InvoiceDeliverAlert);

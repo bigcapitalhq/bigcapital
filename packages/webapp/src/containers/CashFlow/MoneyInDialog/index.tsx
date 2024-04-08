@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from '@/components';
@@ -10,11 +9,7 @@ const MoneyInDialogContent = React.lazy(() => import('./MoneyInDialogContent'));
 /**
  * Money In dialog.
  */
-function MoneyInDialog({
-  dialogName,
-  payload = { account_type: null, account_id: null, account_name: '' },
-  isOpen,
-}) {
+function MoneyInDialog({ dialogName, payload = { account_type: null, account_id: null, account_name: '' }, isOpen }) {
   return (
     <Dialog
       name={dialogName}

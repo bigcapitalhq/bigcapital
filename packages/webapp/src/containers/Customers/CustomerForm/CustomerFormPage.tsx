@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,10 +5,7 @@ import styled from 'styled-components';
 import { DashboardCard, DashboardInsider } from '@/components';
 
 import CustomerFormFormik from './CustomerFormFormik';
-import {
-  CustomerFormProvider,
-  useCustomerFormContext,
-} from './CustomerFormProvider';
+import { CustomerFormProvider, useCustomerFormContext } from './CustomerFormProvider';
 
 /**
  * Customer form page loading.
@@ -18,11 +14,7 @@ import {
 function CustomerFormPageLoading({ children }) {
   const { isFormLoading } = useCustomerFormContext();
 
-  return (
-    <CustomerDashboardInsider loading={isFormLoading}>
-      {children}
-    </CustomerDashboardInsider>
-  );
+  return <CustomerDashboardInsider loading={isFormLoading}>{children}</CustomerDashboardInsider>;
 }
 
 /**
@@ -33,7 +25,7 @@ export default function CustomerFormPage() {
   const history = useHistory();
   const { id } = useParams();
 
-  const customerId = parseInt(id, 10);
+  const customerId = Number.parseInt(id, 10);
 
   // Handle the form submit success.
   const handleSubmitSuccess = (values, formArgs, submitPayload) => {
@@ -50,10 +42,7 @@ export default function CustomerFormPage() {
     <CustomerFormProvider customerId={customerId}>
       <CustomerFormPageLoading>
         <DashboardCard page>
-          <CustomerFormPageFormik
-            onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleFormCancel}
-          />
+          <CustomerFormPageFormik onSubmitSuccess={handleSubmitSuccess} onCancel={handleFormCancel} />
         </DashboardCard>
       </CustomerFormPageLoading>
     </CustomerFormProvider>

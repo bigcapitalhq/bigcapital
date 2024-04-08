@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -30,9 +29,7 @@ function BillUniversalSearchSelectComponent({
   return null;
 }
 
-export const BillUniversalSearchSelect = withDrawerActions(
-  BillUniversalSearchSelectComponent,
-);
+export const BillUniversalSearchSelect = withDrawerActions(BillUniversalSearchSelectComponent);
 
 /**
  * Status accessor.
@@ -41,21 +38,17 @@ export function BillStatus({ bill }) {
   return (
     <Choose>
       <Choose.When condition={bill.is_fully_paid && bill.is_open}>
-        <span class="fully-paid-text">
+        <span className="fully-paid-text">
           <T id={'paid'} />
         </span>
       </Choose.When>
       <Choose.When condition={bill.is_open}>
         <Choose>
           <Choose.When condition={bill.is_overdue}>
-            <span className={'overdue-status'}>
-              {intl.get('overdue_by', { overdue: bill.overdue_days })}
-            </span>
+            <span className={'overdue-status'}>{intl.get('overdue_by', { overdue: bill.overdue_days })}</span>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'due-status'}>
-              {intl.get('due_in', { due: bill.remaining_days })}
-            </span>
+            <span className={'due-status'}>{intl.get('due_in', { due: bill.remaining_days })}</span>
           </Choose.Otherwise>
         </Choose>
         <If condition={bill.is_partially_paid}>
@@ -67,7 +60,7 @@ export function BillStatus({ bill }) {
         </If>
       </Choose.When>
       <Choose.Otherwise>
-        <span class="draft">
+        <span className="draft">
           <T id={'draft'} />
         </span>
       </Choose.Otherwise>
@@ -78,26 +71,22 @@ export function BillStatus({ bill }) {
 /**
  * Bill universal search item.
  */
-export function BillUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function BillUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
-            {item.reference.bill_number}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+          <span className="bp4-text-muted">
+            {item.reference.bill_number} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_bill_date}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formatted_amount}</div>
           <BillStatus bill={item.reference} />
         </>
       }

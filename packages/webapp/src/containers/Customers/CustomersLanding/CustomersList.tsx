@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 
 import '@/style/pages/Customers/List.scss';
@@ -35,10 +34,7 @@ function CustomersList({
   );
 
   return (
-    <CustomersListProvider
-      tableState={customersTableState}
-      tableStateChanged={customersTableStateChanged}
-    >
+    <CustomersListProvider tableState={customersTableState} tableStateChanged={customersTableStateChanged}>
       <CustomersActionsBar />
 
       <DashboardPageContent>

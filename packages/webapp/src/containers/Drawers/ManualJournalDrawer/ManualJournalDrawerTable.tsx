@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { CommercialDocEntriesTable } from '@/components';
@@ -17,11 +16,5 @@ export default function ManualJournalDrawerTable() {
   // Manual journal drawer context.
   const { manualJournal } = useManualJournalDrawerContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={manualJournal.entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={manualJournal.entries} styleName={TableStyle.Constrant} />;
 }

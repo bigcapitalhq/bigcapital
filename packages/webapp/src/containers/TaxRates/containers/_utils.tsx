@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Tag } from '@blueprintjs/core';
 import { Align } from '@/constants';

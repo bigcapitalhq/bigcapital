@@ -1,10 +1,10 @@
 import { ServiceError } from '@/exceptions';
 import { IPaymentReceive } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { ERRORS } from './constants';
 import { PaymentReceiveTransfromer } from './PaymentReceiveTransformer';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { ERRORS } from './constants';
 
 @Service()
 export class GetPaymentReceive {
@@ -20,10 +20,7 @@ export class GetPaymentReceive {
    * @param {number} paymentReceiveId - Payment receive id.
    * @return {Promise<IPaymentReceive>}
    */
-  public async getPaymentReceive(
-    tenantId: number,
-    paymentReceiveId: number
-  ): Promise<IPaymentReceive> {
+  public async getPaymentReceive(tenantId: number, paymentReceiveId: number): Promise<IPaymentReceive> {
     const { PaymentReceive } = this.tenancy.models(tenantId);
 
     const paymentReceive = await PaymentReceive.query()
@@ -37,10 +34,6 @@ export class GetPaymentReceive {
     if (!paymentReceive) {
       throw new ServiceError(ERRORS.PAYMENT_RECEIVE_NOT_EXISTS);
     }
-    return this.transformer.transform(
-      tenantId,
-      paymentReceive,
-      new PaymentReceiveTransfromer()
-    );
+    return this.transformer.transform(tenantId, paymentReceive, new PaymentReceiveTransfromer());
   }
 }

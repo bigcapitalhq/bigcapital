@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
@@ -9,10 +8,7 @@ import InventoryItemDetailsHeader from './InventoryItemDetailsHeader';
 
 import withInventoryItemDetailsActions from './withInventoryItemDetailsActions';
 import { InventoryItemDetailsProvider } from './InventoryItemDetailsProvider';
-import {
-  InventoryItemDetailsLoadingBar,
-  InventoryItemDetailsAlerts,
-} from './components';
+import { InventoryItemDetailsLoadingBar, InventoryItemDetailsAlerts } from './components';
 
 import { InventoryItemDetailsBody } from './InventoryItemDetailsBody';
 import { InventoryItemDetailsDialogs } from './InventoryItemDetailsDialogs';
@@ -58,10 +54,7 @@ function InventoryItemDetails({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <InventoryItemDetailsHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <InventoryItemDetailsHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <InventoryItemDetailsBody />
         </FinancialStatement>
       </DashboardPageContent>

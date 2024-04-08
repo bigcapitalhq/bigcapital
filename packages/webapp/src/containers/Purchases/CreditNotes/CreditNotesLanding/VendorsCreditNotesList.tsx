@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/VendorsCreditNote/List.scss';
@@ -46,10 +45,8 @@ function VendorsCreditNotesList({
 
 export default compose(
   withVendorsCreditNotesActions,
-  withVendorsCreditNotes(
-    ({ vendorsCreditNoteTableState, vendorsCreditNoteTableStateChanged }) => ({
-      vendorsCreditNoteTableState,
-      vendorsCreditNoteTableStateChanged,
-    }),
-  ),
+  withVendorsCreditNotes(({ vendorsCreditNoteTableState, vendorsCreditNoteTableStateChanged }) => ({
+    vendorsCreditNoteTableState,
+    vendorsCreditNoteTableStateChanged,
+  })),
 )(VendorsCreditNotesList);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { TaskAccessor, TaskTimeAccessor } from './components';
 
@@ -25,7 +24,7 @@ export function useProjectTaskColumns() {
         className: 'name',
         clickable: true,
         textOverview: true,
-      }
+      },
     ],
     [],
   );

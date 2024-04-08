@@ -1,9 +1,9 @@
 import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
+import TenantModel from '../models/TenantModel';
 
 export default class ExpenseCategory extends TenantModel {
   amount: number;
-  
+
   /**
    * Table name
    */
@@ -30,8 +30,8 @@ export default class ExpenseCategory extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    
+    const Account = require('../models/Account');
+
     return {
       expenseAccount: {
         relation: Model.BelongsToOneRelation,

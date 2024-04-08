@@ -1,20 +1,20 @@
-import * as R from 'ramda';
-import { Knex } from 'knex';
 import {
   AccountNormal,
-  IBill,
-  IBillLandedCost,
-  IBillLandedCostEntry,
-  ILandedCostTransactionEntry,
-  ILedger,
-  ILedgerEntry,
+  type IBill,
+  type IBillLandedCost,
+  type IBillLandedCostEntry,
+  type ILandedCostTransactionEntry,
+  type ILedger,
+  type ILedgerEntry,
 } from '@/interfaces';
-import JournalPosterService from '@/services/Sales/JournalPosterService';
-import { Service, Inject } from 'typedi';
-import LedgerRepository from '@/services/Ledger/LedgerRepository';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import BaseLandedCostService from './BaseLandedCost';
 import Ledger from '@/services/Accounting/Ledger';
+import LedgerRepository from '@/services/Ledger/LedgerRepository';
+import JournalPosterService from '@/services/Sales/JournalPosterService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import BaseLandedCostService from './BaseLandedCost';
 
 @Service()
 export default class LandedCostGLEntries extends BaseLandedCostService {
@@ -33,10 +33,7 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
    * @param   {IBillLandedCost} allocatedLandedCost
    * @returns
    */
-  private getLandedCostGLCommonEntry = (
-    bill: IBill,
-    allocatedLandedCost: IBillLandedCost
-  ) => {
+  private getLandedCostGLCommonEntry = (bill: IBill, allocatedLandedCost: IBillLandedCost) => {
     return {
       date: bill.billDate,
       currencyCode: allocatedLandedCost.currencyCode,
@@ -63,12 +60,9 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
   private getLandedCostGLInventoryEntry = (
     bill: IBill,
     allocatedLandedCost: IBillLandedCost,
-    allocatedEntry: IBillLandedCostEntry
+    allocatedEntry: IBillLandedCostEntry,
   ): ILedgerEntry => {
-    const commonEntry = this.getLandedCostGLCommonEntry(
-      bill,
-      allocatedLandedCost
-    );
+    const commonEntry = this.getLandedCostGLCommonEntry(bill, allocatedLandedCost);
     return {
       ...commonEntry,
       debit: allocatedLandedCost.localAmount,
@@ -88,12 +82,9 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
   private getLandedCostGLCostEntry = (
     bill: IBill,
     allocatedLandedCost: IBillLandedCost,
-    fromTransactionEntry: ILandedCostTransactionEntry
+    fromTransactionEntry: ILandedCostTransactionEntry,
   ): ILedgerEntry => {
-    const commonEntry = this.getLandedCostGLCommonEntry(
-      bill,
-      allocatedLandedCost
-    );
+    const commonEntry = this.getLandedCostGLCommonEntry(bill, allocatedLandedCost);
     return {
       ...commonEntry,
       credit: allocatedLandedCost.localAmount,
@@ -116,20 +107,12 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
       bill: IBill,
       allocatedLandedCost: IBillLandedCost,
       fromTransactionEntry: ILandedCostTransactionEntry,
-      allocatedEntry: IBillLandedCostEntry
+      allocatedEntry: IBillLandedCostEntry,
     ): ILedgerEntry[] => {
-      const inventoryEntry = this.getLandedCostGLInventoryEntry(
-        bill,
-        allocatedLandedCost,
-        allocatedEntry
-      );
-      const costEntry = this.getLandedCostGLCostEntry(
-        bill,
-        allocatedLandedCost,
-        fromTransactionEntry
-      );
+      const inventoryEntry = this.getLandedCostGLInventoryEntry(bill, allocatedLandedCost, allocatedEntry);
+      const costEntry = this.getLandedCostGLCostEntry(bill, allocatedLandedCost, fromTransactionEntry);
       return [inventoryEntry, costEntry];
-    }
+    },
   );
 
   /**
@@ -142,14 +125,10 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
   public getLandedCostGLEntries = (
     allocatedLandedCost: IBillLandedCost,
     bill: IBill,
-    fromTransactionEntry: ILandedCostTransactionEntry
+    fromTransactionEntry: ILandedCostTransactionEntry,
   ): ILedgerEntry[] => {
-    const getEntry = this.getLandedCostGLAllocateEntry(
-      bill,
-      allocatedLandedCost,
-      fromTransactionEntry
-    );
-    return allocatedLandedCost.allocateEntries.map(getEntry).flat();
+    const getEntry = this.getLandedCostGLAllocateEntry(bill, allocatedLandedCost, fromTransactionEntry);
+    return allocatedLandedCost.allocateEntries.flatMap(getEntry);
   };
 
   /**
@@ -162,13 +141,9 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
   public getLandedCostLedger = (
     allocatedLandedCost: IBillLandedCost,
     bill: IBill,
-    fromTransactionEntry: ILandedCostTransactionEntry
+    fromTransactionEntry: ILandedCostTransactionEntry,
   ): ILedger => {
-    const entries = this.getLandedCostGLEntries(
-      allocatedLandedCost,
-      bill,
-      fromTransactionEntry
-    );
+    const entries = this.getLandedCostGLEntries(allocatedLandedCost, bill, fromTransactionEntry);
     return new Ledger(entries);
   };
 
@@ -181,13 +156,9 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
     allocatedLandedCost: IBillLandedCost,
     bill: IBill,
     fromTransactionEntry: ILandedCostTransactionEntry,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
-    const ledgerEntries = this.getLandedCostGLEntries(
-      allocatedLandedCost,
-      bill,
-      fromTransactionEntry
-    );
+    const ledgerEntries = this.getLandedCostGLEntries(allocatedLandedCost, bill, fromTransactionEntry);
     await this.ledgerRepository.saveLedgerEntries(tenantId, ledgerEntries, trx);
   };
 
@@ -197,11 +168,7 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
    * @param {number} billLandedCostId
    * @param {Knex.Transaction} trx
    */
-  public createLandedCostGLEntries = async (
-    tenantId: number,
-    billLandedCostId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public createLandedCostGLEntries = async (tenantId: number, billLandedCostId: number, trx?: Knex.Transaction) => {
     const { BillLandedCost } = this.tenancy.models(tenantId);
 
     // Retrieve the bill landed cost transacion with associated
@@ -216,16 +183,10 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
       tenantId,
       allocatedLandedCost.fromTransactionType,
       allocatedLandedCost.fromTransactionId,
-      allocatedLandedCost.fromTransactionEntryId
+      allocatedLandedCost.fromTransactionEntryId,
     );
     // Writes the given landed cost GL entries to the storage layer.
-    await this.writeLandedCostGLEntries(
-      tenantId,
-      allocatedLandedCost,
-      allocatedLandedCost.bill,
-      transactionEntry,
-      trx
-    );
+    await this.writeLandedCostGLEntries(tenantId, allocatedLandedCost, allocatedLandedCost.bill, transactionEntry, trx);
   };
 
   /**
@@ -234,16 +195,7 @@ export default class LandedCostGLEntries extends BaseLandedCostService {
    * @param {number} landedCostId
    * @param {Knex.Transaction} trx
    */
-  public revertLandedCostGLEntries = async (
-    tenantId: number,
-    landedCostId: number,
-    trx: Knex.Transaction
-  ) => {
-    await this.journalService.revertJournalTransactions(
-      tenantId,
-      landedCostId,
-      'LandedCost',
-      trx
-    );
+  public revertLandedCostGLEntries = async (tenantId: number, landedCostId: number, trx: Knex.Transaction) => {
+    await this.journalService.revertJournalTransactions(tenantId, landedCostId, 'LandedCost', trx);
   };
 }

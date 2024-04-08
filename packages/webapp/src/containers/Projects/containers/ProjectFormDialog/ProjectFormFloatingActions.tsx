@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { Intent, Button, Classes } from '@blueprintjs/core';
@@ -21,12 +20,7 @@ function ProjectFormFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '100px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '100px' }} type="submit">
           <T id={'projects.label.create'} />
         </Button>
       </div>

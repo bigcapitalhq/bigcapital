@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -29,16 +28,11 @@ export const transformErrors = (errors, { setFieldError }) => {
     setFieldError('payment_number', intl.get('payment_number_is_not_unique'));
   }
   if (getError(PAYMENT_MADE_ERRORS.INVALID_BILL_PAYMENT_AMOUNT)) {
-    setFieldError(
-      'payment_amount',
-      intl.get('the_payment_amount_bigger_than_invoice_due_amount'),
-    );
+    setFieldError('payment_amount', intl.get('the_payment_amount_bigger_than_invoice_due_amount'));
   }
   if (getError(PAYMENT_MADE_ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID)) {
     AppToaster.show({
-      message: intl.get(
-        'payment_made.error.withdrawal_account_currency_invalid',
-      ),
+      message: intl.get('payment_made.error.withdrawal_account_currency_invalid'),
       intent: Intent.DANGER,
     });
   }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -55,15 +54,8 @@ function CustomerInactivateAlert({
       onConfirm={handleConfirmCustomerInactive}
       loading={isLoading}
     >
-      <p>
-        {intl.get(
-          'customer.alert.are_you_sure_want_to_inactivate_this_customer',
-        )}
-      </p>
+      <p>{intl.get('customer.alert.are_you_sure_want_to_inactivate_this_customer')}</p>
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CustomerInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CustomerInactivateAlert);

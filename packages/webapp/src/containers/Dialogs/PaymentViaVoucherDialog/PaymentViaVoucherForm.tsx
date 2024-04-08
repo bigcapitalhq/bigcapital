@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core';
 import { Form, FastField, ErrorMessage, useFormikContext } from 'formik';
@@ -60,12 +59,7 @@ function PaymentViaLicenseForm({
             <T id={'close'} />
           </Button>
 
-          <Button
-            intent={Intent.PRIMARY}
-            disabled={false}
-            type="submit"
-            loading={isSubmitting}
-          >
+          <Button intent={Intent.PRIMARY} disabled={false} type="submit" loading={isSubmitting}>
             <T id={'submit'} />
           </Button>
         </div>

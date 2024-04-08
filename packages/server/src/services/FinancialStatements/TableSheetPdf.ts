@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
 import { ITableColumn, ITableData, ITableRow } from '@/interfaces';
 import { ChromiumlyTenancy } from '@/services/ChromiumlyTenancy/ChromiumlyTenancy';
 import { TemplateInjectable } from '@/services/TemplateInjectable/TemplateInjectable';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { FinancialTableStructure } from './FinancialTableStructure';
 import { tableClassNames } from './utils';
 
@@ -27,7 +27,7 @@ export class TableSheetPdf {
     table: ITableData,
     sheetName: string,
     sheetDate: string,
-    customCSS?: string
+    customCSS?: string,
   ): Promise<Buffer> {
     // Prepare columns and rows for PDF conversion
     const columns = this.tablePdfColumns(table.columns);
@@ -36,16 +36,12 @@ export class TableSheetPdf {
     const landscape = columns.length > 4;
 
     // Generate HTML content from the template
-    const htmlContent = await this.templateInjectable.render(
-      tenantId,
-      'modules/financial-sheet',
-      {
-        table: { rows, columns },
-        sheetName,
-        sheetDate,
-        customCSS,
-      }
-    );
+    const htmlContent = await this.templateInjectable.render(tenantId, 'modules/financial-sheet', {
+      table: { rows, columns },
+      sheetName,
+      sheetDate,
+      customCSS,
+    });
     // Convert the HTML content to PDF
     return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
       margins: { top: 0, bottom: 0, left: 0, right: 0 },
@@ -68,9 +64,7 @@ export class TableSheetPdf {
    * @returns {ITableRow[]}
    */
   private tablePdfRows = (rows: ITableRow[]): ITableRow[] => {
-    const curriedFlatNestedTree = R.curry(
-      FinancialTableStructure.flatNestedTree
-    );
+    const curriedFlatNestedTree = R.curry(FinancialTableStructure.flatNestedTree);
     const flatNestedTree = curriedFlatNestedTree(R.__, {
       nestedPrefix: '<span style="padding-left: 15px;"></span>',
     });

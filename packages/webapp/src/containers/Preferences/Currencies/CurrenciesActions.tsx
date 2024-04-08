@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { compose } from '@/utils';
@@ -11,12 +10,8 @@ function CurrenciesActions({ openDialog }) {
   }, [openDialog]);
 
   return (
-    <div class="users-actions">
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={handleClickNewCurrency}
-        intent={Intent.PRIMARY}
-      >
+    <div className="users-actions">
+      <Button icon={<Icon icon="plus" iconSize={12} />} onClick={handleClickNewCurrency} intent={Intent.PRIMARY}>
         <T id={'new_currency'} />
       </Button>
     </div>

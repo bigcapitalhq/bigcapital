@@ -1,9 +1,8 @@
-
-exports.up = function (knex) {
-  return knex.schema.createTable('items_categories', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('items_categories', (table) => {
     table.increments();
     table.string('name').index();
-   
+
     table.text('description');
     table.integer('user_id').unsigned().index();
 
@@ -14,6 +13,5 @@ exports.up = function (knex) {
     table.string('cost_method');
     table.timestamps();
   });
-};
 
 exports.down = (knex) => knex.schema.dropTableIfExists('items_categories');

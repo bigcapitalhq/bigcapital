@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -28,6 +27,4 @@ function VendorDrawerLinkComponent({
   );
 }
 
-export const VendorDrawerLink = R.compose(withDrawerActions)(
-  VendorDrawerLinkComponent,
-);
+export const VendorDrawerLink = R.compose(withDrawerActions)(VendorDrawerLinkComponent);

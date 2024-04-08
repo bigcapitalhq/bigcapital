@@ -1,12 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import {
-  AppToaster,
-  FormattedMessage as T,
-  FormattedHTMLMessage,
-} from '@/components';
+import { AppToaster, FormattedMessage as T, FormattedHTMLMessage } from '@/components';
 
 import withAlertStoreConnect from '@/containers/Alert/withAlertStoreConnect';
 import withAlertActions from '@/containers/Alert/withAlertActions';
@@ -32,8 +27,7 @@ function VendorCreditDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { isLoading, mutateAsync: deleteVendorCreditMutate } =
-    useDeleteVendorCredit();
+  const { isLoading, mutateAsync: deleteVendorCreditMutate } = useDeleteVendorCredit();
 
   // handle cancel delete credit note alert.
   const handleCancelDeleteAlert = () => {
@@ -74,16 +68,10 @@ function VendorCreditDeleteAlert({
       loading={isLoading}
     >
       <p>
-        <FormattedHTMLMessage
-          id={'vendor_credits.note.once_delete_this_vendor_credit_note'}
-        />
+        <FormattedHTMLMessage id={'vendor_credits.note.once_delete_this_vendor_credit_note'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(VendorCreditDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(VendorCreditDeleteAlert);

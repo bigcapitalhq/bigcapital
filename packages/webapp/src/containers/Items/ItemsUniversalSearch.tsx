@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
@@ -27,9 +27,7 @@ function ItemUniversalSearchSelectComponent({
   return null;
 }
 
-export const ItemUniversalSearchSelectAction = withDrawerActions(
-  ItemUniversalSearchSelectComponent,
-);
+export const ItemUniversalSearchSelectAction = withDrawerActions(ItemUniversalSearchSelectComponent);
 
 /**
  * Transformes items to search.

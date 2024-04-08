@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as Yup from 'yup';
 import styled from 'styled-components';
@@ -37,10 +36,7 @@ function TrialBalanceSheetHeader({
   // Form validation schema.
   const validationSchema = Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('to_date')),
   });
   // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
@@ -80,32 +76,17 @@ function TrialBalanceSheetHeader({
   };
 
   return (
-    <TrialBalanceSheetDrawerHeader
-      isOpen={trialBalanceDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <TrialBalanceSheetDrawerHeader isOpen={trialBalanceDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<TrialBalanceSheetHeaderGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<TrialBalanceSheetHeaderGeneralPanel />} />
             {isBranchesFeatureCan && (
-              <Tab
-                id="dimensions"
-                title={<T id={'dimensions'} />}
-                panel={<TrialBalanceSheetHeaderDimensionsPanel />}
-              />
+              <Tab id="dimensions" title={<T id={'dimensions'} />} panel={<TrialBalanceSheetHeaderDimensionsPanel />} />
             )}
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

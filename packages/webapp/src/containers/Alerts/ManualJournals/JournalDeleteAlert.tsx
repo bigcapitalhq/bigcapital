@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -71,8 +70,4 @@ function JournalDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(JournalDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(JournalDeleteAlert);

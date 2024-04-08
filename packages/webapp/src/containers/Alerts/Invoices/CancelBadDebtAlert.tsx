@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -62,7 +61,4 @@ function CancelBadDebtAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CancelBadDebtAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CancelBadDebtAlert);

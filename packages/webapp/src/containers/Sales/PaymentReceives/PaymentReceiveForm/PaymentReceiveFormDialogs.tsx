@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import PaymentReceiveNumberDialog from '@/containers/Dialogs/PaymentReceiveNumberDialog';
@@ -21,9 +20,6 @@ export default function PaymentReceiveFormDialogs() {
   };
 
   return (
-    <PaymentReceiveNumberDialog
-      dialogName={'payment-receive-number-form'}
-      onConfirm={handleUpdatePaymentNumber}
-    />
+    <PaymentReceiveNumberDialog dialogName={'payment-receive-number-form'} onConfirm={handleUpdatePaymentNumber} />
   );
 }

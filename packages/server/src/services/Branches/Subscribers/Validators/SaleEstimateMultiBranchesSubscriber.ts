@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { ISaleEstimateCreatingPayload, ISaleEstimateEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  ISaleEstimateCreatingPayload,
-  ISaleEstimateEditingPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -15,14 +12,8 @@ export class SaleEstimateBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.saleEstimate.onCreating,
-      this.validateBranchExistanceOnEstimateCreating
-    );
-    bus.subscribe(
-      events.saleEstimate.onEditing,
-      this.validateBranchExistanceOnEstimateEditing
-    );
+    bus.subscribe(events.saleEstimate.onCreating, this.validateBranchExistanceOnEstimateCreating);
+    bus.subscribe(events.saleEstimate.onEditing, this.validateBranchExistanceOnEstimateEditing);
     return bus;
   };
 
@@ -34,23 +25,14 @@ export class SaleEstimateBranchValidateSubscriber {
     tenantId,
     estimateDTO,
   }: ISaleEstimateCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      estimateDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, estimateDTO.branchId);
   };
 
   /**
    * Validate branch existance once estimate editing.
    * @param {ISaleEstimateEditingPayload} payload
    */
-  private validateBranchExistanceOnEstimateEditing = async ({
-    estimateDTO,
-    tenantId,
-  }: ISaleEstimateEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      estimateDTO.branchId
-    );
+  private validateBranchExistanceOnEstimateEditing = async ({ estimateDTO, tenantId }: ISaleEstimateEditingPayload) => {
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, estimateDTO.branchId);
   };
 }

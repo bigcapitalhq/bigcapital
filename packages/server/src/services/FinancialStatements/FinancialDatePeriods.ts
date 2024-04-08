@@ -1,13 +1,13 @@
-import * as R from 'ramda';
-import { memoize } from 'lodash';
-import { compose } from 'lodash/fp';
 import {
   IAccountTransactionsGroupBy,
-  IFinancialDatePeriodsUnit,
-  IFinancialSheetTotalPeriod,
-  IFormatNumberSettings,
+  type IFinancialDatePeriodsUnit,
+  type IFinancialSheetTotalPeriod,
+  type IFormatNumberSettings,
 } from '@/interfaces';
-import { dateRangeFromToCollection } from 'utils';
+import { memoize } from 'lodash';
+import { compose } from 'lodash/fp';
+import * as R from 'ramda';
+import { dateRangeFromToCollection } from '../../utils';
 import { FinancialDateRanges } from './FinancialDateRanges';
 
 export const FinancialDatePeriods = (Base) =>
@@ -18,11 +18,9 @@ export const FinancialDatePeriods = (Base) =>
      * @param {Date} toDate
      * @param {string} unit
      */
-    protected getDateRanges = memoize(
-      (fromDate: Date, toDate: Date, unit: string) => {
-        return dateRangeFromToCollection(fromDate, toDate, unit);
-      }
-    );
+    protected getDateRanges = memoize((fromDate: Date, toDate: Date, unit: string) => {
+      return dateRangeFromToCollection(fromDate, toDate, unit);
+    });
 
     /**
      * Retrieve the date period meta.
@@ -35,7 +33,7 @@ export const FinancialDatePeriods = (Base) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings?: IFormatNumberSettings
+      overrideSettings?: IFormatNumberSettings,
     ): IFinancialSheetTotalPeriod => {
       return {
         fromDate: this.getDateMeta(fromDate),
@@ -55,7 +53,7 @@ export const FinancialDatePeriods = (Base) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings: IFormatNumberSettings = {}
+      overrideSettings: IFormatNumberSettings = {},
     ) => {
       return this.getDatePeriodMeta(total, fromDate, toDate, {
         money: true,
@@ -75,12 +73,7 @@ export const FinancialDatePeriods = (Base) =>
         toDate: Date,
         periodsUnit: string,
         node: any,
-        callback: (
-          node: any,
-          fromDate: Date,
-          toDate: Date,
-          index: number
-        ) => any
+        callback: (node: any, fromDate: Date, toDate: Date, index: number) => any,
       ) => {
         const curriedCallback = R.curry(callback)(node);
 
@@ -90,7 +83,7 @@ export const FinancialDatePeriods = (Base) =>
         return dateRanges.map((dateRange, index) => {
           return curriedCallback(dateRange.fromDate, dateRange.toDate, index);
         });
-      }
+      },
     );
 
     /**
@@ -98,9 +91,7 @@ export const FinancialDatePeriods = (Base) =>
      * @param   {IAccountTransactionsGroupBy} columnsBy
      * @returns {IAccountTransactionsGroupBy}
      */
-    protected getGroupByFromDisplayColumnsBy = (
-      columnsBy: IFinancialDatePeriodsUnit
-    ): IAccountTransactionsGroupBy => {
+    protected getGroupByFromDisplayColumnsBy = (columnsBy: IFinancialDatePeriodsUnit): IAccountTransactionsGroupBy => {
       const paris = {
         week: IAccountTransactionsGroupBy.Day,
         quarter: IAccountTransactionsGroupBy.Month,

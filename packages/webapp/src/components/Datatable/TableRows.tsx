@@ -1,6 +1,5 @@
-// @ts-nocheck
-import React, { useContext } from "react";
-import TableContext from "./TableContext";
+import React, { useContext } from 'react';
+import TableContext from './TableContext';
 
 /**
  * Table rows.

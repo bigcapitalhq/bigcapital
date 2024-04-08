@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -42,12 +41,9 @@ export default function InviteAcceptForm() {
     inviteAcceptMutate([values, token])
       .then(() => {
         AppToaster.show({
-          message: intl.getHTML(
-            'congrats_your_account_has_been_created_and_invited',
-            {
-              organization_name: inviteMeta.organizationName,
-            },
-          ),
+          message: intl.getHTML('congrats_your_account_has_been_created_and_invited', {
+            organization_name: inviteMeta.organizationName,
+          }),
           intent: Intent.SUCCESS,
         });
         history.push('/auth/login');

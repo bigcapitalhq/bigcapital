@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -7,10 +6,7 @@ import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { defaultTo, isEmpty } from 'lodash';
 import { CLASSES } from '@/constants/classes';
-import {
-  CreateCreditNoteFormSchema,
-  EditCreditNoteFormSchema,
-} from './CreditNoteForm.schema';
+import { CreateCreditNoteFormSchema, EditCreditNoteFormSchema } from './CreditNoteForm.schema';
 
 import CreditNoteFormHeader from './CreditNoteFormHeader';
 import CreditNoteItemsEntriesEditorField from './CreditNoteItemsEntriesEditorField';
@@ -22,26 +18,13 @@ import CreditNoteFormTopBar from './CreditNoteFormTopBar';
 import { AppToaster } from '@/components';
 
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
-import {
-  filterNonZeroEntries,
-  transformToEditForm,
-  transformFormValuesToRequest,
-  defaultCreditNote,
-} from './utils';
+import { filterNonZeroEntries, transformToEditForm, transformFormValuesToRequest, defaultCreditNote } from './utils';
 
-import {
-  compose,
-  orderingLinesIndexes,
-  transactionNumber,
-  safeSumBy,
-} from '@/utils';
+import { compose, orderingLinesIndexes, transactionNumber, safeSumBy } from '@/utils';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
-import {
-  CreditNoteExchangeRateSync,
-  CreditNoteSyncIncrementSettingsToForm,
-} from './components';
+import { CreditNoteExchangeRateSync, CreditNoteSyncIncrementSettingsToForm } from './components';
 
 /**
  * Credit note form.
@@ -60,14 +43,8 @@ function CreditNoteForm({
   const history = useHistory();
 
   // Credit note form context.
-  const {
-    isNewMode,
-    submitPayload,
-    creditNote,
-    newCreditNote,
-    createCreditNoteMutate,
-    editCreditNoteMutate,
-  } = useCreditNoteFormContext();
+  const { isNewMode, submitPayload, creditNote, newCreditNote, createCreditNoteMutate, editCreditNoteMutate } =
+    useCreditNoteFormContext();
 
   // Credit number.
   const creditNumber = transactionNumber(creditNumberPrefix, creditNextNumber);
@@ -90,10 +67,7 @@ function CreditNoteForm({
   };
 
   // Handles form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
-  ) => {
+  const handleFormSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     const entries = filterNonZeroEntries(values.entries);
     const totalQuantity = safeSumBy(entries, 'quantity');
 
@@ -112,11 +86,7 @@ function CreditNoteForm({
     // Handle the request success.
     const onSuccess = () => {
       AppToaster.show({
-        message: intl.get(
-          isNewMode
-            ? 'credit_note.success_message'
-            : 'credit_note.edit_success_message',
-        ),
+        message: intl.get(isNewMode ? 'credit_note.success_message' : 'credit_note.edit_success_message'),
         intent: Intent.SUCCESS,
       });
       setSubmitting(false);
@@ -139,24 +109,14 @@ function CreditNoteForm({
     if (isNewMode) {
       createCreditNoteMutate(form).then(onSuccess).catch(onError);
     } else {
-      editCreditNoteMutate([creditNote.id, form])
-        .then(onSuccess)
-        .catch(onError);
+      editCreditNoteMutate([creditNote.id, form]).then(onSuccess).catch(onError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_CREDIT_NOTE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_CREDIT_NOTE)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema
-        }
+        validationSchema={isNewMode ? CreateCreditNoteFormSchema : EditCreditNoteFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

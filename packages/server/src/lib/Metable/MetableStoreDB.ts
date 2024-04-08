@@ -1,17 +1,15 @@
-import { IMetadata, IMetableStoreStorage } from '@/interfaces';
-import MetableStore from './MetableStore';
-import { isBlank, parseBoolean } from 'utils';
+import config from '@/data/options';
+import { IMetableStoreStorage, IMetadata } from '@/interfaces';
+import { isBlank, parseBoolean } from '../../utils';
 import MetableConfig from './MetableConfig';
-import config from '@/data/options'
-export default class MetableDBStore
-  extends MetableStore
-  implements IMetableStoreStorage {
+import MetableStore from './MetableStore';
+export default class MetableDBStore extends MetableStore implements IMetableStoreStorage {
   repository: any;
   KEY_COLUMN: string;
   VALUE_COLUMN: string;
   TYPE_COLUMN: string;
   extraQuery: Function;
-  loaded: Boolean;
+  loaded: boolean;
   config: MetableConfig;
 
   /**
@@ -90,10 +88,7 @@ export default class MetableDBStore
 
     updated.forEach((meta) => {
       const updateOper = this.repository
-        .update(
-          { [this.VALUE_COLUMN]: meta.value },
-          { ...this.extraQuery(meta) }
-        )
+        .update({ [this.VALUE_COLUMN]: meta.value }, { ...this.extraQuery(meta) })
         .then(() => {
           meta._markAsUpdated = false;
         });
@@ -108,9 +103,7 @@ export default class MetableDBStore
    * @returns {Promise}
    */
   saveDeleted(metadata: IMetadata[]) {
-    const deleted = metadata.filter(
-      (m: IMetadata) => m._markAsDeleted === true
-    );
+    const deleted = metadata.filter((m: IMetadata) => m._markAsDeleted === true);
     const opers: Promise<void> = [];
 
     if (deleted.length > 0) {
@@ -134,9 +127,7 @@ export default class MetableDBStore
    * @returns {Promise}
    */
   saveInserted(metadata: IMetadata[]) {
-    const inserted = metadata.filter(
-      (m: IMetadata) => m._markAsInserted === true
-    );
+    const inserted = metadata.filter((m: IMetadata) => m._markAsInserted === true);
     const opers: Promise<void> = [];
 
     inserted.forEach((meta) => {
@@ -176,15 +167,12 @@ export default class MetableDBStore
    * @param {String} valueType -
    * @return {String|Number|Boolean} -
    */
-  static parseMetaValue(
-    value: string,
-    valueType: string | false
-  ): string | boolean | number {
+  static parseMetaValue(value: string, valueType: string | false): string | boolean | number {
     let parsedValue: string | number | boolean;
 
     switch (valueType) {
       case 'number':
-        parsedValue = parseFloat(value);
+        parsedValue = Number.parseFloat(value);
         break;
       case 'boolean':
         parsedValue = parseBoolean(value, false);
@@ -205,16 +193,10 @@ export default class MetableDBStore
    * @param {String} parseType -
    */
   mapMetadata(metadata: IMetadata) {
-    const metaType = this.config.getMetaType(
-      metadata[this.KEY_COLUMN],
-      metadata['group'],
-    );
+    const metaType = this.config.getMetaType(metadata[this.KEY_COLUMN], metadata['group']);
     return {
       key: metadata[this.KEY_COLUMN],
-      value: MetableDBStore.parseMetaValue(
-        metadata[this.VALUE_COLUMN],
-        metaType
-      ),
+      value: MetableDBStore.parseMetaValue(metadata[this.VALUE_COLUMN], metaType),
       ...this.extraColumns.reduce((obj, extraCol: string) => {
         obj[extraCol] = metadata[extraCol] || null;
         return obj;
@@ -235,9 +217,7 @@ export default class MetableDBStore
    */
   private validateStoreIsLoaded() {
     if (!this.loaded) {
-      throw new Error(
-        'You could not save the store before loaded from the storage.'
-      );
+      throw new Error('You could not save the store before loaded from the storage.');
     }
   }
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 
 
 export const setGlobalErrors = (errors) => {
@@ -8,4 +7,4 @@ export const setGlobalErrors = (errors) => {
       errors,
     },
   };
-}
+};

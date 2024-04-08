@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { useSaleReceiptDefaultOptions } from '@/hooks/query';
 import { DialogContent } from '@/components';
@@ -9,8 +8,7 @@ interface ReceiptMailDialogBootValues {
   redirectToReceiptsList: boolean;
 }
 
-const ReceiptMailDialogBootContext =
-  createContext<ReceiptMailDialogBootValues>();
+const ReceiptMailDialogBootContext = createContext<ReceiptMailDialogBootValues>();
 
 interface ReceiptMailDialogBootProps {
   receiptId: number;
@@ -21,13 +19,8 @@ interface ReceiptMailDialogBootProps {
 /**
  * Receipt mail dialog boot provider.
  */
-function ReceiptMailDialogBoot({
-  receiptId,
-  redirectToReceiptsList = false,
-  ...props
-}: ReceiptMailDialogBootProps) {
-  const { data: mailOptions, isLoading: isMailOptionsLoading } =
-    useSaleReceiptDefaultOptions(receiptId);
+function ReceiptMailDialogBoot({ receiptId, redirectToReceiptsList = false, ...props }: ReceiptMailDialogBootProps) {
+  const { data: mailOptions, isLoading: isMailOptionsLoading } = useSaleReceiptDefaultOptions(receiptId);
 
   const provider = {
     saleReceiptId: receiptId,
@@ -43,7 +36,6 @@ function ReceiptMailDialogBoot({
   );
 }
 
-const useReceiptMailDialogBoot = () =>
-  React.useContext<ReceiptMailDialogBootValues>(ReceiptMailDialogBootContext);
+const useReceiptMailDialogBoot = () => React.useContext<ReceiptMailDialogBootValues>(ReceiptMailDialogBootContext);
 
 export { ReceiptMailDialogBoot, useReceiptMailDialogBoot };

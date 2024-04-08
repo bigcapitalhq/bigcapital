@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardPageContent, DashboardContentTable } from '@/components';
 
@@ -14,7 +13,7 @@ import { compose, transformTableStateToQuery } from '@/utils';
 
 /**
  * Projects list.
- * @returns 
+ * @returns
  */
 function ProjectsList({
   // #withProjects

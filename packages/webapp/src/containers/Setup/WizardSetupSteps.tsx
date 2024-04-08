@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { getSetupWizardSteps } from '@/constants/registerWizard';
@@ -22,11 +21,7 @@ export default function WizardSetupSteps({ currentStep = 1 }) {
       <div className={'setup-page-steps'}>
         <ul>
           {setupWizardSetups.map((step, index) => (
-            <WizardSetupStep
-              label={step.label}
-              isActive={index + 1 === currentStep}
-              key={index}
-            />
+            <WizardSetupStep label={step.label} isActive={index + 1 === currentStep} key={index} />
           ))}
         </ul>
       </div>

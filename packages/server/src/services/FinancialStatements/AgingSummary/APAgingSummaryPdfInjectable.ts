@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import { IAPAgingSummaryQuery } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { TableSheetPdf } from '../TableSheetPdf';
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
 import { HtmlTableCss } from './_constants';
@@ -18,10 +18,7 @@ export class APAgingSummaryPdfInjectable {
    * @param {IAPAgingSummaryQuery} query - Balance sheet query.
    * @returns {Promise<Buffer>}
    */
-  public async pdf(
-    tenantId: number,
-    query: IAPAgingSummaryQuery
-  ): Promise<Buffer> {
+  public async pdf(tenantId: number, query: IAPAgingSummaryQuery): Promise<Buffer> {
     const table = await this.APAgingSummaryTable.table(tenantId, query);
 
     return this.tableSheetPdf.convertToPdf(
@@ -29,7 +26,7 @@ export class APAgingSummaryPdfInjectable {
       table.table,
       table.meta.sheetName,
       table.meta.formattedAsDate,
-      HtmlTableCss
+      HtmlTableCss,
     );
   }
 }

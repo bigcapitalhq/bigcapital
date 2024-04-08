@@ -1,10 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  useAuthenticatedAccount,
-  useCurrentOrganization,
-  useDashboardMeta,
-} from '@/hooks/query';
+import { useAuthenticatedAccount, useCurrentOrganization, useDashboardMeta } from '@/hooks/query';
 import { useSplashLoading } from '@/hooks/state';
 import { useWatch, useWatchImmediate, useWhen } from '@/hooks';
 import { setCookie, getCookie } from '@/utils';
@@ -51,8 +46,7 @@ export function useApplicationBoot() {
   } = useCurrentOrganization();
 
   // Authenticated user.
-  const { isSuccess: isAuthUserSuccess, isLoading: isAuthUserLoading } =
-    useAuthenticatedAccount();
+  const { isSuccess: isAuthUserSuccess, isLoading: isAuthUserLoading } = useAuthenticatedAccount();
 
   // Initial locale cookie value.
   const localeCookie = getCookie('locale');
@@ -109,9 +103,7 @@ export function useApplicationBoot() {
 
   // Once the all requests complete change the app loading state.
   useWhen(
-    isAuthUserSuccess &&
-      isCurrentOrganizationSuccess &&
-      localeCookie === organization?.metadata?.language,
+    isAuthUserSuccess && isCurrentOrganizationSuccess && localeCookie === organization?.metadata?.language,
     () => {
       isBooted.current = true;
     },

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createDeepEqualSelector } from '@/utils';
 import { paginationLocationQuery } from '@/store/selectors';
 
@@ -7,13 +7,9 @@ const exchangeRateTableState = (state) => {
 };
 
 export const getExchangeRatesTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    exchangeRateTableState,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, exchangeRateTableState, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });

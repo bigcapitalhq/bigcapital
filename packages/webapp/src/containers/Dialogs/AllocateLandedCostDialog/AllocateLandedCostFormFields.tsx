@@ -1,14 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FastField, Field, ErrorMessage } from 'formik';
-import {
-  Classes,
-  FormGroup,
-  RadioGroup,
-  Radio,
-  InputGroup,
-} from '@blueprintjs/core';
+import { Classes, FormGroup, RadioGroup, Radio, InputGroup } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { FormattedMessage as T, If } from '@/components';
 import { inputIntent, handleStringChange } from '@/utils';
@@ -17,11 +10,7 @@ import { CLASSES } from '@/constants/classes';
 import allocateLandedCostType from '@/constants/allocateLandedCostType';
 
 import AllocateLandedCostFormBody from './AllocateLandedCostFormBody';
-import {
-  transactionsSelectShouldUpdate,
-  allocateCostToEntries,
-  resetAllocatedCostEntries,
-} from './utils';
+import { transactionsSelectShouldUpdate, allocateCostToEntries, resetAllocatedCostEntries } from './utils';
 import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogProvider';
 
 /**
@@ -29,8 +18,7 @@ import { useAllocateLandedConstDialogContext } from './AllocateLandedCostDialogP
  */
 export default function AllocateLandedCostFormFields() {
   // Allocated landed cost dialog.
-  const { costTransactionEntries, landedCostTransactions } =
-    useAllocateLandedConstDialogContext();
+  const { costTransactionEntries, landedCostTransactions } = useAllocateLandedConstDialogContext();
 
   return (
     <div className={Classes.DIALOG_BODY}>
@@ -40,11 +28,7 @@ export default function AllocateLandedCostFormFields() {
         transactions={allocateLandedCostType}
         shouldUpdate={transactionsSelectShouldUpdate}
       >
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'transaction_type'} />}
             labelInfo={<FieldRequiredHint />}
@@ -105,9 +89,7 @@ export default function AllocateLandedCostFormFields() {
               selectedItemProp={'id'}
               textProp={'name'}
               labelProp={'formatted_unallocated_cost_amount'}
-              defaultText={intl.get(
-                'landed_cost.dialog.label_select_transaction',
-              )}
+              defaultText={intl.get('landed_cost.dialog.label_select_transaction')}
               popoverProps={{ minimal: true }}
             />
           </FormGroup>
@@ -126,38 +108,25 @@ export default function AllocateLandedCostFormFields() {
               label={<T id={'transaction_line'} />}
               intent={inputIntent({ error, touched })}
               helperText={<ErrorMessage name="transaction_entry_id" />}
-              className={classNames(
-                CLASSES.FILL,
-                'form-group--transaction_entry_id',
-              )}
+              className={classNames(CLASSES.FILL, 'form-group--transaction_entry_id')}
               inline={true}
             >
               <ListSelect
                 items={costTransactionEntries}
                 onItemSelect={(entry) => {
-                  const { id, unallocated_cost_amount: unallocatedAmount } =
-                    entry;
+                  const { id, unallocated_cost_amount: unallocatedAmount } = entry;
                   const { items, allocation_method } = form.values;
 
                   form.setFieldValue('amount', unallocatedAmount);
                   form.setFieldValue('transaction_entry_id', id);
-                  form.setFieldValue(
-                    'items',
-                    allocateCostToEntries(
-                      unallocatedAmount,
-                      allocation_method,
-                      items,
-                    ),
-                  );
+                  form.setFieldValue('items', allocateCostToEntries(unallocatedAmount, allocation_method, items));
                 }}
                 filterable={false}
                 selectedItem={value}
                 selectedItemProp={'id'}
                 textProp={'name'}
                 labelProp={'formatted_unallocated_cost_amount'}
-                defaultText={intl.get(
-                  'landed_cost.dialog.label_select_transaction_entry',
-                )}
+                defaultText={intl.get('landed_cost.dialog.label_select_transaction_entry')}
                 popoverProps={{ minimal: true }}
               />
             </FormGroup>
@@ -181,10 +150,7 @@ export default function AllocateLandedCostFormFields() {
                 const amount = e.target.value;
                 const { allocation_method, items } = form.values;
 
-                form.setFieldValue(
-                  'items',
-                  allocateCostToEntries(amount, allocation_method, items),
-                );
+                form.setFieldValue('items', allocateCostToEntries(amount, allocation_method, items));
               }}
             />
           </FormGroup>
@@ -208,10 +174,7 @@ export default function AllocateLandedCostFormFields() {
                 const { amount, items } = form.values;
 
                 form.setFieldValue('allocation_method', _value);
-                form.setFieldValue(
-                  'items',
-                  allocateCostToEntries(amount, _value, items),
-                );
+                form.setFieldValue('items', allocateCostToEntries(amount, _value, items));
               })}
               selectedValue={value}
               inline={true}

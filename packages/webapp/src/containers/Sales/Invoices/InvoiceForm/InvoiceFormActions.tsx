@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
@@ -27,20 +26,13 @@ export function InvoiceExclusiveInclusiveSelect(props) {
   const { values, setFieldValue } = useFormikContext();
 
   const handleItemSelect = (item) => {
-    const newEntries = composeEntriesOnEditInclusiveTax(
-      item.key,
-      values.entries,
-    );
+    const newEntries = composeEntriesOnEditInclusiveTax(item.key, values.entries);
     setFieldValue('inclusive_exclusive_tax', item.key);
     setFieldValue('entries', newEntries);
   };
 
   return (
-    <InclusiveFormGroup
-      name={'inclusive_exclusive_tax'}
-      label={'Amounts are'}
-      inline={true}
-    >
+    <InclusiveFormGroup name={'inclusive_exclusive_tax'} label={'Amounts are'} inline={true}>
       <FSelect
         name={'inclusive_exclusive_tax'}
         items={InclusiveButtonOptions}

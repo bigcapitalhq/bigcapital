@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Alert, Intent } from '@blueprintjs/core';
@@ -60,7 +59,4 @@ function UserActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(UserActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(UserActivateAlert);

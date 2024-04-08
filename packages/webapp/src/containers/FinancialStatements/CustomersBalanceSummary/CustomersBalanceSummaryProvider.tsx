@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCustomerBalanceSummaryReport } from '@/hooks/query';
@@ -10,10 +9,7 @@ const CustomersBalanceSummaryContext = createContext();
  * Customers balance summary provider.
  */
 function CustomersBalanceSummaryProvider({ filter, ...props }) {
-  const query = React.useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
-  );
+  const query = React.useMemo(() => transformFilterFormToQuery(filter), [filter]);
 
   // Fetches customers balance summary report based on the given report.
   const {
@@ -31,7 +27,7 @@ function CustomersBalanceSummaryProvider({ filter, ...props }) {
     isCustomersBalanceLoading,
     refetch,
     query,
-    httpQuery: query
+    httpQuery: query,
   };
   return (
     <FinancialReportPage name={'customers-balance-summary'}>
@@ -40,7 +36,6 @@ function CustomersBalanceSummaryProvider({ filter, ...props }) {
   );
 }
 
-const useCustomersBalanceSummaryContext = () =>
-  useContext(CustomersBalanceSummaryContext);
+const useCustomersBalanceSummaryContext = () => useContext(CustomersBalanceSummaryContext);
 
 export { CustomersBalanceSummaryProvider, useCustomersBalanceSummaryContext };

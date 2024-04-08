@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Formik } from 'formik';
 import { FormattedMessage as T } from '@/components';
@@ -64,6 +63,4 @@ function SetupOrganizationPage({ wizard }) {
   );
 }
 
-export default compose(
-  withSettingsActions,
-)(SetupOrganizationPage);
+export default compose(withSettingsActions)(SetupOrganizationPage);

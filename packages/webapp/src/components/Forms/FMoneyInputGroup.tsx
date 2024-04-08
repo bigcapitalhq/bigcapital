@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Field, getIn } from 'formik';
@@ -17,9 +16,9 @@ const fieldToMoneyInputGroup = ({
     intent: showError ? Intent.DANGER : Intent.NONE,
     onBlurValue:
       onBlur ??
-      function (e) {
+      ((e) => {
         onFieldBlur(e ?? field.name);
-      },
+      }),
     ...field,
     onChange: (value) => {
       setFieldValue(field.name, value);

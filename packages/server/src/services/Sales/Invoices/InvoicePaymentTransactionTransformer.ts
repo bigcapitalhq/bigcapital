@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 
 export class InvoicePaymentTransactionTransformer extends Transformer {
   /**
@@ -23,7 +23,7 @@ export class InvoicePaymentTransactionTransformer extends Transformer {
 
   /**
    * Formatted payment date.
-   * @param entry 
+   * @param entry
    * @returns {string}
    */
   protected formattedPaymentDate = (entry): string => {

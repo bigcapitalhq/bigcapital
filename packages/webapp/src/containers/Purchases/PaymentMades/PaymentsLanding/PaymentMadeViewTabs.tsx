@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router';
 import { DashboardViewsTabs, FormattedMessage as T } from '@/components';
@@ -31,10 +30,7 @@ function PaymentMadeViewTabs({
     setPaymentMadesTableState({ viewSlug });
   };
   // Transformes payment views to tabs.
-  const tabs = React.useMemo(
-    () => transformPaymentViewsToTabs(paymentMadesViews),
-    [paymentMadesViews],
-  );
+  const tabs = React.useMemo(() => transformPaymentViewsToTabs(paymentMadesViews), [paymentMadesViews]);
 
   const handleClickNewView = () => {
     history.push('/custom_views/payment-mades/new');

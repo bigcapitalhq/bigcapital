@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/InventoryAdjustments/List.scss';
@@ -20,9 +19,7 @@ function InventoryAdjustmentList({
   inventoryAdjustmentTableState,
 }) {
   return (
-    <InventoryAdjustmentsProvider
-      query={transformTableStateToQuery(inventoryAdjustmentTableState)}
-    >
+    <InventoryAdjustmentsProvider query={transformTableStateToQuery(inventoryAdjustmentTableState)}>
       <DashboardPageContent>
         <DashboardContentTable>
           <InventoryAdjustmentTable />

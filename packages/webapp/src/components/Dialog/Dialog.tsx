@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Dialog } from '@blueprintjs/core';
 import withDialogActions from '@/containers/Dialog/withDialogActions';

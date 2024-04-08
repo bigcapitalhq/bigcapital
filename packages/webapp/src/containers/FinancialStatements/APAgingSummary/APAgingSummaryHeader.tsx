@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { FormattedMessage as T } from '@/components';
@@ -15,10 +14,7 @@ import withAPAgingSummaryActions from './withAPAgingSummaryActions';
 import { transformToForm, compose } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
-import {
-  getAPAgingSummaryQuerySchema,
-  getDefaultAPAgingSummaryQuery,
-} from './common';
+import { getAPAgingSummaryQuerySchema, getDefaultAPAgingSummaryQuery } from './common';
 
 /**
  * AP Aging Summary Report - Drawer Header.
@@ -41,10 +37,7 @@ function APAgingSummaryHeader({
   const defaultValues = getDefaultAPAgingSummaryQuery();
 
   // Formik initial values.
-  const initialValues = transformToForm(
-    { ...defaultValues, ...pageFilter },
-    defaultValues,
-  );
+  const initialValues = transformToForm({ ...defaultValues, ...pageFilter }, defaultValues);
   // Handle form submit.
   const handleSubmit = (values, { setSubmitting }) => {
     onSubmitFilter(values);
@@ -64,28 +57,13 @@ function APAgingSummaryHeader({
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
-    <APAgingDrawerHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <APAgingDrawerHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id={'general'}
-              title={<T id={'general'} />}
-              panel={<APAgingSummaryHeaderGeneral />}
-            />
+            <Tab id={'general'} title={<T id={'general'} />} panel={<APAgingSummaryHeaderGeneral />} />
             {isBranchesFeatureCan && (
-              <Tab
-                id="dimensions"
-                title={<T id={'dimensions'} />}
-                panel={<APAgingSummaryHeaderDimensions />}
-              />
+              <Tab id="dimensions" title={<T id={'dimensions'} />} panel={<APAgingSummaryHeaderDimensions />} />
             )}
           </Tabs>
           <div className={'financial-header-drawer__footer'}>

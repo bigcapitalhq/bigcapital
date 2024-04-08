@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { FormattedMessage as T, EmptyStatus } from '@/components';
@@ -25,11 +24,7 @@ function WarehousesEmptyStatus({
       }
       action={
         <React.Fragment>
-          <Button
-            intent={Intent.PRIMARY}
-            large={true}
-            onClick={handleActivateWarehouse}
-          >
+          <Button intent={Intent.PRIMARY} large={true} onClick={handleActivateWarehouse}>
             <T id={'warehouses.activate_button'} />
           </Button>
         </React.Fragment>

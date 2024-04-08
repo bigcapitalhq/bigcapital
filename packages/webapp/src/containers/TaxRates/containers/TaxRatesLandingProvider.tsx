@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isEmpty } from 'lodash';
 import { DashboardInsider } from '@/components/Dashboard';
@@ -25,7 +24,7 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
     taxRates,
     isTaxRatesFetching,
     isTaxRatesLoading,
-    isEmptyStatus
+    isEmptyStatus,
   };
 
   return (
@@ -35,7 +34,6 @@ function TaxRatesLandingProvider({ tableState, ...props }) {
   );
 }
 
-const useTaxRatesLandingContext = () =>
-  React.useContext(TaxRatesLandingContext);
+const useTaxRatesLandingContext = () => React.useContext(TaxRatesLandingContext);
 
 export { TaxRatesLandingProvider, useTaxRatesLandingContext };

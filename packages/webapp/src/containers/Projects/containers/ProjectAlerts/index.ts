@@ -1,13 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 
 const ProjectDeleteAlert = React.lazy(() => import('./ProjectDeleteAlert'));
-const ProjectTaskDeleteAlert = React.lazy(
-  () => import('./ProjectTaskDeleteAlert'),
-);
-const ProjectTimesheetDeleteAlert = React.lazy(
-  () => import('./ProjectTimesheetDeleteAlert'),
-);
+const ProjectTaskDeleteAlert = React.lazy(() => import('./ProjectTaskDeleteAlert'));
+const ProjectTimesheetDeleteAlert = React.lazy(() => import('./ProjectTimesheetDeleteAlert'));
 
 const ProjectStatusAlert = React.lazy(() => import('./ProjectStatusAlert'));
 

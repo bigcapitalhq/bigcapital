@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { EmptyStatus, Can, FormattedMessage as T } from '@/components';
@@ -27,11 +26,7 @@ function ProjectsEmptyStatus({
       action={
         <React.Fragment>
           <Can I={ProjectAction.Create} a={AbilitySubject.Project}>
-            <Button
-              intent={Intent.PRIMARY}
-              large={true}
-              onClick={handleNewProjectClick}
-            >
+            <Button intent={Intent.PRIMARY} large={true} onClick={handleNewProjectClick}>
               <T id="projects.empty_status.action" />
             </Button>
             <Button intent={Intent.NONE} large={true}>

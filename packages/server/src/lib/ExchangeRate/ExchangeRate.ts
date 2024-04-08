@@ -1,5 +1,5 @@
 import { OpenExchangeRate } from './OpenExchangeRate';
-import { ExchangeRateServiceType, IExchangeRateService } from './types';
+import { ExchangeRateServiceType, type IExchangeRateService } from './types';
 
 export class ExchangeRate {
   private exchangeRateService: IExchangeRateService;
@@ -18,9 +18,7 @@ export class ExchangeRate {
    * Initialize the exchange rate service based on the service type.
    */
   private initService() {
-    if (
-      this.exchangeRateServiceType === ExchangeRateServiceType.OpenExchangeRate
-    ) {
+    if (this.exchangeRateServiceType === ExchangeRateServiceType.OpenExchangeRate) {
       this.setExchangeRateService(new OpenExchangeRate());
     }
   }

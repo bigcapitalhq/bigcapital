@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -9,10 +8,7 @@ import { Icon } from '@/components';
 /**
  * Context menu of roles.
  */
-export function ActionsMenu({
-  payload: { onDeleteRole, onEditRole },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onDeleteRole, onEditRole }, row: { original } }) {
   return (
     <Menu>
       <MenuItem

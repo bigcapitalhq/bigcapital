@@ -1,17 +1,14 @@
-import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
-import {
-  IBranchesActivatedPayload,
-  IBranchesActivatePayload,
-} from '@/interfaces';
+import { IBranchesActivatePayload, IBranchesActivatedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import UnitOfWork from '@/services/UnitOfWork';
-import { CreateBranch } from './CreateBranch';
-import { BranchesSettings } from './BranchesSettings';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { BranchesSettings } from './BranchesSettings';
+import { CreateBranch } from './CreateBranch';
+import { ERRORS } from './constants';
 
 @Service()
 export class ActivateBranches {

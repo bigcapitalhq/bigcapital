@@ -8,12 +8,7 @@ exports.up = (knex) => {
     table.string('password');
     table.boolean('active').index();
     table.string('language');
-    table
-      .bigInteger('tenant_id')
-      .unsigned()
-      .index()
-      .references('id')
-      .inTable('tenants');
+    table.bigInteger('tenant_id').unsigned().index().references('id').inTable('tenants');
     table.dateTime('invite_accepted_at').index();
     table.dateTime('last_login_at').index();
     table.dateTime('deleted_at').index();

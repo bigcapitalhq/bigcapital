@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useRef, useCallback } from 'react';
 import { ProgressBar, Classes, Intent } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -41,24 +40,17 @@ const useMedia = ({ saveCallback, deleteCallback }) => {
           return res;
         });
       };
-      return saveFilesInAsync(notUploadedFiles, saveAction).onProgress(
-        (progress) => {
-          if (progress > 0) {
-            AppToaster.show(
-              openProgressToast(progress * 100),
-              toastKey.current,
-            );
-          }
-        },
-      );
+      return saveFilesInAsync(notUploadedFiles, saveAction).onProgress((progress) => {
+        if (progress > 0) {
+          AppToaster.show(openProgressToast(progress * 100), toastKey.current);
+        }
+      });
     }
     return Promise.resolve([]);
   }, [files, openProgressToast, saveCallback]);
 
   const deleteMedia = useCallback(() => {
-    return deletedFiles.length > 0
-      ? deleteCallback(deletedFiles)
-      : Promise.resolve();
+    return deletedFiles.length > 0 ? deleteCallback(deletedFiles) : Promise.resolve();
   }, [deletedFiles, deleteCallback]);
 
   return {

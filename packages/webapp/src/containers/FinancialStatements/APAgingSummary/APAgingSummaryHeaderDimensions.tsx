@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, Classes } from '@blueprintjs/core';
@@ -38,10 +37,7 @@ function APAgingSummaryHeaderDimensionsContent() {
     <Row>
       <Col xs={4}>
         {isBranchesFeatureCan && (
-          <FormGroup
-            label={intl.get('branches_multi_select.label')}
-            className={Classes.FILL}
-          >
+          <FormGroup label={intl.get('branches_multi_select.label')} className={Classes.FILL}>
             <BranchMultiSelect name={'branchesIds'} branches={branches} />
           </FormGroup>
         )}

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import {
   setWarehouseTransferTableState,
@@ -6,8 +6,7 @@ import {
 } from '@/store/WarehouseTransfer/warehouseTransfer.actions';
 
 const mapDipatchToProps = (dispatch) => ({
-  setWarehouseTransferTableState: (queries) =>
-    dispatch(setWarehouseTransferTableState(queries)),
+  setWarehouseTransferTableState: (queries) => dispatch(setWarehouseTransferTableState(queries)),
   resetWarehouseTransferTableState: () => dispatch(resetWarehouseTransferTableState()),
 });
 

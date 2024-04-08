@@ -1,14 +1,6 @@
 import knex from '@/database/knex';
-import {
-  request,
-  expect,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: `/routes`', () => {
   describe('GET: `/users`', () => {
@@ -36,15 +28,14 @@ describe('routes: `/routes`', () => {
   describe('POST: `/users/:id`', () => {
     it('Should create a new user if the user was not authorized.', async () => {
       const user = await tenantFactory.create('user');
-      const res = await request()
-        .post(`/api/users/${user.id}`);
+      const res = await request().post(`/api/users/${user.id}`);
 
       expect(res.status).equals(401);
       expect(res.body.message).equals('Unauthorized');
     });
 
     it('Should `first_name` be required.', async () => {
-      const user = await  tenantFactory.create('user');
+      const user = await tenantFactory.create('user');
       const res = await request()
         .post(`/api/users/${user.id}`)
         .set('x-access-token', loginRes.body.token)
@@ -173,7 +164,8 @@ describe('routes: `/routes`', () => {
 
       expect(res.status).equals(404);
       expect(res.body.errors).include.something.that.deep.equals({
-        type: 'USER_NOT_FOUND', code: 100,
+        type: 'USER_NOT_FOUND',
+        code: 100,
       });
     });
 
@@ -185,7 +177,7 @@ describe('routes: `/routes`', () => {
         .set('organization-id', tenantWebsite.organizationId)
         .send();
 
-      expect(res.status).equals(200);      
+      expect(res.status).equals(200);
     });
 
     it('Should delete the give user from the storage.', async () => {

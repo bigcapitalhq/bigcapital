@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import currencies from 'js-money/lib/currency';
 import { sortBy } from 'lodash';

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useExpense } from '@/hooks/query';
@@ -51,7 +50,6 @@ function ExpenseDrawerProvider({ expenseId, ...props }) {
     </DrawerLoading>
   );
 }
-const useExpenseDrawerContext = () =>
-  React.useContext(ExpenseDrawerDrawerContext);
+const useExpenseDrawerContext = () => React.useContext(ExpenseDrawerDrawerContext);
 
 export { ExpenseDrawerProvider, useExpenseDrawerContext };

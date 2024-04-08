@@ -17,11 +17,7 @@ exports.up = (knex) => {
       table.decimal('estimate_hours').unsigned();
       table.decimal('actual_hours').unsigned();
       table.decimal('invoiced_hours').unsigned().default(0);
-      table
-        .integer('project_id')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('project_id').unsigned().references('id').inTable('projects');
       table.timestamps();
     })
     .createTable('times', (table) => {
@@ -31,59 +27,31 @@ exports.up = (knex) => {
       table.date('date');
 
       table.integer('taskId').unsigned().references('id').inTable('tasks');
-      table
-        .integer('project_id')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('project_id').unsigned().references('id').inTable('projects');
       table.timestamps();
     })
     .table('accounts_transactions', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
     })
     .table('manual_journals_entries', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
     })
     .table('bills', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
       table.decimal('invoiced_amount').unsigned().defaultTo(0);
     })
     .table('items_entries', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
 
       table.integer('project_ref_id').unsigned();
       table.string('project_ref_type');
       table.decimal('project_ref_invoiced_amount').unsigned().defaultTo(0);
     })
     .table('sales_invoices', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
     })
     .table('expenses_transactions', (table) => {
-      table
-        .integer('projectId')
-        .unsigned()
-        .references('id')
-        .inTable('projects');
+      table.integer('projectId').unsigned().references('id').inTable('projects');
       table.decimal('invoiced_amount').unsigned().defaultTo(0);
     });
 };

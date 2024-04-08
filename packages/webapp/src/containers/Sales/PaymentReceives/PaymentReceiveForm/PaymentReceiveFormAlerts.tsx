@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import ClearingAllLinesAlert from '@/containers/Alerts/PaymentReceives/ClearingAllLinesAlert';
@@ -8,7 +7,10 @@ import { clearAllPaymentEntries } from './utils';
  * Payment receive form alerts.
  */
 export default function PaymentReceiveFormAlerts() {
-  const { values: { entries }, setFieldValue } = useFormikContext();
+  const {
+    values: { entries },
+    setFieldValue,
+  } = useFormikContext();
 
   const handleClearingAllLines = () => {
     const newEntries = clearAllPaymentEntries(entries);
@@ -18,10 +20,7 @@ export default function PaymentReceiveFormAlerts() {
 
   return (
     <>
-      <ClearingAllLinesAlert
-        name={'clear-all-lines-payment-receive'}
-        onConfirm={handleClearingAllLines}
-      />
+      <ClearingAllLinesAlert name={'clear-all-lines-payment-receive'} onConfirm={handleClearingAllLines} />
     </>
   );
 }

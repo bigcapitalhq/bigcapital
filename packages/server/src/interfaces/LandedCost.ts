@@ -18,7 +18,7 @@ export interface IBillLandedCost {
   currencyCode: string;
 
   billId: number;
-  allocateEntries: IBillLandedCostEntry[]
+  allocateEntries: IBillLandedCostEntry[];
 }
 
 export interface IBillLandedCostEntry {
@@ -93,8 +93,7 @@ export interface ILandedCostTransactionEntry {
   costAccountId: number;
 }
 
-export interface ILandedCostTransactionEntryDOJO
-  extends ILandedCostTransactionEntry {
+export interface ILandedCostTransactionEntryDOJO extends ILandedCostTransactionEntry {
   formattedAmount: string;
   formattedUnallocatedCostAmount: string;
   formattedAllocatedCostAmount: string;
@@ -150,4 +149,4 @@ export interface IAllocatedLandedCostCreatedPayload {
   trx: Knex.Transaction;
 }
 
-export interface IBillAssociatedLandedCostTransactions {}
+export type IBillAssociatedLandedCostTransactions = {};

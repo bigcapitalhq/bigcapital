@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Classes } from '@blueprintjs/core';
@@ -9,10 +8,7 @@ import { Classes } from '@blueprintjs/core';
  */
 export function DialogFooterActions({ alignment = 'right', children }) {
   return (
-    <DialogFooterActionsRoot
-      className={Classes.DIALOG_FOOTER_ACTIONS}
-      alignment={alignment}
-    >
+    <DialogFooterActionsRoot className={Classes.DIALOG_FOOTER_ACTIONS} alignment={alignment}>
       {children}
     </DialogFooterActionsRoot>
   );
@@ -32,8 +28,7 @@ const DialogFooterRoot = styled.div`
 `;
 
 const DialogFooterActionsRoot = styled.div`
-  ${(props) =>
-    props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;'};
+  ${(props) => (props.alignment === 'right' ? 'margin-left: auto;' : 'margin-right: auto;')};
 
   .bp4-button {
     margin-left: 5px;

@@ -1,13 +1,13 @@
+import path from 'node:path';
 import bcrypt from 'bcryptjs';
-import moment from 'moment';
 import _ from 'lodash';
-import path from 'path';
+import moment from 'moment';
 import * as R from 'ramda';
 
-import accounting from 'accounting';
-import pug from 'pug';
-import Currencies from 'js-money/lib/currency';
 import definedOptions from '@/data/options';
+import accounting from 'accounting';
+import Currencies from 'js-money/lib/currency';
+import pug from 'pug';
 
 export * from './table';
 
@@ -22,12 +22,7 @@ const hashPassword = (password) =>
 
 const origin = (request) => `${request.protocol}://${request.hostname}`;
 
-const dateRangeCollection = (
-  fromDate,
-  toDate,
-  addType = 'day',
-  increment = 1
-) => {
+const dateRangeCollection = (fromDate, toDate, addType = 'day', increment = 1) => {
   const collection = [];
   const momentFromDate = moment(fromDate);
   let dateFormat = '';
@@ -55,12 +50,7 @@ const dateRangeCollection = (
   return collection;
 };
 
-const dateRangeFromToCollection = (
-  fromDate,
-  toDate,
-  addType = 'day',
-  increment = 1
-) => {
+const dateRangeFromToCollection = (fromDate, toDate, addType = 'day', increment = 1) => {
   const collection = [];
   const momentFromDate = moment(fromDate);
   const dateFormat = 'YYYY-MM-DD';
@@ -94,11 +84,7 @@ function mapKeysDeep(obj, cb, isRecursive) {
     return {};
   }
   if (!isRecursive) {
-    if (
-      typeof obj === 'string' ||
-      typeof obj === 'number' ||
-      typeof obj === 'boolean'
-    ) {
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean') {
       return {};
     }
   }
@@ -113,24 +99,16 @@ function mapKeysDeep(obj, cb, isRecursive) {
 }
 
 const mapValuesDeep = (v, callback) =>
-  _.isObject(v)
-    ? _.mapValues(v, (v) => mapValuesDeep(v, callback))
-    : callback(v);
+  _.isObject(v) ? _.mapValues(v, (v) => mapValuesDeep(v, callback)) : callback(v);
 
 const promiseSerial = (funcs) => {
   return funcs.reduce(
-    (promise, func) =>
-      promise.then((result) =>
-        func().then(Array.prototype.concat.bind(result))
-      ),
-    Promise.resolve([])
+    (promise, func) => promise.then((result) => func().then(Array.prototype.concat.bind(result))),
+    Promise.resolve([]),
   );
 };
 
-const flatToNestedArray = (
-  data,
-  config = { id: 'id', parentId: 'parent_id' }
-) => {
+const flatToNestedArray = (data, config = { id: 'id', parentId: 'parent_id' }) => {
   const map = {};
   const nestedArray = [];
 
@@ -158,20 +136,14 @@ const itemsStartWith = (items, char) => {
 
 const getTotalDeep = (items, deepProp, totalProp) =>
   items.reduce((acc, item) => {
-    const total = Array.isArray(item[deepProp])
-      ? getTotalDeep(item[deepProp], deepProp, totalProp)
-      : 0;
+    const total = Array.isArray(item[deepProp]) ? getTotalDeep(item[deepProp], deepProp, totalProp) : 0;
     return _.sumBy(item, totalProp) + total + acc;
   }, 0);
 
 function applyMixins(derivedCtor, baseCtors) {
   baseCtors.forEach((baseCtor) => {
     Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
-      Object.defineProperty(
-        derivedCtor.prototype,
-        name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name)
-      );
+      Object.defineProperty(derivedCtor.prototype, name, Object.getOwnPropertyDescriptor(baseCtor.prototype, name));
     });
   });
 }
@@ -208,12 +180,7 @@ const isDefinedOptionConfigurable = (key, group) => {
   return definedOption?.config || false;
 };
 
-const entriesAmountDiff = (
-  newEntries,
-  oldEntries,
-  amountAttribute,
-  idAttribute
-) => {
+const entriesAmountDiff = (newEntries, oldEntries, amountAttribute, idAttribute) => {
   const oldEntriesTable = _.chain(oldEntries)
     .groupBy(idAttribute)
     .mapValues((group) => _.sumBy(group, amountAttribute) || 0)
@@ -238,11 +205,7 @@ const entriesAmountDiff = (
 };
 
 const convertEmptyStringToNull = (value) => {
-  return typeof value === 'string'
-    ? value.trim() === ''
-      ? null
-      : value
-    : value;
+  return typeof value === 'string' ? (value.trim() === '' ? null : value) : value;
 };
 
 const getNegativeFormat = (formatName) => {
@@ -271,13 +234,13 @@ const formatNumber = (
     money = true,
     currencyCode,
     symbol = '',
-  }
+  },
 ) => {
   const formattedSymbol = getCurrencySign(currencyCode);
   const negForamt = getNegativeFormat(negativeFormat);
   const format = '%s%v';
 
-  let formattedBalance = parseFloat(balance);
+  let formattedBalance = Number.parseFloat(balance);
 
   if (divideOn1000) {
     formattedBalance /= 1000;
@@ -292,7 +255,7 @@ const formatNumber = (
       pos: format,
       neg: negForamt,
       zero: excerptZero ? zeroSign : format,
-    }
+    },
   );
 };
 
@@ -301,17 +264,11 @@ const isBlank = (value) => {
 };
 
 function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
-  const _defaultValue =
-    typeof defaultValue === 'undefined'
-      ? defaultOrTransformedValue
-      : defaultValue;
+  const _defaultValue = typeof defaultValue === 'undefined' ? defaultOrTransformedValue : defaultValue;
 
-  const _transfromedValue =
-    typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
+  const _transfromedValue = typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
-  return value == null || value !== value || value === ''
-    ? _defaultValue
-    : _transfromedValue;
+  return value == null || value !== value || value === '' ? _defaultValue : _transfromedValue;
 }
 
 const transformToMap = (objects, key) => {
@@ -328,13 +285,11 @@ const transactionIncrement = (s) => s.replace(/([0-8]|\d?9+)?$/, (e) => ++e);
 const booleanValuesRepresentingTrue: string[] = ['true', '1'];
 const booleanValuesRepresentingFalse: string[] = ['false', '0'];
 
-const normalizeValue = (value: any): string =>
-  value.toString().trim().toLowerCase();
+const normalizeValue = (value: any): string => value.toString().trim().toLowerCase();
 
-const booleanValues: string[] = [
-  ...booleanValuesRepresentingTrue,
-  ...booleanValuesRepresentingFalse,
-].map((value) => normalizeValue(value));
+const booleanValues: string[] = [...booleanValuesRepresentingTrue, ...booleanValuesRepresentingFalse].map((value) =>
+  normalizeValue(value),
+);
 
 export const parseBoolean = <T>(value: any, defaultValue: T): T | boolean => {
   const normalizedValue = normalizeValue(value);
@@ -372,7 +327,7 @@ const mergeObjectsBykey = (object1, object2, key) => {
 };
 
 function templateRender(filePath, options) {
-  const basePath = path.join(global.__resources_dir, '/views');
+  const basePath = path.join(process.env.APP_RESOURCES_DIR, '/views');
   return pug.renderFile(`${basePath}/${filePath}.pug`, options);
 }
 
@@ -382,9 +337,7 @@ function templateRender(filePath, options) {
  * @returns
  */
 export const allPassedConditionsPass = (condsPairFilters): Function => {
-  const filterCallbacks = condsPairFilters
-    .filter((cond) => cond[0])
-    .map((cond) => cond[1]);
+  const filterCallbacks = condsPairFilters.filter((cond) => cond[0]).map((cond) => cond[1]);
 
   return R.allPass(filterCallbacks);
 };
@@ -419,18 +372,13 @@ export const parseDate = (date: string) => {
   return date ? moment(date).utcOffset(0).format('YYYY-MM-DD') : '';
 };
 
-const nestedArrayToFlatten = (
-  collection,
-  property = 'children',
-  parseItem = (a, level) => a,
-  level = 1
-) => {
+const nestedArrayToFlatten = (collection, property = 'children', parseItem = (a, level) => a, level = 1) => {
   const parseObject = (obj) =>
     parseItem(
       {
         ..._.omit(obj, [property]),
       },
-      level
+      level,
     );
 
   return collection.reduce((items, currentValue, index) => {
@@ -439,23 +387,14 @@ const nestedArrayToFlatten = (
     localItems.push(parsedItem);
 
     if (Array.isArray(currentValue[property])) {
-      const flattenArray = nestedArrayToFlatten(
-        currentValue[property],
-        property,
-        parseItem,
-        level + 1
-      );
+      const flattenArray = nestedArrayToFlatten(currentValue[property], property, parseItem, level + 1);
       localItems = _.concat(localItems, flattenArray);
     }
     return localItems;
   }, []);
 };
 
-const assocDepthLevelToObjectTree = (
-  objects,
-  level = 1,
-  propertyName = 'level'
-) => {
+const assocDepthLevelToObjectTree = (objects, level = 1, propertyName = 'level') => {
   for (let i = 0; i < objects.length; i++) {
     const object = objects[i];
     object[propertyName] = level;

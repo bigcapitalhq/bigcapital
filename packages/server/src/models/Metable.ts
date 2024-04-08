@@ -73,7 +73,9 @@ export default {
       this.metadata = [];
 
       const metadataArray = this.mapMetadataCollection(metadataCollection);
-      metadataArray.forEach((metadata) => { this.metadata.push(metadata); });
+      metadataArray.forEach((metadata) => {
+        this.metadata.push(metadata);
+      });
     }
   },
 
@@ -125,7 +127,7 @@ export default {
    */
   removeAllMeta(group = 'default') {
     this.metdata.map((meta) => ({
-      ...(meta.group !== group) ? { markAsDeleted: true } : {},
+      ...(meta.group !== group ? { markAsDeleted: true } : {}),
       ...meta,
     }));
     this.shouldReload = true;
@@ -153,7 +155,10 @@ export default {
       metadata.markAsUpdated = true;
     } else {
       this.metadata.push({
-        value, key, ...payload, markAsInserted: true,
+        value,
+        key,
+        ...payload,
+        markAsInserted: true,
       });
     }
   },
@@ -162,31 +167,33 @@ export default {
    * Saved the modified metadata.
    */
   async saveMeta() {
-    const inserted = this.metadata.filter((m) => (m.markAsInserted === true));
-    const updated = this.metadata.filter((m) => (m.markAsUpdated === true));
-    const deleted = this.metadata.filter((m) => (m.markAsDeleted === true));
+    const inserted = this.metadata.filter((m) => m.markAsInserted === true);
+    const updated = this.metadata.filter((m) => m.markAsUpdated === true);
+    const deleted = this.metadata.filter((m) => m.markAsDeleted === true);
 
     const metadataDeletedKeys = deleted.map((m) => m.key);
     const metadataInserted = inserted.map((m) => this.mapMetadata(m, 'format'));
     const metadataUpdated = updated.map((m) => this.mapMetadata(m, 'format'));
 
-    const batchUpdate = (collection) => knex.transaction((trx) => {
-      const queries = collection.map((tuple) => {
-        const query = knex(this.tableName);
-        this.whereQuery(query, tuple.key);
-        this.extraMetadataQuery(query);
-        return query.update(tuple).transacting(trx);
+    const batchUpdate = (collection) =>
+      knex.transaction((trx) => {
+        const queries = collection.map((tuple) => {
+          const query = knex(this.tableName);
+          this.whereQuery(query, tuple.key);
+          this.extraMetadataQuery(query);
+          return query.update(tuple).transacting(trx);
+        });
+        return Promise.all(queries).then(trx.commit).catch(trx.rollback);
       });
-      return Promise.all(queries).then(trx.commit).catch(trx.rollback);
-    });
 
     await Promise.all([
       knex.insert(metadataInserted).into(this.tableName),
       batchUpdate(metadataUpdated),
       metadataDeletedKeys.length > 0
         ? this.query('whereIn', this.KEY_COLUMN, metadataDeletedKeys).destroy({
-          require: true,
-        }) : null,
+            require: true,
+          })
+        : null,
     ]);
     this.shouldReload = true;
   },
@@ -209,10 +216,10 @@ export default {
 
     switch (valueType) {
       case 'integer':
-        parsedValue = parseInt(value, 10);
+        parsedValue = Number.parseInt(value, 10);
         break;
       case 'float':
-        parsedValue = parseFloat(value);
+        parsedValue = Number.parseFloat(value);
         break;
       case 'boolean':
         parsedValue = Boolean(value);
@@ -256,15 +263,10 @@ export default {
   mapMetadata(attr, parseType = 'parse') {
     return {
       key: attr[this.KEY_COLUMN],
-      value: (parseType === 'parse')
-        ? this.parseMetaValue(
-          attr[this.VALUE_COLUMN],
-          this.TYPE_COLUMN ? attr[this.TYPE_COLUMN] : false,
-        )
-        : this.formatMetaValue(
-          attr[this.VALUE_COLUMN],
-          this.TYPE_COLUMN ? attr[this.TYPE_COLUMN] : false,
-        ),
+      value:
+        parseType === 'parse'
+          ? this.parseMetaValue(attr[this.VALUE_COLUMN], this.TYPE_COLUMN ? attr[this.TYPE_COLUMN] : false)
+          : this.formatMetaValue(attr[this.VALUE_COLUMN], this.TYPE_COLUMN ? attr[this.TYPE_COLUMN] : false),
       ...this.extraColumns.map((extraCol) => ({
         [extraCol]: attr[extraCol] || null,
       })),

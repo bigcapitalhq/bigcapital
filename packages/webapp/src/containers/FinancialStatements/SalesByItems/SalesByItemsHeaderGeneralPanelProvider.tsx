@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { useItems } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
@@ -16,9 +15,7 @@ function SalesByItemGeneralPanelProvider({ query, ...props }) {
     isFetching: isItemsFetching,
   } = useItems({
     page_size: 10000,
-    stringified_filter_roles: JSON.stringify([
-      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
-    ]),
+    stringified_filter_roles: JSON.stringify([{ fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 }]),
   });
 
   const provider = {
@@ -35,7 +32,6 @@ function SalesByItemGeneralPanelProvider({ query, ...props }) {
   );
 }
 
-const useSalesByItemsGeneralPanelContext = () =>
-  useContext(SalesByItemGeneralPanelContext);
+const useSalesByItemsGeneralPanelContext = () => useContext(SalesByItemGeneralPanelContext);
 
 export { SalesByItemGeneralPanelProvider, useSalesByItemsGeneralPanelContext };

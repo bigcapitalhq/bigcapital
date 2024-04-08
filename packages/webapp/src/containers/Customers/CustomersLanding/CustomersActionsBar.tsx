@@ -1,14 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-  Intent,
-  Switch,
-  Alignment,
-} from '@blueprintjs/core';
+import { NavbarGroup, NavbarDivider, Button, Classes, Intent, Switch, Alignment } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -130,9 +121,7 @@ function CustomerActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={customersFilterConditions.length}
-          />
+          <DashboardFilterButton conditionsCount={customersFilterConditions.length} />
         </AdvancedFilterPopover>
 
         <If condition={customersSelectedRows.length}>
@@ -156,10 +145,7 @@ function CustomerActionsBar({
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={customersTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={customersTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
         <Can I={CustomerAction.Edit} a={AbilitySubject.Customer}>
           <Switch

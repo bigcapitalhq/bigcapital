@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../utils';
 
 export class ItemInvoicesTransactionsTransformer extends Transformer {
   /**
@@ -7,12 +7,7 @@ export class ItemInvoicesTransactionsTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedAmount',
-      'formattedInvoiceDate',
-      'formattedRate',
-      'formattedCost',
-    ];
+    return ['formattedAmount', 'formattedInvoiceDate', 'formattedRate', 'formattedCost'];
   };
 
   /**

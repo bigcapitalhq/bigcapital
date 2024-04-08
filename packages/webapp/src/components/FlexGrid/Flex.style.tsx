@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { FlexProps } from './interfaces';
 
@@ -10,8 +10,7 @@ export const FlexStyled = styled.div<FlexProps>`
 
   &:after {
     content: '';
-    max-width: ${({ col, gap = 1 }) =>
-      col && col < 12 ? `${(100 * col) / 12 - gap}%` : '100%'};
+    max-width: ${({ col, gap = 1 }) => (col && col < 12 ? `${(100 * col) / 12 - gap}%` : '100%')};
     width: 100%;
   }
 `;

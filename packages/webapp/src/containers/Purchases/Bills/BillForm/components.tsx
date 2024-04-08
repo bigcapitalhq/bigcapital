@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Button } from '@blueprintjs/core';
@@ -34,6 +33,6 @@ export function BillExchangeRateInputField({ ...props }) {
  * bill project select.
  * @returns {JSX.Element}
  */
- export function BillProjectSelectButton({ label }) {
+export function BillProjectSelectButton({ label }) {
   return <Button text={label ?? intl.get('select_project')} />;
 }

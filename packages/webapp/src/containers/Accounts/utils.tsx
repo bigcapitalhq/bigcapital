@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Tag } from '@blueprintjs/core';
@@ -13,9 +12,9 @@ import { transformTableStateToQuery, isBlank } from '@/utils';
 export const accountNameAccessor = (account) => {
   return (
     <span>
-      <span class={'account-name'}>{account.name}</span>
+      <span className={'account-name'}>{account.name}</span>
       <If condition={account.description}>
-        <span class={'account-desc'}>{account.description}</span>
+        <span className={'account-desc'}>{account.description}</span>
       </If>
     </span>
   );

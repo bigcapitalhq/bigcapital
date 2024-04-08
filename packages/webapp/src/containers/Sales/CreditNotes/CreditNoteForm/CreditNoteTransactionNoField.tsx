@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import { Position, ControlGroup } from '@blueprintjs/core';
@@ -83,9 +82,7 @@ export const CreditNoteTransactionNoField = R.compose(
             }}
             tooltip={true}
             tooltipProps={{
-              content: (
-                <T id={'setting_your_auto_generated_credit_note_number'} />
-              ),
+              content: <T id={'setting_your_auto_generated_credit_note_number'} />,
               position: Position.BOTTOM_LEFT,
             }}
           />

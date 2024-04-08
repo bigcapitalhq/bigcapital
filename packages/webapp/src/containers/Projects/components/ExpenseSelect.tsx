@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Button } from '@blueprintjs/core';
@@ -48,21 +47,9 @@ const expenseSelectProps = {
 };
 
 export function ExpenseSelect({ expenses, defaultText, ...rest }) {
-  return (
-    <FSelect
-      items={expenses}
-      {...expenseSelectProps}
-      {...rest}
-      input={ExpenseSelectButton}
-    />
-  );
+  return <FSelect items={expenses} {...expenseSelectProps} {...rest} input={ExpenseSelectButton} />;
 }
 
 function ExpenseSelectButton({ label, ...rest }) {
-  return (
-    <Button
-      text={label ? label : intl.get('choose_an_estimated_expense')}
-      {...rest}
-    />
-  );
+  return <Button text={label ? label : intl.get('choose_an_estimated_expense')} {...rest} />;
 }

@@ -1,13 +1,10 @@
-import { Inject, Service } from 'typedi';
+import { IPlaidItemCreatedEventPayload, PlaidItemDTO } from '@/interfaces/Plaid';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import {
-  IPlaidItemCreatedEventPayload,
-  PlaidItemDTO,
-} from '@/interfaces/Plaid';
 import SystemPlaidItem from '@/system/models/SystemPlaidItem';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class PlaidItemService {

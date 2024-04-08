@@ -1,22 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
-  ValidationError,
-  NotFoundError,
-  DBError,
-  UniqueViolationError,
-  NotNullViolationError,
-  ForeignKeyViolationError,
   CheckViolationError,
+  DBError,
   DataError,
+  ForeignKeyViolationError,
+  NotFoundError,
+  NotNullViolationError,
+  UniqueViolationError,
+  ValidationError,
 } from 'objection';
 
 // In this example `res` is an express response object.
-export default function ObjectionErrorHandlerMiddleware(
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export default function ObjectionErrorHandlerMiddleware(err: Error, req: Request, res: Response, next: NextFunction) {
   if (err instanceof ValidationError) {
     switch (err.type) {
       case 'ModelValidation':

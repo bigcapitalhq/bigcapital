@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import BalanceSheetTable from './BalanceSheetTable';
@@ -21,11 +20,7 @@ function BalanceSheetBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <BalanceSheetTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <BalanceSheetTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

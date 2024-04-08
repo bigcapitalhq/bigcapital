@@ -8,10 +8,7 @@ export default class JournalContacts {
 
   constructor(journal) {
     this.journal = journal;
-    this.saveContactBalanceQueue = async.queue(
-      this.saveContactBalanceChangeTask.bind(this),
-      10
-    );
+    this.saveContactBalanceQueue = async.queue(this.saveContactBalanceChangeTask.bind(this), 10);
   }
   /**
    * Sets the contact balance change.
@@ -39,9 +36,11 @@ export default class JournalContacts {
    * Save contacts balance change.
    */
   saveContactsBalance() {
-    const balanceChanges = Object.entries(
-      this.contactsBalanceTable
-    ).map(([contactId, { credit, debit }]) => ({ contactId, credit, debit }));
+    const balanceChanges = Object.entries(this.contactsBalanceTable).map(([contactId, { credit, debit }]) => ({
+      contactId,
+      credit,
+      debit,
+    }));
 
     return this.saveContactBalanceQueue.pushAsync(balanceChanges);
   }
@@ -64,11 +63,7 @@ export default class JournalContacts {
       balanceChange += debit - credit;
     }
     // Contact change balance.
-    await contactRepository.changeNumber(
-      { id: contactId },
-      'balance',
-      balanceChange
-    );
+    await contactRepository.changeNumber({ id: contactId }, 'balance', balanceChange);
     callback();
   }
 }

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { lazy } from 'react';
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
@@ -26,10 +26,7 @@ export const getDashboardRoutes = () => [
   // Accounting.
   {
     path: `/make-journal-entry`,
-    component: lazy(
-      () =>
-        import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
-    ),
+    component: lazy(() => import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage')),
     breadcrumb: intl.get('make_journal_entry'),
     hotkey: 'ctrl+shift+m',
     pageTitle: intl.get('new_journal'),
@@ -40,10 +37,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/manual-journals/:id/edit`,
-    component: lazy(
-      () =>
-        import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage'),
-    ),
+    component: lazy(() => import('@/containers/Accounting/MakeJournal/MakeJournalEntriesPage')),
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_journal'),
     sidebarExpand: false,
@@ -64,10 +58,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/manual-journals`,
-    component: lazy(
-      () =>
-        import('@/containers/Accounting/JournalsLanding/ManualJournalsList'),
-    ),
+    component: lazy(() => import('@/containers/Accounting/JournalsLanding/ManualJournalsList')),
     breadcrumb: intl.get('manual_journals'),
     hotkey: 'shift+m',
     pageTitle: intl.get('manual_journals'),
@@ -76,9 +67,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/item/categories/import`,
-    component: lazy(
-      () => import('@/containers/ItemsCategories/ItemCategoriesImport'),
-    ),
+    component: lazy(() => import('@/containers/ItemsCategories/ItemCategoriesImport')),
     backLink: true,
     pageTitle: 'Item Categories Import',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -86,9 +75,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/items/categories`,
-    component: lazy(
-      () => import('@/containers/ItemsCategories/ItemCategoriesList'),
-    ),
+    component: lazy(() => import('@/containers/ItemsCategories/ItemCategoriesList')),
     breadcrumb: intl.get('categories'),
     pageTitle: intl.get('category_list'),
     defaultSearchResource: RESOURCES_TYPES.ITEM,
@@ -147,9 +134,7 @@ export const getDashboardRoutes = () => [
   // Inventory adjustments.
   {
     path: `/inventory-adjustments`,
-    component: lazy(
-      () => import('@/containers/InventoryAdjustments/InventoryAdjustmentList'),
-    ),
+    component: lazy(() => import('@/containers/InventoryAdjustments/InventoryAdjustmentList')),
     breadcrumb: intl.get('inventory_adjustments'),
     pageTitle: intl.get('inventory_adjustment_list'),
     defaultSearchResource: RESOURCES_TYPES.ITEM,
@@ -159,12 +144,7 @@ export const getDashboardRoutes = () => [
   // Warehouse Transfer.
   {
     path: `/warehouses-transfers/:id/edit`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage')),
     name: 'warehouse-transfer-edit',
     pageTitle: intl.get('warehouse_transfer.label.edit_warehouse_transfer'),
     sidebarExpand: false,
@@ -172,12 +152,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/warehouses-transfers/new`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/WarehouseTransfers/WarehouseTransferForm/WarehouseTransferFormPage')),
     name: 'warehouses-transfer-new',
     pageTitle: intl.get('warehouse_transfer.label.new_warehouse_transfer'),
     sidebarExpand: false,
@@ -185,12 +160,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/warehouses-transfers`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/WarehouseTransfers/WarehouseTransfersLanding/WarehouseTransfersList')),
     pageTitle: intl.get('warehouse_transfer.label.warehouse_transfer_list'),
     // defaultSearchResource: RESOURCES_TYPES.ITEM,
     // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -199,10 +169,7 @@ export const getDashboardRoutes = () => [
   // Financial Reports.
   {
     path: `/financial-reports/general-ledger`,
-    component: lazy(
-      () =>
-        import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger'),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/GeneralLedger/GeneralLedger')),
     breadcrumb: intl.get('general_ledger'),
     hint: intl.get('reports_every_transaction_going_in_and_out_of_your'),
     hotkey: 'shift+4',
@@ -214,10 +181,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/balance-sheet`,
-    component: lazy(
-      () =>
-        import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet'),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/BalanceSheet/BalanceSheet')),
     breadcrumb: intl.get('balance_sheet'),
     hint: intl.get('reports_a_company_s_assets_liabilities_and_shareholders'),
     hotkey: 'shift+1',
@@ -228,12 +192,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/trial-balance-sheet`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/TrialBalanceSheet/TrialBalanceSheet')),
     breadcrumb: intl.get('trial_balance_sheet'),
     hint: intl.get('summarizes_the_credit_and_debit_balance_of_each_account'),
     hotkey: 'shift+5',
@@ -244,12 +203,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/profit-loss-sheet`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/ProfitLossSheet/ProfitLossSheet')),
     breadcrumb: intl.get('profit_loss_sheet'),
     hint: intl.get('reports_the_revenues_costs_and_expenses'),
     hotkey: 'shift+2',
@@ -260,12 +214,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports/receivable-aging-summary',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/ARAgingSummary/ARAgingSummary')),
     breadcrumb: intl.get('receivable_aging_summary'),
     hint: intl.get('summarize_total_unpaid_balances_of_customers_invoices'),
     pageTitle: intl.get('receivable_aging_summary'),
@@ -275,12 +224,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports/payable-aging-summary',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/APAgingSummary/APAgingSummary'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/APAgingSummary/APAgingSummary')),
     breadcrumb: intl.get('payable_aging_summary'),
     hint: intl.get('summarize_total_unpaid_balances_of_vendors_purchase'),
     pageTitle: intl.get('payable_aging_summary'),
@@ -290,9 +234,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/journal-sheet`,
-    component: lazy(
-      () => import('@/containers/FinancialStatements/Journal/Journal'),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/Journal/Journal')),
     breadcrumb: intl.get('journal_sheet'),
     hint: intl.get('the_debit_and_credit_entries_of_system_transactions'),
     hotkey: 'shift+3',
@@ -303,12 +245,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/purchases-by-items`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/PurchasesByItems/PurchasesByItems'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/PurchasesByItems/PurchasesByItems')),
     breadcrumb: intl.get('purchases_by_items'),
     // hotkey: '',
     pageTitle: intl.get('purchases_by_items'),
@@ -318,27 +255,17 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/sales-by-items`,
-    component: lazy(
-      () =>
-        import('@/containers/FinancialStatements/SalesByItems/SalesByItems'),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/SalesByItems/SalesByItems')),
     breadcrumb: intl.get('sales_by_items'),
     pageTitle: intl.get('sales_by_items'),
-    hint: intl.get(
-      'summarize_the_business_s_sold_items_quantity_income_and_average_income_rate',
-    ),
+    hint: intl.get('summarize_the_business_s_sold_items_quantity_income_and_average_income_rate'),
     backLink: true,
     sidebarExpand: false,
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `/financial-reports/inventory-valuation`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/InventoryValuation/InventoryValuation'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/InventoryValuation/InventoryValuation')),
     breadcrumb: intl.get('inventory_valuation'),
     hint: intl.get('summerize_your_transactions_for_each_inventory_item'),
     pageTitle: intl.get('inventory_valuation'),
@@ -348,12 +275,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/customers-balance-summary`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/CustomersBalanceSummary/CustomersBalanceSummary'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/CustomersBalanceSummary/CustomersBalanceSummary')),
     breadcrumb: intl.get('customers_balance_summary'),
     hint: intl.get('summerize_how_much_each_customer_owes_your_business'),
     pageTitle: intl.get('customers_balance_summary'),
@@ -363,12 +285,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/vendors-balance-summary`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/VendorsBalanceSummary/VendorsBalanceSummary')),
     breadcrumb: intl.get('vendors_balance_summary'),
     hint: intl.get('summerize_the_total_amount_your_business_owes_each_vendor'),
     pageTitle: intl.get('vendors_balance_summary'),
@@ -378,16 +295,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/transactions-by-customers`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/CustomersTransactions/CustomersTransactions'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/CustomersTransactions/CustomersTransactions')),
     breadcrumb: intl.get('customers_transactions'),
-    hint: intl.get(
-      'reports_every_transaction_going_in_and_out_of_each_customer',
-    ),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_customer'),
     pageTitle: intl.get('customers_transactions'),
     backLink: true,
     sidebarExpand: false,
@@ -395,16 +305,9 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/transactions-by-vendors`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/VendorsTransactions/VendorsTransactions'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/VendorsTransactions/VendorsTransactions')),
     breadcrumb: intl.get('vendors_transactions'),
-    hint: intl.get(
-      'reports_every_transaction_going_in_and_out_of_each_vendor_supplier',
-    ),
+    hint: intl.get('reports_every_transaction_going_in_and_out_of_each_vendor_supplier'),
     pageTitle: intl.get('vendors_transactions'),
     backLink: true,
     sidebarExpand: false,
@@ -412,12 +315,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/cash-flow`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/CashFlowStatement/CashFlowStatement'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/CashFlowStatement/CashFlowStatement')),
     breadcrumb: intl.get('cash_flow_statement'),
     hint: intl.get('reports_inflow_and_outflow_of_cash_and_cash_equivalents'),
     pageTitle: intl.get('cash_flow_statement'),
@@ -427,12 +325,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/inventory-item-details`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/InventoryItemDetails/InventoryItemDetails')),
     breadcrumb: intl.get('inventory_item_details'),
     hint: intl.get('reports_every_transaction_going_in_and_out_of_your_items'),
     pageTitle: intl.get('inventory_item_details'),
@@ -442,12 +335,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/realized-gain-loss`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/RealizedGainOrLoss/RealizedGainOrLoss')),
     breadcrumb: intl.get('realized_gain_or_loss.label'),
     pageTitle: intl.get('realized_gain_or_loss.label'),
     backLink: true,
@@ -456,12 +344,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/financial-reports/unrealized-gain-loss`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/UnrealizedGainOrLoss/UnrealizedGainOrLoss'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/UnrealizedGainOrLoss/UnrealizedGainOrLoss')),
     breadcrumb: intl.get('unrealized_gain_or_loss.label'),
     pageTitle: intl.get('unrealized_gain_or_loss.label'),
     backLink: true,
@@ -471,10 +354,7 @@ export const getDashboardRoutes = () => [
   {
     path: `/financial-reports/project-profitability-summary`,
     component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'
-        ),
+      () => import('@/containers/FinancialStatements/ProjectProfitabilitySummary/ProjectProfitabilitySummary'),
     ),
     breadcrumb: intl.get('project_profitability_summary'),
     pageTitle: intl.get('project_profitability_summary'),
@@ -484,12 +364,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports/sales-tax-liability-summary',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummary'
-        ),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/SalesTaxLiabilitySummary/SalesTaxLiabilitySummary')),
     breadcrumb: 'Sales Tax Liability Summary',
     pageTitle: 'Sales Tax Liability Summary',
     backLink: true,
@@ -498,9 +373,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/financial-reports',
-    component: lazy(
-      () => import('@/containers/FinancialStatements/FinancialReports'),
-    ),
+    component: lazy(() => import('@/containers/FinancialStatements/FinancialReports')),
     breadcrumb: intl.get('financial_reports'),
     pageTitle: intl.get('all_financial_reports'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
@@ -518,9 +391,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/expenses/new`,
-    component: lazy(
-      () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage')),
     breadcrumb: intl.get('expenses'),
     hotkey: 'ctrl+shift+x',
     pageTitle: intl.get('new_expense'),
@@ -530,9 +401,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/expenses/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Expenses/ExpenseForm/ExpenseFormPage')),
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_expense'),
     sidebarExpand: false,
@@ -541,9 +410,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/expenses`,
-    component: lazy(
-      () => import('@/containers/Expenses/ExpensesLanding/ExpensesList'),
-    ),
+    component: lazy(() => import('@/containers/Expenses/ExpensesLanding/ExpensesList')),
     breadcrumb: intl.get('expenses_list'),
     pageTitle: intl.get('expenses_list'),
     hotkey: 'shift+x',
@@ -560,9 +427,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Customers/CustomerForm/CustomerFormPage')),
     name: 'customer-edit',
     breadcrumb: intl.get('edit_customer'),
     pageTitle: intl.get('edit_customer'),
@@ -572,9 +437,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers/new`,
-    component: lazy(
-      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Customers/CustomerForm/CustomerFormPage')),
     name: 'customer-new',
     breadcrumb: intl.get('new_customer'),
     hotkey: 'ctrl+shift+c',
@@ -585,9 +448,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers`,
-    component: lazy(
-      () => import('@/containers/Customers/CustomersLanding/CustomersList'),
-    ),
+    component: lazy(() => import('@/containers/Customers/CustomersLanding/CustomersList')),
     breadcrumb: intl.get('customers'),
     hotkey: 'shift+c',
     pageTitle: intl.get('customers_list'),
@@ -596,9 +457,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/customers/contact_duplicate=/:id`,
-    component: lazy(
-      () => import('@/containers/Customers/CustomerForm/CustomerFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Customers/CustomerForm/CustomerFormPage')),
     name: 'duplicate-customer',
     breadcrumb: intl.get('duplicate_customer'),
     pageTitle: intl.get('new_customer'),
@@ -618,9 +477,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/vendors/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Vendors/VendorForm/VendorFormPage')),
     name: 'vendor-edit',
     breadcrumb: intl.get('edit_vendor'),
     pageTitle: intl.get('edit_vendor'),
@@ -630,9 +487,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/vendors/new`,
-    component: lazy(
-      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Vendors/VendorForm/VendorFormPage')),
     name: 'vendor-new',
     breadcrumb: intl.get('new_vendor'),
     hotkey: 'ctrl+shift+v',
@@ -643,9 +498,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/vendors`,
-    component: lazy(
-      () => import('@/containers/Vendors/VendorsLanding/VendorsList'),
-    ),
+    component: lazy(() => import('@/containers/Vendors/VendorsLanding/VendorsList')),
     breadcrumb: intl.get('vendors'),
     hotkey: 'shift+v',
     pageTitle: intl.get('vendors_list'),
@@ -654,9 +507,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/vendors/contact_duplicate=/:id`,
-    component: lazy(
-      () => import('@/containers/Vendors/VendorForm/VendorFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Vendors/VendorForm/VendorFormPage')),
     name: 'duplicate-vendor',
     breadcrumb: intl.get('duplicate_vendor'),
     pageTitle: intl.get('new_vendor'),
@@ -680,10 +531,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/estimates/:id/edit`,
-    component: lazy(
-      () =>
-        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
     name: 'estimate-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_estimate'),
@@ -694,10 +542,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/invoices/new?from_estimate_id=/:id`,
-    component: lazy(
-      () =>
-        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
     name: 'convert-to-invoice',
     breadcrumb: intl.get('new_estimate'),
     pageTitle: intl.get('new_estimate'),
@@ -708,10 +553,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/estimates/new`,
-    component: lazy(
-      () =>
-        import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Estimates/EstimateForm/EstimateFormPage')),
     name: 'estimate-new',
     breadcrumb: intl.get('new_estimate'),
     hotkey: 'ctrl+shift+e',
@@ -723,10 +565,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/estimates`,
-    component: lazy(
-      () =>
-        import('@/containers/Sales/Estimates/EstimatesLanding/EstimatesList'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Estimates/EstimatesLanding/EstimatesList')),
     name: 'estimates-list',
     breadcrumb: intl.get('estimates_list'),
     hotkey: 'shift+e',
@@ -748,9 +587,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/invoices/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage')),
     name: 'invoice-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_invoice'),
@@ -761,9 +598,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/invoices/new`,
-    component: lazy(
-      () => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Invoices/InvoiceForm/InvoiceFormPage')),
     name: 'invoice-new',
     breadcrumb: intl.get('new_invoice'),
     hotkey: 'ctrl+shift+i',
@@ -775,9 +610,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/invoices`,
-    component: lazy(
-      () => import('@/containers/Sales/Invoices/InvoicesLanding/InvoicesList'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Invoices/InvoicesLanding/InvoicesList')),
     breadcrumb: intl.get('invoices_list'),
     hotkey: 'shift+i',
     pageTitle: intl.get('invoices_list'),
@@ -799,9 +632,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/receipts/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage')),
     name: 'receipt-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_receipt'),
@@ -812,9 +643,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/receipts/new`,
-    component: lazy(
-      () => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Receipts/ReceiptForm/ReceiptFormPage')),
     name: 'receipt-new',
     breadcrumb: intl.get('new_receipt'),
     hotkey: 'ctrl+shift+r',
@@ -826,9 +655,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/receipts`,
-    component: lazy(
-      () => import('@/containers/Sales/Receipts/ReceiptsLanding/ReceiptsList'),
-    ),
+    component: lazy(() => import('@/containers/Sales/Receipts/ReceiptsLanding/ReceiptsList')),
     breadcrumb: intl.get('receipts_list'),
     hotkey: 'shift+r',
     pageTitle: intl.get('receipts_list'),
@@ -851,12 +678,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/credit-notes/:id/edit`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage')),
     name: 'credit-note-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('credit_note.label.edit_credit_note'),
@@ -867,12 +689,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/credit-notes/new/?from_invoice_id=/:id`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage')),
     name: 'credit-note-new',
     breadcrumb: intl.get('credit_note.label.new_credit_note'),
     backLink: true,
@@ -883,12 +700,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/credit-notes/new',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/CreditNotes/CreditNoteForm/CreditNoteFormPage')),
     name: 'credit-note-new',
     breadcrumb: intl.get('credit_note.label.new_credit_note'),
     backLink: true,
@@ -899,12 +711,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/credit-notes',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/CreditNotes/CreditNotesLanding/CreditNotesList')),
     breadcrumb: intl.get('credit_note.label_create_note_list'),
     pageTitle: intl.get('credit_note.label_create_note_list'),
     defaultSearchResource: RESOURCES_TYPES.CREDIT_NOTE,
@@ -925,12 +732,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-receives/:id/edit`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage')),
     name: 'payment-receive-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_payment_receive'),
@@ -941,12 +743,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-receives/new`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/PaymentReceives/PaymentReceiveForm/PaymentReceiveFormPage')),
     name: 'payment-receive-new',
     breadcrumb: intl.get('new_payment_receive'),
     pageTitle: intl.get('new_payment_receive'),
@@ -957,12 +754,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-receives`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Sales/PaymentReceives/PaymentsLanding/PaymentReceivesList')),
     breadcrumb: intl.get('payment_receives_list'),
     pageTitle: intl.get('payment_receives_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_RECEIVE,
@@ -982,9 +774,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/bills/:id/edit`,
-    component: lazy(
-      () => import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Purchases/Bills/BillForm/BillFormPage')),
     name: 'bill-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_bill'),
@@ -995,9 +785,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/bills/new`,
-    component: lazy(
-      () => import('@/containers/Purchases/Bills/BillForm/BillFormPage'),
-    ),
+    component: lazy(() => import('@/containers/Purchases/Bills/BillForm/BillFormPage')),
     name: 'bill-new',
     breadcrumb: intl.get('new_bill'),
     hotkey: 'ctrl+shift+b',
@@ -1009,9 +797,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/bills`,
-    component: lazy(
-      () => import('@/containers/Purchases/Bills/BillsLanding/BillsList'),
-    ),
+    component: lazy(() => import('@/containers/Purchases/Bills/BillsLanding/BillsList')),
     breadcrumb: intl.get('bills_list'),
     hotkey: 'shift+b',
     pageTitle: intl.get('bills_list'),
@@ -1033,12 +819,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/vendor-credits/:id/edit`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage')),
     name: 'vendor-credits-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('vendor_credits.label.edit_vendor_credit'),
@@ -1049,12 +830,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/vendor-credits/new/?from_bill_id=/:id',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage')),
     name: 'vendor-credits-new',
     backLink: true,
     sidebarExpand: false,
@@ -1065,12 +841,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/vendor-credits/new',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/CreditNotes/CreditNoteForm/VendorCreditNoteFormPage')),
     name: 'vendor-credits-new',
     backLink: true,
     sidebarExpand: false,
@@ -1081,12 +852,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: '/vendor-credits',
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/CreditNotes/CreditNotesLanding/VendorsCreditNotesList')),
     breadcrumb: intl.get('vendor_credits.lable_vendor_credit_list'),
     pageTitle: intl.get('vendor_credits.lable_vendor_credit_list'),
     defaultSearchResource: RESOURCES_TYPES.VENDOR_CREDIT,
@@ -1115,12 +881,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-mades/:id/edit`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage')),
     name: 'payment-made-edit',
     breadcrumb: intl.get('edit'),
     pageTitle: intl.get('edit_payment_made'),
@@ -1131,12 +892,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-mades/new`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/PaymentMades/PaymentForm/PaymentMadeFormPage')),
     name: 'payment-made-new',
     breadcrumb: intl.get('new_payment_made'),
     pageTitle: intl.get('new_payment_made'),
@@ -1147,12 +903,7 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/payment-mades`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/Purchases/PaymentMades/PaymentsLanding/PaymentMadeList')),
     breadcrumb: intl.get('payment_made_list'),
     pageTitle: intl.get('payment_made_list'),
     defaultSearchResource: RESOURCES_TYPES.PAYMENT_MADE,
@@ -1161,12 +912,7 @@ export const getDashboardRoutes = () => [
   // Cash flow
   {
     path: `/cashflow-accounts/:id/transactions`,
-    component: lazy(
-      () =>
-        import(
-          '@/containers/CashFlow/AccountTransactions/AccountTransactionsList'
-        ),
-    ),
+    component: lazy(() => import('@/containers/CashFlow/AccountTransactions/AccountTransactionsList')),
     sidebarExpand: false,
     backLink: true,
     pageTitle: intl.get('cash_flow.label_account_transcations'),
@@ -1176,10 +922,7 @@ export const getDashboardRoutes = () => [
   {
     path: `/cashflow-accounts/:id/import`,
     component: lazy(
-      () =>
-        import(
-          '@/containers/CashFlow/ImportIUncategorizedTransactions/ImportUncategorizedTransactionsPage'
-        ),
+      () => import('@/containers/CashFlow/ImportIUncategorizedTransactions/ImportUncategorizedTransactionsPage'),
     ),
     backLink: true,
     sidebarExpand: false,
@@ -1189,42 +932,30 @@ export const getDashboardRoutes = () => [
   },
   {
     path: `/cashflow-accounts`,
-    component: lazy(
-      () =>
-        import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList'),
-    ),
+    component: lazy(() => import('@/containers/CashFlow/CashFlowAccounts/CashFlowAccountsList')),
     pageTitle: intl.get('siebar.cashflow.label_cash_and_bank_accounts'),
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
     defaultSearchResource: RESOURCES_TYPES.ACCOUNT,
   },
   {
     path: `/transactions-locking`,
-    component: lazy(
-      () => import('@/containers/TransactionsLocking/TransactionsLockingPage'),
-    ),
+    component: lazy(() => import('@/containers/TransactionsLocking/TransactionsLockingPage')),
     pageTitle: intl.get('sidebar.transactions_locaking'),
   },
   {
     path: '/projects/:id/details',
-    component: lazy(
-      () => import('@/containers/Projects/containers/ProjectDetails'),
-    ),
+    component: lazy(() => import('@/containers/Projects/containers/ProjectDetails')),
     sidebarExpand: false,
     backLink: true,
   },
   {
     path: '/projects',
-    component: lazy(
-      () =>
-        import('@/containers/Projects/containers/ProjectsLanding/ProjectsList'),
-    ),
+    component: lazy(() => import('@/containers/Projects/containers/ProjectsLanding/ProjectsList')),
     pageTitle: intl.get('sidebar.projects'),
   },
   {
     path: '/tax-rates',
-    component: lazy(
-      () => import('@/containers/TaxRates/pages/TaxRatesLanding'),
-    ),
+    component: lazy(() => import('@/containers/TaxRates/pages/TaxRatesLanding')),
     pageTitle: 'Tax Rates',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },

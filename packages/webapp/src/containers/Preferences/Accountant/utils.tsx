@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 export const transferObjectOptionsToArray = (input) =>
   Object.entries(input).flatMap(([group, options]) =>

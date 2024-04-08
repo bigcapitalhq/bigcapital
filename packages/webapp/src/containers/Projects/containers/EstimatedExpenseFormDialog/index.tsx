@@ -1,23 +1,16 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const EstimatedExpenseFormDialogContent = React.lazy(
-  () => import('./EstimatedExpenseFormDialogContent'),
-);
+const EstimatedExpenseFormDialogContent = React.lazy(() => import('./EstimatedExpenseFormDialogContent'));
 
 /**
  * Estimate expense form dialog.
  * @returns
  */
-function EstimatedExpenseFormDialog({
-  dialogName,
-  payload: { projectId = null },
-  isOpen,
-}) {
+function EstimatedExpenseFormDialog({ dialogName, payload: { projectId = null }, isOpen }) {
   return (
     <EstimateExpenseFormDialogRoot
       name={dialogName}
@@ -28,10 +21,7 @@ function EstimatedExpenseFormDialog({
       style={{ width: '400px' }}
     >
       <DialogSuspense>
-        <EstimatedExpenseFormDialogContent
-          dialogName={dialogName}
-          estimatedExpense={projectId}
-        />
+        <EstimatedExpenseFormDialogContent dialogName={dialogName} estimatedExpense={projectId} />
       </DialogSuspense>
     </EstimateExpenseFormDialogRoot>
   );

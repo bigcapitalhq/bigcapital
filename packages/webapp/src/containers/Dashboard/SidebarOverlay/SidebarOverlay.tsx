@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Overlay, OverlayProps } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
@@ -31,11 +30,7 @@ export interface ISidebarOverlayItemDivider {
  * @param   {ISidebarOverlayItemProps}
  * @returns {JSX.Element}
  */
-export function SidebarOverlayItemLink({
-  text,
-  href,
-  onClick,
-}: ISidebarOverlayItemProps) {
+export function SidebarOverlayItemLink({ text, href, onClick }: ISidebarOverlayItemProps) {
   return (
     <div className="sidebar-overlay__item">
       <Link to={href} onClick={onClick}>
@@ -54,9 +49,7 @@ export interface ISidebarOverlayItemLabel {
  * @param   {ISidebarOverlayItemLabel}
  * @returns {JSX.Element}
  */
-export function SidebarOverlayLabel({
-  text,
-}: ISidebarOverlayItemLabel): JSX.Element {
+export function SidebarOverlayLabel({ text }: ISidebarOverlayItemLabel): JSX.Element {
   return <div className="sidebar-overlay__label">{text}</div>;
 }
 
@@ -82,8 +75,7 @@ function SidebarOverlayItem({ item }: SidebarOverlayItemProps) {
   return item.type === ISidebarMenuItemType.Group ? (
     <SidebarOverlayLabel text={item.text} />
   ) : //
-  item.type === ISidebarMenuItemType.Link ||
-    item.type === ISidebarMenuItemType.Dialog ? (
+  item.type === ISidebarMenuItemType.Link || item.type === ISidebarMenuItemType.Dialog ? (
     <SidebarOverlayItemLink text={item.text} href={item.href} onClick={item.onClick} />
   ) : null;
 }
@@ -122,10 +114,7 @@ export interface SidebarOverlayProps extends OverlayProps {
 export function SidebarOverlay({ items, label, ...rest }: SidebarOverlayProps) {
   return (
     <Overlay
-      portalContainer={
-        (document.querySelector('.Pane.vertical.Pane2') as HTMLElement) ||
-        document.body
-      }
+      portalContainer={(document.querySelector('.Pane.vertical.Pane2') as HTMLElement) || document.body}
       transitionDuration={100}
       backdropClassName={'sidebar-overlay-backdrop'}
       {...rest}

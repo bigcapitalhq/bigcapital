@@ -1,8 +1,8 @@
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
 import { ISaleReceipt } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class SaleReceiptInventoryTransactions {
@@ -22,14 +22,10 @@ export class SaleReceiptInventoryTransactions {
     tenantId: number,
     saleReceipt: ISaleReceipt,
     override?: boolean,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Loads the inventory items entries of the given sale invoice.
-    const inventoryEntries =
-      await this.itemsEntriesService.filterInventoryEntries(
-        tenantId,
-        saleReceipt.entries
-      );
+    const inventoryEntries = await this.itemsEntriesService.filterInventoryEntries(tenantId, saleReceipt.entries);
     const transaction = {
       transactionId: saleReceipt.id,
       transactionType: 'SaleReceipt',
@@ -43,12 +39,7 @@ export class SaleReceiptInventoryTransactions {
 
       warehouseId: saleReceipt.warehouseId,
     };
-    return this.inventoryService.recordInventoryTransactionsFromItemsEntries(
-      tenantId,
-      transaction,
-      override,
-      trx
-    );
+    return this.inventoryService.recordInventoryTransactionsFromItemsEntries(tenantId, transaction, override, trx);
   }
 
   /**
@@ -57,16 +48,7 @@ export class SaleReceiptInventoryTransactions {
    * @param {number} billId - Bill id.
    * @return {Promise<void>}
    */
-  public async revertInventoryTransactions(
-    tenantId: number,
-    receiptId: number,
-    trx?: Knex.Transaction
-  ) {
-    return this.inventoryService.deleteInventoryTransactions(
-      tenantId,
-      receiptId,
-      'SaleReceipt',
-      trx
-    );
+  public async revertInventoryTransactions(tenantId: number, receiptId: number, trx?: Knex.Transaction) {
+    return this.inventoryService.deleteInventoryTransactions(tenantId, receiptId, 'SaleReceipt', trx);
   }
 }

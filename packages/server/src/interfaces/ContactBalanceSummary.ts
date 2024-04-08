@@ -28,20 +28,20 @@ export interface IContactBalanceSummaryTotal {
   percentageOfColumn?: IContactBalanceSummaryPercentage;
 }
 
-export interface ICustomerBalanceSummaryData {
+export interface ICustomerBalanceSummaryDataDupe {
   customers: IContactBalanceSummaryContact[];
   total: IContactBalanceSummaryTotal;
 }
 
-export interface ICustomerBalanceSummaryStatement {
-  data: ICustomerBalanceSummaryData;
+export interface ICustomerBalanceSummaryStatementDupe {
+  data: ICustomerBalanceSummaryDataDupe;
   columns: {};
   query: IContactBalanceSummaryQuery;
 }
 
-export interface ICustomerBalanceSummaryService {
+export interface ICustomerBalanceSummaryServiceDupe {
   customerBalanceSummary(
     tenantId: number,
-    query: IContactBalanceSummaryQuery
-  ): Promise<ICustomerBalanceSummaryStatement>;
+    query: IContactBalanceSummaryQuery,
+  ): Promise<ICustomerBalanceSummaryStatementDupe>;
 }

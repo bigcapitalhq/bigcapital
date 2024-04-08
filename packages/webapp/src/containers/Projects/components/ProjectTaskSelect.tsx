@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem, Button } from '@blueprintjs/core';
@@ -49,19 +48,12 @@ const taskSelectProps = {
 };
 
 /**
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export function ProjectTaskSelect({ tasks, ...rest }) {
-  return (
-    <FSelect
-      items={tasks}
-      {...taskSelectProps}
-      {...rest}
-      input={TaskSelectButton}
-    />
-  );
+  return <FSelect items={tasks} {...taskSelectProps} {...rest} input={TaskSelectButton} />;
 }
 
 function TaskSelectButton({ label }) {

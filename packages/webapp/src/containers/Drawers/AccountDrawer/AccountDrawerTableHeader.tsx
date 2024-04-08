@@ -4,12 +4,8 @@ import styled from 'styled-components';
 import { useAccountDrawerTableOptionsContext } from './AccountDrawerTableOptionsProvider';
 
 export function AccountDrawerTableHeader() {
-  const {
-    setBCYCurrencyType,
-    setFYCCurrencyType,
-    isBCYCurrencyType,
-    isFCYCurrencyType,
-  } = useAccountDrawerTableOptionsContext();
+  const { setBCYCurrencyType, setFYCCurrencyType, isBCYCurrencyType, isFCYCurrencyType } =
+    useAccountDrawerTableOptionsContext();
 
   const handleBCYBtnClick = () => {
     setBCYCurrencyType();
@@ -21,20 +17,10 @@ export function AccountDrawerTableHeader() {
   return (
     <TableHeaderRoot>
       <ButtonGroup>
-        <Button
-          small
-          outlined
-          onClick={handleFCYBtnClick}
-          active={isFCYCurrencyType}
-        >
+        <Button small outlined onClick={handleFCYBtnClick} active={isFCYCurrencyType}>
           FCY
         </Button>
-        <Button
-          small
-          outlined
-          onClick={handleBCYBtnClick}
-          active={isBCYCurrencyType}
-        >
+        <Button small outlined onClick={handleBCYBtnClick} active={isBCYCurrencyType}>
           BCY
         </Button>
       </ButtonGroup>

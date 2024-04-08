@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useSaveSettings } from '@/hooks/query';
@@ -9,10 +8,7 @@ import ReferenceNumberForm from '@/containers/JournalNumber/ReferenceNumberForm'
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
-import {
-  transformFormToSettings,
-  transformSettingsToForm,
-} from '@/containers/JournalNumber/utils';
+import { transformFormToSettings, transformSettingsToForm } from '@/containers/JournalNumber/utils';
 import { compose } from '@/utils';
 
 /**

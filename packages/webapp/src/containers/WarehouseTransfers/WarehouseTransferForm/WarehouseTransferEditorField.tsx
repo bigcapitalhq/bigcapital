@@ -1,15 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { useWarehouseTransferFormContext } from './WarehouseTransferFormProvider';
 import WarehouseTransferFormEntriesTable from './WarehouseTransferFormEntriesTable';
-import {
-  entriesFieldShouldUpdate,
-  defaultWarehouseTransferEntry,
-  useWatchItemsCostSetCostEntries
-} from './utils';
+import { entriesFieldShouldUpdate, defaultWarehouseTransferEntry, useWatchItemsCostSetCostEntries } from './utils';
 
 /**
  * Warehouse transafer editor field.
@@ -22,16 +17,8 @@ export default function WarehouseTransferEditorField() {
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
-      <FastField
-        name={'entries'}
-        items={items}
-        shouldUpdate={entriesFieldShouldUpdate}
-      >
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+      <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <WarehouseTransferFormEntriesTable
             entries={value}
             onUpdateData={(entries) => {

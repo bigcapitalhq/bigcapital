@@ -1,9 +1,6 @@
-import { Service, Inject } from 'typedi';
+import { IApplyCreditToInvoicesCreatedPayload, IApplyCreditToInvoicesDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  IApplyCreditToInvoicesCreatedPayload,
-  IApplyCreditToInvoicesDeletedPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import CreditNoteApplySyncInvoicesCreditedAmount from './CreditNoteApplySyncInvoices';
 
 @Service()
@@ -15,14 +12,8 @@ export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.creditNote.onApplyToInvoicesCreated,
-      this.incrementAppliedInvoicesOnceCreditCreated
-    );
-    bus.subscribe(
-      events.creditNote.onApplyToInvoicesDeleted,
-      this.decrementAppliedInvoicesOnceCreditDeleted
-    );
+    bus.subscribe(events.creditNote.onApplyToInvoicesCreated, this.incrementAppliedInvoicesOnceCreditCreated);
+    bus.subscribe(events.creditNote.onApplyToInvoicesDeleted, this.decrementAppliedInvoicesOnceCreditDeleted);
   }
 
   /**
@@ -34,11 +25,7 @@ export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
     tenantId,
     creditNoteAppliedInvoices,
   }: IApplyCreditToInvoicesCreatedPayload) => {
-    await this.syncInvoicesWithCreditNote.incrementInvoicesCreditedAmount(
-      tenantId,
-      creditNoteAppliedInvoices,
-      trx
-    );
+    await this.syncInvoicesWithCreditNote.incrementInvoicesCreditedAmount(tenantId, creditNoteAppliedInvoices, trx);
   };
 
   /**
@@ -55,7 +42,7 @@ export default class CreditNoteApplySyncInvoicesCreditedAmountSubscriber {
       tenantId,
       creditNoteAppliedToInvoice.invoiceId,
       creditNoteAppliedToInvoice.amount,
-      trx
+      trx,
     );
   };
 }

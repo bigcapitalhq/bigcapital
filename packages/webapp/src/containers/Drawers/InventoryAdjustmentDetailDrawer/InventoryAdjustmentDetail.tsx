@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -28,15 +27,8 @@ export default function InventoryAdjustmentDetail() {
  */
 function InventoryAdjustmentDetailTabs() {
   return (
-    <DrawerMainTabs
-      renderActiveTabPanelOnly={true}
-      defaultSelectedTabId="details"
-    >
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<InventoryAdjustmentDetailTab />}
-      />
+    <DrawerMainTabs renderActiveTabPanelOnly={true} defaultSelectedTabId="details">
+      <Tab title={intl.get('details')} id={'details'} panel={<InventoryAdjustmentDetailTab />} />
       <Tab
         title={intl.get('journal_entries')}
         id={'journal_entries'}

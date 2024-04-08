@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -25,11 +24,7 @@ export default function CustomersBalanceSummaryTable({
   const columns = useCustomersSummaryColumns();
 
   return (
-    <FinancialSheet
-      companyName={companyName}
-      sheetType={intl.get('customers_balance_summary')}
-      asDate={query.as_date}
-    >
+    <FinancialSheet companyName={companyName} sheetType={intl.get('customers_balance_summary')} asDate={query.as_date}>
       <CustomerBalanceDataTable
         columns={columns}
         data={table.rows}

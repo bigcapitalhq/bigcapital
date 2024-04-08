@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import * as Yup from 'yup';
@@ -24,10 +23,7 @@ export const getDefaultPurchasesByItemsQuery = () => ({
 export const getPurchasesByItemsQuerySchema = () => {
   return Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('from_date')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('to_date')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('to_date')),
   });
 };
 
@@ -54,9 +50,6 @@ export const usePurchasesByItemsQuery = () => {
   // Retrieves location query.
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
-  const query = React.useMemo(
-    () => parsePurchasesByItemsQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parsePurchasesByItemsQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

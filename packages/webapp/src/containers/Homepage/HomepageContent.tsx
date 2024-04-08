@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import AccountsReceivableSection from './AccountsReceivableSection';
 import AccountsPayableSection from './AccountsPayableSection';

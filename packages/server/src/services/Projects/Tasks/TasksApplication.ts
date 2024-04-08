@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import {
   ICreateTaskDTO,
   IEditTaskDTO,
@@ -6,10 +5,11 @@ import {
   IProjectTaskEditPOJO,
   IProjectTaskGetPOJO,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { CreateTaskService } from './CreateTask';
 import { DeleteTaskService } from './DeleteTask';
-import { GetTaskService } from './GetTask';
 import { EditTaskService } from './EditTask';
+import { GetTaskService } from './GetTask';
 import { GetTasksService } from './GetTasks';
 
 @Service()
@@ -39,7 +39,7 @@ export class TasksApplication {
   public createTask = (
     tenantId: number,
     projectId: number,
-    taskDTO: ICreateTaskDTO
+    taskDTO: ICreateTaskDTO,
   ): Promise<IProjectTaskCreatePOJO> => {
     return this.createTaskService.createTask(tenantId, projectId, taskDTO);
   };
@@ -51,11 +51,7 @@ export class TasksApplication {
    * @param {IEditTaskDTO} projectDTO - Create project DTO.
    * @returns {Promise<IProjectTaskEditPOJO>}
    */
-  public editTask = (
-    tenantId: number,
-    taskId: number,
-    taskDTO: IEditTaskDTO
-  ): Promise<IProjectTaskEditPOJO> => {
+  public editTask = (tenantId: number, taskId: number, taskDTO: IEditTaskDTO): Promise<IProjectTaskEditPOJO> => {
     return this.editTaskService.editTask(tenantId, taskId, taskDTO);
   };
 
@@ -75,10 +71,7 @@ export class TasksApplication {
    * @param {number} taskId
    * @returns {Promise<IProjectTaskGetPOJO>}
    */
-  public getTask = (
-    tenantId: number,
-    taskId: number
-  ): Promise<IProjectTaskGetPOJO> => {
+  public getTask = (tenantId: number, taskId: number): Promise<IProjectTaskGetPOJO> => {
     return this.getTaskService.getTask(tenantId, taskId);
   };
 
@@ -88,10 +81,7 @@ export class TasksApplication {
    * @param {IVendorsFilter} filterDTO
    * @returns {Promise<IProjectTaskGetPOJO[]>}
    */
-  public getTasks = (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectTaskGetPOJO[]> => {
+  public getTasks = (tenantId: number, projectId: number): Promise<IProjectTaskGetPOJO[]> => {
     return this.getTasksService.getTasks(tenantId, projectId);
   };
 }

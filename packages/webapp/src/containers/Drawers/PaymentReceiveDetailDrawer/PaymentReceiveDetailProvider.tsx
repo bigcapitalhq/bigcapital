@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -52,7 +51,6 @@ function PaymentReceiveDetailProvider({ paymentReceiveId, ...props }) {
   );
 }
 
-const usePaymentReceiveDetailContext = () =>
-  React.useContext(PaymentReceiveDetailContext);
+const usePaymentReceiveDetailContext = () => React.useContext(PaymentReceiveDetailContext);
 
 export { PaymentReceiveDetailProvider, usePaymentReceiveDetailContext };

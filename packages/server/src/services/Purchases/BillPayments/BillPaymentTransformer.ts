@@ -1,6 +1,6 @@
 import { IBillPayment } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../../utils';
 import { BillPaymentEntryTransformer } from './BillPaymentEntryTransformer';
 
 export class BillPaymentTransformer extends Transformer {

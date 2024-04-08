@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik, Form } from 'formik';
@@ -88,8 +87,5 @@ export default compose(
   withDashboardActions,
   withBillingActions,
   withSubscriptionPlansActions,
-  withSubscriptions(
-    ({ isSubscriptionInactive }) => ({ isSubscriptionInactive }),
-    'main',
-  ),
+  withSubscriptions(({ isSubscriptionInactive }) => ({ isSubscriptionInactive }), 'main'),
 )(BillingForm);

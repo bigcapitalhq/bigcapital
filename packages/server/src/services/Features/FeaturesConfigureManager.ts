@@ -10,9 +10,7 @@ export class FeaturesConfigureManager {
    * @returns
    */
   getFeatureConfigure = (featureName: string, accessor?: string) => {
-    const meta = FeaturesConfigure.find(
-      (feature) => feature.name === featureName
-    );
+    const meta = FeaturesConfigure.find((feature) => feature.name === featureName);
     return accessor ? get(meta, accessor) : meta;
   };
 }

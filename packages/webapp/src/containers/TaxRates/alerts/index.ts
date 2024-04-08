@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const TaxRateDeleteAlert = React.lazy(() => import('./TaxRateDeleteAlert'));

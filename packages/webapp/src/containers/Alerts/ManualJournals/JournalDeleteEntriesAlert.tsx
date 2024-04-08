@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
@@ -18,7 +17,7 @@ function JournalDeleteEntriesAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: {  },
+  payload: {},
 
   // #withAlertActions
   closeAlert,
@@ -44,14 +43,9 @@ function JournalDeleteEntriesAlert({
       onConfirm={handleConfirm}
       loading={false}
     >
-      <p>
-        Clearing the table lines will delete all credits and debits were applied, Is this okay?
-      </p>
+      <p>Clearing the table lines will delete all credits and debits were applied, Is this okay?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(JournalDeleteEntriesAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(JournalDeleteEntriesAlert);

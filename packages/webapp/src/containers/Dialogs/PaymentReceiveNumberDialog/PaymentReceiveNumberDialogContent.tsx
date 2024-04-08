@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
@@ -12,10 +11,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { saveInvoke, compose } from '@/utils';
-import {
-  transformFormToSettings,
-  transformSettingsToForm,
-} from '@/containers/JournalNumber/utils';
+import { transformFormToSettings, transformSettingsToForm } from '@/containers/JournalNumber/utils';
 
 /**
  * Payment receive number dialog's content.

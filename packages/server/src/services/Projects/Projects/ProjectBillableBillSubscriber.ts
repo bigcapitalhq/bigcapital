@@ -1,12 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { ISaleInvoiceCreatedPayload, ISaleInvoiceDeletedPayload, ISaleInvoiceEditedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  ISaleInvoiceCreatedPayload,
-  ISaleInvoiceDeletedPayload,
-  ISaleInvoiceEditedPayload,
-} from '@/interfaces';
-import { ProjectBillableTask } from './ProjectBillableTasks';
-import { ProjectBillableExpense } from './ProjectBillableExpense';
+import { Inject, Service } from 'typedi';
 import { ProjectBillableExpenseInvoiced } from './ProjectBillableExpenseInvoiced';
 
 @Service()
@@ -19,15 +13,9 @@ export class ProjectBillableBillSubscriber {
    * @param bus
    */
   attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleIncreaseBillableBill
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.handleIncreaseBillableBill);
     bus.subscribe(events.saleInvoice.onEdited, this.handleEditBillableBill);
-    bus.subscribe(
-      events.saleInvoice.onDeleted,
-      this.handleDecreaseBillableBill
-    );
+    bus.subscribe(events.saleInvoice.onDeleted, this.handleDecreaseBillableBill);
   }
 
   /**
@@ -40,27 +28,15 @@ export class ProjectBillableBillSubscriber {
     saleInvoiceDTO,
     trx,
   }: ISaleInvoiceCreatedPayload) => {
-    await this.projectBillableExpenseInvoiced.increaseInvoicedExpense(
-      tenantId,
-      saleInvoiceDTO,
-      trx
-    );
+    await this.projectBillableExpenseInvoiced.increaseInvoicedExpense(tenantId, saleInvoiceDTO, trx);
   };
 
   /**
    * Decreases the billable amount of expense.
    * @param {ISaleInvoiceDeletedPayload} payload -
    */
-  public handleDecreaseBillableBill = async ({
-    tenantId,
-    oldSaleInvoice,
-    trx,
-  }: ISaleInvoiceDeletedPayload) => {
-    await this.projectBillableExpenseInvoiced.decreaseInvoicedExpense(
-      tenantId,
-      oldSaleInvoice,
-      trx
-    );
+  public handleDecreaseBillableBill = async ({ tenantId, oldSaleInvoice, trx }: ISaleInvoiceDeletedPayload) => {
+    await this.projectBillableExpenseInvoiced.decreaseInvoicedExpense(tenantId, oldSaleInvoice, trx);
   };
 
   /**
@@ -73,15 +49,7 @@ export class ProjectBillableBillSubscriber {
     saleInvoiceDTO,
     trx,
   }: ISaleInvoiceEditedPayload) => {
-    await this.projectBillableExpenseInvoiced.decreaseInvoicedExpense(
-      tenantId,
-      oldSaleInvoice,
-      trx
-    );
-    await this.projectBillableExpenseInvoiced.increaseInvoicedExpense(
-      tenantId,
-      saleInvoiceDTO,
-      trx
-    );
+    await this.projectBillableExpenseInvoiced.decreaseInvoicedExpense(tenantId, oldSaleInvoice, trx);
+    await this.projectBillableExpenseInvoiced.increaseInvoicedExpense(tenantId, saleInvoiceDTO, trx);
   };
 }

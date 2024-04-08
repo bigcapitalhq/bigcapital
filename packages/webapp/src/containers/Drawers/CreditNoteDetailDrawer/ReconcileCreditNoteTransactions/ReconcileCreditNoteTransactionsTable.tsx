@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DataTable, Card } from '@/components';
 
@@ -6,10 +5,7 @@ import { TableStyle } from '@/constants';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 
 import { useCreditNoteDetailDrawerContext } from '../CreditNoteDetailDrawerProvider';
-import {
-  useReconcileCreditTransactionsTableColumns,
-  ActionsMenu,
-} from './components';
+import { useReconcileCreditTransactionsTableColumns, ActionsMenu } from './components';
 
 import { compose } from '@/utils';
 

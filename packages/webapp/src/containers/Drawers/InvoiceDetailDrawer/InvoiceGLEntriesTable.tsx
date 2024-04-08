@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
@@ -6,9 +5,7 @@ import { Card } from '@/components';
 import { useTransactionsByReference } from '@/hooks/query';
 import { useInvoiceDetailDrawerContext } from './InvoiceDetailDrawerProvider';
 
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 /**
  * Invoice GL entries table.
@@ -32,10 +29,7 @@ export default function InvoiceGLEntriesTable() {
   return (
     <InvoiceGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <InvoiceGLEntriesDatatable
-        loading={isTransactionLoading}
-        transactions={transactions}
-      />
+      <InvoiceGLEntriesDatatable loading={isTransactionLoading} transactions={transactions} />
     </InvoiceGLEntriesRoot>
   );
 }

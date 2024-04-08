@@ -1,6 +1,5 @@
-// @ts-nocheck
-import { useRef, useEffect } from 'react';
 
+import { useRef, useEffect } from 'react';
 
 // Hook
 export function usePrevious(value) {

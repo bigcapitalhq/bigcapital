@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/RefundCreditNote/RefundCreditNote.scss';
@@ -14,10 +13,7 @@ export default function RefundCreditNoteDialogContent({
   creditNoteId,
 }) {
   return (
-    <RefundCreditNoteFormProvider
-      creditNoteId={creditNoteId}
-      dialogName={dialogName}
-    >
+    <RefundCreditNoteFormProvider creditNoteId={creditNoteId} dialogName={dialogName}>
       <RefundCreditNoteForm />
     </RefundCreditNoteFormProvider>
   );

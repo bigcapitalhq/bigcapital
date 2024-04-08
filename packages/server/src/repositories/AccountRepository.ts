@@ -1,8 +1,8 @@
-import { Account } from 'models';
-import TenantRepository from '@/repositories/TenantRepository';
-import { IAccount } from '@/interfaces';
-import { Knex } from 'knex';
 import { TaxPayableAccount } from '@/database/seeds/data/accounts';
+import { IAccount } from '@/interfaces';
+import TenantRepository from '@/repositories/TenantRepository';
+import { Knex } from 'knex';
+import { Account } from '../models';
 
 export default class AccountRepository extends TenantRepository {
   /**
@@ -68,10 +68,7 @@ export default class AccountRepository extends TenantRepository {
    * @return {Promise<void>}
    */
   async activateByIds(userIds: number[], trx): Promise<IAccount> {
-    const results = await this.model
-      .query(trx)
-      .whereIn('id', userIds)
-      .patch({ active: true });
+    const results = await this.model.query(trx).whereIn('id', userIds).patch({ active: true });
 
     this.flushCache();
     return results;
@@ -83,10 +80,7 @@ export default class AccountRepository extends TenantRepository {
    * @return {Promise<void>}
    */
   async inactivateByIds(userIds: number[], trx): Promise<IAccount> {
-    const results = await this.model
-      .query(trx)
-      .whereIn('id', userIds)
-      .patch({ active: false });
+    const results = await this.model.query(trx).whereIn('id', userIds).patch({ active: false });
 
     this.flushCache();
     return results;
@@ -99,11 +93,7 @@ export default class AccountRepository extends TenantRepository {
    * @param trx
    * @returns
    */
-  findOrCreateAccountReceivable = async (
-    currencyCode: string = '',
-    extraAttrs = {},
-    trx?: Knex.Transaction
-  ) => {
+  findOrCreateAccountReceivable = async (currencyCode = '', extraAttrs = {}, trx?: Knex.Transaction) => {
     let result = await this.model
       .query(trx)
       .onBuild((query) => {
@@ -134,13 +124,8 @@ export default class AccountRepository extends TenantRepository {
    * @param {Knex.Transaction} trx
    * @returns
    */
-  async findOrCreateTaxPayable(
-    extraAttrs: Record<string, string> = {},
-    trx?: Knex.Transaction
-  ) {
-    let result = await this.model
-      .query(trx)
-      .findOne({ slug: TaxPayableAccount.slug, ...extraAttrs });
+  async findOrCreateTaxPayable(extraAttrs: Record<string, string> = {}, trx?: Knex.Transaction) {
+    let result = await this.model.query(trx).findOne({ slug: TaxPayableAccount.slug, ...extraAttrs });
 
     if (!result) {
       result = await this.model.query(trx).insertAndFetch({
@@ -151,11 +136,7 @@ export default class AccountRepository extends TenantRepository {
     return result;
   }
 
-  findOrCreateAccountsPayable = async (
-    currencyCode: string = '',
-    extraAttrs = {},
-    trx?: Knex.Transaction
-  ) => {
+  findOrCreateAccountsPayable = async (currencyCode = '', extraAttrs = {}, trx?: Knex.Transaction) => {
     let result = await this.model
       .query(trx)
       .onBuild((query) => {

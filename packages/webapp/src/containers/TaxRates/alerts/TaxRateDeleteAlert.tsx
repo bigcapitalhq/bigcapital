@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -72,21 +71,11 @@ function TaxRateDeleteAlert({
       onConfirm={handleConfirmDeleteItem}
       loading={isLoading}
     >
-      <p>
-        Once you delete this tax rate, you won't be able to restore the item
-        later.
-      </p>
+      <p>Once you delete this tax rate, you won't be able to restore the item later.</p>
 
-      <p>
-        Are you sure you want to delete ? If you're not sure, you can inactivate
-        it instead.
-      </p>
+      <p>Are you sure you want to delete ? If you're not sure, you can inactivate it instead.</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(TaxRateDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(TaxRateDeleteAlert);

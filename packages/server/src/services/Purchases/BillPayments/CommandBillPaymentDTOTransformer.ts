@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import { sumBy } from 'lodash';
 import { IBillPayment, IBillPaymentDTO, IVendor } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import { sumBy } from 'lodash';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class CommandBillPaymentDTOTransformer {
@@ -21,7 +21,7 @@ export class CommandBillPaymentDTOTransformer {
     tenantId: number,
     billPaymentDTO: IBillPaymentDTO,
     vendor: IVendor,
-    oldBillPayment?: IBillPayment
+    oldBillPayment?: IBillPayment,
   ): Promise<IBillPayment> {
     const initialDTO = {
       ...formatDateFields(billPaymentDTO, ['paymentDate']),
@@ -30,8 +30,6 @@ export class CommandBillPaymentDTOTransformer {
       exchangeRate: billPaymentDTO.exchangeRate || 1,
       entries: billPaymentDTO.entries,
     };
-    return R.compose(
-      this.branchDTOTransform.transformDTO<IBillPayment>(tenantId)
-    )(initialDTO);
+    return R.compose(this.branchDTOTransform.transformDTO<IBillPayment>(tenantId))(initialDTO);
   }
 }

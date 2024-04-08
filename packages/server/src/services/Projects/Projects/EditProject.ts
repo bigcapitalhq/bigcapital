@@ -1,16 +1,16 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
   IProjectEditDTO,
-  IProjectEditedEventPayload,
   IProjectEditEventPayload,
-  IProjectEditingEventPayload,
   IProjectEditPOJO,
+  IProjectEditedEventPayload,
+  IProjectEditingEventPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ProjectsValidator } from './ProjectsValidator';
 
 @Service()
@@ -36,7 +36,7 @@ export default class EditProjectService {
   public editProject = async (
     tenantId: number,
     projectId: number,
-    projectDTO: IProjectEditDTO
+    projectDTO: IProjectEditDTO,
   ): Promise<IProjectEditPOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
@@ -45,10 +45,7 @@ export default class EditProjectService {
 
     // Validate the project's contact id existance.
     if (oldProject.contactId !== projectDTO.contactId) {
-      await this.projectsValidator.validateContactExists(
-        tenantId,
-        projectDTO.contactId
-      );
+      await this.projectsValidator.validateContactExists(tenantId, projectDTO.contactId);
     }
     // Triggers `onProjectEdit` event.
     await this.eventPublisher.emitAsync(events.project.onEdit, {

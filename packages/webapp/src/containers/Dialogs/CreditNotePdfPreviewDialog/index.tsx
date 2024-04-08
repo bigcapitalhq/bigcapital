@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 
@@ -9,18 +8,12 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
-const PdfPreviewDialogContent = React.lazy(() =>
-  import('./CreditNotePdfPreviewDialogContent'),
-);
+const PdfPreviewDialogContent = React.lazy(() => import('./CreditNotePdfPreviewDialogContent'));
 
 /**
  * Credit note PDF previwe dialog.
  */
-function CreditNotePdfPreviewDialog({
-  dialogName,
-  payload = { creditNoteId: null },
-  isOpen,
-}) {
+function CreditNotePdfPreviewDialog({ dialogName, payload = { creditNoteId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -32,10 +25,7 @@ function CreditNotePdfPreviewDialog({
       style={{ width: '1000px' }}
     >
       <DialogSuspense>
-        <PdfPreviewDialogContent
-          dialogName={dialogName}
-          subscriptionForm={payload}
-        />
+        <PdfPreviewDialogContent dialogName={dialogName} subscriptionForm={payload} />
       </DialogSuspense>
     </Dialog>
   );

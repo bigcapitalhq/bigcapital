@@ -1,11 +1,11 @@
-import { Inject, Service } from 'typedi';
+import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import * as yup from 'yup';
 import { Importable } from '../Import/Importable';
-import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
-import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 import { ImportableContext } from '../Import/interfaces';
 import HasTenancyService from '../Tenancy/TenancyService';
+import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
 import { BankTransactionsSampleData } from './constants';
 
 @Service()
@@ -22,11 +22,7 @@ export class UncategorizedTransactionsImportable extends Importable {
    * @param {any} createDTO
    * @param {Knex.Transaction} trx
    */
-  public async importable(
-    tenantId: number,
-    createDTO: CreateUncategorizedTransactionDTO,
-    trx?: Knex.Transaction
-  ) {
+  public async importable(tenantId: number, createDTO: CreateUncategorizedTransactionDTO, trx?: Knex.Transaction) {
     return this.createUncategorizedTransaction.create(tenantId, createDTO, trx);
   }
 
@@ -38,7 +34,7 @@ export class UncategorizedTransactionsImportable extends Importable {
    */
   public transform(
     createDTO: CreateUncategorizedTransactionDTO,
-    context?: ImportableContext
+    context?: ImportableContext,
   ): CreateUncategorizedTransactionDTO {
     return {
       ...createDTO,
@@ -69,10 +65,7 @@ export class UncategorizedTransactionsImportable extends Importable {
    * @param {number} tenantId -
    * @param {Record<string, any>} params -
    */
-  public async validateParams(
-    tenantId: number,
-    params: Record<string, any>
-  ): Promise<void> {
+  public async validateParams(tenantId: number, params: Record<string, any>): Promise<void> {
     const { Account } = this.tenancy.models(tenantId);
 
     if (params.accountId) {

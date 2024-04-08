@@ -1,7 +1,7 @@
-import moment from 'moment';
-import SystemRepository from '@/system/repositories/SystemRepository';
-import { SystemUser } from '@/system/models';
 import { ISystemUser } from '@/interfaces';
+import { SystemUser } from '@/system/models';
+import SystemRepository from '@/system/repositories/SystemRepository';
+import moment from 'moment';
 
 export default class SystemUserRepository extends SystemRepository {
   /**
@@ -21,9 +21,7 @@ export default class SystemUserRepository extends SystemRepository {
     const cacheKey = this.getCacheKey('findByCrediential', crediential);
 
     return this.cache.get(cacheKey, () => {
-      return this.model.query()
-        .findOne('email', crediential)
-        .orWhere('phone_number', crediential);
+      return this.model.query().findOne('email', crediential).orWhere('phone_number', crediential);
     });
   }
 
@@ -37,8 +35,7 @@ export default class SystemUserRepository extends SystemRepository {
     const cacheKey = this.getCacheKey('findOneByIdAndTenant', userId, tenantId);
 
     return this.cache.get(cacheKey, () => {
-      return this.model.query()
-        .findOne({ id: userId, tenant_id: tenantId });
+      return this.model.query().findOne({ id: userId, tenant_id: tenantId });
     });
   }
 
@@ -64,8 +61,7 @@ export default class SystemUserRepository extends SystemRepository {
     const cacheKey = this.getCacheKey('findOneByPhoneNumber', phoneNumber);
 
     return this.cache.get(cacheKey, () => {
-      return this.model.query()
-        .findOne('phoneNumber', phoneNumber);
+      return this.model.query().findOne('phoneNumber', phoneNumber);
     });
   }
 
@@ -75,10 +71,7 @@ export default class SystemUserRepository extends SystemRepository {
    * @return {Promise<void>}
    */
   patchLastLoginAt(userId: number): Promise<void> {
-    return super.update(
-      { last_login_at: moment().toMySqlDateTime() },
-      { id: userId }
-    );
+    return super.update({ last_login_at: moment().toMySqlDateTime() }, { id: userId });
   }
 
   /**

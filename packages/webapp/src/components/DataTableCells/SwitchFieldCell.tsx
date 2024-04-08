@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { Classes, Switch, FormGroup, Intent } from '@blueprintjs/core';
@@ -34,10 +33,7 @@ const SwitchEditableCell = ({
   const error = payload.errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames(Classes.FILL)}
-    >
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames(Classes.FILL)}>
       <Switch
         value={value}
         onChange={onChange}

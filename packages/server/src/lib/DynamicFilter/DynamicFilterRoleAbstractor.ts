@@ -1,14 +1,12 @@
+import { IDynamicFilter, IFilterRole, IModel } from '@/interfaces';
 import moment from 'moment';
 import * as R from 'ramda';
-import { IFilterRole, IDynamicFilter, IModel } from '@/interfaces';
+import { Lexer } from '../LogicEvaluation/Lexer';
 import Parser from '../LogicEvaluation/Parser';
 import DynamicFilterQueryParser from './DynamicFilterQueryParser';
-import { Lexer } from '../LogicEvaluation/Lexer';
 import { COMPARATOR_TYPE, FIELD_TYPE } from './constants';
 
-export default abstract class DynamicFilterAbstractor
-  implements IDynamicFilter
-{
+export default abstract class DynamicFilterAbstractor implements IDynamicFilter {
   protected filterRoles: IFilterRole[] = [];
   protected tableName: string;
   protected model: IModel;
@@ -44,11 +42,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {Array} roles -
    * @return {Function}
    */
-  protected buildFilterRolesQuery = (
-    model: IModel,
-    roles: IFilterRole[],
-    logicExpression: string = ''
-  ) => {
+  protected buildFilterRolesQuery = (model: IModel, roles: IFilterRole[], logicExpression = '') => {
     const rolesIndexSet = this.convertRolesMapByIndex(model, roles);
 
     // Lexer for logic expression.
@@ -66,14 +60,11 @@ export default abstract class DynamicFilterAbstractor
 
   /**
    * Parses the logic expression to base expression.
-   * @param {string} logicExpression - 
+   * @param {string} logicExpression -
    * @return {string}
    */
   private parseLogicExpression(logicExpression: string): string {
-    return R.compose(
-      R.replace(/or|OR/g, '||'),
-      R.replace(/and|AND/g, '&&'),
-    )(logicExpression);
+    return R.compose(R.replace(/or|OR/g, '||'), R.replace(/and|AND/g, '&&'))(logicExpression);
   }
 
   /**
@@ -82,11 +73,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {Array} roles - Filter roles.
    * @param {String} logicExpression - Logic expression.
    */
-  protected buildFilterQuery = (
-    model: IModel,
-    roles: IFilterRole[],
-    logicExpression: string
-  ) => {
+  protected buildFilterQuery = (model: IModel, roles: IFilterRole[], logicExpression: string) => {
     const basicExpression = this.parseLogicExpression(logicExpression);
 
     return (builder) => {
@@ -103,9 +90,7 @@ export default abstract class DynamicFilterAbstractor
     if (relation) {
       const relationModel = relation.modelClass;
       const relationColumn =
-        field.relationEntityKey === 'id'
-          ? 'id'
-          : relationModel.getField(field.relationEntityKey, 'column');
+        field.relationEntityKey === 'id' ? 'id' : relationModel.getField(field.relationEntityKey, 'column');
 
       return `${relationModel.tableName}.${relationColumn}`;
     }
@@ -157,10 +142,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn
    * @returns
    */
-  protected booleanRoleQueryBuilder = (
-    role: IFilterRole,
-    comparatorColumn: string
-  ) => {
+  protected booleanRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUALS:
       case COMPARATOR_TYPE.EQUAL:
@@ -184,10 +166,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn
    * @returns
    */
-  protected numberRoleQueryBuilder = (
-    role: IFilterRole,
-    comparatorColumn: string
-  ) => {
+  protected numberRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUALS:
       case COMPARATOR_TYPE.EQUAL:
@@ -227,10 +206,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn
    * @returns {Function}
    */
-  protected textRoleQueryBuilder = (
-    role: IFilterRole,
-    comparatorColumn: string
-  ) => {
+  protected textRoleQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.EQUAL:
       case COMPARATOR_TYPE.EQUALS:
@@ -265,7 +241,6 @@ export default abstract class DynamicFilterAbstractor
         return (builder) => {
           builder.where(comparatorColumn, 'LIKE', `%${role.value}`);
         };
-
     }
   };
 
@@ -275,10 +250,7 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn
    * @returns {Function}
    */
-  protected dateQueryBuilder = (
-    role: IFilterRole,
-    comparatorColumn: string
-  ) => {
+  protected dateQueryBuilder = (role: IFilterRole, comparatorColumn: string) => {
     switch (role.comparator) {
       case COMPARATOR_TYPE.AFTER:
       case COMPARATOR_TYPE.BEFORE:
@@ -298,16 +270,8 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn
    * @param builder
    */
-  protected dateQueryInComparator = (
-    role: IFilterRole,
-    comparatorColumn: string,
-    builder
-  ) => {
-    const hasTimeFormat = moment(
-      role.value,
-      'YYYY-MM-DD HH:MM',
-      true
-    ).isValid();
+  protected dateQueryInComparator = (role: IFilterRole, comparatorColumn: string, builder) => {
+    const hasTimeFormat = moment(role.value, 'YYYY-MM-DD HH:MM', true).isValid();
     const dateFormat = 'YYYY-MM-DD HH:MM:SS';
 
     if (hasTimeFormat) {
@@ -328,17 +292,9 @@ export default abstract class DynamicFilterAbstractor
    * @param {string} comparatorColumn - Column.
    * @param builder
    */
-  protected dateQueryAfterBeforeComparator = (
-    role: IFilterRole,
-    comparatorColumn: string,
-    builder
-  ) => {
+  protected dateQueryAfterBeforeComparator = (role: IFilterRole, comparatorColumn: string, builder) => {
     const comparator = role.comparator === COMPARATOR_TYPE.BEFORE ? '<' : '>';
-    const hasTimeFormat = moment(
-      role.value,
-      'YYYY-MM-DD HH:MM',
-      true
-    ).isValid();
+    const hasTimeFormat = moment(role.value, 'YYYY-MM-DD HH:MM', true).isValid();
     const targetDate = moment(role.value);
     const dateFormat = 'YYYY-MM-DD HH:MM:SS';
 
@@ -360,15 +316,9 @@ export default abstract class DynamicFilterAbstractor
    */
   protected setRelationIfRelationField = (fieldKey: string): void => {
     const field = this.model.getField(fieldKey);
-    const isAlreadyRegistered = this.relationFields.some(
-      (field) => field === fieldKey
-    );
+    const isAlreadyRegistered = this.relationFields.some((field) => field === fieldKey);
 
-    if (
-      !isAlreadyRegistered &&
-      field &&
-      field.fieldType === FIELD_TYPE.RELATION
-    ) {
+    if (!isAlreadyRegistered && field && field.fieldType === FIELD_TYPE.RELATION) {
       this.relationFields.push(field.relationKey);
     }
   };

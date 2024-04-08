@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -11,12 +10,7 @@ import ItemPreferencesForm from './ItemPreferencesForm';
 import { useItemPreferencesFormContext } from './ItemPreferencesFormProvider';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import withSettings from '@/containers/Settings/withSettings';
-import {
-  compose,
-  optionsMapToArray,
-  transformGeneralSettings,
-  transformToForm,
-} from '@/utils';
+import { compose, optionsMapToArray, transformGeneralSettings, transformToForm } from '@/utils';
 
 import '@/style/pages/Preferences/Accounting.scss';
 
@@ -39,10 +33,7 @@ function ItemPreferencesFormPage({
   // Initial values.
   const initialValues = {
     ...defaultFormValues,
-    ...transformToForm(
-      transformGeneralSettings(itemsSettings),
-      defaultFormValues,
-    ),
+    ...transformToForm(transformGeneralSettings(itemsSettings), defaultFormValues),
   };
 
   useEffect(() => {

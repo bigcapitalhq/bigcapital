@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/CustomerOpeningBalance/CustomerOpeningBalance.scss';
@@ -16,10 +15,7 @@ export default function CustomerOpeningBalanceDialogContent({
   customerId,
 }) {
   return (
-    <CustomerOpeningBalanceFormProvider
-      customerId={customerId}
-      dialogName={dialogName}
-    >
+    <CustomerOpeningBalanceFormProvider customerId={customerId} dialogName={dialogName}>
       <CustomerOpeningBalanceForm />
     </CustomerOpeningBalanceFormProvider>
   );

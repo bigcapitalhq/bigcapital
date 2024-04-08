@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { removeSeparators } from '../removeSeparators';
 
 describe('removeSeparators', () => {

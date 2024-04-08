@@ -8,9 +8,7 @@ interface AccountDrawerTableOptionsContextValue {
   currencyType: ForeignCurrencyType;
 }
 
-const AccountDrawerTableOptionsContext = React.createContext(
-  {} as AccountDrawerTableOptionsContextValue,
-);
+const AccountDrawerTableOptionsContext = React.createContext({} as AccountDrawerTableOptionsContextValue);
 
 enum ForeignCurrencyTypes {
   FCY = 'FCY',
@@ -18,21 +16,11 @@ enum ForeignCurrencyTypes {
 }
 type ForeignCurrencyType = ForeignCurrencyTypes.FCY | ForeignCurrencyTypes.BCY;
 
-function AccountDrawerTableOptionsProvider({
-  initialCurrencyType = ForeignCurrencyTypes.FCY,
-  ...props
-}) {
-  const [currencyType, setCurrentType] =
-    useState<ForeignCurrencyType>(initialCurrencyType);
+function AccountDrawerTableOptionsProvider({ initialCurrencyType = ForeignCurrencyTypes.FCY, ...props }) {
+  const [currencyType, setCurrentType] = useState<ForeignCurrencyType>(initialCurrencyType);
 
-  const setFYCCurrencyType = useCallback(
-    () => setCurrentType(ForeignCurrencyTypes.FCY),
-    [setCurrentType],
-  );
-  const setBCYCurrencyType = useCallback(
-    () => setCurrentType(ForeignCurrencyTypes.BCY),
-    [setCurrentType],
-  );
+  const setFYCCurrencyType = useCallback(() => setCurrentType(ForeignCurrencyTypes.FCY), [setCurrentType]);
+  const setBCYCurrencyType = useCallback(() => setCurrentType(ForeignCurrencyTypes.BCY), [setCurrentType]);
 
   // Provider.
   const provider = {
@@ -43,15 +31,9 @@ function AccountDrawerTableOptionsProvider({
     currencyType,
   };
 
-  return (
-    <AccountDrawerTableOptionsContext.Provider value={provider} {...props} />
-  );
+  return <AccountDrawerTableOptionsContext.Provider value={provider} {...props} />;
 }
 
-const useAccountDrawerTableOptionsContext = () =>
-  React.useContext(AccountDrawerTableOptionsContext);
+const useAccountDrawerTableOptionsContext = () => React.useContext(AccountDrawerTableOptionsContext);
 
-export {
-  AccountDrawerTableOptionsProvider,
-  useAccountDrawerTableOptionsContext,
-};
+export { AccountDrawerTableOptionsProvider, useAccountDrawerTableOptionsContext };

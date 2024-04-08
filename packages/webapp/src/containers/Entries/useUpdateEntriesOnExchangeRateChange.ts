@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { round } from 'lodash';
@@ -11,10 +10,7 @@ import { updateItemsEntriesTotal } from './utils';
  * @param {number} exchangeRate
  * @returns {number}
  */
-export const convertToForeignCurrency = (
-  rate: number,
-  exchangeRate: number,
-) => {
+export const convertToForeignCurrency = (rate: number, exchangeRate: number) => {
   return rate * exchangeRate;
 };
 
@@ -36,11 +32,7 @@ export const covertToBaseCurrency = (rate: number, exchangeRate: number) => {
  * @param {number} newExchangeRate - New exchange rate.
  * @returns {number}
  */
-const revertAndConvertExchangeRate = (
-  rate: number,
-  oldExchangeRate: number,
-  newExchangeRate: number,
-) => {
+const revertAndConvertExchangeRate = (rate: number, oldExchangeRate: number, newExchangeRate: number) => {
   const oldValue = convertToForeignCurrency(rate, oldExchangeRate);
   const newValue = covertToBaseCurrency(oldValue, newExchangeRate);
 
@@ -57,11 +49,7 @@ const assignRateRevertAndCovertExchangeRate = R.curry(
   (oldExchangeRate: number, newExchangeRate: number, entries: IITemEntry[]) => {
     return entries.map((entry) => ({
       ...entry,
-      rate: revertAndConvertExchangeRate(
-        entry.rate,
-        oldExchangeRate,
-        newExchangeRate,
-      ),
+      rate: revertAndConvertExchangeRate(entry.rate, oldExchangeRate, newExchangeRate),
     }));
   },
 );

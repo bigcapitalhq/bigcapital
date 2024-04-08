@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
 import { ServiceError } from '@/exceptions';
+import { NextFunction, Request, Response } from 'express';
 
 /**
  * Handles branches integration service errors.
@@ -8,12 +8,7 @@ import { ServiceError } from '@/exceptions';
  * @param {Response} res
  * @param {NextFunction} next
  */
-export function BranchIntegrationErrorsMiddleware(
-  error: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export function BranchIntegrationErrorsMiddleware(error: Error, req: Request, res: Response, next: NextFunction) {
   if (error instanceof ServiceError) {
     if (error.errorType === 'WAREHOUSE_ID_NOT_FOUND') {
       return res.boom.badRequest(null, {

@@ -1,31 +1,11 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  Intent,
-  Tag,
-  Menu,
-  MenuItem,
-  MenuDivider,
-  ProgressBar,
-} from '@blueprintjs/core';
+import { Intent, Tag, Menu, MenuItem, MenuDivider, ProgressBar } from '@blueprintjs/core';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  AppToaster,
-  Choose,
-  If,
-  Icon,
-  Can,
-} from '@/components';
+import { FormatDateCell, FormattedMessage as T, AppToaster, Choose, If, Icon, Can } from '@/components';
 import { formattedAmount, safeCallback, calculateStatus } from '@/utils';
-import {
-  SaleInvoiceAction,
-  PaymentReceiveAction,
-  AbilitySubject,
-} from '@/constants/abilityOption';
+import { SaleInvoiceAction, PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption';
 
 export function InvoiceStatus({ invoice }) {
   return (
@@ -34,7 +14,7 @@ export function InvoiceStatus({ invoice }) {
         <span className={'fully-paid-icon'}>
           <Icon icon="small-tick" iconSize={18} />
         </span>
-        <span class="fully-paid-text">
+        <span className="fully-paid-text">
           <T id={'paid'} />
         </span>
       </Choose.When>
@@ -42,19 +22,15 @@ export function InvoiceStatus({ invoice }) {
       <Choose.When condition={invoice.is_delivered}>
         <Choose>
           <Choose.When condition={invoice.is_overdue}>
-            <span className={'overdue-status'}>
-              {intl.get('overdue_by', { overdue: invoice.overdue_days })}
-            </span>
+            <span className={'overdue-status'}>{intl.get('overdue_by', { overdue: invoice.overdue_days })}</span>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'due-status'}>
-              {intl.get('due_in', { due: invoice.remaining_days })}
-            </span>
+            <span className={'due-status'}>{intl.get('due_in', { due: invoice.remaining_days })}</span>
           </Choose.Otherwise>
         </Choose>
 
         <If condition={invoice.is_partially_paid}>
-          <span class="partial-paid">
+          <span className="partial-paid">
             {intl.get('day_partially_paid', {
               due: formattedAmount(invoice.due_amount, invoice.currency_code),
             })}
@@ -85,51 +61,28 @@ export const statusAccessor = (row) => {
 };
 
 export const handleDeleteErrors = (errors) => {
-  if (
-    errors.find(
-      (error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'INVOICE_HAS_ASSOCIATED_PAYMENT_ENTRIES')) {
     AppToaster.show({
       message: intl.get('the_invoice_cannot_be_deleted'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find(
-      (error) => error.type === 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'INVOICE_AMOUNT_SMALLER_THAN_PAYMENT_AMOUNT')) {
     AppToaster.show({
       message: intl.get('the_payment_amount_that_received'),
       intent: Intent.DANGER,
     });
   }
-  if (
-    errors.find(
-      (error) => error.type === 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES',
-    )
-  ) {
+  if (errors.find((error) => error.type === 'SALE_INVOICE_HAS_APPLIED_TO_CREDIT_NOTES')) {
     AppToaster.show({
-      message: intl.get(
-        'invoices.error.you_couldn_t_delete_sale_invoice_that_has_reconciled',
-      ),
+      message: intl.get('invoices.error.you_couldn_t_delete_sale_invoice_that_has_reconciled'),
       intent: Intent.DANGER,
     });
   }
 };
 
 export function ActionsMenu({
-  payload: {
-    onEdit,
-    onDeliver,
-    onDelete,
-    onConvert,
-    onQuick,
-    onViewDetails,
-    onPrint,
-    onSendMail
-  },
+  payload: { onEdit, onDeliver, onDelete, onConvert, onQuick, onViewDetails, onPrint, onSendMail },
   row: { original },
 }) {
   return (

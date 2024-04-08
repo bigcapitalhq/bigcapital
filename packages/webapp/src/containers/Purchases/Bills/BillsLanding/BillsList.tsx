@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { DashboardPageContent } from '@/components';
 
@@ -35,10 +34,7 @@ function BillsList({
   );
 
   return (
-    <BillsListProvider
-      query={transformTableStateToQuery(billsTableState)}
-      tableStateChanged={billsTableStateChanged}
-    >
+    <BillsListProvider query={transformTableStateToQuery(billsTableState)} tableStateChanged={billsTableStateChanged}>
       <BillsActionsBar />
 
       <DashboardPageContent>

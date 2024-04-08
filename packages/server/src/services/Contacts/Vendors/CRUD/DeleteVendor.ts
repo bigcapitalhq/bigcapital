@@ -1,15 +1,11 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import {
-  ISystemUser,
-  IVendorEventDeletedPayload,
-  IVendorEventDeletingPayload,
-} from '@/interfaces';
+import { ISystemUser, IVendorEventDeletedPayload, IVendorEventDeletingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
-import UnitOfWork from '@/services/UnitOfWork';
-import { ERRORS } from '../constants';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from '../constants';
 
 @Service()
 export class DeleteVendor {
@@ -28,11 +24,7 @@ export class DeleteVendor {
    * @param  {number} vendorId
    * @return {Promise<void>}
    */
-  public async deleteVendor(
-    tenantId: number,
-    vendorId: number,
-    authorizedUser: ISystemUser
-  ) {
+  public async deleteVendor(tenantId: number, vendorId: number, authorizedUser: ISystemUser) {
     const { Contact } = this.tenancy.models(tenantId);
 
     // Retrieves the old vendor or throw not found service error.

@@ -49,9 +49,7 @@ exports.up = (knex) => {
       table.decimal('exchange_rate', 13, 9).after('currency_code');
     })
     .table('contacts', (table) => {
-      table
-        .decimal('opening_balance_exchange_rate', 13, 9)
-        .after('opening_balance_at');
+      table.decimal('opening_balance_exchange_rate', 13, 9).after('opening_balance_at');
     })
     .table('items', (table) => {
       table.dropColumn('currency_code');

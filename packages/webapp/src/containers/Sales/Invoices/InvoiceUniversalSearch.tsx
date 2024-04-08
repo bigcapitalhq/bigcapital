@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -28,9 +27,7 @@ function InvoiceUniversalSearchSelectComponent({
   return null;
 }
 
-export const InvoiceUniversalSearchSelect = withDrawerActions(
-  InvoiceUniversalSearchSelectComponent,
-);
+export const InvoiceUniversalSearchSelect = withDrawerActions(InvoiceUniversalSearchSelectComponent);
 
 /**
  * Invoice status.
@@ -39,7 +36,7 @@ function InvoiceStatus({ customer }) {
   return (
     <Choose>
       <Choose.When condition={customer.is_fully_paid && customer.is_delivered}>
-        <span class="status status-success">
+        <span className="status status-success">
           <T id={'paid'} />
         </span>
       </Choose.When>
@@ -52,14 +49,12 @@ function InvoiceStatus({ customer }) {
             </span>
           </Choose.When>
           <Choose.Otherwise>
-            <span className={'status status-warning'}>
-              {intl.get('due_in', { due: customer.remaining_days })}
-            </span>
+            <span className={'status status-warning'}>{intl.get('due_in', { due: customer.remaining_days })}</span>
           </Choose.Otherwise>
         </Choose>
       </Choose.When>
       <Choose.Otherwise>
-        <span class="status status--gray">
+        <span className="status status--gray">
           <T id={'draft'} />
         </span>
       </Choose.Otherwise>
@@ -70,26 +65,22 @@ function InvoiceStatus({ customer }) {
 /**
  * Universal search invoice item.
  */
-export function InvoiceUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function InvoiceUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
       text={
         <div>
           <div>{highlightText(item.text, query)}</div>
-          <span class="bp4-text-muted">
-            {highlightText(item.reference.invoice_no, query)}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+          <span className="bp4-text-muted">
+            {highlightText(item.reference.invoice_no, query)} <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.invoice_date_formatted}
           </span>
         </div>
       }
       label={
         <>
-          <div class="amount">{item.reference.total_formatted}</div>
+          <div className="amount">{item.reference.total_formatted}</div>
           <InvoiceStatus customer={item.reference} />
         </>
       }

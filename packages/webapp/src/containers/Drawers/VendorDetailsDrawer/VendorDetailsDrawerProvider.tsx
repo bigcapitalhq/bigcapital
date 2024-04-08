@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useVendor } from '@/hooks/query';
@@ -23,16 +22,12 @@ function VendorDetailsDrawerProvider({ vendorId, ...props }) {
 
   return (
     <DrawerLoading loading={isVendorLoading}>
-      <DrawerHeaderContent
-        name={DRAWERS.VENDOR_DETAILS}
-        title={vendor?.display_name}
-      />
+      <DrawerHeaderContent name={DRAWERS.VENDOR_DETAILS} title={vendor?.display_name} />
       <VendorDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );
 }
 
-const useVendorDetailsDrawerContext = () =>
-  React.useContext(VendorDetailDrawerContext);
+const useVendorDetailsDrawerContext = () => React.useContext(VendorDetailDrawerContext);
 
 export { VendorDetailsDrawerProvider, useVendorDetailsDrawerContext };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import keyboardShortcuts from '@/constants/keyboardShortcutsOptions';
 import { useAbilitiesFilter } from '../utils/useAbilityContext';
@@ -9,8 +8,5 @@ import { useAbilitiesFilter } from '../utils/useAbilityContext';
 export const useKeywordShortcuts = () => {
   const abilitiesFilter = useAbilitiesFilter();
 
-  return React.useMemo(
-    () => abilitiesFilter(keyboardShortcuts),
-    [abilitiesFilter],
-  );
+  return React.useMemo(() => abilitiesFilter(keyboardShortcuts), [abilitiesFilter]);
 };

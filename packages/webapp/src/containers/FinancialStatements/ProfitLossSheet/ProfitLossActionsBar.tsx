@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   NavbarGroup,
@@ -72,13 +71,7 @@ function ProfitLossActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            profitLossDrawerFilter ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={profitLossDrawerFilter ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           onClick={handleFilterClick}
           active={profitLossDrawerFilter}
         />

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { useCreateInviteUser, useUsers, useRoles } from '@/hooks/query';
 import { DialogContent } from '@/components';
@@ -29,10 +28,7 @@ function InviteUserFormProvider({ userId, isEditMode, dialogName, ...props }) {
   };
 
   return (
-    <DialogContent
-      isLoading={isUsersLoading || isRolesLoading}
-      name={'invite-form'}
-    >
+    <DialogContent isLoading={isUsersLoading || isRolesLoading} name={'invite-form'}>
       <InviteUserFormContext.Provider value={provider} {...props} />
     </DialogContent>
   );

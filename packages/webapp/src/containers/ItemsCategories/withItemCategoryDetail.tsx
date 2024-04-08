@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getItemCategoryByIdFactory } from '@/store/itemCategories/ItemsCategories.selectors';
 

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRef, useEffect, useMemo } from 'react';
 import { useLocation, useHistory } from 'react-router';
 import useAutofocus from './useAutofocus';
@@ -27,16 +27,13 @@ const isCurrentFocus = (autoFocus, columnId, rowIndex) => {
     _columnId = autoFocus[0];
     _rowIndex = autoFocus[1] || 0;
   }
-  _rowIndex = parseInt(_rowIndex, 10);
+  _rowIndex = Number.parseInt(_rowIndex, 10);
 
   return columnId === _columnId && _rowIndex === rowIndex;
 };
 
 export function useCellAutoFocus(ref, autoFocus, columnId, rowIndex) {
-  const focus = useMemo(
-    () => isCurrentFocus(autoFocus, columnId, rowIndex),
-    [autoFocus, columnId, rowIndex],
-  );
+  const focus = useMemo(() => isCurrentFocus(autoFocus, columnId, rowIndex), [autoFocus, columnId, rowIndex]);
   useEffect(() => {
     if (ref.current && focus) {
       ref.current.focus();

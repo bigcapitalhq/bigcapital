@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DashboardInsider } from '@/components';
 import { ImportView } from '@/containers/Import/ImportView';
 import { useHistory, useParams } from 'react-router-dom';
@@ -8,14 +8,10 @@ export default function ImportUncategorizedTransactions() {
   const params = useParams();
 
   const handleImportSuccess = () => {
-    history.push(
-      `/cashflow-accounts/${params.id}/transactions?filter=uncategorized`,
-    );
+    history.push(`/cashflow-accounts/${params.id}/transactions?filter=uncategorized`);
   };
   const handleCnacelBtnClick = () => {
-    history.push(
-      `/cashflow-accounts/${params.id}/transactions?filter=uncategorized`,
-    );
+    history.push(`/cashflow-accounts/${params.id}/transactions?filter=uncategorized`);
   };
 
   return (

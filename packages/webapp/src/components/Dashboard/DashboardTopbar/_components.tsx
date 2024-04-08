@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Classes } from '@blueprintjs/core';
 import { useGetUniversalSearchTypeOptions } from '@/containers/UniversalSearch/utils';
@@ -6,7 +5,7 @@ import { Icon, FormattedMessage as T } from '@/components';
 
 export function DashboardTopbarSubscriptionMessage() {
   return (
-    <div class="dashboard__topbar-subscription-msg">
+    <div className="dashboard__topbar-subscription-msg">
       <span>
         <T id={'dashboard.subscription_msg.period_over'} />
       </span>
@@ -17,14 +16,7 @@ export function DashboardTopbarSubscriptionMessage() {
 export function DashboardHamburgerButton({ ...props }) {
   return (
     <Button minimal={true} {...props}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        role="img"
-        focusable="false"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" role="img" focusable="false">
         <title>
           <T id={'menu'} />
         </title>

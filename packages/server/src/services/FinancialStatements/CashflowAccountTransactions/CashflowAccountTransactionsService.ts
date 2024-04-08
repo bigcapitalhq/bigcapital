@@ -1,15 +1,15 @@
-import { Service, Inject } from 'typedi';
-import { includes } from 'lodash';
-import * as qim from 'qim';
-import { ICashflowAccountTransactionsQuery, IAccount } from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import FinancialSheet from '../FinancialSheet';
-import CashflowAccountTransactionsRepo from './CashflowAccountTransactionsRepo';
-import CashflowAccountTransactionsReport from './CashflowAccountTransactions';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
+import { IAccount, ICashflowAccountTransactionsQuery } from '@/interfaces';
 import I18nService from '@/services/I18n/I18nService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { includes } from 'lodash';
+import * as qim from 'qim';
+import { Inject, Service } from 'typedi';
+import FinancialSheet from '../FinancialSheet';
+import CashflowAccountTransactionsReport from './CashflowAccountTransactions';
+import CashflowAccountTransactionsRepo from './CashflowAccountTransactionsRepo';
+import { ERRORS } from './constants';
 
 @Service()
 export default class CashflowAccountTransactionsService extends FinancialSheet {
@@ -46,10 +46,7 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
    * @param {ICashflowAccountTransactionsQuery} query -
    * @return {Promise<IInvetoryItemDetailDOO>}
    */
-  public async cashflowAccountTransactions(
-    tenantId: number,
-    query: ICashflowAccountTransactionsQuery
-  ) {
+  public async cashflowAccountTransactions(tenantId: number, query: ICashflowAccountTransactionsQuery) {
     const { Account } = this.tenancy.models(tenantId);
     const parsedQuery = { ...this.defaultQuery, ...query };
 
@@ -60,32 +57,22 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
     this.validateCashflowAccountType(account);
 
     // Retrieve the cashflow account transactions.
-    const { results: transactions, pagination } =
-      await this.cashflowTransactionsRepo.getCashflowAccountTransactions(
-        tenantId,
-        parsedQuery
-      );
-    // Retrieve the cashflow account opening balance.
-    const openingBalance =
-      await this.cashflowTransactionsRepo.getCashflowAccountOpeningBalance(
-        tenantId,
-        parsedQuery.accountId,
-        pagination
-      );
-    // Retrieve the computed report.
-    const report = new CashflowAccountTransactionsReport(
-      transactions,
-      openingBalance,
-      parsedQuery
+    const { results: transactions, pagination } = await this.cashflowTransactionsRepo.getCashflowAccountTransactions(
+      tenantId,
+      parsedQuery,
     );
+    // Retrieve the cashflow account opening balance.
+    const openingBalance = await this.cashflowTransactionsRepo.getCashflowAccountOpeningBalance(
+      tenantId,
+      parsedQuery.accountId,
+      pagination,
+    );
+    // Retrieve the computed report.
+    const report = new CashflowAccountTransactionsReport(transactions, openingBalance, parsedQuery);
     const reportTranasctions = report.reportData();
 
     return {
-      transactions: this.i18nService.i18nApply(
-        [[qim.$each, 'formattedTransactionType']],
-        reportTranasctions,
-        tenantId
-      ),
+      transactions: this.i18nService.i18nApply([[qim.$each, 'formattedTransactionType']], reportTranasctions, tenantId),
       pagination,
     };
   }
@@ -95,11 +82,7 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
    * @param {IAccount} account -
    */
   private validateCashflowAccountType(account: IAccount) {
-    const cashflowTypes = [
-      ACCOUNT_TYPE.CASH,
-      ACCOUNT_TYPE.CREDIT_CARD,
-      ACCOUNT_TYPE.BANK,
-    ];
+    const cashflowTypes = [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.CREDIT_CARD, ACCOUNT_TYPE.BANK];
 
     if (!includes(cashflowTypes, account.accountType)) {
       throw new ServiceError(ERRORS.ACCOUNT_ID_HAS_INVALID_TYPE);

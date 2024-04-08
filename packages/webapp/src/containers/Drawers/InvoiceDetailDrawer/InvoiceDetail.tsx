@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
@@ -20,24 +19,10 @@ function InvoiceDetailsTabs() {
   const ability = useAbilityContext();
 
   return (
-    <DrawerMainTabs
-      renderActiveTabPanelOnly={true}
-      defaultSelectedTabId="details"
-    >
-      <Tab
-        title={intl.get('overview')}
-        id={'details'}
-        panel={<InvoiceDetailTab />}
-      />
-      <Tab
-        title={intl.get('journal_entries')}
-        id={'journal_entries'}
-        panel={<InvoiceGLEntriesTable />}
-      />
-      {ability.can(
-        PaymentReceiveAction.View,
-        AbilitySubject.PaymentReceive,
-      ) && (
+    <DrawerMainTabs renderActiveTabPanelOnly={true} defaultSelectedTabId="details">
+      <Tab title={intl.get('overview')} id={'details'} panel={<InvoiceDetailTab />} />
+      <Tab title={intl.get('journal_entries')} id={'journal_entries'} panel={<InvoiceGLEntriesTable />} />
+      {ability.can(PaymentReceiveAction.View, AbilitySubject.PaymentReceive) && (
         <Tab
           title={intl.get('payment_transactions')}
           id={'payment_transactions'}

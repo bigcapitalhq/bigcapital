@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { CreateSaleReceipt } from './CreateSaleReceipt';
 import {
   IFilterMeta,
   IPaginationMeta,
@@ -8,14 +6,16 @@ import {
   SaleReceiptMailOpts,
   SaleReceiptMailOptsDTO,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { CloseSaleReceipt } from './CloseSaleReceipt';
+import { CreateSaleReceipt } from './CreateSaleReceipt';
+import { DeleteSaleReceipt } from './DeleteSaleReceipt';
 import { EditSaleReceipt } from './EditSaleReceipt';
 import { GetSaleReceipt } from './GetSaleReceipt';
-import { DeleteSaleReceipt } from './DeleteSaleReceipt';
 import { GetSaleReceipts } from './GetSaleReceipts';
-import { CloseSaleReceipt } from './CloseSaleReceipt';
-import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
-import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
 import { SaleReceiptMailNotification } from './SaleReceiptMailNotification';
+import { SaleReceiptNotifyBySms } from './SaleReceiptNotifyBySms';
+import { SaleReceiptsPdf } from './SaleReceiptsPdfService';
 
 @Service()
 export class SaleReceiptApplication {
@@ -52,14 +52,8 @@ export class SaleReceiptApplication {
    * @param {} saleReceiptDTO
    * @returns {Promise<ISaleReceipt>}
    */
-  public async createSaleReceipt(
-    tenantId: number,
-    saleReceiptDTO: any
-  ): Promise<ISaleReceipt> {
-    return this.createSaleReceiptService.createSaleReceipt(
-      tenantId,
-      saleReceiptDTO
-    );
+  public async createSaleReceipt(tenantId: number, saleReceiptDTO: any): Promise<ISaleReceipt> {
+    return this.createSaleReceiptService.createSaleReceipt(tenantId, saleReceiptDTO);
   }
 
   /**
@@ -69,16 +63,8 @@ export class SaleReceiptApplication {
    * @param {} saleReceiptDTO
    * @returns
    */
-  public async editSaleReceipt(
-    tenantId: number,
-    saleReceiptId: number,
-    saleReceiptDTO: any
-  ) {
-    return this.editSaleReceiptService.editSaleReceipt(
-      tenantId,
-      saleReceiptId,
-      saleReceiptDTO
-    );
+  public async editSaleReceipt(tenantId: number, saleReceiptId: number, saleReceiptDTO: any) {
+    return this.editSaleReceiptService.editSaleReceipt(tenantId, saleReceiptId, saleReceiptDTO);
   }
 
   /**
@@ -98,10 +84,7 @@ export class SaleReceiptApplication {
    * @returns
    */
   public async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
-    return this.deleteSaleReceiptService.deleteSaleReceipt(
-      tenantId,
-      saleReceiptId
-    );
+    return this.deleteSaleReceiptService.deleteSaleReceipt(tenantId, saleReceiptId);
   }
 
   /**
@@ -112,7 +95,7 @@ export class SaleReceiptApplication {
    */
   public async getSaleReceipts(
     tenantId: number,
-    filterDTO: ISalesReceiptsFilter
+    filterDTO: ISalesReceiptsFilter,
   ): Promise<{
     data: ISaleReceipt[];
     pagination: IPaginationMeta;
@@ -128,10 +111,7 @@ export class SaleReceiptApplication {
    * @returns {Promise<void>}
    */
   public async closeSaleReceipt(tenantId: number, saleReceiptId: number) {
-    return this.closeSaleReceiptService.closeSaleReceipt(
-      tenantId,
-      saleReceiptId
-    );
+    return this.closeSaleReceiptService.closeSaleReceipt(tenantId, saleReceiptId);
   }
 
   /**
@@ -141,10 +121,7 @@ export class SaleReceiptApplication {
    * @returns
    */
   public getSaleReceiptPdf(tenantId: number, saleReceiptId: number) {
-    return this.getSaleReceiptPdfService.saleReceiptPdf(
-      tenantId,
-      saleReceiptId
-    );
+    return this.getSaleReceiptPdfService.saleReceiptPdf(tenantId, saleReceiptId);
   }
 
   /**
@@ -154,10 +131,7 @@ export class SaleReceiptApplication {
    * @returns
    */
   public saleReceiptNotifyBySms(tenantId: number, saleReceiptId: number) {
-    return this.saleReceiptNotifyBySmsService.notifyBySms(
-      tenantId,
-      saleReceiptId
-    );
+    return this.saleReceiptNotifyBySmsService.notifyBySms(tenantId, saleReceiptId);
   }
 
   /**
@@ -167,10 +141,7 @@ export class SaleReceiptApplication {
    * @returns
    */
   public getSaleReceiptSmsDetails(tenantId: number, saleReceiptId: number) {
-    return this.saleReceiptNotifyBySmsService.smsDetails(
-      tenantId,
-      saleReceiptId
-    );
+    return this.saleReceiptNotifyBySmsService.smsDetails(tenantId, saleReceiptId);
   }
 
   /**
@@ -183,13 +154,9 @@ export class SaleReceiptApplication {
   public sendSaleReceiptMail(
     tenantId: number,
     saleReceiptId: number,
-    messageOpts: SaleReceiptMailOptsDTO
+    messageOpts: SaleReceiptMailOptsDTO,
   ): Promise<void> {
-    return this.saleReceiptNotifyByMailService.triggerMail(
-      tenantId,
-      saleReceiptId,
-      messageOpts
-    );
+    return this.saleReceiptNotifyByMailService.triggerMail(tenantId, saleReceiptId, messageOpts);
   }
 
   /**
@@ -198,13 +165,7 @@ export class SaleReceiptApplication {
    * @param {number} saleReceiptId
    * @returns {Promise<SaleReceiptMailOpts>}
    */
-  public getSaleReceiptMail(
-    tenantId: number,
-    saleReceiptId: number
-  ): Promise<SaleReceiptMailOpts> {
-    return this.saleReceiptNotifyByMailService.getMailOptions(
-      tenantId,
-      saleReceiptId
-    );
+  public getSaleReceiptMail(tenantId: number, saleReceiptId: number): Promise<SaleReceiptMailOpts> {
+    return this.saleReceiptNotifyByMailService.getMailOptions(tenantId, saleReceiptId);
   }
 }

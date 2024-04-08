@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 
@@ -36,10 +35,7 @@ export const useJournalQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseJournalQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseJournalQuery(locationQuery), [locationQuery]);
 
   return {
     query,

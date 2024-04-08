@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
@@ -24,15 +23,12 @@ function CustomerBulkDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
 
   // handle cancel delete  alert.
   const handleCancelDeleteAlert = () => {
     closeAlert(name);
   };
-
-
 
   // Handle confirm customers bulk delete.
   const handleConfirmBulkDelete = useCallback(() => {
@@ -71,7 +67,4 @@ function CustomerBulkDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CustomerBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CustomerBulkDeleteAlert);

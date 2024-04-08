@@ -1,9 +1,9 @@
 import {
   IAgingPeriod,
-  IAgingSummaryQuery,
-  IAgingSummaryTotal,
   IAgingSummaryContact,
   IAgingSummaryData,
+  IAgingSummaryQuery,
+  IAgingSummaryTotal,
 } from './AgingReport';
 import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
@@ -24,7 +24,7 @@ export interface IAPAgingSummaryData extends IAgingSummaryData {
 
 export type IAPAgingSummaryColumns = IAgingPeriod[];
 
-export interface IARAgingSummaryMeta extends IFinancialSheetCommonMeta {
+export interface IAPAgingSummaryMeta extends IFinancialSheetCommonMeta {
   formattedAsDate: string;
 }
 

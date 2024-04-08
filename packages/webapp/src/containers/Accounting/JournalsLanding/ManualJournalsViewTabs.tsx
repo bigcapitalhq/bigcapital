@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 import { pick } from 'lodash';
@@ -19,7 +18,7 @@ function ManualJournalsViewTabs({
   setManualJournalsTableState,
 
   // #withManualJournals
-  journalsTableState
+  journalsTableState,
 }) {
   // Manual journals context.
   const { journalsViews } = useManualJournalsContext();
@@ -36,7 +35,7 @@ function ManualJournalsViewTabs({
       customViewId: viewId || null,
     });
   };
-  
+
   return (
     <Navbar className="navbar--dashboard-views">
       <NavbarGroup align={Alignment.LEFT}>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
@@ -48,9 +47,7 @@ function ExchangeRateBulkDeleteAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={
-        <T id={'delete_count'} values={{ count: size(exchangeRatesIds) }} />
-      }
+      confirmButtonText={<T id={'delete_count'} values={{ count: size(exchangeRatesIds) }} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -59,15 +56,10 @@ function ExchangeRateBulkDeleteAlert({
       // loading={isLoading}
     >
       <p>
-        <T
-          id={'once_delete_these_exchange_rates_you_will_not_able_restore_them'}
-        />
+        <T id={'once_delete_these_exchange_rates_you_will_not_able_restore_them'} />
       </p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExchangeRateBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExchangeRateBulkDeleteAlert);

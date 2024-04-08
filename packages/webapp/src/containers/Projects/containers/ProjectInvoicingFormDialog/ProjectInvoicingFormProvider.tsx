@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 
@@ -25,7 +24,6 @@ function ProjectInvoicingFormProvider({
   );
 }
 
-const useProjectInvoicingFormContext = () =>
-  React.useContext(ProjectInvoicingFormContext);
+const useProjectInvoicingFormContext = () => React.useContext(ProjectInvoicingFormContext);
 
 export { ProjectInvoicingFormProvider, useProjectInvoicingFormContext };

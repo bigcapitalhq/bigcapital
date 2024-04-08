@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 export function Join({ items, sep }) {

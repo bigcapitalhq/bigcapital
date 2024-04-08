@@ -1,9 +1,9 @@
-import { Response, Request, NextFunction } from 'express';
-import { matchedData, validationResult } from 'express-validator';
-import accepts from 'accepts';
-import { isArray, drop, first, camelCase, snakeCase, omit, set, get } from 'lodash';
-import { mapKeysDeep } from 'utils';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import accepts from 'accepts';
+import { NextFunction, Request, Response } from 'express';
+import { matchedData, validationResult } from 'express-validator';
+import { camelCase, drop, first, get, isArray, omit, set, snakeCase } from 'lodash';
+import { mapKeysDeep } from '../../utils';
 
 export default class BaseController {
   /**
@@ -59,19 +59,15 @@ export default class BaseController {
 
   /**
    * Sets localization to response object by the given path.
-   * @param {Response} response - 
-   * @param {string} path - 
-   * @param {Request} req - 
+   * @param {Response} response -
+   * @param {string} path -
+   * @param {Request} req -
    */
-  private setLocalizationByPath(
-    response: any,
-    path: string,
-    req: Request,
-  ) {
+  private setLocalizationByPath(response: any, path: string, req: Request) {
     const DOT = '.';
 
     if (isArray(response)) {
-      response.forEach((va) => {
+      for (const va of response) {
         const currentPath = first(path.split(DOT));
         const value = get(va, currentPath);
 
@@ -81,7 +77,7 @@ export default class BaseController {
         } else {
           set(va, path, req.__(value));
         }
-      })
+      }
     } else {
       const value = get(response, path);
       set(response, path, req.__(value));
@@ -92,21 +88,15 @@ export default class BaseController {
    * Transform the given data to response.
    * @param {any} data
    */
-  protected transfromToResponse(
-    data: any,
-    translatable?: string | string[],
-    req?: Request
-  ) {
+  protected transfromToResponse(data: any, translatable?: string | string[], req?: Request) {
     const response = mapKeysDeep(data, (v, k) => snakeCase(k));
 
     if (translatable) {
-      const translatables = Array.isArray(translatable)
-        ? translatable
-        : [translatable];
+      const translatables = Array.isArray(translatable) ? translatable : [translatable];
 
-      translatables.forEach((path) => {
+      for (const path of translatables) {
         this.setLocalizationByPath(response, path, req);
-      });
+      }
     }
     return response;
   }
@@ -129,12 +119,12 @@ export default class BaseController {
   }
 
   /**
-   * 
-   * @param {Request} req 
-   * @param {string[]} types 
+   *
+   * @param {Request} req
+   * @param {string[]} types
    * @returns {string}
    */
-  protected acceptTypes(req: Request, types: string[])  {
+  protected acceptTypes(req: Request, types: string[]) {
     return this.accepts(req).types(types);
   }
 }

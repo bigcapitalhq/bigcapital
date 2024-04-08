@@ -1,15 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router';
-import {
-  Navbar,
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-  Tooltip,
-  Position,
-} from '@blueprintjs/core';
+import { Navbar, NavbarGroup, NavbarDivider, Button, Classes, Tooltip, Position } from '@blueprintjs/core';
 import { FormattedMessage as T, Icon, Hint, If } from '@/components';
 
 import DashboardTopbarUser from '@/components/Dashboard/TopbarUser';
@@ -53,28 +44,22 @@ function DashboardTopbar({
   };
 
   return (
-    <div class="dashboard__topbar" data-testId={'dashboard-topbar'}>
-      <div class="dashboard__topbar-left">
-        <div class="dashboard__topbar-sidebar-toggle">
+    <div className="dashboard__topbar" data-testId={'dashboard-topbar'}>
+      <div className="dashboard__topbar-left">
+        <div className="dashboard__topbar-sidebar-toggle">
           <Tooltip
-            content={
-              !sidebarExpended ? (
-                <T id={'open_sidebar'} />
-              ) : (
-                <T id={'close_sidebar'} />
-              )
-            }
+            content={!sidebarExpended ? <T id={'open_sidebar'} /> : <T id={'close_sidebar'} />}
             position={Position.RIGHT}
           >
             <DashboardHamburgerButton onClick={handleSidebarToggleBtn} />
           </Tooltip>
         </div>
 
-        <div class="dashboard__title">
+        <div className="dashboard__title">
           <h1>{pageTitle}</h1>
 
           <If condition={pageHint}>
-            <div class="dashboard__hint">
+            <div className="dashboard__hint">
               <Hint content={pageHint} />
             </div>
           </If>
@@ -88,28 +73,20 @@ function DashboardTopbar({
           </If>
         </div>
 
-        <div class="dashboard__breadcrumbs">
+        <div className="dashboard__breadcrumbs">
           <DashboardBreadcrumbs />
         </div>
         <DashboardBackLink />
       </div>
 
-      <div class="dashboard__topbar-right">
-        <Navbar class="dashboard__topbar-navbar">
+      <div className="dashboard__topbar-right">
+        <Navbar className="dashboard__topbar-navbar">
           <NavbarGroup>
-            <DashboardQuickSearchButton
-              onClick={() => openGlobalSearch(true)}
-            />
+            <DashboardQuickSearchButton onClick={() => openGlobalSearch(true)} />
             <QuickNewDropdown />
 
-            <Tooltip
-              content={<T id={'notifications'} />}
-              position={Position.BOTTOM}
-            >
-              <Button
-                className={Classes.MINIMAL}
-                icon={<Icon icon={'notification-24'} iconSize={20} />}
-              />
+            <Tooltip content={<T id={'notifications'} />} position={Position.BOTTOM}>
+              <Button className={Classes.MINIMAL} icon={<Icon icon={'notification-24'} iconSize={20} />} />
             </Tooltip>
 
             <Button
@@ -121,7 +98,7 @@ function DashboardTopbar({
           </NavbarGroup>
         </Navbar>
 
-        <div class="dashboard__topbar-user">
+        <div className="dashboard__topbar-user">
           <DashboardTopbarUser />
         </div>
       </div>

@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
-import {
-  ISaleInvoiceCreatingPaylaod,
-  ISaleInvoiceEditingPayload,
-} from '@/interfaces';
+import { ISaleInvoiceCreatingPaylaod, ISaleInvoiceEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
 
 @Service()
@@ -15,14 +12,8 @@ export class SaleInvoicesWarehousesValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.validateSaleInvoiceWarehouseExistanceOnCreating
-    );
-    bus.subscribe(
-      events.saleInvoice.onEditing,
-      this.validateSaleInvoiceWarehouseExistanceOnEditing
-    );
+    bus.subscribe(events.saleInvoice.onCreating, this.validateSaleInvoiceWarehouseExistanceOnCreating);
+    bus.subscribe(events.saleInvoice.onEditing, this.validateSaleInvoiceWarehouseExistanceOnEditing);
     return bus;
   }
 
@@ -34,10 +25,7 @@ export class SaleInvoicesWarehousesValidateSubscriber {
     saleInvoiceDTO,
     tenantId,
   }: ISaleInvoiceCreatingPaylaod) => {
-    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
-      tenantId,
-      saleInvoiceDTO
-    );
+    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(tenantId, saleInvoiceDTO);
   };
 
   /**
@@ -48,9 +36,6 @@ export class SaleInvoicesWarehousesValidateSubscriber {
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceEditingPayload) => {
-    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(
-      tenantId,
-      saleInvoiceDTO
-    );
+    await this.warehousesDTOValidator.validateDTOWarehouseWhenActive(tenantId, saleInvoiceDTO);
   };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
@@ -28,11 +27,7 @@ function LicenseTab({ openDialog }) {
         <T id={'cards_will_be_charged'} />
       </p>
 
-      <Button
-        onClick={handleSubmitBtnClick}
-        intent={Intent.PRIMARY}
-        large={true}
-      >
+      <Button onClick={handleSubmitBtnClick} intent={Intent.PRIMARY} large={true}>
         <T id={'submit_voucher'} />
       </Button>
     </div>

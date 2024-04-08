@@ -19,12 +19,7 @@ export interface IModelMetaDefaultSort {
   sortField: string;
 }
 
-export type IModelColumnType =
-  | 'text'
-  | 'number'
-  | 'enumeration'
-  | 'boolean'
-  | 'relation';
+export type IModelColumnType = 'text' | 'number' | 'enumeration' | 'boolean' | 'relation';
 
 export type ISortOrder = 'DESC' | 'ASC';
 

@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
+import TenantModel from '../models/TenantModel';
 
 export default class ItemWarehouseQuantity extends TenantModel {
   /**
@@ -10,8 +10,8 @@ export default class ItemWarehouseQuantity extends TenantModel {
   }
 
   static get relationMappings() {
-    const Item = require('models/Item');
-    const Warehouse = require('models/Warehouse');
+    const Item = require('../models/Item');
+    const Warehouse = require('../models/Warehouse');
 
     return {
       item: {

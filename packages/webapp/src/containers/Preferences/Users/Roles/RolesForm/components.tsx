@@ -1,13 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Field } from 'formik';
 import { Checkbox, Popover } from '@blueprintjs/core';
 
-import {
-  getPermissionsSchema,
-  ModulePermissionsStyle,
-} from '@/constants/permissionsSchema';
+import { getPermissionsSchema, ModulePermissionsStyle } from '@/constants/permissionsSchema';
 import { Card, If, ButtonLink, Choose, T } from '@/components';
 import {
   getSerivceColumnPermission,
@@ -25,25 +21,19 @@ const ModuleServiceContext = React.createContext();
  * Retrieves the module permissions provider.
  * @returns {React.JSX}
  */
-const useModulePermissionsProvider = () =>
-  React.useContext(ModulePermissionsContext);
+const useModulePermissionsProvider = () => React.useContext(ModulePermissionsContext);
 
 /**
  * Module permissions service context provider.
  */
-const useModulePermissionsServiceProvider = () =>
-  React.useContext(ModuleServiceContext);
+const useModulePermissionsServiceProvider = () => React.useContext(ModuleServiceContext);
 
 /**
  * Module permissions context state provider.
  * @returns {React.JSX}
  */
 function ModulePermissionsProvider({ module, children }) {
-  return (
-    <ModulePermissionsContext.Provider value={{ module }}>
-      {children}
-    </ModulePermissionsContext.Provider>
-  );
+  return <ModulePermissionsContext.Provider value={{ module }}>{children}</ModulePermissionsContext.Provider>;
 }
 
 /**
@@ -51,11 +41,7 @@ function ModulePermissionsProvider({ module, children }) {
  * @returns {React.JSX}
  */
 function ModulePermissionsServiceProvider({ service, children }) {
-  return (
-    <ModuleServiceContext.Provider value={{ service }}>
-      {children}
-    </ModuleServiceContext.Provider>
-  );
+  return <ModuleServiceContext.Provider value={{ service }}>{children}</ModuleServiceContext.Provider>;
 }
 
 /**
@@ -71,14 +57,11 @@ function PermissionBodyColumn({ column }) {
 
   // Display empty cell if the current column key has no related permissions.
   if (!permission) {
-    return <td class={'permission-checkbox'}></td>;
+    return <td className={'permission-checkbox'}></td>;
   }
   return (
-    <td class={'permission-checkbox'}>
-      <Field
-        name={`permissions.${service.subject}/${permission.key}`}
-        type="checkbox"
-      >
+    <td className={'permission-checkbox'}>
+      <Field name={`permissions.${service.subject}/${permission.key}`} type="checkbox">
         {({ field, form }) => (
           <PermissionCheckbox
             inline={true}
@@ -117,20 +100,13 @@ function ModuleExtraPermissionsPopover() {
 
       <ExtraPermissionsRoot>
         {extraPermissions.map((permission) => (
-          <Field
-            name={`permissions.${service.subject}/${permission.key}`}
-            type="checkbox"
-          >
+          <Field name={`permissions.${service.subject}/${permission.key}`} type="checkbox">
             {({ form, field }) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}
                 {...field}
-                onChange={handleCheckboxPermissionChange(
-                  form,
-                  permission,
-                  service,
-                )}
+                onChange={handleCheckboxPermissionChange(form, permission, service)}
               />
             )}
           </Field>
@@ -173,12 +149,12 @@ function ModulePermissionsTableHead() {
       <tr>
         <th></th>
         <If condition={serviceFullAccess}>
-          <th class={'full'}>
+          <th className={'full'}>
             <T id={'permissions.column.full_access'} />
           </th>
         </If>
         {columns.map((column) => (
-          <th class={'permission'}>{column.label}</th>
+          <th className={'permission'}>{column.label}</th>
         ))}
         <th></th>
       </tr>
@@ -199,15 +175,13 @@ function ModulePermissionsServiceFullAccess() {
 
   return (
     <If condition={module.serviceFullAccess}>
-      <td class="full-access-permission">
+      <td className="full-access-permission">
         <Field name={`serviceFullAccess.${service.subject}`} type="checkbox">
           {({ form, field }) => (
             <PermissionCheckbox
               inline={true}
               {...field}
-              indeterminate={
-                field.value === FULL_ACCESS_CHECKBOX_STATE.INDETARMINE
-              }
+              indeterminate={field.value === FULL_ACCESS_CHECKBOX_STATE.INDETARMINE}
               onChange={handleCheckboxFullAccessChange(service, form)}
             />
           )}
@@ -264,23 +238,16 @@ function ModuleVerticalTableCells() {
   const { service } = useModulePermissionsServiceProvider();
 
   return (
-    <td class={'permissions'}>
+    <td className={'permissions'}>
       {service.permissions.map((permission) => (
         <div>
-          <Field
-            name={`permissions.${service.subject}/${permission.key}`}
-            type="checkbox"
-          >
+          <Field name={`permissions.${service.subject}/${permission.key}`} type="checkbox">
             {({ form, field }) => (
               <PermissionCheckbox
                 inline={true}
                 label={permission.label}
                 {...field}
-                onChange={handleCheckboxPermissionChange(
-                  form,
-                  permission,
-                  service,
-                )}
+                onChange={handleCheckboxPermissionChange(form, permission, service)}
               />
             )}
           </Field>
@@ -304,7 +271,7 @@ function ModulePermissionsVerticalServices() {
           {module.services.map((service) => (
             <ModulePermissionsServiceProvider service={service}>
               <tr>
-                <td class={'service-label'}>{service.label} </td>
+                <td className={'service-label'}>{service.label} </td>
                 <ModuleVerticalTableCells />
               </tr>
             </ModulePermissionsServiceProvider>
@@ -325,9 +292,7 @@ function ModulePermissionsBody() {
   return (
     <ModulePermissionBodyRoot>
       <Choose>
-        <Choose.When
-          condition={module.type === ModulePermissionsStyle.Vertical}
-        >
+        <Choose.When condition={module.type === ModulePermissionsStyle.Vertical}>
           <ModulePermissionsVerticalServices />
         </Choose.When>
 

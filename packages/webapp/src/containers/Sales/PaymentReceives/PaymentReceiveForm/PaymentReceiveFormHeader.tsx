@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { sumBy } from 'lodash';
@@ -34,18 +33,15 @@ function PaymentReceiveFormBigTotal() {
   } = useFormikContext();
 
   // Calculates the total payment amount from due amount.
-  const paymentFullAmount = useMemo(
-    () => sumBy(entries, 'payment_amount'),
-    [entries],
-  );
+  const paymentFullAmount = useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
-      <div class="big-amount">
-        <span class="big-amount__label">
+      <div className="big-amount">
+        <span className="big-amount__label">
           <T id={'amount_received'} />
         </span>
-        <h1 class="big-amount__number">
+        <h1 className="big-amount__number">
           <Money amount={paymentFullAmount} currency={currency_code} />
         </h1>
       </div>

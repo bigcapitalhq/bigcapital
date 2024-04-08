@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup } from '@blueprintjs/core';
@@ -37,11 +36,7 @@ function TransactionTypeFields() {
       <Row>
         {/*------------ Transaction type -----------*/}
         <Col xs={5}>
-          <FFormGroup
-            name={'transaction_type'}
-            label={<T id={'transaction_type'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'transaction_type'} label={<T id={'transaction_type'} />} labelInfo={<FieldRequiredHint />}>
             <FSelect
               name={'transaction_type'}
               items={addMoneyOutOptions}
@@ -62,10 +57,7 @@ function TransactionTypeFields() {
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="cashflow_account_id" />}
                 minimal={true}
-                className={classNames(
-                  CLASSES.FILL,
-                  'form-group--cashflow_account_id',
-                )}
+                className={classNames(CLASSES.FILL, 'form-group--cashflow_account_id')}
               >
                 <AccountsSuggestField
                   accounts={cashflowAccounts}

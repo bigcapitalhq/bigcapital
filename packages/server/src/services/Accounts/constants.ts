@@ -10,15 +10,11 @@ export const ERRORS = {
   ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS: 'account_has_associated_transactions',
   PREDEFINED_ACCOUNTS: 'predefined_accounts',
   ACCOUNTS_HAVE_TRANSACTIONS: 'accounts_have_transactions',
-  CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE:
-    'close_account_and_to_account_not_same_type',
+  CLOSE_ACCOUNT_AND_TO_ACCOUNT_NOT_SAME_TYPE: 'close_account_and_to_account_not_same_type',
   ACCOUNTS_NOT_FOUND: 'accounts_not_found',
-  ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY:
-    'ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY',
-  ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT:
-    'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT',
-  PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL:
-    'PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL',
+  ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY: 'ACCOUNT_TYPE_NOT_SUPPORTS_MULTI_CURRENCY',
+  ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT: 'ACCOUNT_CURRENCY_NOT_SAME_PARENT_ACCOUNT',
+  PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL: 'PARENT_ACCOUNT_EXCEEDED_THE_DEPTH_LEVEL',
 };
 
 // Default views columns.
@@ -39,9 +35,7 @@ export const DEFAULT_VIEWS = [
     name: 'Assets',
     slug: 'assets',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'root_type', comparator: 'equals', value: 'asset' },
-    ],
+    roles: [{ index: 1, fieldKey: 'root_type', comparator: 'equals', value: 'asset' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {

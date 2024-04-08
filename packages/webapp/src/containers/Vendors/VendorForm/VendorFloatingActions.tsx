@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   Intent,
@@ -65,10 +64,7 @@ export default function VendorFloatingActions({ onCancel }) {
         <Popover
           content={
             <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitAndNewClick}
-              />
+              <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitAndNewClick} />
             </Menu>
           }
           minimal={true}
@@ -90,12 +86,7 @@ export default function VendorFloatingActions({ onCancel }) {
         text={!isNewMode ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} disabled={isSubmitting} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

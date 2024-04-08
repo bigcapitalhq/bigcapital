@@ -1,8 +1,8 @@
-import { Service } from 'typedi';
+import { EchangeRateLatestPOJO, ExchangeRateLatestDTO } from '@/interfaces';
 import { ExchangeRate } from '@/lib/ExchangeRate/ExchangeRate';
 import { ExchangeRateServiceType } from '@/lib/ExchangeRate/types';
-import { EchangeRateLatestPOJO, ExchangeRateLatestDTO } from '@/interfaces';
 import { TenantMetadata } from '@/system/models';
+import { Service } from 'typedi';
 
 @Service()
 export class ExchangeRatesService {
@@ -12,18 +12,13 @@ export class ExchangeRatesService {
    * @param {number} exchangeRateLatestDTO
    * @returns {EchangeRateLatestPOJO}
    */
-  public async latest(
-    tenantId: number,
-    exchangeRateLatestDTO: ExchangeRateLatestDTO
-  ): Promise<EchangeRateLatestPOJO> {
+  public async latest(tenantId: number, exchangeRateLatestDTO: ExchangeRateLatestDTO): Promise<EchangeRateLatestPOJO> {
     const organization = await TenantMetadata.query().findOne({ tenantId });
 
     // Assign the organization base currency as a default currency
     // if no currency is provided
-    const fromCurrency =
-      exchangeRateLatestDTO.fromCurrency || organization.baseCurrency;
-    const toCurrency =
-      exchangeRateLatestDTO.toCurrency || organization.baseCurrency;
+    const fromCurrency = exchangeRateLatestDTO.fromCurrency || organization.baseCurrency;
+    const toCurrency = exchangeRateLatestDTO.toCurrency || organization.baseCurrency;
 
     const exchange = new ExchangeRate(ExchangeRateServiceType.OpenExchangeRate);
     const exchangeRate = await exchange.latest(fromCurrency, toCurrency);

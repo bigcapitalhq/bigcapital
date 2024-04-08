@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import classNames from 'classnames';
 
@@ -10,9 +9,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const CashflowSheetPdfDialogContent = lazy(
-  () => import('./CashflowSheetPdfDialogContent'),
-);
+const CashflowSheetPdfDialogContent = lazy(() => import('./CashflowSheetPdfDialogContent'));
 
 /**
  * Cashflow sheet pdf preview dialog.
@@ -36,6 +33,4 @@ function CashflowSheetPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const CashflowSheetPdfDialog = compose(withDialogRedux())(
-  CashflowSheetPdfDialogRoot,
-);
+export const CashflowSheetPdfDialog = compose(withDialogRedux())(CashflowSheetPdfDialogRoot);

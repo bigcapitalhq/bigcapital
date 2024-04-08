@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -31,10 +31,7 @@ export const useDashboardPageTitle = () => {
  * Splash loading screen actions.
  */
 export const useSplashLoading = () => {
-  return [
-    useDispatchAction(splashStartLoading),
-    useDispatchAction(splashStopLoading),
-  ];
+  return [useDispatchAction(splashStartLoading), useDispatchAction(splashStopLoading)];
 };
 
 /**

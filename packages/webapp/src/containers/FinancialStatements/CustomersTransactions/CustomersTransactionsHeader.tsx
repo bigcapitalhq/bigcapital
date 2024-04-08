@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -13,10 +12,7 @@ import withCustomersTransactions from './withCustomersTransactions';
 import withCustomersTransactionsActions from './withCustomersTransactionsActions';
 
 import { compose, transformToForm } from '@/utils';
-import {
-  getCustomersTransactionsDefaultQuery,
-  getCustomersTransactionsQuerySchema,
-} from './_utils';
+import { getCustomersTransactionsDefaultQuery, getCustomersTransactionsQuerySchema } from './_utils';
 
 /**
  * Customers transactions header.
@@ -61,25 +57,14 @@ function CustomersTransactionsHeader({
   };
 
   return (
-    <CustomerTransactionsDrawerHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <CustomerTransactionsDrawerHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<CustomersTransactionsHeaderGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<CustomersTransactionsHeaderGeneralPanel />} />
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

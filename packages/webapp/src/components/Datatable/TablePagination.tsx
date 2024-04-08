@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useContext } from 'react';
 import { If, Pagination } from '@/components';
 import TableContext from './TableContext';
@@ -50,10 +49,7 @@ export default function TablePagination() {
   );
 
   // Detarmines when display the pagination.
-  const showPagination =
-    pagination &&
-    ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) &&
-    !loading;
+  const showPagination = pagination && ((hidePaginationNoPages && pageCount > 1) || !hidePaginationNoPages) && !loading;
 
   return (
     showPagination && (

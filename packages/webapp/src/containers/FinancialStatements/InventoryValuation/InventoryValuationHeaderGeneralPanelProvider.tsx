@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useItems } from '@/hooks/query';
@@ -12,9 +11,7 @@ function InventoryValuationGeneralPanelProvider({ query, ...props }) {
     isLoading: isItemsLoading,
     isFetching: isItemsFetching,
   } = useItems({
-    stringified_filter_roles: JSON.stringify([
-      { fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 },
-    ]),
+    stringified_filter_roles: JSON.stringify([{ fieldKey: 'type', comparator: 'is', value: 'inventory', index: 1 }]),
     page_size: 10000,
   });
 
@@ -30,17 +27,10 @@ function InventoryValuationGeneralPanelProvider({ query, ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <InventoryValuationGeneralPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <InventoryValuationGeneralPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useInventoryValuationGeneralPanelContext = () =>
-  React.useContext(InventoryValuationGeneralPanelContext);
+const useInventoryValuationGeneralPanelContext = () => React.useContext(InventoryValuationGeneralPanelContext);
 
-export {
-  InventoryValuationGeneralPanelProvider,
-  useInventoryValuationGeneralPanelContext,
-};
+export { InventoryValuationGeneralPanelProvider, useInventoryValuationGeneralPanelContext };

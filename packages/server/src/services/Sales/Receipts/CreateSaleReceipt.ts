@@ -11,6 +11,12 @@ import TenancyService from '@/services/Tenancy/TenancyService';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptDTOTransformer } from './SaleReceiptDTOTransformer';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
 
@@ -54,32 +60,16 @@ export class CreateSaleReceipt {
       .throwIfNotFound();
 
     // Transform sale receipt DTO to model.
-    const saleReceiptObj = await this.transformer.transformDTOToModel(
-      tenantId,
-      saleReceiptDTO,
-      paymentCustomer
-    );
+    const saleReceiptObj = await this.transformer.transformDTOToModel(tenantId, saleReceiptDTO, paymentCustomer);
     // Validate receipt deposit account existance and type.
-    await this.validators.validateReceiptDepositAccountExistance(
-      tenantId,
-      saleReceiptDTO.depositAccountId
-    );
+    await this.validators.validateReceiptDepositAccountExistance(tenantId, saleReceiptDTO.depositAccountId);
     // Validate items IDs existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      saleReceiptDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, saleReceiptDTO.entries);
     // Validate the sellable items.
-    await this.itemsEntriesService.validateNonSellableEntriesItems(
-      tenantId,
-      saleReceiptDTO.entries
-    );
+    await this.itemsEntriesService.validateNonSellableEntriesItems(tenantId, saleReceiptDTO.entries);
     // Validate sale receipt number uniuqiness.
     if (saleReceiptDTO.receiptNumber) {
-      await this.validators.validateReceiptNumberUnique(
-        tenantId,
-        saleReceiptDTO.receiptNumber
-      );
+      await this.validators.validateReceiptNumberUnique(tenantId, saleReceiptDTO.receiptNumber);
     }
     // Creates a sale receipt transaction and associated transactions under UOW env.
     return this.uow.withTransaction(

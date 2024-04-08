@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import classNames from 'classnames';
 
@@ -8,9 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const InventoryItemDetailsPdfDialogContent = lazy(
-  () => import('./InventoryItemDetailsPdfDialogContent'),
-);
+const InventoryItemDetailsPdfDialogContent = lazy(() => import('./InventoryItemDetailsPdfDialogContent'));
 
 /**
  * Inventory item details sheet pdf preview dialog.
@@ -34,6 +31,4 @@ function InventoryItemDetailsPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const InventoryItemDetailsPdfDialog = compose(withDialogRedux())(
-  InventoryItemDetailsPdfDialogRoot,
-);
+export const InventoryItemDetailsPdfDialog = compose(withDialogRedux())(InventoryItemDetailsPdfDialogRoot);

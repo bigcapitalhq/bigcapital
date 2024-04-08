@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -53,12 +52,6 @@ function WarehouseActivateForm({
     activateWarehouses(form).then(onSuccess).catch(onError);
   };
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-      component={WarehouseActivateFormContent}
-    />
-  );
+  return <Formik initialValues={initialValues} onSubmit={handleFormSubmit} component={WarehouseActivateFormContent} />;
 }
 export default compose(withDialogActions)(WarehouseActivateForm);

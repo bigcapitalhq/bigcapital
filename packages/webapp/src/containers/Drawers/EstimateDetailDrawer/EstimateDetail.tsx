@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
@@ -16,11 +15,7 @@ import EstimateDetailPanel from './EstimateDetailPanel';
 function EstimateDetailsTabs() {
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<EstimateDetailPanel />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<EstimateDetailPanel />} />
     </DrawerMainTabs>
   );
 }

@@ -19,17 +19,14 @@ export const ItemCategoriesSampleData = [
   },
   {
     Name: 'Crist, Mraz and Lueilwitz',
-    Description:
-      'Dolores veniam deserunt sed commodi error quia veritatis non.',
+    Description: 'Dolores veniam deserunt sed commodi error quia veritatis non.',
   },
   {
     Name: 'Gutmann and Sons',
-    Description:
-      'Ratione aperiam voluptas rem adipisci assumenda eos neque veritatis tempora.',
+    Description: 'Ratione aperiam voluptas rem adipisci assumenda eos neque veritatis tempora.',
   },
   {
     Name: 'Reichel - Raynor',
-    Description:
-      'Necessitatibus repellendus placeat possimus dolores excepturi ut.',
+    Description: 'Necessitatibus repellendus placeat possimus dolores excepturi ut.',
   },
 ];

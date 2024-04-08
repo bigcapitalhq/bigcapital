@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -30,15 +29,13 @@ function VendorOpeningBalanceForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, vendor, editVendorOpeningBalanceMutate } =
-    useVendorOpeningBalanceContext();
+  const { dialogName, vendor, editVendorOpeningBalanceMutate } = useVendorOpeningBalanceContext();
 
   // Initial form values
   const initialValues = {
     ...defaultInitialValues,
     ...vendor,
     opening_balance: defaultTo(vendor.opening_balance, ''),
-
   };
 
   // Handles the form submit.
@@ -67,9 +64,7 @@ function VendorOpeningBalanceForm({
       setSubmitting(false);
     };
 
-    editVendorOpeningBalanceMutate([vendor.id, formValues])
-      .then(onSuccess)
-      .catch(onError);
+    editVendorOpeningBalanceMutate([vendor.id, formValues]).then(onSuccess).catch(onError);
   };
 
   return (

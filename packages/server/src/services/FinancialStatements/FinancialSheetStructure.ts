@@ -1,15 +1,14 @@
-import * as R from 'ramda';
 import { set, sumBy } from 'lodash';
+import { mapValues } from 'lodash';
+import * as R from 'ramda';
 import {
-  mapValuesDeepReverse,
-  mapValuesDeep,
-  mapValues,
-  condense,
   filterDeep,
-  reduceDeep,
-  findValueDeep,
   filterNodesDeep,
-} from 'utils/deepdash';
+  findValueDeep,
+  mapValuesDeep,
+  mapValuesDeepReverse,
+  reduceDeep,
+} from '../../utils/deepdash';
 
 export const FinancialSheetStructure = (Base: Class) =>
   class extends Base {
@@ -72,18 +71,14 @@ export const FinancialSheetStructure = (Base: Class) =>
       return reduceDeep(
         nodes,
         (acc, value, key, parentValue, context) => {
-          set(
-            acc,
-            context.path,
-            callback(value, key, parentValue, acc, context)
-          );
+          set(acc, context.path, callback(value, key, parentValue, acc, context));
           return acc;
         },
         [],
         {
           childrenPath: 'children',
           pathFormat: 'array',
-        }
+        },
       );
     };
 

@@ -1,22 +1,15 @@
-// @ts-nocheck
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { compose } from '@/utils';
 
-const WarehouseFormDialogContent = React.lazy(
-  () => import('./WarehouseFormDialogContent'),
-);
+const WarehouseFormDialogContent = React.lazy(() => import('./WarehouseFormDialogContent'));
 
 /**
  * Warehouse form form dialog.
  */
-function WarehouseFormDialog({
-  dialogName,
-  payload: { warehouseId = null, action },
-  isOpen,
-}) {
+function WarehouseFormDialog({ dialogName, payload: { warehouseId = null, action }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -33,10 +26,7 @@ function WarehouseFormDialog({
       className={'dialog--warehouse-form'}
     >
       <DialogSuspense>
-        <WarehouseFormDialogContent
-          dialogName={dialogName}
-          warehouseId={warehouseId}
-        />
+        <WarehouseFormDialogContent dialogName={dialogName} warehouseId={warehouseId} />
       </DialogSuspense>
     </Dialog>
   );

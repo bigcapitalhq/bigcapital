@@ -1,7 +1,7 @@
-import { Model } from 'objection';
-import bcrypt from 'bcryptjs';
-import SystemModel from '@/system/models/SystemModel';
 import SoftDeleteQueryBuilder from '@/collection/SoftDeleteQueryBuilder';
+import SystemModel from '@/system/models/SystemModel';
+import bcrypt from 'bcryptjs';
+import { Model } from 'objection';
 
 export default class SystemUser extends SystemModel {
   /**
@@ -33,14 +33,14 @@ export default class SystemUser extends SystemModel {
   }
 
   /**
-   * 
+   *
    */
   get isDeleted() {
     return !!this.deletedAt;
   }
 
   /**
-   * 
+   *
    */
   get isInviteAccepted() {
     return !!this.inviteAcceptedAt;
@@ -50,14 +50,14 @@ export default class SystemUser extends SystemModel {
    * Full name attribute.
    */
   get fullName() {
-    return (this.firstName + ' ' + this.lastName).trim();
+    return `${this.firstName} ${this.lastName}`.trim();
   }
 
   /**
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Tenant = require('system/models/Tenant');
+    const Tenant = require('./Tenant');
 
     return {
       /**

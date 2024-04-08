@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Classes, Intent } from '@blueprintjs/core';
 import { Form, Formik } from 'formik';
@@ -6,16 +5,8 @@ import { AppToaster } from '@/components';
 
 import TaxRateFormDialogFormContent from './TaxRateFormDialogFormContent';
 
-import {
-  CreateTaxRateFormSchema,
-  EditTaxRateFormSchema,
-} from './TaxRateForm.schema';
-import {
-  isTaxRateChange,
-  transformApiErrors,
-  transformFormToReq,
-  transformTaxRateToForm,
-} from './utils';
+import { CreateTaxRateFormSchema, EditTaxRateFormSchema } from './TaxRateForm.schema';
+import { isTaxRateChange, transformApiErrors, transformFormToReq, transformTaxRateToForm } from './utils';
 import { useCreateTaxRate, useEditTaxRate } from '@/hooks/query/taxRates';
 import { useTaxRateFormDialogContext } from './TaxRateFormDialogBoot';
 import { TaxRateFormDialogFormFooter } from './TaxRateFormDialogFormFooter';
@@ -36,13 +27,10 @@ function TaxRateFormDialogForm({
   closeDrawer,
 }) {
   // Account form context.
-  const { taxRate, taxRateId, isNewMode, dialogName } =
-    useTaxRateFormDialogContext();
+  const { taxRate, taxRateId, isNewMode, dialogName } = useTaxRateFormDialogContext();
 
   // Form validation schema in create and edit mode.
-  const validationSchema = isNewMode
-    ? CreateTaxRateFormSchema
-    : EditTaxRateFormSchema;
+  const validationSchema = isNewMode ? CreateTaxRateFormSchema : EditTaxRateFormSchema;
 
   const { mutateAsync: createTaxRateMutate } = useCreateTaxRate();
   const { mutateAsync: editTaxRateMutate } = useEditTaxRate();
@@ -58,8 +46,7 @@ function TaxRateFormDialogForm({
     // and confirm box is not checked.
     if (!isNewMode && isTaxChanged && !values.confirm_edit) {
       setErrors({
-        confirm_edit:
-          'Please review the terms and conditions below before proceeding',
+        confirm_edit: 'Please review the terms and conditions below before proceeding',
       });
       setSubmitting(false);
       return;
@@ -105,11 +92,7 @@ function TaxRateFormDialogForm({
   };
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       <Form>
         <div className={Classes.DIALOG_BODY}>
           <TaxRateFormDialogFormErrors />
@@ -121,7 +104,4 @@ function TaxRateFormDialogForm({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withDrawerActions,
-)(TaxRateFormDialogForm);
+export default compose(withDialogActions, withDrawerActions)(TaxRateFormDialogForm);

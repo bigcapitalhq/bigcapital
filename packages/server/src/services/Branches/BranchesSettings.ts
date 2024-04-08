@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { Features } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class BranchesSettings {

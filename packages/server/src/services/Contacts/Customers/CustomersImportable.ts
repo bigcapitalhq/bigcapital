@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
+import { ICustomerNewDTO } from '@/interfaces';
 import { Importable } from '@/services/Import/Importable';
-import { CreateCustomer } from './CRUD/CreateCustomer';
 import { Knex } from 'knex';
-import { ICustomer, ICustomerNewDTO } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { CreateCustomer } from './CRUD/CreateCustomer';
 import { CustomersSampleData } from './_SampleData';
 
 @Service()
@@ -20,7 +20,7 @@ export class CustomersImportable extends Importable {
   public async importable(
     tenantId: number,
     createDTO: ICustomerNewDTO,
-    trx?: Knex.Transaction<any, any[]>
+    trx?: Knex.Transaction<any, any[]>,
   ): Promise<void> {
     await this.createCustomerService.createCustomer(tenantId, createDTO, trx);
   }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import ProfitLossSheetTable from './ProfitLossSheetTable';
@@ -21,11 +20,7 @@ function ProfitLossBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <ProfitLossSheetTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <ProfitLossSheetTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

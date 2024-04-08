@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useInviteMetaByToken, useAuthInviteAccept } from '@/hooks/query';
@@ -26,7 +25,9 @@ function InviteAcceptProvider({ token, ...props }) {
   const history = useHistory();
 
   useEffect(() => {
-    if (inviteMetaError) { history.push('/auth/login'); }
+    if (inviteMetaError) {
+      history.push('/auth/login');
+    }
   }, [history, inviteMetaError]);
 
   // Provider payload.
@@ -36,7 +37,7 @@ function InviteAcceptProvider({ token, ...props }) {
     inviteMetaError,
     isInviteMetaError,
     isInviteMetaLoading,
-    inviteAcceptMutate
+    inviteAcceptMutate,
   };
 
   if (inviteMetaError) {
@@ -45,7 +46,7 @@ function InviteAcceptProvider({ token, ...props }) {
 
   return (
     <InviteAcceptLoading isLoading={isInviteMetaLoading}>
-      { isInviteMetaError }
+      {isInviteMetaError}
       <InviteAcceptContext.Provider value={provider} {...props} />
     </InviteAcceptLoading>
   );

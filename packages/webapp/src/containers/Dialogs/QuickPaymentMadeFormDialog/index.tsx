@@ -1,21 +1,14 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const QuickPaymentMadeFormDialogContent = lazy(
-  () => import('./QuickPaymentMadeFormDialogContent'),
-);
+const QuickPaymentMadeFormDialogContent = lazy(() => import('./QuickPaymentMadeFormDialogContent'));
 
 /**
  * Quick payment made form dialog.
  */
-function QuickPaymentMadeFormDialog({
-  dialogName,
-  payload = { billId: null },
-  isOpen,
-}) {
+function QuickPaymentMadeFormDialog({ dialogName, payload = { billId: null }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -26,10 +19,7 @@ function QuickPaymentMadeFormDialog({
       className={'dialog--quick-payment-receive'}
     >
       <DialogSuspense>
-        <QuickPaymentMadeFormDialogContent
-          bill={payload.billId}
-          dialogName={dialogName}
-        />
+        <QuickPaymentMadeFormDialogContent bill={payload.billId} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -63,8 +63,8 @@ const propTypes = {
 const defaultProps = {
   noGutters: false,
 };
- 
-export function Row ({
+
+export function Row({
   bsPrefix,
   className,
   noGutters,
@@ -93,15 +93,7 @@ export function Row ({
   });
 
   return (
-    <Component
-      {...props}
-      className={classNames(
-        className,
-        decoratedBsPrefix,
-        noGutters && 'no-gutters',
-        ...classes,
-      )}
-    />
+    <Component {...props} className={classNames(className, decoratedBsPrefix, noGutters && 'no-gutters', ...classes)} />
   );
 }
 

@@ -1,13 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  T,
-  TotalLines,
-  TotalLineBorderStyle,
-  TotalLineTextStyle,
-} from '@/components';
+import { T, TotalLines, TotalLineBorderStyle, TotalLineTextStyle } from '@/components';
 import { useExpenseDrawerContext } from './ExpenseDrawerProvider';
 import { TotalLine } from '@/components';
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -25,10 +24,7 @@ export function InventoryItemDetailsTable({
 
   const columns = useInventoryItemDetailsColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 4),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
 
   return (
     <FinancialSheet

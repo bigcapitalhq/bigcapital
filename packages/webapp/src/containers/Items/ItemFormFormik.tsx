@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { Intent } from '@blueprintjs/core';
@@ -14,10 +13,7 @@ import ItemFormPrimarySection from './ItemFormPrimarySection';
 import ItemFormFloatingActions from './ItemFormFloatingActions';
 import ItemFormInventorySection from './ItemFormInventorySection';
 
-import {
-  transformSubmitRequestErrors,
-  useItemFormInitialValues,
-} from './utils';
+import { transformSubmitRequestErrors, useItemFormInitialValues } from './utils';
 import { useItemFormContext } from './ItemFormProvider';
 import { EditItemFormSchema, CreateItemFormSchema } from './ItemForm.schema';
 import { safeInvoke } from '@/utils';
@@ -34,15 +30,7 @@ export default function ItemFormFormik({
   className,
 }) {
   // Item form context.
-  const {
-    itemId,
-    item,
-    accounts,
-    createItemMutate,
-    editItemMutate,
-    submitPayload,
-    isNewMode,
-  } = useItemFormContext();
+  const { itemId, item, accounts, createItemMutate, editItemMutate, submitPayload, isNewMode } = useItemFormContext();
 
   // Initial values in create and edit mode.
   const initialValues = useItemFormInitialValues(item, initialValuesComponent);
@@ -58,9 +46,7 @@ export default function ItemFormFormik({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_item_has_been_created_successfully'
-            : 'the_item_has_been_edited_successfully',
+          isNewMode ? 'the_item_has_been_created_successfully' : 'the_item_has_been_edited_successfully',
           {
             number: itemId,
           },
@@ -90,9 +76,7 @@ export default function ItemFormFormik({
   };
 
   return (
-    <div
-      class={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}>
       <Formik
         enableReinitialize={true}
         validationSchema={isNewMode ? CreateItemFormSchema : EditItemFormSchema}
@@ -100,7 +84,7 @@ export default function ItemFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
             <ItemFormPrimarySection />
             <ItemFormBody accounts={accounts} />
             <ItemFormInventorySection accounts={accounts} />

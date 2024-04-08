@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -29,13 +28,8 @@ function LockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    moduleName,
-    transactionLocking,
-    isEnabled,
-    createLockingTransactionMutate,
-  } = useLockingTransactionsContext();
+  const { dialogName, moduleName, transactionLocking, isEnabled, createLockingTransactionMutate } =
+    useLockingTransactionsContext();
 
   // Initial form values.
   const initialValues = React.useMemo(

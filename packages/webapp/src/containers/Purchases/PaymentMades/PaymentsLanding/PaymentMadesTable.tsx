@@ -1,15 +1,9 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from '@/utils';
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 
 import PaymentMadesEmptyStatus from './PaymentMadesEmptyStatus';
 
@@ -48,13 +42,8 @@ function PaymentMadesTable({
   const columns = usePaymentMadesTableColumns();
 
   // Payment mades list context.
-  const {
-    paymentMades,
-    pagination,
-    isEmptyStatus,
-    isPaymentsLoading,
-    isPaymentsFetching,
-  } = usePaymentMadesListContext();
+  const { paymentMades, pagination, isEmptyStatus, isPaymentsLoading, isPaymentsFetching } =
+    usePaymentMadesListContext();
 
   // History context.
   const history = useHistory();
@@ -82,8 +71,7 @@ function PaymentMadesTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PAYMENT_MADES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.PAYMENT_MADES);
 
   // Handle datatable fetch data once the table state change.
   const handleDataTableFetchData = useCallback(

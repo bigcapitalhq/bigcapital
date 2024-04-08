@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
@@ -55,25 +54,17 @@ function APAgingSummary({
 
   return (
     <APAgingSummaryProvider filter={query}>
-      <APAgingSummaryActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <APAgingSummaryActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <APAgingSummarySheetLoadingBar />
 
       <DashboardPageContent>
         <FinancialStatement name={'AP-aging-summary'}>
-          <APAgingSummaryHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <APAgingSummaryHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <APAgingSummaryBody organizationName={organizationName} />
         </FinancialStatement>
       </DashboardPageContent>
 
-      <APAgingSummaryPdfDialog
-        dialogName={DialogsName.APAgingSummaryPdfPreview}
-      />
+      <APAgingSummaryPdfDialog dialogName={DialogsName.APAgingSummaryPdfPreview} />
     </APAgingSummaryProvider>
   );
 }

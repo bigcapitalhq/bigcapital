@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -30,8 +29,7 @@ function CustomerOpeningBalanceForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, customer, editCustomerOpeningBalanceMutate } =
-    useCustomerOpeningBalanceContext();
+  const { dialogName, customer, editCustomerOpeningBalanceMutate } = useCustomerOpeningBalanceContext();
 
   // Initial form values
   const initialValues = {
@@ -66,9 +64,7 @@ function CustomerOpeningBalanceForm({
       setSubmitting(false);
     };
 
-    editCustomerOpeningBalanceMutate([customer.id, formValues])
-      .then(onSuccess)
-      .catch(onError);
+    editCustomerOpeningBalanceMutate([customer.id, formValues]).then(onSuccess).catch(onError);
   };
 
   return (

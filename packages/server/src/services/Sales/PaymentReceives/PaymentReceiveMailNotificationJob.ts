@@ -7,11 +7,7 @@ export class PaymentReceiveMailNotificationJob {
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'payment-receive-mail-send',
-      { priority: 'high', concurrency: 2 },
-      this.handler
-    );
+    agenda.define('payment-receive-mail-send', { priority: 'high', concurrency: 2 }, this.handler);
   }
 
   /**

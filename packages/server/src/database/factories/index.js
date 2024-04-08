@@ -1,7 +1,5 @@
 import KnexFactory from '@/lib/KnexFactory';
 import faker from 'faker';
-import { hashPassword } from 'utils';
-
 
 export default (tenantDb) => {
   const factory = new KnexFactory(tenantDb);
@@ -359,32 +357,20 @@ export default (tenantDb) => {
   });
 
   factory.define('sale_invoice', 'sales_invoices', async () => {
-
-    return {
-
-    };
+    return {};
   });
 
   factory.define('sale_invoice_entry', 'sales_invoices_entries', async () => {
-    return {
-
-    };
+    return {};
   });
 
-  factory.define('payment_receive', 'payment_receives', async () => {
+  factory.define('payment_receive', 'payment_receives', async () => {});
 
-  });
-
-  factory.define('payment_receive_entry', 'payment_receives_entries', async () => {
-
-  });
-
+  factory.define('payment_receive_entry', 'payment_receives_entries', async () => {});
 
   factory.define('bill', 'bills', async () => {
-    return {
-      
-    }
+    return {};
   });
 
   return factory;
-}
+};

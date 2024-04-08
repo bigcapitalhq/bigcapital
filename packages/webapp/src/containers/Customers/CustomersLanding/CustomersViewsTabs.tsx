@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Alignment, Navbar, NavbarGroup } from '@blueprintjs/core';
 
@@ -9,7 +8,6 @@ import { compose, transfromViewsToTabs } from '@/utils';
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
-
 
 /**
  * Customers views tabs.

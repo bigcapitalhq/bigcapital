@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import intl from 'react-intl-universal';
@@ -25,10 +24,7 @@ export default function BalanceSheetTable({
   const tableColumns = useBalanceSheetColumns();
 
   // Retrieve default expanded rows of balance sheet.
-  const expandedRows = React.useMemo(
-    () => defaultExpanderReducer(table.rows, 3),
-    [table],
-  );
+  const expandedRows = React.useMemo(() => defaultExpanderReducer(table.rows, 3), [table]);
 
   return (
     <FinancialSheet

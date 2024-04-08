@@ -1,11 +1,7 @@
-import { Service, Inject } from 'typedi';
-import {
-  IViewsService,
-  IView,
-  IModel,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
+import { IModel, IView, IViewsService } from '@/interfaces';
 import ResourceService from '@/services/Resource/ResourceService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ViewsService implements IViewsService {
@@ -23,15 +19,9 @@ export default class ViewsService implements IViewsService {
    * @param {number} tenantId -
    * @param {string} resourceModel -
    */
-  public async listResourceViews(
-    tenantId: number,
-    resourceModelName: string
-  ): Promise<IView[]> {
+  public async listResourceViews(tenantId: number, resourceModelName: string): Promise<IView[]> {
     // Validate the resource model name is valid.
-    const resourceModel = this.getResourceModelOrThrowError(
-      tenantId,
-      resourceModelName
-    );
+    const resourceModel = this.getResourceModelOrThrowError(tenantId, resourceModelName);
     // Default views.
     const defaultViews = resourceModel.getDefaultViews();
 
@@ -43,10 +33,7 @@ export default class ViewsService implements IViewsService {
    * @param {number} tenantId
    * @param {number} resourceModel
    */
-  private getResourceModelOrThrowError(
-    tenantId: number,
-    resourceModel: string
-  ): IModel {
+  private getResourceModelOrThrowError(tenantId: number, resourceModel: string): IModel {
     return this.resourceService.getResourceModel(tenantId, resourceModel);
   }
 }

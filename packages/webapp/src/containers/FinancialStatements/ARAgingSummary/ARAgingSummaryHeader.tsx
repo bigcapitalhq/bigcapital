@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -16,10 +15,7 @@ import withARAgingSummaryActions from './withARAgingSummaryActions';
 import { compose, transformToForm } from '@/utils';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
-import {
-  getARAgingSummaryQuerySchema,
-  getDefaultARAgingSummaryQuery,
-} from './common';
+import { getARAgingSummaryQuerySchema, getDefaultARAgingSummaryQuery } from './common';
 
 /**
  * AR Aging Summary Report - Drawer Header.
@@ -69,32 +65,17 @@ function ARAgingSummaryHeader({
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
-    <ARAgingDrawerHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <ARAgingDrawerHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<ARAgingSummaryHeaderGeneral />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<ARAgingSummaryHeaderGeneral />} />
             {isBranchesFeatureCan && (
-              <Tab
-                id="dimensions"
-                title={<T id={'dimensions'} />}
-                panel={<ARAgingSummaryHeaderDimensions />}
-              />
+              <Tab id="dimensions" title={<T id={'dimensions'} />} panel={<ARAgingSummaryHeaderDimensions />} />
             )}
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

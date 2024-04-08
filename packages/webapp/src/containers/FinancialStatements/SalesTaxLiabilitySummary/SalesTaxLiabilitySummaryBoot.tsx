@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { transformFilterFormToQuery } from '../common';
@@ -12,10 +11,7 @@ const SalesTaxLiabilitySummaryContext = createContext();
  */
 function SalesTaxLiabilitySummaryBoot({ filter, ...props }) {
   // Transformes the given filter to query.
-  const query = React.useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
-  );
+  const query = React.useMemo(() => transformFilterFormToQuery(filter), [filter]);
   // Fetches the sales tax liability summary report.
   const {
     data: salesTaxLiabilitySummary,
@@ -40,7 +36,6 @@ function SalesTaxLiabilitySummaryBoot({ filter, ...props }) {
   );
 }
 
-const useSalesTaxLiabilitySummaryContext = () =>
-  useContext(SalesTaxLiabilitySummaryContext);
+const useSalesTaxLiabilitySummaryContext = () => useContext(SalesTaxLiabilitySummaryContext);
 
 export { SalesTaxLiabilitySummaryBoot, useSalesTaxLiabilitySummaryContext };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Form } from 'formik';
 import intl from 'react-intl-universal';
@@ -7,13 +6,7 @@ import { Link } from 'react-router-dom';
 import { Tooltip2 } from '@blueprintjs/popover2';
 import styled from 'styled-components';
 
-import {
-  FFormGroup,
-  FInputGroup,
-  Row,
-  Col,
-  FormattedMessage as T,
-} from '@/components';
+import { FFormGroup, FInputGroup, Row, Col, FormattedMessage as T } from '@/components';
 import { AuthSubmitButton, AuthenticationLoadingOverlay } from './_components';
 
 /**

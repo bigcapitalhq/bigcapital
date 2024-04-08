@@ -1,15 +1,15 @@
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
+import { IMailAttachment } from '@/interfaces';
 import Mustache from 'mustache';
 import { Container } from 'typedi';
-import path from 'path';
-import { IMailAttachment } from '@/interfaces';
 
 export default class Mail {
   view: string;
-  subject: string = '';
-  content: string = '';
+  subject = '';
+  content = '';
   to: string | string[];
-  from: string = `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`;
+  from = `${process.env.MAIL_FROM_NAME} ${process.env.MAIL_FROM_ADDRESS}`;
   data: { [key: string]: string | number };
   attachments: IMailAttachment[];
 
@@ -72,7 +72,7 @@ export default class Mail {
 
   /**
    * Set attachments to the mail.
-   * @param {IMailAttachment[]} attachments 
+   * @param {IMailAttachment[]} attachments
    * @returns {Mail}
    */
   setAttachments(attachments: IMailAttachment[]) {
@@ -122,7 +122,7 @@ export default class Mail {
    * Retrieve view content from the view directory.
    */
   static getViewContent(view: string): string {
-    const filePath = path.join(global.__views_dir, `/${view}`);
+    const filePath = path.join(process.env.APP_VIEWS_DIR, `/${view}`);
     return fs.readFileSync(filePath, 'utf8');
   }
 }

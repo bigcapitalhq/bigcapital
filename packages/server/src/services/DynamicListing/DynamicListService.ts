@@ -1,19 +1,14 @@
-import { Service, Inject } from 'typedi';
-import { Request, Response, NextFunction } from 'express';
-import { castArray, isEmpty } from 'lodash';
 import { ServiceError } from '@/exceptions';
+import { IDynamicListFilter, IDynamicListService, IModel } from '@/interfaces';
 import { DynamicFilter } from '@/lib/DynamicFilter';
-import {
-  IDynamicListFilter,
-  IDynamicListService,
-  IFilterRole,
-  IModel,
-} from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListFilterRoles from './DynamicListFilterRoles';
-import DynamicListSortBy from './DynamicListSortBy';
+import { NextFunction, Request, Response } from 'express';
+import { castArray, isEmpty } from 'lodash';
+import { Inject, Service } from 'typedi';
 import DynamicListCustomView from './DynamicListCustomView';
+import DynamicListFilterRoles from './DynamicListFilterRoles';
 import DynamicListSearch from './DynamicListSearch';
+import DynamicListSortBy from './DynamicListSortBy';
 
 @Service()
 export default class DynamicListService implements IDynamicListService {
@@ -56,11 +51,7 @@ export default class DynamicListService implements IDynamicListService {
    * @param {IModel} model - Model.
    * @param {IDynamicListFilter} filter - Dynamic filter DTO.
    */
-  public dynamicList = async (
-    tenantId: number,
-    model: IModel,
-    filter: IDynamicListFilter
-  ) => {
+  public dynamicList = async (tenantId: number, model: IModel, filter: IDynamicListFilter) => {
     const dynamicFilter = new DynamicFilter(model);
 
     // Parses the filter object.
@@ -68,20 +59,16 @@ export default class DynamicListService implements IDynamicListService {
 
     // Search by keyword.
     if (filter.searchKeyword) {
-      const dynamicListSearch = this.dynamicListSearch.dynamicSearch(
-        model,
-        filter.searchKeyword
-      );
+      const dynamicListSearch = this.dynamicListSearch.dynamicSearch(model, filter.searchKeyword);
       dynamicFilter.setFilter(dynamicListSearch);
     }
     // Custom view filter roles.
     if (filter.viewSlug) {
-      const dynamicListCustomView =
-        await this.dynamicListView.dynamicListCustomView(
-          dynamicFilter,
-          filter.viewSlug,
-          tenantId
-        );
+      const dynamicListCustomView = await this.dynamicListView.dynamicListCustomView(
+        dynamicFilter,
+        filter.viewSlug,
+        tenantId,
+      );
       dynamicFilter.setFilter(dynamicListCustomView);
     }
     // Sort by the given column.
@@ -89,16 +76,13 @@ export default class DynamicListService implements IDynamicListService {
       const dynmaicListSortBy = this.dynamicListSortBy.dynamicSortBy(
         model,
         parsedFilter.columnSortBy,
-        parsedFilter.sortOrder
+        parsedFilter.sortOrder,
       );
       dynamicFilter.setFilter(dynmaicListSortBy);
     }
     // Filter roles.
     if (!isEmpty(parsedFilter.filterRoles)) {
-      const dynamicFilterRoles = this.dynamicListFilterRoles.dynamicList(
-        model,
-        parsedFilter.filterRoles
-      );
+      const dynamicFilterRoles = this.dynamicListFilterRoles.dynamicList(model, parsedFilter.filterRoles);
       dynamicFilter.setFilter(dynamicFilterRoles);
     }
     return dynamicFilter;
@@ -111,12 +95,7 @@ export default class DynamicListService implements IDynamicListService {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  public handlerErrorsToResponse(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  public handlerErrorsToResponse(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'sort_column_not_found') {
         return res.boom.badRequest(null, {
@@ -173,9 +152,7 @@ export default class DynamicListService implements IDynamicListService {
   public parseStringifiedFilter = (filterRoles: IDynamicListFilter) => {
     return {
       ...filterRoles,
-      filterRoles: filterRoles.stringifiedFilterRoles
-        ? castArray(JSON.parse(filterRoles.stringifiedFilterRoles))
-        : [],
+      filterRoles: filterRoles.stringifiedFilterRoles ? castArray(JSON.parse(filterRoles.stringifiedFilterRoles)) : [],
     };
   };
 }

@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import { IItem, IItemWarehouseQuantityChange } from '@/interfaces';
-import { WarehousesItemsQuantitySync } from './Integrations/WarehousesItemsQuantitySync';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { WarehousesItemsQuantitySync } from './Integrations/WarehousesItemsQuantitySync';
 
 @Service()
 export class CreateInitialWarehousesItemsQuantity {
@@ -18,10 +18,7 @@ export class CreateInitialWarehousesItemsQuantity {
    * @param {IWarehouse} primaryWarehouse
    * @returns {IItemWarehouseQuantityChange[]}
    */
-  private getWarehousesItemsChanges = (
-    items: IItem[],
-    primaryWarehouseId: number
-  ): IItemWarehouseQuantityChange[] => {
+  private getWarehousesItemsChanges = (items: IItem[], primaryWarehouseId: number): IItemWarehouseQuantityChange[] => {
     return items
       .filter((item: IItem) => item.quantityOnHand)
       .map((item: IItem) => ({
@@ -35,23 +32,12 @@ export class CreateInitialWarehousesItemsQuantity {
    * Creates initial warehouses items quantity.
    * @param {number} tenantId
    */
-  public run = async (
-    tenantId: number,
-    primaryWarehouseId: number,
-    trx?: Knex.Transaction
-  ): Promise<void> => {
+  public run = async (tenantId: number, primaryWarehouseId: number, trx?: Knex.Transaction): Promise<void> => {
     const { Item } = this.tenancy.models(tenantId);
 
     const items = await Item.query(trx).where('type', 'Inventory');
 
-    const warehousesChanges = this.getWarehousesItemsChanges(
-      items,
-      primaryWarehouseId
-    );
-    await this.warehousesItemsQuantitySync.mutateWarehousesItemsQuantity(
-      tenantId,
-      warehousesChanges,
-      trx
-    );
+    const warehousesChanges = this.getWarehousesItemsChanges(items, primaryWarehouseId);
+    await this.warehousesItemsQuantitySync.mutateWarehousesItemsQuantity(tenantId, warehousesChanges, trx);
   };
 }

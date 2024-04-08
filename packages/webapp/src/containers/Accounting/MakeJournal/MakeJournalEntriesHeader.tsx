@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
@@ -29,11 +28,5 @@ function MakeJournalHeaderBigNumber() {
 
   const total = Math.max(totalCredit, totalDebit);
 
-  return (
-    <PageFormBigNumber
-      label={<T id={'amount'} />}
-      amount={total}
-      currencyCode={currency_code}
-    />
-  );
+  return <PageFormBigNumber label={<T id={'amount'} />} amount={total} currencyCode={currency_code} />;
 }

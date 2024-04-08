@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import {
   setCashflowAccountsTableState,
@@ -6,11 +6,9 @@ import {
 } from '@/store/CashflowAccounts/CashflowAccounts.actions';
 
 const mapActionsToProps = (dispatch) => ({
-  setCashflowAccountsTableState: (queries) =>
-    dispatch(setCashflowAccountsTableState(queries)),
+  setCashflowAccountsTableState: (queries) => dispatch(setCashflowAccountsTableState(queries)),
 
-  resetCashflowAccountsTableState: () =>
-    dispatch(resetCashflowAccountsTableState()),
+  resetCashflowAccountsTableState: () => dispatch(resetCashflowAccountsTableState()),
 });
 
 export default connect(null, mapActionsToProps);

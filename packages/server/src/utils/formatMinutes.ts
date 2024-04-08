@@ -1,4 +1,3 @@
-
 export function formatMinutes(totalMinutes: number) {
   const minutes = totalMinutes % 60;
   const hours = Math.floor(totalMinutes / 60);

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 export * from './cleanValue';
 export * from './fixedDecimalValue';
 export * from './formatValue';

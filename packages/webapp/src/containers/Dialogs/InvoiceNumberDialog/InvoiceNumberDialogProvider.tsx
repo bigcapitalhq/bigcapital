@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsInvoices } from '@/hooks/query';
@@ -23,7 +22,6 @@ function InvoiceNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useInvoiceNumberDialogContext = () =>
-  useContext(InvoiceNumberDialogContext);
+const useInvoiceNumberDialogContext = () => useContext(InvoiceNumberDialogContext);
 
 export { InvoiceNumberDialogProvider, useInvoiceNumberDialogContext };

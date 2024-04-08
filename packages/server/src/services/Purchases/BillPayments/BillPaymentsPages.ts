@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { IBill, IBillPayment, IBillReceivePageEntry } from '@/interfaces';
-import { ERRORS } from './constants';
 import { ServiceError } from '@/exceptions';
+import { IBill, IBillPayment, IBillReceivePageEntry } from '@/interfaces';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export default class BillPaymentsPages {
@@ -17,15 +17,13 @@ export default class BillPaymentsPages {
    */
   public async getBillPaymentEditPage(
     tenantId: number,
-    billPaymentId: number
+    billPaymentId: number,
   ): Promise<{
     billPayment: Omit<IBillPayment, 'entries'>;
     entries: IBillReceivePageEntry[];
   }> {
     const { BillPayment, Bill } = this.tenancy.models(tenantId);
-    const billPayment = await BillPayment.query()
-      .findById(billPaymentId)
-      .withGraphFetched('entries.bill');
+    const billPayment = await BillPayment.query().findById(billPaymentId).withGraphFetched('entries.bill');
 
     // Throw not found the bill payment.
     if (!billPayment) {
@@ -43,7 +41,7 @@ export default class BillPaymentsPages {
       .where('vendor_id', billPayment.vendorId)
       .whereNotIn(
         'id',
-        billPayment.entries.map((e) => e.billId)
+        billPayment.entries.map((e) => e.billId),
       )
       .orderBy('bill_date', 'ASC');
 
@@ -62,10 +60,7 @@ export default class BillPaymentsPages {
    * @param {number} tenantId
    * @param {number} vendorId
    */
-  public async getNewPageEntries(
-    tenantId: number,
-    vendorId: number
-  ): Promise<IBillReceivePageEntry[]> {
+  public async getNewPageEntries(tenantId: number, vendorId: number): Promise<IBillReceivePageEntry[]> {
     const { Bill } = this.tenancy.models(tenantId);
 
     // Retrieve all payable bills that associated to the payment made transaction.

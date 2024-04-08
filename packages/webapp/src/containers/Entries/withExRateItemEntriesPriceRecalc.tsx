@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useFormikContext } from 'formik';
 import { useUpdateEntriesOnExchangeRateChange } from './useUpdateEntriesOnExchangeRateChange';
 import { useAutoExRateContext } from './AutoExchangeProvider';
@@ -10,23 +10,19 @@ import { useCurrentOrganization } from '@/hooks/state';
  * @param {InvoiceExchangeRateInputFieldRoot} Component
  * @returns {JSX.Element}
  */
-export const withExchangeRateItemEntriesPriceRecalc =
-  (Component) => (props) => {
-    const { setFieldValue } = useFormikContext();
-    const updateChangeExRate = useUpdateEntriesOnExchangeRateChange();
+export const withExchangeRateItemEntriesPriceRecalc = (Component) => (props) => {
+  const { setFieldValue } = useFormikContext();
+  const updateChangeExRate = useUpdateEntriesOnExchangeRateChange();
 
-    return (
-      <Component
-        onRecalcConfirm={({ exchangeRate, oldExchangeRate }) => {
-          setFieldValue(
-            'entries',
-            updateChangeExRate(oldExchangeRate, exchangeRate),
-          );
-        }}
-        {...props}
-      />
-    );
-  };
+  return (
+    <Component
+      onRecalcConfirm={({ exchangeRate, oldExchangeRate }) => {
+        setFieldValue('entries', updateChangeExRate(oldExchangeRate, exchangeRate));
+      }}
+      {...props}
+    />
+  );
+};
 
 /**
  * Injects the loading props to the exchange rate field.
@@ -67,22 +63,13 @@ export const useCustomerUpdateExRate = () => {
       // If the customer's currency code equals the same base currency.
       if (customer.currency_code === currentCompany.base_currency) {
         setFieldValue('exchange_rate', DEFAULT_EX_RATE + '');
-        setFieldValue(
-          'entries',
-          updateEntriesOnExChange(values.exchange_rate, DEFAULT_EX_RATE),
-        );
+        setFieldValue('entries', updateEntriesOnExChange(values.exchange_rate, DEFAULT_EX_RATE));
       } else {
         // Sets the currency code to fetch exchange rate of the given currency code.
         setAutoExRateCurrency(customer?.currency_code);
       }
     },
-    [
-      currentCompany.base_currency,
-      setAutoExRateCurrency,
-      setFieldValue,
-      updateEntriesOnExChange,
-      values.exchange_rate,
-    ],
+    [currentCompany.base_currency, setAutoExRateCurrency, setFieldValue, updateEntriesOnExChange, values.exchange_rate],
   );
 };
 
@@ -98,8 +85,7 @@ interface UseSyncExRateToFormProps {
  */
 export const useSyncExRateToForm = ({ onSynced }: UseSyncExRateToFormProps) => {
   const { setFieldValue, values } = useFormikContext();
-  const { autoExRateCurrency, autoExchangeRate, isAutoExchangeRateLoading } =
-    useAutoExRateContext();
+  const { autoExRateCurrency, autoExchangeRate, isAutoExchangeRateLoading } = useAutoExRateContext();
   const updateEntriesOnExChange = useUpdateEntriesOnExchangeRateChange();
 
   // Sync the fetched real-time exchanage rate to the form.
@@ -110,18 +96,11 @@ export const useSyncExRateToForm = ({ onSynced }: UseSyncExRateToFormProps) => {
       const exchangeRate = autoExchangeRate?.exchange_rate || 1;
 
       setFieldValue('exchange_rate', exchangeRate + '');
-      setFieldValue(
-        'entries',
-        updateEntriesOnExChange(values.exchange_rate, exchangeRate),
-      );
+      setFieldValue('entries', updateEntriesOnExChange(values.exchange_rate, exchangeRate));
       onSynced?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    autoExchangeRate?.exchange_rate,
-    autoExRateCurrency,
-    isAutoExchangeRateLoading,
-  ]);
+  }, [autoExchangeRate?.exchange_rate, autoExRateCurrency, isAutoExchangeRateLoading]);
 
   return null;
 };

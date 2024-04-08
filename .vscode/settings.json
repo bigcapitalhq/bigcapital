@@ -1,27 +1,22 @@
 {
     "eslint.validate": [  
-        {  
-            "language":"vue",
-            "autoFix":true
-        },
-        {  
-            "language":"html",
-            "autoFix":true
-        },
-        {  
-            "language":"javascript",
-            "autoFix":true
-        },
-        {  
-            "language":"typescript",
-            "autoFix":true
-        }
+        "vue",
+        "html",
+        "javascript",
+        "typescript"
     ],
+    "editor.defaultFormatter":  "biomejs.biome",
+    "[javascript]": {
+      "editor.defaultFormatter": "biomejs.biome"
+    },
     "eslint.alwaysShowStatus": true,
     "eslint.workingDirectories": [
         "./client",
         "./server"
     ],
+    "editor.codeActionsOnSave": {
+      "quickfix.biome": "explicit"
+    },
     "editor.useTabStops": false,
     "editor.tabSize": 2,
     "editor.insertSpaces": true,

@@ -1,13 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import { Classes } from '@blueprintjs/core';
 import { ListSelect } from '../Select';
 import { getConditionTypeCompatators } from './utils';
 
-export default function DynamicFilterCompatatorField({
-  dataType,
-  ...restProps
-}) {
+export default function DynamicFilterCompatatorField({ dataType, ...restProps }) {
   const options = getConditionTypeCompatators(dataType);
 
   return (

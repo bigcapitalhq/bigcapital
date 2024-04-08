@@ -1,22 +1,11 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { Classes, FormGroup, TextArea, Position } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import {
-  FieldRequiredHint,
-  Col,
-  Row,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { FieldRequiredHint, Col, Row, FormattedMessage as T } from '@/components';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { useAutofocus } from '@/hooks';
 
 /**
@@ -33,9 +22,7 @@ export default function UnlockingPartialTransactionsFormFields() {
           <FastField name={'unlock_from_date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
-                label={
-                  <T id={'unlocking_partial_transactions.dialog.from_date'} />
-                }
+                label={<T id={'unlocking_partial_transactions.dialog.from_date'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="unlock_from_date" />}
@@ -64,9 +51,7 @@ export default function UnlockingPartialTransactionsFormFields() {
           <FastField name={'unlock_to_date'}>
             {({ form, field: { value }, meta: { error, touched } }) => (
               <FormGroup
-                label={
-                  <T id={'unlocking_partial_transactions.dialog.to_date'} />
-                }
+                label={<T id={'unlocking_partial_transactions.dialog.to_date'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="unlock_to_date" />}

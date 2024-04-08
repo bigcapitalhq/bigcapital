@@ -14,11 +14,7 @@ exports.up = (knex) => {
     })
     .table('items_entries', (table) => {
       table.boolean('is_inclusive_tax').defaultTo(false);
-      table
-        .integer('tax_rate_id')
-        .unsigned()
-        .references('id')
-        .inTable('tax_rates');
+      table.integer('tax_rate_id').unsigned().references('id').inTable('tax_rates');
       table.decimal('tax_rate').unsigned();
     })
     .table('sales_invoices', (table) => {
@@ -27,22 +23,14 @@ exports.up = (knex) => {
     })
     .createTable('tax_rate_transactions', (table) => {
       table.increments('id');
-      table
-        .integer('tax_rate_id')
-        .unsigned()
-        .references('id')
-        .inTable('tax_rates');
+      table.integer('tax_rate_id').unsigned().references('id').inTable('tax_rates');
       table.string('reference_type');
       table.integer('reference_id');
       table.decimal('rate').unsigned();
       table.integer('tax_account_id').unsigned();
     })
     .table('accounts_transactions', (table) => {
-      table
-        .integer('tax_rate_id')
-        .unsigned()
-        .references('id')
-        .inTable('tax_rates');
+      table.integer('tax_rate_id').unsigned().references('id').inTable('tax_rates');
       table.decimal('tax_rate').unsigned();
     });
 };

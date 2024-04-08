@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import {
   ICustomer,
   IPaymentReceiveCreateDTO,
@@ -7,13 +5,15 @@ import {
   IPaymentReceiveCreatingPayload,
   ISystemUser,
 } from '@/interfaces';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
-import events from '@/subscribers/events';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
+import events from '@/subscribers/events';
 import { TenantMetadata } from '@/system/models';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { PaymentReceiveDTOTransformer } from './PaymentReceiveDTOTransformer';
+import { PaymentReceiveValidators } from './PaymentReceiveValidators';
 
 @Service()
 export class CreatePaymentReceive {
@@ -56,37 +56,27 @@ export class CreatePaymentReceive {
       .throwIfNotFound();
 
     // Transformes the payment receive DTO to model.
-    const paymentReceiveObj = await this.transformCreateDTOToModel(
-      tenantId,
-      paymentCustomer,
-      paymentReceiveDTO
-    );
+    const paymentReceiveObj = await this.transformCreateDTOToModel(tenantId, paymentCustomer, paymentReceiveDTO);
     // Validate payment receive number uniquiness.
-    await this.validators.validatePaymentReceiveNoExistance(
-      tenantId,
-      paymentReceiveObj.paymentReceiveNo
-    );
+    await this.validators.validatePaymentReceiveNoExistance(tenantId, paymentReceiveObj.paymentReceiveNo);
     // Validate the deposit account existance and type.
     const depositAccount = await this.validators.getDepositAccountOrThrowError(
       tenantId,
-      paymentReceiveDTO.depositAccountId
+      paymentReceiveDTO.depositAccountId,
     );
     // Validate payment receive invoices IDs existance.
     await this.validators.validateInvoicesIDsExistance(
       tenantId,
       paymentReceiveDTO.customerId,
-      paymentReceiveDTO.entries
+      paymentReceiveDTO.entries,
     );
     // Validate invoice payment amount.
-    await this.validators.validateInvoicesPaymentsAmount(
-      tenantId,
-      paymentReceiveDTO.entries
-    );
+    await this.validators.validateInvoicesPaymentsAmount(tenantId, paymentReceiveDTO.entries);
     // Validates the payment account currency code.
     this.validators.validatePaymentAccountCurrency(
       depositAccount.currencyCode,
       paymentCustomer.currencyCode,
-      tenantMeta.baseCurrency
+      tenantMeta.baseCurrency,
     );
     // Creates a payment receive transaction under UOW envirment.
     return this.uow.withTransaction(
@@ -130,12 +120,8 @@ export class CreatePaymentReceive {
   private transformCreateDTOToModel = async (
     tenantId: number,
     customer: ICustomer,
-    paymentReceiveDTO: IPaymentReceiveCreateDTO
+    paymentReceiveDTO: IPaymentReceiveCreateDTO,
   ) => {
-    return this.transformer.transformPaymentReceiveDTOToModel(
-      tenantId,
-      customer,
-      paymentReceiveDTO
-    );
+    return this.transformer.transformPaymentReceiveDTOToModel(tenantId, customer, paymentReceiveDTO);
   };
 }

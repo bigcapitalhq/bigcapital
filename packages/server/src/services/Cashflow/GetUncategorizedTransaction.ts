@@ -1,6 +1,6 @@
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { UncategorizedTransactionTransformer } from './UncategorizedTransactionTransformer';
 
 @Service()
@@ -16,10 +16,7 @@ export class GetUncategorizedTransaction {
    * @param {number} tenantId - Tenant id.
    * @param {number} uncategorizedTransactionId - Uncategorized transaction id.
    */
-  public async getTransaction(
-    tenantId: number,
-    uncategorizedTransactionId: number
-  ) {
+  public async getTransaction(tenantId: number, uncategorizedTransactionId: number) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     const transaction = await UncategorizedCashflowTransaction.query()
@@ -27,10 +24,6 @@ export class GetUncategorizedTransaction {
       .withGraphFetched('account')
       .throwIfNotFound();
 
-    return this.transformer.transform(
-      tenantId,
-      transaction,
-      new UncategorizedTransactionTransformer()
-    );
+    return this.transformer.transform(tenantId, transaction, new UncategorizedTransactionTransformer());
   }
 }

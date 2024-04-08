@@ -14,10 +14,7 @@ export class FinancialTableStructure {
    * @param {FlatNestTreeOpts}
    * @returns {ITableRow[]}
    */
-  public static flatNestedTree = (
-    obj: ITableRow[],
-    options?: FlatNestTreeOpts
-  ): ITableRow[] => {
+  public static flatNestedTree = (obj: ITableRow[], options?: FlatNestTreeOpts): ITableRow[] => {
     const parsedOptions = {
       nestedPrefix: '   ',
       nestedPrefixIndex: 0,
@@ -32,9 +29,8 @@ export class FinancialTableStructure {
           return {
             ...cell,
             value:
-              (context.depth > 1 && nestedPrefixIndex === index
-                ? repeat(nestedPrefix, context.depth)
-                : '') + cell.value,
+              (context.depth > 1 && nestedPrefixIndex === index ? repeat(nestedPrefix, context.depth) : '') +
+              cell.value,
           };
         });
         return {
@@ -42,7 +38,7 @@ export class FinancialTableStructure {
           cells,
         };
       },
-      parsedOptions
+      parsedOptions,
     );
   };
 }

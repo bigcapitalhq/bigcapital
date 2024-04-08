@@ -1,22 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose, saveInvoke } from '@/utils';
 
-const CreditNoteNumberDialogContent = React.lazy(() =>
-  import('./CreditNoteNumberDialogContent'),
-);
+const CreditNoteNumberDialogContent = React.lazy(() => import('./CreditNoteNumberDialogContent'));
 
 /**
  * Credit note number dialog.
  */
-function CreditNoteNumberDialog({
-  dialogName,
-  payload: { initialFormValues },
-  isOpen,
-  onConfirm,
-}) {
+function CreditNoteNumberDialog({ dialogName, payload: { initialFormValues }, isOpen, onConfirm }) {
   const handleConfirm = (values) => {
     saveInvoke(onConfirm, values);
   };
@@ -30,10 +22,7 @@ function CreditNoteNumberDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <CreditNoteNumberDialogContent
-          initialValues={{ ...initialFormValues }}
-          onConfirm={handleConfirm}
-        />
+        <CreditNoteNumberDialogContent initialValues={{ ...initialFormValues }} onConfirm={handleConfirm} />
       </DialogSuspense>
     </Dialog>
   );

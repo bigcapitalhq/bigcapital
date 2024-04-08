@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { camelCase} from 'lodash';
+import { camelCase } from 'lodash';
 
 import { If, Skeleton } from '@/components';
 import { useAppIntlContext } from '@/components/AppIntlProvider';
@@ -17,14 +16,7 @@ const ROW_CLICK_SELECTORS_INGORED = ['.expand-toggle', '.selection-checkbox'];
 export default function TableCell({ cell, row, index }) {
   const { index: rowIndex, depth, getToggleRowExpandedProps, isExpanded } = row;
   const {
-    props: {
-      expandToggleColumn,
-      expandColumnSpace,
-      expandable,
-      cellsLoading,
-      cellsLoadingCoords,
-      onCellClick,
-    },
+    props: { expandToggleColumn, expandColumnSpace, expandable, cellsLoading, cellsLoadingCoords, onCellClick },
   } = useContext(TableContext);
 
   const isExpandColumn = expandToggleColumn === index;
@@ -34,12 +26,7 @@ export default function TableCell({ cell, row, index }) {
   const { isRTL } = useAppIntlContext();
 
   // Detarmines whether the current cell is loading.
-  const cellLoading = isCellLoading(
-    cellsLoading,
-    cellsLoadingCoords,
-    rowIndex,
-    cell.column.id,
-  );
+  const cellLoading = isCellLoading(cellsLoading, cellsLoadingCoords, rowIndex, cell.column.id);
 
   if (cellLoading) {
     return (
@@ -58,7 +45,7 @@ export default function TableCell({ cell, row, index }) {
       return;
     }
     saveInvoke(onCellClick, cell, event);
-  };  
+  };
   const cellType = camelCase(cell.column.Cell.cellType) || 'text';
 
   return (
@@ -72,7 +59,7 @@ export default function TableCell({ cell, row, index }) {
           [`td-${cell.column.id}`]: cell.column.id,
           [`td-${cellType}-type`]: !!cellType,
         }),
-        tabindex: 0,
+        tabIndex: 0,
         onClick: handleCellClick,
       })}
     >
@@ -85,9 +72,7 @@ export default function TableCell({ cell, row, index }) {
         )}
         style={{
           [isRTL ? 'paddingRight' : 'paddingLeft']:
-            isExpandColumn && expandable
-              ? `${depth * expandColumnSpace}rem`
-              : '',
+            isExpandColumn && expandable ? `${depth * expandColumnSpace}rem` : '',
         }}
       >
         {

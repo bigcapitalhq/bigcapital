@@ -1,17 +1,12 @@
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
-import { omit } from 'lodash';
-import {
-  IEditTaxRateDTO,
-  ITaxRate,
-  ITaxRateEditedPayload,
-  ITaxRateEditingPayload,
-} from '@/interfaces';
-import UnitOfWork from '../UnitOfWork';
+import { IEditTaxRateDTO, ITaxRate, ITaxRateEditedPayload, ITaxRateEditingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import HasTenancyService from '../Tenancy/TenancyService';
-import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
+import HasTenancyService from '../Tenancy/TenancyService';
+import UnitOfWork from '../UnitOfWork';
+import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
 
 @Service()
 export class EditTaxRateService {
@@ -33,10 +28,7 @@ export class EditTaxRateService {
    * @param {IEditTaxRateDTO} editTaxRateDTO
    * @returns {boolean}
    */
-  private isTaxRateDTOChanged = (
-    taxRate: ITaxRate,
-    editTaxRateDTO: IEditTaxRateDTO
-  ) => {
+  private isTaxRateDTOChanged = (taxRate: ITaxRate, editTaxRateDTO: IEditTaxRateDTO) => {
     return (
       taxRate.rate !== editTaxRateDTO.rate ||
       taxRate.name !== editTaxRateDTO.name ||
@@ -56,13 +48,10 @@ export class EditTaxRateService {
     tenantId: number,
     oldTaxRate: ITaxRate,
     editTaxRateDTO: IEditTaxRateDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) {
     const { TaxRate } = this.tenancy.models(tenantId);
-    const isTaxDTOChanged = this.isTaxRateDTOChanged(
-      oldTaxRate,
-      editTaxRateDTO
-    );
+    const isTaxDTOChanged = this.isTaxRateDTOChanged(oldTaxRate, editTaxRateDTO);
     if (isTaxDTOChanged) {
       // Soft deleting the old tax rate.
       await TaxRate.query(trx).findById(oldTaxRate.id).delete();
@@ -86,11 +75,7 @@ export class EditTaxRateService {
    * @param {IEditTaxRateDTO} taxRateEditDTO
    * @returns {Promise<ITaxRate>}
    */
-  public async editTaxRate(
-    tenantId: number,
-    taxRateId: number,
-    editTaxRateDTO: IEditTaxRateDTO
-  ) {
+  public async editTaxRate(tenantId: number, taxRateId: number, editTaxRateDTO: IEditTaxRateDTO) {
     const { TaxRate } = this.tenancy.models(tenantId);
 
     const oldTaxRate = await TaxRate.query().findById(taxRateId);
@@ -106,12 +91,7 @@ export class EditTaxRateService {
         trx,
       } as ITaxRateEditingPayload);
 
-      const taxRate = await this.editTaxRateOrCreate(
-        tenantId,
-        oldTaxRate,
-        editTaxRateDTO,
-        trx
-      );
+      const taxRate = await this.editTaxRateOrCreate(tenantId, oldTaxRate, editTaxRateDTO, trx);
       // Triggers `onTaxRateEdited` event.
       await this.eventPublisher.emitAsync(events.taxRates.onEdited, {
         editTaxRateDTO,

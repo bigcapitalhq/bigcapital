@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 
@@ -15,13 +14,7 @@ const useDetailsMenuContext = () => React.useContext(DetailsMenuContext);
 /**
  * Details menu.
  */
-export function DetailsMenu({
-  children,
-  direction = DIRECTION.VERTICAL,
-  textAlign,
-  minLabelSize,
-  className,
-}) {
+export function DetailsMenu({ children, direction = DIRECTION.VERTICAL, textAlign, minLabelSize, className }) {
   return (
     <div
       className={classNames(
@@ -34,9 +27,7 @@ export function DetailsMenu({
         className,
       )}
     >
-      <DetailsMenuContext.Provider value={{ minLabelSize }}>
-        {children}
-      </DetailsMenuContext.Provider>
+      <DetailsMenuContext.Provider value={{ minLabelSize }}>{children}</DetailsMenuContext.Provider>
     </div>
   );
 }
@@ -62,7 +53,7 @@ export function DetailItem({ label, children, name, align, className }) {
         style={{
           'min-width': minLabelSize,
         }}
-        class="detail-item__label"
+        className="detail-item__label"
       >
         {label}
       </div>

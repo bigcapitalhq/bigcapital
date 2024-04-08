@@ -26,10 +26,7 @@ export default class DashboardService {
    * @param {number} tenantId
    * @param {number} authorizedUser
    */
-  public getBootMeta = async (
-    tenantId: number,
-    authorizedUser: ISystemUser
-  ): Promise<IDashboardBootMeta> => {
+  public getBootMeta = async (tenantId: number, authorizedUser: ISystemUser): Promise<IDashboardBootMeta> => {
     // Retrieves all orgnaization abilities.
     const abilities = await this.getBootAbilities(tenantId, authorizedUser.id);
 
@@ -58,15 +55,10 @@ export default class DashboardService {
    * Retrieve the boot abilities.
    * @returns
    */
-  private getBootAbilities = async (
-    tenantId: number,
-    systemUserId: number
-  ): Promise<IRoleAbility[]> => {
+  private getBootAbilities = async (tenantId: number, systemUserId: number): Promise<IRoleAbility[]> => {
     const { User } = this.tenancy.models(tenantId);
 
-    const tenantUser = await User.query()
-      .findOne('systemUserId', systemUserId)
-      .withGraphFetched('role.permissions');
+    const tenantUser = await User.query().findOne('systemUserId', systemUserId).withGraphFetched('role.permissions');
 
     return tenantUser.role.slug === 'admin'
       ? [{ subject: 'all', action: 'manage' }]

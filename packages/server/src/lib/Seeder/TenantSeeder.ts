@@ -1,6 +1,6 @@
-import { Seeder } from "./Seeder";
+import { Seeder } from './Seeder';
 
-export class TenantSeeder extends Seeder{
+export class TenantSeeder extends Seeder {
   public knex: any;
   public i18n: i18nAPI;
   public models: any;

@@ -1,5 +1,5 @@
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-import { Service, Inject } from 'typedi';
+import { Inject, Service } from 'typedi';
 import BaseVendorCredit from '../BaseVendorCredit';
 import { VendorCreditAppliedBillTransformer } from './VendorCreditAppliedBillTransformer';
 
@@ -17,20 +17,13 @@ export default class GetAppliedBillsToVendorCredit extends BaseVendorCredit {
   public getAppliedBills = async (tenantId: number, vendorCreditId: number) => {
     const { VendorCreditAppliedBill } = this.tenancy.models(tenantId);
 
-    const vendorCredit = await this.getVendorCreditOrThrowError(
-      tenantId,
-      vendorCreditId
-    );
+    const vendorCredit = await this.getVendorCreditOrThrowError(tenantId, vendorCreditId);
     const appliedToBills = await VendorCreditAppliedBill.query()
       .where('vendorCreditId', vendorCreditId)
       .withGraphFetched('bill')
       .withGraphFetched('vendorCredit');
 
     // Transformes the models to POJO.
-    return this.transformer.transform(
-      tenantId,
-      appliedToBills,
-      new VendorCreditAppliedBillTransformer()
-    );
+    return this.transformer.transform(tenantId, appliedToBills, new VendorCreditAppliedBillTransformer());
   };
 }

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 /**
@@ -19,4 +19,3 @@ export const resetCashflowAccountsTableState = () => {
     type: t.CASHFLOW_ACCOUNTS_TABLE_STATE_RESET,
   };
 };
- 

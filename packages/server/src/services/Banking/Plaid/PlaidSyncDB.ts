@@ -1,16 +1,13 @@
-import * as R from 'ramda';
-import { Inject, Service } from 'typedi';
-import bluebird from 'bluebird';
-import { entries, groupBy } from 'lodash';
-import { CreateAccount } from '@/services/Accounts/CreateAccount';
 import { PlaidAccount, PlaidTransaction } from '@/interfaces';
-import {
-  transformPlaidAccountToCreateAccount,
-  transformPlaidTrxsToCashflowCreate,
-} from './utils';
+import { CreateAccount } from '@/services/Accounts/CreateAccount';
+import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
+import bluebird from 'bluebird';
+import { entries, groupBy } from 'lodash';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { transformPlaidAccountToCreateAccount, transformPlaidTrxsToCashflowCreate } from './utils';
 
 const CONCURRENCY_ASYNC = 10;
 
@@ -34,21 +31,15 @@ export class PlaidSyncDb {
    * @param {PlaidAccount[]} plaidAccounts
    * @returns {Promise<void>}
    */
-  public async syncBankAccounts(
-    tenantId: number,
-    plaidAccounts: PlaidAccount[],
-    institution: any
-  ): Promise<void> {
-    const transformToPlaidAccounts =
-      transformPlaidAccountToCreateAccount(institution);
+  public async syncBankAccounts(tenantId: number, plaidAccounts: PlaidAccount[], institution: any): Promise<void> {
+    const transformToPlaidAccounts = transformPlaidAccountToCreateAccount(institution);
 
     const accountCreateDTOs = R.map(transformToPlaidAccounts)(plaidAccounts);
 
     await bluebird.map(
       accountCreateDTOs,
-      (createAccountDTO: any) =>
-        this.createAccountService.createAccount(tenantId, createAccountDTO),
-      { concurrency: CONCURRENCY_ASYNC }
+      (createAccountDTO: any) => this.createAccountService.createAccount(tenantId, createAccountDTO),
+      { concurrency: CONCURRENCY_ASYNC },
     );
   }
 
@@ -61,35 +52,22 @@ export class PlaidSyncDb {
   public async syncAccountTranactions(
     tenantId: number,
     plaidAccountId: number,
-    plaidTranasctions: PlaidTransaction[]
+    plaidTranasctions: PlaidTransaction[],
   ): Promise<void> {
     const { Account } = this.tenancy.models(tenantId);
 
-    const cashflowAccount = await Account.query()
-      .findOne({ plaidAccountId })
-      .throwIfNotFound();
+    const cashflowAccount = await Account.query().findOne({ plaidAccountId }).throwIfNotFound();
 
-    const openingEquityBalance = await Account.query().findOne(
-      'slug',
-      'opening-balance-equity'
-    );
+    const openingEquityBalance = await Account.query().findOne('slug', 'opening-balance-equity');
     // Transformes the Plaid transactions to cashflow create DTOs.
-    const transformTransaction = transformPlaidTrxsToCashflowCreate(
-      cashflowAccount.id,
-      openingEquityBalance.id
-    );
-    const uncategorizedTransDTOs =
-      R.map(transformTransaction)(plaidTranasctions);
+    const transformTransaction = transformPlaidTrxsToCashflowCreate(cashflowAccount.id, openingEquityBalance.id);
+    const uncategorizedTransDTOs = R.map(transformTransaction)(plaidTranasctions);
 
     // Creating account transaction queue.
     await bluebird.map(
       uncategorizedTransDTOs,
-      (uncategoriedDTO) =>
-        this.cashflowApp.createUncategorizedTransaction(
-          tenantId,
-          uncategoriedDTO
-        ),
-      { concurrency: 1 }
+      (uncategoriedDTO) => this.cashflowApp.createUncategorizedTransaction(tenantId, uncategoriedDTO),
+      { concurrency: 1 },
     );
   }
 
@@ -100,21 +78,15 @@ export class PlaidSyncDb {
    */
   public async syncAccountsTransactions(
     tenantId: number,
-    plaidAccountsTransactions: PlaidTransaction[]
+    plaidAccountsTransactions: PlaidTransaction[],
   ): Promise<void> {
-    const groupedTrnsxByAccountId = entries(
-      groupBy(plaidAccountsTransactions, 'account_id')
-    );
+    const groupedTrnsxByAccountId = entries(groupBy(plaidAccountsTransactions, 'account_id'));
     await bluebird.map(
       groupedTrnsxByAccountId,
       ([plaidAccountId, plaidTransactions]: [number, PlaidTransaction[]]) => {
-        return this.syncAccountTranactions(
-          tenantId,
-          plaidAccountId,
-          plaidTransactions
-        );
+        return this.syncAccountTranactions(tenantId, plaidAccountId, plaidTransactions);
       },
-      { concurrency: CONCURRENCY_ASYNC }
+      { concurrency: CONCURRENCY_ASYNC },
     );
   }
 
@@ -122,27 +94,16 @@ export class PlaidSyncDb {
    * Syncs the removed Plaid transactions ids from the cashflow system transactions.
    * @param {string[]} plaidTransactionsIds - Plaid Transactions IDs.
    */
-  public async syncRemoveTransactions(
-    tenantId: number,
-    plaidTransactionsIds: string[]
-  ) {
+  public async syncRemoveTransactions(tenantId: number, plaidTransactionsIds: string[]) {
     const { CashflowTransaction } = this.tenancy.models(tenantId);
 
-    const cashflowTransactions = await CashflowTransaction.query().whereIn(
-      'plaidTransactionId',
-      plaidTransactionsIds
-    );
-    const cashflowTransactionsIds = cashflowTransactions.map(
-      (trans) => trans.id
-    );
+    const cashflowTransactions = await CashflowTransaction.query().whereIn('plaidTransactionId', plaidTransactionsIds);
+    const cashflowTransactionsIds = cashflowTransactions.map((trans) => trans.id);
     await bluebird.map(
       cashflowTransactionsIds,
       (transactionId: number) =>
-        this.deleteCashflowTransactionService.deleteCashflowTransaction(
-          tenantId,
-          transactionId
-        ),
-      { concurrency: CONCURRENCY_ASYNC }
+        this.deleteCashflowTransactionService.deleteCashflowTransaction(tenantId, transactionId),
+      { concurrency: CONCURRENCY_ASYNC },
     );
   }
 
@@ -152,11 +113,7 @@ export class PlaidSyncDb {
    * @param {string} itemId - Plaid item ID.
    * @param {string} lastCursor - Last transaction cursor.
    */
-  public async syncTransactionsCursor(
-    tenantId: number,
-    plaidItemId: string,
-    lastCursor: string
-  ) {
+  public async syncTransactionsCursor(tenantId: number, plaidItemId: string, lastCursor: string) {
     const { PlaidItem } = this.tenancy.models(tenantId);
 
     await PlaidItem.query().findOne({ plaidItemId }).patch({ lastCursor });
@@ -167,10 +124,7 @@ export class PlaidSyncDb {
    * @param {number} tenantId
    * @param {string[]} plaidAccountIds
    */
-  public async updateLastFeedsUpdatedAt(
-    tenantId: number,
-    plaidAccountIds: string[]
-  ) {
+  public async updateLastFeedsUpdatedAt(tenantId: number, plaidAccountIds: string[]) {
     const { Account } = this.tenancy.models(tenantId);
 
     await Account.query().whereIn('plaid_account_id', plaidAccountIds).patch({
@@ -184,11 +138,7 @@ export class PlaidSyncDb {
    * @param {number[]} plaidAccountIds
    * @param {boolean} isFeedsActive
    */
-  public async updateAccountsFeedsActive(
-    tenantId: number,
-    plaidAccountIds: string[],
-    isFeedsActive: boolean = true
-  ) {
+  public async updateAccountsFeedsActive(tenantId: number, plaidAccountIds: string[], isFeedsActive = true) {
     const { Account } = this.tenancy.models(tenantId);
 
     await Account.query().whereIn('plaid_account_id', plaidAccountIds).patch({

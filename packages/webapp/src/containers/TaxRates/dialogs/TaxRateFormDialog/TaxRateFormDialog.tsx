@@ -1,22 +1,15 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const TaxRateFormDialogContent = lazy(
-  () => import('./TaxRateFormDialogContent'),
-);
+const TaxRateFormDialogContent = lazy(() => import('./TaxRateFormDialogContent'));
 
 /**
  * Tax rate form dialog.
  */
-function TaxRateFormDialog({
-  dialogName,
-  payload = { action: '', id: null },
-  isOpen,
-}) {
+function TaxRateFormDialog({ dialogName, payload = { action: '', id: null }, isOpen }) {
   return (
     <TaxRateDialog
       name={dialogName}
@@ -26,10 +19,7 @@ function TaxRateFormDialog({
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <TaxRateFormDialogContent
-          dialogName={dialogName}
-          taxRateId={payload.id}
-        />
+        <TaxRateFormDialogContent dialogName={dialogName} taxRateId={payload.id} />
       </DialogSuspense>
     </TaxRateDialog>
   );

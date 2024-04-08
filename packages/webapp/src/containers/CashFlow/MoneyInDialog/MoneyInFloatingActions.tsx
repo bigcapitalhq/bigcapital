@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
@@ -19,8 +18,7 @@ function MoneyInFloatingActions({
   // Formik context.
   const { isSubmitting, submitForm } = useFormikContext();
   //  money in  dialog context.
-  const { dialogName, setSubmitPayload, submitPayload } =
-    useMoneyInDailogContext();
+  const { dialogName, setSubmitPayload, submitPayload } = useMoneyInDailogContext();
 
   // handle submit as draft button click.
   const handleSubmitDraftBtnClick = (event) => {
@@ -39,11 +37,7 @@ function MoneyInFloatingActions({
   return (
     <div className={Classes.DIALOG_FOOTER}>
       <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-        <Button
-          disabled={isSubmitting}
-          onClick={handleCloseBtnClick}
-          style={{ minWidth: '75px' }}
-        >
+        <Button disabled={isSubmitting} onClick={handleCloseBtnClick} style={{ minWidth: '75px' }}>
           <T id={'close'} />
         </Button>
         {/* <Button

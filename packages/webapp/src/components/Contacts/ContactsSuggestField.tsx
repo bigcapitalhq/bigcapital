@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
@@ -30,20 +29,13 @@ export function ContactsSuggestField({
     [contactsList],
   );
 
-  const initialContact = useMemo(
-    () => contacts.find((a) => a.id === initialContactId),
-    [initialContactId, contacts],
-  );
+  const initialContact = useMemo(() => contacts.find((a) => a.id === initialContactId), [initialContactId, contacts]);
 
-  const [selecetedContact, setSelectedContact] = useState(
-    initialContact || null,
-  );
+  const [selecetedContact, setSelectedContact] = useState(initialContact || null);
 
   useEffect(() => {
     if (typeof selectedContactId !== 'undefined') {
-      const contact = selectedContactId
-        ? contacts.find((a) => a.id === selectedContactId)
-        : null;
+      const contact = selectedContactId ? contacts.find((a) => a.id === selectedContactId) : null;
       setSelectedContact(contact);
     }
   }, [selectedContactId, contacts, setSelectedContact]);
@@ -80,10 +72,7 @@ export function ContactsSuggestField({
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
-      return (
-        `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >=
-        0
-      );
+      return `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
     }
   };
 

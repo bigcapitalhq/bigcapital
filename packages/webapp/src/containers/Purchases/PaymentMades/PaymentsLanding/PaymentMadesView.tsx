@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
@@ -18,11 +17,7 @@ function PaymentMadesViewPage({
 }) {
   return (
     <Switch>
-      <Route
-        exact={true}
-        path={['/payment-mades/:custom_view_id/custom_view', '/payment-mades']}
-      >
-        
+      <Route exact={true} path={['/payment-mades/:custom_view_id/custom_view', '/payment-mades']}>
         {/* <PaymentMadeDataTable
               onDeletePaymentMade={handleDeletePaymentMade}
               onEditPaymentMade={handleEditPaymentMade}
@@ -33,7 +28,4 @@ function PaymentMadesViewPage({
   );
 }
 
-export default compose(
-  withAlertsActions,
-  withDialogActions,
-)(PaymentMadesViewPage);
+export default compose(withAlertsActions, withDialogActions)(PaymentMadesViewPage);

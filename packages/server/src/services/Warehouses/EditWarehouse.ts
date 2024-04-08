@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
+import { IEditWarehouseDTO, IWarehouse } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { IEditWarehouseDTO, IWarehouse } from '@/interfaces';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { WarehouseValidator } from './WarehouseValidator';
 
 @Service()
@@ -26,17 +26,9 @@ export class EditWarehouse {
    * @param {number} tenantId -
    * @param {ICreateWarehouseDTO} warehouseDTO -
    */
-  public authorize = async (
-    tenantId: number,
-    warehouseDTO: IEditWarehouseDTO,
-    warehouseId: number
-  ) => {
+  public authorize = async (tenantId: number, warehouseDTO: IEditWarehouseDTO, warehouseId: number) => {
     if (warehouseDTO.code) {
-      await this.validator.validateWarehouseCodeUnique(
-        tenantId,
-        warehouseDTO.code,
-        warehouseId
-      );
+      await this.validator.validateWarehouseCodeUnique(tenantId, warehouseDTO.code, warehouseId);
     }
   };
 
@@ -49,7 +41,7 @@ export class EditWarehouse {
   public editWarehouse = async (
     tenantId: number,
     warehouseId: number,
-    warehouseDTO: IEditWarehouseDTO
+    warehouseDTO: IEditWarehouseDTO,
   ): Promise<IWarehouse> => {
     const { Warehouse } = this.tenancy.models(tenantId);
 

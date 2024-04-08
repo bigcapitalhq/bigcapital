@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -24,8 +23,7 @@ function CancelUnlockingPartialTarnsactions({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: cancelUnlockingPartial, isLoading } =
-    useCancelUnlockingPartialTransactions();
+  const { mutateAsync: cancelUnlockingPartial, isLoading } = useCancelUnlockingPartialTransactions();
 
   // Handle cancel.
   const handleCancel = () => {
@@ -40,9 +38,7 @@ function CancelUnlockingPartialTarnsactions({
     cancelUnlockingPartial(values)
       .then(() => {
         AppToaster.show({
-          message: intl.get(
-            'unlocking_partial_transactions.alert.cancel_message',
-          ),
+          message: intl.get('unlocking_partial_transactions.alert.cancel_message'),
           intent: Intent.SUCCESS,
         });
       })
@@ -75,7 +71,4 @@ function CancelUnlockingPartialTarnsactions({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CancelUnlockingPartialTarnsactions);
+export default compose(withAlertStoreConnect(), withAlertActions)(CancelUnlockingPartialTarnsactions);

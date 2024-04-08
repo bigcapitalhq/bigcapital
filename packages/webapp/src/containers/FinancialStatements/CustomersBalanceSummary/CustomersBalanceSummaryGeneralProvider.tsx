@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
 import { useCustomers } from '@/hooks/query';
@@ -27,17 +26,10 @@ function CustomersBalanceSummaryGeneralProvider({ ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <CustomersBalanceSummaryGeneralContext.Provider
-      value={provider}
-      {...props}
-    />
+    <CustomersBalanceSummaryGeneralContext.Provider value={provider} {...props} />
   );
 }
 
-const useCustomersBalanceSummaryGeneralContext = () =>
-  useContext(CustomersBalanceSummaryGeneralContext);
+const useCustomersBalanceSummaryGeneralContext = () => useContext(CustomersBalanceSummaryGeneralContext);
 
-export {
-  CustomersBalanceSummaryGeneralProvider,
-  useCustomersBalanceSummaryGeneralContext,
-};
+export { CustomersBalanceSummaryGeneralProvider, useCustomersBalanceSummaryGeneralContext };

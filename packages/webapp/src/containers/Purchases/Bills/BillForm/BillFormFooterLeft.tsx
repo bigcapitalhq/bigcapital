@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -8,14 +7,8 @@ export function BillFormFooterLeft() {
   return (
     <React.Fragment>
       {/* --------- note --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'bill_form.label.note'} />}
-        name={'note'}
-      >
-        <FEditableText
-          name={'note'}
-          placeholder={intl.get('bill_form.label.note.placeholder')}
-        />
+      <TermsConditsFormGroup label={<T id={'bill_form.label.note'} />} name={'note'}>
+        <FEditableText name={'note'} placeholder={intl.get('bill_form.label.note.placeholder')} />
       </TermsConditsFormGroup>
     </React.Fragment>
   );

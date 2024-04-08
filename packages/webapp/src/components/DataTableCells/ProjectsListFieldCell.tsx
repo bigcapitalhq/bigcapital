@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -26,11 +25,7 @@ export function ProjectsListFieldCell({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(
-        'form-group--select-list',
-        'form-group--contacts-list',
-        Classes.FILL,
-      )}
+      className={classNames('form-group--select-list', 'form-group--contacts-list', Classes.FILL)}
     >
       <ProjectSuggestField
         projects={projects}

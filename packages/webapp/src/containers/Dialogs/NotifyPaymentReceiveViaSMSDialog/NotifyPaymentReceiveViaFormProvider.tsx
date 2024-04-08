@@ -1,28 +1,19 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
-import {
-  useCreateNotifyPaymentReceiveBySMS,
-  usePaymentReceiveSMSDetail,
-} from '@/hooks/query';
+import { useCreateNotifyPaymentReceiveBySMS, usePaymentReceiveSMSDetail } from '@/hooks/query';
 
 const NotifyPaymentReceiveViaSMSContext = React.createContext();
 
-function NotifyPaymentReceiveViaFormProvider({
-  paymentReceiveId,
-  dialogName,
-  ...props
-}) {
+function NotifyPaymentReceiveViaFormProvider({ paymentReceiveId, dialogName, ...props }) {
   // Create notfiy receipt via sms mutations.
-  const { mutateAsync: createNotifyPaymentReceivetBySMSMutate } =
-    useCreateNotifyPaymentReceiveBySMS();
+  const { mutateAsync: createNotifyPaymentReceivetBySMSMutate } = useCreateNotifyPaymentReceiveBySMS();
 
-  const {
-    data: paymentReceiveMSDetail,
-    isLoading: isPaymentReceiveSMSDetailLoading,
-  } = usePaymentReceiveSMSDetail(paymentReceiveId, {
-    enabled: !!paymentReceiveId,
-  });
+  const { data: paymentReceiveMSDetail, isLoading: isPaymentReceiveSMSDetailLoading } = usePaymentReceiveSMSDetail(
+    paymentReceiveId,
+    {
+      enabled: !!paymentReceiveId,
+    },
+  );
 
   // State provider.
   const provider = {
@@ -39,10 +30,6 @@ function NotifyPaymentReceiveViaFormProvider({
   );
 }
 
-const useNotifyPaymentReceiveViaSMSContext = () =>
-  React.useContext(NotifyPaymentReceiveViaSMSContext);
+const useNotifyPaymentReceiveViaSMSContext = () => React.useContext(NotifyPaymentReceiveViaSMSContext);
 
-export {
-  NotifyPaymentReceiveViaFormProvider,
-  useNotifyPaymentReceiveViaSMSContext,
-};
+export { NotifyPaymentReceiveViaFormProvider, useNotifyPaymentReceiveViaSMSContext };

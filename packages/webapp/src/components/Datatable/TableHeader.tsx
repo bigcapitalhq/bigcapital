@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { ScrollSyncPane } from 'react-scroll-sync';
@@ -53,11 +52,8 @@ function TableHeaderCell({ column, index }) {
       </div>
 
       {column.canResize && (
-        <div
-          {...column.getResizerProps()}
-          className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
-        >
-          <div class="inner-resizer" />
+        <div {...column.getResizerProps()} className={`resizer ${column.isResizing ? 'isResizing' : ''}`}>
+          <div className="inner-resizer" />
         </div>
       )}
     </div>
@@ -80,12 +76,7 @@ function TableHeaderGroup({ headerGroup }) {
 export default function TableHeader() {
   const {
     table: { headerGroups, page },
-    props: {
-      TableHeaderSkeletonRenderer,
-      headerLoading,
-      progressBarLoading,
-      hideTableHeader,
-    },
+    props: { TableHeaderSkeletonRenderer, headerLoading, progressBarLoading, hideTableHeader },
   } = useContext(TableContext);
 
   // Can't contiunue if the thead is disabled.

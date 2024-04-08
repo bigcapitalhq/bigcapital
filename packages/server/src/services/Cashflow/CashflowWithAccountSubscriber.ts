@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import { IAccountEventDeletePayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import CashflowDeleteAccount from './CashflowDeleteAccount';
 
 @Service()
@@ -12,10 +12,7 @@ export default class CashflowWithAccountSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.accounts.onDelete,
-      this.validateAccountHasNoCashflowTransactionsOnDelete
-    );
+    bus.subscribe(events.accounts.onDelete, this.validateAccountHasNoCashflowTransactionsOnDelete);
   };
 
   /**
@@ -26,9 +23,6 @@ export default class CashflowWithAccountSubscriber {
     tenantId,
     oldAccount,
   }: IAccountEventDeletePayload) => {
-    await this.cashflowDeleteAccount.validateAccountHasNoCashflowEntries(
-      tenantId,
-      oldAccount.id
-    );
+    await this.cashflowDeleteAccount.validateAccountHasNoCashflowEntries(tenantId, oldAccount.id);
   };
 }

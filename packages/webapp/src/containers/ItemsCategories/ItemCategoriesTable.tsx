@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -26,8 +25,7 @@ function ItemsCategoryTable({
   openAlert,
 }) {
   // Items categories context.
-  const { isCategoriesLoading, isCategoriesFetching, itemsCategories } =
-    useItemsCategoriesContext();
+  const { isCategoriesLoading, isCategoriesFetching, itemsCategories } = useItemsCategoriesContext();
 
   // Table columns.
   const columns = useItemsCategoriesTableColumns();

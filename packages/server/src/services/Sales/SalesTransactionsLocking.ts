@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import TransactionsLockingValidator from '@/services/TransactionsLocking/TransactionsLockingGuard';
 import { TransactionsLockingGroup } from '@/interfaces';
+import TransactionsLockingValidator from '@/services/TransactionsLocking/TransactionsLockingGuard';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SalesTransactionsLocking {
@@ -12,15 +12,12 @@ export default class SalesTransactionsLocking {
    * @param {number} tenantId
    * @param {Date} transactionDate
    */
-  public validateTransactionsLocking = (
-    tenantId: number,
-    transactionDate: Date
-  ) => {
+  public validateTransactionsLocking = (tenantId: number, transactionDate: Date) => {
     // Validates the all transcation locking.
     this.transactionLockingValidator.validateTransactionsLocking(
       tenantId,
       transactionDate,
-      TransactionsLockingGroup.All
+      TransactionsLockingGroup.All,
     );
     // Validates the partial sales transcation locking.
     // this.transactionLockingValidator.validateTransactionsLocking(

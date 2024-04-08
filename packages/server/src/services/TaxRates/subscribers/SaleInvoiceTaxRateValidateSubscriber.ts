@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
-import {
-  ISaleInvoiceCreatingPaylaod,
-  ISaleInvoiceEditingPayload,
-} from '@/interfaces';
+import { ISaleInvoiceCreatingPaylaod, ISaleInvoiceEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { CommandTaxRatesValidators } from '../CommandTaxRatesValidators';
 
 @Service()
@@ -15,22 +12,10 @@ export class SaleInvoiceTaxRateValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.validateSaleInvoiceEntriesTaxCodeExistanceOnCreating
-    );
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.validateSaleInvoiceEntriesTaxIdExistanceOnCreating
-    );
-    bus.subscribe(
-      events.saleInvoice.onEditing,
-      this.validateSaleInvoiceEntriesTaxCodeExistanceOnEditing
-    );
-    bus.subscribe(
-      events.saleInvoice.onEditing,
-      this.validateSaleInvoiceEntriesTaxIdExistanceOnEditing
-    );
+    bus.subscribe(events.saleInvoice.onCreating, this.validateSaleInvoiceEntriesTaxCodeExistanceOnCreating);
+    bus.subscribe(events.saleInvoice.onCreating, this.validateSaleInvoiceEntriesTaxIdExistanceOnCreating);
+    bus.subscribe(events.saleInvoice.onEditing, this.validateSaleInvoiceEntriesTaxCodeExistanceOnEditing);
+    bus.subscribe(events.saleInvoice.onEditing, this.validateSaleInvoiceEntriesTaxIdExistanceOnEditing);
     return bus;
   }
 
@@ -42,10 +27,7 @@ export class SaleInvoiceTaxRateValidateSubscriber {
     saleInvoiceDTO,
     tenantId,
   }: ISaleInvoiceCreatingPaylaod) => {
-    await this.taxRateDTOValidator.validateItemEntriesTaxCode(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.taxRateDTOValidator.validateItemEntriesTaxCode(tenantId, saleInvoiceDTO.entries);
   };
 
   /**
@@ -56,10 +38,7 @@ export class SaleInvoiceTaxRateValidateSubscriber {
     saleInvoiceDTO,
     tenantId,
   }: ISaleInvoiceCreatingPaylaod) => {
-    await this.taxRateDTOValidator.validateItemEntriesTaxCodeId(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.taxRateDTOValidator.validateItemEntriesTaxCodeId(tenantId, saleInvoiceDTO.entries);
   };
 
   /**
@@ -70,10 +49,7 @@ export class SaleInvoiceTaxRateValidateSubscriber {
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceEditingPayload) => {
-    await this.taxRateDTOValidator.validateItemEntriesTaxCode(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.taxRateDTOValidator.validateItemEntriesTaxCode(tenantId, saleInvoiceDTO.entries);
   };
 
   /**
@@ -84,9 +60,6 @@ export class SaleInvoiceTaxRateValidateSubscriber {
     tenantId,
     saleInvoiceDTO,
   }: ISaleInvoiceEditingPayload) => {
-    await this.taxRateDTOValidator.validateItemEntriesTaxCodeId(
-      tenantId,
-      saleInvoiceDTO.entries
-    );
+    await this.taxRateDTOValidator.validateItemEntriesTaxCodeId(tenantId, saleInvoiceDTO.entries);
   };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Card, DetailItem, DetailsMenu } from '@/components';
 import { useTaxRateDetailsContext } from './TaxRateDetailsContentBoot';
@@ -26,10 +25,7 @@ export default function TaxRateDetailsContentDetails() {
         <DetailsMenu direction={'horizantal'} minLabelSize={200}>
           <DetailItem label={'Tax Rate Name'} children={taxRate.name} />
           <DetailItem label={'Code'} children={taxRate.code} />
-          <DetailItem
-            label={'Description'}
-            children={taxRate.description || '-'}
-          />
+          <DetailItem label={'Description'} children={taxRate.description || '-'} />
           <DetailItem
             label={'Non Recoverable'}
             children={

@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import { SaleReceiptIncrement } from '@/services/Sales/Receipts/SaleReceiptIncrement';
 import { ISaleReceiptCreatedPayload } from '@/interfaces';
+import { SaleReceiptIncrement } from '@/services/Sales/Receipts/SaleReceiptIncrement';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleReceiptAutoSerialSubscriber {
@@ -13,19 +13,13 @@ export default class SaleReceiptAutoSerialSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleReceipt.onCreated,
-      this.handleReceiptNextNumberIncrement
-    );
+    bus.subscribe(events.saleReceipt.onCreated, this.handleReceiptNextNumberIncrement);
   }
 
   /**
    * Handle sale receipt increment next number once be created.
    */
-  private handleReceiptNextNumberIncrement = async ({
-    tenantId,
-    saleReceiptId,
-  }: ISaleReceiptCreatedPayload) => {
+  private handleReceiptNextNumberIncrement = async ({ tenantId, saleReceiptId }: ISaleReceiptCreatedPayload) => {
     await this.saleReceiptsService.incrementNextReceiptNumber(tenantId);
   };
 }

@@ -1,18 +1,14 @@
+import { DEFAULT_VIEWS } from '@/services/Sales/Estimates/constants';
 import moment from 'moment';
 import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import { defaultToTransform } from 'utils';
-import SaleEstimateSettings from './SaleEstimate.Settings';
-import ModelSetting from './ModelSetting';
+import TenantModel from '../models/TenantModel';
+import { defaultToTransform } from '../utils';
 import CustomViewBaseModel from './CustomViewBaseModel';
-import { DEFAULT_VIEWS } from '@/services/Sales/Estimates/constants';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
+import SaleEstimateSettings from './SaleEstimate.Settings';
 
-export default class SaleEstimate extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class SaleEstimate extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */
@@ -31,14 +27,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'localAmount',
-      'isDelivered',
-      'isExpired',
-      'isConvertedToInvoice',
-      'isApproved',
-      'isRejected',
-    ];
+    return ['localAmount', 'isDelivered', 'isExpired', 'isConvertedToInvoice', 'isApproved', 'isRejected'];
   }
 
   /**
@@ -70,11 +59,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
    * @return {boolean}
    */
   get isExpired() {
-    return defaultToTransform(
-      this.expirationDate,
-      moment().isAfter(this.expirationDate, 'day'),
-      false
-    );
+    return defaultToTransform(this.expirationDate, moment().isAfter(this.expirationDate, 'day'), false);
   }
 
   /**
@@ -179,9 +164,9 @@ export default class SaleEstimate extends mixin(TenantModel, [
    * Relationship mapping.
    */
   static get relationMappings() {
-    const ItemEntry = require('models/ItemEntry');
-    const Customer = require('models/Customer');
-    const Branch = require('models/Branch');
+    const ItemEntry = require('../models/ItemEntry');
+    const Customer = require('../models/Customer');
+    const Branch = require('../models/Branch');
 
     return {
       customer: {

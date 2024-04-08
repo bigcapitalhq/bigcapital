@@ -1,12 +1,9 @@
+import { IGeneralLedgerSheetQuery, IGeneralLedgerTableData } from '@/interfaces';
 import { Inject } from 'typedi';
-import {
-  IGeneralLedgerSheetQuery,
-  IGeneralLedgerTableData,
-} from '@/interfaces';
-import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
 import { GeneralLedgerExportInjectable } from './GeneralLedgerExport';
-import { GeneralLedgerService } from './GeneralLedgerService';
 import { GeneralLedgerPdf } from './GeneralLedgerPdf';
+import { GeneralLedgerService } from './GeneralLedgerService';
+import { GeneralLedgerTableInjectable } from './GeneralLedgerTableInjectable';
 
 export class GeneralLedgerApplication {
   @Inject()
@@ -36,10 +33,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<IGeneralLedgerTableData>}
    */
-  public table(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<IGeneralLedgerTableData> {
+  public table(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<IGeneralLedgerTableData> {
     return this.GLTable.table(tenantId, query);
   }
 
@@ -49,10 +43,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {}
    */
-  public xlsx(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<Buffer> {
     return this.GLExport.xlsx(tenantId, query);
   }
 
@@ -61,10 +52,7 @@ export class GeneralLedgerApplication {
    * @param {number} tenantId -
    * @param {IGeneralLedgerSheetQuery} query -
    */
-  public csv(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<string> {
+  public csv(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<string> {
     return this.GLExport.csv(tenantId, query);
   }
 
@@ -74,10 +62,7 @@ export class GeneralLedgerApplication {
    * @param {IGeneralLedgerSheetQuery} query
    * @returns {Promise<Buffer>}
    */
-  public pdf(
-    tenantId: number,
-    query: IGeneralLedgerSheetQuery
-  ): Promise<Buffer> {
+  public pdf(tenantId: number, query: IGeneralLedgerSheetQuery): Promise<Buffer> {
     return this.GLPdf.pdf(tenantId, query);
   }
 }

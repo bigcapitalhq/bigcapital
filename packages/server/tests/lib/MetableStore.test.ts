@@ -1,8 +1,7 @@
-import { expect } from '~/testInit';
 import MetableStore from '@/lib/MetableStore';
+import { expect } from '~/testInit';
 
-describe('MetableStore()', () => { 
-
+describe('MetableStore()', () => {
   describe('find', () => {
     it('Find metadata by the given key.', () => {
       const store = new MetableStore();
@@ -14,26 +13,18 @@ describe('MetableStore()', () => {
       expect(meta.key).equals('first-key');
     });
 
-    it('Find metadata by the key as payload.', () => {
-      
-    });
+    it('Find metadata by the key as payload.', () => {});
 
-    it('Find metadata by the given key and extra columns.', () => {
-
-    });
+    it('Find metadata by the given key and extra columns.', () => {});
   });
 
   describe('all()', () => {
-    it('Should retrieve all metadata in the store.', () => {
-
-    });
+    it('Should retrieve all metadata in the store.', () => {});
   });
 
   describe('get()', () => {
-    it('Should retrieve data of the given metadata query.', () => {
-
-    });
+    it('Should retrieve data of the given metadata query.', () => {});
   });
 
-  describe('removeMeta')
+  describe('removeMeta');
 });

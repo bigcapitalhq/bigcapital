@@ -1,11 +1,8 @@
-import { Inject, Service } from 'typedi';
+import { ICommandCashflowCreatedPayload, ICommandCashflowDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import CashflowTransactionJournalEntries from './CashflowTransactionJournalEntries';
-import {
-  ICommandCashflowCreatedPayload,
-  ICommandCashflowDeletedPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { CashflowTransactionAutoIncrement } from './CashflowTransactionAutoIncrement';
+import CashflowTransactionJournalEntries from './CashflowTransactionJournalEntries';
 
 @Service()
 export default class CashflowTransactionSubscriber {
@@ -19,18 +16,9 @@ export default class CashflowTransactionSubscriber {
    * Attaches events with handles.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.cashflow.onTransactionCreated,
-      this.writeJournalEntriesOnceTransactionCreated
-    );
-    bus.subscribe(
-      events.cashflow.onTransactionCreated,
-      this.incrementTransactionNumberOnceTransactionCreated
-    );
-    bus.subscribe(
-      events.cashflow.onTransactionDeleted,
-      this.revertGLEntriesOnceTransactionDeleted
-    );
+    bus.subscribe(events.cashflow.onTransactionCreated, this.writeJournalEntriesOnceTransactionCreated);
+    bus.subscribe(events.cashflow.onTransactionCreated, this.incrementTransactionNumberOnceTransactionCreated);
+    bus.subscribe(events.cashflow.onTransactionDeleted, this.revertGLEntriesOnceTransactionDeleted);
     return bus;
   }
 
@@ -46,23 +34,15 @@ export default class CashflowTransactionSubscriber {
     // Can't write GL entries if the transaction not published yet.
     if (!cashflowTransaction.isPublished) return;
 
-    await this.cashflowTransactionEntries.writeJournalEntries(
-      tenantId,
-      cashflowTransaction.id,
-      trx
-    );
+    await this.cashflowTransactionEntries.writeJournalEntries(tenantId, cashflowTransaction.id, trx);
   };
 
   /**
    * Increment the cashflow transaction number once the transaction created.
    * @param {ICommandCashflowCreatedPayload} payload -
    */
-  private incrementTransactionNumberOnceTransactionCreated = async ({
-    tenantId,
-  }: ICommandCashflowCreatedPayload) => {
-    this.cashflowTransactionAutoIncrement.incrementNextTransactionNumber(
-      tenantId
-    );
+  private incrementTransactionNumberOnceTransactionCreated = async ({ tenantId }: ICommandCashflowCreatedPayload) => {
+    this.cashflowTransactionAutoIncrement.incrementNextTransactionNumber(tenantId);
   };
 
   /**
@@ -74,10 +54,6 @@ export default class CashflowTransactionSubscriber {
     cashflowTransactionId,
     trx,
   }: ICommandCashflowDeletedPayload) => {
-    await this.cashflowTransactionEntries.revertJournalEntries(
-      tenantId,
-      cashflowTransactionId,
-      trx
-    );
+    await this.cashflowTransactionEntries.revertJournalEntries(tenantId, cashflowTransactionId, trx);
   };
 }

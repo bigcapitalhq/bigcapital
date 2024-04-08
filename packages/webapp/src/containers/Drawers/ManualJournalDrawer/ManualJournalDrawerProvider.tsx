@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useJournal } from '@/hooks/query';
@@ -42,7 +41,6 @@ function ManualJournalDrawerProvider({ manualJournalId, ...props }) {
   );
 }
 
-const useManualJournalDrawerContext = () =>
-  React.useContext(ManualJournalDrawerContext);
+const useManualJournalDrawerContext = () => React.useContext(ManualJournalDrawerContext);
 
 export { ManualJournalDrawerProvider, useManualJournalDrawerContext };

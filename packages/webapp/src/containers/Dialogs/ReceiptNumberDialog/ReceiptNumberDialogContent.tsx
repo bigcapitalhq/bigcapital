@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
@@ -11,10 +10,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose, saveInvoke } from '@/utils';
-import {
-  transformFormToSettings,
-  transformSettingsToForm,
-} from '@/containers/JournalNumber/utils';
+import { transformFormToSettings, transformSettingsToForm } from '@/containers/JournalNumber/utils';
 
 /**
  * Receipt number dialog's content.

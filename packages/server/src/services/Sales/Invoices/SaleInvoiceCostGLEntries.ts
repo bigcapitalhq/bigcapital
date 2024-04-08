@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import { Knex } from 'knex';
-import { AccountNormal, IInventoryLotCost, ILedgerEntry } from '@/interfaces';
-import { increment } from 'utils';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { AccountNormal, type IInventoryLotCost, type ILedgerEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { increment } from '../../../utils';
 import { groupInventoryTransactionsByTypeId } from '../../Inventory/utils';
 
 @Service()
@@ -25,7 +25,7 @@ export class SaleInvoiceCostGLEntries {
   public writeInventoryCostJournalEntries = async (
     tenantId: number,
     startingDate: Date,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
@@ -49,16 +49,11 @@ export class SaleInvoiceCostGLEntries {
    * @param   {IInventoryLotCost[]} inventoryCostLots
    * @returns {Ledger}
    */
-  private getInventoryCostLotsLedger = (
-    inventoryCostLots: IInventoryLotCost[]
-  ) => {
+  private getInventoryCostLotsLedger = (inventoryCostLots: IInventoryLotCost[]) => {
     // Groups the inventory cost lots transactions.
-    const inventoryTransactions =
-      groupInventoryTransactionsByTypeId(inventoryCostLots);
+    const inventoryTransactions = groupInventoryTransactionsByTypeId(inventoryCostLots);
 
-    const entries = inventoryTransactions
-      .map(this.getSaleInvoiceCostGLEntries)
-      .flat();
+    const entries = inventoryTransactions.flatMap(this.getSaleInvoiceCostGLEntries);
     return new Ledger(entries);
   };
 
@@ -67,9 +62,7 @@ export class SaleInvoiceCostGLEntries {
    * @param {IInventoryLotCost} inventoryCostLot
    * @returns {}
    */
-  private getInvoiceCostGLCommonEntry = (
-    inventoryCostLot: IInventoryLotCost
-  ) => {
+  private getInvoiceCostGLCommonEntry = (inventoryCostLot: IInventoryLotCost) => {
     return {
       currencyCode: inventoryCostLot.invoice.currencyCode,
       exchangeRate: inventoryCostLot.invoice.exchangeRate,
@@ -95,13 +88,9 @@ export class SaleInvoiceCostGLEntries {
    * @returns {ILedgerEntry[]}
    */
   private getInventoryCostGLEntry = R.curry(
-    (
-      getIndexIncrement,
-      inventoryCostLot: IInventoryLotCost
-    ): ILedgerEntry[] => {
+    (getIndexIncrement, inventoryCostLot: IInventoryLotCost): ILedgerEntry[] => {
       const commonEntry = this.getInvoiceCostGLCommonEntry(inventoryCostLot);
-      const costAccountId =
-        inventoryCostLot.costAccountId || inventoryCostLot.item.costAccountId;
+      const costAccountId = inventoryCostLot.costAccountId || inventoryCostLot.item.costAccountId;
 
       // XXX Debit - Cost account.
       const costEntry = {
@@ -122,7 +111,7 @@ export class SaleInvoiceCostGLEntries {
         index: getIndexIncrement(),
       };
       return [costEntry, inventoryEntry];
-    }
+    },
   );
 
   /**
@@ -130,17 +119,14 @@ export class SaleInvoiceCostGLEntries {
    * -----
    * - Cost of goods sold -> Debit -> YYYY
    *    - Inventory assets -> Credit -> YYYY
-    *----- 
+   *-----
    * @param {ISaleInvoice} saleInvoice
    * @param {JournalPoster} journal
    */
-  public getSaleInvoiceCostGLEntries = (
-    inventoryCostLots: IInventoryLotCost[]
-  ): ILedgerEntry[] => {
+  public getSaleInvoiceCostGLEntries = (inventoryCostLots: IInventoryLotCost[]): ILedgerEntry[] => {
     const getIndexIncrement = increment(0);
-    const getInventoryLotEntry =
-      this.getInventoryCostGLEntry(getIndexIncrement);
+    const getInventoryLotEntry = this.getInventoryCostGLEntry(getIndexIncrement);
 
-    return inventoryCostLots.map(getInventoryLotEntry).flat();
+    return inventoryCostLots.flatMap(getInventoryLotEntry);
   };
 }

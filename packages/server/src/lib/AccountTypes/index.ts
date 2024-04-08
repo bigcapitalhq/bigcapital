@@ -1,5 +1,5 @@
-import { get } from 'lodash';
 import { ACCOUNT_TYPES } from '@/data/AccountTypes';
+import { get } from 'lodash';
 
 export default class AccountTypesUtils {
   /**
@@ -20,8 +20,8 @@ export default class AccountTypesUtils {
 
   /**
    * Retrieve account type by the given account type key.
-   * @param {string} key 
-   * @param {string} accessor 
+   * @param {string} key
+   * @param {string} accessor
    */
   static getType(key: string, accessor?: string) {
     const type = ACCOUNT_TYPES.find((type) => type.key === key);
@@ -34,7 +34,7 @@ export default class AccountTypesUtils {
 
   /**
    * Retrieve accounts types by the parent account type.
-   * @param {string} parentType 
+   * @param {string} parentType
    */
   static getTypesByParentType(parentType: string) {
     return ACCOUNT_TYPES.filter((type) => type.parentType === parentType);
@@ -42,16 +42,16 @@ export default class AccountTypesUtils {
 
   /**
    * Retrieve accounts types by the given account normal.
-   * @param {string} normal 
+   * @param {string} normal
    */
   static getTypesByNormal(normal: string) {
     return ACCOUNT_TYPES.filter((type) => type.normal === normal);
   }
 
   /**
-   * Detarmines whether the root type equals the account type. 
-   * @param {string} key 
-   * @param {string} rootType 
+   * Detarmines whether the root type equals the account type.
+   * @param {string} key
+   * @param {string} rootType
    */
   static isRootTypeEqualsKey(key: string, rootType: string): boolean {
     return ACCOUNT_TYPES.some((type) => {
@@ -79,7 +79,7 @@ export default class AccountTypesUtils {
   /**
    * Detarmines whether account type has balance sheet.
    * @param {string} key - Account type key.
-   * 
+   *
    */
   static isTypeBalanceSheet(key: string): boolean {
     return ACCOUNT_TYPES.some((type) => {

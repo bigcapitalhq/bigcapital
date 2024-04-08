@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerBody } from '@/components';
 
@@ -13,9 +12,7 @@ export default function WarehouseTransferDetailDrawerContent({
   warehouseTransferId,
 }) {
   return (
-    <WarehouseTransferDetailDrawerProvider
-      warehouseTransferId={warehouseTransferId}
-    >
+    <WarehouseTransferDetailDrawerProvider warehouseTransferId={warehouseTransferId}>
       <DrawerBody>
         <WarehouseTransferDetail />
       </DrawerBody>

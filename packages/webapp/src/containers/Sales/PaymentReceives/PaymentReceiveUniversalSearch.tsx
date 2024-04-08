@@ -1,13 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
-import {
-  AbilitySubject,
-  PaymentReceiveAction,
-} from '@/constants/abilityOption';
+import { AbilitySubject, PaymentReceiveAction } from '@/constants/abilityOption';
 import { highlightText } from '@/utils';
 import { Icon } from '@/components';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
@@ -32,17 +28,12 @@ function PaymentReceiveUniversalSearchSelectComponent({
   return null;
 }
 
-export const PaymentReceiveUniversalSearchSelect = withDrawerActions(
-  PaymentReceiveUniversalSearchSelectComponent,
-);
+export const PaymentReceiveUniversalSearchSelect = withDrawerActions(PaymentReceiveUniversalSearchSelectComponent);
 
 /**
  * Payment receive universal search item.
  */
-export function PaymentReceiveUniversalSearchItem(
-  item,
-  { handleClick, modifiers, query },
-) {
+export function PaymentReceiveUniversalSearchItem(item, { handleClick, modifiers, query }) {
   return (
     <MenuItem
       active={modifiers.active}
@@ -50,14 +41,13 @@ export function PaymentReceiveUniversalSearchItem(
         <div>
           <div>{highlightText(item.text, query)}</div>
 
-          <span class="bp4-text-muted">
-            {highlightText(item.reference.payment_receive_no, query)}{' '}
-            <Icon icon={'caret-right-16'} iconSize={16} />
+          <span className="bp4-text-muted">
+            {highlightText(item.reference.payment_receive_no, query)} <Icon icon={'caret-right-16'} iconSize={16} />
             {highlightText(item.reference.formatted_payment_date, query)}
           </span>
         </div>
       }
-      label={<div class="amount">{item.reference.formatted_amount}</div>}
+      label={<div className="amount">{item.reference.formatted_amount}</div>}
       onClick={handleClick}
       className={'universal-search__item--invoice'}
     />

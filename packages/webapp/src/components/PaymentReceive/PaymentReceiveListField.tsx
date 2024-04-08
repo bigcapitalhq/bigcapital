@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { ListSelect, FormattedMessage as T } from '@/components';
@@ -14,9 +13,7 @@ export function PaymentReceiveListField({
   });
 
   const handleInvoiceRenderer = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem id={item.id} name={item.name} onClick={handleClick} />
-    ),
+    (item, { handleClick }) => <MenuItem id={item.id} name={item.name} onClick={handleClick} />,
     [],
   );
 

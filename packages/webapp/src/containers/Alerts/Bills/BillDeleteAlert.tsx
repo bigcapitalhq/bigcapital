@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -78,8 +77,4 @@ function BillDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(BillDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(BillDeleteAlert);

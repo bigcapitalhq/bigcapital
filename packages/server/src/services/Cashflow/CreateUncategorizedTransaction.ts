@@ -1,8 +1,8 @@
+import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import UnitOfWork from '../UnitOfWork';
-import { CreateUncategorizedTransactionDTO } from '@/interfaces';
 
 @Service()
 export class CreateUncategorizedTransaction {
@@ -17,24 +17,18 @@ export class CreateUncategorizedTransaction {
    * @param {number} tenantId
    * @param {CreateUncategorizedTransactionDTO} createDTO
    */
-  public create(
-    tenantId: number,
-    createDTO: CreateUncategorizedTransactionDTO,
-    trx?: Knex.Transaction
-  ) {
+  public create(tenantId: number, createDTO: CreateUncategorizedTransactionDTO, trx?: Knex.Transaction) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     return this.uow.withTransaction(
       tenantId,
       async (trx: Knex.Transaction) => {
-        const transaction = await UncategorizedCashflowTransaction.query(
-          trx
-        ).insertAndFetch({
+        const transaction = await UncategorizedCashflowTransaction.query(trx).insertAndFetch({
           ...createDTO,
         });
         return transaction;
       },
-      trx
+      trx,
     );
   }
 }

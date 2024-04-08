@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import { omit } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { BranchesSettings } from '../BranchesSettings';
 
 @Service()
@@ -14,7 +14,7 @@ export class BranchTransactionDTOTransform {
    */
   private excludeDTOBranchIdWhenInactive = <T extends { branchId?: number }>(
     tenantId: number,
-    DTO: T
+    DTO: T,
   ): Omit<T, 'branchId'> | T => {
     const isActive = this.branchesSettings.isMultiBranchesActive(tenantId);
 

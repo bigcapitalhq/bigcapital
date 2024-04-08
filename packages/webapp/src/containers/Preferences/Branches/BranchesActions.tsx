@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 
@@ -18,11 +17,7 @@ function BranchesActions({
   return (
     <React.Fragment>
       <FeatureCan feature={Features.Branches}>
-        <Button
-          icon={<Icon icon="plus" iconSize={12} />}
-          onClick={handleClickNewBranche}
-          intent={Intent.PRIMARY}
-        >
+        <Button icon={<Icon icon="plus" iconSize={12} />} onClick={handleClickNewBranche} intent={Intent.PRIMARY}>
           <T id={'branches.label.new_branch'} />
         </Button>
       </FeatureCan>

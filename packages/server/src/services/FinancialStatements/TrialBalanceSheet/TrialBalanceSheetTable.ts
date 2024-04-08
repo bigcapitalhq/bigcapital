@@ -1,6 +1,3 @@
-import * as R from 'ramda';
-import FinancialSheet from '../FinancialSheet';
-import { FinancialTable } from '../FinancialTable';
 import {
   ITableColumn,
   ITableColumnAccessor,
@@ -11,13 +8,13 @@ import {
   ITrialBalanceTotal,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
+import * as R from 'ramda';
 import { IROW_TYPE } from '../BalanceSheet/constants';
+import FinancialSheet from '../FinancialSheet';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
 
-export class TrialBalanceSheetTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class TrialBalanceSheetTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   /**
    * Trial balance sheet data.
    * @param {ITrialBalanceSheetData}
@@ -35,11 +32,7 @@ export class TrialBalanceSheetTable extends R.compose(
    * @param {IBalanceSheetStatementData} reportData -
    * @param {ITrialBalanceSheetQuery} query -
    */
-  constructor(
-    data: ITrialBalanceSheetData,
-    query: ITrialBalanceSheetQuery,
-    i18n: any
-  ) {
+  constructor(data: ITrialBalanceSheetData, query: ITrialBalanceSheetQuery, i18n: any) {
     super();
 
     this.data = data;
@@ -65,9 +58,7 @@ export class TrialBalanceSheetTable extends R.compose(
    * @param {ITrialBalanceAccount} node -
    * @returns {ITableRow}
    */
-  private accountNodeTableRowsMapper = (
-    node: ITrialBalanceAccount
-  ): ITableRow => {
+  private accountNodeTableRowsMapper = (node: ITrialBalanceAccount): ITableRow => {
     const columns = this.commonColumnsAccessors();
     const meta = {
       rowTypes: [IROW_TYPE.ACCOUNT],
@@ -95,9 +86,7 @@ export class TrialBalanceSheetTable extends R.compose(
    * @param  {IBalanceSheetDataNode[]} nodes -
    * @return {ITableRow}
    */
-  private accountsToTableRowsMap = (
-    nodes: ITrialBalanceAccount[]
-  ): ITableRow[] => {
+  private accountsToTableRowsMap = (nodes: ITrialBalanceAccount[]): ITableRow[] => {
     return this.mapNodesDeep(nodes, this.accountNodeTableRowsMapper);
   };
 
@@ -122,10 +111,7 @@ export class TrialBalanceSheetTable extends R.compose(
    * @returns {ITableRow[]}
    */
   public tableRows = (): ITableRow[] => {
-    return R.compose(
-      R.unless(R.isEmpty, R.append(this.totalTableRow())),
-      R.concat(this.accountsTableRows())
-    )([]);
+    return R.compose(R.unless(R.isEmpty, R.append(this.totalTableRow())), R.concat(this.accountsTableRows()))([]);
   };
 
   /**
@@ -140,7 +126,7 @@ export class TrialBalanceSheetTable extends R.compose(
         { key: 'debit', label: 'Debit' },
         { key: 'credit', label: 'Credit' },
         { key: 'total', label: 'Total' },
-      ])
+      ]),
     )([]);
   };
 }

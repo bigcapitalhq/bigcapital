@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
 import { FastField } from 'formik';
 import { useBillFormContext } from './BillFormProvider';
@@ -12,16 +12,8 @@ export default function BillFormBody({ defaultBill }) {
   const { items, taxRates } = useBillFormContext();
 
   return (
-    <FastField
-      name={'entries'}
-      items={items}
-      shouldUpdate={entriesFieldShouldUpdate}
-    >
-      {({
-        form: { values, setFieldValue },
-        field: { value },
-        meta: { error, touched },
-      }) => (
+    <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
+      {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
         <ItemsEntriesTable
           value={value}
           onChange={(entries) => {

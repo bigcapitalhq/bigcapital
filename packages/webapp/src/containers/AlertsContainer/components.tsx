@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { Suspense } from 'react';
 import styled from 'styled-components';
 import clsx from 'classnames';
@@ -91,10 +90,7 @@ function AlertLazyInside({ isOpen, name, Component }) {
   );
 }
 
-export const AlertLazy = R.compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(AlertLazyInside);
+export const AlertLazy = R.compose(withAlertStoreConnect(), withAlertActions)(AlertLazyInside);
 
 const ToastText = styled.div`
   margin-bottom: 10px;

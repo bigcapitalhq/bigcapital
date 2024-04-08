@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { IProjectTimeGetPOJO } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { TimeTransformer } from './TimeTransformer';
 
 @Service()
@@ -18,10 +18,7 @@ export class GetTimelineService {
    * @param {number} taskId - Task Id.
    * @returns {Promise<IProjectTimeGetPOJO[]>}
    */
-  public getTimeline = async (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectTimeGetPOJO[]> => {
+  public getTimeline = async (tenantId: number, projectId: number): Promise<IProjectTimeGetPOJO[]> => {
     const { Time } = this.tenancy.models(tenantId);
 
     // Retrieve the project.

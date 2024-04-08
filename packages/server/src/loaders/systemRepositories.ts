@@ -1,8 +1,5 @@
+import { SystemUserRepository, TenantRepository } from '@/system/repositories';
 import Container from 'typedi';
-import {
-  SystemUserRepository,
-  TenantRepository,
-} from '@/system/repositories';
 
 export default () => {
   const knex = Container.get('knex');
@@ -12,4 +9,4 @@ export default () => {
     systemUserRepository: new SystemUserRepository(knex, cache),
     tenantRepository: new TenantRepository(knex, cache),
   };
-}
+};

@@ -1,17 +1,7 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import Item from 'models/Item';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
-
+import { loginRes, tenantFactory, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('routes: `/financial_statements/receivable_aging_summary`', () => {
-
   it('Should retrieve customers list.', async () => {
     const customer1 = await tenantFactory.create('customer', { display_name: 'Ahmed' });
     const customer2 = await tenantFactory.create('customer', { display_name: 'Mohamed' });
@@ -23,7 +13,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       .send();
 
     expect(res.status).equals(200);
-    
+
     expect(res.body.aging.customers).is.an('array');
     expect(res.body.aging.customers.length).equals(2);
 
@@ -43,8 +33,10 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
 
     expect(res.status).equals(400);
     expect(res.body.errors).include.something.deep.equals({
-      type: 'CUSTOMERS.IDS.NOT.FOUND', code: 300, ids: [3213, 3322]
-    })
+      type: 'CUSTOMERS.IDS.NOT.FOUND',
+      code: 300,
+      ids: [3213, 3322],
+    });
   });
 
   it('Should retrieve aging report columns.', async () => {
@@ -68,7 +60,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
 
     expect(res.body.columns[1].before_days).equals(31);
     expect(res.body.columns[1].to_days).equals(60);
-    
+
     expect(res.body.columns[2].before_days).equals(61);
     expect(res.body.columns[2].to_days).equals(90);
 
@@ -94,7 +86,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-01-01',
     });
-    
+
     await tenantFactory.create('account_transaction', {
       contact_id: customer1.id,
       contact_type: 'customer',
@@ -113,7 +105,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-06-01',
     });
-    
+
     const res = await request()
       .get('/api/financial_statements/receivable_aging_summary')
       .set('x-access-token', loginRes.body.token)
@@ -133,7 +125,6 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
     expect(res.body.aging.total[5].total).equals(2000);
   });
 
-
   it('Should retrieve customer aging.', async () => {
     const customer1 = await tenantFactory.create('customer', { display_name: 'Ahmed' });
     const customer2 = await tenantFactory.create('customer', { display_name: 'Mohamed' });
@@ -146,7 +137,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-01-14',
     });
-    
+
     await tenantFactory.create('account_transaction', {
       contact_id: customer1.id,
       contact_type: 'customer',
@@ -165,7 +156,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-06-01',
     });
-    
+
     const res = await request()
       .get('/api/financial_statements/receivable_aging_summary')
       .set('x-access-token', loginRes.body.token)
@@ -197,7 +188,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-01-14',
     });
-    
+
     await tenantFactory.create('account_transaction', {
       contact_id: customer1.id,
       contact_type: 'customer',
@@ -216,7 +207,7 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       account_id: 10,
       date: '2020-06-01',
     });
-    
+
     const res = await request()
       .get('/api/financial_statements/receivable_aging_summary')
       .set('x-access-token', loginRes.body.token)
@@ -230,5 +221,5 @@ describe('routes: `/financial_statements/receivable_aging_summary`', () => {
       .send();
 
     expect(res.body.aging.customers.length).equals(1);
-  })
+  });
 });

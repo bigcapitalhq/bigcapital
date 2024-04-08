@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import UnitOfWork from '@/services/UnitOfWork';
+import { ICreateWarehouseDTO, IWarehouse, IWarehouseCreatePayload, IWarehouseCreatedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import {
-  ICreateWarehouseDTO,
-  IWarehouse,
-  IWarehouseCreatedPayload,
-  IWarehouseCreatePayload,
-} from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { WarehouseValidator } from './WarehouseValidator';
 
 @Service()
@@ -31,15 +26,9 @@ export class CreateWarehouse {
    * @param {number} tenantId -
    * @param {ICreateWarehouseDTO} warehouseDTO -
    */
-  public authorize = async (
-    tenantId: number,
-    warehouseDTO: ICreateWarehouseDTO
-  ) => {
+  public authorize = async (tenantId: number, warehouseDTO: ICreateWarehouseDTO) => {
     if (warehouseDTO.code) {
-      await this.validator.validateWarehouseCodeUnique(
-        tenantId,
-        warehouseDTO.code
-      );
+      await this.validator.validateWarehouseCodeUnique(tenantId, warehouseDTO.code);
     }
   };
 
@@ -48,10 +37,7 @@ export class CreateWarehouse {
    * @param {number} tenantId
    * @param {ICreateWarehouseDTO} warehouseDTO
    */
-  public createWarehouse = async (
-    tenantId: number,
-    warehouseDTO: ICreateWarehouseDTO
-  ): Promise<IWarehouse> => {
+  public createWarehouse = async (tenantId: number, warehouseDTO: ICreateWarehouseDTO): Promise<IWarehouse> => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     // Authorize warehouse before creating.

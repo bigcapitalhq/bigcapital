@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
 import { AbilitySubject, ManualJournalAction } from '@/constants/abilityOption';
@@ -24,9 +24,7 @@ function JournalUniversalSearchSelectComponent({
   return null;
 }
 
-export const JournalUniversalSearchSelectAction = withDrawerActions(
-  JournalUniversalSearchSelectComponent,
-);
+export const JournalUniversalSearchSelectAction = withDrawerActions(JournalUniversalSearchSelectComponent);
 
 /**
  * Mappes the manual journal item to search item.

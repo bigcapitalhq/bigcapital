@@ -1,13 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import { isEmpty } from 'lodash';
 
-import {
-  Icon,
-  DetailsMenu,
-  DetailItem,
-  FormattedMessage as T,
-} from '@/components';
+import { Icon, DetailsMenu, DetailItem, FormattedMessage as T } from '@/components';
 import { useAccountDrawerContext } from './AccountDrawerProvider';
 
 /**
@@ -19,11 +13,8 @@ export default function AccountDrawerHeader() {
   return (
     <div className={'account-drawer__content-header'}>
       <DetailsMenu>
-        <DetailItem
-          name={'closing-balance'}
-          label={<T id={'closing_balance'} />}
-        >
-          <h3 class={'big-number'}>{account.formatted_amount}</h3>
+        <DetailItem name={'closing-balance'} label={<T id={'closing_balance'} />}>
+          <h3 className={'big-number'}>{account.formatted_amount}</h3>
         </DetailItem>
 
         <DetailItem name={'account-type'} label={<T id={'account_type'} />}>
@@ -32,12 +23,7 @@ export default function AccountDrawerHeader() {
 
         <DetailItem name={'account-normal'} label={<T id={'account_normal'} />}>
           {account.account_normal_formatted}
-          <Icon
-            iconSize={14}
-            icon={`arrow-${
-              account.account_normal === 'credit' ? 'down' : 'up'
-            }`}
-          />
+          <Icon iconSize={14} icon={`arrow-${account.account_normal === 'credit' ? 'down' : 'up'}`} />
         </DetailItem>
 
         <DetailItem name={'code'} label={<T id={'code'} />}>

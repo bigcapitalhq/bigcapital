@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import { castArray } from 'lodash';
@@ -46,10 +45,7 @@ export const useTrialBalanceSheetQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseTrialBalanceSheetQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseTrialBalanceSheetQuery(locationQuery), [locationQuery]);
 
   return {
     query,

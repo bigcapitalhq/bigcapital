@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvi
  */
 export default function ReceiptFormPage() {
   const { id } = useParams();
-  const idInt = parseInt(id, 10);
+  const idInt = Number.parseInt(id, 10);
 
   return (
     <ReceiptFormProvider receiptId={idInt}>

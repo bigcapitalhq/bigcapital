@@ -1,12 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ConnectBankDialogBody = React.lazy(
-  () => import('./ConnectBankDialogBody'),
-);
+const ConnectBankDialogBody = React.lazy(() => import('./ConnectBankDialogBody'));
 
 /**
  * Connect bank dialog.
@@ -27,6 +24,4 @@ function ConnectBankDialogRoot({ dialogName, payload = {}, isOpen }) {
   );
 }
 
-export const ConnectBankDialog = compose(withDialogRedux())(
-  ConnectBankDialogRoot,
-);
+export const ConnectBankDialog = compose(withDialogRedux())(ConnectBankDialogRoot);

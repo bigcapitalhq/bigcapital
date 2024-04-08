@@ -4,9 +4,7 @@ import { TrialBalanceSheetPdfDialog } from './dialogs/TrialBalanceSheetPdfDialog
 export const TrialBalanceSheetDialogs = () => {
   return (
     <>
-      <TrialBalanceSheetPdfDialog
-        dialogName={DialogsName.TrialBalanceSheetPdfPreview}
-      />
+      <TrialBalanceSheetPdfDialog dialogName={DialogsName.TrialBalanceSheetPdfPreview} />
     </>
   );
 };

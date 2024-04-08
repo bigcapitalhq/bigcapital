@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ManualJournalTransfromer } from './ManualJournalTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { ManualJournalTransfromer } from './ManualJournalTransformer';
 
 @Service()
 export class GetManualJournal {
@@ -16,10 +16,7 @@ export class GetManualJournal {
    * @param {number} tenantId
    * @param {number} manualJournalId
    */
-  public getManualJournal = async (
-    tenantId: number,
-    manualJournalId: number
-  ) => {
+  public getManualJournal = async (tenantId: number, manualJournalId: number) => {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
     const manualJournal = await ManualJournal.query()
@@ -31,10 +28,6 @@ export class GetManualJournal {
       .withGraphFetched('media')
       .throwIfNotFound();
 
-    return this.transformer.transform(
-      tenantId,
-      manualJournal,
-      new ManualJournalTransfromer()
-    );
+    return this.transformer.transform(tenantId, manualJournal, new ManualJournalTransfromer());
   };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
 import { FormGroup, Classes, Intent } from '@blueprintjs/core';
@@ -21,10 +20,7 @@ function PaymentReceiveListFieldCell({
   const error = errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames('form-group--selcet-list', Classes.FILL)}
-    >
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames('form-group--selcet-list', Classes.FILL)}>
       <PaymentReceiveListField
         invoices={invoices}
         onInvoiceSelected={handleInvoicesSelected}

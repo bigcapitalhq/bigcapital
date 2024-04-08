@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import TransactionsLockingGuard from './TransactionsLockingGuard';
 import { TransactionsLockingGroup } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import TransactionsLockingGuard from './TransactionsLockingGuard';
 
 @Service()
 export default class FinancialTransactionLocking {
@@ -13,14 +13,11 @@ export default class FinancialTransactionLocking {
    * @param {Date} transactionDate
    * @throws {ServiceError(TRANSACTIONS_DATE_LOCKED)}
    */
-  public transactionLockingGuard = (
-    tenantId: number,
-    transactionDate: Date
-  ) => {
+  public transactionLockingGuard = (tenantId: number, transactionDate: Date) => {
     this.transactionLockingGuardService.transactionsLockingGuard(
-      tenantId, 
+      tenantId,
       transactionDate,
-      TransactionsLockingGroup.Financial
+      TransactionsLockingGroup.Financial,
     );
   };
 }

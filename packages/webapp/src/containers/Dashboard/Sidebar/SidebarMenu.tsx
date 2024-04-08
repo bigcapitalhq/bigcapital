@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Menu } from '@blueprintjs/core';
 
@@ -28,11 +27,7 @@ function SidebarMenuItem({ item, index }) {
   );
 }
 
-SidebarMenuItem.ItemTypes = [
-  ISidebarMenuItemType.Link,
-  ISidebarMenuItemType.Overlay,
-  ISidebarMenuItemType.Dialog,
-];
+SidebarMenuItem.ItemTypes = [ISidebarMenuItemType.Link, ISidebarMenuItemType.Overlay, ISidebarMenuItemType.Dialog];
 
 /**
  * Detarmines which sidebar menu item type should display.

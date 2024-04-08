@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useCreateNotifyReceiptBySMS, useReceiptSMSDetail } from '@/hooks/query';
@@ -6,18 +5,16 @@ import { useCreateNotifyReceiptBySMS, useReceiptSMSDetail } from '@/hooks/query'
 const NotifyReceiptViaSMSContext = React.createContext();
 
 /**
- * 
+ *
  */
 function NotifyReceiptViaSMSFormProvider({ receiptId, dialogName, ...props }) {
   // Create notfiy receipt via SMS mutations.
-  const { mutateAsync: createNotifyReceiptBySMSMutate } =
-    useCreateNotifyReceiptBySMS();
+  const { mutateAsync: createNotifyReceiptBySMSMutate } = useCreateNotifyReceiptBySMS();
 
   // Retrieve the receipt SMS notification details.
-  const { data: receiptSMSDetail, isLoading: isReceiptSMSDetailLoading } =
-    useReceiptSMSDetail(receiptId, {
-      enabled: !!receiptId,
-    });
+  const { data: receiptSMSDetail, isLoading: isReceiptSMSDetailLoading } = useReceiptSMSDetail(receiptId, {
+    enabled: !!receiptId,
+  });
 
   // State provider.
   const provider = {
@@ -34,7 +31,6 @@ function NotifyReceiptViaSMSFormProvider({ receiptId, dialogName, ...props }) {
   );
 }
 
-const useNotifyReceiptViaSMSContext = () =>
-  React.useContext(NotifyReceiptViaSMSContext);
+const useNotifyReceiptViaSMSContext = () => React.useContext(NotifyReceiptViaSMSContext);
 
 export { NotifyReceiptViaSMSFormProvider, useNotifyReceiptViaSMSContext };

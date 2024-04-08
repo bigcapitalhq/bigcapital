@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Button, Classes } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
@@ -33,18 +32,11 @@ function CustomerOpeningBalanceFormFloatingActions({
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>
           <T id={'cancel'} />
         </Button>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '75px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
           {<T id={'edit'} />}
         </Button>
       </div>
     </div>
   );
 }
-export default compose(withDialogActions)(
-  CustomerOpeningBalanceFormFloatingActions,
-);
+export default compose(withDialogActions)(CustomerOpeningBalanceFormFloatingActions);

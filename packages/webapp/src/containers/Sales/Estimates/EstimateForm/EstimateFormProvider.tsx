@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
 import { DashboardInsider } from '@/components/Dashboard';
@@ -84,8 +83,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   const isNewMode = !estimateId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
   // Provider payload.
   const provider = {
@@ -115,10 +113,7 @@ function EstimateFormProvider({ query, estimateId, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isCustomersLoading || isItemsLoading || isEstimateLoading}
-      name={'estimate-form'}
-    >
+    <DashboardInsider loading={isCustomersLoading || isItemsLoading || isEstimateLoading} name={'estimate-form'}>
       <EstimateFormContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );

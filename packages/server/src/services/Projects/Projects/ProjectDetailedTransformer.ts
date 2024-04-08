@@ -1,8 +1,8 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { sumBy } from 'lodash';
-import Project from 'models/Project';
-import { formatNumber } from 'utils';
-import { formatMinutes } from 'utils/formatMinutes';
+import Project from '../../../models/Project';
+import { formatNumber } from '../../../utils';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 export class ProjectDetailedTransformer extends Transformer {
   /**
@@ -297,10 +297,7 @@ export class ProjectDetailedTransformer extends Transformer {
    * @returns {number}
    */
   public totalInvoicedExpenses = (project: Project) => {
-    const totalInvoicedExpenses = sumBy(
-      project.expenses,
-      'totalInvoicedExpenses'
-    );
+    const totalInvoicedExpenses = sumBy(project.expenses, 'totalInvoicedExpenses');
     const totalInvoicedBills = sumBy(project.bills, 'totalInvoicedBills');
 
     return totalInvoicedExpenses + totalInvoicedBills;

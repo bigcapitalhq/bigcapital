@@ -92,8 +92,7 @@ export interface IProjectDeletingEventPayload {
   trx: Knex.Transaction;
 }
 
-export interface IProjectDeletedEventPayload
-  extends IProjectDeletingEventPayload {}
+export interface IProjectDeletedEventPayload extends IProjectDeletingEventPayload {}
 
 export interface IProjectEditEventPayload {
   tenantId: number;

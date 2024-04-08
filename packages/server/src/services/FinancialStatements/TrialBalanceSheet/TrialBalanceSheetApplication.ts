@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
-import { TrialBalanceExportInjectable } from './TrialBalanceExportInjectable';
 import { ITrialBalanceSheetQuery, ITrialBalanceStatement } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { TrialBalanceExportInjectable } from './TrialBalanceExportInjectable';
 import TrialBalanceSheetService from './TrialBalanceSheetInjectable';
+import { TrialBalanceSheetTableInjectable } from './TrialBalanceSheetTableInjectable';
 
 @Service()
 export class TrialBalanceSheetApplication {
@@ -21,10 +21,7 @@ export class TrialBalanceSheetApplication {
    * @param {ITrialBalanceSheetQuery} query
    * @returns {Promise<ITrialBalanceStatement>}
    */
-  public sheet(
-    tenantId: number,
-    query: ITrialBalanceSheetQuery
-  ): Promise<ITrialBalanceStatement> {
+  public sheet(tenantId: number, query: ITrialBalanceSheetQuery): Promise<ITrialBalanceStatement> {
     return this.sheetService.trialBalanceSheet(tenantId, query);
   }
 

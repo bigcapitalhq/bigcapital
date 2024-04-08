@@ -1,15 +1,9 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, NavbarGroup, Classes, Intent } from '@blueprintjs/core';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import { useRefundVendorCreditNoteDrawerContext } from './RefundVendorCreditDrawerProvider';
-import {
-  Icon,
-  DrawerActionsBar,
-  FormattedMessage as T,
-  Can,
-} from '@/components';
+import { Icon, DrawerActionsBar, FormattedMessage as T, Can } from '@/components';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';

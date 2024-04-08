@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
@@ -18,11 +17,7 @@ export default function CreditNotesEmptyStatus() {
       action={
         <>
           <Can I={CreditNoteAction.Create} a={AbilitySubject.CreditNote}>
-            <Button
-              intent={Intent.PRIMARY}
-              large={true}
-              onClick={() => history.push('/credit-notes/new')}
-            >
+            <Button intent={Intent.PRIMARY} large={true} onClick={() => history.push('/credit-notes/new')}>
               <T id={'credit_note.label.new_credit_note'} />
             </Button>
 

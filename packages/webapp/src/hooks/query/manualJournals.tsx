@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from '@/utils';
@@ -55,19 +55,16 @@ export function useEditJournal(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`manual-journals/${id}`, values),
-    {
-      onSuccess: (res, [id]) => {
-        // Invalidate specific manual journal.
-        queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
+  return useMutation(([id, values]) => apiRequest.post(`manual-journals/${id}`, values), {
+    onSuccess: (res, [id]) => {
+      // Invalidate specific manual journal.
+      queryClient.invalidateQueries(t.MANUAL_JOURNAL, id);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**

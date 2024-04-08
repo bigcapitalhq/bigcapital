@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { DialogContent } from '@/components';
@@ -25,7 +24,6 @@ function WarehouseActivateFormProvider({ dialogName, ...props }) {
   );
 }
 
-const useWarehouseActivateContext = () =>
-  React.useContext(WarehouseActivateContext);
+const useWarehouseActivateContext = () => React.useContext(WarehouseActivateContext);
 
 export { WarehouseActivateFormProvider, useWarehouseActivateContext };

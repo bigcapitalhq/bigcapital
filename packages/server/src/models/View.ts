@@ -1,5 +1,5 @@
-import { Model, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
+import { Model } from 'objection';
+import TenantModel from '../models/TenantModel';
 
 export default class View extends TenantModel {
   /**
@@ -27,21 +27,21 @@ export default class View extends TenantModel {
 
       specificOrFavourite(query, viewId) {
         if (viewId) {
-          query.where('id', viewId)
+          query.where('id', viewId);
         } else {
           query.where('favourite', true);
         }
         return query;
-      }
-    }
+      },
+    };
   }
 
   /**
    * Relationship mapping.
    */
   static get relationMappings() {
-    const ViewColumn = require('models/ViewColumn');
-    const ViewRole = require('models/ViewRole');
+    const ViewColumn = require('../models/ViewColumn');
+    const ViewRole = require('../models/ViewRole');
 
     return {
       /**

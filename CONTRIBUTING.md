@@ -48,7 +48,7 @@ cp .env.example .env
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `backend` package. just hit the command on root directory and it will install dependencies of all packages.
 
 ```
-pnpm install
+bun install
 ```
 
 - Run all required docker containers in the development, we already configured all containers under `docker-compose.yml`.
@@ -69,13 +69,13 @@ cefa73fe2881   bigcapital-redis   "docker-entrypoint.s…"   7 seconds ago   Up 
 - There're some CLI commands we should run before running the server like databaase migration, so we need to build the `server` app first.
 
 ```
-pnpm run build:server
+bun run build:server
 ```
 
 - Run the database migration for system database.
 
 ```
-node packages/server/build/commands.js system:migrate:latest
+bun packages/server/build/commands/index.js system:migrate:latest
 ```
 
 And you should get something like that.
@@ -87,7 +87,7 @@ Batch 1 run: 6 migrations
 - Next, start the webapp application.
 
 ```
-pnpm run dev:server
+bun run dev:server
 ```
 
 **[`^top^`](#)**
@@ -105,19 +105,29 @@ git clone https://github.com/bigcapital/bigcapital.git && cd bigcaptial
 - Install all npm dependencies of the monorepo, you don't have to change directory to the `frontend` package. just hit that command and will install all packages across all application.
 
 ```
-pnpm install
+bun install
 ```
 
 - Next, start the webapp application.
 
 ```
-pnpm run dev:webapp
+bun run dev:webapp
 ```
 
 **[`^top^`](#)**
 
 ---
 
+## Contribute to Backend & Frontend
+- Or develop both the backend and frontend at the same time!
+
+```
+bun run dev
+```
+
+**[`^top^`](#)**
+
+----
 ## Code Review
 
 We welcome constructive criticism and feedback on code submitted by contributors. All feedback should be constructive and respectful, and should focus on the code rather than the contributor. Code review may include suggestions for improvement or changes to the code.

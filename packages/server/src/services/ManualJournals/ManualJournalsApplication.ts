@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import {
-  IManualJournalDTO,
-  IManualJournalsFilter,
-  ISystemUser,
-} from '@/interfaces';
+import { IManualJournalDTO, IManualJournalsFilter, ISystemUser } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { CreateManualJournalService } from './CreateManualJournal';
 import { DeleteManualJournal } from './DeleteManualJournal';
 import { EditManualJournal } from './EditManualJournal';
-import { PublishManualJournal } from './PublishManualJournal';
-import { GetManualJournals } from './GetManualJournals';
 import { GetManualJournal } from './GetManualJournal';
+import { GetManualJournals } from './GetManualJournals';
+import { PublishManualJournal } from './PublishManualJournal';
 
 @Service()
 export class ManualJournalsApplication {
@@ -38,16 +34,8 @@ export class ManualJournalsApplication {
    * @param   {ISystemUser} authorizedUser
    * @returns {Promise<IManualJournal>}
    */
-  public createManualJournal = (
-    tenantId: number,
-    manualJournalDTO: IManualJournalDTO,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.createManualJournalService.makeJournalEntries(
-      tenantId,
-      manualJournalDTO,
-      authorizedUser
-    );
+  public createManualJournal = (tenantId: number, manualJournalDTO: IManualJournalDTO, authorizedUser: ISystemUser) => {
+    return this.createManualJournalService.makeJournalEntries(tenantId, manualJournalDTO, authorizedUser);
   };
 
   /**
@@ -61,13 +49,13 @@ export class ManualJournalsApplication {
     tenantId: number,
     manualJournalId: number,
     manualJournalDTO: IManualJournalDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) => {
     return this.editManualJournalService.editJournalEntries(
       tenantId,
       manualJournalId,
       manualJournalDTO,
-      authorizedUser
+      authorizedUser,
     );
   };
 
@@ -78,10 +66,7 @@ export class ManualJournalsApplication {
    * @return {Promise<void>}
    */
   public deleteManualJournal = (tenantId: number, manualJournalId: number) => {
-    return this.deleteManualJournalService.deleteManualJournal(
-      tenantId,
-      manualJournalId
-    );
+    return this.deleteManualJournalService.deleteManualJournal(tenantId, manualJournalId);
   };
 
   /**
@@ -90,10 +75,7 @@ export class ManualJournalsApplication {
    * @param {number} manualJournalId - Manual journal id.
    */
   public publishManualJournal = (tenantId: number, manualJournalId: number) => {
-    return this.publishManualJournalService.publishManualJournal(
-      tenantId,
-      manualJournalId
-    );
+    return this.publishManualJournalService.publishManualJournal(tenantId, manualJournalId);
   };
 
   /**
@@ -103,10 +85,7 @@ export class ManualJournalsApplication {
    * @returns
    */
   public getManualJournal = (tenantId: number, manualJournalId: number) => {
-    return this.getManualJournalService.getManualJournal(
-      tenantId,
-      manualJournalId
-    );
+    return this.getManualJournalService.getManualJournal(tenantId, manualJournalId);
   };
 
   /**
@@ -115,10 +94,7 @@ export class ManualJournalsApplication {
    * @param {IManualJournalsFilter} filterDTO
    * @returns
    */
-  public getManualJournals = (
-    tenantId: number,
-    filterDTO: IManualJournalsFilter
-  ) => {
+  public getManualJournals = (tenantId: number, filterDTO: IManualJournalsFilter) => {
     return this.getManualJournalsService.getManualJournals(tenantId, filterDTO);
   };
 }

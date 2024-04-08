@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 
 import '@/style/pages/Vendors/List.scss';
@@ -35,10 +34,7 @@ function VendorsList({
   );
 
   return (
-    <VendorsListProvider
-      tableState={vendorsTableState}
-      tableStateChanged={vendorsTableStateChanged}
-    >
+    <VendorsListProvider tableState={vendorsTableState} tableStateChanged={vendorsTableStateChanged}>
       <VendorActionsBar />
 
       <DashboardPageContent>

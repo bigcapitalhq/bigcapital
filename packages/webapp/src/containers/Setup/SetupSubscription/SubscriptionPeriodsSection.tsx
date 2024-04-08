@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Field } from 'formik';
 import * as R from 'ramda';
@@ -7,9 +6,7 @@ import { T, SubscriptionPeriods } from '@/components';
 
 import withPlan from '../../Subscriptions/withPlan';
 
-const SubscriptionPeriodsEnhanced = R.compose(
-  withPlan(({ plan }) => ({ plan })),
-)(({ plan, ...restProps }) => {
+const SubscriptionPeriodsEnhanced = R.compose(withPlan(({ plan }) => ({ plan })))(({ plan, ...restProps }) => {
   // Can't continue if the current plan of the form not selected.
   if (!plan) {
     return null;
@@ -22,11 +19,11 @@ const SubscriptionPeriodsEnhanced = R.compose(
  */
 export default function SubscriptionPeriodsSection() {
   return (
-    <section class="billing-plans__section">
-      <h1 class="title">
+    <section className="billing-plans__section">
+      <h1 className="title">
         <T id={'setup.plans.select_period.title'} />
       </h1>
-      <div class="description">
+      <div className="description">
         <p className="paragraph">
           <T id={'setup.plans.select_period.description'} />
         </p>

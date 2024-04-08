@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
-import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
 import { IARAgingSummaryQuery } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
+import { ARAgingSummaryTableInjectable } from './ARAgingSummaryTableInjectable';
 
 @Service()
 export class ARAgingSummaryExportInjectable {
@@ -14,10 +14,7 @@ export class ARAgingSummaryExportInjectable {
    * @param {IARAgingSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: IARAgingSummaryQuery
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: IARAgingSummaryQuery): Promise<Buffer> {
     const table = await this.ARAgingSummaryTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class ARAgingSummaryExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<string>}
    */
-  public async csv(
-    tenantId: number,
-    query: IARAgingSummaryQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IARAgingSummaryQuery): Promise<string> {
     const table = await this.ARAgingSummaryTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

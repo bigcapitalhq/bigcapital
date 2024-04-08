@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import BigcapitalLoading from './BigcapitalLoading';
 import withDashboard from '@/containers/Dashboard/withDashboard';

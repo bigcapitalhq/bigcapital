@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import { castArray } from 'lodash';
@@ -27,10 +26,7 @@ export const getInventoryItemDetailsDefaultQuery = () => ({
 export const getInventoryItemDetailsQuerySchema = () => {
   return Yup.object().shape({
     fromDate: Yup.date().required().label(intl.get('fromDate')),
-    toDate: Yup.date()
-      .min(Yup.ref('fromDate'))
-      .required()
-      .label(intl.get('toDate')),
+    toDate: Yup.date().min(Yup.ref('fromDate')).required().label(intl.get('toDate')),
   });
 };
 
@@ -63,10 +59,7 @@ export const useInventoryValuationQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseInventoryItemDetailsQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseInventoryItemDetailsQuery(locationQuery), [locationQuery]);
 
   return {
     query,

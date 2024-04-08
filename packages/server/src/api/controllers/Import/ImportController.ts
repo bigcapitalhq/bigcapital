@@ -1,12 +1,12 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
-import { body, param, query } from 'express-validator';
-import { defaultTo } from 'lodash';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ImportResourceApplication } from '@/services/Import/ImportResourceApplication';
-import { uploadImportFile } from './_utils';
 import { parseJsonSafe } from '@/utils/parse-json-safe';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { body, param, query } from 'express-validator';
+import { defaultTo } from 'lodash';
+import { Inject, Service } from 'typedi';
+import { uploadImportFile } from './_utils';
 
 @Service()
 export class ImportController extends BaseController {
@@ -25,13 +25,9 @@ export class ImportController extends BaseController {
       this.importValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.fileUpload.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
-    router.post(
-      '/:import_id/import',
-      this.asyncMiddleware(this.import.bind(this)),
-      this.catchServiceErrors
-    );
+    router.post('/:import_id/import', this.asyncMiddleware(this.import.bind(this)), this.catchServiceErrors);
     router.post(
       '/:import_id/mapping',
       [
@@ -43,24 +39,16 @@ export class ImportController extends BaseController {
       ],
       this.validationResult,
       this.asyncMiddleware(this.mapping.bind(this)),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
     router.get(
       '/sample',
       [query('resource').exists(), query('format').optional()],
       this.downloadImportSample.bind(this),
-      this.catchServiceErrors
+      this.catchServiceErrors,
     );
-    router.get(
-      '/:import_id',
-      this.asyncMiddleware(this.getImportFileMeta.bind(this)),
-      this.catchServiceErrors
-    );
-    router.get(
-      '/:import_id/preview',
-      this.asyncMiddleware(this.preview.bind(this)),
-      this.catchServiceErrors
-    );
+    router.get('/:import_id', this.asyncMiddleware(this.getImportFileMeta.bind(this)), this.catchServiceErrors);
+    router.get('/:import_id/preview', this.asyncMiddleware(this.preview.bind(this)), this.catchServiceErrors);
     return router;
   }
 
@@ -84,12 +72,7 @@ export class ImportController extends BaseController {
     const params = defaultTo(parseJsonSafe(body.params), {});
 
     try {
-      const data = await this.importResourceApp.import(
-        tenantId,
-        body.resource,
-        req.file.filename,
-        params
-      );
+      const data = await this.importResourceApp.import(tenantId, body.resource, req.file.filename, params);
       return res.status(200).send(data);
     } catch (error) {
       next(error);
@@ -108,11 +91,7 @@ export class ImportController extends BaseController {
     const body = this.matchedBodyData(req);
 
     try {
-      const mapping = await this.importResourceApp.mapping(
-        tenantId,
-        importId,
-        body?.mapping
-      );
+      const mapping = await this.importResourceApp.mapping(tenantId, importId, body?.mapping);
       return res.status(200).send(mapping);
     } catch (error) {
       next(error);
@@ -163,11 +142,7 @@ export class ImportController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async downloadImportSample(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async downloadImportSample(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { format, resource } = this.matchedQueryData(req);
 
@@ -186,19 +161,12 @@ export class ImportController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private async getImportFileMeta(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private async getImportFileMeta(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { import_id: importId } = req.params;
 
     try {
-      const result = await this.importResourceApp.importMeta(
-        tenantId,
-        importId
-      );
+      const result = await this.importResourceApp.importMeta(tenantId, importId);
       return res.status(200).send(result);
     } catch (error) {
       next(error);
@@ -212,12 +180,7 @@ export class ImportController extends BaseController {
    * @param {Response} res
    * @param {ServiceError} error
    */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private catchServiceErrors(error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'INVALID_MAP_ATTRS') {
         return res.status(400).send({

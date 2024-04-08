@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -13,11 +12,7 @@ import { CreateRolesFormSchema, EditRolesFormSchema } from './RolesForm.schema';
 import { useRolesFormContext } from './RolesFormProvider';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import RolesFormContent from './RolesFormContent';
-import {
-  getNewRoleInitialValues,
-  transformToArray,
-  transformToObject,
-} from './utils';
+import { getNewRoleInitialValues, transformToArray, transformToObject } from './utils';
 import { handleDeleteErrors } from '../utils';
 import { compose, transformToForm } from '@/utils';
 
@@ -39,14 +34,8 @@ function RolesForm({
   const history = useHistory();
 
   // Role form context.
-  const {
-    isNewMode,
-    createRolePermissionMutate,
-    editRolePermissionMutate,
-    permissionsSchema,
-    role,
-    roleId,
-  } = useRolesFormContext();
+  const { isNewMode, createRolePermissionMutate, editRolePermissionMutate, permissionsSchema, role, roleId } =
+    useRolesFormContext();
 
   // Initial values.
   const initialValues = {
@@ -70,9 +59,7 @@ function RolesForm({
     const onSuccess = () => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'roles.permission_schema.success_message'
-            : 'roles.permission_schema.upload_message',
+          isNewMode ? 'roles.permission_schema.success_message' : 'roles.permission_schema.upload_message',
         ),
         intent: Intent.SUCCESS,
       });

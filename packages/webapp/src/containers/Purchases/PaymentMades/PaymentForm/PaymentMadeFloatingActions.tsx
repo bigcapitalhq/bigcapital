@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import {
@@ -16,8 +15,6 @@ import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { CLASSES } from '@/constants/classes';
-
-
 
 /**
  * Payment made floating actions bar.
@@ -56,7 +53,7 @@ export default function PaymentMadeFloatingActions() {
   // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });
-    submitForm()
+    submitForm();
   };
 
   return (
@@ -74,14 +71,8 @@ export default function PaymentMadeFloatingActions() {
         <Popover
           content={
             <Menu>
-              <MenuItem
-                text={<T id={'save_and_new'} />}
-                onClick={handleSubmitAndNewClick}
-              />
-              <MenuItem
-                text={<T id={'save_continue_editing'} />}
-                onClick={handleSubmitContinueEditingBtnClick}
-              />
+              <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitAndNewClick} />
+              <MenuItem text={<T id={'save_continue_editing'} />} onClick={handleSubmitContinueEditingBtnClick} />
             </Menu>
           }
           minimal={true}
@@ -103,12 +94,7 @@ export default function PaymentMadeFloatingActions() {
         text={paymentMadeId ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel  ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} disabled={isSubmitting} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

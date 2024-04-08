@@ -1,15 +1,9 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { compose } from '@/utils';
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 
 import PaymentReceivesEmptyStatus from './PaymentReceivesEmptyStatus';
 
@@ -88,8 +82,7 @@ function PaymentReceivesDataTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.PAYMENT_RECEIVES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.PAYMENT_RECEIVES);
 
   // Handle datatable fetch once the table's state changing.
   const handleDataTableFetchData = useCallback(

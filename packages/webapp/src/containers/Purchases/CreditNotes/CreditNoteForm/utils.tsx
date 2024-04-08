@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
@@ -12,10 +11,7 @@ import {
   orderingLinesIndexes,
   formattedAmount,
 } from '@/utils';
-import {
-  updateItemsEntriesTotal,
-  ensureEntriesHaveEmptyLine,
-} from '@/containers/Entries/utils';
+import { updateItemsEntriesTotal, ensureEntriesHaveEmptyLine } from '@/containers/Entries/utils';
 import { useFormikContext } from 'formik';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
@@ -58,10 +54,7 @@ export const transformToEditForm = (creditNote) => {
     ...creditNote.entries.map((entry) => ({
       ...transformToForm(entry, defaultCreditNoteEntry),
     })),
-    ...repeatValue(
-      defaultCreditNoteEntry,
-      Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0),
-    ),
+    ...repeatValue(defaultCreditNoteEntry, Math.max(MIN_LINES_NUMBER - creditNote.entries.length, 0)),
   ];
   const entries = R.compose(
     ensureEntriesHaveEmptyLine(defaultCreditNoteEntry),
@@ -82,10 +75,7 @@ export const transformEntriesToSubmit = (entries) => {
     R.omit(['amount']),
     R.curry(transformToForm)(R.__, defaultCreditNoteEntry),
   );
-  return R.compose(
-    orderingLinesIndexes,
-    R.map(transformCreditNoteEntry),
-  )(entries);
+  return R.compose(orderingLinesIndexes, R.map(transformCreditNoteEntry))(entries);
 };
 
 /**
@@ -122,10 +112,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines entries fast field should update.
  */
 export const entriesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
@@ -161,8 +148,7 @@ export const useSetPrimaryWarehouseToForm = () => {
 
   React.useEffect(() => {
     if (isWarehousesSuccess) {
-      const primaryWarehouse =
-        warehouses.find((b) => b.primary) || first(warehouses);
+      const primaryWarehouse = warehouses.find((b) => b.primary) || first(warehouses);
 
       if (primaryWarehouse) {
         setFieldValue('warehouse_id', primaryWarehouse.id);
@@ -180,10 +166,7 @@ export const useVendorCrditNoteTotals = () => {
   const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

@@ -1,8 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { get } from 'lodash';
-
 
 import '@/style/pages/Subscription/PlanPeriodRadio.scss';
 

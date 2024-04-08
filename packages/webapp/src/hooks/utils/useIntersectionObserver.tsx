@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 export function useIntersectionObserver({
@@ -14,8 +13,7 @@ export function useIntersectionObserver({
       return;
     }
     const observer = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => entry.isIntersecting && onIntersect()),
+      (entries) => entries.forEach((entry) => entry.isIntersecting && onIntersect()),
       {
         root: root && root.current,
         rootMargin,

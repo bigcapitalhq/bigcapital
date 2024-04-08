@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { ListSelect } from '@/components';
@@ -33,9 +32,7 @@ export function CategoriesSelectList({
   );
 
   const categoryItem = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem key={item.id} text={item.name} onClick={handleClick} />
-    ),
+    (item, { handleClick }) => <MenuItem key={item.id} text={item.name} onClick={handleClick} />,
     [],
   );
 

@@ -1,9 +1,9 @@
-import path from 'path';
+import path from 'node:path';
+import config from '@/config';
 import { ISystemUser } from '@/interfaces';
 import Mail from '@/lib/Mail';
-import { Service } from 'typedi';
 import { Tenant } from '@/system/models';
-import config from '@/config';
+import { Service } from 'typedi';
 
 @Service()
 export default class SendInviteUsersMailMessage {
@@ -14,11 +14,9 @@ export default class SendInviteUsersMailMessage {
    */
   async sendInviteMail(tenantId: number, fromUser: ISystemUser, invite: any) {
     // Retreive tenant orgnaization name.
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
-    const root = path.join(global.__views_dir, '/images/bigcapital.png');
+    const root = path.join(process.env.APP_VIEWS_DIR, '/images/bigcapital.png');
 
     const mail = new Mail()
       .setSubject(`${fromUser.firstName} has invited you to join a Bigcapital`)

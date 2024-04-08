@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -20,18 +19,11 @@ function UsersActions({ openDialog, closeDialog }) {
 
   return (
     <div className="preferences-actions">
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={onClickNewUser}
-        intent={Intent.PRIMARY}
-      >
+      <Button icon={<Icon icon="plus" iconSize={12} />} onClick={onClickNewUser} intent={Intent.PRIMARY}>
         <T id={'invite_user'} />
       </Button>
 
-      <Button
-        icon={<Icon icon="plus" iconSize={12} />}
-        onClick={onClickNewRole}
-      >
+      <Button icon={<Icon icon="plus" iconSize={12} />} onClick={onClickNewRole}>
         <T id={'new_role'} />
       </Button>
     </div>

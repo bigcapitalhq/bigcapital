@@ -1,6 +1,5 @@
-
-exports.up = function(knex) {
-  return knex.schema.createTable('inventory_adjustments', table => {
+exports.up = (knex) =>
+  knex.schema.createTable('inventory_adjustments', (table) => {
     table.increments();
     table.date('date').index();
     table.string('type').index();
@@ -11,9 +10,6 @@ exports.up = function(knex) {
     table.integer('user_id').unsigned();
     table.date('published_at');
     table.timestamps();
-  });  
-};
+  });
 
-exports.down = function(knex) {
-  return knex.schema.dropTableIfExists('inventory_adjustments');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('inventory_adjustments');

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useCallback } from 'react';
 import moment from 'moment';
 
@@ -45,25 +44,16 @@ function SalesByItems({
     });
   };
   // Hide the filter drawer once the page unmount.
-  useEffect(
-    () => () => toggleSalesByItemsFilterDrawer(false),
-    [toggleSalesByItemsFilterDrawer],
-  );
+  useEffect(() => () => toggleSalesByItemsFilterDrawer(false), [toggleSalesByItemsFilterDrawer]);
 
   return (
     <SalesByItemProvider query={query}>
-      <SalesByItemsActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <SalesByItemsActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <SalesByItemsLoadingBar />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <SalesByItemsHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <SalesByItemsHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <SalesByItemsBody />
         </FinancialStatement>
       </DashboardPageContent>

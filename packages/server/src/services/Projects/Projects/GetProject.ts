@@ -18,10 +18,7 @@ export default class GetProject {
    * @param {number} creditNoteId
    * @returns {Promise<IProjectGetPOJO>}
    */
-  public getProject = async (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectGetPOJO> => {
+  public getProject = async (tenantId: number, projectId: number): Promise<IProjectGetPOJO> => {
     const { Project } = this.tenancy.models(tenantId);
 
     // Retrieve the project.
@@ -34,10 +31,6 @@ export default class GetProject {
       .throwIfNotFound();
 
     // Transformes and returns object.
-    return this.transformer.transform(
-      tenantId,
-      project,
-      new ProjectDetailedTransformer()
-    );
+    return this.transformer.transform(tenantId, project, new ProjectDetailedTransformer());
   };
 }

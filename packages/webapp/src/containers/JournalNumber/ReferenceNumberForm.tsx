@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
@@ -29,13 +28,7 @@ const validationSchema = Yup.object().shape({
 /**
  * Reference number form.
  */
-export default function ReferenceNumberForm({
-  initialValues,
-  description,
-  onSubmit,
-  onClose,
-  onChange,
-}) {
+export default function ReferenceNumberForm({ initialValues, description, onSubmit, onClose, onChange }) {
   // Initial values.
   const formInitialValues = {
     ...initialFormValues,
@@ -48,11 +41,7 @@ export default function ReferenceNumberForm({
   };
 
   return (
-    <Formik
-      initialValues={formInitialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
+    <Formik initialValues={formInitialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
       {({ isSubmitting, values }) => (
         <Form className={'reference-number-form'}>
           <div className={Classes.DIALOG_BODY}>
@@ -65,11 +54,7 @@ export default function ReferenceNumberForm({
               <Button onClick={onClose}>
                 <T id={'cancel'} />
               </Button>
-              <Button
-                intent={Intent.PRIMARY}
-                type="submit"
-                loading={isSubmitting}
-              >
+              <Button intent={Intent.PRIMARY} type="submit" loading={isSubmitting}>
                 <T id={'submit'} />
               </Button>
             </div>

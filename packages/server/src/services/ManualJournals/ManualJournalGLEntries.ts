@@ -1,14 +1,10 @@
-import { Service, Inject } from 'typedi';
-import * as R from 'ramda';
-import {
-  IManualJournal,
-  IManualJournalEntry,
-  ILedgerEntry,
-} from '@/interfaces';
-import { Knex } from 'knex';
+import { ILedgerEntry, IManualJournal, IManualJournalEntry } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class ManualJournalGLEntries {
@@ -24,17 +20,11 @@ export class ManualJournalGLEntries {
    * @param {number} manualJournalId
    * @param {Knex.Transaction} trx
    */
-  public createManualJournalGLEntries = async (
-    tenantId: number,
-    manualJournalId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public createManualJournalGLEntries = async (tenantId: number, manualJournalId: number, trx?: Knex.Transaction) => {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
     // Retrieves the given manual journal with associated entries.
-    const manualJournal = await ManualJournal.query(trx)
-      .findById(manualJournalId)
-      .withGraphFetched('entries.account');
+    const manualJournal = await ManualJournal.query(trx).findById(manualJournalId).withGraphFetched('entries.account');
 
     // Retrieves the ledger entries of the given manual journal.
     const ledger = this.getManualJournalGLedger(manualJournal);
@@ -49,11 +39,7 @@ export class ManualJournalGLEntries {
    * @param {number} manualJournalId
    * @param {Knex.Transaction} trx
    */
-  public editManualJournalGLEntries = async (
-    tenantId: number,
-    manualJournalId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public editManualJournalGLEntries = async (tenantId: number, manualJournalId: number, trx?: Knex.Transaction) => {
     // Reverts the manual journal GL entries.
     await this.revertManualJournalGLEntries(tenantId, manualJournalId, trx);
 
@@ -70,14 +56,9 @@ export class ManualJournalGLEntries {
   public revertManualJournalGLEntries = async (
     tenantId: number,
     manualJournalId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    return this.ledgerStorage.deleteByReference(
-      tenantId,
-      manualJournalId,
-      'Journal',
-      trx
-    );
+    return this.ledgerStorage.deleteByReference(tenantId, manualJournalId, 'Journal', trx);
   };
 
   /**
@@ -96,9 +77,7 @@ export class ManualJournalGLEntries {
    * @param   {IManualJournal} manualJournal
    * @returns {Partial<ILedgerEntry>}
    */
-  private getManualJournalCommonEntry = (
-    manualJournal: IManualJournal
-  ): Partial<ILedgerEntry> => {
+  private getManualJournalCommonEntry = (manualJournal: IManualJournal): Partial<ILedgerEntry> => {
     return {
       transactionNumber: manualJournal.journalNumber,
       referenceNumber: manualJournal.reference,
@@ -121,41 +100,34 @@ export class ManualJournalGLEntries {
    * @param   {IManualJournalEntry} entry -
    * @returns {ILedgerEntry}
    */
-  private getManualJournalEntry = R.curry(
-    (
-      manualJournal: IManualJournal,
-      entry: IManualJournalEntry
-    ): ILedgerEntry => {
-      const commonEntry = this.getManualJournalCommonEntry(manualJournal);
+  private getManualJournalEntry = R.curry((manualJournal: IManualJournal, entry: IManualJournalEntry): ILedgerEntry => {
+    const commonEntry = this.getManualJournalCommonEntry(manualJournal);
 
-      return {
-        ...commonEntry,
-        debit: entry.debit,
-        credit: entry.credit,
-        accountId: entry.accountId,
+    return {
+      ...commonEntry,
+      debit: entry.debit,
+      credit: entry.credit,
+      accountId: entry.accountId,
 
-        contactId: entry.contactId,
-        note: entry.note,
+      contactId: entry.contactId,
+      note: entry.note,
 
-        index: entry.index,
-        accountNormal: entry.account.accountNormal,
+      index: entry.index,
+      accountNormal: entry.account.accountNormal,
 
-        branchId: entry.branchId,
-        projectId: entry.projectId,
-      };
-    }
-  );
+      branchId: entry.branchId,
+      projectId: entry.projectId,
+    };
+  });
 
   /**
    * Retrieves the ledger of the given manual journal.
    * @param   {IManualJournal} manualJournal
    * @returns {ILedgerEntry[]}
    */
-  private getManualJournalGLEntries = (
-    manualJournal: IManualJournal
-  ): ILedgerEntry[] => {
+  private getManualJournalGLEntries = (manualJournal: IManualJournal): ILedgerEntry[] => {
     const transformEntry = this.getManualJournalEntry(manualJournal);
 
-    return manualJournal.entries.map(transformEntry).flat();
+    return manualJournal.entries.flatMap(transformEntry);
   };
 }

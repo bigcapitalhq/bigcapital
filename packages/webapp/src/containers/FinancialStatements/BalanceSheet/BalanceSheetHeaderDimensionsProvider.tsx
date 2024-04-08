@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { Features } from '@/constants';
@@ -32,17 +31,10 @@ function BalanceSheetHeaderDimensionsProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <BalanceSheetHeaderDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <BalanceSheetHeaderDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useBalanceSheetHeaderDimensionsPanelContext = () =>
-  React.useContext(BalanceSheetHeaderDimensionsPanelContext);
+const useBalanceSheetHeaderDimensionsPanelContext = () => React.useContext(BalanceSheetHeaderDimensionsPanelContext);
 
-export {
-  BalanceSheetHeaderDimensionsProvider,
-  useBalanceSheetHeaderDimensionsPanelContext,
-};
+export { BalanceSheetHeaderDimensionsProvider, useBalanceSheetHeaderDimensionsPanelContext };

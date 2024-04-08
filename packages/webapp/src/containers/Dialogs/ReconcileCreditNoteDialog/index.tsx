@@ -1,21 +1,14 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T, Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ReconcileCreditNoteDialogContent = React.lazy(() =>
-  import('./ReconcileCreditNoteDialogContent'),
-);
+const ReconcileCreditNoteDialogContent = React.lazy(() => import('./ReconcileCreditNoteDialogContent'));
 
 /**
  * Reconcile credit note dialog.
  */
-function ReconcileCreditNoteDialog({
-  dialogName,
-  payload: { creditNoteId },
-  isOpen,
-}) {
+function ReconcileCreditNoteDialog({ dialogName, payload: { creditNoteId }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -25,10 +18,7 @@ function ReconcileCreditNoteDialog({
       className="dialog--reconcile-credit-form"
     >
       <DialogSuspense>
-        <ReconcileCreditNoteDialogContent
-          creditNoteId={creditNoteId}
-          dialogName={dialogName}
-        />
+        <ReconcileCreditNoteDialogContent creditNoteId={creditNoteId} dialogName={dialogName} />
       </DialogSuspense>
     </Dialog>
   );

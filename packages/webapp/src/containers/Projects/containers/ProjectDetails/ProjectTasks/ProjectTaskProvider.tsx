@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useProjectTasks, useProject } from '../../../hooks';
@@ -11,7 +10,7 @@ const ProjectTaskContext = React.createContext();
  */
 function ProjectTaskProvider({ ...props }) {
   const { id } = useParams();
-  const projectId = parseInt(id, 10);
+  const projectId = Number.parseInt(id, 10);
 
   // Handle fetch project tasks.
   const {
@@ -26,7 +25,6 @@ function ProjectTaskProvider({ ...props }) {
   const { data: project, isLoading: isProjectLoading } = useProject(projectId, {
     enabled: !!projectId,
   });
-
 
   // provider payload.
   const provider = {

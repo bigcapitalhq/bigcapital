@@ -1,7 +1,7 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { VendorGLEntries } from './VendorGLEntries';
 
 @Service()
@@ -21,11 +21,7 @@ export class VendorGLEntriesStorage {
    * @param {number} vendorId
    * @param {Knex.Transaction} trx
    */
-  public writeVendorOpeningBalance = async (
-    tenantId: number,
-    vendorId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public writeVendorOpeningBalance = async (tenantId: number, vendorId: number, trx?: Knex.Transaction) => {
     const { Vendor } = this.tenancy.models(tenantId);
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
@@ -36,17 +32,9 @@ export class VendorGLEntriesStorage {
       slug: 'other-expenses',
     });
     // Find or create the A/P account.
-    const APAccount = await accountRepository.findOrCreateAccountsPayable(
-      vendor.currencyCode,
-      {},
-      trx
-    );
+    const APAccount = await accountRepository.findOrCreateAccountsPayable(vendor.currencyCode, {}, trx);
     // Retrieves the vendor opening balance ledger.
-    const ledger = this.vendorGLEntries.getOpeningBalanceLedger(
-      APAccount.id,
-      expenseAccount.id,
-      vendor
-    );
+    const ledger = this.vendorGLEntries.getOpeningBalanceLedger(APAccount.id, expenseAccount.id, vendor);
     // Commits the ledger entries to the storage.
     await this.ledegrRepository.commit(tenantId, ledger, trx);
   };
@@ -57,17 +45,8 @@ export class VendorGLEntriesStorage {
    * @param {number} vendorId
    * @param {Knex.Transaction} trx
    */
-  public revertVendorOpeningBalance = async (
-    tenantId: number,
-    vendorId: number,
-    trx?: Knex.Transaction
-  ) => {
-    await this.ledegrRepository.deleteByReference(
-      tenantId,
-      vendorId,
-      'VendorOpeningBalance',
-      trx
-    );
+  public revertVendorOpeningBalance = async (tenantId: number, vendorId: number, trx?: Knex.Transaction) => {
+    await this.ledegrRepository.deleteByReference(tenantId, vendorId, 'VendorOpeningBalance', trx);
   };
 
   /**
@@ -76,11 +55,7 @@ export class VendorGLEntriesStorage {
    * @param {number} vendorId
    * @param {Knex.Transaction} trx
    */
-  public rewriteVendorOpeningBalance = async (
-    tenantId: number,
-    vendorId: number,
-    trx?: Knex.Transaction
-  ) => {
+  public rewriteVendorOpeningBalance = async (tenantId: number, vendorId: number, trx?: Knex.Transaction) => {
     await this.writeVendorOpeningBalance(tenantId, vendorId, trx);
 
     await this.revertVendorOpeningBalance(tenantId, vendorId, trx);

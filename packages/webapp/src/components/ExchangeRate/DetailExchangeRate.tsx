@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as R from 'ramda';
@@ -30,6 +29,4 @@ function DetailExchangeRate({
   );
 }
 
-export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(
-  DetailExchangeRate,
-);
+export const ExchangeRateDetailItem = R.compose(withCurrentOrganization())(DetailExchangeRate);

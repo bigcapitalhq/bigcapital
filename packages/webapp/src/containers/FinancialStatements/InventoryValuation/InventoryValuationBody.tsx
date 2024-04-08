@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -21,11 +20,7 @@ function InventoryValuationBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <InventoryValuationTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <InventoryValuationTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

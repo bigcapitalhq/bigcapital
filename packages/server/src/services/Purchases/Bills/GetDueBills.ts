@@ -1,7 +1,6 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import UnitOfWork from '@/services/UnitOfWork';
 import { IBill } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class GetDueBills {
@@ -13,10 +12,7 @@ export class GetDueBills {
    * @param {number} tenantId -
    * @param {number} vendorId -
    */
-  public async getDueBills(
-    tenantId: number,
-    vendorId?: number
-  ): Promise<IBill[]> {
+  public async getDueBills(tenantId: number, vendorId?: number): Promise<IBill[]> {
     const { Bill } = this.tenancy.models(tenantId);
 
     const dueBills = await Bill.query().onBuild((query) => {

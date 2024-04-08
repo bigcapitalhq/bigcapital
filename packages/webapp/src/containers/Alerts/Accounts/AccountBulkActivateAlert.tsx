@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -64,8 +63,4 @@ function AccountBulkActivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkActivateAlert);

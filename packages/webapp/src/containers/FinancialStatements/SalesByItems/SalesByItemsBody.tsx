@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -21,11 +20,7 @@ function SalesByItemsBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <SalesByItemsTable companyName={organizationName} />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <SalesByItemsTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

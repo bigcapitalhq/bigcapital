@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import styled from 'styled-components';
 import { Form } from 'formik';
 import { Button, Intent } from '@blueprintjs/core';
@@ -20,31 +20,13 @@ export function PreferencesInvoicesForm({ isSubmitting }) {
   return (
     <Form>
       {/* ---------- Customer Notes ----------  */}
-      <FFormGroup
-        name={'customerNotes'}
-        label={<T id={'pref.invoices.customerNotes.field'} />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'customerNotes'}
-          fastField={true}
-          fill={true}
-        />
+      <FFormGroup name={'customerNotes'} label={<T id={'pref.invoices.customerNotes.field'} />} fastField={true}>
+        <FTextArea medium={'true'} name={'customerNotes'} fastField={true} fill={true} />
       </FFormGroup>
 
       {/* ---------- Terms & Conditions ----------  */}
-      <FFormGroup
-        name={'termsConditions'}
-        label={<T id={'pref.invoices.termsConditions.field'} />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'termsConditions'}
-          fastField={true}
-          fill={true}
-        />
+      <FFormGroup name={'termsConditions'} label={<T id={'pref.invoices.termsConditions.field'} />} fastField={true}>
+        <FTextArea medium={'true'} name={'termsConditions'} fastField={true} fill={true} />
       </FFormGroup>
 
       <CardFooterActions>

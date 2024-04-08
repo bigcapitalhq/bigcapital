@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -60,7 +59,4 @@ function AccountInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(AccountInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(AccountInactivateAlert);

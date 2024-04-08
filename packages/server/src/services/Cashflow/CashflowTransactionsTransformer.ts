@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../utils';
 
 export class CashflowTransactionTransformer extends Transformer {
   /**
@@ -15,16 +15,7 @@ export class CashflowTransactionTransformer extends Transformer {
    * @returns {string[]}
    */
   protected excludeAttributes = (): string[] => {
-    return [
-      'credit',
-      'debit',
-      'index',
-      'index_group',
-      'item_id',
-      'item_quantity',
-      'contact_type',
-      'contact_id',
-    ];
+    return ['credit', 'debit', 'index', 'index_group', 'item_id', 'item_quantity', 'contact_type', 'contact_id'];
   };
 
   /**

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ExchangeRateMutedField } from '@/components';
 import { useForeignAccount } from './utils';

@@ -1,6 +1,6 @@
-import xlsx, { WorkBook } from 'xlsx';
-import { IFinancialTable, ITableData } from '@/interfaces';
+import { ITableData } from '@/interfaces';
 import { FinancialTableStructure } from '@/services/FinancialStatements/FinancialTableStructure';
+import { type WorkBook, utils, write } from 'xlsx';
 
 interface ITableSheet {
   convertToXLSX(): WorkBook;
@@ -38,9 +38,7 @@ export class TableSheet implements ITableSheet {
    * @returns {Record<string, string>}
    */
   private get rows() {
-    const computedRows = FinancialTableStructure.flatNestedTree(
-      this.table.rows
-    );
+    const computedRows = FinancialTableStructure.flatNestedTree(this.table.rows);
     return computedRows.map((row) => {
       const entries = row.cells.map((cell, index) => {
         return [`${index}`, cell.value];
@@ -58,14 +56,14 @@ export class TableSheet implements ITableSheet {
     const headers = this.columns;
 
     // Convert data to worksheet with headers
-    const worksheet = xlsx.utils.json_to_sheet(this.rows, {
+    const worksheet = utils.json_to_sheet(this.rows, {
       header: this.columnsAccessors,
     });
     // Add custom headers to the worksheet
-    xlsx.utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
+    utils.sheet_add_aoa(worksheet, [headers], { origin: 'A1' });
 
     // Convert worksheet to CSV format
-    const csvOutput = xlsx.utils.sheet_to_csv(worksheet);
+    const csvOutput = utils.sheet_to_csv(worksheet);
 
     return csvOutput;
   }
@@ -76,19 +74,19 @@ export class TableSheet implements ITableSheet {
    */
   public convertToXLSX(): WorkBook {
     // Create a new workbook and a worksheet
-    const workbook = xlsx.utils.book_new();
-    const worksheet = xlsx.utils.json_to_sheet(this.rows, {
+    const workbook = utils.book_new();
+    const worksheet = utils.json_to_sheet(this.rows, {
       header: this.columnsAccessors,
     });
     // Add custom headers to the worksheet
-    xlsx.utils.sheet_add_aoa(worksheet, [this.columns], {
+    utils.sheet_add_aoa(worksheet, [this.columns], {
       origin: 'A1',
     });
     // Adjust column width.
     worksheet['!cols'] = this.computeXlsxColumnsWidths(this.rows);
 
     // Append the worksheet to the workbook
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    utils.book_append_sheet(workbook, worksheet, 'Sheet1');
 
     return workbook;
   }
@@ -100,7 +98,7 @@ export class TableSheet implements ITableSheet {
    * @returns {Promise<Buffer>}
    */
   public convertToBuffer(workbook: WorkBook, fileType: 'xlsx' | 'csv'): Buffer {
-    return xlsx.write(workbook, {
+    return write(workbook, {
       type: 'buffer',
       bookType: fileType,
       cellStyles: true,

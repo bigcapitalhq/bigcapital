@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import General from '@/containers/Preferences/General/General';
 import Users from '../containers/Preferences/Users/Users';
 import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';
@@ -12,7 +12,7 @@ import Branches from '../containers/Preferences/Branches';
 import Invoices from '../containers/Preferences/Invoices/PreferencesInvoices';
 import { PreferencesCreditNotes } from '../containers/Preferences/CreditNotes/PreferencesCreditNotes';
 import { PreferencesEstimates } from '@/containers/Preferences/Estimates/PreferencesEstimates';
-import{ PreferencesReceipts } from '@/containers/Preferences/Receipts/PreferencesReceipts'
+import { PreferencesReceipts } from '@/containers/Preferences/Receipts/PreferencesReceipts';
 
 const BASE_URL = '/preferences';
 

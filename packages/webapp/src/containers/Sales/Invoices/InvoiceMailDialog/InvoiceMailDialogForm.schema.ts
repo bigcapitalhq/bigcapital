@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as Yup from 'yup';
 
 export const InvoiceMailFormSchema = Yup.object().shape({

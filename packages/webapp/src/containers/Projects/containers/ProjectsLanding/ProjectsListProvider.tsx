@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isEmpty } from 'lodash';
 import { useResourceViews, useResourceMeta } from '@/hooks/query';
@@ -13,8 +12,7 @@ const ProjectsListContext = React.createContext();
  */
 function ProjectsListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: projectsViews, isLoading: isViewsLoading } =
-    useResourceViews('projects');
+  const { data: projectsViews, isLoading: isViewsLoading } = useResourceViews('projects');
 
   // Fetch accounts list according to the given custom view id.
   const {
@@ -24,8 +22,7 @@ function ProjectsListProvider({ query, tableStateChanged, ...props }) {
   } = useProjects(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(projects) && !tableStateChanged && !isProjectsLoading;
+  const isEmptyStatus = isEmpty(projects) && !tableStateChanged && !isProjectsLoading;
 
   // provider payload.
   const provider = {

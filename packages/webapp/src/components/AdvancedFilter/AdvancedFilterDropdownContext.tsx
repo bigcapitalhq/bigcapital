@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { get, keyBy } from 'lodash';
 import { useFormikContext } from 'formik';
@@ -9,18 +8,11 @@ const FilterConditionContext = createContext({});
 /**
  * Advanced filter dropdown context provider.
  */
-function AdvancedFilterDropdownProvider({
-  initialCondition,
-  fields,
-  ...props
-}) {
+function AdvancedFilterDropdownProvider({ initialCondition, fields, ...props }) {
   const fieldsByKey = keyBy(fields, 'key');
 
   // Retrieve field meta by the given field key.
-  const getFieldMetaByKey = React.useCallback(
-    (key) => get(fieldsByKey, key),
-    [fieldsByKey],
-  );
+  const getFieldMetaByKey = React.useCallback((key) => get(fieldsByKey, key), [fieldsByKey]);
   // Provider payload.
   const provider = { initialCondition, fields, fieldsByKey, getFieldMetaByKey };
 
@@ -58,10 +50,7 @@ function FilterConditionProvider({ conditionIndex, ...props }) {
   );
 
   // Retrieve the condition field path.
-  const getConditionFieldPath = React.useCallback(
-    (field) => `${conditionPath}.${field}`,
-    [conditionPath],
-  );
+  const getConditionFieldPath = React.useCallback((field) => `${conditionPath}.${field}`, [conditionPath]);
 
   // Provider payload.
   const provider = {
@@ -77,9 +66,4 @@ function FilterConditionProvider({ conditionIndex, ...props }) {
 const useFilterCondition = () => useContext(FilterConditionContext);
 const useAdvancedFilterContext = () => useContext(AdvancedFilterContext);
 
-export {
-  AdvancedFilterDropdownProvider,
-  FilterConditionProvider,
-  useAdvancedFilterContext,
-  useFilterCondition,
-};
+export { AdvancedFilterDropdownProvider, FilterConditionProvider, useAdvancedFilterContext, useFilterCondition };

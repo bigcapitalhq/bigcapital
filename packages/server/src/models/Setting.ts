@@ -1,4 +1,4 @@
-import TenantModel from 'models/TenantModel';
+import TenantModel from '../models/TenantModel';
 import Auth from './Auth';
 
 export default class Setting extends TenantModel {

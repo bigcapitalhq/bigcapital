@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 export const setInvoicesTableState = (queries) => {
@@ -8,10 +8,10 @@ export const setInvoicesTableState = (queries) => {
   };
 };
 
-export const resetInvoicesTableState= () => {
+export const resetInvoicesTableState = () => {
   return {
     type: t.INVOICES_TABLE_STATE_RESET,
   };
-}
+};
 
 export const setSelectedRowsItems = () => {};

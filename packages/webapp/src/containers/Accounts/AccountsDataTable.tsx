@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import {
@@ -41,8 +40,7 @@ function AccountsDataTable({
   // #withSettings
   accountsTableSize,
 }) {
-  const { isAccountsLoading, isAccountsFetching, accounts } =
-    useAccountsChartContext();
+  const { isAccountsLoading, isAccountsFetching, accounts } = useAccountsChartContext();
 
   // Retrieve accounts table columns.
   const columns = useAccountsTableColumns();
@@ -88,8 +86,7 @@ function AccountsDataTable({
     openDrawer(DRAWERS.ACCOUNT_DETAILS, { accountId: cell.row.original.id });
   };
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.ACCOUNTS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.ACCOUNTS);
 
   return (
     <DataTable

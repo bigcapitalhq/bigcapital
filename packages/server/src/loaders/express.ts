@@ -1,23 +1,20 @@
-import { json, Request, Response, NextFunction } from 'express';
-import express from 'express';
-import helmet from 'helmet';
-import boom from 'express-boom';
-import errorHandler from 'errorhandler';
-import bodyParser from 'body-parser';
-import { Server } from 'socket.io';
-import Container from 'typedi';
-import routes from 'api';
-import LoggerMiddleware from '@/api/middleware/LoggerMiddleware';
+import path from 'node:path';
 import AgendashController from '@/api/controllers/Agendash';
 import ConvertEmptyStringsToNull from '@/api/middleware/ConvertEmptyStringsToNull';
-import RateLimiterMiddleware from '@/api/middleware/RateLimiterMiddleware';
-import {
-  JSONResponseTransformer,
-  snakecaseResponseTransformer,
-} from '@/api/middleware/JSONResponseTransformer';
-import config from '@/config';
-import path from 'path';
+import { JSONResponseTransformer, snakecaseResponseTransformer } from '@/api/middleware/JSONResponseTransformer';
+import LoggerMiddleware from '@/api/middleware/LoggerMiddleware';
 import ObjectionErrorHandlerMiddleware from '@/api/middleware/ObjectionErrorHandlerMiddleware';
+import RateLimiterMiddleware from '@/api/middleware/RateLimiterMiddleware';
+import config from '@/config';
+import bodyParser from 'body-parser';
+import errorHandler from 'errorhandler';
+import { type NextFunction, type Request, type Response, json } from 'express';
+import express from 'express';
+import boom from 'express-boom';
+import helmet from 'helmet';
+import { Server } from 'socket.io';
+import Container from 'typedi';
+import routes from '../api';
 
 export default ({ app }) => {
   // Express configuration.
@@ -44,7 +41,7 @@ export default ({ app }) => {
   // Middleware for intercepting and transforming json responses.
   app.use(JSONResponseTransformer(snakecaseResponseTransformer));
 
-  app.use('/public', express.static(path.join(global.__storage_dir)));
+  app.use('/public', express.static(path.join(process.env.APP_STORAGE_DIR)));
 
   // Logger middleware.
   app.use(LoggerMiddleware);

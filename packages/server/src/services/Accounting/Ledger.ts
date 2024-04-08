@@ -1,6 +1,6 @@
-import moment from 'moment';
-import { defaultTo, sumBy, uniqBy } from 'lodash';
 import { IAccountTransaction, ILedger, ILedgerEntry } from '@/interfaces';
+import { defaultTo, sumBy, uniqBy } from 'lodash';
+import moment from 'moment';
 
 export default class Ledger implements ILedger {
   readonly entries: ILedgerEntry[];
@@ -51,7 +51,7 @@ export default class Ledger implements ILedger {
 
   /**
    * Filters entries by the given accounts ids then returns a new ledger.
-   * @param {number[]} accountIds 
+   * @param {number[]} accountIds
    * @returns {ILedger}
    */
   public whereAccountsIds(accountIds: number[]): ILedger {
@@ -66,10 +66,7 @@ export default class Ledger implements ILedger {
   public whereFromDate(fromDate: Date | string): ILedger {
     const fromDateParsed = moment(fromDate);
 
-    return this.filter(
-      (entry) =>
-        fromDateParsed.isBefore(entry.date) || fromDateParsed.isSame(entry.date)
-    );
+    return this.filter((entry) => fromDateParsed.isBefore(entry.date) || fromDateParsed.isSame(entry.date));
   }
 
   /**
@@ -80,10 +77,7 @@ export default class Ledger implements ILedger {
   public whereToDate(toDate: Date | string): ILedger {
     const toDateParsed = moment(toDate);
 
-    return this.filter(
-      (entry) =>
-        toDateParsed.isAfter(entry.date) || toDateParsed.isSame(entry.date)
-    );
+    return this.filter((entry) => toDateParsed.isAfter(entry.date) || toDateParsed.isSame(entry.date));
   }
 
   /**
@@ -187,9 +181,7 @@ export default class Ledger implements ILedger {
    * @returns {number[]}
    */
   public getAccountsIds = (): number[] => {
-    return uniqBy(this.entries, 'accountId').map(
-      (e: ILedgerEntry) => e.accountId
-    );
+    return uniqBy(this.entries, 'accountId').map((e: ILedgerEntry) => e.accountId);
   };
 
   /**

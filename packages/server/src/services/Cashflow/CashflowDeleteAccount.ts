@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './constants';
 
 @Service()
@@ -10,13 +10,10 @@ export default class CashflowDeleteAccount {
 
   /**
    * Validate the account has no associated cashflow transactions.
-   * @param {number} tenantId 
-   * @param {number} accountId 
+   * @param {number} tenantId
+   * @param {number} accountId
    */
-  public validateAccountHasNoCashflowEntries = async (
-    tenantId: number,
-    accountId: number
-  ) => {
+  public validateAccountHasNoCashflowEntries = async (tenantId: number, accountId: number) => {
     const { CashflowTransactionLine } = this.tenancy.models(tenantId);
 
     const associatedLines = await CashflowTransactionLine.query()
@@ -24,7 +21,7 @@ export default class CashflowDeleteAccount {
       .orWhere('cashflowAccountId', accountId);
 
     if (associatedLines.length > 0) {
-      throw new ServiceError(ERRORS.ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS)
+      throw new ServiceError(ERRORS.ACCOUNT_HAS_ASSOCIATED_TRANSACTIONS);
     }
   };
 }

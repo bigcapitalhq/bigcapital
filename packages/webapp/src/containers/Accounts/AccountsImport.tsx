@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DashboardInsider } from '@/components';
 import { ImportView } from '../Import/ImportView';
 import { useHistory } from 'react-router-dom';
@@ -15,11 +15,7 @@ export default function AccountsImport() {
 
   return (
     <DashboardInsider name={'import-accounts'}>
-      <ImportView
-        resource={'accounts'}
-        onCancelClick={handleCancelBtnClick}
-        onImportSuccess={handleImportSuccess}
-      />
+      <ImportView resource={'accounts'} onCancelClick={handleCancelBtnClick} onImportSuccess={handleImportSuccess} />
     </DashboardInsider>
   );
 }

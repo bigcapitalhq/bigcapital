@@ -23,14 +23,12 @@ export class ConvertSaleEstimate {
     tenantId: number,
     estimateId: number,
     invoiceId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const { SaleEstimate } = this.tenancy.models(tenantId);
 
     // Retrieve details of the given sale estimate.
-    const saleEstimate = await SaleEstimate.query()
-      .findById(estimateId)
-      .throwIfNotFound();
+    const saleEstimate = await SaleEstimate.query().findById(estimateId).throwIfNotFound();
 
     // Marks the estimate as converted from the givne invoice.
     await SaleEstimate.query(trx).where('id', estimateId).patch({
@@ -38,9 +36,6 @@ export class ConvertSaleEstimate {
       convertedToInvoiceAt: moment().toMySqlDateTime(),
     });
     // Triggers `onSaleEstimateConvertedToInvoice` event.
-    await this.eventPublisher.emitAsync(
-      events.saleEstimate.onConvertedToInvoice,
-      {}
-    );
+    await this.eventPublisher.emitAsync(events.saleEstimate.onConvertedToInvoice, {});
   }
 }

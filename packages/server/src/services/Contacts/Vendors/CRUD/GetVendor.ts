@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import VendorTransfromer from '../VendorTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import VendorTransfromer from '../VendorTransformer';
 
 @Service()
 export class GetVendor {
@@ -19,16 +19,9 @@ export class GetVendor {
   public async getVendor(tenantId: number, vendorId: number) {
     const { Contact } = this.tenancy.models(tenantId);
 
-    const vendor = await Contact.query()
-      .findById(vendorId)
-      .modify('vendor')
-      .throwIfNotFound();
+    const vendor = await Contact.query().findById(vendorId).modify('vendor').throwIfNotFound();
 
     // Transformes the vendor.
-    return this.transformer.transform(
-      tenantId,
-      vendor,
-      new VendorTransfromer()
-    );
+    return this.transformer.transform(tenantId, vendor, new VendorTransfromer());
   }
 }

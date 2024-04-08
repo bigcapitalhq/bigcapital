@@ -1,15 +1,9 @@
+import { IFilterMeta, IPaginationMeta, ISaleEstimate, ISalesEstimatesFilter } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
-import {
-  IFilterMeta,
-  IPaginationMeta,
-  ISaleEstimate,
-  ISalesEstimatesFilter,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
-import { SaleEstimateDTOTransformer } from './SaleEstimateDTOTransformer';
 import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
 
 @Service()
@@ -30,7 +24,7 @@ export class GetSaleEstimates {
    */
   public async getEstimates(
     tenantId: number,
-    filterDTO: ISalesEstimatesFilter
+    filterDTO: ISalesEstimatesFilter,
   ): Promise<{
     salesEstimates: ISaleEstimate[];
     pagination: IPaginationMeta;
@@ -42,11 +36,7 @@ export class GetSaleEstimates {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      SaleEstimate,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleEstimate, filter);
     const { results, pagination } = await SaleEstimate.query()
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
@@ -55,11 +45,7 @@ export class GetSaleEstimates {
       })
       .pagination(filter.page - 1, filter.pageSize);
 
-    const transformedEstimates = await this.transformer.transform(
-      tenantId,
-      results,
-      new SaleEstimateTransfromer()
-    );
+    const transformedEstimates = await this.transformer.transform(tenantId, results, new SaleEstimateTransfromer());
     return {
       salesEstimates: transformedEstimates,
       pagination,

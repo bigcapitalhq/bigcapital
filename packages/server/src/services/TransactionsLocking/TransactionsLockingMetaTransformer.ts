@@ -1,6 +1,6 @@
-import { get } from 'lodash';
 import { TransactionsLockingGroup } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { get } from 'lodash';
 import { getTransactionsLockingSchemaMeta } from './constants';
 
 export default class TransactionsLockingMetaTransformer extends Transformer {
@@ -34,12 +34,7 @@ export default class TransactionsLockingMetaTransformer extends Transformer {
   protected formattedModule = () => {
     return this.options.module === TransactionsLockingGroup.All
       ? this.context.i18n.__('transactions_locking.module.all_transactions')
-      : this.context.i18n.__(
-          get(
-            getTransactionsLockingSchemaMeta(this.options.module),
-            'formattedModule'
-          )
-        );
+      : this.context.i18n.__(get(getTransactionsLockingSchemaMeta(this.options.module), 'formattedModule'));
   };
 
   /**
@@ -49,12 +44,7 @@ export default class TransactionsLockingMetaTransformer extends Transformer {
   protected description = () => {
     return this.options.module === TransactionsLockingGroup.All
       ? ''
-      : this.context.i18n.__(
-          get(
-            getTransactionsLockingSchemaMeta(this.options.module),
-            'description'
-          )
-        );
+      : this.context.i18n.__(get(getTransactionsLockingSchemaMeta(this.options.module), 'description'));
   };
 
   /**

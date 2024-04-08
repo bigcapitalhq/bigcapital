@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useAccount, useAccountTransactions } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -16,10 +15,9 @@ function AccountDrawerProvider({ accountId, name, ...props }) {
   });
 
   // Load the specific account transactions.
-  const { data: accounts, isLoading: isAccountsLoading } =
-    useAccountTransactions(accountId, {
-      enabled: !!accountId,
-    });
+  const { data: accounts, isLoading: isAccountsLoading } = useAccountTransactions(accountId, {
+    enabled: !!accountId,
+  });
 
   // Drawer title.
   const drawerTitle = `${account.name} ${account.code}`;

@@ -1,4 +1,3 @@
-
 export class Seeder {
   knex: any;
 
@@ -8,4 +7,3 @@ export class Seeder {
   up(knex) {}
   down(knex) {}
 }
-

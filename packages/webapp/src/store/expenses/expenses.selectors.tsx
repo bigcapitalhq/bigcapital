@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { isEqual } from 'lodash';
 
 import { createDeepEqualSelector } from '@/utils';
@@ -10,16 +10,12 @@ const expensesTableStateSelector = (state) => state.expenses.tableState;
 
 // Retrive expenses table query.
 export const getExpensesTableStateFactory = () =>
-  createDeepEqualSelector(
-    paginationLocationQuery,
-    expensesTableStateSelector,
-    (locationQuery, tableState) => {
-      return {
-        ...locationQuery,
-        ...tableState,
-      };
-    },
-  );
+  createDeepEqualSelector(paginationLocationQuery, expensesTableStateSelector, (locationQuery, tableState) => {
+    return {
+      ...locationQuery,
+      ...tableState,
+    };
+  });
 
 export const expensesTableStateChangedFactory = () =>
   createDeepEqualSelector(expensesTableStateSelector, (tableState) => {

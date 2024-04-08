@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // Based on https://github.com/jquense/yup/blob/2973d0a/src/locale.js
 
 import printValue from '../printValue';
@@ -14,14 +14,10 @@ export const locale = {
       let msg =
         `${path} يجب أن يكون \`${type}\` نوع, ` +
         `ولكن القيمة النهائية كانت في: \`${printValue(value, true)}\`` +
-        (isCast
-          ? ` (المدلى بها من قيمة \`${printValue(originalValue, true)}\`).`
-          : '.');
+        (isCast ? ` (المدلى بها من قيمة \`${printValue(originalValue, true)}\`).` : '.');
 
       if (value === null) {
-        msg +=
-          `\n إذا كان المقصود "لاغية" كقيمة فارغة مما لا شك فيه للاحتفال مخطط كما` +
-          ' `.nullable()`';
+        msg += `\n إذا كان المقصود "لاغية" كقيمة فارغة مما لا شك فيه للاحتفال مخطط كما` + ' `.nullable()`';
       }
 
       return msg;

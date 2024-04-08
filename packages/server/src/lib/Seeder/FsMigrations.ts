@@ -1,11 +1,11 @@
-import path from 'path';
-import { sortBy } from 'lodash';
-import fs from 'fs';
+import fs from 'node:fs';
+import path from 'node:path';
 import { promisify } from 'util';
-import { MigrateItem } from './interfaces';
+import { sortBy } from 'lodash';
+import { filterMigrations } from './MigrateUtils';
 import { importWebpackSeedModule } from './Utils';
 import { DEFAULT_LOAD_EXTENSIONS } from './constants';
-import { filterMigrations } from './MigrateUtils';
+import { MigrateItem } from './interfaces';
 
 const readdir = promisify(fs.readdir);
 
@@ -20,11 +20,7 @@ class FsMigrations {
    * @param sortDirsSeparately
    * @param loadExtensions
    */
-  constructor(
-    migrationDirectories: string[],
-    sortDirsSeparately: boolean,
-    loadExtensions: string[]
-  ) {
+  constructor(migrationDirectories: string[], sortDirsSeparately: boolean, loadExtensions: string[]) {
     this.sortDirsSeparately = sortDirsSeparately;
 
     if (!Array.isArray(migrationDirectories)) {
@@ -55,26 +51,16 @@ class FsMigrations {
         if (this.sortDirsSeparately) {
           migrationDirectory.files = migrationDirectory.files.sort();
         }
-        migrationDirectory.files.forEach((file) =>
-          acc.push({ file, directory: migrationDirectory.configDir })
-        );
+        migrationDirectory.files.forEach((file) => acc.push({ file, directory: migrationDirectory.configDir }));
         return acc;
       }, []);
 
       // If true we have already sorted the migrations inside the folders
       // return the migrations fully qualified
       if (this.sortDirsSeparately) {
-        return filterMigrations(
-          this,
-          migrations,
-          loadExtensions || this.loadExtensions
-        );
+        return filterMigrations(this, migrations, loadExtensions || this.loadExtensions);
       }
-      return filterMigrations(
-        this,
-        sortBy(migrations, 'file'),
-        loadExtensions || this.loadExtensions
-      );
+      return filterMigrations(this, sortBy(migrations, 'file'), loadExtensions || this.loadExtensions);
     });
   }
 

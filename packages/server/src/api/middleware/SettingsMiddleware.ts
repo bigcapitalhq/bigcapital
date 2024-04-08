@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { Container } from 'typedi';
 import SettingsStore from '@/services/Settings/SettingsStore';
- 
+import { NextFunction, Request, Response } from 'express';
+import { Container } from 'typedi';
+
 export default async (req: Request, res: Response, next: NextFunction) => {
   const { tenantId } = req.user;
 
@@ -24,4 +24,4 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     await settings.save();
   });
   next();
-}
+};

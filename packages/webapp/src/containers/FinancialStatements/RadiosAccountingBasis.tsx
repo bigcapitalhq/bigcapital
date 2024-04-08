@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FastField } from 'formik';
@@ -7,14 +6,10 @@ import { RadioGroup, Radio } from '@blueprintjs/core';
 
 export default function RadiosAccountingBasis(props) {
   const { key = 'basis', ...rest } = props;
-  
 
   return (
     <FastField name={'basis'}>
-      {({
-        form: { setFieldValue },
-        field: { value },
-      }) => (
+      {({ form: { setFieldValue }, field: { value } }) => (
         <RadioGroup
           inline={true}
           label={intl.get('accounting_basis')}

@@ -1,8 +1,8 @@
-import { mixin, Model } from 'objection';
-import TenantModel from 'models/TenantModel';
-import ModelSetting from './ModelSetting';
+import { Model, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import CustomViewBaseModel from './CustomViewBaseModel';
 import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
 export default class VendorCreditAppliedBill extends mixin(TenantModel, [
   ModelSetting,
@@ -27,8 +27,8 @@ export default class VendorCreditAppliedBill extends mixin(TenantModel, [
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Bill = require('models/Bill');
-    const VendorCredit = require('models/VendorCredit');
+    const Bill = require('../models/Bill');
+    const VendorCredit = require('../models/VendorCredit');
 
     return {
       bill: {

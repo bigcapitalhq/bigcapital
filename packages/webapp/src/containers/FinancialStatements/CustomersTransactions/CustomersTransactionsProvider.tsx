@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCustomersTransactionsReport } from '@/hooks/query';
@@ -37,7 +37,6 @@ function CustomersTransactionsProvider({ filter, ...props }) {
     </FinancialReportPage>
   );
 }
-const useCustomersTransactionsContext = () =>
-  useContext(CustomersTransactionsContext);
+const useCustomersTransactionsContext = () => useContext(CustomersTransactionsContext);
 
 export { CustomersTransactionsProvider, useCustomersTransactionsContext };

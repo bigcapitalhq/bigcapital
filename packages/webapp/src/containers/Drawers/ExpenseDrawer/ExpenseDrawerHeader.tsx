@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -29,7 +28,7 @@ export default function ExpenseDrawerHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
-            <h3 class="big-number">{expense.formatted_amount}</h3>
+            <h3 className="big-number">{expense.formatted_amount}</h3>
           </DetailItem>
 
           <StatusDetailItem>
@@ -49,22 +48,13 @@ export default function ExpenseDrawerHeader() {
               {defaultTo(expense.reference_no, '-')}
             </DetailItem>
 
-            <DetailItem label={<T id={'description'} />}>
-              {defaultTo(expense.description, '—')}
-            </DetailItem>
-            <ExchangeRateDetailItem
-              exchangeRate={expense?.exchange_rate}
-              toCurrency={expense?.currency_code}
-            />
+            <DetailItem label={<T id={'description'} />}>{defaultTo(expense.description, '—')}</DetailItem>
+            <ExchangeRateDetailItem exchangeRate={expense?.exchange_rate} toCurrency={expense?.currency_code} />
           </DetailsMenu>
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            textAlign={'right'}
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-          >
+          <DetailsMenu textAlign={'right'} direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem label={<T id={'published_at'} />}>
               <FormatDate value={expense.published_at} />
             </DetailItem>

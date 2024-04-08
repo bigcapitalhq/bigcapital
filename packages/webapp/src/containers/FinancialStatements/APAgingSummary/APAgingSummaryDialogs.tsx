@@ -4,9 +4,7 @@ import { APAgingSummaryPdfDialog } from './dialogs/APAgingSummaryPdfDialog';
 export function APAgingSummaryDialogs() {
   return (
     <>
-      <APAgingSummaryPdfDialog
-        dialogName={DialogsName.APAgingSummaryPdfPreview}
-      />
+      <APAgingSummaryPdfDialog dialogName={DialogsName.APAgingSummaryPdfPreview} />
     </>
   );
 }

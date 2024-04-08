@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useState, createContext, useContext } from 'react';
 
 interface AlertsManagerContextValue {
@@ -11,9 +11,7 @@ interface AlertsManagerContextValue {
   findAlert: (alert: string | number) => string | number | undefined;
 }
 
-const AlertsManagerContext = createContext<AlertsManagerContextValue>(
-  {} as AlertsManagerContextValue,
-);
+const AlertsManagerContext = createContext<AlertsManagerContextValue>({} as AlertsManagerContextValue);
 
 export function AlertsManager({ children }: { children: ReactNode }) {
   const [alerts, setAlerts] = useState<(string | number)[]>([]);

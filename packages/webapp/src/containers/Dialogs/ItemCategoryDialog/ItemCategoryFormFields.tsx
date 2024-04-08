@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Classes, FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
 import { FormattedMessage as T, FieldRequiredHint } from '@/components';
@@ -46,12 +45,7 @@ export default function ItemCategoryFormFields() {
             helperText={<ErrorMessage name="description" />}
             inline={true}
           >
-            <TextArea
-              growVertically={true}
-              large={true}
-              intent={inputIntent({ error, touched })}
-              {...field}
-            />
+            <TextArea growVertically={true} large={true} intent={inputIntent({ error, touched })} {...field} />
           </FormGroup>
         )}
       </FastField>

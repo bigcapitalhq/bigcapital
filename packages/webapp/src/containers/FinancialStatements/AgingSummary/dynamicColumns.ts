@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import * as R from 'ramda';
 import { getColumnWidth } from '@/utils';

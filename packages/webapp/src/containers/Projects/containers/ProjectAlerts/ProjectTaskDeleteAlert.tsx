@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
@@ -25,8 +24,7 @@ function ProjectTaskDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deleteProjectTaskMutate, isLoading } =
-    useDeleteProjectTask();
+  const { mutateAsync: deleteProjectTaskMutate, isLoading } = useDeleteProjectTask();
 
   // handle cancel delete alert.
   const handleCancelDeleteAlert = () => {
@@ -72,7 +70,4 @@ function ProjectTaskDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ProjectTaskDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ProjectTaskDeleteAlert);

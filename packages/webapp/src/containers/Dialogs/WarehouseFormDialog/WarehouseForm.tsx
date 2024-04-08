@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -33,13 +32,7 @@ function WarehouseForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    warehouse,
-    warehouseId,
-    createWarehouseMutate,
-    editWarehouseMutate,
-  } = useWarehouseFormContext();
+  const { dialogName, warehouse, warehouseId, createWarehouseMutate, editWarehouseMutate } = useWarehouseFormContext();
 
   // Initial form values.
   const initialValues = {

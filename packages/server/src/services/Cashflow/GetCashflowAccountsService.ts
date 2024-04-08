@@ -1,9 +1,9 @@
-import { Service, Inject } from 'typedi';
 import { ICashflowAccount, ICashflowAccountsFilter } from '@/interfaces';
-import { CashflowAccountTransformer } from './CashflowAccountTransformer';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { CashflowAccountTransformer } from './CashflowAccountTransformer';
 
 @Service()
 export default class GetCashflowAccountsService {
@@ -24,7 +24,7 @@ export default class GetCashflowAccountsService {
    */
   public async getCashflowAccounts(
     tenantId: number,
-    filterDTO: ICashflowAccountsFilter
+    filterDTO: ICashflowAccountsFilter,
   ): Promise<{ cashflowAccounts: ICashflowAccount[] }> {
     const { CashflowAccount } = this.tenancy.models(tenantId);
 
@@ -32,11 +32,7 @@ export default class GetCashflowAccountsService {
     const filter = this.dynamicListService.parseStringifiedFilter(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      CashflowAccount,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, CashflowAccount, filter);
     // Retrieve accounts model based on the given query.
     const accounts = await CashflowAccount.query().onBuild((builder) => {
       dynamicList.buildQuery()(builder);
@@ -45,10 +41,6 @@ export default class GetCashflowAccountsService {
       builder.modify('inactiveMode', filter.inactiveMode);
     });
     // Retrieves the transformed accounts.
-    return this.transformer.transform(
-      tenantId,
-      accounts,
-      new CashflowAccountTransformer()
-    );
+    return this.transformer.transform(tenantId, accounts, new CashflowAccountTransformer());
   }
 }

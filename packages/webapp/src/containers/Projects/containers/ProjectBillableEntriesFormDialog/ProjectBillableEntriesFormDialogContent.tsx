@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ProjectBillableEntriesFormProvider } from './ProjectBillableEntriesFormProvider';
 import ProjectBillableEntriesForm from './ProjectBillableEntriesForm';
@@ -13,10 +12,7 @@ export default function ProjectEntriesFormDialogContent({
   projectId,
 }) {
   return (
-    <ProjectBillableEntriesFormProvider
-      dialogName={dialogName}
-      projectId={projectId}
-    >
+    <ProjectBillableEntriesFormProvider dialogName={dialogName} projectId={projectId}>
       <ProjectBillableEntriesForm />
     </ProjectBillableEntriesFormProvider>
   );

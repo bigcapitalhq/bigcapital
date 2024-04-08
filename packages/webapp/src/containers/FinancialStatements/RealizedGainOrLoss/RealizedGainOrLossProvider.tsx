@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 
@@ -17,7 +16,6 @@ function RealizedGainOrLossProvider({ filter, ...props }) {
   );
 }
 
-const useRealizedGainOrLossContext = () =>
-  React.useContext(RealizedGainOrLossContext);
+const useRealizedGainOrLossContext = () => React.useContext(RealizedGainOrLossContext);
 
 export { RealizedGainOrLossProvider, useRealizedGainOrLossContext };

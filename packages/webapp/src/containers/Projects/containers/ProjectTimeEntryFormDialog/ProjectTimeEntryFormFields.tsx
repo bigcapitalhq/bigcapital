@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -16,11 +15,7 @@ import {
   Stack,
 } from '@/components';
 import { useProjectTimeEntryFormContext } from './ProjectTimeEntryFormProvider';
-import {
-  ProjectsSelect,
-  ProjectTaskSelect,
-  ProjectSelectButton,
-} from '../../components';
+import { ProjectsSelect, ProjectTaskSelect, ProjectSelectButton } from '../../components';
 import { momentFormatter } from '@/utils';
 import { useSetProjectToForm } from './utils';
 
@@ -30,8 +25,7 @@ import { useSetProjectToForm } from './utils';
  */
 function ProjectTimeEntryFormFields() {
   // time entry form dialog context.
-  const { projectTasks, projects, projectId } =
-    useProjectTimeEntryFormContext();
+  const { projectTasks, projects, projectId } = useProjectTimeEntryFormContext();
 
   // Sets the project id.
   useSetProjectToForm();
@@ -63,11 +57,7 @@ function ProjectTimeEntryFormFields() {
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
-          <ProjectsSelect
-            name={'project_id'}
-            projects={projects}
-            input={ProjectSelectButton}
-          />
+          <ProjectsSelect name={'project_id'} projects={projects} input={ProjectSelectButton} />
         </FFormGroup>
 
         {/*------------ Task -----------*/}
@@ -77,11 +67,7 @@ function ProjectTimeEntryFormFields() {
           labelInfo={<FieldRequiredHint />}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
-          <ProjectTaskSelect
-            name={'task_id'}
-            tasks={projectTasks}
-            popoverProps={{ minimal: true }}
-          />
+          <ProjectTaskSelect name={'task_id'} tasks={projectTasks} popoverProps={{ minimal: true }} />
         </FFormGroup>
 
         {/*------------ Duration -----------*/}
@@ -90,11 +76,7 @@ function ProjectTimeEntryFormFields() {
           name={'duration'}
           labelInfo={<FieldRequiredHint />}
         >
-          <DurationInputGroup
-            name="duration"
-            inputProps={{}}
-            placeholder="HH:MM"
-          />
+          <DurationInputGroup name="duration" inputProps={{}} placeholder="HH:MM" />
         </FFormGroup>
 
         {/*------------ Description -----------*/}

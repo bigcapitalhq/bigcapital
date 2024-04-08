@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useEffect } from 'react';
 import moment from 'moment';
 
@@ -52,10 +51,7 @@ function Journal({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <JournalHeader
-            onSubmitFilter={handleFilterSubmit}
-            pageFilter={query}
-          />
+          <JournalHeader onSubmitFilter={handleFilterSubmit} pageFilter={query} />
           <JournalSheetLoadingBar />
           <JournalSheetAlerts />
           <JournalBody />

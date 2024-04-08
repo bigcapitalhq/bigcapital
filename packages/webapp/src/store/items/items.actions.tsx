@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 export const setItemsTableState = (queries) => {
@@ -8,11 +8,10 @@ export const setItemsTableState = (queries) => {
   };
 };
 
-
 export const resetItemsTableState = () => {
   return {
     type: t.ITEMS_TABLE_STATE_RESET,
   };
-}
+};
 
 export const setSelectedRowsItems = () => {};

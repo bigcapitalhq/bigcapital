@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Dialog, DialogSuspense } from '@/components';
@@ -6,18 +5,12 @@ import withDialogRedux from '@/components/DialogReduxConnect';
 
 import { compose } from '@/utils';
 
-const SMSMessageDialogContent = React.lazy(() =>
-  import('./SMSMessageDialogContent'),
-);
+const SMSMessageDialogContent = React.lazy(() => import('./SMSMessageDialogContent'));
 
 /**
  * SMS Message dialog.
  */
-function SMSMessageDialog({
-  dialogName,
-  payload: { notificationkey },
-  isOpen,
-}) {
+function SMSMessageDialog({ dialogName, payload: { notificationkey }, isOpen }) {
   return (
     <Dialog
       name={dialogName}
@@ -28,10 +21,7 @@ function SMSMessageDialog({
       className={'dialog--sms-message'}
     >
       <DialogSuspense>
-        <SMSMessageDialogContent
-          dialogName={dialogName}
-          notificationkey={notificationkey}
-        />
+        <SMSMessageDialogContent dialogName={dialogName} notificationkey={notificationkey} />
       </DialogSuspense>
     </Dialog>
   );

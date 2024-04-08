@@ -1,13 +1,13 @@
-// @ts-nocheck
 import LazyLoader from '@/components/LazyLoader';
 
 const BASE_URL = '/auth';
 
-export default [
+const authenticationRoutes = [
   {
     path: `${BASE_URL}/login`,
     component: LazyLoader({
       loader: () => import('@/containers/Authentication/Login'),
+      // loader: () => Promise.resolve(() => <div>Hello World</div>),
     }),
   },
   {
@@ -33,5 +33,7 @@ export default [
     component: LazyLoader({
       loader: () => import('@/containers/Authentication/Register'),
     }),
-  }
+  },
 ];
+
+export default authenticationRoutes;

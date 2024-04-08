@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -10,10 +9,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose } from '@/utils';
-import {
-  transformFormToSettings,
-  transformSettingsToForm,
-} from '@/containers/JournalNumber/utils';
+import { transformFormToSettings, transformSettingsToForm } from '@/containers/JournalNumber/utils';
 
 /**
  * Warehouse transfer no dialog content.

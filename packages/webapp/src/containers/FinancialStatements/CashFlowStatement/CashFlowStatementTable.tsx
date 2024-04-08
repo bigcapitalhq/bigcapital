@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -24,10 +23,7 @@ export default function CashFlowStatementTable({
 
   const columns = useCashFlowStatementColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(tableRows, 4),
-    [tableRows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(tableRows, 4), [tableRows]);
   return (
     <FinancialSheet
       companyName={companyName}

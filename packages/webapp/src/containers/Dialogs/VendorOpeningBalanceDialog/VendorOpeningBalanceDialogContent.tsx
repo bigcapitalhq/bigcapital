@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/VendorOpeningBalance/VendorOpeningBalance.scss';
@@ -16,10 +15,7 @@ export default function VendorOpeningBalanceDialogContent({
   vendorId,
 }) {
   return (
-    <VendorOpeningBalanceFormProvider
-      vendorId={vendorId}
-      dialogName={dialogName}
-    >
+    <VendorOpeningBalanceFormProvider vendorId={vendorId} dialogName={dialogName}>
       <VendorOpeningBalanceForm />
     </VendorOpeningBalanceFormProvider>
   );

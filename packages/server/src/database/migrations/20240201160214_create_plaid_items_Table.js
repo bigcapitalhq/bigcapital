@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('plaid_items', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('plaid_items', (table) => {
     table.increments('id');
     table.integer('tenant_id').unsigned();
     table.string('plaid_item_id');
@@ -9,6 +9,5 @@ exports.up = function (knex) {
     table.string('status');
     table.timestamps();
   });
-};
 
-exports.down = function (knex) {};
+exports.down = (knex) => {};

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Classes, ControlGroup } from '@blueprintjs/core';
@@ -7,10 +6,7 @@ import { useFormikContext } from 'formik';
 
 function PercentageFormField() {
   return (
-    <FFormGroup
-      label={intl.get('estimated_expenses.dialog.percentage')}
-      name={'percentage'}
-    >
+    <FFormGroup label={intl.get('estimated_expenses.dialog.percentage')} name={'percentage'}>
       <FInputGroup name="percentage" />
     </FFormGroup>
   );
@@ -19,16 +15,10 @@ function PercentageFormField() {
 function CustomPirceField() {
   return (
     <ControlGroup className={Classes.FILL}>
-      <FFormGroup
-        name={'unitPrice'}
-        label={intl.get('estimated_expenses.dialog.unit_price')}
-      >
+      <FFormGroup name={'unitPrice'} label={intl.get('estimated_expenses.dialog.unit_price')}>
         <FInputGroup name="unitPrice" />
       </FFormGroup>
-      <FFormGroup
-        name={'unitPrice'}
-        label={intl.get('estimated_expenses.dialog.total')}
-      >
+      <FFormGroup name={'unitPrice'} label={intl.get('estimated_expenses.dialog.total')}>
         <FInputGroup name="total" />
       </FFormGroup>
     </ControlGroup>

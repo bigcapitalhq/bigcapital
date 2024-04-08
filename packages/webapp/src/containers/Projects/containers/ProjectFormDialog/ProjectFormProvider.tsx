@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useCustomers } from '@/hooks/query';
 import { useCreateProject, useEditProject, useProject } from '../../hooks';

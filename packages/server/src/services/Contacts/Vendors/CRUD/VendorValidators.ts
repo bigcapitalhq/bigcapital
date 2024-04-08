@@ -1,5 +1,5 @@
 import { ServiceError } from '@/exceptions';
-import { Service, Inject } from 'typedi';
+import { Service } from 'typedi';
 import { ERRORS } from '../constants';
 
 @Service()

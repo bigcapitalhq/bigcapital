@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import { first, pick } from 'lodash';
@@ -22,11 +21,6 @@ export const useSetPrimaryBranchToForm = () => {
 
 export function transfromCustomertoForm(values) {
   return {
-    ...pick(values, [
-      'id',
-      'opening_balance',
-      'opening_balance_exchange_rate',
-      'currency_code',
-    ]),
+    ...pick(values, ['id', 'opening_balance', 'opening_balance_exchange_rate', 'currency_code']),
   };
 }

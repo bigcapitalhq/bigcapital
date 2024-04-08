@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Card } from '@/components';
 
@@ -35,11 +34,7 @@ export function CreditNoteGLEntriesTable() {
     <Card>
       <AmountDisplayedBaseCurrencyMessage />
 
-      <JournalEntriesTable
-        columns={columns}
-        data={transactions}
-        loading={isTransactionLoading}
-      />
+      <JournalEntriesTable columns={columns} data={transactions} loading={isTransactionLoading} />
     </Card>
   );
 }

@@ -1,15 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Position,
-  Classes,
-  Tooltip,
-  MenuItem,
-  Menu,
-  MenuDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Position, Classes, Tooltip, MenuItem, Menu, MenuDivider, Intent } from '@blueprintjs/core';
 import { Can, Icon, If } from '@/components';
 import { safeCallback } from '@/utils';
 import { AbilitySubject, AccountAction } from '@/constants/abilityOption';
@@ -113,7 +104,7 @@ export function BalanceCell({ cell }) {
       {/* <Money amount={account.amount} currency={account.currency_code} /> */}
     </span>
   ) : (
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 }
 
@@ -123,9 +114,5 @@ export function BalanceCell({ cell }) {
 export function BankBalanceCell({ cell }) {
   const account = cell.row.original;
 
-  return account.amount !== null ? (
-    <span>{account.bank_balance_formatted}</span>
-  ) : (
-    <span class="placeholder">—</span>
-  );
+  return account.amount !== null ? <span>{account.bank_balance_formatted}</span> : <span className="placeholder">—</span>;
 }

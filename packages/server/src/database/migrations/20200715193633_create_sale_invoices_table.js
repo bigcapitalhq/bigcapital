@@ -1,12 +1,7 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('sales_invoices', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('sales_invoices', (table) => {
     table.increments();
-    table
-      .integer('customer_id')
-      .unsigned()
-      .index()
-      .references('id')
-      .inTable('contacts');
+    table.integer('customer_id').unsigned().index().references('id').inTable('contacts');
 
     table.date('invoice_date').index();
     table.date('due_date');
@@ -27,8 +22,5 @@ exports.up = function (knex) {
     table.integer('user_id').unsigned();
     table.timestamps();
   });
-};
 
-exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('sales_invoices');
-};
+exports.down = (knex) => knex.schema.dropTableIfExists('sales_invoices');

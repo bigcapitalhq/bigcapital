@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { useSaleEstimateDefaultOptions } from '@/hooks/query';
 import { DialogContent } from '@/components';
@@ -20,13 +19,8 @@ interface EstimateMailDialogBootProps {
 /**
  * Estimate mail dialog boot provider.
  */
-function EstimateMailDialogBoot({
-  estimateId,
-  redirectToEstimatesList,
-  ...props
-}: EstimateMailDialogBootProps) {
-  const { data: mailOptions, isLoading: isMailOptionsLoading } =
-    useSaleEstimateDefaultOptions(estimateId);
+function EstimateMailDialogBoot({ estimateId, redirectToEstimatesList, ...props }: EstimateMailDialogBootProps) {
+  const { data: mailOptions, isLoading: isMailOptionsLoading } = useSaleEstimateDefaultOptions(estimateId);
 
   const provider = {
     saleEstimateId: estimateId,
@@ -42,7 +36,6 @@ function EstimateMailDialogBoot({
   );
 }
 
-const useEstimateMailDialogBoot = () =>
-  React.useContext<EstimateMailDialogBootValues>(EstimateMailDialagBoot);
+const useEstimateMailDialogBoot = () => React.useContext<EstimateMailDialogBootValues>(EstimateMailDialagBoot);
 
 export { EstimateMailDialogBoot, useEstimateMailDialogBoot };

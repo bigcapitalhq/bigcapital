@@ -1,11 +1,9 @@
-
-
 export interface IOptionDTO {
-  key: string,
-  value: string|number,
-  group: string,
-};
+  key: string;
+  value: string | number;
+  group: string;
+}
 
 export interface IOptionsDTO {
-  options: IOptionDTO[],
-};
+  options: IOptionDTO[];
+}

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useReducer, useEffect } from 'react';
 import classNames from 'classnames';
 import { Button, ButtonGroup, Intent, HTMLSelect } from '@blueprintjs/core';
@@ -40,9 +39,7 @@ const getState = ({ currentPage, size, total }) => {
       endPage = currentPage + halfVisibleItems - 1;
     }
   }
-  const pages = [...Array(endPage + 1 - startPage).keys()].map(
-    (i) => startPage + i,
-  );
+  const pages = [...Array(endPage + 1 - startPage).keys()].map((i) => startPage + i);
 
   // Too large or small currentPage
   let correctCurrentpage = currentPage;
@@ -91,11 +88,7 @@ export function Pagination({
   onPageChange,
   onPageSizeChange,
 }) {
-  const [state, dispatch] = useReducer(
-    reducer,
-    { currentPage, total, size },
-    getState,
-  );
+  const [state, dispatch] = useReducer(reducer, { currentPage, total, size }, getState);
 
   useEffect(() => {
     dispatch({
@@ -107,8 +100,8 @@ export function Pagination({
   }, [total, size, currentPage]);
 
   return (
-    <div class="pagination">
-      <div class="pagination__buttons-group">
+    <div className="pagination">
+      <div className="pagination__buttons-group">
         <ButtonGroup>
           <Button
             disabled={state.currentPage <= 1}
@@ -139,13 +132,9 @@ export function Pagination({
                 onPageChange({ page, pageSize });
               }}
               minimal={true}
-              className={classNames(
-                'pagination__item',
-                'pagination__item--page',
-                {
-                  'is-active': state.currentPage === page,
-                },
-              )}
+              className={classNames('pagination__item', 'pagination__item--page', {
+                'is-active': state.currentPage === page,
+              })}
             >
               {page}
             </Button>
@@ -171,15 +160,15 @@ export function Pagination({
         </ButtonGroup>
       </div>
 
-      <div class="pagination__controls">
-        <div class="pagination__goto-control">
+      <div className="pagination__controls">
+        <div className="pagination__goto-control">
           Go to
           <HTMLSelect
             minimal={true}
             options={range(1, state.totalPages + 1)}
             value={state.currentPage}
             onChange={(event) => {
-              const page = parseInt(event.currentTarget.value, 10);
+              const page = Number.parseInt(event.currentTarget.value, 10);
               const { size: pageSize } = state;
 
               dispatch({ type: 'PAGE_CHANGE', page });
@@ -188,14 +177,14 @@ export function Pagination({
           />
         </div>
 
-        <div class="pagination__pagesize-control">
+        <div className="pagination__pagesize-control">
           <T id={'page_size'} />
           <HTMLSelect
             minimal={true}
             options={pageSizesOptions}
             value={size}
             onChange={(event) => {
-              const pageSize = parseInt(event.currentTarget.value, 10);
+              const pageSize = Number.parseInt(event.currentTarget.value, 10);
               dispatch({ type: 'PAGE_SIZE_CHANGE', size: pageSize });
               dispatch({ type: 'PAGE_CHANGE', page: 1 });
 
@@ -205,7 +194,7 @@ export function Pagination({
         </div>
       </div>
 
-      <div class="pagination__info">
+      <div className="pagination__info">
         {intl.get('showing_current_page_to_total', {
           currentPage: state.currentPage,
           totalPages: state.totalPages,

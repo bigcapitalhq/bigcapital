@@ -13,10 +13,7 @@ export default function EstimateMailDialogContent({
 }: EstimateMailDialogContentProps) {
   return (
     <EstimateMailDialogBoot estimateId={estimateId}>
-      <EstimateMailDialogForm
-        onFormSubmit={onFormSubmit}
-        onCancelClick={onCancelClick}
-      />
+      <EstimateMailDialogForm onFormSubmit={onFormSubmit} onCancelClick={onCancelClick} />
     </EstimateMailDialogBoot>
   );
 }

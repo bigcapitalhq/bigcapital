@@ -1,15 +1,10 @@
-/* eslint-disable global-require */
-import * as R from 'ramda';
-import { Model, ModelOptions, QueryContext, mixin } from 'objection';
-import TenantModel from 'models/TenantModel';
-import ModelSettings from './ModelSetting';
+import { Model, type ModelOptions, type QueryContext, mixin } from 'objection';
+import TenantModel from '../models/TenantModel';
 import Account from './Account';
+import ModelSettings from './ModelSetting';
 import UncategorizedCashflowTransactionMeta from './UncategorizedCashflowTransaction.meta';
 
-export default class UncategorizedCashflowTransaction extends mixin(
-  TenantModel,
-  [ModelSettings]
-) {
+export default class UncategorizedCashflowTransaction extends mixin(TenantModel, [ModelSettings]) {
   id!: number;
   amount!: number;
   categorized!: boolean;
@@ -33,12 +28,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return [
-      'withdrawal',
-      'deposit',
-      'isDepositTransaction',
-      'isWithdrawalTransaction',
-    ];
+    return ['withdrawal', 'deposit', 'isDepositTransaction', 'isWithdrawalTransaction'];
   }
 
   static get meta() {
@@ -79,7 +69,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
+    const Account = require('../models/Account');
 
     return {
       /**
@@ -102,10 +92,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
    * @param {QueryContext} queryContext - The query context for the transaction.
    * @param {boolean} increment - Indicates whether to increment or decrement the count.
    */
-  private async updateUncategorizedTransactionCount(
-    queryContext: QueryContext,
-    increment: boolean
-  ) {
+  private async updateUncategorizedTransactionCount(queryContext: QueryContext, increment: boolean) {
     const operation = increment ? 'increment' : 'decrement';
     const amount = increment ? 1 : -1;
 
@@ -128,10 +115,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
    * @param {ModelOptions} opt
    * @param {QueryContext} queryContext
    */
-  public async $afterUpdate(
-    opt: ModelOptions,
-    queryContext: QueryContext
-  ): Promise<any> {
+  public async $afterUpdate(opt: ModelOptions, queryContext: QueryContext): Promise<any> {
     await super.$afterUpdate(opt, queryContext);
 
     if (this.id && this.categorized) {

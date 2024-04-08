@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const VendorCreditDeleteAlert = React.lazy(
@@ -6,21 +5,13 @@ const VendorCreditDeleteAlert = React.lazy(
 );
 
 const RefundVendorCreditDeleteAlert = React.lazy(
-  () =>
-    import(
-      '@/containers/Alerts/VendorCeditNotes/RefundVendorCreditDeleteAlert'
-    ),
+  () => import('@/containers/Alerts/VendorCeditNotes/RefundVendorCreditDeleteAlert'),
 );
 
-const OpenVendorCreditAlert = React.lazy(
-  () => import('@/containers/Alerts/VendorCeditNotes/VendorCreditOpenedAlert'),
-);
+const OpenVendorCreditAlert = React.lazy(() => import('@/containers/Alerts/VendorCeditNotes/VendorCreditOpenedAlert'));
 
 const ReconcileVendorCreditDeleteAlert = React.lazy(
-  () =>
-    import(
-      '@/containers/Alerts/VendorCeditNotes/ReconcileVendorCreditDeleteAlert'
-    ),
+  () => import('@/containers/Alerts/VendorCeditNotes/ReconcileVendorCreditDeleteAlert'),
 );
 
 /**

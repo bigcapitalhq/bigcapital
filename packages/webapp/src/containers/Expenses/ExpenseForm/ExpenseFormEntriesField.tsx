@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { FastField } from 'formik';
 import React from 'react';
 import ExpenseFormEntriesTable from './ExpenseFormEntriesTable';
@@ -13,17 +13,8 @@ export default function ExpenseFormEntriesField({ linesNumber = 4 }) {
   const { accounts, projects } = useExpenseFormContext();
 
   return (
-    <FastField
-      name={'categories'}
-      accounts={accounts}
-      projects={projects}
-      shouldUpdate={accountsFieldShouldUpdate}
-    >
-      {({
-        form: { values, setFieldValue },
-        field: { value },
-        meta: { error, touched },
-      }) => (
+    <FastField name={'categories'} accounts={accounts} projects={projects} shouldUpdate={accountsFieldShouldUpdate}>
+      {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
         <ExpenseFormEntriesTable
           entries={value}
           error={error}

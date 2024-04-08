@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -21,16 +20,8 @@ import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
 import { AppToaster } from '@/components';
-import {
-  CreateExpenseFormSchema,
-  EditExpenseFormSchema,
-} from './ExpenseForm.schema';
-import {
-  transformErrors,
-  defaultExpense,
-  transformToEditForm,
-  transformFormValuesToRequest,
-} from './utils';
+import { CreateExpenseFormSchema, EditExpenseFormSchema } from './ExpenseForm.schema';
+import { transformErrors, defaultExpense, transformToEditForm, transformFormValuesToRequest } from './utils';
 import { compose } from '@/utils';
 
 /**
@@ -43,13 +34,7 @@ function ExpenseForm({
   organization: { base_currency },
 }) {
   // Expense form context.
-  const {
-    editExpenseMutate,
-    createExpenseMutate,
-    expense,
-    expenseId,
-    submitPayload,
-  } = useExpenseFormContext();
+  const { editExpenseMutate, createExpenseMutate, expense, expenseId, submitPayload } = useExpenseFormContext();
 
   const isNewMode = !expenseId;
 
@@ -93,9 +78,7 @@ function ExpenseForm({
     const handleSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_expense_has_been_created_successfully'
-            : 'the_expense_has_been_edited_successfully',
+          isNewMode ? 'the_expense_has_been_created_successfully' : 'the_expense_has_been_edited_successfully',
           { number: values.payment_account_id },
         ),
         intent: Intent.SUCCESS,
@@ -122,24 +105,14 @@ function ExpenseForm({
     if (isNewMode) {
       createExpenseMutate(form).then(handleSuccess).catch(handleError);
     } else {
-      editExpenseMutate([expense.id, form])
-        .then(handleSuccess)
-        .catch(handleError);
+      editExpenseMutate([expense.id, form]).then(handleSuccess).catch(handleError);
     }
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_EXPENSE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_EXPENSE)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema
-        }
+        validationSchema={isNewMode ? CreateExpenseFormSchema : EditExpenseFormSchema}
         initialValues={initialValues}
         onSubmit={handleSubmit}
       >
@@ -158,10 +131,7 @@ function ExpenseForm({
 export default compose(
   withDashboardActions,
   withSettings(({ expenseSettings }) => ({
-    preferredPaymentAccount: parseInt(
-      expenseSettings?.preferredPaymentAccount,
-      10,
-    ),
+    preferredPaymentAccount: Number.parseInt(expenseSettings?.preferredPaymentAccount, 10),
   })),
   withCurrentOrganization(),
 )(ExpenseForm);

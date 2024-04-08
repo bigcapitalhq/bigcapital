@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { compose } from '@/utils';
 
@@ -34,10 +33,7 @@ function ItemsList({
   );
 
   return (
-    <ItemsListProvider
-      tableState={itemsTableState}
-      tableStateChanged={itemsTableStateChanged}
-    >
+    <ItemsListProvider tableState={itemsTableState} tableStateChanged={itemsTableStateChanged}>
       <ItemsActionsBar />
 
       <DashboardPageContent>

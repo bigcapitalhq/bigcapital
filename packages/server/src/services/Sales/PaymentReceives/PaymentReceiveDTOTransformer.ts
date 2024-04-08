@@ -1,16 +1,11 @@
-import * as R from 'ramda';
-import { Inject, Service } from 'typedi';
-import { omit, sumBy } from 'lodash';
-import {
-  ICustomer,
-  IPaymentReceive,
-  IPaymentReceiveCreateDTO,
-  IPaymentReceiveEditDTO,
-} from '@/interfaces';
-import { PaymentReceiveValidators } from './PaymentReceiveValidators';
-import { PaymentReceiveIncrement } from './PaymentReceiveIncrement';
+import { ICustomer, IPaymentReceive, IPaymentReceiveCreateDTO, IPaymentReceiveEditDTO } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import { omit, sumBy } from 'lodash';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { PaymentReceiveIncrement } from './PaymentReceiveIncrement';
+import { PaymentReceiveValidators } from './PaymentReceiveValidators';
 
 @Service()
 export class PaymentReceiveDTOTransformer {
@@ -34,26 +29,21 @@ export class PaymentReceiveDTOTransformer {
     tenantId: number,
     customer: ICustomer,
     paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
-    oldPaymentReceive?: IPaymentReceive
+    oldPaymentReceive?: IPaymentReceive,
   ): Promise<IPaymentReceive> {
     const paymentAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Retreive the next invoice number.
-    const autoNextNumber =
-      this.increments.getNextPaymentReceiveNumber(tenantId);
+    const autoNextNumber = this.increments.getNextPaymentReceiveNumber(tenantId);
 
     // Retrieve the next payment receive number.
     const paymentReceiveNo =
-      paymentReceiveDTO.paymentReceiveNo ||
-      oldPaymentReceive?.paymentReceiveNo ||
-      autoNextNumber;
+      paymentReceiveDTO.paymentReceiveNo || oldPaymentReceive?.paymentReceiveNo || autoNextNumber;
 
     this.validators.validatePaymentNoRequire(paymentReceiveNo);
 
     const initialDTO = {
-      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
-        'paymentDate',
-      ]),
+      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), ['paymentDate']),
       amount: paymentAmount,
       currencyCode: customer.currencyCode,
       ...(paymentReceiveNo ? { paymentReceiveNo } : {}),
@@ -62,8 +52,6 @@ export class PaymentReceiveDTOTransformer {
         ...entry,
       })),
     };
-    return R.compose(
-      this.branchDTOTransform.transformDTO<IPaymentReceive>(tenantId)
-    )(initialDTO);
+    return R.compose(this.branchDTOTransform.transformDTO<IPaymentReceive>(tenantId))(initialDTO);
   }
 }

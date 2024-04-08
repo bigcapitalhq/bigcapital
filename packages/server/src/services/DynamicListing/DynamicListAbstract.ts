@@ -1,6 +1,1 @@
-
-
-
-export default class DynamicListAbstract {
-    
-}
+export default class DynamicListAbstract {}

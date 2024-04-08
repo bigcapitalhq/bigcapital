@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import {
@@ -17,13 +16,7 @@ import clsx from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { FormatDateCell, FormattedMessage as T, Icon, If, Can } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
@@ -47,10 +40,7 @@ export function DescriptionAccessor(row) {
 /**
  * Actions menu.
  */
-export function ActionsMenu({
-  row: { original },
-  payload: { onPublish, onEdit, onDelete, onViewDetails },
-}) {
+export function ActionsMenu({ row: { original }, payload: { onPublish, onEdit, onDelete, onViewDetails } }) {
   return (
     <Menu>
       <MenuItem
@@ -93,10 +83,7 @@ export function ActionsMenu({
  */
 export function ActionsCell(props) {
   return (
-    <Popover
-      content={<ActionsMenu {...props} />}
-      position={Position.RIGHT_BOTTOM}
-    >
+    <Popover content={<ActionsMenu {...props} />} position={Position.RIGHT_BOTTOM}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );

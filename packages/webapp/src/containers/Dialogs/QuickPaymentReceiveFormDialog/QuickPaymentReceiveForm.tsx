@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -26,20 +25,12 @@ function QuickPaymentReceiveForm({
   paymentReceiveAutoIncrement,
   paymentReceiveNumberPrefix,
   paymentReceiveNextNumber,
-  preferredDepositAccount
+  preferredDepositAccount,
 }) {
-  
-  const {
-    dialogName,
-    invoice,
-    createPaymentReceiveMutate,
-  } = useQuickPaymentReceiveContext();
+  const { dialogName, invoice, createPaymentReceiveMutate } = useQuickPaymentReceiveContext();
 
   // Payment receive number.
-  const nextPaymentNumber = transactionNumber(
-    paymentReceiveNumberPrefix,
-    paymentReceiveNextNumber,
-  );
+  const nextPaymentNumber = transactionNumber(paymentReceiveNumberPrefix, paymentReceiveNextNumber);
 
   // Initial form values
   const initialValues = {

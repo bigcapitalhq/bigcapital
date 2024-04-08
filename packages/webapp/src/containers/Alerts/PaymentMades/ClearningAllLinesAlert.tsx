@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
@@ -21,7 +20,6 @@ function ClearAllLinesAlert({
   // #withAlertActions
   closeAlert,
 }) {
-
   // Handle the alert cancel.
   const handleCancel = () => {
     closeAlert(name);
@@ -41,15 +39,9 @@ function ClearAllLinesAlert({
       onConfirm={handleConfirm}
       loading={false}
     >
-      <p>
-        Clearing the table lines will delete all credits and payments were
-        applied. Is this okay?
-      </p>
+      <p>Clearing the table lines will delete all credits and payments were applied. Is this okay?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ClearAllLinesAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ClearAllLinesAlert);

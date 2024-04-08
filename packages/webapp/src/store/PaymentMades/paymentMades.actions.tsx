@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 export const setPaymentMadesTableState = (queries) => {
@@ -14,4 +14,3 @@ export const resetPaymentMadesTableState = (queries) => {
     payload: { queries },
   };
 };
-

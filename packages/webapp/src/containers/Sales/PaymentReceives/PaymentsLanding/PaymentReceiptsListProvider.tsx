@@ -1,13 +1,8 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceMeta,
-  usePaymentReceives,
-} from '@/hooks/query';
+import { useResourceViews, useResourceMeta, usePaymentReceives } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 const PaymentReceivesListContext = createContext();
@@ -17,8 +12,7 @@ const PaymentReceivesListContext = createContext();
  */
 function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch payment receives resource views and fields.
-  const { data: paymentReceivesViews, isLoading: isViewsLoading } =
-    useResourceViews('payment_receives');
+  const { data: paymentReceivesViews, isLoading: isViewsLoading } = useResourceViews('payment_receives');
 
   // Fetch the payment receives resource fields.
   const {
@@ -35,8 +29,7 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   } = usePaymentReceives(query);
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(paymentReceives) && !isPaymentReceivesLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(paymentReceives) && !isPaymentReceivesLoading && !tableStateChanged;
 
   // Provider payload.
   const state = {
@@ -57,16 +50,12 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'payment-receives-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'payment-receives-list'}>
       <PaymentReceivesListContext.Provider value={state} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentReceivesListContext = () =>
-  useContext(PaymentReceivesListContext);
+const usePaymentReceivesListContext = () => useContext(PaymentReceivesListContext);
 
 export { PaymentReceivesListProvider, usePaymentReceivesListContext };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useHistory } from 'react-router-dom';
@@ -59,8 +58,4 @@ function GlobalHotkeys({
   return <div></div>;
 }
 
-export default compose(
-  withDashboardActions,
-  withDialogActions,
-  withUniversalSearchActions,
-)(GlobalHotkeys);
+export default compose(withDashboardActions, withDialogActions, withUniversalSearchActions)(GlobalHotkeys);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -34,12 +33,6 @@ function InvoiceFormBigTotal() {
   // Calculate the total due amount of invoice entries.
   const totalDueAmount = useInvoiceSubtotal();
 
-  return (
-    <PageFormBigNumber
-      label={intl.get('due_amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
-  );
+  return <PageFormBigNumber label={intl.get('due_amount')} amount={totalDueAmount} currencyCode={currency_code} />;
 }
 export default InvoiceFormHeader;

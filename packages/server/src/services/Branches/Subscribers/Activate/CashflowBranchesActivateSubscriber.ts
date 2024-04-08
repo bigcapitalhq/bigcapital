@@ -1,10 +1,10 @@
 import { IBranchesActivatedPayload } from '@/interfaces';
-import { Service, Inject } from 'typedi';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { CashflowTransactionsActivateBranches } from '../../Integrations/Cashflow/CashflowActivateBranches';
 
 @Service()
-export class CreditNoteActivateBranchesSubscriber {
+export class CashflowBranchesActivateSubscriber {
   @Inject()
   private cashflowActivateBranches: CashflowTransactionsActivateBranches;
 
@@ -12,10 +12,7 @@ export class CreditNoteActivateBranchesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.branch.onActivated,
-      this.updateCashflowWithBranchOnActivated
-    );
+    bus.subscribe(events.branch.onActivated, this.updateCashflowWithBranchOnActivated);
     return bus;
   }
 
@@ -24,15 +21,7 @@ export class CreditNoteActivateBranchesSubscriber {
    * the multi-branches is activated.
    * @param {IBranchesActivatedPayload}
    */
-  private updateCashflowWithBranchOnActivated = async ({
-    tenantId,
-    primaryBranch,
-    trx,
-  }: IBranchesActivatedPayload) => {
-    await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(
-      tenantId,
-      primaryBranch.id,
-      trx
-    );
+  private updateCashflowWithBranchOnActivated = async ({ tenantId, primaryBranch, trx }: IBranchesActivatedPayload) => {
+    await this.cashflowActivateBranches.updateCashflowTransactionsWithBranch(tenantId, primaryBranch.id, trx);
   };
 }

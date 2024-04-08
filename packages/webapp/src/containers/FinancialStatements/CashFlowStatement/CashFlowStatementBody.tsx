@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -21,11 +20,7 @@ function CashFlowStatementBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isCashFlowLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <CashFlowStatementTable companyName={organizationName} />
-      )}
+      {isCashFlowLoading ? <FinancialSheetSkeleton /> : <CashFlowStatementTable companyName={organizationName} />}
     </FinancialReportBody>
   );
 }

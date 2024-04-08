@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ProjectTaskFormProvider } from './ProjectTaskFormProvider';
 import ProjectTaskForm from './ProjectTaskForm';
@@ -13,11 +12,7 @@ export default function ProjectTaskFormDialogContent({
   project,
 }) {
   return (
-    <ProjectTaskFormProvider
-      taskId={task}
-      projectId={project}
-      dialogName={dialogName}
-    >
+    <ProjectTaskFormProvider taskId={task} projectId={project} dialogName={dialogName}>
       <ProjectTaskForm />
     </ProjectTaskFormProvider>
   );

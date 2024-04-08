@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IRefundVendorCreditCreatingPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -12,10 +12,7 @@ export class VendorCreditRefundBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.vendorCredit.onRefundCreating,
-      this.validateBranchExistanceOnCreditRefundCreating
-    );
+    bus.subscribe(events.vendorCredit.onRefundCreating, this.validateBranchExistanceOnCreditRefundCreating);
     return bus;
   };
 
@@ -27,9 +24,6 @@ export class VendorCreditRefundBranchValidateSubscriber {
     tenantId,
     refundVendorCreditDTO,
   }: IRefundVendorCreditCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      refundVendorCreditDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, refundVendorCreditDTO.branchId);
   };
 }

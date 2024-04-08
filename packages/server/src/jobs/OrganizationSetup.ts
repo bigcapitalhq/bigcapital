@@ -1,16 +1,12 @@
-import { Container } from 'typedi';
 import OrganizationService from '@/services/Organization/OrganizationService';
+import { Container } from 'typedi';
 
 export default class OrganizationSetupJob {
   /**
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'organization-setup',
-      { priority: 'high', concurrency: 1 },
-      this.handler
-    );
+    agenda.define('organization-setup', { priority: 'high', concurrency: 1 }, this.handler);
   }
 
   /**

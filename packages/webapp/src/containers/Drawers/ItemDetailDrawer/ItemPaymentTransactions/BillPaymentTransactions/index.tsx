@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -69,7 +68,4 @@ function BillPaymentTransactions({
     />
   );
 }
-export default compose(
-  withAlertsActions,
-  withDrawerActions,
-)(BillPaymentTransactions);
+export default compose(withAlertsActions, withDrawerActions)(BillPaymentTransactions);

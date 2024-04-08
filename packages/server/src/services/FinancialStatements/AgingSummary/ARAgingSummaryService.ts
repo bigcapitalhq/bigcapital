@@ -1,11 +1,11 @@
-import moment from 'moment';
-import { Inject, Service } from 'typedi';
-import { isEmpty } from 'lodash';
 import { IARAgingSummaryQuery } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import ARAgingSummarySheet from './ARAgingSummarySheet';
 import { Tenant } from '@/system/models';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
 import { ARAgingSummaryMeta } from './ARAgingSummaryMeta';
+import ARAgingSummarySheet from './ARAgingSummarySheet';
 
 @Service()
 export default class ARAgingSummaryService {
@@ -49,9 +49,7 @@ export default class ARAgingSummaryService {
       ...this.defaultQuery,
       ...query,
     };
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Retrieve all customers from the storage.
     const customers =
@@ -71,9 +69,7 @@ export default class ARAgingSummaryService {
       .onBuild(commonQuery);
 
     // Retrieve all due sale invoices.
-    const currentInvoices = await SaleInvoice.query()
-      .modify('dueInvoicesFromDate', filter.asDate)
-      .onBuild(commonQuery);
+    const currentInvoices = await SaleInvoice.query().modify('dueInvoicesFromDate', filter.asDate).onBuild(commonQuery);
 
     // AR aging summary report instance.
     const ARAgingSummaryReport = new ARAgingSummarySheet(
@@ -82,7 +78,7 @@ export default class ARAgingSummaryService {
       customers,
       overdueSaleInvoices,
       currentInvoices,
-      tenant.metadata.baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // AR aging summary report data and columns.
     const data = ARAgingSummaryReport.reportData();

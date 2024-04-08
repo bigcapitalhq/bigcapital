@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import { Button } from '@blueprintjs/core';
 
@@ -49,8 +48,5 @@ export function useProjectProfitabilitySummaryColumns() {
     projectProfitabilitySummary: { columns, tableRows },
   } = useProjectProfitabilitySummaryContext();
 
-  return useMemo(
-    () => dynamicColumns(columns, tableRows),
-    [tableRows, columns],
-  );
+  return useMemo(() => dynamicColumns(columns, tableRows), [tableRows, columns]);
 }

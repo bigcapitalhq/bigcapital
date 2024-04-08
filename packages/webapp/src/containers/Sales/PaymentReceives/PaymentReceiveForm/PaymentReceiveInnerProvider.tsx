@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { useDueInvoices } from '@/hooks/query';
@@ -45,7 +44,6 @@ function PaymentReceiveInnerProvider({ ...props }) {
   return <PaymentReceiveInnerContext.Provider value={provider} {...props} />;
 }
 
-const usePaymentReceiveInnerContext = () =>
-  useContext(PaymentReceiveInnerContext);
+const usePaymentReceiveInnerContext = () => useContext(PaymentReceiveInnerContext);
 
 export { PaymentReceiveInnerProvider, usePaymentReceiveInnerContext };

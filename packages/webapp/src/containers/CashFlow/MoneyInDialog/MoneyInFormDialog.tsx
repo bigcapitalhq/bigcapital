@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 
@@ -17,10 +16,7 @@ export default function MoneyInFormDialog() {
   };
   return (
     <React.Fragment>
-      <TransactionNumberDialog
-        dialogName={'transaction-number-form'}
-        onConfirm={handleTransactionNumberFormConfirm}
-      />
+      <TransactionNumberDialog dialogName={'transaction-number-form'} onConfirm={handleTransactionNumberFormConfirm} />
     </React.Fragment>
   );
 }

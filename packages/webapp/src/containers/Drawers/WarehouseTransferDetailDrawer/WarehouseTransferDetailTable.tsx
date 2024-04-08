@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { TableStyle } from '@/constants';
@@ -18,11 +17,5 @@ export default function WarehouseTransferDetailTable() {
     warehouseTransfer: { entries },
   } = useWarehouseDetailDrawerContext();
 
-  return (
-    <CommercialDocEntriesTable
-      columns={columns}
-      data={entries}
-      styleName={TableStyle.Constrant}
-    />
-  );
+  return <CommercialDocEntriesTable columns={columns} data={entries} styleName={TableStyle.Constrant} />;
 }

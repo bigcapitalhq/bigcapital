@@ -1,13 +1,10 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { Dialog, DialogSuspense } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ContactDialogContent = lazy(() =>
-  import('./ContactDuplicateDialogContent'),
-);
+const ContactDialogContent = lazy(() => import('./ContactDuplicateDialogContent'));
 /**
  * Contact duplicate dialog.
  */
@@ -22,10 +19,7 @@ function ContactDuplicateDialog({ dialogName, payload, isOpen }) {
       isOpen={isOpen}
     >
       <DialogSuspense>
-        <ContactDialogContent
-          dialogName={dialogName}
-          contact={payload.contactId}
-        />
+        <ContactDialogContent dialogName={dialogName} contact={payload.contactId} />
       </DialogSuspense>
     </Dialog>
   );

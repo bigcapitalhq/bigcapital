@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { InputGroup, FormGroup, Position, Classes } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -6,12 +5,7 @@ import { FastField, ErrorMessage } from 'formik';
 import { CustomersSelect, FormattedMessage as T } from '@/components';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { customersFieldShouldUpdate, accountsFieldShouldUpdate } from './utils';
 import {
   CurrencySelectList,
@@ -80,11 +74,7 @@ export default function ExpenseFormHeader() {
         {({ form, field: { value }, meta: { error, touched } }) => (
           <FormGroup
             label={<T id={'currency'} />}
-            className={classNames(
-              'form-group--select-list',
-              'form-group--currency',
-              Classes.FILL,
-            )}
+            className={classNames('form-group--select-list', 'form-group--currency', Classes.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="currency_code" />}
             inline={true}
@@ -102,10 +92,7 @@ export default function ExpenseFormHeader() {
       </FastField>
 
       {/* ----------- Exchange rate ----------- */}
-      <ExpensesExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <ExpensesExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
 
       <FastField name={'reference_no'}>
         {({ form, field, meta: { error, touched } }) => (

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent } from '@blueprintjs/core';
 import { Form } from 'formik';
@@ -19,13 +18,7 @@ export default function ResetPasswordForm({ isSubmitting }) {
         <FInputGroup name={'confirm_password'} type={'password'} large={true} />
       </FFormGroup>
 
-      <AuthSubmitButton
-        fill={true}
-        intent={Intent.PRIMARY}
-        type="submit"
-        loading={isSubmitting}
-        large={true}
-      >
+      <AuthSubmitButton fill={true} intent={Intent.PRIMARY} type="submit" loading={isSubmitting} large={true}>
         <T id={'submit'} />
       </AuthSubmitButton>
     </Form>

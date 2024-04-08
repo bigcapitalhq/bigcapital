@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   Intent,
@@ -90,14 +89,8 @@ export default function BillFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'open_and_new'} />}
-                  onClick={handleSubmitOpenAndNewBtnClick}
-                />
-                <MenuItem
-                  text={<T id={'open_continue_editing'} />}
-                  onClick={handleSubmitOpenContinueEditingBtnClick}
-                />
+                <MenuItem text={<T id={'open_and_new'} />} onClick={handleSubmitOpenAndNewBtnClick} />
+                <MenuItem text={<T id={'open_continue_editing'} />} onClick={handleSubmitOpenContinueEditingBtnClick} />
               </Menu>
             }
             minimal={true}
@@ -122,10 +115,7 @@ export default function BillFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDraftAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'save_continue_editing'} />}
                   onClick={handleSubmitDraftContinueEditingBtnClick}
@@ -136,10 +126,7 @@ export default function BillFloatingActions() {
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
           >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
+            <Button disabled={isSubmitting} rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
           </Popover>
         </ButtonGroup>
       </If>
@@ -156,10 +143,7 @@ export default function BillFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitOpenAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitOpenAndNewBtnClick} />
               </Menu>
             }
             minimal={true}
@@ -183,12 +167,7 @@ export default function BillFloatingActions() {
         text={bill ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} disabled={isSubmitting} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

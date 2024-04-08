@@ -1,13 +1,13 @@
-import { Inject, Service } from 'typedi';
-import { chain } from 'lodash';
-import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
-import { ERRORS, getSheetColumns, getUnmappedSheetColumns } from './_utils';
+import { Knex } from 'knex';
+import { chain } from 'lodash';
+import { Inject, Service } from 'typedi';
+import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
+import UnitOfWork from '../UnitOfWork';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
-import ResourceService from '../Resource/ResourceService';
-import UnitOfWork from '../UnitOfWork';
+import { ERRORS, getSheetColumns, getUnmappedSheetColumns } from './_utils';
 import { ImportFilePreviewPOJO } from './interfaces';
 
 @Service()
@@ -33,16 +33,10 @@ export class ImportFileProcess {
    * @param {number} importId
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
-  public async import(
-    tenantId: number,
-    importId: number,
-    trx?: Knex.Transaction
-  ): Promise<ImportFilePreviewPOJO> {
+  public async import(tenantId: number, importId: number, trx?: Knex.Transaction): Promise<ImportFilePreviewPOJO> {
     const { Import } = this.tenancy.models(tenantId);
 
-    const importFile = await Import.query()
-      .findOne('importId', importId)
-      .throwIfNotFound();
+    const importFile = await Import.query().findOne('importId', importId).throwIfNotFound();
 
     // Throw error if the import file is not mapped yet.
     if (!importFile.isMapped) {

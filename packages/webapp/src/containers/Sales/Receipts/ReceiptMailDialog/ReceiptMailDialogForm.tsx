@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
@@ -37,15 +37,9 @@ export function ReceiptMailDialogForm({
   const { mutateAsync: sendReceiptMail } = useSendSaleReceiptMail();
 
   // Transformes mail options to initial form values.
-  const initialValues = transformMailFormToInitialValues(
-    mailOptions,
-    initialFormValues,
-  );
+  const initialValues = transformMailFormToInitialValues(mailOptions, initialFormValues);
   // Handle the form submitting.
-  const handleSubmit = (
-    values: ReceiptMailFormValues,
-    { setSubmitting }: FormikBag<ReceiptMailFormValues>,
-  ) => {
+  const handleSubmit = (values: ReceiptMailFormValues, { setSubmitting }: FormikBag<ReceiptMailFormValues>) => {
     const reqValues = transformMailFormToRequest(values);
 
     setSubmitting(true);

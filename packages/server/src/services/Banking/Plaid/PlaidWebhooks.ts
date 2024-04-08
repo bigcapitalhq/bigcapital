@@ -17,7 +17,7 @@ export class PlaidWebooks {
     tenantId: number,
     plaidItemId: string,
     webhookType: string,
-    webhookCode: string
+    webhookCode: string,
   ): Promise<void> {
     const _webhookType = webhookType.toLowerCase();
 
@@ -27,8 +27,7 @@ export class PlaidWebooks {
       transactions: this.handleTransactionsWebooks.bind(this),
       item: this.itemsHandler.bind(this),
     };
-    const webhookHandler =
-      webhookHandlerMap[_webhookType] || this.unhandledWebhook;
+    const webhookHandler = webhookHandlerMap[_webhookType] || this.unhandledWebhook;
 
     await webhookHandler(tenantId, plaidItemId, webhookCode);
   }
@@ -39,13 +38,9 @@ export class PlaidWebooks {
    * @param {string} webhookCode
    * @param {string} plaidItemId
    */
-  private async unhandledWebhook(
-    webhookType: string,
-    webhookCode: string,
-    plaidItemId: string
-  ): Promise<void> {
+  private async unhandledWebhook(webhookType: string, webhookCode: string, plaidItemId: string): Promise<void> {
     console.log(
-      `UNHANDLED ${webhookType} WEBHOOK: ${webhookCode}: Plaid item id ${plaidItemId}: unhandled webhook type received.`
+      `UNHANDLED ${webhookType} WEBHOOK: ${webhookCode}: Plaid item id ${plaidItemId}: unhandled webhook type received.`,
     );
   }
 
@@ -55,14 +50,8 @@ export class PlaidWebooks {
    * @param {string} webhookCode
    * @param {string} plaidItemId
    */
-  private serverLogAndEmitSocket(
-    additionalInfo: string,
-    webhookCode: string,
-    plaidItemId: string
-  ): void {
-    console.log(
-      `WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`
-    );
+  private serverLogAndEmitSocket(additionalInfo: string, webhookCode: string, plaidItemId: string): void {
+    console.log(`WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`);
   }
 
   /**
@@ -73,23 +62,18 @@ export class PlaidWebooks {
    * @param {string} webhookCode
    * @returns {Promise<void>}
    */
-  public async handleTransactionsWebooks(
-    tenantId: number,
-    plaidItemId: string,
-    webhookCode: string
-  ): Promise<void> {
+  public async handleTransactionsWebooks(tenantId: number, plaidItemId: string, webhookCode: string): Promise<void> {
     switch (webhookCode) {
       case 'SYNC_UPDATES_AVAILABLE': {
         // Fired when new transactions data becomes available.
-        const { addedCount, modifiedCount, removedCount } =
-          await this.updateTransactionsService.updateTransactions(
-            tenantId,
-            plaidItemId
-          );
+        const { addedCount, modifiedCount, removedCount } = await this.updateTransactionsService.updateTransactions(
+          tenantId,
+          plaidItemId,
+        );
         this.serverLogAndEmitSocket(
           `Transactions: ${addedCount} added, ${modifiedCount} modified, ${removedCount} removed`,
           webhookCode,
-          plaidItemId
+          plaidItemId,
         );
         break;
       }
@@ -99,11 +83,7 @@ export class PlaidWebooks {
         /* ignore - not needed if using sync endpoint + webhook */
         break;
       default:
-        this.serverLogAndEmitSocket(
-          `unhandled webhook type received.`,
-          webhookCode,
-          plaidItemId
-        );
+        this.serverLogAndEmitSocket(`unhandled webhook type received.`, webhookCode, plaidItemId);
     }
   }
 
@@ -114,11 +94,7 @@ export class PlaidWebooks {
    * @param {string} plaidItemId - The Plaid ID for the item
    * @returns {Promise<void>}
    */
-  public async itemsHandler(
-    tenantId: number,
-    plaidItemId: string,
-    webhookCode: string
-  ): Promise<void> {
+  public async itemsHandler(tenantId: number, plaidItemId: string, webhookCode: string): Promise<void> {
     switch (webhookCode) {
       case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
         this.serverLogAndEmitSocket('is updated', plaidItemId, error);
@@ -130,11 +106,7 @@ export class PlaidWebooks {
         break;
       }
       default:
-        this.serverLogAndEmitSocket(
-          'unhandled webhook type received.',
-          webhookCode,
-          plaidItemId
-        );
+        this.serverLogAndEmitSocket('unhandled webhook type received.', webhookCode, plaidItemId);
     }
   }
 }

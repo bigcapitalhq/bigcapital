@@ -1,16 +1,16 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import { sumBy, omit } from 'lodash';
-import composeAsync from 'async/compose';
-import moment from 'moment';
+import { ICustomer, ISaleReceipt, ISaleReceiptDTO } from '@/interfaces';
+import { ItemEntry } from '@/models';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
 import { WarehouseTransactionDTOTransform } from '@/services/Warehouses/Integrations/WarehouseTransactionDTOTransform';
-import { SaleReceiptValidators } from './SaleReceiptValidators';
-import { ICustomer, ISaleReceipt, ISaleReceiptDTO } from '@/interfaces';
 import { formatDateFields } from '@/utils';
+import composeAsync from 'async/compose';
+import { omit, sumBy } from 'lodash';
+import moment from 'moment';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptIncrement } from './SaleReceiptIncrement';
-import { ItemEntry } from '@/models';
+import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
 export class SaleReceiptDTOTransformer {
@@ -39,19 +39,14 @@ export class SaleReceiptDTOTransformer {
     tenantId: number,
     saleReceiptDTO: ISaleReceiptDTO,
     paymentCustomer: ICustomer,
-    oldSaleReceipt?: ISaleReceipt
+    oldSaleReceipt?: ISaleReceipt,
   ): Promise<ISaleReceipt> {
-    const amount = sumBy(saleReceiptDTO.entries, (e) =>
-      ItemEntry.calcAmount(e)
-    );
+    const amount = sumBy(saleReceiptDTO.entries, (e) => ItemEntry.calcAmount(e));
     // Retreive the next invoice number.
     const autoNextNumber = this.receiptIncrement.getNextReceiptNumber(tenantId);
 
     // Retreive the receipt number.
-    const receiptNumber =
-      saleReceiptDTO.receiptNumber ||
-      oldSaleReceipt?.receiptNumber ||
-      autoNextNumber;
+    const receiptNumber = saleReceiptDTO.receiptNumber || oldSaleReceipt?.receiptNumber || autoNextNumber;
 
     // Validate receipt number require.
     this.validators.validateReceiptNoRequire(receiptNumber);
@@ -63,14 +58,12 @@ export class SaleReceiptDTOTransformer {
 
     const entries = await composeAsync(
       // Sets default cost and sell account to receipt items entries.
-      this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId)
+      this.itemsEntriesService.setItemsEntriesDefaultAccounts(tenantId),
     )(initialEntries);
 
     const initialDTO = {
       amount,
-      ...formatDateFields(omit(saleReceiptDTO, ['closed', 'entries']), [
-        'receiptDate',
-      ]),
+      ...formatDateFields(omit(saleReceiptDTO, ['closed', 'entries']), ['receiptDate']),
       currencyCode: paymentCustomer.currencyCode,
       exchangeRate: saleReceiptDTO.exchangeRate || 1,
       receiptNumber,
@@ -83,7 +76,7 @@ export class SaleReceiptDTOTransformer {
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<ISaleReceipt>(tenantId),
-      this.warehouseDTOTransform.transformDTO<ISaleReceipt>(tenantId)
+      this.warehouseDTOTransform.transformDTO<ISaleReceipt>(tenantId),
     )(initialDTO);
   }
 }

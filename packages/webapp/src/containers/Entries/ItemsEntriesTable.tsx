@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import classNames from 'classnames';
 
@@ -12,10 +11,7 @@ import {
   useComposeRowsOnRemoveTableRow,
   useComposeRowsOnNewRow,
 } from './utils';
-import {
-  ItemEntriesTableProvider,
-  useItemEntriesTableContext,
-} from './ItemEntriesTableProvider';
+import { ItemEntriesTableProvider, useItemEntriesTableContext } from './ItemEntriesTableProvider';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { ItemEntry } from '@/interfaces/ItemEntries';
 
@@ -52,17 +48,8 @@ function ItemsEntriesTable(props: ItemsEntriesTableProps) {
  * @returns {JSX.Element}
  */
 function ItemEntriesTableRoot() {
-  const {
-    localValue,
-    defaultEntry,
-    handleChange,
-    items,
-    errors,
-    currencyCode,
-    landedCost,
-    taxRates,
-    itemType,
-  } = useItemEntriesTableContext();
+  const { localValue, defaultEntry, handleChange, items, errors, currencyCode, landedCost, taxRates, itemType } =
+    useItemEntriesTableContext();
 
   // Editiable items entries columns.
   const columns = useEditableItemsEntriesColumns();

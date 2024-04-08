@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import TaxRateDetailsContentActionsBar from './TaxRateDetailsContentActionsBar';
 import { TaxRateDetailsContentBoot } from './TaxRateDetailsContentBoot';
@@ -10,15 +9,10 @@ interface TaxRateDetailsContentProps {
   taxRateid: number;
 }
 
-export default function TaxRateDetailsContent({
-  taxRateId,
-}: TaxRateDetailsContentProps) {
+export default function TaxRateDetailsContent({ taxRateId }: TaxRateDetailsContentProps) {
   return (
     <TaxRateDetailsContentBoot taxRateId={taxRateId}>
-      <DrawerHeaderContent
-        name={DRAWERS.TAX_RATE_DETAILS}
-        title={'Tax Rate Details'}
-      />
+      <DrawerHeaderContent name={DRAWERS.TAX_RATE_DETAILS} title={'Tax Rate Details'} />
       <TaxRateDetailsContentActionsBar />
 
       <DrawerBody>

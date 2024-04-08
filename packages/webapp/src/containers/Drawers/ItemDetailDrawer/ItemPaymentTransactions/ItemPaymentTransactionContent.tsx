@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import InvoicePaymentTransactions from './InvoicePaymentTransactions';
 import EstimatePaymentTransactions from './EstimatePaymentTransactions';

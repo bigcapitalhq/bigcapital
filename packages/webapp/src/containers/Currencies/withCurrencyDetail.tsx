@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getCurrencyByCode } from '@/store/currencies/currencies.selector';
 

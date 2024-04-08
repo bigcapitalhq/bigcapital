@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
@@ -18,11 +17,9 @@ const RolesFormContext = React.createContext();
  */
 function RolesFormProvider({ roleId, ...props }) {
   // Create and edit roles mutations.
-  const { mutateAsync: createRolePermissionMutate } =
-    useCreateRolePermissionSchema();
+  const { mutateAsync: createRolePermissionMutate } = useCreateRolePermissionSchema();
 
-  const { mutateAsync: editRolePermissionMutate } =
-    useEditRolePermissionSchema();
+  const { mutateAsync: editRolePermissionMutate } = useEditRolePermissionSchema();
 
   // Retrieve permissions schema.
   const {
@@ -31,12 +28,9 @@ function RolesFormProvider({ roleId, ...props }) {
     isFetching: isPermissionsSchemaFetching,
   } = usePermissionsSchema();
 
-  const { data: role, isLoading: isPermissionLoading } = useRolePermission(
-    roleId,
-    {
-      enabled: !!roleId,
-    },
-  );
+  const { data: role, isLoading: isPermissionLoading } = useRolePermission(roleId, {
+    enabled: !!roleId,
+  });
 
   // Detarmines whether the new or edit mode.
   const isNewMode = !roleId;

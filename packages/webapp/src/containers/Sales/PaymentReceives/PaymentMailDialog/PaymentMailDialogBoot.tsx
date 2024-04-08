@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { usePaymentReceiveDefaultOptions } from '@/hooks/query';
 import { DialogContent } from '@/components';
@@ -8,8 +7,7 @@ interface PaymentMailDialogBootValues {
   mailOptions: any;
 }
 
-const PaymentMailDialogBootContext =
-  createContext<PaymentMailDialogBootValues>();
+const PaymentMailDialogBootContext = createContext<PaymentMailDialogBootValues>();
 
 interface PaymentMailDialogBootProps {
   paymentReceiveId: number;
@@ -20,18 +18,14 @@ interface PaymentMailDialogBootProps {
 /**
  * Payment mail dialog boot provider.
  */
-function PaymentMailDialogBoot({
-  paymentReceiveId,
-  ...props
-}: PaymentMailDialogBootProps) {
-  const { data: mailOptions, isLoading: isMailOptionsLoading } =
-    usePaymentReceiveDefaultOptions(paymentReceiveId);
+function PaymentMailDialogBoot({ paymentReceiveId, ...props }: PaymentMailDialogBootProps) {
+  const { data: mailOptions, isLoading: isMailOptionsLoading } = usePaymentReceiveDefaultOptions(paymentReceiveId);
 
   const provider = {
     mailOptions,
     isMailOptionsLoading,
     paymentReceiveId,
-    redirectToPaymentsList
+    redirectToPaymentsList,
   };
 
   return (
@@ -41,7 +35,6 @@ function PaymentMailDialogBoot({
   );
 }
 
-const usePaymentMailDialogBoot = () =>
-  React.useContext<PaymentMailDialogBootValues>(PaymentMailDialogBootContext);
+const usePaymentMailDialogBoot = () => React.useContext<PaymentMailDialogBootValues>(PaymentMailDialogBootContext);
 
 export { PaymentMailDialogBoot, usePaymentMailDialogBoot };

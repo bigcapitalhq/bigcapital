@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useSettingsVendorCredits } from '@/hooks/query';
@@ -23,7 +22,6 @@ function VendorCreditNumberDilaogProvider({ query, ...props }) {
   );
 }
 
-const useVendorCreditNumberDialogContext = () =>
-  React.useContext(VendorCreditNumberDialogContext);
+const useVendorCreditNumberDialogContext = () => React.useContext(VendorCreditNumberDialogContext);
 
 export { VendorCreditNumberDilaogProvider, useVendorCreditNumberDialogContext };

@@ -33,11 +33,6 @@ export function getLockTableName(tableName: string): string {
  * @param {string} schemaName
  * @returns {string}
  */
-export function getLockTableNameWithSchema(
-  tableName: string,
-  schemaName = null
-): string {
-  return schemaName
-    ? `${schemaName} + ${getLockTableName(tableName)}`
-    : getLockTableName(tableName);
+export function getLockTableNameWithSchema(tableName: string, schemaName = null): string {
+  return schemaName ? `${schemaName} + ${getLockTableName(tableName)}` : getLockTableName(tableName);
 }

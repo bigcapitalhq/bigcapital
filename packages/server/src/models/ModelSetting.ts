@@ -1,3 +1,4 @@
+import { } from '@/interfaces';
 import { get } from 'lodash';
 import {
   IModelMeta,

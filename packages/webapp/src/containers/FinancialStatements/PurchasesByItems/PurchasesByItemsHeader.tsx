@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -13,10 +12,7 @@ import withPurchasesByItems from './withPurchasesByItems';
 import withPurchasesByItemsActions from './withPurchasesByItemsActions';
 
 import { compose, transformToForm } from '@/utils';
-import {
-  getDefaultPurchasesByItemsQuery,
-  getPurchasesByItemsQuerySchema,
-} from './utils';
+import { getDefaultPurchasesByItemsQuery, getPurchasesByItemsQuerySchema } from './utils';
 
 /**
  * Purchases by items header.
@@ -59,24 +55,13 @@ function PurchasesByItemsHeader({
   };
 
   return (
-    <PurchasesByItemsDrawerHeader
-      isOpen={purchasesByItemsDrawerFilter}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
+    <PurchasesByItemsDrawerHeader isOpen={purchasesByItemsDrawerFilter} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<PurchasesByItemsGeneralPanel />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<PurchasesByItemsGeneralPanel />} />
           </Tabs>
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

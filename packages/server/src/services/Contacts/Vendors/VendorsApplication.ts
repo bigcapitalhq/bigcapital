@@ -1,4 +1,3 @@
-import { Inject, Service } from 'typedi';
 import {
   ISystemUser,
   IVendorEditDTO,
@@ -6,6 +5,7 @@ import {
   IVendorOpeningBalanceEditDTO,
   IVendorsFilter,
 } from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { CreateVendor } from './CRUD/CreateVendor';
 import { DeleteVendor } from './CRUD/DeleteVendor';
 import { EditOpeningBalanceVendor } from './CRUD/EditOpeningBalanceVendor';
@@ -39,16 +39,8 @@ export class VendorsApplication {
    * @param  {IVendorNewDTO} vendorDTO
    * @return {Promise<void>}
    */
-  public createVendor = (
-    tenantId: number,
-    vendorDTO: IVendorNewDTO,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.createVendorService.createVendor(
-      tenantId,
-      vendorDTO,
-      authorizedUser
-    );
+  public createVendor = (tenantId: number, vendorDTO: IVendorNewDTO, authorizedUser: ISystemUser) => {
+    return this.createVendorService.createVendor(tenantId, vendorDTO, authorizedUser);
   };
 
   /**
@@ -58,18 +50,8 @@ export class VendorsApplication {
    * @param   {IVendorEditDTO} vendorDTO -
    * @returns {Promise<IVendor>}
    */
-  public editVendor = (
-    tenantId: number,
-    vendorId: number,
-    vendorDTO: IVendorEditDTO,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.editVendorService.editVendor(
-      tenantId,
-      vendorId,
-      vendorDTO,
-      authorizedUser
-    );
+  public editVendor = (tenantId: number, vendorId: number, vendorDTO: IVendorEditDTO, authorizedUser: ISystemUser) => {
+    return this.editVendorService.editVendor(tenantId, vendorId, vendorDTO, authorizedUser);
   };
 
   /**
@@ -78,16 +60,8 @@ export class VendorsApplication {
    * @param  {number} vendorId
    * @return {Promise<void>}
    */
-  public deleteVendor = (
-    tenantId: number,
-    vendorId: number,
-    authorizedUser: ISystemUser
-  ) => {
-    return this.deleteVendorService.deleteVendor(
-      tenantId,
-      vendorId,
-      authorizedUser
-    );
+  public deleteVendor = (tenantId: number, vendorId: number, authorizedUser: ISystemUser) => {
+    return this.deleteVendorService.deleteVendor(tenantId, vendorId, authorizedUser);
   };
 
   /**
@@ -101,13 +75,9 @@ export class VendorsApplication {
   public editOpeningBalance = (
     tenantId: number,
     vendorId: number,
-    openingBalanceEditDTO: IVendorOpeningBalanceEditDTO
+    openingBalanceEditDTO: IVendorOpeningBalanceEditDTO,
   ) => {
-    return this.editOpeningBalanceService.editOpeningBalance(
-      tenantId,
-      vendorId,
-      openingBalanceEditDTO
-    );
+    return this.editOpeningBalanceService.editOpeningBalance(tenantId, vendorId, openingBalanceEditDTO);
   };
 
   /**

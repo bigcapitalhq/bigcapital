@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -32,13 +31,7 @@ function EstimateFormBigTotal() {
   // Calculate the total due amount of bill entries.
   const totalDueAmount = useMemo(() => getEntriesTotal(entries), [entries]);
 
-  return (
-    <PageFormBigNumber
-      label={intl.get('amount')}
-      amount={totalDueAmount}
-      currencyCode={currency_code}
-    />
-  );
+  return <PageFormBigNumber label={intl.get('amount')} amount={totalDueAmount} currencyCode={currency_code} />;
 }
 
 export default EstimateFormHeader;

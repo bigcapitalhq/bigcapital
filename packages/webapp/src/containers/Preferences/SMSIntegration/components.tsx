@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -14,9 +13,7 @@ export const NotificationAccessor = (row) => {
   return (
     <span className="notification">
       <NotificationLabel>{row.notification_label}</NotificationLabel>
-      <NotificationDescription>
-        {row.notification_description}
-      </NotificationDescription>
+      <NotificationDescription>{row.notification_description}</NotificationDescription>
     </span>
   );
 };
@@ -24,19 +21,11 @@ export const NotificationAccessor = (row) => {
 /**
  * SMS notification message cell.
  */
-export const SMSMessageCell = ({
-  payload: { onEditMessageText },
-  row: { original },
-}) => (
+export const SMSMessageCell = ({ payload: { onEditMessageText }, row: { original } }) => (
   <div>
     <MessageBox>{original.sms_message}</MessageBox>
     <MessageBoxActions>
-      <Button
-        minimal={true}
-        small={true}
-        intent={Intent.NONE}
-        onClick={() => safeInvoke(onEditMessageText, original)}
-      >
+      <Button minimal={true} small={true} intent={Intent.NONE} onClick={() => safeInvoke(onEditMessageText, original)}>
         {intl.get('sms_messages.label_edit_message')}
       </Button>
     </MessageBoxActions>

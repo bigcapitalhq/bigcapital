@@ -1,9 +1,5 @@
+import { CommonMailOptions, CommonMailOptionsDTO, ISystemUser } from '@/interfaces';
 import { Knex } from 'knex';
-import {
-  CommonMailOptions,
-  CommonMailOptionsDTO,
-  ISystemUser,
-} from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { ISaleInvoice } from './SaleInvoice';
 
@@ -91,10 +87,7 @@ export interface IPaymentReceiveEditPage {
 }
 
 export interface IPaymentsReceiveService {
-  validateCustomerHasNoPayments(
-    tenantId: number,
-    customerId: number
-  ): Promise<void>;
+  validateCustomerHasNoPayments(tenantId: number, customerId: number): Promise<void>;
 }
 
 export interface IPaymentReceiveSmsDetails {

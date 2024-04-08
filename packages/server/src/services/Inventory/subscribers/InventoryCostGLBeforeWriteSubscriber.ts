@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IInventoryCostLotsGLEntriesWriteEvent } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { InventoryCostGLStorage } from '../InventoryCostGLStorage';
 
 @Service()
@@ -12,10 +12,7 @@ export class InventoryCostGLBeforeWriteSubscriber {
    * Attaches events.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.inventory.onCostLotsGLEntriesBeforeWrite,
-      this.revertsInventoryCostGLEntries
-    );
+    bus.subscribe(events.inventory.onCostLotsGLEntriesBeforeWrite, this.revertsInventoryCostGLEntries);
   }
 
   /**
@@ -27,10 +24,6 @@ export class InventoryCostGLBeforeWriteSubscriber {
     startingDate,
     tenantId,
   }: IInventoryCostLotsGLEntriesWriteEvent) => {
-    await this.inventoryCostGLStorage.revertInventoryCostGLEntries(
-      tenantId,
-      startingDate,
-      trx
-    );
+    await this.inventoryCostGLStorage.revertInventoryCostGLEntries(tenantId, startingDate, trx);
   };
 }

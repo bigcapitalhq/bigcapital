@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext } from 'react';
 import TableContext from './TableContext';
 
@@ -8,13 +7,7 @@ import TableContext from './TableContext';
 export default function TablePage() {
   const {
     table: { page },
-    props: {
-      spinnerProps,
-      loading,
-      TableRowsRenderer,
-      TableLoadingRenderer,
-      TableNoResultsRowRenderer,
-    },
+    props: { spinnerProps, loading, TableRowsRenderer, TableLoadingRenderer, TableNoResultsRowRenderer },
   } = useContext(TableContext);
 
   if (loading) {
@@ -23,5 +16,5 @@ export default function TablePage() {
   if (page.length === 0) {
     return <TableNoResultsRowRenderer />;
   }
-  return (<TableRowsRenderer />);
+  return <TableRowsRenderer />;
 }

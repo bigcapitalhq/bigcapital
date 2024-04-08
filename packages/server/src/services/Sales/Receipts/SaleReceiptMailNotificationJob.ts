@@ -7,11 +7,7 @@ export class SaleReceiptMailNotificationJob {
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'sale-receipt-mail-send',
-      { priority: 'high', concurrency: 2 },
-      this.handler
-    );
+    agenda.define('sale-receipt-mail-send', { priority: 'high', concurrency: 2 }, this.handler);
   }
 
   /**
@@ -22,11 +18,7 @@ export class SaleReceiptMailNotificationJob {
     const receiveMailNotification = Container.get(SaleReceiptMailNotification);
 
     try {
-      await receiveMailNotification.sendMail(
-        tenantId,
-        saleReceiptId,
-        messageOpts
-      );
+      await receiveMailNotification.sendMail(tenantId, saleReceiptId, messageOpts);
       done();
     } catch (error) {
       console.log(error);

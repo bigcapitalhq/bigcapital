@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -28,11 +27,7 @@ export default function RefundCreditNoteDetail() {
 function RefundCreditNoteDetailTabs() {
   return (
     <DrawerMainTabs>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<RefundCreditNoteDetailTab />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<RefundCreditNoteDetailTab />} />
     </DrawerMainTabs>
   );
 }

@@ -1,13 +1,13 @@
-import * as R from 'ramda';
-import { isEmpty } from 'lodash';
 import {
   ILedger,
-  IVendor,
-  IVendorBalanceSummaryVendor,
-  IVendorBalanceSummaryQuery,
-  IVendorBalanceSummaryData,
   INumberFormatQuery,
+  IVendor,
+  IVendorBalanceSummaryData,
+  IVendorBalanceSummaryQuery,
+  IVendorBalanceSummaryVendor,
 } from '@/interfaces';
+import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 import { ContactBalanceSummaryReport } from '../ContactBalanceSummary/ContactBalanceSummary';
 
 export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
@@ -24,12 +24,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param {IVendorBalanceSummaryQuery} filter
    * @param {string} baseCurrency
    */
-  constructor(
-    ledger: ILedger,
-    vendors: IVendor[],
-    filter: IVendorBalanceSummaryQuery,
-    baseCurrency: string
-  ) {
+  constructor(ledger: ILedger, vendors: IVendor[], filter: IVendorBalanceSummaryQuery, baseCurrency: string) {
     super();
 
     this.ledger = ledger;
@@ -45,9 +40,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @returns {IVendorBalanceSummaryVendor}
    */
   private vendorMapper = (vendor: IVendor): IVendorBalanceSummaryVendor => {
-    const closingBalance = this.ledger
-      .whereContactId(vendor.id)
-      .getClosingBalance();
+    const closingBalance = this.ledger.whereContactId(vendor.id).getClosingBalance();
 
     return {
       id: vendor.id,
@@ -61,9 +54,7 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
    * @param {IVendor[]} vendors - Customers.
    * @returns {IVendorBalanceSummaryVendor[]}
    */
-  private vendorsMapper = (
-    vendors: IVendor[]
-  ): IVendorBalanceSummaryVendor[] => {
+  private vendorsMapper = (vendors: IVendor[]): IVendorBalanceSummaryVendor[] => {
     return vendors.map(this.vendorMapper);
   };
 
@@ -83,11 +74,8 @@ export class VendorBalanceSummaryReport extends ContactBalanceSummaryReport {
   private getVendorsSection(vendors: IVendor[]): IVendorBalanceSummaryVendor[] {
     return R.compose(
       R.when(this.isVendorsPostFilter, this.contactsFilter),
-      R.when(
-        R.always(this.filter.percentageColumn),
-        this.contactCamparsionPercentageOfColumn
-      ),
-      this.vendorsMapper
+      R.when(R.always(this.filter.percentageColumn), this.contactCamparsionPercentageOfColumn),
+      this.vendorsMapper,
     )(vendors);
   }
 

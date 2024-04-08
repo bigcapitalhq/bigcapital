@@ -1,10 +1,10 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import {
   IVendorCreditCreatedPayload,
   IVendorCreditDeletedPayload,
   IVendorCreditEditedPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import VendorCreditInventoryTransactions from './VendorCreditInventoryTransactions';
 
 @Service()
@@ -17,22 +17,10 @@ export default class VendorCreditInventoryTransactionsSubscriber {
    * @param bus
    */
   attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onCreated,
-      this.writeInventoryTransactionsOnceCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onOpened,
-      this.writeInventoryTransactionsOnceCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onEdited,
-      this.rewriteInventroyTransactionsOnceEdited
-    );
-    bus.subscribe(
-      events.vendorCredit.onDeleted,
-      this.revertInventoryTransactionsOnceDeleted
-    );
+    bus.subscribe(events.vendorCredit.onCreated, this.writeInventoryTransactionsOnceCreated);
+    bus.subscribe(events.vendorCredit.onOpened, this.writeInventoryTransactionsOnceCreated);
+    bus.subscribe(events.vendorCredit.onEdited, this.rewriteInventroyTransactionsOnceEdited);
+    bus.subscribe(events.vendorCredit.onDeleted, this.revertInventoryTransactionsOnceDeleted);
   }
 
   /**
@@ -47,11 +35,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     // Can't continue if vendor credit is not opened.
     if (!vendorCredit.openedAt) return null;
 
-    await this.inventoryTransactions.createInventoryTransactions(
-      tenantId,
-      vendorCredit,
-      trx
-    );
+    await this.inventoryTransactions.createInventoryTransactions(tenantId, vendorCredit, trx);
   };
 
   /**
@@ -67,12 +51,7 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     // Can't continue if vendor credit is not opened.
     if (!vendorCredit.openedAt) return null;
 
-    await this.inventoryTransactions.editInventoryTransactions(
-      tenantId,
-      vendorCreditId,
-      vendorCredit,
-      trx
-    );
+    await this.inventoryTransactions.editInventoryTransactions(tenantId, vendorCreditId, vendorCredit, trx);
   };
 
   /**
@@ -84,10 +63,6 @@ export default class VendorCreditInventoryTransactionsSubscriber {
     vendorCreditId,
     trx,
   }: IVendorCreditDeletedPayload) => {
-    await this.inventoryTransactions.deleteInventoryTransactions(
-      tenantId,
-      vendorCreditId,
-      trx
-    );
+    await this.inventoryTransactions.deleteInventoryTransactions(tenantId, vendorCreditId, trx);
   };
 }

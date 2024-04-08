@@ -1,5 +1,3 @@
-import * as R from 'ramda';
-import { first } from 'lodash';
 import {
   IColumnMapperMeta,
   IJournalEntry,
@@ -11,15 +9,14 @@ import {
   ITableRow,
 } from '@/interfaces';
 import { tableRowMapper } from '@/utils';
-import { FinancialTable } from '../FinancialTable';
-import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { first } from 'lodash';
+import * as R from 'ramda';
 import FinancialSheet from '../FinancialSheet';
+import { FinancialSheetStructure } from '../FinancialSheetStructure';
+import { FinancialTable } from '../FinancialTable';
 import { ROW_TYPE } from './types';
 
-export class JournalSheetTable extends R.compose(
-  FinancialTable,
-  FinancialSheetStructure
-)(FinancialSheet) {
+export class JournalSheetTable extends R.compose(FinancialTable, FinancialSheetStructure)(FinancialSheet) {
   private data: IJournalTableData;
   private query: IJournalReportQuery;
   private i18n: any;
@@ -128,9 +125,7 @@ export class JournalSheetTable extends R.compose(
    * @param {IJournalReportEntriesGroup} group
    * @returns {ITableRow}
    */
-  private firstEntryGroupMapper = (
-    group: IJournalReportEntriesGroup
-  ): ITableRow => {
+  private firstEntryGroupMapper = (group: IJournalReportEntriesGroup): ITableRow => {
     const meta = {
       rowTypes: [ROW_TYPE.ENTRY],
     };
@@ -206,9 +201,7 @@ export class JournalSheetTable extends R.compose(
    * @param {IJournalReportEntriesGroup[]} entries -
    * @returns {ITableRow[]}
    */
-  private groupsMapper = (
-    entries: IJournalReportEntriesGroup[]
-  ): ITableRow[] => {
+  private groupsMapper = (entries: IJournalReportEntriesGroup[]): ITableRow[] => {
     return R.compose(R.flatten, R.map(this.groupMapper))(entries);
   };
 

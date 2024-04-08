@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 import { Features } from '@/constants';
@@ -90,13 +89,7 @@ function ExpenseFormPageProvider({ query, expenseId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isCurrenciesLoading ||
-        isExpenseLoading ||
-        isCustomersLoading ||
-        isAccountsLoading ||
-        isProjectsLoading
-      }
+      loading={isCurrenciesLoading || isExpenseLoading || isCustomersLoading || isAccountsLoading || isProjectsLoading}
       name={'expense-form'}
     >
       <ExpenseFormPageContext.Provider value={provider} {...props} />

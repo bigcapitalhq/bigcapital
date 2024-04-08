@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
@@ -31,18 +30,14 @@ function PreferencesEstimatesBoot({ ...props }) {
         {isLoading ? (
           <PreferencesPageLoader />
         ) : (
-          <PreferencesEstimatesFormContext.Provider
-            value={provider}
-            {...props}
-          />
+          <PreferencesEstimatesFormContext.Provider value={provider} {...props} />
         )}
       </PreferencesEstimatesCard>
     </div>
   );
 }
 
-const usePreferencesEstimatesFormContext = () =>
-  React.useContext(PreferencesEstimatesFormContext);
+const usePreferencesEstimatesFormContext = () => React.useContext(PreferencesEstimatesFormContext);
 
 const PreferencesEstimatesCard = styled(Card)`
   padding: 25px;

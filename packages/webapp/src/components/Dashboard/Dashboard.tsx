@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Switch, Route } from 'react-router';
 
@@ -13,7 +12,7 @@ import DashboardSplitPane from '@/components/Dashboard/DashboardSplitePane';
 import GlobalHotkeys from './GlobalHotkeys';
 import DashboardProvider from './DashboardProvider';
 import DrawersContainer from '@/components/DrawersContainer';
-import AlertsContainer from '@/containers/AlertsContainer';
+import AlertsContainer from '@/containers/AlertsContainer/AlertsContainer';
 import { DashboardSockets } from './DashboardSockets';
 
 /**

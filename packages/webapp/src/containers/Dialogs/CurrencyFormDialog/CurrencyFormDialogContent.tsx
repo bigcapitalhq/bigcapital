@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { CurrencyFormProvider } from './CurrencyFormProvider';
 
@@ -15,11 +14,7 @@ function CurrencyFormDialogContent({
   dialogName,
 }) {
   return (
-    <CurrencyFormProvider
-      isEditMode={action}
-      currency={currencyCode}
-      dialogName={dialogName}
-    >
+    <CurrencyFormProvider isEditMode={action} currency={currencyCode} dialogName={dialogName}>
       <CurrencyForm />
     </CurrencyFormProvider>
   );

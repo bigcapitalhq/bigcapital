@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
 import { IBill, IBillLandedCostTransaction } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { mergeLocatedWithBillEntries } from './utils';
 
 @Service()
@@ -19,13 +19,10 @@ export default class LandedCostInventoryTransactions {
     tenantId: number,
     billLandedCost: IBillLandedCostTransaction,
     bill: IBill,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Retrieve the merged allocated entries with bill entries.
-    const allocateEntries = mergeLocatedWithBillEntries(
-      billLandedCost.allocateEntries,
-      bill.entries
-    );
+    const allocateEntries = mergeLocatedWithBillEntries(billLandedCost.allocateEntries, bill.entries);
     // Mappes the allocate cost entries to inventory transactions.
     const inventoryTransactions = allocateEntries.map((allocateEntry) => ({
       date: bill.billDate,
@@ -38,12 +35,7 @@ export default class LandedCostInventoryTransactions {
       entryId: allocateEntry.entryId,
     }));
     // Writes inventory transactions.
-    return this.inventoryService.recordInventoryTransactions(
-      tenantId,
-      inventoryTransactions,
-      false,
-      trx
-    );
+    return this.inventoryService.recordInventoryTransactions(tenantId, inventoryTransactions, false, trx);
   };
 
   /**
@@ -53,16 +45,7 @@ export default class LandedCostInventoryTransactions {
    * @param {Knex.Transaction} trx - Knex transactions.
    * @returns
    */
-  public removeInventoryTransactions = (
-    tenantId: number,
-    landedCostId: number,
-    trx?: Knex.Transaction
-  ) => {
-    return this.inventoryService.deleteInventoryTransactions(
-      tenantId,
-      landedCostId,
-      'LandedCost',
-      trx
-    );
+  public removeInventoryTransactions = (tenantId: number, landedCostId: number, trx?: Knex.Transaction) => {
+    return this.inventoryService.deleteInventoryTransactions(tenantId, landedCostId, 'LandedCost', trx);
   };
 }

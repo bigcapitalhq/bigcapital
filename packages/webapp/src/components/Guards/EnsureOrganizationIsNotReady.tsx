@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -14,11 +13,9 @@ function EnsureOrganizationIsNotReady({
 
   // #withOrganization
   isOrganizationReady,
-  isOrganizationSetupCompleted
+  isOrganizationSetupCompleted,
 }) {
-  return (isOrganizationReady && !isOrganizationSetupCompleted) ? (
-    <Redirect to={{ pathname: '/' }} />
-  ) : children;
+  return isOrganizationReady && !isOrganizationSetupCompleted ? <Redirect to={{ pathname: '/' }} /> : children;
 }
 
 export default compose(
@@ -28,11 +25,8 @@ export default compose(
   connect((state, props) => ({
     organizationId: props.currentOrganizationId,
   })),
-  withOrganization(({
+  withOrganization(({ isOrganizationReady, isOrganizationSetupCompleted }) => ({
     isOrganizationReady,
-    isOrganizationSetupCompleted
-  }) => ({
-    isOrganizationReady,
-    isOrganizationSetupCompleted
+    isOrganizationSetupCompleted,
   })),
 )(EnsureOrganizationIsNotReady);

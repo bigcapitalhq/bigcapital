@@ -1,12 +1,8 @@
-import R from 'ramda';
+import { ICashflowAccountTransaction, ICashflowAccountTransactionsQuery, INumberFormatQuery } from '@/interfaces';
 import moment from 'moment';
-import {
-  ICashflowAccountTransaction,
-  ICashflowAccountTransactionsQuery,
-  INumberFormatQuery,
-} from '@/interfaces';
+import * as R from 'ramda';
+import { runningAmount } from '../../../utils';
 import FinancialSheet from '../FinancialSheet';
-import { runningAmount } from 'utils';
 
 export default class CashflowAccountTransactionReport extends FinancialSheet {
   private transactions: any;
@@ -22,11 +18,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
    * @param {number} openingBalance -
    * @param {ICashflowAccountTransactionsQuery} query -
    */
-  constructor(
-    transactions,
-    openingBalance: number,
-    query: ICashflowAccountTransactionsQuery
-  ) {
+  constructor(transactions, openingBalance: number, query: ICashflowAccountTransactionsQuery) {
     super();
 
     this.transactions = transactions;
@@ -75,9 +67,7 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
    * @param {IAccountTransaction} transaction
    * @returns {ICashflowAccountTransaction}
    */
-  private transactionRunningBalance = (
-    transaction: ICashflowAccountTransaction
-  ): ICashflowAccountTransaction => {
+  private transactionRunningBalance = (transaction: ICashflowAccountTransaction): ICashflowAccountTransaction => {
     const amount = transaction.deposit - transaction.withdrawal;
 
     const biggerThanZero = R.lt(0, amount);
@@ -102,13 +92,8 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
    * @param {ICashflowAccountTransaction} transaction
    * @returns {ICashflowAccountTransaction}
    */
-  private transactionBalance = (
-    transaction: ICashflowAccountTransaction
-  ): ICashflowAccountTransaction => {
-    const balance =
-      transaction.runningBalance +
-      transaction.withdrawal * -1 +
-      transaction.deposit;
+  private transactionBalance = (transaction: ICashflowAccountTransaction): ICashflowAccountTransaction => {
+    const balance = transaction.runningBalance + transaction.withdrawal * -1 + transaction.deposit;
 
     return {
       ...transaction,
@@ -122,14 +107,8 @@ export default class CashflowAccountTransactionReport extends FinancialSheet {
    * @param {ICashflowAccountTransaction} transaction
    * @returns {ICashflowAccountTransaction}
    */
-  private transactionTransformer = (
-    transaction
-  ): ICashflowAccountTransaction => {
-    return R.compose(
-      this.transactionBalance,
-      this.transactionRunningBalance,
-      this.transactionNode
-    )(transaction);
+  private transactionTransformer = (transaction): ICashflowAccountTransaction => {
+    return R.compose(this.transactionBalance, this.transactionRunningBalance, this.transactionNode)(transaction);
   };
 
   /**

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { compose } from '@/utils';
 
@@ -65,10 +64,7 @@ function CurrenciesDataTable({
   );
 }
 
-export default compose(
-  withDialogActions,
-  withAlertActions,
-)(CurrenciesDataTable);
+export default compose(withDialogActions, withAlertActions)(CurrenciesDataTable);
 
 const CurrencieDataTable = styled(DataTable)`
   .table .th,

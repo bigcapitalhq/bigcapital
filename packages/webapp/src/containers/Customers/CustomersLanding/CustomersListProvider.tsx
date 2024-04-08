@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
@@ -14,8 +13,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
   const tableQuery = transformCustomersStateToQuery(tableState);
 
   // Fetch customers resource views and fields.
-  const { data: customersViews, isLoading: isViewsLoading } =
-    useResourceViews('customers');
+  const { data: customersViews, isLoading: isViewsLoading } = useResourceViews('customers');
 
   // Fetch the customers resource fields.
   const {
@@ -32,8 +30,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
   } = useCustomers(tableQuery, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(customers) && !isCustomersLoading && !tableStateChanged;
+  const isEmptyStatus = isEmpty(customers) && !isCustomersLoading && !tableStateChanged;
 
   const state = {
     customersViews,
@@ -53,10 +50,7 @@ function CustomersListProvider({ tableState, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceMetaLoading}
-      name={'customers-list'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceMetaLoading} name={'customers-list'}>
       <CustomersListContext.Provider value={state} {...props} />
     </DashboardInsider>
   );

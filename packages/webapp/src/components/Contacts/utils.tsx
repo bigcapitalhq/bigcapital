@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -10,18 +9,12 @@ export const itemPredicate = (query, contact, index, exactMatch) => {
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
-    return (
-      `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0
-    );
+    return `${contact.display_name} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
   }
 };
 
 export const handleContactRenderer = (contact, { handleClick }) => (
-  <MenuItem
-    key={contact.id}
-    text={contact.display_name}
-    onClick={handleClick}
-  />
+  <MenuItem key={contact.id} text={contact.display_name} onClick={handleClick} />
 );
 
 // Creates a new item from query.

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialog';
 
@@ -7,8 +6,8 @@ import PaymentViaVoucherDialog from '@/containers/Dialogs/PaymentViaVoucherDialo
  */
 export default function SetupDialogs() {
   return (
-    <div class="setup-dialogs">
+    <div className="setup-dialogs">
       <PaymentViaVoucherDialog dialogName={'payment-via-voucher'} />
     </div>
-  )
+  );
 }

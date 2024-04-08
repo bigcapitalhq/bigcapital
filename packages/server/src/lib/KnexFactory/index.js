@@ -1,7 +1,6 @@
 const { extend, isFunction, isObject } = require('lodash');
 
 export default class KnexFactory {
-
   constructor(knex) {
     this.knex = knex;
 
@@ -20,13 +19,13 @@ export default class KnexFactory {
     }
     let { defaultAttributes } = factory;
     const insertData = {};
-    
-    if( 'function' === typeof defaultAttributes) {
+
+    if ('function' === typeof defaultAttributes) {
       defaultAttributes = await defaultAttributes();
     }
     extend(insertData, defaultAttributes, attributes);
 
-    for (let k in insertData) {
+    for (const k in insertData) {
       const v = insertData[k];
 
       if (isFunction(v)) {
@@ -37,7 +36,7 @@ export default class KnexFactory {
       if (isObject(insertData[k]) && insertData[k].id) {
         insertData[k] = insertData[k].id;
       }
-    };
+    }
 
     return insertData;
   }

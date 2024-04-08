@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FormGroup, Intent, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';
@@ -27,11 +26,7 @@ export default function BranchesListFieldCell({
   return (
     <FormGroup
       intent={error ? Intent.DANGER : null}
-      className={classNames(
-        'form-group--select-list',
-        'form-group--contacts-list',
-        Classes.FILL,
-      )}
+      className={classNames('form-group--select-list', 'form-group--contacts-list', Classes.FILL)}
     >
       <BranchSuggestField
         branches={branches}

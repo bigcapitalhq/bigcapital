@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -9,10 +8,7 @@ import { safeCallback } from '@/utils';
 /**
  * Table actions cell.
  */
-export function ActionsMenu({
-  payload: { onEdit, onDelete },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onEdit, onDelete }, row: { original } }) {
   return (
     <Menu>
       <MenuItem
@@ -78,12 +74,7 @@ export function TaskTimeAccessor(task) {
         <TaskTimeFull>17h 30m</TaskTimeFull>
       </TaskTimeMinutesRoot>
 
-      <TaskProgressBar
-        animate={false}
-        stripes={false}
-        intent={Intent.NONE}
-        value={100}
-      />
+      <TaskProgressBar animate={false} stripes={false} intent={Intent.NONE} value={100} />
     </TaskTimeRoot>
   );
 }

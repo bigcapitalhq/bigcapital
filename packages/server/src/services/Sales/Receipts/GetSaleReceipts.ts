@@ -1,15 +1,10 @@
-import * as R from 'ramda';
-import {
-  IFilterMeta,
-  IPaginationMeta,
-  ISaleReceipt,
-  ISalesReceiptsFilter,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
-import { SaleReceiptTransformer } from './SaleReceiptTransformer';
+import { IFilterMeta, IPaginationMeta, ISaleReceipt, ISalesReceiptsFilter } from '@/interfaces';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 
 @Service()
 export class GetSaleReceipts {
@@ -29,7 +24,7 @@ export class GetSaleReceipts {
    */
   public async getSaleReceipts(
     tenantId: number,
-    filterDTO: ISalesReceiptsFilter
+    filterDTO: ISalesReceiptsFilter,
   ): Promise<{
     data: ISaleReceipt[];
     pagination: IPaginationMeta;
@@ -41,11 +36,7 @@ export class GetSaleReceipts {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      SaleReceipt,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, SaleReceipt, filter);
     const { results, pagination } = await SaleReceipt.query()
       .onBuild((builder) => {
         builder.withGraphFetched('depositAccount');
@@ -57,11 +48,7 @@ export class GetSaleReceipts {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the estimates models to POJO.
-    const salesEstimates = await this.transformer.transform(
-      tenantId,
-      results,
-      new SaleReceiptTransformer()
-    );
+    const salesEstimates = await this.transformer.transform(tenantId, results, new SaleReceiptTransformer());
     return {
       data: salesEstimates,
       pagination,

@@ -1,19 +1,14 @@
-import { isEmpty, omit } from 'lodash';
-import moment from 'moment';
+import config from '@/config';
 import { ServiceError } from '@/exceptions';
-import {
-  IAuthSignedUpEventPayload,
-  IAuthSigningUpEventPayload,
-  IRegisterDTO,
-  ISystemUser,
-} from '@/interfaces';
-import { ERRORS } from './_constants';
-import { Inject } from 'typedi';
+import { IAuthSignedUpEventPayload, IAuthSigningUpEventPayload, IRegisterDTO, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import TenantsManagerService from '../Tenancy/TenantsManager';
 import events from '@/subscribers/events';
 import { hashPassword } from '@/utils';
-import config from '@/config';
+import { isEmpty, omit } from 'lodash';
+import moment from 'moment';
+import { Inject } from 'typedi';
+import TenantsManagerService from '../Tenancy/TenantsManager';
+import { ERRORS } from './_constants';
 
 export class AuthSignupService {
   @Inject()
@@ -88,17 +83,11 @@ export class AuthSignupService {
     if (!config.signupRestrictions.disabled) return;
 
     // Validate the allowed email addresses and domains.
-    if (
-      !isEmpty(config.signupRestrictions.allowedEmails) ||
-      !isEmpty(config.signupRestrictions.allowedDomains)
-    ) {
+    if (!isEmpty(config.signupRestrictions.allowedEmails) || !isEmpty(config.signupRestrictions.allowedDomains)) {
       const emailDomain = email.split('@').pop();
-      const isAllowedEmail =
-        config.signupRestrictions.allowedEmails.indexOf(email) !== -1;
+      const isAllowedEmail = config.signupRestrictions.allowedEmails.indexOf(email) !== -1;
 
-      const isAllowedDomain = config.signupRestrictions.allowedDomains.some(
-        (domain) => emailDomain === domain
-      );
+      const isAllowedDomain = config.signupRestrictions.allowedDomains.some((domain) => emailDomain === domain);
 
       if (!isAllowedEmail && !isAllowedDomain) {
         throw new ServiceError(ERRORS.SIGNUP_RESTRICTED_NOT_ALLOWED);

@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class DeleteItemWarehousesQuantity {
@@ -16,7 +16,7 @@ export class DeleteItemWarehousesQuantity {
   public deleteItemWarehousesQuantity = async (
     tenantId: number,
     itemId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { ItemWarehouseQuantity } = this.tenancy.models(tenantId);
 

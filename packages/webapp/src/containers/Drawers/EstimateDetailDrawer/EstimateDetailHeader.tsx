@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -30,7 +29,7 @@ export default function EstimateDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountEstimateDetail label={intl.get('amount')}>
-            <span class="big-number">{estimate.formatted_amount}</span>
+            <span className="big-number">{estimate.formatted_amount}</span>
           </AmountEstimateDetail>
 
           <EstimateStatusDetail>
@@ -53,32 +52,16 @@ export default function EstimateDetailHeader() {
               </CustomerDrawerLink>
             </DetailItem>
 
-            <DetailItem
-              label={intl.get('estimate_date')}
-              children={estimate.formatted_estimate_date}
-            />
+            <DetailItem label={intl.get('estimate_date')} children={estimate.formatted_estimate_date} />
 
-            <DetailItem
-              label={intl.get('expiration_date')}
-              children={estimate.formatted_expiration_date}
-            />
-            <ExchangeRateDetailItem
-              exchangeRate={estimate?.exchange_rate}
-              toCurrency={estimate?.currency_code}
-            />
+            <DetailItem label={intl.get('expiration_date')} children={estimate.formatted_expiration_date} />
+            <ExchangeRateDetailItem exchangeRate={estimate?.exchange_rate} toCurrency={estimate?.currency_code} />
           </DetailsMenu>
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            textAlign={'right'}
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-          >
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(estimate.reference, '-')}
-            />
+          <DetailsMenu textAlign={'right'} direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem label={intl.get('reference')} children={defaultTo(estimate.reference, '-')} />
             <DetailItem
               label={<T id={'estimate.details.created_at'} />}
               children={<FormatDate value={estimate.created_at} />}

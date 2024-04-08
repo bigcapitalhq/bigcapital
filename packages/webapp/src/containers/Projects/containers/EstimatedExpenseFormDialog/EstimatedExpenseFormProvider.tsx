@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 
@@ -25,7 +24,6 @@ function EstimatedExpenseFormProvider({
   );
 }
 
-const useEstimatedExpenseFormContext = () =>
-  React.useContext(EstimatedExpenseFormContext);
+const useEstimatedExpenseFormContext = () => React.useContext(EstimatedExpenseFormContext);
 
 export { EstimatedExpenseFormProvider, useEstimatedExpenseFormContext };

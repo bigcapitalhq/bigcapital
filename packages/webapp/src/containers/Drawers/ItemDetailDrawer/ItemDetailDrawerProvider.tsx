@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { useItem } from '@/hooks/query';
@@ -30,15 +29,11 @@ function ItemDetailDrawerProvider({ itemId, ...props }) {
 
   return (
     <DrawerLoading loading={isItemLoading}>
-      <DrawerHeaderContent
-        name={DRAWERS.ITEM_DETAILS}
-        title={inactiveStatus(item)}
-      />
+      <DrawerHeaderContent name={DRAWERS.ITEM_DETAILS} title={inactiveStatus(item)} />
       <ItemDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );
 }
-const useItemDetailDrawerContext = () =>
-  React.useContext(ItemDetailDrawerContext);
+const useItemDetailDrawerContext = () => React.useContext(ItemDetailDrawerContext);
 
 export { ItemDetailDrawerProvider, useItemDetailDrawerContext };

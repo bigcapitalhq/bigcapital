@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { chain, isEmpty, castArray, memoize } from 'lodash';
 import * as R from 'ramda';
 import { DepGraph } from 'dependency-graph';
@@ -70,21 +70,16 @@ export const transformToObject = (role) => {
 };
 
 export const getDefaultValuesFromSchema = (schema) => {
-  return schema
-    .map((item) => {
-      const abilities = [
-        ...(item.abilities || []),
-        ...(item.extra_abilities || []),
-      ];
-      return abilities
-        .filter((ability) => ability.default)
-        .map((ability) => ({
-          subject: item.subject,
-          ability: ability.key,
-          value: ability.default,
-        }));
-    })
-    .flat();
+  return schema.flatMap((item) => {
+    const abilities = [...(item.abilities || []), ...(item.extra_abilities || [])];
+    return abilities
+      .filter((ability) => ability.default)
+      .map((ability) => ({
+        subject: item.subject,
+        ability: ability.key,
+        value: ability.default,
+      }));
+  });
 };
 
 /**
@@ -114,9 +109,7 @@ export const getInitialServicesFullAccess = (formPermissions) => {
  * @returns
  */
 export const getNewRoleInitialValues = (schema) => {
-  const permissions = transformPermissionsToObject(
-    getDefaultValuesFromSchema(schema),
-  );
+  const permissions = transformPermissionsToObject(getDefaultValuesFromSchema(schema));
   const serviceFullAccess = getInitialServicesFullAccess(permissions);
 
   return {
@@ -154,9 +147,7 @@ export function getServiceExtraPermissions(service) {
 export function isServiceFullChecked(subject, permissions) {
   const serviceSchema = getPermissionsSchemaService(subject);
 
-  return serviceSchema.permissions.every(
-    (permission) => permissions[`${subject}/${permission.key}`],
-  );
+  return serviceSchema.permissions.every((permission) => permissions[`${subject}/${permission.key}`]);
 }
 
 /**
@@ -167,53 +158,43 @@ export function isServiceFullChecked(subject, permissions) {
 export function isServiceFullUnchecked(subject, permissionsMap) {
   const serviceSchema = getPermissionsSchemaService(subject);
 
-  return serviceSchema.permissions.every(
-    (permission) => !permissionsMap[`${subject}/${permission.key}`],
-  );
+  return serviceSchema.permissions.every((permission) => !permissionsMap[`${subject}/${permission.key}`]);
 }
 
 /**
  * Handles permission checkbox change.
  */
-export const handleCheckboxPermissionChange = R.curry(
-  (form, permission, service, event) => {
-    const { subject } = service;
-    const isChecked = event.currentTarget.checked;
+export const handleCheckboxPermissionChange = R.curry((form, permission, service, event) => {
+  const { subject } = service;
+  const isChecked = event.currentTarget.checked;
 
-    const permissionsGraph = memoizedPermissionsGraph();
-    const dependencies = isChecked
-      ? permissionsGraph.dependenciesOf(`${subject}/${permission.key}`)
-      : permissionsGraph.dependantsOf(`${subject}/${permission.key}`);
+  const permissionsGraph = memoizedPermissionsGraph();
+  const dependencies = isChecked
+    ? permissionsGraph.dependenciesOf(`${subject}/${permission.key}`)
+    : permissionsGraph.dependantsOf(`${subject}/${permission.key}`);
 
-    const newDependsPermiss = chain(dependencies)
-      .map((dep) => [dep, isChecked])
-      .fromPairs()
-      .value();
+  const newDependsPermiss = chain(dependencies)
+    .map((dep) => [dep, isChecked])
+    .fromPairs()
+    .value();
 
-    const newValues = {
-      ...form.values,
-      permissions: {
-        ...form.values.permissions,
-        [`${subject}/${permission.key}`]: isChecked,
-        ...newDependsPermiss,
-      },
-    };
-    const isFullChecked = isServiceFullChecked(subject, newValues.permissions);
-    const isFullUnchecked = isServiceFullUnchecked(
-      subject,
-      newValues.permissions,
-    );
-    form.setFieldValue(`permissions.${subject}/${permission.key}`, isChecked);
-    form.setFieldValue(
-      `serviceFullAccess.${subject}`,
-      detarmineCheckboxState(isFullChecked, isFullUnchecked),
-    );
+  const newValues = {
+    ...form.values,
+    permissions: {
+      ...form.values.permissions,
+      [`${subject}/${permission.key}`]: isChecked,
+      ...newDependsPermiss,
+    },
+  };
+  const isFullChecked = isServiceFullChecked(subject, newValues.permissions);
+  const isFullUnchecked = isServiceFullUnchecked(subject, newValues.permissions);
+  form.setFieldValue(`permissions.${subject}/${permission.key}`, isChecked);
+  form.setFieldValue(`serviceFullAccess.${subject}`, detarmineCheckboxState(isFullChecked, isFullUnchecked));
 
-    dependencies.forEach((depKey) => {
-      form.setFieldValue(`permissions.${depKey}`, isChecked);
-    });
-  },
-);
+  dependencies.forEach((depKey) => {
+    form.setFieldValue(`permissions.${depKey}`, isChecked);
+  });
+});
 
 /**
  * Detarmines the permission checkbox state.
@@ -225,8 +206,8 @@ function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
   return isFullChecked
     ? FULL_ACCESS_CHECKBOX_STATE.ON
     : isFullUnchecked
-    ? FULL_ACCESS_CHECKBOX_STATE.OFF
-    : FULL_ACCESS_CHECKBOX_STATE.INDETARMINE;
+      ? FULL_ACCESS_CHECKBOX_STATE.OFF
+      : FULL_ACCESS_CHECKBOX_STATE.INDETARMINE;
 }
 
 /**
@@ -237,31 +218,22 @@ function detarmineCheckboxState(isFullChecked, isFullUnchecked) {
 export function getServiceAllPermissionsPaths(subject) {
   const service = getPermissionsSchemaService(subject);
 
-  return service.permissions.map(
-    (perm) => `permissions.${subject}/${perm.key}`,
-  );
+  return service.permissions.map((perm) => `permissions.${subject}/${perm.key}`);
 }
 
 /**
  * Handle full access service checkbox change.
  */
-export const handleCheckboxFullAccessChange = R.curry(
-  (service, form, event) => {
-    const isChecked = event.currentTarget.checked;
-    const permsPaths = getServiceAllPermissionsPaths(service.subject);
+export const handleCheckboxFullAccessChange = R.curry((service, form, event) => {
+  const isChecked = event.currentTarget.checked;
+  const permsPaths = getServiceAllPermissionsPaths(service.subject);
 
-    form.setFieldValue(`serviceFullAccess.${service.subject}`, isChecked);
+  form.setFieldValue(`serviceFullAccess.${service.subject}`, isChecked);
 
-    permsPaths.forEach((permissionPath) => {
-      form.setFieldValue(
-        permissionPath,
-        isChecked
-          ? FULL_ACCESS_CHECKBOX_STATE.ON
-          : FULL_ACCESS_CHECKBOX_STATE.OFF,
-      );
-    });
-  },
-);
+  permsPaths.forEach((permissionPath) => {
+    form.setFieldValue(permissionPath, isChecked ? FULL_ACCESS_CHECKBOX_STATE.ON : FULL_ACCESS_CHECKBOX_STATE.OFF);
+  });
+});
 
 /**
  * Retrieves all flatten modules permissions.

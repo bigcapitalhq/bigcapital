@@ -1,12 +1,6 @@
-import { Service } from 'typedi';
+import { IBill, IItem, IItemEntry, ILandedCostTransaction, ILandedCostTransactionEntry } from '@/interfaces';
 import { isEmpty } from 'lodash';
-import {
-  IBill,
-  IItem,
-  ILandedCostTransactionEntry,
-  ILandedCostTransaction,
-  IItemEntry,
-} from '@/interfaces';
+import { Service } from 'typedi';
 
 @Service()
 export default class BillLandedCost {
@@ -40,9 +34,7 @@ export default class BillLandedCost {
    * @param {IItemEntry} billEntry - Bill entry.
    * @return {ILandedCostTransactionEntry}
    */
-  public transformToLandedCostEntry(
-    billEntry: IItemEntry & { item: IItem }
-  ): ILandedCostTransactionEntry {
+  public transformToLandedCostEntry(billEntry: IItemEntry & { item: IItem }): ILandedCostTransactionEntry {
     return {
       id: billEntry.id,
       name: billEntry.item.name,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { MenuItem, Button } from '@blueprintjs/core';
 import { FSelect } from '@/components';
@@ -10,14 +9,7 @@ import { FSelect } from '@/components';
  * @returns
  */
 const chargeTypeItemRenderer = (item, { handleClick, modifiers, query }) => {
-  return (
-    <MenuItem
-      label={item.label}
-      key={item.name}
-      onClick={handleClick}
-      text={item.name}
-    />
-  );
+  return <MenuItem label={item.label} key={item.name} onClick={handleClick} text={item.name} />;
 };
 
 const chargeTypeSelectProps = {
@@ -32,14 +24,7 @@ const chargeTypeSelectProps = {
  * @returns
  */
 export function ProjectTaskChargeTypeSelect({ items, ...rest }) {
-  return (
-    <FSelect
-      {...chargeTypeSelectProps}
-      {...rest}
-      items={items}
-      input={ChargeTypeSelectButton}
-    />
-  );
+  return <FSelect {...chargeTypeSelectProps} {...rest} items={items} input={ChargeTypeSelectButton} />;
 }
 /**
  *

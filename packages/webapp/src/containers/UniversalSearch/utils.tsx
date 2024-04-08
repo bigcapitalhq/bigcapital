@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { get } from 'lodash';
 import * as R from 'ramda';
 import React from 'react';
@@ -21,9 +21,7 @@ export const getUniversalSearchBinds = () => {
  * @returns
  */
 export const getUniversalSearchBind = (resourceType, key) => {
-  const resourceConfig = getUniversalSearchBinds().find(
-    (meta) => meta.resourceType === resourceType,
-  );
+  const resourceConfig = getUniversalSearchBinds().find((meta) => meta.resourceType === resourceType);
   return key ? get(resourceConfig, key) : resourceConfig;
 };
 

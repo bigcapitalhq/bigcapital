@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -21,11 +20,7 @@ function ARAgingSummaryBodyJSX({
 
   return (
     <FinancialReportBody>
-      {isARAgingLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <ARAgingSummaryTable organizationName={organizationName} />
-      )}
+      {isARAgingLoading ? <FinancialSheetSkeleton /> : <ARAgingSummaryTable organizationName={organizationName} />}
     </FinancialReportBody>
   );
 }

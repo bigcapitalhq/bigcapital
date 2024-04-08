@@ -28,9 +28,5 @@ export class WarehousesService {
    * @param {number} warehouseId
    * @param {IEditWarehouseDTO} warehouseDTO
    */
-  editWarehouse = (
-    tenantId: number,
-    warehouseId: number,
-    warehouseDTO: IEditWarehouseDTO
-  ) => {};
+  editWarehouse = (tenantId: number, warehouseId: number, warehouseDTO: IEditWarehouseDTO) => {};
 }

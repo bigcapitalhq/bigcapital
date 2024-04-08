@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
@@ -17,7 +16,7 @@ function ItemsEntriesDeleteAlert({
 
   // #withAlertStoreConnect
   isOpen,
-  payload: {  },
+  payload: {},
 
   // #withAlertActions
   closeAlert,
@@ -30,7 +29,7 @@ function ItemsEntriesDeleteAlert({
   // Handle confirm the alert.
   const handleConfirm = (event) => {
     closeAlert(name);
-    saveInvoke(onConfirm, event)
+    saveInvoke(onConfirm, event);
   };
 
   return (
@@ -43,14 +42,9 @@ function ItemsEntriesDeleteAlert({
       onConfirm={handleConfirm}
       loading={false}
     >
-      <p>
-        Clearing the table lines will delete all quantities and rate were applied to the items, Is this okay?
-      </p>
+      <p>Clearing the table lines will delete all quantities and rate were applied to the items, Is this okay?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ItemsEntriesDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ItemsEntriesDeleteAlert);

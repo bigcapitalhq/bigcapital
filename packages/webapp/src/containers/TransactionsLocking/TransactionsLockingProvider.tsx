@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 import { useTransactionsLocking } from '@/hooks/query';
@@ -18,8 +17,7 @@ function TransactionsLockingProvider({ ...props }) {
   } = useTransactionsLocking();
 
   // Transactions locking type.
-  const [transactionLockingType, setTransactionLockingType] =
-    React.useState('partial');
+  const [transactionLockingType, setTransactionLockingType] = React.useState('partial');
 
   // Locking type controlled from response.
   useWatchImmediate(() => {
@@ -45,7 +43,6 @@ function TransactionsLockingProvider({ ...props }) {
   );
 }
 
-const useTransactionsLockingContext = () =>
-  React.useContext(TransactionsLockingContext);
+const useTransactionsLockingContext = () => React.useContext(TransactionsLockingContext);
 
 export { TransactionsLockingProvider, useTransactionsLockingContext };

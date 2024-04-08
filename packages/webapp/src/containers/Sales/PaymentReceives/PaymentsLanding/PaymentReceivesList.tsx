@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/PaymentReceive/List.scss';
@@ -49,11 +48,9 @@ function PaymentReceiveList({
 }
 
 export default compose(
-  withPaymentReceives(
-    ({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
-      paymentReceivesTableState,
-      paymentsTableStateChanged,
-    }),
-  ),
+  withPaymentReceives(({ paymentReceivesTableState, paymentsTableStateChanged }) => ({
+    paymentReceivesTableState,
+    paymentsTableStateChanged,
+  })),
   withPaymentReceivesActions,
 )(PaymentReceiveList);

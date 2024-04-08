@@ -1,5 +1,4 @@
-export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT =
-  'Estimate {EstimateNumber} is awaiting your approval';
+export const DEFAULT_ESTIMATE_REMINDER_MAIL_SUBJECT = 'Estimate {EstimateNumber} is awaiting your approval';
 export const DEFAULT_ESTIMATE_REMINDER_MAIL_CONTENT = `<p>Dear {CustomerName}</p>
 <p>Thank you for your business, You can view or print your estimate from attachements.</p>
 <p>
@@ -32,9 +31,7 @@ export const DEFAULT_VIEWS = [
     name: 'Draft',
     slug: 'draft',
     rolesLogicExpression: '1',
-    roles: [
-      { index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' },
-    ],
+    roles: [{ index: 1, fieldKey: 'status', comparator: 'equals', value: 'draft' }],
     columns: DEFAULT_VIEW_COLUMNS,
   },
   {

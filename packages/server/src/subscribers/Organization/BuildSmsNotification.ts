@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import { IOrganizationBuildEventPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class OrgBuildSmsNotificationSubscriber {
@@ -17,10 +17,7 @@ export default class OrgBuildSmsNotificationSubscriber {
   /**
    * Sends welcome SMS once the organization build completed.
    */
-  public sendWelcomeSmsNotification = async ({
-    tenantId,
-    systemUser,
-  }: IOrganizationBuildEventPayload) => {
+  public sendWelcomeSmsNotification = async ({ tenantId, systemUser }: IOrganizationBuildEventPayload) => {
     // await this.agenda.now('welcome-sms', { tenant, user });
   };
 }

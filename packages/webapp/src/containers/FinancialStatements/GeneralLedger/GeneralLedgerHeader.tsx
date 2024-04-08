@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -6,10 +5,7 @@ import { Formik, Form } from 'formik';
 import { Tabs, Tab, Button, Intent } from '@blueprintjs/core';
 
 import { FormattedMessage as T } from '@/components';
-import {
-  getDefaultGeneralLedgerQuery,
-  getGeneralLedgerQuerySchema,
-} from './common';
+import { getDefaultGeneralLedgerQuery, getGeneralLedgerQuerySchema } from './common';
 import { compose, transformToForm, saveInvoke } from '@/utils';
 
 import FinancialStatementHeader from '../FinancialStatementHeader';
@@ -72,32 +68,17 @@ function GeneralLedgerHeader({
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   return (
-    <GeneralLedgerDrawerHeader
-      isOpen={isFilterDrawerOpen}
-      drawerProps={{ onClose: handleDrawerClose }}
-    >
-      <Formik
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-      >
+    <GeneralLedgerDrawerHeader isOpen={isFilterDrawerOpen} drawerProps={{ onClose: handleDrawerClose }}>
+      <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <Tabs animate={true} vertical={true} renderActiveTabPanelOnly={true}>
-            <Tab
-              id="general"
-              title={<T id={'general'} />}
-              panel={<GeneralLedgerHeaderGeneralPane />}
-            />
+            <Tab id="general" title={<T id={'general'} />} panel={<GeneralLedgerHeaderGeneralPane />} />
             {isBranchesFeatureCan && (
-              <Tab
-                id="dimensions"
-                title={<T id={'dimensions'} />}
-                panel={<GeneralLedgerHeaderDimensionsPanel />}
-              />
+              <Tab id="dimensions" title={<T id={'dimensions'} />} panel={<GeneralLedgerHeaderDimensionsPanel />} />
             )}
           </Tabs>
 
-          <div class="financial-header-drawer__footer">
+          <div className="financial-header-drawer__footer">
             <Button className={'mr1'} intent={Intent.PRIMARY} type={'submit'}>
               <T id={'calculate_report'} />
             </Button>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
@@ -14,12 +13,7 @@ function TaxRatesLandingEmptyStateRoot({
   return (
     <EmptyStatus
       title={"The organization doesn't have taxes, yet!"}
-      description={
-        <p>
-          Setup the organization taxes to start tracking taxes on sales
-          transactions.
-        </p>
-      }
+      description={<p>Setup the organization taxes to start tracking taxes on sales transactions.</p>}
       action={
         <>
           <Can I={SaleInvoiceAction.Create} a={AbilitySubject.Invoice}>
@@ -42,6 +36,4 @@ function TaxRatesLandingEmptyStateRoot({
   );
 }
 
-export const TaxRatesLandingEmptyState = R.compose(withDialogActions)(
-  TaxRatesLandingEmptyStateRoot,
-);
+export const TaxRatesLandingEmptyState = R.compose(withDialogActions)(TaxRatesLandingEmptyStateRoot);

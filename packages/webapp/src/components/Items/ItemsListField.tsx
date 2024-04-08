@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useMemo, useEffect, useState } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { ListSelect, T } from '@/components';
@@ -25,18 +24,13 @@ export function ItemsListField({
     return filteredItems;
   }, [items, sellable, purchasable]);
 
-  const initialItem = useMemo(
-    () => filteredItems.find((a) => a.id === initialItemId),
-    [initialItemId],
-  );
+  const initialItem = useMemo(() => filteredItems.find((a) => a.id === initialItemId), [initialItemId]);
 
   const [selectedItem, setSelectedItem] = useState(initialItem || null);
 
   useEffect(() => {
     if (typeof selectedItemId !== 'undefined') {
-      const item = selectedItemId
-        ? filteredItems.find((a) => a.id === selectedItemId)
-        : null;
+      const item = selectedItemId ? filteredItems.find((a) => a.id === selectedItemId) : null;
       setSelectedItem(item);
     }
   }, [selectedItemId, filteredItems, setSelectedItem]);
@@ -50,14 +44,7 @@ export function ItemsListField({
   );
 
   const itemRenderer = useCallback(
-    (item, { handleClick }) => (
-      <MenuItem
-        key={item.id}
-        text={item.name}
-        label={item.code}
-        onClick={handleClick}
-      />
-    ),
+    (item, { handleClick }) => <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />,
     [],
   );
 

@@ -1,11 +1,8 @@
-import {
-  IVendorBalanceSummaryQuery,
-  IVendorBalanceSummaryTable,
-} from '@/interfaces';
+import { IVendorBalanceSummaryQuery, IVendorBalanceSummaryTable } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { VendorBalanceSummaryTable } from './VendorBalanceSummaryTableRows';
 import { VendorBalanceSummaryService } from './VendorBalanceSummaryService';
+import { VendorBalanceSummaryTable } from './VendorBalanceSummaryTableRows';
 
 @Service()
 export class VendorBalanceSummaryTableInjectable {
@@ -21,18 +18,10 @@ export class VendorBalanceSummaryTableInjectable {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<IVendorBalanceSummaryTable>}
    */
-  public async table(
-    tenantId: number,
-    query: IVendorBalanceSummaryQuery
-  ): Promise<IVendorBalanceSummaryTable> {
+  public async table(tenantId: number, query: IVendorBalanceSummaryQuery): Promise<IVendorBalanceSummaryTable> {
     const i18n = this.tenancy.i18n(tenantId);
 
-    const { data, meta } =
-      await this.vendorBalanceSummarySheet.vendorBalanceSummary(
-        
-        tenantId,
-        query
-      );
+    const { data, meta } = await this.vendorBalanceSummarySheet.vendorBalanceSummary(tenantId, query);
     const table = new VendorBalanceSummaryTable(data, query, i18n);
 
     return {

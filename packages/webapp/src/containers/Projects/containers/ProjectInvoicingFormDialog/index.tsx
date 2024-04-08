@@ -1,20 +1,16 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { Dialog, DialogSuspense, FormattedMessage as T } from '@/components';
 import withDialogRedux from '@/components/DialogReduxConnect';
 import { compose } from '@/utils';
 
-const ProjectInvoicingDialogContent = React.lazy(
-  () => import('./ProjectInvoicingFormDialogContent'),
-);
+const ProjectInvoicingDialogContent = React.lazy(() => import('./ProjectInvoicingFormDialogContent'));
 
 /**
  * Project invoicing form dialog.
  * @returns
  */
 function ProjectInvoicingFormDialog({ dialogName, payload: {}, isOpen }) {
-
   return (
     <ProjectInvoicingFormDialogRoot
       name={dialogName}

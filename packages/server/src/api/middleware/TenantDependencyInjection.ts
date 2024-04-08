@@ -1,9 +1,9 @@
-import { Container } from 'typedi';
 import { ITenant } from '@/interfaces';
-import { Request } from 'express';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import TenantsManagerService from '@/services/Tenancy/TenantsManager';
+import { Request } from 'express';
 import rtlDetect from 'rtl-detect';
+import { Container } from 'typedi';
 
 export default (req: Request, tenant: ITenant) => {
   const { id: tenantId, organizationId } = tenant;

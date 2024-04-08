@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Can, Icon } from '@/components';
 import { AbilitySubject, TaxRateAction } from '@/constants/abilityOption';
@@ -22,11 +21,7 @@ export function TaxRatesTableActionsMenu({
       />
       <Can I={TaxRateAction.Edit} a={AbilitySubject.TaxRate}>
         <MenuDivider />
-        <MenuItem
-          icon={<Icon icon="pen-18" />}
-          text={'Edit Tax Rate'}
-          onClick={safeCallback(onEdit, original)}
-        />
+        <MenuItem icon={<Icon icon="pen-18" />} text={'Edit Tax Rate'} onClick={safeCallback(onEdit, original)} />
       </Can>
       <MenuDivider />
       {!original.active && (

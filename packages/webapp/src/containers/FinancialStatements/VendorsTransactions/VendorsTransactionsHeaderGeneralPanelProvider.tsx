@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { useVendors } from '@/hooks/query';
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
@@ -27,17 +26,10 @@ function VendorsTransactionsGeneralPanelProvider({ ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <VendorsTransactionsGeneralPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <VendorsTransactionsGeneralPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useVendorsTransactionsGeneralPanelContext = () =>
-  useContext(VendorsTransactionsGeneralPanelContext);
+const useVendorsTransactionsGeneralPanelContext = () => useContext(VendorsTransactionsGeneralPanelContext);
 
-export {
-  VendorsTransactionsGeneralPanelProvider,
-  useVendorsTransactionsGeneralPanelContext,
-};
+export { VendorsTransactionsGeneralPanelProvider, useVendorsTransactionsGeneralPanelContext };

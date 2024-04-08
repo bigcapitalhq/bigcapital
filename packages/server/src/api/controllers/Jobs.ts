@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import { Router, Request, Response, NextFunction } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import JobsService from '@/services/Jobs/JobsService';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class ItemsController extends BaseController {
@@ -47,12 +47,7 @@ export default class ItemsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handlerServiceErrors = (
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private handlerServiceErrors = (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ServiceError) {
     }
     next(error);

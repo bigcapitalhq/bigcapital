@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { isEmpty, pick } from 'lodash';
 import { useLocation } from 'react-router-dom';
@@ -50,10 +49,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   } = useProjects({}, { enabled: !!isProjectsFeatureCan });
 
   // Fetches the estimate by the given id.
-  const { data: estimate, isLoading: isEstimateLoading } = useEstimate(
-    estimateId,
-    { enabled: !!estimateId },
-  );
+  const { data: estimate, isLoading: isEstimateLoading } = useEstimate(estimateId, { enabled: !!estimateId });
 
   const newInvoice = !isEmpty(estimate)
     ? transformToEditForm({
@@ -104,8 +100,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
   const isNewMode = !invoiceId;
 
   // Determines whether the warehouse and branches are loading.
-  const isFeatureLoading =
-    isWarehouesLoading || isBranchesLoading || isProjectsLoading;
+  const isFeatureLoading = isWarehouesLoading || isBranchesLoading || isProjectsLoading;
 
   const provider = {
     invoice,
@@ -139,13 +134,7 @@ function InvoiceFormProvider({ invoiceId, baseCurrency, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isInvoiceLoading ||
-        isItemsLoading ||
-        isCustomersLoading ||
-        isEstimateLoading ||
-        isSettingsLoading
-      }
+      loading={isInvoiceLoading || isItemsLoading || isCustomersLoading || isEstimateLoading || isSettingsLoading}
       name={'invoice-form'}
     >
       <InvoiceFormContext.Provider value={provider} {...props} />

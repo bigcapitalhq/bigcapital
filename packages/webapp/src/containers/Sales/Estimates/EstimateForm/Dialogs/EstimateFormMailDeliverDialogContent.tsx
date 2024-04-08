@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { useHistory } from 'react-router-dom';
@@ -26,15 +26,7 @@ function EstimateFormDeliverDialogContentRoot({
     history.push('/estimates');
   };
 
-  return (
-    <EstimateMailDialogContent
-      estimateId={estimateId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancel}
-    />
-  );
+  return <EstimateMailDialogContent estimateId={estimateId} onFormSubmit={handleSubmit} onCancelClick={handleCancel} />;
 }
 
-export default R.compose(withDialogActions)(
-  EstimateFormDeliverDialogContentRoot,
-);
+export default R.compose(withDialogActions)(EstimateFormDeliverDialogContentRoot);

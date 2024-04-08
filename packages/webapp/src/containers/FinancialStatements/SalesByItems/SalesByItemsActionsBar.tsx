@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   NavbarGroup,
@@ -72,13 +71,7 @@ function SalesByItemsActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            salesByItemsDrawerFilter ? (
-              <T id={'hide_customizer'} />
-            ) : (
-              <T id={'customize_report'} />
-            )
-          }
+          text={salesByItemsDrawerFilter ? <T id={'hide_customizer'} /> : <T id={'customize_report'} />}
           active={salesByItemsDrawerFilter}
           onClick={handleFilterToggleClick}
         />

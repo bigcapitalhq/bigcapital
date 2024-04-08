@@ -1,17 +1,17 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
+import { ServiceError } from '@/exceptions';
 import {
   ISaleInvoice,
   ISaleInvoiceWriteoffCreatePayload,
   ISaleInvoiceWriteoffDTO,
-  ISaleInvoiceWrittenOffCanceledPayload,
   ISaleInvoiceWrittenOffCancelPayload,
+  ISaleInvoiceWrittenOffCanceledPayload,
 } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
-import { ServiceError } from '@/exceptions';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CommandSaleInvoiceValidators } from './CommandSaleInvoiceValidators';
 import { ERRORS } from './constants';
 
@@ -39,7 +39,7 @@ export class WriteoffSaleInvoice {
   public writeOff = async (
     tenantId: number,
     saleInvoiceId: number,
-    writeoffDTO: ISaleInvoiceWriteoffDTO
+    writeoffDTO: ISaleInvoiceWriteoffDTO,
   ): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
@@ -63,10 +63,7 @@ export class WriteoffSaleInvoice {
       } as ISaleInvoiceWriteoffCreatePayload;
 
       // Triggers `onSaleInvoiceWriteoff` event.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onWriteoff,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onWriteoff, eventPayload);
       // Mark the sale invoice as written-off.
       const newSaleInvoice = await SaleInvoice.query(trx)
         .patch({
@@ -77,10 +74,7 @@ export class WriteoffSaleInvoice {
         .findById(saleInvoiceId);
 
       // Triggers `onSaleInvoiceWrittenoff` event.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onWrittenoff,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onWrittenoff, eventPayload);
       return newSaleInvoice;
     });
   };
@@ -91,10 +85,7 @@ export class WriteoffSaleInvoice {
    * @param {number} saleInvoiceId
    * @returns {Promise<ISaleInvoice>}
    */
-  public cancelWrittenoff = async (
-    tenantId: number,
-    saleInvoiceId: number
-  ): Promise<ISaleInvoice> => {
+  public cancelWrittenoff = async (tenantId: number, saleInvoiceId: number): Promise<ISaleInvoice> => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     // Validate the sale invoice existance.
@@ -110,14 +101,11 @@ export class WriteoffSaleInvoice {
     // Cancels the invoice written-off and removes the associated transactions.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onSaleInvoiceWrittenoffCancel` event.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onWrittenoffCancel,
-        {
-          tenantId,
-          saleInvoice,
-          trx,
-        } as ISaleInvoiceWrittenOffCancelPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onWrittenoffCancel, {
+        tenantId,
+        saleInvoice,
+        trx,
+      } as ISaleInvoiceWrittenOffCancelPayload);
       // Mark the sale invoice as written-off.
       const newSaleInvoice = await SaleInvoice.query(trx)
         .patch({
@@ -127,14 +115,11 @@ export class WriteoffSaleInvoice {
         .findById(saleInvoiceId);
 
       // Triggers `onSaleInvoiceWrittenoffCanceled`.
-      await this.eventPublisher.emitAsync(
-        events.saleInvoice.onWrittenoffCanceled,
-        {
-          tenantId,
-          saleInvoice,
-          trx,
-        } as ISaleInvoiceWrittenOffCanceledPayload
-      );
+      await this.eventPublisher.emitAsync(events.saleInvoice.onWrittenoffCanceled, {
+        tenantId,
+        saleInvoice,
+        trx,
+      } as ISaleInvoiceWrittenOffCanceledPayload);
       return newSaleInvoice;
     });
   };

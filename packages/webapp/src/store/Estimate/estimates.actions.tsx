@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 export const setEstimatesTableState = (queries) => {
@@ -12,4 +12,4 @@ export const resetEstimatesTableState = () => {
   return {
     type: t.ESTIMATES_TABLE_STATE_RESET,
   };
-}
+};

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
@@ -13,11 +12,7 @@ export default function ReceiptItemsEntriesEditor({ defaultReceipt }) {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'} items={items} shouldUpdate={entriesFieldShouldUpdate}>
-        {({
-          form: { values, setFieldValue },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
           <ItemsEntriesTable
             value={value}
             onChange={(entries) => {

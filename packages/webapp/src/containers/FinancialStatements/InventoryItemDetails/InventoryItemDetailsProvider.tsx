@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useInventoryItemDetailsReport } from '@/hooks/query';
@@ -10,10 +9,7 @@ const InventoryItemDetailsContext = React.createContext();
  * Inventory item details provider.
  */
 function InventoryItemDetailsProvider({ query, ...props }) {
-  const requestQuery = React.useMemo(
-    () => transformFilterFormToQuery(query),
-    [query],
-  );
+  const requestQuery = React.useMemo(() => transformFilterFormToQuery(query), [query]);
 
   // Fetching inventory item details report based on the givne query.
   const {
@@ -29,7 +25,7 @@ function InventoryItemDetailsProvider({ query, ...props }) {
     isInventoryItemDetailsLoading,
     inventoryItemDetailsRefetch,
     query,
-    httpQuery: requestQuery
+    httpQuery: requestQuery,
   };
 
   return (
@@ -38,7 +34,6 @@ function InventoryItemDetailsProvider({ query, ...props }) {
     </FinancialReportPage>
   );
 }
-const useInventoryItemDetailsContext = () =>
-  React.useContext(InventoryItemDetailsContext);
+const useInventoryItemDetailsContext = () => React.useContext(InventoryItemDetailsContext);
 
 export { InventoryItemDetailsProvider, useInventoryItemDetailsContext };

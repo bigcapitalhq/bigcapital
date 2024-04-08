@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useCallback } from 'react';
 import moment from 'moment';
 
@@ -53,18 +52,12 @@ function PurchasesByItems({
 
   return (
     <PurchasesByItemsProvider query={query}>
-      <PurchasesByItemsActionsBar
-        numberFormat={query.numberFormat}
-        onNumberFormatSubmit={handleNumberFormatSubmit}
-      />
+      <PurchasesByItemsActionsBar numberFormat={query.numberFormat} onNumberFormatSubmit={handleNumberFormatSubmit} />
       <PurchasesByItemsLoadingBar />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <PurchasesByItemsHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <PurchasesByItemsHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <PurchasesByItemsBody />
         </FinancialStatement>
       </DashboardPageContent>

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   Intent,
@@ -90,10 +89,7 @@ export default function InvoiceFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'deliver_and_new'} />}
-                  onClick={handleSubmitDeliverAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'deliver_and_new'} />} onClick={handleSubmitDeliverAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'deliver_continue_editing'} />}
                   onClick={handleSubmitDeliverContinueEditingBtnClick}
@@ -122,10 +118,7 @@ export default function InvoiceFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDraftAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'save_continue_editing'} />}
                   onClick={handleSubmitDraftContinueEditingBtnClick}
@@ -136,10 +129,7 @@ export default function InvoiceFloatingActions() {
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
           >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
+            <Button disabled={isSubmitting} rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
           </Popover>
         </ButtonGroup>
       </If>
@@ -157,10 +147,7 @@ export default function InvoiceFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDeliverAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDeliverAndNewBtnClick} />
               </Menu>
             }
             minimal={true}
@@ -184,11 +171,7 @@ export default function InvoiceFloatingActions() {
         text={invoice ? <T id={'reset'} /> : <T id={'clear'} />}
       />
       {/* ----------- Cancel ----------- */}
-      <Button
-        className={'ml1'}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

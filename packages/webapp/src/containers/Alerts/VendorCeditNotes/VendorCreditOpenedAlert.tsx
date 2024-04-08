@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -24,8 +23,7 @@ function VendorCreditOpenedAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: openVendorCreditMutate, isLoading } =
-    useOpenVendorCredit();
+  const { mutateAsync: openVendorCreditMutate, isLoading } = useOpenVendorCredit();
 
   // Handle cancel opened credit note alert.
   const handleAlertCancel = () => {
@@ -63,7 +61,4 @@ function VendorCreditOpenedAlert({
     </Alert>
   );
 }
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(VendorCreditOpenedAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(VendorCreditOpenedAlert);

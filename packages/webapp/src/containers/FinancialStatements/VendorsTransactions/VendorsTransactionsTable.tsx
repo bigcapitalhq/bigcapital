@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -20,18 +19,14 @@ export default function VendorsTransactionsTable({
   companyName,
 }) {
   // Vendor transactions context.
-  const { vendorsTransactions, isVendorsTransactionsLoading } =
-    useVendorsTransactionsContext();
+  const { vendorsTransactions, isVendorsTransactionsLoading } = useVendorsTransactionsContext();
 
   const { table, query } = vendorsTransactions;
 
   // Retireve vendor transactions table columns.
   const columns = useVendorsTransactionsColumns();
 
-  const expandedRows = useMemo(
-    () => defaultExpanderReducer(table.rows, 5),
-    [table.rows],
-  );
+  const expandedRows = useMemo(() => defaultExpanderReducer(table.rows, 5), [table.rows]);
 
   return (
     <FinancialSheet

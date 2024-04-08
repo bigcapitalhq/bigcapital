@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
@@ -45,9 +44,7 @@ function ExpenseBulkDeleteAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={
-        <T id={'delete_count'} values={{ count: selectedCount }} />
-      }
+      confirmButtonText={<T id={'delete_count'} values={{ count: selectedCount }} />}
       icon="trash"
       intent={Intent.DANGER}
       isOpen={isOpen}
@@ -61,7 +58,4 @@ function ExpenseBulkDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExpenseBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExpenseBulkDeleteAlert);

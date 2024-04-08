@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -24,8 +23,7 @@ function BranchMarkPrimaryAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: markPrimaryBranchMutate, isLoading } =
-    useMarkBranchAsPrimary();
+  const { mutateAsync: markPrimaryBranchMutate, isLoading } = useMarkBranchAsPrimary();
 
   // Handle cancel mark primary alert.
   const handleCancelMarkPrimaryAlert = () => {
@@ -64,7 +62,4 @@ function BranchMarkPrimaryAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(BranchMarkPrimaryAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(BranchMarkPrimaryAlert);

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -30,8 +29,7 @@ function BranchForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, branch, branchId, createBranchMutate, editBranchMutate } =
-    useBranchFormContext();
+  const { dialogName, branch, branchId, createBranchMutate, editBranchMutate } = useBranchFormContext();
 
   // Initial form values.
   const initialValues = {

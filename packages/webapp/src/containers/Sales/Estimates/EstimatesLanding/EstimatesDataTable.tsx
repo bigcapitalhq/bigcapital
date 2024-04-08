@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -11,12 +10,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonRows,
-  TableSkeletonHeader,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonRows, TableSkeletonHeader } from '@/components';
 import { ActionsMenu, useEstiamtesTableColumns } from './components';
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -46,13 +40,7 @@ function EstimatesDataTable({
   const history = useHistory();
 
   // Estimates list context.
-  const {
-    estimates,
-    pagination,
-    isEmptyStatus,
-    isEstimatesLoading,
-    isEstimatesFetching,
-  } = useEstimatesListContext();
+  const { estimates, pagination, isEmptyStatus, isEstimatesLoading, isEstimatesFetching } = useEstimatesListContext();
 
   // Estimates table columns.
   const columns = useEstiamtesTableColumns();
@@ -104,11 +92,10 @@ function EstimatesDataTable({
   // Handle mail send estimate.
   const handleMailSendEstimate = ({ id }) => {
     openDialog(DialogsName.EstimateMail, { estimateId: id });
-  }
+  };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.ESTIMATES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.ESTIMATES);
 
   // Handles fetch data.
   const handleFetchData = useCallback(

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import * as R from 'ramda';
@@ -27,9 +26,7 @@ function ProjectBillableEntriesLinkComponent({
   );
 }
 
-export const ProjectBillableEntriesLink = R.compose(withDialogActions)(
-  ProjectBillableEntriesLinkComponent,
-);
+export const ProjectBillableEntriesLink = R.compose(withDialogActions)(ProjectBillableEntriesLinkComponent);
 
 const BillableEntriesLink = styled(ButtonLink)`
   font-size: 11px;

@@ -1,27 +1,27 @@
 import {
   CreditNoteActivateBranchesSubscriber,
+  PaymentMadeActivateBranchesSubscriber,
   PaymentReceiveActivateBranchesSubscriber,
   SaleEstimatesActivateBranchesSubscriber,
   SaleInvoicesActivateBranchesSubscriber,
-  PaymentMadeActivateBranchesSubscriber,
   SaleReceiptsActivateBranchesSubscriber,
 } from './Subscribers/Activate';
 import {
   BillBranchValidateSubscriber,
-  VendorCreditBranchValidateSubscriber,
-  PaymentMadeBranchValidateSubscriber,
-  SaleEstimateBranchValidateSubscriber,
-  CreditNoteBranchValidateSubscriber,
-  ExpenseBranchValidateSubscriber,
-  SaleReceiptBranchValidateSubscriber,
-  ManualJournalBranchValidateSubscriber,
-  PaymentReceiveBranchValidateSubscriber,
-  CreditNoteRefundBranchValidateSubscriber,
   CashflowBranchDTOValidatorSubscriber,
-  VendorCreditRefundBranchValidateSubscriber,
-  InvoiceBranchValidateSubscriber,
   ContactBranchValidateSubscriber,
-  InventoryAdjustmentBranchValidateSubscriber
+  CreditNoteBranchValidateSubscriber,
+  CreditNoteRefundBranchValidateSubscriber,
+  ExpenseBranchValidateSubscriber,
+  InventoryAdjustmentBranchValidateSubscriber,
+  InvoiceBranchValidateSubscriber,
+  ManualJournalBranchValidateSubscriber,
+  PaymentMadeBranchValidateSubscriber,
+  PaymentReceiveBranchValidateSubscriber,
+  SaleEstimateBranchValidateSubscriber,
+  SaleReceiptBranchValidateSubscriber,
+  VendorCreditBranchValidateSubscriber,
+  VendorCreditRefundBranchValidateSubscriber,
 } from './Subscribers/Validators';
 
 export default () => [
@@ -46,5 +46,5 @@ export default () => [
   CashflowBranchDTOValidatorSubscriber,
   InvoiceBranchValidateSubscriber,
   ContactBranchValidateSubscriber,
-  InventoryAdjustmentBranchValidateSubscriber
+  InventoryAdjustmentBranchValidateSubscriber,
 ];

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { useCashflowTransaction } from '@/hooks/query';
@@ -43,10 +42,6 @@ function CashflowTransactionDrawerProvider({ referenceId, ...props }) {
   );
 }
 
-const useCashflowTransactionDrawerContext = () =>
-  React.useContext(CashflowTransactionDrawerContext);
+const useCashflowTransactionDrawerContext = () => React.useContext(CashflowTransactionDrawerContext);
 
-export {
-  CashflowTransactionDrawerProvider,
-  useCashflowTransactionDrawerContext,
-};
+export { CashflowTransactionDrawerProvider, useCashflowTransactionDrawerContext };

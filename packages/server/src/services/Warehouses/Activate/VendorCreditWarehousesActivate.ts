@@ -1,6 +1,6 @@
-import { Service, Inject } from 'typedi';
 import { IWarehouse } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class VendorCreditActivateWarehouses {
@@ -13,10 +13,7 @@ export class VendorCreditActivateWarehouses {
    * @param   {number} primaryWarehouse
    * @returns {Promise<void>}
    */
-  public updateCreditsWithWarehouse = async (
-    tenantId: number,
-    primaryWarehouse: IWarehouse
-  ): Promise<void> => {
+  public updateCreditsWithWarehouse = async (tenantId: number, primaryWarehouse: IWarehouse): Promise<void> => {
     const { VendorCredit, ItemEntry } = this.tenancy.models(tenantId);
 
     // Updates the vendor credits transactions with primary warehouse.

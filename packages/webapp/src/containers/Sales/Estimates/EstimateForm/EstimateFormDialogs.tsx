@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import EstimateNumberDialog from '@/containers/Dialogs/EstimateNumberDialog';
@@ -23,13 +22,8 @@ export default function EstimateFormDialogs() {
 
   return (
     <>
-      <EstimateNumberDialog
-        dialogName={'estimate-number-form'}
-        onConfirm={handleEstimateNumberFormConfirm}
-      />
-      <EstimateFormMailDeliverDialog
-        dialogName={DialogsName.EstimateFormMailDeliver}
-      />
+      <EstimateNumberDialog dialogName={'estimate-number-form'} onConfirm={handleEstimateNumberFormConfirm} />
+      <EstimateFormMailDeliverDialog dialogName={DialogsName.EstimateFormMailDeliver} />
     </>
   );
 }

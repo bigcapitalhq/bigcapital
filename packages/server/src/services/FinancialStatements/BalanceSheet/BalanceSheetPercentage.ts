@@ -1,6 +1,6 @@
-import * as R from 'ramda';
-import { get } from 'lodash';
 import { IBalanceSheetDataNode } from '@/interfaces';
+import { get } from 'lodash';
+import * as R from 'ramda';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 
 export const BalanceSheetPercentage = (Base: any) =>
@@ -13,20 +13,10 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @returns {IBalanceSheetDataNode}
      */
     protected assocReportNodeColumnPercentage = R.curry(
-      (
-        parentTotal: number,
-        node: IBalanceSheetDataNode
-      ): IBalanceSheetDataNode => {
-        const percentage = this.getPercentageBasis(
-          parentTotal,
-          node.total.amount
-        );
-        return R.assoc(
-          'percentageColumn',
-          this.getPercentageAmountMeta(percentage),
-          node
-        );
-      }
+      (parentTotal: number, node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
+        const percentage = this.getPercentageBasis(parentTotal, node.total.amount);
+        return R.assoc('percentageColumn', this.getPercentageAmountMeta(percentage), node);
+      },
     );
 
     /**
@@ -35,20 +25,10 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @returns {IBalanceSheetDataNode}
      */
     protected assocReportNodeRowPercentage = R.curry(
-      (
-        parentTotal: number,
-        node: IBalanceSheetDataNode
-      ): IBalanceSheetDataNode => {
-        const percenatage = this.getPercentageBasis(
-          parentTotal,
-          node.total.amount
-        );
-        return R.assoc(
-          'percentageRow',
-          this.getPercentageAmountMeta(percenatage),
-          node
-        );
-      }
+      (parentTotal: number, node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
+        const percenatage = this.getPercentageBasis(parentTotal, node.total.amount);
+        return R.assoc('percentageRow', this.getPercentageAmountMeta(percenatage), node);
+      },
     );
 
     /**
@@ -58,15 +38,12 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @returns {IBalanceSheetDataNode}
      */
     protected assocRowPercentageHorizTotals = R.curry(
-      (
-        parentTotal: number,
-        node: IBalanceSheetDataNode
-      ): IBalanceSheetDataNode => {
+      (parentTotal: number, node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
         const assocRowPercen = this.assocReportNodeRowPercentage(parentTotal);
         const horTotals = R.map(assocRowPercen)(node.horizontalTotals);
 
         return R.assoc('horizontalTotals', horTotals, node);
-      }
+      },
     );
 
     /**
@@ -75,16 +52,10 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @param {} horTotalNode -
      * @param {number} index -
      */
-    private assocColumnPercentageHorizTotal = R.curry(
-      (parentNode, horTotalNode, index) => {
-        const parentTotal = get(
-          parentNode,
-          `horizontalTotals[${index}].total.amount`,
-          0
-        );
-        return this.assocReportNodeColumnPercentage(parentTotal, horTotalNode);
-      }
-    );
+    private assocColumnPercentageHorizTotal = R.curry((parentNode, horTotalNode, index) => {
+      const parentTotal = get(parentNode, `horizontalTotals[${index}].total.amount`, 0);
+      return this.assocReportNodeColumnPercentage(parentTotal, horTotalNode);
+    });
 
     /**
      * Assoc column percentage to horizontal totals nodes.
@@ -92,17 +63,12 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @returns {IBalanceSheetDataNode}
      */
     protected assocColumnPercentageHorizTotals = R.curry(
-      (
-        parentNode: IBalanceSheetDataNode,
-        node: IBalanceSheetDataNode
-      ): IBalanceSheetDataNode => {
+      (parentNode: IBalanceSheetDataNode, node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
         // Horizontal totals.
         const assocColPerc = this.assocColumnPercentageHorizTotal(parentNode);
-        const horTotals = R.addIndex(R.map)(assocColPerc)(
-          node.horizontalTotals
-        );
+        const horTotals = R.addIndex(R.map)(assocColPerc)(node.horizontalTotals);
         return R.assoc('horizontalTotals', horTotals, node);
-      }
+      },
     );
 
     /**
@@ -111,19 +77,14 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @param {} node
      * @returns
      */
-    protected reportNodeColumnPercentageComposer = R.curry(
-      (parentNode, node) => {
-        const parentTotal = parentNode.total.amount;
+    protected reportNodeColumnPercentageComposer = R.curry((parentNode, node) => {
+      const parentTotal = parentNode.total.amount;
 
-        return R.compose(
-          R.when(
-            this.isNodeHasHorizoTotals,
-            this.assocColumnPercentageHorizTotals(parentNode)
-          ),
-          this.assocReportNodeColumnPercentage(parentTotal)
-        )(node);
-      }
-    );
+      return R.compose(
+        R.when(this.isNodeHasHorizoTotals, this.assocColumnPercentageHorizTotals(parentNode)),
+        this.assocReportNodeColumnPercentage(parentTotal),
+      )(node);
+    });
 
     /**
      *
@@ -134,11 +95,8 @@ export const BalanceSheetPercentage = (Base: any) =>
       const total = node.total.amount;
 
       return R.compose(
-        R.when(
-          this.isNodeHasHorizoTotals,
-          this.assocRowPercentageHorizTotals(total)
-        ),
-        this.assocReportNodeRowPercentage(total)
+        R.when(this.isNodeHasHorizoTotals, this.assocRowPercentageHorizTotals(total)),
+        this.assocReportNodeRowPercentage(total),
       )(node);
     };
 
@@ -146,10 +104,7 @@ export const BalanceSheetPercentage = (Base: any) =>
      *
      */
     private assocNodeColumnPercentageChildren = (node) => {
-      const children = this.mapNodesDeep(
-        node.children,
-        this.reportNodeColumnPercentageComposer(node)
-      );
+      const children = this.mapNodesDeep(node.children, this.reportNodeColumnPercentageComposer(node));
       return R.assoc('children', children, node);
     };
 
@@ -163,12 +118,9 @@ export const BalanceSheetPercentage = (Base: any) =>
       const parentNode = node;
 
       return R.compose(
-        R.when(
-          this.isNodeHasHorizoTotals,
-          this.assocColumnPercentageHorizTotals(parentNode)
-        ),
+        R.when(this.isNodeHasHorizoTotals, this.assocColumnPercentageHorizTotals(parentNode)),
         this.assocReportNodeColumnPercentage(parentTotal),
-        this.assocNodeColumnPercentageChildren
+        this.assocNodeColumnPercentageChildren,
       )(node);
     };
 
@@ -177,9 +129,7 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @param   {IBalanceSheetDataNode[]} node
      * @returns {IBalanceSheetDataNode[]}
      */
-    private reportColumnsPercentageMapper = (
-      nodes: IBalanceSheetDataNode[]
-    ): IBalanceSheetDataNode[] => {
+    private reportColumnsPercentageMapper = (nodes: IBalanceSheetDataNode[]): IBalanceSheetDataNode[] => {
       return R.map(this.reportNodeColumnPercentageDeepMap, nodes);
     };
 
@@ -199,14 +149,8 @@ export const BalanceSheetPercentage = (Base: any) =>
      */
     protected reportPercentageCompose = (nodes) => {
       return R.compose(
-        R.when(
-          this.query.isColumnsPercentageActive,
-          this.reportColumnsPercentageMapper
-        ),
-        R.when(
-          this.query.isRowsPercentageActive,
-          this.reportRowsPercentageMapper
-        )
+        R.when(this.query.isColumnsPercentageActive, this.reportColumnsPercentageMapper),
+        R.when(this.query.isRowsPercentageActive, this.reportRowsPercentageMapper),
       )(nodes);
     };
 
@@ -215,11 +159,7 @@ export const BalanceSheetPercentage = (Base: any) =>
      * @param   {IBalanceSheetDataNode} node
      * @returns {boolean}
      */
-    protected isNodeHasHorizoTotals = (
-      node: IBalanceSheetDataNode
-    ): boolean => {
-      return (
-        !R.isEmpty(node.horizontalTotals) && !R.isNil(node.horizontalTotals)
-      );
+    protected isNodeHasHorizoTotals = (node: IBalanceSheetDataNode): boolean => {
+      return !R.isEmpty(node.horizontalTotals) && !R.isNil(node.horizontalTotals);
     };
   };

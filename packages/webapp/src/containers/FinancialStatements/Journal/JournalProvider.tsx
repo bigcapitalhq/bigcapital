@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useJournalSheet } from '@/hooks/query';
@@ -11,16 +10,8 @@ const JournalSheetContext = createContext();
  */
 function JournalSheetProvider({ query, ...props }) {
   // Transforms the sheet query to request query.
-  const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(query),
-    [query],
-  );
-  const {
-    data: journalSheet,
-    isFetching,
-    isLoading,
-    refetch,
-  } = useJournalSheet(httpQuery, { keepPreviousData: true });
+  const httpQuery = React.useMemo(() => transformFilterFormToQuery(query), [query]);
+  const { data: journalSheet, isFetching, isLoading, refetch } = useJournalSheet(httpQuery, { keepPreviousData: true });
 
   const provider = {
     journalSheet,

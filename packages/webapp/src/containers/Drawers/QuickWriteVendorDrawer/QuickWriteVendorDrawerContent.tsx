@@ -1,10 +1,5 @@
-// @ts-nocheck
 import React from 'react';
-import {
-  DrawerHeaderContent,
-  DrawerBody,
-  FormattedMessage as T,
-} from '@/components';
+import { DrawerHeaderContent, DrawerBody, FormattedMessage as T } from '@/components';
 
 import QuickVendorFormDrawer from './QuickVendorFormDrawer';
 import { DRAWERS } from '@/constants/drawers';
@@ -15,11 +10,7 @@ import { DRAWERS } from '@/constants/drawers';
 export default function QuickWriteVendorDrawerContent({ displayName }) {
   return (
     <React.Fragment>
-      <DrawerHeaderContent
-        name={DRAWERS.QUICK_CREATE_CUSTOMER}
-        title={<T id={'create_a_new_vendor'} />}
-
-      />
+      <DrawerHeaderContent name={DRAWERS.QUICK_CREATE_CUSTOMER} title={<T id={'create_a_new_vendor'} />} />
       <DrawerBody>
         <QuickVendorFormDrawer displayName={displayName} />
       </DrawerBody>

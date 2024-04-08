@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -29,11 +28,7 @@ const projectItemPredicate = (query, project, _index, exactMatch) => {
  * @param param2
  * @returns
  */
-const projectItemRenderer = (
-  project,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
+const projectItemRenderer = (project, { handleClick, modifiers, query }, { isSelected }) => {
   return (
     <MenuItem
       active={modifiers.active}

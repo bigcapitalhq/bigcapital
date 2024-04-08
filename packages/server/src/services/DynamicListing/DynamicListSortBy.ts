@@ -1,8 +1,8 @@
+import { ServiceError } from '@/exceptions';
+import { IModel, ISortOrder } from '@/interfaces';
+import DynamicFilterSortBy from '@/lib/DynamicFilter/DynamicFilterSortBy';
 import { Service } from 'typedi';
 import DynamicListAbstract from './DynamicListAbstract';
-import DynamicFilterSortBy from '@/lib/DynamicFilter/DynamicFilterSortBy';
-import { IModel, ISortOrder } from '@/interfaces';
-import { ServiceError } from '@/exceptions';
 import { ERRORS } from './constants';
 
 @Service()
@@ -14,11 +14,7 @@ export default class DynamicListSortBy extends DynamicListAbstract {
    * @param {ISortOrder} sortOrder
    * @returns {DynamicFilterSortBy}
    */
-  public dynamicSortBy(
-    model: IModel,
-    columnSortBy: string,
-    sortOrder: ISortOrder
-  ) {
+  public dynamicSortBy(model: IModel, columnSortBy: string, sortOrder: ISortOrder) {
     this.validateSortColumnExistance(model, columnSortBy);
 
     return new DynamicFilterSortBy(columnSortBy, sortOrder);

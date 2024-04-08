@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import JournalNumberDialog from '@/containers/Dialogs/JournalNumberDialog';
@@ -21,10 +20,5 @@ export default function MakeJournalFormDialogs() {
     }
   };
 
-  return (
-    <JournalNumberDialog
-      dialogName={'journal-number-form'}
-      onConfirm={handleConfirm}
-    />
-  );
+  return <JournalNumberDialog dialogName={'journal-number-form'} onConfirm={handleConfirm} />;
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { MaterialProgressBar } from '@/components';
 
@@ -10,5 +9,5 @@ export default function FinancialLoadingBar() {
     <div className={'financial-progressbar'}>
       <MaterialProgressBar />
     </div>
-  )
+  );
 }

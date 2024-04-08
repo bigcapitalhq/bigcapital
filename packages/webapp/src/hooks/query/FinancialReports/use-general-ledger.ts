@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';
 import { useRequestPdf } from '../../useRequestPdf';
@@ -58,6 +58,6 @@ export const useGeneralLedgerSheetCsvExport = (query, args) => {
 export function useGeneralLedgerPdf(query = {}) {
   return useRequestPdf({
     url: `/financial_statements/general_ledger`,
-    params: query
+    params: query,
   });
 }

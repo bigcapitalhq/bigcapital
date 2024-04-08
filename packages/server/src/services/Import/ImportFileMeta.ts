@@ -1,6 +1,6 @@
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { ImportFileMetaTransformer } from './ImportFileMetaTransformer';
 
 @Service()
@@ -23,10 +23,6 @@ export class ImportFileMeta {
     const importFile = await Import.query().findOne('importId', importId);
 
     // Retrieves the transformed accounts collection.
-    return this.transformer.transform(
-      tenantId,
-      importFile,
-      new ImportFileMetaTransformer()
-    );
+    return this.transformer.transform(tenantId, importFile, new ImportFileMetaTransformer());
   }
 }

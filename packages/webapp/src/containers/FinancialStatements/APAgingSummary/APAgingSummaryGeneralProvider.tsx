@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 
 import { useVendors } from '@/hooks/query';
@@ -30,7 +29,6 @@ function APAgingSummaryGeneralProvider({ filter, ...props }) {
   );
 }
 
-const useAPAgingSummaryGeneralContext = () =>
-  useContext(APAgingSummaryGeneralContext);
+const useAPAgingSummaryGeneralContext = () => useContext(APAgingSummaryGeneralContext);
 
 export { APAgingSummaryGeneralProvider, useAPAgingSummaryGeneralContext };

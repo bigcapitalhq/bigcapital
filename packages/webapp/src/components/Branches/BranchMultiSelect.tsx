@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { MenuItem } from '@blueprintjs/core';
@@ -29,11 +28,7 @@ const branchItemPredicate = (query, branch, _index, exactMatch) => {
  * @param {*} param1
  * @returns
  */
-const branchItemRenderer = (
-  branch,
-  { handleClick, modifiers, query },
-  { isSelected },
-) => {
+const branchItemRenderer = (branch, { handleClick, modifiers, query }, { isSelected }) => {
   return (
     <MenuItem
       active={modifiers.active}

@@ -1,28 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  NavbarGroup,
-  NavbarDivider,
-  Button,
-  Classes,
-  Intent,
-  Switch,
-  Alignment,
-} from '@blueprintjs/core';
-import {
-  DashboardActionsBar,
-  DashboardRowsHeightButton,
-  FormattedMessage as T,
-} from '@/components';
-import {
-  If,
-  Can,
-  Icon,
-  DashboardActionViewsList,
-  AdvancedFilterPopover,
-  DashboardFilterButton,
-} from '@/components';
+import { NavbarGroup, NavbarDivider, Button, Classes, Intent, Switch, Alignment } from '@blueprintjs/core';
+import { DashboardActionsBar, DashboardRowsHeightButton, FormattedMessage as T } from '@/components';
+import { If, Can, Icon, DashboardActionViewsList, AdvancedFilterPopover, DashboardFilterButton } from '@/components';
 
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { useItemsListContext } from './ItemsListProvider';
@@ -156,10 +136,7 @@ function ItemsActionsBar({
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={itemsTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={itemsTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
         <Can I={ItemAction.Edit} a={AbilitySubject.Item}>
           <Switch

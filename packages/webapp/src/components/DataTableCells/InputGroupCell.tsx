@@ -1,15 +1,9 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { Classes, InputGroup, FormGroup, Intent } from '@blueprintjs/core';
 import { CellType } from '@/constants';
 
-const InputEditableCell = ({
-  row: { index },
-  column: { id },
-  cell: { value: initialValue },
-  payload,
-}) => {
+const InputEditableCell = ({ row: { index }, column: { id }, cell: { value: initialValue }, payload }) => {
   const [value, setValue] = useState(initialValue);
 
   const onChange = (e) => {
@@ -25,16 +19,8 @@ const InputEditableCell = ({
   const error = payload.errors?.[index]?.[id];
 
   return (
-    <FormGroup
-      intent={error ? Intent.DANGER : null}
-      className={classNames(Classes.FILL)}
-    >
-      <InputGroup
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        fill={true}
-      />
+    <FormGroup intent={error ? Intent.DANGER : null} className={classNames(Classes.FILL)}>
+      <InputGroup value={value} onChange={onChange} onBlur={onBlur} fill={true} />
     </FormGroup>
   );
 };

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent } from '@blueprintjs/core';
@@ -27,12 +26,8 @@ function UnlockingTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    dialogName,
-    moduleName,
-    cancelLockingTransactionMutate,
-    cancelUnLockingPartialTransactionMutate,
-  } = useUnlockingTransactionsContext();
+  const { dialogName, moduleName, cancelLockingTransactionMutate, cancelUnLockingPartialTransactionMutate } =
+    useUnlockingTransactionsContext();
 
   // Initial form values.
   const initialValues = {

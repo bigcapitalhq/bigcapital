@@ -1,17 +1,12 @@
-import { Container, Inject } from 'typedi';
-import { cloneDeep } from 'lodash';
-import { Tenant } from '@/system/models';
-import {
-  IAuthSignedInEventPayload,
-  IAuthSigningInEventPayload,
-  IAuthSignInPOJO,
-  ISystemUser,
-} from '@/interfaces';
 import { ServiceError } from '@/exceptions';
-import events from '@/subscribers/events';
+import { IAuthSignInPOJO, IAuthSignedInEventPayload, IAuthSigningInEventPayload, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import { generateToken } from './_utils';
+import events from '@/subscribers/events';
+import { Tenant } from '@/system/models';
+import { cloneDeep } from 'lodash';
+import { Container, Inject } from 'typedi';
 import { ERRORS } from './_constants';
+import { generateToken } from './_utils';
 
 @Inject()
 export class AuthSigninService {
@@ -27,11 +22,7 @@ export class AuthSigninService {
    * @param {string} email
    * @param {string} password
    */
-  public async validateSignIn(
-    user: ISystemUser,
-    email: string,
-    password: string
-  ) {
+  public async validateSignIn(user: ISystemUser, email: string, password: string) {
     const loginThrottler = Container.get('rateLimiter.login');
 
     // Validate if the user is not exist.
@@ -57,10 +48,7 @@ export class AuthSigninService {
    * @param {string} password - Password.
    * @return {Promise<{user: IUser, token: string}>}
    */
-  public async signIn(
-    email: string,
-    password: string
-  ): Promise<IAuthSignInPOJO> {
+  public async signIn(email: string, password: string): Promise<IAuthSignInPOJO> {
     const { systemUserRepository } = this.sysRepositories;
 
     // Finds the user of the given email address.
@@ -88,9 +76,7 @@ export class AuthSigninService {
       user,
     } as IAuthSignedInEventPayload);
 
-    const tenant = await Tenant.query()
-      .findById(user.tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(user.tenantId).withGraphFetched('metadata');
 
     // Keep the user object immutable.
     const outputUser = cloneDeep(user);

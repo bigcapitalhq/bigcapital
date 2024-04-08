@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import moment from 'moment';
 import * as R from 'ramda';
@@ -41,35 +40,22 @@ function CustomersBalanceSummary({
     });
   };
 
-  useEffect(
-    () => () => toggleCustomerBalanceFilterDrawer(false),
-    [toggleCustomerBalanceFilterDrawer],
-  );
+  useEffect(() => () => toggleCustomerBalanceFilterDrawer(false), [toggleCustomerBalanceFilterDrawer]);
 
   return (
     <CustomersBalanceSummaryProvider filter={query}>
-      <CustomersBalanceSummaryActionsBar
-        numberFormat={query?.numberFormat}
-        onNumberFormatSubmit={handleNumberFormat}
-      />
+      <CustomersBalanceSummaryActionsBar numberFormat={query?.numberFormat} onNumberFormatSubmit={handleNumberFormat} />
       <CustomersBalanceLoadingBar />
 
       <DashboardPageContent>
         <FinancialStatement>
-          <CustomersBalanceSummaryHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <CustomersBalanceSummaryHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <CustomerBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>
 
-      <CustomerBalanceSummaryPdfDialog
-        dialogName={DialogsName.CustomerBalanceSummaryPdfPreview}
-      />
+      <CustomerBalanceSummaryPdfDialog dialogName={DialogsName.CustomerBalanceSummaryPdfPreview} />
     </CustomersBalanceSummaryProvider>
   );
 }
-export default R.compose(withCustomersBalanceSummaryActions)(
-  CustomersBalanceSummary,
-);
+export default R.compose(withCustomersBalanceSummaryActions)(CustomersBalanceSummary);

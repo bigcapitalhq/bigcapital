@@ -17,10 +17,10 @@ export enum IROW_TYPE {
 export const TOTAL_NODE_TYPES = [
   ProfitLossNodeType.ACCOUNTS,
   ProfitLossNodeType.AGGREGATE,
-  ProfitLossNodeType.EQUATION
+  ProfitLossNodeType.EQUATION,
 ];
 
-export const HtmlTableCustomCss =`
+export const HtmlTableCustomCss = `
 table tr.row-type--total td {
   font-weight: 600;
   border-top: 1px solid #bbb;

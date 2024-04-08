@@ -1,15 +1,15 @@
-import { Service, Inject } from 'typedi';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import UnitOfWork from '@/services/UnitOfWork';
-import { Knex } from 'knex';
-import events from '@/subscribers/events';
 import {
   IEditWarehouseTransferDTO,
   IWarehouseTransfer,
   IWarehouseTransferEditPayload,
   IWarehouseTransferEditedPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { CommandWarehouseTransfer } from './CommandWarehouseTransfer';
 
 @Service()
@@ -33,33 +33,22 @@ export class EditWarehouseTransfer extends CommandWarehouseTransfer {
   public editWarehouseTransfer = async (
     tenantId: number,
     warehouseTransferId: number,
-    editWarehouseDTO: IEditWarehouseTransferDTO
+    editWarehouseDTO: IEditWarehouseTransferDTO,
   ): Promise<IWarehouseTransfer> => {
     const { WarehouseTransfer } = this.tenancy.models(tenantId);
 
     // Retrieves the old warehouse transfer transaction.
-    const oldWarehouseTransfer = await WarehouseTransfer.query()
-      .findById(warehouseTransferId)
-      .throwIfNotFound();
+    const oldWarehouseTransfer = await WarehouseTransfer.query().findById(warehouseTransferId).throwIfNotFound();
 
     // Validate warehouse from and to should not be the same.
     this.validateWarehouseFromToNotSame(editWarehouseDTO);
 
     // Retrieves the from warehouse or throw not found service error.
-    const fromWarehouse = await this.getFromWarehouseOrThrow(
-      tenantId,
-      editWarehouseDTO.fromWarehouseId
-    );
+    const fromWarehouse = await this.getFromWarehouseOrThrow(tenantId, editWarehouseDTO.fromWarehouseId);
     // Retrieves the to warehouse or throw not found service error.
-    const toWarehouse = await this.getToWarehouseOrThrow(
-      tenantId,
-      editWarehouseDTO.toWarehouseId
-    );
+    const toWarehouse = await this.getToWarehouseOrThrow(tenantId, editWarehouseDTO.toWarehouseId);
     // Validates the not found entries items ids.
-    const items = await this.itemsEntries.validateItemsIdsExistance(
-      tenantId,
-      editWarehouseDTO.entries
-    );
+    const items = await this.itemsEntries.validateItemsIdsExistance(tenantId, editWarehouseDTO.entries);
     // Validate the items entries should be inventory type.
     this.validateItemsShouldBeInventory(items);
 
@@ -74,9 +63,7 @@ export class EditWarehouseTransfer extends CommandWarehouseTransfer {
       } as IWarehouseTransferEditPayload);
 
       // Updates warehouse transfer graph on the storage.
-      const warehouseTransfer = await WarehouseTransfer.query(
-        trx
-      ).upsertGraphAndFetch({
+      const warehouseTransfer = await WarehouseTransfer.query(trx).upsertGraphAndFetch({
         id: warehouseTransferId,
         ...editWarehouseDTO,
       });

@@ -19,10 +19,7 @@ export default class ListCreditNoteRefunds extends BaseCreditNotes {
    * @param {number} creditNoteId
    * @returns {Promise<IRefundCreditNotePOJO[]>}
    */
-  public getCreditNoteRefunds = async (
-    tenantId: number,
-    creditNoteId: number
-  ): Promise<IRefundCreditNotePOJO[]> => {
+  public getCreditNoteRefunds = async (tenantId: number, creditNoteId: number): Promise<IRefundCreditNotePOJO[]> => {
     const { RefundCreditNote } = this.tenancy.models(tenantId);
 
     // Retrieve refund credit notes associated to the given credit note.
@@ -32,10 +29,6 @@ export default class ListCreditNoteRefunds extends BaseCreditNotes {
       .withGraphFetched('fromAccount');
 
     // Transformes refund credit note models to POJO objects.
-    return this.transformer.transform(
-      tenantId,
-      refundCreditTransactions,
-      new RefundCreditNoteTransformer()
-    );
+    return this.transformer.transform(tenantId, refundCreditTransactions, new RefundCreditNoteTransformer());
   };
 }

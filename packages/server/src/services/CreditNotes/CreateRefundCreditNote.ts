@@ -1,5 +1,3 @@
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
 import {
   ICreditNote,
   ICreditNoteRefundDTO,
@@ -11,6 +9,8 @@ import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import RefundCreditNote from './RefundCreditNote';
 
 @Service()
@@ -33,19 +33,14 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
   public createCreditNoteRefund = async (
     tenantId: number,
     creditNoteId: number,
-    newCreditNoteDTO: ICreditNoteRefundDTO
+    newCreditNoteDTO: ICreditNoteRefundDTO,
   ): Promise<IRefundCreditNote> => {
     const { RefundCreditNote, Account } = this.tenancy.models(tenantId);
 
     // Retrieve the credit note or throw not found service error.
-    const creditNote = await this.getCreditNoteOrThrowError(
-      tenantId,
-      creditNoteId
-    );
+    const creditNote = await this.getCreditNoteOrThrowError(tenantId, creditNoteId);
     // Retrieve the withdrawal account or throw not found service error.
-    const fromAccount = await Account.query()
-      .findById(newCreditNoteDTO.fromAccountId)
-      .throwIfNotFound();
+    const fromAccount = await Account.query().findById(newCreditNoteDTO.fromAccountId).throwIfNotFound();
 
     // Validate the credit note remaining amount.
     this.validateCreditRemainingAmount(creditNote, newCreditNoteDTO.amount);
@@ -64,11 +59,9 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
       } as IRefundCreditNoteCreatingPayload);
 
       // Stores the refund credit note graph to the storage layer.
-      const refundCreditNote = await RefundCreditNote.query(trx).insertAndFetch(
-        {
-          ...this.transformDTOToModel(creditNote, newCreditNoteDTO),
-        }
-      );
+      const refundCreditNote = await RefundCreditNote.query(trx).insertAndFetch({
+        ...this.transformDTOToModel(creditNote, newCreditNoteDTO),
+      });
       // Triggers `onCreditNoteRefundCreated` event.
       await this.eventPublisher.emitAsync(events.creditNote.onRefundCreated, {
         trx,
@@ -87,10 +80,7 @@ export default class CreateRefundCreditNote extends RefundCreditNote {
    * @param {ICreditNoteRefundDTO} creditNoteDTO
    * @returns {ICreditNote}
    */
-  private transformDTOToModel = (
-    creditNote: ICreditNote,
-    creditNoteDTO: ICreditNoteRefundDTO
-  ): IRefundCreditNote => {
+  private transformDTOToModel = (creditNote: ICreditNote, creditNoteDTO: ICreditNoteRefundDTO): IRefundCreditNote => {
     return {
       creditNoteId: creditNote.id,
       currencyCode: creditNote.currencyCode,

@@ -1,20 +1,20 @@
-import { Inject, Service } from 'typedi';
-import FinancialTransactionLocking from './FinancialTransactionLockingGuard';
-import events from '@/subscribers/events';
 import {
   ICommandCashflowCreatingPayload,
   ICommandCashflowDeletingPayload,
   IExpenseCreatingPayload,
   IExpenseDeletingPayload,
   IExpenseEventEditingPayload,
+  IExpensePublishingPayload,
   IInventoryAdjustmentCreatingPayload,
   IInventoryAdjustmentDeletingPayload,
   IInventoryAdjustmentPublishingPayload,
   IManualJournalCreatingPayload,
-  IExpensePublishingPayload,
   IManualJournalEditingPayload,
   IManualJournalPublishingPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import FinancialTransactionLocking from './FinancialTransactionLockingGuard';
 
 @Service()
 export default class FinancialTransactionLockingGuardSubscriber {
@@ -27,61 +27,22 @@ export default class FinancialTransactionLockingGuardSubscriber {
    */
   public attach = (bus) => {
     // Manual journals.
-    bus.subscribe(
-      events.manualJournals.onCreating,
-      this.transactionsLockingGuardOnManualJournalCreating
-    );
-    bus.subscribe(
-      events.manualJournals.onEditing,
-      this.transactionsLockingGuardOnManualJournalEditing
-    );
-    bus.subscribe(
-      events.manualJournals.onDeleting,
-      this.transactionsLockingGuardOnManualJournalDeleting
-    );
-    bus.subscribe(
-      events.manualJournals.onPublishing,
-      this.transactionsLockingGuardOnManualJournalPublishing
-    );
+    bus.subscribe(events.manualJournals.onCreating, this.transactionsLockingGuardOnManualJournalCreating);
+    bus.subscribe(events.manualJournals.onEditing, this.transactionsLockingGuardOnManualJournalEditing);
+    bus.subscribe(events.manualJournals.onDeleting, this.transactionsLockingGuardOnManualJournalDeleting);
+    bus.subscribe(events.manualJournals.onPublishing, this.transactionsLockingGuardOnManualJournalPublishing);
     // Expenses
-    bus.subscribe(
-      events.expenses.onCreating,
-      this.transactionsLockingGuardOnExpenseCreating
-    );
-    bus.subscribe(
-      events.expenses.onEditing,
-      this.transactionsLockingGuardOnExpenseEditing
-    );
-    bus.subscribe(
-      events.expenses.onDeleting,
-      this.transactionsLockingGuardOnExpenseDeleting
-    );
-    bus.subscribe(
-      events.expenses.onPublishing,
-      this.transactionsLockingGuardOnExpensePublishing
-    );
+    bus.subscribe(events.expenses.onCreating, this.transactionsLockingGuardOnExpenseCreating);
+    bus.subscribe(events.expenses.onEditing, this.transactionsLockingGuardOnExpenseEditing);
+    bus.subscribe(events.expenses.onDeleting, this.transactionsLockingGuardOnExpenseDeleting);
+    bus.subscribe(events.expenses.onPublishing, this.transactionsLockingGuardOnExpensePublishing);
     // Cashflow
-    bus.subscribe(
-      events.cashflow.onTransactionCreating,
-      this.transactionsLockingGuardOnCashflowTransactionCreating
-    );
-    bus.subscribe(
-      events.cashflow.onTransactionDeleting,
-      this.transactionsLockingGuardOnCashflowTransactionDeleting
-    );
+    bus.subscribe(events.cashflow.onTransactionCreating, this.transactionsLockingGuardOnCashflowTransactionCreating);
+    bus.subscribe(events.cashflow.onTransactionDeleting, this.transactionsLockingGuardOnCashflowTransactionDeleting);
     // Inventory adjustment.
-    bus.subscribe(
-      events.inventoryAdjustment.onQuickCreating,
-      this.transactionsLockingGuardOnInventoryAdjCreating
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onDeleting,
-      this.transactionLockingGuardOnInventoryAdjDeleting
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onPublishing,
-      this.transactionLockingGuardOnInventoryAdjPublishing
-    );
+    bus.subscribe(events.inventoryAdjustment.onQuickCreating, this.transactionsLockingGuardOnInventoryAdjCreating);
+    bus.subscribe(events.inventoryAdjustment.onDeleting, this.transactionLockingGuardOnInventoryAdjDeleting);
+    bus.subscribe(events.inventoryAdjustment.onPublishing, this.transactionLockingGuardOnInventoryAdjPublishing);
   };
 
   /**
@@ -101,10 +62,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     // Can't continue if the new journal is not published yet.
     if (!manualJournalDTO.publish) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      manualJournalDTO.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, manualJournalDTO.date);
   };
 
   /**
@@ -118,10 +76,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     // Can't continue if the old journal is not published.
     if (!oldManualJournal.isPublished) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldManualJournal.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldManualJournal.date);
   };
 
   /**
@@ -135,17 +90,11 @@ export default class FinancialTransactionLockingGuardSubscriber {
   }: IManualJournalEditingPayload) => {
     // Can't continue if the old and new journal are not published.
     if (!oldManualJournal.isPublished && !manualJournalDTO.publish) return;
-   
+
     // Validate the old journal date.
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldManualJournal.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldManualJournal.date);
     // Validate the new journal date.
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      manualJournalDTO.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, manualJournalDTO.date);
   };
 
   /**
@@ -156,10 +105,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     oldManualJournal,
     tenantId,
   }: IManualJournalPublishingPayload) => {
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldManualJournal.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldManualJournal.date);
   };
 
   /**
@@ -172,34 +118,22 @@ export default class FinancialTransactionLockingGuardSubscriber {
    * Transactions locking guard on expense creating.
    * @param {IExpenseCreatingPayload} payload
    */
-  private transactionsLockingGuardOnExpenseCreating = async ({
-    expenseDTO,
-    tenantId,
-  }: IExpenseCreatingPayload) => {
+  private transactionsLockingGuardOnExpenseCreating = async ({ expenseDTO, tenantId }: IExpenseCreatingPayload) => {
     // Can't continue if the new expense is not published yet.
     if (!expenseDTO.publish) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      expenseDTO.paymentDate
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, expenseDTO.paymentDate);
   };
 
   /**
    * Transactions locking guard on expense deleting.
    * @param {IExpenseDeletingPayload} payload
    */
-  private transactionsLockingGuardOnExpenseDeleting = async ({
-    tenantId,
-    oldExpense,
-  }: IExpenseDeletingPayload) => {
+  private transactionsLockingGuardOnExpenseDeleting = async ({ tenantId, oldExpense }: IExpenseDeletingPayload) => {
     // Can't continue if expense transaction is not published.
     if (!oldExpense.isPublished) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldExpense.paymentDate
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldExpense.paymentDate);
   };
 
   /**
@@ -215,29 +149,17 @@ export default class FinancialTransactionLockingGuardSubscriber {
     if (!oldExpense.isPublished && !expenseDTO.publish) return;
 
     // Validate the old expense date.
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldExpense.paymentDate
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldExpense.paymentDate);
     // Validate the new expense date.
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      expenseDTO.paymentDate
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, expenseDTO.paymentDate);
   };
 
   /**
    * Transactions locking guard on expense publishing.
    * @param {IExpensePublishingPayload} payload -
    */
-  private transactionsLockingGuardOnExpensePublishing = async ({
-    tenantId,
-    oldExpense,
-  }: IExpensePublishingPayload) => {
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldExpense.paymentDate
-    );
+  private transactionsLockingGuardOnExpensePublishing = async ({ tenantId, oldExpense }: IExpensePublishingPayload) => {
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldExpense.paymentDate);
   };
 
   /**
@@ -256,10 +178,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
   }: ICommandCashflowCreatingPayload) => {
     if (!newTransactionDTO.publish) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      newTransactionDTO.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, newTransactionDTO.date);
   };
 
   /**
@@ -273,10 +192,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     // Can't continue if the cashflow transaction is not published.
     if (!oldCashflowTransaction.isPublished) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldCashflowTransaction.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldCashflowTransaction.date);
   };
 
   /**
@@ -296,10 +212,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     // Can't locking if the new adjustment is not published yet.
     if (!quickAdjustmentDTO.publish) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      quickAdjustmentDTO.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, quickAdjustmentDTO.date);
   };
 
   /**
@@ -313,10 +226,7 @@ export default class FinancialTransactionLockingGuardSubscriber {
     // Can't locking if the adjustment is published yet.
     if (!oldInventoryAdjustment.isPublished) return;
 
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldInventoryAdjustment.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldInventoryAdjustment.date);
   };
 
   /**
@@ -327,9 +237,6 @@ export default class FinancialTransactionLockingGuardSubscriber {
     tenantId,
     oldInventoryAdjustment,
   }: IInventoryAdjustmentPublishingPayload) => {
-    await this.financialTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldInventoryAdjustment.date
-    );
+    await this.financialTransactionsLocking.transactionLockingGuard(tenantId, oldInventoryAdjustment.date);
   };
 }

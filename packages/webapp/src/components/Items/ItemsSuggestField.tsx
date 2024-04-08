@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { MenuItem } from '@blueprintjs/core';
 import { Suggest } from '@blueprintjs/select';
@@ -35,12 +34,7 @@ const createNewItemRenderer = (query, active, handleClick) => {
 
 // Item renderer.
 const itemRenderer = (item, { modifiers, handleClick }) => (
-  <MenuItem
-    key={item.id}
-    text={item.name}
-    label={item.code}
-    onClick={handleClick}
-  />
+  <MenuItem key={item.id} text={item.name} label={item.code} onClick={handleClick} />
 );
 
 // Filters items.
@@ -94,10 +88,7 @@ function ItemsSuggestFieldRoot({
   }, [items, sellable, purchasable]);
 
   // Find initial item object.
-  const initialItem = useMemo(
-    () => filteredItems.some((a) => a.id === initialItemId),
-    [initialItemId, filteredItems],
-  );
+  const initialItem = useMemo(() => filteredItems.some((a) => a.id === initialItemId), [initialItemId, filteredItems]);
 
   const [selectedItem, setSelectedItem] = useState(initialItem || null);
 
@@ -115,18 +106,14 @@ function ItemsSuggestFieldRoot({
 
   useEffect(() => {
     if (typeof selectedItemId !== 'undefined') {
-      const item = selectedItemId
-        ? filteredItems.find((a) => a.id === selectedItemId)
-        : null;
+      const item = selectedItemId ? filteredItems.find((a) => a.id === selectedItemId) : null;
       setSelectedItem(item);
     }
   }, [selectedItemId, filteredItems, setSelectedItem]);
 
   // Maybe inject create new item props to suggest component.
   const maybeCreateNewItemRenderer = allowCreate ? createNewItemRenderer : null;
-  const maybeCreateNewItemFromQuery = allowCreate
-    ? createNewItemFromQuery
-    : null;
+  const maybeCreateNewItemFromQuery = allowCreate ? createNewItemFromQuery : null;
 
   return (
     <Suggest
@@ -152,5 +139,4 @@ function ItemsSuggestFieldRoot({
   );
 }
 
-export const ItemsSuggestField =
-  R.compose(withDrawerActions)(ItemsSuggestFieldRoot);
+export const ItemsSuggestField = R.compose(withDrawerActions)(ItemsSuggestFieldRoot);

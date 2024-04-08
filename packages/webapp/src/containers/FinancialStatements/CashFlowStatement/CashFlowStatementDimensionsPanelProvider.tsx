@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';
@@ -30,17 +29,10 @@ function CashFlowStatementDimensionsPanelProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <CashFlowStatementDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <CashFlowStatementDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useCashFlowStatementDimensionsPanelContext = () =>
-  React.useContext(CashFlowStatementDimensionsPanelContext);
+const useCashFlowStatementDimensionsPanelContext = () => React.useContext(CashFlowStatementDimensionsPanelContext);
 
-export {
-  CashFlowStatementDimensionsPanelProvider,
-  useCashFlowStatementDimensionsPanelContext,
-};
+export { CashFlowStatementDimensionsPanelProvider, useCashFlowStatementDimensionsPanelContext };

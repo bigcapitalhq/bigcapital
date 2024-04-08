@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { ErrorMessage, FastField } from 'formik';
 import { FormGroup, InputGroup, TextArea } from '@blueprintjs/core';
@@ -31,11 +30,7 @@ export function RoleFormHeader() {
             helperText={<ErrorMessage name="role_name" />}
             inline={true}
           >
-            <InputGroup
-              medium={true}
-              inputRef={(ref) => (roleNameFieldRef.current = ref)}
-              {...field}
-            />
+            <InputGroup medium={true} inputRef={(ref) => (roleNameFieldRef.current = ref)} {...field} />
           </FormGroup>
         )}
       </FastField>
@@ -50,12 +45,7 @@ export function RoleFormHeader() {
             helperText={<ErrorMessage name={'role_description'} />}
             inline={true}
           >
-            <TextArea
-              growVertically={true}
-              height={280}
-              {...field}
-              placeholder="Max. 500 characters"
-            />
+            <TextArea growVertically={true} height={280} {...field} placeholder="Max. 500 characters" />
           </FormGroup>
         )}
       </FastField>

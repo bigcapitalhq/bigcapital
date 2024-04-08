@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
@@ -10,8 +9,7 @@ const ManualJournalsContext = createContext();
 
 function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
   // Fetches accounts resource views and fields.
-  const { data: journalsViews, isLoading: isViewsLoading } =
-    useResourceViews('manual_journals');
+  const { data: journalsViews, isLoading: isViewsLoading } = useResourceViews('manual_journals');
 
   // Fetches the manual journals transactions with pagination meta.
   const {
@@ -28,8 +26,7 @@ function ManualJournalsListProvider({ query, tableStateChanged, ...props }) {
   } = useResourceMeta('manual_journals');
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    isEmpty(manualJournals) && !tableStateChanged && !isManualJournalsLoading;
+  const isEmptyStatus = isEmpty(manualJournals) && !tableStateChanged && !isManualJournalsLoading;
 
   // Global state.
   const state = {

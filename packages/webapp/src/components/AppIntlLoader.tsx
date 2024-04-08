@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import { setLocale } from 'yup';
@@ -34,23 +33,33 @@ function getCurrentLocal() {
 }
 
 /**
- * Loads the localization data of the given locale.
+ * Loads the localization data of the given locale. (Written for Vite dev).
+ * @param {string} currentLocale - The current locale.
+ * @returns {Promise<any>} - The promise of the locale data.
+ * @throws {Error} - If the locale data not found.
  */
-function loadLocales(currentLocale) {
-  return import(`../lang/${currentLocale}/index.json`);
+function loadLocales(currentLocale: string) {
+  const localePath = `/lang/${currentLocale}/index.json`; // Adjust the path as needed
+  return fetch(localePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Locale data for ${currentLocale} not found.`);
+      }
+      return response.json();
+    });
 }
 
 /**
  * Loads the localization data of yup validation library.
  */
-function loadYupLocales(currentLocale) {
+function loadYupLocales(currentLocale: any) {
   return import(`../lang/${currentLocale}/locale`);
 }
 
 /**
  * Modifies the html document direction to RTl if it was rtl-language.
  */
-function useDocumentDirectionModifier(locale, isRTL) {
+function useDocumentDirectionModifier(locale: string, isRTL: any) {
   React.useEffect(() => {
     if (isRTL) {
       const htmlDocument = document.querySelector('html');
@@ -60,7 +69,7 @@ function useDocumentDirectionModifier(locale, isRTL) {
   }, [isRTL, locale]);
 }
 
-function transformMomentLocale(currentLocale) {
+function transformMomentLocale(currentLocale: string) {
   return currentLocale === 'ar' ? 'ar-ly' : currentLocale;
 }
 
@@ -69,7 +78,7 @@ function transformMomentLocale(currentLocale) {
  * @param {string} currentLocale
  * @returns {{ isLoading: boolean }}
  */
-function useAppLoadLocales(currentLocale) {
+function useAppLoadLocales(currentLocale: string) {
   const [startLoading, stopLoading] = useSplashLoading();
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -91,10 +100,7 @@ function useAppLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the value to start/stop splash screen.
-  useWatchImmediate(
-    (value) => (value ? startLoading() : stopLoading()),
-    isLoading,
-  );
+  useWatchImmediate((value: any) => (value ? startLoading() : stopLoading()), isLoading);
   return { isLoading };
 }
 
@@ -103,7 +109,7 @@ function useAppLoadLocales(currentLocale) {
  * @param {string} currentLocale
  * @returns {{ isLoading: boolean }}
  */
-function useAppYupLoadLocales(currentLocale) {
+function useAppYupLoadLocales(currentLocale: string) {
   const [startLoading, stopLoading] = useSplashLoading();
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -117,10 +123,7 @@ function useAppYupLoadLocales(currentLocale) {
   }, [currentLocale, stopLoading]);
 
   // Watches the valiue to start/stop splash screen.
-  useWatchImmediate(
-    (value) => (value ? startLoading() : stopLoading()),
-    isLoading,
-  );
+  useWatchImmediate((value: any) => (value ? startLoading() : stopLoading()), isLoading);
   return { isLoading };
 }
 
@@ -138,8 +141,7 @@ function AppIntlLoader({ children }) {
   useDocumentDirectionModifier(currentLocale, isRTL);
 
   // Loads yup localization of the given locale.
-  const { isLoading: isAppYupLocalesLoading } =
-    useAppYupLoadLocales(currentLocale);
+  const { isLoading: isAppYupLocalesLoading } = useAppYupLoadLocales(currentLocale);
 
   // Loads application locales of the given locale.
   const { isLoading: isAppLocalesLoading } = useAppLoadLocales(currentLocale);

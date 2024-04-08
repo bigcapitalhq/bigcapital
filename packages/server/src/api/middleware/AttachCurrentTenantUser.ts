@@ -1,5 +1,5 @@
-import { Container } from 'typedi';
 import { Request, Response } from 'express';
+import { Container } from 'typedi';
 
 /**
  * Attach user to req.currentUser
@@ -21,10 +21,9 @@ const attachCurrentUser = async (req: Request, res: Response, next: Function) =>
     }
     if (!user.active) {
       Logger.info('[attach_user_middleware] the system user not found.');
-      return res.boom.badRequest(
-        'The authorized user is inactivated.',
-        { errors: [{ type: 'USER_INACTIVE', code: 100, }] },
-      );
+      return res.boom.badRequest('The authorized user is inactivated.', {
+        errors: [{ type: 'USER_INACTIVE', code: 100 }],
+      });
     }
     // Delete password property from user object.
     Reflect.deleteProperty(user, 'password');

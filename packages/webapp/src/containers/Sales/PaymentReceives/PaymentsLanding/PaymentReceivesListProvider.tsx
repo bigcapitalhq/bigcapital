@@ -1,13 +1,8 @@
-// @ts-nocheck
 import React, { createContext } from 'react';
 import { isEmpty } from 'lodash';
 
 import { DashboardInsider } from '@/components/Dashboard';
-import {
-  useResourceViews,
-  useResourceMeta,
-  usePaymentReceives,
-} from '@/hooks/query';
+import { useResourceViews, useResourceMeta, usePaymentReceives } from '@/hooks/query';
 import { getFieldsFromResourceMeta } from '@/utils';
 
 const PaymentReceivesListContext = createContext();
@@ -17,8 +12,7 @@ const PaymentReceivesListContext = createContext();
  */
 function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   // Fetch accounts resource views and fields.
-  const { data: paymentReceivesViews, isFetching: isViewsLoading } =
-    useResourceViews('payment_receives');
+  const { data: paymentReceivesViews, isFetching: isViewsLoading } = useResourceViews('payment_receives');
 
   // Fetch the accounts resource fields.
   const {
@@ -35,8 +29,7 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   } = usePaymentReceives(query, { keepPreviousData: true });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    !isPaymentReceivesLoading && !tableStateChanged && isEmpty(paymentReceives);
+  const isEmptyStatus = !isPaymentReceivesLoading && !tableStateChanged && isEmpty(paymentReceives);
 
   // Provider payload.
   const provider = {
@@ -56,16 +49,12 @@ function PaymentReceivesListProvider({ query, tableStateChanged, ...props }) {
   };
 
   return (
-    <DashboardInsider
-      loading={isViewsLoading || isResourceLoading}
-      name={'payment_receives'}
-    >
+    <DashboardInsider loading={isViewsLoading || isResourceLoading} name={'payment_receives'}>
       <PaymentReceivesListContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const usePaymentReceivesListContext = () =>
-  React.useContext(PaymentReceivesListContext);
+const usePaymentReceivesListContext = () => React.useContext(PaymentReceivesListContext);
 
 export { PaymentReceivesListProvider, usePaymentReceivesListContext };

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 import { setCookie } from '../../utils';
@@ -14,8 +14,7 @@ function setAuthLoginCookies(data) {
   setCookie('organization_id', data.tenant.organization_id);
   setCookie('tenant_id', data.tenant.id);
 
-  if (data?.tenant?.metadata?.language)
-    setCookie('locale', data.tenant.metadata.language);
+  if (data?.tenant?.metadata?.language) setCookie('locale', data.tenant.metadata.language);
 }
 
 /**
@@ -43,10 +42,7 @@ export const useAuthLogin = (props) => {
 export const useAuthRegister = (props) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (values) => apiRequest.post('auth/register', values),
-    props,
-  );
+  return useMutation((values) => apiRequest.post('auth/register', values), props);
 };
 
 /**
@@ -55,10 +51,7 @@ export const useAuthRegister = (props) => {
 export const useAuthSendResetPassword = (props) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (email) => apiRequest.post('auth/send_reset_password', email),
-    props,
-  );
+  return useMutation((email) => apiRequest.post('auth/send_reset_password', email), props);
 };
 
 /**
@@ -67,10 +60,7 @@ export const useAuthSendResetPassword = (props) => {
 export const useAuthResetPassword = (props) => {
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([token, values]) => apiRequest.post(`auth/reset/${token}`, values),
-    props,
-  );
+  return useMutation(([token, values]) => apiRequest.post(`auth/reset/${token}`, values), props);
 };
 
 /**
@@ -78,7 +68,7 @@ export const useAuthResetPassword = (props) => {
  */
 export const useAuthMetadata = (props) => {
   return useRequestQuery(
-    [t.AUTH_METADATA_PAGE,],
+    [t.AUTH_METADATA_PAGE],
     {
       method: 'get',
       url: `auth/meta`,
@@ -88,5 +78,5 @@ export const useAuthMetadata = (props) => {
       defaultData: {},
       ...props,
     },
-  ); 
-}
+  );
+};

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -31,10 +30,7 @@ function SMSIntegrationTabs({
     <SMSIntegrationCard>
       <div className={classNames(CLASSES.PREFERENCES_PAGE_TABS)}>
         <Tabs animate={true} defaultSelectedTabId={'sms_messages'}>
-          <Tab
-            id="overview"
-            title={intl.get('sms_integration.label.overview')}
-          />
+          <Tab id="overview" title={intl.get('sms_integration.label.overview')} />
           <Tab
             id="sms_messages"
             title={intl.get('sms_integration.label.sms_messages')}

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useCustomer } from '@/hooks/query';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -11,12 +10,9 @@ const ContactDetailDrawerContext = React.createContext();
  */
 function CustomerDetailsDrawerProvider({ customerId, ...props }) {
   // Handle fetch customer details.
-  const { data: customer, isLoading: isCustomerLoading } = useCustomer(
-    customerId,
-    {
-      enabled: !!customerId,
-    },
-  );
+  const { data: customer, isLoading: isCustomerLoading } = useCustomer(customerId, {
+    enabled: !!customerId,
+  });
   // Provider.
   const provider = {
     customer,
@@ -26,16 +22,12 @@ function CustomerDetailsDrawerProvider({ customerId, ...props }) {
 
   return (
     <DrawerLoading loading={isCustomerLoading}>
-      <DrawerHeaderContent
-        name={DRAWERS.CUSTOMER_DETAILS}
-        title={customer?.display_name}
-      />
+      <DrawerHeaderContent name={DRAWERS.CUSTOMER_DETAILS} title={customer?.display_name} />
       <ContactDetailDrawerContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );
 }
 
-const useCustomerDetailsDrawerContext = () =>
-  React.useContext(ContactDetailDrawerContext);
+const useCustomerDetailsDrawerContext = () => React.useContext(ContactDetailDrawerContext);
 
 export { CustomerDetailsDrawerProvider, useCustomerDetailsDrawerContext };

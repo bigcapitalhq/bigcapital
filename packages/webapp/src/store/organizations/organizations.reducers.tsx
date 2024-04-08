@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { createReducer } from '@reduxjs/toolkit';
 import { omit } from 'lodash';
 import t from '@/store/types';
@@ -9,7 +9,6 @@ const initialState = {
 };
 
 const reducer = createReducer(initialState, {
-
   [t.ORGANIZATIONS_LIST_SET]: (state, action) => {
     const { organizations } = action.payload;
     const _data = {};
@@ -34,7 +33,7 @@ const reducer = createReducer(initialState, {
       ...(state.data[tenantId] || {}),
       is_congrats: !!congrats,
     };
-  }
-})
+  },
+});
 
 export default reducer;

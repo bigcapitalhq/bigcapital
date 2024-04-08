@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { FastField } from 'formik';
@@ -9,11 +8,7 @@ export default function PaymentMadeFormBody() {
   return (
     <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
       <FastField name={'entries'}>
-        {({
-          form: { setFieldValue, values },
-          field: { value },
-          meta: { error, touched },
-        }) => (
+        {({ form: { setFieldValue, values }, field: { value }, meta: { error, touched } }) => (
           <PaymentMadeEntriesTable
             entries={value}
             onUpdateData={(newEntries) => {

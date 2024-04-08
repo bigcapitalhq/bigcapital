@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -10,7 +9,7 @@ import PaymentReceiveForm from './PaymentReceiveForm';
  */
 export default function PaymentReceiveFormPage() {
   const { id: paymentReceiveId } = useParams();
-  const paymentReceiveIdInt = parseInt(paymentReceiveId, 10);
+  const paymentReceiveIdInt = Number.parseInt(paymentReceiveId, 10);
 
   return (
     <PaymentReceiveFormProvider paymentReceiveId={paymentReceiveIdInt}>

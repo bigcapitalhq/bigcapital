@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { Row, Col } from '@/components';
@@ -18,9 +17,7 @@ export default function ProfitLossSheetHeaderGeneralPane({}) {
 
       <Row>
         <Col xs={4}>
-          <FinancialStatementsFilter
-            initialSelectedItem={'with-transactions'}
-          />
+          <FinancialStatementsFilter initialSelectedItem={'with-transactions'} />
         </Col>
       </Row>
       <RadiosAccountingBasis key={'basis'} />

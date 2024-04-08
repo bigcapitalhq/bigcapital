@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
@@ -22,7 +21,6 @@ function AccountBulkInactivateAlert({
 
   closeAlert,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
   const selectedRowsCount = 0;
 
@@ -65,8 +63,4 @@ function AccountBulkInactivateAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkInactivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkInactivateAlert);

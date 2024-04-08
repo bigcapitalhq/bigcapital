@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -20,10 +19,7 @@ function WarehousesProvider({ query, ...props }) {
   const isWarehouseFeatureCan = featureCan(Features.Warehouses);
 
   // Fetch warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
-    query,
-    { enabled: isWarehouseFeatureCan },
-  );
+  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(query, { enabled: isWarehouseFeatureCan });
 
   // Detarmines the datatable empty status.
   const isEmptyStatus = isEmpty(warehouses) || !isWarehouseFeatureCan;

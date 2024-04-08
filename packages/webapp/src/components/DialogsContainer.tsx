@@ -63,86 +63,50 @@ export default function DialogsContainer() {
       <InviteUserDialog dialogName={DialogsName.InviteForm} />
       <UserFormDialog dialogName={DialogsName.UserForm} />
       <ItemCategoryDialog dialogName={DialogsName.ItemCategoryForm} />
-      <InventoryAdjustmentDialog
-        dialogName={DialogsName.InventoryAdjustmentForm}
-      />
+      <InventoryAdjustmentDialog dialogName={DialogsName.InventoryAdjustmentForm} />
       <PaymentViaVoucherDialog dialogName={DialogsName.PaymentViaVoucherForm} />
       <KeyboardShortcutsDialog dialogName={DialogsName.KeyboardShortcutForm} />
       <ContactDuplicateDialog dialogName={DialogsName.ContactDuplicateForm} />
-      <QuickPaymentReceiveFormDialog
-        dialogName={DialogsName.QuickPaymentReceiveForm}
-      />
-      <QuickPaymentMadeFormDialog
-        dialogName={DialogsName.QuickPaymentMadeForm}
-      />
-      <AllocateLandedCostDialog
-        dialogName={DialogsName.AllocateLandedCostForm}
-      />
+      <QuickPaymentReceiveFormDialog dialogName={DialogsName.QuickPaymentReceiveForm} />
+      <QuickPaymentMadeFormDialog dialogName={DialogsName.QuickPaymentMadeForm} />
+      <AllocateLandedCostDialog dialogName={DialogsName.AllocateLandedCostForm} />
       <InvoicePdfPreviewDialog dialogName={DialogsName.InvoicePdfForm} />
       <EstimatePdfPreviewDialog dialogName={DialogsName.EstimatePdfForm} />
       <ReceiptPdfPreviewDialog dialogName={DialogsName.ReceiptPdfForm} />
       <MoneyInDialog dialogName={DialogsName.MoneyInForm} />
       <MoneyOutDialog dialogName={DialogsName.MoneyOutForm} />
 
-      <NotifyInvoiceViaSMSDialog
-        dialogName={DialogsName.NotifyInvoiceViaForm}
-      />
-      <NotifyReceiptViaSMSDialog
-        dialogName={DialogsName.NotifyReceiptViaForm}
-      />
-      <NotifyEstimateViaSMSDialog
-        dialogName={DialogsName.NotifyEstimateViaForm}
-      />
-      <NotifyPaymentReceiveViaSMSDialog
-        dialogName={DialogsName.NotifyPaymentViaForm}
-      />
+      <NotifyInvoiceViaSMSDialog dialogName={DialogsName.NotifyInvoiceViaForm} />
+      <NotifyReceiptViaSMSDialog dialogName={DialogsName.NotifyReceiptViaForm} />
+      <NotifyEstimateViaSMSDialog dialogName={DialogsName.NotifyEstimateViaForm} />
+      <NotifyPaymentReceiveViaSMSDialog dialogName={DialogsName.NotifyPaymentViaForm} />
 
       <BadDebtDialog dialogName={DialogsName.BadDebtForm} />
       <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
       <RefundCreditNoteDialog dialogName={DialogsName.RefundCreditNote} />
       <RefundVendorCreditDialog dialogName={DialogsName.RefundVendorCredit} />
       <ReconcileCreditNoteDialog dialogName={DialogsName.ReconcileCreditNote} />
-      <ReconcileVendorCreditDialog
-        dialogName={DialogsName.ReconcileVendorCredit}
-      />
+      <ReconcileVendorCreditDialog dialogName={DialogsName.ReconcileVendorCredit} />
       <LockingTransactionsDialog dialogName={DialogsName.TransactionsLocking} />
-      <UnlockingTransactionsDialog
-        dialogName={DialogsName.TransactionsUnlocking}
-      />
-      <UnlockingPartialTransactionsDialog
-        dialogName={DialogsName.PartialTransactionsUnlocking}
-      />
+      <UnlockingTransactionsDialog dialogName={DialogsName.TransactionsUnlocking} />
+      <UnlockingPartialTransactionsDialog dialogName={DialogsName.PartialTransactionsUnlocking} />
       <CreditNotePdfPreviewDialog dialogName={DialogsName.CreditNotePdfForm} />
       <PaymentReceivePdfPreviewDialog dialogName={DialogsName.PaymentPdfForm} />
       <WarehouseFormDialog dialogName={DialogsName.WarehouseForm} />
       <BranchFormDialog dialogName={DialogsName.BranchForm} />
       <BranchActivateDialog dialogName={DialogsName.BranchActivateForm} />
       <WarehouseActivateDialog dialogName={DialogsName.WarehouseActivateForm} />
-      <CustomerOpeningBalanceDialog
-        dialogName={DialogsName.CustomerOpeningBalanceForm}
-      />
-      <VendorOpeningBalanceDialog
-        dialogName={DialogsName.VendorOpeningBalanceForm}
-      />
+      <CustomerOpeningBalanceDialog dialogName={DialogsName.CustomerOpeningBalanceForm} />
+      <VendorOpeningBalanceDialog dialogName={DialogsName.VendorOpeningBalanceForm} />
       <ProjectFormDialog dialogName={DialogsName.ProjectForm} />
       <ProjectTaskFormDialog dialogName={DialogsName.ProjectTaskForm} />
-      <ProjectTimeEntryFormDialog
-        dialogName={DialogsName.ProjectTimeEntryForm}
-      />
+      <ProjectTimeEntryFormDialog dialogName={DialogsName.ProjectTimeEntryForm} />
       <ProjectExpenseForm dialogName={DialogsName.ProjectExpenseForm} />
-      <EstimatedExpenseFormDialog
-        dialogName={DialogsName.EstimateExpenseForm}
-      />
-      <ProjectInvoicingFormDialog
-        dialogName={DialogsName.ProjectInvoicingForm}
-      />
-      <ProjectBillableEntriesFormDialog
-        dialogName={DialogsName.ProjectBillableEntriesForm}
-      />
+      <EstimatedExpenseFormDialog dialogName={DialogsName.EstimateExpenseForm} />
+      <ProjectInvoicingFormDialog dialogName={DialogsName.ProjectInvoicingForm} />
+      <ProjectBillableEntriesFormDialog dialogName={DialogsName.ProjectBillableEntriesForm} />
       <TaxRateFormDialog dialogName={DialogsName.TaxRateForm} />
-      <InvoiceExchangeRateChangeDialog
-        dialogName={DialogsName.InvoiceExchangeRateChangeNotice}
-      />
+      <InvoiceExchangeRateChangeDialog dialogName={DialogsName.InvoiceExchangeRateChangeNotice} />
       <InvoiceMailDialog dialogName={DialogsName.InvoiceMail} />
       <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
       <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />

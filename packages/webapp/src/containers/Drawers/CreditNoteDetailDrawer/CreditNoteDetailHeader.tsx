@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -32,7 +31,7 @@ export default function CreditNoteDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <AmountItem label={intl.get('amount')}>
-            <span class="big-number">{creditNote.formatted_amount}</span>
+            <span className="big-number">{creditNote.formatted_amount}</span>
           </AmountItem>
 
           <StatusItem>
@@ -44,15 +43,11 @@ export default function CreditNoteDetailHeader() {
       <Row>
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
-            <DetailItem
-              label={intl.get('credit_note.drawer.label_credit_note_date')}
-            >
+            <DetailItem label={intl.get('credit_note.drawer.label_credit_note_date')}>
               <FormatDate value={creditNote.formatted_credit_note_date} />
             </DetailItem>
 
-            <DetailItem
-              label={intl.get('credit_note.drawer.label_credit_note_no')}
-            >
+            <DetailItem label={intl.get('credit_note.drawer.label_credit_note_no')}>
               {defaultTo(creditNote.credit_note_number, '-')}
             </DetailItem>
 
@@ -61,28 +56,16 @@ export default function CreditNoteDetailHeader() {
                 {creditNote.customer?.display_name}
               </CustomerDrawerLink>
             </DetailItem>
-            <ExchangeRateDetailItem
-              exchangeRate={creditNote?.exchange_rate}
-              toCurrency={creditNote?.currency_code}
-            />
+            <ExchangeRateDetailItem exchangeRate={creditNote?.exchange_rate} toCurrency={creditNote?.currency_code} />
           </DetailsMenu>
         </Col>
 
         <Col xs={6}>
-          <DetailsMenu
-            textAlign={'right'}
-            direction={'horizantal'}
-            minLabelSize={'180px'}
-          >
-            <DetailItem
-              label={intl.get('credit_note.drawer.label_credits_remaining')}
-            >
+          <DetailsMenu textAlign={'right'} direction={'horizantal'} minLabelSize={'180px'}>
+            <DetailItem label={intl.get('credit_note.drawer.label_credits_remaining')}>
               <strong>{creditNote.formatted_credits_remaining}</strong>
             </DetailItem>
-            <DetailItem
-              label={intl.get('reference')}
-              children={defaultTo(creditNote.reference_no, '-')}
-            />
+            <DetailItem label={intl.get('reference')} children={defaultTo(creditNote.reference_no, '-')} />
             <DetailItem
               label={<T id={'credit_note.drawer.label_created_at'} />}
               children={<FormatDate value={creditNote.created_at} />}

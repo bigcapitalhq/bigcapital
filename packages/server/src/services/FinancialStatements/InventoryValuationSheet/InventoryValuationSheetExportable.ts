@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
 import { IInventoryValuationReportQuery } from '@/interfaces';
-import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
+import { InventoryValuationSheetTableInjectable } from './InventoryValuationSheetTableInjectable';
 
 @Service()
 export class InventoryValuationSheetExportable {
@@ -14,10 +14,7 @@ export class InventoryValuationSheetExportable {
    * @param {IInventoryValuationReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: IInventoryValuationReportQuery): Promise<Buffer> {
     const table = await this.inventoryValuationTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class InventoryValuationSheetExportable {
    * @param {IInventoryValuationReportQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IInventoryValuationReportQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IInventoryValuationReportQuery): Promise<string> {
     const table = await this.inventoryValuationTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

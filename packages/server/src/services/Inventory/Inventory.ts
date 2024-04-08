@@ -1,24 +1,24 @@
-import { Container, Service, Inject } from 'typedi';
-import { pick } from 'lodash';
 import config from '@/config';
 import {
+  IInventoryItemCostScheduledPayload,
   IInventoryLotCost,
   IInventoryTransaction,
-  TInventoryTransactionDirection,
-  IItemEntry,
-  IItemEntryTransactionType,
   IInventoryTransactionsCreatedPayload,
   IInventoryTransactionsDeletedPayload,
-  IInventoryItemCostScheduledPayload,
+  IItemEntry,
+  IItemEntryTransactionType,
+  TInventoryTransactionDirection,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import InventoryAverageCost from '@/services/Inventory/InventoryAverageCost';
 import InventoryCostLotTracker from '@/services/Inventory/InventoryCostLotTracker';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import { Knex } from 'knex';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { pick } from 'lodash';
+import { Container, Inject, Service } from 'typedi';
 
 type TCostMethod = 'FIFO' | 'LIFO' | 'AVG';
 
@@ -87,12 +87,7 @@ export default class InventoryService {
    * @param {Date} fromDate - From date.
    * @param {number} itemId - Item id.
    */
-  async computeInventoryItemCost(
-    tenantId: number,
-    fromDate: Date,
-    itemId: number,
-    trx?: Knex.Transaction
-  ) {
+  async computeInventoryItemCost(tenantId: number, fromDate: Date, itemId: number, trx?: Knex.Transaction) {
     const { Item } = this.tenancy.models(tenantId);
 
     // Fetches the item with associated item category.
@@ -108,19 +103,10 @@ export default class InventoryService {
     switch ('AVG') {
       case 'FIFO':
       case 'LIFO':
-        costMethodComputer = new InventoryCostLotTracker(
-          tenantId,
-          fromDate,
-          itemId
-        );
+        costMethodComputer = new InventoryCostLotTracker(tenantId, fromDate, itemId);
         break;
       case 'AVG':
-        costMethodComputer = new InventoryAverageCost(
-          tenantId,
-          fromDate,
-          itemId,
-          trx
-        );
+        costMethodComputer = new InventoryAverageCost(tenantId, fromDate, itemId, trx);
         break;
     }
     return costMethodComputer.computeItemCost();
@@ -132,11 +118,7 @@ export default class InventoryService {
    * @param {number} itemId
    * @param {Date} startingDate
    */
-  async scheduleComputeItemCost(
-    tenantId: number,
-    itemId: number,
-    startingDate: Date | string
-  ) {
+  async scheduleComputeItemCost(tenantId: number, itemId: number, startingDate: Date | string) {
     const agenda = Container.get('agenda');
 
     // Cancel any `compute-item-cost` in the queue has upper starting date
@@ -158,20 +140,17 @@ export default class InventoryService {
       'data.startingDate': { $lte: startingDate },
     });
     if (dependsJobs.length === 0) {
-      await agenda.schedule(
-        config.scheduleComputeItemCost,
-        'compute-item-cost',
-        {
-          startingDate,
-          itemId,
-          tenantId,
-        }
-      );
+      await agenda.schedule(config.scheduleComputeItemCost, 'compute-item-cost', {
+        startingDate,
+        itemId,
+        tenantId,
+      });
       // Triggers `onComputeItemCostJobScheduled` event.
-      await this.eventPublisher.emitAsync(
-        events.inventory.onComputeItemCostJobScheduled,
-        { startingDate, itemId, tenantId } as IInventoryItemCostScheduledPayload
-      );
+      await this.eventPublisher.emitAsync(events.inventory.onComputeItemCostJobScheduled, {
+        startingDate,
+        itemId,
+        tenantId,
+      } as IInventoryItemCostScheduledPayload);
     }
   }
 
@@ -185,31 +164,23 @@ export default class InventoryService {
   async recordInventoryTransactions(
     tenantId: number,
     transactions: IInventoryTransaction[],
-    override: boolean = false,
-    trx?: Knex.Transaction
+    override = false,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const bulkInsertOpers = [];
 
     transactions.forEach((transaction: IInventoryTransaction) => {
-      const oper = this.recordInventoryTransaction(
-        tenantId,
-        transaction,
-        override,
-        trx
-      );
+      const oper = this.recordInventoryTransaction(tenantId, transaction, override, trx);
       bulkInsertOpers.push(oper);
     });
     const inventoryTransactions = await Promise.all(bulkInsertOpers);
 
     // Triggers `onInventoryTransactionsCreated` event.
-    await this.eventPublisher.emitAsync(
-      events.inventory.onInventoryTransactionsCreated,
-      {
-        tenantId,
-        inventoryTransactions,
-        trx,
-      } as IInventoryTransactionsCreatedPayload
-    );
+    await this.eventPublisher.emitAsync(events.inventory.onInventoryTransactionsCreated, {
+      tenantId,
+      inventoryTransactions,
+      trx,
+    } as IInventoryTransactionsCreatedPayload);
   }
 
   /**
@@ -223,8 +194,8 @@ export default class InventoryService {
   async recordInventoryTransaction(
     tenantId: number,
     inventoryEntry: IInventoryTransaction,
-    deleteOld: boolean = false,
-    trx: Knex.Transaction
+    deleteOld = false,
+    trx: Knex.Transaction,
   ): Promise<IInventoryTransaction> {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
 
@@ -233,7 +204,7 @@ export default class InventoryService {
         tenantId,
         inventoryEntry.transactionId,
         inventoryEntry.transactionType,
-        trx
+        trx,
       );
     }
     return InventoryTransaction.query(trx).insertGraph({
@@ -264,24 +235,18 @@ export default class InventoryService {
 
       warehouseId: number;
     },
-    override: boolean = false,
-    trx?: Knex.Transaction
+    override = false,
+    trx?: Knex.Transaction,
   ): Promise<void> {
     // Can't continue if there is no entries has inventory items in the invoice.
     if (transaction.entries.length <= 0) {
       return;
     }
     // Inventory transactions.
-    const inventoryTranscations =
-      this.transformItemEntriesToInventory(transaction);
+    const inventoryTranscations = this.transformItemEntriesToInventory(transaction);
 
     // Records the inventory transactions of the given sale invoice.
-    await this.recordInventoryTransactions(
-      tenantId,
-      inventoryTranscations,
-      override,
-      trx
-    );
+    await this.recordInventoryTransactions(tenantId, inventoryTranscations, override, trx);
   }
 
   /**
@@ -297,31 +262,24 @@ export default class InventoryService {
     tenantId: number,
     transactionId: number,
     transactionType: string,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<{ oldInventoryTransactions: IInventoryTransaction[] }> {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
 
     // Retrieve the inventory transactions of the given sale invoice.
-    const oldInventoryTransactions = await InventoryTransaction.query(
-      trx
-    ).where({ transactionId, transactionType });
+    const oldInventoryTransactions = await InventoryTransaction.query(trx).where({ transactionId, transactionType });
 
     // Deletes the inventory transactions by the given transaction type and id.
-    await InventoryTransaction.query(trx)
-      .where({ transactionType, transactionId })
-      .delete();
+    await InventoryTransaction.query(trx).where({ transactionType, transactionId }).delete();
 
     // Triggers `onInventoryTransactionsDeleted` event.
-    await this.eventPublisher.emitAsync(
-      events.inventory.onInventoryTransactionsDeleted,
-      {
-        tenantId,
-        oldInventoryTransactions,
-        transactionId,
-        transactionType,
-        trx,
-      } as IInventoryTransactionsDeletedPayload
-    );
+    await this.eventPublisher.emitAsync(events.inventory.onInventoryTransactionsDeleted, {
+      tenantId,
+      oldInventoryTransactions,
+      transactionId,
+      transactionType,
+      trx,
+    } as IInventoryTransactionsDeletedPayload);
     return { oldInventoryTransactions };
   }
 
@@ -331,10 +289,7 @@ export default class InventoryService {
    * @param {IInventoryLotCost} inventoryLotEntry
    * @return {Promise<IInventoryLotCost>}
    */
-  async recordInventoryCostLotTransaction(
-    tenantId: number,
-    inventoryLotEntry: IInventoryLotCost
-  ): Promise<void> {
+  async recordInventoryCostLotTransaction(tenantId: number, inventoryLotEntry: IInventoryLotCost): Promise<void> {
     const { InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
     return InventoryCostLotTracker.query().insert({
@@ -347,10 +302,7 @@ export default class InventoryService {
    * @param {number} tenantId -
    * @param {boolean} isRunning -
    */
-  async markItemsCostComputeRunning(
-    tenantId: number,
-    isRunning: boolean = true
-  ) {
+  async markItemsCostComputeRunning(tenantId: number, isRunning = true) {
     const settings = this.tenancy.settings(tenantId);
 
     settings.set({

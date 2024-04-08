@@ -1,5 +1,5 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatMinutes } from 'utils/formatMinutes';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 export class TaskTransformer extends Transformer {
   /**
@@ -7,12 +7,7 @@ export class TaskTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'estimateHoursFormatted',
-      'actualHoursFormatted',
-      'invoicedHoursFormatted',
-      'billableHoursFormatted',
-    ];
+    return ['estimateHoursFormatted', 'actualHoursFormatted', 'invoicedHoursFormatted', 'billableHoursFormatted'];
   };
 
   /**

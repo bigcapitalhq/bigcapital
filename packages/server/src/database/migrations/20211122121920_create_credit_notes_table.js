@@ -1,11 +1,7 @@
 exports.up = (knex) => {
   return knex.schema.createTable('credit_notes', (table) => {
     table.increments();
-    table
-      .integer('customer_id')
-      .unsigned()
-      .references('id')
-      .inTable('contacts');
+    table.integer('customer_id').unsigned().references('id').inTable('contacts');
     table.date('credit_note_date');
     table.string('credit_note_number');
     table.string('reference_no');

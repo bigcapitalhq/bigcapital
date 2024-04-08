@@ -1,18 +1,14 @@
-import { Model, mixin, raw } from 'objection';
-import TenantModel from 'models/TenantModel';
-import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
-import ModelSetting from './ModelSetting';
-import ExpenseSettings from './Expense.Settings';
-import CustomViewBaseModel from './CustomViewBaseModel';
+// import { viewRolesBuilder } from '@/lib/ViewRolesBuilder';
 import { DEFAULT_VIEWS } from '@/services/Expenses/constants';
-import ModelSearchable from './ModelSearchable';
 import moment from 'moment';
+import { Model, mixin, raw } from 'objection';
+import TenantModel from '../models/TenantModel';
+import CustomViewBaseModel from './CustomViewBaseModel';
+import ExpenseSettings from './Expense.Settings';
+import ModelSearchable from './ModelSearchable';
+import ModelSetting from './ModelSetting';
 
-export default class Expense extends mixin(TenantModel, [
-  ModelSetting,
-  CustomViewBaseModel,
-  ModelSearchable,
-]) {
+export default class Expense extends mixin(TenantModel, [ModelSetting, CustomViewBaseModel, ModelSearchable]) {
   /**
    * Table name
    */
@@ -135,9 +131,9 @@ export default class Expense extends mixin(TenantModel, [
           query.where('payment_account_id', accountId);
         }
       },
-      viewRolesBuilder(query, conditionals, expression) {
-        viewRolesBuilder(conditionals, expression)(query);
-      },
+      // viewRolesBuilder(query, conditionals, expression) {
+      //   viewRolesBuilder(conditionals, expression)(query);
+      // },
 
       filterByDraft(query) {
         query.where('published_at', null);
@@ -178,10 +174,10 @@ export default class Expense extends mixin(TenantModel, [
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    const ExpenseCategory = require('models/ExpenseCategory');
-    const Media = require('models/Media');
-    const Branch = require('models/Branch');
+    const Account = require('../models/Account');
+    const ExpenseCategory = require('../models/ExpenseCategory');
+    const Media = require('../models/Media');
+    const Branch = require('../models/Branch');
 
     return {
       paymentAccount: {
@@ -217,7 +213,7 @@ export default class Expense extends mixin(TenantModel, [
       },
 
       /**
-       * 
+       *
        */
       media: {
         relation: Model.ManyToManyRelation,

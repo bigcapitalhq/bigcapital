@@ -1,5 +1,5 @@
-exports.up = function (knex) {
-  return knex.schema.createTable('bill_located_costs', (table) => {
+exports.up = (knex) =>
+  knex.schema.createTable('bill_located_costs', (table) => {
     table.increments();
 
     table.decimal('amount', 13, 3).unsigned();
@@ -16,6 +16,5 @@ exports.up = function (knex) {
 
     table.timestamps();
   });
-};
 
-exports.down = function (knex) {};
+exports.down = (knex) => {};

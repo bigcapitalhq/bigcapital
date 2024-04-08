@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -13,7 +12,7 @@ import { AutoExchangeRateProvider } from '@/containers/Entries/AutoExchangeProvi
  */
 export default function CreditNoteFormPage() {
   const { id } = useParams();
-  const idAsInteger = parseInt(id, 10);
+  const idAsInteger = Number.parseInt(id, 10);
 
   return (
     <CreditNoteFormProvider creditNoteId={idAsInteger}>

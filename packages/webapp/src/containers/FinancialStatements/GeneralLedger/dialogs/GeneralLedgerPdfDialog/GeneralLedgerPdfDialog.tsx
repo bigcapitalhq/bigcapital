@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { lazy } from 'react';
 import classNames from 'classnames';
 
@@ -10,9 +9,7 @@ import { CLASSES } from '@/constants/classes';
 import { compose } from '@/utils';
 
 // Lazy loading the content.
-const GeneralLedgerPdfDialogContent = lazy(
-  () => import('./GeneralLedgerPdfDialogContent'),
-);
+const GeneralLedgerPdfDialogContent = lazy(() => import('./GeneralLedgerPdfDialogContent'));
 
 /**
  * General ledger pdf preview dialog.
@@ -36,6 +33,4 @@ function GeneralLedgerPdfDialogRoot({ dialogName, payload, isOpen }) {
   );
 }
 
-export const GeneralLedgerPdfDialog = compose(withDialogRedux())(
-  GeneralLedgerPdfDialogRoot,
-);
+export const GeneralLedgerPdfDialog = compose(withDialogRedux())(GeneralLedgerPdfDialogRoot);

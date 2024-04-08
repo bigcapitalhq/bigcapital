@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -31,17 +30,10 @@ function APAgingSummaryHeaderDimensionsProvider({ query, ...props }) {
   return isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <APAgingSummaryHeaderDimensonsContext.Provider
-      value={provider}
-      {...props}
-    />
+    <APAgingSummaryHeaderDimensonsContext.Provider value={provider} {...props} />
   );
 }
 
-const useAPAgingSummaryHeaderDimensonsContext = () =>
-  React.useContext(APAgingSummaryHeaderDimensonsContext);
+const useAPAgingSummaryHeaderDimensonsContext = () => React.useContext(APAgingSummaryHeaderDimensonsContext);
 
-export {
-  APAgingSummaryHeaderDimensionsProvider,
-  useAPAgingSummaryHeaderDimensonsContext,
-};
+export { APAgingSummaryHeaderDimensionsProvider, useAPAgingSummaryHeaderDimensonsContext };

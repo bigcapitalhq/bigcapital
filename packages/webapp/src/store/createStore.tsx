@@ -1,16 +1,11 @@
-// @ts-nocheck
-import {
-  createStore as createReduxStore,
-  applyMiddleware,
-  compose,
-} from 'redux';
+
+import { createStore as createReduxStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { persistStore } from 'redux-persist';
 import monitorReducerEnhancer from '@/store/enhancers/monitorReducer';
 import loggerMiddleware from '@/store/logger.middleware';
 import rootReducer from '@/store/reducers';
 import ResetMiddleware from './ResetMiddleware';
-
 
 const createStoreFactory = (initialState = {}) => {
   /**

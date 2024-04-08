@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { FinancialHeaderLoadingSkeleton } from '../FinancialHeaderLoadingSkeleton';
@@ -29,17 +28,10 @@ function VendorsBalanceSummaryGeneralPanelProvider({ filter, ...props }) {
   return loading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <VendorsBalanceSummaryGeneralPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <VendorsBalanceSummaryGeneralPanelContext.Provider value={provider} {...props} />
   );
 }
 
-const useVendorsBalanceSummaryGeneralPanelContext = () =>
-  React.useContext(VendorsBalanceSummaryGeneralPanelContext);
+const useVendorsBalanceSummaryGeneralPanelContext = () => React.useContext(VendorsBalanceSummaryGeneralPanelContext);
 
-export {
-  VendorsBalanceSummaryGeneralPanelProvider,
-  useVendorsBalanceSummaryGeneralPanelContext,
-};
+export { VendorsBalanceSummaryGeneralPanelProvider, useVendorsBalanceSummaryGeneralPanelContext };

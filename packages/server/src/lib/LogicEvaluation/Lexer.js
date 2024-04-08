@@ -1,4 +1,3 @@
-
 const OperationType = {
   LOGIC: 'LOGIC',
   STRING: 'STRING',
@@ -16,7 +15,7 @@ export class Lexer {
       '?': OperationType.LOGIC,
       ':': OperationType.LOGIC,
 
-      '\'': OperationType.STRING,
+      "'": OperationType.STRING,
       '"': OperationType.STRING,
 
       '!': OperationType.COMPARISON,
@@ -79,7 +78,7 @@ export class Lexer {
         err.name = 'UnknowToken';
         throw err;
       }
-    } while (tok !== undefined)
+    } while (tok !== undefined);
 
     return this.tokenList;
   }

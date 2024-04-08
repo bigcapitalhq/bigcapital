@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useTrialBalanceSheetContext } from './TrialBalanceProvider';
 import { trialBalancesheetDynamicColumns } from './dynamicColumns';
@@ -11,8 +10,5 @@ export const useTrialBalanceSheetTableColumns = () => {
     trialBalanceSheet: { table },
   } = useTrialBalanceSheetContext();
 
-  return React.useMemo(
-    () => trialBalancesheetDynamicColumns(table.columns, table.rows),
-    [table],
-  );
+  return React.useMemo(() => trialBalancesheetDynamicColumns(table.columns, table.rows), [table]);
 };

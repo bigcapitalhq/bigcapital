@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { includes } from 'lodash';
 
@@ -17,16 +16,9 @@ function EnsureSubscriptionIsActive({
   exclude,
   isSubscriptionActive,
 }) {
-  return isSubscriptionActive || includes(exclude, routePath) ? (
-    children
-  ) : (
-    <Redirect to={{ pathname: redirectTo }} />
-  );
+  return isSubscriptionActive || includes(exclude, routePath) ? children : <Redirect to={{ pathname: redirectTo }} />;
 }
 
-export default compose(
-  withSubscriptions(
-    ({ isSubscriptionActive }) => ({ isSubscriptionActive }),
-    'main',
-  ),
-)(EnsureSubscriptionIsActive);
+export default compose(withSubscriptions(({ isSubscriptionActive }) => ({ isSubscriptionActive }), 'main'))(
+  EnsureSubscriptionIsActive,
+);

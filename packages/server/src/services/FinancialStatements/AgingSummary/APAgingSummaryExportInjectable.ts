@@ -1,7 +1,7 @@
+import { IAPAgingSummaryQuery } from '@/interfaces';
+import { TableSheet } from '@/lib/Xlsx/TableSheet';
 import { Inject, Service } from 'typedi';
 import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
-import { TableSheet } from '@/lib/Xlsx/TableSheet';
-import { IAPAgingSummaryQuery } from '@/interfaces';
 
 @Service()
 export class APAgingSummaryExportInjectable {
@@ -29,10 +29,7 @@ export class APAgingSummaryExportInjectable {
    * @param {IAPAgingSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: IAPAgingSummaryQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: IAPAgingSummaryQuery): Promise<string> {
     const table = await this.APAgingSummaryTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

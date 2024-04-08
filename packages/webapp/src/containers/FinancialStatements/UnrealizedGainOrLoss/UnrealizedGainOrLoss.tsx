@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { FinancialStatement, DashboardPageContent } from '@/components';
@@ -38,10 +37,7 @@ function UnrealizedGainOrLoss({
       <UnrealizedGainOrLossActionsBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <UnrealizedGainOrLossHeader
-            pageFilter={[]}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <UnrealizedGainOrLossHeader pageFilter={[]} onSubmitFilter={handleFilterSubmit} />
 
           <UnrealizedGainOrLossLoadingBar />
         </FinancialStatement>

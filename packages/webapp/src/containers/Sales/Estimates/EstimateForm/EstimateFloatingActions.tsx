@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import {
@@ -86,10 +85,7 @@ export default function EstimateFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'deliver_and_new'} />}
-                  onClick={handleSubmitDeliverAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'deliver_and_new'} />} onClick={handleSubmitDeliverAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'deliver_continue_editing'} />}
                   onClick={handleSubmitDeliverContinueEditingBtnClick}
@@ -119,10 +115,7 @@ export default function EstimateFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDraftAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDraftAndNewBtnClick} />
                 <MenuItem
                   text={<T id={'save_continue_editing'} />}
                   onClick={handleSubmitDraftContinueEditingBtnClick}
@@ -133,10 +126,7 @@ export default function EstimateFloatingActions() {
             interactionKind={PopoverInteractionKind.CLICK}
             position={Position.BOTTOM_LEFT}
           >
-            <Button
-              disabled={isSubmitting}
-              rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />}
-            />
+            <Button disabled={isSubmitting} rightIcon={<Icon icon="arrow-drop-up-16" iconSize={20} />} />
           </Popover>
         </ButtonGroup>
       </If>
@@ -154,10 +144,7 @@ export default function EstimateFloatingActions() {
           <Popover
             content={
               <Menu>
-                <MenuItem
-                  text={<T id={'save_and_new'} />}
-                  onClick={handleSubmitDeliverAndNewBtnClick}
-                />
+                <MenuItem text={<T id={'save_and_new'} />} onClick={handleSubmitDeliverAndNewBtnClick} />
               </Menu>
             }
             minimal={true}
@@ -182,12 +169,7 @@ export default function EstimateFloatingActions() {
       />
 
       {/* ----------- Cancel ----------- */}
-      <Button
-        className={'ml1'}
-        disabled={isSubmitting}
-        onClick={handleCancelBtnClick}
-        text={<T id={'cancel'} />}
-      />
+      <Button className={'ml1'} disabled={isSubmitting} onClick={handleCancelBtnClick} text={<T id={'cancel'} />} />
     </div>
   );
 }

@@ -1,6 +1,3 @@
-import { Service, Inject } from 'typedi';
-import { ObjectId } from 'mongodb';
-import { defaultTo, pick } from 'lodash';
 import { ServiceError } from '@/exceptions';
 import {
   IOrganizationBuildDTO,
@@ -10,12 +7,16 @@ import {
   ITenant,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
-import config from '../../config';
-import TenantsManager from '@/services/Tenancy/TenantsManager';
-import { Tenant } from '@/system/models';
-import OrganizationBaseCurrencyLocking from './OrganizationBaseCurrencyLocking';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import TenantsManager from '@/services/Tenancy/TenantsManager';
+import events from '@/subscribers/events';
+import { Tenant } from '@/system/models';
+import { defaultTo, pick } from 'lodash';
+import { Types } from 'mongoose';
+const { ObjectId } = Types;
+import { Inject, Service } from 'typedi';
+import config from '../../config';
+import OrganizationBaseCurrencyLocking from './OrganizationBaseCurrencyLocking';
 import { ERRORS } from './constants';
 
 @Service()
@@ -40,11 +41,7 @@ export default class OrganizationService {
    * @param  {srting} organizationId
    * @return {Promise<void>}
    */
-  public async build(
-    tenantId: number,
-    buildDTO: IOrganizationBuildDTO,
-    systemUser: ISystemUser
-  ): Promise<void> {
+  public async build(tenantId: number, buildDTO: IOrganizationBuildDTO, systemUser: ISystemUser): Promise<void> {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
@@ -63,8 +60,7 @@ export default class OrganizationService {
     const migratedTenant = await tenant.$query().withGraphFetched('metadata');
 
     // Creates a tenancy object from given tenant model.
-    const tenancyContext =
-      this.tenantsManager.getSeedMigrationContext(migratedTenant);
+    const tenancyContext = this.tenantsManager.getSeedMigrationContext(migratedTenant);
 
     // Seed tenant.
     await this.tenantsManager.seedTenant(migratedTenant, tenancyContext);
@@ -90,11 +86,7 @@ export default class OrganizationService {
    * @param {IOrganizationBuildDTO} buildDTO
    * @returns
    */
-  async buildRunJob(
-    tenantId: number,
-    buildDTO: IOrganizationBuildDTO,
-    authorizedUser: ISystemUser
-  ) {
+  async buildRunJob(tenantId: number, buildDTO: IOrganizationBuildDTO, authorizedUser: ISystemUser) {
     const tenant = await this.getTenantOrThrowError(tenantId);
 
     // Throw error if the tenant is already initialized.
@@ -142,9 +134,7 @@ export default class OrganizationService {
    * @returns {Promise<ITenant[]>}
    */
   public async currentOrganization(tenantId: number): Promise<ITenant> {
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     this.throwIfTenantNotExists(tenant);
 
@@ -165,34 +155,22 @@ export default class OrganizationService {
    * @param {ITenant} tenantId
    * @param {IOrganizationUpdateDTO} organizationDTO
    */
-  public async updateOrganization(
-    tenantId: number,
-    organizationDTO: IOrganizationUpdateDTO
-  ): Promise<void> {
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+  public async updateOrganization(tenantId: number, organizationDTO: IOrganizationUpdateDTO): Promise<void> {
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     // Throw error if the tenant not exists.
     this.throwIfTenantNotExists(tenant);
 
     // Validate organization transactions before mutate base currency.
-    await this.validateMutateBaseCurrency(
-      tenant,
-      organizationDTO.baseCurrency,
-      tenant.metadata?.baseCurrency
-    );
+    await this.validateMutateBaseCurrency(tenant, organizationDTO.baseCurrency, tenant.metadata?.baseCurrency);
     await tenant.saveMetadata(organizationDTO);
 
     if (organizationDTO.baseCurrency !== tenant.metadata?.baseCurrency) {
       // Triggers `onOrganizationBaseCurrencyUpdated` event.
-      await this.eventPublisher.emitAsync(
-        events.organization.baseCurrencyUpdated,
-        {
-          tenantId,
-          organizationDTO,
-        }
-      );
+      await this.eventPublisher.emitAsync(events.organization.baseCurrencyUpdated, {
+        tenantId,
+        organizationDTO,
+      });
     }
   }
 
@@ -201,9 +179,7 @@ export default class OrganizationService {
    * @param {IOrganizationBuildDTO} buildDTO
    * @returns {IOrganizationBuildDTO}
    */
-  private transformBuildDTO(
-    buildDTO: IOrganizationBuildDTO
-  ): IOrganizationBuildDTO {
+  private transformBuildDTO(buildDTO: IOrganizationBuildDTO): IOrganizationBuildDTO {
     return {
       ...buildDTO,
       dateFormat: defaultTo(buildDTO.dateFormat, 'DD/MM/yyyy'),
@@ -223,16 +199,9 @@ export default class OrganizationService {
    * @param {string} newBaseCurrency -
    * @param {string} oldBaseCurrency -
    */
-  private async validateMutateBaseCurrency(
-    tenant: Tenant,
-    newBaseCurrency: string,
-    oldBaseCurrency: string
-  ) {
+  private async validateMutateBaseCurrency(tenant: Tenant, newBaseCurrency: string, oldBaseCurrency: string) {
     if (tenant.isReady && newBaseCurrency !== oldBaseCurrency) {
-      const isLocked =
-        await this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked(
-          tenant.id
-        );
+      const isLocked = await this.baseCurrencyMutateLocking.isBaseCurrencyMutateLocked(tenant.id);
 
       if (isLocked) {
         this.throwBaseCurrencyMutateLocked();
@@ -299,23 +268,13 @@ export default class OrganizationService {
   /**
    * Syncs system user to tenant user.
    */
-  public async syncSystemUserToTenant(
-    tenantId: number,
-    systemUser: ISystemUser
-  ) {
+  public async syncSystemUserToTenant(tenantId: number, systemUser: ISystemUser) {
     const { User, Role } = this.tenancy.models(tenantId);
 
     const adminRole = await Role.query().findOne('slug', 'admin');
 
     await User.query().insert({
-      ...pick(systemUser, [
-        'firstName',
-        'lastName',
-        'phoneNumber',
-        'email',
-        'active',
-        'inviteAcceptedAt',
-      ]),
+      ...pick(systemUser, ['firstName', 'lastName', 'phoneNumber', 'email', 'active', 'inviteAcceptedAt']),
       systemUserId: systemUser.id,
       roleId: adminRole.id,
     });

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as Yup from 'yup';
 
 const Schema = Yup.object().shape({
@@ -13,7 +13,7 @@ const Schema = Yup.object().shape({
     preferredDepositAccount: Yup.number().nullable(),
     preferredAdvanceDeposit: Yup.number().nullable(),
     withdrawalAccount: Yup.number().nullable(),
-  })
+  }),
 });
 
 export const AccountantSchema = Schema;

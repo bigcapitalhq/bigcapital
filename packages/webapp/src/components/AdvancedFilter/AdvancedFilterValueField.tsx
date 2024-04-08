@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Position, Checkbox, InputGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -42,13 +41,7 @@ function tansformDateValue(date, defaultValue = null) {
 /**
  * Advanced filter value field detarminer.
  */
-export default function AdvancedFilterValueField2({
-  value,
-  fieldType,
-  options,
-  onChange,
-  isFocus,
-}) {
+export default function AdvancedFilterValueField2({ value, fieldType, options, onChange, isFocus }) {
   const [localValue, setLocalValue] = React.useState(value);
 
   React.useEffect(() => {
@@ -90,11 +83,7 @@ export default function AdvancedFilterValueField2({
   return (
     <Choose>
       <Choose.When condition={fieldType === IFieldType.ENUMERATION}>
-        <AdvancedFilterEnumerationField
-          options={options}
-          value={localValue}
-          onItemSelect={handleEnumerationChange}
-        />
+        <AdvancedFilterEnumerationField options={options} value={localValue} onItemSelect={handleEnumerationChange} />
       </Choose.When>
 
       <Choose.When condition={fieldType === IFieldType.DATE}>

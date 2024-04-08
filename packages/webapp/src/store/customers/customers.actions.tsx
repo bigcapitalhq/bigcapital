@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import t from '@/store/types';
 
 /**
@@ -15,4 +15,4 @@ export const resetCustomersTableState = () => {
   return {
     type: t.CUSTOMERS_TABLE_STATE_RESET,
   };
-}
+};

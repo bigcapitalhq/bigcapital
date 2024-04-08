@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -44,10 +43,7 @@ function PreferencesInvoiceFormPage({
   };
   // Handle the form submit.
   const handleFormSubmit = (values, { setSubmitting }) => {
-    const options = R.compose(
-      transferObjectOptionsToArray,
-      transfromToSnakeCase,
-    )({ salesInvoices: { ...values } });
+    const options = R.compose(transferObjectOptionsToArray, transfromToSnakeCase)({ salesInvoices: { ...values } });
 
     // Handle request success.
     const onSuccess = () => {

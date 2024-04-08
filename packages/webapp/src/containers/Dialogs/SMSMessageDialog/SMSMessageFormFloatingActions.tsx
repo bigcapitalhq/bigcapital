@@ -1,13 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 
-import {
-  DialogFooter,
-  DialogFooterActions,
-  FormattedMessage as T,
-} from '@/components';
+import { DialogFooter, DialogFooterActions, FormattedMessage as T } from '@/components';
 import { useSMSMessageDialogContext } from './SMSMessageDialogProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
@@ -34,12 +29,7 @@ function SMSMessageFormFloatingActions({
   return (
     <DialogFooter>
       <DialogFooterActions alignment={'left'}>
-        <Button
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-          style={{ minWidth: '75px' }}
-          type="submit"
-        >
+        <Button intent={Intent.PRIMARY} loading={isSubmitting} style={{ minWidth: '75px' }} type="submit">
           <T id={'save_sms_message'} />
         </Button>
         <Button onClick={handleCancelBtnClick} style={{ minWidth: '75px' }}>

@@ -1,20 +1,14 @@
-import {
-  IBill,
-  IBillEditDTO,
-  IBillEditedPayload,
-  IBillEditingPayload,
-  ISystemUser,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
-import { BillsValidators } from './BillsValidators';
-import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
-import UnitOfWork from '@/services/UnitOfWork';
-import { Knex } from 'knex';
+import { IBill, IBillEditDTO, IBillEditedPayload, IBillEditingPayload, ISystemUser } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
 import EntriesService from '@/services/Entries';
+import ItemsEntriesService from '@/services/Items/ItemsEntriesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { BillDTOTransformer } from './BillDTOTransformer';
+import { BillsValidators } from './BillsValidators';
 
 @Service()
 export class EditBill {
@@ -60,73 +54,38 @@ export class EditBill {
     tenantId: number,
     billId: number,
     billDTO: IBillEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IBill> {
     const { Bill, Contact } = this.tenancy.models(tenantId);
 
     // Retrieve the given bill or throw not found error.
-    const oldBill = await Bill.query()
-      .findById(billId)
-      .withGraphFetched('entries');
+    const oldBill = await Bill.query().findById(billId).withGraphFetched('entries');
 
     // Validate bill existance.
     this.validators.validateBillExistance(oldBill);
 
     // Retrieve vendor details or throw not found service error.
-    const vendor = await Contact.query()
-      .findById(billDTO.vendorId)
-      .modify('vendor')
-      .throwIfNotFound();
+    const vendor = await Contact.query().findById(billDTO.vendorId).modify('vendor').throwIfNotFound();
 
     // Validate bill number uniqiness on the storage.
     if (billDTO.billNumber) {
-      await this.validators.validateBillNumberExists(
-        tenantId,
-        billDTO.billNumber,
-        billId
-      );
+      await this.validators.validateBillNumberExists(tenantId, billDTO.billNumber, billId);
     }
     // Validate the entries ids existance.
-    await this.itemsEntriesService.validateEntriesIdsExistance(
-      tenantId,
-      billId,
-      'Bill',
-      billDTO.entries
-    );
+    await this.itemsEntriesService.validateEntriesIdsExistance(tenantId, billId, 'Bill', billDTO.entries);
     // Validate the items ids existance on the storage.
-    await this.itemsEntriesService.validateItemsIdsExistance(
-      tenantId,
-      billDTO.entries
-    );
+    await this.itemsEntriesService.validateItemsIdsExistance(tenantId, billDTO.entries);
     // Accept the purchasable items only.
-    await this.itemsEntriesService.validateNonPurchasableEntriesItems(
-      tenantId,
-      billDTO.entries
-    );
-    
+    await this.itemsEntriesService.validateNonPurchasableEntriesItems(tenantId, billDTO.entries);
+
     // Transforms the bill DTO to model object.
-    const billObj = await this.transformerDTO.billDTOToModel(
-      tenantId,
-      billDTO,
-      vendor,
-      authorizedUser,
-      oldBill
-    );
+    const billObj = await this.transformerDTO.billDTOToModel(tenantId, billDTO, vendor, authorizedUser, oldBill);
     // Validate bill total amount should be bigger than paid amount.
-    this.validators.validateBillAmountBiggerPaidAmount(
-      billObj.amount,
-      oldBill.paymentAmount
-    );
+    this.validators.validateBillAmountBiggerPaidAmount(billObj.amount, oldBill.paymentAmount);
     // Validate landed cost entries that have allocated cost could not be deleted.
-    await this.entriesService.validateLandedCostEntriesNotDeleted(
-      oldBill.entries,
-      billObj.entries
-    );
+    await this.entriesService.validateLandedCostEntriesNotDeleted(oldBill.entries, billObj.entries);
     // Validate new landed cost entries should be bigger than new entries.
-    await this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
-      oldBill.entries,
-      billObj.entries
-    );
+    await this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(oldBill.entries, billObj.entries);
     // Edits bill transactions and associated transactions under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBillEditing` event.

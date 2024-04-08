@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import BaseVendorCredit from './BaseVendorCredit';
 import { IVendorCreditCreatedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
+import BaseVendorCredit from './BaseVendorCredit';
 
 @Service()
 export default class VendorCreditAutoSerialSubscriber {
@@ -19,9 +19,7 @@ export default class VendorCreditAutoSerialSubscriber {
    * Auto serial increment once the vendor credit created.
    * @param {IVendorCreditCreatedPayload} payload
    */
-  private autoIncrementOnceCreated = ({
-    tenantId,
-  }: IVendorCreditCreatedPayload) => {
+  private autoIncrementOnceCreated = ({ tenantId }: IVendorCreditCreatedPayload) => {
     this.vendorCreditService.incrementSerialNumber(tenantId);
   };
 }

@@ -1,7 +1,7 @@
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { CommandTaxRatesValidators } from './CommandTaxRatesValidators';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { TaxRateTransformer } from './TaxRateTransformer';
 
 @Service()
@@ -30,10 +30,6 @@ export class GetTaxRateService {
     this.validators.validateTaxRateExistance(taxRate);
 
     // Transforms the tax rate.
-    return this.transformer.transform(
-      tenantId,
-      taxRate,
-      new TaxRateTransformer()
-    );
+    return this.transformer.transform(tenantId, taxRate, new TaxRateTransformer());
   }
 }

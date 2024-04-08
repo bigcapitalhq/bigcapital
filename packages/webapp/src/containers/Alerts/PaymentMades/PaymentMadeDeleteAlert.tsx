@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -29,8 +28,7 @@ function PaymentMadeDeleteAlert({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { mutateAsync: deletePaymentMadeMutate, isLoading } =
-    useDeletePaymentMade();
+  const { mutateAsync: deletePaymentMadeMutate, isLoading } = useDeletePaymentMade();
 
   // Handle cancel payment made.
   const handleCancelPaymentMadeDelete = () => {
@@ -70,8 +68,4 @@ function PaymentMadeDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(PaymentMadeDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(PaymentMadeDeleteAlert);

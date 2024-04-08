@@ -1,13 +1,10 @@
-import { Inject, Service } from 'typedi';
-import { Knex } from 'knex';
-import {
-  ISaleReceiptDeletingPayload,
-  ISaleReceiptEventDeletedPayload,
-} from '@/interfaces';
+import { ISaleReceiptDeletingPayload, ISaleReceiptEventDeletedPayload } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { SaleReceiptValidators } from './SaleReceiptValidators';
 
 @Service()
@@ -32,9 +29,7 @@ export class DeleteSaleReceipt {
   public async deleteSaleReceipt(tenantId: number, saleReceiptId: number) {
     const { SaleReceipt, ItemEntry } = this.tenancy.models(tenantId);
 
-    const oldSaleReceipt = await SaleReceipt.query()
-      .findById(saleReceiptId)
-      .withGraphFetched('entries');
+    const oldSaleReceipt = await SaleReceipt.query().findById(saleReceiptId).withGraphFetched('entries');
 
     // Validates the sale receipt existance.
     this.validators.validateReceiptExistance(oldSaleReceipt);
@@ -47,10 +42,7 @@ export class DeleteSaleReceipt {
         tenantId,
       } as ISaleReceiptDeletingPayload);
 
-      await ItemEntry.query(trx)
-        .where('reference_id', saleReceiptId)
-        .where('reference_type', 'SaleReceipt')
-        .delete();
+      await ItemEntry.query(trx).where('reference_id', saleReceiptId).where('reference_type', 'SaleReceipt').delete();
 
       // Delete the sale receipt transaction.
       await SaleReceipt.query(trx).where('id', saleReceiptId).delete();

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
@@ -35,16 +34,8 @@ function VendorCreditDetailsTabs() {
 
   return (
     <DrawerMainTabs renderActiveTabPanelOnly={true}>
-      <Tab
-        title={intl.get('details')}
-        id={'details'}
-        panel={<VendorCreditDetailPanel />}
-      />
-      <Tab
-        title={intl.get('journal_entries')}
-        id={'journal_entries'}
-        panel={<VendorCreditGLEntriesTable />}
-      />
+      <Tab title={intl.get('details')} id={'details'} panel={<VendorCreditDetailPanel />} />
+      <Tab title={intl.get('journal_entries')} id={'journal_entries'} panel={<VendorCreditGLEntriesTable />} />
       {ability.can(VendorCreditAction.View, AbilitySubject.VendorCredit) && (
         <Tab
           title={intl.get('vendor_credit.drawer.label_refund_transactions')}

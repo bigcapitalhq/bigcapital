@@ -1,24 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { pick } from 'lodash';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
-import {
-  useAccounts,
-  useVendorCredit,
-  useBranches,
-  useCreateRefundVendorCredit,
-} from '@/hooks/query';
+import { useAccounts, useVendorCredit, useBranches, useCreateRefundVendorCredit } from '@/hooks/query';
 
 const RefundVendorCreditContext = React.createContext();
 
-function RefundVendorCreditFormProvider({
-  vendorCreditId,
-  dialogName,
-  query,
-  ...props
-}) {
+function RefundVendorCreditFormProvider({ vendorCreditId, dialogName, query, ...props }) {
   // Features guard.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -34,14 +23,12 @@ function RefundVendorCreditFormProvider({
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Handle fetch vendor credit details.
-  const { data: vendorCredit, isLoading: isVendorCreditLoading } =
-    useVendorCredit(vendorCreditId, {
-      enabled: !!vendorCreditId,
-    });
+  const { data: vendorCredit, isLoading: isVendorCreditLoading } = useVendorCredit(vendorCreditId, {
+    enabled: !!vendorCreditId,
+  });
 
   // Create refund vendor credit mutations.
-  const { mutateAsync: createRefundVendorCreditMutate } =
-    useCreateRefundVendorCredit();
+  const { mutateAsync: createRefundVendorCreditMutate } = useCreateRefundVendorCredit();
 
   // State provider.
   const provider = {
@@ -57,17 +44,12 @@ function RefundVendorCreditFormProvider({
   };
 
   return (
-    <DialogContent
-      isLoading={
-        isAccountsLoading || isVendorCreditLoading || isBranchesLoading
-      }
-    >
+    <DialogContent isLoading={isAccountsLoading || isVendorCreditLoading || isBranchesLoading}>
       <RefundVendorCreditContext.Provider value={provider} {...props} />
     </DialogContent>
   );
 }
 
-const useRefundVendorCreditContext = () =>
-  React.useContext(RefundVendorCreditContext);
+const useRefundVendorCreditContext = () => React.useContext(RefundVendorCreditContext);
 
 export { RefundVendorCreditFormProvider, useRefundVendorCreditContext };

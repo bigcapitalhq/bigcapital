@@ -2,15 +2,13 @@ import { IFinancialSheetCommonMeta } from './FinancialStatements';
 import { IFinancialTable } from './Table';
 import {
   ITransactionsByContactsAmount,
-  ITransactionsByContactsTransaction,
   ITransactionsByContactsFilter,
+  ITransactionsByContactsTransaction,
 } from './TransactionsByContacts';
 
-export interface ITransactionsByVendorsAmount
-  extends ITransactionsByContactsAmount {}
+export interface ITransactionsByVendorsAmount extends ITransactionsByContactsAmount {}
 
-export interface ITransactionsByVendorsTransaction
-  extends ITransactionsByContactsTransaction {}
+export interface ITransactionsByVendorsTransaction extends ITransactionsByContactsTransaction {}
 
 export interface ITransactionsByVendorsVendor {
   vendorName: string;
@@ -19,8 +17,7 @@ export interface ITransactionsByVendorsVendor {
   transactions: ITransactionsByVendorsTransaction[];
 }
 
-export interface ITransactionsByVendorsFilter
-  extends ITransactionsByContactsFilter {
+export interface ITransactionsByVendorsFilter extends ITransactionsByContactsFilter {
   vendorsIds: number[];
 }
 
@@ -35,7 +32,7 @@ export interface ITransactionsByVendorsStatement {
 export interface ITransactionsByVendorsService {
   transactionsByVendors(
     tenantId: number,
-    filter: ITransactionsByVendorsFilter
+    filter: ITransactionsByVendorsFilter,
   ): Promise<ITransactionsByVendorsStatement>;
 }
 

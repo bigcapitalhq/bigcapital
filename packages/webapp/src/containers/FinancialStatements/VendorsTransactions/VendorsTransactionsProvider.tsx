@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext, useMemo } from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useVendorsTransactionsReport } from '@/hooks/query';
@@ -36,7 +35,6 @@ function VendorsTransactionsProvider({ filter, ...props }) {
   );
 }
 
-const useVendorsTransactionsContext = () =>
-  useContext(VendorsTransactionsContext);
+const useVendorsTransactionsContext = () => useContext(VendorsTransactionsContext);
 
 export { VendorsTransactionsProvider, useVendorsTransactionsContext };

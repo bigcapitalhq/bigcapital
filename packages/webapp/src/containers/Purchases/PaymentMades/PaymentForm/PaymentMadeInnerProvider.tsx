@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext, useEffect } from 'react';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeNewPageEntries } from '@/hooks/query';

@@ -1,19 +1,19 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
 import {
   IExpense,
-  ISystemUser,
+  IExpenseEditDTO,
   IExpenseEventEditPayload,
   IExpenseEventEditingPayload,
-  IExpenseEditDTO,
+  ISystemUser,
 } from '@/interfaces';
-import events from '@/subscribers/events';
-import { CommandExpenseValidator } from './CommandExpenseValidator';
-import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ExpenseDTOTransformer } from './ExpenseDTOTransformer';
 import EntriesService from '@/services/Entries';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { CommandExpenseValidator } from './CommandExpenseValidator';
+import { ExpenseDTOTransformer } from './ExpenseDTOTransformer';
 
 @Service()
 export class EditExpense {
@@ -41,32 +41,18 @@ export class EditExpense {
    * @param {number} expenseId
    * @param {IExpenseEditDTO} expenseDTO
    */
-  public authorize = async (
-    tenantId: number,
-    oldExpense: IExpense,
-    expenseDTO: IExpenseEditDTO
-  ) => {
+  public authorize = async (tenantId: number, oldExpense: IExpense, expenseDTO: IExpenseEditDTO) => {
     const { Account } = this.tenancy.models(tenantId);
 
     // Validate payment account existance on the storage.
-    const paymentAccount = await Account.query()
-      .findById(expenseDTO.paymentAccountId)
-      .throwIfNotFound();
+    const paymentAccount = await Account.query().findById(expenseDTO.paymentAccountId).throwIfNotFound();
 
     // Retrieves the DTO expense accounts ids.
-    const DTOExpenseAccountsIds = expenseDTO.categories.map(
-      (category) => category.expenseAccountId
-    );
+    const DTOExpenseAccountsIds = expenseDTO.categories.map((category) => category.expenseAccountId);
     // Retrieves the expenses accounts.
-    const expenseAccounts = await Account.query().whereIn(
-      'id',
-      DTOExpenseAccountsIds
-    );
+    const expenseAccounts = await Account.query().whereIn('id', DTOExpenseAccountsIds);
     // Validate expense accounts exist on the storage.
-    this.validator.validateExpensesAccountsExistance(
-      expenseAccounts,
-      DTOExpenseAccountsIds
-    );
+    this.validator.validateExpensesAccountsExistance(expenseAccounts, DTOExpenseAccountsIds);
     // Validate payment account type.
     await this.validator.validatePaymentAccountType(paymentAccount);
 
@@ -76,15 +62,9 @@ export class EditExpense {
     this.validator.validateCategoriesNotEqualZero(expenseDTO);
 
     // Validate expense entries that have allocated landed cost cannot be deleted.
-    this.entriesService.validateLandedCostEntriesNotDeleted(
-      oldExpense.categories,
-      expenseDTO.categories
-    );
+    this.entriesService.validateLandedCostEntriesNotDeleted(oldExpense.categories, expenseDTO.categories);
     // Validate expense entries that have allocated cost amount should be bigger than amount.
-    this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(
-      oldExpense.categories,
-      expenseDTO.categories
-    );
+    this.entriesService.validateLocatedCostEntriesSmallerThanNewEntries(oldExpense.categories, expenseDTO.categories);
   };
 
   /**
@@ -107,24 +87,18 @@ export class EditExpense {
     tenantId: number,
     expenseId: number,
     expenseDTO: IExpenseEditDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IExpense> {
     const { Expense } = this.tenancy.models(tenantId);
 
     // Retrieves the expense model or throw not found error.
-    const oldExpense = await Expense.query()
-      .findById(expenseId)
-      .withGraphFetched('categories')
-      .throwIfNotFound();
+    const oldExpense = await Expense.query().findById(expenseId).withGraphFetched('categories').throwIfNotFound();
 
     // Authorize expense DTO before editing.
     await this.authorize(tenantId, oldExpense, expenseDTO);
 
     // Update the expense on the storage.
-    const expenseObj = await this.transformDTO.expenseEditDTO(
-      tenantId,
-      expenseDTO
-    );
+    const expenseObj = await this.transformDTO.expenseEditDTO(tenantId, expenseDTO);
     // Edits expense transactions and associated transactions under UOW envirement.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onExpenseEditing` event.

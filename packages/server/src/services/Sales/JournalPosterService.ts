@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
+import JournalCommands from '@/services/Accounting/JournalCommands';
 import JournalPoster from '@/services/Accounting/JournalPoster';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import JournalCommands from '@/services/Accounting/JournalCommands';
 import Knex from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class JournalPosterService {
@@ -18,19 +18,15 @@ export default class JournalPosterService {
    */
   async revertJournalTransactions(
     tenantId: number,
-    referenceId: number|number[],
-    referenceType: string|string[],
-    trx?: Knex.Transaction
+    referenceId: number | number[],
+    referenceType: string | string[],
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const journal = new JournalPoster(tenantId, null, trx);
     const journalCommand = new JournalCommands(journal);
 
     await journalCommand.revertJournalEntries(referenceId, referenceType);
 
-    await Promise.all([
-      journal.deleteEntries(),
-      journal.saveBalance(),
-      journal.saveContactsBalance(),
-    ]);
+    await Promise.all([journal.deleteEntries(), journal.saveBalance(), journal.saveContactsBalance()]);
   }
 }

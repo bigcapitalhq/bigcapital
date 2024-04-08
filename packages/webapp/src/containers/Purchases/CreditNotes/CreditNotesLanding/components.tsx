@@ -1,18 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 import { CLASSES } from '@/constants/classes';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Choose,
-  If,
-  Icon,
-  Can,
-} from '@/components';
+import { FormatDateCell, FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
@@ -55,11 +47,7 @@ export function ActionsMenu({
         </If>
       </Can>
       <Can I={VendorCreditAction.Edit} a={AbilitySubject.VendorCredit}>
-        <If
-          condition={
-            !original.is_draft && !original.is_closed && original.is_published
-          }
-        >
+        <If condition={!original.is_draft && !original.is_closed && original.is_published}>
           <MenuItem
             text={intl.get('vendor_credits.action.reconcile_with_bills')}
             icon={<Icon icon="receipt-24" iconSize={16} />}

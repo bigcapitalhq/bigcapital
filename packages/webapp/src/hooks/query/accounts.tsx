@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
@@ -90,16 +90,13 @@ export function useEditAccount(props) {
   const client = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`accounts/${id}`, values),
-    {
-      onSuccess: () => {
-        // Common invalidate queries.
-        commonInvalidateQueries(client);
-      },
-      ...props,
+  return useMutation(([id, values]) => apiRequest.post(`accounts/${id}`, values), {
+    onSuccess: () => {
+      // Common invalidate queries.
+      commonInvalidateQueries(client);
     },
-  );
+    ...props,
+  });
 }
 
 /**

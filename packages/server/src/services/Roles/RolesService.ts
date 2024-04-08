@@ -1,5 +1,4 @@
-import { Service, Inject } from 'typedi';
-import Knex from 'knex';
+import { ServiceError } from '@/exceptions';
 import {
   ICreateRoleDTO,
   ICreateRolePermissionDTO,
@@ -10,16 +9,17 @@ import {
   IRoleDeletedPayload,
   IRoleEditedPayload,
 } from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError } from '@/exceptions';
-import { AbilitySchema } from './AbilitySchema';
-import { getInvalidPermissions } from './utils';
-import UnitOfWork from '@/services/UnitOfWork';
-import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import Knex from 'knex';
+import { Inject, Service } from 'typedi';
+import { AbilitySchema } from './AbilitySchema';
 import { RoleTransformer } from './RoleTransformer';
+import { ERRORS } from './constants';
+import { getInvalidPermissions } from './utils';
 
 @Service()
 export default class RolesService {
@@ -41,10 +41,7 @@ export default class RolesService {
    * @param {ICreateRoleDTO} createRoleDTO
    * @returns
    */
-  public createRole = async (
-    tenantId: number,
-    createRoleDTO: ICreateRoleDTO
-  ) => {
+  public createRole = async (tenantId: number, createRoleDTO: ICreateRoleDTO) => {
     const { Role } = this.tenancy.models(tenantId);
 
     // Validates the invalid permissions.
@@ -78,11 +75,7 @@ export default class RolesService {
    * @param {number} roleId -
    * @param {IEditRoleDTO} editRoleDTO - Edit role DTO.
    */
-  public editRole = async (
-    tenantId: number,
-    roleId: number,
-    editRoleDTO: IEditRoleDTO
-  ) => {
+  public editRole = async (tenantId: number, roleId: number, editRoleDTO: IEditRoleDTO) => {
     const { Role } = this.tenancy.models(tenantId);
 
     // Validates the invalid permissions.
@@ -91,9 +84,7 @@ export default class RolesService {
     // Retrieve the given role or throw not found serice error.
     const oldRole = await this.getRoleOrThrowError(tenantId, roleId);
 
-    const permissions = this.tranaformEditPermissionsDTO(
-      editRoleDTO.permissions
-    );
+    const permissions = this.tranaformEditPermissionsDTO(editRoleDTO.permissions);
     // Updates the role on the storage.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Updates the given role to the storage.
@@ -121,10 +112,7 @@ export default class RolesService {
    * @param {number} roleId
    * @returns {Promise<IRole>}
    */
-  public getRoleOrThrowError = async (
-    tenantId: number,
-    roleId: number
-  ): Promise<IRole> => {
+  public getRoleOrThrowError = async (tenantId: number, roleId: number): Promise<IRole> => {
     const { Role } = this.tenancy.models(tenantId);
 
     const role = await Role.query().findById(roleId);
@@ -149,10 +137,7 @@ export default class RolesService {
    * @param {number} tenantId -
    * @param {number} roleId - Role id.
    */
-  public deleteRole = async (
-    tenantId: number,
-    roleId: number
-  ): Promise<void> => {
+  public deleteRole = async (tenantId: number, roleId: number): Promise<void> => {
     const { Role, RolePermission } = this.tenancy.models(tenantId);
 
     // Retrieve the given role or throw not found serice error.
@@ -204,9 +189,7 @@ export default class RolesService {
   public getRole = async (tenantId: number, roleId: number): Promise<IRole> => {
     const { Role } = this.tenancy.models(tenantId);
 
-    const role = await Role.query()
-      .findById(roleId)
-      .withGraphFetched('permissions');
+    const role = await Role.query().findById(roleId).withGraphFetched('permissions');
 
     this.throwRoleNotFound(role);
 
@@ -227,9 +210,7 @@ export default class RolesService {
    * Validates the invalid given permissions.
    * @param {ICreateRolePermissionDTO[]} permissions -
    */
-  public validateInvalidPermissions = (
-    permissions: ICreateRolePermissionDTO[]
-  ) => {
+  public validateInvalidPermissions = (permissions: ICreateRolePermissionDTO[]) => {
     const invalidPerms = getInvalidPermissions(AbilitySchema, permissions);
 
     if (invalidPerms.length > 0) {
@@ -244,9 +225,7 @@ export default class RolesService {
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {ICreateRolePermissionDTO[]}
    */
-  private tranaformPermissionsDTO = (
-    permissions: ICreateRolePermissionDTO[]
-  ) => {
+  private tranaformPermissionsDTO = (permissions: ICreateRolePermissionDTO[]) => {
     return permissions.map((permission: ICreateRolePermissionDTO) => ({
       subject: permission.subject,
       ability: permission.ability,
@@ -259,9 +238,7 @@ export default class RolesService {
    * @param {ICreateRolePermissionDTO[]} permissions
    * @returns {IEditRolePermissionDTO[]}
    */
-  private tranaformEditPermissionsDTO = (
-    permissions: IEditRolePermissionDTO[]
-  ) => {
+  private tranaformEditPermissionsDTO = (permissions: IEditRolePermissionDTO[]) => {
     return permissions.map((permission: IEditRolePermissionDTO) => ({
       permissionId: permission.permissionId,
       subject: permission.subject,
@@ -275,10 +252,7 @@ export default class RolesService {
    * @param {number} tenantId
    * @param {number} roleId
    */
-  private validateRoleNotAssociatedToUser = async (
-    tenantId: number,
-    roleId: number
-  ) => {
+  private validateRoleNotAssociatedToUser = async (tenantId: number, roleId: number) => {
     const { User } = this.tenancy.models(tenantId);
 
     const userAssociatedRole = await User.query().where('roleId', roleId);

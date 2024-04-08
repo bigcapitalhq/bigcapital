@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormattedMessage as T, FormattedHTMLMessage } from '@/components';
@@ -73,7 +72,4 @@ function ProjectDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ProjectDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ProjectDeleteAlert);

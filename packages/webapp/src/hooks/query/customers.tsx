@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMutation, useQueryClient } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from '@/utils';
@@ -66,19 +66,16 @@ export function useEditCustomer(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) => apiRequest.post(`customers/${id}`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific customer.
-        queryClient.invalidateQueries([t.CUSTOMER, id]);
+  return useMutation(([id, values]) => apiRequest.post(`customers/${id}`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific customer.
+      queryClient.invalidateQueries([t.CUSTOMER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -135,20 +132,16 @@ export function useEditCustomerOpeningBalance(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`customers/${id}/opening_balance`, values),
-    {
-      onSuccess: (res, [id, values]) => {
-        // Invalidate specific customer.
-        queryClient.invalidateQueries([t.CUSTOMER, id]);
+  return useMutation(([id, values]) => apiRequest.post(`customers/${id}/opening_balance`, values), {
+    onSuccess: (res, [id, values]) => {
+      // Invalidate specific customer.
+      queryClient.invalidateQueries([t.CUSTOMER, id]);
 
-        // Common invalidate queries.
-        commonInvalidateQueries(queryClient);
-      },
-      ...props,
+      // Common invalidate queries.
+      commonInvalidateQueries(queryClient);
     },
-  );
+    ...props,
+  });
 }
 
 export function useRefreshCustomers() {

@@ -102,9 +102,7 @@ export interface IProfitLossHorizontalDatePeriodNode
   percentageColumn?: IProfitLossSheetPercentage;
 }
 
-export interface IProfitLossSheetCommonNode
-  extends IFinancialNodeWithPreviousYear,
-    IFinancialNodeWithPreviousPeriod {
+export interface IProfitLossSheetCommonNode extends IFinancialNodeWithPreviousYear, IFinancialNodeWithPreviousPeriod {
   id: ProfitLossAggregateNodeId;
   name: string;
 
@@ -116,17 +114,14 @@ export interface IProfitLossSheetCommonNode
   percentageRow?: IProfitLossSheetPercentage;
   percentageColumn?: IProfitLossSheetPercentage;
 }
-export interface IProfitLossSheetAccountNode
-  extends IProfitLossSheetCommonNode {
+export interface IProfitLossSheetAccountNode extends IProfitLossSheetCommonNode {
   nodeType: ProfitLossNodeType.ACCOUNT;
 }
-export interface IProfitLossSheetEquationNode
-  extends IProfitLossSheetCommonNode {
+export interface IProfitLossSheetEquationNode extends IProfitLossSheetCommonNode {
   nodeType: ProfitLossNodeType.EQUATION;
 }
 
-export interface IProfitLossSheetAccountsNode
-  extends IProfitLossSheetCommonNode {
+export interface IProfitLossSheetAccountsNode extends IProfitLossSheetCommonNode {
   nodeType: ProfitLossNodeType.ACCOUNTS;
 }
 
@@ -135,7 +130,7 @@ export type IProfitLossSheetNode =
   | IProfitLossSheetEquationNode
   | IProfitLossSheetAccountNode;
 
-export interface IProfitLossSheetMeta extends IFinancialSheetCommonMeta{
+export interface IProfitLossSheetMeta extends IFinancialSheetCommonMeta {
   formattedDateRange: string;
   formattedFromDate: string;
   formattedToDate: string;
@@ -152,14 +147,12 @@ export interface IProfitLossCommonSchemaNode {
   alwaysShow?: boolean;
 }
 
-export interface IProfitLossEquationSchemaNode
-  extends IProfitLossCommonSchemaNode {
+export interface IProfitLossEquationSchemaNode extends IProfitLossCommonSchemaNode {
   nodeType: ProfitLossNodeType.EQUATION;
   equation: string;
 }
 
-export interface IProfitLossAccountsSchemaNode
-  extends IProfitLossCommonSchemaNode {
+export interface IProfitLossAccountsSchemaNode extends IProfitLossCommonSchemaNode {
   nodeType: ProfitLossNodeType.ACCOUNTS;
   accountsTypes: string[];
 }
@@ -180,8 +173,7 @@ export enum ProfitLossSheetRowType {
   TOTAL = 'TOTAL',
 }
 
-
-export interface IProfitLossSheetTable extends IFinancialTable{
+export interface IProfitLossSheetTable extends IFinancialTable {
   meta: IProfitLossSheetMeta;
   query: IProfitLossSheetQuery;
 }

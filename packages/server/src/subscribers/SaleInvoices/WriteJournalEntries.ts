@@ -1,11 +1,7 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
-import {
-  ISaleInvoiceCreatedPayload,
-  ISaleInvoiceDeletePayload,
-  ISaleInvoiceEditedPayload,
-} from '@/interfaces';
+import { ISaleInvoiceCreatedPayload, ISaleInvoiceDeletePayload, ISaleInvoiceEditedPayload } from '@/interfaces';
 import { SaleInvoiceGLEntries } from '@/services/Sales/Invoices/InvoiceGLEntries';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SaleInvoiceWriteGLEntriesSubscriber {
@@ -16,22 +12,10 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
    * Constructor method.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleWriteJournalEntriesOnInvoiceCreated
-    );
-    bus.subscribe(
-      events.saleInvoice.onDelivered,
-      this.handleWriteJournalEntriesOnInvoiceCreated
-    );
-    bus.subscribe(
-      events.saleInvoice.onEdited,
-      this.handleRewriteJournalEntriesOnceInvoiceEdit
-    );
-    bus.subscribe(
-      events.saleInvoice.onDeleted,
-      this.handleRevertingInvoiceJournalEntriesOnDelete
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.handleWriteJournalEntriesOnInvoiceCreated);
+    bus.subscribe(events.saleInvoice.onDelivered, this.handleWriteJournalEntriesOnInvoiceCreated);
+    bus.subscribe(events.saleInvoice.onEdited, this.handleRewriteJournalEntriesOnceInvoiceEdit);
+    bus.subscribe(events.saleInvoice.onDeleted, this.handleRevertingInvoiceJournalEntriesOnDelete);
   }
 
   /**
@@ -48,11 +32,7 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
     // Can't continue if the sale invoice is not delivered yet.
     if (!saleInvoice.deliveredAt) return null;
 
-    await this.saleInvoiceGLEntries.writeInvoiceGLEntries(
-      tenantId,
-      saleInvoiceId,
-      trx
-    );
+    await this.saleInvoiceGLEntries.writeInvoiceGLEntries(tenantId, saleInvoiceId, trx);
   };
 
   /**
@@ -68,11 +48,7 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
     // Can't continue if the sale invoice is not delivered yet.
     if (!saleInvoice.deliveredAt) return null;
 
-    await this.saleInvoiceGLEntries.rewritesInvoiceGLEntries(
-      tenantId,
-      saleInvoice.id,
-      trx
-    );
+    await this.saleInvoiceGLEntries.rewritesInvoiceGLEntries(tenantId, saleInvoice.id, trx);
   };
 
   /**
@@ -85,10 +61,6 @@ export default class SaleInvoiceWriteGLEntriesSubscriber {
     saleInvoiceId,
     trx,
   }: ISaleInvoiceDeletePayload) => {
-    await this.saleInvoiceGLEntries.revertInvoiceGLEntries(
-      tenantId,
-      saleInvoiceId,
-      trx
-    );
+    await this.saleInvoiceGLEntries.revertInvoiceGLEntries(tenantId, saleInvoiceId, trx);
   };
 }

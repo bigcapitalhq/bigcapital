@@ -1,10 +1,7 @@
-import { Service, Inject } from 'typedi';
+import { IRefundCreditNoteDeletedPayload, IRefundVendorCreditCreatedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import RefundVendorCreditGLEntries from './RefundVendorCreditGLEntries';
-import {
-  IRefundCreditNoteDeletedPayload,
-  IRefundVendorCreditCreatedPayload,
-} from '@/interfaces';
 
 @Service()
 export default class RefundVendorCreditGLEntriesSubscriber {
@@ -15,14 +12,8 @@ export default class RefundVendorCreditGLEntriesSubscriber {
    * Attaches events with handlers.
    */
   attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onRefundCreated,
-      this.writeRefundVendorCreditGLEntriesOnceCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onRefundDeleted,
-      this.revertRefundVendorCreditOnceDeleted
-    );
+    bus.subscribe(events.vendorCredit.onRefundCreated, this.writeRefundVendorCreditGLEntriesOnceCreated);
+    bus.subscribe(events.vendorCredit.onRefundDeleted, this.revertRefundVendorCreditOnceDeleted);
   }
 
   /**
@@ -34,11 +25,7 @@ export default class RefundVendorCreditGLEntriesSubscriber {
     trx,
     refundVendorCredit,
   }: IRefundVendorCreditCreatedPayload) => {
-    await this.refundVendorGLEntries.saveRefundCreditGLEntries(
-      tenantId,
-      refundVendorCredit.id,
-      trx
-    );
+    await this.refundVendorGLEntries.saveRefundCreditGLEntries(tenantId, refundVendorCredit.id, trx);
   };
 
   /**
@@ -50,10 +37,6 @@ export default class RefundVendorCreditGLEntriesSubscriber {
     trx,
     refundCreditId,
   }: IRefundCreditNoteDeletedPayload) => {
-    await this.refundVendorGLEntries.revertRefundCreditGLEntries(
-      tenantId,
-      refundCreditId,
-      trx
-    );
+    await this.refundVendorGLEntries.revertRefundCreditGLEntries(tenantId, refundCreditId, trx);
   };
 }

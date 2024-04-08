@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormGroup, InputGroup, ControlGroup } from '@blueprintjs/core';
@@ -10,10 +9,8 @@ import { inputIntent } from '@/utils';
  * Vendor form  after primary section.
  */
 function VendorFormAfterPrimarySection() {
-  
-
   return (
-    <div class="customer-form__after-primary-section-content">
+    <div className="customer-form__after-primary-section-content">
       {/*------------ Vendor email -----------*/}
       <FastField name={'email'}>
         {({ field, meta: { error, touched } }) => (
@@ -30,28 +27,16 @@ function VendorFormAfterPrimarySection() {
       </FastField>
 
       {/*------------ Phone number -----------*/}
-      <FormGroup
-        className={'form-group--phone-number'}
-        label={<T id={'phone_number'} />}
-        inline={true}
-      >
+      <FormGroup className={'form-group--phone-number'} label={<T id={'phone_number'} />} inline={true}>
         <ControlGroup>
           <FastField name={'work_phone'}>
             {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                placeholder={intl.get('work')}
-                {...field}
-              />
+              <InputGroup intent={inputIntent({ error, touched })} placeholder={intl.get('work')} {...field} />
             )}
           </FastField>
           <FastField name={'personal_phone'}>
             {({ field, meta: { error, touched } }) => (
-              <InputGroup
-                intent={inputIntent({ error, touched })}
-                placeholder={intl.get('mobile')}
-                {...field}
-              />
+              <InputGroup intent={inputIntent({ error, touched })} placeholder={intl.get('mobile')} {...field} />
             )}
           </FastField>
         </ControlGroup>

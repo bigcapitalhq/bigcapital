@@ -1,15 +1,10 @@
-import { Inject, Service } from 'typedi';
-import * as R from 'ramda';
-import {
-  IBillPayment,
-  IBillPaymentsFilter,
-  IPaginationMeta,
-  IFilterMeta,
-} from '@/interfaces';
-import { BillPaymentTransformer } from './BillPaymentTransformer';
+import { IBillPayment, IBillPaymentsFilter, IFilterMeta, IPaginationMeta } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { BillPaymentTransformer } from './BillPaymentTransformer';
 
 @Service()
 export class GetBillPayments {
@@ -29,7 +24,7 @@ export class GetBillPayments {
    */
   public async getBillPayments(
     tenantId: number,
-    filterDTO: IBillPaymentsFilter
+    filterDTO: IBillPaymentsFilter,
   ): Promise<{
     billPayments: IBillPayment;
     pagination: IPaginationMeta;
@@ -41,11 +36,7 @@ export class GetBillPayments {
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      BillPayment,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, BillPayment, filter);
     const { results, pagination } = await BillPayment.query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
@@ -56,11 +47,7 @@ export class GetBillPayments {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Transformes the bill payments models to POJO.
-    const billPayments = await this.transformer.transform(
-      tenantId,
-      results,
-      new BillPaymentTransformer()
-    );
+    const billPayments = await this.transformer.transform(tenantId, results, new BillPaymentTransformer());
     return {
       billPayments,
       pagination,

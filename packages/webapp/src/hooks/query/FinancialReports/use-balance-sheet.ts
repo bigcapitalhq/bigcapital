@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 import { useRequestQuery } from '../../useQueryRequest';
 import { useDownloadFile } from '../../useDownloadFile';

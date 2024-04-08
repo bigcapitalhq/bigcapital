@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DialogContent } from '@/components';
 import { useSettingCashFlow } from '@/hooks/query';
@@ -21,7 +20,6 @@ function TransactionNumberDialogProvider({ query, ...props }) {
   );
 }
 
-const useTransactionNumberDialogContext = () =>
-  React.useContext(TransactionNumberDialogContext);
+const useTransactionNumberDialogContext = () => React.useContext(TransactionNumberDialogContext);
 
 export { TransactionNumberDialogProvider, useTransactionNumberDialogContext };

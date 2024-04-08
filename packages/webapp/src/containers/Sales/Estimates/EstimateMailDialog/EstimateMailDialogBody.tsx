@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import EstimateMailDialogContent from './EstimateMailDialogContent';
@@ -22,11 +22,7 @@ function EstimateMailDialogBodyRoot({
   };
 
   return (
-    <EstimateMailDialogContent
-      estimateId={estimateId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancelClick}
-    />
+    <EstimateMailDialogContent estimateId={estimateId} onFormSubmit={handleSubmit} onCancelClick={handleCancelClick} />
   );
 }
 

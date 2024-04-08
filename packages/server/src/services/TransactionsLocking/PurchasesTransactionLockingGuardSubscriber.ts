@@ -1,5 +1,3 @@
-import { Inject } from 'typedi';
-import events from '@/subscribers/events';
 import {
   IBillCreatingPayload,
   IBillEditingPayload,
@@ -13,6 +11,8 @@ import {
   IVendorCreditDeletingPayload,
   IVendorCreditEditingPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject } from 'typedi';
 import PurchasesTransactionsLocking from './PurchasesTransactionLockingGuard';
 
 export default class PurchasesTransactionLockingGuardSubscriber {
@@ -25,52 +25,19 @@ export default class PurchasesTransactionLockingGuardSubscriber {
    */
   public attach = (bus) => {
     // Bills
-    bus.subscribe(
-      events.bill.onCreating,
-      this.transactionLockingGuardOnBillCreating
-    );
-    bus.subscribe(
-      events.bill.onEditing,
-      this.transactionLockingGuardOnBillEditing
-    );
-    bus.subscribe(
-      events.bill.onDeleting,
-      this.transactionLockingGuardOnBillDeleting
-    );
+    bus.subscribe(events.bill.onCreating, this.transactionLockingGuardOnBillCreating);
+    bus.subscribe(events.bill.onEditing, this.transactionLockingGuardOnBillEditing);
+    bus.subscribe(events.bill.onDeleting, this.transactionLockingGuardOnBillDeleting);
     // Payment mades.
-    bus.subscribe(
-      events.billPayment.onCreating,
-      this.transactionLockingGuardOnPaymentCreating
-    );
-    bus.subscribe(
-      events.billPayment.onEditing,
-      this.transactionLockingGuardOnPaymentEditing
-    );
-    bus.subscribe(
-      events.billPayment.onDeleting,
-      this.transactionLockingGuardOnPaymentDeleting
-    );
+    bus.subscribe(events.billPayment.onCreating, this.transactionLockingGuardOnPaymentCreating);
+    bus.subscribe(events.billPayment.onEditing, this.transactionLockingGuardOnPaymentEditing);
+    bus.subscribe(events.billPayment.onDeleting, this.transactionLockingGuardOnPaymentDeleting);
     // Vendor credits.
-    bus.subscribe(
-      events.vendorCredit.onCreating,
-      this.transactionLockingGuardOnVendorCreditCreating
-    );
-    bus.subscribe(
-      events.vendorCredit.onDeleting,
-      this.transactionLockingGuardOnVendorCreditDeleting
-    );
-    bus.subscribe(
-      events.vendorCredit.onEditing,
-      this.transactionLockingGuardOnVendorCreditEditing
-    );
-    bus.subscribe(
-      events.vendorCredit.onRefundCreating,
-      this.transactionLockingGuardOnRefundVendorCredit
-    );
-    bus.subscribe(
-      events.vendorCredit.onRefundDeleting,
-      this.transactionLockingGuardOnRefundCreditDeleting
-    );
+    bus.subscribe(events.vendorCredit.onCreating, this.transactionLockingGuardOnVendorCreditCreating);
+    bus.subscribe(events.vendorCredit.onDeleting, this.transactionLockingGuardOnVendorCreditDeleting);
+    bus.subscribe(events.vendorCredit.onEditing, this.transactionLockingGuardOnVendorCreditEditing);
+    bus.subscribe(events.vendorCredit.onRefundCreating, this.transactionLockingGuardOnRefundVendorCredit);
+    bus.subscribe(events.vendorCredit.onRefundDeleting, this.transactionLockingGuardOnRefundCreditDeleting);
   };
 
   /**
@@ -89,15 +56,9 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     billPaymentDTO,
   }: IBillPaymentEditingPayload) => {
     // Validate old payment date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldBillPayment.paymentDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldBillPayment.paymentDate);
     // Validate the new payment date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      billPaymentDTO.paymentDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, billPaymentDTO.paymentDate);
   };
 
   /**
@@ -108,10 +69,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     tenantId,
     billPaymentDTO,
   }: IBillPaymentCreatingPayload) => {
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      billPaymentDTO.paymentDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, billPaymentDTO.paymentDate);
   };
 
   /**
@@ -122,10 +80,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     tenantId,
     oldBillPayment,
   }: IBillPaymentDeletingPayload) => {
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldBillPayment.paymentDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldBillPayment.paymentDate);
   };
 
   /**
@@ -138,58 +93,36 @@ export default class PurchasesTransactionLockingGuardSubscriber {
    * Transaction locking guard on bill creating.
    * @param {IBillCreatingPayload} payload
    */
-  private transactionLockingGuardOnBillCreating = async ({
-    tenantId,
-    billDTO,
-  }: IBillCreatingPayload) => {
+  private transactionLockingGuardOnBillCreating = async ({ tenantId, billDTO }: IBillCreatingPayload) => {
     // Can't continue if the new bill is not published.
     if (!billDTO.open) return;
 
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      billDTO.billDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, billDTO.billDate);
   };
 
   /**
    * Transaction locking guard on bill editing.
    * @param {IBillEditingPayload} payload
    */
-  private transactionLockingGuardOnBillEditing = async ({
-    oldBill,
-    tenantId,
-    billDTO,
-  }: IBillEditingPayload) => {
+  private transactionLockingGuardOnBillEditing = async ({ oldBill, tenantId, billDTO }: IBillEditingPayload) => {
     // Can't continue if the old and new bill are not published.
     if (!oldBill.isOpen && !billDTO.open) return;
 
     // Validate the old bill date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldBill.billDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldBill.billDate);
     // Validate the new bill date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      billDTO.billDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, billDTO.billDate);
   };
 
   /**
    * Transaction locking guard on bill deleting.
    * @param {IBillEventDeletingPayload} payload
    */
-  private transactionLockingGuardOnBillDeleting = async ({
-    tenantId,
-    oldBill,
-  }: IBillEventDeletingPayload) => {
+  private transactionLockingGuardOnBillDeleting = async ({ tenantId, oldBill }: IBillEventDeletingPayload) => {
     // Can't continue if the old bill is not published.
     if (!oldBill.isOpen) return;
 
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldBill.billDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldBill.billDate);
   };
 
   /**
@@ -209,10 +142,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     // Can't continue if the new vendor credit is not published.
     if (!vendorCreditCreateDTO.open) return;
 
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      vendorCreditCreateDTO.vendorCreditDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, vendorCreditCreateDTO.vendorCreditDate);
   };
 
   /**
@@ -226,10 +156,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     // Can't continue if the old vendor credit is not open.
     if (!oldVendorCredit.isOpen) return;
 
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldVendorCredit.vendorCreditDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldVendorCredit.vendorCreditDate);
   };
 
   /**
@@ -245,15 +172,9 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     if (!oldVendorCredit.isPublished && !vendorCreditDTO.open) return;
 
     // Validate the old credit date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldVendorCredit.vendorCreditDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldVendorCredit.vendorCreditDate);
     // Validate the new credit date.
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      vendorCreditDTO.vendorCreditDate
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, vendorCreditDTO.vendorCreditDate);
   };
 
   /**
@@ -264,10 +185,7 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     tenantId,
     refundVendorCreditDTO,
   }: IRefundVendorCreditCreatingPayload) => {
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      refundVendorCreditDTO.date
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, refundVendorCreditDTO.date);
   };
 
   /**
@@ -278,9 +196,6 @@ export default class PurchasesTransactionLockingGuardSubscriber {
     tenantId,
     oldRefundCredit,
   }: IRefundVendorCreditDeletingPayload) => {
-    await this.purchasesTransactionsLocking.transactionLockingGuard(
-      tenantId,
-      oldRefundCredit.date
-    );
+    await this.purchasesTransactionsLocking.transactionLockingGuard(tenantId, oldRefundCredit.date);
   };
 }

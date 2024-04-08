@@ -1,6 +1,4 @@
-
-
-export interface IPaymentModel {}
+export type IPaymentModel = {};
 
 export interface ILicensePaymentModel extends IPaymentModel {
   licenseCode: string;

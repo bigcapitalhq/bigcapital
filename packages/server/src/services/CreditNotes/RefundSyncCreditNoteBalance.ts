@@ -1,6 +1,5 @@
-import Knex from 'knex';
-import { IRefundCreditNote } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import Knex from 'knex';
 import { Inject, Service } from 'typedi';
 
 @Service()
@@ -18,13 +17,11 @@ export default class RefundSyncCreditNoteBalance {
     tenantId: number,
     creditNoteId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
-    await CreditNote.query(trx)
-      .findById(creditNoteId)
-      .increment('refunded_amount', amount);
+    await CreditNote.query(trx).findById(creditNoteId).increment('refunded_amount', amount);
   };
 
   /**
@@ -37,12 +34,10 @@ export default class RefundSyncCreditNoteBalance {
     tenantId: number,
     creditNoteId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { CreditNote } = this.tenancy.models(tenantId);
 
-    await CreditNote.query(trx)
-      .findById(creditNoteId)
-      .decrement('refunded_amount', amount);
+    await CreditNote.query(trx).findById(creditNoteId).decrement('refunded_amount', amount);
   };
 }

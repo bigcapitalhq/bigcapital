@@ -1,5 +1,5 @@
-import moment from 'moment';
 import { IDateRange, ITableColumn, ITableColumnAccessor } from '@/interfaces';
+import moment from 'moment';
 
 export const FinancialTablePreviousYear = (Base) =>
   class extends Base {
@@ -14,9 +14,7 @@ export const FinancialTablePreviousYear = (Base) =>
      * @param   {DateRange} previousYear -
      * @returns {ITableColumn}
      */
-    protected getPreviousYearTotalColumn = (
-      dateRange?: IDateRange
-    ): ITableColumn => {
+    protected getPreviousYearTotalColumn = (dateRange?: IDateRange): ITableColumn => {
       const PYDate = dateRange ? dateRange.toDate : this.getTotalPreviousYear();
       const PYFormatted = moment(PYDate).format('YYYY-MM-DD');
 
@@ -91,9 +89,7 @@ export const FinancialTablePreviousYear = (Base) =>
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousYearTotalHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousYearTotalHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_year',
         accessor: `horizontalTotals[${index}].previousYear.formattedAmount`,
@@ -105,9 +101,7 @@ export const FinancialTablePreviousYear = (Base) =>
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousYearChangeHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousYearChangeHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_year_change',
         accessor: `horizontalTotals[${index}].previousYearChange.formattedAmount`,
@@ -119,9 +113,7 @@ export const FinancialTablePreviousYear = (Base) =>
      * @param   {number} index
      * @returns {ITableColumnAccessor}
      */
-    protected getPreviousYearPercentageHorizAccessor = (
-      index: number
-    ): ITableColumnAccessor => {
+    protected getPreviousYearPercentageHorizAccessor = (index: number): ITableColumnAccessor => {
       return {
         key: 'previous_year_percentage',
         accessor: `horizontalTotals[${index}].previousYearPercentage.formattedAmount`,

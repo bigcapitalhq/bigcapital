@@ -363,29 +363,28 @@ export interface IVendorOpeningBalanceEditedPayload {
   trx: Knex.Transaction;
 }
 
-
 export interface ICustomerActivatingPayload {
   tenantId: number;
-  trx: Knex.Transaction,
+  trx: Knex.Transaction;
   oldCustomer: IContact;
 }
 
 export interface ICustomerActivatedPayload {
   tenantId: number;
-  trx: Knex.Transaction,
-  oldCustomer: IContact; 
+  trx: Knex.Transaction;
+  oldCustomer: IContact;
   customer: IContact;
 }
 
 export interface IVendorActivatingPayload {
   tenantId: number;
-  trx: Knex.Transaction,
+  trx: Knex.Transaction;
   oldVendor: IContact;
 }
 
 export interface IVendorActivatedPayload {
   tenantId: number;
-  trx: Knex.Transaction,
-  oldVendor: IContact; 
+  trx: Knex.Transaction;
+  oldVendor: IContact;
   vendor: IContact;
 }

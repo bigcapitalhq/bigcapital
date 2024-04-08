@@ -1,5 +1,4 @@
-import { Model } from 'objection';
-import TenantModel from 'models/TenantModel';
+import TenantModel from '../models/TenantModel';
 
 export default class ViewColumn extends TenantModel {
   /**
@@ -13,9 +12,6 @@ export default class ViewColumn extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-
-    return {
-
-    };
+    return {};
   }
 }

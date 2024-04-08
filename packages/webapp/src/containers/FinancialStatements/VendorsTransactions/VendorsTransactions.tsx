@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
@@ -59,10 +58,7 @@ function VendorsTransactions({
       <VendorsTransactionsLoadingBar />
       <DashboardPageContent>
         <FinancialStatement>
-          <VendorsTransactionsHeader
-            pageFilter={filter}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <VendorsTransactionsHeader pageFilter={filter} onSubmitFilter={handleFilterSubmit} />
           <VendorsTransactionsBody />
         </FinancialStatement>
       </DashboardPageContent>

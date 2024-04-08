@@ -1,6 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
-import Time from 'models/Time';
-import { formatMinutes } from 'utils/formatMinutes';
+import Time from '../../../models/Time';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 export class TimeTransformer extends Transformer {
   /**
@@ -48,10 +48,10 @@ export class TimeTransformer extends Transformer {
 
   /**
    * Retrieves the formatted duration.
-   * @param {Time} time 
+   * @param {Time} time
    * @returns {string}
    */
   public durationFormatted = (time: Time) => {
     return formatMinutes(time.duration);
-  }
+  };
 }

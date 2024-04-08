@@ -1,15 +1,12 @@
-import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
-import {
-  ISaleEstimateDeletedPayload,
-  ISaleEstimateDeletingPayload,
-} from '@/interfaces';
-import events from '@/subscribers/events';
-import { ERRORS } from './constants';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ISaleEstimateDeletedPayload, ISaleEstimateDeletingPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
+import { ERRORS } from './constants';
 
 @Service()
 export class DeleteSaleEstimate {
@@ -29,16 +26,11 @@ export class DeleteSaleEstimate {
    * @param {IEstimate} estimateId
    * @return {void}
    */
-  public async deleteEstimate(
-    tenantId: number,
-    estimateId: number
-  ): Promise<void> {
+  public async deleteEstimate(tenantId: number, estimateId: number): Promise<void> {
     const { SaleEstimate, ItemEntry } = this.tenancy.models(tenantId);
 
     // Retrieve sale estimate or throw not found service error.
-    const oldSaleEstimate = await SaleEstimate.query()
-      .findById(estimateId)
-      .throwIfNotFound();
+    const oldSaleEstimate = await SaleEstimate.query().findById(estimateId).throwIfNotFound();
 
     // Throw error if the sale estimate converted to sale invoice.
     if (oldSaleEstimate.convertedToInvoiceId) {
@@ -54,10 +46,7 @@ export class DeleteSaleEstimate {
       } as ISaleEstimateDeletingPayload);
 
       // Delete sale estimate entries.
-      await ItemEntry.query(trx)
-        .where('reference_id', estimateId)
-        .where('reference_type', 'SaleEstimate')
-        .delete();
+      await ItemEntry.query(trx).where('reference_id', estimateId).where('reference_type', 'SaleEstimate').delete();
 
       // Delete sale estimate transaction.
       await SaleEstimate.query(trx).where('id', estimateId).delete();

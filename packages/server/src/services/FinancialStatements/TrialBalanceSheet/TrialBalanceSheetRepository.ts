@@ -1,4 +1,4 @@
-import { ITrialBalanceSheetQuery } from '@/interfaces';
+import type { ITrialBalanceSheetQuery } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
@@ -46,8 +46,7 @@ export class TrialBalanceSheetRepository {
    */
   public initAccounts = async () => {
     const accounts = await this.getAccounts();
-    const accountsDepGraph =
-      await this.repos.accountRepository.getDependencyGraph();
+    const accountsDepGraph = await this.repos.accountRepository.getDependencyGraph();
 
     this.accountsDepGraph = accountsDepGraph;
     this.accounts = accounts;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useCashFlowStatementReport } from '@/hooks/query';
@@ -11,10 +10,7 @@ const CashFLowStatementContext = React.createContext();
  */
 function CashFlowStatementProvider({ filter, ...props }) {
   // Transforms the given state query to http query.
-  const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(filter),
-    [filter],
-  );
+  const httpQuery = React.useMemo(() => transformFilterFormToQuery(filter), [filter]);
   // Fetching the cash flow statement report.
   const {
     data: cashFlowStatement,
@@ -40,7 +36,6 @@ function CashFlowStatementProvider({ filter, ...props }) {
   );
 }
 
-const useCashFlowStatementContext = () =>
-  React.useContext(CashFLowStatementContext);
+const useCashFlowStatementContext = () => React.useContext(CashFLowStatementContext);
 
 export { CashFlowStatementProvider, useCashFlowStatementContext };

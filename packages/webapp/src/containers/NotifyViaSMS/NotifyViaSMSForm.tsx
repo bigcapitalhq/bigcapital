@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { castArray, includes } from 'lodash';
@@ -15,7 +14,6 @@ import { FormObserver, SMSMessagePreview } from '@/components';
 
 import { transformToForm, safeInvoke } from '@/utils';
 import { getSMSUnits } from './utils';
-
 
 const defaultInitialValues = {
   notification_key: '',
@@ -68,10 +66,7 @@ function NotifyViaSMSForm({
     ...transformToForm(initialValuesComponent, defaultInitialValues),
   };
   // Ensure always returns array.
-  const formattedNotificationTypes = React.useMemo(
-    () => castArray(notificationTypes),
-    [notificationTypes],
-  );
+  const formattedNotificationTypes = React.useMemo(() => castArray(notificationTypes), [notificationTypes]);
 
   return (
     <Formik
@@ -85,9 +80,7 @@ function NotifyViaSMSForm({
           <NotifyContent>
             <NotifyFieldsSection>
               <NotifyViaSMSAlerts calloutCodes={calloutCodes} />
-              <NotifyViaSMSFormFields
-                notificationTypes={formattedNotificationTypes}
-              />
+              <NotifyViaSMSFormFields notificationTypes={formattedNotificationTypes} />
             </NotifyFieldsSection>
 
             <SMSMessagePreviewSection />

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { includes } from 'lodash';
 
@@ -24,9 +23,6 @@ function EnsureSubscriptionsIsInactive({
   );
 }
 
-export default compose(
-  withSubscriptions(
-    ({ isSubscriptionsInactive }) => ({ isSubscriptionsInactive }),
-    'main',
-  ),
-)(EnsureSubscriptionsIsInactive);
+export default compose(withSubscriptions(({ isSubscriptionsInactive }) => ({ isSubscriptionsInactive }), 'main'))(
+  EnsureSubscriptionsIsInactive,
+);

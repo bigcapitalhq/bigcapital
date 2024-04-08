@@ -1,11 +1,8 @@
-import { Inject, Service } from 'typedi';
+import { ITransactionsByVendorTable, ITransactionsByVendorsFilter } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TransactionsByVendorsTable } from './TransactionsByVendorTable';
-import {
-  ITransactionsByVendorTable,
-  ITransactionsByVendorsFilter,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { TransactionsByVendorsInjectable } from './TransactionsByVendorInjectable';
+import { TransactionsByVendorsTable } from './TransactionsByVendorTable';
 
 @Service()
 export class TransactionsByVendorTableInjectable {
@@ -21,16 +18,10 @@ export class TransactionsByVendorTableInjectable {
    * @param {ITransactionsByReferenceQuery} query
    * @returns {Promise<ITransactionsByVendorTable>}
    */
-  public async table(
-    tenantId: number,
-    query: ITransactionsByVendorsFilter
-  ): Promise<ITransactionsByVendorTable> {
+  public async table(tenantId: number, query: ITransactionsByVendorsFilter): Promise<ITransactionsByVendorTable> {
     const i18n = this.tenancy.i18n(tenantId);
 
-    const sheet = await this.transactionsByVendor.transactionsByVendors(
-      tenantId,
-      query
-    );
+    const sheet = await this.transactionsByVendor.transactionsByVendors(tenantId, query);
     const table = new TransactionsByVendorsTable(sheet.data, i18n);
 
     return {

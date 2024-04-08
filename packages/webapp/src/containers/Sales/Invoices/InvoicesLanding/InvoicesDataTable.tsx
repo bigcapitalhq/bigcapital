@@ -1,16 +1,10 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import InvoicesEmptyStatus from './InvoicesEmptyStatus';
 
 import { TABLES } from '@/constants/tables';
-import {
-  DataTable,
-  DashboardContentTable,
-  TableSkeletonHeader,
-  TableSkeletonRows,
-} from '@/components';
+import { DataTable, DashboardContentTable, TableSkeletonHeader, TableSkeletonRows } from '@/components';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
@@ -53,13 +47,7 @@ function InvoicesDataTable({
   const history = useHistory();
 
   // Invoices list context.
-  const {
-    invoices,
-    pagination,
-    isEmptyStatus,
-    isInvoicesLoading,
-    isInvoicesFetching,
-  } = useInvoicesListContext();
+  const { invoices, pagination, isEmptyStatus, isInvoicesLoading, isInvoicesFetching } = useInvoicesListContext();
 
   // Invoices table columns.
   const columns = useInvoicesTableColumns();
@@ -110,8 +98,7 @@ function InvoicesDataTable({
   };
 
   // Local storage memorizing columns widths.
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.INVOICES);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.INVOICES);
 
   // Handles fetch data once the table state change.
   const handleDataTableFetchData = useCallback(
@@ -163,7 +150,7 @@ function InvoicesDataTable({
           onViewDetails: handleViewDetailInvoice,
           onPrint: handlePrintInvoice,
           onConvert: handleConvertToCreitNote,
-          onSendMail: handleSendMailInvoice
+          onSendMail: handleSendMailInvoice,
         }}
       />
     </DashboardContentTable>

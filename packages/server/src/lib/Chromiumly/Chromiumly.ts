@@ -7,8 +7,7 @@ export class Chromiumly {
   public static readonly PDF_ENGINES_PATH = 'forms/pdfengines';
   public static readonly LIBRE_OFFICE_PATH = 'forms/libreoffice';
 
-  public static readonly GOTENBERG_DOCS_ENDPOINT =
-    process.env.GOTENBERG_DOCS_URL || '';
+  public static readonly GOTENBERG_DOCS_ENDPOINT = process.env.GOTENBERG_DOCS_URL || '';
 
   public static readonly CHROMIUM_ROUTES = {
     url: ChromiumRoute.URL,

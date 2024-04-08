@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { connect } from 'react-redux';
 import { getItemById } from '@/store/items/items.reducer';
 

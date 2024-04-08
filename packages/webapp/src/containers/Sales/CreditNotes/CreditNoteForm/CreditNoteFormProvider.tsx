@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { isEmpty, pick } from 'lodash';
@@ -48,12 +47,9 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
   });
 
   // Handle fetch  credit details.
-  const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(
-    creditNoteId,
-    {
-      enabled: !!creditNoteId,
-    },
-  );
+  const { data: creditNote, isLoading: isCreditNoteLoading } = useCreditNote(creditNoteId, {
+    enabled: !!creditNoteId,
+  });
   // Handle fetch invoice detail.
   const { data: invoice, isLoading: isInvoiceLoading } = useInvoice(invoiceId, {
     enabled: !!invoiceId,
@@ -117,11 +113,7 @@ function CreditNoteFormProvider({ creditNoteId, ...props }) {
     setSubmitPayload,
   };
 
-  const isLoading =
-    isItemsLoading ||
-    isCustomersLoading ||
-    isCreditNoteLoading ||
-    isInvoiceLoading;
+  const isLoading = isItemsLoading || isCustomersLoading || isCreditNoteLoading || isInvoiceLoading;
 
   return (
     <DashboardInsider loading={isLoading} name={'credit-note-form'}>

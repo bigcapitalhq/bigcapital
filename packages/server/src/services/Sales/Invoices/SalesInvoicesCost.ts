@@ -1,15 +1,12 @@
-import { Container, Service, Inject } from 'typedi';
+import { IInventoryCostLotsGLEntriesWriteEvent, IInventoryTransaction } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import InventoryService from '@/services/Inventory/Inventory';
+import UnitOfWork from '@/services/UnitOfWork';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { chain } from 'lodash';
 import moment from 'moment';
-import { Knex } from 'knex';
-import InventoryService from '@/services/Inventory/Inventory';
-import {
-  IInventoryCostLotsGLEntriesWriteEvent,
-  IInventoryTransaction,
-} from '@/interfaces';
-import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
-import events from '@/subscribers/events';
+import { Container, Inject, Service } from 'typedi';
 
 @Service()
 export class SaleInvoicesCost {
@@ -32,16 +29,12 @@ export class SaleInvoicesCost {
   async scheduleComputeCostByItemsIds(
     tenantId: number,
     inventoryItemsIds: number[],
-    startingDate: Date
+    startingDate: Date,
   ): Promise<void> {
     const asyncOpers: Promise<[]>[] = [];
 
     inventoryItemsIds.forEach((inventoryItemId: number) => {
-      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
-        tenantId,
-        inventoryItemId,
-        startingDate
-      );
+      const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(tenantId, inventoryItemId, startingDate);
       asyncOpers.push(oper);
     });
     await Promise.all([...asyncOpers]);
@@ -53,17 +46,12 @@ export class SaleInvoicesCost {
    * @param {IInventoryTransaction[]} inventoryTransactions
    * @return {IInventoryTransaction[]}
    */
-  getMaxDateInventoryTransactions(
-    inventoryTransactions: IInventoryTransaction[]
-  ): IInventoryTransaction[] {
+  getMaxDateInventoryTransactions(inventoryTransactions: IInventoryTransaction[]): IInventoryTransaction[] {
     return chain(inventoryTransactions)
       .reduce((acc: any, transaction) => {
         const compatatorDate = acc[transaction.itemId];
 
-        if (
-          !compatatorDate ||
-          moment(compatatorDate.date).isBefore(transaction.date)
-        ) {
+        if (!compatatorDate || moment(compatatorDate.date).isBefore(transaction.date)) {
           return {
             ...acc,
             [transaction.itemId]: {
@@ -82,19 +70,14 @@ export class SaleInvoicesCost {
    * @param {number} tenantId
    * @param {IInventoryTransaction[]} inventoryTransactions
    */
-  async computeItemsCostByInventoryTransactions(
-    tenantId: number,
-    inventoryTransactions: IInventoryTransaction[]
-  ) {
+  async computeItemsCostByInventoryTransactions(tenantId: number, inventoryTransactions: IInventoryTransaction[]) {
     const asyncOpers: Promise<[]>[] = [];
-    const reducedTransactions = this.getMaxDateInventoryTransactions(
-      inventoryTransactions
-    );
+    const reducedTransactions = this.getMaxDateInventoryTransactions(inventoryTransactions);
     reducedTransactions.forEach((transaction) => {
       const oper: Promise<[]> = this.inventoryService.scheduleComputeItemCost(
         tenantId,
         transaction.itemId,
-        transaction.date
+        transaction.date,
       );
       asyncOpers.push(oper);
     });
@@ -124,23 +107,17 @@ export class SaleInvoicesCost {
   public writeCostLotsGLEntries = (tenantId: number, startingDate: Date) => {
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers event `onInventoryCostLotsGLEntriesBeforeWrite`.
-      await this.eventPublisher.emitAsync(
-        events.inventory.onCostLotsGLEntriesBeforeWrite,
-        {
-          tenantId,
-          startingDate,
-          trx,
-        } as IInventoryCostLotsGLEntriesWriteEvent
-      );
+      await this.eventPublisher.emitAsync(events.inventory.onCostLotsGLEntriesBeforeWrite, {
+        tenantId,
+        startingDate,
+        trx,
+      } as IInventoryCostLotsGLEntriesWriteEvent);
       // Triggers event `onInventoryCostLotsGLEntriesWrite`.
-      await this.eventPublisher.emitAsync(
-        events.inventory.onCostLotsGLEntriesWrite,
-        {
-          tenantId,
-          startingDate,
-          trx,
-        } as IInventoryCostLotsGLEntriesWriteEvent
-      );
+      await this.eventPublisher.emitAsync(events.inventory.onCostLotsGLEntriesWrite, {
+        tenantId,
+        startingDate,
+        trx,
+      } as IInventoryCostLotsGLEntriesWriteEvent);
     });
   };
 }

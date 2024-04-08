@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -16,7 +15,7 @@ import withItemsCategories from './withItemCategories';
  */
 function ItemCategoryList({
   // #withItemsCategories
-  itemsCategoriesTableState
+  itemsCategoriesTableState,
 }) {
   return (
     <ItemsCategoriesProvider tableState={itemsCategoriesTableState}>

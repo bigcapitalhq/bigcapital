@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Features } from '@/constants';
 import { useBranches } from '@/hooks/query';
@@ -35,10 +34,6 @@ function TrialBLHeaderDimensionsPanelProvider({ query, ...props }) {
   );
 }
 
-const useTrialBalanceSheetPanelContext = () =>
-  React.useContext(TrialBLSheetHeaderDimensionsContext);
+const useTrialBalanceSheetPanelContext = () => React.useContext(TrialBLSheetHeaderDimensionsContext);
 
-export {
-  TrialBLHeaderDimensionsPanelProvider,
-  useTrialBalanceSheetPanelContext,
-};
+export { TrialBLHeaderDimensionsPanelProvider, useTrialBalanceSheetPanelContext };

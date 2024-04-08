@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -12,7 +11,7 @@ import { ExpenseFormPageProvider } from './ExpenseFormPageProvider';
  */
 export default function ExpenseFormPage() {
   const { id } = useParams();
-  const expenseId = parseInt(id, 10);
+  const expenseId = Number.parseInt(id, 10);
 
   return (
     <ExpenseFormPageProvider expenseId={expenseId}>

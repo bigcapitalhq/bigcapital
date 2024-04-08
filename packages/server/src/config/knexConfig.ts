@@ -1,5 +1,5 @@
-import config from '@/config';
 import { ITenant } from '@/interfaces';
+import config from '../config';
 
 export const tenantKnexConfig = (tenant: ITenant) => {
   const { organizationId, id } = tenant;
@@ -23,8 +23,8 @@ export const tenantKnexConfig = (tenant: ITenant) => {
     pool: { min: 0, max: 5 },
     userParams: {
       tenantId: id,
-      organizationId
-    }
+      organizationId,
+    },
   };
 };
 
@@ -56,4 +56,4 @@ export const tenantSeedConfig = (tenant: ITenant) => {
   return {
     directory: config.tenant.seeds_dir,
   };
-}
+};

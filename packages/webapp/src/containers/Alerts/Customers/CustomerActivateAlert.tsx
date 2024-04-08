@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -56,14 +55,9 @@ function CustomerActivateAlert({
       loading={isLoading}
       onConfirm={handleConfirmCustomerActivate}
     >
-      <p>
-        {intl.get('customer.alert.are_you_sure_want_to_activate_this_customer')}
-      </p>
+      <p>{intl.get('customer.alert.are_you_sure_want_to_activate_this_customer')}</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(CustomerActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(CustomerActivateAlert);

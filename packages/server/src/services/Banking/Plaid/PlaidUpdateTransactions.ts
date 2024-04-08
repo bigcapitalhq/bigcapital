@@ -1,8 +1,8 @@
+import { PlaidFetchedTransactionsUpdates } from '@/interfaces';
+import { PlaidClientWrapper } from '@/lib/Plaid/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
-import { PlaidClientWrapper } from '@/lib/Plaid/Plaid';
 import { PlaidSyncDb } from './PlaidSyncDB';
-import { PlaidFetchedTransactionsUpdates } from '@/interfaces';
 
 @Service()
 export class PlaidUpdateTransactions {
@@ -19,8 +19,7 @@ export class PlaidUpdateTransactions {
    */
   public async updateTransactions(tenantId: number, plaidItemId: string) {
     // Fetch new transactions from plaid api.
-    const { added, modified, removed, cursor, accessToken } =
-      await this.fetchTransactionUpdates(tenantId, plaidItemId);
+    const { added, modified, removed, cursor, accessToken } = await this.fetchTransactionUpdates(tenantId, plaidItemId);
 
     const request = { access_token: accessToken };
     const plaidInstance = new PlaidClientWrapper();
@@ -38,10 +37,7 @@ export class PlaidUpdateTransactions {
     });
     // Update the DB.
     await this.plaidSync.syncBankAccounts(tenantId, accounts, institution);
-    await this.plaidSync.syncAccountsTransactions(
-      tenantId,
-      added.concat(modified)
-    );
+    await this.plaidSync.syncAccountsTransactions(tenantId, added.concat(modified));
     await this.plaidSync.syncRemoveTransactions(tenantId, removed);
     await this.plaidSync.syncTransactionsCursor(tenantId, plaidItemId, cursor);
 
@@ -66,16 +62,13 @@ export class PlaidUpdateTransactions {
    */
   private async fetchTransactionUpdates(
     tenantId: number,
-    plaidItemId: string
+    plaidItemId: string,
   ): Promise<PlaidFetchedTransactionsUpdates> {
     // the transactions endpoint is paginated, so we may need to hit it multiple times to
     // retrieve all available transactions.
     const { PlaidItem } = this.tenancy.models(tenantId);
 
-    const plaidItem = await PlaidItem.query().findOne(
-      'plaidItemId',
-      plaidItemId
-    );
+    const plaidItem = await PlaidItem.query().findOne('plaidItemId', plaidItemId);
     if (!plaidItem) {
       throw new Error('The given Plaid item id is not found.');
     }

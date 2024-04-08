@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Field } from 'formik';
 import * as R from 'ramda';
@@ -10,9 +9,7 @@ import withPlan from './withPlan';
 /**
  * Sunscription periods enhanced.
  */
-const SubscriptionPeriodsEnhanced = R.compose(
-  withPlan(({ plan }) => ({ plan })),
-)(({ plan, ...restProps }) => {
+const SubscriptionPeriodsEnhanced = R.compose(withPlan(({ plan }) => ({ plan })))(({ plan, ...restProps }) => {
   if (!plan) return null;
 
   return <SubscriptionPeriods periods={plan.periods} {...restProps} />;
@@ -23,11 +20,11 @@ const SubscriptionPeriodsEnhanced = R.compose(
  */
 export default function BillingPeriods() {
   return (
-    <section class="billing-plans__section">
-      <h1 class="title">
+    <section className="billing-plans__section">
+      <h1 className="title">
         <T id={'setup.plans.select_period.title'} />
       </h1>
-      <div class="description">
+      <div className="description">
         <p className="paragraph">
           <T id={'setup.plans.select_period.description'} />
         </p>

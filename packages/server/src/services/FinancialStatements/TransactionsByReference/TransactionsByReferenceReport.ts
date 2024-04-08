@@ -1,5 +1,5 @@
 import {
-    IAccount,
+  IAccount,
   IAccountTransaction,
   INumberFormatQuery,
   ITransactionsByReferenceQuery,
@@ -20,9 +20,9 @@ export default class TransactionsByReference extends FinancialSheet {
    * @param {string} baseCurrency
    */
   constructor(
-    transactions: (IAccountTransaction & { account: IAccount }) [],
+    transactions: (IAccountTransaction & { account: IAccount })[],
     query: ITransactionsByReferenceQuery,
-    baseCurrency: string
+    baseCurrency: string,
   ) {
     super();
 
@@ -37,9 +37,7 @@ export default class TransactionsByReference extends FinancialSheet {
    * @param {IAccountTransaction} transaction
    * @returns {ITransactionsByReferenceTransaction}
    */
-  private transactionMapper = (
-    transaction: IAccountTransaction
-  ): ITransactionsByReferenceTransaction => {
+  private transactionMapper = (transaction: IAccountTransaction): ITransactionsByReferenceTransaction => {
     return {
       date: this.getDateMeta(transaction.date),
 
@@ -65,9 +63,7 @@ export default class TransactionsByReference extends FinancialSheet {
    * @param {IAccountTransaction} transaction
    * @returns {ITransactionsByReferenceTransaction}
    */
-  private transactionsMapper = (
-    transactions: IAccountTransaction[]
-  ): ITransactionsByReferenceTransaction[] => {
+  private transactionsMapper = (transactions: IAccountTransaction[]): ITransactionsByReferenceTransaction[] => {
     return transactions.map(this.transactionMapper);
   };
 

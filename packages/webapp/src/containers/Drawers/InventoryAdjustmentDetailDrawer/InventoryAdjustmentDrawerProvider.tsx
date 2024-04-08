@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -12,10 +11,9 @@ const InventoryAdjustmentDrawerContext = React.createContext();
  */
 function InventoryAdjustmentDrawerProvider({ inventoryId, ...props }) {
   // Handle fetch inventory adjustment .
-  const { data: inventoryAdjustment, isLoading: isAdjustmentsLoading } =
-    useInventoryAdjustment(inventoryId, {
-      enabled: !!inventoryId,
-    });
+  const { data: inventoryAdjustment, isLoading: isAdjustmentsLoading } = useInventoryAdjustment(inventoryId, {
+    enabled: !!inventoryId,
+  });
 
   //provider.
   const provider = {
@@ -34,10 +32,6 @@ function InventoryAdjustmentDrawerProvider({ inventoryId, ...props }) {
   );
 }
 
-const useInventoryAdjustmentDrawerContext = () =>
-  React.useContext(InventoryAdjustmentDrawerContext);
+const useInventoryAdjustmentDrawerContext = () => React.useContext(InventoryAdjustmentDrawerContext);
 
-export {
-  InventoryAdjustmentDrawerProvider,
-  useInventoryAdjustmentDrawerContext,
-};
+export { InventoryAdjustmentDrawerProvider, useInventoryAdjustmentDrawerContext };

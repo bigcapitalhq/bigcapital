@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 
 import { RESOURCES_TYPES } from '@/constants/resourcesTypes';
@@ -24,9 +24,7 @@ function VendorUniversalSearchSelectComponent({
   return null;
 }
 
-const VendorUniversalSearchSelectAction = withDrawerActions(
-  VendorUniversalSearchSelectComponent,
-);
+const VendorUniversalSearchSelectAction = withDrawerActions(VendorUniversalSearchSelectComponent);
 
 /**
  * Transformes vendor resource item to search.

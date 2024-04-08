@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import Knex from 'knex';
-import Bluebird from 'bluebird';
 import { ICreditNoteAppliedToInvoice } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import Bluebird from 'bluebird';
+import Knex from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class CreditNoteApplySyncInvoicesCreditedAmount {
@@ -18,18 +18,15 @@ export default class CreditNoteApplySyncInvoicesCreditedAmount {
   public incrementInvoicesCreditedAmount = async (
     tenantId,
     creditNoteAppliedInvoices: ICreditNoteAppliedToInvoice[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    await Bluebird.each(
-      creditNoteAppliedInvoices,
-      (creditNoteAppliedInvoice: ICreditNoteAppliedToInvoice) => {
-        return SaleInvoice.query(trx)
-          .where('id', creditNoteAppliedInvoice.invoiceId)
-          .increment('creditedAmount', creditNoteAppliedInvoice.amount);
-      }
-    );
+    await Bluebird.each(creditNoteAppliedInvoices, (creditNoteAppliedInvoice: ICreditNoteAppliedToInvoice) => {
+      return SaleInvoice.query(trx)
+        .where('id', creditNoteAppliedInvoice.invoiceId)
+        .increment('creditedAmount', creditNoteAppliedInvoice.amount);
+    });
   };
 
   /**
@@ -42,12 +39,10 @@ export default class CreditNoteApplySyncInvoicesCreditedAmount {
     tenantId: number,
     invoiceId: number,
     amount: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    await SaleInvoice.query(trx)
-      .findById(invoiceId)
-      .decrement('creditedAmount', amount);
+    await SaleInvoice.query(trx).findById(invoiceId).decrement('creditedAmount', amount);
   };
 }

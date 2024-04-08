@@ -1,11 +1,11 @@
-import { Service, Inject } from 'typedi';
-import events from '@/subscribers/events';
 import {
   IVendorCreditCreatedPayload,
   IVendorCreditDeletedPayload,
   IVendorCreditEditedPayload,
   IVendorCreditOpenedPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import VendorCreditGLEntries from './VendorCreditGLEntries';
 
 @Service()
@@ -17,22 +17,10 @@ export default class VendorCreditGlEntriesSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.vendorCredit.onCreated,
-      this.writeGLEntriesOnceVendorCreditCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onOpened,
-      this.writeGLEntgriesOnceVendorCreditOpened
-    );
-    bus.subscribe(
-      events.vendorCredit.onEdited,
-      this.editGLEntriesOnceVendorCreditEdited
-    );
-    bus.subscribe(
-      events.vendorCredit.onDeleted,
-      this.revertGLEntriesOnceDeleted
-    );
+    bus.subscribe(events.vendorCredit.onCreated, this.writeGLEntriesOnceVendorCreditCreated);
+    bus.subscribe(events.vendorCredit.onOpened, this.writeGLEntgriesOnceVendorCreditOpened);
+    bus.subscribe(events.vendorCredit.onEdited, this.editGLEntriesOnceVendorCreditEdited);
+    bus.subscribe(events.vendorCredit.onDeleted, this.revertGLEntriesOnceDeleted);
   }
 
   /**
@@ -47,11 +35,7 @@ export default class VendorCreditGlEntriesSubscriber {
     // Can't continue if the vendor credit is not open yet.
     if (!vendorCredit.isPublished) return;
 
-    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
-      tenantId,
-      vendorCredit.id,
-      trx
-    );
+    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(tenantId, vendorCredit.id, trx);
   };
 
   /**
@@ -63,11 +47,7 @@ export default class VendorCreditGlEntriesSubscriber {
     vendorCreditId,
     trx,
   }: IVendorCreditOpenedPayload) => {
-    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(
-      tenantId,
-      vendorCreditId,
-      trx
-    );
+    await this.vendorCreditGLEntries.writeVendorCreditGLEntries(tenantId, vendorCreditId, trx);
   };
 
   /**
@@ -83,11 +63,7 @@ export default class VendorCreditGlEntriesSubscriber {
     // Can't continue if the vendor credit is not open yet.
     if (!vendorCredit.isPublished) return;
 
-    await this.vendorCreditGLEntries.rewriteVendorCreditGLEntries(
-      tenantId,
-      vendorCreditId,
-      trx
-    );
+    await this.vendorCreditGLEntries.rewriteVendorCreditGLEntries(tenantId, vendorCreditId, trx);
   };
 
   /**
@@ -102,9 +78,6 @@ export default class VendorCreditGlEntriesSubscriber {
     // Can't continue of the vendor credit is not open yet.
     if (!oldVendorCredit.isPublished) return;
 
-    await this.vendorCreditGLEntries.revertVendorCreditGLEntries(
-      tenantId,
-      vendorCreditId
-    );
+    await this.vendorCreditGLEntries.revertVendorCreditGLEntries(tenantId, vendorCreditId);
   };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import '@/style/pages/SMSMessage/SMSMessage.scss';
@@ -14,10 +13,7 @@ export default function SMSMessageDialogContent({
   notificationkey,
 }) {
   return (
-    <SMSMessageDialogProvider
-      dialogName={dialogName}
-      notificationkey={notificationkey}
-    >
+    <SMSMessageDialogProvider dialogName={dialogName} notificationkey={notificationkey}>
       <SMSMessageForm />
     </SMSMessageDialogProvider>
   );

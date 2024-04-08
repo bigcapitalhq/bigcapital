@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { EstimatedExpenseFormProvider } from './EstimatedExpenseFormProvider';
 import EstimatedExpenseForm from './EstimatedExpenseForm';
@@ -13,10 +12,7 @@ export default function EstimatedExpenseFormDialogContent({
   estimatedExpense,
 }) {
   return (
-    <EstimatedExpenseFormProvider
-      dialogName={dialogName}
-      estimatedExpenseId={estimatedExpense}
-    >
+    <EstimatedExpenseFormProvider dialogName={dialogName} estimatedExpenseId={estimatedExpense}>
       <EstimatedExpenseForm />
     </EstimatedExpenseFormProvider>
   );

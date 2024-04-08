@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import { useHistory } from 'react-router-dom';
 import InvoiceMailDialogContent from '../../../InvoiceMailDialog/InvoiceMailDialogContent';
@@ -26,15 +26,7 @@ function InvoiceFormDeliverDialogContentRoot({
     closeDialog(DialogsName.InvoiceFormMailDeliver);
   };
 
-  return (
-    <InvoiceMailDialogContent
-      invoiceId={invoiceId}
-      onFormSubmit={handleSubmit}
-      onCancelClick={handleCancel}
-    />
-  );
+  return <InvoiceMailDialogContent invoiceId={invoiceId} onFormSubmit={handleSubmit} onCancelClick={handleCancel} />;
 }
 
-export default R.compose(withDialogActions)(
-  InvoiceFormDeliverDialogContentRoot,
-);
+export default R.compose(withDialogActions)(InvoiceFormDeliverDialogContentRoot);

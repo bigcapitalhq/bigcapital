@@ -1,8 +1,5 @@
+import { IFinancialDatePeriodsUnit, IFinancialNodeWithPreviousPeriod } from '@/interfaces';
 import { sumBy } from 'lodash';
-import {
-  IFinancialDatePeriodsUnit,
-  IFinancialNodeWithPreviousPeriod,
-} from '@/interfaces';
 import * as R from 'ramda';
 
 export const FinancialPreviousPeriod = (Base) =>
@@ -16,17 +13,13 @@ export const FinancialPreviousPeriod = (Base) =>
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
     protected assocPreviousPeriodPercentageNode = (
-      accountNode: IProfitLossSheetAccountNode
+      accountNode: IProfitLossSheetAccountNode,
     ): IFinancialNodeWithPreviousPeriod => {
       const percentage = this.getPercentageBasis(
         accountNode.previousPeriod.amount,
-        accountNode.previousPeriodChange.amount
+        accountNode.previousPeriodChange.amount,
       );
-      return R.assoc(
-        'previousPeriodPercentage',
-        this.getPercentageAmountMeta(percentage),
-        accountNode
-      );
+      return R.assoc('previousPeriodPercentage', this.getPercentageAmountMeta(percentage), accountNode);
     };
 
     /**
@@ -35,17 +28,10 @@ export const FinancialPreviousPeriod = (Base) =>
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
     protected assocPreviousPeriodChangeNode = (
-      accountNode: IProfitLossSheetAccountNode
+      accountNode: IProfitLossSheetAccountNode,
     ): IFinancialNodeWithPreviousPeriod => {
-      const change = this.getAmountChange(
-        accountNode.total.amount,
-        accountNode.previousPeriod.amount
-      );
-      return R.assoc(
-        'previousPeriodChange',
-        this.getAmountMeta(change),
-        accountNode
-      );
+      const change = this.getAmountChange(accountNode.total.amount, accountNode.previousPeriod.amount);
+      return R.assoc('previousPeriodChange', this.getAmountMeta(change), accountNode);
     };
 
     /**
@@ -57,17 +43,13 @@ export const FinancialPreviousPeriod = (Base) =>
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
     protected assocPreviousPeriodTotalPercentageNode = (
-      accountNode: IProfitLossSheetAccountNode
+      accountNode: IProfitLossSheetAccountNode,
     ): IFinancialNodeWithPreviousPeriod => {
       const percentage = this.getPercentageBasis(
         accountNode.previousPeriod.amount,
-        accountNode.previousPeriodChange.amount
+        accountNode.previousPeriodChange.amount,
       );
-      return R.assoc(
-        'previousPeriodPercentage',
-        this.getPercentageTotalAmountMeta(percentage),
-        accountNode
-      );
+      return R.assoc('previousPeriodPercentage', this.getPercentageTotalAmountMeta(percentage), accountNode);
     };
 
     /**
@@ -75,18 +57,9 @@ export const FinancialPreviousPeriod = (Base) =>
      * @param   {IProfitLossSheetAccountNode} accountNode
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
-    protected assocPreviousPeriodTotalChangeNode = (
-      accountNode: any
-    ): IFinancialNodeWithPreviousPeriod => {
-      const change = this.getAmountChange(
-        accountNode.total.amount,
-        accountNode.previousPeriod.amount
-      );
-      return R.assoc(
-        'previousPeriodChange',
-        this.getTotalAmountMeta(change),
-        accountNode
-      );
+    protected assocPreviousPeriodTotalChangeNode = (accountNode: any): IFinancialNodeWithPreviousPeriod => {
+      const change = this.getAmountChange(accountNode.total.amount, accountNode.previousPeriod.amount);
+      return R.assoc('previousPeriodChange', this.getTotalAmountMeta(change), accountNode);
     };
 
     /**
@@ -95,21 +68,17 @@ export const FinancialPreviousPeriod = (Base) =>
      * @returns {IFinancialNodeWithPreviousPeriod}
      */
     protected assocPreviousPeriodHorizNodeFromToDates = R.curry(
-      (
-        periodUnit: IFinancialDatePeriodsUnit,
-        horizNode: any
-      ): IFinancialNodeWithPreviousPeriod => {
-        const { fromDate: PPFromDate, toDate: PPToDate } =
-          this.getPreviousPeriodDateRange(
-            horizNode.fromDate.date,
-            horizNode.toDate.date,
-            periodUnit
-          );
+      (periodUnit: IFinancialDatePeriodsUnit, horizNode: any): IFinancialNodeWithPreviousPeriod => {
+        const { fromDate: PPFromDate, toDate: PPToDate } = this.getPreviousPeriodDateRange(
+          horizNode.fromDate.date,
+          horizNode.toDate.date,
+          periodUnit,
+        );
         return R.compose(
           R.assoc('previousPeriodToDate', this.getDateMeta(PPToDate)),
-          R.assoc('previousPeriodFromDate', this.getDateMeta(PPFromDate))
+          R.assoc('previousPeriodFromDate', this.getDateMeta(PPFromDate)),
         )(horizNode);
-      }
+      },
     );
 
     /**
@@ -119,9 +88,6 @@ export const FinancialPreviousPeriod = (Base) =>
      * @returns {number}
      */
     protected getPPHorizNodesTotalSumation = (index: number, node): number => {
-      return sumBy(
-        node.children,
-        `horizontalTotals[${index}].previousPeriod.amount`
-      );
+      return sumBy(node.children, `horizontalTotals[${index}].previousPeriod.amount`);
     };
   };

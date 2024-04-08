@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import clsx from 'classnames';
@@ -11,10 +10,7 @@ import { PaymentReceiveAction, AbilitySubject } from '@/constants/abilityOption'
 /**
  * Table actions menu.
  */
-export function ActionsMenu({
-  row: { original },
-  payload: { onEdit, onDelete },
-}) {
+export function ActionsMenu({ row: { original }, payload: { onEdit, onDelete } }) {
   return (
     <Menu>
       <Can I={PaymentReceiveAction.Edit} a={AbilitySubject.PaymentReceive}>

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 export const validateMoveToPartialLocking = (all) => {
   return all.is_enabled;
 };

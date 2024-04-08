@@ -1,11 +1,11 @@
-import { Knex } from 'knex';
-import { defaultTo } from 'lodash';
-import { Service, Inject } from 'typedi';
 import { IItem, IItemDTO, IItemEventCreatedPayload } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { defaultTo } from 'lodash';
+import { Inject, Service } from 'typedi';
 import { ItemsValidators } from './ItemValidators';
 
 @Service()
@@ -32,40 +32,22 @@ export class CreateItem {
     await this.validators.validateItemNameUniquiness(tenantId, itemDTO.name);
 
     if (itemDTO.categoryId) {
-      await this.validators.validateItemCategoryExistance(
-        tenantId,
-        itemDTO.categoryId
-      );
+      await this.validators.validateItemCategoryExistance(tenantId, itemDTO.categoryId);
     }
     if (itemDTO.sellAccountId) {
-      await this.validators.validateItemSellAccountExistance(
-        tenantId,
-        itemDTO.sellAccountId
-      );
+      await this.validators.validateItemSellAccountExistance(tenantId, itemDTO.sellAccountId);
     }
     if (itemDTO.costAccountId) {
-      await this.validators.validateItemCostAccountExistance(
-        tenantId,
-        itemDTO.costAccountId
-      );
+      await this.validators.validateItemCostAccountExistance(tenantId, itemDTO.costAccountId);
     }
     if (itemDTO.inventoryAccountId) {
-      await this.validators.validateItemInventoryAccountExistance(
-        tenantId,
-        itemDTO.inventoryAccountId
-      );
+      await this.validators.validateItemInventoryAccountExistance(tenantId, itemDTO.inventoryAccountId);
     }
     if (itemDTO.purchaseTaxRateId) {
-      await this.validators.validatePurchaseTaxRateExistance(
-        tenantId,
-        itemDTO.purchaseTaxRateId
-      );
+      await this.validators.validatePurchaseTaxRateExistance(tenantId, itemDTO.purchaseTaxRateId);
     }
     if (itemDTO.sellTaxRateId) {
-      await this.validators.validateSellTaxRateExistance(
-        tenantId,
-        itemDTO.sellTaxRateId
-      );
+      await this.validators.validateSellTaxRateExistance(tenantId, itemDTO.sellTaxRateId);
     }
   }
 
@@ -88,11 +70,7 @@ export class CreateItem {
    * @param {IItemDTO} item
    * @return {Promise<IItem>}
    */
-  public async createItem(
-    tenantId: number,
-    itemDTO: IItemDTO,
-    trx?: Knex.Transaction
-  ): Promise<IItem> {
+  public async createItem(tenantId: number, itemDTO: IItemDTO, trx?: Knex.Transaction): Promise<IItem> {
     const { Item } = this.tenancy.models(tenantId);
 
     // Authorize the item before creating.
@@ -116,7 +94,7 @@ export class CreateItem {
 
         return item;
       },
-      trx
+      trx,
     );
     return item;
   }

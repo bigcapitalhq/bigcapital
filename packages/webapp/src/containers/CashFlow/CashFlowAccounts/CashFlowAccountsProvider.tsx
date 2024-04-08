@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardInsider } from '@/components/Dashboard';
 
@@ -34,7 +33,6 @@ function CashFlowAccountsProvider({ tableState, ...props }) {
   );
 }
 
-const useCashFlowAccountsContext = () =>
-  React.useContext(CashFlowAccountsContext);
+const useCashFlowAccountsContext = () => React.useContext(CashFlowAccountsContext);
 
 export { CashFlowAccountsProvider, useCashFlowAccountsContext };

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { Formik, Form } from 'formik';
@@ -7,10 +7,7 @@ import { sumBy, isEmpty, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
 
-import {
-  CreateEstimateFormSchema,
-  EditEstimateFormSchema,
-} from './EstimateForm.schema';
+import { CreateEstimateFormSchema, EditEstimateFormSchema } from './EstimateForm.schema';
 
 import EstimateFormHeader from './EstimateFormHeader';
 import EstimateItemsEntriesField from './EstimateItemsEntriesField';
@@ -18,10 +15,7 @@ import EstimateFloatingActions from './EstimateFloatingActions';
 import EstimateFormFooter from './EstimateFormFooter';
 import EstimateFormDialogs from './EstimateFormDialogs';
 import EstimtaeFormTopBar from './EstimtaeFormTopBar';
-import {
-  EstimateIncrementSyncSettingsToForm,
-  EstimateSyncAutoExRateToForm,
-} from './components';
+import { EstimateIncrementSyncSettingsToForm, EstimateSyncAutoExRateToForm } from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
@@ -52,18 +46,9 @@ function EstimateForm({
   organization: { base_currency },
 }) {
   const history = useHistory();
-  const {
-    estimate,
-    isNewMode,
-    submitPayload,
-    createEstimateMutate,
-    editEstimateMutate,
-  } = useEstimateFormContext();
+  const { estimate, isNewMode, submitPayload, createEstimateMutate, editEstimateMutate } = useEstimateFormContext();
 
-  const estimateNumber = transactionNumber(
-    estimateNumberPrefix,
-    estimateNextNumber,
-  );
+  const estimateNumber = transactionNumber(estimateNumberPrefix, estimateNextNumber);
   // Initial values in create and edit mode.
   const initialValues = {
     ...(!isEmpty(estimate)
@@ -83,16 +68,11 @@ function EstimateForm({
   };
 
   // Handles form submit.
-  const handleFormSubmit = (
-    values,
-    { setSubmitting, setErrors, resetForm },
-  ) => {
+  const handleFormSubmit = (values, { setSubmitting, setErrors, resetForm }) => {
     setSubmitting(true);
 
-    const entries = values.entries.filter(
-      (item) => item.item_id && item.quantity,
-    );
-    const totalQuantity = sumBy(entries, (entry) => parseInt(entry.quantity));
+    const entries = values.entries.filter((item) => item.item_id && item.quantity);
+    const totalQuantity = sumBy(entries, (entry) => Number.parseInt(entry.quantity));
 
     // Validate the entries quantity should be bigger than zero.
     if (totalQuantity === 0) {
@@ -111,9 +91,7 @@ function EstimateForm({
     const onSuccess = (response) => {
       AppToaster.show({
         message: intl.get(
-          isNewMode
-            ? 'the_estimate_has_been_created_successfully'
-            : 'the_estimate_has_been_edited_successfully',
+          isNewMode ? 'the_estimate_has_been_created_successfully' : 'the_estimate_has_been_edited_successfully',
           { number: values.estimate_number },
         ),
         intent: Intent.SUCCESS,
@@ -146,17 +124,9 @@ function EstimateForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_ESTIMATE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_ESTIMATE)}>
       <Formik
-        validationSchema={
-          isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema
-        }
+        validationSchema={isNewMode ? CreateEstimateFormSchema : EditEstimateFormSchema}
         initialValues={initialValues}
         onSubmit={handleFormSubmit}
       >

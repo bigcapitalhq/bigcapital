@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core';
@@ -9,10 +8,7 @@ import { Icon, If } from '@/components';
 /**
  * Context menu of Branches.
  */
-export function ActionsMenu({
-  payload: { onEdit, onDelete, onMarkPrimary },
-  row: { original },
-}) {
+export function ActionsMenu({ payload: { onEdit, onDelete, onMarkPrimary }, row: { original } }) {
   return (
     <Menu>
       <MenuItem

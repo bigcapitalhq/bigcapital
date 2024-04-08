@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
@@ -29,8 +28,7 @@ function SMSMessageForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, smsNotification, editSMSNotificationMutate } =
-    useSMSMessageDialogContext();
+  const { dialogName, smsNotification, editSMSNotificationMutate } = useSMSMessageDialogContext();
 
   // Initial form values.
   const initialValues = {

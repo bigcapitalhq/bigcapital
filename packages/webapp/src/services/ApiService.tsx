@@ -1,8 +1,7 @@
-// @ts-nocheck
+
 import axios from '@/services/axios';
 
 export default {
-
   get(resource, params) {
     return axios.get(`/api/${resource}`, params);
   },
@@ -21,5 +20,5 @@ export default {
 
   delete(resource, params) {
     return axios.delete(`/api/${resource}`, params);
-  }
+  },
 };

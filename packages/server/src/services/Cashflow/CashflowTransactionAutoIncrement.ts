@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import AutoIncrementOrdersService from '@/services/Sales/AutoIncrementOrdersService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class CashflowTransactionAutoIncrement {
@@ -12,10 +12,7 @@ export class CashflowTransactionAutoIncrement {
    * @return {string}
    */
   public getNextTransactionNumber = (tenantId: number): string => {
-    return this.autoIncrementOrdersService.getNextTransactionNumber(
-      tenantId,
-      'cashflow'
-    );
+    return this.autoIncrementOrdersService.getNextTransactionNumber(tenantId, 'cashflow');
   };
 
   /**
@@ -23,9 +20,6 @@ export class CashflowTransactionAutoIncrement {
    * @param {number} tenantId -
    */
   public incrementNextTransactionNumber = (tenantId: number) => {
-    return this.autoIncrementOrdersService.incrementSettingsNextNumber(
-      tenantId,
-      'cashflow'
-    );
+    return this.autoIncrementOrdersService.incrementSettingsNextNumber(tenantId, 'cashflow');
   };
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -8,12 +7,7 @@ import { FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { inputIntent } from '@/utils';
 import { useAutofocus } from '@/hooks';
-import {
-  Hint,
-  FieldRequiredHint,
-  SalutationList,
-  DisplayNameList,
-} from '@/components';
+import { Hint, FieldRequiredHint, SalutationList, DisplayNameList } from '@/components';
 
 /**
  * Vendor form primary section.
@@ -24,11 +18,7 @@ function VendorFormPrimarySection() {
   return (
     <div className={'customer-form__primary-section-content'}>
       {/**----------- Vendor name -----------*/}
-      <FormGroup
-        className={classNames('form-group--contact_name')}
-        label={<T id={'contact_name'} />}
-        inline={true}
-      >
+      <FormGroup className={classNames('form-group--contact_name')} label={<T id={'contact_name'} />} inline={true}>
         <ControlGroup>
           <FastField name={'salutation'}>
             {({ form, field: { value }, meta: { error, touched } }) => (

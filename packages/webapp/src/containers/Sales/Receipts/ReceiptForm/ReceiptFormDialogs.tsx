@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useFormikContext } from 'formik';
 import ReceiptNumberDialog from '@/containers/Dialogs/ReceiptNumberDialog';
@@ -25,13 +24,8 @@ export default function ReceiptFormDialogs() {
 
   return (
     <>
-      <ReceiptNumberDialog
-        dialogName={'receipt-number-form'}
-        onConfirm={handleReceiptNumberFormConfirm}
-      />
-      <ReceiptFormMailDeliverDialog
-        dialogName={DialogsName.ReceiptFormMailDeliver}
-      />
+      <ReceiptNumberDialog dialogName={'receipt-number-form'} onConfirm={handleReceiptNumberFormConfirm} />
+      <ReceiptFormMailDeliverDialog dialogName={DialogsName.ReceiptFormMailDeliver} />
     </>
   );
 }

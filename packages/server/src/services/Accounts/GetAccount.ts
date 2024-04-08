@@ -1,8 +1,8 @@
-import { Service, Inject } from 'typedi';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import I18nService from '@/services/I18n/I18nService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { AccountTransformer } from './AccountTransform';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 
 @Service()
 export class GetAccount {
@@ -30,16 +30,9 @@ export class GetAccount {
     const accountsGraph = await accountRepository.getDependencyGraph();
 
     // Transformes the account model to POJO.
-    const transformed = await this.transformer.transform(
-      tenantId,
-      account,
-      new AccountTransformer(),
-      { accountsGraph }
-    );
-    return this.i18nService.i18nApply(
-      [['accountTypeLabel'], ['accountNormalFormatted']],
-      transformed,
-      tenantId
-    );
+    const transformed = await this.transformer.transform(tenantId, account, new AccountTransformer(), {
+      accountsGraph,
+    });
+    return this.i18nService.i18nApply([['accountTypeLabel'], ['accountNormalFormatted']], transformed, tenantId);
   };
 }

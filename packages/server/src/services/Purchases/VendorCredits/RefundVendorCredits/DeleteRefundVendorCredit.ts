@@ -1,13 +1,13 @@
-import { Knex } from 'knex';
 import {
-  IRefundVendorCreditDeletedPayload,
   IRefundVendorCreditDeletePayload,
+  IRefundVendorCreditDeletedPayload,
   IRefundVendorCreditDeletingPayload,
 } from '@/interfaces';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import RefundVendorCredit from './RefundVendorCredit';
 
@@ -28,17 +28,11 @@ export default class DeleteRefundVendorCredit extends RefundVendorCredit {
    * @param {number} creditNoteId - Credit note id.
    * @returns {Promise<void>}
    */
-  public deleteRefundVendorCreditRefund = async (
-    tenantId: number,
-    refundCreditId: number
-  ): Promise<void> => {
+  public deleteRefundVendorCreditRefund = async (tenantId: number, refundCreditId: number): Promise<void> => {
     const { RefundVendorCredit } = this.tenancy.models(tenantId);
 
     // Retrieve the old credit note or throw not found service error.
-    const oldRefundCredit = await this.getRefundVendorCreditOrThrowError(
-      tenantId,
-      refundCreditId
-    );
+    const oldRefundCredit = await this.getRefundVendorCreditOrThrowError(tenantId, refundCreditId);
     // Triggers `onVendorCreditRefundDelete` event.
     await this.eventPublisher.emitAsync(events.vendorCredit.onRefundDelete, {
       refundCreditId,
@@ -56,17 +50,14 @@ export default class DeleteRefundVendorCredit extends RefundVendorCredit {
       } as IRefundVendorCreditDeletingPayload;
 
       // Triggers `onVendorCreditRefundDeleting` event.
-      await this.eventPublisher.emitAsync(
-        events.vendorCredit.onRefundDeleting,
-        eventPayload
-      );
+      await this.eventPublisher.emitAsync(events.vendorCredit.onRefundDeleting, eventPayload);
       // Deletes the refund vendor credit graph from the storage.
       await RefundVendorCredit.query(trx).findById(refundCreditId).delete();
 
       // Triggers `onVendorCreditRefundDeleted` event.
       await this.eventPublisher.emitAsync(
         events.vendorCredit.onRefundDeleted,
-        eventPayload as IRefundVendorCreditDeletedPayload
+        eventPayload as IRefundVendorCreditDeletedPayload,
       );
     });
   };

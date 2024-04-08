@@ -1,25 +1,22 @@
-import * as R from 'ramda';
-import { sumBy } from 'lodash';
 import {
-  IBalanceSheetQuery,
-  IFormatNumberSettings,
-  IBalanceSheetDatePeriods,
   IBalanceSheetAccountNode,
+  IBalanceSheetCommonNode,
+  IBalanceSheetDatePeriods,
+  IBalanceSheetQuery,
   IBalanceSheetTotalPeriod,
   IDateRange,
-  IBalanceSheetCommonNode,
+  IFormatNumberSettings,
 } from '@/interfaces';
-import FinancialSheet from '../FinancialSheet';
+import { sumBy } from 'lodash';
+import * as R from 'ramda';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
+import FinancialSheet from '../FinancialSheet';
 
 /**
  * Balance sheet date periods.
  */
 export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
-  class
-    extends R.compose(FinancialDatePeriods)(Base)
-    implements IBalanceSheetDatePeriods
-  {
+  class extends R.compose(FinancialDatePeriods)(Base) implements IBalanceSheetDatePeriods {
     /**
      * @param {IBalanceSheetQuery}
      */
@@ -30,11 +27,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      * @returns {IDateRange[]}
      */
     get datePeriods(): IDateRange[] {
-      return this.getDateRanges(
-        this.query.fromDate,
-        this.query.toDate,
-        this.query.displayColumnsBy
-      );
+      return this.getDateRanges(this.query.fromDate, this.query.toDate, this.query.displayColumnsBy);
     }
 
     /**
@@ -45,19 +38,14 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      */
     protected getReportNodeDatePeriods = (
       node: IBalanceSheetCommonNode,
-      callback: (
-        node: IBalanceSheetCommonNode,
-        fromDate: Date,
-        toDate: Date,
-        index: number
-      ) => any
+      callback: (node: IBalanceSheetCommonNode, fromDate: Date, toDate: Date, index: number) => any,
     ) => {
       return this.getNodeDatePeriods(
         this.query.fromDate,
         this.query.toDate,
         this.query.displayColumnsBy,
         node,
-        callback
+        callback,
       );
     };
 
@@ -72,7 +60,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
       total: number,
       fromDate: Date,
       toDate: Date,
-      overrideSettings: IFormatNumberSettings = {}
+      overrideSettings: IFormatNumberSettings = {},
     ): IBalanceSheetTotalPeriod => {
       return this.getDatePeriodMeta(total, fromDate, toDate, {
         money: true,
@@ -89,18 +77,13 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      * @param   {Date} toDate
      * @returns {number}
      */
-    private getAccountDatePeriodTotal = (
-      accountId: number,
-      toDate: Date
-    ): number => {
+    private getAccountDatePeriodTotal = (accountId: number, toDate: Date): number => {
       const periodTotalBetween = this.repository.periodsAccountsLedger
         .whereAccountId(accountId)
         .whereToDate(toDate)
         .getClosingBalance();
 
-      const periodOpening = this.repository.periodsOpeningAccountLedger
-        .whereAccountId(accountId)
-        .getClosingBalance();
+      const periodOpening = this.repository.periodsOpeningAccountLedger.whereAccountId(accountId).getClosingBalance();
 
       return periodOpening + periodTotalBetween;
     };
@@ -115,7 +98,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
     private getAccountNodeDatePeriod = (
       node: IBalanceSheetAccountNode,
       fromDate: Date,
-      toDate: Date
+      toDate: Date,
     ): IBalanceSheetTotalPeriod => {
       const periodTotal = this.getAccountDatePeriodTotal(node.id, toDate);
 
@@ -127,9 +110,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    private getAccountsNodeDatePeriods = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetTotalPeriod[] => {
+    private getAccountsNodeDatePeriods = (node: IBalanceSheetAccountNode): IBalanceSheetTotalPeriod[] => {
       return this.getReportNodeDatePeriods(node, this.getAccountNodeDatePeriod);
     };
 
@@ -138,9 +119,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    public assocAccountNodeDatePeriods = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+    public assocAccountNodeDatePeriods = (node: IBalanceSheetAccountNode): IBalanceSheetAccountNode => {
       const datePeriods = this.getAccountsNodeDatePeriods(node);
 
       return R.assoc('horizontalTotals', datePeriods, node);
@@ -170,7 +149,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
       node: IBalanceSheetAccountNode,
       fromDate: Date,
       toDate: Date,
-      index: number
+      index: number,
     ) => {
       const periodTotal = this.getAggregateDatePeriodIndexTotal(node, index);
 
@@ -183,10 +162,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
      * @returns
      */
     public getAggregateNodeDatePeriods = (node) => {
-      return this.getReportNodeDatePeriods(
-        node,
-        this.getAggregateNodeDatePeriod
-      );
+      return this.getReportNodeDatePeriods(node, this.getAggregateNodeDatePeriod);
     };
 
     /**
@@ -201,7 +177,7 @@ export const BalanceSheetDatePeriods = (Base: FinancialSheet) =>
     };
 
     /**
-     * 
+     *
      * @param node
      * @returns
      */

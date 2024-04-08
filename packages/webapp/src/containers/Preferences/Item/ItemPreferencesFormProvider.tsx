@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useContext, createContext } from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -18,10 +17,7 @@ function ItemPreferencesFormProvider({ ...props }) {
   // Fetches the accounts list.
   const { isLoading: isAccountsLoading, data: accounts } = useAccounts();
 
-  const {
-    isLoading: isItemsSettingsLoading,
-    isFetching: isItemsSettingsFetching,
-  } = useSettingsItems();
+  const { isLoading: isItemsSettingsLoading, isFetching: isItemsSettingsFetching } = useSettingsItems();
 
   // Save Organization Settings.
   const { mutateAsync: saveSettingMutate } = useSaveSettings();
@@ -42,11 +38,7 @@ function ItemPreferencesFormProvider({ ...props }) {
       )}
     >
       <ItemsPreferencesCard>
-        {isLoading ? (
-          <PreferencesPageLoader />
-        ) : (
-          <ItemFormContext.Provider value={provider} {...props} />
-        )}
+        {isLoading ? <PreferencesPageLoader /> : <ItemFormContext.Provider value={provider} {...props} />}
       </ItemsPreferencesCard>
     </div>
   );

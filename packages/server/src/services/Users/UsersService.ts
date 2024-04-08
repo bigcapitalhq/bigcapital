@@ -1,5 +1,3 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { ServiceError } from '@/exceptions';
 import {
   IEditUserDTO,
@@ -10,12 +8,14 @@ import {
   ITenantUserEditedPayload,
   ITenantUserInactivatedPayload,
 } from '@/interfaces';
-import RolesService from '@/services/Roles/RolesService';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ERRORS } from './constants';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import RolesService from '@/services/Roles/RolesService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { UserTransformer } from './UserTransformer';
+import { ERRORS } from './constants';
 
 @Service()
 export default class UsersService {
@@ -42,30 +42,20 @@ export default class UsersService {
     tenantId: number,
     userId: number,
     editUserDTO: IEditUserDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<any> {
     const { User } = this.tenancy.models(tenantId);
     const { email } = editUserDTO;
 
     // Retrieve the tenant user or throw not found service error.
-    const oldTenantUser = await this.getTenantUserOrThrowError(
-      tenantId,
-      userId
-    );
+    const oldTenantUser = await this.getTenantUserOrThrowError(tenantId, userId);
     // Validate cannot mutate the authorized user.
-    this.validateMutateRoleNotAuthorizedUser(
-      oldTenantUser,
-      editUserDTO,
-      authorizedUser
-    );
+    this.validateMutateRoleNotAuthorizedUser(oldTenantUser, editUserDTO, authorizedUser);
     // Validate user email should be unique.
     await this.validateUserEmailUniquiness(tenantId, email, userId);
 
     // Retrieve the given role or throw not found service error.
-    const role = await this.rolesService.getRoleOrThrowError(
-      tenantId,
-      editUserDTO.roleId
-    );
+    const role = await this.rolesService.getRoleOrThrowError(tenantId, editUserDTO.roleId);
     // Updates the tenant user.
     const tenantUser = await User.query().updateAndFetchById(userId, {
       ...editUserDTO,
@@ -114,11 +104,7 @@ export default class UsersService {
    * @param {number} userId - User id.
    * @return {Promise<void>}
    */
-  public async activateUser(
-    tenantId: number,
-    userId: number,
-    authorizedUser: ISystemUser
-  ): Promise<void> {
+  public async activateUser(tenantId: number, userId: number, authorizedUser: ISystemUser): Promise<void> {
     const { User } = this.tenancy.models(tenantId);
 
     // Throw service error if the given user is equals the authorized user.
@@ -148,11 +134,7 @@ export default class UsersService {
    * @param {number} userId
    * @return {Promise<void>}
    */
-  public async inactivateUser(
-    tenantId: number,
-    userId: number,
-    authorizedUser: ISystemUser
-  ): Promise<void> {
+  public async inactivateUser(tenantId: number, userId: number, authorizedUser: ISystemUser): Promise<void> {
     const { User } = this.tenancy.models(tenantId);
 
     // Throw service error if the given user is equals the authorized user.
@@ -207,10 +189,7 @@ export default class UsersService {
    * @param {number} userId -
    * @returns {ISystemUser}
    */
-  async getTenantUserOrThrowError(
-    tenantId: number,
-    userId: number
-  ): Promise<ITenantUser> {
+  async getTenantUserOrThrowError(tenantId: number, userId: number): Promise<ITenantUser> {
     const { User } = this.tenancy.models(tenantId);
 
     const user = await User.query().findById(userId);
@@ -228,9 +207,7 @@ export default class UsersService {
   private async validateNotLastUserDelete(tenantId: number) {
     const { User } = this.tenancy.models(tenantId);
 
-    const inviteAcceptedUsers = await User.query()
-      .select(['id'])
-      .whereNotNull('invite_accepted_at');
+    const inviteAcceptedUsers = await User.query().select(['id']).whereNotNull('invite_accepted_at');
 
     if (inviteAcceptedUsers.length === 1) {
       throw new ServiceError(ERRORS.CANNOT_DELETE_LAST_USER);
@@ -264,10 +241,7 @@ export default class UsersService {
    * @param {number} userId
    * @param {ISystemUser} authorizedUser
    */
-  private throwErrorIfUserSameAuthorizedUser(
-    userId: number,
-    authorizedUser: ISystemUser
-  ) {
+  private throwErrorIfUserSameAuthorizedUser(userId: number, authorizedUser: ISystemUser) {
     if (userId === authorizedUser.id) {
       throw new ServiceError(ERRORS.USER_SAME_THE_AUTHORIZED_USER);
     }
@@ -278,16 +252,10 @@ export default class UsersService {
    * @param {string} email
    * @param {number} userId
    */
-  private validateUserEmailUniquiness = async (
-    tenantId: number,
-    email: string,
-    userId: number
-  ) => {
+  private validateUserEmailUniquiness = async (tenantId: number, email: string, userId: number) => {
     const { User } = this.tenancy.models(tenantId);
 
-    const userByEmail = await User.query()
-      .findOne('email', email)
-      .whereNot('id', userId);
+    const userByEmail = await User.query().findOne('email', email).whereNot('id', userId);
 
     if (userByEmail) {
       throw new ServiceError(ERRORS.EMAIL_ALREADY_EXISTS);
@@ -303,12 +271,9 @@ export default class UsersService {
   validateMutateRoleNotAuthorizedUser(
     oldTenantUser: ITenantUser,
     editUserDTO: IEditUserDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ) {
-    if (
-      authorizedUser.id === oldTenantUser.systemUserId &&
-      editUserDTO.roleId !== oldTenantUser.roleId
-    ) {
+    if (authorizedUser.id === oldTenantUser.systemUserId && editUserDTO.roleId !== oldTenantUser.roleId) {
       throw new ServiceError(ERRORS.CANNOT_AUTHORIZED_USER_MUTATE_ROLE);
     }
   }

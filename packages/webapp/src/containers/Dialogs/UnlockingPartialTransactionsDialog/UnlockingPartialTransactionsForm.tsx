@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -30,8 +29,7 @@ function UnlockingPartialTransactionsForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { dialogName, moduleName, createUnlockingPartialTransactionsMutate } =
-    useUnlockingPartialTransactionsContext();
+  const { dialogName, moduleName, createUnlockingPartialTransactionsMutate } = useUnlockingPartialTransactionsContext();
 
   // Initial form values.
   const initialValues = {
@@ -46,9 +44,7 @@ function UnlockingPartialTransactionsForm({
     // Handle request response success.
     const onSuccess = (response) => {
       AppToaster.show({
-        message: intl.get(
-          'unlocking_partial_transactions.dialog.success_message',
-        ),
+        message: intl.get('unlocking_partial_transactions.dialog.success_message'),
         intent: Intent.SUCCESS,
       });
       closeDialog(dialogName);
@@ -62,9 +58,7 @@ function UnlockingPartialTransactionsForm({
       setSubmitting(false);
     };
 
-    createUnlockingPartialTransactionsMutate(values)
-      .then(onSuccess)
-      .catch(onError);
+    createUnlockingPartialTransactionsMutate(values).then(onSuccess).catch(onError);
   };
 
   return (

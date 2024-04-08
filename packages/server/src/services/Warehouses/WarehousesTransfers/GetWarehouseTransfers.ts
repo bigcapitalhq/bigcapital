@@ -1,10 +1,10 @@
-import * as R from 'ramda';
-import { Service, Inject } from 'typedi';
-import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import { IGetWarehousesTransfersFilterDTO } from '@/interfaces';
-import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import DynamicListingService from '@/services/DynamicListing/DynamicListService';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
+import { WarehouseTransferTransformer } from './WarehouseTransferTransfomer';
 
 @Service()
 export class GetWarehouseTransfers {
@@ -32,21 +32,14 @@ export class GetWarehouseTransfers {
    * @param   {IGetWarehousesTransfersFilterDTO} filterDTO
    * @returns {}
    */
-  public getWarehouseTransfers = async (
-    tenantId: number,
-    filterDTO: IGetWarehousesTransfersFilterDTO
-  ) => {
+  public getWarehouseTransfers = async (tenantId: number, filterDTO: IGetWarehousesTransfersFilterDTO) => {
     const { WarehouseTransfer } = this.tenancy.models(tenantId);
 
     // Parses stringified filter roles.
     const filter = this.parseListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicFilter = await this.dynamicListService.dynamicList(
-      tenantId,
-      WarehouseTransfer,
-      filter
-    );
+    const dynamicFilter = await this.dynamicListService.dynamicList(tenantId, WarehouseTransfer, filter);
     const { results, pagination } = await WarehouseTransfer.query()
       .onBuild((query) => {
         query.withGraphFetched('entries.item');
@@ -58,11 +51,7 @@ export class GetWarehouseTransfers {
       .pagination(filter.page - 1, filter.pageSize);
 
     // Retrieves the transformed warehouse transfers
-    const warehousesTransfers = await this.transformer.transform(
-      tenantId,
-      results,
-      new WarehouseTransferTransformer()
-    );
+    const warehousesTransfers = await this.transformer.transform(tenantId, results, new WarehouseTransferTransformer());
     return {
       warehousesTransfers,
       pagination,

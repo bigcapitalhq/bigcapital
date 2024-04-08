@@ -1,8 +1,8 @@
-import { Model, raw } from 'objection';
-import moment from 'moment';
-import { isEmpty, castArray } from 'lodash';
-import TenantModel from 'models/TenantModel';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
+import { castArray, isEmpty } from 'lodash';
+import moment from 'moment';
+import { Model, raw } from 'objection';
+import TenantModel from '../models/TenantModel';
 
 export default class AccountTransaction extends TenantModel {
   referenceType: string;
@@ -125,12 +125,7 @@ export default class AccountTransaction extends TenantModel {
         query.modify('filterDateRange', null, toDate);
         query.modify('sumationCreditDebit');
       },
-      contactsOpeningBalance(
-        query,
-        openingDate,
-        receivableAccounts,
-        customersIds
-      ) {
+      contactsOpeningBalance(query, openingDate, receivableAccounts, customersIds) {
         // Filter by date.
         query.modify('filterDateRange', null, openingDate);
 
@@ -181,8 +176,8 @@ export default class AccountTransaction extends TenantModel {
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Account = require('models/Account');
-    const Contact = require('models/Contact');
+    const Account = require('../models/Account');
+    const Contact = require('../models/Contact');
 
     return {
       account: {

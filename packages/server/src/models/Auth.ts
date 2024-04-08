@@ -1,4 +1,3 @@
-
 export default class Auth {
   /**
    * Retrieve the authenticated user.

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Classes, Position, FormGroup, ControlGroup } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
@@ -45,27 +44,17 @@ function VendorOpeningBalanceFormFields({
   return (
     <div className={Classes.DIALOG_BODY}>
       {/*------------ Opening balance -----------*/}
-      <FFormGroup
-        name={'opening_balance'}
-        label={<T id={'vendor_opening_balance.label.opening_balance'} />}
-      >
+      <FFormGroup name={'opening_balance'} label={<T id={'vendor_opening_balance.label.opening_balance'} />}>
         <ControlGroup>
           <InputPrependText text={vendor.currency_code} />
-          <FMoneyInputGroup
-            name={'opening_balance'}
-            allowDecimals={true}
-            allowNegativeValue={true}
-          />
+          <FMoneyInputGroup name={'opening_balance'} allowDecimals={true} allowNegativeValue={true} />
         </ControlGroup>
       </FFormGroup>
 
       {/*------------ Opening balance at -----------*/}
       <FastField name={'opening_balance_at'}>
         {({ form, field: { value } }) => (
-          <FormGroup
-            label={<T id={'vendor_opening_balance.label.opening_balance_at'} />}
-            className={Classes.FILL}
-          >
+          <FormGroup label={<T id={'vendor_opening_balance.label.opening_balance_at'} />} className={Classes.FILL}>
             <DateInput
               {...momentFormatter('YYYY/MM/DD')}
               onChange={handleDateChange((formattedDate) => {
@@ -112,6 +101,4 @@ function VendorOpeningBalanceFormFields({
   );
 }
 
-export default compose(withCurrentOrganization())(
-  VendorOpeningBalanceFormFields,
-);
+export default compose(withCurrentOrganization())(VendorOpeningBalanceFormFields);

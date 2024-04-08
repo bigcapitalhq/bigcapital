@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { useWarehouses, useBranches } from '@/hooks/query';
@@ -23,10 +22,7 @@ function InventoryItemDetailsHeaderDimensionsProvider({ ...props }) {
   const isBranchesFeatureCan = featureCan(Features.Branches);
 
   // Fetches the warehouses list.
-  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(
-    null,
-    { enabled: isWarehouseFeatureCan },
-  );
+  const { data: warehouses, isLoading: isWarehouesLoading } = useWarehouses(null, { enabled: isWarehouseFeatureCan });
 
   // Fetches the branches list.
   const { data: branches, isLoading: isBranchesLoading } = useBranches(null, {
@@ -44,17 +40,11 @@ function InventoryItemDetailsHeaderDimensionsProvider({ ...props }) {
   return isWarehouesLoading || isBranchesLoading ? (
     <FinancialHeaderLoadingSkeleton />
   ) : (
-    <InventoryItemDetailsHeaderDimensionsPanelContext.Provider
-      value={provider}
-      {...props}
-    />
+    <InventoryItemDetailsHeaderDimensionsPanelContext.Provider value={provider} {...props} />
   );
 }
 
 const useInventoryItemDetailsHeaderDimensionsPanelContext = () =>
   React.useContext(InventoryItemDetailsHeaderDimensionsPanelContext);
 
-export {
-  InventoryItemDetailsHeaderDimensionsProvider,
-  useInventoryItemDetailsHeaderDimensionsPanelContext,
-};
+export { InventoryItemDetailsHeaderDimensionsProvider, useInventoryItemDetailsHeaderDimensionsPanelContext };

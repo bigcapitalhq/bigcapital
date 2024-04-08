@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import BodyClassName from 'react-body-classname';
 import { Redirect } from 'react-router-dom';
@@ -9,11 +8,7 @@ export default function PrivateRoute({ component: Component, ...rest }) {
 
   return (
     <BodyClassName className={''}>
-      {isAuthenticated ? (
-        <Component />
-      ) : (
-        <Redirect to={{ pathname: '/auth/login' }} />
-      )}
+      {isAuthenticated ? <Component /> : <Redirect to={{ pathname: '/auth/login' }} />}
     </BodyClassName>
   );
 }

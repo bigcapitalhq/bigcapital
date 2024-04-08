@@ -1,7 +1,7 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { FeaturesConfigure } from './constants';
 import { IFeatureAllItem } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
+import { FeaturesConfigure } from './constants';
 
 @Service()
 export class FeaturesSettingsDriver {
@@ -52,10 +52,7 @@ export class FeaturesSettingsDriver {
   async all(tenantId: number): Promise<IFeatureAllItem[]> {
     const mappedOpers = FeaturesConfigure.map(async (featureConfigure) => {
       const { name, defaultValue } = featureConfigure;
-      const isAccessible = await this.accessible(
-        tenantId,
-        featureConfigure.name
-      );
+      const isAccessible = await this.accessible(tenantId, featureConfigure.name);
       return { name, isAccessible, defaultAccessible: defaultValue };
     });
     return Promise.all(mappedOpers);

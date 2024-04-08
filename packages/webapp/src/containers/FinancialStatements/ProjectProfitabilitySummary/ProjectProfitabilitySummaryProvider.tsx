@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useMemo, useContext } from 'react';
 
 import FinancialReportPage from '../FinancialReportPage';
@@ -32,24 +31,17 @@ function ProjectProfitabilitySummaryProvider({ filter, ...props }) {
     isProjectProfitabilitySummaryLoading,
     refetchProjectProfitabilitySummary,
     projects,
-    
+
     query,
     filter,
   };
   return (
     <FinancialReportPage name={'project-profitability-summary'}>
-      <ProjectProfitabilitySummaryContext.Provider
-        value={provider}
-        {...props}
-      />
+      <ProjectProfitabilitySummaryContext.Provider value={provider} {...props} />
     </FinancialReportPage>
   );
 }
 
-const useProjectProfitabilitySummaryContext = () =>
-  useContext(ProjectProfitabilitySummaryContext);
+const useProjectProfitabilitySummaryContext = () => useContext(ProjectProfitabilitySummaryContext);
 
-export {
-  ProjectProfitabilitySummaryProvider,
-  useProjectProfitabilitySummaryContext,
-};
+export { ProjectProfitabilitySummaryProvider, useProjectProfitabilitySummaryContext };

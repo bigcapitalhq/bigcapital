@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, Position, ControlGroup } from '@blueprintjs/core';
@@ -20,12 +19,7 @@ import {
 } from '@/components';
 import { DateInput } from '@blueprintjs/datetime';
 import { ACCOUNT_TYPE } from '@/constants/accountTypes';
-import {
-  inputIntent,
-  momentFormatter,
-  tansformDateValue,
-  handleDateChange,
-} from '@/utils';
+import { inputIntent, momentFormatter, tansformDateValue, handleDateChange } from '@/utils';
 import { Features } from '@/constants';
 import { CLASSES } from '@/constants/classes';
 import { useMoneyOutDialogContext } from '../MoneyOutDialogProvider';
@@ -102,11 +96,7 @@ export default function TransferToAccountFormFields() {
       {/*------------ Amount -----------*/}
       <Row>
         <Col xs={10}>
-          <FFormGroup
-            name={'amount'}
-            label={<T id={'amount'} />}
-            labelInfo={<FieldRequiredHint />}
-          >
+          <FFormGroup name={'amount'} label={<T id={'amount'} />} labelInfo={<FieldRequiredHint />}>
             <ControlGroup>
               <InputPrependText text={account.currency_code} />
               <FMoneyInputGroup name={'amount'} minimal={true} />
@@ -124,9 +114,7 @@ export default function TransferToAccountFormFields() {
           <FastField name={'credit_account_id'}>
             {({ form, field, meta: { error, touched } }) => (
               <FormGroup
-                label={
-                  <T id={'cash_flow_transaction.label_transfer_to_account'} />
-                }
+                label={<T id={'cash_flow_transaction.label_transfer_to_account'} />}
                 labelInfo={<FieldRequiredHint />}
                 intent={inputIntent({ error, touched })}
                 helperText={<ErrorMessage name="credit_account_id" />}
@@ -134,14 +122,8 @@ export default function TransferToAccountFormFields() {
               >
                 <AccountsSuggestField
                   accounts={accounts}
-                  onAccountSelected={({ id }) =>
-                    form.setFieldValue('credit_account_id', id)
-                  }
-                  filterByTypes={[
-                    ACCOUNT_TYPE.CASH,
-                    ACCOUNT_TYPE.BANK,
-                    ACCOUNT_TYPE.CREDIT_CARD,
-                  ]}
+                  onAccountSelected={({ id }) => form.setFieldValue('credit_account_id', id)}
+                  filterByTypes={[ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK, ACCOUNT_TYPE.CREDIT_CARD]}
                   inputProps={{
                     intent: inputIntent({ error, touched }),
                   }}
@@ -161,12 +143,7 @@ export default function TransferToAccountFormFields() {
 
       {/*------------ Description -----------*/}
       <FFormGroup name={'description'} label={<T id={'description'} />}>
-        <FTextArea
-          name={'description'}
-          growVertically={true}
-          large={true}
-          fill={true}
-        />
+        <FTextArea name={'description'} growVertically={true} large={true} fill={true} />
       </FFormGroup>
     </React.Fragment>
   );

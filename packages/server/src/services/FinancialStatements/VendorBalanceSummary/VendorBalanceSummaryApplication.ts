@@ -1,9 +1,9 @@
-import { Inject, Service } from 'typedi';
 import { IVendorBalanceSummaryQuery } from '@/interfaces';
-import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
+import { Inject, Service } from 'typedi';
 import { VendorBalanceSummaryExportInjectable } from './VendorBalanceSummaryExportInjectable';
-import { VendorBalanceSummaryService } from './VendorBalanceSummaryService';
 import { VendorBalanceSummaryPdf } from './VendorBalanceSummaryPdf';
+import { VendorBalanceSummaryService } from './VendorBalanceSummaryService';
+import { VendorBalanceSummaryTableInjectable } from './VendorBalanceSummaryTableInjectable';
 
 @Service()
 export class VendorBalanceSummaryApplication {
@@ -44,10 +44,7 @@ export class VendorBalanceSummaryApplication {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public xlsx(
-    tenantId: number,
-    query: IVendorBalanceSummaryQuery
-  ): Promise<Buffer> {
+  public xlsx(tenantId: number, query: IVendorBalanceSummaryQuery): Promise<Buffer> {
     return this.vendorBalanceSummaryExport.xlsx(tenantId, query);
   }
 
@@ -57,10 +54,7 @@ export class VendorBalanceSummaryApplication {
    * @param {IVendorBalanceSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
-  public csv(
-    tenantId: number,
-    query: IVendorBalanceSummaryQuery
-  ): Promise<string> {
+  public csv(tenantId: number, query: IVendorBalanceSummaryQuery): Promise<string> {
     return this.vendorBalanceSummaryExport.csv(tenantId, query);
   }
 

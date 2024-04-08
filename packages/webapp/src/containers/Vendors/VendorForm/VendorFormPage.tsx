@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { useParams, useHistory } from 'react-router-dom';
@@ -16,11 +15,7 @@ import VendorFormFormik from './VendorFormFormik';
 function VendorFormPageLoading({ children }) {
   const { isFormLoading } = useVendorFormContext();
 
-  return (
-    <VendorDashboardInsider loading={isFormLoading}>
-      {children}
-    </VendorDashboardInsider>
-  );
+  return <VendorDashboardInsider loading={isFormLoading}>{children}</VendorDashboardInsider>;
 }
 
 /**
@@ -45,10 +40,7 @@ export default function VendorFormPage() {
     <VendorFormProvider vendorId={id}>
       <VendorFormPageLoading>
         <DashboardCard page>
-          <VendorFormPageFormik
-            onSubmitSuccess={handleSubmitSuccess}
-            onCancel={handleFormCancel}
-          />
+          <VendorFormPageFormik onSubmitSuccess={handleSubmitSuccess} onCancel={handleFormCancel} />
         </DashboardCard>
       </VendorFormPageLoading>
     </VendorFormProvider>

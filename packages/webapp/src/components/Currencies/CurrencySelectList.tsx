@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback, useEffect, useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
@@ -24,11 +23,7 @@ export function CurrencySelectList({
     if (exactMatch) {
       return normalizedTitle === normalizedQuery;
     } else {
-      return (
-        `${currency.currency_code} ${normalizedTitle}`.indexOf(
-          normalizedQuery,
-        ) >= 0
-      );
+      return `${currency.currency_code} ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
     }
   };
 
@@ -38,13 +33,7 @@ export function CurrencySelectList({
   });
 
   const currencyCodeRenderer = useCallback((CurrencyCode, { handleClick }) => {
-    return (
-      <MenuItem
-        key={CurrencyCode.id}
-        text={CurrencyCode.currency_code}
-        onClick={handleClick}
-      />
-    );
+    return <MenuItem key={CurrencyCode.id} text={CurrencyCode.currency_code} onClick={handleClick} />;
   }, []);
 
   useEffect(() => {
@@ -72,12 +61,7 @@ export function CurrencySelectList({
         [CLASSES.SELECT_LIST_FILL_POPOVER]: popoverFill,
       })}
     >
-      <Button
-        disabled={disabled}
-        text={
-          selectedCurrency ? selectedCurrency.currency_code : defaultSelectText
-        }
-      />
+      <Button disabled={disabled} text={selectedCurrency ? selectedCurrency.currency_code : defaultSelectText} />
     </Select>
   );
 }

@@ -1,27 +1,13 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import {
-  Menu,
-  Popover,
-  Button,
-  Position,
-  MenuItem,
-  MenuDivider,
-  Intent,
-} from '@blueprintjs/core';
+import { Menu, Popover, Button, Position, MenuItem, MenuDivider, Intent } from '@blueprintjs/core';
 import { Icon } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
  * Row actions menu list.
  */
-export function ActionMenuList({
-  row: { original },
-  payload: { onEditCategory, onDeleteCategory },
-}) {
-  
-
+export function ActionMenuList({ row: { original }, payload: { onEditCategory, onDeleteCategory } }) {
   return (
     <Menu>
       <MenuItem
@@ -45,10 +31,7 @@ export function ActionMenuList({
  */
 export function TableActionsCell(props) {
   return (
-    <Popover
-      content={<ActionMenuList {...props} />}
-      position={Position.RIGHT_TOP}
-    >
+    <Popover content={<ActionMenuList {...props} />} position={Position.RIGHT_TOP}>
       <Button icon={<Icon icon="more-h-16" iconSize={16} />} />
     </Popover>
   );
@@ -58,8 +41,6 @@ export function TableActionsCell(props) {
  * Retrieve the items categories table columns.
  */
 export function useItemsCategoriesTableColumns() {
-  
-
   return React.useMemo(
     () => [
       {
@@ -68,7 +49,7 @@ export function useItemsCategoriesTableColumns() {
         accessor: 'name',
         width: 220,
       },
-      
+
       {
         id: 'count',
         Header: intl.get('count'),
@@ -82,7 +63,7 @@ export function useItemsCategoriesTableColumns() {
         accessor: 'description',
         className: 'description',
         width: 220,
-      }
+      },
     ],
     [],
   );

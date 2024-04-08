@@ -1,4 +1,4 @@
-import { ISmsNotificationDefined, SMS_NOTIFICATION_KEY } from '@/interfaces';
+import { type ISmsNotificationDefined, SMS_NOTIFICATION_KEY } from '@/interfaces';
 
 export default [
   {
@@ -126,7 +126,7 @@ export default [
       },
       {
         variable: 'ExpirationDate',
-        description: 'sms_notification.estimate.var.expiration_date'
+        description: 'sms_notification.estimate.var.expiration_date',
       },
       {
         variable: 'ReferenceNumber',

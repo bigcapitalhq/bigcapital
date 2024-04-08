@@ -1,10 +1,10 @@
-import events from '@/subscribers/events';
 import {
-  ITenantUserInactivatedPayload,
   ITenantUserActivatedPayload,
   ITenantUserDeletedPayload,
   ITenantUserEditedPayload,
+  ITenantUserInactivatedPayload,
 } from '@/interfaces';
+import events from '@/subscribers/events';
 import { ABILITIES_CACHE } from '../../api/middleware/AuthorizationMiddleware';
 
 export default class PurgeUserAbilityCache {
@@ -14,14 +14,8 @@ export default class PurgeUserAbilityCache {
    */
   attach(bus) {
     bus.subscribe(events.tenantUser.onEdited, this.purgeAuthorizedUserAbility);
-    bus.subscribe(
-      events.tenantUser.onActivated,
-      this.purgeAuthorizedUserAbility
-    );
-    bus.subscribe(
-      events.tenantUser.onInactivated,
-      this.purgeAuthorizedUserAbility
-    );
+    bus.subscribe(events.tenantUser.onActivated, this.purgeAuthorizedUserAbility);
+    bus.subscribe(events.tenantUser.onInactivated, this.purgeAuthorizedUserAbility);
   }
 
   /**

@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { IBill } from '@/interfaces';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { BillsValidators } from './BillsValidators';
 import { PurchaseInvoiceTransformer } from './PurchaseInvoiceTransformer';
 
@@ -34,10 +34,6 @@ export class GetBill {
     // Validates the bill existance.
     this.validators.validateBillExistance(bill);
 
-    return this.transformer.transform(
-      tenantId,
-      bill,
-      new PurchaseInvoiceTransformer()
-    );
+    return this.transformer.transform(tenantId, bill, new PurchaseInvoiceTransformer());
   }
 }

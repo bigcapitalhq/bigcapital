@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import styled from 'styled-components';
@@ -6,10 +5,7 @@ import styled from 'styled-components';
 import { Card, DrawerLoading } from '@/components';
 
 import ItemFormFormik from '../../Items/ItemFormFormik';
-import {
-  ItemFormProvider,
-  useItemFormContext,
-} from '../../Items/ItemFormProvider';
+import { ItemFormProvider, useItemFormContext } from '../../Items/ItemFormProvider';
 
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
@@ -72,10 +68,7 @@ function DrawerItemFormLoading({ children }) {
   return <DrawerLoading loading={isFormLoading}>{children}</DrawerLoading>;
 }
 
-export default R.compose(
-  withDrawerActions,
-  withDashboardActions,
-)(QuickCreateItemDrawerForm);
+export default R.compose(withDrawerActions, withDashboardActions)(QuickCreateItemDrawerForm);
 
 const ItemFormCard = styled(Card)`
   margin: 15px;

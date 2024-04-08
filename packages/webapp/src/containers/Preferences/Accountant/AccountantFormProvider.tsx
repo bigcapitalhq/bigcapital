@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -40,11 +39,7 @@ function AccountantFormProvider({ ...props }) {
       )}
     >
       <AccountantFormCard>
-        {isLoading ? (
-          <PreferencesPageLoader />
-        ) : (
-          <AccountantFormContext.Provider value={provider} {...props} />
-        )}
+        {isLoading ? <PreferencesPageLoader /> : <AccountantFormContext.Provider value={provider} {...props} />}
       </AccountantFormCard>
     </div>
   );

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField, ErrorMessage } from 'formik';
 import { FormGroup, Checkbox, Switch } from '@blueprintjs/core';
@@ -6,11 +5,7 @@ import { CLASSES } from '@/constants/classes';
 import { ListSelect } from '@/components';
 import { FormattedMessage as T } from '@/components';
 import { inputIntent } from '@/utils';
-import {
-  moneyFormat,
-  negativeFormat,
-  decimalPlaces,
-} from '@/constants/numberFormatsOptions';
+import { moneyFormat, negativeFormat, decimalPlaces } from '@/constants/numberFormatsOptions';
 import classNames from 'classnames';
 
 /**
@@ -96,13 +91,7 @@ export default function NumberFormatFields({}) {
         <FastField name={'showZero'} type={'checkbox'}>
           {({ field }) => (
             <FormGroup inline={true}>
-              <Switch
-                inline={true}
-                small={true}
-                label={<T id={'show_zero'} />}
-                name={'showZero'}
-                {...field}
-              />
+              <Switch inline={true} small={true} label={<T id={'show_zero'} />} name={'showZero'} {...field} />
             </FormGroup>
           )}
         </FastField>
@@ -111,12 +100,7 @@ export default function NumberFormatFields({}) {
         <FastField name={'showInRed'} type={'checkbox'}>
           {({ field }) => (
             <FormGroup inline={true}>
-              <Switch
-                inline={true}
-                label={<T id={'show_negative_in_red'} />}
-                name={'showInRed'}
-                {...field}
-              />
+              <Switch inline={true} label={<T id={'show_negative_in_red'} />} name={'showInRed'} {...field} />
             </FormGroup>
           )}
         </FastField>
@@ -125,12 +109,7 @@ export default function NumberFormatFields({}) {
         <FastField name={'divideOn1000'} type={'checkbox'}>
           {({ field }) => (
             <FormGroup inline={true}>
-              <Switch
-                inline={true}
-                label={<T id={'divide_on_1000'} />}
-                name={'divideOn1000'}
-                {...field}
-              />
+              <Switch inline={true} label={<T id={'divide_on_1000'} />} name={'divideOn1000'} {...field} />
             </FormGroup>
           )}
         </FastField>

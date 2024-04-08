@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { useState } from 'react';
 import { useMutation } from 'react-query';
@@ -20,8 +20,7 @@ export const useDownloadFile = (args: IArgs) => {
       .get(args.url, {
         responseType: 'blob',
         onDownloadProgress: (ev) => {
-          args.onDownloadProgress &&
-            args.onDownloadProgress(Math.round((ev.loaded * 100) / ev.total));
+          args.onDownloadProgress && args.onDownloadProgress(Math.round((ev.loaded * 100) / ev.total));
         },
         ...args.config,
       })
@@ -64,7 +63,7 @@ export function downloadFile(data, filename, mime, bom) {
     tempLink.click();
 
     // Fixes "webkit blob resource error 1"
-    setTimeout(function () {
+    setTimeout(() => {
       document.body.removeChild(tempLink);
       window.URL.revokeObjectURL(blobURL);
     }, 200);

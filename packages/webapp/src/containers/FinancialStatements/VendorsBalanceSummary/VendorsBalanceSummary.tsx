@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
@@ -43,10 +42,7 @@ function VendorsBalanceSummary({
     });
   };
 
-  useEffect(
-    () => () => toggleVendorSummaryFilterDrawer(false),
-    [toggleVendorSummaryFilterDrawer],
-  );
+  useEffect(() => () => toggleVendorSummaryFilterDrawer(false), [toggleVendorSummaryFilterDrawer]);
 
   return (
     <VendorsBalanceSummaryProvider filter={query}>
@@ -58,10 +54,7 @@ function VendorsBalanceSummary({
 
       <DashboardPageContent>
         <FinancialStatement>
-          <VendorsBalanceSummaryHeader
-            pageFilter={query}
-            onSubmitFilter={handleFilterSubmit}
-          />
+          <VendorsBalanceSummaryHeader pageFilter={query} onSubmitFilter={handleFilterSubmit} />
           <VendorBalanceSummaryBody />
         </FinancialStatement>
       </DashboardPageContent>

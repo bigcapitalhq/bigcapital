@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -22,16 +21,8 @@ import { compose, orderingLinesIndexes } from '@/utils';
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 
-import {
-  EditPaymentMadeFormSchema,
-  CreatePaymentMadeFormSchema,
-} from './PaymentMadeForm.schema';
-import {
-  defaultPaymentMade,
-  transformToEditForm,
-  transformErrors,
-  transformFormToRequest,
-} from './utils';
+import { EditPaymentMadeFormSchema, CreatePaymentMadeFormSchema } from './PaymentMadeForm.schema';
+import { defaultPaymentMade, transformToEditForm, transformErrors, transformFormToRequest } from './utils';
 
 /**
  * Payment made form component.
@@ -74,10 +65,7 @@ function PaymentMadeForm({
   );
 
   // Handle the form submit.
-  const handleSubmitForm = (
-    values,
-    { setSubmitting, resetForm, setFieldError },
-  ) => {
+  const handleSubmitForm = (values, { setSubmitting, resetForm, setFieldError }) => {
     setSubmitting(true);
     // Total payment amount of entries.
     const totalPaymentAmount = sumBy(values.entries, 'payment_amount');
@@ -128,18 +116,10 @@ function PaymentMadeForm({
   };
 
   return (
-    <div
-      className={classNames(
-        CLASSES.PAGE_FORM,
-        CLASSES.PAGE_FORM_STRIP_STYLE,
-        CLASSES.PAGE_FORM_PAYMENT_MADE,
-      )}
-    >
+    <div className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_STRIP_STYLE, CLASSES.PAGE_FORM_PAYMENT_MADE)}>
       <Formik
         initialValues={initialValues}
-        validationSchema={
-          isNewMode ? CreatePaymentMadeFormSchema : EditPaymentMadeFormSchema
-        }
+        validationSchema={isNewMode ? CreatePaymentMadeFormSchema : EditPaymentMadeFormSchema}
         onSubmit={handleSubmitForm}
       >
         <Form>
@@ -160,7 +140,7 @@ export default compose(
   withSettings(({ billPaymentSettings }) => ({
     paymentNextNumber: billPaymentSettings?.next_number,
     paymentNumberPrefix: billPaymentSettings?.number_prefix,
-    preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
+    preferredPaymentAccount: Number.parseInt(billPaymentSettings?.withdrawalAccount),
   })),
   withCurrentOrganization(),
 )(PaymentMadeForm);

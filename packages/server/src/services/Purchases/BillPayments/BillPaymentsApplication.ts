@@ -1,10 +1,10 @@
+import { IBillPayment, IBillPaymentDTO } from '@/interfaces';
 import { Inject, Service } from 'typedi';
-import { IBillPaymentDTO, IBillPayment } from '@/interfaces';
 import { CreateBillPayment } from './CreateBillPayment';
 import { DeleteBillPayment } from './DeleteBillPayment';
 import { EditBillPayment } from './EditBillPayment';
-import { GetBillPayments } from './GetBillPayments';
 import { GetBillPayment } from './GetBillPayment';
+import { GetBillPayments } from './GetBillPayments';
 import { GetPaymentBills } from './GetPaymentBills';
 
 /**
@@ -37,14 +37,8 @@ export class BillPaymentsApplication {
    * @param {IBillPaymentDTO} billPaymentDTO
    * @returns {Promise<IBillPayment>}
    */
-  public createBillPayment(
-    tenantId: number,
-    billPaymentDTO: IBillPaymentDTO
-  ): Promise<IBillPayment> {
-    return this.createBillPaymentService.createBillPayment(
-      tenantId,
-      billPaymentDTO
-    );
+  public createBillPayment(tenantId: number, billPaymentDTO: IBillPaymentDTO): Promise<IBillPayment> {
+    return this.createBillPaymentService.createBillPayment(tenantId, billPaymentDTO);
   }
 
   /**
@@ -53,10 +47,7 @@ export class BillPaymentsApplication {
    * @param {number} billPaymentId
    */
   public deleteBillPayment(tenantId: number, billPaymentId: number) {
-    return this.deleteBillPaymentService.deleteBillPayment(
-      tenantId,
-      billPaymentId
-    );
+    return this.deleteBillPaymentService.deleteBillPayment(tenantId, billPaymentId);
   }
 
   /**
@@ -66,16 +57,8 @@ export class BillPaymentsApplication {
    * @param billPaymentDTO
    * @returns {Promise<IBillPayment>}
    */
-  public editBillPayment(
-    tenantId: number,
-    billPaymentId: number,
-    billPaymentDTO
-  ): Promise<IBillPayment> {
-    return this.editBillPaymentService.editBillPayment(
-      tenantId,
-      billPaymentId,
-      billPaymentDTO
-    );
+  public editBillPayment(tenantId: number, billPaymentId: number, billPaymentDTO): Promise<IBillPayment> {
+    return this.editBillPaymentService.editBillPayment(tenantId, billPaymentId, billPaymentDTO);
   }
 
   /**

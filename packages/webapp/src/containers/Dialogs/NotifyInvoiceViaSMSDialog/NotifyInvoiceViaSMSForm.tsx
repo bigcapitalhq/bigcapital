@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { pick } from 'lodash';
@@ -74,9 +73,7 @@ function NotifyInvoiceViaSMSForm({
     const requestValues = transformFormValuesToRequest(values);
 
     // Submits invoice SMS notification.
-    createNotifyInvoiceBySMSMutate([invoiceId, requestValues])
-      .then(onSuccess)
-      .catch(onError);
+    createNotifyInvoiceBySMSMutate([invoiceId, requestValues]).then(onSuccess).catch(onError);
   };
   // Handle the form cancel.
   const handleFormCancel = React.useCallback(() => {

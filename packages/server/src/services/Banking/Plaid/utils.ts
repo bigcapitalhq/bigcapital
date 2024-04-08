@@ -1,10 +1,10 @@
-import * as R from 'ramda';
 import {
   CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
   PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';
+import * as R from 'ramda';
 
 /**
  * Transformes the Plaid account to create cashflow account DTO.
@@ -24,7 +24,7 @@ export const transformPlaidAccountToCreateAccount = R.curry(
       bankBalance: plaidAccount.balances.current,
       accountMask: plaidAccount.mask,
     };
-  }
+  },
 );
 
 /**
@@ -38,7 +38,7 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
     creditAccountId: number,
-    plaidTranasction: PlaidTransaction
+    plaidTranasction: PlaidTransaction,
   ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
@@ -50,5 +50,5 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
       referenceNo: plaidTranasction.payment_meta?.reference_number,
       plaidTransactionId: plaidTranasction.transaction_id,
     };
-  }
+  },
 );

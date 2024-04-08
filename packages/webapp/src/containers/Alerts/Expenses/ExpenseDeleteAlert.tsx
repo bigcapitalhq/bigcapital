@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -51,14 +50,10 @@ function ExpenseDeleteAlert({
             data: { errors },
           },
         }) => {
-          if (
-            errors.find((e) => e.type === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST')
-          ) {
+          if (errors.find((e) => e.type === 'EXPENSE_HAS_ASSOCIATED_LANDED_COST')) {
             AppToaster.show({
               intent: Intent.DANGER,
-              message: intl.get(
-                'couldn_t_delete_expense_transaction_has_associated_located_landed_cost_transaction',
-              ),
+              message: intl.get('couldn_t_delete_expense_transaction_has_associated_located_landed_cost_transaction'),
             });
           }
         },
@@ -86,8 +81,4 @@ function ExpenseDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withDrawerActions,
-)(ExpenseDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withDrawerActions)(ExpenseDeleteAlert);

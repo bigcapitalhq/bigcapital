@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
@@ -26,8 +25,7 @@ function BranchesProvider({ query, ...props }) {
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
   // Detarmines the datatable empty status.
-  const isEmptyStatus =
-    (isEmpty(branches) && !isBranchesLoading) || !isBranchFeatureCan;
+  const isEmptyStatus = (isEmpty(branches) && !isBranchesLoading) || !isBranchFeatureCan;
 
   // Provider state.
   const provider = {
@@ -39,10 +37,7 @@ function BranchesProvider({ query, ...props }) {
 
   return (
     <div
-      className={classNames(
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT,
-        CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES,
-      )}
+      className={classNames(CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT, CLASSES.PREFERENCES_PAGE_INSIDE_CONTENT_BRANCHES)}
     >
       <BranchesContext.Provider value={provider} {...props} />
     </div>

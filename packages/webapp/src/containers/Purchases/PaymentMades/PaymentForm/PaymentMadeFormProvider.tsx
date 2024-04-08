@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -102,12 +101,7 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   return (
     <DashboardInsider
-      loading={
-        isVendorsLoading ||
-        isItemsLoading ||
-        isAccountsLoading ||
-        isPaymentLoading
-      }
+      loading={isVendorsLoading || isItemsLoading || isAccountsLoading || isPaymentLoading}
       name={'payment-made'}
     >
       <PaymentMadeFormContext.Provider value={provider} {...props} />

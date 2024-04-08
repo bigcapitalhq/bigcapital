@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
 import { IInventoryAdjustmentCreatingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { WarehousesDTOValidators } from '../../../Integrations/WarehousesDTOValidators';
 
 @Service()
@@ -12,10 +12,7 @@ export class InventoryAdjustmentWarehouseValidatorSubscriber {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.inventoryAdjustment.onQuickCreating,
-      this.validateAdjustmentWarehouseExistanceOnCreating
-    );
+    bus.subscribe(events.inventoryAdjustment.onQuickCreating, this.validateAdjustmentWarehouseExistanceOnCreating);
     return bus;
   }
 
@@ -27,9 +24,6 @@ export class InventoryAdjustmentWarehouseValidatorSubscriber {
     quickAdjustmentDTO,
     tenantId,
   }: IInventoryAdjustmentCreatingPayload) => {
-    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(
-      tenantId,
-      quickAdjustmentDTO
-    );
+    await this.warehouseDTOValidator.validateDTOWarehouseWhenActive(tenantId, quickAdjustmentDTO);
   };
 }

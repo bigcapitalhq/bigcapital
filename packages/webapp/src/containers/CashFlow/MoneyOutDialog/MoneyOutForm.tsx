@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -46,18 +45,10 @@ function MoneyOutForm({
   transactionNumberPrefix,
   transactionIncrementMode,
 }) {
-  const {
-    dialogName,
-    accountId,
-    accountType,
-    createCashflowTransactionMutate,
-  } = useMoneyOutDialogContext();
+  const { dialogName, accountId, accountType, createCashflowTransactionMutate } = useMoneyOutDialogContext();
 
   // transaction number.
-  const transactionNo = transactionNumber(
-    transactionNumberPrefix,
-    transactionNextNumber,
-  );
+  const transactionNo = transactionNumber(transactionNumberPrefix, transactionNextNumber);
 
   // Initial form values.
   const initialValues = {
@@ -91,11 +82,7 @@ function MoneyOutForm({
       });
   };
   return (
-    <Formik
-      validationSchema={CreateMoneyOutSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={CreateMoneyOutSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       <MoneyOutFormContent />
     </Formik>
   );

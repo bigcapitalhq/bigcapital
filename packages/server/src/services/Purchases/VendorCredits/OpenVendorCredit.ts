@@ -1,14 +1,14 @@
 import { ServiceError } from '@/exceptions';
 import {
   IVendorCredit,
+  IVendorCreditOpenPayload,
   IVendorCreditOpenedPayload,
   IVendorCreditOpeningPayload,
-  IVendorCreditOpenPayload,
 } from '@/interfaces';
-import Knex from 'knex';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import Knex from 'knex';
 import { Inject, Service } from 'typedi';
 import BaseVendorCredit from './BaseVendorCredit';
 import { ERRORS } from './constants';
@@ -27,17 +27,11 @@ export default class OpenVendorCredit extends BaseVendorCredit {
    * @param {ICreditNoteEditDTO} creditNoteEditDTO -
    * @returns {Promise<ICreditNote>}
    */
-  public openVendorCredit = async (
-    tenantId: number,
-    vendorCreditId: number
-  ): Promise<IVendorCredit> => {
+  public openVendorCredit = async (tenantId: number, vendorCreditId: number): Promise<IVendorCredit> => {
     const { VendorCredit } = this.tenancy.models(tenantId);
 
     // Retrieve the vendor credit or throw not found service error.
-    const oldVendorCredit = await this.getVendorCreditOrThrowError(
-      tenantId,
-      vendorCreditId
-    );
+    const oldVendorCredit = await this.getVendorCreditOrThrowError(tenantId, vendorCreditId);
     // Throw service error if the credit note is already open.
     this.throwErrorIfAlreadyOpen(oldVendorCredit);
 
@@ -58,16 +52,11 @@ export default class OpenVendorCredit extends BaseVendorCredit {
       } as IVendorCreditOpeningPayload;
 
       // Triggers `onCreditNoteOpening` event.
-      await this.eventPublisher.emitAsync(
-        events.creditNote.onOpening,
-        eventPayload as IVendorCreditOpeningPayload
-      );
+      await this.eventPublisher.emitAsync(events.creditNote.onOpening, eventPayload as IVendorCreditOpeningPayload);
       // Saves the vendor credit graph to the storage.
-      const vendorCredit = await VendorCredit.query(trx)
-        .findById(vendorCreditId)
-        .update({
-          openedAt: new Date(),
-        });
+      const vendorCredit = await VendorCredit.query(trx).findById(vendorCreditId).update({
+        openedAt: new Date(),
+      });
       // Triggers `onVendorCreditOpened` event.
       await this.eventPublisher.emitAsync(events.vendorCredit.onOpened, {
         ...eventPayload,

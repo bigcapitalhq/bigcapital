@@ -1,12 +1,5 @@
-import {
-  request,
-  expect,
-} from '~/testInit';
-import {
-  tenantWebsite,
-  tenantFactory,
-  loginRes
-} from '~/dbInit';
+import { loginRes, tenantWebsite } from '~/dbInit';
+import { expect, request } from '~/testInit';
 
 describe('route: `/api/purchases/bill_payments`', () => {
   describe('POST: `/api/purchases/bill_payments`', () => {
@@ -72,42 +65,26 @@ describe('route: `/api/purchases/bill_payments`', () => {
       });
     });
 
-    it('Should `payment_number` be unique on the storage.', () => {
+    it('Should `payment_number` be unique on the storage.', () => {});
 
-    });
+    it('Should `payment_account_id` be exists on the storage.', () => {});
 
-    it('Should `payment_account_id` be exists on the storage.', () => {
+    it('Should `entries.*.item_id` be exists on the storage.', () => {});
 
-    });
-
-    it('Should `entries.*.item_id` be exists on the storage.', () => {
-
-    });
-
-    it('Should store the given bill payment to the storage.', () => {
-
-    });
+    it('Should store the given bill payment to the storage.', () => {});
   });
 
   describe('POST: `/api/purchases/bill_payments/:id`', () => {
-    it('Should bill payment be exists on the storage.', () => {
-
-    });
+    it('Should bill payment be exists on the storage.', () => {});
   });
 
   describe('DELETE: `/api/purchases/bill_payments/:id`', () => {
-    it('Should bill payment be exists on the storage.', () => {
+    it('Should bill payment be exists on the storage.', () => {});
 
-    });
-
-    it('Should delete the given bill payment from the storage.', () => {
-
-    });    
+    it('Should delete the given bill payment from the storage.', () => {});
   });
 
   describe('GET: `/api/purchases/bill_payments/:id`', () => {
-    it('Should bill payment be exists on the storage.', () => {
-
-    });
+    it('Should bill payment be exists on the storage.', () => {});
   });
 });

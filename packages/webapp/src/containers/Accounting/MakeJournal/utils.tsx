@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 import moment from 'moment';
@@ -25,11 +24,9 @@ const ERROR = {
   VENDORS_NOT_WITH_PAYABLE_ACCOUNT: 'VENDORS.NOT.WITH.PAYABLE.ACCOUNT',
   PAYABLE_ENTRIES_HAS_NO_VENDORS: 'PAYABLE.ENTRIES.HAS.NO.VENDORS',
   RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS: 'RECEIVABLE.ENTRIES.HAS.NO.CUSTOMERS',
-  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO:
-    'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
+  CREDIT_DEBIT_SUMATION_SHOULD_NOT_EQUAL_ZERO: 'CREDIT.DEBIT.SUMATION.SHOULD.NOT.EQUAL.ZERO',
   ENTRIES_SHOULD_ASSIGN_WITH_CONTACT: 'ENTRIES_SHOULD_ASSIGN_WITH_CONTACT',
-  COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS:
-    'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
+  COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS: 'COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS',
 };
 
 export const MIN_LINES_NUMBER = 1;
@@ -66,15 +63,10 @@ export function transformToEditForm(manualJournal) {
     ...manualJournal.entries.map((entry) => ({
       ...transformToForm(entry, defaultEntry),
     })),
-    ...repeatValue(
-      defaultEntry,
-      Math.max(MIN_LINES_NUMBER - manualJournal.entries.length, 0),
-    ),
+    ...repeatValue(defaultEntry, Math.max(MIN_LINES_NUMBER - manualJournal.entries.length, 0)),
   ];
 
-  const entries = R.compose(
-    ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry),
-  )(initialEntries);
+  const entries = R.compose(ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry))(initialEntries);
 
   return {
     ...transformToForm(manualJournal, defaultManualJournal),
@@ -137,40 +129,24 @@ export const transformErrors = (resErrors, { setErrors, errors }) => {
     });
 
   if ((error = getError(ERROR.RECEIVABLE_ENTRIES_HAS_NO_CUSTOMERS))) {
-    toastMessages.push(
-      intl.get('should_select_customers_with_entries_have_receivable_account'),
-    );
+    toastMessages.push(intl.get('should_select_customers_with_entries_have_receivable_account'));
     setEntriesErrors(error.indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.ENTRIES_SHOULD_ASSIGN_WITH_CONTACT))) {
     if (error.meta.find((meta) => meta.contact_type === 'customer')) {
-      toastMessages.push(
-        intl.get('receivable_accounts_should_assign_with_customers'),
-      );
+      toastMessages.push(intl.get('receivable_accounts_should_assign_with_customers'));
     }
     if (error.meta.find((meta) => meta.contact_type === 'vendor')) {
-      toastMessages.push(
-        intl.get('payable_accounts_should_assign_with_vendors'),
-      );
+      toastMessages.push(intl.get('payable_accounts_should_assign_with_vendors'));
     }
-    const indexes = error.meta.map((meta) => meta.indexes).flat();
+    const indexes = error.meta.flatMap((meta) => meta.indexes);
     setEntriesErrors(indexes, 'contact_id', 'error');
   }
   if ((error = getError(ERROR.JOURNAL_NUMBER_ALREADY_EXISTS))) {
-    newErrors = setWith(
-      newErrors,
-      'journal_number',
-      intl.get('journal_number_is_already_used'),
-    );
+    newErrors = setWith(newErrors, 'journal_number', intl.get('journal_number_is_already_used'));
   }
-  if (
-    (error = getError(ERROR.COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS))
-  ) {
-    toastMessages.push(
-      intl.get(
-        'make_journal.errors.should_add_accounts_in_same_currency_or_base_currency',
-      ),
-    );
+  if ((error = getError(ERROR.COULD_NOT_ASSIGN_DIFFERENT_CURRENCY_TO_ACCOUNTS))) {
+    toastMessages.push(intl.get('make_journal.errors.should_add_accounts_in_same_currency_or_base_currency'));
   }
   setErrors({ ...newErrors });
 
@@ -200,10 +176,7 @@ export const entriesFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines currencies fast field should update.
  */
 export const currenciesFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.currencies !== oldProps.currencies ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.currencies !== oldProps.currencies || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 export const useSetPrimaryBranchToForm = () => {
@@ -235,10 +208,7 @@ export const useJournalTotals = () => {
 
   const total = Math.max(totalCredit, totalDebit);
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

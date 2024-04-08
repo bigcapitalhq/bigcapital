@@ -1,13 +1,10 @@
-// @ts-nocheck
 import React from 'react';
 import { Drawer, DrawerSuspense } from '@/components';
 import withDrawers from '@/containers/Drawer/withDrawers';
 
 import { compose } from '@/utils';
 
-const ContactDetailDrawerContent = React.lazy(() =>
-  import('./ContactDetailDrawerContent'),
-);
+const ContactDetailDrawerContent = React.lazy(() => import('./ContactDetailDrawerContent'));
 
 /**
  * Contact detail drawer.

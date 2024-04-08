@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -20,12 +19,7 @@ import { customerNameFieldShouldUpdate } from './utils';
 import { useCreditNoteFormContext } from './CreditNoteFormProvider';
 import { CreditNoteExchangeRateInputField } from './components';
 import { CreditNoteTransactionNoField } from './CreditNoteTransactionNoField';
-import {
-  momentFormatter,
-  tansformDateValue,
-  inputIntent,
-  handleDateChange,
-} from '@/utils';
+import { momentFormatter, tansformDateValue, inputIntent, handleDateChange } from '@/utils';
 import { useCustomerUpdateExRate } from '@/containers/Entries/withExRateItemEntriesPriceRecalc';
 
 /**

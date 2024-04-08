@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect } from 'react';
 import { Scrollbar } from 'react-scrollbars-custom';
 import classNames from 'classnames';
@@ -52,10 +51,7 @@ function SidebarContainerJSX({
       onMouseLeave={handleSidebarMouseLeave}
     >
       <div className={'sidebar__scroll-wrapper'}>
-        <Scrollbar
-          noDefaultStyles={true}
-          scrollerProps={{ elementRef: scrollerElementRef }}
-        >
+        <Scrollbar noDefaultStyles={true} scrollerProps={{ elementRef: scrollerElementRef }}>
           <div className="sidebar__inner">{children}</div>
         </Scrollbar>
       </div>

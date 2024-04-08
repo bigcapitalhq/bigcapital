@@ -1,15 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import styled from 'styled-components';
-import {
-  Popover,
-  Menu,
-  Position,
-  Button,
-  MenuItem,
-  Classes,
-} from '@blueprintjs/core';
+import { Popover, Menu, Position, Button, MenuItem, Classes } from '@blueprintjs/core';
 import { Icon } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { curry } from 'lodash/fp';
@@ -20,10 +12,7 @@ function AccountSwitchButton() {
   const { currentAccount } = useAccountTransactionsContext();
 
   return (
-    <AccountSwitchButtonBase
-      minimal={true}
-      rightIcon={<Icon icon={'arrow-drop-down'} iconSize={24} />}
-    >
+    <AccountSwitchButtonBase minimal={true} rightIcon={<Icon icon={'arrow-drop-down'} iconSize={24} />}>
       <AccountSwitchText>{currentAccount.name}</AccountSwitchText>
     </AccountSwitchButtonBase>
   );
@@ -48,11 +37,7 @@ function AccountSwitchItem() {
   ));
 
   return (
-    <Popover
-      content={<Menu>{items}</Menu>}
-      position={Position.BOTTOM_LEFT}
-      minimal={true}
-    >
+    <Popover content={<Menu>{items}</Menu>} position={Position.BOTTOM_LEFT} minimal={true}>
       <AccountSwitchButton />
     </Popover>
   );
@@ -64,9 +49,7 @@ function AccountBalanceItem() {
   return (
     <AccountBalanceItemWrap>
       {intl.get('cash_flow_transaction.balance_in_bigcapital')} {''}
-      <AccountBalanceAmount>
-        {currentAccount.formatted_amount}
-      </AccountBalanceAmount>
+      <AccountBalanceAmount>{currentAccount.formatted_amount}</AccountBalanceAmount>
     </AccountBalanceItemWrap>
   );
 }
@@ -77,9 +60,7 @@ function AccountBankBalanceItem() {
   return (
     <AccountBalanceItemWrap>
       Balance in Bank Account
-      <AccountBalanceAmount>
-        {currentAccount.bank_balance_formatted}
-      </AccountBalanceAmount>
+      <AccountBalanceAmount>{currentAccount.bank_balance_formatted}</AccountBalanceAmount>
     </AccountBalanceItemWrap>
   );
 }
@@ -89,22 +70,14 @@ function AccountNumberItem() {
 
   if (!currentAccount.account_mask) return null;
 
-  return (
-    <AccountBalanceItemWrap>
-      Account Number: xxx{currentAccount.account_mask}
-    </AccountBalanceItemWrap>
-  );
+  return <AccountBalanceItemWrap>Account Number: xxx{currentAccount.account_mask}</AccountBalanceItemWrap>;
 }
 
 function AccountTransactionsDetailsBarSkeleton() {
   return (
     <React.Fragment>
-      <DetailsBarSkeletonBase className={Classes.SKELETON}>
-        X
-      </DetailsBarSkeletonBase>
-      <DetailsBarSkeletonBase className={Classes.SKELETON}>
-        X
-      </DetailsBarSkeletonBase>
+      <DetailsBarSkeletonBase className={Classes.SKELETON}>X</DetailsBarSkeletonBase>
+      <DetailsBarSkeletonBase className={Classes.SKELETON}>X</DetailsBarSkeletonBase>
     </React.Fragment>
   );
 }
@@ -125,21 +98,12 @@ export function AccountTransactionsDetailsBar() {
 
   return (
     <AccountTransactionDetailsWrap>
-      {isCurrentAccountLoading ? (
-        <AccountTransactionsDetailsBarSkeleton />
-      ) : (
-        <AccountTransactionsDetailsContent />
-      )}
+      {isCurrentAccountLoading ? <AccountTransactionsDetailsBarSkeleton /> : <AccountTransactionsDetailsContent />}
     </AccountTransactionDetailsWrap>
   );
 }
 
-function AccountSwitchMenuItem({
-  name,
-  balance,
-  transactionsNumber,
-  ...restProps
-}) {
+function AccountSwitchMenuItem({ name, balance, transactionsNumber, ...restProps }) {
   return (
     <MenuItem
       label={balance}

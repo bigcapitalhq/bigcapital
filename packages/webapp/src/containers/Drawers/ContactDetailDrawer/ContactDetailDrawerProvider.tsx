@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DrawerHeaderContent, DashboardInsider } from '@/components';
 import { useContact } from '@/hooks/query';
@@ -21,17 +20,13 @@ function ContactDetailDrawerProvider({ contactId, ...props }) {
 
   return (
     <DashboardInsider loading={isContactLoading}>
-      <DrawerHeaderContent
-        name="contact-detail-drawer"
-        title={contact?.display_name}
-      />
+      <DrawerHeaderContent name="contact-detail-drawer" title={contact?.display_name} />
 
       <ContactDetailDrawerContext.Provider value={provider} {...props} />
     </DashboardInsider>
   );
 }
 
-const useContactDetailDrawerContext = () =>
-  React.useContext(ContactDetailDrawerContext);
+const useContactDetailDrawerContext = () => React.useContext(ContactDetailDrawerContext);
 
 export { ContactDetailDrawerProvider, useContactDetailDrawerContext };

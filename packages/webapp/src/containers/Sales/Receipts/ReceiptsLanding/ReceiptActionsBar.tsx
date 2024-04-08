@@ -1,13 +1,5 @@
-// @ts-nocheck
 import React, { useState } from 'react';
-import {
-  Button,
-  Classes,
-  NavbarDivider,
-  NavbarGroup,
-  Intent,
-  Alignment,
-} from '@blueprintjs/core';
+import { Button, Classes, NavbarDivider, NavbarGroup, Intent, Alignment } from '@blueprintjs/core';
 
 import { useHistory } from 'react-router-dom';
 import {
@@ -18,12 +10,7 @@ import {
   DashboardRowsHeightButton,
 } from '@/components';
 
-import {
-  Can,
-  If,
-  DashboardActionsBar,
-  DashboardActionViewsList,
-} from '@/components';
+import { Can, If, DashboardActionsBar, DashboardActionViewsList } from '@/components';
 
 import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
@@ -116,9 +103,7 @@ function ReceiptActionsBar({
             },
           }}
         >
-          <DashboardFilterButton
-            conditionsCount={receiptsFilterConditions.length}
-          />
+          <DashboardFilterButton conditionsCount={receiptsFilterConditions.length} />
         </AdvancedFilterPopover>
 
         <If condition={false}>
@@ -147,10 +132,7 @@ function ReceiptActionsBar({
           text={<T id={'export'} />}
         />
         <NavbarDivider />
-        <DashboardRowsHeightButton
-          initialValue={receiptsTableSize}
-          onChange={handleTableRowSizeChange}
-        />
+        <DashboardRowsHeightButton initialValue={receiptsTableSize} onChange={handleTableRowSizeChange} />
         <NavbarDivider />
       </NavbarGroup>
       <NavbarGroup align={Alignment.RIGHT}>

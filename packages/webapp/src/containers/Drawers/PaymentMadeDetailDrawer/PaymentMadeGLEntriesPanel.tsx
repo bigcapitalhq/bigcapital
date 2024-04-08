@@ -1,11 +1,8 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
 import { Card } from '@/components';
-import JournalEntriesTable, {
-  AmountDisplayedBaseCurrencyMessage,
-} from '../../JournalEntriesTable/JournalEntriesTable';
+import JournalEntriesTable, { AmountDisplayedBaseCurrencyMessage } from '../../JournalEntriesTable/JournalEntriesTable';
 
 import { useTransactionsByReference } from '@/hooks/query';
 import { usePaymentMadeDetailContext } from './PaymentMadeDetailProvider';
@@ -32,10 +29,7 @@ export default function PaymentMadeGLEntriesPanel() {
   return (
     <PaymentMadeGLEntriesRoot>
       <AmountDisplayedBaseCurrencyMessage />
-      <JournalEntriesTable
-        loading={isTransactionLoading}
-        transactions={transactions}
-      />
+      <JournalEntriesTable loading={isTransactionLoading} transactions={transactions} />
     </PaymentMadeGLEntriesRoot>
   );
 }

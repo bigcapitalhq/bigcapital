@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
 import { ICashFlowStatementQuery } from '@/interfaces';
 import { TableSheet } from '@/lib/Xlsx/TableSheet';
+import { Inject, Service } from 'typedi';
 import { CashflowTableInjectable } from './CashflowTableInjectable';
 
 @Service()
@@ -14,10 +14,7 @@ export class CashflowExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async xlsx(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<Buffer> {
+  public async xlsx(tenantId: number, query: ICashFlowStatementQuery): Promise<Buffer> {
     const table = await this.cashflowSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);
@@ -32,10 +29,7 @@ export class CashflowExportInjectable {
    * @param {ICashFlowStatementQuery} query
    * @returns {Promise<Buffer>}
    */
-  public async csv(
-    tenantId: number,
-    query: ICashFlowStatementQuery
-  ): Promise<string> {
+  public async csv(tenantId: number, query: ICashFlowStatementQuery): Promise<string> {
     const table = await this.cashflowSheetTable.table(tenantId, query);
 
     const tableSheet = new TableSheet(table.table);

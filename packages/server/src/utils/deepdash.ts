@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import deepdash from 'deepdash';
+import _ from 'lodash';
 
 const {
   condense,
@@ -34,11 +34,7 @@ const mapValuesDeepReverse = (nodes, callback, config?) => {
   reversedPaths.forEach((pathStack: string[], i) => {
     const node = _.get(clonedNodes, pathStack);
     const pathString = pathToString(pathStack);
-    const children = _.get(
-      clonedNodes,
-      `${pathString}.${config.childrenPath}`,
-      []
-    );
+    const children = _.get(clonedNodes, `${pathString}.${config.childrenPath}`, []);
     const mappedNode = callback(node, children);
 
     if (!mappedNode.children && children) {
@@ -73,8 +69,8 @@ const filterNodesDeep = (predicate, nodes) => {
         childrenPath: 'children',
         pathFormat: 'array',
         callbackAfterIterate: true,
-      }
-    )
+      },
+    ),
   );
 };
 
@@ -83,9 +79,7 @@ const flatNestedTree = (obj, mapper, options) => {
     obj,
     (accumulator, value, key, parentValue, context) => {
       const computedValue = _.omit(value, ['children']);
-      const mappedValue = mapper
-        ? mapper(computedValue, key, context)
-        : computedValue;
+      const mappedValue = mapper ? mapper(computedValue, key, context) : computedValue;
 
       accumulator.push(mappedValue);
       return accumulator;
@@ -95,7 +89,7 @@ const flatNestedTree = (obj, mapper, options) => {
       childrenPath: 'children',
       pathFormat: 'array',
       ...options,
-    }
+    },
   );
 };
 

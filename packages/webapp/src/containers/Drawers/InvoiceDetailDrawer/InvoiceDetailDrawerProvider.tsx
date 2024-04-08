@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
@@ -46,7 +45,6 @@ function InvoiceDetailDrawerProvider({ invoiceId, ...props }) {
   );
 }
 
-const useInvoiceDetailDrawerContext = () =>
-  React.useContext(InvoiceDetailDrawerContext);
+const useInvoiceDetailDrawerContext = () => React.useContext(InvoiceDetailDrawerContext);
 
 export { InvoiceDetailDrawerProvider, useInvoiceDetailDrawerContext };

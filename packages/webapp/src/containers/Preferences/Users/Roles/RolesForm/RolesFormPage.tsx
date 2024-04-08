@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { RolesFormProvider } from './RolesFormProvider';
@@ -9,7 +8,7 @@ import RolesForm from './RolesForm';
  */
 export default function RolesFormPage() {
   const { id } = useParams();
-  const idInteger = parseInt(id, 10);
+  const idInteger = Number.parseInt(id, 10);
 
   return (
     <RolesFormProvider roleId={idInteger}>

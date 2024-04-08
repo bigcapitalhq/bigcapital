@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -64,7 +63,4 @@ function WarehouseMarkPrimaryAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(WarehouseMarkPrimaryAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(WarehouseMarkPrimaryAlert);

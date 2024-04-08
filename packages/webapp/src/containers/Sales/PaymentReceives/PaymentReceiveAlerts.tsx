@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 const PaymentReceiveDeleteAlert = React.lazy(
@@ -8,6 +7,4 @@ const PaymentReceiveDeleteAlert = React.lazy(
 /**
  * PaymentReceives alert.
  */
-export default [
-  { name: 'payment-receive-delete', component: PaymentReceiveDeleteAlert },
-];
+export default [{ name: 'payment-receive-delete', component: PaymentReceiveDeleteAlert }];

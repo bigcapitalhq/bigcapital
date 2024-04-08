@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import * as R from 'ramda';
 
@@ -34,11 +33,9 @@ function DashboardUniversalSearchItemActions({
 }
 
 export default R.compose(
-  withUniversalSearch(
-    ({ searchSelectedResourceType, searchSelectedResourceId }) => ({
-      searchSelectedResourceType,
-      searchSelectedResourceId,
-    }),
-  ),
+  withUniversalSearch(({ searchSelectedResourceType, searchSelectedResourceId }) => ({
+    searchSelectedResourceType,
+    searchSelectedResourceId,
+  })),
   withUniversalSearchActions,
 )(DashboardUniversalSearchItemActions);

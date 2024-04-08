@@ -1,8 +1,8 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import { SaleInvoiceNotifyBySms } from '@/services/Sales/Invoices/SaleInvoiceNotifyBySms';
 import { ISaleInvoiceCreatedPayload } from '@/interfaces';
+import { SaleInvoiceNotifyBySms } from '@/services/Sales/Invoices/SaleInvoiceNotifyBySms';
 import { runAfterTransaction } from '@/services/UnitOfWork/TransactionsHooks';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SendSmsNotificationToCustomer {
@@ -13,10 +13,7 @@ export default class SendSmsNotificationToCustomer {
    * Attaches events with handlers.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.sendSmsNotificationAfterInvoiceCreation
-    );
+    bus.subscribe(events.saleInvoice.onCreated, this.sendSmsNotificationAfterInvoiceCreation);
   }
 
   /**
@@ -34,10 +31,7 @@ export default class SendSmsNotificationToCustomer {
     // Notify via sms after transactions complete running.
     runAfterTransaction(trx, async () => {
       try {
-        await this.saleInvoiceNotifyBySms.notifyDetailsBySmsAfterCreation(
-          tenantId,
-          saleInvoiceId
-        );
+        await this.saleInvoiceNotifyBySms.notifyDetailsBySmsAfterCreation(tenantId, saleInvoiceId);
       } catch (error) {}
     });
   };

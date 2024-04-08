@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import moment from 'moment';
 import _ from 'lodash';
 import * as R from 'ramda';
@@ -13,9 +13,7 @@ import jsCookie from 'js-cookie';
 import { deepMapKeys } from './map-key-deep';
 export * from './deep';
 
-
-export const getCookie = (name, defaultValue) =>
-  _.defaultTo(jsCookie.get(name), defaultValue);
+export const getCookie = (name, defaultValue) => _.defaultTo(jsCookie.get(name), defaultValue);
 
 export const setCookie = (name, value, expiry = 365, secure = false) => {
   jsCookie.set(name, value, { expires: expiry, path: '/', secure });
@@ -29,7 +27,7 @@ export function removeEmptyFromObject(obj) {
   obj = Object.assign({}, obj);
   var keys = Object.keys(obj);
 
-  keys.forEach(function (key) {
+  keys.forEach((key) => {
     const value = obj[key];
 
     if (value === '' || value === null || value === undefined) {
@@ -257,7 +255,7 @@ export const saveFilesInAsync = (files, actionCb, extraTasks) => {
 };
 
 export const firstLettersArgs = (...args) => {
-  let letters = [];
+  const letters = [];
 
   args.forEach((word) => {
     if (typeof word === 'string') {
@@ -298,10 +296,7 @@ export const repeatValue = (value, len) => {
   return arr;
 };
 
-export const flatToNestedArray = (
-  data,
-  config = { id: 'id', parentId: 'parent_id' },
-) => {
+export const flatToNestedArray = (data, config = { id: 'id', parentId: 'parent_id' }) => {
   const map = {};
   const nestedArray = [];
 
@@ -327,7 +322,7 @@ export const orderingLinesIndexes = (lines, attribute = 'index') => {
 };
 
 export const transformToObject = (arr, key) => {
-  return arr.reduce(function (acc, cur, i) {
+  return arr.reduce((acc, cur, i) => {
     acc[key ? cur[key] : i] = cur;
     return acc;
   }, {});
@@ -346,10 +341,7 @@ export const safeInvoke = (func, ...rest) => {
 };
 
 export const transformToForm = (obj, emptyInitialValues) => {
-  return _.pickBy(
-    obj,
-    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-  );
+  return _.pickBy(obj, (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key));
 };
 
 export function inputIntent({ error, touched }) {
@@ -358,11 +350,7 @@ export function inputIntent({ error, touched }) {
 
 export function listToTree(
   inputList,
-  {
-    idFieldKey = 'id',
-    parentFieldKey = 'parent_account_id',
-    nodeMapper = (node) => ({ ...node }),
-  },
+  { idFieldKey = 'id', parentFieldKey = 'parent_account_id', nodeMapper = (node) => ({ ...node }) },
 ) {
   var map = {},
     node,
@@ -414,38 +402,20 @@ export function treeToList(
   return walker(list);
 }
 
-export function defaultToTransform(
-  value,
-  defaultOrTransformedValue,
-  defaultValue,
-) {
-  const _defaultValue =
-    typeof defaultValue === 'undefined'
-      ? defaultOrTransformedValue
-      : defaultValue;
+export function defaultToTransform(value, defaultOrTransformedValue, defaultValue) {
+  const _defaultValue = typeof defaultValue === 'undefined' ? defaultOrTransformedValue : defaultValue;
 
-  const _transfromedValue =
-    typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
+  const _transfromedValue = typeof defaultValue === 'undefined' ? value : defaultOrTransformedValue;
 
-  return value == null || value !== value || value === ''
-    ? _defaultValue
-    : _transfromedValue;
+  return value == null || value !== value || value === '' ? _defaultValue : _transfromedValue;
 }
 
 export function isBlank(value) {
   return (_.isEmpty(value) && !_.isNumber(value)) || _.isNaN(value);
 }
 
-export const getColumnWidth = (
-  rows,
-  accessor,
-  { maxWidth, minWidth, magicSpacing = 14 },
-  headerText = '',
-) => {
-  const cellLength = Math.max(
-    ...rows.map((row) => (`${_.get(row, accessor)}` || '').length),
-    headerText.length,
-  );
+export const getColumnWidth = (rows, accessor, { maxWidth, minWidth, magicSpacing = 14 }, headerText = '') => {
+  const cellLength = Math.max(...rows.map((row) => (`${_.get(row, accessor)}` || '').length), headerText.length);
   let result = cellLength * magicSpacing;
 
   result = minWidth ? Math.max(minWidth, result) : result;
@@ -486,7 +456,7 @@ export function flatObject(obj) {
       return (flatObject[path.join('.')] = obj);
     }
 
-    for (let key in obj) {
+    for (const key in obj) {
       path.push(key);
       dig(obj[key]);
       path.pop();
@@ -499,7 +469,7 @@ export function flatObject(obj) {
 
 export function randomNumber(min, max) {
   if (min > max) {
-    let temp = max;
+    const temp = max;
     max = min;
     min = temp;
   }
@@ -530,20 +500,13 @@ export function safeCallback(callback, ...args) {
   return () => callback && callback(...args);
 }
 
-export const createDeepEqualSelector = createSelectorCreator(
-  defaultMemoize,
-  isEqual,
-);
+export const createDeepEqualSelector = createSelectorCreator(defaultMemoize, isEqual);
 
 /**
  * Detarmines whether the table has empty status.
  */
 export const isTableEmptyStatus = ({ data, pagination, filterMeta }) => {
-  return [
-    _.isEmpty(data),
-    _.isEmpty(filterMeta.view),
-    pagination.page === 1,
-  ].every((cond) => cond === true);
+  return [_.isEmpty(data), _.isEmpty(filterMeta.view), pagination.page === 1].every((cond) => cond === true);
 };
 
 /**
@@ -570,9 +533,7 @@ export function transformTableStateToQuery(tableState) {
     page: pageIndex + 1,
     ...(tableState.filterRoles
       ? {
-          stringified_filter_roles: transformFilterRoles(
-            tableState.filterRoles,
-          ),
+          stringified_filter_roles: transformFilterRoles(tableState.filterRoles),
         }
       : {}),
     ...(viewSlug ? { viewSlug } : {}),
@@ -608,7 +569,7 @@ export function transformPagination(pagination) {
 }
 
 export function removeRowsByIndex(rows, rowIndex) {
-  const removeIndex = parseInt(rowIndex, 10);
+  const removeIndex = Number.parseInt(rowIndex, 10);
   const newRows = rows.filter((row, index) => index !== removeIndex);
 
   return newRows;
@@ -664,7 +625,7 @@ export const updateMinEntriesLines = (min, defaultEntry) => (lines) => {
 };
 
 export const updateRemoveLineByIndex = (rowIndex) => (entries) => {
-  const removeIndex = parseInt(rowIndex, 10);
+  const removeIndex = Number.parseInt(rowIndex, 10);
   return entries.filter((row, index) => index !== removeIndex);
 };
 
@@ -727,36 +688,26 @@ function getIn(obj, key, def, p = 0) {
 export const defaultFastFieldShouldUpdate = (props, prevProps) => {
   return (
     props.name !== prevProps.name ||
-    getIn(props.formik.values, prevProps.name) !==
-      getIn(prevProps.formik.values, prevProps.name) ||
-    getIn(props.formik.errors, prevProps.name) !==
-      getIn(prevProps.formik.errors, prevProps.name) ||
-    getIn(props.formik.touched, prevProps.name) !==
-      getIn(prevProps.formik.touched, prevProps.name) ||
+    getIn(props.formik.values, prevProps.name) !== getIn(prevProps.formik.values, prevProps.name) ||
+    getIn(props.formik.errors, prevProps.name) !== getIn(prevProps.formik.errors, prevProps.name) ||
+    getIn(props.formik.touched, prevProps.name) !== getIn(prevProps.formik.touched, prevProps.name) ||
     Object.keys(prevProps).length !== Object.keys(props).length ||
     props.formik.isSubmitting !== prevProps.formik.isSubmitting
   );
 };
 
-export const ensureEntriesHasEmptyLine = R.curry(
-  (minLinesNumber, defaultEntry, entries) => {
-    if (entries.length >= minLinesNumber) {
-      return [...entries, defaultEntry];
-    }
-    return entries;
-  },
-);
+export const ensureEntriesHasEmptyLine = R.curry((minLinesNumber, defaultEntry, entries) => {
+  if (entries.length >= minLinesNumber) {
+    return [...entries, defaultEntry];
+  }
+  return entries;
+});
 
 export const transfromViewsToTabs = (views) => {
   return views.map((view) => ({ ..._.pick(view, ['slug', 'name']) }));
 };
 
-export function nestedArrayToflatten(
-  collection,
-  property = 'children',
-  parseItem = (a, level) => a,
-  level = 1,
-) {
+export function nestedArrayToflatten(collection, property = 'children', parseItem = (a, level) => a, level = 1) {
   const parseObject = (obj) =>
     parseItem(
       {
@@ -772,12 +723,7 @@ export function nestedArrayToflatten(
     localItems.push(parsedItem);
 
     if (Array.isArray(currentValue[property])) {
-      const flattenArray = nestedArrayToflatten(
-        currentValue[property],
-        property,
-        parseItem,
-        level + 1,
-      );
+      const flattenArray = nestedArrayToflatten(currentValue[property], property, parseItem, level + 1);
       localItems = _.concat(localItems, flattenArray);
     }
     return localItems;
@@ -843,12 +789,7 @@ export function highlightText(text, query) {
 }
 
 function isBuffer(obj) {
-  return (
-    obj &&
-    obj.constructor &&
-    typeof obj.constructor.isBuffer === 'function' &&
-    obj.constructor.isBuffer(obj)
-  );
+  return obj && obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj);
 }
 
 function keyIdentity(key) {
@@ -865,16 +806,14 @@ export function flatten(opts, target) {
 
   function step(object, prev, currentDepth) {
     currentDepth = currentDepth || 1;
-    Object.keys(object).forEach(function (key) {
+    Object.keys(object).forEach((key) => {
       const value = object[key];
       const isarray = opts.safe && Array.isArray(value);
       const type = Object.prototype.toString.call(value);
       const isbuffer = isBuffer(value);
       const isobject = type === '[object Object]' || type === '[object Array]';
 
-      const newKey = prev
-        ? prev + delimiter + transformKey(key)
-        : transformKey(key);
+      const newKey = prev ? prev + delimiter + transformKey(key) : transformKey(key);
 
       if (
         !isarray &&
@@ -899,9 +838,7 @@ export function flatten(opts, target) {
  * Ingores the given selectors from event callback.
  */
 export function ignoreEventFromSelectors(event, selectors) {
-  return selectors
-    .map((selector) => event.target.closest(selector))
-    .some((element) => !!element);
+  return selectors.map((selector) => event.target.closest(selector)).some((element) => !!element);
 }
 
 export const tableRowTypesToClassnames = ({ original }) => {
@@ -942,14 +879,10 @@ export const filterAccountsByQuery = (accounts, queryProps) => {
     );
   }
   if (!isEmpty(query.filterByTypes)) {
-    filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByTypes, account.account_type),
-    );
+    filteredAccounts = filteredAccounts.filter((account) => includes(query.filterByTypes, account.account_type));
   }
   if (!isEmpty(query.filterByNormal)) {
-    filteredAccounts = filteredAccounts.filter((account) =>
-      includes(query.filterByTypes, account.account_normal),
-    );
+    filteredAccounts = filteredAccounts.filter((account) => includes(query.filterByTypes, account.account_normal));
   }
   if (!isEmpty(query.filterByRootTypes)) {
     filteredAccounts = filteredAccounts.filter((account) =>

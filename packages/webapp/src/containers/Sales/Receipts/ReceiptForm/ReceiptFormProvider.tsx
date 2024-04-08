@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
@@ -133,13 +132,7 @@ function ReceiptFormProvider({ receiptId, ...props }) {
   };
   return (
     <DashboardInsider
-      loading={
-        isReceiptLoading ||
-        isAccountsLoading ||
-        isCustomersLoading ||
-        isItemsLoading ||
-        isSettingLoading
-      }
+      loading={isReceiptLoading || isAccountsLoading || isCustomersLoading || isItemsLoading || isSettingLoading}
       name={'receipt-form'}
     >
       <ReceiptFormContext.Provider value={provider} {...props} />

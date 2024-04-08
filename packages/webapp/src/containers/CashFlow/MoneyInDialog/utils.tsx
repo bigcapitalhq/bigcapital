@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { useFormikContext } from 'formik';
@@ -36,10 +35,7 @@ export const useForeignAccount = () => {
   const { values } = useFormikContext();
   const { account } = useMoneyInFieldsContext();
 
-  return (
-    !isEqual(account.currency_code, values.currency_code) &&
-    !isNull(account.currency_code)
-  );
+  return !isEqual(account.currency_code, values.currency_code) && !isNull(account.currency_code);
 };
 
 export const BranchRowDivider = styled.div`

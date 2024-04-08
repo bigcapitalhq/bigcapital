@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import * as R from 'ramda';
 import { Form, Formik, FormikHelpers } from 'formik';
 import classNames from 'classnames';
@@ -27,10 +27,7 @@ function ConnectBankDialogBodyRoot({
   const setPlaidId = useSetBankingPlaidToken();
 
   // Handles the form submitting.
-  const handleSubmit = (
-    values: ConnectBankDialogForm,
-    { setSubmitting }: FormikHelpers<ConnectBankDialogForm>,
-  ) => {
+  const handleSubmit = (values: ConnectBankDialogForm, { setSubmitting }: FormikHelpers<ConnectBankDialogForm>) => {
     setSubmitting(true);
     getPlaidLinkToken()
       .then((res) => {

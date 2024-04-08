@@ -1,9 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { IBillPaymentCreatingPayload, IBillPaymentEditingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  IBillPaymentCreatingPayload,
-  IBillPaymentEditingPayload,
-} from '@/interfaces';
+import { Inject, Service } from 'typedi';
 import { ValidateBranchExistance } from '../../Integrations/ValidateBranchExistance';
 
 @Service()
@@ -15,14 +12,8 @@ export class PaymentMadeBranchValidateSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.billPayment.onCreating,
-      this.validateBranchExistanceOnPaymentCreating
-    );
-    bus.subscribe(
-      events.billPayment.onEditing,
-      this.validateBranchExistanceOnPaymentEditing
-    );
+    bus.subscribe(events.billPayment.onCreating, this.validateBranchExistanceOnPaymentCreating);
+    bus.subscribe(events.billPayment.onEditing, this.validateBranchExistanceOnPaymentEditing);
     return bus;
   };
 
@@ -34,10 +25,7 @@ export class PaymentMadeBranchValidateSubscriber {
     tenantId,
     billPaymentDTO,
   }: IBillPaymentCreatingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      billPaymentDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, billPaymentDTO.branchId);
   };
 
   /**
@@ -48,9 +36,6 @@ export class PaymentMadeBranchValidateSubscriber {
     billPaymentDTO,
     tenantId,
   }: IBillPaymentEditingPayload) => {
-    await this.validateBranchExistance.validateTransactionBranchWhenActive(
-      tenantId,
-      billPaymentDTO.branchId
-    );
+    await this.validateBranchExistance.validateTransactionBranchWhenActive(tenantId, billPaymentDTO.branchId);
   };
 }

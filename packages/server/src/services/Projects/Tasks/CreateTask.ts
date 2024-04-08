@@ -1,16 +1,16 @@
-import { Knex } from 'knex';
-import { Service, Inject } from 'typedi';
 import {
   ICreateTaskDTO,
   IProjectTaskCreatePOJO,
-  ITaskCreatedEventPayload,
   ITaskCreateEventPayload,
+  ITaskCreatedEventPayload,
   ITaskCreatingEventPayload,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class CreateTaskService {
@@ -33,7 +33,7 @@ export class CreateTaskService {
   public createTask = async (
     tenantId: number,
     projectId: number,
-    taskDTO: ICreateTaskDTO
+    taskDTO: ICreateTaskDTO,
   ): Promise<IProjectTaskCreatePOJO> => {
     const { Task, Project } = this.tenancy.models(tenantId);
 

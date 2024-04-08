@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import intl from 'react-intl-universal';
 import { AbilitySubject, CustomerAction } from '@/constants/abilityOption';
 
@@ -22,9 +22,7 @@ function CustomerUniversalSearchSelectComponent({
   return null;
 }
 
-const CustomerUniversalSearchSelectAction = withDrawerActions(
-  CustomerUniversalSearchSelectComponent,
-);
+const CustomerUniversalSearchSelectAction = withDrawerActions(CustomerUniversalSearchSelectComponent);
 
 /**
  * Transformes customers to search.

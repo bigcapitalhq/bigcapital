@@ -1,19 +1,15 @@
-import * as R from 'ramda';
-import { sumBy, isEmpty } from 'lodash';
 import {
   IBalanceSheetAccountNode,
   IBalanceSheetCommonNode,
   IBalanceSheetDataNode,
   IBalanceSheetTotal,
-  ITableColumn,
 } from '@/interfaces';
+import { isEmpty, sumBy } from 'lodash';
+import * as R from 'ramda';
 import { FinancialPreviousYear } from '../FinancialPreviousYear';
 
 export const BalanceSheetComparsionPreviousYear = (Base: any) =>
-  class
-    extends R.compose(FinancialPreviousYear)(Base)
-    implements IBalanceSheetComparsions
-  {
+  class extends R.compose(FinancialPreviousYear)(Base) implements IBalanceSheetComparsions {
     // ------------------------------
     // # Account
     // ------------------------------
@@ -22,13 +18,8 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetDataNode} node
      * @returns {IBalanceSheetDataNode}
      */
-    protected assocPreviousYearAccountNode = (
-      node: IBalanceSheetDataNode
-    ): IBalanceSheetDataNode => {
-      const closingBalance =
-        this.repository.PYTotalAccountsLedger.whereAccountId(
-          node.id
-        ).getClosingBalance();
+    protected assocPreviousYearAccountNode = (node: IBalanceSheetDataNode): IBalanceSheetDataNode => {
+      const closingBalance = this.repository.PYTotalAccountsLedger.whereAccountId(node.id).getClosingBalance();
 
       return R.assoc('previousYear', this.getAmountMeta(closingBalance), node);
     };
@@ -38,23 +29,12 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    protected previousYearAccountNodeComposer = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+    protected previousYearAccountNodeComposer = (node: IBalanceSheetAccountNode): IBalanceSheetAccountNode => {
       return R.compose(
-        R.when(
-          this.isNodeHasHorizontalTotals,
-          this.assocPreviousYearAccountHorizNodeComposer
-        ),
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          this.assocPreviousYearPercentageNode
-        ),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearChangetNode
-        ),
-        this.assocPreviousYearAccountNode
+        R.when(this.isNodeHasHorizontalTotals, this.assocPreviousYearAccountHorizNodeComposer),
+        R.when(this.query.isPreviousYearPercentageActive, this.assocPreviousYearPercentageNode),
+        R.when(this.query.isPreviousYearChangeActive, this.assocPreviousYearChangetNode),
+        this.assocPreviousYearAccountNode,
       )(node);
     };
 
@@ -66,9 +46,7 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    protected assocPreviousYearAggregateNode = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+    protected assocPreviousYearAggregateNode = (node: IBalanceSheetAccountNode): IBalanceSheetAccountNode => {
       const total = sumBy(node.children, 'previousYear.amount');
 
       return R.assoc('previousYear', this.getTotalAmountMeta(total), node);
@@ -79,23 +57,12 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    protected previousYearAggregateNodeComposer = (
-      node: IBalanceSheetAccountNode
-    ): IBalanceSheetAccountNode => {
+    protected previousYearAggregateNodeComposer = (node: IBalanceSheetAccountNode): IBalanceSheetAccountNode => {
       return R.compose(
-        R.when(
-          this.query.isPreviousYearPercentageActive,
-          this.assocPreviousYearTotalPercentageNode
-        ),
-        R.when(
-          this.query.isPreviousYearChangeActive,
-          this.assocPreviousYearTotalChangeNode
-        ),
-        R.when(
-          this.isNodeHasHorizontalTotals,
-          this.assocPreviousYearAggregateHorizNode
-        ),
-        this.assocPreviousYearAggregateNode
+        R.when(this.query.isPreviousYearPercentageActive, this.assocPreviousYearTotalPercentageNode),
+        R.when(this.query.isPreviousYearChangeActive, this.assocPreviousYearTotalChangeNode),
+        R.when(this.isNodeHasHorizontalTotals, this.assocPreviousYearAggregateHorizNode),
+        this.assocPreviousYearAggregateNode,
       )(node);
     };
 
@@ -107,17 +74,11 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param node
      * @returns
      */
-    private assocPreviousYearAggregateHorizTotalNode = R.curry(
-      (node, index, totalNode) => {
-        const total = this.getPYHorizNodesTotalSumation(index, node);
+    private assocPreviousYearAggregateHorizTotalNode = R.curry((node, index, totalNode) => {
+      const total = this.getPYHorizNodesTotalSumation(index, node);
 
-        return R.assoc(
-          'previousYear',
-          this.getTotalAmountMeta(total),
-          totalNode
-        );
-      }
-    );
+      return R.assoc('previousYear', this.getTotalAmountMeta(total), totalNode);
+    });
 
     /**
      * Compose previous year to aggregate horizontal nodes.
@@ -125,30 +86,14 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @returns {IBalanceSheetTotal}
      */
     private previousYearAggregateHorizNodeComposer = R.curry(
-      (
-        node: IBalanceSheetCommonNode,
-        horiontalTotalNode: IBalanceSheetTotal,
-        index: number
-      ): IBalanceSheetTotal => {
+      (node: IBalanceSheetCommonNode, horiontalTotalNode: IBalanceSheetTotal, index: number): IBalanceSheetTotal => {
         return R.compose(
-          R.when(
-            this.query.isPreviousYearPercentageActive,
-            this.assocPreviousYearTotalPercentageNode
-          ),
-          R.when(
-            this.query.isPreviousYearChangeActive,
-            this.assocPreviousYearTotalChangeNode
-          ),
-          R.when(
-            this.query.isPreviousYearActive,
-            this.assocPreviousYearAggregateHorizTotalNode(node, index)
-          ),
-          R.when(
-            this.query.isPreviousYearActive,
-            this.assocPreviousYearHorizNodeFromToDates
-          )
+          R.when(this.query.isPreviousYearPercentageActive, this.assocPreviousYearTotalPercentageNode),
+          R.when(this.query.isPreviousYearChangeActive, this.assocPreviousYearTotalChangeNode),
+          R.when(this.query.isPreviousYearActive, this.assocPreviousYearAggregateHorizTotalNode(node, index)),
+          R.when(this.query.isPreviousYearActive, this.assocPreviousYearHorizNodeFromToDates),
         )(horiontalTotalNode);
-      }
+      },
     );
 
     /**
@@ -156,12 +101,10 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetCommonNode} node
      * @returns {IBalanceSheetCommonNode}
      */
-    public assocPreviousYearAggregateHorizNode = (
-      node: IBalanceSheetCommonNode
-    ): IBalanceSheetCommonNode => {
+    public assocPreviousYearAggregateHorizNode = (node: IBalanceSheetCommonNode): IBalanceSheetCommonNode => {
       const horizontalTotals = R.addIndex(R.map)(
         this.previousYearAggregateHorizNodeComposer(node),
-        node.horizontalTotals
+        node.horizontalTotals,
       ) as IBalanceSheetTotal[];
 
       return R.assoc('horizontalTotals', horizontalTotals, node);
@@ -177,37 +120,30 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {Date} toDate - To date.
      * @returns {number}
      */
-    private getAccountPYDatePeriodTotal = R.curry(
-      (accountId: number, fromDate: Date, toDate: Date): number => {
-        const PYPeriodsTotal =
-          this.repository.PYPeriodsAccountsLedger.whereAccountId(accountId)
-            .whereToDate(toDate)
-            .getClosingBalance();
+    private getAccountPYDatePeriodTotal = R.curry((accountId: number, fromDate: Date, toDate: Date): number => {
+      const PYPeriodsTotal = this.repository.PYPeriodsAccountsLedger.whereAccountId(accountId)
+        .whereToDate(toDate)
+        .getClosingBalance();
 
-        const PYPeriodsOpeningTotal =
-          this.repository.PYPeriodsOpeningAccountLedger.whereAccountId(
-            accountId
-          ).getClosingBalance();
+      const PYPeriodsOpeningTotal =
+        this.repository.PYPeriodsOpeningAccountLedger.whereAccountId(accountId).getClosingBalance();
 
-        return PYPeriodsOpeningTotal + PYPeriodsTotal;
-      }
-    );
+      return PYPeriodsOpeningTotal + PYPeriodsTotal;
+    });
 
     /**
      * Assoc preivous year to account horizontal total node.
      * @param   {IBalanceSheetAccountNode} node
      * @returns {}
      */
-    private assocPreviousYearAccountHorizTotal = R.curry(
-      (node: IBalanceSheetAccountNode, totalNode) => {
-        const total = this.getAccountPYDatePeriodTotal(
-          node.id,
-          totalNode.previousYearFromDate.date,
-          totalNode.previousYearToDate.date
-        );
-        return R.assoc('previousYear', this.getAmountMeta(total), totalNode);
-      }
-    );
+    private assocPreviousYearAccountHorizTotal = R.curry((node: IBalanceSheetAccountNode, totalNode) => {
+      const total = this.getAccountPYDatePeriodTotal(
+        node.id,
+        totalNode.previousYearFromDate.date,
+        totalNode.previousYearToDate.date,
+      );
+      return R.assoc('previousYear', this.getAmountMeta(total), totalNode);
+    });
 
     /**
      * Previous year account horizontal node composer.
@@ -216,29 +152,14 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @returns {IBalanceSheetTotal}
      */
     private previousYearAccountHorizNodeCompose = R.curry(
-      (
-        node: IBalanceSheetAccountNode,
-        horizontalTotalNode: IBalanceSheetTotal
-      ): IBalanceSheetTotal => {
+      (node: IBalanceSheetAccountNode, horizontalTotalNode: IBalanceSheetTotal): IBalanceSheetTotal => {
         return R.compose(
-          R.when(
-            this.query.isPreviousYearPercentageActive,
-            this.assocPreviousYearPercentageNode
-          ),
-          R.when(
-            this.query.isPreviousYearChangeActive,
-            this.assocPreviousYearChangetNode
-          ),
-          R.when(
-            this.query.isPreviousYearActive,
-            this.assocPreviousYearAccountHorizTotal(node)
-          ),
-          R.when(
-            this.query.isPreviousYearActive,
-            this.assocPreviousYearHorizNodeFromToDates
-          )
+          R.when(this.query.isPreviousYearPercentageActive, this.assocPreviousYearPercentageNode),
+          R.when(this.query.isPreviousYearChangeActive, this.assocPreviousYearChangetNode),
+          R.when(this.query.isPreviousYearActive, this.assocPreviousYearAccountHorizTotal(node)),
+          R.when(this.query.isPreviousYearActive, this.assocPreviousYearHorizNodeFromToDates),
         )(horizontalTotalNode);
-      }
+      },
     );
 
     /**
@@ -246,13 +167,8 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetAccountNode} node
      * @returns {IBalanceSheetAccountNode}
      */
-    private assocPreviousYearAccountHorizNodeComposer = (
-      node: IBalanceSheetAccountNode
-    ) => {
-      const horizontalTotals = R.map(
-        this.previousYearAccountHorizNodeCompose(node),
-        node.horizontalTotals
-      );
+    private assocPreviousYearAccountHorizNodeComposer = (node: IBalanceSheetAccountNode) => {
+      const horizontalTotals = R.map(this.previousYearAccountHorizNodeCompose(node), node.horizontalTotals);
       return R.assoc('horizontalTotals', horizontalTotals, node);
     };
 
@@ -264,6 +180,5 @@ export const BalanceSheetComparsionPreviousYear = (Base: any) =>
      * @param   {IBalanceSheetCommonNode} node
      * @returns {boolean}
      */
-    public isNodeHasHorizontalTotals = (node: IBalanceSheetCommonNode) =>
-      !isEmpty(node.horizontalTotals);
+    public isNodeHasHorizontalTotals = (node: IBalanceSheetCommonNode) => !isEmpty(node.horizontalTotals);
   };

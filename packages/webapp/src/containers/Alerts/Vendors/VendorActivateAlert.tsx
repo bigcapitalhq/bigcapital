@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -56,14 +55,9 @@ function VendorActivateAlert({
       loading={isLoading}
       onConfirm={handleConfirmVendorActivate}
     >
-      <p>
-        {intl.get('vendor.alert.are_you_sure_want_to_activate_this_vendor')}
-      </p>
+      <p>{intl.get('vendor.alert.are_you_sure_want_to_activate_this_vendor')}</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(VendorActivateAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(VendorActivateAlert);

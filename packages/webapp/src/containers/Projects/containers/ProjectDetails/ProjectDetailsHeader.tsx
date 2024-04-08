@@ -1,11 +1,7 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { FormatDate } from '@/components';
-import {
-  DetailFinancialCard,
-  DetailFinancialSection,
-} from './components';
+import { DetailFinancialCard, DetailFinancialSection } from './components';
 import { calculateStatus } from '@/utils';
 import { useCalculateProject } from './utils';
 
@@ -30,10 +26,7 @@ export function ProjectDetailHeader() {
         description={intl.get('project_details.label.of_project_estimate', {
           value: percentageOfInvoice,
         })}
-        progressValue={calculateStatus(
-          project.total_invoiced,
-          project.cost_estimate,
-        )}
+        progressValue={calculateStatus(project.total_invoiced, project.cost_estimate)}
       />
       <DetailFinancialCard
         label={intl.get('project_details.label.time_expenses')}
@@ -41,10 +34,7 @@ export function ProjectDetailHeader() {
         description={intl.get('project_details.label.of_project_estimate', {
           value: percentageOfExpense,
         })}
-        progressValue={calculateStatus(
-          project.total_expenses,
-          project.cost_estimate,
-        )}
+        progressValue={calculateStatus(project.total_expenses, project.cost_estimate)}
       />
       <DetailFinancialCard
         label={intl.get('project_details.label.to_be_invoiced')}

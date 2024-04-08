@@ -1,27 +1,27 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { check, param, query } from 'express-validator';
-import { Service, Inject } from 'typedi';
+import BaseController from '@/api/controllers/BaseController';
+import CheckPolicies from '@/api/middleware/CheckPolicies';
+import { ServiceError } from '@/exceptions';
 import {
   AbilitySubject,
-  IVendorCreditCreateDTO,
-  IVendorCreditEditDTO,
+  type IVendorCreditCreateDTO,
+  type IVendorCreditEditDTO,
   VendorCreditAction,
 } from '@/interfaces';
-import BaseController from '@/api/controllers/BaseController';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
-import { ServiceError } from '@/exceptions';
-import CheckPolicies from '@/api/middleware/CheckPolicies';
 import CreateVendorCredit from '@/services/Purchases/VendorCredits/CreateVendorCredit';
-import EditVendorCredit from '@/services/Purchases/VendorCredits/EditVendorCredit';
 import DeleteVendorCredit from '@/services/Purchases/VendorCredits/DeleteVendorCredit';
+import EditVendorCredit from '@/services/Purchases/VendorCredits/EditVendorCredit';
 import GetVendorCredit from '@/services/Purchases/VendorCredits/GetVendorCredit';
 import ListVendorCredits from '@/services/Purchases/VendorCredits/ListVendorCredits';
+import OpenVendorCredit from '@/services/Purchases/VendorCredits/OpenVendorCredit';
 import CreateRefundVendorCredit from '@/services/Purchases/VendorCredits/RefundVendorCredits/CreateRefundVendorCredit';
 import DeleteRefundVendorCredit from '@/services/Purchases/VendorCredits/RefundVendorCredits/DeleteRefundVendorCredit';
-import ListVendorCreditRefunds from '@/services/Purchases/VendorCredits/RefundVendorCredits/ListRefundVendorCredits';
-import OpenVendorCredit from '@/services/Purchases/VendorCredits/OpenVendorCredit';
 import GetRefundVendorCredit from '@/services/Purchases/VendorCredits/RefundVendorCredits/GetRefundVendorCredit';
+import ListVendorCreditRefunds from '@/services/Purchases/VendorCredits/RefundVendorCredits/ListRefundVendorCredits';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { type NextFunction, type Request, type Response, Router } from 'express';
+import { check, param, query } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class VendorCreditController extends BaseController {
@@ -73,7 +73,7 @@ export default class VendorCreditController extends BaseController {
       this.vendorCreditCreateDTOSchema,
       this.validationResult,
       this.asyncMiddleware(this.newVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.post(
       '/:id',
@@ -81,7 +81,7 @@ export default class VendorCreditController extends BaseController {
       this.vendorCreditEditDTOSchema,
       this.validationResult,
       this.asyncMiddleware(this.editVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/:id',
@@ -89,7 +89,7 @@ export default class VendorCreditController extends BaseController {
       [],
       this.validationResult,
       this.asyncMiddleware(this.getVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/',
@@ -98,7 +98,7 @@ export default class VendorCreditController extends BaseController {
       this.validationResult,
       this.asyncMiddleware(this.getVendorCreditsList),
       this.handleServiceError,
-      this.dynamicListService.handlerErrorsToResponse
+      this.dynamicListService.handlerErrorsToResponse,
     );
     router.delete(
       '/:id',
@@ -106,21 +106,21 @@ export default class VendorCreditController extends BaseController {
       this.deleteDTOValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.deleteVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.post(
       '/:id/open',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.openVendorCreditTransaction),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/:id/refund',
       [param('id').exists().isNumeric().toInt()],
       this.validationResult,
       this.asyncMiddleware(this.vendorCreditRefundTransactions),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.post(
       '/:id/refund',
@@ -128,14 +128,14 @@ export default class VendorCreditController extends BaseController {
       this.vendorCreditRefundValidationSchema,
       this.validationResult,
       this.asyncMiddleware(this.refundVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.get(
       '/refunds/:refundId',
       this.getRefundCreditTransactionSchema,
       this.validationResult,
       this.asyncMiddleware(this.getRefundCreditTransaction),
-      this.handleServiceError
+      this.handleServiceError,
     );
     router.delete(
       '/refunds/:refundId',
@@ -143,7 +143,7 @@ export default class VendorCreditController extends BaseController {
       this.deleteRefundVendorCreditSchema,
       this.validationResult,
       this.asyncMiddleware(this.deleteRefundVendorCredit),
-      this.handleServiceError
+      this.handleServiceError,
     );
     return router;
   }
@@ -156,10 +156,7 @@ export default class VendorCreditController extends BaseController {
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
-      check('vendor_credit_number')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('vendor_credit_number').optional({ nullable: true }).trim().escape(),
       check('reference_no').optional().trim().escape(),
       check('vendor_credit_date').exists().isISO8601().toDate(),
       check('note').optional().trim().escape(),
@@ -174,18 +171,9 @@ export default class VendorCreditController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -199,10 +187,7 @@ export default class VendorCreditController extends BaseController {
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
-      check('vendor_credit_number')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('vendor_credit_number').optional({ nullable: true }).trim().escape(),
       check('reference_no').optional().trim().escape(),
       check('vendor_credit_date').exists().isISO8601().toDate(),
       check('note').optional().trim().escape(),
@@ -216,18 +201,9 @@ export default class VendorCreditController extends BaseController {
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.quantity').exists().isNumeric().toInt(),
-      check('entries.*.discount')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('entries.*.warehouse_id')
-        .optional({ nullable: true })
-        .isNumeric()
-        .toInt(),
+      check('entries.*.discount').optional({ nullable: true }).isNumeric().toFloat(),
+      check('entries.*.description').optional({ nullable: true }).trim().escape(),
+      check('entries.*.warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
     ];
   }
 
@@ -285,21 +261,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res
    * @param {Function} next
    */
-  private newVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private newVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId, user } = req;
-    const vendorCreditCreateDTO: IVendorCreditCreateDTO =
-      this.matchedBodyData(req);
+    const vendorCreditCreateDTO: IVendorCreditCreateDTO = this.matchedBodyData(req);
 
     try {
-      const vendorCredit = await this.createVendorCreditService.newVendorCredit(
-        tenantId,
-        vendorCreditCreateDTO,
-        user
-      );
+      const vendorCredit = await this.createVendorCreditService.newVendorCredit(tenantId, vendorCreditCreateDTO, user);
 
       return res.status(200).send({
         id: vendorCredit.id,
@@ -315,21 +282,13 @@ export default class VendorCreditController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private editVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private editVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const { id: vendorCreditId } = req.params;
     const { tenantId, user } = req;
     const vendorCreditEditDTO: IVendorCreditEditDTO = this.matchedBodyData(req);
 
     try {
-      await this.editVendorCreditService.editVendorCredit(
-        tenantId,
-        vendorCreditId,
-        vendorCreditEditDTO
-      );
+      await this.editVendorCreditService.editVendorCredit(tenantId, vendorCreditId, vendorCreditEditDTO);
 
       return res.status(200).send({
         id: vendorCreditId,
@@ -346,19 +305,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res
    * @return {Response}
    */
-  private getVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const { id: billId } = req.params;
 
     try {
-      const data = await this.getVendorCreditService.getVendorCredit(
-        tenantId,
-        billId
-      );
+      const data = await this.getVendorCreditService.getVendorCredit(tenantId, billId);
 
       return res.status(200).send({ data });
     } catch (error) {
@@ -372,19 +324,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res -
    * @return {Response}
    */
-  private deleteVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const vendorCreditId = req.params.id;
     const { tenantId } = req;
 
     try {
-      await this.deleteVendorCreditService.deleteVendorCredit(
-        tenantId,
-        vendorCreditId
-      );
+      await this.deleteVendorCreditService.deleteVendorCredit(tenantId, vendorCreditId);
 
       return res.status(200).send({
         id: vendorCreditId,
@@ -402,11 +347,7 @@ export default class VendorCreditController extends BaseController {
    * @param next
    * @returns
    */
-  private getVendorCreditsList = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getVendorCreditsList = async (req: Request, res: Response, next: NextFunction) => {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -417,8 +358,10 @@ export default class VendorCreditController extends BaseController {
     };
 
     try {
-      const { vendorCredits, pagination, filterMeta } =
-        await this.listCreditNotesService.getVendorCredits(tenantId, filter);
+      const { vendorCredits, pagination, filterMeta } = await this.listCreditNotesService.getVendorCredits(
+        tenantId,
+        filter,
+      );
 
       return res.status(200).send({ vendorCredits, pagination, filterMeta });
     } catch (error) {
@@ -433,21 +376,13 @@ export default class VendorCreditController extends BaseController {
    * @param {NextFunction} next
    * @returns
    */
-  private refundVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private refundVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const refundDTO = this.matchedBodyData(req);
     const { id: vendorCreditId } = req.params;
     const { tenantId } = req;
 
     try {
-      const refundVendorCredit = await this.createRefundCredit.createRefund(
-        tenantId,
-        vendorCreditId,
-        refundDTO
-      );
+      const refundVendorCredit = await this.createRefundCredit.createRefund(tenantId, vendorCreditId, refundDTO);
 
       return res.status(200).send({
         id: refundVendorCredit.id,
@@ -464,19 +399,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private deleteRefundVendorCredit = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private deleteRefundVendorCredit = async (req: Request, res: Response, next: NextFunction) => {
     const { refundId: vendorCreditId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.deleteRefundCredit.deleteRefundVendorCreditRefund(
-        tenantId,
-        vendorCreditId
-      );
+      await this.deleteRefundCredit.deleteRefundVendorCreditRefund(tenantId, vendorCreditId);
 
       return res.status(200).send({
         id: vendorCreditId,
@@ -493,19 +421,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private vendorCreditRefundTransactions = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private vendorCreditRefundTransactions = async (req: Request, res: Response, next: NextFunction) => {
     const { id: vendorCreditId } = req.params;
     const { tenantId } = req;
 
     try {
-      const transactions = await this.listRefundCredit.getVendorCreditRefunds(
-        tenantId,
-        vendorCreditId
-      );
+      const transactions = await this.listRefundCredit.getVendorCreditRefunds(tenantId, vendorCreditId);
       return res.status(200).send({ data: transactions });
     } catch (error) {
       next(error);
@@ -518,19 +439,12 @@ export default class VendorCreditController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private openVendorCreditTransaction = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private openVendorCreditTransaction = async (req: Request, res: Response, next: NextFunction) => {
     const { id: vendorCreditId } = req.params;
     const { tenantId } = req;
 
     try {
-      await this.openVendorCreditService.openVendorCredit(
-        tenantId,
-        vendorCreditId
-      );
+      await this.openVendorCreditService.openVendorCredit(tenantId, vendorCreditId);
 
       return res.status(200).send({
         id: vendorCreditId,
@@ -548,20 +462,12 @@ export default class VendorCreditController extends BaseController {
    * @param next
    * @returns
    */
-  private getRefundCreditTransaction = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  private getRefundCreditTransaction = async (req: Request, res: Response, next: NextFunction) => {
     const { refundId } = req.params;
     const { tenantId } = req;
 
     try {
-      const refundCredit =
-        await this.getRefundCredit.getRefundCreditTransaction(
-          tenantId,
-          refundId
-        );
+      const refundCredit = await this.getRefundCredit.getRefundCreditTransaction(tenantId, refundId);
       return res.status(200).send({ refundCredit });
     } catch (error) {
       next(error);
@@ -575,12 +481,7 @@ export default class VendorCreditController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  private handleServiceError(
-    error: Error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
+  private handleServiceError(error: Error, req: Request, res: Response, next: NextFunction) {
     if (error instanceof ServiceError) {
       if (error.errorType === 'ENTRIES_ITEMS_IDS_NOT_EXISTS') {
         return res.boom.badRequest(null, {
@@ -619,9 +520,7 @@ export default class VendorCreditController extends BaseController {
       }
       if (error.errorType === 'VENDOR_CREDIT_HAS_NO_CREDITS_REMAINING') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'VENDOR_CREDIT_HAS_NO_CREDITS_REMAINING', code: 800 },
-          ],
+          errors: [{ type: 'VENDOR_CREDIT_HAS_NO_CREDITS_REMAINING', code: 800 }],
         });
       }
       if (error.errorType === 'VENDOR_CREDIT_ALREADY_OPENED') {
@@ -636,9 +535,7 @@ export default class VendorCreditController extends BaseController {
       }
       if (error.errorType === 'VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS') {
         return res.boom.badRequest(null, {
-          errors: [
-            { type: 'VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS', code: 1200 },
-          ],
+          errors: [{ type: 'VENDOR_CREDIT_HAS_REFUND_TRANSACTIONS', code: 1200 }],
         });
       }
       if (error.errorType === 'TRANSACTIONS_DATE_LOCKED') {

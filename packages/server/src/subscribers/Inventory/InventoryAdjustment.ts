@@ -1,12 +1,12 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
-import InventoryAdjustmentService from '@/services/Inventory/InventoryAdjustmentService';
-import InventoryAdjustmentsGL from '@/services/Inventory/InventoryAdjustmentGL';
 import {
   IInventoryAdjustmentEventCreatedPayload,
   IInventoryAdjustmentEventDeletedPayload,
   IInventoryAdjustmentEventPublishedPayload,
 } from '@/interfaces';
+import InventoryAdjustmentsGL from '@/services/Inventory/InventoryAdjustmentGL';
+import InventoryAdjustmentService from '@/services/Inventory/InventoryAdjustmentService';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class InventoryAdjustmentsSubscriber {
@@ -21,30 +21,12 @@ export default class InventoryAdjustmentsSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.inventoryAdjustment.onQuickCreated,
-      this.handleWriteInventoryTransactionsOncePublished
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onQuickCreated,
-      this.handleGLEntriesOnceIncrementAdjustmentCreated
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onPublished,
-      this.handleGLEntriesOnceIncrementAdjustmentCreated
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onPublished,
-      this.handleWriteInventoryTransactionsOncePublished
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onDeleted,
-      this.handleRevertInventoryTransactionsOnceDeleted
-    );
-    bus.subscribe(
-      events.inventoryAdjustment.onDeleted,
-      this.revertAdjustmentGLEntriesOnceDeleted
-    );
+    bus.subscribe(events.inventoryAdjustment.onQuickCreated, this.handleWriteInventoryTransactionsOncePublished);
+    bus.subscribe(events.inventoryAdjustment.onQuickCreated, this.handleGLEntriesOnceIncrementAdjustmentCreated);
+    bus.subscribe(events.inventoryAdjustment.onPublished, this.handleGLEntriesOnceIncrementAdjustmentCreated);
+    bus.subscribe(events.inventoryAdjustment.onPublished, this.handleWriteInventoryTransactionsOncePublished);
+    bus.subscribe(events.inventoryAdjustment.onDeleted, this.handleRevertInventoryTransactionsOnceDeleted);
+    bus.subscribe(events.inventoryAdjustment.onDeleted, this.revertAdjustmentGLEntriesOnceDeleted);
   }
 
   /**
@@ -64,11 +46,7 @@ export default class InventoryAdjustmentsSubscriber {
     if (inventoryAdjustment.type !== 'increment') {
       return;
     }
-    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(
-      tenantId,
-      inventoryAdjustmentId,
-      trx
-    );
+    await this.inventoryAdjustmentGL.writeAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);
   };
 
   /**
@@ -80,15 +58,8 @@ export default class InventoryAdjustmentsSubscriber {
     tenantId,
     inventoryAdjustment,
     trx,
-  }:
-    | IInventoryAdjustmentEventPublishedPayload
-    | IInventoryAdjustmentEventCreatedPayload) => {
-    await this.inventoryAdjustment.writeInventoryTransactions(
-      tenantId,
-      inventoryAdjustment,
-      false,
-      trx
-    );
+  }: IInventoryAdjustmentEventPublishedPayload | IInventoryAdjustmentEventCreatedPayload) => {
+    await this.inventoryAdjustment.writeInventoryTransactions(tenantId, inventoryAdjustment, false, trx);
   };
 
   /**
@@ -106,11 +77,7 @@ export default class InventoryAdjustmentsSubscriber {
       return;
     }
     // Reverts the inventory transactions of adjustment transaction.
-    await this.inventoryAdjustment.revertInventoryTransactions(
-      tenantId,
-      inventoryAdjustmentId,
-      trx
-    );
+    await this.inventoryAdjustment.revertInventoryTransactions(tenantId, inventoryAdjustmentId, trx);
   };
 
   /**
@@ -126,9 +93,6 @@ export default class InventoryAdjustmentsSubscriber {
     if (!oldInventoryAdjustment.isPublished) {
       return;
     }
-    await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(
-      tenantId,
-      inventoryAdjustmentId
-    );
+    await this.inventoryAdjustmentGL.revertAdjustmentGLEntries(tenantId, inventoryAdjustmentId);
   };
 }

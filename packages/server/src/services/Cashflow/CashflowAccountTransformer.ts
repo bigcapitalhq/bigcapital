@@ -1,6 +1,6 @@
 import { IAccount } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { formatNumber } from 'utils';
+import { formatNumber } from '../../utils';
 
 export class CashflowAccountTransformer extends Transformer {
   /**

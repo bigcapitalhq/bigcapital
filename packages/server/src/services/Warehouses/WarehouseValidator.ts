@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
+import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ServiceError, ServiceErrors } from '@/exceptions';
+import { Inject, Service } from 'typedi';
 import { ERRORS } from './contants';
 
 @Service()
@@ -13,10 +13,7 @@ export class WarehouseValidator {
    * @param {number} tenantId
    * @param {number} warehouseId
    */
-  public validateWarehouseNotOnlyWarehouse = async (
-    tenantId: number,
-    warehouseId: number
-  ) => {
+  public validateWarehouseNotOnlyWarehouse = async (tenantId: number, warehouseId: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const warehouses = await Warehouse.query().whereNot('id', warehouseId);
@@ -27,16 +24,12 @@ export class WarehouseValidator {
   };
 
   /**
-   * 
-   * @param tenantId 
-   * @param code 
-   * @param exceptWarehouseId 
+   *
+   * @param tenantId
+   * @param code
+   * @param exceptWarehouseId
    */
-  public validateWarehouseCodeUnique = async (
-    tenantId: number,
-    code: string,
-    exceptWarehouseId?: number
-  ) => {
+  public validateWarehouseCodeUnique = async (tenantId: number, code: string, exceptWarehouseId?: number) => {
     const { Warehouse } = this.tenancy.models(tenantId);
 
     const warehouse = await Warehouse.query()

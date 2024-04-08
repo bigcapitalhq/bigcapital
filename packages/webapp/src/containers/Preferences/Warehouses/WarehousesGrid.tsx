@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import WarehousesEmptyStatus from './WarehousesEmptyStatus';
 import { useWarehousesContext } from './WarehousesProvider';
@@ -10,11 +9,7 @@ import WarehousesGridItems from './WarehousesGridItems';
  */
 export default function WarehousesGrid() {
   // Retrieve list context.
-  const {
-    warehouses,
-    isWarehouesLoading,
-    isEmptyStatus,
-  } = useWarehousesContext();
+  const { warehouses, isWarehouesLoading, isEmptyStatus } = useWarehousesContext();
 
   return (
     <React.Fragment>

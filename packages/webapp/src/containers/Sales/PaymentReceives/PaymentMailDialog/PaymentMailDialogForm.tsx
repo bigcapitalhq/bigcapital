@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { Formik, FormikBag } from 'formik';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
@@ -29,21 +29,14 @@ export function PaymentMailDialogFormRoot({
   // #withDialogActions
   closeDialog,
 }) {
-  const { mailOptions, paymentReceiveId, redirectToPaymentsList } =
-    usePaymentMailDialogBoot();
+  const { mailOptions, paymentReceiveId, redirectToPaymentsList } = usePaymentMailDialogBoot();
   const { mutateAsync: sendPaymentMail } = useSendPaymentReceiveMail();
 
   const history = useHistory();
 
-  const initialValues = transformMailFormToInitialValues(
-    mailOptions,
-    initialFormValues,
-  );
+  const initialValues = transformMailFormToInitialValues(mailOptions, initialFormValues);
   // Handles the form submitting.
-  const handleSubmit = (
-    values: PaymentMailFormValue,
-    { setSubmitting }: FormikBag<PaymentMailFormValue>,
-  ) => {
+  const handleSubmit = (values: PaymentMailFormValue, { setSubmitting }: FormikBag<PaymentMailFormValue>) => {
     const reqValues = transformMailFormToRequest(values);
 
     setSubmitting(true);
@@ -82,6 +75,4 @@ export function PaymentMailDialogFormRoot({
   );
 }
 
-export const PaymentMailDialogForm = R.compose(withDialogActions)(
-  PaymentMailDialogFormRoot,
-);
+export const PaymentMailDialogForm = R.compose(withDialogActions)(PaymentMailDialogFormRoot);

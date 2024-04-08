@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 
@@ -7,12 +6,7 @@ import { DataTable } from './DataTable';
 /**
  * Editable datatable.
  */
-export function DataTableEditable({
-  totalRow = false,
-  actions,
-  name,
-  ...tableProps
-}) {
+export function DataTableEditable({ totalRow = false, actions, name, ...tableProps }) {
   return (
     <DatatableEditableRoot>
       <DataTable {...tableProps} />

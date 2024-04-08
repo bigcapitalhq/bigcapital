@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -67,15 +66,9 @@ function UserDeleteAlert({
       onConfirm={handleConfirmUserDelete}
       loading={isLoading}
     >
-      <p>
-        Once you delete this user, you won't be able to restore it later. Are
-        you sure you want to delete ?
-      </p>
+      <p>Once you delete this user, you won't be able to restore it later. Are you sure you want to delete ?</p>
     </Alert>
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(UserDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(UserDeleteAlert);

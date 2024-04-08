@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { FastField } from 'formik';
 import ItemsEntriesTable from '@/containers/Entries/ItemsEntriesTable';
@@ -14,17 +13,8 @@ export default function InvoiceItemsEntriesEditorField() {
   const { items, taxRates } = useInvoiceFormContext();
 
   return (
-    <FastField
-      name={'entries'}
-      items={items}
-      taxRates={taxRates}
-      shouldUpdate={entriesFieldShouldUpdate}
-    >
-      {({
-        form: { values, setFieldValue },
-        field: { value },
-        meta: { error, touched },
-      }) => (
+    <FastField name={'entries'} items={items} taxRates={taxRates} shouldUpdate={entriesFieldShouldUpdate}>
+      {({ form: { values, setFieldValue }, field: { value }, meta: { error, touched } }) => (
         <ItemsEntriesTable
           value={value}
           onChange={(entries) => {

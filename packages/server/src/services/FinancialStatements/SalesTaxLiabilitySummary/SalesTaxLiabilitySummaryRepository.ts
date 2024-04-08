@@ -28,15 +28,11 @@ export class SalesTaxLiabilitySummaryRepository {
    * @param {number} tenantId
    * @returns {Promise<SalesTaxLiabilitySummaryPayableById>}
    */
-  public async taxesPayableSumGroupedByRateId(
-    tenantId: number
-  ): Promise<SalesTaxLiabilitySummaryPayableById> {
+  public async taxesPayableSumGroupedByRateId(tenantId: number): Promise<SalesTaxLiabilitySummaryPayableById> {
     const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
     // Retrieves tax payable accounts.
-    const taxPayableAccounts = await Account.query().whereIn('accountType', [
-      ACCOUNT_TYPE.TAX_PAYABLE,
-    ]);
+    const taxPayableAccounts = await Account.query().whereIn('accountType', [ACCOUNT_TYPE.TAX_PAYABLE]);
     const payableAccountsIds = taxPayableAccounts.map((account) => account.id);
 
     const groupedTaxesById = await AccountTransaction.query()
@@ -55,9 +51,7 @@ export class SalesTaxLiabilitySummaryRepository {
    * @param {number} tenantId
    * @returns {Promise<SalesTaxLiabilitySummarySalesById>}
    */
-  public taxesSalesSumGroupedByRateId = async (
-    tenantId: number
-  ): Promise<SalesTaxLiabilitySummarySalesById> => {
+  public taxesSalesSumGroupedByRateId = async (tenantId: number): Promise<SalesTaxLiabilitySummarySalesById> => {
     const { AccountTransaction, Account } = this.tenancy.models(tenantId);
 
     const incomeAccounts = await Account.query().whereIn('accountType', [

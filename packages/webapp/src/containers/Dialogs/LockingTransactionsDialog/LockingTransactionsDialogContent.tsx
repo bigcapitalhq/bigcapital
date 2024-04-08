@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { LockingTransactionsFormProvider } from './LockingTransactionsFormProvider';
 import LockingTransactionsForm from './LockingTransactionsForm';
@@ -12,13 +11,8 @@ export default function LockingTransactionsDialogContent({
   moduleName,
   isEnabled,
 }) {
-
   return (
-    <LockingTransactionsFormProvider
-      isEnabled={isEnabled}
-      moduleName={moduleName}
-      dialogName={dialogName}
-    >
+    <LockingTransactionsFormProvider isEnabled={isEnabled} moduleName={moduleName} dialogName={dialogName}>
       <LockingTransactionsForm />
     </LockingTransactionsFormProvider>
   );

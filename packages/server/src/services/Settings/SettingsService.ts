@@ -1,5 +1,5 @@
-import { Service, Inject } from 'typedi';
 import TenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class SettingsService {
@@ -24,7 +24,7 @@ export default class SettingsService {
     const currentNumber = settings.find(findQuery);
 
     if (currentNumber) {
-      const nextNumber = parseInt(currentNumber.value, 10) + 1;
+      const nextNumber = Number.parseInt(currentNumber.value, 10) + 1;
       settings.set(findQuery, nextNumber);
 
       await settings.save();

@@ -18,10 +18,7 @@ export class GetTasksService {
    * @param   {number} taskId - Task Id.
    * @returns {}
    */
-  public getTasks = async (
-    tenantId: number,
-    projectId: number
-  ): Promise<IProjectTaskGetPOJO[]> => {
+  public getTasks = async (tenantId: number, projectId: number): Promise<IProjectTaskGetPOJO[]> => {
     const { Task } = this.tenancy.models(tenantId);
 
     // Retrieve the project.

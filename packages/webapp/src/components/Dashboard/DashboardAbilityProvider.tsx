@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Ability } from '@casl/ability';
 import { createContextualCan } from '@casl/react';
@@ -19,9 +18,5 @@ export function DashboardAbilityProvider({ children }) {
   // Ability instance.
   const ability = new Ability(abilities);
 
-  return (
-    <AbilityContext.Provider value={ability}>
-      {children}
-    </AbilityContext.Provider>
-  );
+  return <AbilityContext.Provider value={ability}>{children}</AbilityContext.Provider>;
 }

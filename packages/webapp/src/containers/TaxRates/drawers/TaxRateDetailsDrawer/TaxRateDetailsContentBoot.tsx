@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useContext } from 'react';
 import { DrawerLoading } from '@/components';
 import { useTaxRate } from '@/hooks/query/taxRates';
@@ -13,10 +12,7 @@ interface TaxRateDetailsContentBootProps {
  * Tax rate details content boot.
  * @returns {JSX}
  */
-export function TaxRateDetailsContentBoot({
-  taxRateId,
-  ...props
-}: TaxRateDetailsContentBootProps) {
+export function TaxRateDetailsContentBoot({ taxRateId, ...props }: TaxRateDetailsContentBootProps) {
   const {
     data: taxRate,
     isFetching: isTaxRateFetching,

@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 import { SaleEstimateTransfromer } from './SaleEstimateTransformer';
 import { SaleEstimateValidators } from './SaleEstimateValidators';
 
@@ -34,10 +34,6 @@ export class GetSaleEstimate {
     this.validators.validateEstimateExistance(estimate);
 
     // Transformes sale estimate model to POJO.
-    return this.transformer.transform(
-      tenantId,
-      estimate,
-      new SaleEstimateTransfromer()
-    );
+    return this.transformer.transform(tenantId, estimate, new SaleEstimateTransfromer());
   }
 }

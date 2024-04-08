@@ -1,4 +1,3 @@
-import { Service } from 'typedi';
 import ContactTransfromer from '../ContactTransformer';
 
 export default class VendorTransfromer extends ContactTransfromer {
@@ -7,10 +6,6 @@ export default class VendorTransfromer extends ContactTransfromer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return [
-      'formattedBalance',
-      'formattedOpeningBalance',
-      'formattedOpeningBalanceAt'
-    ];
+    return ['formattedBalance', 'formattedOpeningBalance', 'formattedOpeningBalanceAt'];
   };
 }

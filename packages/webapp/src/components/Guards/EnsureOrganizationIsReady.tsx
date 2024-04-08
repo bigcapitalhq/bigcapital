@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
@@ -15,11 +14,7 @@ function EnsureOrganizationIsReady({
   // #withOrganizationByOrgId
   isOrganizationReady,
 }) {
-  return isOrganizationReady ? (
-    children
-  ) : (
-    <Redirect to={{ pathname: redirectTo }} />
-  );
+  return isOrganizationReady ? children : <Redirect to={{ pathname: redirectTo }} />;
 }
 
 export default compose(

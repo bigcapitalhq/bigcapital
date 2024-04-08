@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import * as Yup from 'yup';
@@ -24,9 +23,7 @@ function ContactDuplicateForm({
   const { dialogName, contactId } = useContactDuplicateFromContext();
 
   const validationSchema = Yup.object().shape({
-    contact_type: Yup.string()
-      .required()
-      .label(intl.get('contact_type_')),
+    contact_type: Yup.string().required().label(intl.get('contact_type_')),
   });
 
   const initialValues = {
@@ -47,15 +44,11 @@ function ContactDuplicateForm({
   };
 
   return (
-    <Formik
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-      onSubmit={handleFormSubmit}
-    >
+    <Formik validationSchema={validationSchema} initialValues={initialValues} onSubmit={handleFormSubmit}>
       {({ isSubmitting }) => (
         <Form>
           <div className={Classes.DIALOG_BODY}>
-            <p class="paragraph">
+            <p className="paragraph">
               <T id={'are_you_sure_want_to_duplicate'} />
             </p>
 
@@ -71,9 +64,7 @@ function ContactDuplicateForm({
                 >
                   <ListSelect
                     items={Contacts}
-                    onItemSelect={({ path }) =>
-                      form.setFieldValue('contact_type', path)
-                    }
+                    onItemSelect={({ path }) => form.setFieldValue('contact_type', path)}
                     defaultText={<T id={'select_contact'} />}
                     textProp={'name'}
                     selectedItemProp={'name'}
@@ -91,11 +82,7 @@ function ContactDuplicateForm({
                 <T id={'cancel'} />
               </Button>
 
-              <Button
-                intent={Intent.PRIMARY}
-                type="submit"
-                disabled={isSubmitting}
-              >
+              <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
                 <T id={'duplicate'} />
               </Button>
             </div>

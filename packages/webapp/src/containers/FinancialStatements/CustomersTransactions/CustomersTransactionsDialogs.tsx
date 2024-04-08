@@ -4,9 +4,7 @@ import { CustomerTransactionsPdfDialog } from './dialogs/CustomerTransactionsPdf
 export function CustomersTransactionsDialogs() {
   return (
     <>
-      <CustomerTransactionsPdfDialog
-        dialogName={DialogsName.CustomerTransactionsPdfPreview}
-      />
+      <CustomerTransactionsPdfDialog dialogName={DialogsName.CustomerTransactionsPdfPreview} />
     </>
   );
 }

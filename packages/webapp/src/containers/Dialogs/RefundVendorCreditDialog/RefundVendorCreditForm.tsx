@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -30,8 +29,7 @@ function RefundVendorCreditForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const { vendorCredit, dialogName, createRefundVendorCreditMutate } =
-    useRefundVendorCreditContext();
+  const { vendorCredit, dialogName, createRefundVendorCreditMutate } = useRefundVendorCreditContext();
 
   // Initial form values
   const initialValues = {
@@ -62,9 +60,7 @@ function RefundVendorCreditForm({
       setSubmitting(false);
     };
 
-    createRefundVendorCreditMutate([vendorCredit.id, form])
-      .then(onSaved)
-      .catch(onError);
+    createRefundVendorCreditMutate([vendorCredit.id, form]).then(onSaved).catch(onError);
   };
 
   return (

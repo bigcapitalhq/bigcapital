@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -25,8 +24,7 @@ function TransferredWarehouseTransferAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: transferredWarehouseTransferMutate, isLoading } =
-    useTransferredWarehouseTransfer();
+  const { mutateAsync: transferredWarehouseTransferMutate, isLoading } = useTransferredWarehouseTransfer();
 
   // handle cancel alert.
   const handleCancelAlert = () => {
@@ -65,7 +63,4 @@ function TransferredWarehouseTransferAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(TransferredWarehouseTransferAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(TransferredWarehouseTransferAlert);

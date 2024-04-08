@@ -1,9 +1,6 @@
-import { Service, Inject } from 'typedi';
-import {
-  IRefundVendorCreditCreatedPayload,
-  IRefundVendorCreditDeletedPayload,
-} from '@/interfaces';
+import { IRefundVendorCreditCreatedPayload, IRefundVendorCreditDeletedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import RefundSyncCreditRefundedAmount from './RefundSyncCreditRefundedAmount';
 
 @Service()
@@ -15,14 +12,8 @@ export default class RefundSyncVendorCreditBalanceSubscriber {
    * Attaches events with handlers.
    */
   public attach = (bus) => {
-    bus.subscribe(
-      events.vendorCredit.onRefundCreated,
-      this.incrementRefundedAmountOnceRefundCreated
-    );
-    bus.subscribe(
-      events.vendorCredit.onRefundDeleted,
-      this.decrementRefundedAmountOnceRefundDeleted
-    );
+    bus.subscribe(events.vendorCredit.onRefundCreated, this.incrementRefundedAmountOnceRefundCreated);
+    bus.subscribe(events.vendorCredit.onRefundDeleted, this.decrementRefundedAmountOnceRefundDeleted);
   };
 
   /**
@@ -39,7 +30,7 @@ export default class RefundSyncVendorCreditBalanceSubscriber {
       tenantId,
       refundVendorCredit.vendorCreditId,
       refundVendorCredit.amount,
-      trx
+      trx,
     );
   };
 
@@ -56,7 +47,7 @@ export default class RefundSyncVendorCreditBalanceSubscriber {
       tenantId,
       oldRefundCredit.vendorCreditId,
       oldRefundCredit.amount,
-      trx
+      trx,
     );
   };
 }

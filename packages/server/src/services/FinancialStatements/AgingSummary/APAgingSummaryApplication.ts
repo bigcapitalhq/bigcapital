@@ -1,9 +1,9 @@
+import { IAPAgingSummaryQuery } from '@/interfaces';
 import { Inject, Service } from 'typedi';
 import { APAgingSummaryExportInjectable } from './APAgingSummaryExportInjectable';
-import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
-import { IAPAgingSummaryQuery } from '@/interfaces';
-import { APAgingSummaryService } from './APAgingSummaryService';
 import { APAgingSummaryPdfInjectable } from './APAgingSummaryPdfInjectable';
+import { APAgingSummaryService } from './APAgingSummaryService';
+import { APAgingSummaryTableInjectable } from './APAgingSummaryTableInjectable';
 
 @Service()
 export class APAgingSummaryApplication {
@@ -57,8 +57,8 @@ export class APAgingSummaryApplication {
 
   /**
    * Retrieves the A/P aging summary in pdf format.
-   * @param {number} tenantId 
-   * @param {IAPAgingSummaryQuery} query 
+   * @param {number} tenantId
+   * @param {IAPAgingSummaryQuery} query
    * @returns {Promise<Buffer>}
    */
   public pdf(tenantId: number, query: IAPAgingSummaryQuery) {

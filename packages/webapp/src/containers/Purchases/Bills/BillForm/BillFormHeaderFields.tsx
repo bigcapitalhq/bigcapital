@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
@@ -8,29 +7,14 @@ import { DateInput } from '@blueprintjs/datetime';
 
 import { FeatureCan, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
-import {
-  FFormGroup,
-  FieldRequiredHint,
-  Icon,
-  VendorDrawerLink,
-  VendorsSelect,
-} from '@/components';
+import { FFormGroup, FieldRequiredHint, Icon, VendorDrawerLink, VendorsSelect } from '@/components';
 
 import { useBillFormContext } from './BillFormProvider';
 import { vendorsFieldShouldUpdate } from './utils';
-import {
-  BillExchangeRateInputField,
-  BillProjectSelectButton,
-} from './components';
+import { BillExchangeRateInputField, BillProjectSelectButton } from './components';
 import { ProjectsSelect } from '@/containers/Projects/components';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import {
-  momentFormatter,
-  compose,
-  tansformDateValue,
-  handleDateChange,
-  inputIntent,
-} from '@/utils';
+import { momentFormatter, compose, tansformDateValue, handleDateChange, inputIntent } from '@/utils';
 import { Features } from '@/constants';
 
 /**
@@ -46,10 +30,7 @@ function BillFormHeader() {
       <BillFormVendorField />
 
       {/* ----------- Exchange rate ----------- */}
-      <BillExchangeRateInputField
-        name={'exchange_rate'}
-        formGroupProps={{ label: ' ', inline: true }}
-      />
+      <BillExchangeRateInputField name={'exchange_rate'} formGroupProps={{ label: ' ', inline: true }} />
 
       {/* ------- Bill date ------- */}
       <FastField name={'bill_date'}>
@@ -81,11 +62,7 @@ function BillFormHeader() {
           <FormGroup
             label={<T id={'due_date'} />}
             inline={true}
-            className={classNames(
-              'form-group--due-date',
-              'form-group--select-list',
-              CLASSES.FILL,
-            )}
+            className={classNames('form-group--due-date', 'form-group--select-list', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
             helperText={<ErrorMessage name="due_date" />}
           >
@@ -142,12 +119,7 @@ function BillFormHeader() {
           inline={true}
           className={classNames('form-group--select-list', Classes.FILL)}
         >
-          <ProjectsSelect
-            name={'project_id'}
-            projects={projects}
-            input={BillProjectSelectButton}
-            popoverFill={true}
-          />
+          <ProjectsSelect name={'project_id'} projects={projects} input={BillProjectSelectButton} popoverFill={true} />
         </FFormGroup>
       </FeatureCan>
     </div>

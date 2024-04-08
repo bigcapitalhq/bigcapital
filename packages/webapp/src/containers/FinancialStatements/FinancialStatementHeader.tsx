@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { Position, Drawer } from '@blueprintjs/core';
@@ -8,12 +7,7 @@ import '@/style/containers/FinancialStatements/DrawerHeader.scss';
  * Financial statement header.
  * @returns {JSX.Element}
  */
-export default function FinancialStatementHeader({
-  children,
-  isOpen,
-  drawerProps,
-  className,
-}) {
+export default function FinancialStatementHeader({ children, isOpen, drawerProps, className }) {
   const timeoutRef = React.useRef();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 

@@ -1,16 +1,16 @@
-import { Service, Inject } from 'typedi';
-import { Knex } from 'knex';
-import * as R from 'ramda';
-import TenancyService from '@/services/Tenancy/TenancyService';
 import {
   AccountNormal,
-  IInventoryAdjustment,
-  IInventoryAdjustmentEntry,
-  ILedgerEntry,
+  type IInventoryAdjustment,
+  type IInventoryAdjustmentEntry,
+  type ILedgerEntry,
 } from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { TenantMetadata } from '@/system/models';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class InventoryAdjustmentsGL {
@@ -26,10 +26,7 @@ export default class InventoryAdjustmentsGL {
    * @param   {string} baseCurrency -
    * @returns {ILedgerEntry}
    */
-  private getAdjustmentGLCommonEntry = (
-    inventoryAdjustment: IInventoryAdjustment,
-    baseCurrency: string
-  ) => {
+  private getAdjustmentGLCommonEntry = (inventoryAdjustment: IInventoryAdjustment, baseCurrency: string) => {
     return {
       currencyCode: baseCurrency,
       exchangeRate: 1,
@@ -63,12 +60,9 @@ export default class InventoryAdjustmentsGL {
       inventoryAdjustment: IInventoryAdjustment,
       baseCurrency: string,
       entry: IInventoryAdjustmentEntry,
-      index: number
+      index: number,
     ): ILedgerEntry => {
-      const commonEntry = this.getAdjustmentGLCommonEntry(
-        inventoryAdjustment,
-        baseCurrency
-      );
+      const commonEntry = this.getAdjustmentGLCommonEntry(inventoryAdjustment, baseCurrency);
       const amount = entry.cost * entry.quantity;
 
       return {
@@ -78,7 +72,7 @@ export default class InventoryAdjustmentsGL {
         accountNormal: AccountNormal.DEBIT,
         index,
       };
-    }
+    },
   );
 
   /**
@@ -92,12 +86,9 @@ export default class InventoryAdjustmentsGL {
       inventoryAdjustment: IInventoryAdjustment,
       baseCurrency: string,
       entry: IInventoryAdjustmentEntry,
-      index: number
+      index: number,
     ): ILedgerEntry => {
-      const commonEntry = this.getAdjustmentGLCommonEntry(
-        inventoryAdjustment,
-        baseCurrency
-      );
+      const commonEntry = this.getAdjustmentGLCommonEntry(inventoryAdjustment, baseCurrency);
       const amount = entry.cost * entry.quantity;
 
       return {
@@ -107,7 +98,7 @@ export default class InventoryAdjustmentsGL {
         credit: amount,
         index: index + 2,
       };
-    }
+    },
   );
 
   /**
@@ -123,21 +114,13 @@ export default class InventoryAdjustmentsGL {
       adjustment: IInventoryAdjustment,
       baseCurrency: string,
       entry: IInventoryAdjustmentEntry,
-      index: number
+      index: number,
     ): ILedgerEntry[] => {
-      const getInventoryEntry = this.getAdjustmentGLInventoryEntry(
-        adjustment,
-        baseCurrency
-      );
+      const getInventoryEntry = this.getAdjustmentGLInventoryEntry(adjustment, baseCurrency);
       const inventoryEntry = getInventoryEntry(entry, index);
-      const costEntry = this.getAdjustmentGLCostEntry(
-        adjustment,
-        baseCurrency,
-        entry,
-        index
-      );
+      const costEntry = this.getAdjustmentGLCostEntry(adjustment, baseCurrency, entry, index);
       return [inventoryEntry, costEntry];
-    }
+    },
   );
 
   /**
@@ -148,13 +131,10 @@ export default class InventoryAdjustmentsGL {
    */
   public getIncrementAdjustmentGLEntries(
     inventoryAdjustment: IInventoryAdjustment,
-    baseCurrency: string
+    baseCurrency: string,
   ): ILedgerEntry[] {
-    const getItemEntry = this.getAdjustmentGLItemEntry(
-      inventoryAdjustment,
-      baseCurrency
-    );
-    return inventoryAdjustment.entries.map(getItemEntry).flat();
+    const getItemEntry = this.getAdjustmentGLItemEntry(inventoryAdjustment, baseCurrency);
+    return inventoryAdjustment.entries.flatMap(getItemEntry);
   }
 
   /**
@@ -165,7 +145,7 @@ export default class InventoryAdjustmentsGL {
   public writeAdjustmentGLEntries = async (
     tenantId: number,
     inventoryAdjustmentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
     const { InventoryAdjustment } = this.tenancy.models(tenantId);
 
@@ -177,10 +157,7 @@ export default class InventoryAdjustmentsGL {
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Retrieves the inventory adjustment GL entries.
-    const entries = this.getIncrementAdjustmentGLEntries(
-      adjustment,
-      tenantMeta.baseCurrency
-    );
+    const entries = this.getIncrementAdjustmentGLEntries(adjustment, tenantMeta.baseCurrency);
     const ledger = new Ledger(entries);
 
     // Commits the ledger entries to the storage.
@@ -196,14 +173,9 @@ export default class InventoryAdjustmentsGL {
   public revertAdjustmentGLEntries = (
     tenantId: number,
     inventoryAdjustmentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> => {
-    return this.ledgerStorage.deleteByReference(
-      tenantId,
-      inventoryAdjustmentId,
-      'InventoryAdjustment',
-      trx
-    );
+    return this.ledgerStorage.deleteByReference(tenantId, inventoryAdjustmentId, 'InventoryAdjustment', trx);
   };
 
   /**
@@ -215,7 +187,7 @@ export default class InventoryAdjustmentsGL {
   public rewriteAdjustmentGLEntries = async (
     tenantId: number,
     inventoryAdjustmentId: number,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ) => {
     // Reverts GL entries of the given inventory adjustment.
     await this.revertAdjustmentGLEntries(tenantId, inventoryAdjustmentId, trx);

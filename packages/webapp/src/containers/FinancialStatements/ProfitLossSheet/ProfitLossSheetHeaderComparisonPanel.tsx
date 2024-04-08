@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
 import { FastField } from 'formik';
@@ -136,12 +135,7 @@ function ProfitLossComaprsionPanelFields() {
       <FastField name={'percentageRow'} type={'checkbox'}>
         {({ field }) => (
           <FormGroup labelInfo={<FieldHint />}>
-            <Checkbox
-              inline={true}
-              small={true}
-              label={<T id={'profit_loss_sheet.percentage_of_row'} />}
-              {...field}
-            />
+            <Checkbox inline={true} small={true} label={<T id={'profit_loss_sheet.percentage_of_row'} />} {...field} />
           </FormGroup>
         )}
       </FastField>

@@ -1,13 +1,9 @@
-import { Inject } from 'typedi';
-import { raw } from 'objection';
+import { IInventoryDetailsQuery, IInventoryTransaction, IItem } from '@/interfaces';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { isEmpty } from 'lodash';
 import moment from 'moment';
-import {
-  IItem,
-  IInventoryDetailsQuery,
-  IInventoryTransaction,
-} from '@/interfaces';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { raw } from 'objection';
+import { Inject } from 'typedi';
 
 export default class InventoryDetailsRepository {
   @Inject()
@@ -18,10 +14,7 @@ export default class InventoryDetailsRepository {
    * @param {number} tenantId -
    * @returns {Promise<IItem>}
    */
-  public getInventoryItems(
-    tenantId: number,
-    itemsIds?: number[]
-  ): Promise<IItem[]> {
+  public getInventoryItems(tenantId: number, itemsIds?: number[]): Promise<IItem[]> {
     const { Item } = this.tenancy.models(tenantId);
 
     return Item.query().onBuild((q) => {
@@ -41,29 +34,19 @@ export default class InventoryDetailsRepository {
    */
   public async openingBalanceTransactions(
     tenantId: number,
-    filter: IInventoryDetailsQuery
+    filter: IInventoryDetailsQuery,
   ): Promise<IInventoryTransaction[]> {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
 
-    const openingBalanceDate = moment(filter.fromDate)
-      .subtract(1, 'days')
-      .toDate();
+    const openingBalanceDate = moment(filter.fromDate).subtract(1, 'days').toDate();
 
     // Opening inventory transactions.
     const openingTransactions = InventoryTransaction.query()
       .select('*')
       .select(raw("IF(`DIRECTION` = 'IN', `QUANTITY`, 0) as 'QUANTITY_IN'"))
       .select(raw("IF(`DIRECTION` = 'OUT', `QUANTITY`, 0) as 'QUANTITY_OUT'"))
-      .select(
-        raw(
-          "IF(`DIRECTION` = 'IN', IF(`QUANTITY` IS NULL, `RATE`, `QUANTITY` * `RATE`), 0) as 'VALUE_IN'"
-        )
-      )
-      .select(
-        raw(
-          "IF(`DIRECTION` = 'OUT', IF(`QUANTITY` IS NULL, `RATE`, `QUANTITY` * `RATE`), 0) as 'VALUE_OUT'"
-        )
-      )
+      .select(raw("IF(`DIRECTION` = 'IN', IF(`QUANTITY` IS NULL, `RATE`, `QUANTITY` * `RATE`), 0) as 'VALUE_IN'"))
+      .select(raw("IF(`DIRECTION` = 'OUT', IF(`QUANTITY` IS NULL, `RATE`, `QUANTITY` * `RATE`), 0) as 'VALUE_OUT'"))
       .modify('filterDateRange', null, openingBalanceDate)
       .orderBy('date', 'ASC')
       .as('inventory_transactions');
@@ -99,7 +82,7 @@ export default class InventoryDetailsRepository {
    */
   public async itemInventoryTransactions(
     tenantId: number,
-    filter: IInventoryDetailsQuery
+    filter: IInventoryDetailsQuery,
   ): Promise<IInventoryTransaction[]> {
     const { InventoryTransaction } = this.tenancy.models(tenantId);
 

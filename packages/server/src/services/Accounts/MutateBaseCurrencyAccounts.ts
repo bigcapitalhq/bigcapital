@@ -1,5 +1,5 @@
-import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export class MutateBaseCurrencyAccounts {
@@ -11,10 +11,7 @@ export class MutateBaseCurrencyAccounts {
    * @param {number} tenantId
    * @param {string} currencyCode
    */
-  public mutateAllAccountsCurrency = async (
-    tenantId: number,
-    currencyCode: string
-  ) => {
+  public mutateAllAccountsCurrency = async (tenantId: number, currencyCode: string) => {
     const { Account } = this.tenancy.models(tenantId);
 
     await Account.query().update({ currencyCode });

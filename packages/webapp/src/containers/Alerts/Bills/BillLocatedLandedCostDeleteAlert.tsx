@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Intent, Alert } from '@blueprintjs/core';
 import { FormattedMessage as T } from '@/components';
@@ -23,8 +22,7 @@ function BillTransactionDeleteAlert({
   // #withAlertActions
   closeAlert,
 }) {
-  const { mutateAsync: deleteLandedCostMutate, isLoading } =
-    useDeleteLandedCost();
+  const { mutateAsync: deleteLandedCostMutate, isLoading } = useDeleteLandedCost();
 
   // Handle cancel delete.
   const handleCancelAlert = () => {
@@ -64,7 +62,4 @@ function BillTransactionDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(BillTransactionDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(BillTransactionDeleteAlert);

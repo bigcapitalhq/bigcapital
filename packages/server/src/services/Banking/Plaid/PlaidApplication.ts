@@ -1,7 +1,7 @@
-import { Inject, Service } from 'typedi';
-import { PlaidLinkTokenService } from './PlaidLinkToken';
-import { PlaidItemService } from './PlaidItem';
 import { PlaidItemDTO } from '@/interfaces';
+import { Inject, Service } from 'typedi';
+import { PlaidItemService } from './PlaidItem';
+import { PlaidLinkTokenService } from './PlaidLinkToken';
 import { PlaidWebooks } from './PlaidWebhooks';
 
 @Service()
@@ -37,23 +37,13 @@ export class PlaidApplication {
 
   /**
    * Listens to Plaid webhooks
-   * @param {number} tenantId 
-   * @param {string} webhookType 
-   * @param {string} plaidItemId 
-   * @param {string} webhookCode 
-   * @returns 
+   * @param {number} tenantId
+   * @param {string} webhookType
+   * @param {string} plaidItemId
+   * @param {string} webhookCode
+   * @returns
    */
-  public webhooks(
-    tenantId: number,
-    plaidItemId: string,
-    webhookType: string,
-    webhookCode: string
-  ) {
-    return this.plaidWebhooks.webhooks(
-      tenantId,
-      plaidItemId,
-      webhookType,
-      webhookCode
-    );
+  public webhooks(tenantId: number, plaidItemId: string, webhookType: string, webhookCode: string) {
+    return this.plaidWebhooks.webhooks(tenantId, plaidItemId, webhookType, webhookCode);
   }
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import { useFormikContext } from 'formik';
 import * as R from 'ramda';
@@ -62,10 +61,7 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
     // Do not update if the credit note auto-increment mode is disabled.
     if (!creditAutoIncrement) return;
 
-    setFieldValue(
-      'credit_note_number',
-      transactionNumber(creditNumberPrefix, creditNextNumber),
-    );
+    setFieldValue('credit_note_number', transactionNumber(creditNumberPrefix, creditNextNumber));
   }, [setFieldValue, creditNumberPrefix, creditNextNumber]);
 
   return null;
@@ -76,22 +72,20 @@ export const CreditNoteSyncIncrementSettingsToForm = R.compose(
  * as an indication the entries rates have been re-calculated.
  * @returns {React.ReactNode}
  */
-export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(
-  ({ openDialog }) => {
-    const { total } = useCreditNoteTotals();
-    const timeout = useRef();
+export const CreditNoteExchangeRateSync = R.compose(withDialogActions)(({ openDialog }) => {
+  const { total } = useCreditNoteTotals();
+  const timeout = useRef();
 
-    useSyncExRateToForm({
-      onSynced: () => {
-        // If the total bigger then zero show alert to the user after adjusting entries.
-        if (total > 0) {
-          clearTimeout(timeout.current);
-          timeout.current = setTimeout(() => {
-            openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
-          }, 500);
-        }
-      },
-    });
-    return null;
-  },
-);
+  useSyncExRateToForm({
+    onSynced: () => {
+      // If the total bigger then zero show alert to the user after adjusting entries.
+      if (total > 0) {
+        clearTimeout(timeout.current);
+        timeout.current = setTimeout(() => {
+          openDialog(DialogsName.InvoiceExchangeRateChangeNotice);
+        }, 500);
+      }
+    },
+  });
+  return null;
+});

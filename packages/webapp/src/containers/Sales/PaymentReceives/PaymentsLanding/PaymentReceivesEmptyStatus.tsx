@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Button, Intent } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
@@ -14,17 +13,12 @@ export default function PaymentReceivesEmptyStatus() {
       title={<T id={'the_organization_doesn_t_receive_money_yet'} />}
       description={
         <p>
-          <T
-            id={'receiving_customer_payments_is_one_pleasant_accounting_tasks'}
-          />
+          <T id={'receiving_customer_payments_is_one_pleasant_accounting_tasks'} />
         </p>
       }
       action={
         <>
-          <Can
-            I={PaymentReceiveAction.Create}
-            a={AbilitySubject.PaymentReceive}
-          >
+          <Can I={PaymentReceiveAction.Create} a={AbilitySubject.PaymentReceive}>
             <Button
               intent={Intent.PRIMARY}
               large={true}

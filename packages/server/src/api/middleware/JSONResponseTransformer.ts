@@ -1,5 +1,5 @@
 import { snakeCase } from 'lodash';
-import { mapKeysDeep } from 'utils';
+import { mapKeysDeep } from '../../utils';
 
 /**
  * Express middleware for intercepting and transforming json responses
@@ -11,15 +11,15 @@ import { mapKeysDeep } from 'utils';
 export function JSONResponseTransformer(transform: Function) {
   const replaceJson = (res) => {
     var origJson = res.json;
-  
-    res.json = function (val) {
+
+    res.json = (val) => {
       const json = JSON.parse(JSON.stringify(val));
 
       return origJson.call(res, transform(json));
     };
   };
 
-  return function (req, res, next) {
+  return (req, res, next) => {
     replaceJson(res);
     next();
   };

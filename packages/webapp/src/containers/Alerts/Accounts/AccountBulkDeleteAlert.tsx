@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
@@ -31,7 +30,6 @@ function AccountBulkDeleteAlert({
   // #withAccountsActions
   requestDeleteBulkAccounts,
 }) {
-  
   const [isLoading, setLoading] = useState(false);
 
   const selectedRowsCount = 0;
@@ -77,8 +75,4 @@ function AccountBulkDeleteAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-  withAccountsActions,
-)(AccountBulkDeleteAlert);
+export default compose(withAlertStoreConnect(), withAlertActions, withAccountsActions)(AccountBulkDeleteAlert);

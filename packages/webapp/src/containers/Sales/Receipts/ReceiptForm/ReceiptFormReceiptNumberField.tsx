@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Position, ControlGroup } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
@@ -59,12 +58,7 @@ export const ReceiptFormReceiptNumberField = R.compose(
     };
 
     return (
-      <FFormGroup
-        name={'receipt_number'}
-        label={<T id={'receipt'} />}
-        inline={true}
-        labelInfo={<FieldRequiredHint />}
-      >
+      <FFormGroup name={'receipt_number'} label={<T id={'receipt'} />} inline={true} labelInfo={<FieldRequiredHint />}>
         <ControlGroup fill={true}>
           <FInputGroup
             name={'receipt_number'}
@@ -81,9 +75,7 @@ export const ReceiptFormReceiptNumberField = R.compose(
             }}
             tooltip={true}
             tooltipProps={{
-              content: (
-                <T id={'setting_your_auto_generated_payment_receive_number'} />
-              ),
+              content: <T id={'setting_your_auto_generated_payment_receive_number'} />,
               position: Position.BOTTOM_LEFT,
             }}
             inputProps={{

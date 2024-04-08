@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { DashboardAbilityProvider } from '../../components';
 import { useDashboardMetaBoot } from './DashboardBoot';

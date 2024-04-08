@@ -1,6 +1,6 @@
-import { Inject, Service } from 'typedi';
-import events from '@/subscribers/events';
 import { IBillEditedPayload } from '@/interfaces';
+import events from '@/subscribers/events';
+import { Inject, Service } from 'typedi';
 import { BillPaymentsGLEntriesRewrite } from './BillPaymentsGLEntriesRewrite';
 
 @Service()
@@ -12,25 +12,14 @@ export class BillPaymentsGLEntriesRewriteSubscriber {
    * Attaches events with handles.
    */
   public attach(bus) {
-    bus.subscribe(
-      events.bill.onEdited,
-      this.handlerRewritePaymentsGLOnBillEdited
-    );
+    bus.subscribe(events.bill.onEdited, this.handlerRewritePaymentsGLOnBillEdited);
   }
 
   /**
    * Handles writing journal entries once bill created.
    * @param {IBillCreatedPayload} payload -
    */
-  private handlerRewritePaymentsGLOnBillEdited = async ({
-    tenantId,
-    billId,
-    trx,
-  }: IBillEditedPayload) => {
-    await this.billPaymentGLEntriesRewrite.rewriteBillPaymentsGLEntries(
-      tenantId,
-      billId,
-      trx
-    );
+  private handlerRewritePaymentsGLOnBillEdited = async ({ tenantId, billId, trx }: IBillEditedPayload) => {
+    await this.billPaymentGLEntriesRewrite.rewriteBillPaymentsGLEntries(tenantId, billId, trx);
   };
 }

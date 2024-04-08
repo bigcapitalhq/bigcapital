@@ -1,10 +1,9 @@
-// @ts-nocheck
+
 import { createReducer } from '@reduxjs/toolkit';
 import { isUndefined, isNumber } from 'lodash';
 import t from '@/store/types';
 import { persistReducer, purgeStoredState } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
 
 const initialState = {
   pageTitle: '',
@@ -97,9 +96,7 @@ const reducerInstance = createReducer(initialState, {
 
   [t.SIDEBAR_EXPEND_TOGGLE]: (state, action) => {
     const { toggle } = action.payload;
-    state.sidebarExpended = isUndefined(toggle)
-      ? !state.sidebarExpended
-      : !!toggle;
+    state.sidebarExpended = isUndefined(toggle) ? !state.sidebarExpended : !!toggle;
   },
 
   [t.SET_DASHBOARD_BACK_LINK]: (state, action) => {
@@ -148,9 +145,7 @@ const reducerInstance = createReducer(initialState, {
 export default persistReducer(CONFIG, reducerInstance);
 
 export const getDialogPayload = (state, dialogName) => {
-  return typeof state.dashboard.dialogs[dialogName] !== 'undefined'
-    ? state.dashboard.dialogs[dialogName].payload
-    : {};
+  return typeof state.dashboard.dialogs[dialogName] !== 'undefined' ? state.dashboard.dialogs[dialogName].payload : {};
 };
 
 export const getDialogActiveStatus = (state, dialogName) => {

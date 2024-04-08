@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { useMemo } from 'react';
 import {
   chain,
@@ -61,28 +61,24 @@ export const transformResToFormValues = (
   }, {});
 };
 
-/**
- * Retrieves the initial values of mapping form. 
- * @param {EntityColumn[]} entityColumns 
- * @param {SheetColumn[]} sheetColumns 
- */
 const getInitialDefaultValues = (
   entityColumns: EntityColumn[],
   sheetColumns: SheetColumn[],
 ) => {
-  return entityColumns.reduce((acc, { fields, groupKey }) => {
-    fields.forEach(({ key, name }) => {
-      const _name = lowerCase(name);
-      const _matched = sheetColumns.find(
-        (column) => lowerCase(column) === _name,
-      );
-      const _key = groupKey ? `${groupKey}.${key}` : key;
-      const _value = _matched ? _matched : '';
+  const initialValues = {};
 
-      set(acc, _key, _value);
-    });
-    return acc;
-  }, {});
+  for (const { fields, groupKey } of entityColumns) {
+    for (const { key, name } of fields) {
+      const _name = lowerCase(name);
+      const _matched = sheetColumns.find(column => lowerCase(column) === _name);
+      const _key = getFieldKey(key, groupKey); // Use existing utility for consistency
+      const _value = _matched || '';
+
+      set(initialValues, _key, _value);
+    }
+  }
+
+  return initialValues;
 };
 
 /**
@@ -97,18 +93,14 @@ export const useImportFileMappingInitialValues = () => {
     () => transformResToFormValues(importFile?.map || []),
     [importFile?.map],
   );
-  // Retrieves the initial default values.
+
   const initialDefaultValues = useMemo(
     () => getInitialDefaultValues(entityColumns, sheetColumns),
     [entityColumns, sheetColumns],
   );
 
   return useMemo<Record<string, any>>(
-    () =>
-      assign(
-        initialDefaultValues,
-        transformToForm(initialResValues, initialDefaultValues),
-      ),
+    () => assign(initialDefaultValues, transformToForm(initialResValues, initialDefaultValues)),
     [initialDefaultValues, initialResValues],
   );
 };

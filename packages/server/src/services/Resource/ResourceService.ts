@@ -5,7 +5,13 @@ import pluralize from 'pluralize';
 import { IModelMeta, IModelMetaField, IModelMetaField2 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
+import { IModelMeta, IModelMetaField } from '@/interfaces';
 import I18nService from '@/services/I18n/I18nService';
+import TenancyService from '@/services/Tenancy/TenancyService';
+import { camelCase, pickBy, upperFirst } from 'lodash';
+import pluralize from 'pluralize';
+import * as qim from 'qim';
+import { Inject, Service } from 'typedi';
 
 const ERRORS = {
   RESOURCE_MODEL_NOT_FOUND: 'RESOURCE_MODEL_NOT_FOUND',
@@ -48,11 +54,7 @@ export default class ResourceService {
    * @param {string} modelName
    * @returns {IModelMeta}
    */
-  public getResourceMeta(
-    tenantId: number,
-    modelName: string,
-    metakey?: string
-  ): IModelMeta {
+  public getResourceMeta(tenantId: number, modelName: string, metakey?: string): IModelMeta {
     const resourceModel = this.getResourceModel(tenantId, modelName);
 
     // Retrieve the resource meta.
@@ -65,10 +67,7 @@ export default class ResourceService {
   /**
    *
    */
-  public getResourceFields(
-    tenantId: number,
-    modelName: string
-  ): { [key: string]: IModelMetaField } {
+  public getResourceFields(tenantId: number, modelName: string): { [key: string]: IModelMetaField } {
     const meta = this.getResourceMeta(tenantId, modelName);
 
     return meta.fields;
@@ -89,10 +88,7 @@ export default class ResourceService {
    * @param {string} modelName
    * @returns
    */
-  public getResourceImportableFields(
-    tenantId: number,
-    modelName: string
-  ): { [key: string]: IModelMetaField } {
+  public getResourceImportableFields(tenantId: number, modelName: string): { [key: string]: IModelMetaField } {
     const fields = this.getResourceFields(tenantId, modelName);
 
     return pickBy(fields, (field) => field.importable);
@@ -102,8 +98,7 @@ export default class ResourceService {
    * Retrieve the resource meta localized based on the current user language.
    */
   public getResourceMetaLocalized(meta, tenantId) {
-    const $enumerationType = (field) =>
-      field.fieldType === 'enumeration' ? field : undefined;
+    const $enumerationType = (field) => (field.fieldType === 'enumeration' ? field : undefined);
 
     const $hasFields = (field) => 'undefined' !== typeof field.fields ? field : undefined;
 

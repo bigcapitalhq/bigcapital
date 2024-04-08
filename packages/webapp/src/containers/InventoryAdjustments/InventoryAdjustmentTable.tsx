@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 
@@ -60,8 +59,7 @@ function InventoryAdjustmentDataTable({
   // Inventory adjustments columns.
   const columns = useInventoryAdjustmentsColumns();
 
-  const [initialColumnsWidths, , handleColumnResizing] =
-    useMemorizedColumnsWidths(TABLES.INVENTORY_ADJUSTMENTS);
+  const [initialColumnsWidths, , handleColumnResizing] = useMemorizedColumnsWidths(TABLES.INVENTORY_ADJUSTMENTS);
 
   // Handle the table fetch data once states changing.
   const handleDataTableFetchData = useCallback(

@@ -7,11 +7,7 @@ export class SendSaleEstimateMailJob {
    * Constructor method.
    */
   constructor(agenda) {
-    agenda.define(
-      'sale-estimate-mail-send',
-      { priority: 'high', concurrency: 2 },
-      this.handler
-    );
+    agenda.define('sale-estimate-mail-send', { priority: 'high', concurrency: 2 }, this.handler);
   }
 
   /**
@@ -22,11 +18,7 @@ export class SendSaleEstimateMailJob {
     const sendSaleEstimateMail = Container.get(SendSaleEstimateMail);
 
     try {
-      await sendSaleEstimateMail.sendMail(
-        tenantId,
-        saleEstimateId,
-        messageOptions
-      );
+      await sendSaleEstimateMail.sendMail(tenantId, saleEstimateId, messageOptions);
       done();
     } catch (error) {
       console.log(error);

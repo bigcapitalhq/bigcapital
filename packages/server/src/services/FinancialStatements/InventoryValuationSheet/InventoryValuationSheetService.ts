@@ -1,15 +1,11 @@
-import { Service, Inject } from 'typedi';
-import moment from 'moment';
-import { isEmpty } from 'lodash';
-import {
-  IInventoryValuationReportQuery,
-  IInventoryValuationSheet,
-  IInventoryValuationSheetMeta,
-} from '@/interfaces';
-import TenancyService from '@/services/Tenancy/TenancyService';
-import { InventoryValuationSheet } from './InventoryValuationSheet';
+import { IInventoryValuationReportQuery, IInventoryValuationSheet } from '@/interfaces';
 import InventoryService from '@/services/Inventory/Inventory';
+import TenancyService from '@/services/Tenancy/TenancyService';
 import { Tenant } from '@/system/models';
+import { isEmpty } from 'lodash';
+import moment from 'moment';
+import { Inject, Service } from 'typedi';
+import { InventoryValuationSheet } from './InventoryValuationSheet';
 import { InventoryValuationMetaInjectable } from './InventoryValuationSheetMeta';
 
 @Service()
@@ -57,13 +53,11 @@ export class InventoryValuationSheetService {
    */
   public async inventoryValuationSheet(
     tenantId: number,
-    query: IInventoryValuationReportQuery
+    query: IInventoryValuationReportQuery,
   ): Promise<IInventoryValuationSheet> {
     const { Item, InventoryCostLotTracker } = this.tenancy.models(tenantId);
 
-    const tenant = await Tenant.query()
-      .findById(tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await Tenant.query().findById(tenantId).withGraphFetched('metadata');
 
     const filter = {
       ...this.defaultQuery,
@@ -94,21 +88,17 @@ export class InventoryValuationSheetService {
       }
     };
     // Retrieve the inventory cost `IN` transactions.
-    const INTransactions = await InventoryCostLotTracker.query()
-      .onBuild(commonQuery)
-      .where('direction', 'IN');
+    const INTransactions = await InventoryCostLotTracker.query().onBuild(commonQuery).where('direction', 'IN');
 
     // Retrieve the inventory cost `OUT` transactions.
-    const OUTTransactions = await InventoryCostLotTracker.query()
-      .onBuild(commonQuery)
-      .where('direction', 'OUT');
+    const OUTTransactions = await InventoryCostLotTracker.query().onBuild(commonQuery).where('direction', 'OUT');
 
     const inventoryValuationInstance = new InventoryValuationSheet(
       filter,
       inventoryItems,
       INTransactions,
       OUTTransactions,
-      tenant.metadata.baseCurrency
+      tenant.metadata.baseCurrency,
     );
     // Retrieve the inventory valuation report data.
     const inventoryValuationData = inventoryValuationInstance.reportData();

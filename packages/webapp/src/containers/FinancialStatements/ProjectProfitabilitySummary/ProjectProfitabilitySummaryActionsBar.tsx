@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import {
   NavbarGroup,
@@ -33,8 +32,7 @@ function ProjectProfitabilitySummaryActionsBar({
   numberFormat,
   onNumberFormatSubmit,
 }) {
-  const { isLoading, refetchProjectProfitabilitySummary } =
-    useProjectProfitabilitySummaryContext();
+  const { isLoading, refetchProjectProfitabilitySummary } = useProjectProfitabilitySummaryContext();
 
   // Handle filter toggle click.
   const handleFilterToggleClick = () => {
@@ -64,13 +62,7 @@ function ProjectProfitabilitySummaryActionsBar({
         <Button
           className={classNames(Classes.MINIMAL, 'button--table-views')}
           icon={<Icon icon="cog-16" iconSize={16} />}
-          text={
-            !isFilterDrawerOpen ? (
-              <T id={'customize_report'} />
-            ) : (
-              <T id={'hide_customizer'} />
-            )
-          }
+          text={!isFilterDrawerOpen ? <T id={'customize_report'} /> : <T id={'hide_customizer'} />}
           onClick={handleFilterToggleClick}
           active={isFilterDrawerOpen}
         />
@@ -107,11 +99,7 @@ function ProjectProfitabilitySummaryActionsBar({
 
         <NavbarDivider />
 
-        <Button
-          className={Classes.MINIMAL}
-          icon={<Icon icon="print-16" iconSize={16} />}
-          text={<T id={'print'} />}
-        />
+        <Button className={Classes.MINIMAL} icon={<Icon icon="print-16" iconSize={16} />} text={<T id={'print'} />} />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
@@ -123,10 +111,8 @@ function ProjectProfitabilitySummaryActionsBar({
 }
 
 export default compose(
-  withProjectProfitabilitySummary(
-    ({ projectProfitabilitySummaryDrawerFilter }) => ({
-      isFilterDrawerOpen: projectProfitabilitySummaryDrawerFilter,
-    }),
-  ),
+  withProjectProfitabilitySummary(({ projectProfitabilitySummaryDrawerFilter }) => ({
+    isFilterDrawerOpen: projectProfitabilitySummaryDrawerFilter,
+  })),
   withProjectProfitabilitySummaryActions,
 )(ProjectProfitabilitySummaryActionsBar);

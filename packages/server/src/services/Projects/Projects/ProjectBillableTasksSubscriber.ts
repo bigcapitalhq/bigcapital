@@ -1,12 +1,8 @@
-import { Inject, Service } from 'typedi';
+import { ISaleInvoiceCreatedPayload, ISaleInvoiceDeletedPayload, ISaleInvoiceEditedPayload } from '@/interfaces';
 import events from '@/subscribers/events';
-import {
-  ISaleInvoiceCreatedPayload,
-  ISaleInvoiceDeletedPayload,
-  ISaleInvoiceEditedPayload,
-} from '@/interfaces';
-import { ProjectInvoiceValidator } from './ProjectInvoiceValidator';
+import { Inject, Service } from 'typedi';
 import { ProjectBillableTasksInvoiced } from './ProjectBillableTasksInvoiced';
+import { ProjectInvoiceValidator } from './ProjectInvoiceValidator';
 
 @Service()
 export class ProjectBillableTasksSubscriber {
@@ -21,63 +17,34 @@ export class ProjectBillableTasksSubscriber {
    * @param bus
    */
   public attach(bus) {
-    bus.subscribe(
-      events.saleInvoice.onCreating,
-      this.handleValidateInvoiceTasksRefs
-    );
-    bus.subscribe(
-      events.saleInvoice.onCreated,
-      this.handleIncreaseBillableTasks
-    );
+    bus.subscribe(events.saleInvoice.onCreating, this.handleValidateInvoiceTasksRefs);
+    bus.subscribe(events.saleInvoice.onCreated, this.handleIncreaseBillableTasks);
     bus.subscribe(events.saleInvoice.onEdited, this.handleEditBillableTasks);
-    bus.subscribe(
-      events.saleInvoice.onDeleted,
-      this.handleDecreaseBillableTasks
-    );
+    bus.subscribe(events.saleInvoice.onDeleted, this.handleDecreaseBillableTasks);
   }
 
   /**
    * Validate the tasks refs ids existance.
    * @param {ISaleInvoiceCreatedPayload} payload -
    */
-  public handleValidateInvoiceTasksRefs = async ({
-    tenantId,
-    saleInvoiceDTO,
-  }: ISaleInvoiceCreatedPayload) => {
-    await this.projectBillableTasksValidator.validateTasksRefsExistance(
-      tenantId,
-      saleInvoiceDTO
-    );
+  public handleValidateInvoiceTasksRefs = async ({ tenantId, saleInvoiceDTO }: ISaleInvoiceCreatedPayload) => {
+    await this.projectBillableTasksValidator.validateTasksRefsExistance(tenantId, saleInvoiceDTO);
   };
 
   /**
    * Handle increase the invoiced tasks once the sale invoice be created.
    * @param {ISaleInvoiceCreatedPayload} payload -
    */
-  public handleIncreaseBillableTasks = async ({
-    tenantId,
-    saleInvoiceDTO,
-  }: ISaleInvoiceCreatedPayload) => {
-    await this.projectBillableTasks.increaseInvoicedTasks(
-      tenantId,
-      saleInvoiceDTO
-    );
+  public handleIncreaseBillableTasks = async ({ tenantId, saleInvoiceDTO }: ISaleInvoiceCreatedPayload) => {
+    await this.projectBillableTasks.increaseInvoicedTasks(tenantId, saleInvoiceDTO);
   };
 
   /**
    * Handle decrease the invoiced tasks once the sale invoice be deleted.
    * @param {ISaleInvoiceDeletedPayload} payload -
    */
-  public handleDecreaseBillableTasks = async ({
-    tenantId,
-    oldSaleInvoice,
-    trx,
-  }: ISaleInvoiceDeletedPayload) => {
-    await this.projectBillableTasks.decreaseInvoicedTasks(
-      tenantId,
-      oldSaleInvoice,
-      trx
-    );
+  public handleDecreaseBillableTasks = async ({ tenantId, oldSaleInvoice, trx }: ISaleInvoiceDeletedPayload) => {
+    await this.projectBillableTasks.decreaseInvoicedTasks(tenantId, oldSaleInvoice, trx);
   };
 
   /**
@@ -90,15 +57,7 @@ export class ProjectBillableTasksSubscriber {
     saleInvoiceDTO,
     trx,
   }: ISaleInvoiceEditedPayload) => {
-    await this.projectBillableTasks.increaseInvoicedTasks(
-      tenantId,
-      saleInvoiceDTO,
-      trx
-    );
-    await this.projectBillableTasks.decreaseInvoicedTasks(
-      tenantId,
-      oldSaleInvoice,
-      trx
-    );
+    await this.projectBillableTasks.increaseInvoicedTasks(tenantId, saleInvoiceDTO, trx);
+    await this.projectBillableTasks.decreaseInvoicedTasks(tenantId, oldSaleInvoice, trx);
   };
 }

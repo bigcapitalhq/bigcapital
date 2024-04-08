@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 
 import { FinancialReportBody } from '../FinancialReportPage';
@@ -16,11 +15,7 @@ export function SalesTaxLiabilitySummaryBody() {
 
   return (
     <FinancialReportBody>
-      {isLoading ? (
-        <FinancialSheetSkeleton />
-      ) : (
-        <SalesTaxLiabilitySummaryTable />
-      )}
+      {isLoading ? <FinancialSheetSkeleton /> : <SalesTaxLiabilitySummaryTable />}
     </FinancialReportBody>
   );
 }

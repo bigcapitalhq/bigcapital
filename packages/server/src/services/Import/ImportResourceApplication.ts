@@ -1,11 +1,11 @@
 import { Inject } from 'typedi';
-import { ImportFileUploadService } from './ImportFileUpload';
 import { ImportFileMapping } from './ImportFileMapping';
-import { ImportMappingAttr } from './interfaces';
-import { ImportFileProcess } from './ImportFileProcess';
-import { ImportFilePreview } from './ImportFilePreview';
-import { ImportSampleService } from './ImportSample';
 import { ImportFileMeta } from './ImportFileMeta';
+import { ImportFilePreview } from './ImportFilePreview';
+import { ImportFileProcess } from './ImportFileProcess';
+import { ImportFileUploadService } from './ImportFileUpload';
+import { ImportSampleService } from './ImportSample';
+import { ImportMappingAttr } from './interfaces';
 
 @Inject()
 export class ImportResourceApplication {
@@ -34,12 +34,7 @@ export class ImportResourceApplication {
    * @param {string} fileName - File name.
    * @returns {Promise<ImportFileUploadPOJO>}
    */
-  public async import(
-    tenantId: number,
-    resource: string,
-    filename: string,
-    params: Record<string, any>
-  ) {
+  public async import(tenantId: number, resource: string, filename: string, params: Record<string, any>) {
     return this.importFileService.import(tenantId, resource, filename, params);
   }
 
@@ -49,11 +44,7 @@ export class ImportResourceApplication {
    * @param {number} importId - Import id.
    * @param {ImportMappingAttr} maps
    */
-  public async mapping(
-    tenantId: number,
-    importId: number,
-    maps: ImportMappingAttr[]
-  ) {
+  public async mapping(tenantId: number, importId: number, maps: ImportMappingAttr[]) {
     return this.importMappingService.mapping(tenantId, importId, maps);
   }
 
@@ -79,7 +70,7 @@ export class ImportResourceApplication {
 
   /**
    * Retrieves the import meta of the given import id.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @param {string} importId - Import id.
    * @returns {}
    */
@@ -92,11 +83,7 @@ export class ImportResourceApplication {
    * @param {number} tenantId
    * @param {number} resource - Resource name.
    */
-  public sample(
-    tenantId: number,
-    resource: string,
-    format: 'csv' | 'xlsx' = 'csv'
-  ) {
+  public sample(tenantId: number, resource: string, format: 'csv' | 'xlsx' = 'csv') {
     return this.importSampleService.sample(tenantId, resource, format);
   }
 }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
@@ -84,10 +83,7 @@ export const vendorsFieldShouldUpdate = (newProps, oldProps) => {
  * Detarmines accounts fast field when update.
  */
 export const accountsFieldShouldUpdate = (newProps, oldProps) => {
-  return (
-    newProps.items !== oldProps.items ||
-    defaultFastFieldShouldUpdate(newProps, oldProps)
-  );
+  return newProps.items !== oldProps.items || defaultFastFieldShouldUpdate(newProps, oldProps);
 };
 
 /**
@@ -130,9 +126,7 @@ export const transformErrors = (errors, { setFieldError }) => {
   }
   if (getError(PAYMENT_MADE_ERRORS.WITHDRAWAL_ACCOUNT_CURRENCY_INVALID)) {
     AppToaster.show({
-      message: intl.get(
-        'payment_made.error.withdrawal_account_currency_invalid',
-      ),
+      message: intl.get('payment_made.error.withdrawal_account_currency_invalid'),
       intent: Intent.DANGER,
     });
   }
@@ -144,16 +138,10 @@ export const usePaymentMadeTotals = () => {
   } = useFormikContext();
 
   // Retrieves the invoice entries total.
-  const total = React.useMemo(
-    () => sumBy(entries, 'payment_amount'),
-    [entries],
-  );
+  const total = React.useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
 
   // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total, currencyCode),
-    [total, currencyCode],
-  );
+  const formattedTotal = React.useMemo(() => formattedAmount(total, currencyCode), [total, currencyCode]);
   // Retrieves the formatted subtotal.
   const formattedSubtotal = React.useMemo(
     () => formattedAmount(total, currencyCode, { money: false }),

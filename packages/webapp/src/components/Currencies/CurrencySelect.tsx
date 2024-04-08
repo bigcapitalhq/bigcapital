@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 
@@ -19,11 +18,7 @@ const currencyItemPredicate = (query, currency, _index, exactMatch) => {
   if (exactMatch) {
     return normalizedTitle === normalizedQuery;
   } else {
-    return (
-      `${currency.currency_code}. ${normalizedTitle}`.indexOf(
-        normalizedQuery,
-      ) >= 0
-    );
+    return `${currency.currency_code}. ${normalizedTitle}`.indexOf(normalizedQuery) >= 0;
   }
 };
 

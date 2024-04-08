@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
@@ -59,7 +58,4 @@ function ExpensePublishAlert({
   );
 }
 
-export default compose(
-  withAlertStoreConnect(),
-  withAlertActions,
-)(ExpensePublishAlert);
+export default compose(withAlertStoreConnect(), withAlertActions)(ExpensePublishAlert);

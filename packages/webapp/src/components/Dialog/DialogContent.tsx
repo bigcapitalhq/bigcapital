@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { Spinner, Classes } from '@blueprintjs/core';
 import classNames from 'classnames';

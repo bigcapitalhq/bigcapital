@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import FinancialReportPage from '../FinancialReportPage';
 import { useInventoryValuationTable } from '@/hooks/query';
@@ -11,10 +10,7 @@ const InventoryValuationContext = React.createContext();
  */
 function InventoryValuationProvider({ query, ...props }) {
   // Transformes the filter form query to request query.
-  const httpQuery = React.useMemo(
-    () => transformFilterFormToQuery(query),
-    [query],
-  );
+  const httpQuery = React.useMemo(() => transformFilterFormToQuery(query), [query]);
 
   const {
     data: inventoryValuation,
@@ -29,7 +25,7 @@ function InventoryValuationProvider({ query, ...props }) {
     isLoading,
     isFetching,
     refetchSheet: refetch,
-    httpQuery
+    httpQuery,
   };
 
   return (
@@ -39,7 +35,6 @@ function InventoryValuationProvider({ query, ...props }) {
   );
 }
 
-const useInventoryValuationContext = () =>
-  React.useContext(InventoryValuationContext);
+const useInventoryValuationContext = () => React.useContext(InventoryValuationContext);
 
 export { InventoryValuationProvider, useInventoryValuationContext };

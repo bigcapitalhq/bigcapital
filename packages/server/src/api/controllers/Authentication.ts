@@ -1,13 +1,13 @@
-import { Request, Response, Router } from 'express';
-import { check, ValidationChain } from 'express-validator';
-import { Service, Inject } from 'typedi';
 import BaseController from '@/api/controllers/BaseController';
-import asyncMiddleware from '@/api/middleware/asyncMiddleware';
-import { ILoginDTO, ISystemUser, IRegisterDTO } from '@/interfaces';
-import { ServiceError, ServiceErrors } from '@/exceptions';
-import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import LoginThrottlerMiddleware from '@/api/middleware/LoginThrottlerMiddleware';
+import asyncMiddleware from '@/api/middleware/asyncMiddleware';
+import { DATATYPES_LENGTH } from '@/data/DataTypes';
+import { ServiceError } from '@/exceptions';
+import { ILoginDTO, IRegisterDTO } from '@/interfaces';
 import AuthenticationApplication from '@/services/Authentication/AuthApplication';
+import { type Request, type Response, Router } from 'express';
+import { type ValidationChain, check } from 'express-validator';
+import { Inject, Service } from 'typedi';
 
 @Service()
 export default class AuthenticationController extends BaseController {
@@ -26,28 +26,28 @@ export default class AuthenticationController extends BaseController {
       this.validationResult,
       LoginThrottlerMiddleware,
       asyncMiddleware(this.login.bind(this)),
-      this.handlerErrors
+      this.handlerErrors,
     );
     router.post(
       '/register',
       this.registerSchema,
       this.validationResult,
       asyncMiddleware(this.register.bind(this)),
-      this.handlerErrors
+      this.handlerErrors,
     );
     router.post(
       '/send_reset_password',
       this.sendResetPasswordSchema,
       this.validationResult,
       asyncMiddleware(this.sendResetPassword.bind(this)),
-      this.handlerErrors
+      this.handlerErrors,
     );
     router.post(
       '/reset/:token',
       this.resetPasswordSchema,
       this.validationResult,
       asyncMiddleware(this.resetPassword.bind(this)),
-      this.handlerErrors
+      this.handlerErrors,
     );
     router.get('/meta', asyncMiddleware(this.getAuthMeta.bind(this)));
     return router;
@@ -58,10 +58,7 @@ export default class AuthenticationController extends BaseController {
    * @returns {ValidationChain[]}
    */
   private get loginSchema(): ValidationChain[] {
-    return [
-      check('crediential').exists().isEmail(),
-      check('password').exists().isLength({ min: 5 }),
-    ];
+    return [check('crediential').exists().isEmail(), check('password').exists().isLength({ min: 5 })];
   }
 
   /**
@@ -70,25 +67,9 @@ export default class AuthenticationController extends BaseController {
    */
   private get registerSchema(): ValidationChain[] {
     return [
-      check('first_name')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('last_name')
-        .exists()
-        .isString()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
-      check('email')
-        .exists()
-        .isString()
-        .isEmail()
-        .trim()
-        .escape()
-        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('first_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('last_name').exists().isString().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('email').exists().isString().isEmail().trim().escape().isLength({ max: DATATYPES_LENGTH.STRING }),
       check('password')
         .exists()
         .isString()
@@ -135,10 +116,7 @@ export default class AuthenticationController extends BaseController {
     const userDTO: ILoginDTO = this.matchedBodyData(req);
 
     try {
-      const { token, user, tenant } = await this.authApplication.signIn(
-        userDTO.crediential,
-        userDTO.password
-      );
+      const { token, user, tenant } = await this.authApplication.signIn(userDTO.crediential, userDTO.password);
       return res.status(200).send({ token, user, tenant });
     } catch (error) {
       next(error);
@@ -231,9 +209,7 @@ export default class AuthenticationController extends BaseController {
    */
   private handlerErrors(error, req: Request, res: Response, next: Function) {
     if (error instanceof ServiceError) {
-      if (
-        ['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1
-      ) {
+      if (['INVALID_DETAILS', 'invalid_password'].indexOf(error.errorType) !== -1) {
         return res.boom.badRequest(null, {
           errors: [{ type: 'INVALID_DETAILS', code: 100 }],
         });
@@ -243,10 +219,7 @@ export default class AuthenticationController extends BaseController {
           errors: [{ type: 'USER_INACTIVE', code: 200 }],
         });
       }
-      if (
-        error.errorType === 'TOKEN_INVALID' ||
-        error.errorType === 'TOKEN_EXPIRED'
-      ) {
+      if (error.errorType === 'TOKEN_INVALID' || error.errorType === 'TOKEN_EXPIRED') {
         return res.boom.badRequest(null, {
           errors: [{ type: 'TOKEN_INVALID', code: 300 }],
         });
@@ -271,8 +244,7 @@ export default class AuthenticationController extends BaseController {
           errors: [
             {
               type: 'SIGNUP_RESTRICTED',
-              message:
-                'Sign-up is restricted no one can sign-up to the system.',
+              message: 'Sign-up is restricted no one can sign-up to the system.',
               code: 700,
             },
           ],
@@ -283,8 +255,7 @@ export default class AuthenticationController extends BaseController {
           errors: [
             {
               type: 'SIGNUP_RESTRICTED_NOT_ALLOWED',
-              message:
-                'Sign-up is restricted the given email address is not allowed to sign-up.',
+              message: 'Sign-up is restricted the given email address is not allowed to sign-up.',
               code: 710,
             },
           ],

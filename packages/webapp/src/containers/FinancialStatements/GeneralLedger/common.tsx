@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
 import moment from 'moment';
@@ -18,9 +17,7 @@ export const filterAccountsOptions = [
   {
     key: 'with-transactions',
     name: intl.get('accounts_with_transactions'),
-    hint: intl.get(
-      'include_accounts_once_has_transactions_on_given_date_period',
-    ),
+    hint: intl.get('include_accounts_once_has_transactions_on_given_date_period'),
   },
 ];
 
@@ -75,9 +72,6 @@ export const useGeneralLedgerQuery = () => {
   const [locationQuery, setLocationQuery] = useAppQueryString();
 
   // Merges the default filter query with location URL query.
-  const query = React.useMemo(
-    () => parseGeneralLedgerQuery(locationQuery),
-    [locationQuery],
-  );
+  const query = React.useMemo(() => parseGeneralLedgerQuery(locationQuery), [locationQuery]);
   return { query, locationQuery, setLocationQuery };
 };

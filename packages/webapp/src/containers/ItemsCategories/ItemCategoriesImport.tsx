@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import { DashboardInsider } from '@/components';
 import { ImportView } from '../Import/ImportView';
 import { useHistory } from 'react-router-dom';
@@ -19,7 +19,7 @@ export default function ItemCategoriesImport() {
         onImportSuccess={handleImportSuccess}
         onCancelClick={handleCancelBtnClick}
         exampleTitle="Item Categories Example"
-        />
+      />
     </DashboardInsider>
   );
 }

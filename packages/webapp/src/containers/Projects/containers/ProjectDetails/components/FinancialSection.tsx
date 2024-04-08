@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { isUndefined } from 'lodash';
 import styled from 'styled-components';
@@ -15,20 +14,13 @@ interface DetailFinancialCardProps {
   progressValue: number;
 }
 
-export function DetailFinancialCard({
-  label,
-  value,
-  description,
-  progressValue,
-}: DetailFinancialCardProps) {
+export function DetailFinancialCard({ label, value, description, progressValue }: DetailFinancialCardProps) {
   return (
     <FinancialSectionCard>
       <FinancialCardTitle>{label}</FinancialCardTitle>
       <FinancialCardValue>{value}</FinancialCardValue>
       {description && <FinancialCartDesc>{description}</FinancialCartDesc>}
-      {!isUndefined(progressValue) && (
-        <FinancialProgressBar intent={Intent.NONE} value={progressValue} />
-      )}
+      {!isUndefined(progressValue) && <FinancialProgressBar intent={Intent.NONE} value={progressValue} />}
     </FinancialSectionCard>
   );
 }

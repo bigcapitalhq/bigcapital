@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 
 export default {
   VIEW_META_SET: 'VIEW_META_SET',

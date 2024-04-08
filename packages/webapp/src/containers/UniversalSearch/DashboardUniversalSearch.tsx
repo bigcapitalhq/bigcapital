@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { debounce } from 'lodash';
 import { isUndefined } from 'lodash';
@@ -42,10 +41,7 @@ function DashboardUniversalSearch({
 
   // Sync default search type with default universal resource type.
   React.useEffect(() => {
-    if (
-      !isUndefined(defaultUniversalResourceType) &&
-      defaultSearchType !== defaultUniversalResourceType
-    ) {
+    if (!isUndefined(defaultUniversalResourceType) && defaultSearchType !== defaultUniversalResourceType) {
       setSearchType(defaultUniversalResourceType);
       setDefaultSearchType(defaultUniversalResourceType);
     }
@@ -104,7 +100,7 @@ function DashboardUniversalSearch({
   }
 
   return (
-    <div class="dashboard__universal-search">
+    <div className="dashboard__universal-search">
       <UniversalSearch
         isOpen={globalSearchShow}
         isLoading={isSearchFetching}

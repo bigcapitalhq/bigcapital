@@ -1,25 +1,25 @@
-import { Inject } from 'typedi';
-import * as R from 'ramda';
-import { Knex } from 'knex';
+import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { ServiceError } from '@/exceptions';
 import {
-  IItemCategory,
-  IItemCategoryOTD,
-  IItemCategoriesService,
-  IItemCategoriesFilter,
-  ISystemUser,
   IFilterMeta,
+  IItemCategoriesFilter,
+  IItemCategoriesService,
+  IItemCategory,
   IItemCategoryCreatedPayload,
-  IItemCategoryEditedPayload,
   IItemCategoryDeletedPayload,
+  IItemCategoryEditedPayload,
+  IItemCategoryOTD,
+  ISystemUser,
 } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 import TenancyService from '@/services/Tenancy/TenancyService';
-import events from '@/subscribers/events';
-import { ACCOUNT_ROOT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
-import { ERRORS } from './constants';
 import UnitOfWork from '@/services/UnitOfWork';
-import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import { Knex } from 'knex';
+import * as R from 'ramda';
+import { Inject } from 'typedi';
+import { ERRORS } from './constants';
 
 export default class ItemCategoriesService implements IItemCategoriesService {
   @Inject()
@@ -42,10 +42,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} tenantId
    * @param {number} itemCategoryId
    */
-  private async getItemCategoryOrThrowError(
-    tenantId: number,
-    itemCategoryId: number
-  ) {
+  private async getItemCategoryOrThrowError(tenantId: number, itemCategoryId: number) {
     const { ItemCategory } = this.tenancy.models(tenantId);
     const category = await ItemCategory.query().findById(itemCategoryId);
 
@@ -60,10 +57,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {IItemCategoryOTD} itemCategoryOTD
    * @param {ISystemUser} authorizedUser
    */
-  private transformOTDToObject(
-    itemCategoryOTD: IItemCategoryOTD,
-    authorizedUser: ISystemUser
-  ) {
+  private transformOTDToObject(itemCategoryOTD: IItemCategoryOTD, authorizedUser: ISystemUser) {
     return { ...itemCategoryOTD, userId: authorizedUser.id };
   }
 
@@ -73,11 +67,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} itemCategoryId -
    * @returns {IItemCategory}
    */
-  public async getItemCategory(
-    tenantId: number,
-    itemCategoryId: number,
-    user: ISystemUser
-  ) {
+  public async getItemCategory(tenantId: number, itemCategoryId: number, user: ISystemUser) {
     return this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
   }
 
@@ -87,11 +77,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {string} categoryName - Category name.
    * @param {number} notAccountId - Ignore the account id.
    */
-  private async validateCategoryNameUniquiness(
-    tenantId: number,
-    categoryName: string,
-    notCategoryId?: number
-  ) {
+  private async validateCategoryNameUniquiness(tenantId: number, categoryName: string, notCategoryId?: number) {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
     const foundItemCategory = await ItemCategory.query()
@@ -119,7 +105,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     tenantId: number,
     itemCategoryOTD: IItemCategoryOTD,
     authorizedUser: ISystemUser,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
@@ -133,15 +119,9 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       await this.validateCostAccount(tenantId, itemCategoryOTD.costAccountId);
     }
     if (itemCategoryOTD.inventoryAccountId) {
-      await this.validateInventoryAccount(
-        tenantId,
-        itemCategoryOTD.inventoryAccountId
-      );
+      await this.validateInventoryAccount(tenantId, itemCategoryOTD.inventoryAccountId);
     }
-    const itemCategoryObj = this.transformOTDToObject(
-      itemCategoryOTD,
-      authorizedUser
-    );
+    const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     // Creates item category under unit-of-work evnirement.
     return this.uow.withTransaction(
       tenantId,
@@ -159,7 +139,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
 
         return itemCategory;
       },
-      trx
+      trx,
     );
   }
 
@@ -205,15 +185,10 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} inventoryAccountId
    * @return {Promise<void>}
    */
-  private async validateInventoryAccount(
-    tenantId: number,
-    inventoryAccountId: number
-  ) {
+  private async validateInventoryAccount(tenantId: number, inventoryAccountId: number) {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
-    const foundAccount = await accountRepository.findOneById(
-      inventoryAccountId
-    );
+    const foundAccount = await accountRepository.findOneById(inventoryAccountId);
     if (!foundAccount) {
       throw new ServiceError(ERRORS.INVENTORY_ACCOUNT_NOT_FOUND);
     } else if (!foundAccount.isAccountType(ACCOUNT_TYPE.INVENTORY)) {
@@ -232,21 +207,14 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     tenantId: number,
     itemCategoryId: number,
     itemCategoryOTD: IItemCategoryOTD,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
     // Retrieve the item category from the storage.
-    const oldItemCategory = await this.getItemCategoryOrThrowError(
-      tenantId,
-      itemCategoryId
-    );
+    const oldItemCategory = await this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
     // Validate the category name whether unique on the storage.
-    await this.validateCategoryNameUniquiness(
-      tenantId,
-      itemCategoryOTD.name,
-      itemCategoryId
-    );
+    await this.validateCategoryNameUniquiness(tenantId, itemCategoryOTD.name, itemCategoryId);
     if (itemCategoryOTD.sellAccountId) {
       await this.validateSellAccount(tenantId, itemCategoryOTD.sellAccountId);
     }
@@ -254,22 +222,13 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       await this.validateCostAccount(tenantId, itemCategoryOTD.costAccountId);
     }
     if (itemCategoryOTD.inventoryAccountId) {
-      await this.validateInventoryAccount(
-        tenantId,
-        itemCategoryOTD.inventoryAccountId
-      );
+      await this.validateInventoryAccount(tenantId, itemCategoryOTD.inventoryAccountId);
     }
-    const itemCategoryObj = this.transformOTDToObject(
-      itemCategoryOTD,
-      authorizedUser
-    );
+    const itemCategoryObj = this.transformOTDToObject(itemCategoryOTD, authorizedUser);
     //
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       //
-      const itemCategory = await ItemCategory.query().patchAndFetchById(
-        itemCategoryId,
-        { ...itemCategoryObj }
-      );
+      const itemCategory = await ItemCategory.query().patchAndFetchById(itemCategoryId, { ...itemCategoryObj });
       // Triggers `onItemCategoryEdited` event.
       await this.eventPublisher.emitAsync(events.itemCategory.onEdited, {
         oldItemCategory,
@@ -287,18 +246,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
    * @param {number} itemCategoryId - Item category id.
    * @return {Promise<void>}
    */
-  public async deleteItemCategory(
-    tenantId: number,
-    itemCategoryId: number,
-    authorizedUser: ISystemUser
-  ) {
+  public async deleteItemCategory(tenantId: number, itemCategoryId: number, authorizedUser: ISystemUser) {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
     // Retrieve item category or throw not found error.
-    const oldItemCategory = await this.getItemCategoryOrThrowError(
-      tenantId,
-      itemCategoryId
-    );
+    const oldItemCategory = await this.getItemCategoryOrThrowError(tenantId, itemCategoryId);
 
     //
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
@@ -325,7 +277,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   private parsesListFilterDTO(filterDTO) {
     return R.compose(
       // Parses stringified filter roles.
-      this.dynamicListService.parseStringifiedFilter
+      this.dynamicListService.parseStringifiedFilter,
     )(filterDTO);
   }
 
@@ -337,7 +289,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   public async getItemCategoriesList(
     tenantId: number,
     filterDTO: IItemCategoriesFilter,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
   ): Promise<{ itemCategories: IItemCategory[]; filterMeta: IFilterMeta }> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
@@ -345,11 +297,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
     const filter = this.parsesListFilterDTO(filterDTO);
 
     // Dynamic list service.
-    const dynamicList = await this.dynamicListService.dynamicList(
-      tenantId,
-      ItemCategory,
-      filter
-    );
+    const dynamicList = await this.dynamicListService.dynamicList(tenantId, ItemCategory, filter);
     // Items categories.
     const itemCategories = await ItemCategory.query().onBuild((query) => {
       // Subquery to calculate sumation of associated items to the item category.
@@ -369,15 +317,11 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   private async unassociateItemsWithCategories(
     tenantId: number,
     itemCategoryId: number | number[],
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
   ): Promise<void> {
     const { Item } = this.tenancy.models(tenantId);
-    const ids = Array.isArray(itemCategoryId)
-      ? itemCategoryId
-      : [itemCategoryId];
+    const ids = Array.isArray(itemCategoryId) ? itemCategoryId : [itemCategoryId];
 
-    await Item.query(trx)
-      .whereIn('category_id', ids)
-      .patch({ category_id: null });
+    await Item.query(trx).whereIn('category_id', ids).patch({ category_id: null });
   }
 }
