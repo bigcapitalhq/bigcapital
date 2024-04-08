@@ -2,19 +2,16 @@ import { Inject, Service } from 'typedi';
 import { chain } from 'lodash';
 import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
-import { ERRORS, getSheetColumns, getUnmappedSheetColumns } from './_utils';
-import HasTenancyService from '../Tenancy/TenancyService';
+import { ERRORS, getSheetColumns, getUnmappedSheetColumns, readImportFile } from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import ResourceService from '../Resource/ResourceService';
 import UnitOfWork from '../UnitOfWork';
 import { ImportFilePreviewPOJO } from './interfaces';
+import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileProcess {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private resource: ResourceService;
 
@@ -38,10 +35,9 @@ export class ImportFileProcess {
     importId: number,
     trx?: Knex.Transaction
   ): Promise<ImportFilePreviewPOJO> {
-    const { Import } = this.tenancy.models(tenantId);
-
     const importFile = await Import.query()
       .findOne('importId', importId)
+      .where('tenantId', tenantId)
       .throwIfNotFound();
 
     // Throw error if the import file is not mapped yet.
@@ -49,7 +45,7 @@ export class ImportFileProcess {
       throw new ServiceError(ERRORS.IMPORT_FILE_NOT_MAPPED);
     }
     // Read the imported file.
-    const buffer = await this.importCommon.readImportFile(importFile.filename);
+    const buffer = await readImportFile(importFile.filename);
     const sheetData = this.importCommon.parseXlsxSheet(buffer);
     const header = getSheetColumns(sheetData);
 

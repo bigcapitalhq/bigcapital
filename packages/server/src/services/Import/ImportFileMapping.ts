@@ -1,6 +1,5 @@
 import { fromPairs, isUndefined } from 'lodash';
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
 import {
   ImportDateFormats,
   ImportFileMapPOJO,
@@ -9,12 +8,10 @@ import {
 import ResourceService from '../Resource/ResourceService';
 import { ServiceError } from '@/exceptions';
 import { ERRORS } from './_utils';
+import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileMapping {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private resource: ResourceService;
 
@@ -29,8 +26,6 @@ export class ImportFileMapping {
     importId: number,
     maps: ImportMappingAttr[]
   ): Promise<ImportFileMapPOJO> {
-    const { Import } = this.tenancy.models(tenantId);
-
     const importFile = await Import.query()
       .findOne('filename', importId)
       .throwIfNotFound();

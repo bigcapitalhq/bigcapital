@@ -5,6 +5,11 @@ import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
 
 export default class Tenant extends BaseModel {
+  upgradeJobId: string;
+  buildJobId: string;
+  initializedAt!: Date | null;
+  seededAt!: Date | null;
+
   /**
    * Table name.
    */
@@ -14,6 +19,7 @@ export default class Tenant extends BaseModel {
 
   /**
    * Timestamps columns.
+   * @returns {string[]}
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
@@ -21,6 +27,7 @@ export default class Tenant extends BaseModel {
 
   /**
    * Virtual attributes.
+   * @returns {string[]}
    */
   static get virtualAttributes() {
     return ['isReady', 'isBuildRunning', 'isUpgradeRunning'];
@@ -28,6 +35,7 @@ export default class Tenant extends BaseModel {
 
   /**
    * Tenant is ready.
+   * @returns {boolean}
    */
   get isReady() {
     return !!(this.initializedAt && this.seededAt);
@@ -35,6 +43,7 @@ export default class Tenant extends BaseModel {
 
   /**
    * Detarimes the tenant whether is build currently running.
+   * @returns {boolean}
    */
   get isBuildRunning() {
     return !!this.buildJobId;
@@ -42,6 +51,7 @@ export default class Tenant extends BaseModel {
 
   /**
    * Detarmines the tenant whether is upgrade currently running.
+   * @returns {boolean}
    */
   get isUpgradeRunning() {
     return !!this.upgradeJobId;
@@ -64,6 +74,7 @@ export default class Tenant extends BaseModel {
       },
     };
   }
+
   /**
    * Creates a new tenant with random organization id.
    */

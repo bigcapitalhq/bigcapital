@@ -4,6 +4,7 @@ import SystemUser from './SystemUser';
 import PasswordReset from './PasswordReset';
 import Invite from './Invite';
 import SystemPlaidItem from './SystemPlaidItem';
+import { Import } from './Import';
 
 export {
   Tenant,
@@ -12,4 +13,5 @@ export {
   PasswordReset,
   Invite,
   SystemPlaidItem,
+  Import,
 };
