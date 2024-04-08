@@ -1,7 +1,22 @@
 import React from 'react';
 import { FormattedMessage as T } from '@/components';
 
-export default [
+export interface IMenuItem {
+  text: React.ReactNode; // since you're using <T id={'...'} /> for internationalization
+  href?: string;
+  disabled?: boolean;
+  label?: React.ReactNode; // Assuming it could also be internationalized or icon etc.
+}
+
+export interface IMenuDivider {
+  divider: true;
+  title?: string; // Assuming dividers might have titles
+}
+
+export type PreferencesMenuItem = IMenuItem | IMenuDivider;
+
+
+const preferencesMenu: PreferencesMenuItem[] = [
   {
     text: <T id={'general'} />,
     disabled: false,
@@ -55,3 +70,5 @@ export default [
     href: '/preferences/sms-message',
   },
 ];
+
+export default preferencesMenu;
