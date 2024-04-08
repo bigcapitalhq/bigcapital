@@ -9,14 +9,11 @@ import {
   getFieldKey,
   aggregate,
   sanitizeSheetData,
+  getMapToPath,
 } from './_utils';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
-
-const CurrencyParsingDTOs = 10;
-
-const getMapToPath = (to: string, group = '') =>
-  group ? `${group}.${to}` : to;
+import { CurrencyParsingDTOs } from './_constants';
 
 @Service()
 export class ImportFileDataTransformer {

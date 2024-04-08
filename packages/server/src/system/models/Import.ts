@@ -1,11 +1,13 @@
-import TenantModel from 'models/TenantModel';
+import { Model, ModelObject } from 'objection';
+import SystemModel from './SystemModel';
 
-export default class Import extends TenantModel {
-  resource!: string;
+export class Import extends SystemModel {
+  resource: string;
+  tenantId: number;
   mapping!: string;
   columns!: string;
-  params!: Record<string, any>;
-  
+  params!: string;
+
   /**
    * Table name.
    */
@@ -24,14 +26,7 @@ export default class Import extends TenantModel {
    * Timestamps columns.
    */
   get timestamps() {
-    return [];
-  }
-
-  /**
-   * Relationship mapping.
-   */
-  static get relationMappings() {
-    return {};
+    return ['createdAt', 'updatedAt'];
   }
 
   /**
@@ -50,7 +45,6 @@ export default class Import extends TenantModel {
     }
   }
 
-
   public get paramsParsed() {
     try {
       return JSON.parse(this.params);
@@ -66,4 +60,27 @@ export default class Import extends TenantModel {
       return [];
     }
   }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    const Tenant = require('system/models/Tenant');
+
+    return {
+      /**
+       * System user may belongs to tenant model.
+       */
+      tenant: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Tenant.default,
+        join: {
+          from: 'imports.tenantId',
+          to: 'tenants.id',
+        },
+      },
+    };
+  }
 }
+
+export type ImportShape = ModelObject<Import>;

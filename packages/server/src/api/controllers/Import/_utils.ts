@@ -4,18 +4,29 @@ import { ServiceError } from '@/exceptions';
 export function allowSheetExtensions(req, file, cb) {
   if (
     file.mimetype !== 'text/csv' &&
-    file.mimetype !== 'application/vnd.ms-excel' && 
-    file.mimetype !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    file.mimetype !== 'application/vnd.ms-excel' &&
+    file.mimetype !==
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   ) {
     cb(new ServiceError('IMPORTED_FILE_EXTENSION_INVALID'));
-
     return;
   }
   cb(null, true);
 }
 
+const storage = Multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/imports');
+  },
+  filename: function (req, file, cb) {
+    // Add the creation timestamp to clean up temp files later.
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix);
+  },
+});
+
 export const uploadImportFile = Multer({
-  dest: './public/imports',
+  storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: allowSheetExtensions,
 });

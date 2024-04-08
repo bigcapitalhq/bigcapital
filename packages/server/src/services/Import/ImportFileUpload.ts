@@ -1,7 +1,8 @@
 import { Inject, Service } from 'typedi';
-import HasTenancyService from '../Tenancy/TenancyService';
 import {
+  deleteImportFile,
   getResourceColumns,
+  readImportFile,
   sanitizeResourceName,
   validateSheetEmpty,
 } from './_utils';
@@ -9,12 +10,10 @@ import ResourceService from '../Resource/ResourceService';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataValidator } from './ImportFileDataValidator';
 import { ImportFileUploadPOJO } from './interfaces';
+import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileUploadService {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private resourceService: ResourceService;
 
@@ -25,11 +24,12 @@ export class ImportFileUploadService {
   private importValidator: ImportFileDataValidator;
 
   /**
-   * Reads the imported file and stores the import file meta under unqiue id.
-   * @param {number} tenantId - Tenant id.
-   * @param {string} resource - Resource name.
-   * @param {string} filePath - File path.
-   * @param {string} fileName - File name.
+   * Imports the specified file for the given resource.
+   * Deletes the file if an error occurs during the import process.
+   * @param {number} tenantId
+   * @param {string} resourceName
+   * @param {string} filename
+   * @param {Record<string, number | string>} params
    * @returns {Promise<ImportFileUploadPOJO>}
    */
   public async import(
@@ -38,8 +38,35 @@ export class ImportFileUploadService {
     filename: string,
     params: Record<string, number | string>
   ): Promise<ImportFileUploadPOJO> {
-    const { Import } = this.tenancy.models(tenantId);
+    console.log(filename, 'filename');
 
+    try {
+      return await this.importUnhandled(
+        tenantId,
+        resourceName,
+        filename,
+        params
+      );
+    } catch (err) {
+      deleteImportFile(filename);
+      throw err;
+    }
+  }
+
+  /**
+   * Reads the imported file and stores the import file meta under unqiue id.
+   * @param {number} tenantId - Tenant id.
+   * @param {string} resource - Resource name.
+   * @param {string} filePath - File path.
+   * @param {string} fileName - File name.
+   * @returns {Promise<ImportFileUploadPOJO>}
+   */
+  public async importUnhandled(
+    tenantId: number,
+    resourceName: string,
+    filename: string,
+    params: Record<string, number | string>
+  ): Promise<ImportFileUploadPOJO> {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.resourceService.getResourceMeta(
       tenantId,
@@ -49,7 +76,7 @@ export class ImportFileUploadService {
     this.importValidator.validateResourceImportable(resourceMeta);
 
     // Reads the imported file into buffer.
-    const buffer = await this.importFileCommon.readImportFile(filename);
+    const buffer = await readImportFile(filename);
 
     // Parse the buffer file to array data.
     const sheetData = this.importFileCommon.parseXlsxSheet(buffer);
@@ -76,6 +103,7 @@ export class ImportFileUploadService {
     const importFile = await Import.query().insert({
       filename,
       resource,
+      tenantId,
       importId: filename,
       columns: coumnsStringified,
       params: paramsStringified,

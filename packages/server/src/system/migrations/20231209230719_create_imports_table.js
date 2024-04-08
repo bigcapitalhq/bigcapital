@@ -7,6 +7,12 @@ exports.up = function (knex) {
     table.json('columns');
     table.json('mapping');
     table.json('params');
+    table
+      .bigInteger('tenant_id')
+      .unsigned()
+      .index()
+      .references('id')
+      .inTable('tenants');
     table.timestamps();
   });
 };

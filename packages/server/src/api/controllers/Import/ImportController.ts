@@ -48,6 +48,7 @@ export class ImportController extends BaseController {
     router.get(
       '/sample',
       [query('resource').exists(), query('format').optional()],
+      this.validationResult,
       this.downloadImportSample.bind(this),
       this.catchServiceErrors
     );

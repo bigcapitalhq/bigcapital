@@ -10,9 +10,9 @@ export class ImportSampleService {
 
   /**
    * Retrieves the sample sheet of the given resource.
-   * @param {number} tenantId 
-   * @param {string} resource 
-   * @param {string} format 
+   * @param {number} tenantId
+   * @param {string} resource
+   * @param {string} format
    * @returns {Buffer | string}
    */
   public sample(

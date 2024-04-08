@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Knex } from 'knex';
+import fs from 'fs/promises';
 import {
   defaultTo,
   upperFirst,
@@ -141,9 +142,9 @@ const parseFieldName = (fieldName: string, field: IModelMetaField) => {
 
 /**
  * Retrieves the unmapped sheet columns.
- * @param columns 
- * @param mapping 
- * @returns 
+ * @param columns
+ * @param mapping
+ * @returns
  */
 export const getUnmappedSheetColumns = (columns, mapping) => {
   return columns.filter(
@@ -420,4 +421,31 @@ export function aggregate(
  */
 export const sanitizeSheetData = (json) => {
   return R.compose(R.map(trimObject))(json);
+};
+
+/**
+ * Returns the path to map a value to based on the 'to' and 'group' parameters.
+ * @param {string} to - The target key to map the value to.
+ * @param {string} group - The group key to nest the target key under.
+ * @returns {string} - The path to map the value to.
+ */
+export const getMapToPath = (to: string, group = '') =>
+  group ? `${group}.${to}` : to;
+
+/**
+ * Deletes the imported file from the storage and database.
+ * @param {string} filename
+ */
+export const deleteImportFile = async (filename: string) => {
+  // Deletes the imported file.
+  await fs.unlink(`public/imports/${filename}`);
+};
+
+/**
+ * Reads the import file.
+ * @param {string} filename
+ * @returns {Promise<Buffer>}
+ */
+export const readImportFile = (filename: string) => {
+  return fs.readFile(`public/imports/${filename}`);
 };
