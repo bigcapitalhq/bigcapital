@@ -48,7 +48,7 @@ export class ImportFileUploadService {
         params
       );
     } catch (err) {
-      // deleteImportFile(filename);
+      deleteImportFile(filename);
       throw err;
     }
   }
