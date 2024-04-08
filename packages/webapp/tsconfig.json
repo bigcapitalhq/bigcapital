@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "strict": true,
+    "resolveJsonModule": true,
     "jsx": "react-jsx",
     "types": ["bun-types"],
     "target": "ESNext",
