@@ -6,7 +6,7 @@ export default function AlertsContainer() {
   return (
     <React.Fragment>
       {registered.map((alert) => (
-        <AlertLazy name={alert.name} Component={alert.component} />
+        <AlertLazy key={alert.id} name={alert.name} Component={alert.component} />
       ))}
     </React.Fragment>
   );
