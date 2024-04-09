@@ -84,10 +84,12 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
+      importHint: "Matches the account name or code."
     },
     paymentReceiveNo: {
       name: 'payment_receive.field.payment_receive_no',
       fieldType: 'text',
+      importHint: "The payment number should be unique."
     },
     statement: {
       name: 'payment_receive.field.statement',
@@ -106,6 +108,7 @@ export default {
           relationModel: 'SaleInvoice',
           relationImportMatch: 'invoiceNo',
           required: true,
+          importHint: "Matches the invoice number."
         },
         paymentAmount: {
           name: 'payment_receive.field.entries.payment_amount',

@@ -2,7 +2,12 @@ import { Inject, Service } from 'typedi';
 import { chain } from 'lodash';
 import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
-import { ERRORS, getSheetColumns, getUnmappedSheetColumns, readImportFile } from './_utils';
+import {
+  ERRORS,
+  getSheetColumns,
+  getUnmappedSheetColumns,
+  readImportFile,
+} from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import ResourceService from '../Resource/ResourceService';
@@ -49,10 +54,9 @@ export class ImportFileProcess {
     const sheetData = this.importCommon.parseXlsxSheet(buffer);
     const header = getSheetColumns(sheetData);
 
-    const resourceFields = this.resource.getResourceFields2(
-      tenantId,
-      importFile.resource
-    );
+    const resource = importFile.resource;
+    const resourceFields = this.resource.getResourceFields2(tenantId, resource);
+
     // Runs the importing operation with ability to return errors that will happen.
     const [successedImport, failedImport, allData] =
       await this.uow.withTransaction(
@@ -91,6 +95,7 @@ export class ImportFileProcess {
     const skippedCount = errorsCount;
 
     return {
+      resource,
       createdCount,
       skippedCount,
       totalCount,

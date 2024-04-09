@@ -44,6 +44,7 @@ export interface ImportFileMapPOJO {
 }
 
 export interface ImportFilePreviewPOJO {
+  resource: string;
   createdCount: number;
   skippedCount: number;
   totalCount: number;

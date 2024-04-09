@@ -68,6 +68,7 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
+      importHint: "Matches the account name or code."
     },
     referenceNo: {
       name: 'expense.field.reference_no',
@@ -101,6 +102,7 @@ export default {
           relationModel: 'Account',
           relationImportMatch: ['name', 'code'],
           required: true,
+          importHint: "Matches the account name or code."
         },
         amount: {
           name: 'expense.field.amount',

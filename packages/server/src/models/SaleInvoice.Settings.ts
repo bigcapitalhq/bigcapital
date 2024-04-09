@@ -142,6 +142,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
+          importHint: "Matches the item name or code."
         },
         rate: {
           name: 'invoice.field.rate',

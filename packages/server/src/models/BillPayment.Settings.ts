@@ -84,6 +84,7 @@ export default {
       name: 'bill_payment.field.payment_number',
       fieldType: 'text',
       unique: true,
+      importHint: "The payment number should be unique."
     },
     paymentAccountId: {
       name: 'bill_payment.field.payment_account',
@@ -91,6 +92,7 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
+      importHint: "Matches the account name or code."
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
@@ -118,6 +120,7 @@ export default {
           relationModel: 'Bill',
           relationImportMatch: 'billNumber',
           required: true,
+          importHint: "Matches the bill number."
         },
         paymentAmount: {
           name: 'bill_payment.field.entries.payment_amount',
