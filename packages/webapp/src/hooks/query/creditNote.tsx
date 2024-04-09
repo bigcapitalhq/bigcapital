@@ -3,7 +3,7 @@ import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import { transformPagination } from '@/utils';
 import useApiRequest from '../useRequest';
-import { useRequestPdf } from '../utils';
+import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
@@ -354,7 +354,5 @@ export function useRefundCreditTransaction(id, props, requestProps) {
  * Retrieve the credit note pdf document data,
  */
 export function usePdfCreditNote(creditNoteId) {
-  return useRequestPdf({
-    url: `sales/credit_notes/${creditNoteId}`,
-  });
+  return useRequestPdf({ url: `sales/credit_notes/${creditNoteId}` });
 }

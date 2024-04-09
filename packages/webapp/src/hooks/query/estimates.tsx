@@ -2,10 +2,9 @@
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
-import { useRequestPdf } from '../utils';
-
 import { transformPagination } from '@/utils';
 import t from './types';
+import { useRequestPdf } from '../useRequestPdf';
 
 const commonInvalidateQueries = (queryClient) => {
   // Invalidate estimates.
