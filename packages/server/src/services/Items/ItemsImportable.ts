@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 import { Importable } from '@/services/Import/Importable';
 import { IItemCreateDTO } from '@/interfaces';
 import { CreateItem } from './CreateItem';
+import { ItemsSampleData } from './constants';
 
 @Service()
 export class ItemsImportable extends Importable {
@@ -28,6 +29,6 @@ export class ItemsImportable extends Importable {
    * Retrieves the sample data of customers used to download sample sheet.
    */
   public sampleData(): any[] {
-    return [];
+    return ItemsSampleData;
   }
 }

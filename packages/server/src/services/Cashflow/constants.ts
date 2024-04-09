@@ -79,27 +79,25 @@ export interface ICashflowTransactionTypeMeta {
 }
 
 export const BankTransactionsSampleData = [
-  [
-    {
-      Amount: '6,410.19',
-      Date: '2024-03-26',
-      Payee: 'MacGyver and Sons',
-      'Reference No.': 'REF-1',
-      Description: 'Commodi quo labore.',
-    },
-    {
-      Amount: '8,914.17',
-      Date: '2024-01-05',
-      Payee: 'Eichmann - Bergnaum',
-      'Reference No.': 'REF-1',
-      Description: 'Quia enim et.',
-    },
-    {
-      Amount: '6,200.88',
-      Date: '2024-02-17',
-      Payee: 'Luettgen, Mraz and Legros',
-      'Reference No.': 'REF-1',
-      Description: 'Occaecati consequuntur cum impedit illo.',
-    },
-  ],
+  {
+    Amount: '6,410.19',
+    Date: '2024-03-26',
+    Payee: 'MacGyver and Sons',
+    'Reference No.': 'REF-1',
+    Description: 'Commodi quo labore.',
+  },
+  {
+    Amount: '8,914.17',
+    Date: '2024-01-05',
+    Payee: 'Eichmann - Bergnaum',
+    'Reference No.': 'REF-1',
+    Description: 'Quia enim et.',
+  },
+  {
+    Amount: '6,200.88',
+    Date: '2024-02-17',
+    Payee: 'Luettgen, Mraz and Legros',
+    'Reference No.': 'REF-1',
+    Description: 'Occaecati consequuntur cum impedit illo.',
+  },
 ];

@@ -53,23 +53,19 @@ export default {
     },
     payee: {
       name: 'Payee',
-      column: 'payee',
       fieldType: 'text',
     },
     description: {
       name: 'Description',
-      column: 'description',
       fieldType: 'text',
     },
     referenceNo: {
       name: 'Reference No.',
-      column: 'reference_no',
       fieldType: 'text',
     },
     amount: {
       name: 'Amount',
-      column: 'Amount',
-      fieldType: 'numeric',
+      fieldType: 'number',
       required: true,
     },
   },
