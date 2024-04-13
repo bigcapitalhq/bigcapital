@@ -38,7 +38,6 @@ import ExchangeRates from '@/api/controllers/ExchangeRates';
 import Media from '@/api/controllers/Media';
 import Ping from '@/api/controllers/Ping';
 import Subscription from '@/api/controllers/Subscription';
-import Licenses from '@/api/controllers/Subscription/Licenses';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
@@ -73,7 +72,6 @@ export default () => {
 
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
-  app.use('/licenses', Container.get(Licenses).router());
   app.use('/subscription', Container.get(Subscription).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
