@@ -1,8 +1,10 @@
 import moment from 'moment';
 import { Model } from 'objection';
 import uniqid from 'uniqid';
+import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
+import PlanSubscription from './Subscriptions/PlanSubscription';
 
 export default class Tenant extends BaseModel {
   upgradeJobId: string;
@@ -58,12 +60,32 @@ export default class Tenant extends BaseModel {
   }
 
   /**
+   * Query modifiers.
+   */
+  static modifiers() {
+    return {
+      subscriptions(builder) {
+        builder.withGraphFetched('subscriptions');
+      },
+    };
+  }
+
+  /**
    * Relations mappings.
    */
   static get relationMappings() {
+    const PlanSubscription = require('./Subscriptions/PlanSubscription');
     const TenantMetadata = require('./TenantMetadata');
 
     return {
+      subscriptions: {
+        relation: Model.HasManyRelation,
+        modelClass: PlanSubscription.default,
+        join: {
+          from: 'tenants.id',
+          to: 'subscription_plan_subscriptions.tenantId',
+        },
+      },
       metadata: {
         relation: Model.HasOneRelation,
         modelClass: TenantMetadata.default,
@@ -125,9 +147,9 @@ export default class Tenant extends BaseModel {
 
   /**
    * Marks the given tenant as upgrading.
-   * @param {number} tenantId
-   * @param {string} upgradeJobId
-   * @returns
+   * @param {number} tenantId 
+   * @param {string} upgradeJobId 
+   * @returns 
    */
   static markAsUpgrading(tenantId, upgradeJobId) {
     return this.query().update({ upgradeJobId }).where({ id: tenantId });
@@ -135,8 +157,8 @@ export default class Tenant extends BaseModel {
 
   /**
    * Markes the given tenant as upgraded.
-   * @param {number} tenantId
-   * @returns
+   * @param {number} tenantId 
+   * @returns 
    */
   static markAsUpgraded(tenantId) {
     return this.query().update({ upgradeJobId: null }).where({ id: tenantId });
