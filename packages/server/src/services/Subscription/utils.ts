@@ -23,11 +23,9 @@ export function configureLemonSqueezy() {
   lemonSqueezySetup({
     apiKey: process.env.LEMONSQUEEZY_API_KEY,
     onError: (error) => {
-      console.log(error);
-      // console.log('LL', error.message);
       // eslint-disable-next-line no-console -- allow logging
-      // console.error(error);
-      // throw new Error(`Lemon Squeezy API error: ${error.message}`);
+      console.error(error);
+      throw new Error(`Lemon Squeezy API error: ${error.message}`);
     },
   });
 }

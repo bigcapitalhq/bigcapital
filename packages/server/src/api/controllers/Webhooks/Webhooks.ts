@@ -29,7 +29,7 @@ export class Webhooks extends BaseController {
   }
 
   /**
-   * Listens to LemonSqueezy webhooks events.
+   * Listens to Lemon Squeezy webhooks events.
    * @param {Request} req
    * @param {Response} res
    * @returns {Response}
