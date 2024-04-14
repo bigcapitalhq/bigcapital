@@ -31,5 +31,4 @@ export default ({ agenda }: { agenda: Agenda }) => {
   agenda.start().then(() => {
     agenda.every('1 hours', 'delete-expired-imported-files', {});
   });
-  agenda.start();
 };

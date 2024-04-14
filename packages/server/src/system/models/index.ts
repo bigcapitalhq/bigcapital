@@ -1,6 +1,5 @@
 import Plan from './Subscriptions/Plan';
 import PlanSubscription from './Subscriptions/PlanSubscription';
-import License from './Subscriptions/License';
 import Tenant from './Tenant';
 import TenantMetadata from './TenantMetadata';
 import SystemUser from './SystemUser';
@@ -12,7 +11,6 @@ import { Import } from './Import';
 export {
   Plan,
   PlanSubscription,
-  License,
   Tenant,
   TenantMetadata,
   SystemUser,

@@ -1,5 +1,5 @@
 import { getPrice } from '@lemonsqueezy/lemonsqueezy.js';
-import { ServiceError } from '@/exceptions';
+import config from '@/config';
 import { Inject, Service } from 'typedi';
 import {
   compareSignatures,
@@ -29,10 +29,10 @@ export class LemonSqueezyWebhooks {
   ): Promise<void> {
     configureLemonSqueezy();
 
-    if (!process.env.LEMONSQUEEZY_WEBHOOK_SECRET) {
-      throw new ServiceError('Lemon Squeezy Webhook Secret not set in .env');
+    if (!config.lemonSqueezy.webhookSecret) {
+      throw new Error('Lemon Squeezy Webhook Secret not set in .env');
     }
-    const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
+    const secret = config.lemonSqueezy.webhookSecret;
     const hmacSignature = createHmacSignature(secret, rawData);
 
     if (!compareSignatures(hmacSignature, signature)) {
@@ -42,14 +42,15 @@ export class LemonSqueezyWebhooks {
     if (webhookHasMeta(data)) {
       // Non-blocking call to process the webhook event.
       void this.processWebhookEvent(data);
+    } else {
+      throw new Error('Data invalid');
     }
-    throw new Error('Data invalid');
   }
 
   /**
    * This action will process a webhook event in the database.
    */
-  async processWebhookEvent(eventBody) {
+  private async processWebhookEvent(eventBody) {
     let processingError = '';
     const webhookEvent = eventBody.meta.event_name;
 
@@ -88,6 +89,7 @@ export class LemonSqueezyWebhooks {
             ? priceData.data?.data.attributes.unit_price_decimal
             : priceData.data?.data.attributes.unit_price;
 
+          // Create a new subscription of the tenant.
           if (webhookEvent === 'subscription_created') {
             await this.subscriptionService.newSubscribtion(
               tenantId,
