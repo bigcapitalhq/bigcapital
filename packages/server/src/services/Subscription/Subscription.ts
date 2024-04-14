@@ -1,37 +1,27 @@
-import { Inject } from 'typedi';
-import { Tenant, Plan } from '@/system/models';
-import { IPaymentContext } from '@/interfaces';
+import { Service } from 'typedi';
 import { NotAllowedChangeSubscriptionPlan } from '@/exceptions';
+import { Plan, Tenant } from '@/system/models';
 
-export default class Subscription<PaymentModel> {
-  paymentContext: IPaymentContext | null;
-
-  @Inject('logger')
-  logger: any;
-
-  /**
-   * Constructor method.
-   * @param {IPaymentContext}
-   */
-  constructor(payment?: IPaymentContext) {
-    this.paymentContext = payment;
-  }
-
+@Service()
+export class Subscription {
   /**
    * Give the tenant a new subscription.
-   * @param {Tenant} tenant
-   * @param {Plan} plan
+   * @param {number} tenantId - Tenant id.
+   * @param {string} planSlug - Plan slug.
    * @param {string} invoiceInterval
    * @param {number} invoicePeriod
    * @param {string} subscriptionSlug
    */
-  protected async newSubscribtion(
-    tenant,
-    plan,
+  public async newSubscribtion(
+    tenantId: number,
+    planSlug: string,
     invoiceInterval: string,
     invoicePeriod: number,
     subscriptionSlug: string = 'main'
   ) {
+    const tenant = await Tenant.query().findById(tenantId).throwIfNotFound();
+    const plan = await Plan.query().findOne('slug', planSlug).throwIfNotFound();
+
     const subscription = await tenant
       .$relatedQuery('subscriptions')
       .modify('subscriptionBySlug', subscriptionSlug)
@@ -54,27 +44,5 @@ export default class Subscription<PaymentModel> {
         subscriptionSlug
       );
     }
-  }
-
-  /**
-   * Subscripe to the given plan.
-   * @param {Plan} plan
-   * @throws {NotAllowedChangeSubscriptionPlan}
-   */
-  public async subscribe(
-    tenant: Tenant,
-    plan: Plan,
-    paymentModel?: PaymentModel,
-    subscriptionSlug: string = 'main'
-  ) {
-    await this.paymentContext.makePayment(paymentModel, plan);
-
-    return this.newSubscribtion(
-      tenant,
-      plan,
-      plan.invoiceInterval,
-      plan.invoicePeriod,
-      subscriptionSlug
-    );
   }
 }

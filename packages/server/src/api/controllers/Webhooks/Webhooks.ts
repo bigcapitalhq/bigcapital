@@ -3,6 +3,7 @@ import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
 import BaseController from '../BaseController';
+import { LemonSqueezyWebhooks } from '@/services/Subscription/LemonSqueezyWebhooks';
 import { PlaidWebhookTenantBootMiddleware } from '@/services/Banking/Plaid/PlaidWebhookTenantBootMiddleware';
 
 @Service()
@@ -10,16 +11,37 @@ export class Webhooks extends BaseController {
   @Inject()
   private plaidApp: PlaidApplication;
 
+  @Inject()
+  private lemonWebhooksService: LemonSqueezyWebhooks;
+
   /**
    * Router constructor.
    */
   router() {
     const router = Router();
 
-    router.use(PlaidWebhookTenantBootMiddleware);
+    router.use('/plaid', PlaidWebhookTenantBootMiddleware);
     router.post('/plaid', this.plaidWebhooks.bind(this));
 
+    router.post('/lemon', this.lemonWebhooks.bind(this));
+
     return router;
+  }
+
+  /**
+   * Listens to LemonSqueezy webhooks events.
+   * @param {Request} req
+   * @param {Response} res
+   * @returns {Response}
+   */
+  public async lemonWebhooks(req: Request, res: Response) {
+    const data = req.body;
+    const signature = req.headers['x-signature'] ?? '';
+    const rawBody = req.rawBody;
+
+    await this.lemonWebhooksService.handlePostWebhook(rawBody, data, signature);
+
+    return res.status(200).send();
   }
 
   /**

@@ -147,9 +147,9 @@ export default class Tenant extends BaseModel {
 
   /**
    * Marks the given tenant as upgrading.
-   * @param {number} tenantId 
-   * @param {string} upgradeJobId 
-   * @returns 
+   * @param {number} tenantId
+   * @param {string} upgradeJobId
+   * @returns
    */
   static markAsUpgrading(tenantId, upgradeJobId) {
     return this.query().update({ upgradeJobId }).where({ id: tenantId });
@@ -157,8 +157,8 @@ export default class Tenant extends BaseModel {
 
   /**
    * Markes the given tenant as upgraded.
-   * @param {number} tenantId 
-   * @returns 
+   * @param {number} tenantId
+   * @returns
    */
   static markAsUpgraded(tenantId) {
     return this.query().update({ upgradeJobId: null }).where({ id: tenantId });
@@ -184,5 +184,45 @@ export default class Tenant extends BaseModel {
    */
   saveMetadata(metadata) {
     return Tenant.saveMetadata(this.id, metadata);
+  }
+
+  /**
+   *
+   * @param {*} planId
+   * @param {*} invoiceInterval
+   * @param {*} invoicePeriod
+   * @param {*} subscriptionSlug
+   * @returns
+   */
+  public newSubscription(planId, invoiceInterval, invoicePeriod, subscriptionSlug) {
+    return Tenant.newSubscription(
+      this.id,
+      planId,
+      invoiceInterval,
+      invoicePeriod,
+      subscriptionSlug
+    );
+    );
+  }
+
+  /**
+   * Records a new subscription for the associated tenant.
+   */
+  static newSubscription(
+    tenantId: number,
+    planId: number,
+    invoiceInterval: string,
+    invoicePeriod: number,
+    subscriptionSlug: string
+  ) {
+    const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
+
+    return PlanSubscription.query().insert({
+      tenantId,
+      slug: subscriptionSlug,
+      planId,
+      startsAt: period.getStartDate(),
+      endsAt: period.getEndDate(),
+    });
   }
 }

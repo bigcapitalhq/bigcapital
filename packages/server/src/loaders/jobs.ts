@@ -2,8 +2,6 @@ import Agenda from 'agenda';
 import ResetPasswordMailJob from 'jobs/ResetPasswordMail';
 import ComputeItemCost from 'jobs/ComputeItemCost';
 import RewriteInvoicesJournalEntries from 'jobs/WriteInvoicesJEntries';
-import SendLicenseViaPhoneJob from 'jobs/SendLicensePhone';
-import SendLicenseViaEmailJob from 'jobs/SendLicenseEmail';
 import SendSMSNotificationSubscribeEnd from 'jobs/SMSNotificationSubscribeEnd';
 import SendSMSNotificationTrialEnd from 'jobs/SMSNotificationTrialEnd';
 import SendMailNotificationSubscribeEnd from 'jobs/MailNotificationSubscribeEnd';
@@ -22,8 +20,6 @@ import { ImportDeleteExpiredFilesJobs } from '@/services/Import/jobs/ImportDelet
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);
   new UserInviteMailJob(agenda);
-  new SendLicenseViaEmailJob(agenda);
-  new SendLicenseViaPhoneJob(agenda);
   new ComputeItemCost(agenda);
   new RewriteInvoicesJournalEntries(agenda);
   new OrganizationSetupJob(agenda);

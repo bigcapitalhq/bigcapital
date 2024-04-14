@@ -1,6 +1,6 @@
 import { getPrice } from '@lemonsqueezy/lemonsqueezy.js';
 import { ServiceError } from '@/exceptions';
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import {
   compareSignatures,
   configureLemonSqueezy,
@@ -9,40 +9,41 @@ import {
   webhookHasMeta,
 } from './utils';
 import { Plan } from '@/system/models';
+import { Subscription } from './Subscription';
 
 @Service()
-export class LemonWebhooks {
+export class LemonSqueezyWebhooks {
+  @Inject()
+  private subscriptionService: Subscription;
+
   /**
-   *
+   * handle the LemonSqueezy webhooks.
    * @param {string} rawBody
    * @param {string} signature
-   * @returns
+   * @returns {Promise<void>}
    */
   public async handlePostWebhook(
     rawData: any,
     data: Record<string, any>,
     signature: string
-  ) {
+  ): Promise<void> {
     configureLemonSqueezy();
 
     if (!process.env.LEMONSQUEEZY_WEBHOOK_SECRET) {
-      return new ServiceError('Lemon Squeezy Webhook Secret not set in .env');
+      throw new ServiceError('Lemon Squeezy Webhook Secret not set in .env');
     }
     const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
     const hmacSignature = createHmacSignature(secret, rawData);
 
     if (!compareSignatures(hmacSignature, signature)) {
-      console.log('invalid');
-      return new Error('Invalid signature', { status: 400 });
+      throw new Error('Invalid signature');
     }
     // Type guard to check if the object has a 'meta' property.
     if (webhookHasMeta(data)) {
       // Non-blocking call to process the webhook event.
       void this.processWebhookEvent(data);
-
-      return true;
     }
-    return new Error('Data invalid', { status: 400 });
+    throw new Error('Data invalid');
   }
 
   /**
@@ -51,6 +52,9 @@ export class LemonWebhooks {
   async processWebhookEvent(eventBody) {
     let processingError = '';
     const webhookEvent = eventBody.meta.event_name;
+
+    const userId = eventBody.meta.custom_data?.user_id;
+    const tenantId = eventBody.meta.custom_data?.tenant_id;
 
     if (!webhookHasMeta(eventBody)) {
       processingError = "Event body is missing the 'meta' property.";
@@ -78,14 +82,20 @@ export class LemonWebhooks {
           if (priceData.error) {
             processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.`;
           }
-
           const isUsageBased =
             attributes.first_subscription_item.is_usage_based;
           const price = isUsageBased
             ? priceData.data?.data.attributes.unit_price_decimal
             : priceData.data?.data.attributes.unit_price;
 
-          const newSubscription = {};
+          if (webhookEvent === 'subscription_created') {
+            await this.subscriptionService.newSubscribtion(
+              tenantId,
+              'pro-yearly',
+              'year',
+              1
+            );
+          }
         }
       } else if (webhookEvent.startsWith('order_')) {
         // Save orders; eventBody is a "Order"
