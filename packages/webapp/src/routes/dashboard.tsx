@@ -1093,13 +1093,6 @@ export const getDashboardRoutes = () => [
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
 
-  // Subscription billing.
-  {
-    path: `/billing`,
-    component: lazy(() => import('@/containers/Subscriptions/BillingForm')),
-    breadcrumb: intl.get('new_billing'),
-    subscriptionInactive: [SUBSCRIPTION_TYPE.MAIN],
-  },
   // Payment modes.
   {
     path: `/payment-mades/import`,

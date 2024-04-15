@@ -1,42 +1,25 @@
 // @ts-nocheck
-import React from 'react';
-import { Field } from 'formik';
+import { T } from '@/components';
 
-import { T, SubscriptionPlans } from '@/components';
-
-import { compose } from '@/utils';
+import { SubscriptionPlans } from './SubscriptionPlan';
 import withPlans from '../../Subscriptions/withPlans';
+import { compose } from '@/utils';
 
 /**
  * Billing plans.
  */
-function SubscriptionPlansSection({ plans }) {
+function SubscriptionPlansSectionRoot({ plans }) {
   return (
-    <section class="billing-plans__section">
-      <h1 class="title">
-        <T id={'setup.plans.select_plan.title'} />
-      </h1>
-      <div class="description">
-        <p className="paragraph">
-          <T id={'setup.plans.select_plan.description'} />
-        </p>
-      </div>
+    <section>
+      <p className="paragraph" style={{ marginBottom: '1.2rem' }}>
+        <T id={'setup.plans.select_plan.description'} />
+      </p>
 
-      <Field name={'plan_slug'}>
-        {({ form: { setFieldValue }, field: { value } }) => (
-          <SubscriptionPlans
-            value={value}
-            plans={plans}
-            onSelect={(value) => {
-              setFieldValue('plan_slug', value);
-            }}
-          />
-        )}
-      </Field>
+      <SubscriptionPlans plans={plans} />
     </section>
   );
 }
 
-export default compose(withPlans(({ plans }) => ({ plans })))(
-  SubscriptionPlansSection,
-);
+export const SubscriptionPlansSection = compose(
+  withPlans(({ plans }) => ({ plans })),
+)(SubscriptionPlansSectionRoot);

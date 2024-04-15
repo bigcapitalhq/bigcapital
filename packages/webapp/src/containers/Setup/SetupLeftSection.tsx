@@ -54,7 +54,6 @@ function SetupLeftSectionHeader() {
       <p className={'content__text'}>
         <T id={'setup.left_side.description'} />
       </p>
-      <div class="content__divider"></div>
 
       <div className={'content__organization'}>
         <span class="signout">

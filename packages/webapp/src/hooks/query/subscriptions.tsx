@@ -45,7 +45,7 @@ export const useOrganizationSubscriptions = (props) => {
 };
 
 /**
- * Fetches the checkout url of the lemon squeezy.
+ * Fetches the checkout url of the Lemon Squeezy.
  */
 export const useGetLemonSqueezyCheckout = (props = {}) => {
   const apiRequest = useApiRequest();
