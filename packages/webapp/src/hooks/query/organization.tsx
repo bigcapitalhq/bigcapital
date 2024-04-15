@@ -1,11 +1,11 @@
 // @ts-nocheck
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';
+import { omit } from 'lodash';
 import t from './types';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
 import { useSetOrganizations, useSetSubscriptions } from '../state';
-import { omit } from 'lodash';
 
 /**
  * Retrieve organizations of the authenticated user.

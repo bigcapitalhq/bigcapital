@@ -7,6 +7,7 @@ import SetupWizardContent from './SetupWizardContent';
 import withOrganization from '@/containers/Organization/withOrganization';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import withSetupWizard from '@/store/organizations/withSetupWizard';
+import withSubscriptions from '../Subscriptions/withSubscriptions';
 
 import { compose } from '@/utils';
 
