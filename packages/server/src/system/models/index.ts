@@ -1,3 +1,5 @@
+import Plan from './Subscriptions/Plan';
+import PlanSubscription from './Subscriptions/PlanSubscription';
 import Tenant from './Tenant';
 import TenantMetadata from './TenantMetadata';
 import SystemUser from './SystemUser';
@@ -7,6 +9,8 @@ import SystemPlaidItem from './SystemPlaidItem';
 import { Import } from './Import';
 
 export {
+  Plan,
+  PlanSubscription,
   Tenant,
   TenantMetadata,
   SystemUser,

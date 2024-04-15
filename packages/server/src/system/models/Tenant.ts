@@ -1,8 +1,10 @@
 import moment from 'moment';
 import { Model } from 'objection';
 import uniqid from 'uniqid';
+import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 import BaseModel from 'models/Model';
 import TenantMetadata from './TenantMetadata';
+import PlanSubscription from './Subscriptions/PlanSubscription';
 
 export default class Tenant extends BaseModel {
   upgradeJobId: string;
@@ -58,12 +60,32 @@ export default class Tenant extends BaseModel {
   }
 
   /**
+   * Query modifiers.
+   */
+  static modifiers() {
+    return {
+      subscriptions(builder) {
+        builder.withGraphFetched('subscriptions');
+      },
+    };
+  }
+
+  /**
    * Relations mappings.
    */
   static get relationMappings() {
+    const PlanSubscription = require('./Subscriptions/PlanSubscription');
     const TenantMetadata = require('./TenantMetadata');
 
     return {
+      subscriptions: {
+        relation: Model.HasManyRelation,
+        modelClass: PlanSubscription.default,
+        join: {
+          from: 'tenants.id',
+          to: 'subscription_plan_subscriptions.tenantId',
+        },
+      },
       metadata: {
         relation: Model.HasOneRelation,
         modelClass: TenantMetadata.default,
@@ -162,5 +184,45 @@ export default class Tenant extends BaseModel {
    */
   saveMetadata(metadata) {
     return Tenant.saveMetadata(this.id, metadata);
+  }
+
+  /**
+   *
+   * @param {*} planId
+   * @param {*} invoiceInterval
+   * @param {*} invoicePeriod
+   * @param {*} subscriptionSlug
+   * @returns
+   */
+  public newSubscription(planId, invoiceInterval, invoicePeriod, subscriptionSlug) {
+    return Tenant.newSubscription(
+      this.id,
+      planId,
+      invoiceInterval,
+      invoicePeriod,
+      subscriptionSlug
+    );
+    );
+  }
+
+  /**
+   * Records a new subscription for the associated tenant.
+   */
+  static newSubscription(
+    tenantId: number,
+    planId: number,
+    invoiceInterval: string,
+    invoicePeriod: number,
+    subscriptionSlug: string
+  ) {
+    const period = new SubscriptionPeriod(invoiceInterval, invoicePeriod);
+
+    return PlanSubscription.query().insert({
+      tenantId,
+      slug: subscriptionSlug,
+      planId,
+      startsAt: period.getStartDate(),
+      endsAt: period.getEndDate(),
+    });
   }
 }

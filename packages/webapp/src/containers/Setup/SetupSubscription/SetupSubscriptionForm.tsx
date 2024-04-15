@@ -1,17 +1,28 @@
 // @ts-nocheck
-import React from 'react';
-
+import { Form } from 'formik';
 import SubscriptionPlansSection from './SubscriptionPlansSection';
 import SubscriptionPeriodsSection from './SubscriptionPeriodsSection';
-import SubscriptionPaymentMethodsSection from './SubscriptionPaymentsMethodsSection';
+import { Button, Intent } from '@blueprintjs/core';
+import { T } from '@/components';
 
+function StepSubscriptionActions() {
+  return (
+    <div>
+      <Button type="submit" intent={Intent.PRIMARY} large={true}>
+        <T id={'submit_voucher'} />
+      </Button>
+    </div>
+  );
+}
 
 export default function SetupSubscriptionForm() {
   return (
-    <div class="billing-plans">
-      <SubscriptionPlansSection />
-      <SubscriptionPeriodsSection />
-      <SubscriptionPaymentMethodsSection />
-    </div>
+    <Form>
+      <div class="billing-plans">
+        <SubscriptionPlansSection />
+        <SubscriptionPeriodsSection />
+        <StepSubscriptionActions />
+      </div>
+    </Form>
   );
 }
