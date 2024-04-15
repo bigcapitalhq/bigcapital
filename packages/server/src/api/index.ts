@@ -37,7 +37,7 @@ import Resources from './controllers/Resources';
 import ExchangeRates from '@/api/controllers/ExchangeRates';
 import Media from '@/api/controllers/Media';
 import Ping from '@/api/controllers/Ping';
-import Subscription from '@/api/controllers/Subscription';
+import { SubscriptionController } from '@/api/controllers/Subscription';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
@@ -72,7 +72,7 @@ export default () => {
 
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
-  app.use('/subscription', Container.get(Subscription).router());
+  app.use('/subscription', Container.get(SubscriptionController).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
@@ -140,12 +140,10 @@ export default () => {
   dashboard.use('/warehouses', Container.get(WarehousesController).router());
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
-
   dashboard.use('/import', Container.get(ImportController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
-
   dashboard.use('/', Container.get(WarehousesItemController).router());
 
   dashboard.use('/dashboard', Container.get(DashboardController).router());

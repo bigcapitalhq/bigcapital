@@ -49,16 +49,17 @@ export class LemonSqueezyWebhooks {
 
   /**
    * This action will process a webhook event in the database.
+   * @param {unknown} eventBody - 
+   * @returns {Promise<void>}
    */
-  private async processWebhookEvent(eventBody) {
-    let processingError = '';
+  private async processWebhookEvent(eventBody): Promise<void> {
     const webhookEvent = eventBody.meta.event_name;
 
     const userId = eventBody.meta.custom_data?.user_id;
     const tenantId = eventBody.meta.custom_data?.tenant_id;
 
     if (!webhookHasMeta(eventBody)) {
-      processingError = "Event body is missing the 'meta' property.";
+      throw new Error("Event body is missing the 'meta' property.");
     } else if (webhookHasData(eventBody)) {
       if (webhookEvent.startsWith('subscription_payment_')) {
         // Save subscription invoices; eventBody is a SubscriptionInvoice
@@ -72,7 +73,7 @@ export class LemonSqueezyWebhooks {
         const plan = await Plan.query().findOne('slug', 'essentials-yearly');
 
         if (!plan) {
-          processingError = `Plan with variantId ${variantId} not found.`;
+          throw new Error(`Plan with variantId ${variantId} not found.`);
         } else {
           // Update the subscription in the database.
           const priceId = attributes.first_subscription_item.price_id;
@@ -81,7 +82,9 @@ export class LemonSqueezyWebhooks {
           const priceData = await getPrice(priceId);
 
           if (priceData.error) {
-            processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.`;
+            throw new Error(
+              `Failed to get the price data for the subscription ${eventBody.data.id}.`
+            );
           }
           const isUsageBased =
             attributes.first_subscription_item.is_usage_based;
