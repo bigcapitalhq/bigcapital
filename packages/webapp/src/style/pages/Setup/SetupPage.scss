@@ -16,7 +16,7 @@
       max-width: 600px;
       min-width: 600px;
 
-      @media only screen and (max-width: 1200px) {
+      @media only screen and (max-width: 1500px) {
         min-width: 500px;
         max-width: 500px;
       }
@@ -54,7 +54,7 @@
     top: 0;
     width: 600px;
 
-    @media only screen and (max-width: 1200px) {
+    @media only screen and (max-width: 1500px) {
       width: 500px;
     }
     @media only screen and (max-width: 1024px) {
@@ -99,6 +99,7 @@
       &__organization {
         font-size: 16px;
         opacity: 0.75;
+        margin-top: 2.4rem;
 
         span>a {
           text-decoration: underline;
@@ -108,17 +109,8 @@
         }
       }
 
-      &__divider {
-        height: 1px;
-        width: 60%;
-        background: rgba(255, 255, 255, 0.25);
-        margin: 18px 0;
-      }
-
       &__footer {
         margin-top: auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.25);
-        padding-top: 20px;
       }
 
       &__links {

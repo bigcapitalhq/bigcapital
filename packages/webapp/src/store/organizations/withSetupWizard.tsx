@@ -26,7 +26,7 @@ export default (mapState) => {
     const mapped = {
       ...condits,
       setupStepId: setupStep?.step,
-      setupStepIndex: scenarios.indexOf(setupStep) + 1,
+      setupStepIndex: scenarios.indexOf(setupStep),
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
