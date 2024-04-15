@@ -30,6 +30,7 @@ export default class CreateVendorCredit extends BaseVendorCredit {
    * Creates a new vendor credit.
    * @param {number} tenantId -
    * @param {IVendorCreditCreateDTO} vendorCreditCreateDTO -
+   * @param {Knex.Transaction} trx - 
    */
   public newVendorCredit = async (
     tenantId: number,
