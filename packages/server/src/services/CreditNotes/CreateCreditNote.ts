@@ -4,7 +4,6 @@ import {
   ICreditNoteCreatedPayload,
   ICreditNoteCreatingPayload,
   ICreditNoteNewDTO,
-  ISystemUser,
 } from '@/interfaces';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import ItemsEntriesService from '@/services/Items/ItemsEntriesService';

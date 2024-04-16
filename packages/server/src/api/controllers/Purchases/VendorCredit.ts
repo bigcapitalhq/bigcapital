@@ -297,8 +297,7 @@ export default class VendorCreditController extends BaseController {
     try {
       const vendorCredit = await this.createVendorCreditService.newVendorCredit(
         tenantId,
-        vendorCreditCreateDTO,
-        user
+        vendorCreditCreateDTO
       );
 
       return res.status(200).send({
