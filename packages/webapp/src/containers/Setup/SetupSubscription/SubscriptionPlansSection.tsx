@@ -4,6 +4,7 @@ import { T } from '@/components';
 import { SubscriptionPlans } from './SubscriptionPlan';
 import withPlans from '../../Subscriptions/withPlans';
 import { compose } from '@/utils';
+import { Callout, Intent } from '@blueprintjs/core';
 
 /**
  * Billing plans.
@@ -11,10 +12,14 @@ import { compose } from '@/utils';
 function SubscriptionPlansSectionRoot({ plans }) {
   return (
     <section>
-      <p className="paragraph" style={{ marginBottom: '1.2rem' }}>
-        <T id={'setup.plans.select_plan.description'} />
-      </p>
-
+      <Callout
+        style={{ marginBottom: '1.5rem' }}
+        icon={null}
+        title={'Early Adaptors Plan'}
+      >
+        We're looking for 200 early adaptors, when you subscribe you'll get
+        the full features and unlimited users for a year regardless of the subscribed plan.
+      </Callout>
       <SubscriptionPlans plans={plans} />
     </section>
   );
