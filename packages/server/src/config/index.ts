@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
-import { toInteger } from 'lodash';
+import { defaultTo, toInteger } from 'lodash';
 import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
 
 dotenv.config();
@@ -207,7 +207,7 @@ module.exports = {
    * NOTE: DO NOT CHANGE THIS OPTION OR ADD THIS ENV VAR.
    */
   hostedOnBigcapitalCloud: parseBoolean(
-    process.env.HOSTED_ON_BIGCAPITAL_CLOUD,
+    defaultTo(process.env.HOSTED_ON_BIGCAPITAL_CLOUD, false),
     false
   ),
 };
