@@ -1,10 +1,10 @@
-import moment from 'moment';
+import moment, { type unitOfTime } from 'moment';
 
 export default class SubscriptionPeriod {
-  start: Date;
-  end: Date;
-  interval: string;
-  count: number;
+  private start: Date;
+  private end: Date;
+  private interval: string;
+  private count: number;
 
   /**
    * Constructor method.
@@ -12,7 +12,11 @@ export default class SubscriptionPeriod {
    * @param {number} count -
    * @param {Date} start -
    */
-  constructor(interval: string = 'month', count: number, start?: Date) {
+  constructor(
+    interval: unitOfTime.DurationConstructor = 'month',
+    count: number,
+    start?: Date
+  ) {
     this.interval = interval;
     this.count = count;
     this.start = start;
@@ -20,7 +24,11 @@ export default class SubscriptionPeriod {
     if (!start) {
       this.start = moment().toDate();
     }
-    this.end = moment(start).add(count, interval).toDate();
+    if (count === Infinity) {
+      this.end = null;
+    } else {
+      this.end = moment(start).add(count, interval).toDate();
+    }
   }
 
   getStartDate() {
@@ -36,6 +44,6 @@ export default class SubscriptionPeriod {
   }
 
   getIntervalCount() {
-    return this.interval;
+    return this.count;
   }
 }

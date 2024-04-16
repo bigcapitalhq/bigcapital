@@ -90,6 +90,8 @@ import { SaleReceiptMarkClosedOnMailSentSubcriber } from '@/services/Sales/Recei
 import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/subscribers/SaleEstimateMarkApprovedOnMailSent';
 import { DeleteCashflowTransactionOnUncategorize } from '@/services/Cashflow/subscribers/DeleteCashflowTransactionOnUncategorize';
 import { PreventDeleteTransactionOnDelete } from '@/services/Cashflow/subscribers/PreventDeleteTransactionsOnDelete';
+import { SubscribeFreeOnSignupCommunity } from '@/services/Subscription/events/SubscribeFreeOnSignupCommunity';
+
 
 export default () => {
   return new EventPublisher();
@@ -219,5 +221,7 @@ export const susbcribers = () => {
     // Cashflow
     DeleteCashflowTransactionOnUncategorize,
     PreventDeleteTransactionOnDelete,
+
+    SubscribeFreeOnSignupCommunity
   ];
 };

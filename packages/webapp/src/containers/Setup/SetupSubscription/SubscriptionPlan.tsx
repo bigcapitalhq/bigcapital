@@ -26,7 +26,7 @@ function SubscriptionPricing({
     useGetLemonSqueezyCheckout();
 
   const handleClick = () => {
-    getLemonCheckout({ variantId: '337977' })
+    getLemonCheckout({ variantId: '338516' })
       .then((res) => {
         const checkoutUrl = res.data.data.attributes.url;
         window.LemonSqueezy.Url.Open(checkoutUrl);

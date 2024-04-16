@@ -201,4 +201,13 @@ module.exports = {
     storeId: process.env.LEMONSQUEEZY_STORE_ID,
     webhookSecret: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
   },
+
+  /**
+   * Bigcapital (Cloud).
+   * NOTE: DO NOT CHANGE THIS OPTION OR ADD THIS ENV VAR.
+   */
+  hostedOnBigcapitalCloud: parseBoolean(
+    process.env.HOSTED_ON_BIGCAPITAL_CLOUD,
+    false
+  ),
 };

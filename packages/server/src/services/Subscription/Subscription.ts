@@ -15,12 +15,16 @@ export class Subscription {
   public async newSubscribtion(
     tenantId: number,
     planSlug: string,
-    invoiceInterval: string,
-    invoicePeriod: number,
     subscriptionSlug: string = 'main'
   ) {
     const tenant = await Tenant.query().findById(tenantId).throwIfNotFound();
     const plan = await Plan.query().findOne('slug', planSlug).throwIfNotFound();
+
+    const isFree = plan.price === 0;
+
+    // Take the invoice interval and period from the given plan.
+    const invoiceInterval = plan.invoiceInternal;
+    const invoicePeriod = isFree ? Infinity : plan.invoicePeriod;
 
     const subscription = await tenant
       .$relatedQuery('subscriptions')

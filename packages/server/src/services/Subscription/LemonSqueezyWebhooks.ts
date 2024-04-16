@@ -96,9 +96,7 @@ export class LemonSqueezyWebhooks {
           if (webhookEvent === 'subscription_created') {
             await this.subscriptionService.newSubscribtion(
               tenantId,
-              'pro-yearly',
-              'year',
-              1
+              'early-adaptor',
             );
           }
         }
