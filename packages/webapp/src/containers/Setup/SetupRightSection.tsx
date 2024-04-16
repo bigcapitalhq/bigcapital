@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from 'react';
 
-import SetupDialogs from './SetupDialogs';
 import SetupWizardContent from './SetupWizardContent';
 
 import withOrganization from '@/containers/Organization/withOrganization';
@@ -30,7 +29,6 @@ function SetupRightSection({
   return (
     <section className={'setup-page__right-section'}>
       <SetupWizardContent stepId={setupStepId} stepIndex={setupStepIndex} />
-      <SetupDialogs />
     </section>
   );
 }

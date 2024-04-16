@@ -211,7 +211,7 @@ export default class Tenant extends BaseModel {
   static newSubscription(
     tenantId: number,
     planId: number,
-    invoiceInterval: string,
+    invoiceInterval: 'month' | 'year',
     invoicePeriod: number,
     subscriptionSlug: string
   ) {
