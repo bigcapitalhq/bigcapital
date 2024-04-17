@@ -21,16 +21,12 @@ services:
     depends_on:
       - server
       - webapp
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
 
   webapp:
     container_name: bigcapital-webapp
     image: ghcr.io/bigcapitalhq/webapp:latest
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
 
   server:
     container_name: bigcapital-server
@@ -45,9 +41,7 @@ services:
       - mysql
       - mongo
       - redis
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -92,6 +86,12 @@ services:
       - GOTENBERG_URL=${GOTENBERG_URL}
       - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
 
+      # Lemon Squeez
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+
   database_migration:
     container_name: bigcapital-database-migration
     build:
@@ -111,9 +111,7 @@ services:
 
   mysql:
     container_name: bigcapital-mysql
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build:
       context: ./docker/mariadb
     environment:
@@ -128,9 +126,7 @@ services:
 
   mongo:
     container_name: bigcapital-mongo
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build: ./docker/mongo
     expose:
       - '27017'
@@ -139,9 +135,7 @@ services:
 
   redis:
     container_name: bigcapital-redis
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build:
       context: ./docker/redis
     expose:
