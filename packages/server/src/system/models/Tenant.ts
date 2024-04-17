@@ -194,14 +194,18 @@ export default class Tenant extends BaseModel {
    * @param {*} subscriptionSlug
    * @returns
    */
-  public newSubscription(planId, invoiceInterval, invoicePeriod, subscriptionSlug) {
+  public newSubscription(
+    planId,
+    invoiceInterval,
+    invoicePeriod,
+    subscriptionSlug
+  ) {
     return Tenant.newSubscription(
       this.id,
       planId,
       invoiceInterval,
       invoicePeriod,
       subscriptionSlug
-    );
     );
   }
 
