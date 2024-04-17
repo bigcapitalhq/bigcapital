@@ -38,6 +38,9 @@ importers:
       '@hapi/boom':
         specifier: ^7.4.3
         version: 7.4.11
+      '@lemonsqueezy/lemonsqueezy.js':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@types/i18n':
         specifier: ^0.8.7
         version: 0.8.8
@@ -4621,6 +4624,11 @@ packages:
 
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
+    dev: false
+
+  /@lemonsqueezy/lemonsqueezy.js@2.2.0:
+    resolution: {integrity: sha512-DsZTeowehSLTESUZ6xxoYPDhoE8BYepWsj3TCqibG7FvB8X1HERPXQlc6E/IeGj22SOfIM997b7GfFkeLWY8pA==}
+    engines: {node: '>=18'}
     dev: false
 
   /@lerna/add@6.4.1:
