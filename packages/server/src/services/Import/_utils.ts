@@ -3,6 +3,7 @@ import moment from 'moment';
 import * as R from 'ramda';
 import { Knex } from 'knex';
 import fs from 'fs/promises';
+import path from 'path';
 import {
   defaultTo,
   upperFirst,
@@ -353,7 +354,6 @@ export const parseKey = R.curry(
         _key = `${fieldKey}`;
       }
     }
-    console.log(_key);
     return _key;
   }
 );
@@ -432,13 +432,19 @@ export const sanitizeSheetData = (json) => {
 export const getMapToPath = (to: string, group = '') =>
   group ? `${group}.${to}` : to;
 
+export const getImportsStoragePath = () => {
+  return  path.join(global.__storage_dir, `/imports`);
+}
+
 /**
  * Deletes the imported file from the storage and database.
  * @param {string} filename
  */
 export const deleteImportFile = async (filename: string) => {
+  const filePath = getImportsStoragePath();
+
   // Deletes the imported file.
-  await fs.unlink(`public/imports/${filename}`);
+  await fs.unlink(`${filePath}/${filename}`);
 };
 
 /**
@@ -447,5 +453,7 @@ export const deleteImportFile = async (filename: string) => {
  * @returns {Promise<Buffer>}
  */
 export const readImportFile = (filename: string) => {
-  return fs.readFile(`public/imports/${filename}`);
+  const filePath = getImportsStoragePath();
+
+  return fs.readFile(`${filePath}/${filename}`);
 };
