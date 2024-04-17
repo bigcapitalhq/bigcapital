@@ -1,5 +1,6 @@
 import Multer from 'multer';
 import { ServiceError } from '@/exceptions';
+import { getImportsStoragePath } from '@/services/Import/_utils';
 
 export function allowSheetExtensions(req, file, cb) {
   if (
@@ -16,7 +17,8 @@ export function allowSheetExtensions(req, file, cb) {
 
 const storage = Multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './public/imports');
+    const path = getImportsStoragePath();
+    cb(null, path);
   },
   filename: function (req, file, cb) {
     // Add the creation timestamp to clean up temp files later.

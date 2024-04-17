@@ -38,8 +38,6 @@ export class ImportFileUploadService {
     filename: string,
     params: Record<string, number | string>
   ): Promise<ImportFileUploadPOJO> {
-    console.log(filename, 'filename');
-
     try {
       return await this.importUnhandled(
         tenantId,
