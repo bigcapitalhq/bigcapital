@@ -12,6 +12,12 @@ env:
 
 jobs:
   build-publish-webapp:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
     name: Build and deploy webapp container
     runs-on: ubuntu-latest
     environment: production
@@ -35,10 +41,11 @@ jobs:
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
             context: .
             file: ./packages/webapp/Dockerfile
+            platform: ${{ matrix.platform }}
             push: true
             tags: ghcr.io/bigcapitalhq/webapp:latest
             labels: ${{ steps.meta.outputs.labels }}
@@ -66,10 +73,11 @@ jobs:
 
       # Builds and push the Docker image.
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./
           file: ./packages/server/Dockerfile
+          platform: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/bigcapitalhq/server:latest
           labels: ${{ steps.meta.outputs.labels }}
