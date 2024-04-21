@@ -22,6 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -35,9 +40,9 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-            registry: ${{ env.REGISTRY }}
-            username: ${{ github.actor }}
-            password: ${{ secrets.GH_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -48,14 +53,28 @@ jobs:
       # Builds and push the Docker image.
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
+        id: build
         with:
-            context: .
-            file: ./packages/webapp/Dockerfile
-            platforms: ${{ matrix.platform }}
-            push: true
-            tags: ghcr.io/bigcapitalhq/webapp:latest
-            labels: ${{ steps.meta.outputs.labels }}
+          context: .
+          file: ./packages/webapp/Dockerfile
+          platforms: ${{ matrix.platform }}
+          push: true
+          tags: ghcr.io/bigcapitalhq/webapp:latest
+          labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-main-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
       # Send notification to Slack channel.
       - name: Slack Notification built and published webapp container successfully.
         uses: rtCamp/action-slack-notify@v2
@@ -66,6 +85,11 @@ jobs:
     name: Build and deploy server container
     runs-on: ubuntu-latest
     steps:
+      - name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -86,6 +110,7 @@ jobs:
       # Builds and push the Docker image.
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
+        id: build
         with:
           context: ./
           file: ./packages/server/Dockerfile
@@ -94,6 +119,20 @@ jobs:
           tags: ghcr.io/bigcapitalhq/server:latest
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+  
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-main-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+          
       # Send notification to Slack channel.
       - name: Slack Notification built and published server container successfully.
         uses: rtCamp/action-slack-notify@v2
