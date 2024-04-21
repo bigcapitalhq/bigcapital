@@ -33,7 +33,7 @@ export default function PreferencesSidebar() {
 
   return (
     <PreferencesSidebarContainer>
-      <div class="preferences-sidebar__head">
+      <div className="preferences-sidebar__head">
         <h2>{<T id={'preferences'} />}</h2>
       </div>
 

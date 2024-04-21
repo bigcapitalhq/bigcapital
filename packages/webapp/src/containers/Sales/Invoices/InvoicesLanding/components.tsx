@@ -34,7 +34,7 @@ export function InvoiceStatus({ invoice }) {
         <span className={'fully-paid-icon'}>
           <Icon icon="small-tick" iconSize={18} />
         </span>
-        <span class="fully-paid-text">
+        <span className="fully-paid-text">
           <T id={'paid'} />
         </span>
       </Choose.When>
@@ -54,7 +54,7 @@ export function InvoiceStatus({ invoice }) {
         </Choose>
 
         <If condition={invoice.is_partially_paid}>
-          <span class="partial-paid">
+          <span className="partial-paid">
             {intl.get('day_partially_paid', {
               due: formattedAmount(invoice.due_amount, invoice.currency_code),
             })}

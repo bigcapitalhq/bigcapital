@@ -71,7 +71,7 @@ export function Dragzone({
 
   return (
     <section className={classNames('dropzone-container', className)}>
-      {hint && <div class="dropzone-hint">{hint}</div>}
+      {hint && <div className="dropzone-hint">{hint}</div>}
 
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />

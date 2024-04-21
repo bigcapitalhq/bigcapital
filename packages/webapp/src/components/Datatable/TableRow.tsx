@@ -33,7 +33,7 @@ function TableRowContextMenu({ children, row }) {
   }, [setVisible]);
 
   return (
-    <div class="tr-context" {...bindTrigger}>
+    <div className="tr-context" {...bindTrigger}>
       {children}
 
       <ContextMenu

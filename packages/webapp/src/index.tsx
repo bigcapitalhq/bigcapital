@@ -10,7 +10,8 @@ import App from '@/components/App';
 import * as serviceWorker from '@/serviceWorker';
 import { store, persistor } from '@/store/createStore';
 
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.NODE_ENV === 'development') {
+  // import @welldone-software/why-did-you-render
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
   whyDidYouRender(React, { trackAllPureComponents: false });
 }

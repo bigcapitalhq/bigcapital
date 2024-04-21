@@ -2,5 +2,5 @@
 import React from 'react';
 
 export function CellTextSpan({ cell: { value } }) {
-  return (<span class="cell-text">{ value }</span>)
+  return (<span className="cell-text">{ value }</span>)
 }

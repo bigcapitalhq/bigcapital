@@ -42,7 +42,7 @@ function ItemFormBody({ organization: { base_currency } }) {
   const { values } = useFormikContext();
 
   return (
-    <div class="page-form__section page-form__section--selling-cost">
+    <div className="page-form__section page-form__section--selling-cost">
       <Row>
         <Col xs={6}>
           {/*------------- Purchasable checbox ------------- */}

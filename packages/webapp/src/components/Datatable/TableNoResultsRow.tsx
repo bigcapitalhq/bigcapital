@@ -16,7 +16,7 @@ export default function TableNoResultsRow() {
 
   return (
     <div className={'tr no-results'}>
-      <div class="td">{noResultText}</div>
+      <div className="td">{noResultText}</div>
     </div>
   );
 }

@@ -9,21 +9,21 @@ import '@/style/pages/FinancialStatements/FinancialSheets.scss';
 
 function FinancialReportsItem({ title, desc, link }) {
   return (
-    <div class="financial-reports__item">
-      <Link class="title" to={link}>
+    <div className="financial-reports__item">
+      <Link className="title" to={link}>
         {title}
       </Link>
-      <p class="desc">{desc}</p>
+      <p className="desc">{desc}</p>
     </div>
   );
 }
 
 function FinancialReportsSection({ sectionTitle, reports }) {
   return (
-    <div class="financial-reports__section">
-      <div class="section-title">{sectionTitle}</div>
+    <div className="financial-reports__section">
+      <div className="section-title">{sectionTitle}</div>
 
-      <div class="financial-reports__list">
+      <div className="financial-reports__list">
         <For render={FinancialReportsItem} of={reports} />
       </div>
     </div>
@@ -38,7 +38,7 @@ export default function FinancialReports() {
 
   return (
     <DashboardInsider name={'financial-reports'}>
-      <div class="financial-reports">
+      <div className="financial-reports">
         <For render={FinancialReportsSection} of={financialReportMenu} />
       </div>
     </DashboardInsider>

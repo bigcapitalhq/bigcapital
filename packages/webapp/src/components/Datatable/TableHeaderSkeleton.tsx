@@ -33,7 +33,7 @@ export function TableSkeletonHeader({}) {
   } = useContext(TableContext);
 
   return (
-    <div class="thead">
+    <div className="thead">
       {headerGroups.map((headerGroup) => (
         <div
           {...headerGroup.getHeaderGroupProps({

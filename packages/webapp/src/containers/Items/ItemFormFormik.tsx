@@ -91,7 +91,7 @@ export default function ItemFormFormik({
 
   return (
     <div
-      class={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
+      className={classNames(CLASSES.PAGE_FORM, CLASSES.PAGE_FORM_ITEM, className)}
     >
       <Formik
         enableReinitialize={true}
@@ -100,7 +100,7 @@ export default function ItemFormFormik({
         onSubmit={handleFormSubmit}
       >
         <Form>
-          <div class={classNames(CLASSES.PAGE_FORM_BODY)}>
+          <div className={classNames(CLASSES.PAGE_FORM_BODY)}>
             <ItemFormPrimarySection />
             <ItemFormBody accounts={accounts} />
             <ItemFormInventorySection accounts={accounts} />

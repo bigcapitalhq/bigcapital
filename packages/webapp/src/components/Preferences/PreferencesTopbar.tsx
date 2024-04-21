@@ -26,10 +26,10 @@ function PreferencesTopbar({ preferencesPageTitle }) {
         CLASSES.PREFERENCES_TOPBAR,
       )}
     >
-      <div class="preferences-topbar__title">
+      <div className="preferences-topbar__title">
         <h2>{preferencesPageTitle}</h2>
       </div>
-      <div class="preferences-topbar__actions">
+      <div className="preferences-topbar__actions">
         <Route pathname="/preferences">
           <Switch>
             <Route exact path={'/preferences/users'} component={UsersActions} />
@@ -52,7 +52,7 @@ function PreferencesTopbar({ preferencesPageTitle }) {
         </Route>
       </div>
 
-      <div class="preferences-topbar__user">
+      <div className="preferences-topbar__user">
         <DashboardTopbarUser />
       </div>
     </div>

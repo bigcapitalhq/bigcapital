@@ -22,7 +22,7 @@ export function LoadingIndicator({
 
   const loadingComponent = useMemo(
     () => (
-      <div class="dashboard__loading-indicator">
+      <div className="dashboard__loading-indicator">
         <Spinner size={spinnerSize} value={null} />
       </div>
     ),

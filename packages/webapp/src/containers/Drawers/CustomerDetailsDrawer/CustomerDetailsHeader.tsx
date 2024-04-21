@@ -25,7 +25,7 @@ export default function CustomerDetailsHeader() {
           name={'outstanding-receivable'}
           label={<T id={'customer.drawer.label.outstanding_receivable'} />}
         >
-          <h3 class="big-number">{customer.formatted_balance}</h3>
+          <h3 className="big-number">{customer.formatted_balance}</h3>
         </DetailItem>
 
         <DetailItem

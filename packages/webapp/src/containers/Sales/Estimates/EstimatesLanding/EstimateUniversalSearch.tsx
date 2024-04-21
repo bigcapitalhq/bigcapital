@@ -37,12 +37,12 @@ export const EstimateUniversalSearchSelect = withDrawerActions(
 export const EstimateStatus = ({ estimate }) => (
   <Choose>
     <Choose.When condition={estimate.is_delivered && estimate.is_approved}>
-      <span class="approved">
+      <span className="approved">
         <T id={'approved'} />
       </span>
     </Choose.When>
     <Choose.When condition={estimate.is_delivered && estimate.is_rejected}>
-      <span class="reject">
+      <span className="reject">
         <T id={'rejected'} />
       </span>
     </Choose.When>
@@ -51,12 +51,12 @@ export const EstimateStatus = ({ estimate }) => (
         estimate.is_delivered && !estimate.is_rejected && !estimate.is_approved
       }
     >
-      <span class="delivered">
+      <span className="delivered">
         <T id={'delivered'} />
       </span>
     </Choose.When>
     <Choose.Otherwise>
-      <span class="draft">
+      <span className="draft">
         <T id={'draft'} />
       </span>
     </Choose.Otherwise>
@@ -76,7 +76,7 @@ export function EstimateUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.estimate_number}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_estimate_date}
@@ -85,7 +85,7 @@ export function EstimateUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formatted_amount}</div>
           <EstimateStatus estimate={item.reference} />
         </>
       }

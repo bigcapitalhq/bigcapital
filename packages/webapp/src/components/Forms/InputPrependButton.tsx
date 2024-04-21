@@ -24,7 +24,7 @@ export function InputPrependButton({
   );
 
   return (
-    <div class="input-prepend">
+    <div className="input-prepend">
       {tooltip ? appendButtonWithTooltip : appendButton}
     </div>
   );

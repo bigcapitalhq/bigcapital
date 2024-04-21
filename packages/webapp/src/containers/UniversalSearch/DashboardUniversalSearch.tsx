@@ -104,7 +104,7 @@ function DashboardUniversalSearch({
   }
 
   return (
-    <div class="dashboard__universal-search">
+    <div className="dashboard__universal-search">
       <UniversalSearch
         isOpen={globalSearchShow}
         isLoading={isSearchFetching}

@@ -36,8 +36,15 @@ function getCurrentLocal() {
 /**
  * Loads the localization data of the given locale.
  */
-function loadLocales(currentLocale) {
-  return import(`../lang/${currentLocale}/index.json`);
+function loadLocales(currentLocale: string) {
+  const localePath = `/lang/${currentLocale}/index.json`; // Adjust the path as needed
+  return fetch(localePath)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Locale data for ${currentLocale} not found.`);
+      }
+      return response.json();
+    });
 }
 
 /**

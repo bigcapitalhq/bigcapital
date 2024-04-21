@@ -23,18 +23,18 @@ export function Postbox({
 
   return (
     <div
-      class={classNames('postbox', {
+      className={classNames('postbox', {
         'is-toggable': toggable,
       })}
     >
-      <div class="postbox__header" onClick={handleTitleClick}>
-        <h5 class="postbox__title">{title}</h5>
+      <div className="postbox__header" onClick={handleTitleClick}>
+        <h5 className="postbox__title">{title}</h5>
 
-        <span class="postbox__toggle-indicator"></span>
+        <span className="postbox__toggle-indicator"></span>
       </div>
-      <div class="postbox__content">
+      <div className="postbox__content">
         <Collapse isOpen={isOpen}>
-          <div class="postbox__content-inner">{children}</div>
+          <div className="postbox__content-inner">{children}</div>
         </Collapse>
       </div>
     </div>

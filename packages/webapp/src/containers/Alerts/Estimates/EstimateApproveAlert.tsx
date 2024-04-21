@@ -3,7 +3,6 @@ import React, { useCallback } from 'react';
 import intl from 'react-intl-universal';
 import { AppToaster, FormattedMessage as T } from '@/components';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
 
 import { useApproveEstimate } from '@/hooks/query';
 
@@ -40,7 +39,7 @@ function EstimateApproveAlert({
           message: intl.get('the_estimate_has_been_approved_successfully'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('estimates-table');
+        // queryCache.invalidateQueries('estimates-table'); // TODO
       })
       .catch((error) => {})
       .finally(() => {

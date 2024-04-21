@@ -11,7 +11,7 @@ import '@/style/components/BigcapitalLoading.scss';
 export default function BigcapitalLoading({ className }) {
   return (
     <div className={classNames('bigcapital-loading', className)}>
-      <div class="center">
+      <div className="center">
         <Icon icon="bigcapital" height={37} width={228} />
       </div>
     </div>

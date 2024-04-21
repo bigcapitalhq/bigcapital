@@ -29,7 +29,7 @@ export default function ExpenseDrawerHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem name={'amount'} label={<T id={'full_amount'} />}>
-            <h3 class="big-number">{expense.formatted_amount}</h3>
+            <h3 className="big-number">{expense.formatted_amount}</h3>
           </DetailItem>
 
           <StatusDetailItem>

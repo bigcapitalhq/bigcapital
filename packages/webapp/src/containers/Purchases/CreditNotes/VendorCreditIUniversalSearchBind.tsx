@@ -74,7 +74,7 @@ export function VendorCreditUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.vendor_credit_number}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_vendor_credit_date}
@@ -83,7 +83,7 @@ export function VendorCreditUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formatted_amount}</div>
           <VendorCreditUniversalSearchStatus receipt={item.reference} />
         </>
       }

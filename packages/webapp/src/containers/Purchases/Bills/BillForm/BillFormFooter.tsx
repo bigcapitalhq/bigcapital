@@ -11,7 +11,7 @@ import { BillFormFooterRight } from './BillFormFooterRight';
 // Bill form floating actions.
 export default function BillFormFooter() {
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <BillFooterPaper>
         <Row>
           <Col md={8}>

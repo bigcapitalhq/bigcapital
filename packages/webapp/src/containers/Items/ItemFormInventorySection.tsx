@@ -21,7 +21,7 @@ function ItemFormInventorySection({ organization: { base_currency } }) {
   const { accounts } = useItemFormContext();
 
   return (
-    <div class="page-form__section page-form__section--inventory">
+    <div className="page-form__section page-form__section--inventory">
       <h3>
         <T id={'inventory_information'} />
       </h3>

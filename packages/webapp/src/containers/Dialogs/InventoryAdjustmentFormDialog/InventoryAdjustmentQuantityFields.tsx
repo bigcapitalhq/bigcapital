@@ -9,7 +9,7 @@ export default function InventoryAdjustmentQuantityFields() {
   const { values } = useFormikContext();
 
   return (
-    <div class="adjustment-fields">
+    <div className="adjustment-fields">
       <Choose>
         <Choose.When condition={values.type === 'decrement'}>
           <DecrementAdjustmentFields />

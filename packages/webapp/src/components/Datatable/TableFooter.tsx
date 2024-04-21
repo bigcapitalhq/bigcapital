@@ -16,7 +16,7 @@ export default function TableFooter() {
   if (!footer) { return null; }
   
   return (
-    <div class="tfooter">
+    <div className="tfooter">
       {footerGroups.map((group) => (
         <div {...group.getFooterGroupProps({ className: 'tr' })}>
           {group.headers.map((column) => (

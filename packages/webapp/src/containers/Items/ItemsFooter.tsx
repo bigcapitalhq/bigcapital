@@ -10,7 +10,7 @@ export default function ItemFloatingFooter({
   itemDetail,
 }) {
   return (
-    <div class="form__floating-footer">
+    <div className="form__floating-footer">
       <Button
         intent={Intent.PRIMARY}
         disabled={isSubmitting}

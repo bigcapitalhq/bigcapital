@@ -13,7 +13,7 @@ export default function TableTBody({
   return (
     <ScrollSyncPane>
       <div {...getTableBodyProps()} className="tbody">
-        <div class="tbody-inner">
+        <div className="tbody-inner">
           { children }
         </div>
       </div>

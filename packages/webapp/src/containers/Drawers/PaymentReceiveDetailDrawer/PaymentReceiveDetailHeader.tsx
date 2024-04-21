@@ -26,7 +26,7 @@ export default function PaymentReceiveDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{paymentReceive.formatted_amount}</h3>
+            <h3 className="big-number">{paymentReceive.formatted_amount}</h3>
           </DetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>

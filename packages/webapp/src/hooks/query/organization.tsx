@@ -1,11 +1,11 @@
-// @ts-nocheck
+
+import { omit } from 'lodash';
 import { useMutation, useQueryClient } from 'react-query';
 import { batch } from 'react-redux';
-import { omit } from 'lodash';
 import t from './types';
 import useApiRequest from '../useRequest';
 import { useRequestQuery } from '../useQueryRequest';
-import { useSetOrganizations, useSetSubscriptions } from '../state';
+import { useSetOrganizations } from '../state';
 
 /**
  * Retrieve organizations of the authenticated user.
@@ -32,7 +32,6 @@ export function useOrganizations(props) {
  */
 export function useCurrentOrganization(props) {
   const setOrganizations = useSetOrganizations();
-  const setSubscriptions = useSetSubscriptions();
 
   return useRequestQuery(
     [t.ORGANIZATION_CURRENT],
@@ -44,9 +43,6 @@ export function useCurrentOrganization(props) {
         const organization = omit(data, ['subscriptions']);
 
         batch(() => {
-          // Sets subscriptions.
-          setSubscriptions(data.subscriptions);
-
           // Sets organizations.
           setOrganizations([organization]);
         });
@@ -63,15 +59,12 @@ export function useOrganizationSetup() {
   const apiRequest = useApiRequest();
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (values) => apiRequest.post(`organization/build`, values),
-    {
-      onSuccess: (res) => {
-        queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-        queryClient.invalidateQueries(t.ORGANIZATIONS);
-      },
+  return useMutation((values) => apiRequest.post(`organization/build`, values), {
+    onSuccess: (res) => {
+      queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
+      queryClient.invalidateQueries(t.ORGANIZATIONS);
     },
-  );
+  });
 }
 
 /**
@@ -81,16 +74,13 @@ export function useUpdateOrganization(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
-    (information) => apiRequest.put('organization', information),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
-        queryClient.invalidateQueries(t.ORGANIZATIONS);
-      },
-      ...props,
+  return useMutation((information) => apiRequest.put('organization', information), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(t.ORGANIZATION_CURRENT);
+      queryClient.invalidateQueries(t.ORGANIZATIONS);
     },
-  );
+    ...props,
+  });
 }
 
 export function useOrgBaseCurrencyMutateAbilities(props) {
