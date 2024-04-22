@@ -24,7 +24,7 @@
   },
   "engineStrict": true,
   "engines": {
-    "node": "16.x || 17.x || 18.x || 20.x",
+    "node": "18.x || 20.x || 21.x",
     "pnpm": ">=9"
   },
   "husky": {
