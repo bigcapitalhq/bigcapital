@@ -9,6 +9,8 @@
     "dev:server": "lerna run dev --scope \"@bigcapital/server\"",
     "build:server": "lerna run build --scope \"@bigcapital/server\"",
     "serve:server": "lerna run serve --scope \"@bigcapital/server\"",
+    "lint": "lerna run lint --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
+    "format": "lerna run format --scope \"@bigcapital/webapp\" --scope \"@bigcapital/server\"",
     "test:e2e": "playwright test",
     "prepare": "husky install"
   },

@@ -2,7 +2,12 @@
   "name": "@bigcapital/server",
   "version": "0.10.2",
   "description": "",
+  "license": "ISC",
+  "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
   "main": "src/server.ts",
+  "bin": {
+    "bigcapital": "./bin/bigcapital.js"
+  },
   "scripts": {
     "inspect": "cross-env NODE_PATH=./src nodemon src/server.ts",
     "clear": "rimraf build",
@@ -12,12 +17,8 @@
     "build:commands": "cross-env NODE_ENV=production webpack --config scripts/webpack.cli.js",
     "build": "npm-run-all build:*",
     "serve": "node ./build/index.js",
-    "lint:fix": "eslint --fix ./**/*.ts"
-  },
-  "author": "Ahmed Bouhuolia, <a.bouhuolia@gmail.com>",
-  "license": "ISC",
-  "bin": {
-    "bigcapital": "./bin/bigcapital.js"
+    "format": "biome format --write ./",
+    "lint": "biome check --apply ./"
   },
   "dependencies": {
     "@casl/ability": "^5.4.3",
