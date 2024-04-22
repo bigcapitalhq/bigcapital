@@ -1,0 +1,10 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "server",
+  "prefix": "server",
+  "projectType": "application",
+  "sourceRoot": "packages/server/src",
+  "tags": [],
+  "targets": {
+  }
+}

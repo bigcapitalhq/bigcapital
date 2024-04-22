@@ -1,30 +1,6 @@
 {
-    "eslint.validate": [  
-        {  
-            "language":"vue",
-            "autoFix":true
-        },
-        {  
-            "language":"html",
-            "autoFix":true
-        },
-        {  
-            "language":"javascript",
-            "autoFix":true
-        },
-        {  
-            "language":"typescript",
-            "autoFix":true
-        }
-    ],
-    "eslint.alwaysShowStatus": true,
-    "eslint.workingDirectories": [
-        "./client",
-        "./server"
-    ],
     "editor.useTabStops": false,
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "git.ignoreLimitWarning": true,
-    "god.tsconfig": "./server/tsconfig.json",
 }

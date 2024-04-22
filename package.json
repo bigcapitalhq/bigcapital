@@ -13,11 +13,14 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.7.0",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@commitlint/config-lerna-scopes": "^17.4.2",
     "@faker-js/faker": "^8.0.2",
     "@playwright/test": "^1.32.3",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
     "husky": "^8.0.3",
     "lerna": "^6.4.1"
   },

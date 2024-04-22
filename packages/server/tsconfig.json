@@ -27,7 +27,8 @@
     },
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+    "./eslint.config.js"
   ],
   "exclude": [
     "./node_modules",
