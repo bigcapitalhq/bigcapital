@@ -20,10 +20,12 @@
     "@playwright/test": "^1.32.3",
     "husky": "^8.0.3",
     "lerna": "^8.1.2",
-    "pnpm": "^9"
+    "pnpm": "^9.0.5"
   },
+  "engineStrict": true,
   "engines": {
-    "node": "16.x || 17.x || 18.x || 20.x"
+    "node": "16.x || 17.x || 18.x || 20.x",
+    "pnpm": ">=9"
   },
   "husky": {
     "hooks": {
