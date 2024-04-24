@@ -40,7 +40,7 @@ jobs:
             context: .
             file: ./packages/webapp/Dockerfile
             push: true
-            tags: ghcr.io/bigcapitalhq/webapp:latest
+            tags: ghcr.io/bigcapitalhq/webapp:latest, ghcr.io/bigcapitalhq/webapp:${{github.ref_name}}
             labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
@@ -71,7 +71,7 @@ jobs:
           context: ./
           file: ./packages/server/Dockerfile
           push: true
-          tags: ghcr.io/bigcapitalhq/server:latest
+          tags: ghcr.io/bigcapitalhq/server:latest, ghcr.io/bigcapitalhq/server:${{github.ref_name}}
           labels: ${{ steps.meta.outputs.labels }}
 
       # Send notification to Slack channel.
