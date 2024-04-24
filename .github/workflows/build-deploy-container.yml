@@ -57,6 +57,7 @@ jobs:
         with:
           context: ./
           file: ./packages/webapp/Dockerfile
+          platforms: ${{ matrix.platform }}
           push: true
           tags: ghcr.io/bigcapitalhq/webapp:latest, ghcr.io/bigcapitalhq/webapp:${{github.ref_name}}
           labels: ${{ steps.meta.outputs.labels }}
