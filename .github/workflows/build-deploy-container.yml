@@ -55,11 +55,11 @@ jobs:
         uses: docker/build-push-action@v5
         id: build
         with:
-            context: .
-            file: ./packages/webapp/Dockerfile
-            push: true
-            tags: ghcr.io/bigcapitalhq/webapp:latest, ghcr.io/bigcapitalhq/webapp:${{github.ref_name}}
-            labels: ${{ steps.meta.outputs.labels }}
+          context: ./
+          file: ./packages/webapp/Dockerfile
+          push: true
+          tags: ghcr.io/bigcapitalhq/webapp:latest, ghcr.io/bigcapitalhq/webapp:${{github.ref_name}}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Export digest
         run: |
