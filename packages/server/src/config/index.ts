@@ -181,6 +181,14 @@ module.exports = {
   },
 
   /**
+   * Bank Synchronization.
+   */
+  bankSync: {
+    enabled: parseBoolean(defaultTo(process.env.BANKING_CONNECT, false), false),
+    provider: 'plaid',
+  },
+
+  /**
    * Plaid.
    */
   plaid: {
