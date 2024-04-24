@@ -8,14 +8,14 @@ on:
       - '**.ts'
       - '**.tsx'
       - '**/tsconfig.json'
-      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/e2e.yml'
   pull_request:
     paths:
       - '**.ts'
       - '**.tsx'
       - '**/tsconfig.json'
-      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/e2e.yml'
 
 defaults:
