@@ -62,13 +62,13 @@ export default class MetableStore implements IMetableStore {
    * @param {String} key -
    * @param {Mixied} defaultValue -
    */
-  get(query: string | IMetaQuery, defaultValue: any): any | false {
+  get(query: string | IMetaQuery, defaultValue: any): any | null {
     const metadata = this.find(query);
     return metadata
       ? metadata.value
       : typeof defaultValue !== 'undefined'
       ? defaultValue
-      : false;
+      : null;
   }
 
   /**

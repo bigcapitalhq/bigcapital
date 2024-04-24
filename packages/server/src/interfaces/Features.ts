@@ -1,6 +1,7 @@
 export enum Features {
   WAREHOUSES = 'warehouses',
   BRANCHES = 'branches',
+  BankSyncing = 'BankSyncing'
 }
 
 export interface IFeatureAllItem {

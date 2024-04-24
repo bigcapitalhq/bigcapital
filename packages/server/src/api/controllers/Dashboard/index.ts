@@ -8,10 +8,10 @@ export default class DashboardMetaController {
   dashboardService: DashboardService;
 
   /**
-   *
+   * Constructor router.
    * @returns
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get('/boot', this.getDashboardBoot);
@@ -25,7 +25,7 @@ export default class DashboardMetaController {
    * @param {Response} res - 
    * @param {NextFunction} next -
    */
-  getDashboardBoot = async (
+  private getDashboardBoot = async (
     req: Request,
     res: Response,
     next: NextFunction
