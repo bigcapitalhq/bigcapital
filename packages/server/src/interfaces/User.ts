@@ -183,3 +183,8 @@ export interface IUserSendInviteDTO {
   email: string;
   roleId: number;
 }
+
+export interface IUserTenants {
+  user_id: number;
+  tenants_id: number;
+}

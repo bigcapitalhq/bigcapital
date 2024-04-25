@@ -32,7 +32,7 @@ export class AuthSignupService {
    * @returns {Promise<ISystemUser>}
    */
   public async signUp(signupDTO: IRegisterDTO): Promise<ISystemUser> {
-    const { systemUserRepository } = this.sysRepositories;
+    const { systemUserRepository, systemUserTenantsRepository } = this.sysRepositories;
 
     // Validates the signup disable restrictions.
     await this.validateSignupRestrictions(signupDTO.email);
@@ -61,6 +61,11 @@ export class AuthSignupService {
       tenant,
       user: registeredUser,
     } as IAuthSignedUpEventPayload);
+
+    await systemUserTenantsRepository.create({
+      tenantId: tenant.id,
+      userId: registeredUser.id,
+    });
 
     return registeredUser;
   }
