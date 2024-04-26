@@ -33,4 +33,34 @@ export default class AuthenticationMailMesssages {
       })
       .send();
   }
+
+  /**
+   * Sends signup verification mail.
+   * @param {string} email - Email address
+   * @param {string} fullName - User name.
+   * @param {string} token - Verification token.
+   * @returns {Promise<void>}
+   */
+  public async sendSignupVerificationMail(
+    email: string,
+    fullName: string,
+    token: string,
+  ) {
+    await new Mail()
+      .setSubject('Bigcapital - Verify your email')
+      .setView('mail/SignupVerifyEmail.html')
+      .setTo(email)
+      .setAttachments([
+        {
+          filename: 'bigcapital.png',
+          path: `${global.__views_dir}/images/bigcapital.png`,
+          cid: 'bigcapital_logo',
+        },
+      ])
+      .setData({
+        verifyUrl: `${config.baseURL}/auth/reset_password/${token}`,
+        fullName,
+      })
+      .send(); 
+  }
 }

@@ -9,6 +9,13 @@ import { AuthSigninService } from './AuthSignin';
 import { AuthSignupService } from './AuthSignup';
 import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { GetAuthMeta } from './GetAuthMeta';
+import { AuthSignupConfirmService } from './AuthSignupConfirm';
+import { SystemUser } from '@/system/models';
+
+interface ISignupConfirmDTO {
+  token: string;
+  email: string;
+}
 
 @Service()
 export default class AuthenticationApplication {
@@ -17,6 +24,9 @@ export default class AuthenticationApplication {
 
   @Inject()
   private authSignupService: AuthSignupService;
+
+  @Inject()
+  private authSignupConfirmService: AuthSignupConfirmService;
 
   @Inject()
   private authResetPasswordService: AuthSendResetPassword;
@@ -42,6 +52,29 @@ export default class AuthenticationApplication {
    */
   public async signUp(signupDTO: IRegisterDTO): Promise<ISystemUser> {
     return this.authSignupService.signUp(signupDTO);
+  }
+
+  /**
+   * Verfying the provided user's email after signin-up.
+   * @param {string} email
+   * @param {string} token
+   * @returns {Promise<SystemUser>}
+   */
+  public async signUpConfirm(
+    email: string,
+    token: string
+  ): Promise<SystemUser> {
+    return this.authSignupConfirmService.signUpConfirm(email, token);
+  }
+
+  /**
+   *
+   * @param {string} email
+   * @param {string} token
+   * @returns
+   */
+  public async signUpConfirmSend(email: string, token: string) {
+    return this.authSignupConfirmService.signUpConfirm(email, token);
   }
 
   /**

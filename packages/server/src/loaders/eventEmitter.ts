@@ -91,6 +91,7 @@ import { SaleEstimateMarkApprovedOnMailSent } from '@/services/Sales/Estimates/s
 import { DeleteCashflowTransactionOnUncategorize } from '@/services/Cashflow/subscribers/DeleteCashflowTransactionOnUncategorize';
 import { PreventDeleteTransactionOnDelete } from '@/services/Cashflow/subscribers/PreventDeleteTransactionsOnDelete';
 import { SubscribeFreeOnSignupCommunity } from '@/services/Subscription/events/SubscribeFreeOnSignupCommunity';
+import { SendVerfiyMailOnSignUp } from '@/services/Authentication/events/SendVerfiyMailOnSignUp';
 
 
 export default () => {
@@ -222,6 +223,7 @@ export const susbcribers = () => {
     DeleteCashflowTransactionOnUncategorize,
     PreventDeleteTransactionOnDelete,
 
-    SubscribeFreeOnSignupCommunity
+    SubscribeFreeOnSignupCommunity,
+    SendVerfiyMailOnSignUp
   ];
 };

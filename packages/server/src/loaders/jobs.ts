@@ -12,6 +12,7 @@ import { SaleReceiptMailNotificationJob } from '@/services/Sales/Receipts/SaleRe
 import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentReceives/PaymentReceiveMailNotificationJob';
 import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
 import { ImportDeleteExpiredFilesJobs } from '@/services/Import/jobs/ImportDeleteExpiredFilesJob';
+import { SendVerifyMailJob } from '@/services/Authentication/jobs/SendVerifyMailJob';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);
@@ -27,6 +28,7 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new PaymentReceiveMailNotificationJob(agenda);
   new PlaidFetchTransactionsJob(agenda);
   new ImportDeleteExpiredFilesJobs(agenda);
+  new SendVerifyMailJob(agenda);
 
   agenda.start().then(() => {
     agenda.every('1 hours', 'delete-expired-imported-files', {});

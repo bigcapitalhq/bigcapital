@@ -1,5 +1,6 @@
 import { isEmpty, omit } from 'lodash';
 import moment from 'moment';
+import crypto from 'crypto';
 import { ServiceError } from '@/exceptions';
 import {
   IAuthSignedUpEventPayload,
@@ -41,6 +42,7 @@ export class AuthSignupService {
     await this.validateEmailUniqiness(signupDTO.email);
 
     const hashedPassword = await hashPassword(signupDTO.password);
+    const verifyToken = crypto.randomBytes(64).toString('hex');
 
     // Triggers signin up event.
     await this.eventPublisher.emitAsync(events.auth.signingUp, {
@@ -50,6 +52,7 @@ export class AuthSignupService {
     const tenant = await this.tenantsManager.createTenant();
     const registeredUser = await systemUserRepository.create({
       ...omit(signupDTO, 'country'),
+      verifyToken,
       active: true,
       password: hashedPassword,
       tenantId: tenant.id,
