@@ -11,6 +11,7 @@ import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { GetAuthMeta } from './GetAuthMeta';
 import { AuthSignupConfirmService } from './AuthSignupConfirm';
 import { SystemUser } from '@/system/models';
+import { AuthSignupConfirmResend } from './AuthSignupResend';
 
 interface ISignupConfirmDTO {
   token: string;
@@ -27,6 +28,9 @@ export default class AuthenticationApplication {
 
   @Inject()
   private authSignupConfirmService: AuthSignupConfirmService;
+
+  @Inject()
+  private authSignUpConfirmResendService: AuthSignupConfirmResend;
 
   @Inject()
   private authResetPasswordService: AuthSendResetPassword;

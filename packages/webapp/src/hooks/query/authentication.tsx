@@ -90,3 +90,30 @@ export const useAuthMetadata = (props) => {
     },
   ); 
 }
+
+
+/**
+ * 
+ */
+export const useAuthSignUpVerifyResendMail = (props) => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    () => apiRequest.post('auth/register/verify/resend'),
+    props,
+  );
+};
+
+
+
+/**
+ * 
+ */
+export const useAuthSignUpVerify = (props) => {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (token: string, email: string) => apiRequest.post('auth/register/verify'),
+    props,
+  );
+};

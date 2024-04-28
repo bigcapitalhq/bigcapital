@@ -64,3 +64,10 @@ export const useAuthUser = () => {
 export const useAuthOrganizationId = () => {
   return useSelector((state) => state.authentication.organizationId);
 };
+
+/**
+ * 
+ */
+export const useAuthUserVerified = () => {
+  return useSelector(() => false);
+};

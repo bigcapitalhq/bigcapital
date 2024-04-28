@@ -13,14 +13,12 @@ export class AuthSignupConfirmResend {
    * @param {number} tenantId
    * @param {string} email
    */
-  public async signUpConfirmResend(email: string) {
-    const user = await SystemUser.query()
-      .findOne({ email })
-      .throwIfNotFound();
+  public async signUpConfirmResend(userId: number) {
+    const user = await SystemUser.query().findById(userId).throwIfNotFound();
 
-    // 
+    //
     if (user.verified) {
-      throw new ServiceError(ERRORS.USER_ALREADY_VERIFIED)
+      throw new ServiceError(ERRORS.USER_ALREADY_VERIFIED);
     }
     if (user.verifyToken) {
       throw new ServiceError(ERRORS.USER_ALREADY_VERIFIED);

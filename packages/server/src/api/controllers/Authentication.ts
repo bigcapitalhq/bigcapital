@@ -9,6 +9,8 @@ import { DATATYPES_LENGTH } from '@/data/DataTypes';
 import LoginThrottlerMiddleware from '@/api/middleware/LoginThrottlerMiddleware';
 import AuthenticationApplication from '@/services/Authentication/AuthApplication';
 
+import JWTAuth from '@/api/middleware/jwtAuth';
+import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
 @Service()
 export default class AuthenticationController extends BaseController {
   @Inject()
@@ -28,10 +30,10 @@ export default class AuthenticationController extends BaseController {
       asyncMiddleware(this.login.bind(this)),
       this.handlerErrors
     );
+    router.use('/register/verify/resend', JWTAuth);
+    router.use('/register/verify/resend', AttachCurrentTenantUser);
     router.post(
-      'register/verify/resend',
-      [check('email').exists().isEmail()],
-      this.validationResult,
+      '/register/verify/resend',
       asyncMiddleware(this.registerVerifyResendMail.bind(this)),
       this.handlerErrors
     );
@@ -199,7 +201,8 @@ export default class AuthenticationController extends BaseController {
    * @returns {Response|void}
    */
   private async registerVerify(req: Request, res: Response, next: Function) {
-    const signUpVerifyDTO = this.matchedBodyData(req);
+    const signUpVerifyDTO: { email: string; token: string } =
+      this.matchedBodyData(req);
 
     try {
       const user = await this.authApplication.signUpConfirm(
@@ -228,17 +231,15 @@ export default class AuthenticationController extends BaseController {
     res: Response,
     next: Function
   ) {
-    const signUpVerifyDTO = this.matchedBodyData(req);
+    const { user } = req;
 
     try {
-      const user = await this.authApplication.signUpConfirm(
-        signUpVerifyDTO.email,
-        signUpVerifyDTO.token
-      );
+      const data = await this.authApplication.signUpConfirm(user.id);
+
       return res.status(200).send({
         type: 'success',
         message: 'The given user has verified successfully',
-        user,
+        data,
       });
     } catch (error) {
       next(error);

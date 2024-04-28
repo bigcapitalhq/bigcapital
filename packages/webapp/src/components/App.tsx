@@ -14,8 +14,15 @@ import GlobalErrors from '@/containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from '@/components/Dashboard/PrivatePages';
 import { Authentication } from '@/containers/Authentication/Authentication';
 
+import LazyLoader from '@/components/LazyLoader';
 import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';
+import { EnsureUserEmailVerified } from './Guards/EnsureUserEmailVerified';
+import { EnsureAuthNotAuthenticated } from './Guards/EnsureAuthNotAuthenticated';
+
+const RegisterVerify = LazyLoader({
+  loader: () => import('@/containers/Authentication/RegisterVerify'),
+});
 
 /**
  * App inner.
@@ -26,9 +33,24 @@ function AppInsider({ history }) {
       <DashboardThemeProvider>
         <Router history={history}>
           <Switch>
-            <Route path={'/auth'} component={Authentication} />
+            <Route path={'/auth'}>
+              <EnsureAuthNotAuthenticated>
+                <Authentication />
+              </EnsureAuthNotAuthenticated>
+            </Route>
+
+            <Route path={'/register/verify'}>
+              <PrivateRoute>
+                <RegisterVerify />
+              </PrivateRoute>
+            </Route>
+
             <Route path={'/'}>
-              <PrivateRoute component={DashboardPrivatePages} />
+              <PrivateRoute>
+                <EnsureUserEmailVerified>
+                  <DashboardPrivatePages />
+                </EnsureUserEmailVerified>
+              </PrivateRoute>
             </Route>
           </Switch>
         </Router>
