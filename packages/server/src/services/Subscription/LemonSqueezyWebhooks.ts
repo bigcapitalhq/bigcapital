@@ -70,7 +70,7 @@ export class LemonSqueezyWebhooks {
         const variantId = attributes.variant_id as string;
 
         // We assume that the Plan table is up to date.
-        const plan = await Plan.query().findOne('slug', 'essentials-yearly');
+        const plan = await Plan.query().findOne('slug', 'early-adaptor');
 
         if (!plan) {
           throw new Error(`Plan with variantId ${variantId} not found.`);

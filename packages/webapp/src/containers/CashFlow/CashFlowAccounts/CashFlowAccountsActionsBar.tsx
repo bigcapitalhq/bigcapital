@@ -12,6 +12,7 @@ import {
   Can,
   Icon,
   FormattedMessage as T,
+  FeatureCan,
 } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
@@ -21,7 +22,7 @@ import withCashflowAccountsTableActions from '../AccountTransactions/withCashflo
 
 import { AccountDialogAction } from '@/containers/Dialogs/AccountDialog/utils';
 
-import { ACCOUNT_TYPE } from '@/constants';
+import { ACCOUNT_TYPE, Features } from '@/constants';
 import { DialogsName } from '@/constants/dialogs';
 
 import { compose } from '@/utils';
@@ -110,12 +111,14 @@ function CashFlowAccountsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
-        <Button
-          className={Classes.MINIMAL}
-          text={'Connect to Bank / Credit Card'}
-          onClick={handleConnectToBank}
-        />
+        <FeatureCan feature={Features.BankSyncing}>
+          <Button
+            className={Classes.MINIMAL}
+            text={'Connect to Bank / Credit Card'}
+            onClick={handleConnectToBank}
+          />
         <NavbarDivider />
+        </FeatureCan>
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}
