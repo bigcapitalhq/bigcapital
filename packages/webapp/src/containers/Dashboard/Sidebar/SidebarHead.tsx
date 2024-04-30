@@ -6,7 +6,7 @@ import { Icon } from '@/components';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { useAuthenticatedAccount } from '@/hooks/query';
-import { compose, firstLettersArgs } from '@/utils';
+import { compose, firstLettersArgs, getCookie } from '@/utils';
 import GeneralFormPage from '@/containers/Preferences/General/GeneralFormPage';
 import { GeneralFormProvider } from '@/containers/Preferences/General/GeneralFormProvider';
 import React from 'react';
@@ -25,7 +25,9 @@ function SidebarHeadJSX({
 }) {
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
-  const index = ['test', 'second_test'];
+  // const tenants = getCookie('tenants');
+  const tenants = [];
+  const tenantsarr = JSON.parse(getCookie('tenants'));
   const [btnStatus, setBtnStatus] = React.useState(false);
   const clickedBtn = () => {
     setBtnStatus(!btnStatus);
@@ -39,14 +41,20 @@ function SidebarHeadJSX({
           boundary={'window'}
           content={
             <Menu className={'menu--dashboard-organization'}>
-              {index.map((data, index) => (
-                <div class="org-item" onClick={() => clickedBtn()} style={{ cursor: 'pointer'}}>
+              {tenantsarr.map((data, index) => (
+                <div class="org-item" style={{ cursor: 'pointer', marginBottom: '5px'}}>
                   <div class="org-item__logo">
-                    {firstLettersArgs(...(data || '').split(' '))}{' '}
+                    {firstLettersArgs(...(data.data.metadata.name || '').split(' '))}{' '}
                   </div>
-                  <div class="org-item__name">{data}</div>
+                  <div class="org-item__name">{data.data.metadata.name}</div>
                 </div>
               ))}
+              <div class="org-item" onClick={() => clickedBtn()} style={{ cursor: 'pointer'}}>
+                <div class="org-item__logo">
+                  +
+                </div>
+                <div class="org-item__name">Add Tenant</div>
+              </div>
             </Menu>
           }
 

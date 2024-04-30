@@ -10,6 +10,9 @@ export default class AuthenticatedAccount {
    * @returns
    */
   getAccount = async (tenantId: number, authorizedUser: ISystemUser) => {
+    // authorizedUser.currentTenantId = authorizedUser.tenantId;
+    // authorizedUser.tenantId = 
+    console.log(authorizedUser.currentTenantId);
     return authorizedUser;
   };
 }

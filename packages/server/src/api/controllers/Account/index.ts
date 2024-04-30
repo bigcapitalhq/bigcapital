@@ -40,10 +40,9 @@ export default class AccountController extends BaseController {
     next: NextFunction
   ) => {
     const { tenantId, user } = req;
-
     try {
       const account = await this.accountService.getAccount(tenantId, user);
-
+      console.log(account)
       return res.status(200).send({ data: account });
     } catch (error) {
       next(error);

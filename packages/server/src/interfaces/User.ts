@@ -10,9 +10,10 @@ export interface ISystemUser extends Model {
   active: boolean;
   password: string;
   email: string;
+  currentTenantId: number;
 
   roleId: number;
-  tenantId: number;
+  tenantId: number[];
 
   inviteAcceptAt: Date;
   lastLoginAt: Date;
