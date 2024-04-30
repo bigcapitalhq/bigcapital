@@ -113,6 +113,7 @@ export default class ResourceService {
       ['fields2', qim.$each, 'name'],
       ['fields2', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
       ['fields2', qim.$each, $hasFields, 'fields', qim.$each, 'name'],
+      ['columns', qim.$each, 'name'],
     ];
     return this.i18nService.i18nApply(naviagations, meta, tenantId);
   }

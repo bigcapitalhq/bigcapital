@@ -87,6 +87,58 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    invoiceDate: {
+      name: 'invoice.field.invoice_date',
+      type: 'date',
+      exportable: true,
+    },
+    dueDate: {
+      name: 'invoice.field.due_date',
+      type: 'date',
+      exportable: true,
+    },
+    referenceNo: {
+      name: 'invoice.field.reference_no',
+      type: 'text',
+      exportable: true,
+    },
+    invoiceNo: {
+      name: 'invoice.field.invoice_no',
+      type: 'text',
+      exportable: true,
+    },
+    customer: {
+      name: 'invoice.field.customer',
+      type: 'text',
+      exportable: true,
+    },
+    exchangeRate: {
+      name: 'invoice.field.exchange_rate',
+      type: 'number',
+      exportable: true,
+    },
+    currencyCode: {
+      name: 'invoice.field.currency',
+      type: 'text',
+      exportable: true,
+    },
+    invoiceMessage: {
+      name: 'invoice.field.invoice_message',
+      type: 'text',
+      exportable: true,
+    },
+    termsConditions: {
+      name: 'invoice.field.terms_conditions',
+      type: 'text',
+      exportable: true,
+    },
+    delivered: {
+      name: 'invoice.field.delivered',
+      type: 'boolean',
+      exportable: true,
+    },
+  },
   fields2: {
     invoiceDate: {
       name: 'invoice.field.invoice_date',
@@ -142,7 +194,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'invoice.field.rate',

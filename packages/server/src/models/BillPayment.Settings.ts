@@ -4,6 +4,7 @@ export default {
     sortOrder: 'DESC',
     sortField: 'bill_date',
   },
+  exportable: true,
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -67,6 +68,44 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    vendor: {
+      name: 'bill_payment.field.vendor',
+      type: 'relation',
+      exportable: true,
+    },
+    paymentDate: {
+      name: 'bill_payment.field.payment_date',
+      type: 'date',
+      required: true,
+      exportable: true,
+    },
+    paymentNumber: {
+      name: 'bill_payment.field.payment_number',
+      type: 'text',
+      exportable: true,
+    },
+    paymentAccountId: {
+      name: 'bill_payment.field.payment_account',
+      type: 'relation',
+      exportable: true,
+    },
+    exchangeRate: {
+      name: 'bill_payment.field.exchange_rate',
+      type: 'number',
+      exportable: true,
+    },
+    statement: {
+      name: 'bill_payment.field.statement',
+      type: 'text',
+      exportable: true,
+    },
+    reference: {
+      name: 'bill_payment.field.reference',
+      type: 'text',
+      exportable: true,
+    },
+  },
   fields2: {
     vendorId: {
       name: 'bill_payment.field.vendor',
@@ -84,7 +123,7 @@ export default {
       name: 'bill_payment.field.payment_number',
       fieldType: 'text',
       unique: true,
-      importHint: "The payment number should be unique."
+      importHint: 'The payment number should be unique.',
     },
     paymentAccountId: {
       name: 'bill_payment.field.payment_account',
@@ -92,7 +131,7 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: "Matches the account name or code."
+      importHint: 'Matches the account name or code.',
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
@@ -120,7 +159,7 @@ export default {
           relationModel: 'Bill',
           relationImportMatch: 'billNumber',
           required: true,
-          importHint: "Matches the bill number."
+          importHint: 'Matches the bill number.',
         },
         paymentAmount: {
           name: 'bill_payment.field.entries.payment_amount',

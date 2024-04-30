@@ -48,7 +48,6 @@ export class ExportController extends BaseController {
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_PDF,
       ]);
-
       const data = await this.exportResourceApp.export(
         tenantId,
         query.resource,

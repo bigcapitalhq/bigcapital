@@ -1,5 +1,6 @@
 export default {
   importable: true,
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'paymentReceiveNo',
@@ -57,6 +58,48 @@ export default {
       fieldDate: 'date',
     },
   },
+  columns: {
+    customer: {
+      name: 'payment_receive.field.customer',
+      type: 'text',
+      importable: true,
+    },
+    paymentDate: {
+      name: 'payment_receive.field.payment_date',
+      type: 'date',
+      importable: true,
+    },
+    amount: {
+      name: 'payment_receive.field.amount',
+      type: 'number',
+      importable: true,
+    },
+    referenceNo: {
+      name: 'payment_receive.field.reference_no',
+      type: 'text',
+      importable: true,
+    },
+    depositAccount: {
+      name: 'payment_receive.field.deposit_account',
+      type: 'text',
+      importable: true,
+    },
+    paymentReceiveNo: {
+      name: 'payment_receive.field.payment_receive_no',
+      type: 'text',
+      importable: true,
+    },
+    statement: {
+      name: 'payment_receive.field.statement',
+      type: 'text',
+      importable: true,
+    },
+    created_at: {
+      name: 'payment_receive.field.created_at',
+      type: 'date',
+      importable: true,
+    },
+  },
   fields2: {
     customerId: {
       name: 'payment_receive.field.customer',
@@ -84,12 +127,12 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: "Matches the account name or code."
+      importHint: 'Matches the account name or code.',
     },
     paymentReceiveNo: {
       name: 'payment_receive.field.payment_receive_no',
       fieldType: 'text',
-      importHint: "The payment number should be unique."
+      importHint: 'The payment number should be unique.',
     },
     statement: {
       name: 'payment_receive.field.statement',
@@ -108,7 +151,7 @@ export default {
           relationModel: 'SaleInvoice',
           relationImportMatch: 'invoiceNo',
           required: true,
-          importHint: "Matches the invoice number."
+          importHint: 'Matches the invoice number.',
         },
         paymentAmount: {
           name: 'payment_receive.field.entries.payment_amount',

@@ -3,6 +3,8 @@ import xlsx from 'xlsx';
 import { sanitizeResourceName } from '../Import/_utils';
 import ResourceService from '../Resource/ResourceService';
 import { ExportableResources } from './ExportResources';
+import { ServiceError } from '@/exceptions';
+import { Errors } from './common';
 
 @Service()
 export class ExportResourceService {
@@ -13,10 +15,10 @@ export class ExportResourceService {
   private exportableResources: ExportableResources;
 
   /**
-   *
-   * @param {number} tenantId
-   * @param {string} resourceName
-   * @param {string} format
+   * Exports the given resource data through csv, xlsx or pdf.
+   * @param {number} tenantId - Tenant id.
+   * @param {string} resourceName - Resource name.
+   * @param {string} format - File format.
    */
   async export(tenantId: number, resourceName: string, format: string = 'csv') {
     const resource = sanitizeResourceName(resourceName);
@@ -27,24 +29,25 @@ export class ExportResourceService {
     const exportable =
       this.exportableResources.registry.getExportable(resource);
 
+    if (!resourceMeta.exportable) {
+      throw new ServiceError(Errors.RESOURCE_NOT_EXPORTABLE);
+    }
     const data = await exportable.exportable(tenantId, {});
 
-    const exportableColumns = [
-      {
-        label: 'Account Normal',
-        accessor: 'accountNormalFormatted',
-      },
-      {
-        label: 'Account Type',
-        accessor: 'accountTypeFormatted',
-      },
-    ];
+    const exportableColumns = Object.entries(resourceMeta.columns)
+      .filter(([_, value]) => value.exportable)
+      .map(([key, value]) => ({
+        name: value.name,
+        type: value.type,
+        accessor: value.accessor || key,
+      }));
 
     const workbook = xlsx.utils.book_new();
     const worksheetData = data.map((item) =>
       exportableColumns.map((col) => item[col.accessor])
     );
-    worksheetData.unshift(exportableColumns.map((col) => col.label)); // Add header row
+    worksheetData.unshift(exportableColumns.map((col) => col.name)); // Add header row
+
     const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Exported Data');
 

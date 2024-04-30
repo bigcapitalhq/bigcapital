@@ -5,6 +5,7 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'journalNumber',
@@ -54,6 +55,48 @@ export default {
       name: 'manual_journal.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  columns: {
+    date: {
+      name: 'manual_journal.field.date',
+      type: 'date',
+      exportable: true,
+    },
+    journalNumber: {
+      name: 'manual_journal.field.journal_number',
+      type: 'text',
+      exportable: true,
+    },
+    reference: {
+      name: 'manual_journal.field.reference',
+      type: 'text',
+      exportable: true,
+    },
+    journalType: {
+      name: 'manual_journal.field.journal_type',
+      type: 'text',
+      exportable: true,
+    },
+    currencyCode: {
+      name: 'manual_journal.field.currency',
+      type: 'text',
+      exportable: true,
+    },
+    exchange_rate: {
+      name: 'manual_journal.field.exchange_rate',
+      type: 'number',
+      exportable: true,
+    },
+    description: {
+      name: 'manual_journal.field.description',
+      type: 'text',
+      exportable: true,
+    },
+    publish: {
+      name: 'Publish',
+      type: 'boolean',
+      exportable: true,
     },
   },
   fields2: {

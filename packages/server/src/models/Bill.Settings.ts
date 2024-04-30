@@ -5,6 +5,7 @@ export default {
     sortField: 'bill_date',
   },
   importable: true,
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'billNumber',
@@ -80,6 +81,48 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    billNumber: {
+      name: 'Bill No.',
+      type: 'text',
+      exportable: true,
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      type: 'text',
+      exportable: true,
+    },
+    billDate: {
+      name: 'Date',
+      type: 'date',
+      exportable: true,
+    },
+    dueDate: {
+      name: 'Due Date',
+      type: 'date',
+      exportable: true,
+    },
+    vendorId: {
+      name: 'Vendor',
+      type: 'text',
+      exportable: true,
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+      exportable: true,
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+      exportable: true,
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
+      exportable: true,
+    },
+  },
   fields2: {
     billNumber: {
       name: 'Bill No.',
@@ -132,7 +175,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'Rate',

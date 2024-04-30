@@ -5,6 +5,7 @@ export default {
     sortField: 'created_at',
   },
   importable: true,
+  exportable: true,
   fields: {
     first_name: {
       name: 'vendor.field.first_name',
@@ -89,6 +90,135 @@ export default {
         }
       },
     },
+  },
+  columns: {
+    firstName: {
+      name: 'vendor.field.first_name',
+      type: 'text',
+    },
+    lastName: {
+      name: 'vendor.field.last_name',
+      type: 'text',
+    },
+    displayName: {
+      name: 'vendor.field.display_name',
+      type: 'text',
+    },
+    email: {
+      name: 'vendor.field.email',
+      type: 'text',
+    },
+    workPhone: {
+      name: 'vendor.field.work_phone',
+      type: 'text',
+    },
+    personalPhone: {
+      name: 'vendor.field.personal_pone',
+      type: 'text',
+    },
+    companyName: {
+      name: 'vendor.field.company_name',
+      type: 'text',
+    },
+    website: {
+      name: 'vendor.field.website',
+      type: 'text',
+    },
+    createdAt: {
+      name: 'vendor.field.created_at',
+      type: 'date',
+    },
+    balance: {
+      name: 'vendor.field.balance',
+      type: 'number',
+    },
+    openingBalance: {
+      name: 'vendor.field.opening_balance',
+      type: 'number',
+    },
+    openingBalanceAt: {
+      name: 'vendor.field.opening_balance_at',
+      type: 'date',
+    },
+    currencyCode: {
+      name: 'vendor.field.currency',
+      type: 'text',
+    },
+    status: {
+      name: 'vendor.field.status',
+    },
+    // Billing Address
+    billingAddress1: {
+      name: 'Billing Address 1',
+      column: 'billing_address1',
+      type: 'text',
+    },
+    billingAddress2: {
+      name: 'Billing Address 2',
+      column: 'billing_address2',
+      type: 'text',
+    },
+    billingAddressCity: {
+      name: 'Billing Address City',
+      column: 'billing_address_city',
+      type: 'text',
+    },
+    billingAddressCountry: {
+      name: 'Billing Address Country',
+      column: 'billing_address_country',
+      type: 'text',
+    },
+    billingAddressPostcode: {
+      name: 'Billing Address Postcode',
+      column: 'billing_address_postcode',
+      type: 'text',
+    },
+    billingAddressState: {
+      name: 'Billing Address State',
+      column: 'billing_address_state',
+      type: 'text',
+    },
+    billingAddressPhone: {
+      name: 'Billing Address Phone',
+      column: 'billing_address_phone',
+      type: 'text',
+    },
+    // Shipping Address
+    shippingAddress1: {
+      name: 'Shipping Address 1',
+      column: 'shipping_address1',
+      type: 'text',
+    },
+    shippingAddress2: {
+      name: 'Shipping Address 2',
+      column: 'shipping_address2',
+      type: 'text',
+    },
+    shippingAddressCity: {
+      name: 'Shipping Address City',
+      column: 'shipping_address_city',
+      type: 'text',
+    },
+    shippingAddressCountry: {
+      name: 'Shipping Address Country',
+      column: 'shipping_address_country',
+      type: 'text',
+    },
+    shippingAddressPostcode: {
+      name: 'Shipping Address Postcode',
+      column: 'shipping_address_postcode',
+      type: 'text',
+    },
+    shippingAddressState: {
+      name: 'Shipping Address State',
+      column: 'shipping_address_state',
+      type: 'text',
+    },
+    shippingAddressPhone: {
+      name: 'Shipping Address Phone',
+      column: 'shipping_address_phone',
+      type: 'text',
+    }
   },
   fields2: {
     firstName: {

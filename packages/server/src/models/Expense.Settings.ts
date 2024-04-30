@@ -8,6 +8,7 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportabe: true,
   fields: {
     payment_date: {
       name: 'expense.field.payment_date',
@@ -61,6 +62,47 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    paymentReceive: {
+      name: 'expense.field.payment_account',
+      exportable: true,
+    },
+    referenceNo: {
+      name: 'expense.field.reference_no',
+      type: 'text',
+      exportable: true,
+    },
+    paymentDate: {
+      name: 'expense.field.payment_date',
+      type: 'date',
+      exportable: true,
+    },
+    currencyCode: {
+      name: 'expense.field.currency_code',
+      type: 'text',
+      exportable: true,
+    },
+    exchangeRate: {
+      name: 'expense.field.exchange_rate',
+      type: 'number',
+      exportable: true,
+    },
+    description: {
+      name: 'expense.field.description',
+      type: 'text',
+      exportable: true,
+    },
+    categories: {
+      name: 'expense.field.categories',
+      type: 'collection',
+      exportable: true,
+    },
+    publish: {
+      name: 'expense.field.publish',
+      type: 'boolean',
+      exportable: true,
+    },
+  },
   fields2: {
     paymentAccountId: {
       name: 'expense.field.payment_account',
@@ -68,7 +110,7 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: "Matches the account name or code."
+      importHint: 'Matches the account name or code.',
     },
     referenceNo: {
       name: 'expense.field.reference_no',
@@ -102,7 +144,7 @@ export default {
           relationModel: 'Account',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the account name or code."
+          importHint: 'Matches the account name or code.',
         },
         amount: {
           name: 'expense.field.amount',

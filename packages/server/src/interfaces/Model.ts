@@ -127,12 +127,14 @@ export interface IModelMeta {
   defaultSort: IModelMetaDefaultSort;
 
   importable?: boolean;
+  exportable?: boolean;
 
   importAggregator?: string;
   importAggregateOn?: string;
   importAggregateBy?: string;
 
   fields: { [key: string]: IModelMetaField };
+  columns: { [key: string]: IModelMetaColumn };
 }
 
 // ----
@@ -161,3 +163,15 @@ export type IModelMetaField2 = IModelMetaFieldCommon2 &
     | IModelMetaRelationField2
     | IModelMetaCollectionField
   );
+
+export interface ImodelMetaColumnMeta {
+  name: string;
+  accessor?: string;
+  exportable?: boolean;
+}
+
+interface IModelMetaColumnText {
+  type: 'text;';
+}
+
+export type IModelMetaColumn = ImodelMetaColumnMeta & IModelMetaColumnText;

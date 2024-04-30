@@ -77,6 +77,71 @@ export default {
       sortCustomQuery: StatusFieldSortQuery,
     },
   },
+  columns: {
+    amount: {
+      name: 'receipt.field.amount',
+      column: 'amount',
+      type: 'number',
+      exportable: true,
+    },
+    depositAccount: {
+      column: 'deposit_account_id',
+      name: 'receipt.field.deposit_account',
+      type: 'relation',
+      exportable: true,
+    },
+    customer: {
+      name: 'receipt.field.customer',
+      column: 'customer_id',
+      type: 'relation',
+      exportable: true,
+    },
+    receiptDate: {
+      name: 'receipt.field.receipt_date',
+      column: 'receipt_date',
+      type: 'date',
+      exportable: true,
+    },
+    receiptNumber: {
+      name: 'receipt.field.receipt_number',
+      column: 'receipt_number',
+      type: 'text',
+      exportable: true,
+    },
+    referenceNo: {
+      name: 'receipt.field.reference_no',
+      column: 'reference_no',
+      type: 'text',
+      exportable: true,
+    },
+    receiptMessage: {
+      name: 'receipt.field.receipt_message',
+      column: 'receipt_message',
+      type: 'text',
+      exportable: true,
+    },
+    statement: {
+      name: 'receipt.field.statement',
+      column: 'statement',
+      type: 'text',
+      exportable: true,
+    },
+    createdAt: {
+      name: 'receipt.field.created_at',
+      column: 'created_at',
+      type: 'date',
+      exportable: true,
+    },
+    status: {
+      name: 'receipt.field.status',
+      type: 'enumeration',
+      options: [
+        { key: 'draft', label: 'receipt.field.status.draft' },
+        { key: 'closed', label: 'receipt.field.status.closed' },
+      ],
+      exportable: true,
+    },
+  },
   fields2: {
     receiptDate: {
       name: 'Receipt Date',
@@ -126,7 +191,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'invoice.field.rate',
