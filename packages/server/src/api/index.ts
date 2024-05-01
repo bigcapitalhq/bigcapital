@@ -4,6 +4,7 @@ import { Container } from 'typedi';
 // Middlewares
 import JWTAuth from '@/api/middleware/jwtAuth';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import SubscriptionMiddleware from '@/api/middleware/SubscriptionMiddleware';
 import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
 import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
 import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
@@ -36,6 +37,7 @@ import Resources from './controllers/Resources';
 import ExchangeRates from '@/api/controllers/ExchangeRates';
 import Media from '@/api/controllers/Media';
 import Ping from '@/api/controllers/Ping';
+import { SubscriptionController } from '@/api/controllers/Subscription';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
 import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
 import Jobs from './controllers/Jobs';
@@ -72,6 +74,7 @@ export default () => {
   app.use('/oidc', Container.get(OidcController).router());
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
+  app.use('/subscription', Container.get(SubscriptionController).router());
   app.use('/organization', Container.get(Organization).router());
   app.use('/ping', Container.get(Ping).router());
   app.use('/jobs', Container.get(Jobs).router());
@@ -85,6 +88,7 @@ export default () => {
   dashboard.use(JWTAuth);
   dashboard.use(AttachCurrentTenantUser);
   dashboard.use(TenancyMiddleware);
+  dashboard.use(SubscriptionMiddleware('main'));
   dashboard.use(EnsureTenantIsInitialized);
   dashboard.use(SettingsMiddleware);
   dashboard.use(I18nAuthenticatedMiddlware);
@@ -138,12 +142,10 @@ export default () => {
   dashboard.use('/warehouses', Container.get(WarehousesController).router());
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
-
   dashboard.use('/import', Container.get(ImportController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
-
   dashboard.use('/', Container.get(WarehousesItemController).router());
 
   dashboard.use('/dashboard', Container.get(DashboardController).router());

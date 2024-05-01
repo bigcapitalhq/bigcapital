@@ -2,19 +2,21 @@ import { Inject, Service } from 'typedi';
 import { chain } from 'lodash';
 import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
-import { ERRORS, getSheetColumns, getUnmappedSheetColumns } from './_utils';
-import HasTenancyService from '../Tenancy/TenancyService';
+import {
+  ERRORS,
+  getSheetColumns,
+  getUnmappedSheetColumns,
+  readImportFile,
+} from './_utils';
 import { ImportFileCommon } from './ImportFileCommon';
 import { ImportFileDataTransformer } from './ImportFileDataTransformer';
 import ResourceService from '../Resource/ResourceService';
 import UnitOfWork from '../UnitOfWork';
 import { ImportFilePreviewPOJO } from './interfaces';
+import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileProcess {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private resource: ResourceService;
 
@@ -38,10 +40,9 @@ export class ImportFileProcess {
     importId: number,
     trx?: Knex.Transaction
   ): Promise<ImportFilePreviewPOJO> {
-    const { Import } = this.tenancy.models(tenantId);
-
     const importFile = await Import.query()
       .findOne('importId', importId)
+      .where('tenantId', tenantId)
       .throwIfNotFound();
 
     // Throw error if the import file is not mapped yet.
@@ -49,27 +50,37 @@ export class ImportFileProcess {
       throw new ServiceError(ERRORS.IMPORT_FILE_NOT_MAPPED);
     }
     // Read the imported file.
-    const buffer = await this.importCommon.readImportFile(importFile.filename);
+    const buffer = await readImportFile(importFile.filename);
     const sheetData = this.importCommon.parseXlsxSheet(buffer);
     const header = getSheetColumns(sheetData);
 
-    const importableFields = this.resource.getResourceImportableFields(
-      tenantId,
-      importFile.resource
-    );
-    // Prases the sheet json data.
-    const parsedData = this.importParser.parseSheetData(
-      importFile,
-      importableFields,
-      sheetData
-    );
+    const resource = importFile.resource;
+    const resourceFields = this.resource.getResourceFields2(tenantId, resource);
+
     // Runs the importing operation with ability to return errors that will happen.
-    const [successedImport, failedImport] = await this.uow.withTransaction(
-      tenantId,
-      (trx: Knex.Transaction) =>
-        this.importCommon.import(tenantId, importFile, parsedData, trx),
-      trx
-    );
+    const [successedImport, failedImport, allData] =
+      await this.uow.withTransaction(
+        tenantId,
+        async (trx: Knex.Transaction) => {
+          // Prases the sheet json data.
+          const parsedData = await this.importParser.parseSheetData(
+            tenantId,
+            importFile,
+            resourceFields,
+            sheetData,
+            trx
+          );
+          const [successedImport, failedImport] =
+            await this.importCommon.import(
+              tenantId,
+              importFile,
+              parsedData,
+              trx
+            );
+          return [successedImport, failedImport, parsedData];
+        },
+        trx
+      );
     const mapping = importFile.mappingParsed;
     const errors = chain(failedImport)
       .map((oper) => oper.error)
@@ -77,13 +88,14 @@ export class ImportFileProcess {
       .value();
 
     const unmappedColumns = getUnmappedSheetColumns(header, mapping);
-    const totalCount = parsedData.length;
+    const totalCount = allData.length;
 
     const createdCount = successedImport.length;
     const errorsCount = failedImport.length;
     const skippedCount = errorsCount;
 
     return {
+      resource,
       createdCount,
       skippedCount,
       totalCount,

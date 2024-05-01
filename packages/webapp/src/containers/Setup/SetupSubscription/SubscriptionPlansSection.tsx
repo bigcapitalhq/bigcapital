@@ -1,42 +1,30 @@
 // @ts-nocheck
-import React from 'react';
-import { Field } from 'formik';
+import { T } from '@/components';
 
-import { T, SubscriptionPlans } from '@/components';
-
-import { compose } from '@/utils';
+import { SubscriptionPlans } from './SubscriptionPlan';
 import withPlans from '../../Subscriptions/withPlans';
+import { compose } from '@/utils';
+import { Callout, Intent } from '@blueprintjs/core';
 
 /**
  * Billing plans.
  */
-function SubscriptionPlansSection({ plans }) {
+function SubscriptionPlansSectionRoot({ plans }) {
   return (
-    <section class="billing-plans__section">
-      <h1 class="title">
-        <T id={'setup.plans.select_plan.title'} />
-      </h1>
-      <div class="description">
-        <p className="paragraph">
-          <T id={'setup.plans.select_plan.description'} />
-        </p>
-      </div>
-
-      <Field name={'plan_slug'}>
-        {({ form: { setFieldValue }, field: { value } }) => (
-          <SubscriptionPlans
-            value={value}
-            plans={plans}
-            onSelect={(value) => {
-              setFieldValue('plan_slug', value);
-            }}
-          />
-        )}
-      </Field>
+    <section>
+      <Callout
+        style={{ marginBottom: '1.5rem' }}
+        icon={null}
+        title={'Early Adaptors Plan'}
+      >
+        We're looking for 200 early adaptors, when you subscribe you'll get
+        the full features and unlimited users for a year regardless of the subscribed plan.
+      </Callout>
+      <SubscriptionPlans plans={plans} />
     </section>
   );
 }
 
-export default compose(withPlans(({ plans }) => ({ plans })))(
-  SubscriptionPlansSection,
-);
+export const SubscriptionPlansSection = compose(
+  withPlans(({ plans }) => ({ plans })),
+)(SubscriptionPlansSectionRoot);

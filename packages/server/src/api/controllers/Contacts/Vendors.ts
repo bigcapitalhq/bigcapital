@@ -144,10 +144,8 @@ export default class VendorsController extends ContactsController {
     try {
       const vendor = await this.vendorsApplication.createVendor(
         tenantId,
-        contactDTO,
-        user
+        contactDTO
       );
-
       return res.status(200).send({
         id: vendor.id,
         message: 'The vendor has been created successfully.',
@@ -272,7 +270,7 @@ export default class VendorsController extends ContactsController {
     const vendorsFilter: IVendorsFilter = {
       inactiveMode: false,
       sortOrder: 'desc',
-      columnSortBy: 'createdAt',
+      columnSortBy: 'created_at',
       page: 1,
       pageSize: 12,
       ...this.matchedQueryData(req),

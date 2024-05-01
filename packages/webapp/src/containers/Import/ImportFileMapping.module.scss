@@ -1,6 +1,16 @@
+.group {
+  margin-top: 1.4rem;
+}
+
+.groupTitle {
+  margin-bottom: 1.2rem;
+  color: #738091;
+  font-weight: 700;
+  padding: 0 11px;
+}
+
 .table {
   width: 100%;
-  margin-top: 1.4rem;
 
   th.label,
   td.label{

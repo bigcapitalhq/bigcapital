@@ -53,10 +53,9 @@ function SetupLeftSectionHeader() {
           <T id={'setup.left_side.title'} />
         </h1>
 
-        <p className={'content__text'}>
-          <T id={'setup.left_side.description'} />
-        </p>
-        <div class="content__divider"></div>
+      <p className={'content__text'}>
+        <T id={'setup.left_side.description'} />
+      </p>
 
         <div className={'content__organization'}>
           <span class="signout">

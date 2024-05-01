@@ -78,6 +78,11 @@ function BillActionsBar({
     addSetting('bills', 'tableSize', size);
   };
 
+  // Handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/bills/import');
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -130,6 +135,7 @@ function BillActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

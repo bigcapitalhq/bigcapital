@@ -1,18 +1,19 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import clsx from 'classnames';
 import { Button, Intent, Position } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FSelect, Group, Hint } from '@/components';
+import { Box, FSelect, Group, Hint } from '@/components';
 import { ImportFileMappingForm } from './ImportFileMappingForm';
-import { EntityColumn, useImportFileContext } from './ImportFileProvider';
+import { EntityColumnField, useImportFileContext } from './ImportFileProvider';
 import { CLASSES } from '@/constants';
 import { ImportFileContainer } from './ImportFileContainer';
 import { ImportStepperStep } from './_types';
 import { ImportFileMapBootProvider } from './ImportFileMappingBoot';
 import styles from './ImportFileMapping.module.scss';
+import { getFieldKey } from './_utils';
 
 export function ImportFileMapping() {
-  const { importId } = useImportFileContext();
+  const { importId, entityColumns } = useImportFileContext();
 
   return (
     <ImportFileMapBootProvider importId={importId}>
@@ -23,56 +24,98 @@ export function ImportFileMapping() {
             Bigcapital fields.
           </p>
 
-          <table className={clsx('bp4-html-table', styles.table)}>
-            <thead>
-              <tr>
-                <th className={styles.label}>Bigcapital Fields</th>
-                <th className={styles.field}>Sheet Column Headers</th>
-              </tr>
-            </thead>
-            <tbody>
-              <ImportFileMappingFields />
-            </tbody>
-          </table>
+          {entityColumns.map((entityColumn, index) => (
+            <ImportFileMappingGroup
+              groupKey={entityColumn.groupKey}
+              groupLabel={entityColumn.groupLabel}
+              fields={entityColumn.fields}
+            />
+          ))}
         </ImportFileContainer>
-
         <ImportFileMappingFloatingActions />
       </ImportFileMappingForm>
     </ImportFileMapBootProvider>
   );
 }
 
-function ImportFileMappingFields() {
-  const { entityColumns, sheetColumns } = useImportFileContext();
+interface ImportFileMappingGroupProps {
+  groupKey: string;
+  groupLabel: string;
+  fields: any;
+}
+
+/**
+ * Mapping fields group
+ * @returns {React.ReactNode}
+ */
+function ImportFileMappingGroup({
+  groupKey,
+  groupLabel,
+  fields,
+}: ImportFileMappingGroupProps) {
+  return (
+    <Box className={styles.group}>
+      {groupLabel && <h3 className={styles.groupTitle}>{groupLabel}</h3>}
+
+      <table className={clsx('bp4-html-table', styles.table)}>
+        <thead>
+          <tr>
+            <th className={styles.label}>Bigcapital Fields</th>
+            <th className={styles.field}>Sheet Column Headers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ImportFileMappingFields fields={fields} />
+        </tbody>
+      </table>
+    </Box>
+  );
+}
+
+interface ImportFileMappingFieldsProps {
+  fields: EntityColumnField[];
+}
+
+/**
+ * Import mapping fields.
+ * @returns {React.ReactNode}
+ */
+function ImportFileMappingFields({ fields }: ImportFileMappingFieldsProps) {
+  const { sheetColumns } = useImportFileContext();
 
   const items = useMemo(
     () => sheetColumns.map((column) => ({ value: column, text: column })),
     [sheetColumns],
   );
-  const columnMapper = (column: EntityColumn, index: number) => (
-    <tr key={index}>
-      <td className={styles.label}>
-        {column.name}{' '}
-        {column.required && <span className={styles.requiredSign}>*</span>}
-      </td>
-      <td className={styles.field}>
-        <Group spacing={4}>
-          <FSelect
-            name={column.key}
-            items={items}
-            popoverProps={{ minimal: true }}
-            minimal={true}
-            fill={true}
-          />
-          {column.hint && (
-            <Hint content={column.hint} position={Position.BOTTOM} />
-          )}
-        </Group>
-      </td>
-    </tr>
+  const columnMapper = useCallback(
+    (column: EntityColumnField, index: number) => (
+      <tr key={index}>
+        <td className={styles.label}>
+          {column.name}{' '}
+          {column.required && <span className={styles.requiredSign}>*</span>}
+        </td>
+        <td className={styles.field}>
+          <Group spacing={4}>
+            <FSelect
+              name={getFieldKey(column.key, column.group)}
+              items={items}
+              popoverProps={{ minimal: true }}
+              minimal={true}
+              fill={true}
+            />
+            {column.hint && (
+              <Hint content={column.hint} position={Position.BOTTOM} />
+            )}
+          </Group>
+        </td>
+      </tr>
+    ),
+    [items],
   );
-  const columns = entityColumns.map(columnMapper);
-
+  const columns = useMemo(
+    () => fields.map(columnMapper),
+    [columnMapper, fields],
+  );
   return <>{columns}</>;
 }
 

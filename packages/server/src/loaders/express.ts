@@ -40,7 +40,13 @@ export default ({ app }) => {
   // Boom response objects.
   app.use(boom());
 
-  app.use(bodyParser.json());
+  app.use(
+    bodyParser.json({
+      verify: (req, res, buf) => {
+        req.rawBody = buf;
+      },
+    })
+  );
 
   // Parses both json and urlencoded.
   app.use(json());

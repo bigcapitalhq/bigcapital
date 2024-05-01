@@ -25,7 +25,6 @@ export default function WizardSetupSteps({ currentStep = 1 }) {
             <WizardSetupStep
               label={step.label}
               isActive={index + 1 === currentStep}
-              key={index}
             />
           ))}
         </ul>

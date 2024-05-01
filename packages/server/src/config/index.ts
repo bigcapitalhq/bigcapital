@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
-import { toInteger } from 'lodash';
+import { defaultTo, toInteger } from 'lodash';
 import { castCommaListEnvVarToArray, parseBoolean } from '@/utils';
 
 dotenv.config();
@@ -55,7 +55,7 @@ module.exports = {
   mail: {
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
-    secure: !!parseInt(process.env.MAIL_SECURE, 10),
+    secure: parseBoolean(defaultTo(process.env.MAIL_SECURE, false), false),
     username: process.env.MAIL_USERNAME,
     password: process.env.MAIL_PASSWORD,
     from: process.env.MAIL_FROM_ADDRESS,
@@ -181,6 +181,14 @@ module.exports = {
   },
 
   /**
+   * Bank Synchronization.
+   */
+  bankSync: {
+    enabled: parseBoolean(defaultTo(process.env.BANKING_CONNECT, false), false),
+    provider: 'plaid',
+  },
+
+  /**
    * Plaid.
    */
   plaid: {
@@ -190,7 +198,7 @@ module.exports = {
     secretSandbox: process.env.PLAID_SECRET_SANDBOX,
     redirectSandBox: process.env.PLAID_SANDBOX_REDIRECT_URI,
     redirectDevelopment: process.env.PLAID_DEVELOPMENT_REDIRECT_URI,
-    linkWebhook: process.env.PLAID_LINK_WEBHOOK,
+    linkWebhook: process.env.PLAID_LINK_WEBHOOK,,
   },
   oidcLogin: {
     disabled: parseBoolean<boolean>(process.env.OIDC_LOGIN_DISABLED, false),
@@ -200,4 +208,22 @@ module.exports = {
       process.env.CORS_ALLOWED_DOMAINS
     ),
   },
+
+  /**
+   * Lemon Squeezy.
+   */
+  lemonSqueezy: {
+    key: process.env.LEMONSQUEEZY_API_KEY,
+    storeId: process.env.LEMONSQUEEZY_STORE_ID,
+    webhookSecret: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
+  },
+
+  /**
+   * Bigcapital (Cloud).
+   * NOTE: DO NOT CHANGE THIS OPTION OR ADD THIS ENV VAR.
+   */
+  hostedOnBigcapitalCloud: parseBoolean(
+    defaultTo(process.env.HOSTED_ON_BIGCAPITAL_CLOUD, false),
+    false
+  ),
 };

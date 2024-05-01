@@ -11,3 +11,25 @@ export const ERRORS = {
   INVENTORY_ACCOUNT_NOT_INVENTORY: 'INVENTORY_ACCOUNT_NOT_INVENTORY',
   CATEGORY_HAVE_ITEMS: 'CATEGORY_HAVE_ITEMS',
 };
+
+export const ItemCategoriesSampleData = [
+  {
+    Name: 'Kassulke Group',
+    Description: 'Optio itaque eaque qui adipisci illo sed.',
+  },
+  {
+    Name: 'Crist, Mraz and Lueilwitz',
+    Description:
+      'Dolores veniam deserunt sed commodi error quia veritatis non.',
+  },
+  {
+    Name: 'Gutmann and Sons',
+    Description:
+      'Ratione aperiam voluptas rem adipisci assumenda eos neque veritatis tempora.',
+  },
+  {
+    Name: 'Reichel - Raynor',
+    Description:
+      'Necessitatibus repellendus placeat possimus dolores excepturi ut.',
+  },
+];

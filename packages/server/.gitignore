@@ -3,3 +3,6 @@
 stdout.log
 /dist
 /build
+/public/imports
+
+dist

@@ -1,6 +1,6 @@
 import { Inject } from 'typedi';
 import * as R from 'ramda';
-import Knex from 'knex';
+import { Knex } from 'knex';
 import { ServiceError } from '@/exceptions';
 import {
   IItemCategory,
@@ -102,7 +102,10 @@ export default class ItemCategoriesService implements IItemCategoriesService {
         }
       });
     if (foundItemCategory) {
-      throw new ServiceError(ERRORS.CATEGORY_NAME_EXISTS);
+      throw new ServiceError(
+        ERRORS.CATEGORY_NAME_EXISTS,
+        'The item category name is already exist.'
+      );
     }
   }
 
@@ -115,7 +118,8 @@ export default class ItemCategoriesService implements IItemCategoriesService {
   public async newItemCategory(
     tenantId: number,
     itemCategoryOTD: IItemCategoryOTD,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    trx?: Knex.Transaction
   ): Promise<IItemCategory> {
     const { ItemCategory } = this.tenancy.models(tenantId);
 
@@ -139,20 +143,24 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       authorizedUser
     );
     // Creates item category under unit-of-work evnirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Inserts the item category.
-      const itemCategory = await ItemCategory.query(trx).insert({
-        ...itemCategoryObj,
-      });
-      // Triggers `onItemCategoryCreated` event.
-      await this.eventPublisher.emitAsync(events.itemCategory.onCreated, {
-        itemCategory,
-        tenantId,
-        trx,
-      } as IItemCategoryCreatedPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Inserts the item category.
+        const itemCategory = await ItemCategory.query(trx).insert({
+          ...itemCategoryObj,
+        });
+        // Triggers `onItemCategoryCreated` event.
+        await this.eventPublisher.emitAsync(events.itemCategory.onCreated, {
+          itemCategory,
+          tenantId,
+          trx,
+        } as IItemCategoryCreatedPayload);
 
-      return itemCategory;
-    });
+        return itemCategory;
+      },
+      trx
+    );
   }
 
   /**
@@ -308,7 +316,7 @@ export default class ItemCategoriesService implements IItemCategoriesService {
       } as IItemCategoryDeletedPayload);
     });
   }
- 
+
   /**
    * Parses items categories filter DTO.
    * @param {} filterDTO

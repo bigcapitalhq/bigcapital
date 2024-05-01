@@ -36,3 +36,43 @@ export const ERRORS = {
   EXPENSE_ALREADY_PUBLISHED: 'expense_already_published',
   EXPENSE_HAS_ASSOCIATED_LANDED_COST: 'EXPENSE_HAS_ASSOCIATED_LANDED_COST',
 };
+
+export const ExpensesSampleData = [
+  {
+    'Payment Date': '2024-03-01',
+    'Reference No.': 'REF-1',
+    'Payment Account': 'Petty Cash',
+    Description: 'Vel et dolorem architecto veniam.',
+    'Currency Code': '',
+    'Exchange Rate': '',
+    'Expense Account': 'Utilities Expense',
+    Amount: 9000,
+    'Line Description': 'Voluptates voluptas corporis vel.',
+    Publish: 'T',
+  },
+  {
+    'Payment Date': '2024-03-02',
+    'Reference No.': 'REF-2',
+    'Payment Account': 'Petty Cash',
+    Description: 'Id est molestias.',
+    'Currency Code': '',
+    'Exchange Rate': '',
+    'Expense Account': 'Utilities Expense',
+    Amount: 9000,
+    'Line Description': 'Eos voluptatem cumque et voluptate reiciendis.',
+    Publish: 'T',
+  },
+  {
+    'Payment Date': '2024-03-03',
+    'Reference No.': 'REF-3',
+    'Payment Account': 'Petty Cash',
+    Description: 'Quam cupiditate at nihil dicta dignissimos non fugit illo.',
+    'Currency Code': '',
+    'Exchange Rate': '',
+    'Expense Account': 'Utilities Expense',
+    Amount: 9000,
+    'Line Description':
+      'Hic alias rerum sed commodi dolores sint animi perferendis.',
+    Publish: 'T',
+  },
+];

@@ -82,7 +82,10 @@ export class CommandManualJournalValidators {
         }
       });
     if (journals.length > 0) {
-      throw new ServiceError(ERRORS.JOURNAL_NUMBER_EXISTS);
+      throw new ServiceError(
+        ERRORS.JOURNAL_NUMBER_EXISTS,
+        'The journal number is already exist.'
+      );
     }
   }
 

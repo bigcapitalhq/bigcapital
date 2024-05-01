@@ -3,17 +3,12 @@ import { Intent } from '@blueprintjs/core';
 import { useImportFileMapping } from '@/hooks/query/import';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useImportFileContext } from './ImportFileProvider';
-import { useMemo } from 'react';
-import { isEmpty, lowerCase } from 'lodash';
 import { AppToaster } from '@/components';
-import { useImportFileMapBootContext } from './ImportFileMappingBoot';
-import { transformToForm } from '@/utils';
-
-interface ImportFileMappingFormProps {
-  children: React.ReactNode;
-}
-
-type ImportFileMappingFormValues = Record<string, string | null>;
+import { ImportFileMappingFormProps } from './_types';
+import {
+  transformValueToReq,
+  useImportFileMappingInitialValues,
+} from './_utils';
 
 export function ImportFileMappingForm({
   children,
@@ -52,50 +47,3 @@ export function ImportFileMappingForm({
     </Formik>
   );
 }
-
-const transformValueToReq = (value: ImportFileMappingFormValues) => {
-  const mapping = Object.keys(value)
-    .filter((key) => !isEmpty(value[key]))
-    .map((key) => ({ from: value[key], to: key }));
-  return { mapping };
-};
-
-const transformResToFormValues = (value: { from: string; to: string }[]) => {
-  return value?.reduce((acc, map) => {
-    acc[map.to] = map.from;
-    return acc;
-  }, {});
-};
-
-const useImportFileMappingInitialValues = () => {
-  const { importFile } = useImportFileMapBootContext();
-  const { entityColumns, sheetColumns } = useImportFileContext();
-
-  const initialResValues = useMemo(
-    () => transformResToFormValues(importFile?.map || []),
-    [importFile?.map],
-  );
-
-  const initialValues = useMemo(
-    () =>
-      entityColumns.reduce((acc, { key, name }) => {
-        const _name = lowerCase(name);
-        const _matched = sheetColumns.find(
-          (column) => lowerCase(column) === _name,
-        );
-        // Match the default column name the same field name
-        // if matched one of sheet columns has the same field name.
-        acc[key] = _matched ? _matched : '';
-        return acc;
-      }, {}),
-    [entityColumns, sheetColumns],
-  );
-
-  return useMemo(
-    () => ({
-      ...transformToForm(initialResValues, initialValues),
-      ...initialValues,
-    }),
-    [initialValues, initialResValues],
-  );
-};

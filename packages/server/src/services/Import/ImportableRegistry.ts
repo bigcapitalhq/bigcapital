@@ -5,7 +5,7 @@ export class ImportableRegistry {
   private static instance: ImportableRegistry;
   private importables: Record<string, Importable>;
 
-  private constructor() {
+  constructor() {
     this.importables = {};
   }
 

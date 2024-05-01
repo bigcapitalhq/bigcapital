@@ -1,9 +1,9 @@
 // @ts-nocheck
 import { useQueryClient, useMutation } from 'react-query';
 import { useRequestQuery } from '../useQueryRequest';
-import { useRequestPdf } from '../utils';
 import useApiRequest from '../useRequest';
 import { transformPagination } from '@/utils';
+import { useRequestPdf } from '../useRequestPdf';
 import t from './types';
 
 const commonInvalidateQueries = (queryClient) => {
@@ -165,9 +165,7 @@ export function useReceipt(id, props) {
  * @param {number} receiptId -
  */
 export function usePdfReceipt(receiptId: number) {
-  return useRequestPdf({
-    url: `sales/receipts/${receiptId}`,
-  });
+  return useRequestPdf({ url: `sales/receipts/${receiptId}` });
 }
 
 export function useRefreshReceipts() {

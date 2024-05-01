@@ -1,0 +1,59 @@
+.root{
+  border-radius: 5px;
+  padding: 40px 15px;
+  position: relative;
+  border: 1px solid #D8DEE4;
+  padding-top: 45px;
+  flex: 1;
+
+  &.isFeatured {
+    background-color: #F5F6F8;
+    border: 0;
+  }
+}
+.featuredBox {
+  background-color: #A3ACBA;
+  height: 30px;
+  line-height: 30px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-radius: 5px 5px 0 0;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+}
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2F343C;
+  
+}
+.description{
+  font-size: 14px;
+  color: #687385;
+  line-height: 1.5;
+}
+.buttonCTA {
+  min-height: 34px;
+  border-radius: 5px;
+}
+.features {
+  margin-top: 1rem;
+}
+.priceRoot{
+  padding-bottom: 10px;
+}
+.price {
+  font-size: 18px;
+    line-height: 1;
+    font-weight: 500;
+    color: #404854;
+}
+
+.pricePer{ 
+  color: #738091;
+  font-size: 12px;
+  line-height: 1;
+}

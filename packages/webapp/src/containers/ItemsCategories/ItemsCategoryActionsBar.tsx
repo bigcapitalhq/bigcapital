@@ -12,7 +12,7 @@ import {
   FormattedMessage as T,
   AdvancedFilterPopover,
   DashboardFilterButton,
-  DashboardActionsBar
+  DashboardActionsBar,
 } from '@/components';
 
 import withItemCategories from './withItemCategories';
@@ -22,6 +22,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 
 import { compose } from '@/utils';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Items categories actions bar.
@@ -41,9 +42,14 @@ function ItemsCategoryActionsBar({
   openAlert,
 }) {
   const { fields } = useItemsCategoriesContext();
+  const history = useHistory();
 
   const onClickNewCategory = () => {
     openDialog('item-category-form', {});
+  };
+
+  const handleImportBtnClick = () => {
+    history.push('/item/categories/import');
   };
 
   // Handle the items categories bulk delete.
@@ -93,6 +99,7 @@ function ItemsCategoryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
