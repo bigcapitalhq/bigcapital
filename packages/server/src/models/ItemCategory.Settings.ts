@@ -5,6 +5,7 @@ export default {
     sortOrder: 'DESC',
   },
   importable: true,
+  exportable: true,
   fields: {
     name: {
       name: 'item_category.field.name',

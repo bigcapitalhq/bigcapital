@@ -15,7 +15,11 @@ export class ExpensesExportable extends Exportable {
    */
   public exportable(tenantId: number, query: IExpensesFilter) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
+      page: 1,
+      pageSize: 12000,
     } as IExpensesFilter;
 
     return this.expensesApplication

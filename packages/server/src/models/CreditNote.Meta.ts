@@ -12,6 +12,7 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  exportable: true,
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -79,6 +80,41 @@ export default {
       name: 'credit_note.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  columns: {
+    customer: {
+      name: 'Customer',
+      type: 'relation',
+      accessor: 'customer.displayName',
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+    },
+    creditNoteDate: {
+      name: 'Credit Note Date',
+      type: 'date',
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      type: 'text',
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+    },
+    termsConditions: {
+      name: 'Terms & Conditions',
+      type: 'text',
+    },
+    creditNoteNumber: {
+      name: 'Credit Note Number',
+      type: 'text',
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
     },
   },
   fields2: {

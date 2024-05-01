@@ -4,6 +4,7 @@ export default {
     sortOrder: 'DESC',
     sortField: 'created_at',
   },
+  exportable: true,
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',

@@ -12,6 +12,7 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  exportable: true,
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -76,6 +77,37 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    vendorId: {
+      name: 'Vendor',
+      type: 'relation',
+      accessor: 'vendor.displayName',
+    },
+    exchangeRate: {
+      name: 'Echange Rate',
+      type: 'text',
+    },
+    vendorCreditNumber: {
+      name: 'Vendor Credit No.',
+      type: 'text',
+    },
+    referenceNo: {
+      name: 'Refernece No.',
+      type: 'text',
+    },
+    vendorCreditDate: {
+      name: 'Vendor Credit Date',
+      type: 'date',
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
+    },
+  },
   fields2: {
     vendorId: {
       name: 'Vendor',
@@ -122,7 +154,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'Rate',

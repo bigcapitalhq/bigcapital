@@ -15,7 +15,11 @@ export class BillsExportable extends Exportable {
    */
   public exportable(tenantId: number, query: IBillsFilter) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
+      page: 1,
+      pageSize: 12000,
     } as IBillsFilter;
 
     return this.billsApplication

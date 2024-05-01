@@ -8,7 +8,7 @@ export default {
     sortField: 'name',
   },
   importable: true,
-  exportabe: true,
+  exportable: true,
   fields: {
     payment_date: {
       name: 'expense.field.payment_date',
@@ -65,6 +65,7 @@ export default {
   columns: {
     paymentReceive: {
       name: 'expense.field.payment_account',
+      type: 'text',
       exportable: true,
     },
     referenceNo: {

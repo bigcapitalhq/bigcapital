@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { ISalesInvoicesFilter, ISalesReceiptsFilter } from '@/interfaces';
+import { ISalesReceiptsFilter } from '@/interfaces';
 import { Exportable } from '@/services/Export/Exportable';
 import { SaleReceiptApplication } from './SaleReceiptApplication';
 
@@ -15,8 +15,12 @@ export class SaleReceiptsExportable extends Exportable {
    */
   public exportable(tenantId: number, query: ISalesReceiptsFilter) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
-    } as ISalesInvoicesFilter;
+      page: 1,
+      pageSize: 12,
+    } as ISalesReceiptsFilter;
 
     return this.saleReceiptsApp
       .getSaleReceipts(tenantId, parsedQuery)

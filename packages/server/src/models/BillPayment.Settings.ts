@@ -72,38 +72,31 @@ export default {
     vendor: {
       name: 'bill_payment.field.vendor',
       type: 'relation',
-      exportable: true,
+      accessor: 'vendor.displayName',
     },
     paymentDate: {
       name: 'bill_payment.field.payment_date',
       type: 'date',
-      required: true,
-      exportable: true,
     },
     paymentNumber: {
       name: 'bill_payment.field.payment_number',
       type: 'text',
-      exportable: true,
     },
     paymentAccountId: {
       name: 'bill_payment.field.payment_account',
       type: 'relation',
-      exportable: true,
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
       type: 'number',
-      exportable: true,
     },
     statement: {
       name: 'bill_payment.field.statement',
       type: 'text',
-      exportable: true,
     },
     reference: {
       name: 'bill_payment.field.reference',
       type: 'text',
-      exportable: true,
     },
   },
   fields2: {

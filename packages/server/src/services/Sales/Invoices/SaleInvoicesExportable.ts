@@ -15,7 +15,11 @@ export class SaleInvoicesExportable extends Exportable {
    */
   public exportable(tenantId: number, query: ISalesInvoicesFilter) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
+      page: 1,
+      pageSize: 120000,
     } as ISalesInvoicesFilter;
 
     return this.saleInvoicesApplication

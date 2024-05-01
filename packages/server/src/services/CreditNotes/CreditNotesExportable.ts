@@ -16,7 +16,11 @@ export class CreditNotesExportable extends Exportable {
    */
   public exportable(tenantId: number, query: ICreditNotesQueryDTO) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
+      page: 1,
+      pageSize: 12000,
     } as ICreditNotesQueryDTO;
 
     return this.getCreditNotes

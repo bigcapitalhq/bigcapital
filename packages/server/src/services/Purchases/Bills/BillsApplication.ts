@@ -99,7 +99,7 @@ export class BillsApplication {
     tenantId: number,
     filterDTO: IBillsFilter
   ): Promise<{
-    bills: IBill;
+    bills: IBill[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {

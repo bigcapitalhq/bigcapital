@@ -14,6 +14,7 @@ import { BillPaymentExportable } from '../Purchases/BillPayments/BillPaymentExpo
 import { ManualJournalsExportable } from '../ManualJournals/ManualJournalExportable';
 import { CreditNotesExportable } from '../CreditNotes/CreditNotesExportable';
 import { VendorCreditsExportable } from '../Purchases/VendorCredits/VendorCreditsExportable';
+import { ItemCategoriesExportable } from '../ItemCategories/ItemCategoriesExportable';
 
 @Service()
 export class ExportableResources {
@@ -32,6 +33,7 @@ export class ExportableResources {
   private importables = [
     { resource: 'Account', exportable: AccountsExportable },
     { resource: 'Item', exportable: ItemsExportable },
+    { resource: 'ItemCategory', exportable: ItemCategoriesExportable },
     { resource: 'Customer', exportable: CustomersExportable },
     { resource: 'Vendor', exportable: VendorsExportable },
     { resource: 'Expense', exportable: ExpensesExportable },
@@ -43,7 +45,7 @@ export class ExportableResources {
     { resource: 'BillPayment', exportable: BillPaymentExportable },
     { resource: 'ManualJournal', exportable: ManualJournalsExportable },
     { resource: 'CreditNote', exportable: CreditNotesExportable },
-    { resource: 'VendorCredit', exportable: VendorCreditsExportable }
+    { resource: 'VendorCredit', exportable: VendorCreditsExportable },
   ];
 
   /**

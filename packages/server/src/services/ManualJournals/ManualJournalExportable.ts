@@ -9,7 +9,7 @@ export class ManualJournalsExportable extends Exportable {
   private manualJournalsApplication: ManualJournalsApplication;
 
   /**
-   * Retrieves the accounts data to exportable sheet.
+   * Retrieves the manual journals data to exportable sheet.
    * @param {number} tenantId
    * @returns
    */

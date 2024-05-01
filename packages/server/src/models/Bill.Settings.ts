@@ -85,42 +85,34 @@ export default {
     billNumber: {
       name: 'Bill No.',
       type: 'text',
-      exportable: true,
     },
     referenceNo: {
       name: 'Reference No.',
       type: 'text',
-      exportable: true,
     },
     billDate: {
       name: 'Date',
       type: 'date',
-      exportable: true,
     },
     dueDate: {
       name: 'Due Date',
       type: 'date',
-      exportable: true,
     },
     vendorId: {
       name: 'Vendor',
       type: 'text',
-      exportable: true,
     },
     exchangeRate: {
       name: 'Exchange Rate',
       type: 'number',
-      exportable: true,
     },
     note: {
       name: 'Note',
       type: 'text',
-      exportable: true,
     },
     open: {
       name: 'Open',
       type: 'boolean',
-      exportable: true,
     },
   },
   fields2: {

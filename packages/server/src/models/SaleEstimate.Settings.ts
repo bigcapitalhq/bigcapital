@@ -4,6 +4,7 @@ export default {
     sortOrder: 'DESC',
     sortField: 'estimate_date',
   },
+  exportable: true,
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -71,6 +72,59 @@ export default {
       name: 'estimate.field.created_at',
       column: 'created_at',
       columnType: 'date',
+    },
+  },
+  columns: {
+    customer: {
+      name: 'Customer',
+      type: 'text',
+      accessor: 'customer.displayName',
+      exportable: true,
+    },
+    estimateDate: {
+      name: 'Estimate Date',
+      type: 'date',
+      exportable: true,
+    },
+    expirationDate: {
+      name: 'Expiration Date',
+      type: 'date',
+      exportable: true,
+    },
+    estimateNumber: {
+      name: 'Estimate No.',
+      type: 'text',
+      exportable: true,
+    },
+    reference: {
+      name: 'Reference No.',
+      type: 'text',
+      exportable: true,
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+      exportable: true,
+    },
+    currencyCode: {
+      name: 'Currency',
+      type: 'text',
+      exportable: true,
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+      exportable: true,
+    },
+    termsConditions: {
+      name: 'Terms & Conditions',
+      type: 'text',
+      exportable: true,
+    },
+    delivered: {
+      name: 'Delivered',
+      type: 'boolean',
+      exportable: true,
     },
   },
   fields2: {

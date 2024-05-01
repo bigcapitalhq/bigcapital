@@ -9,14 +9,18 @@ export class VendorCreditsExportable extends Exportable {
   private getVendorCredits: ListVendorCredits;
 
   /**
-   * Retrieves the accounts data to exportable sheet.
+   * Retrieves the vendor credits data to exportable sheet.
    * @param {number} tenantId -
    * @param {IVendorCreditsQueryDTO} query -
    * @returns {}
    */
   public exportable(tenantId: number, query: IVendorCreditsQueryDTO) {
     const parsedQuery = {
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
       ...query,
+      page: 1,
+      pageSize: 12000,
     } as IVendorCreditsQueryDTO;
 
     return this.getVendorCredits

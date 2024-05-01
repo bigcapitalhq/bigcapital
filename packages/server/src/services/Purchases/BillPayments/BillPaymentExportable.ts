@@ -14,7 +14,11 @@ export class BillPaymentExportable extends Exportable {
    */
   public exportable(tenantId: number, query: any) {
     const parsedQuery = {
+      page: 1,
+      pageSize: 12,
       ...query,
+      sortOrder: 'desc',
+      columnSortBy: 'created_at',
     } as any;
 
     return this.billPaymentsApplication
