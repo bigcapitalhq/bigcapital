@@ -90,56 +90,49 @@ export default {
     name: {
       name: 'account.field.name',
       type: 'text',
-      exportable: true,
     },
     code: {
       name: 'account.field.code',
       type: 'text',
-      exportable: true,
-    },
-    description: {
-      name: 'account.field.description',
-      type: 'text',
-      exportable: true,
     },
     rootType: {
       name: 'account.field.root_type',
       type: 'text',
-      exportable: true,
+      accessor: 'accountRootType',
     },
     accountType: {
       name: 'account.field.type',
       accessor: 'accountTypeLabel',
-      type: 'enumeration',
-      exportable: true,
+      type: 'text',
     },
     accountNormal: {
       name: 'account.field.normal',
       accessor: 'accountNormalFormatted',
-      exportable: true,
     },
     currencyCode: {
       name: 'account.field.currency',
-      exportable: true,
+      type: 'text',
     },
     bankBalance: {
       name: 'account.field.bank_balance',
       accessor: 'bankBalanceFormatted',
+      type: 'text',
       exportable: true,
     },
     balance: {
-      name: 'account.field.bank_balance',
+      name: 'account.field.balance',
       accessor: 'amount',
-      exportable: true,
+    },
+    description: {
+      name: 'account.field.description',
+      type: 'text',
     },
     active: {
       name: 'account.field.active',
       type: 'boolean',
-      exportable: true,
     },
     createdAt: {
       name: 'account.field.created_at',
-      exportable: true,
     },
   },
   fields2: {

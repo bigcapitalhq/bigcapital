@@ -100,11 +100,28 @@ export default {
     },
     vendorId: {
       name: 'Vendor',
+      accessor: 'vendor.displayName',
       type: 'text',
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
     },
     exchangeRate: {
       name: 'Exchange Rate',
       type: 'number',
+    },
+    currencyCode: {
+      name: 'Currency Code',
+      type: 'text',
+    },
+    dueAmount: {
+      name: 'Due Amount',
+      accessor: 'formattedDueAmount',
+    },
+    paidAmount: {
+      name: 'Paid Amount',
+      accessor: 'formattedPaymentAmount'
     },
     note: {
       name: 'Note',

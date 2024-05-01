@@ -92,52 +92,56 @@ export default {
     invoiceDate: {
       name: 'invoice.field.invoice_date',
       type: 'date',
-      exportable: true,
     },
     dueDate: {
       name: 'invoice.field.due_date',
       type: 'date',
-      exportable: true,
     },
     referenceNo: {
       name: 'invoice.field.reference_no',
       type: 'text',
-      exportable: true,
     },
     invoiceNo: {
       name: 'invoice.field.invoice_no',
       type: 'text',
-      exportable: true,
     },
     customer: {
       name: 'invoice.field.customer',
       type: 'text',
-      exportable: true,
+      accessor: 'customer.displayName',
+    },
+    amount: {
+      name: 'invoice.field.amount',
+      type: 'text',
+      accessor: 'balanceAmountFormatted',
     },
     exchangeRate: {
       name: 'invoice.field.exchange_rate',
       type: 'number',
-      exportable: true,
     },
     currencyCode: {
       name: 'invoice.field.currency',
       type: 'text',
-      exportable: true,
+    },
+    paidAmount: {
+      name: 'Paid Amount',
+      accessor: 'paymentAmountFormatted'
+    },
+    dueAmount: {
+      name: 'Due Amount',
+      accessor: 'dueAmountFormatted',
     },
     invoiceMessage: {
       name: 'invoice.field.invoice_message',
       type: 'text',
-      exportable: true,
     },
     termsConditions: {
       name: 'invoice.field.terms_conditions',
       type: 'text',
-      exportable: true,
     },
     delivered: {
       name: 'invoice.field.delivered',
       type: 'boolean',
-      exportable: true,
     },
   },
   fields2: {

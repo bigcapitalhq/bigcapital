@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
 import xlsx from 'xlsx';
+import { get } from 'lodash';
 import { sanitizeResourceName } from '../Import/_utils';
 import ResourceService from '../Resource/ResourceService';
 import { ExportableResources } from './ExportResources';
@@ -92,7 +93,7 @@ export class ExportResourceService {
   private createWorkbook(data: any[], exportableColumns: any[]) {
     const workbook = xlsx.utils.book_new();
     const worksheetData = data.map((item) =>
-      exportableColumns.map((col) => item[col.accessor])
+      exportableColumns.map((col) => get(item, col.accessor))
     );
     worksheetData.unshift(exportableColumns.map((col) => col.name));
 

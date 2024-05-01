@@ -61,43 +61,37 @@ export default {
   columns: {
     customer: {
       name: 'payment_receive.field.customer',
+      accessor: 'customer.displayName',
       type: 'text',
-      importable: true,
     },
     paymentDate: {
       name: 'payment_receive.field.payment_date',
       type: 'date',
-      importable: true,
     },
     amount: {
       name: 'payment_receive.field.amount',
       type: 'number',
-      importable: true,
     },
     referenceNo: {
       name: 'payment_receive.field.reference_no',
       type: 'text',
-      importable: true,
     },
     depositAccount: {
       name: 'payment_receive.field.deposit_account',
+      accessor: 'depositAccount.name',
       type: 'text',
-      importable: true,
     },
     paymentReceiveNo: {
       name: 'payment_receive.field.payment_receive_no',
       type: 'text',
-      importable: true,
     },
     statement: {
       name: 'payment_receive.field.statement',
       type: 'text',
-      importable: true,
     },
     created_at: {
       name: 'payment_receive.field.created_at',
       type: 'date',
-      importable: true,
     },
   },
   fields2: {

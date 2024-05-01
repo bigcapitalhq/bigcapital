@@ -33,7 +33,7 @@ export default {
       fieldType: 'text',
     },
     personal_phone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       column: 'personal_phone',
       fieldType: 'text',
     },
@@ -118,7 +118,7 @@ export default {
       exportable: true,
     },
     personalPhone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       type: 'text',
       exportable: true,
     },

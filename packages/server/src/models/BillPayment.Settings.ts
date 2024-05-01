@@ -82,16 +82,25 @@ export default {
       name: 'bill_payment.field.payment_number',
       type: 'text',
     },
-    paymentAccountId: {
+    paymentAccount: {
       name: 'bill_payment.field.payment_account',
-      type: 'relation',
+      accessor: 'paymentAccount.name',
+      type: 'text',
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+    },
+    currencyCode: {
+      name: 'Currency Code',
+      type: 'text',
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
       type: 'number',
     },
     statement: {
-      name: 'bill_payment.field.statement',
+      name: 'bill_payment.field.note',
       type: 'text',
     },
     reference: {
@@ -131,7 +140,7 @@ export default {
       fieldType: 'number',
     },
     statement: {
-      name: 'bill_payment.field.statement',
+      name: 'bill_payment.field.note',
       fieldType: 'text',
     },
     reference: {

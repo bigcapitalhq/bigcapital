@@ -161,16 +161,19 @@ export default {
     costAccount: {
       name: 'item.field.sell_account',
       type: 'text',
+      accessor: 'costAccount.name',
       exportable: true,
     },
     sellAccount: {
       name: 'item.field.sell_description',
       type: 'text',
+      accessor: 'sellAccount.name',
       exportable: true,
     },
     inventoryAccount: {
       name: 'item.field.inventory_account',
       type: 'text',
+      accessor: 'inventoryAccount.name',
       exportable: true,
     },
     sellDescription: {
@@ -196,6 +199,7 @@ export default {
     category: {
       name: 'item.field.category',
       type: 'text',
+      accessor: 'category.name',
       exportable: true,
     },
     active: {

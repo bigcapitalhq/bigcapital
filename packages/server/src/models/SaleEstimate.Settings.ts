@@ -101,6 +101,11 @@ export default {
       type: 'text',
       exportable: true,
     },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+      type: 'text',
+    },
     exchangeRate: {
       name: 'Exchange Rate',
       type: 'number',
