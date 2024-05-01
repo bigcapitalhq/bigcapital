@@ -1,13 +1,16 @@
 // @ts-nocheck
 import { Formik } from 'formik';
 
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { compose, transformToForm } from '@/utils';
 
 import { ExportDialogFormSchema } from './ExportDialogForm.schema';
 import { ExportDialogFormContent } from './ExportDialogFormContent';
 import { useResourceExport } from '@/hooks/query/FinancialReports/use-export';
 import { ExportFormInitialValues } from './type';
+import { AppToaster } from '@/components';
+import { Intent } from '@blueprintjs/core';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 // Default initial form values.
 const defaultInitialValues = {
@@ -39,9 +42,14 @@ function ExportDialogFormRoot({
     mutateExport({ resource, format })
       .then(() => {
         setSubmitting(false);
+        closeDialog(DialogsName.Export);
       })
       .catch(() => {
         setSubmitting(false);
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong!',
+        });
       });
   };
 
