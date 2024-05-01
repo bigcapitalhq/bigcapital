@@ -50,10 +50,7 @@ export class CustomersApplication {
    * @param   {ISystemUser} authorizedUser
    * @returns {Promise<ICustomer>}
    */
-  public createCustomer = (
-    tenantId: number,
-    customerDTO: ICustomerNewDTO,
-  ) => {
+  public createCustomer = (tenantId: number, customerDTO: ICustomerNewDTO) => {
     return this.createCustomerService.createCustomer(tenantId, customerDTO);
   };
 

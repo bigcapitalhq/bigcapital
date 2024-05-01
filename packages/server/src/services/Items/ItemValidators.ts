@@ -35,7 +35,10 @@ export class ItemsValidators {
       }
     });
     if (foundItems.length > 0) {
-      throw new ServiceError(ERRORS.ITEM_NAME_EXISTS);
+      throw new ServiceError(
+        ERRORS.ITEM_NAME_EXISTS,
+        'The item name is already exist.'
+      );
     }
   }
 

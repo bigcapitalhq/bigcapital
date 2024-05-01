@@ -53,7 +53,8 @@ export class CreateBill {
   public async createBill(
     tenantId: number,
     billDTO: IBillDTO,
-    authorizedUser: ISystemUser
+    authorizedUser: ISystemUser,
+    trx?: Knex.Transaction
   ): Promise<IBill> {
     const { Bill, Contact } = this.tenancy.models(tenantId);
 
@@ -91,26 +92,30 @@ export class CreateBill {
       authorizedUser
     );
     // Write new bill transaction with associated transactions under UOW env.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onBillCreating` event.
-      await this.eventPublisher.emitAsync(events.bill.onCreating, {
-        trx,
-        billDTO,
-        tenantId,
-      } as IBillCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onBillCreating` event.
+        await this.eventPublisher.emitAsync(events.bill.onCreating, {
+          trx,
+          billDTO,
+          tenantId,
+        } as IBillCreatingPayload);
 
-      // Inserts the bill graph object to the storage.
-      const bill = await Bill.query(trx).upsertGraph(billObj);
+        // Inserts the bill graph object to the storage.
+        const bill = await Bill.query(trx).upsertGraph(billObj);
 
-      // Triggers `onBillCreated` event.
-      await this.eventPublisher.emitAsync(events.bill.onCreated, {
-        tenantId,
-        bill,
-        billId: bill.id,
-        trx,
-      } as IBillCreatedPayload);
+        // Triggers `onBillCreated` event.
+        await this.eventPublisher.emitAsync(events.bill.onCreated, {
+          tenantId,
+          bill,
+          billId: bill.id,
+          trx,
+        } as IBillCreatedPayload);
 
-      return bill;
-    });
+        return bill;
+      },
+      trx
+    );
   }
 }

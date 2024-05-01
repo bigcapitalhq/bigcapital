@@ -78,6 +78,11 @@ function PaymentMadeActionsBar({
     addSetting('billPayments', 'tableSize', size);
   };
 
+  // Handle the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/payment-mades/import');
+  }
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -128,6 +133,7 @@ function PaymentMadeActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
           text={<T id={'import'} />}
+          onClick={handleImportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

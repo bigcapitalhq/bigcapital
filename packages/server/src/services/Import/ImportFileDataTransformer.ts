@@ -1,24 +1,43 @@
-import { Service } from 'typedi';
-import * as R from 'ramda';
-import { isUndefined, get, chain } from 'lodash';
+import { Inject, Service } from 'typedi';
+import bluebird from 'bluebird';
+import { isUndefined, pickBy, set } from 'lodash';
+import { Knex } from 'knex';
 import { ImportMappingAttr, ResourceMetaFieldsMap } from './interfaces';
-import { parseBoolean } from '@/utils';
-import { trimObject } from './_utils';
+import {
+  valueParser,
+  parseKey,
+  getFieldKey,
+  aggregate,
+  sanitizeSheetData,
+  getMapToPath,
+} from './_utils';
+import ResourceService from '../Resource/ResourceService';
+import HasTenancyService from '../Tenancy/TenancyService';
+import { CurrencyParsingDTOs } from './_constants';
 
 @Service()
 export class ImportFileDataTransformer {
+  @Inject()
+  private resource: ResourceService;
+
+  @Inject()
+  private tenancy: HasTenancyService;
+
   /**
-   *
+   * Parses the given sheet data before passing to the service layer.
+   * based on the mapped fields and the each field type.
    * @param {number} tenantId -
    * @param {}
    */
-  public parseSheetData(
+  public async parseSheetData(
+    tenantId: number,
     importFile: any,
-    importableFields: any,
-    data: Record<string, unknown>[]
-  ) {
+    importableFields: ResourceMetaFieldsMap,
+    data: Record<string, unknown>[],
+    trx?: Knex.Transaction
+  ): Promise<Record<string, any>[]> {
     // Sanitize the sheet data.
-    const sanitizedData = this.sanitizeSheetData(data);
+    const sanitizedData = sanitizeSheetData(data);
 
     // Map the sheet columns key with the given map.
     const mappedDTOs = this.mapSheetColumns(
@@ -26,19 +45,44 @@ export class ImportFileDataTransformer {
       importFile.mappingParsed
     );
     // Parse the mapped sheet values.
-    const parsedValues = this.parseExcelValues(importableFields, mappedDTOs);
-
-    return parsedValues;
+    const parsedValues = await this.parseExcelValues(
+      tenantId,
+      importableFields,
+      mappedDTOs,
+      trx
+    );
+    const aggregateValues = this.aggregateParsedValues(
+      tenantId,
+      importFile.resource,
+      parsedValues
+    );
+    return aggregateValues;
   }
 
   /**
-   * Sanitizes the data in the imported sheet by trimming object keys.
-   * @param json - The JSON data representing the imported sheet.
-   * @returns {string[][]} - The sanitized data with trimmed object keys.
+   * Aggregates parsed data based on resource metadata configuration.
+   * @param {number} tenantId
+   * @param {string} resourceName
+   * @param {Record<string, any>} parsedData
+   * @returns {Record<string, any>[]}
    */
-  public sanitizeSheetData(json) {
-    return R.compose(R.map(trimObject))(json);
-  }
+  public aggregateParsedValues = (
+    tenantId: number,
+    resourceName: string,
+    parsedData: Record<string, any>[]
+  ): Record<string, any>[] => {
+    let _value = parsedData;
+    const meta = this.resource.getResourceMeta(tenantId, resourceName);
+
+    if (meta.importAggregator === 'group') {
+      _value = aggregate(
+        _value,
+        meta.importAggregateBy,
+        meta.importAggregateOn
+      );
+    }
+    return _value;
+  };
 
   /**
    * Maps the columns of the imported data based on the provided mapping attributes.
@@ -55,7 +99,8 @@ export class ImportFileDataTransformer {
       map
         .filter((mapping) => !isUndefined(item[mapping.from]))
         .forEach((mapping) => {
-          newItem[mapping.to] = item[mapping.from];
+          const toPath = getMapToPath(mapping.to, mapping.group);
+          newItem[toPath] = item[mapping.from];
         });
       return newItem;
     });
@@ -67,35 +112,40 @@ export class ImportFileDataTransformer {
    * @param {Record<string, any>} valueDTOS -
    * @returns {Record<string, any>}
    */
-  public parseExcelValues(
+  public async parseExcelValues(
+    tenantId: number,
     fields: ResourceMetaFieldsMap,
-    valueDTOs: Record<string, any>[]
-  ): Record<string, any> {
-    const parser = (value, key) => {
-      let _value = value;
+    valueDTOs: Record<string, any>[],
+    trx?: Knex.Transaction
+  ): Promise<Record<string, any>[]> {
+    const tenantModels = this.tenancy.models(tenantId);
+    const _valueParser = valueParser(fields, tenantModels, trx);
+    const _keyParser = parseKey(fields);
 
-      // Parses the boolean value.
-      if (fields[key].fieldType === 'boolean') {
-        _value = parseBoolean(value, false);
+    const parseAsync = async (valueDTO) => {
+      // Clean up the undefined keys that not exist in resource fields.
+      const _valueDTO = pickBy(
+        valueDTO,
+        (value, key) => !isUndefined(fields[getFieldKey(key)])
+      );
+      // Keys of mapped values. key structure: `group.key` or `key`.
+      const keys = Object.keys(_valueDTO);
 
-        // Parses the enumeration value.
-      } else if (fields[key].fieldType === 'enumeration') {
-        const field = fields[key];
-        const option = get(field, 'options', []).find(
-          (option) => option.label === value
-        );
-        _value = get(option, 'key');
-        // Prases the numeric value.
-      } else if (fields[key].fieldType === 'number') {
-        _value = parseFloat(value);
-      }
-      return _value;
+      // Map the object values.
+      return bluebird.reduce(
+        keys,
+        async (acc, key) => {
+          const parsedValue = await _valueParser(_valueDTO[key], key);
+          const parsedKey = await _keyParser(key);
+
+          set(acc, parsedKey, parsedValue);
+          return acc;
+        },
+        {}
+      );
     };
-    return valueDTOs.map((DTO) => {
-      return chain(DTO)
-        .pickBy((value, key) => !isUndefined(fields[key]))
-        .mapValues(parser)
-        .value();
+    return bluebird.map(valueDTOs, parseAsync, {
+      concurrency: CurrencyParsingDTOs,
     });
   }
 }

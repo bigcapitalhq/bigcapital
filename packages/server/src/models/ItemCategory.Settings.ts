@@ -4,6 +4,7 @@ export default {
     sortField: 'name',
     sortOrder: 'DESC',
   },
+  importable: true,
   fields: {
     name: {
       name: 'item_category.field.name',
@@ -25,6 +26,18 @@ export default {
       name: 'item_category.field.created_at',
       column: 'created_at',
       columnType: 'date',
+    },
+  },
+  fields2: {
+    name: {
+      name: 'item_category.field.name',
+      column: 'name',
+      fieldType: 'text',
+    },
+    description: {
+      name: 'item_category.field.description',
+      column: 'description',
+      fieldType: 'text',
     },
   },
 };

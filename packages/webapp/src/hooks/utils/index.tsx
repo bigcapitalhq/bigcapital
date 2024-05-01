@@ -4,7 +4,6 @@ export * from './usePrevious';
 export * from './useUpdateEffect';
 export * from './useWatch';
 export * from './useWhen';
-export * from './useRequestPdf';
 export * from './useIntersectionObserver';
 export * from './useAbilityContext';
 export * from './useCustomCompareEffect';

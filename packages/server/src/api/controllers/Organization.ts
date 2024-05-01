@@ -6,6 +6,7 @@ import { check, ValidationChain } from 'express-validator';
 import asyncMiddleware from '@/api/middleware/asyncMiddleware';
 import JWTAuth from '@/api/middleware/jwtAuth';
 import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
+import SubscriptionMiddleware from '@/api/middleware/SubscriptionMiddleware';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
 import OrganizationService from '@/services/Organization/OrganizationService';
 import { MONTHS, ACCEPTED_LOCALES } from '@/services/Organization/constants';
@@ -17,7 +18,7 @@ import BaseController from '@/api/controllers/BaseController';
 @Service()
 export default class OrganizationController extends BaseController {
   @Inject()
-  private organizationService: OrganizationService;
+  organizationService: OrganizationService;
 
   /**
    * Router constructor.
@@ -25,10 +26,13 @@ export default class OrganizationController extends BaseController {
   router() {
     const router = Router();
 
+    // Should before build tenant database the user be authorized and
+    // most important than that, should be subscribed to any plan.
     router.use(JWTAuth);
     router.use(AttachCurrentTenantUser);
     router.use(TenancyMiddleware);
 
+    router.use('/build', SubscriptionMiddleware('main'));
     router.post(
       '/build',
       this.buildOrganizationValidationSchema,

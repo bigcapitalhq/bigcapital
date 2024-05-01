@@ -31,3 +31,17 @@ export const ERRORS = {
 };
 
 export const DEFAULT_VIEWS = [];
+
+export const PaymentsReceiveSampleData = [
+  {
+    Customer: 'Randall Kohler',
+    'Payment Date': '2024-10-10',
+    'Payment Receive No.': 'PAY-0001',
+    'Reference No.': 'REF-0001',
+    'Deposit Account': 'Petty Cash',
+    'Exchange Rate': '',
+    Statement: 'Totam optio quisquam qui.',
+    Invoice: 'INV-00001',
+    'Payment Amount': 850,
+  },
+];

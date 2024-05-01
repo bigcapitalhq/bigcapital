@@ -1,8 +1,14 @@
 // @ts-nocheck
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 import { downloadFile, useDownloadFile } from '../useDownloadFile';
+import T from './types';
 
 const QueryKeys = {
   ImportPreview: 'ImportPreview',
@@ -75,6 +81,7 @@ export function useImportFileProcess(props = {}) {
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
+        invalidateResourcesOnImport(queryClient, res.data.resource);
       },
       ...props,
     },
@@ -116,4 +123,99 @@ export const useSampleSheetImport = () => {
         });
     },
   );
+};
+
+/**
+ * Invalidates resources cached queries based on the given resource name,
+ * @param queryClient 
+ * @param resource 
+ */
+const invalidateResourcesOnImport = (
+  queryClient: QueryClient,
+  resource: string,
+) => {
+  debugger;
+  switch (resource) {
+    case 'Item':
+      queryClient.invalidateQueries(T.ITEMS);
+      queryClient.invalidateQueries(T.ITEM);
+      break;
+
+    case 'ItemCategory':
+      queryClient.invalidateQueries(T.ITEMS_CATEGORIES);
+      break;
+
+    case 'Bill':
+      queryClient.invalidateQueries(T.BILLS);
+      queryClient.invalidateQueries(T.BILL);
+      queryClient.invalidateQueries(T.ITEMS_ASSOCIATED_WITH_BILLS);
+      break;
+
+    case 'SaleInvoice':
+      queryClient.invalidateQueries(T.SALE_INVOICE);
+      queryClient.invalidateQueries(T.SALE_INVOICES);
+      queryClient.invalidateQueries(T.ITEM_ASSOCIATED_WITH_INVOICES);
+      break;
+
+    case 'SaleEstimate':
+      queryClient.invalidateQueries(T.SALE_ESTIMATE);
+      queryClient.invalidateQueries(T.SALE_ESTIMATES);
+      queryClient.invalidateQueries(T.ITEM_ASSOCIATED_WITH_ESTIMATES);
+      break;
+
+    case 'SaleReceipt':
+      queryClient.invalidateQueries(T.SALE_RECEIPT);
+      queryClient.invalidateQueries(T.SALE_RECEIPTS);
+      queryClient.invalidateQueries(T.ITEM_ASSOCIATED_WITH_RECEIPTS);
+      break;
+
+    case 'CreditNote':
+      queryClient.invalidateQueries(T.CREDIT_NOTE);
+      queryClient.invalidateQueries(T.CREDIT_NOTES);
+      break;
+
+    case 'VendorCredit':
+      queryClient.invalidateQueries(T.VENDOR_CREDIT);
+      queryClient.invalidateQueries(T.VENDOR_CREDITS);
+      break;
+
+    case 'PaymentReceive':
+      queryClient.invalidateQueries(T.PAYMENT_RECEIVE);
+      queryClient.invalidateQueries(T.PAYMENT_RECEIVES);
+      break;
+
+    case 'BillPayment':
+      queryClient.invalidateQueries(T.BILLS_PAYMENT_TRANSACTIONS);
+      break;
+
+    case 'Customer':
+      queryClient.invalidateQueries(T.CUSTOMERS);
+      queryClient.invalidateQueries(T.CUSTOMER);
+      break;
+
+    case 'Vendor':
+      queryClient.invalidateQueries(T.VENDOR);
+      queryClient.invalidateQueries(T.VENDORS);
+      break;
+
+    case 'Expense':
+      queryClient.invalidateQueries(T.EXPENSE);
+      queryClient.invalidateQueries(T.EXPENSES);
+      break;
+
+    case 'ManualJournal':
+      queryClient.invalidateQueries(T.MANUAL_JOURNAL);
+      queryClient.invalidateQueries(T.MANUAL_JOURNALS);
+      break;
+
+    case 'UncategorizedCashflowTransaction':
+      queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
+      queryClient.invalidateQueries(T.CASH_FLOW_TRANSACTIONS);
+      queryClient.invalidateQueries(T.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+      queryClient.invalidateQueries(
+        T.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+      );
+      queryClient.invalidateQueries(T.CASHFLOW_UNCAATEGORIZED_TRANSACTION);
+      break;
+  }
 };

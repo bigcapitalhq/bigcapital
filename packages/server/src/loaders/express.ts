@@ -18,6 +18,7 @@ import {
 import config from '@/config';
 import path from 'path';
 import ObjectionErrorHandlerMiddleware from '@/api/middleware/ObjectionErrorHandlerMiddleware';
+import corsMiddleware from '@/api/middleware/CorsMiddleware';
 
 export default ({ app }) => {
   // Express configuration.
@@ -30,13 +31,22 @@ export default ({ app }) => {
   // Helmet helps you secure your Express apps by setting various HTTP headers.
   app.use(helmet());
 
+  // Cors middleware.
+  app.use(corsMiddleware);
+
   // Allow to full error stack traces and internal details
   app.use(errorHandler());
 
   // Boom response objects.
   app.use(boom());
 
-  app.use(bodyParser.json());
+  app.use(
+    bodyParser.json({
+      verify: (req, res, buf) => {
+        req.rawBody = buf;
+      },
+    })
+  );
 
   // Parses both json and urlencoded.
   app.use(json());

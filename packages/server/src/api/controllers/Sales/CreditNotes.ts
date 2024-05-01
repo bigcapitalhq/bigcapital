@@ -338,8 +338,7 @@ export default class PaymentReceivesController extends BaseController {
     try {
       const creditNote = await this.createCreditNoteService.newCreditNote(
         tenantId,
-        creditNoteDTO,
-        user
+        creditNoteDTO
       );
       return res.status(200).send({
         id: creditNote.id,

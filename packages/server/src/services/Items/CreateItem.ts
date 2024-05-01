@@ -88,7 +88,11 @@ export class CreateItem {
    * @param {IItemDTO} item
    * @return {Promise<IItem>}
    */
-  public async createItem(tenantId: number, itemDTO: IItemDTO): Promise<IItem> {
+  public async createItem(
+    tenantId: number,
+    itemDTO: IItemDTO,
+    trx?: Knex.Transaction
+  ): Promise<IItem> {
     const { Item } = this.tenancy.models(tenantId);
 
     // Authorize the item before creating.
@@ -111,7 +115,8 @@ export class CreateItem {
         } as IItemEventCreatedPayload);
 
         return item;
-      }
+      },
+      trx
     );
     return item;
   }

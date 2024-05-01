@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import XLSX from 'xlsx';
 import bluebird from 'bluebird';
 import * as R from 'ramda';
@@ -17,7 +16,7 @@ import { getUniqueImportableValue, trimObject } from './_utils';
 import { ImportableResources } from './ImportableResources';
 import ResourceService from '../Resource/ResourceService';
 import HasTenancyService from '../Tenancy/TenancyService';
-import Import from '@/models/Import';
+import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileCommon {
@@ -48,14 +47,6 @@ export class ImportFileCommon {
     return XLSX.utils.sheet_to_json(worksheet, {});
   }
 
-  /**
-   * Reads the import file.
-   * @param {string} filename
-   * @returns {Promise<Buffer>}
-   */
-  public readImportFile(filename: string) {
-    return fs.readFile(`public/imports/${filename}`);
-  }
 
   /**
    * Imports the given parsed data to the resource storage through registered importable service.
@@ -71,7 +62,7 @@ export class ImportFileCommon {
     parsedData: Record<string, any>[],
     trx?: Knex.Transaction
   ): Promise<[ImportOperSuccess[], ImportOperError[]]> {
-    const importableFields = this.resource.getResourceImportableFields(
+    const resourceFields = this.resource.getResourceFields2(
       tenantId,
       importFile.resource
     );
@@ -90,7 +81,7 @@ export class ImportFileCommon {
       };
       const transformedDTO = importable.transform(objectDTO, context);
       const rowNumber = index + 1;
-      const uniqueValue = getUniqueImportableValue(importableFields, objectDTO);
+      const uniqueValue = getUniqueImportableValue(resourceFields, objectDTO);
       const errorContext = {
         rowNumber,
         uniqueValue,
@@ -98,7 +89,7 @@ export class ImportFileCommon {
       try {
         // Validate the DTO object before passing it to the service layer.
         await this.importFileValidator.validateData(
-          importableFields,
+          resourceFields,
           transformedDTO
         );
         try {
@@ -201,20 +192,5 @@ export class ImportFileCommon {
    */
   public parseSheetColumns(json: unknown[]): string[] {
     return R.compose(Object.keys, trimObject, first)(json);
-  }
-
-  /**
-   * Deletes the imported file from the storage and database.
-   * @param {number} tenantId
-   * @param {} importFile
-   */
-  public async deleteImportFile(tenantId: number, importFile: any) {
-    const { Import } = this.tenancy.models(tenantId);
-
-    // Deletes the import row.
-    await Import.query().findById(importFile.id).delete();
-
-    // Deletes the imported file.
-    await fs.unlink(`public/imports/${importFile.filename}`);
   }
 }

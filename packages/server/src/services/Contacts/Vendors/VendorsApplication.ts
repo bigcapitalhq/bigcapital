@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 import {
   ISystemUser,
   IVendorEditDTO,
@@ -42,13 +43,9 @@ export class VendorsApplication {
   public createVendor = (
     tenantId: number,
     vendorDTO: IVendorNewDTO,
-    authorizedUser: ISystemUser
+    trx?: Knex.Transaction
   ) => {
-    return this.createVendorService.createVendor(
-      tenantId,
-      vendorDTO,
-      authorizedUser
-    );
+    return this.createVendorService.createVendor(tenantId, vendorDTO, trx);
   };
 
   /**

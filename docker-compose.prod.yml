@@ -21,16 +21,12 @@ services:
     depends_on:
       - server
       - webapp
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
 
   webapp:
     container_name: bigcapital-webapp
     image: ghcr.io/bigcapitalhq/webapp:latest
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
 
   server:
     container_name: bigcapital-server
@@ -45,9 +41,7 @@ services:
       - mysql
       - mongo
       - redis
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -92,6 +86,22 @@ services:
       - GOTENBERG_URL=${GOTENBERG_URL}
       - GOTENBERG_DOCS_URL=${GOTENBERG_DOCS_URL}
 
+      # Bank Sync
+      - BANKING_CONNECT=${BANKING_CONNECT}
+
+      # Plaid
+      - PLAID_ENV=${PLAID_ENV}
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
+      - PLAID_SECRET_DEVELOPMENT=${PLAID_SECRET_DEVELOPMENT}
+      - PLAID_SECRET_SANDBOX=${b8cf42b441e110451e2f69ad7e1e9f}
+      - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
+
+      # Lemon Squeez
+      - LEMONSQUEEZY_API_KEY=${LEMONSQUEEZY_API_KEY}
+      - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
+      - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
+      - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+
       # OIDC
       - OIDC_LOGIN_DISABLED=${OIDC_LOGIN_DISABLED:-false}
       - OIDC_ISSUER=${OIDC_ISSUER}
@@ -106,6 +116,9 @@ services:
       - OIDC_REDIRECT_URI=${OIDC_REDIRECT_URI}
       - OIDC_SCOPE=${OIDC_SCOPE}
       - OIDC_JWK_URI=${OIDC_JWK_URI}
+
+      #CORS
+      - CORS_ALLOWED_DOMAINS=${CORS_ALLOWED_DOMAINS}
 
   database_migration:
     container_name: bigcapital-database-migration
@@ -126,9 +139,7 @@ services:
 
   mysql:
     container_name: bigcapital-mysql
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build:
       context: ./docker/mariadb
     environment:
@@ -143,9 +154,7 @@ services:
 
   mongo:
     container_name: bigcapital-mongo
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build: ./docker/mongo
     expose:
       - '27017'
@@ -154,9 +163,7 @@ services:
 
   redis:
     container_name: bigcapital-redis
-    deploy:
-      restart_policy:
-        condition: unless-stopped
+    restart: on-failure
     build:
       context: ./docker/redis
     expose:

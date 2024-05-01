@@ -94,6 +94,10 @@ function ItemsActionsBar({
   const handleTableRowSizeChange = (size) => {
     addSetting('items', 'tableSize', size);
   };
+  // Handles the import button click.
+  const handleImportBtnClick = () => {
+    history.push('/items/import');
+  };
 
   return (
     <DashboardActionsBar>
@@ -143,6 +147,7 @@ function ItemsActionsBar({
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
+          onClick={handleImportBtnClick}
           text={<T id={'import'} />}
         />
         <Button

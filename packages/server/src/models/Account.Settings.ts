@@ -12,18 +12,11 @@ export default {
       name: 'account.field.name',
       column: 'name',
       fieldType: 'text',
-      unique: true,
-      required: true,
-      importable: true,
-      exportable: true,
-      order: 1,
     },
     description: {
       name: 'account.field.description',
       column: 'description',
       fieldType: 'text',
-      importable: true,
-      exportable: true,
     },
     slug: {
       name: 'account.field.slug',
@@ -31,20 +24,13 @@ export default {
       fieldType: 'text',
       columnable: false,
       filterable: false,
-      importable: false,
     },
     code: {
       name: 'account.field.code',
       column: 'code',
       fieldType: 'text',
-      exportable: true,
-      importable: true,
-      minLength: 3,
-      maxLength: 6,
-      unique: true,
-      importHint: 'Unique number to identify the account.',
     },
-    rootType: {
+    root_type: {
       name: 'account.field.root_type',
       fieldType: 'enumeration',
       options: [
@@ -56,7 +42,6 @@ export default {
       ],
       filterCustomQuery: RootTypeFieldFilterQuery,
       sortable: false,
-      importable: false,
     },
     normal: {
       name: 'account.field.normal',
@@ -67,9 +52,8 @@ export default {
       ],
       filterCustomQuery: NormalTypeFieldFilterQuery,
       sortable: false,
-      importable: false,
     },
-    accountType: {
+    type: {
       name: 'account.field.type',
       column: 'account_type',
       fieldType: 'enumeration',
@@ -77,46 +61,71 @@ export default {
         label: accountType.label,
         key: accountType.key,
       })),
-      required: true,
-      importable: true,
-      exportable: true,
-      order: 2,
     },
     active: {
       name: 'account.field.active',
       column: 'active',
       fieldType: 'boolean',
       filterable: false,
-      exportable: true,
-      importable: true,
     },
     balance: {
       name: 'account.field.balance',
       column: 'amount',
       fieldType: 'number',
-      importable: false,
     },
-    currencyCode: {
+    currency: {
       name: 'account.field.currency',
       column: 'currency_code',
       fieldType: 'text',
       filterable: false,
-      importable: true,
-      exportable: true,
     },
-    parentAccount: {
-      name: 'account.field.parent_account',
-      column: 'parent_account_id',
-      fieldType: 'relation',
-      to: { model: 'Account', to: 'id' },
-      importable: false,
-    },
-    createdAt: {
+    created_at: {
       name: 'account.field.created_at',
       column: 'created_at',
       fieldType: 'date',
-      importable: false,
-      exportable: true,
+    },
+  },
+  fields2: {
+    name: {
+      name: 'account.field.name',
+      fieldType: 'text',
+      unique: true,
+      required: true,
+    },
+    description: {
+      name: 'account.field.description',
+      fieldType: 'text',
+    },
+    code: {
+      name: 'account.field.code',
+      fieldType: 'text',
+      minLength: 3,
+      maxLength: 6,
+      unique: true,
+      importHint: 'Unique number to identify the account.',
+    },
+    accountType: {
+      name: 'account.field.type',
+      fieldType: 'enumeration',
+      options: ACCOUNT_TYPES.map((accountType) => ({
+        label: accountType.label,
+        key: accountType.key,
+      })),
+      required: true,
+    },
+    active: {
+      name: 'account.field.active',
+      fieldType: 'boolean',
+    },
+    currencyCode: {
+      name: 'account.field.currency',
+      fieldType: 'text',
+    },
+    parentAccountId: {
+      name: 'account.field.parent_account',
+      fieldType: 'relation',
+      relationModel: 'Account',
+      relationImportMatch: ['name', 'code'],
     },
   },
 };

@@ -6,7 +6,7 @@ import ItemTransactionsController from './ItemsTransactions';
 
 @Service()
 export default class ItemsBaseController {
-  router() {
+  public router() {
     const router = Router();
 
     router.use('/', Container.get(ItemsController).router());

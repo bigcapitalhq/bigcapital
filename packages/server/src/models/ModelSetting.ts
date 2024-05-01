@@ -1,13 +1,34 @@
 import { get } from 'lodash';
-import { IModelMeta, IModelMetaField, IModelMetaDefaultSort } from '@/interfaces';
+import {
+  IModelMeta,
+  IModelMetaField,
+  IModelMetaDefaultSort,
+} from '@/interfaces';
+
+const defaultModelMeta = {
+  fields: {},
+  fields2: {},
+};
 
 export default (Model) =>
   class ModelSettings extends Model {
     /**
      *
+     * @returns {IModelMeta}
      */
     static get meta(): IModelMeta {
       throw new Error('');
+    }
+
+    /**
+     * Parsed meta merged with default emta.
+     * @returns {IModelMeta}
+     */
+    static get parsedMeta(): IModelMeta {
+      return {
+        ...defaultModelMeta,
+        ...this.meta,
+      };
     }
 
     /**
@@ -15,19 +36,19 @@ export default (Model) =>
      * @param {string} key
      * @returns {IModelMetaField}
      */
-    public static getField(key: string, attribute?:string): IModelMetaField {
+    public static getField(key: string, attribute?: string): IModelMetaField {
       const field = get(this.meta.fields, key);
 
       return attribute ? get(field, attribute) : field;
     }
 
     /**
-     * Retrieve  the specific model meta.
+     * Retrieves the specific model meta.
      * @param {string} key
      * @returns
      */
     public static getMeta(key?: string) {
-      return key ? get(this.meta, key): this.meta; 
+      return key ? get(this.parsedMeta, key) : this.parsedMeta;
     }
 
     /**

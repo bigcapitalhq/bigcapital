@@ -35,6 +35,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
       const systemUser = await systemUserRepository.findOneByEmail(email);
 
+      if (!systemUser) throw new Error(`User with email: ${email} not found`);
+
       const payload = {
         id: systemUser.id,
         oidc_access_token: token,

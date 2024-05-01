@@ -4,11 +4,13 @@ import {
   ISystemUser,
   IPasswordReset,
   IAuthGetMetaPOJO,
+  ITenant,
 } from '@/interfaces';
 import { AuthSigninService } from './AuthSignin';
 import { AuthSignupService } from './AuthSignup';
 import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { GetAuthMeta } from './GetAuthMeta';
+import { GetAuthMe } from './GetAuthMe';
 
 @Service()
 export default class AuthenticationApplication {
@@ -23,6 +25,9 @@ export default class AuthenticationApplication {
 
   @Inject()
   private authGetMeta: GetAuthMeta;
+
+  @Inject()
+  private authGetMe: GetAuthMe;
 
   /**
    * Signin and generates JWT token.
@@ -69,5 +74,14 @@ export default class AuthenticationApplication {
    */
   public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
     return this.authGetMeta.getAuthMeta();
+  }
+
+  /**
+   * Retrieves the authenticated tenant
+   * @param {number} tenantId
+   * @returns {Promise<ITenant>}
+   */
+  public async getAuthTenant(tenantId: number): Promise<ITenant> {
+    return this.authGetMe.getAuthTenant(tenantId);
   }
 }

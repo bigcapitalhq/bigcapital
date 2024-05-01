@@ -48,7 +48,8 @@ export class CreateBillPayment {
    */
   public async createBillPayment(
     tenantId: number,
-    billPaymentDTO: IBillPaymentDTO
+    billPaymentDTO: IBillPaymentDTO,
+    trx?: Knex.Transaction
   ): Promise<IBillPayment> {
     const { BillPayment, Contact } = this.tenancy.models(tenantId);
 
@@ -97,28 +98,32 @@ export class CreateBillPayment {
     );
     // Writes bill payment transacation with associated transactions
     // under unit-of-work envirement.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onBillPaymentCreating` event.
-      await this.eventPublisher.emitAsync(events.billPayment.onCreating, {
-        tenantId,
-        billPaymentDTO,
-        trx,
-      } as IBillPaymentCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onBillPaymentCreating` event.
+        await this.eventPublisher.emitAsync(events.billPayment.onCreating, {
+          tenantId,
+          billPaymentDTO,
+          trx,
+        } as IBillPaymentCreatingPayload);
 
-      // Writes the bill payment graph to the storage.
-      const billPayment = await BillPayment.query(trx).insertGraphAndFetch({
-        ...billPaymentObj,
-      });
+        // Writes the bill payment graph to the storage.
+        const billPayment = await BillPayment.query(trx).insertGraphAndFetch({
+          ...billPaymentObj,
+        });
 
-      // Triggers `onBillPaymentCreated` event.
-      await this.eventPublisher.emitAsync(events.billPayment.onCreated, {
-        tenantId,
-        billPayment,
-        billPaymentId: billPayment.id,
-        trx,
-      } as IBillPaymentEventCreatedPayload);
+        // Triggers `onBillPaymentCreated` event.
+        await this.eventPublisher.emitAsync(events.billPayment.onCreated, {
+          tenantId,
+          billPayment,
+          billPaymentId: billPayment.id,
+          trx,
+        } as IBillPaymentEventCreatedPayload);
 
-      return billPayment;
-    });
+        return billPayment;
+      },
+      trx
+    );
   }
 }

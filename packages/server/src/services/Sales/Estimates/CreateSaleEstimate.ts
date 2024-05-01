@@ -43,7 +43,8 @@ export class CreateSaleEstimate {
    */
   public async createEstimate(
     tenantId: number,
-    estimateDTO: ISaleEstimateDTO
+    estimateDTO: ISaleEstimateDTO,
+    trx?: Knex.Transaction
   ): Promise<ISaleEstimate> {
     const { SaleEstimate, Contact } = this.tenancy.models(tenantId);
 
@@ -75,28 +76,32 @@ export class CreateSaleEstimate {
       estimateDTO.entries
     );
     // Creates a sale estimate transaction with associated transactions as UOW.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onSaleEstimateCreating` event.
-      await this.eventPublisher.emitAsync(events.saleEstimate.onCreating, {
-        estimateDTO,
-        tenantId,
-        trx,
-      } as ISaleEstimateCreatingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onSaleEstimateCreating` event.
+        await this.eventPublisher.emitAsync(events.saleEstimate.onCreating, {
+          estimateDTO,
+          tenantId,
+          trx,
+        } as ISaleEstimateCreatingPayload);
 
-      // Upsert the sale estimate graph to the storage.
-      const saleEstimate = await SaleEstimate.query(trx).upsertGraphAndFetch({
-        ...estimateObj,
-      });
-      // Triggers `onSaleEstimateCreated` event.
-      await this.eventPublisher.emitAsync(events.saleEstimate.onCreated, {
-        tenantId,
-        saleEstimate,
-        saleEstimateId: saleEstimate.id,
-        saleEstimateDTO: estimateDTO,
-        trx,
-      } as ISaleEstimateCreatedPayload);
+        // Upsert the sale estimate graph to the storage.
+        const saleEstimate = await SaleEstimate.query(trx).upsertGraphAndFetch({
+          ...estimateObj,
+        });
+        // Triggers `onSaleEstimateCreated` event.
+        await this.eventPublisher.emitAsync(events.saleEstimate.onCreated, {
+          tenantId,
+          saleEstimate,
+          saleEstimateId: saleEstimate.id,
+          saleEstimateDTO: estimateDTO,
+          trx,
+        } as ISaleEstimateCreatedPayload);
 
-      return saleEstimate;
-    });
+        return saleEstimate;
+      },
+      trx
+    );
   }
 }
