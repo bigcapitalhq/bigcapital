@@ -20,6 +20,8 @@ export class AccountsExportable extends Exportable {
       inactiveMode: false,
       ...query,
       structure: IAccountsStructureType.Flat,
+      pageSize: 12000,
+      page: 1,
     } as IAccountsFilter;
 
     return this.accountsApplication

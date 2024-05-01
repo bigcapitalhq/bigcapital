@@ -26,6 +26,7 @@ import withPaymentReceives from './withPaymentReceives';
 import withPaymentReceivesActions from './withPaymentReceivesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   PaymentReceiveAction,
   AbilitySubject,
@@ -33,6 +34,7 @@ import {
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment receives actions bar.
@@ -49,6 +51,9 @@ function PaymentReceiveActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   // History context.
   const history = useHistory();
@@ -81,6 +86,10 @@ function PaymentReceiveActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/payment-receives/import');
+  };
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'payment_receive' });
   };
 
   return (
@@ -139,6 +148,7 @@ function PaymentReceiveActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
 
         <NavbarDivider />
@@ -169,4 +179,5 @@ export default compose(
   withSettings(({ paymentReceiveSettings }) => ({
     paymentReceivesTableSize: paymentReceiveSettings?.tableSize,
   })),
+  withDialogActions,
 )(PaymentReceiveActionsBar);

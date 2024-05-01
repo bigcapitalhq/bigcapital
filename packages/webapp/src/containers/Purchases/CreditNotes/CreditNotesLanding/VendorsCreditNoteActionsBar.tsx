@@ -22,14 +22,16 @@ import {
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
+
+import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withVendorsCreditNotes from './withVendorsCreditNotes';
-import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
-
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withVendorActions from './withVendorActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Vendors Credit note  table actions bar.
@@ -48,6 +50,9 @@ function VendorsCreditNoteActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -77,8 +82,13 @@ function VendorsCreditNoteActionsBar({
 
   // Handle import button click.
   const handleImportBtnClick = () => {
-    history.push('/vendor-credits/import')
-  }
+    history.push('/vendor-credits/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'vendor_credit' });
+  };
 
   return (
     <DashboardActionsBar>
@@ -128,6 +138,7 @@ function VendorsCreditNoteActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -157,4 +168,5 @@ export default compose(
   withSettings(({ vendorsCreditNoteSetting }) => ({
     creditNoteTableSize: vendorsCreditNoteSetting?.tableSize,
   })),
+  withDialogActions,
 )(VendorsCreditNoteActionsBar);

@@ -33,6 +33,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 import withSettings from '@/containers/Settings/withSettings';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Expenses actions bar.
@@ -49,6 +50,9 @@ function ExpensesActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   // History context.
   const history = useHistory();
@@ -63,7 +67,6 @@ function ExpensesActionsBar({
   const onClickNewExpense = () => {
     history.push('/expenses/new');
   };
-
   // Handle delete button click.
   const handleBulkDelete = () => {};
 
@@ -73,21 +76,23 @@ function ExpensesActionsBar({
       viewSlug: view ? view.slug : null,
     });
   };
-
   // Handle click a refresh
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/expenses/import');
-  }
-
+  };
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('expenses', 'tableSize', size);
   };
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'expense' });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -146,6 +151,7 @@ function ExpensesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton

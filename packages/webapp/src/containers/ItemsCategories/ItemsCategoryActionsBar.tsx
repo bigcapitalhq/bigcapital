@@ -23,6 +23,7 @@ import withAlertActions from '@/containers/Alert/withAlertActions';
 import { compose } from '@/utils';
 import { useItemsCategoriesContext } from './ItemsCategoriesProvider';
 import { useHistory } from 'react-router-dom';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Items categories actions bar.
@@ -57,6 +58,10 @@ function ItemsCategoryActionsBar({
     openAlert('item-categories-bulk-delete', {
       itemCategoriesIds: itemCategoriesSelectedRows,
     });
+  };
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'item_category' });
   };
 
   return (
@@ -105,6 +110,7 @@ function ItemsCategoryActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
       </NavbarGroup>
     </DashboardActionsBar>

@@ -31,6 +31,8 @@ import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Estimates list actions bar.
@@ -44,6 +46,9 @@ function EstimateActionsBar({
 
   // #withSettings
   estimatesTableSize,
+
+  // #withDialogActions
+  openDialog,
 
   // #withSettingsActions
   addSetting,
@@ -80,7 +85,11 @@ function EstimateActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/estimates/import');
-  }
+  };
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'sale_estimate' });
+  };
 
   return (
     <DashboardActionsBar>
@@ -141,6 +150,7 @@ function EstimateActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -170,4 +180,5 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,
   })),
+  withDialogActions
 )(EstimateActionsBar);

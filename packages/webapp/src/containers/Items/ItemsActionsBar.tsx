@@ -33,7 +33,9 @@ import withItemsActions from './withItemsActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '../Dialog/withDialogActions';
 
+import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
 
 /**
@@ -56,6 +58,9 @@ function ItemsActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog
 }) {
   // Items list context.
   const { itemsViews, fields } = useItemsListContext();
@@ -98,6 +103,11 @@ function ItemsActionsBar({
   const handleImportBtnClick = () => {
     history.push('/items/import');
   };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'item' });
+  }
 
   return (
     <DashboardActionsBar>
@@ -154,6 +164,7 @@ function ItemsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -193,4 +204,5 @@ export default compose(
   })),
   withItemsActions,
   withAlertActions,
+  withDialogActions
 )(ItemsActionsBar);

@@ -118,6 +118,10 @@ function AccountsActionsBar({
   const handleImportBtnClick = () => {
     history.push('/accounts/import');
   };
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'account' });
+  }
 
   return (
     <DashboardActionsBar>
@@ -186,6 +190,7 @@ function AccountsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <Button
           className={Classes.MINIMAL}
