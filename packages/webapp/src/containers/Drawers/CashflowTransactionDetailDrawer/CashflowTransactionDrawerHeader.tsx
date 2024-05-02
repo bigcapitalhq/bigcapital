@@ -23,7 +23,7 @@ export default function CashflowTransactionDrawerHeader() {
       <CommercialDocHeader>
         <DetailsMenu>
           <DetailItem name={'total'} label={<T id={'total'} />}>
-            <h3 class="big-number">{cashflowTransaction.formatted_amount}</h3>
+            <h3 className="big-number">{cashflowTransaction.formatted_amount}</h3>
           </DetailItem>
         </DetailsMenu>
       </CommercialDocHeader>

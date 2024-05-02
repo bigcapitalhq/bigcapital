@@ -37,8 +37,8 @@ export function TotalLine({ title, value, borderStyle, textStyle, className }) {
       textStyle={textStyle}
       className={className}
     >
-      <div class="title">{title}</div>
-      <div class="amount">{value}</div>
+      <div className="title">{title}</div>
+      <div className="amount">{value}</div>
     </TotalLineRoot>
   );
 }

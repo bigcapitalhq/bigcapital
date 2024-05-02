@@ -25,7 +25,7 @@ export const BalanceCell = ({ cell }) => {
   return account.amount !== null ? (
     <span>{account.formatted_amount}</span>
   ) : (
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 };
 

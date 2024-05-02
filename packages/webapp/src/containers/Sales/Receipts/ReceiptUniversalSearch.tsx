@@ -39,13 +39,13 @@ function ReceiptStatus({ receipt }) {
   return (
     <Choose>
       <Choose.When condition={receipt.is_closed}>
-        <span class="closed">
+        <span className="closed">
           <T id={'closed'} />
         </span>
       </Choose.When>
 
       <Choose.Otherwise>
-        <span class="draft">
+        <span className="draft">
           <T id={'draft'} />
         </span>
       </Choose.Otherwise>
@@ -66,7 +66,7 @@ export function ReceiptUniversalSearchItem(
       text={
         <div>
           <div>{item.text}</div>
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {item.reference.receipt_number}{' '}
             <Icon icon={'caret-right-16'} iconSize={16} />
             {item.reference.formatted_receipt_date}
@@ -75,7 +75,7 @@ export function ReceiptUniversalSearchItem(
       }
       label={
         <>
-          <div class="amount">{item.reference.formatted_amount}</div>
+          <div className="amount">{item.reference.formatted_amount}</div>
           <ReceiptStatus receipt={item.reference} />
         </>
       }

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useEffect } from 'react';
 import * as R from 'ramda';
 
@@ -7,25 +6,27 @@ import { SubscriptionPlansSection } from './SubscriptionPlansSection';
 import withSubscriptionPlansActions from '../../Subscriptions/withSubscriptionPlansActions';
 import styles from './SetupSubscription.module.scss';
 
+// TODO: use typescript https://github.com/NuroDev/lemonsqueezy.ts/tree/main/src/modules/subscription#-subscription
+
 /**
  * Subscription step of wizard setup.
  */
 function SetupSubscription({
-  // #withSubscriptionPlansActions
-  initSubscriptionPlans,
+  // // #withSubscriptionPlansActions
+  // initSubscriptionPlans,
 }) {
-  useEffect(() => {
-    initSubscriptionPlans();
-  }, [initSubscriptionPlans]);
+  // useEffect(() => {
+  //   initSubscriptionPlans();
+  // }, [initSubscriptionPlans]);
 
   useEffect(() => {
-    window.LemonSqueezy.Setup({
-      eventHandler: (event) => {
-        // Do whatever you want with this event data
-        if (event.event === 'Checkout.Success') {
-        }
-      },
-    });
+    // window.LemonSqueezy.Setup({
+    //   eventHandler: (event) => {
+    //     // Do whatever you want with this event data
+    //     if (event.event === 'Checkout.Success') {
+    //     }
+    //   },
+    // });
   }, []);
 
   return (

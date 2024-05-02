@@ -5,9 +5,9 @@ import '@/style/components/MaterialProgressBar.scss';
 
 export function MaterialProgressBar() {
   return (
-    <div class="progress-container">
-      <div class="progress-materializecss">
-        <div class="indeterminate"></div>
+    <div className="progress-container">
+      <div className="progress-materializecss">
+        <div className="indeterminate"></div>
       </div>
     </div>
   );

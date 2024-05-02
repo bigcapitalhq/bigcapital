@@ -13,7 +13,7 @@ function VendorFormAfterPrimarySection() {
   
 
   return (
-    <div class="customer-form__after-primary-section-content">
+    <div className="customer-form__after-primary-section-content">
       {/*------------ Vendor email -----------*/}
       <FastField name={'email'}>
         {({ field, meta: { error, touched } }) => (

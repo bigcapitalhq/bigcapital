@@ -45,7 +45,7 @@ export function PaymentMadeUniversalSearchItem(
         <div>
           <div>{highlightText(text, query)}</div>
 
-          <span class="bp4-text-muted">
+          <span className="bp4-text-muted">
             {reference.payment_number && (
               <>
                 {highlightText(reference.payment_number, query)}
@@ -56,7 +56,7 @@ export function PaymentMadeUniversalSearchItem(
           </span>
         </div>
       }
-      label={<div class="amount">{label}</div>}
+      label={<div className="amount">{label}</div>}
       onClick={handleClick}
       className={'universal-search__item--payment-made'}
     />

@@ -26,7 +26,7 @@ export default function ManualJournalDrawerHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem name={'total'} label={<T id={'total'} />}>
-            <h3 class="big-number">{manualJournal.formatted_amount}</h3>
+            <h3 className="big-number">{manualJournal.formatted_amount}</h3>
           </DetailItem>
 
           <StatusDetailItem>

@@ -17,7 +17,7 @@ function InvoicePdfPreviewDialogContent({
 
   return (
     <DialogContent>
-      <div class="dialog__header-actions">
+      <div className="dialog__header-actions">
         <AnchorButton
           href={pdfUrl}
           target={'__blank'}

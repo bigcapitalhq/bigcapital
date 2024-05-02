@@ -15,7 +15,7 @@ export default function ItemDetailHeader() {
 
   return (
     <Card>
-      <div class="item-drawer__content">
+      <div className="item-drawer__content">
         <DetailsMenu direction={'vertical'}>
           <DetailItem
             name={'name'}

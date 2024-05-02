@@ -9,7 +9,7 @@ export default function TableLoading({
   spinnerProps
 }) {
   return (
-    <div class="loading">
+    <div className="loading">
       <Spinner {...spinnerProps} />
     </div>
   );

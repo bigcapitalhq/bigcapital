@@ -13,7 +13,7 @@ import { VendorCreditNoteFormFooterRight } from './VendorCreditNoteFormFooterRig
  */
 export default function VendorCreditNoteFormFooter() {
   return (
-    <div class={classNames(CLASSES.PAGE_FORM_FOOTER)}>
+    <div className={classNames(CLASSES.PAGE_FORM_FOOTER)}>
       <VendorCreditNoteFooterPaper>
         <Row>
           <Col md={8}>

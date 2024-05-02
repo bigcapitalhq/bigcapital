@@ -27,7 +27,7 @@ export default function PaymentMadeDetailHeader() {
       <CommercialDocTopHeader>
         <DetailsMenu>
           <DetailItem label={intl.get('amount')}>
-            <h3 class="big-number">{paymentMade.formatted_amount}</h3>
+            <h3 className="big-number">{paymentMade.formatted_amount}</h3>
           </DetailItem>
         </DetailsMenu>
       </CommercialDocTopHeader>

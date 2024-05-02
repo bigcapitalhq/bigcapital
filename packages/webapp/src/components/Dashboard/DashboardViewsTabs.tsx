@@ -60,7 +60,7 @@ export function DashboardViewsTabs({
   };
 
   return (
-    <div class="dashboard__views-tabs">
+    <div className="dashboard__views-tabs">
       <Tabs
         id="navbar"
         large={true}

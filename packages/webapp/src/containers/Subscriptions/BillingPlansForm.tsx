@@ -15,7 +15,7 @@ import withSubscriptions from './withSubscriptions';
  */
 export default function BillingPlansForm() {
   return (
-    <div class="billing-plans">
+    <div className="billing-plans">
       <BillingPlansInput />
       <BillingPeriodsInput />
       <BillingPaymentMethodWhenSubscriptionInactive />

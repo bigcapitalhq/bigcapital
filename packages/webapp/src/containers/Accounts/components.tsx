@@ -113,7 +113,7 @@ export function BalanceCell({ cell }) {
       {/* <Money amount={account.amount} currency={account.currency_code} /> */}
     </span>
   ) : (
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 }
 
@@ -126,6 +126,6 @@ export function BankBalanceCell({ cell }) {
   return account.amount !== null ? (
     <span>{account.bank_balance_formatted}</span>
   ) : (
-    <span class="placeholder">—</span>
+    <span className="placeholder">—</span>
   );
 }

@@ -111,7 +111,7 @@ export function StatusAccessor(bill) {
           <span className={'fully-paid-icon'}>
             <Icon icon="small-tick" iconSize={18} />
           </span>
-          <span class="fully-paid-text">
+          <span className="fully-paid-text">
             <T id={'paid'} />
           </span>
         </Choose.When>

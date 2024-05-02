@@ -268,9 +268,9 @@ function ViewForm({
   };
 
   return (
-    <div class="view-form">
+    <div className="view-form">
       <form onSubmit={handleSubmit}>
-        <div class="view-form--name-section">
+        <div className="view-form--name-section">
           <Row>
             <Col sm={8}>
               <FormGroup
@@ -296,9 +296,9 @@ function ViewForm({
         <H5 className="mb2">Define the conditionals</H5>
 
         {values.roles.map((role, index) => (
-          <Row class="view-form__role-conditional">
-            <Col sm={2} class="flex">
-              <div class="mr2 pt1 condition-number">{index + 1}</div>
+          <Row className="view-form__role-conditional">
+            <Col sm={2} className="flex">
+              <div className="mr2 pt1 condition-number">{index + 1}</div>
               {index === 0 ? (
                 <HTMLSelect
                   options={whenConditionalsItems}
@@ -338,7 +338,7 @@ function ViewForm({
               </FormGroup>
             </Col>
 
-            <Col sm={5} class="flex">
+            <Col sm={5} className="flex">
               <FormGroup
                 intent={hasError(`roles[${index}].value`) && Intent.DANGER}
               >
@@ -370,7 +370,7 @@ function ViewForm({
           </Button>
         </div>
 
-        <div class="view-form--logic-expression-section">
+        <div className="view-form--logic-expression-section">
           <Row>
             <Col sm={8}>
               <FormGroup
@@ -406,14 +406,14 @@ function ViewForm({
 
         <H5 className={'mb2'}>Columns Preferences</H5>
 
-        <div class="dragable-columns">
+        <div className="dragable-columns">
           <Row gutterWidth={14}>
             <Col sm={4} className="dragable-columns__column">
               <H6 className="dragable-columns__title">Available Columns</H6>
 
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div className="dragable-columns__items">
                 <Menu>
                   <ReactSortable
                     list={availableColumns}
@@ -429,7 +429,7 @@ function ViewForm({
             </Col>
 
             <Col sm={1}>
-              <div class="dragable-columns__arrows">
+              <div className="dragable-columns__arrows">
                 <div>
                   <Icon
                     icon="arrow-circle-left"
@@ -437,7 +437,7 @@ function ViewForm({
                     color="#cecece"
                   />
                 </div>
-                <div class="mt2">
+                <div className="mt2">
                   <Icon
                     icon="arrow-circle-right"
                     iconSize={30}
@@ -451,7 +451,7 @@ function ViewForm({
               <H6 className="dragable-columns__title">Selected Columns</H6>
               <InputGroup placeholder={intl.get('search')} leftIcon="search" />
 
-              <div class="dragable-columns__items">
+              <div className="dragable-columns__items">
                 <Menu>
                   <ReactSortable
                     list={draggedColumns}
@@ -468,7 +468,7 @@ function ViewForm({
           </Row>
         </div>
 
-        <div class="form__floating-footer">
+        <div className="form__floating-footer">
           <Button intent={Intent.PRIMARY} type="submit" disabled={isSubmitting}>
             <T id={'submit'} />
           </Button>

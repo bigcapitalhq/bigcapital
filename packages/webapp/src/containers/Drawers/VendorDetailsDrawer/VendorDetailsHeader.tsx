@@ -26,7 +26,7 @@ export default function VendorDetailsHeader() {
           name={'outstanding-payable'}
           label={<T id={'vendor.drawer.label.outstanding_payable'} />}
         >
-          <h3 class="big-number">{vendor.formatted_balance}</h3>
+          <h3 className="big-number">{vendor.formatted_balance}</h3>
         </DetailItem>
 
         <DetailItem label={<T id={'vendor.drawer.label.unused_credits'} />}>

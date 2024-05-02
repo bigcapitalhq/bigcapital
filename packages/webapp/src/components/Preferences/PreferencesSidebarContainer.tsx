@@ -12,9 +12,9 @@ export default function PreferencesSidebarContainer({ children }) {
         CLASSES.PREFERENCES_SIDEBAR,
       )}
     >
-      <div class="preferences-sidebar__wrapper">
+      <div className="preferences-sidebar__wrapper">
         <Scrollbar noDefaultStyles={true}>
-          <div class="preferences-sidebar__inner">{children}</div>
+          <div className="preferences-sidebar__inner">{children}</div>
         </Scrollbar>
       </div>
     </div>

@@ -2,5 +2,5 @@
 import React from 'react';
 
 export function RequiredHint() {
-  return <span class="required">*</span>;
+  return <span className="required">*</span>;
 }

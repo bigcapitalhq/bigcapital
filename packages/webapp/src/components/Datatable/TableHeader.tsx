@@ -57,7 +57,7 @@ function TableHeaderCell({ column, index }) {
           {...column.getResizerProps()}
           className={`resizer ${column.isResizing ? 'isResizing' : ''}`}
         >
-          <div class="inner-resizer" />
+          <div className="inner-resizer" />
         </div>
       )}
     </div>

@@ -23,7 +23,7 @@ export function FieldHint({
   tooltipProps,
 }: HintProps) {
   return (
-    <span class="hint">
+    <span className="hint">
       <Tooltip content={content} position={position} {...tooltipProps}>
         <Icon icon="info-circle" iconSize={iconSize} />
       </Tooltip>

@@ -103,12 +103,12 @@ function UniversalQuerySearchActions() {
     <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTIONS)}>
       <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTION_SELECT)}>
         <Tag>ENTER</Tag>
-        <span class={'text'}>{intl.get('universal_search.enter_text')}</span>
+        <span className={'text'}>{intl.get('universal_search.enter_text')}</span>
       </div>
 
       <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTION_CLOSE)}>
         <Tag>ESC</Tag>{' '}
-        <span class={'text'}>{intl.get('universal_search.close_text')}</span>
+        <span className={'text'}>{intl.get('universal_search.close_text')}</span>
       </div>
 
       <div className={classNames(CLASSES.UNIVERSAL_SEARCH_ACTION_ARROWS)}>
@@ -118,7 +118,7 @@ function UniversalQuerySearchActions() {
         <Tag>
           <Icon icon={'arrow-down-24'} iconSize={16} />
         </Tag>
-        <span class="text">{intl.get('universal_seach.navigate_text')}</span>
+        <span className="text">{intl.get('universal_seach.navigate_text')}</span>
       </div>
     </div>
   );

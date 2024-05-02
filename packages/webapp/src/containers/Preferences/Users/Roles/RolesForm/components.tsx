@@ -71,10 +71,10 @@ function PermissionBodyColumn({ column }) {
 
   // Display empty cell if the current column key has no related permissions.
   if (!permission) {
-    return <td class={'permission-checkbox'}></td>;
+    return <td className={'permission-checkbox'}></td>;
   }
   return (
-    <td class={'permission-checkbox'}>
+    <td className={'permission-checkbox'}>
       <Field
         name={`permissions.${service.subject}/${permission.key}`}
         type="checkbox"
@@ -173,12 +173,12 @@ function ModulePermissionsTableHead() {
       <tr>
         <th></th>
         <If condition={serviceFullAccess}>
-          <th class={'full'}>
+          <th className={'full'}>
             <T id={'permissions.column.full_access'} />
           </th>
         </If>
         {columns.map((column) => (
-          <th class={'permission'}>{column.label}</th>
+          <th className={'permission'}>{column.label}</th>
         ))}
         <th></th>
       </tr>
@@ -199,7 +199,7 @@ function ModulePermissionsServiceFullAccess() {
 
   return (
     <If condition={module.serviceFullAccess}>
-      <td class="full-access-permission">
+      <td className="full-access-permission">
         <Field name={`serviceFullAccess.${service.subject}`} type="checkbox">
           {({ form, field }) => (
             <PermissionCheckbox
@@ -264,7 +264,7 @@ function ModuleVerticalTableCells() {
   const { service } = useModulePermissionsServiceProvider();
 
   return (
-    <td class={'permissions'}>
+    <td className={'permissions'}>
       {service.permissions.map((permission) => (
         <div>
           <Field
@@ -304,7 +304,7 @@ function ModulePermissionsVerticalServices() {
           {module.services.map((service) => (
             <ModulePermissionsServiceProvider service={service}>
               <tr>
-                <td class={'service-label'}>{service.label} </td>
+                <td className={'service-label'}>{service.label} </td>
                 <ModuleVerticalTableCells />
               </tr>
             </ModulePermissionsServiceProvider>

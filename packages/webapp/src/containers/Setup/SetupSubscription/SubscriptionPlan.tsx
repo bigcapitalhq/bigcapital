@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { AppToaster, Group, T } from '@/components';
 import { useGetLemonSqueezyCheckout } from '@/hooks/query';
 import { Intent } from '@blueprintjs/core';

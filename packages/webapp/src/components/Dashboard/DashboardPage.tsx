@@ -87,7 +87,7 @@ function DashboardPage({
     <div className={CLASSES.DASHBOARD_PAGE}>
       <Suspense
         fallback={
-          <div class="dashboard__fallback-loading">
+          <div className="dashboard__fallback-loading">
             <Spinner size={40} value={null} />
           </div>
         }

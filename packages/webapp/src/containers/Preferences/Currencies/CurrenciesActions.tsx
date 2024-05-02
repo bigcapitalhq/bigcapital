@@ -11,7 +11,7 @@ function CurrenciesActions({ openDialog }) {
   }, [openDialog]);
 
   return (
-    <div class="users-actions">
+    <div className="users-actions">
       <Button
         icon={<Icon icon="plus" iconSize={12} />}
         onClick={handleClickNewCurrency}
