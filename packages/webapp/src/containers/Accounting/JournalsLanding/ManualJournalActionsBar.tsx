@@ -18,7 +18,7 @@ import {
   Can,
   If,
   DashboardActionViewsList,
-  DashboardActionsBar
+  DashboardActionsBar,
 } from '@/components';
 import { useRefreshJournals } from '@/hooks/query/manualJournals';
 import { useManualJournalsContext } from './ManualJournalsListProvider';
@@ -31,6 +31,7 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Manual journal actions bar.
@@ -47,6 +48,9 @@ function ManualJournalActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog
 }) {
   // History context.
   const history = useHistory();
@@ -75,11 +79,16 @@ function ManualJournalActionsBar({
   // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/manual-journals/import');
-  }
+  };
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('manualJournals', 'tableSize', size);
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'manual_journal' });
   };
 
   return (
@@ -140,6 +149,7 @@ function ManualJournalActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton

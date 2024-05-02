@@ -12,10 +12,14 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'creditNoteNumber',
+
   fields: {
     customer: {
       name: 'credit_note.field.customer',
@@ -79,6 +83,67 @@ export default {
       name: 'credit_note.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  columns: {
+    customer: {
+      name: 'Customer',
+      type: 'relation',
+      accessor: 'customer.displayName',
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+    },
+    creditNoteDate: {
+      name: 'Credit Note Date',
+      type: 'date',
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      type: 'text',
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+    },
+    termsConditions: {
+      name: 'Terms & Conditions',
+      type: 'text',
+    },
+    creditNoteNumber: {
+      name: 'Credit Note Number',
+      type: 'text',
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
     },
   },
   fields2: {

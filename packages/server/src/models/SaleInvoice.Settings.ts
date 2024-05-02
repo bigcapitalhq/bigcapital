@@ -4,6 +4,9 @@ export default {
     sortOrder: 'DESC',
     sortField: 'created_at',
   },
+  exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -87,6 +90,89 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    invoiceDate: {
+      name: 'invoice.field.invoice_date',
+      type: 'date',
+    },
+    dueDate: {
+      name: 'invoice.field.due_date',
+      type: 'date',
+    },
+    referenceNo: {
+      name: 'invoice.field.reference_no',
+      type: 'text',
+    },
+    invoiceNo: {
+      name: 'invoice.field.invoice_no',
+      type: 'text',
+    },
+    customer: {
+      name: 'invoice.field.customer',
+      type: 'text',
+      accessor: 'customer.displayName',
+    },
+    amount: {
+      name: 'invoice.field.amount',
+      type: 'text',
+      accessor: 'balanceAmountFormatted',
+    },
+    exchangeRate: {
+      name: 'invoice.field.exchange_rate',
+      type: 'number',
+    },
+    currencyCode: {
+      name: 'invoice.field.currency',
+      type: 'text',
+    },
+    paidAmount: {
+      name: 'Paid Amount',
+      accessor: 'paymentAmountFormatted',
+    },
+    dueAmount: {
+      name: 'Due Amount',
+      accessor: 'dueAmountFormatted',
+    },
+    invoiceMessage: {
+      name: 'invoice.field.invoice_message',
+      type: 'text',
+    },
+    termsConditions: {
+      name: 'invoice.field.terms_conditions',
+      type: 'text',
+    },
+    delivered: {
+      name: 'invoice.field.delivered',
+      type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+  },
   fields2: {
     invoiceDate: {
       name: 'invoice.field.invoice_date',
@@ -142,7 +228,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'invoice.field.rate',

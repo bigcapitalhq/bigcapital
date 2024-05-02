@@ -33,6 +33,8 @@ import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
 import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Payment made actions bar.
@@ -46,6 +48,9 @@ function PaymentMadeActionsBar({
 
   // #withSettings
   paymentMadesTableSize,
+
+  // #withDialogActions
+  openDialog,
 
   // #withSettingsActions
   addSetting,
@@ -81,7 +86,12 @@ function PaymentMadeActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/payment-mades/import');
-  }
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'bill_payment' });
+  };
 
   return (
     <DashboardActionsBar>
@@ -139,6 +149,7 @@ function PaymentMadeActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
 
         <NavbarDivider />
@@ -168,4 +179,5 @@ export default compose(
   withSettings(({ billPaymentSettings }) => ({
     paymentMadesTableSize: billPaymentSettings?.tableSize,
   })),
+  withDialogActions,
 )(PaymentMadeActionsBar);

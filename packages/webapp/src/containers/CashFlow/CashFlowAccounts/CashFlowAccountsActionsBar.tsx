@@ -92,13 +92,13 @@ function CashFlowAccountsActionsBar({
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon="file-export-16" iconSize={16} />}
-          text={<T id={'export'} />}
+          icon={<Icon icon="file-import-16" iconSize={16} />}
+          text={<T id={'import'} />}
         />
         <Button
           className={Classes.MINIMAL}
-          icon={<Icon icon="file-import-16" iconSize={16} />}
-          text={<T id={'import'} />}
+          icon={<Icon icon="file-export-16" iconSize={16} />}
+          text={<T id={'export'} />}
         />
         <NavbarDivider />
         <Can I={CashflowAction.Edit} a={AbilitySubject.Cashflow}>
@@ -117,7 +117,7 @@ function CashFlowAccountsActionsBar({
             text={'Connect to Bank / Credit Card'}
             onClick={handleConnectToBank}
           />
-        <NavbarDivider />
+          <NavbarDivider />
         </FeatureCan>
         <Button
           className={Classes.MINIMAL}

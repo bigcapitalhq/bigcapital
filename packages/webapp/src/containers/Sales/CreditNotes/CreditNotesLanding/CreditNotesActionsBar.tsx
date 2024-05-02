@@ -25,8 +25,10 @@ import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Credit note table actions bar.
@@ -43,6 +45,9 @@ function CreditNotesActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -72,6 +77,11 @@ function CreditNotesActionsBar({
   // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/credit-notes/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'credit_note' });
   };
 
   return (
@@ -122,6 +132,7 @@ function CreditNotesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -150,4 +161,5 @@ export default compose(
   withSettings(({ creditNoteSettings }) => ({
     creditNoteTableSize: creditNoteSettings?.tableSize,
   })),
+  withDialogActions,
 )(CreditNotesActionsBar);

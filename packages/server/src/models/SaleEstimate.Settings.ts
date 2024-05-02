@@ -4,6 +4,9 @@ export default {
     sortOrder: 'DESC',
     sortField: 'estimate_date',
   },
+  exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -73,6 +76,91 @@ export default {
       columnType: 'date',
     },
   },
+  columns: {
+    customer: {
+      name: 'Customer',
+      type: 'text',
+      accessor: 'customer.displayName',
+      exportable: true,
+    },
+    estimateDate: {
+      name: 'Estimate Date',
+      type: 'date',
+      exportable: true,
+    },
+    expirationDate: {
+      name: 'Expiration Date',
+      type: 'date',
+      exportable: true,
+    },
+    estimateNumber: {
+      name: 'Estimate No.',
+      type: 'text',
+      exportable: true,
+    },
+    reference: {
+      name: 'Reference No.',
+      type: 'text',
+      exportable: true,
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+      type: 'text',
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+      exportable: true,
+    },
+    currencyCode: {
+      name: 'Currency',
+      type: 'text',
+      exportable: true,
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+      exportable: true,
+    },
+    termsConditions: {
+      name: 'Terms & Conditions',
+      type: 'text',
+      exportable: true,
+    },
+    delivered: {
+      name: 'Delivered',
+      type: 'boolean',
+      exportable: true,
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+  },
   fields2: {
     customerId: {
       name: 'Customer',
@@ -132,7 +220,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'invoice.field.rate',

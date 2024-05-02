@@ -31,8 +31,10 @@ import withVendors from './withVendors';
 import withVendorsActions from './withVendorsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Vendors actions bar.
@@ -50,6 +52,9 @@ function VendorActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -83,10 +88,17 @@ function VendorActionsBar({
   const handleTableRowSizeChange = (size) => {
     addSetting('vendors', 'tableSize', size);
   };
+
   // Handle import button success.
   const handleImportBtnSuccess = () => {
     history.push('/vendors/import');
   };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'vendor' });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -138,6 +150,7 @@ function VendorActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -175,4 +188,5 @@ export default compose(
   withSettings(({ vendorsSettings }) => ({
     vendorsTableSize: vendorsSettings?.tableSize,
   })),
+  withDialogActions,
 )(VendorActionsBar);

@@ -49,7 +49,7 @@ export class GetSaleInvoices {
     );
     const { results, pagination } = await SaleInvoice.query()
       .onBuild((builder) => {
-        builder.withGraphFetched('entries');
+        builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
         dynamicFilter.buildQuery()(builder);
       })

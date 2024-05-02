@@ -31,7 +31,7 @@ export class GetBillPayments {
     tenantId: number,
     filterDTO: IBillPaymentsFilter
   ): Promise<{
-    billPayments: IBillPayment;
+    billPayments: IBillPayment[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> {

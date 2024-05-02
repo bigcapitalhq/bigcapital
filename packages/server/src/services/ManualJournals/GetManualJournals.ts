@@ -39,7 +39,7 @@ export class GetManualJournals {
     tenantId: number,
     filterDTO: IManualJournalsFilter
   ): Promise<{
-    manualJournals: IManualJournal;
+    manualJournals: IManualJournal[];
     pagination: IPaginationMeta;
     filterMeta: IFilterMeta;
   }> => {

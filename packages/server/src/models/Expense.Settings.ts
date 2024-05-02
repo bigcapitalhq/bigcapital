@@ -8,6 +8,8 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportFlattenOn: 'categories',
+  exportable: true,
   fields: {
     payment_date: {
       name: 'expense.field.payment_date',
@@ -61,6 +63,56 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    paymentReceive: {
+      name: 'expense.field.payment_account',
+      type: 'text',
+      accessor: 'paymentAccount.name'
+    },
+    referenceNo: {
+      name: 'expense.field.reference_no',
+      type: 'text',
+    },
+    paymentDate: {
+      name: 'expense.field.payment_date',
+      type: 'date',
+    },
+    currencyCode: {
+      name: 'expense.field.currency_code',
+      type: 'text',
+    },
+    exchangeRate: {
+      name: 'expense.field.exchange_rate',
+      type: 'number',
+    },
+    description: {
+      name: 'expense.field.description',
+      type: 'text',
+    },
+    categories: {
+      name: 'expense.field.categories',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        expenseAccount: {
+          name: 'expense.field.expense_account',
+          accessor: 'expenseAccount.name',
+        },
+        amount: {
+          name: 'expense.field.amount',
+          accessor: 'amountFormatted',
+        },
+        description: {
+          name: 'expense.field.line_description',
+          type: 'text',
+        },
+      },
+    },
+    publish: {
+      name: 'expense.field.publish',
+      type: 'boolean',
+    },
+  },
   fields2: {
     paymentAccountId: {
       name: 'expense.field.payment_account',
@@ -68,7 +120,7 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: "Matches the account name or code."
+      importHint: 'Matches the account name or code.',
     },
     referenceNo: {
       name: 'expense.field.reference_no',
@@ -102,7 +154,7 @@ export default {
           relationModel: 'Account',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the account name or code."
+          importHint: 'Matches the account name or code.',
         },
         amount: {
           name: 'expense.field.amount',

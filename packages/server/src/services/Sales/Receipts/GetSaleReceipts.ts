@@ -11,6 +11,9 @@ import { SaleReceiptTransformer } from './SaleReceiptTransformer';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import DynamicListingService from '@/services/DynamicListing/DynamicListService';
 
+interface GetSaleReceiptsSettings {
+  fetchEntriesGraph?: boolean;
+}
 @Service()
 export class GetSaleReceipts {
   @Inject()
@@ -50,7 +53,7 @@ export class GetSaleReceipts {
       .onBuild((builder) => {
         builder.withGraphFetched('depositAccount');
         builder.withGraphFetched('customer');
-        builder.withGraphFetched('entries');
+        builder.withGraphFetched('entries.item');
 
         dynamicFilter.buildQuery()(builder);
       })
