@@ -95,71 +95,57 @@ export default {
     firstName: {
       name: 'vendor.field.first_name',
       type: 'text',
-      exportable: true,
     },
     lastName: {
       name: 'vendor.field.last_name',
       type: 'text',
-      exportable: true,
     },
     displayName: {
       name: 'vendor.field.display_name',
       type: 'text',
-      exportable: true,
     },
     email: {
       name: 'vendor.field.email',
       type: 'text',
-      exportable: true,
     },
     workPhone: {
       name: 'vendor.field.work_phone',
       type: 'text',
-      exportable: true,
     },
     personalPhone: {
       name: 'vendor.field.personal_phone',
       type: 'text',
-      exportable: true,
     },
     companyName: {
       name: 'vendor.field.company_name',
       type: 'text',
-      exportable: true,
     },
     website: {
       name: 'vendor.field.website',
       type: 'text',
-      exportable: true,
-    },
-    createdAt: {
-      name: 'vendor.field.created_at',
-      type: 'date',
-      exportable: true,
     },
     balance: {
       name: 'vendor.field.balance',
       type: 'number',
-      exportable: true,
     },
     openingBalance: {
       name: 'vendor.field.opening_balance',
       type: 'number',
-      exportable: true,
     },
     openingBalanceAt: {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
-      exportable: true,
     },
     currencyCode: {
       name: 'vendor.field.currency',
       type: 'text',
-      exportable: true,
     },
     status: {
       name: 'vendor.field.status',
-      exportable: true,
+    },
+    note: {
+      name: 'vendor.field.note',
+      type: 'text',
     },
     // Billing Address
     billingAddress1: {
@@ -246,7 +232,12 @@ export default {
       column: 'shipping_address_phone',
       type: 'text',
       exportable: true,
-    }
+    },
+    createdAt: {
+      name: 'vendor.field.created_at',
+      type: 'date',
+      exportable: true,
+    },
   },
   fields2: {
     firstName: {

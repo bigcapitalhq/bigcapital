@@ -8,6 +8,7 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportFlattenOn: 'categories',
   exportable: true,
   fields: {
     payment_date: {
@@ -66,42 +67,50 @@ export default {
     paymentReceive: {
       name: 'expense.field.payment_account',
       type: 'text',
-      exportable: true,
+      accessor: 'paymentAccount.name'
     },
     referenceNo: {
       name: 'expense.field.reference_no',
       type: 'text',
-      exportable: true,
     },
     paymentDate: {
       name: 'expense.field.payment_date',
       type: 'date',
-      exportable: true,
     },
     currencyCode: {
       name: 'expense.field.currency_code',
       type: 'text',
-      exportable: true,
     },
     exchangeRate: {
       name: 'expense.field.exchange_rate',
       type: 'number',
-      exportable: true,
     },
     description: {
       name: 'expense.field.description',
       type: 'text',
-      exportable: true,
     },
     categories: {
       name: 'expense.field.categories',
       type: 'collection',
-      exportable: true,
+      collectionOf: 'object',
+      columns: {
+        expenseAccount: {
+          name: 'expense.field.expense_account',
+          accessor: 'expenseAccount.name',
+        },
+        amount: {
+          name: 'expense.field.amount',
+          accessor: 'amountFormatted',
+        },
+        description: {
+          name: 'expense.field.line_description',
+          type: 'text',
+        },
+      },
     },
     publish: {
       name: 'expense.field.publish',
       type: 'boolean',
-      exportable: true,
     },
   },
   fields2: {

@@ -13,10 +13,13 @@ export default {
     sortField: 'name',
   },
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'vendorCreditNumber',
+
   fields: {
     vendor: {
       name: 'vendor_credit.field.vendor',
@@ -99,6 +102,22 @@ export default {
       name: 'Vendor Credit Date',
       type: 'date',
     },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+    },
+    creditRemaining: {
+      name: 'Credits Remaining',
+      accessor: 'formattedCreditsRemaining',
+    },
+    refundedAmount: {
+      name: 'Refunded Amount',
+      accessor: 'refundedAmount',
+    },
+    invoicedAmount: {
+      name: 'Invoiced Amount',
+      accessor: 'formattedInvoicedAmount',
+    },
     note: {
       name: 'Note',
       type: 'text',
@@ -106,6 +125,32 @@ export default {
     open: {
       name: 'Open',
       type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
     },
   },
   fields2: {

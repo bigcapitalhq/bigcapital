@@ -5,6 +5,8 @@ export default {
     sortField: 'created_at',
   },
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -125,7 +127,7 @@ export default {
     },
     paidAmount: {
       name: 'Paid Amount',
-      accessor: 'paymentAmountFormatted'
+      accessor: 'paymentAmountFormatted',
     },
     dueAmount: {
       name: 'Due Amount',
@@ -142,6 +144,33 @@ export default {
     delivered: {
       name: 'invoice.field.delivered',
       type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
     },
   },
   fields2: {

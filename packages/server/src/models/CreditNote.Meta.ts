@@ -13,10 +13,13 @@ export default {
     sortField: 'name',
   },
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'creditNoteNumber',
+
   fields: {
     customer: {
       name: 'credit_note.field.customer',
@@ -115,6 +118,32 @@ export default {
     open: {
       name: 'Open',
       type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
     },
   },
   fields2: {

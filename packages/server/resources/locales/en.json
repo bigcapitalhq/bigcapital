@@ -432,6 +432,7 @@
   "vendor.field.created_at": "Created at",
   "vendor.field.balance": "Balance",
   "vendor.field.status": "Status",
+  "vendor.field.note": "Note",
   "vendor.field.currency": "Currency",
   "vendor.field.status.active": "Active",
   "vendor.field.status.inactive": "Inactive",

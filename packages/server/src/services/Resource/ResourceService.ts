@@ -105,7 +105,11 @@ export default class ResourceService {
     const $enumerationType = (field) =>
       field.fieldType === 'enumeration' ? field : undefined;
 
-    const $hasFields = (field) => 'undefined' !== typeof field.fields ? field : undefined;
+    const $hasFields = (field) =>
+      'undefined' !== typeof field.fields ? field : undefined;
+
+    const $hasColumns = (column) =>
+      'undefined' !== typeof column.columns ? column : undefined;
 
     const naviagations = [
       ['fields', qim.$each, 'name'],
@@ -114,6 +118,7 @@ export default class ResourceService {
       ['fields2', qim.$each, $enumerationType, 'options', qim.$each, 'label'],
       ['fields2', qim.$each, $hasFields, 'fields', qim.$each, 'name'],
       ['columns', qim.$each, 'name'],
+      ['columns', qim.$each, $hasColumns, 'columns', qim.$each, 'name'],
     ];
     return this.i18nService.i18nApply(naviagations, meta, tenantId);
   }

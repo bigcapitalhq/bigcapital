@@ -1,12 +1,14 @@
 import { Inject, Service } from 'typedi';
 import xlsx from 'xlsx';
+import * as R from 'ramda';
 import { get } from 'lodash';
 import { sanitizeResourceName } from '../Import/_utils';
 import ResourceService from '../Resource/ResourceService';
 import { ExportableResources } from './ExportResources';
 import { ServiceError } from '@/exceptions';
 import { Errors } from './common';
-import { IModelMeta } from '@/interfaces';
+import { IModelMeta, IModelMetaColumn } from '@/interfaces';
+import { flatDataCollections, getDataAccessor } from './utils';
 
 @Service()
 export class ExportResourceService {
@@ -22,16 +24,16 @@ export class ExportResourceService {
    * @param {string} resourceName - Resource name.
    * @param {string} format - File format.
    */
-  async export(tenantId: number, resourceName: string, format: string = 'csv') {
+  public async export(tenantId: number, resourceName: string, format: string = 'csv') {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(tenantId, resource);
 
     this.validateResourceMeta(resourceMeta);
 
     const data = await this.getExportableData(tenantId, resource);
+    const transformed = this.transformExportedData(tenantId, resource, data);
     const exportableColumns = this.getExportableColumns(resourceMeta);
-
-    const workbook = this.createWorkbook(data, exportableColumns);
+    const workbook = this.createWorkbook(transformed, exportableColumns);
 
     return this.exportWorkbook(workbook, format);
   }
@@ -58,6 +60,29 @@ export class ExportResourceService {
   }
 
   /**
+   * Transforms the exported data based on the resource metadata.
+   * If the resource metadata specifies a flattening attribute (`exportFlattenOn`),
+   * the data will be flattened based on this attribute using the `flatDataCollections` utility function.
+   *
+   * @param {number} tenantId - The tenant identifier.
+   * @param {string} resource - The name of the resource.
+   * @param {Array<Record<string, any>>} data - The original data to be transformed.
+   * @returns {Array<Record<string, any>>} - The transformed data.
+   */
+  private transformExportedData(
+    tenantId: number,
+    resource: string,
+    data: Array<Record<string, any>>
+  ): Array<Record<string, any>> {
+    const resourceMeta = this.getResourceMeta(tenantId, resource);
+
+    return R.when<Array<Record<string, any>>, Array<Record<string, any>>>(
+      R.always(Boolean(resourceMeta.exportFlattenOn)),
+      (data) => flatDataCollections(data, resourceMeta.exportFlattenOn),
+      data
+    );
+  }
+  /**
    * Fetches exportable data for a given resource.
    * @param {number} tenantId - The tenant identifier.
    * @param {string} resource - The name of the resource.
@@ -75,13 +100,29 @@ export class ExportResourceService {
    * @returns An array of exportable columns.
    */
   private getExportableColumns(resourceMeta: IModelMeta) {
-    return Object.entries(resourceMeta.columns)
-      .filter(([_, value]) => value.exportable !== false)
-      .map(([key, value]) => ({
-        name: value.name,
-        type: value.type,
-        accessor: value.accessor || key,
-      }));
+    const processColumns = (
+      columns: { [key: string]: IModelMetaColumn },
+      parent = ''
+    ) => {
+      return Object.entries(columns)
+        .filter(([_, value]) => value.exportable !== false)
+        .flatMap(([key, value]) => {
+          if (value.type === 'collection' && value.collectionOf === 'object') {
+            return processColumns(value.columns, key);
+          } else {
+            const group = parent;
+            return [
+              {
+                name: value.name,
+                type: value.type || 'text',
+                accessor: value.accessor || key,
+                group,
+              },
+            ];
+          }
+        });
+    };
+    return processColumns(resourceMeta.columns);
   }
 
   /**
@@ -93,12 +134,14 @@ export class ExportResourceService {
   private createWorkbook(data: any[], exportableColumns: any[]) {
     const workbook = xlsx.utils.book_new();
     const worksheetData = data.map((item) =>
-      exportableColumns.map((col) => get(item, col.accessor))
+      exportableColumns.map((col) => get(item, getDataAccessor(col)))
     );
+
     worksheetData.unshift(exportableColumns.map((col) => col.name));
 
     const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Exported Data');
+
     return workbook;
   }
 

@@ -5,6 +5,8 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportFlattenOn: 'entries',
+
   exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -61,42 +63,70 @@ export default {
     date: {
       name: 'manual_journal.field.date',
       type: 'date',
-      exportable: true,
     },
     journalNumber: {
       name: 'manual_journal.field.journal_number',
       type: 'text',
-      exportable: true,
     },
     reference: {
       name: 'manual_journal.field.reference',
       type: 'text',
-      exportable: true,
     },
     journalType: {
       name: 'manual_journal.field.journal_type',
       type: 'text',
-      exportable: true,
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
     },
     currencyCode: {
       name: 'manual_journal.field.currency',
       type: 'text',
-      exportable: true,
     },
-    exchange_rate: {
+    exchangeRate: {
       name: 'manual_journal.field.exchange_rate',
       type: 'number',
-      exportable: true,
     },
     description: {
       name: 'manual_journal.field.description',
       type: 'text',
-      exportable: true,
     },
-    publish: {
-      name: 'Publish',
-      type: 'boolean',
-      exportable: true,
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        credit: {
+          name: 'Credit',
+          type: 'text',
+        },
+        debit: {
+          name: 'Debit',
+          type: 'text',
+        },
+        account: {
+          name: 'Account',
+          accessor: 'account.name',
+        },
+        contact: {
+          name: 'Contact',
+          accessor: 'contact.displayName',
+        },
+        note: {
+          name: 'Note',
+        },
+      },
+      publish: {
+        name: 'Publish',
+        type: 'boolean',
+      },
+      publishedAt: {
+        name: 'Published At',
+      },
+    },
+    createdAt: {
+      name: 'Created At',
     },
   },
   fields2: {

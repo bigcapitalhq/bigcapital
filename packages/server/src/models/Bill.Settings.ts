@@ -5,6 +5,7 @@ export default {
     sortField: 'bill_date',
   },
   importable: true,
+  exportFlattenOn: 'entries',
   exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -121,7 +122,7 @@ export default {
     },
     paidAmount: {
       name: 'Paid Amount',
-      accessor: 'formattedPaymentAmount'
+      accessor: 'formattedPaymentAmount',
     },
     note: {
       name: 'Note',
@@ -130,6 +131,33 @@ export default {
     open: {
       name: 'Open',
       type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
     },
   },
   fields2: {

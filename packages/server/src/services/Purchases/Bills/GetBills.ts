@@ -49,6 +49,7 @@ export class GetBills {
     const { results, pagination } = await Bill.query()
       .onBuild((builder) => {
         builder.withGraphFetched('vendor');
+        builder.withGraphFetched('entries.item');
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);

@@ -45,7 +45,7 @@ export default class ListCreditNotes extends BaseCreditNotes {
     );
     const { results, pagination } = await CreditNote.query()
       .onBuild((builder) => {
-        builder.withGraphFetched('entries');
+        builder.withGraphFetched('entries.item');
         builder.withGraphFetched('customer');
         dynamicFilter.buildQuery()(builder);
       })

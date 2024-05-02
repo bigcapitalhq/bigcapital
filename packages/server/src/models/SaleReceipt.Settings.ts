@@ -5,6 +5,8 @@ export default {
     sortField: 'created_at',
   },
   exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -117,10 +119,6 @@ export default {
       name: 'receipt.field.statement',
       type: 'text',
     },
-    createdAt: {
-      name: 'receipt.field.created_at',
-      type: 'date',
-    },
     status: {
       name: 'receipt.field.status',
       type: 'enumeration',
@@ -129,6 +127,37 @@ export default {
         { key: 'closed', label: 'receipt.field.status.closed' },
       ],
       exportable: true,
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+    createdAt: {
+      name: 'receipt.field.created_at',
+      type: 'date',
     },
   },
   fields2: {
