@@ -1,4 +1,4 @@
-import { Service, Inject, Container } from 'typedi';
+import { Service, Inject } from 'typedi';
 import {
   IRegisterDTO,
   ISystemUser,
@@ -12,11 +12,6 @@ import { GetAuthMeta } from './GetAuthMeta';
 import { AuthSignupConfirmService } from './AuthSignupConfirm';
 import { SystemUser } from '@/system/models';
 import { AuthSignupConfirmResend } from './AuthSignupResend';
-
-interface ISignupConfirmDTO {
-  token: string;
-  email: string;
-}
 
 @Service()
 export default class AuthenticationApplication {
@@ -72,13 +67,12 @@ export default class AuthenticationApplication {
   }
 
   /**
-   *
-   * @param {string} email
-   * @param {string} token
-   * @returns
+   * Resends the confirmation email of the given system user.
+   * @param {number} userId - System user id.
+   * @returns {Promise<void>}
    */
-  public async signUpConfirmSend(email: string, token: string) {
-    return this.authSignupConfirmService.signUpConfirm(email, token);
+  public async signUpConfirmResend(userId: number) {
+    return this.authSignUpConfirmResendService.signUpConfirmResend(userId);
   }
 
   /**

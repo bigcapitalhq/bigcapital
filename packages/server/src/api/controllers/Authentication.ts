@@ -220,11 +220,10 @@ export default class AuthenticationController extends BaseController {
   }
 
   /**
-   *
+   * Resends the confirmation email to the user.
    * @param {Request} req
    * @param {Response}| res
    * @param {Function} next
-   * @returns
    */
   private async registerVerifyResendMail(
     req: Request,
@@ -234,7 +233,7 @@ export default class AuthenticationController extends BaseController {
     const { user } = req;
 
     try {
-      const data = await this.authApplication.signUpConfirm(user.id);
+      const data = await this.authApplication.signUpConfirmResend(user.id);
 
       return res.status(200).send({
         type: 'success',

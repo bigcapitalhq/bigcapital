@@ -52,6 +52,6 @@ export class AuthSignupConfirmService {
       userId,
     } as IAuthSignUpVerifiedEventPayload);
 
-    return updatedUser;
+    return updatedUser as SystemUser;
   }
 }

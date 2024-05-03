@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import moment from 'moment';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import path from 'path';
 import * as R from 'ramda';
 
@@ -329,7 +329,7 @@ const booleanValuesRepresentingTrue: string[] = ['true', '1'];
 const booleanValuesRepresentingFalse: string[] = ['false', '0'];
 
 const normalizeValue = (value: any): string =>
-  value.toString().trim().toLowerCase();
+  value?.toString().trim().toLowerCase();
 
 const booleanValues: string[] = [
   ...booleanValuesRepresentingTrue,
@@ -338,7 +338,7 @@ const booleanValues: string[] = [
 
 export const parseBoolean = <T>(value: any, defaultValue: T): T | boolean => {
   const normalizedValue = normalizeValue(value);
-  if (booleanValues.indexOf(normalizedValue) === -1) {
+  if (isEmpty(value) || booleanValues.indexOf(normalizedValue) === -1) {
     return defaultValue;
   }
   return booleanValuesRepresentingTrue.indexOf(normalizedValue) !== -1;

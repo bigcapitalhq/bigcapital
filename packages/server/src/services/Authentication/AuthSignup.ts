@@ -1,4 +1,4 @@
-import { isEmpty, omit } from 'lodash';
+import { defaultTo, isEmpty, omit } from 'lodash';
 import moment from 'moment';
 import crypto from 'crypto';
 import { ServiceError } from '@/exceptions';
@@ -42,7 +42,13 @@ export class AuthSignupService {
     await this.validateEmailUniqiness(signupDTO.email);
 
     const hashedPassword = await hashPassword(signupDTO.password);
-    const verifyToken = crypto.randomBytes(64).toString('hex');
+
+    const verifyTokenCrypto = crypto.randomBytes(64).toString('hex');
+    const verifiedEnabed = defaultTo(config.signupConfirmation.enabled, false);
+    const verifyToken = verifiedEnabed ? verifyTokenCrypto : '';
+    const verified = !verifiedEnabed;
+
+    const inviteAcceptedAt = moment().format('YYYY-MM-DD');
 
     // Triggers signin up event.
     await this.eventPublisher.emitAsync(events.auth.signingUp, {
@@ -53,10 +59,11 @@ export class AuthSignupService {
     const registeredUser = await systemUserRepository.create({
       ...omit(signupDTO, 'country'),
       verifyToken,
+      verified,
       active: true,
       password: hashedPassword,
       tenantId: tenant.id,
-      inviteAcceptedAt: moment().format('YYYY-MM-DD'),
+      inviteAcceptedAt,
     });
     // Triggers signed up event.
     await this.eventPublisher.emitAsync(events.auth.signUp, {
