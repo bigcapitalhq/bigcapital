@@ -1,6 +1,7 @@
 import Container from 'typedi';
 import {
   SystemUserRepository,
+  SystemUserTenantsRepository,
   SubscriptionRepository,
   TenantRepository,
 } from '@/system/repositories';
@@ -11,6 +12,7 @@ export default () => {
 
   return {
     systemUserRepository: new SystemUserRepository(knex, cache),
+    systemUserTenantsRepository: new SystemUserTenantsRepository(knex, cache),
     subscriptionRepository: new SubscriptionRepository(knex, cache),
     tenantRepository: new TenantRepository(knex, cache),
   };

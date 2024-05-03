@@ -1,11 +1,15 @@
 // @ts-nocheck
+
 import { Button, Popover, Menu, Position } from '@blueprintjs/core';
 
 import { Icon } from '@/components';
 
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
 import { useAuthenticatedAccount } from '@/hooks/query';
-import { compose, firstLettersArgs } from '@/utils';
+import { compose, firstLettersArgs, getCookie } from '@/utils';
+import GeneralFormPage from '@/containers/Preferences/General/GeneralFormPage';
+import { GeneralFormProvider } from '@/containers/Preferences/General/GeneralFormProvider';
+import React from 'react';
 
 // Popover modifiers.
 const POPOVER_MODIFIERS = {
@@ -21,6 +25,13 @@ function SidebarHeadJSX({
 }) {
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
+  // const tenants = getCookie('tenants');
+  const tenants = [];
+  const tenantsarr = JSON.parse(getCookie('tenants'));
+  const [btnStatus, setBtnStatus] = React.useState(false);
+  const clickedBtn = () => {
+    setBtnStatus(!btnStatus);
+  }
 
   return (
     <div className="sidebar__head">
@@ -30,17 +41,27 @@ function SidebarHeadJSX({
           boundary={'window'}
           content={
             <Menu className={'menu--dashboard-organization'}>
-              <div class="org-item">
-                <div class="org-item__logo">
-                  {firstLettersArgs(...(organization.name || '').split(' '))}{' '}
+              {tenantsarr.map((data, index) => (
+                <div class="org-item" style={{ cursor: 'pointer', marginBottom: '5px'}}>
+                  <div class="org-item__logo">
+                    {firstLettersArgs(...(data.data.metadata.name || '').split(' '))}{' '}
+                  </div>
+                  <div class="org-item__name">{data.data.metadata.name}</div>
                 </div>
-                <div class="org-item__name">{organization.name}</div>
+              ))}
+              <div class="org-item" onClick={() => clickedBtn()} style={{ cursor: 'pointer'}}>
+                <div class="org-item__logo">
+                  +
+                </div>
+                <div class="org-item__name">Add Tenant</div>
               </div>
             </Menu>
           }
+
           position={Position.BOTTOM}
           minimal={true}
         >
+
           <Button
             className="title"
             rightIcon={<Icon icon={'caret-down-16'} size={16} />}
@@ -59,6 +80,12 @@ function SidebarHeadJSX({
           className="bigcapital--alt"
         />
       </div>
+      <div style={{ position: 'fixed', zIndex: '999', left: '25%', width: '50vw', display: btnStatus ? 'block' : 'none' }}>
+        <GeneralFormProvider>
+          <GeneralFormPage />
+        </GeneralFormProvider>
+      </div>
+
     </div>
   );
 }

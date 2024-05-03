@@ -1,6 +1,6 @@
 import { Container, Inject } from 'typedi';
 import { cloneDeep } from 'lodash';
-import { Tenant } from '@/system/models';
+import { Tenant, UserTenants, TenantMetadata } from '@/system/models';
 import {
   IAuthSignedInEventPayload,
   IAuthSigningInEventPayload,
@@ -88,9 +88,13 @@ export class AuthSigninService {
       user,
     } as IAuthSignedInEventPayload);
 
-    const tenant = await Tenant.query()
-      .findById(user.tenantId)
-      .withGraphFetched('metadata');
+    const tenant = await UserTenants.query()
+      .where({user_id: user.id})
+    for(let i = 0;i < tenant.length;i++) {
+      tenant[i]['data'] = await Tenant.query().findById(tenant[i]['tenantId']);
+      tenant[i]['data']['metadata'] = await TenantMetadata.query().findById(tenant[i]['tenantId']);
+    }
+      console.log(tenant);
 
     // Keep the user object immutable.
     const outputUser = cloneDeep(user);

@@ -10,9 +10,10 @@ export interface ISystemUser extends Model {
   active: boolean;
   password: string;
   email: string;
+  currentTenantId: number;
 
   roleId: number;
-  tenantId: number;
+  tenantId: number[];
 
   inviteAcceptAt: Date;
   lastLoginAt: Date;
@@ -182,4 +183,9 @@ export interface ICheckInviteEventPayload {
 export interface IUserSendInviteDTO {
   email: string;
   roleId: number;
+}
+
+export interface IUserTenants {
+  user_id: number;
+  tenants_id: number;
 }
