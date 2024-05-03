@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import { Route, Switch, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import styled from 'styled-components';

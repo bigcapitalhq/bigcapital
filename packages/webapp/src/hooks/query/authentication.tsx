@@ -78,7 +78,7 @@ export const useAuthResetPassword = (props) => {
  */
 export const useAuthMetadata = (props) => {
   return useRequestQuery(
-    [t.AUTH_METADATA_PAGE,],
+    [t.AUTH_METADATA_PAGE],
     {
       method: 'get',
       url: `auth/meta`,
@@ -88,12 +88,11 @@ export const useAuthMetadata = (props) => {
       defaultData: {},
       ...props,
     },
-  ); 
-}
-
+  );
+};
 
 /**
- * 
+ *
  */
 export const useAuthSignUpVerifyResendMail = (props) => {
   const apiRequest = useApiRequest();
@@ -104,16 +103,20 @@ export const useAuthSignUpVerifyResendMail = (props) => {
   );
 };
 
-
+interface AuthSignUpVerifyValues {
+  token: string;
+  email: string;
+}
 
 /**
- * 
+ *
  */
 export const useAuthSignUpVerify = (props) => {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (token: string, email: string) => apiRequest.post('auth/register/verify'),
+    (values: AuthSignUpVerifyValues) =>
+      apiRequest.post('auth/register/verify', values),
     props,
   );
 };

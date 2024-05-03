@@ -7,10 +7,8 @@ import { AppToaster, Stack } from '@/components';
 import { useAuthActions } from '@/hooks/state';
 import { useAuthSignUpVerifyResendMail } from '@/hooks/query';
 import { AuthContainer } from './AuthContainer';
-import { useHistory } from 'react-router-dom';
 
 export default function RegisterVerify() {
-  const history = useHistory();
   const { setLogout } = useAuthActions();
   const { mutateAsync: resendSignUpVerifyMail, isLoading } =
     useAuthSignUpVerifyResendMail();
@@ -30,8 +28,6 @@ export default function RegisterVerify() {
         });
       });
   };
-
-  // Handle logout link click.
   const handleSignOutBtnClick = () => {
     setLogout();
   };
@@ -60,11 +56,11 @@ export default function RegisterVerify() {
             <Button
               large
               fill
-              intent={Intent.DANGER}
               minimal
+              intent={Intent.DANGER}
               onClick={handleSignOutBtnClick}
             >
-              Signout
+              Not my email
             </Button>
           </Stack>
         </AuthInsiderCard>

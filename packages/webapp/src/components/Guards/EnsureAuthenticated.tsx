@@ -1,19 +1,22 @@
 // @ts-nocheck
 import React from 'react';
-import BodyClassName from 'react-body-classname';
 import { Redirect } from 'react-router-dom';
 import { useIsAuthenticated } from '@/hooks/state';
 
-interface PrivateRouteProps {
+interface EnsureAuthenticatedProps {
   children: React.ReactNode;
+  redirectTo?: string;
 }
 
-export default function PrivateRoute({ children }: PrivateRouteProps) {
+export function EnsureAuthenticated({
+  children,
+  redirectTo = '/auth/login',
+}: EnsureAuthenticatedProps) {
   const isAuthenticated = useIsAuthenticated();
 
   return isAuthenticated ? (
-    children
+    <>{children}</>
   ) : (
-    <Redirect to={{ pathname: '/auth/login' }} />
+    <Redirect to={{ pathname: redirectTo }} />
   );
 }

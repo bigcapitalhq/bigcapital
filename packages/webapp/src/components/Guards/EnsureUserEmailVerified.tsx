@@ -4,6 +4,7 @@ import { useAuthUserVerified } from '@/hooks/state';
 
 interface EnsureUserEmailVerifiedProps {
   children: React.ReactNode;
+  redirectTo?: string;
 }
 
 /**
@@ -12,11 +13,12 @@ interface EnsureUserEmailVerifiedProps {
  */
 export function EnsureUserEmailVerified({
   children,
+  redirectTo = '/auth/register/verify',
 }: EnsureUserEmailVerifiedProps) {
   const isAuthVerified = useAuthUserVerified();
 
   if (!isAuthVerified) {
-    return <Redirect to={{ pathname: '/register/verify' }} />;
+    return <Redirect to={{ pathname: redirectTo }} />;
   }
   return <>{children}</>;
 }

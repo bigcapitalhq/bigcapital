@@ -2,7 +2,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { isAuthenticated } from '@/store/authentication/authentication.reducer';
-import { setLogin } from '@/store/authentication/authentication.actions';
+import {
+  setEmailConfirmed,
+  setLogin,
+} from '@/store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
 import { removeCookie } from '@/utils';
 
@@ -66,8 +69,20 @@ export const useAuthOrganizationId = () => {
 };
 
 /**
- * 
+ * Retrieves the user's email verification status.
  */
 export const useAuthUserVerified = () => {
-  return useSelector(() => false);
+  return useSelector((state) => state.authentication.verified);
+};
+
+/**
+ * Sets the user's email verification status.
+ */
+export const useSetAuthEmailConfirmed = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (verified?: boolean = true) => dispatch(setEmailConfirmed(verified)),
+    [dispatch],
+  );
 };

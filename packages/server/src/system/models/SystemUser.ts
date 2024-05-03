@@ -35,7 +35,7 @@ export default class SystemUser extends SystemModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['fullName', 'isDeleted', 'isInviteAccepted'];
+    return ['fullName', 'isDeleted', 'isInviteAccepted', 'isVerified'];
   }
 
   /**

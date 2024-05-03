@@ -3,12 +3,20 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { useIsAuthenticated } from '@/hooks/state';
 
-interface PrivateRouteProps {
+interface EnsureAuthNotAuthenticatedProps {
   children: React.ReactNode;
+  redirectTo?: string;
 }
 
-export function EnsureAuthNotAuthenticated({ children }: PrivateRouteProps) {
+export function EnsureAuthNotAuthenticated({
+  children,
+  redirectTo = '/',
+}: EnsureAuthNotAuthenticatedProps) {
   const isAuthenticated = useIsAuthenticated();
 
-  return !isAuthenticated ? children : <Redirect to={{ pathname: '/' }} />;
+  return !isAuthenticated ? (
+    <>{children}</>
+  ) : (
+    <Redirect to={{ pathname: redirectTo }} />
+  );
 }

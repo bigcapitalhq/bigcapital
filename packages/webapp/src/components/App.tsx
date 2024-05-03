@@ -9,7 +9,7 @@ import 'moment/locale/ar-ly';
 import 'moment/locale/es-us';
 
 import AppIntlLoader from './AppIntlLoader';
-import PrivateRoute from '@/components/Guards/PrivateRoute';
+import { EnsureAuthenticated } from '@/components/Guards/EnsureAuthenticated';
 import GlobalErrors from '@/containers/GlobalErrors/GlobalErrors';
 import DashboardPrivatePages from '@/components/Dashboard/PrivatePages';
 import { Authentication } from '@/containers/Authentication/Authentication';
@@ -20,6 +20,9 @@ import { queryConfig } from '../hooks/query/base';
 import { EnsureUserEmailVerified } from './Guards/EnsureUserEmailVerified';
 import { EnsureAuthNotAuthenticated } from './Guards/EnsureAuthNotAuthenticated';
 
+const EmailConfirmation = LazyLoader({
+  loader: () => import('@/containers/Authentication/EmailConfirmation'),
+});
 const RegisterVerify = LazyLoader({
   loader: () => import('@/containers/Authentication/RegisterVerify'),
 });
@@ -33,24 +36,28 @@ function AppInsider({ history }) {
       <DashboardThemeProvider>
         <Router history={history}>
           <Switch>
+            <Route path={'/auth/register/verify'}>
+              <EnsureAuthenticated>
+                <RegisterVerify />
+              </EnsureAuthenticated>
+            </Route>
+
+            <Route path={'/auth/email_confirmation'}>
+              <EmailConfirmation />
+            </Route>
+
             <Route path={'/auth'}>
               <EnsureAuthNotAuthenticated>
                 <Authentication />
               </EnsureAuthNotAuthenticated>
             </Route>
 
-            <Route path={'/register/verify'}>
-              <PrivateRoute>
-                <RegisterVerify />
-              </PrivateRoute>
-            </Route>
-
             <Route path={'/'}>
-              <PrivateRoute>
+              <EnsureAuthenticated>
                 <EnsureUserEmailVerified>
                   <DashboardPrivatePages />
                 </EnsureUserEmailVerified>
-              </PrivateRoute>
+              </EnsureAuthenticated>
             </Route>
           </Switch>
         </Router>
