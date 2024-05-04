@@ -2,6 +2,35 @@
   "name": "@bigcapital/webapp",
   "version": "0.10.2",
   "private": true,
+  "scripts": {
+    "build": "craco build",
+    "dev": "PORT=4000 craco start",
+    "format": "biome format --write ./",
+    "lint": "biome check --apply ./",
+    "storybook": "start-storybook -p 6006",
+    "test": "node scripts/test.js"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
+  },
   "dependencies": {
     "@blueprintjs-formik/core": "^0.3.6",
     "@blueprintjs-formik/datetime": "^0.3.7",
@@ -120,32 +149,5 @@
     "typescript": "^4.8.3",
     "yup": "^0.28.1"
   },
-  "scripts": {
-    "dev": "PORT=4000 craco start",
-    "build": "craco build",
-    "test": "node scripts/test.js",
-    "storybook": "start-storybook -p 6006"
-  },
-  "proxy": "http://localhost:3000/",
-  "resolutions": {
-    "react-error-overlay": "6.0.9"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+  "proxy": "http://localhost:3000/"
 }

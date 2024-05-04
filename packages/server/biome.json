@@ -1,0 +1,15 @@
+{
+  "$schema": "../../node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["../../biome.json"],
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "useImportType": "error"
+      },
+      "correctness": {
+        "noUnusedImports": "error"
+      }
+    }
+  }
+}
