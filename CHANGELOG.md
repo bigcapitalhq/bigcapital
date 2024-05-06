@@ -2,6 +2,18 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.16.11] - 06-05-2024
+
+### improvements
+
+* feat: Export resource data to csv, xlsx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/430
+* feat: User email verification after signing-up. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/426
+
+### Fixes
+* feat(repo): upgrade to latest lerna v8 and pnpm v9 by @benpsnyder in https://github.com/bigcapitalhq/bigcapital/pull/414
+* feat: Update Docker Build-Push Action and Add ARM64 Support by @cloudsbird in https://github.com/bigcapitalhq/bigcapital/pull/412
+* feat: Pushing docker containers by version tag by @cloudsbird in https://github.com/bigcapitalhq/bigcapital/pull/421
+
 ## [0.16.10]
 
 * fix: Running migration Docker container on Windows by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/432
