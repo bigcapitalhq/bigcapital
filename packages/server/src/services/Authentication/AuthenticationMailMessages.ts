@@ -44,8 +44,10 @@ export default class AuthenticationMailMesssages {
   public async sendSignupVerificationMail(
     email: string,
     fullName: string,
-    token: string,
+    token: string
   ) {
+    const verifyUrl = `${config.baseURL}/auth/email_confirmation?token=${token}&email=${email}`;
+
     await new Mail()
       .setSubject('Bigcapital - Verify your email')
       .setView('mail/SignupVerifyEmail.html')
@@ -57,10 +59,7 @@ export default class AuthenticationMailMesssages {
           cid: 'bigcapital_logo',
         },
       ])
-      .setData({
-        verifyUrl: `${config.baseURL}/auth/reset_password/${token}`,
-        fullName,
-      })
-      .send(); 
+      .setData({ verifyUrl, fullName })
+      .send();
   }
 }
