@@ -9,6 +9,9 @@ export default {
     signUp: 'onSignUp',
     signingUp: 'onSigningUp',
 
+    signUpConfirming: 'signUpConfirming',
+    signUpConfirmed: 'signUpConfirmed',
+
     sendingResetPassword: 'onSendingResetPassword',
     sendResetPassword: 'onSendResetPassword',
 

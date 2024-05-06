@@ -154,6 +154,13 @@ module.exports = {
   },
 
   /**
+   * Sign-up email confirmation
+   */
+  signupConfirmation: {
+    enabled: parseBoolean<boolean>(process.env.SIGNUP_EMAIL_CONFIRMATION, false),
+  },
+
+  /**
    * Puppeteer remote browserless connection.
    */
   puppeteer: {

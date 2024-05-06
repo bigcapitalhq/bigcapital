@@ -66,16 +66,27 @@ export interface IAuthResetedPasswordEventPayload {
   password: string;
 }
 
-
 export interface IAuthSendingResetPassword {
-  user: ISystemUser,
+  user: ISystemUser;
   token: string;
 }
 export interface IAuthSendedResetPassword {
-  user: ISystemUser,
+  user: ISystemUser;
   token: string;
 }
 
-export interface IAuthGetMetaPOJO  {
+export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
+}
+
+export interface IAuthSignUpVerifingEventPayload {
+  email: string;
+  verifyToken: string;
+  userId: number;
+}
+
+export interface IAuthSignUpVerifiedEventPayload {
+  email: string;
+  verifyToken: string;
+  userId: number;
 }

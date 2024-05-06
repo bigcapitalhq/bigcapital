@@ -1,8 +1,9 @@
 // @ts-nocheck
-import { createReducer } from '@reduxjs/toolkit';
+import { PayloadAction, createReducer } from '@reduxjs/toolkit';
 import { persistReducer } from 'redux-persist';
 import purgeStoredState from 'redux-persist/es/purgeStoredState';
 import storage from 'redux-persist/lib/storage';
+import { isUndefined } from 'lodash';
 import { getCookie } from '@/utils';
 import t from '@/store/types';
 
@@ -13,6 +14,7 @@ const initialState = {
   tenantId: getCookie('tenant_id'),
   userId: getCookie('authenticated_user_id'),
   locale: getCookie('locale'),
+  verified: true, // Let's be optimistic and assume the user's email is confirmed.
   errors: [],
 };
 
@@ -30,6 +32,15 @@ const reducerInstance = createReducer(initialState, {
 
   [t.LOGIN_CLEAR_ERRORS]: (state) => {
     state.errors = [];
+  },
+
+  [t.SET_EMAIL_VERIFIED]: (
+    state,
+    payload: PayloadAction<{ verified?: boolean }>,
+  ) => {
+    state.verified = !isUndefined(payload.action.verified)
+      ? payload.action.verified
+      : true;
   },
 
   [t.RESET]: (state) => {

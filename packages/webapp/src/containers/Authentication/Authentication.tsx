@@ -1,24 +1,16 @@
 // @ts-nocheck
-import React from 'react';
-import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import BodyClassName from 'react-body-classname';
 import styled from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 import authenticationRoutes from '@/routes/authentication';
 import { Icon, FormattedMessage as T } from '@/components';
-import { useIsAuthenticated } from '@/hooks/state';
 import { AuthMetaBootProvider } from './AuthMetaBoot';
 
 import '@/style/pages/Authentication/Auth.scss';
 
 export function Authentication() {
-  const to = { pathname: '/' };
-  const isAuthenticated = useIsAuthenticated();
-
-  if (isAuthenticated) {
-    return <Redirect to={to} />;
-  }
   return (
     <BodyClassName className={'authentication'}>
       <AuthPage>
