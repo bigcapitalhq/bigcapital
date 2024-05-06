@@ -7,7 +7,6 @@ WORKDIR /app
 # Copy application dependency manifests to the container image.
 COPY ./package*.json ./
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
-COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./lerna.json ./lerna.json
 COPY ./packages/webapp/package*.json ./packages/webapp/
 
