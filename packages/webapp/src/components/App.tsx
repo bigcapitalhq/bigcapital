@@ -19,6 +19,7 @@ import { SplashScreen, DashboardThemeProvider } from '../components';
 import { queryConfig } from '../hooks/query/base';
 import { EnsureUserEmailVerified } from './Guards/EnsureUserEmailVerified';
 import { EnsureAuthNotAuthenticated } from './Guards/EnsureAuthNotAuthenticated';
+import { EnsureUserEmailNotVerified } from './Guards/EnsureUserEmailNotVerified';
 
 const EmailConfirmation = LazyLoader({
   loader: () => import('@/containers/Authentication/EmailConfirmation'),
@@ -38,7 +39,9 @@ function AppInsider({ history }) {
           <Switch>
             <Route path={'/auth/register/verify'}>
               <EnsureAuthenticated>
-                <RegisterVerify />
+                <EnsureUserEmailNotVerified>
+                  <RegisterVerify />
+                </EnsureUserEmailNotVerified>
               </EnsureAuthenticated>
             </Route>
 
