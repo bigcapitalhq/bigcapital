@@ -1,6 +1,6 @@
 <p align="center">
   <p align="center">
-    <a href="https://bigcapital.ly" target="_blank">
+    <a href="https://bigcapital.app" target="_blank">
       <img src="https://raw.githubusercontent.com/abouolia/blog/main/public/bigcapital.svg" alt="Bigcapital" width="280" height="75">
     </a>
   </p>
@@ -27,7 +27,7 @@
   </p>
 
   <p align="center">
-    <a href="https://app.bigcapital.ly">Bigcapital Cloud</a>
+    <a href="https://my.bigcapital.app">Bigcapital Cloud</a>
   </p>
 </p>
 
@@ -51,7 +51,7 @@ Bigcapital is available open-source under AGPL license. You can host it on your 
 
 ### Docker
 
-To get started with self-hosted with Docker and Docker Compose, take a look at the [Docker guide](https://docs.bigcapital.ly/deployment/docker).
+To get started with self-hosted with Docker and Docker Compose, take a look at the [Docker guide](https://docs.bigcapital.app/deployment/docker).
 
 ## Development
 
@@ -74,7 +74,7 @@ You can integrate Bigcapital API with your system to organize your transactions 
 
 # Resources
 
-- [Documentation](https://docs.bigcapital.ly/) - Learn how to use.
+- [Documentation](https://docs.bigcapital.app/) - Learn how to use.
 - [Contribution](https://github.com/bigcapitalhq/bigcapital/blob/develop/CONTRIBUTING.md) - Welcome to any contributions.
 - [Discord](https://discord.com/invite/c8nPBJafeb) - Ask for help.
 - [Bug Tracker](https://github.com/bigcapitalhq/bigcapital/issues) - Notify us new bugs.
