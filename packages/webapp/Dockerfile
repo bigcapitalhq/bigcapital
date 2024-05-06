@@ -8,6 +8,7 @@ WORKDIR /app
 COPY ./package*.json ./
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 COPY ./lerna.json ./lerna.json
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./packages/webapp/package*.json ./packages/webapp/
 
 # Install application dependencies
@@ -23,7 +24,7 @@ RUN pnpm install
 
 # Build webapp package
 COPY ./packages/webapp /app/packages/webapp
-RUN npm run build:webapp
+RUN pnpm run build:webapp
 
 FROM nginx
 

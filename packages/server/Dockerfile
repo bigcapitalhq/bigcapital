@@ -93,6 +93,7 @@ RUN npm install -g pnpm
 COPY ./package*.json ./
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 COPY ./lerna.json ./lerna.json
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./packages/server/package*.json ./packages/server/
 
 # Install application dependencies
