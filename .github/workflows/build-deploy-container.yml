@@ -51,7 +51,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=bigcapitalhq/webapp,push-by-digest=true,name-canonical=true,push=true
+          tags: bigcapitalhq/webapp:latest, bigcapitalhq/webapp:${{github.ref_name}}
 
       - name: Export digest
         run: |
