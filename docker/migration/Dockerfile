@@ -1,4 +1,4 @@
-FROM ghcr.io/bigcapitalhq/server:latest as build
+FROM bigcapitalhq/server:latest as build
 
 ARG DB_HOST= \
   DB_USER= \
