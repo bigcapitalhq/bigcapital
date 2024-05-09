@@ -65,7 +65,7 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-main-${{ env.PLATFORM_PAIR }}
+          name: digests-webapp
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
@@ -121,11 +121,11 @@ jobs:
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
-          name: digests-main-${{ env.PLATFORM_PAIR }}
+          name: digests-server
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
-          
+
       # Send notification to Slack channel.
       - name: Slack Notification built and published server container successfully.
         uses: rtCamp/action-slack-notify@v2
