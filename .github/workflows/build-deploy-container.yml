@@ -13,10 +13,6 @@ jobs:
   build-publish-webapp:
     strategy:
       fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          - linux/arm64
     name: Build and deploy webapp container
     runs-on: ubuntu-latest
     environment: production
@@ -55,7 +51,7 @@ jobs:
         with:
           context: ./
           file: ./packages/webapp/Dockerfile
-          platforms: ${{ matrix.platform }}
+          platforms: linux/amd64,linux/arm64
           push: true
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=bigcapitalhq/webapp,push-by-digest=true,name-canonical=true,push=true
