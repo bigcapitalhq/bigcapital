@@ -7,8 +7,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  WEBAPP_IMAGE_NAME: bigcapital/bigcapital-webapp
-  SERVER_IMAGE_NAME: bigcapital/bigcapital-server
+  WEBAPP_IMAGE_NAME: bigcapitalhq/webapp
+  SERVER_IMAGE_NAME: bigcapitalhq/server
 
 jobs:
   build-publish-webapp:
