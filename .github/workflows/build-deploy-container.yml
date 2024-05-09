@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
   WEBAPP_IMAGE_NAME: bigcapitalhq/webapp
   SERVER_IMAGE_NAME: bigcapitalhq/server
 
@@ -58,7 +57,6 @@ jobs:
           file: ./packages/webapp/Dockerfile
           platforms: ${{ matrix.platform }}
           push: true
-          # tags: bigcapitalhq/webapp:latest, bigcapitalhq/webapp:${{github.ref_name}}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=bigcapitalhq/webapp,push-by-digest=true,name-canonical=true,push=true
 
