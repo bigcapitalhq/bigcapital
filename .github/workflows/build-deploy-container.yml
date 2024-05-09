@@ -59,6 +59,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           push: true
           tags: bigcapitalhq/webapp:latest, bigcapitalhq/webapp:${{github.ref_name}}
+          labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=bigcapitalhq/webapp,push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
