@@ -25,12 +25,12 @@ services:
 
   webapp:
     container_name: bigcapital-webapp
-    image: ghcr.io/bigcapitalhq/webapp:latest
+    image: bigcapitalhq/webapp:latest
     restart: on-failure
 
   server:
     container_name: bigcapital-server
-    image: ghcr.io/bigcapitalhq/server:latest
+    image: bigcapitalhq/server:latest
     expose:
       - '3000'
     links:
