@@ -91,8 +91,8 @@ function askForAction() {
         echo "   2) Start"
         echo "   3) Stop"
         echo "   4) Restart"
-        echo "   5) Upgrade"3
-        echo "   6) View Logs"
+        echo "   5) Upgrade"
+        echo "   6) Logs"
         echo "   7) Exit"
         echo 
         read -p "Action [2]: " ACTION
@@ -132,7 +132,7 @@ function askForAction() {
     elif [ "$ACTION" == "6" ]  || [ "$DEFAULT_ACTION" == "logs" ]
     then
         viewLogs $@
-        askForAction
+        askForAction "logs"
     elif [ "$ACTION" == "7" ] 
     then
         exit 0
