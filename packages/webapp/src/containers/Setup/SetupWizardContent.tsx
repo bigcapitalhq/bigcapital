@@ -37,7 +37,7 @@ export default function SetupWizardContent({
           <SetupOrganizationPage id="organization" />
         </Stepper.Step>
 
-        <Stepper.Step label={'Initiializing'}>
+        <Stepper.Step label={'Initializing'}>
           <SetupInitializingForm id={'initializing'} />
         </Stepper.Step>
 
