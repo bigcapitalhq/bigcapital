@@ -18,6 +18,7 @@
   "to_date": "الى تاريخ",
   "report_date_range": "تقرير نطاق التاريخ",
   "log_in": "تسجيل الدخول",
+  "oidc_log_in": "قم بتسجيل الدخول باستخدام OIDC",
   "forget_my_password": "نسيت كلمة المرور الخاصة بي",
   "keep_me_logged_in": "تذكرني",
   "dont_have_an_account": "ليس لديك حساب؟",

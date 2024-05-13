@@ -26,7 +26,7 @@ export const useAuthActions = () => {
 
   return {
     setLogin: useCallback((login) => dispatch(setLogin(login)), [dispatch]),
-    setLogout: useCallback(() => {
+    setLogout: useCallback((href?:string) => {
       // Resets store state.
       // dispatch(setStoreReset());
 
@@ -35,7 +35,11 @@ export const useAuthActions = () => {
 
       removeAuthenticationCookies();
 
-      window.location.reload();
+      if (href) {
+        window.location.href = href;
+      } else {
+        window.location.reload();
+      }
     }, [queryClient]),
   };
 };

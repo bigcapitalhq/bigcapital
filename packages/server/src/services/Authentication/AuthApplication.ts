@@ -1,17 +1,19 @@
-import { Service, Inject } from 'typedi';
 import {
+  IAuthGetMetaPOJO,
+  IPasswordReset,
   IRegisterDTO,
   ISystemUser,
-  IPasswordReset,
-  IAuthGetMetaPOJO,
+  ITenant,
 } from '@/interfaces';
+import { SystemUser } from '@/system/models';
+import { Inject, Service } from 'typedi';
+import { AuthSendResetPassword } from './AuthSendResetPassword';
 import { AuthSigninService } from './AuthSignin';
 import { AuthSignupService } from './AuthSignup';
-import { AuthSendResetPassword } from './AuthSendResetPassword';
-import { GetAuthMeta } from './GetAuthMeta';
 import { AuthSignupConfirmService } from './AuthSignupConfirm';
-import { SystemUser } from '@/system/models';
 import { AuthSignupConfirmResend } from './AuthSignupResend';
+import { GetAuthMe } from './GetAuthMe';
+import { GetAuthMeta } from './GetAuthMeta';
 
 @Service()
 export default class AuthenticationApplication {
@@ -32,6 +34,9 @@ export default class AuthenticationApplication {
 
   @Inject()
   private authGetMeta: GetAuthMeta;
+
+  @Inject()
+  private authGetMe: GetAuthMe;
 
   /**
    * Signin and generates JWT token.
@@ -100,5 +105,14 @@ export default class AuthenticationApplication {
    */
   public async getAuthMeta(): Promise<IAuthGetMetaPOJO> {
     return this.authGetMeta.getAuthMeta();
+  }
+
+  /**
+   * Retrieves the authenticated tenant
+   * @param {number} tenantId
+   * @returns {Promise<ITenant>}
+   */
+  public async getAuthTenant(tenantId: number): Promise<ITenant> {
+    return this.authGetMe.getAuthTenant(tenantId);
   }
 }

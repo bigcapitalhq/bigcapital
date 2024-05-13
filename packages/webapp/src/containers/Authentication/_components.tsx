@@ -75,3 +75,48 @@ export const AuthSubmitButton = styled(Button)`
     }
   }
 `;
+
+export const AuthOidcSignInButton = styled(Button)`
+  &.bp4-intent-primary {
+    background-color: #0052cc;
+
+    &:disabled,
+    &.bp4-disabled {
+      background-color: rgba(0, 82, 204, 0.4);
+    }
+  }
+`;
+
+export const AuthOrDividerContainer = styled.div`
+  position: relative;
+  width: 100%;
+  margin: 20px auto;
+  text-align: center;
+`;
+
+export const AuthOrDivider = styled.div`
+  position: relative;
+  background-color: white;
+  padding: 0 10px;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 30px);
+    height: 1px;
+    background-color: grey;
+    opacity: 0.5;
+    z-index: 0;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+`;
