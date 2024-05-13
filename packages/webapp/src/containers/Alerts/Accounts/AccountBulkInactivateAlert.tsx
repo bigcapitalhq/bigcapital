@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { FormattedMessage as T } from '@/components';
 import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
-import { queryCache } from 'react-query';
+import { QueryCache } from 'react-query';
 import { AppToaster } from '@/components';
 
 import withAccountsActions from '@/containers/Accounts/withAccountsTableActions';
@@ -39,7 +39,7 @@ function AccountBulkInactivateAlert({
           message: intl.get('the_accounts_have_been_successfully_inactivated'),
           intent: Intent.SUCCESS,
         });
-        queryCache.invalidateQueries('accounts-table');
+        QueryCache.invalidateQueries('accounts-table');
       })
       .catch((errors) => {})
       .finally(() => {
