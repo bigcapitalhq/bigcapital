@@ -123,6 +123,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ccantrell72",
+      "name": "Chris Cantrell",
+      "avatar_url": "https://avatars.githubusercontent.com/u/104120598?v=4",
+      "profile": "http://www.pivoten.com",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
