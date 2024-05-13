@@ -35,6 +35,8 @@ import { useRefreshReceipts } from '@/hooks/query/receipts';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { compose } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Receipts actions bar.
@@ -48,6 +50,9 @@ function ReceiptActionsBar({
 
   // #withSettings
   receiptsTableSize,
+
+  // #withDialogActions
+  openDialog,
 
   // #withSettingsActions
   addSetting,
@@ -84,6 +89,11 @@ function ReceiptActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/receipts/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'sale_receipt' });
   };
 
   return (
@@ -145,6 +155,7 @@ function ReceiptActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -173,4 +184,5 @@ export default compose(
   withSettings(({ receiptSettings }) => ({
     receiptsTableSize: receiptSettings?.tableSize,
   })),
+  withDialogActions,
 )(ReceiptActionsBar);

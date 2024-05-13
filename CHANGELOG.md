@@ -2,6 +2,76 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.16.11] - 06-05-2024
+
+### improvements
+
+* feat: Export resource data to csv, xlsx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/430
+* feat: User email verification after signing-up. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/426
+
+### Fixes
+* feat(repo): upgrade to latest lerna v8 and pnpm v9 by @benpsnyder in https://github.com/bigcapitalhq/bigcapital/pull/414
+* feat: Update Docker Build-Push Action and Add ARM64 Support by @cloudsbird in https://github.com/bigcapitalhq/bigcapital/pull/412
+* feat: Pushing docker containers by version tag by @cloudsbird in https://github.com/bigcapitalhq/bigcapital/pull/421
+
+## [0.16.10]
+
+* fix: Running migration Docker container on Windows by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/432
+
+## [0.16.9]
+
+* feat: New Relic for tracking by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/429
+
+## [0.16.8]
+
+* feat: Ability to enable/disable the bank connect feature by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/423
+
+## [0.16.6]
+
+* hotfix: fix the subscription plan when subscribe on cloud by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/422
+
+## [0.16.5]
+
+IMPORTANT: If you upgraded to the v0.16 recently you should upgrade to v0.16.4 as soon as possible, because there're some breaking changes affected the sign-in and some users reported couldn't sign-in.
+
+* feat: Seed free subscription to tenants that have no subscription. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/410
+
+## [0.16.3]
+
+* feat: Integrate Lemon Squeezy payment by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/402
+* feat: optimize the onboarding subscription experience. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/404
+* feat: subscription page content by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/405
+* feat: auto subscribe to free plan once signup on community version. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/406
+* chore: add default value to env variable by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/407
+* fix: absolute storage imports path. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/408
+
+## [0.16.0]
+
+* feat: add convert to invoice button on estimate drawer toolbar by @ANasouf in https://github.com/bigcapitalhq/bigcapital/pull/361
+* feat(webapp): add mark as delivered to action bar of invoice details … by @ANasouf in https://github.com/bigcapitalhq/bigcapital/pull/360
+* feat(webapp): Dialog to choose the bank service provider by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/378
+* feat: Categorize the bank synced transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/377
+* feat: uncategorize the cashflow transaction by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/381
+* Import resources from csv/xlsx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/382
+* feat(webapp): import resource UI by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/386
+* fix: import resources improvements by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/388
+* feat: add sample sheet to accounts and bank transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/389
+* fix: show the unique row value in the import preview by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/392
+* feat: advanced parser for numeric and boolean import values by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/394
+* feat: validate the given imported sheet whether is empty by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/395
+* feat: linking relation with id in importing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/393
+* feat: Aggregate rows import by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/396
+* feat: clean up the imported temp files by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/400
+* feat: add hints to import fields by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/401
+
+## [0.15.0]
+
+* feat: Printing financial reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/363
+* feat: Convert invoice status after sending mail notification by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/332
+* feat: Bigcapital <> Plaid Integration by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/346
+* fix: Broken transactions by vendor report by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/369
+* fix: Optimize the print style some financial reports by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/370
+
 ## [0.14.0] - 30-01-2024
 
 * feat: purchases by items exporting by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/327

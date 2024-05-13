@@ -29,6 +29,8 @@ import withInvoiceActions from './withInvoiceActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { compose } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Invoices table actions bar.
@@ -45,6 +47,9 @@ function InvoiceActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogsActions
+  openDialog
 }) {
   const history = useHistory();
 
@@ -77,6 +82,11 @@ function InvoiceActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/invoices/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'sale_invoice' });
   };
 
   return (
@@ -135,6 +145,7 @@ function InvoiceActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -163,4 +174,5 @@ export default compose(
   withSettings(({ invoiceSettings }) => ({
     invoicesTableSize: invoiceSettings?.tableSize,
   })),
+  withDialogActions,
 )(InvoiceActionsBar);

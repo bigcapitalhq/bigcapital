@@ -1,6 +1,6 @@
-import { ISystemUser } from './User';
-import { ITenant } from './Tenancy';
 import { SystemUser } from '@/system/models';
+import { ITenant } from './Tenancy';
+import { ISystemUser } from './User';
 
 export interface IRegisterDTO {
   firstName: string;
@@ -66,17 +66,28 @@ export interface IAuthResetedPasswordEventPayload {
   password: string;
 }
 
-
 export interface IAuthSendingResetPassword {
-  user: ISystemUser,
+  user: ISystemUser;
   token: string;
 }
 export interface IAuthSendedResetPassword {
-  user: ISystemUser,
+  user: ISystemUser;
   token: string;
 }
 
 export interface IAuthGetMetaPOJO {
   signupDisabled: boolean;
   oidcLoginDisabled: boolean;
+}
+
+export interface IAuthSignUpVerifingEventPayload {
+  email: string;
+  verifyToken: string;
+  userId: number;
+}
+
+export interface IAuthSignUpVerifiedEventPayload {
+  email: string;
+  verifyToken: string;
+  userId: number;
 }

@@ -11,6 +11,8 @@ import AuthenticationApplication from '@/services/Authentication/AuthApplication
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
 import JWTAuth from '@/api/middleware/jwtAuth';
 
+import JWTAuth from '@/api/middleware/jwtAuth';
+import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
 @Service()
 export default class AuthenticationController extends BaseController {
   @Inject()
@@ -28,6 +30,20 @@ export default class AuthenticationController extends BaseController {
       this.validationResult,
       LoginThrottlerMiddleware,
       asyncMiddleware(this.login.bind(this)),
+      this.handlerErrors
+    );
+    router.use('/register/verify/resend', JWTAuth);
+    router.use('/register/verify/resend', AttachCurrentTenantUser);
+    router.post(
+      '/register/verify/resend',
+      asyncMiddleware(this.registerVerifyResendMail.bind(this)),
+      this.handlerErrors
+    );
+    router.post(
+      '/register/verify',
+      this.signupVerifySchema,
+      this.validationResult,
+      asyncMiddleware(this.registerVerify.bind(this)),
       this.handlerErrors
     );
     router.post(
@@ -107,6 +123,17 @@ export default class AuthenticationController extends BaseController {
     ];
   }
 
+  private get signupVerifySchema(): ValidationChain[] {
+    return [
+      check('email')
+        .exists()
+        .isString()
+        .isEmail()
+        .isLength({ max: DATATYPES_LENGTH.STRING }),
+      check('token').exists().isString(),
+    ];
+  }
+
   /**
    * Reset password schema.
    * @returns {ValidationChain[]}
@@ -168,6 +195,58 @@ export default class AuthenticationController extends BaseController {
         type: 'success',
         code: 'REGISTER.SUCCESS',
         message: 'Register organization has been success.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Verifies the provider user's email after signin-up.
+   * @param {Request} req
+   * @param {Response}| res
+   * @param {Function} next
+   * @returns {Response|void}
+   */
+  private async registerVerify(req: Request, res: Response, next: Function) {
+    const signUpVerifyDTO: { email: string; token: string } =
+      this.matchedBodyData(req);
+
+    try {
+      const user = await this.authApplication.signUpConfirm(
+        signUpVerifyDTO.email,
+        signUpVerifyDTO.token
+      );
+      return res.status(200).send({
+        type: 'success',
+        message: 'The given user has verified successfully',
+        user,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Resends the confirmation email to the user.
+   * @param {Request} req
+   * @param {Response}| res
+   * @param {Function} next
+   */
+  private async registerVerifyResendMail(
+    req: Request,
+    res: Response,
+    next: Function
+  ) {
+    const { user } = req;
+
+    try {
+      const data = await this.authApplication.signUpConfirmResend(user.id);
+
+      return res.status(200).send({
+        type: 'success',
+        message: 'The given user has verified successfully',
+        data,
       });
     } catch (error) {
       next(error);

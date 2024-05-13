@@ -12,10 +12,14 @@ export default {
     sortOrder: 'DESC',
     sortField: 'name',
   },
+  exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'vendorCreditNumber',
+
   fields: {
     vendor: {
       name: 'vendor_credit.field.vendor',
@@ -76,6 +80,79 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    vendorId: {
+      name: 'Vendor',
+      type: 'relation',
+      accessor: 'vendor.displayName',
+    },
+    exchangeRate: {
+      name: 'Echange Rate',
+      type: 'text',
+    },
+    vendorCreditNumber: {
+      name: 'Vendor Credit No.',
+      type: 'text',
+    },
+    referenceNo: {
+      name: 'Refernece No.',
+      type: 'text',
+    },
+    vendorCreditDate: {
+      name: 'Vendor Credit Date',
+      type: 'date',
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+    },
+    creditRemaining: {
+      name: 'Credits Remaining',
+      accessor: 'formattedCreditsRemaining',
+    },
+    refundedAmount: {
+      name: 'Refunded Amount',
+      accessor: 'refundedAmount',
+    },
+    invoicedAmount: {
+      name: 'Invoiced Amount',
+      accessor: 'formattedInvoicedAmount',
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+  },
   fields2: {
     vendorId: {
       name: 'Vendor',
@@ -122,7 +199,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'Rate',

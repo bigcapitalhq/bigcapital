@@ -29,9 +29,15 @@ export default [
     }),
   },
   {
+    path: `${BASE_URL}/register/email_confirmation`,
+    component: LazyLoader({
+      loader: () => import('@/containers/Authentication/EmailConfirmation'),
+    }),
+  },
+  {
     path: `${BASE_URL}/register`,
     component: LazyLoader({
       loader: () => import('@/containers/Authentication/Register'),
     }),
-  }
+  },
 ];

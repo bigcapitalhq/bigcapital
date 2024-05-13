@@ -1,5 +1,6 @@
 export default {
   importable: true,
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'paymentReceiveNo',
@@ -57,6 +58,42 @@ export default {
       fieldDate: 'date',
     },
   },
+  columns: {
+    customer: {
+      name: 'payment_receive.field.customer',
+      accessor: 'customer.displayName',
+      type: 'text',
+    },
+    paymentDate: {
+      name: 'payment_receive.field.payment_date',
+      type: 'date',
+    },
+    amount: {
+      name: 'payment_receive.field.amount',
+      type: 'number',
+    },
+    referenceNo: {
+      name: 'payment_receive.field.reference_no',
+      type: 'text',
+    },
+    depositAccount: {
+      name: 'payment_receive.field.deposit_account',
+      accessor: 'depositAccount.name',
+      type: 'text',
+    },
+    paymentReceiveNo: {
+      name: 'payment_receive.field.payment_receive_no',
+      type: 'text',
+    },
+    statement: {
+      name: 'payment_receive.field.statement',
+      type: 'text',
+    },
+    created_at: {
+      name: 'payment_receive.field.created_at',
+      type: 'date',
+    },
+  },
   fields2: {
     customerId: {
       name: 'payment_receive.field.customer',
@@ -84,12 +121,12 @@ export default {
       relationModel: 'Account',
       relationImportMatch: ['name', 'code'],
       required: true,
-      importHint: "Matches the account name or code."
+      importHint: 'Matches the account name or code.',
     },
     paymentReceiveNo: {
       name: 'payment_receive.field.payment_receive_no',
       fieldType: 'text',
-      importHint: "The payment number should be unique."
+      importHint: 'The payment number should be unique.',
     },
     statement: {
       name: 'payment_receive.field.statement',
@@ -108,7 +145,7 @@ export default {
           relationModel: 'SaleInvoice',
           relationImportMatch: 'invoiceNo',
           required: true,
-          importHint: "Matches the invoice number."
+          importHint: 'Matches the invoice number.',
         },
         paymentAmount: {
           name: 'payment_receive.field.entries.payment_amount',

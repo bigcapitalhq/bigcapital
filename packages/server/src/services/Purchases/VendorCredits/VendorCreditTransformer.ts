@@ -14,6 +14,7 @@ export class VendorCreditTransformer extends Transformer {
       'formattedSubtotal',
       'formattedVendorCreditDate',
       'formattedCreditsRemaining',
+      'formattedInvoicedAmount',
       'entries',
     ];
   };
@@ -54,6 +55,17 @@ export class VendorCreditTransformer extends Transformer {
    */
   protected formattedCreditsRemaining = (credit) => {
     return formatNumber(credit.creditsRemaining, {
+      currencyCode: credit.currencyCode,
+    });
+  };
+
+  /**
+   * Retrieves the formatted invoiced amount.
+   * @param credit
+   * @returns {string}
+   */
+  protected formattedInvoicedAmount = (credit) => {
+    return formatNumber(credit.invoicedAmount, {
       currencyCode: credit.currencyCode,
     });
   };

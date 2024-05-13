@@ -2,66 +2,67 @@ import { Router } from 'express';
 import { Container } from 'typedi';
 
 // Middlewares
-import JWTAuth from '@/api/middleware/jwtAuth';
 import AttachCurrentTenantUser from '@/api/middleware/AttachCurrentTenantUser';
+import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
+import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
+import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
+import I18nMiddleware from '@/api/middleware/I18nMiddleware';
+import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
 import SubscriptionMiddleware from '@/api/middleware/SubscriptionMiddleware';
 import TenancyMiddleware from '@/api/middleware/TenancyMiddleware';
-import EnsureTenantIsInitialized from '@/api/middleware/EnsureTenantIsInitialized';
-import SettingsMiddleware from '@/api/middleware/SettingsMiddleware';
-import I18nMiddleware from '@/api/middleware/I18nMiddleware';
-import I18nAuthenticatedMiddlware from '@/api/middleware/I18nAuthenticatedMiddlware';
-import EnsureTenantIsSeeded from '@/api/middleware/EnsureTenantIsSeeded';
+import JWTAuth from '@/api/middleware/jwtAuth';
 
 // Routes
-import Authentication from '@/api/controllers/Authentication';
-import InviteUsers from '@/api/controllers/InviteUsers';
-import Organization from '@/api/controllers/Organization';
 import Account from '@/api/controllers/Account';
-import Users from '@/api/controllers/Users';
-import Items from '@/api/controllers/Items';
-import ItemCategories from '@/api/controllers/ItemCategories';
-import Accounts from '@/api/controllers/Accounts';
 import AccountTypes from '@/api/controllers/AccountTypes';
-import Views from '@/api/controllers/Views';
-import ManualJournals from '@/api/controllers/ManualJournals';
-import FinancialStatements from '@/api/controllers/FinancialStatements';
-import Expenses from '@/api/controllers/Expenses';
-import Settings from '@/api/controllers/Settings';
-import Currencies from '@/api/controllers/Currencies';
+import Accounts from '@/api/controllers/Accounts';
+import Authentication from '@/api/controllers/Authentication';
 import Contacts from '@/api/controllers/Contacts/Contacts';
 import Customers from '@/api/controllers/Contacts/Customers';
 import Vendors from '@/api/controllers/Contacts/Vendors';
-import Sales from '@/api/controllers/Sales';
-import Purchases from '@/api/controllers/Purchases';
-import Resources from './controllers/Resources';
+import Currencies from '@/api/controllers/Currencies';
 import ExchangeRates from '@/api/controllers/ExchangeRates';
-import Media from '@/api/controllers/Media';
-import Ping from '@/api/controllers/Ping';
-import { SubscriptionController } from '@/api/controllers/Subscription';
+import Expenses from '@/api/controllers/Expenses';
+import FinancialStatements from '@/api/controllers/FinancialStatements';
 import InventoryAdjustments from '@/api/controllers/Inventory/InventoryAdjustments';
-import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
-import Jobs from './controllers/Jobs';
+import InviteUsers from '@/api/controllers/InviteUsers';
+import ItemCategories from '@/api/controllers/ItemCategories';
+import Items from '@/api/controllers/Items';
+import ManualJournals from '@/api/controllers/ManualJournals';
+import Media from '@/api/controllers/Media';
 import Miscellaneous from '@/api/controllers/Miscellaneous';
+import OidcController from '@/api/controllers/Oidc';
+import Organization from '@/api/controllers/Organization';
 import OrganizationDashboard from '@/api/controllers/OrganizationDashboard';
-import CashflowController from './controllers/Cashflow/CashflowController';
-import AuthorizationMiddleware from './middleware/AuthorizationMiddleware';
-import RolesController from './controllers/Roles';
-import TransactionsLocking from './controllers/TransactionsLocking';
-import DashboardController from './controllers/Dashboard';
-import { BranchesController } from './controllers/Branches';
-import { WarehousesController } from './controllers/Warehouses';
-import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
-import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
+import Ping from '@/api/controllers/Ping';
+import Purchases from '@/api/controllers/Purchases';
+import Sales from '@/api/controllers/Sales';
+import Settings from '@/api/controllers/Settings';
+import { SubscriptionController } from '@/api/controllers/Subscription';
+import Users from '@/api/controllers/Users';
+import Views from '@/api/controllers/Views';
 import { BranchIntegrationErrorsMiddleware } from '@/services/Branches/BranchIntegrationErrorsMiddleware';
+import { BankingController } from './controllers/Banking/BankingController';
+import { BranchesController } from './controllers/Branches';
+import CashflowController from './controllers/Cashflow/CashflowController';
+import DashboardController from './controllers/Dashboard';
+import { ExportController } from './controllers/Export/ExportController';
+import { ImportController } from './controllers/Import/ImportController';
 import { InventoryItemsCostController } from './controllers/Inventory/InventortyItemsCosts';
+import Jobs from './controllers/Jobs';
 import { ProjectsController } from './controllers/Projects/Projects';
 import { ProjectTasksController } from './controllers/Projects/Tasks';
 import { ProjectTimesController } from './controllers/Projects/Times';
+import Resources from './controllers/Resources';
+import RolesController from './controllers/Roles';
 import { TaxRatesController } from './controllers/TaxRates/TaxRates';
-import { ImportController } from './controllers/Import/ImportController';
-import { BankingController } from './controllers/Banking/BankingController';
+import TransactionsLocking from './controllers/TransactionsLocking';
+import { WarehousesController } from './controllers/Warehouses';
+import { WarehousesTransfers } from './controllers/Warehouses/WarehouseTransfers';
+import { WarehousesItemController } from './controllers/Warehouses/WarehousesItem';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
-import OidcController from '@/api/controllers/Oidc'
+import asyncRenderMiddleware from './middleware/AsyncRenderMiddleware';
+import AuthorizationMiddleware from './middleware/AuthorizationMiddleware';
 
 export default () => {
   const app = Router();
@@ -70,7 +71,7 @@ export default () => {
   // ---------------------------
   app.use(asyncRenderMiddleware);
   app.use(I18nMiddleware);
-   
+
   app.use('/oidc', Container.get(OidcController).router());
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
@@ -143,6 +144,7 @@ export default () => {
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
   dashboard.use('/import', Container.get(ImportController).router());
+  dashboard.use('/export', Container.get(ExportController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());

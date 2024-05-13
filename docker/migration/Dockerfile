@@ -1,4 +1,4 @@
-FROM ghcr.io/bigcapitalhq/server:latest as build
+FROM bigcapitalhq/server:latest as build
 
 ARG DB_HOST= \
   DB_USER= \
@@ -34,7 +34,5 @@ WORKDIR /app/packages/server
 
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
-ADD docker/migration/start.sh /
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
+# Once we listen the mysql port run the migration task.
+CMD ./wait-for-it/wait-for-it.sh mysql:3306 -- sh -c "node ./build/commands.js system:migrate:latest && node ./build/commands.js tenants:migrate:latest"

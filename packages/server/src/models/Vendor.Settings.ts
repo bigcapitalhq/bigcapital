@@ -5,6 +5,7 @@ export default {
     sortField: 'created_at',
   },
   importable: true,
+  exportable: true,
   fields: {
     first_name: {
       name: 'vendor.field.first_name',
@@ -32,7 +33,7 @@ export default {
       fieldType: 'text',
     },
     personal_phone: {
-      name: 'vendor.field.personal_pone',
+      name: 'vendor.field.personal_phone',
       column: 'personal_phone',
       fieldType: 'text',
     },
@@ -88,6 +89,154 @@ export default {
             break;
         }
       },
+    },
+  },
+  columns: {
+    firstName: {
+      name: 'vendor.field.first_name',
+      type: 'text',
+    },
+    lastName: {
+      name: 'vendor.field.last_name',
+      type: 'text',
+    },
+    displayName: {
+      name: 'vendor.field.display_name',
+      type: 'text',
+    },
+    email: {
+      name: 'vendor.field.email',
+      type: 'text',
+    },
+    workPhone: {
+      name: 'vendor.field.work_phone',
+      type: 'text',
+    },
+    personalPhone: {
+      name: 'vendor.field.personal_phone',
+      type: 'text',
+    },
+    companyName: {
+      name: 'vendor.field.company_name',
+      type: 'text',
+    },
+    website: {
+      name: 'vendor.field.website',
+      type: 'text',
+    },
+    balance: {
+      name: 'vendor.field.balance',
+      type: 'number',
+    },
+    openingBalance: {
+      name: 'vendor.field.opening_balance',
+      type: 'number',
+    },
+    openingBalanceAt: {
+      name: 'vendor.field.opening_balance_at',
+      type: 'date',
+    },
+    currencyCode: {
+      name: 'vendor.field.currency',
+      type: 'text',
+    },
+    status: {
+      name: 'vendor.field.status',
+    },
+    note: {
+      name: 'vendor.field.note',
+      type: 'text',
+    },
+    // Billing Address
+    billingAddress1: {
+      name: 'Billing Address 1',
+      column: 'billing_address1',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddress2: {
+      name: 'Billing Address 2',
+      column: 'billing_address2',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddressCity: {
+      name: 'Billing Address City',
+      column: 'billing_address_city',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddressCountry: {
+      name: 'Billing Address Country',
+      column: 'billing_address_country',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddressPostcode: {
+      name: 'Billing Address Postcode',
+      column: 'billing_address_postcode',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddressState: {
+      name: 'Billing Address State',
+      column: 'billing_address_state',
+      type: 'text',
+      exportable: true,
+    },
+    billingAddressPhone: {
+      name: 'Billing Address Phone',
+      column: 'billing_address_phone',
+      type: 'text',
+      exportable: true,
+    },
+    // Shipping Address
+    shippingAddress1: {
+      name: 'Shipping Address 1',
+      column: 'shipping_address1',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddress2: {
+      name: 'Shipping Address 2',
+      column: 'shipping_address2',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddressCity: {
+      name: 'Shipping Address City',
+      column: 'shipping_address_city',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddressCountry: {
+      name: 'Shipping Address Country',
+      column: 'shipping_address_country',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddressPostcode: {
+      name: 'Shipping Address Postcode',
+      column: 'shipping_address_postcode',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddressState: {
+      name: 'Shipping Address State',
+      column: 'shipping_address_state',
+      type: 'text',
+      exportable: true,
+    },
+    shippingAddressPhone: {
+      name: 'Shipping Address Phone',
+      column: 'shipping_address_phone',
+      type: 'text',
+      exportable: true,
+    },
+    createdAt: {
+      name: 'vendor.field.created_at',
+      type: 'date',
+      exportable: true,
     },
   },
   fields2: {

@@ -5,6 +5,7 @@ import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
+import { useSetAuthEmailConfirmed } from '../state';
 
 // Common invalidate queries.
 const commonInvalidateQueries = (queryClient) => {
@@ -130,6 +131,8 @@ export function useUser(id, props) {
 }
 
 export function useAuthenticatedAccount(props) {
+  const setEmailConfirmed = useSetAuthEmailConfirmed();
+
   return useRequestQuery(
     ['AuthenticatedAccount'],
     {
@@ -139,6 +142,9 @@ export function useAuthenticatedAccount(props) {
     {
       select: (response) => response.data.data,
       defaultData: {},
+      onSuccess: (data) => {
+        setEmailConfirmed(data.is_verified);
+      },
       ...props,
     },
   );
@@ -166,4 +172,3 @@ export const useDashboardMeta = (props) => {
   }, [state.isSuccess, state.data, setFeatureDashboardMeta]);
   return state;
 };
-

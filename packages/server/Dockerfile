@@ -78,6 +78,9 @@ ENV MAIL_HOST=$MAIL_HOST \
   SIGNUP_ALLOWED_DOMAINS=$SIGNUP_ALLOWED_DOMAINS \
   SIGNUP_ALLOWED_EMAILS=$SIGNUP_ALLOWED_EMAILS
 
+# New Relic config file.
+ENV NEW_RELIC_NO_CONFIG_FILE=true
+
 # Create app directory.
 WORKDIR /app
 
@@ -89,8 +92,8 @@ RUN npm install -g pnpm
 # Copy application dependency manifests to the container image.
 COPY ./package*.json ./
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
-COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./lerna.json ./lerna.json
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./packages/server/package*.json ./packages/server/
 
 # Install application dependencies

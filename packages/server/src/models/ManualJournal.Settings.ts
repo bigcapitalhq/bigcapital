@@ -5,6 +5,9 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportFlattenOn: 'entries',
+
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'journalNumber',
@@ -54,6 +57,76 @@ export default {
       name: 'manual_journal.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  columns: {
+    date: {
+      name: 'manual_journal.field.date',
+      type: 'date',
+    },
+    journalNumber: {
+      name: 'manual_journal.field.journal_number',
+      type: 'text',
+    },
+    reference: {
+      name: 'manual_journal.field.reference',
+      type: 'text',
+    },
+    journalType: {
+      name: 'manual_journal.field.journal_type',
+      type: 'text',
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+    },
+    currencyCode: {
+      name: 'manual_journal.field.currency',
+      type: 'text',
+    },
+    exchangeRate: {
+      name: 'manual_journal.field.exchange_rate',
+      type: 'number',
+    },
+    description: {
+      name: 'manual_journal.field.description',
+      type: 'text',
+    },
+    entries: {
+      name: 'Entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        credit: {
+          name: 'Credit',
+          type: 'text',
+        },
+        debit: {
+          name: 'Debit',
+          type: 'text',
+        },
+        account: {
+          name: 'Account',
+          accessor: 'account.name',
+        },
+        contact: {
+          name: 'Contact',
+          accessor: 'contact.displayName',
+        },
+        note: {
+          name: 'Note',
+        },
+      },
+      publish: {
+        name: 'Publish',
+        type: 'boolean',
+      },
+      publishedAt: {
+        name: 'Published At',
+      },
+    },
+    createdAt: {
+      name: 'Created At',
     },
   },
   fields2: {

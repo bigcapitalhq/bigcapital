@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   useAuthenticatedAccount,
   useCurrentOrganization,
@@ -115,6 +115,14 @@ export function useApplicationBoot() {
     () => {
       isBooted.current = true;
     },
+  );
+  // Reset the loading states once the hook unmount.
+  useEffect(
+    () => () => {
+      isAuthUserLoading && !isBooted.current && stopLoading();
+      isOrgLoading && !isBooted.current && stopLoading();
+    },
+    [isAuthUserLoading, isOrgLoading, stopLoading],
   );
 
   return {

@@ -25,12 +25,12 @@ services:
 
   webapp:
     container_name: bigcapital-webapp
-    image: ghcr.io/bigcapitalhq/webapp:latest
+    image: bigcapitalhq/webapp:latest
     restart: on-failure
 
   server:
     container_name: bigcapital-server
-    image: ghcr.io/bigcapitalhq/server:latest
+    image: bigcapitalhq/server:latest
     expose:
       - '3000'
     links:
@@ -101,6 +101,13 @@ services:
       - LEMONSQUEEZY_STORE_ID=${LEMONSQUEEZY_STORE_ID}
       - LEMONSQUEEZY_WEBHOOK_SECRET=${LEMONSQUEEZY_WEBHOOK_SECRET}
       - HOSTED_ON_BIGCAPITAL_CLOUD=${HOSTED_ON_BIGCAPITAL_CLOUD}
+
+      # New Relic matrics tracking.
+      - NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=${NEW_RELIC_DISTRIBUTED_TRACING_ENABLED}
+      - NEW_RELIC_LOG=${NEW_RELIC_LOG}
+      - NEW_RELIC_AI_MONITORING_ENABLED=${NEW_RELIC_AI_MONITORING_ENABLED}
+      - NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_CUSTOM_INSIGHTS_EVENTS_MAX_SAMPLES_STORED}
+      - NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED=${NEW_RELIC_SPAN_EVENTS_MAX_SAMPLES_STORED}
 
       # OIDC
       - OIDC_LOGIN_DISABLED=${OIDC_LOGIN_DISABLED:-false}

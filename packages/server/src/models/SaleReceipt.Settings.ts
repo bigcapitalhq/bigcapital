@@ -4,6 +4,9 @@ export default {
     sortOrder: 'DESC',
     sortField: 'created_at',
   },
+  exportable: true,
+  exportFlattenOn: 'entries',
+
   importable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
@@ -77,6 +80,86 @@ export default {
       sortCustomQuery: StatusFieldSortQuery,
     },
   },
+  columns: {
+    amount: {
+      name: 'receipt.field.amount',
+      column: 'amount',
+      type: 'number',
+    },
+    depositAccount: {
+      name: 'receipt.field.deposit_account',
+      type: 'text',
+      accessor: 'depositAccount.name',
+    },
+    customer: {
+      name: 'receipt.field.customer',
+      type: 'text',
+      accessor: 'customer.displayName',
+    },
+    receiptDate: {
+      name: 'receipt.field.receipt_date',
+      type: 'date',
+    },
+    receiptNumber: {
+      name: 'receipt.field.receipt_number',
+      type: 'text',
+    },
+    referenceNo: {
+      name: 'receipt.field.reference_no',
+      column: 'reference_no',
+      type: 'text',
+      exportable: true,
+    },
+    receiptMessage: {
+      name: 'receipt.field.receipt_message',
+      column: 'receipt_message',
+      type: 'text',
+    },
+    statement: {
+      name: 'receipt.field.statement',
+      type: 'text',
+    },
+    status: {
+      name: 'receipt.field.status',
+      type: 'enumeration',
+      options: [
+        { key: 'draft', label: 'receipt.field.status.draft' },
+        { key: 'closed', label: 'receipt.field.status.closed' },
+      ],
+      exportable: true,
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+    createdAt: {
+      name: 'receipt.field.created_at',
+      type: 'date',
+    },
+  },
   fields2: {
     receiptDate: {
       name: 'Receipt Date',
@@ -126,7 +209,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'invoice.field.rate',

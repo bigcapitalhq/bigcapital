@@ -51,6 +51,7 @@ export class GetSaleEstimates {
       .onBuild((builder) => {
         builder.withGraphFetched('customer');
         builder.withGraphFetched('entries');
+        builder.withGraphFetched('entries.item'); 
         dynamicFilter.buildQuery()(builder);
       })
       .pagination(filter.page - 1, filter.pageSize);

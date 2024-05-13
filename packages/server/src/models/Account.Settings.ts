@@ -7,6 +7,7 @@ export default {
     sortField: 'name',
   },
   importable: true,
+  exportable: true,
   fields: {
     name: {
       name: 'account.field.name',
@@ -83,6 +84,55 @@ export default {
       name: 'account.field.created_at',
       column: 'created_at',
       fieldType: 'date',
+    },
+  },
+  columns: {
+    name: {
+      name: 'account.field.name',
+      type: 'text',
+    },
+    code: {
+      name: 'account.field.code',
+      type: 'text',
+    },
+    rootType: {
+      name: 'account.field.root_type',
+      type: 'text',
+      accessor: 'accountRootType',
+    },
+    accountType: {
+      name: 'account.field.type',
+      accessor: 'accountTypeLabel',
+      type: 'text',
+    },
+    accountNormal: {
+      name: 'account.field.normal',
+      accessor: 'accountNormalFormatted',
+    },
+    currencyCode: {
+      name: 'account.field.currency',
+      type: 'text',
+    },
+    bankBalance: {
+      name: 'account.field.bank_balance',
+      accessor: 'bankBalanceFormatted',
+      type: 'text',
+      exportable: true,
+    },
+    balance: {
+      name: 'account.field.balance',
+      accessor: 'amount',
+    },
+    description: {
+      name: 'account.field.description',
+      type: 'text',
+    },
+    active: {
+      name: 'account.field.active',
+      type: 'boolean',
+    },
+    createdAt: {
+      name: 'account.field.created_at',
     },
   },
   fields2: {

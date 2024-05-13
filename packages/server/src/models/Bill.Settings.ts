@@ -5,6 +5,8 @@ export default {
     sortField: 'bill_date',
   },
   importable: true,
+  exportFlattenOn: 'entries',
+  exportable: true,
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'billNumber',
@@ -80,6 +82,84 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    billNumber: {
+      name: 'Bill No.',
+      type: 'text',
+    },
+    referenceNo: {
+      name: 'Reference No.',
+      type: 'text',
+    },
+    billDate: {
+      name: 'Date',
+      type: 'date',
+    },
+    dueDate: {
+      name: 'Due Date',
+      type: 'date',
+    },
+    vendorId: {
+      name: 'Vendor',
+      accessor: 'vendor.displayName',
+      type: 'text',
+    },
+    amount: {
+      name: 'Amount',
+      accessor: 'formattedAmount',
+    },
+    exchangeRate: {
+      name: 'Exchange Rate',
+      type: 'number',
+    },
+    currencyCode: {
+      name: 'Currency Code',
+      type: 'text',
+    },
+    dueAmount: {
+      name: 'Due Amount',
+      accessor: 'formattedDueAmount',
+    },
+    paidAmount: {
+      name: 'Paid Amount',
+      accessor: 'formattedPaymentAmount',
+    },
+    note: {
+      name: 'Note',
+      type: 'text',
+    },
+    open: {
+      name: 'Open',
+      type: 'boolean',
+    },
+    entries: {
+      name: 'Entries',
+      accessor: 'entries',
+      type: 'collection',
+      collectionOf: 'object',
+      columns: {
+        itemName: {
+          name: 'Item Name',
+          accessor: 'item.name',
+        },
+        rate: {
+          name: 'Item Rate',
+          accessor: 'rateFormatted',
+        },
+        quantity: {
+          name: 'Item Quantity',
+          accessor: 'quantityFormatted',
+        },
+        description: {
+          name: 'Item Description',
+        },
+        amount: {
+          name: 'Item Amount',
+          accessor: 'totalFormatted',
+        },
+      },
+    },
+  },
   fields2: {
     billNumber: {
       name: 'Bill No.',
@@ -132,7 +212,7 @@ export default {
           relationModel: 'Item',
           relationImportMatch: ['name', 'code'],
           required: true,
-          importHint: "Matches the item name or code."
+          importHint: 'Matches the item name or code.',
         },
         rate: {
           name: 'Rate',

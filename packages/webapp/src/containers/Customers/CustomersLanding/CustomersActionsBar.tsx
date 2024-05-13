@@ -31,9 +31,11 @@ import withCustomersActions from './withCustomersActions';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withSettings from '@/containers/Settings/withSettings';
-import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
+import { CustomerAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Customers actions bar.
@@ -55,6 +57,9 @@ function CustomerActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   // History context.
   const history = useHistory();
@@ -98,6 +103,11 @@ function CustomerActionsBar({
   // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/customers/import');
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'customer' });
   };
 
   return (
@@ -154,6 +164,7 @@ function CustomerActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="file-export-16" iconSize={16} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton
@@ -192,4 +203,5 @@ export default compose(
     customersTableSize: customersSettings?.tableSize,
   })),
   withAlertActions,
+  withDialogActions,
 )(CustomerActionsBar);

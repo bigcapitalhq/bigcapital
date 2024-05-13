@@ -4,6 +4,12 @@ import SystemModel from '@/system/models/SystemModel';
 import SoftDeleteQueryBuilder from '@/collection/SoftDeleteQueryBuilder';
 
 export default class SystemUser extends SystemModel {
+  firstName!: string;
+  lastName!: string;
+  verified!: boolean;
+  inviteAcceptedAt!: Date | null;
+  deletedAt!: Date | null;
+
   /**
    * Table name.
    */
@@ -29,21 +35,31 @@ export default class SystemUser extends SystemModel {
    * Virtual attributes.
    */
   static get virtualAttributes() {
-    return ['fullName', 'isDeleted', 'isInviteAccepted'];
+    return ['fullName', 'isDeleted', 'isInviteAccepted', 'isVerified'];
   }
 
   /**
-   * 
+   * Detarmines whether the user is deleted.
+   * @returns {boolean}
    */
   get isDeleted() {
     return !!this.deletedAt;
   }
 
   /**
-   * 
+   * Detarmines whether the sent invite is accepted.
+   * @returns {boolean}
    */
   get isInviteAccepted() {
     return !!this.inviteAcceptedAt;
+  }
+
+  /**
+   * Detarmines whether the user's email is verified.
+   * @returns {boolean}
+   */
+  get isVerified() {
+    return !!this.verified;
   }
 
   /**

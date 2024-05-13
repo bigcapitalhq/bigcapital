@@ -32,6 +32,8 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from '@/hooks/query/bills';
 import { compose } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Bills actions bar.
@@ -48,6 +50,9 @@ function BillActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -81,7 +86,12 @@ function BillActionsBar({
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/bills/import');
-  }
+  };
+
+  // Handle the export button click.
+  const handleExportBtnClick = () => {
+    openDialog(DialogsName.Export, { resource: 'bill' });
+  };
 
   return (
     <DashboardActionsBar>
@@ -141,6 +151,7 @@ function BillActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
+          onClick={handleExportBtnClick}
         />
 
         <NavbarDivider />
@@ -170,4 +181,5 @@ export default compose(
   withSettings(({ billsettings }) => ({
     billsTableSize: billsettings?.tableSize,
   })),
+  withDialogActions,
 )(BillActionsBar);

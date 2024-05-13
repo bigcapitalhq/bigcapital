@@ -1,5 +1,6 @@
 export default {
   importable: true,
+  exportable: true,
   defaultFilterField: 'name',
   defaultSort: {
     sortField: 'name',
@@ -121,6 +122,97 @@ export default {
       fieldType: 'date',
     },
   },
+  columns: {
+    type: {
+      name: 'item.field.type',
+      type: 'text',
+      exportable: true,
+    },
+    name: {
+      name: 'item.field.name',
+      type: 'text',
+      exportable: true,
+    },
+    code: {
+      name: 'item.field.code',
+      type: 'text',
+      exportable: true,
+    },
+    sellable: {
+      name: 'item.field.sellable',
+      type: 'boolean',
+      exportable: true,
+    },
+    purchasable: {
+      name: 'item.field.purchasable',
+      type: 'boolean',
+      exportable: true,
+    },
+    sellPrice: {
+      name: 'item.field.cost_price',
+      type: 'number',
+      exportable: true,
+    },
+    costPrice: {
+      name: 'item.field.cost_account',
+      type: 'number',
+      exportable: true,
+    },
+    costAccount: {
+      name: 'item.field.sell_account',
+      type: 'text',
+      accessor: 'costAccount.name',
+      exportable: true,
+    },
+    sellAccount: {
+      name: 'item.field.sell_description',
+      type: 'text',
+      accessor: 'sellAccount.name',
+      exportable: true,
+    },
+    inventoryAccount: {
+      name: 'item.field.inventory_account',
+      type: 'text',
+      accessor: 'inventoryAccount.name',
+      exportable: true,
+    },
+    sellDescription: {
+      name: 'Sell description',
+      type: 'text',
+      exportable: true,
+    },
+    purchaseDescription: {
+      name: 'Purchase description',
+      type: 'text',
+      exportable: true,
+    },
+    quantityOnHand: {
+      name: 'item.field.quantity_on_hand',
+      type: 'number',
+      exportable: true,
+    },
+    note: {
+      name: 'item.field.note',
+      type: 'text',
+      exportable: true,
+    },
+    category: {
+      name: 'item.field.category',
+      type: 'text',
+      accessor: 'category.name',
+      exportable: true,
+    },
+    active: {
+      name: 'item.field.active',
+      fieldType: 'boolean',
+      exportable: true,
+    },
+    createdAt: {
+      name: 'item.field.created_at',
+      type: 'date',
+      exportable: true,
+    },
+  },
   fields2: {
     type: {
       name: 'item.field.type',
@@ -195,7 +287,7 @@ export default {
       fieldType: 'relation',
       relationModel: 'ItemCategory',
       relationImportMatch: ['name'],
-      importHint: "Matches the category name."
+      importHint: 'Matches the category name.',
     },
     active: {
       name: 'item.field.active',
