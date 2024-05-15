@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { useQueryTenant, useRequestQuery } from '../useQueryRequest';
+import { useRequestQuery } from '../useQueryRequest';
 import useApiRequest from '../useRequest';
 import { useSetFeatureDashboardMeta } from '../state/feature';
 import t from './types';
@@ -143,7 +143,7 @@ export function useAuthenticatedAccount(props) {
       select: (response) => response.data.data,
       defaultData: {},
       onSuccess: (data) => {
-        setEmailConfirmed(data.is_verified);
+        setEmailConfirmed(data.is_verified, data.email);
       },
       ...props,
     },

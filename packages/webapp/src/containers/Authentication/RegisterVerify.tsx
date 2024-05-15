@@ -4,7 +4,7 @@ import AuthInsider from './AuthInsider';
 import { AuthInsiderCard } from './_components';
 import styles from './RegisterVerify.module.scss';
 import { AppToaster, Stack } from '@/components';
-import { useAuthActions } from '@/hooks/state';
+import { useAuthActions, useAuthUserVerifyEmail } from '@/hooks/state';
 import { useAuthSignUpVerifyResendMail } from '@/hooks/query';
 import { AuthContainer } from './AuthContainer';
 
@@ -12,6 +12,8 @@ export default function RegisterVerify() {
   const { setLogout } = useAuthActions();
   const { mutateAsync: resendSignUpVerifyMail, isLoading } =
     useAuthSignUpVerifyResendMail();
+
+  const emailAddress = useAuthUserVerifyEmail();
 
   const handleResendMailBtnClick = () => {
     resendSignUpVerifyMail()
@@ -38,8 +40,8 @@ export default function RegisterVerify() {
         <AuthInsiderCard className={styles.root}>
           <h2 className={styles.title}>Please verify your email</h2>
           <p className={styles.description}>
-            We sent an email to <strong>asdahmed@gmail.com</strong> Click the
-            link inside to get started.
+            We sent an email to <strong>{emailAddress}</strong> Click the link
+            inside to get started.
           </p>
 
           <Stack spacing={4}>

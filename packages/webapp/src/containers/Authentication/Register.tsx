@@ -9,7 +9,11 @@ import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
-import { RegisterSchema, transformRegisterErrorsToForm, transformRegisterToastMessages } from './utils';
+import {
+  RegisterSchema,
+  transformRegisterErrorsToForm,
+  transformRegisterToastMessages,
+} from './utils';
 import {
   AuthFooterLinks,
   AuthFooterLink,
@@ -32,7 +36,7 @@ export default function RegisterUserForm() {
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     authRegisterMutate(values)
-      .then((response) => {
+      .then(() => {
         authLoginMutate({
           crediential: values.email,
           password: values.password,
@@ -87,7 +91,10 @@ function RegisterFooterLinks() {
   return (
     <AuthFooterLinks>
       <AuthFooterLink>
-        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
+        <T id={'return_to'} />{' '}
+        <Link to={'/auth/login'}>
+          <T id={'sign_in'} />
+        </Link>
       </AuthFooterLink>
 
       <AuthFooterLink>

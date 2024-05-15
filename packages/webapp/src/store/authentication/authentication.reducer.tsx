@@ -9,12 +9,13 @@ import t from '@/store/types';
 
 // Read stored data in cookies and merge it with the initial state.
 const initialState = {
-  token: getCookie('token'),
-  organizationId: getCookie('organization_id'),
-  tenantId: getCookie('tenant_id'),
-  userId: getCookie('authenticated_user_id'),
-  locale: getCookie('locale'),
+  token: getCookie('token') || null,
+  organizationId: getCookie('organization_id') || null,
+  tenantId: getCookie('tenant_id') || null,
+  userId: getCookie('authenticated_user_id') || null,
+  locale: getCookie('locale') || 'en',
   verified: true, // Let's be optimistic and assume the user's email is confirmed.
+  verifyEmail: null,
   errors: [],
 };
 
@@ -36,11 +37,35 @@ const reducerInstance = createReducer(initialState, {
 
   [t.SET_EMAIL_VERIFIED]: (
     state,
-    payload: PayloadAction<{ verified?: boolean }>,
+    payload: PayloadAction<{ verified?: boolean; email?: string }>,
   ) => {
     state.verified = !isUndefined(payload.action.verified)
       ? payload.action.verified
       : true;
+    state.verifyEmail = payload.action.email || null;
+
+    if (state.verified) {
+      state.verifyEmail = null;
+    }
+  },
+
+  [t.SET_AUTH_TOKEN]: (state, payload: PayloadAction<{ token: string }>) => {
+    state.token = payload.action.token;
+  },
+
+  [t.SET_ORGANIZATIOIN_ID]: (
+    state,
+    payload: PayloadAction<{ organizationId: string }>,
+  ) => {
+    state.organizationId = payload.action.organizationId;
+  },
+
+  [t.SET_TENANT_ID]: (state, payload: PayloadAction<{ tenantId: string }>) => {
+    state.tenantId = payload.action.tenantId;
+  },
+
+  [t.SET_USER_ID]: (state, payload: PayloadAction<{ userId: string }>) => {
+    state.userId = payload.action.userId;
   },
 
   [t.RESET]: (state) => {
