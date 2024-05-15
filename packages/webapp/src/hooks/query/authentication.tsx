@@ -1,9 +1,17 @@
 // @ts-nocheck
 import { useMutation } from 'react-query';
+import { batch } from 'react-redux';
 import useApiRequest from '../useRequest';
 import { setCookie } from '../../utils';
 import { useRequestQuery } from '../useQueryRequest';
 import t from './types';
+import {
+  useSetAuthToken,
+  useSetAuthUserId,
+  useSetLocale,
+  useSetOrganizationId,
+  useSetTenantId,
+} from '../state';
 
 /**
  * Saves the response data to cookies.
@@ -24,14 +32,30 @@ function setAuthLoginCookies(data) {
 export const useAuthLogin = (props) => {
   const apiRequest = useApiRequest();
 
+  const setAuthToken = useSetAuthToken();
+  const setOrganizationId = useSetOrganizationId();
+  const setUserId = useSetAuthUserId();
+  const setTenantId = useSetTenantId();
+  const setLocale = useSetLocale();
+
   return useMutation((values) => apiRequest.post('auth/login', values), {
     select: (res) => res.data,
-    onSuccess: (data) => {
+    onSuccess: (res) => {
       // Set authentication cookies.
-      setAuthLoginCookies(data.data);
+      setAuthLoginCookies(res.data);
 
-      // Reboot the application.
-      window.location.reload();
+      batch(() => {
+        // Sets the auth metadata to global state.
+        setAuthToken(res.data.token);
+        setOrganizationId(res.data.tenant.organization_id);
+        setUserId(res.data.user.id);
+        setTenantId(res.data.tenant.id);
+
+        if (res.data?.tenant?.metadata?.language) {
+          setLocale(res.data?.tenant?.metadata?.language);
+        }
+      });
+      props?.onSuccess && props?.onSuccess(...args);
     },
     ...props,
   });

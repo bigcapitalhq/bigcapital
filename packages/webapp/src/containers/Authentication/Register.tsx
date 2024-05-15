@@ -1,7 +1,7 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -9,7 +9,11 @@ import AuthInsider from '@/containers/Authentication/AuthInsider';
 import { useAuthLogin, useAuthRegister } from '@/hooks/query/authentication';
 
 import RegisterForm from './RegisterForm';
-import { RegisterSchema, transformRegisterErrorsToForm, transformRegisterToastMessages } from './utils';
+import {
+  RegisterSchema,
+  transformRegisterErrorsToForm,
+  transformRegisterToastMessages,
+} from './utils';
 import {
   AuthFooterLinks,
   AuthFooterLink,
@@ -32,22 +36,23 @@ export default function RegisterUserForm() {
 
   const handleSubmit = (values, { setSubmitting, setErrors }) => {
     authRegisterMutate(values)
-      .then((response) => {
+      .then(() => {
         authLoginMutate({
           crediential: values.email,
           password: values.password,
-        }).catch(
-          ({
-            response: {
-              data: { errors },
+        })
+          .catch(
+            ({
+              response: {
+                data: { errors },
+              },
+            }) => {
+              AppToaster.show({
+                message: intl.get('something_wentwrong'),
+                intent: Intent.SUCCESS,
+              });
             },
-          }) => {
-            AppToaster.show({
-              message: intl.get('something_wentwrong'),
-              intent: Intent.SUCCESS,
-            });
-          },
-        );
+          );
       })
       .catch(
         ({
@@ -87,7 +92,10 @@ function RegisterFooterLinks() {
   return (
     <AuthFooterLinks>
       <AuthFooterLink>
-        <T id={'return_to'} /> <Link to={'/auth/login'}><T id={'sign_in'} /></Link>
+        <T id={'return_to'} />{' '}
+        <Link to={'/auth/login'}>
+          <T id={'sign_in'} />
+        </Link>
       </AuthFooterLink>
 
       <AuthFooterLink>

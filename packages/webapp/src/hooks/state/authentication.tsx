@@ -3,8 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import { isAuthenticated } from '@/store/authentication/authentication.reducer';
 import {
+  setAuthTenantId,
+  setAuthToken,
+  setAuthUserId,
   setEmailConfirmed,
   setLogin,
+  setOrganizationId,
+  setLocale,
 } from '@/store/authentication/authentication.actions';
 import { useQueryClient } from 'react-query';
 import { removeCookie } from '@/utils';
@@ -76,13 +81,67 @@ export const useAuthUserVerified = () => {
 };
 
 /**
+ * Retrieves the user's email address.
+ * @returns {string}
+ */
+export const useAuthUserVerifyEmail = () => {
+  return useSelector((state) => state.authentication.verifyEmail);
+};
+
+/**
  * Sets the user's email verification status.
  */
 export const useSetAuthEmailConfirmed = () => {
   const dispatch = useDispatch();
 
   return useCallback(
-    (verified?: boolean = true) => dispatch(setEmailConfirmed(verified)),
+    (verified?: boolean = true, email: string) =>
+      dispatch(setEmailConfirmed(verified, email)),
+    [dispatch],
+  );
+};
+
+export const useSetOrganizationId = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (organizationId: string) => dispatch(setOrganizationId(organizationId)),
+    [dispatch],
+  );
+};
+
+export const useSetAuthToken = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (authToken: string) => dispatch(setAuthToken(authToken)),
+    [dispatch],
+  );
+};
+
+export const useSetTenantId = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (tenantId: string) => dispatch(setAuthTenantId(tenantId)),
+    [dispatch],
+  );
+};
+
+export const useSetAuthUserId = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (userId: string) => dispatch(setAuthUserId(userId)),
+    [dispatch],
+  );
+};
+
+export const useSetLocale = () => {
+  const dispatch = useDispatch();
+
+  return useCallback(
+    (locale: string) => dispatch(setLocale(locale)),
     [dispatch],
   );
 };
