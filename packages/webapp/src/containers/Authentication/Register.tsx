@@ -1,7 +1,7 @@
 // @ts-nocheck
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Intent } from '@blueprintjs/core';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -40,19 +40,18 @@ export default function RegisterUserForm() {
         authLoginMutate({
           crediential: values.email,
           password: values.password,
-        })
-          .catch(
-            ({
-              response: {
-                data: { errors },
-              },
-            }) => {
-              AppToaster.show({
-                message: intl.get('something_wentwrong'),
-                intent: Intent.SUCCESS,
-              });
+        }).catch(
+          ({
+            response: {
+              data: { errors },
             },
-          );
+          }) => {
+            AppToaster.show({
+              message: intl.get('something_wentwrong'),
+              intent: Intent.SUCCESS,
+            });
+          },
+        );
       })
       .catch(
         ({
