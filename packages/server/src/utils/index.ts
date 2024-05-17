@@ -337,6 +337,9 @@ const booleanValues: string[] = [
 ].map((value) => normalizeValue(value));
 
 export const parseBoolean = <T>(value: any, defaultValue: T): T | boolean => {
+  if (typeof value === 'boolean') {
+    return value; // Retrun early we have nothing to parse.
+  }
   const normalizedValue = normalizeValue(value);
   if (isEmpty(value) || booleanValues.indexOf(normalizedValue) === -1) {
     return defaultValue;

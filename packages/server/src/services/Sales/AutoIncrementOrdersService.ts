@@ -15,10 +15,8 @@ export default class AutoIncrementOrdersService {
     const group = settingsGroup;
 
     // Settings service transaction number and prefix.
-    const autoIncrement = settings.get({ group, key: 'auto_increment' }, false);
-
-    return parseBoolean(autoIncrement, false);
-  }
+    return settings.get({ group, key: 'auto_increment' }, false);
+  };
 
   /**
    * Retrieve the next service transaction number.
@@ -27,17 +25,16 @@ export default class AutoIncrementOrdersService {
    * @param {Function} getMaxTransactionNo
    * @return {Promise<string>}
    */
-  getNextTransactionNumber(tenantId: number, settingsGroup: string): string {
+  getNextTransactionNumber(tenantId: number, group: string): string {
     const settings = this.tenancy.settings(tenantId);
-    const group = settingsGroup;
 
     // Settings service transaction number and prefix.
-    const autoIncrement = settings.get({ group, key: 'auto_increment' }, false);
+    const autoIncrement = this.autoIncrementEnabled(tenantId, group);
 
     const settingNo = settings.get({ group, key: 'next_number' }, '');
     const settingPrefix = settings.get({ group, key: 'number_prefix' }, '');
 
-    return parseBoolean(autoIncrement, false) ? `${settingPrefix}${settingNo}` : '';
+    return autoIncrement ? `${settingPrefix}${settingNo}` : '';
   }
 
   /**
@@ -53,7 +50,9 @@ export default class AutoIncrementOrdersService {
     const autoIncrement = settings.get({ group, key: 'auto_increment' });
 
     // Can't continue if the auto-increment of the service was disabled.
-    if (!autoIncrement) { return; }
+    if (!autoIncrement) {
+      return;
+    }
 
     settings.set(
       { group, key: 'next_number' },

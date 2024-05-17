@@ -1,4 +1,4 @@
-import { difference } from 'lodash';
+import { difference, isEmpty } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import {
@@ -244,16 +244,12 @@ export class CommandManualJournalValidators {
   /**
    * Validates the manual journal number require.
    * @param {string} journalNumber
+   * @throws {ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED)}
    */
   public validateJournalNoRequireWhenAutoNotEnabled = (
-    tenantId: number,
     journalNumber: string
   ) => {
-    // Retrieve the next manual journal number.
-    const autoIncrmenetEnabled =
-      this.autoIncrement.autoIncrementEnabled(tenantId);
-
-    if (!journalNumber || !autoIncrmenetEnabled) {
+    if (isEmpty(journalNumber)) {
       throw new ServiceError(ERRORS.MANUAL_JOURNAL_NO_REQUIRED);
     }
   };
