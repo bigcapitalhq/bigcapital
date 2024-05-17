@@ -99,7 +99,6 @@ export class CreateManualJournalService {
 
     // Validate manual journal number require when auto-increment not enabled.
     this.validator.validateJournalNoRequireWhenAutoNotEnabled(
-      tenantId,
       manualJournalDTO.journalNumber
     );
     // Validate manual journal uniquiness on the storage.
