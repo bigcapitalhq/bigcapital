@@ -207,7 +207,6 @@ export default class AccountsController extends BaseController {
         tenantId,
         accountDTO
       );
-
       return res.status(200).send({
         id: account.id,
         message: 'The account has been created successfully.',

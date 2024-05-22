@@ -16,7 +16,7 @@ export class ImportController extends BaseController {
   /**
    * Router constructor method.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(
@@ -240,11 +240,7 @@ export class ImportController extends BaseController {
           errors: [{ type: 'IMPORTED_FILE_EXTENSION_INVALID' }],
         });
       }
-      return res.status(400).send({
-        errors: [{ type: error.errorType }],
-      });
     }
-
     next(error);
   }
 }

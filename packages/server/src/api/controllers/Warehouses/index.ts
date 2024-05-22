@@ -17,7 +17,7 @@ export class WarehousesController extends BaseController {
    *
    * @returns
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.post(

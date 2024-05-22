@@ -155,6 +155,7 @@ export default class UsersController extends BaseController {
 
     try {
       const user = await this.usersService.getUser(tenantId, userId);
+
       return res.status(200).send({ user });
     } catch (error) {
       next(error);
@@ -229,7 +230,7 @@ export default class UsersController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  catchServiceErrors(
+  private catchServiceErrors(
     error: Error,
     req: Request,
     res: Response,

@@ -29,8 +29,7 @@ export class ProjectsController extends BaseController {
         check('cost_estimate').exists().isDecimal(),
       ],
       this.validationResult,
-      asyncMiddleware(this.createProject.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.createProject.bind(this))
     );
     router.post(
       '/:id',
@@ -43,8 +42,7 @@ export class ProjectsController extends BaseController {
         check('cost_estimate').exists().isDecimal(),
       ],
       this.validationResult,
-      asyncMiddleware(this.editProject.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.editProject.bind(this))
     );
     router.patch(
       '/:projectId/status',
@@ -56,16 +54,14 @@ export class ProjectsController extends BaseController {
           .isIn([IProjectStatus.InProgress, IProjectStatus.Closed]),
       ],
       this.validationResult,
-      asyncMiddleware(this.editProject.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.editProject.bind(this))
     );
     router.get(
       '/:id',
       CheckPolicies(ProjectAction.VIEW, AbilitySubject.Project),
       [param('id').exists().isInt().toInt()],
       this.validationResult,
-      asyncMiddleware(this.getProject.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.getProject.bind(this))
     );
     router.get(
       '/:projectId/billable/entries',
@@ -76,24 +72,21 @@ export class ProjectsController extends BaseController {
         query('to_date').optional().isISO8601(),
       ],
       this.validationResult,
-      asyncMiddleware(this.projectBillableEntries.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.projectBillableEntries.bind(this))
     );
     router.get(
       '/',
       CheckPolicies(ProjectAction.VIEW, AbilitySubject.Project),
       [],
       this.validationResult,
-      asyncMiddleware(this.getProjects.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.getProjects.bind(this))
     );
     router.delete(
       '/:id',
       CheckPolicies(ProjectAction.DELETE, AbilitySubject.Project),
       [param('id').exists().isInt().toInt()],
       this.validationResult,
-      asyncMiddleware(this.deleteProject.bind(this)),
-      this.catchServiceErrors
+      asyncMiddleware(this.deleteProject.bind(this))
     );
     return router;
   }
@@ -252,22 +245,4 @@ export class ProjectsController extends BaseController {
       next(error);
     }
   };
-
-  /**
-   * Transforms service errors to response.
-   * @param {Error}
-   * @param {Request} req
-   * @param {Response} res
-   * @param {ServiceError} error
-   */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    if (error instanceof ServiceError) {
-    }
-    next(error);
-  }
 }

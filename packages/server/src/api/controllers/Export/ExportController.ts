@@ -14,7 +14,7 @@ export class ExportController extends BaseController {
   /**
    * Router constructor method.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.get(
@@ -53,6 +53,7 @@ export class ExportController extends BaseController {
         query.resource,
         acceptType === ACCEPT_TYPE.APPLICATION_XLSX ? 'xlsx' : 'csv'
       );
+      // Retrieves the csv format.
       if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
         res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
         res.setHeader('Content-Type', 'text/csv');
