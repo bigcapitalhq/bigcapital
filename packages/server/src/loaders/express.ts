@@ -17,7 +17,9 @@ import {
 } from '@/api/middleware/JSONResponseTransformer';
 import config from '@/config';
 import path from 'path';
-import ObjectionErrorHandlerMiddleware from '@/api/middleware/ObjectionErrorHandlerMiddleware';
+import { ObjectionErrorException } from '@/api/exceptions/ObjectionErrorException';
+import { ServiceErrorException } from '@/api/exceptions/ServiceErrorException';
+import { GlobalErrorException } from '@/api/exceptions/GlobalErrorException';
 
 export default ({ app }) => {
   // Express configuration.
@@ -29,9 +31,6 @@ export default ({ app }) => {
 
   // Helmet helps you secure your Express apps by setting various HTTP headers.
   app.use(helmet());
-
-  // Allow to full error stack traces and internal details
-  app.use(errorHandler());
 
   // Boom response objects.
   app.use(boom());
@@ -65,8 +64,10 @@ export default ({ app }) => {
   // Agendash application load.
   app.use('/agendash', AgendashController.router());
 
-  // Handles objectionjs errors.
-  app.use(ObjectionErrorHandlerMiddleware);
+  // Handles errors.
+  app.use(ObjectionErrorException);
+  app.use(ServiceErrorException);
+  app.use(GlobalErrorException);
 
   // catch 404 and forward to error handler
   app.use((req: Request, res: Response, next: NextFunction) => {

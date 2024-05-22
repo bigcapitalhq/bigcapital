@@ -33,17 +33,17 @@ export default class OrganizationDashboardController extends BaseController {
   }
 
   /**
-   *
-   * @param req
-   * @param res
-   * @param next
-   * @returns
+   * Detarmines whether the current authed organization to able to change its currency/.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Response|void}
    */
   private async baseCurrencyMutateAbility(
     req: Request,
     res: Response,
     next: Function
-  ) {
+  ): Promise<Response|void> {
     const { tenantId } = req;
 
     try {
