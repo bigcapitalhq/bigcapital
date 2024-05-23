@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { ExportResourceService } from './ExportService';
+import { ExportFormat } from './common';
 
 @Service()
 export class ExportApplication {
@@ -9,9 +10,9 @@ export class ExportApplication {
   /**
    * Exports the given resource to csv, xlsx or pdf format.
    * @param {string} reosurce
-   * @param {string} format
+   * @param {ExportFormat} format
    */
-  public export(tenantId: number, resource: string, format: string) {
+  public export(tenantId: number, resource: string, format: ExportFormat) {
     return this.exportResource.export(tenantId, resource, format);
   }
 }

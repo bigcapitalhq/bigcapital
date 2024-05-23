@@ -6,9 +6,10 @@ import { sanitizeResourceName } from '../Import/_utils';
 import ResourceService from '../Resource/ResourceService';
 import { ExportableResources } from './ExportResources';
 import { ServiceError } from '@/exceptions';
-import { Errors } from './common';
+import { Errors, ExportFormat } from './common';
 import { IModelMeta, IModelMetaColumn } from '@/interfaces';
 import { flatDataCollections, getDataAccessor } from './utils';
+import { ExportPdf } from './ExportPdf';
 
 @Service()
 export class ExportResourceService {
@@ -18,13 +19,20 @@ export class ExportResourceService {
   @Inject()
   private exportableResources: ExportableResources;
 
+  @Inject()
+  private exportPdf: ExportPdf;
+
   /**
    * Exports the given resource data through csv, xlsx or pdf.
    * @param {number} tenantId - Tenant id.
    * @param {string} resourceName - Resource name.
-   * @param {string} format - File format.
+   * @param {ExportFormat} format - File format.
    */
-  public async export(tenantId: number, resourceName: string, format: string = 'csv') {
+  public async export(
+    tenantId: number,
+    resourceName: string,
+    format: ExportFormat = ExportFormat.Csv
+  ) {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(tenantId, resource);
 
@@ -33,9 +41,21 @@ export class ExportResourceService {
     const data = await this.getExportableData(tenantId, resource);
     const transformed = this.transformExportedData(tenantId, resource, data);
     const exportableColumns = this.getExportableColumns(resourceMeta);
-    const workbook = this.createWorkbook(transformed, exportableColumns);
 
-    return this.exportWorkbook(workbook, format);
+    // Returns the csv, xlsx format.
+    if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
+      const workbook = this.createWorkbook(transformed, exportableColumns);
+
+      return this.exportWorkbook(workbook, format);
+      // Returns the pdf format.
+    } else if (format === ExportFormat.Pdf) {
+      return this.exportPdf.pdf(
+        tenantId,
+        exportableColumns,
+        transformed,
+        'Accounts'
+      );
+    }
   }
 
   /**
@@ -91,6 +111,7 @@ export class ExportResourceService {
   private async getExportableData(tenantId: number, resource: string) {
     const exportable =
       this.exportableResources.registry.getExportable(resource);
+
     return exportable.exportable(tenantId, {});
   }
 

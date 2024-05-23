@@ -1,4 +1,4 @@
-import { flatMap } from 'lodash';
+import { flatMap, get } from 'lodash';
 /**
  * Flattens the data based on a specified attribute.
  * @param data - The data to be flattened.
@@ -24,4 +24,19 @@ export const flatDataCollections = (
  */
 export const getDataAccessor = (col: any) => {
   return col.group ? `${col.group}.${col.accessor}` : col.accessor;
+};
+
+/**
+ *
+ * @param columns
+ * @param data
+ * @returns
+ */
+export const mapPdfRows = (columns: any, data: Record<string, any>) => {
+  return data.map((item) => {
+    const cells = columns.map((column) => {
+      return { key: column.accessor, value: get(item, column.accessor) };
+    });
+    return { cells, classNames: '' };
+  });
 };

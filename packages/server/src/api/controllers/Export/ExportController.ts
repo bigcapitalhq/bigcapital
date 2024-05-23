@@ -5,6 +5,7 @@ import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ExportApplication } from '@/services/Export/ExportApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { convertAcceptFormatToFormat } from './_utils';
 
 @Service()
 export class ExportController extends BaseController {
@@ -48,10 +49,12 @@ export class ExportController extends BaseController {
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_PDF,
       ]);
+      const applicationFormat = convertAcceptFormatToFormat(acceptType);
+
       const data = await this.exportResourceApp.export(
         tenantId,
         query.resource,
-        acceptType === ACCEPT_TYPE.APPLICATION_XLSX ? 'xlsx' : 'csv'
+        applicationFormat
       );
       if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
         res.setHeader('Content-Disposition', 'attachment; filename=output.csv');
@@ -69,6 +72,13 @@ export class ExportController extends BaseController {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         );
         return res.send(data);
+        //
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': data.length,
+        });
+        res.send(data);
       }
     } catch (error) {
       next(error);

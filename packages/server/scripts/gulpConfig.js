@@ -70,6 +70,10 @@ module.exports = {
         src: `${RESOURCES_PATH}/scss/modules/financial-sheet.scss`,
         dest: `${RESOURCES_PATH}/css/modules`,
       },
+      {
+        src: `${RESOURCES_PATH}/scss/modules/export-resource-table.scss`,
+        dest: `${RESOURCES_PATH}/css/modules`,
+      },
     ],
     // RTL builds.
     rtl: [
