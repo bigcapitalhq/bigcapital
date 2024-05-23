@@ -29,14 +29,15 @@ import withReceipts from './withReceipts';
 import withReceiptsActions from './withReceiptsActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
+import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
-import { compose } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
 
 /**
  * Receipts actions bar.
@@ -61,6 +62,9 @@ function ReceiptActionsBar({
 
   // Sale receipts list context.
   const { receiptsViews, fields } = useReceiptsListContext();
+
+  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
+    useResourceExportPdf();
 
   // Handle new receipt button click.
   const onClickNewReceipt = () => {
@@ -94,6 +98,10 @@ function ReceiptActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'sale_receipt' });
+  };
+  // Handle print button click.
+  const handlePrintButtonClick = () => {
+    exportPdf({ resource: 'SaleReceipt' });
   };
 
   return (
@@ -143,8 +151,9 @@ function ReceiptActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintButtonClick}
+          disabled={isExportPdfLoading}
         />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}

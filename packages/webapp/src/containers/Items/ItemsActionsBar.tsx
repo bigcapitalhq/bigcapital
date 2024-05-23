@@ -27,6 +27,7 @@ import {
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from '@/hooks/query/items';
+import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withItems from './withItems';
 import withItemsActions from './withItemsActions';
@@ -60,10 +61,14 @@ function ItemsActionsBar({
   addSetting,
 
   // #withDialogActions
-  openDialog
+  openDialog,
 }) {
   // Items list context.
   const { itemsViews, fields } = useItemsListContext();
+
+  //
+  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
+    useResourceExportPdf();
 
   // Items refresh action.
   const { refresh } = useRefreshItems();
@@ -107,7 +112,12 @@ function ItemsActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'item' });
-  }
+  };
+
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    exportPdf({ resource: 'Item' });
+  };
 
   return (
     <DashboardActionsBar>
@@ -153,7 +163,13 @@ function ItemsActionsBar({
             onClick={handleBulkDelete}
           />
         </If>
-
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon={'print-16'} iconSize={'16'} />}
+          text={<T id={'print'} />}
+          disabled={isExportPdfLoading}
+          onClick={handlePrintBtnClick}
+        />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
@@ -204,5 +220,5 @@ export default compose(
   })),
   withItemsActions,
   withAlertActions,
-  withDialogActions
+  withDialogActions,
 )(ItemsActionsBar);

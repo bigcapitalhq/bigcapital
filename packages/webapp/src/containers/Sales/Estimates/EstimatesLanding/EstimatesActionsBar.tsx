@@ -26,12 +26,14 @@ import withEstimates from './withEstimates';
 import withEstimatesActions from './withEstimatesActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
+import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
 /**
@@ -58,6 +60,10 @@ function EstimateActionsBar({
   // Estimates list context.
   const { estimatesViews, fields } = useEstimatesListContext();
 
+  // Exports the given resource into pdf.
+  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
+    useResourceExportPdf();
+
   // Handle click a new sale estimate.
   const onClickNewEstimate = () => {
     history.push('/estimates/new');
@@ -71,17 +77,14 @@ function EstimateActionsBar({
       viewSlug: view ? view.slug : null,
     });
   };
-
   // Handle click a refresh sale estimates
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('salesEstimates', 'tableSize', size);
   };
-
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/estimates/import');
@@ -89,6 +92,10 @@ function EstimateActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'sale_estimate' });
+  };
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    exportPdf({ resource: 'SaleEstimate' });
   };
 
   return (
@@ -138,8 +145,9 @@ function EstimateActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
+          disabled={isExportPdfLoading}
         />
-
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon={'file-import-16'} />}
@@ -180,5 +188,5 @@ export default compose(
   withSettings(({ estimatesSettings }) => ({
     estimatesTableSize: estimatesSettings?.tableSize,
   })),
-  withDialogActions
+  withDialogActions,
 )(EstimateActionsBar);

@@ -23,6 +23,7 @@ import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
+import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
@@ -49,12 +50,16 @@ function InvoiceActionsBar({
   addSetting,
 
   // #withDialogsActions
-  openDialog
+  openDialog,
 }) {
   const history = useHistory();
 
   // Sale invoices list context.
   const { invoicesViews, invoicesFields } = useInvoicesListContext();
+
+  // Exports the given resource into pdf.
+  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
+    useResourceExportPdf();
 
   // Handle new invoice button click.
   const handleClickNewInvoice = () => {
@@ -87,6 +92,10 @@ function InvoiceActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'sale_invoice' });
+  };
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    exportPdf({ resource: 'SaleInvoice' });
   };
 
   return (
@@ -134,6 +143,8 @@ function InvoiceActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
+          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

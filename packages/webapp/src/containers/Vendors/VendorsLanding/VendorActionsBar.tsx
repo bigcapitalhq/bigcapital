@@ -35,6 +35,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 /**
  * Vendors actions bar.
@@ -61,11 +62,14 @@ function VendorActionsBar({
   // Vendors list context.
   const { vendorsViews, fields } = useVendorsListContext();
 
+  // Exports the given resource into pdf.
+  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
+    useResourceExportPdf();
+
   // Handles new vendor button click.
   const onClickNewVendor = () => {
     history.push('/vendors/new');
   };
-
   // Vendors refresh action.
   const { refresh } = useRefreshVendors();
 
@@ -73,30 +77,29 @@ function VendorActionsBar({
   const handleTabChange = (viewSlug) => {
     setVendorsTableState({ viewSlug });
   };
-
   // Handle inactive switch changing.
   const handleInactiveSwitchChange = (event) => {
     const checked = event.target.checked;
     setVendorsTableState({ inactiveMode: checked });
   };
-
   // Handle click a refresh sale estimates
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   const handleTableRowSizeChange = (size) => {
     addSetting('vendors', 'tableSize', size);
   };
-
   // Handle import button success.
   const handleImportBtnSuccess = () => {
     history.push('/vendors/import');
   };
-
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'vendor' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    exportPdf({ resource: 'Vendor' });
   };
 
   return (
@@ -140,6 +143,14 @@ function VendorActionsBar({
             intent={Intent.DANGER}
           />
         </If>
+        <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
+          disabled={isExportPdfLoading}
+          onClick={handlePrintBtnClick}
+        />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}
