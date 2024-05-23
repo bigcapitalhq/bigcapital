@@ -20,6 +20,10 @@ export class SendVerfiyMailOnSignUp {
   private handleSendVerifyMailOnSignup = async ({
     user,
   }: IAuthSignedUpEventPayload) => {
+    // Can't continue if the user is verified.
+    if (user.verified) {
+      return;
+    }
     const payload = {
       email: user.email,
       token: user.verifyToken,
