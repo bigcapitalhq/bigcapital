@@ -3,6 +3,8 @@ import { UploadDocument } from './UploadDocument';
 import { DeleteAttachment } from './DeleteAttachment';
 import { GetAttachment } from './GetAttachment';
 import { AttachmentUploadPipeline } from './S3UploadPipeline';
+import { LinkAttachment } from './LinkAttachment';
+import { UnlinkAttachment } from './UnlinkAttachment';
 
 @Service()
 export class AttachmentsApplication {
@@ -15,18 +17,25 @@ export class AttachmentsApplication {
   @Inject()
   private getDocumentService: GetAttachment;
 
+  @Inject()
   private uploadPipelineService: AttachmentUploadPipeline;
 
+  @Inject()
+  private linkDocumentService: LinkAttachment;
+
+  @Inject()
+  private unlinkDocumentService: UnlinkAttachment;
+
   /**
-   * 
-   * @returns 
+   *
+   * @returns
    */
   get uploadPipeline() {
     return this.uploadPipelineService.uploadPipeline();
   }
 
   /**
-   *
+   * Uploads
    * @param {number} tenantId
    * @param {} file
    * @returns
@@ -52,5 +61,44 @@ export class AttachmentsApplication {
    */
   public get(tenantId: number, documentKey: string) {
     return this.getDocumentService.getAttachment(tenantId, documentKey);
+  }
+
+  /**
+   * Links the given document to resource model.
+   * @param {number} tenantId
+   * @param {string} filekey
+   * @param {string} modelRef
+   * @param {number} modelId
+   * @returns
+   */
+  public link(
+    tenantId: number,
+    filekey: string,
+    modelRef: string,
+    modelId: number
+  ) {
+    return this.linkDocumentService.link(tenantId, filekey, modelRef, modelId);
+  }
+
+  /**
+   * Unlinks the given document from resource model.
+   * @param {number} tenantId
+   * @param {string} filekey
+   * @param {string} modelRef
+   * @param {number} modelId
+   * @returns
+   */
+  public unlink(
+    tenantId: number,
+    filekey: string,
+    modelRef: string,
+    modelId: number
+  ) {
+    return this.unlinkDocumentService.unlink(
+      tenantId,
+      filekey,
+      modelRef,
+      modelId
+    );
   }
 }

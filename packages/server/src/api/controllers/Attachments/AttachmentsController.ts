@@ -1,7 +1,7 @@
 import mime from 'mime-types';
 import { Service, Inject } from 'typedi';
 import { Router, Response } from 'express';
-import { param } from 'express-validator';
+import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import { Request } from 'express-validator/src/base';
 import { AttachmentsApplication } from '@/services/Attachments/AttachmentsApplication';
@@ -34,6 +34,23 @@ export class AttachmentsController extends BaseController {
       this.validationResult,
       this.getAttachment.bind(this)
     );
+    router.post(
+      '/:id/link',
+      [body('modelRef').exists(), body('modelId').exists()],
+      this.validationResult
+    );
+    router.post(
+      '/:id/link',
+      [body('modelRef').exists(), body('modelId').exists()],
+      this.validationResult,
+      this.linkDocument.bind(this)
+    );
+    router.post(
+      '/:id/unlink',
+      [body('modelRef').exists(), body('modelId').exists()],
+      this.validationResult,
+      this.unlinkDocument.bind(this)
+    );
 
     return router;
   }
@@ -50,11 +67,12 @@ export class AttachmentsController extends BaseController {
     const file = req.file;
 
     try {
-      await this.attachmentsApplication.upload(tenantId, file);
+      const data = await this.attachmentsApplication.upload(tenantId, file);
 
       return res.status(200).send({
         status: 200,
         message: 'The document has uploaded successfully.',
+        data,
       });
     } catch (error) {
       next(error);
@@ -90,10 +108,10 @@ export class AttachmentsController extends BaseController {
   }
 
   /**
-   * Delete
-   * @param req
-   * @param res
-   * @param next
+   * Deletes the given document key.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @returns
    */
   private async deleteAttachment(req: Request, res: Response, next: Function) {
@@ -106,6 +124,62 @@ export class AttachmentsController extends BaseController {
       return res.status(200).send({
         status: 200,
         message: 'The document has been delete successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Links the given document key.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns
+   */
+  private async linkDocument(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+    const { id: documentId } = req.params;
+    const { modelRef, modelId } = this.matchedBodyData(req);
+
+    try {
+      await this.attachmentsApplication.link(
+        tenantId,
+        documentId,
+        modelRef,
+        modelId
+      );
+      return res.status(200).send({
+        status: 200,
+        message: 'The document has been linked successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Links the given document key.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns
+   */
+  private async unlinkDocument(req: Request, res: Response, next: Function) {
+    const { tenantId } = req;
+    const { id: documentId } = req.params;
+    const { modelRef, modelId } = this.matchedBodyData(req);
+
+    try {
+      await this.attachmentsApplication.link(
+        tenantId,
+        documentId,
+        modelRef,
+        modelId
+      );
+      return res.status(200).send({
+        status: 200,
+        message: 'The document has been linked successfully.',
       });
     } catch (error) {
       next(error);

@@ -62,7 +62,7 @@ import { ImportController } from './controllers/Import/ImportController';
 import { BankingController } from './controllers/Banking/BankingController';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
-import { AttachmentsController } from './controllers/AttachmentsController';
+import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
 
 export default () => {
   const app = Router();
@@ -71,7 +71,7 @@ export default () => {
   // ---------------------------
   app.use(asyncRenderMiddleware);
   app.use(I18nMiddleware);
-  
+
   app.use('/auth', Container.get(Authentication).router());
   app.use('/invite', Container.get(InviteUsers).nonAuthRouter());
   app.use('/subscription', Container.get(SubscriptionController).router());
@@ -80,7 +80,6 @@ export default () => {
   app.use('/jobs', Container.get(Jobs).router());
   app.use('/account', Container.get(Account).router());
   app.use('/webhooks', Container.get(Webhooks).router());
-  app.use('/attachments', Container.get(AttachmentsController).router());
 
   // - Dashboard routes.
   // ---------------------------
@@ -145,6 +144,7 @@ export default () => {
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
   dashboard.use('/import', Container.get(ImportController).router());
   dashboard.use('/export', Container.get(ExportController).router());
+  dashboard.use('/attachments', Container.get(AttachmentsController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());
