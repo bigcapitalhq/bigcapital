@@ -10,6 +10,7 @@ import {
 } from './utils';
 import { Plan } from '@/system/models';
 import { Subscription } from './Subscription';
+import { isEmpty } from 'lodash';
 
 @Service()
 export class LemonSqueezyWebhooks {
@@ -32,6 +33,9 @@ export class LemonSqueezyWebhooks {
     if (!config.lemonSqueezy.webhookSecret) {
       throw new Error('Lemon Squeezy Webhook Secret not set in .env');
     }
+    if (!signature) {
+      throw new Error('Request signature is required.');
+    }
     const secret = config.lemonSqueezy.webhookSecret;
     const hmacSignature = createHmacSignature(secret, rawData);
 
@@ -49,7 +53,7 @@ export class LemonSqueezyWebhooks {
 
   /**
    * This action will process a webhook event in the database.
-   * @param {unknown} eventBody - 
+   * @param {unknown} eventBody -
    * @returns {Promise<void>}
    */
   private async processWebhookEvent(eventBody): Promise<void> {
@@ -96,7 +100,7 @@ export class LemonSqueezyWebhooks {
           if (webhookEvent === 'subscription_created') {
             await this.subscriptionService.newSubscribtion(
               tenantId,
-              'early-adaptor',
+              'early-adaptor'
             );
           }
         }
