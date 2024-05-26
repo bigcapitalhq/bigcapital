@@ -3,6 +3,7 @@ import { ISystemUser, IAccount, ITaxTransaction } from '@/interfaces';
 import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
 import { IDynamicListFilter } from '@/interfaces/DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface ISaleInvoice {
   id: number;
@@ -64,6 +65,8 @@ export interface ISaleInvoiceDTO {
   branchId?: number | null;
 
   isInclusiveTax?: boolean;
+
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ISaleInvoiceCreateDTO extends ISaleInvoiceDTO {

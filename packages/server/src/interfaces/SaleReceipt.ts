@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { IItemEntry } from './ItemEntry';
 import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface ISaleReceipt {
   id?: number;
@@ -43,6 +44,7 @@ export interface ISaleReceiptDTO {
   closed: boolean;
   entries: any[];
   branchId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ISalesReceiptsService {
@@ -85,6 +87,7 @@ export interface ISaleReceiptCreatedPayload {
   tenantId: number;
   saleReceipt: ISaleReceipt;
   saleReceiptId: number;
+  saleReceiptDTO: ISaleReceiptDTO;
   trx: Knex.Transaction;
 }
 
@@ -93,6 +96,7 @@ export interface ISaleReceiptEditedPayload {
   oldSaleReceipt: number;
   saleReceipt: ISaleReceipt;
   saleReceiptId: number;
+  saleReceiptDTO: ISaleReceiptDTO;
   trx: Knex.Transaction;
 }
 

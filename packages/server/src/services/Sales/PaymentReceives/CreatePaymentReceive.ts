@@ -110,6 +110,7 @@ export class CreatePaymentReceive {
           tenantId,
           paymentReceive,
           paymentReceiveId: paymentReceive.id,
+          paymentReceiveDTO,
           authorizedUser,
           trx,
         } as IPaymentReceiveCreatedPayload);

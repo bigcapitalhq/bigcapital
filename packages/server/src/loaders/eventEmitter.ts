@@ -92,7 +92,16 @@ import { DeleteCashflowTransactionOnUncategorize } from '@/services/Cashflow/sub
 import { PreventDeleteTransactionOnDelete } from '@/services/Cashflow/subscribers/PreventDeleteTransactionsOnDelete';
 import { SubscribeFreeOnSignupCommunity } from '@/services/Subscription/events/SubscribeFreeOnSignupCommunity';
 import { SendVerfiyMailOnSignUp } from '@/services/Authentication/events/SendVerfiyMailOnSignUp';
-
+import { AttachmentsOnSaleInvoiceCreated } from '@/services/Attachments/events/AttachmentsOnSaleInvoice';
+import { AttachmentsOnSaleReceipt } from '@/services/Attachments/events/AttachmentsOnSaleReceipts';
+import { AttachmentsOnManualJournals } from '@/services/Attachments/events/AttachmentsOnManualJournals';
+import { AttachmentsOnExpenses } from '@/services/Attachments/events/AttachmentsOnExpenses';
+import { AttachmentsOnBills } from '@/services/Attachments/events/AttachmentsOnBills';
+import { AttachmentsOnPaymentsReceived } from '@/services/Attachments/events/AttachmentsOnPaymentsReceived';
+import { AttachmentsOnVendorCredits } from '@/services/Attachments/events/AttachmentsOnVendorCredits';
+import { AttachmentsOnCreditNote } from '@/services/Attachments/events/AttachmentsOnCreditNote';
+import { AttachmentsOnBillPayments } from '@/services/Attachments/events/AttachmentsOnPaymentsMade';
+import { AttachmentsOnSaleEstimates } from '@/services/Attachments/events/AttachmentsOnSaleEstimates';
 
 export default () => {
   return new EventPublisher();
@@ -224,6 +233,18 @@ export const susbcribers = () => {
     PreventDeleteTransactionOnDelete,
 
     SubscribeFreeOnSignupCommunity,
-    SendVerfiyMailOnSignUp
+    SendVerfiyMailOnSignUp,
+
+    // Attachments
+    AttachmentsOnSaleInvoiceCreated,
+    AttachmentsOnSaleEstimates,
+    AttachmentsOnSaleReceipt,
+    AttachmentsOnPaymentsReceived,
+    AttachmentsOnCreditNote,
+    AttachmentsOnVendorCredits,
+    AttachmentsOnBills,
+    AttachmentsOnBillPayments,
+    AttachmentsOnManualJournals,
+    AttachmentsOnExpenses,
   ];
 };

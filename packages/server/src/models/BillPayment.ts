@@ -56,6 +56,7 @@ export default class BillPayment extends mixin(TenantModel, [
     const Vendor = require('models/Vendor');
     const Account = require('models/Account');
     const Branch = require('models/Branch');
+    const Document = require('models/Document');
 
     return {
       entries: {
@@ -112,6 +113,25 @@ export default class BillPayment extends mixin(TenantModel, [
         join: {
           from: 'bills_payments.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Bill payment may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'bills_payments.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'BillPayment');
         },
       },
     };

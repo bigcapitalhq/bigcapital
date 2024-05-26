@@ -2,6 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { SaleInvoiceTaxEntryTransformer } from './SaleInvoiceTaxEntryTransformer';
 import { ItemEntryTransformer } from './ItemEntryTransformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 
 export class SaleInvoiceTransformer extends Transformer {
   /**
@@ -25,6 +26,7 @@ export class SaleInvoiceTransformer extends Transformer {
       'totalLocalFormatted',
       'taxes',
       'entries',
+      'attachments',
     ];
   };
 
@@ -189,5 +191,14 @@ export class SaleInvoiceTransformer extends Transformer {
     return this.item(invoice.entries, new ItemEntryTransformer(), {
       currencyCode: invoice.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the sale invoice attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (invoice) => {
+    return this.item(invoice.attachments, new AttachmentTransformer());
   };
 }

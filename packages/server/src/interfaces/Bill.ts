@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IDynamicListFilterDTO } from './DynamicFilter';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IBillLandedCost } from './LandedCost';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface IBillDTO {
   vendorId: number;
@@ -20,6 +21,7 @@ export interface IBillDTO {
   warehouseId?: number;
   projectId?: number;
   isInclusiveTax?: boolean;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IBillEditDTO {
@@ -38,6 +40,7 @@ export interface IBillEditDTO {
   branchId?: number;
   warehouseId?: number;
   projectId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IBill {
@@ -105,6 +108,7 @@ export interface IBillsService {
 export interface IBillCreatedPayload {
   tenantId: number;
   bill: IBill;
+  billDTO: IBillDTO;
   billId: number;
   trx: Knex.Transaction;
 }
@@ -126,6 +130,7 @@ export interface IBillEditedPayload {
   billId: number;
   oldBill: IBill;
   bill: IBill;
+  billDTO: IBillDTO;
   trx: Knex.Transaction;
 }
 

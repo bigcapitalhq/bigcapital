@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { ISystemUser } from './User';
 import { IFilterRole } from './DynamicFilter';
 import { IAccount } from './Account';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface IPaginationMeta {
   total: number;
@@ -81,6 +82,7 @@ export interface IExpenseCommonDTO {
   categories: IExpenseCategoryDTO[];
 
   branchId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IExpenseCreateDTO extends IExpenseCommonDTO {}
@@ -152,6 +154,7 @@ export interface IExpenseCreatedPayload {
   expenseId: number;
   authorizedUser: ISystemUser;
   expense: IExpense;
+  expenseDTO: IExpenseCreateDTO;
   trx: Knex.Transaction;
 }
 

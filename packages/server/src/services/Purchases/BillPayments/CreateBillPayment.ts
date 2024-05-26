@@ -118,6 +118,7 @@ export class CreateBillPayment {
           tenantId,
           billPayment,
           billPaymentId: billPayment.id,
+          billPaymentDTO,
           trx,
         } as IBillPaymentEventCreatedPayload);
 

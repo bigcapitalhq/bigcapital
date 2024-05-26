@@ -148,6 +148,9 @@ export default class ManualJournalsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 

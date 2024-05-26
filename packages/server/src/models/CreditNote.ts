@@ -174,6 +174,7 @@ export default class CreditNote extends mixin(TenantModel, [
     const ItemEntry = require('models/ItemEntry');
     const Customer = require('models/Customer');
     const Branch = require('models/Branch');
+    const Document = require('models/Document');
 
     return {
       /**
@@ -231,6 +232,25 @@ export default class CreditNote extends mixin(TenantModel, [
         join: {
           from: 'credit_notes.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Credit note may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'credit_notes.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'CreditNote');
         },
       },
     };

@@ -2,6 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { IExpense } from '@/interfaces';
 import { ExpenseCategoryTransformer } from './ExpenseCategoryTransformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 
 export class ExpenseTransfromer extends Transformer {
   /**
@@ -15,6 +16,7 @@ export class ExpenseTransfromer extends Transformer {
       'formattedAllocatedCostAmount',
       'formattedDate',
       'categories',
+      'attachments',
     ];
   };
 
@@ -69,5 +71,14 @@ export class ExpenseTransfromer extends Transformer {
     return this.item(expense.categories, new ExpenseCategoryTransformer(), {
       currencyCode: expense.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the sale invoice attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (expense: IExpense) => {
+    return this.item(expense.attachments, new AttachmentTransformer());
   };
 }

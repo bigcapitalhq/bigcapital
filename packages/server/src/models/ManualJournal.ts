@@ -94,9 +94,9 @@ export default class ManualJournal extends mixin(TenantModel, [
    * Relationship mapping.
    */
   static get relationMappings() {
-    const Media = require('models/Media');
     const AccountTransaction = require('models/AccountTransaction');
     const ManualJournalEntry = require('models/ManualJournalEntry');
+    const ManualJournal = require('models/ManualJournal');
 
     return {
       entries: {
@@ -121,19 +121,23 @@ export default class ManualJournal extends mixin(TenantModel, [
           query.where('referenceType', 'Journal');
         },
       },
-      media: {
+
+      /**
+       * Manual journal may has many attached attachments.
+       */
+      attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: Media.default,
+        modelClass: ManualJournal.default,
         join: {
           from: 'manual_journals.id',
           through: {
-            from: 'media_links.model_id',
-            to: 'media_links.media_id',
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
           },
-          to: 'media.id',
+          to: 'documents.id',
         },
         filter(query) {
-          query.where('model_name', 'ManualJournal');
+          query.where('model_ref', 'ManualJournal');
         },
       },
     };

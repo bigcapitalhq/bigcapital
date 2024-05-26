@@ -410,7 +410,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const Branch = require('models/Branch');
     const Account = require('models/Account');
     const TaxRateTransaction = require('models/TaxRateTransaction');
-    const DocumentLink = require('models/DocumentLink');
+    const Document = require('models/Document');
 
     return {
       /**
@@ -526,17 +526,21 @@ export default class SaleInvoice extends mixin(TenantModel, [
       },
 
       /**
-       * Invoice may has many attachments.
+       * Sale invoice transaction may has many attached attachments.
        */
       attachments: {
-        relation: Model.HasManyRelation,
-        modelClass: DocumentLink.default,
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
         join: {
           from: 'sales_invoices.id',
-          to: 'document_links.modelId',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
         },
-        filter: (builder) => {
-          builder.where('modelRef', 'SaleInvoice');
+        filter(query) {
+          query.where('model_ref', 'Expense');
         },
       },
     };

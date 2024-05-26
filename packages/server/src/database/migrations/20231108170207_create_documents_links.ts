@@ -4,6 +4,7 @@ exports.up = function (knex) {
     table.string('model_ref').notNullable();
     table.string('model_id').notNullable();
     table.integer('document_id').unsigned();
+    table.datetime('expires_at').nullable();
     table.timestamps();
   });
 };

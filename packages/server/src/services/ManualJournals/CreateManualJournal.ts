@@ -12,7 +12,7 @@ import {
 } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import { Tenant, TenantMetadata } from '@/system/models';
+import { TenantMetadata } from '@/system/models';
 import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import { CommandManualJournalValidators } from './CommandManualJournalValidators';
@@ -59,7 +59,7 @@ export class CreateManualJournalService {
     const journalNumber = manualJournalDTO.journalNumber || autoNextNumber;
 
     const initialDTO = {
-      ...omit(manualJournalDTO, ['publish']),
+      ...omit(manualJournalDTO, ['publish', 'attachments']),
       ...(manualJournalDTO.publish
         ? { publishedAt: moment().toMySqlDateTime() }
         : {}),
@@ -173,6 +173,7 @@ export class CreateManualJournalService {
           tenantId,
           manualJournal,
           manualJournalId: manualJournal.id,
+          manualJournalDTO,
           trx,
         } as IManualJournalEventCreatedPayload);
 
