@@ -1,16 +1,16 @@
 // @ts-nocheck
-import { useState } from 'react';
 import { isEmpty } from 'lodash';
 import { Button, Intent, Text, Spinner } from '@blueprintjs/core';
 import { Box, Group, Icon, Stack } from '@/components';
-import { ImportDropzoneField } from '@/containers/Import/ImportDropzoneFile';
-import { useUncontrolled } from '@/hooks/useUncontrolled';
 import {
-  useDeleteAttachment,
-  useUploadAttachments,
-} from '@/hooks/query/attachments';
-import { formatBytes } from './utils';
+  ImportDropzoneField,
+  ImportDropzoneFieldProps,
+} from '@/containers/Import/ImportDropzoneFile';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { useUploadAttachments } from '@/hooks/query/attachments';
+import { formatBytes } from '../Sales/Invoices/InvoiceForm/utils';
 import styles from './UploadAttachmentPopoverContent.module.scss';
+import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 
 interface AttachmentFileCommon {
   originName: string;
@@ -28,6 +28,8 @@ interface UploadAttachmentsPopoverContentProps {
   initialValue?: AttachmentFile[];
   value?: AttachmentFile[];
   onChange?: (value: AttachmentFile[]) => void;
+  onUploadedChange?: (value: AttachmentFile[]) => void;
+  dropzoneFieldProps?: ImportDropzoneFieldProps;
 }
 
 /**
@@ -38,6 +40,8 @@ export function UploadAttachmentsPopoverContent({
   initialValue,
   value,
   onChange,
+  onUploadedChange,
+  dropzoneFieldProps,
 }: UploadAttachmentsPopoverContentProps) {
   // Controlled/uncontrolled value state.
   const [localFiles, handleFilesChange] = useUncontrolled<AttachmentFile[]>({
@@ -66,45 +70,23 @@ export function UploadAttachmentsPopoverContent({
   };
   // Uploads the attachments.
   const { mutateAsync: uploadAttachments } = useUploadAttachments({
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data) => {
       const newLocalFiles = stopLoadingAttachment(
         localFiles,
         data.config.data.get('internalKey'),
         data.data.data.key,
       );
       handleFilesChange(newLocalFiles);
+      onUploadedChange && onUploadedChange(newLocalFiles);
     },
   });
-  // Deletes the attachment.
-  const { mutateAsync: deleteAttachment } = useDeleteAttachment();
-
   // Deletes the attachment of the given file key.
-  const DeleteButton = ({ fileKey }: { fileKey: string }) => {
-    const [loading, setLoading] = useState<boolean>(false);
-
-    const handleClick = () => {
-      setLoading(true);
-      deleteAttachment(fileKey).then(() => {
-        const updatedFiles = localFiles.filter(
-          (file, i) => file.key !== fileKey,
-        );
-        handleFilesChange(updatedFiles);
-        setLoading(false);
-      });
-    };
-    return (
-      <Button
-        small
-        minimal
-        intent={Intent.DANGER}
-        loading={loading}
-        disabled={loading}
-        onClick={handleClick}
-      >
-        <Icon icon={'trash-16'} iconSize={16} />
-      </Button>
-    );
+  const handleClick = (key: string) => () => {
+    const updatedFiles = localFiles.filter((file, i) => file.key !== key);
+    handleFilesChange(updatedFiles);
+    onUploadedChange && onUploadedChange(updatedFiles);
   };
+
   // Handle change dropzone.
   const handleChangeDropzone = (file: File) => {
     const formData = new FormData();
@@ -136,6 +118,16 @@ export function UploadAttachmentsPopoverContent({
             title={''}
             classNames={{ root: styles.dropzoneRoot }}
             onChange={handleChangeDropzone}
+            dropzoneProps={{
+              accept: [
+                MIME_TYPES.doc,
+                MIME_TYPES.docx,
+                MIME_TYPES.pdf,
+                MIME_TYPES.png,
+                MIME_TYPES.jpeg,
+              ],
+            }}
+            {...dropzoneFieldProps}
           />
           <Group className={styles.hintText}>
             <Box>Formats: CSV, XLSX</Box>
@@ -180,7 +172,14 @@ export function UploadAttachmentsPopoverContent({
                     <Button small minimal>
                       View
                     </Button>
-                    <DeleteButton fileKey={localFile.key} />
+                    <Button
+                      small
+                      minimal
+                      intent={Intent.DANGER}
+                      onClick={handleClick(localFile.key)}
+                    >
+                      <Icon icon={'trash-16'} iconSize={16} />
+                    </Button>
                   </Group>
                 )}
               </Group>

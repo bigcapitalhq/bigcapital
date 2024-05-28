@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { MakeJournalFormFooterLeft } from './MakeJournalFormFooterLeft';
 import { MakeJournalFormFooterRight } from './MakeJournalFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 export default function MakeJournalFormFooter() {
   return (
@@ -15,6 +16,7 @@ export default function MakeJournalFormFooter() {
         <Row>
           <Col md={8}>
             <MakeJournalFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

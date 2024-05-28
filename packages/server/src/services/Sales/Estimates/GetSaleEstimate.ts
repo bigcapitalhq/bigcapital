@@ -28,7 +28,8 @@ export class GetSaleEstimate {
       .findById(estimateId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('attachments');
 
     // Validates the estimate existance.
     this.validators.validateEstimateExistance(estimate);

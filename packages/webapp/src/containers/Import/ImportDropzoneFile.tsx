@@ -8,7 +8,7 @@ import { MIME_TYPES } from '@/components/Dropzone/mine-types';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import styles from './ImportDropzone.module.css';
 
-interface ImportDropzoneFieldProps {
+export interface ImportDropzoneFieldProps {
   initialValue?: File;
   value?: File;
   onChange?: (file: File) => void;

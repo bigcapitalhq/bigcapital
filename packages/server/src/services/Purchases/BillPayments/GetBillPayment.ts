@@ -13,7 +13,7 @@ export class GetBillPayment {
   private transformer: TransformerInjectable;
 
   /**
-   * Retrieve bill payment.
+   * Retrieves bill payment.
    * @param {number} tenantId
    * @param {number} billPyamentId
    * @return {Promise<IBillPayment>}
@@ -30,6 +30,7 @@ export class GetBillPayment {
       .withGraphFetched('paymentAccount')
       .withGraphFetched('transactions')
       .withGraphFetched('branch')
+      .withGraphFetched('attachments')
       .findById(billPyamentId)
       .throwIfNotFound();
 

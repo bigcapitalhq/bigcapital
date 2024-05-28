@@ -9,13 +9,16 @@ import { AppToaster } from '@/components';
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
 import {
   defaultFastFieldShouldUpdate,
-  transactionNumber,
   transformToForm,
   safeSumBy,
   orderingLinesIndexes,
   formattedAmount,
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 // Default payment receive entry.
 export const defaultPaymentReceiveEntry = {
@@ -39,11 +42,12 @@ export const defaultPaymentReceive = {
   // Holds the payment number that entered manually only.
   payment_receive_no_manually: '',
   statement: '',
-  full_amount: '', 
+  full_amount: '',
   currency_code: '',
   branch_id: '',
   exchange_rate: 1,
   entries: [],
+  attachments: []
 };
 
 export const defaultRequestPaymentEntry = {
@@ -74,6 +78,7 @@ export const transformToEditForm = (paymentReceive, paymentReceiveEntries) => ({
       payment_amount: paymentReceiveEntry.payment_amount || '',
     })),
   ],
+  attachments: transformAttachmentsToForm(paymentReceive),
 });
 
 /**
@@ -155,6 +160,8 @@ export const transformFormToRequest = (form) => {
       ...pick(entry, Object.keys(defaultRequestPaymentEntry)),
     }));
 
+  const attachments = transformAttachmentsToRequest(form);
+
   return {
     ...omit(form, ['payment_receive_no_manually', 'payment_receive_no']),
     // The `payment_receive_no_manually` will be presented just if the auto-increment
@@ -163,6 +170,7 @@ export const transformFormToRequest = (form) => {
       payment_receive_no: form.payment_receive_no,
     }),
     entries: orderingLinesIndexes(entries),
+    attachments,
   };
 };
 

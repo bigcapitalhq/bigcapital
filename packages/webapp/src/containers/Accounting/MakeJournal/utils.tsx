@@ -18,6 +18,7 @@ import { AppToaster } from '@/components';
 import { useFormikContext } from 'formik';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 import { useCurrentOrganization } from '@/hooks/state';
+import { transformAttachmentsToForm } from '@/containers/Attachments/utils';
 
 const ERROR = {
   JOURNAL_NUMBER_ALREADY_EXISTS: 'JOURNAL.NUMBER.ALREADY.EXISTS',
@@ -57,6 +58,7 @@ export const defaultManualJournal = {
   branch_id: '',
   exchange_rate: 1,
   entries: [...repeatValue(defaultEntry, DEFAULT_LINES_NUMBER)],
+  attachments: [],
 };
 
 // Transform to edit form.
@@ -76,9 +78,12 @@ export function transformToEditForm(manualJournal) {
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, defaultEntry),
   )(initialEntries);
 
+  const attachments = transformAttachmentsToForm(manualJournal);
+
   return {
     ...transformToForm(manualJournal, defaultManualJournal),
     entries,
+    attachments,
   };
 }
 

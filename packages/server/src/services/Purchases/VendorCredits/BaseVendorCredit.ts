@@ -64,7 +64,7 @@ export default class BaseVendorCredit {
       autoNextNumber;
 
     const initialDTO = {
-      ...omit(vendorCreditDTO, ['open']),
+      ...omit(vendorCreditDTO, ['open', 'attachments']),
       amount,
       currencyCode: vendorCurrencyCode,
       exchangeRate: vendorCreditDTO.exchangeRate || 1,

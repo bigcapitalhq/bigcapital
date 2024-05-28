@@ -1,5 +1,6 @@
 import { IVendorCredit } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { formatNumber } from 'utils';
 
@@ -16,6 +17,7 @@ export class VendorCreditTransformer extends Transformer {
       'formattedCreditsRemaining',
       'formattedInvoicedAmount',
       'entries',
+      'attachments',
     ];
   };
 
@@ -79,5 +81,14 @@ export class VendorCreditTransformer extends Transformer {
     return this.item(vendorCredit.entries, new ItemEntryTransformer(), {
       currencyCode: vendorCredit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the vendor credit attachments.
+   * @param {IVendorCredit} invoice
+   * @returns
+   */
+  protected attachments = (vendorCredit) => {
+    return this.item(vendorCredit.attachments, new AttachmentTransformer());
   };
 }

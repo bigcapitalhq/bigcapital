@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Paper, Row, Col } from '@/components';
 import { BillFormFooterLeft } from './BillFormFooterLeft';
 import { BillFormFooterRight } from './BillFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 // Bill form floating actions.
 export default function BillFormFooter() {
@@ -16,6 +17,7 @@ export default function BillFormFooter() {
         <Row>
           <Col md={8}>
             <BillFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

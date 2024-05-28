@@ -18,6 +18,10 @@ import {
   formattedAmount,
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 const ERROR = {
   EXPENSE_ALREADY_PUBLISHED: 'EXPENSE.ALREADY.PUBLISHED',
@@ -46,6 +50,7 @@ export const defaultExpense = {
   branch_id: '',
   exchange_rate: 1,
   categories: [...repeatValue(defaultExpenseEntry, MIN_LINES_NUMBER)],
+  attachments: [],
 };
 
 /**
@@ -93,9 +98,12 @@ export const transformToEditForm = (
     ensureEntriesHasEmptyLine(MIN_LINES_NUMBER, expenseEntry),
   )(initialEntries);
 
+  const attachments = transformAttachmentsToForm(expense);
+
   return {
     ...transformToForm(expense, defaultExpense),
     categories,
+    attachments,
   };
 };
 
@@ -133,10 +141,12 @@ export const filterNonZeroEntries = (categories) => {
  */
 export const transformFormValuesToRequest = (values) => {
   const categories = filterNonZeroEntries(values.categories);
+  const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...values,
     categories: R.compose(orderingLinesIndexes)(categories),
+    attachments,
   };
 };
 

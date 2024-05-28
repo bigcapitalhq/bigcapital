@@ -7,7 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Paper, Row, Col } from '@/components';
 import { InvoiceFormFooterLeft } from './InvoiceFormFooterLeft';
 import { InvoiceFormFooterRight } from './InvoiceFormFooterRight';
-import { UploadAttachmentButton } from './UploadAttachmentButton';
+import { UploadAttachmentButton } from '../../../Attachments/UploadAttachmentButton';
 
 export default function InvoiceFormFooter() {
   return (

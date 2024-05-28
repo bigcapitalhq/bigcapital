@@ -26,7 +26,8 @@ export default class GetVendorCredit {
       .findById(vendorCreditId)
       .withGraphFetched('entries.item')
       .withGraphFetched('vendor')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('attachments');
 
     if (!vendorCredit) {
       throw new ServiceError(ERRORS.VENDOR_CREDIT_NOT_FOUND);

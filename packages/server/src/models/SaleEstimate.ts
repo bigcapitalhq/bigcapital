@@ -236,7 +236,7 @@ export default class SaleEstimate extends mixin(TenantModel, [
           to: 'documents.id',
         },
         filter(query) {
-          query.where('model_ref', 'Expense');
+          query.where('model_ref', 'SaleEstimate');
         },
       },
     };

@@ -1,5 +1,6 @@
 import { IBill } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 import { ItemEntryTransformer } from '@/services/Sales/Invoices/ItemEntryTransformer';
 import { SaleInvoiceTaxEntryTransformer } from '@/services/Sales/Invoices/SaleInvoiceTaxEntryTransformer';
 import { formatNumber } from 'utils';
@@ -26,6 +27,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
       'totalLocalFormatted',
       'taxes',
       'entries',
+      'attachments',
     ];
   };
 
@@ -191,5 +193,14 @@ export class PurchaseInvoiceTransformer extends Transformer {
     return this.item(bill.entries, new ItemEntryTransformer(), {
       currencyCode: bill.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the bill attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (bill) => {
+    return this.item(bill.attachments, new AttachmentTransformer());
   };
 }

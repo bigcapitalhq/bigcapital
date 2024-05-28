@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { VendorCreditNoteFormFooterLeft } from './VendorCreditNoteFormFooterLeft';
 import { VendorCreditNoteFormFooterRight } from './VendorCreditNoteFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Vendor Credit note form footer.
@@ -18,6 +19,7 @@ export default function VendorCreditNoteFormFooter() {
         <Row>
           <Col md={8}>
             <VendorCreditNoteFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

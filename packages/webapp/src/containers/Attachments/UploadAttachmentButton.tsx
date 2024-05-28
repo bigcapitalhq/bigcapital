@@ -9,6 +9,7 @@ import {
 } from '@blueprintjs/core';
 import { FFormGroup } from '@/components';
 import { UploadAttachmentsPopoverContent } from './UploadAttachmentsPopoverContent';
+import { transformToCamelCase, transfromToSnakeCase } from '@/utils';
 import styles from './UploadAttachmentButton.module.scss';
 
 function UploadAttachmentButtonButtonContentField() {
@@ -16,9 +17,9 @@ function UploadAttachmentButtonButtonContentField() {
     <Field name={'attachments'}>
       {({ form: { setFieldValue }, field: { value } }) => (
         <UploadAttachmentsPopoverContent
-          value={value}
-          onChange={(value) => {
-            setFieldValue('attachments', value);
+          value={transformToCamelCase(value)}
+          onChange={(changedValue) => {
+            setFieldValue('attachments', transfromToSnakeCase(changedValue));
           }}
         />
       )}
@@ -35,6 +36,7 @@ export function UploadAttachmentButton() {
       name={'attachments'}
       label={'Attachments'}
       className={styles.attachmentField}
+      fastField={true}
     >
       <Popover
         interactionKind={PopoverInteractionKind.CLICK}

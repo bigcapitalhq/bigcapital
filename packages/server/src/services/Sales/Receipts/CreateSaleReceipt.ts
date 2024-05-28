@@ -101,6 +101,7 @@ export class CreateSaleReceipt {
           tenantId,
           saleReceipt,
           saleReceiptId: saleReceipt.id,
+          saleReceiptDTO,
           trx,
         } as ISaleReceiptCreatedPayload);
 

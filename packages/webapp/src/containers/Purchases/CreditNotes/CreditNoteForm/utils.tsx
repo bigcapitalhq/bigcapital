@@ -20,6 +20,10 @@ import { useFormikContext } from 'formik';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -48,6 +52,7 @@ export const defaultVendorsCreditNote = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
+  attachments: [],
 };
 
 /**
@@ -68,9 +73,12 @@ export const transformToEditForm = (creditNote) => {
     updateItemsEntriesTotal,
   )(initialEntries);
 
+  const attachments = transformAttachmentsToForm(creditNote);
+
   return {
     ...transformToForm(creditNote, defaultVendorsCreditNote),
     entries,
+    attachments,
   };
 };
 
@@ -100,11 +108,13 @@ export const filterNonZeroEntries = (entries) => {
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
+  const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
     open: false,
+    attachments,
   };
 };
 

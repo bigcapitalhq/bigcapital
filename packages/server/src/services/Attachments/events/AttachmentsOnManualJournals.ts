@@ -99,8 +99,6 @@ export class AttachmentsOnManualJournals {
     manualJournalDTO,
     manualJournal,
   }: IManualJournalEventEditedPayload) {
-    // if (isEmpty(saleInvoiceDTO.attachments)) return;
-
     const keys = manualJournalDTO.attachments?.map(
       (attachment) => attachment.key
     );
