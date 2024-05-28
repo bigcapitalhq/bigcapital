@@ -96,7 +96,7 @@ export default class ManualJournal extends mixin(TenantModel, [
   static get relationMappings() {
     const AccountTransaction = require('models/AccountTransaction');
     const ManualJournalEntry = require('models/ManualJournalEntry');
-    const ManualJournal = require('models/ManualJournal');
+    const Document = require('models/Document');
 
     return {
       entries: {
@@ -127,7 +127,7 @@ export default class ManualJournal extends mixin(TenantModel, [
        */
       attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: ManualJournal.default,
+        modelClass: Document.default,
         join: {
           from: 'manual_journals.id',
           through: {

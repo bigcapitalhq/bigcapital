@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Paper, Row, Col } from '@/components';
 import { InvoiceFormFooterLeft } from './InvoiceFormFooterLeft';
 import { InvoiceFormFooterRight } from './InvoiceFormFooterRight';
+import { UploadAttachmentButton } from './UploadAttachmentButton';
 
 export default function InvoiceFormFooter() {
   return (
@@ -15,6 +16,7 @@ export default function InvoiceFormFooter() {
         <Row>
           <Col md={8}>
             <InvoiceFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

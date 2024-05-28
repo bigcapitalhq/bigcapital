@@ -1,0 +1,49 @@
+
+.content {
+}
+
+.hintText{
+  display: flex;
+  font-size: 12px;
+  margin-top: 6px;
+  color: #8F99A8;
+  justify-content: space-between;
+}
+
+.attachments{
+  margin-top: 12px;
+}
+
+.attachmentItem{
+  border: 1px solid #D3D8DE;
+  border-radius: 3px;
+  padding: 6px 10px;
+  justify-content: space-between;
+}
+
+.attachmentFilenameText{
+  color: #404854;
+}
+
+.attachmentSizeText{
+  font-size: 12px;
+  color: #738091;
+}
+
+.attachmentContent{
+  padding-left: 8px;
+}
+
+.attachmentIcon{
+  color: #8F99A8;
+}
+
+.label{
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.dropzoneRoot{
+  min-height: 140px;
+  padding: 10px;
+}
