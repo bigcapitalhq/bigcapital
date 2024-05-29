@@ -7,6 +7,7 @@ import {
 } from './_utils';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { ServiceError } from '@/exceptions';
+import { ERRORS } from './constants';
 
 @Service()
 export class LinkAttachment {
@@ -32,18 +33,21 @@ export class LinkAttachment {
     const LinkModel = models[modelRef];
     validateLinkModelExists(LinkModel);
 
+    const foundFile = await Document.query(trx)
+      .findOne('key', filekey)
+      .throwIfNotFound();
+
     const foundLinkModel = await LinkModel.query(trx).findById(modelId);
     validateLinkModelEntryExists(foundLinkModel);
 
     const foundLinks = await DocumentLink.query(trx)
       .where('modelRef', modelRef)
-      .where('modelId', modelId);
+      .where('modelId', modelId)
+      .where('documentId', foundFile.id);
 
     if (foundLinks.length > 0) {
-      throw new ServiceError('DOCUMENT_LINK_ALREADY_LINKED');
+      throw new ServiceError(ERRORS.DOCUMENT_LINK_ALREADY_LINKED);
     }
-    const foundFile = await Document.query(trx).findOne('key', filekey);
-
     await DocumentLink.query(trx).insert({
       modelRef,
       modelId,
@@ -67,15 +71,12 @@ export class LinkAttachment {
     modelId: number,
     trx?: Knex.Transaction
   ) {
-    await bluebird.map(
-      filekeys,
-      (fieldKey: string) =>
-        this.link(tenantId, fieldKey, modelRef, modelId, trx),
-      {
-        concurrency: CONCURRENCY_ASYNC,
+    return bluebird.each(filekeys, async (fieldKey: string) => {
+      try {
+        await this.link(tenantId, fieldKey, modelRef, modelId, trx);
+      } catch {
+        // Ignore catching exceptions in bulk action.
       }
-    );
+    });
   }
 }
-
-const CONCURRENCY_ASYNC = 10;

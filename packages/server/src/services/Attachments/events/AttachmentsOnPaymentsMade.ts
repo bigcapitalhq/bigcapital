@@ -12,7 +12,7 @@ import { ValidateAttachments } from '../ValidateAttachments';
 import { UnlinkAttachment } from '../UnlinkAttachment';
 
 @Service()
-export class AttachmentsOnBillPayments{
+export class AttachmentsOnBillPayments {
   @Inject()
   private linkAttachmentService: LinkAttachment;
 
@@ -98,6 +98,7 @@ export class AttachmentsOnBillPayments{
     tenantId,
     billPaymentDTO,
     oldBillPayment,
+    trx,
   }: IBillPaymentEventEditedPayload) {
     const keys = billPaymentDTO.attachments?.map(
       (attachment) => attachment.key
@@ -106,7 +107,8 @@ export class AttachmentsOnBillPayments{
       tenantId,
       keys,
       'BillPayment',
-      oldBillPayment.id
+      oldBillPayment.id,
+      trx
     );
   }
 

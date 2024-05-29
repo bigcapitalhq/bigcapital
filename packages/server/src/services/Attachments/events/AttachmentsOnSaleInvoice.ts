@@ -98,6 +98,7 @@ export class AttachmentsOnSaleInvoiceCreated {
     tenantId,
     saleInvoiceDTO,
     saleInvoice,
+    trx,
   }: ISaleInvoiceEditedPayload) {
     // if (isEmpty(saleInvoiceDTO.attachments)) return;
 
@@ -108,7 +109,8 @@ export class AttachmentsOnSaleInvoiceCreated {
       tenantId,
       keys,
       'SaleInvoice',
-      saleInvoice.id
+      saleInvoice.id,
+      trx
     );
   }
 

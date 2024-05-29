@@ -98,6 +98,7 @@ export class AttachmentsOnSaleReceipt {
     tenantId,
     saleReceiptDTO,
     saleReceipt,
+    trx,
   }: ISaleReceiptEditedPayload) {
     const keys = saleReceiptDTO.attachments?.map(
       (attachment) => attachment.key
@@ -106,7 +107,8 @@ export class AttachmentsOnSaleReceipt {
       tenantId,
       keys,
       'SaleReceipt',
-      saleReceipt.id
+      saleReceipt.id,
+      trx
     );
   }
 

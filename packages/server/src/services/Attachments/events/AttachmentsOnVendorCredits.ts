@@ -98,6 +98,7 @@ export class AttachmentsOnVendorCredits {
     tenantId,
     vendorCreditDTO,
     oldVendorCredit,
+    trx,
   }: IVendorCreditEditedPayload) {
     const keys = vendorCreditDTO.attachments?.map(
       (attachment) => attachment.key
@@ -106,7 +107,8 @@ export class AttachmentsOnVendorCredits {
       tenantId,
       keys,
       'VendorCredit',
-      oldVendorCredit.id
+      oldVendorCredit.id,
+      trx
     );
   }
 

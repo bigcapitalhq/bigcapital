@@ -34,7 +34,7 @@ export class UnlinkAttachment {
     const foundLinkModel = await LinkModel.query(trx).findById(modelId);
     validateLinkModelEntryExists(foundLinkModel);
 
-    const document = await Document.query().findOne('key', filekey);
+    const document = await Document.query(trx).findOne('key', filekey);
 
     // Delete the document link.
     await DocumentLink.query(trx)
@@ -59,14 +59,13 @@ export class UnlinkAttachment {
     modelId: number,
     trx?: Knex.Transaction
   ): Promise<void> {
-    await bluebird.map(
-      filekeys,
-      (fieldKey: string) =>
-        this.unlink(tenantId, fieldKey, modelRef, modelId, trx),
-      {
-        concurrency: CONCURRENCY_ASYNC,
+    await bluebird.each(filekeys, (fieldKey: string) => {
+      try {
+        this.unlink(tenantId, fieldKey, modelRef, modelId, trx);
+      } catch {
+        // Ignore catching exceptions on bulk action.
       }
-    );
+    });
   }
 
   /**
@@ -124,5 +123,3 @@ export class UnlinkAttachment {
     await this.bulkUnlink(tenantId, modelLinkKeys, modelRef, modelId, trx);
   }
 }
-
-const CONCURRENCY_ASYNC = 10;

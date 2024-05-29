@@ -96,13 +96,15 @@ export class AttachmentsOnExpenses {
     tenantId,
     expenseDTO,
     expense,
+    trx,
   }: IExpenseEventEditPayload) {
     const keys = expenseDTO.attachments?.map((attachment) => attachment.key);
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
       tenantId,
       keys,
       'Expense',
-      expense.id
+      expense.id,
+      trx
     );
   }
 

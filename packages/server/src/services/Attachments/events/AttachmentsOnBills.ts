@@ -96,13 +96,15 @@ export class AttachmentsOnBills {
     tenantId,
     billDTO,
     bill,
+    trx
   }: IBillEditedPayload) {
     const keys = billDTO.attachments?.map((attachment) => attachment.key);
     await this.unlinkAttachmentService.unlinkUnpresentedKeys(
       tenantId,
       keys,
       'Bill',
-      bill.id
+      bill.id,
+      trx
     );
   }
 

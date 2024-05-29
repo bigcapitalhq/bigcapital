@@ -98,6 +98,7 @@ export class AttachmentsOnManualJournals {
     tenantId,
     manualJournalDTO,
     manualJournal,
+    trx
   }: IManualJournalEventEditedPayload) {
     const keys = manualJournalDTO.attachments?.map(
       (attachment) => attachment.key
@@ -106,7 +107,8 @@ export class AttachmentsOnManualJournals {
       tenantId,
       keys,
       'SaleInvoice',
-      manualJournal.id
+      manualJournal.id,
+      trx
     );
   }
 

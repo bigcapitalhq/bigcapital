@@ -98,6 +98,7 @@ export class AttachmentsOnSaleEstimates {
     tenantId,
     estimateDTO,
     oldSaleEstimate,
+    trx
   }: ISaleEstimateEditedPayload) {
     const keys = estimateDTO.attachments?.map((attachment) => attachment.key);
 
@@ -105,7 +106,8 @@ export class AttachmentsOnSaleEstimates {
       tenantId,
       keys,
       'SaleEstimate',
-      oldSaleEstimate.id
+      oldSaleEstimate.id,
+      trx
     );
   }
 

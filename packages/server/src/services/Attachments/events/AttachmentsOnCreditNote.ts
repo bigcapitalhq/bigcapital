@@ -96,6 +96,7 @@ export class AttachmentsOnCreditNote {
     tenantId,
     creditNoteEditDTO,
     oldCreditNote,
+    trx,
   }: ICreditNoteEditedPayload) {
     const keys = creditNoteEditDTO.attachments?.map(
       (attachment) => attachment.key
@@ -104,7 +105,8 @@ export class AttachmentsOnCreditNote {
       tenantId,
       keys,
       'CreditNote',
-      oldCreditNote.id
+      oldCreditNote.id,
+      trx
     );
   }
 

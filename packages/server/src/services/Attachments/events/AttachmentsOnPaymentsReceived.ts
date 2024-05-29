@@ -98,6 +98,7 @@ export class AttachmentsOnPaymentsReceived {
     tenantId,
     paymentReceiveDTO,
     oldPaymentReceive,
+    trx,
   }: IPaymentReceiveEditedPayload) {
     const keys = paymentReceiveDTO.attachments?.map(
       (attachment) => attachment.key
@@ -106,7 +107,8 @@ export class AttachmentsOnPaymentsReceived {
       tenantId,
       keys,
       'PaymentReceive',
-      oldPaymentReceive.id
+      oldPaymentReceive.id,
+      trx
     );
   }
 
