@@ -25,7 +25,8 @@ export default class BillPaymentsPages {
     const { BillPayment, Bill } = this.tenancy.models(tenantId);
     const billPayment = await BillPayment.query()
       .findById(billPaymentId)
-      .withGraphFetched('entries.bill');
+      .withGraphFetched('entries.bill')
+      .withGraphFetched('attachments');
 
     // Throw not found the bill payment.
     if (!billPayment) {

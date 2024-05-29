@@ -51,7 +51,7 @@ export class PaymentReceiveDTOTransformer {
     this.validators.validatePaymentNoRequire(paymentReceiveNo);
 
     const initialDTO = {
-      ...formatDateFields(omit(paymentReceiveDTO, ['entries']), [
+      ...formatDateFields(omit(paymentReceiveDTO, ['entries', 'attachments']), [
         'paymentDate',
       ]),
       amount: paymentAmount,

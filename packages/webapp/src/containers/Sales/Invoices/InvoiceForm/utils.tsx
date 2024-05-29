@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import moment from 'moment';
 import * as R from 'ramda';
 import { Intent } from '@blueprintjs/core';
-import { omit, first, sumBy, round } from 'lodash';
+import { omit, first, sumBy } from 'lodash';
 import {
   compose,
   transformToForm,
@@ -27,6 +27,10 @@ import {
   ensureEntriesHaveEmptyLine,
 } from '@/containers/Entries/utils';
 import { TaxType } from '@/interfaces/TaxRates';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -63,6 +67,7 @@ export const defaultInvoice = {
   warehouse_id: '',
   project_id: '',
   entries: [...repeatValue(defaultInvoiceEntry, MIN_LINES_NUMBER)],
+  attachments: [],
 };
 
 /**
@@ -89,6 +94,7 @@ export function transformToEditForm(invoice) {
       ? TaxType.Inclusive
       : TaxType.Exclusive,
     entries,
+    attachments: transformAttachmentsToForm(invoice),
   };
 }
 
@@ -192,6 +198,7 @@ export function transformValueToRequest(values) {
       ...omit(entry, ['amount', 'tax_amount', 'tax_rate']),
     })),
     delivered: false,
+    attachments: transformAttachmentsToRequest(values),
   };
 }
 
@@ -408,3 +415,15 @@ export const useIsInvoiceTaxExclusive = () => {
 
   return values.inclusive_exclusive_tax === TaxType.Exclusive;
 };
+
+export function formatBytes(bytes, decimals = 2) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}

@@ -27,23 +27,23 @@ export class AttachmentsOnVendorCredits {
    */
   public attach(bus) {
     bus.subscribe(
-      events.saleInvoice.onCreating,
+      events.vendorCredit.onCreating,
       this.validateAttachmentsOnVendorCreditCreate.bind(this)
     );
     bus.subscribe(
-      events.saleInvoice.onCreated,
+      events.vendorCredit.onCreated,
       this.handleAttachmentsOnVendorCreditCreated.bind(this)
     );
     bus.subscribe(
-      events.saleInvoice.onEdited,
+      events.vendorCredit.onEdited,
       this.handleUnlinkUnpresentedKeysOnVendorCreditEdited.bind(this)
     );
     bus.subscribe(
-      events.saleInvoice.onEdited,
+      events.vendorCredit.onEdited,
       this.handleLinkPresentedKeysOnVendorCreditEdited.bind(this)
     );
     bus.subscribe(
-      events.saleInvoice.onDeleting,
+      events.vendorCredit.onDeleting,
       this.handleUnlinkAttachmentsOnVendorCreditDeleted.bind(this)
     );
   }

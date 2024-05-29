@@ -112,7 +112,6 @@ export class CreateBillPayment {
         const billPayment = await BillPayment.query(trx).insertGraphAndFetch({
           ...billPaymentObj,
         });
-
         // Triggers `onBillPaymentCreated` event.
         await this.eventPublisher.emitAsync(events.billPayment.onCreated, {
           tenantId,
