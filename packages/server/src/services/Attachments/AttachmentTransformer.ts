@@ -6,7 +6,7 @@ export class AttachmentTransformer extends Transformer {
    * @returns {string[]}
    */
   public excludeAttributes = (): string[] => {
-    return ['*'];
+    return ['id', 'createdAt'];
   };
 
   /**
@@ -14,6 +14,6 @@ export class AttachmentTransformer extends Transformer {
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['extension', 'key'];
+    return [];
   };
 }

@@ -2,10 +2,6 @@
 import { useMutation } from 'react-query';
 import useApiRequest from '../useRequest';
 
-const commonInvalidateQueries = (query) => {
-  // Invalidate accounts.
-};
-
 /**
  * Uploads the given attachments.
  */
@@ -26,6 +22,21 @@ export function useDeleteAttachment(props) {
 
   return useMutation(
     (key: string) => apiRequest.delete(`/attachments/${key}`),
+    props,
+  );
+}
+
+/**
+ * Uploads the given attachments.
+ */
+export function useGetPresignedUrlAttachment(props) {
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (key: string) =>
+      apiRequest
+        .get(`/attachments/${key}/presigned-url`)
+        .then((res) => res.data),
     props,
   );
 }

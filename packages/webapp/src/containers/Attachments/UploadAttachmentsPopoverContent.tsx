@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useState } from 'react';
 import { isEmpty } from 'lodash';
 import { Button, Intent, Text, Spinner } from '@blueprintjs/core';
 import { Box, Group, Icon, Stack } from '@/components';
@@ -7,7 +8,10 @@ import {
   ImportDropzoneFieldProps,
 } from '@/containers/Import/ImportDropzoneFile';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
-import { useUploadAttachments } from '@/hooks/query/attachments';
+import {
+  useGetPresignedUrlAttachment,
+  useUploadAttachments,
+} from '@/hooks/query/attachments';
 import { formatBytes } from '../Sales/Invoices/InvoiceForm/utils';
 import styles from './UploadAttachmentPopoverContent.module.scss';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
@@ -20,7 +24,7 @@ interface AttachmentFileCommon {
 }
 interface AttachmentFileLoaded extends AttachmentFileCommon {}
 interface AttachmentFileLoading extends AttachmentFileCommon {
-  _loading: boolean;
+  loading: boolean;
 }
 type AttachmentFile = AttachmentFileLoaded | AttachmentFileLoading;
 
@@ -62,7 +66,7 @@ export function UploadAttachmentsPopoverContent({
         return {
           ...localFile,
           key: newKey,
-          _loading: false,
+          loading: false,
         };
       }
       return localFile;
@@ -100,7 +104,7 @@ export function UploadAttachmentsPopoverContent({
         originName: file.name,
         size: file.size,
         key,
-        _loading: true,
+        loading: true,
       },
       ...localFiles,
     ]);
@@ -130,35 +134,38 @@ export function UploadAttachmentsPopoverContent({
             {...dropzoneFieldProps}
           />
           <Group className={styles.hintText}>
-            <Box>Formats: CSV, XLSX</Box>
             <Box>Maximum: 25MB</Box>
           </Group>
         </Stack>
 
         {!isEmpty(localFiles) && (
-          <Stack spacing={8} className={styles.attachments}>
+          <Stack spacing={0} className={styles.attachments}>
             {localFiles.map((localFile: AttachmentFile, index: number) => (
               <Group
                 position={'space-between'}
                 className={styles.attachmentItem}
                 key={index}
               >
-                <Group spacing={16} className={styles.attachmentContent}>
-                  {localFile._loading ? (
-                    <Spinner size={20} />
-                  ) : (
-                    <Icon
-                      icon={'media'}
-                      iconSize={16}
-                      className={styles.attachmentIcon}
-                    />
-                  )}
+                <Group spacing={14} className={styles.attachmentContent}>
+                  <div className={styles.attachmentIconWrap}>
+                    {localFile.loading ? (
+                      <Spinner size={20} />
+                    ) : (
+                      <Icon
+                        icon={'media'}
+                        iconSize={16}
+                        className={styles.attachmentIcon}
+                      />
+                    )}
+                  </div>
                   <Stack spacing={2}>
                     <Text className={styles.attachmentFilenameText}>
                       {localFile.originName}
                     </Text>
-                    {localFile._loading ? (
-                      <Text>Loading...</Text>
+                    {localFile.loading ? (
+                      <Text className={styles.attachmentLoadingText}>
+                        Loading...
+                      </Text>
                     ) : (
                       <Text className={styles.attachmentSizeText}>
                         {formatBytes(localFile.size)}
@@ -167,11 +174,9 @@ export function UploadAttachmentsPopoverContent({
                   </Stack>
                 </Group>
 
-                {!localFile._loading && (
-                  <Group spacing={0}>
-                    <Button small minimal>
-                      View
-                    </Button>
+                {!localFile.loading && (
+                  <Group spacing={2}>
+                    <ViewButton fileKey={localFile.key} />
                     <Button
                       small
                       minimal
@@ -190,3 +195,30 @@ export function UploadAttachmentsPopoverContent({
     </div>
   );
 }
+
+const ViewButton = ({ fileKey }: { fileKey: string }) => {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const { mutateAsync: getAttachmentPresignedUrl } =
+    useGetPresignedUrlAttachment();
+
+  const handleViewBtnClick = (key: string) => () => {
+    setLoading(true);
+
+    getAttachmentPresignedUrl(key).then((data) => {
+      window.open(data.presigned_url);
+      setLoading(false);
+    });
+  };
+
+  return (
+    <Button
+      small
+      minimal
+      onClick={handleViewBtnClick(fileKey)}
+      disabled={isLoading}
+      intent={Intent.PRIMARY}
+    >
+      View
+    </Button>
+  );
+};

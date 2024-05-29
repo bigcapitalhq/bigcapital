@@ -4,9 +4,9 @@
 
 .hintText{
   display: flex;
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 6px;
-  color: #8F99A8;
+  color: #738091;
   justify-content: space-between;
 }
 
@@ -15,27 +15,36 @@
 }
 
 .attachmentItem{
-  border: 1px solid #D3D8DE;
-  border-radius: 3px;
-  padding: 6px 10px;
+  border-top: 1px solid #D3D8DE;
+  border-left: 1px solid #D3D8DE;
+  border-right: 1px solid #D3D8DE;
+  padding: 10px 14px;
   justify-content: space-between;
+
+  &:first-child {
+    border-radius: 3px 3px 0 0;
+  }
+  &:last-child{
+    border-radius: 0 0 3px 3px;
+    border-bottom: 1px solid #D3D8DE;
+  }
 }
 
 .attachmentFilenameText{
-  color: #404854;
+  
 }
 
-.attachmentSizeText{
-  font-size: 12px;
+.attachmentSizeText,
+.attachmentLoadingText{
+  font-size: 13px;
   color: #738091;
 }
 
 .attachmentContent{
-  padding-left: 8px;
 }
 
 .attachmentIcon{
-  color: #8F99A8;
+  color: #626b7c;
 }
 
 .label{
@@ -46,4 +55,9 @@
 .dropzoneRoot{
   min-height: 140px;
   padding: 10px;
+}
+
+.attachmentIconWrap{
+  width: 20PX;
+  text-align: right;
 }
