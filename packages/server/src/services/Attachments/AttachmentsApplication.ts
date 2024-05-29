@@ -5,6 +5,7 @@ import { GetAttachment } from './GetAttachment';
 import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { LinkAttachment } from './LinkAttachment';
 import { UnlinkAttachment } from './UnlinkAttachment';
+import { getAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
 
 @Service()
 export class AttachmentsApplication {
@@ -25,6 +26,9 @@ export class AttachmentsApplication {
 
   @Inject()
   private unlinkDocumentService: UnlinkAttachment;
+
+  @Inject()
+  private getPresignedUrlService: getAttachmentPresignedUrl;
 
   /**
    *
@@ -100,5 +104,14 @@ export class AttachmentsApplication {
       modelRef,
       modelId
     );
+  }
+
+  /**
+   * Retrieves the presigned url of the given attachment key.
+   * @param {string} key
+   * @returns {Promise<string>}
+   */
+  public getPresignedUrl(key: string): Promise<string> {
+    return this.getPresignedUrlService.getPresignedUrl(key);
   }
 }

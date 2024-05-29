@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.576.0",
+    "@aws-sdk/s3-request-presigner": "^3.583.0",
     "@casl/ability": "^5.4.3",
     "@hapi/boom": "^7.4.3",
     "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",

@@ -51,6 +51,12 @@ export class AttachmentsController extends BaseController {
       this.validationResult,
       this.unlinkDocument.bind(this)
     );
+    router.get(
+      '/:id/presigned-url',
+      [param('id').exists()],
+      this.validationResult,
+      this.getAttachmentPresignedUrl.bind(this)
+    );
 
     return router;
   }
@@ -181,6 +187,29 @@ export class AttachmentsController extends BaseController {
         status: 200,
         message: 'The document has been linked successfully.',
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retreives the presigned url of the given attachment key.
+   * @param {Request} req
+   * @param {Response} res
+   * @param next
+   */
+  private async getAttachmentPresignedUrl(
+    req: Request,
+    res: Response,
+    next: any
+  ) {
+    const { id: documentKey } = req.params;
+
+    try {
+      const presignedUrl = await this.attachmentsApplication.getPresignedUrl(
+        documentKey
+      );
+      return res.status(200).send({ presignedUrl });
     } catch (error) {
       next(error);
     }

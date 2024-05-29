@@ -6,12 +6,20 @@ export class UploadDocument {
   @Inject()
   private tenancy: HasTenancyService;
 
+  /**
+   * Inserts the document metadata.
+   * @param {number} tenantId 
+   * @param {} file 
+   * @returns {}
+   */
   async upload(tenantId: number, file: any) {
     const { Document } = this.tenancy.models(tenantId);
 
     const insertedDocument = await Document.query().insert({
       key: file.key,
-      extension: file.mimetype,
+      mimeType: file.mimetype,
+      size: file.size,
+      originName: file.originalname,
     });
     return insertedDocument;
   }
