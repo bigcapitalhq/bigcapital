@@ -1,9 +1,8 @@
 import mime from 'mime-types';
 import { Service, Inject } from 'typedi';
-import { Router, Response } from 'express';
+import { Router, Response, NextFunction, Request } from 'express';
 import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
-import { Request } from 'express-validator/src/base';
 import { AttachmentsApplication } from '@/services/Attachments/AttachmentsApplication';
 
 @Service()
@@ -20,6 +19,7 @@ export class AttachmentsController extends BaseController {
     router.post(
       '/',
       this.attachmentsApplication.uploadPipeline.single('file'),
+      this.validateUploadedFileExistance,
       this.uploadAttachment.bind(this)
     );
     router.delete(
@@ -57,18 +57,42 @@ export class AttachmentsController extends BaseController {
       this.validationResult,
       this.getAttachmentPresignedUrl.bind(this)
     );
-
     return router;
+  }
+
+  /**
+   * Validates the upload file existance.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Response|void}
+   */
+  private validateUploadedFileExistance(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    if (!req.file) {
+      return res.boom.badRequest(null, {
+        errorType: 'FILE_UPLOAD_FAILED',
+        message: 'Now file uploaded.',
+      });
+    }
+    next();
   }
 
   /**
    * Uploads the attachments to S3 and store the file metadata to DB.
    * @param {Request} req
    * @param {Response} res
-   * @param {Function} next
-   * @returns
+   * @param {NextFunction} next
+   * @returns {Response|void}
    */
-  private async uploadAttachment(req: Request, res: Response, next: Function) {
+  private async uploadAttachment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { tenantId } = req;
     const file = req.file;
 
@@ -86,12 +110,17 @@ export class AttachmentsController extends BaseController {
   }
 
   /**
-   *
+   * Retrieves the given attachment key.
    * @param {Request} req
    * @param {Response} res
-   * @param next
+   * @param {NextFunction} next
+   * @returns {Promise<Response|void>}
    */
-  private async getAttachment(req: Request, res: Response, next: Function) {
+  private async getAttachment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { tenantId } = req;
     const { id } = req.params;
 
@@ -118,9 +147,13 @@ export class AttachmentsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
+   * @returns {Promise<Response|void>}
    */
-  private async deleteAttachment(req: Request, res: Response, next: Function) {
+  private async deleteAttachment(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { tenantId } = req;
     const { id: documentId } = req.params;
 
@@ -141,9 +174,13 @@ export class AttachmentsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
+   * @returns {Promise<Response|void>}
    */
-  private async linkDocument(req: Request, res: Response, next: Function) {
+  private async linkDocument(
+    req: Request,
+    res: Response,
+    next: Function
+  ): Promise<Response | void> {
     const { tenantId } = req;
     const { id: documentId } = req.params;
     const { modelRef, modelId } = this.matchedBodyData(req);
@@ -169,9 +206,13 @@ export class AttachmentsController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
+   * @returns {Promise<Response|void>}
    */
-  private async unlinkDocument(req: Request, res: Response, next: Function) {
+  private async unlinkDocument(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
     const { tenantId } = req;
     const { id: documentId } = req.params;
     const { modelRef, modelId } = this.matchedBodyData(req);
@@ -196,13 +237,14 @@ export class AttachmentsController extends BaseController {
    * Retreives the presigned url of the given attachment key.
    * @param {Request} req
    * @param {Response} res
-   * @param next
+   * @param {NextFunction} next
+   * @returns {Promise<Response|void>}
    */
   private async getAttachmentPresignedUrl(
     req: Request,
     res: Response,
-    next: any
-  ) {
+    next: NextFunction
+  ): Promise<Response | void> {
     const { id: documentKey } = req.params;
 
     try {

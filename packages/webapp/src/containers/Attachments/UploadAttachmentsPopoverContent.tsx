@@ -12,9 +12,9 @@ import {
   useGetPresignedUrlAttachment,
   useUploadAttachments,
 } from '@/hooks/query/attachments';
-import { formatBytes } from '../Sales/Invoices/InvoiceForm/utils';
 import styles from './UploadAttachmentPopoverContent.module.scss';
 import { MIME_TYPES } from '@/components/Dropzone/mine-types';
+import { formatBytes } from '@/utils/format-bytes';
 
 interface AttachmentFileCommon {
   originName: string;

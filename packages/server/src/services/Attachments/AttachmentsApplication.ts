@@ -6,6 +6,7 @@ import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { LinkAttachment } from './LinkAttachment';
 import { UnlinkAttachment } from './UnlinkAttachment';
 import { getAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
+import type { Multer } from 'multer';
 
 @Service()
 export class AttachmentsApplication {
@@ -31,18 +32,18 @@ export class AttachmentsApplication {
   private getPresignedUrlService: getAttachmentPresignedUrl;
 
   /**
-   *
-   * @returns
+   * Express middleware for uploading attachments to an S3 bucket.
+   * @returns {Multer}
    */
-  get uploadPipeline() {
+  get uploadPipeline(): Multer {
     return this.uploadPipelineService.uploadPipeline();
   }
 
   /**
-   * Uploads
+   * Saves the metadata of uploaded document to S3 on database.
    * @param {number} tenantId
    * @param {} file
-   * @returns
+   * @returns {Promise<Document>}
    */
   public upload(tenantId: number, file: any) {
     return this.uploadDocumentService.upload(tenantId, file);
