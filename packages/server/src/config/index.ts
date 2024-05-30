@@ -233,10 +233,10 @@ module.exports = {
    * S3 for documents.
    */
   s3: {
-    region: process.env.AWS_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    endpoint: process.env.AWS_ENDPOINT,
-    bucket: process.env.AWS_BUCKET,
+    region: process.env.S3_REGION,
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    endpoint: process.env.S3_ENDPOINT,
+    bucket: process.env.S3_BUCKET,
   },
 };

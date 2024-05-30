@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
-import { s3 } from '@/lib/S3/S3';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { s3 } from '@/lib/S3/S3';
+import config from '@/config';
 
 @Service()
 export class GetAttachment {
@@ -11,7 +12,7 @@ export class GetAttachment {
    */
   async getAttachment(tenantId: number, filekey: string) {
     const params = {
-      Bucket: process.env.AWS_BUCKET,
+      Bucket: config.s3.bucket,
       Key: filekey,
     };
     const data = await s3.send(new GetObjectCommand(params));
