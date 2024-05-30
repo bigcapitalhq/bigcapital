@@ -114,6 +114,7 @@ export class EditSaleEstimate {
         estimateId,
         saleEstimate,
         oldSaleEstimate,
+        estimateDTO,
         trx,
       } as ISaleEstimateEditedPayload);
 

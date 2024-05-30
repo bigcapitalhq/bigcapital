@@ -16,6 +16,10 @@ import {
 } from '@/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { PAYMENT_MADE_ERRORS } from '../constants';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const ERRORS = {
   PAYMENT_NUMBER_NOT_UNIQUE: 'PAYMENT.NUMBER.NOT.UNIQUE',
@@ -44,9 +48,12 @@ export const defaultPaymentMade = {
   branch_id: '',
   exchange_rate: 1,
   entries: [],
+  attachments: [],
 };
 
 export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
+  const attachments = transformAttachmentsToForm(paymentMade);
+
   return {
     ...transformToForm(paymentMade, defaultPaymentMade),
     full_amount: safeSumBy(paymentMadeEntries, 'payment_amount'),
@@ -56,6 +63,7 @@ export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
         payment_amount: paymentMadeEntry.payment_amount || '',
       })),
     ],
+    attachments,
   };
 };
 
@@ -101,7 +109,9 @@ export const transformFormToRequest = (form) => {
       ...pick(entry, ['payment_amount', 'bill_id']),
     }));
 
-  return { ...form, entries: orderingLinesIndexes(entries) };
+  const attachments = transformAttachmentsToRequest(form);
+
+  return { ...form, entries: orderingLinesIndexes(entries), attachments };
 };
 
 export const useSetPrimaryBranchToForm = () => {

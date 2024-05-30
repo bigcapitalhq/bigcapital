@@ -18,6 +18,10 @@ import {
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -56,6 +60,7 @@ export const defaultEstimate = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultEstimateEntry, MIN_LINES_NUMBER)],
+  attachments: []
 };
 
 const ERRORS = {
@@ -78,9 +83,12 @@ export const transformToEditForm = (estimate) => {
     updateItemsEntriesTotal,
   )(initialEntries);
 
+  const attachments = transformAttachmentsToForm(estimate);
+
   return {
     ...transformToForm(estimate, defaultEstimate),
     entries,
+    attachments,
   };
 };
 
@@ -150,6 +158,8 @@ export const transfromsFormValuesToRequest = (values) => {
   const entries = values.entries.filter(
     (item) => item.item_id && item.quantity,
   );
+  const attachments = transformAttachmentsToRequest(values);
+
   return {
     ...omit(values, ['estimate_number_manually', 'estimate_number']),
     // The `estimate_number_manually` will be presented just if the auto-increment
@@ -160,6 +170,7 @@ export const transfromsFormValuesToRequest = (values) => {
     entries: entries.map((entry) => ({
       ...transformToForm(entry, defaultEstimateEntryReq),
     })),
+    attachments,
   };
 };
 

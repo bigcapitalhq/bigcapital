@@ -110,6 +110,7 @@ export class EditSaleReceipt {
         oldSaleReceipt,
         saleReceipt,
         saleReceiptId,
+        saleReceiptDTO,
         trx,
       } as ISaleReceiptEditedPayload);
 

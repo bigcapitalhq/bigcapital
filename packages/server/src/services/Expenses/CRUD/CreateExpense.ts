@@ -123,6 +123,7 @@ export class CreateExpense {
           tenantId,
           expenseId: expense.id,
           authorizedUser,
+          expenseDTO,
           expense,
           trx,
         } as IExpenseCreatedPayload);

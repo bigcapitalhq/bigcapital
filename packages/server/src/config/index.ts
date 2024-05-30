@@ -157,7 +157,10 @@ module.exports = {
    * Sign-up email confirmation
    */
   signupConfirmation: {
-    enabled: parseBoolean<boolean>(process.env.SIGNUP_EMAIL_CONFIRMATION, false),
+    enabled: parseBoolean<boolean>(
+      process.env.SIGNUP_EMAIL_CONFIRMATION,
+      false
+    ),
   },
 
   /**
@@ -225,4 +228,15 @@ module.exports = {
     defaultTo(process.env.HOSTED_ON_BIGCAPITAL_CLOUD, false),
     false
   ),
+
+  /**
+   * S3 for documents.
+   */
+  s3: {
+    region: process.env.AWS_REGION,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    endpoint: process.env.AWS_ENDPOINT,
+    bucket: process.env.AWS_BUCKET,
+  },
 };

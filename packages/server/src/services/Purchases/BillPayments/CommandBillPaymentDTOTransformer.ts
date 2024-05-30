@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
-import { sumBy } from 'lodash';
+import { omit, sumBy } from 'lodash';
 import { IBillPayment, IBillPaymentDTO, IVendor } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
@@ -24,7 +24,9 @@ export class CommandBillPaymentDTOTransformer {
     oldBillPayment?: IBillPayment
   ): Promise<IBillPayment> {
     const initialDTO = {
-      ...formatDateFields(billPaymentDTO, ['paymentDate']),
+      ...formatDateFields(omit(billPaymentDTO, ['attachments']), [
+        'paymentDate',
+      ]),
       amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
       currencyCode: vendor.currencyCode,
       exchangeRate: billPaymentDTO.exchangeRate || 1,

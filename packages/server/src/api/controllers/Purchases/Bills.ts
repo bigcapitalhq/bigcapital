@@ -118,7 +118,6 @@ export default class BillsController extends BaseController {
       check('is_inclusive_tax').default(false).isBoolean().toBoolean(),
 
       check('entries').isArray({ min: 1 }),
-
       check('entries.*.index').exists().isNumeric().toInt(),
       check('entries.*.item_id').exists().isNumeric().toInt(),
       check('entries.*.rate').exists().isNumeric().toFloat(),
@@ -148,6 +147,9 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 
@@ -190,6 +192,9 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isBoolean()
         .toBoolean(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 

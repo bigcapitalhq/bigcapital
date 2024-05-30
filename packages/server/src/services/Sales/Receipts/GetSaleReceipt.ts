@@ -28,7 +28,8 @@ export class GetSaleReceipt {
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
       .withGraphFetched('depositAccount')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('attachments');
 
     // Valdiates the sale receipt existance.
     this.validators.validateReceiptExistance(saleReceipt);

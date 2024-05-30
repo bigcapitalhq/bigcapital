@@ -158,6 +158,8 @@ export default class SalesReceiptsController extends BaseController {
         .toInt(),
       check('receipt_message').optional().trim().escape(),
       check('statement').optional().trim().escape(),
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 

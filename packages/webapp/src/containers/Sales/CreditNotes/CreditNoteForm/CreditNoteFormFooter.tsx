@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { CreditNoteFormFooterLeft } from './CreditNoteFormFooterLeft';
 import { CreditNoteFormFooterRight } from './CreditNoteFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Credit note form footer.
@@ -18,6 +19,7 @@ export default function CreditNoteFormFooter() {
         <Row>
           <Col md={8}>
             <CreditNoteFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

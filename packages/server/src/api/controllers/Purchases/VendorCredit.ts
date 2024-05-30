@@ -186,6 +186,9 @@ export default class VendorCreditController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 
@@ -228,6 +231,9 @@ export default class VendorCreditController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 

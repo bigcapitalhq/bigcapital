@@ -58,10 +58,10 @@ export class SaleEstimateDTOTransformer {
 
     const initialDTO = {
       amount,
-      ...formatDateFields(omit(estimateDTO, ['delivered', 'entries']), [
-        'estimateDate',
-        'expirationDate',
-      ]),
+      ...formatDateFields(
+        omit(estimateDTO, ['delivered', 'entries', 'attachments']),
+        ['estimateDate', 'expirationDate']
+      ),
       currencyCode: paymentCustomer.currencyCode,
       exchangeRate: estimateDTO.exchangeRate || 1,
       ...(estimateNumber ? { estimateNumber } : {}),

@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IItemEntry, IItemEntryDTO } from './ItemEntry';
 import { IDynamicListFilterDTO } from '@/interfaces/DynamicFilter';
 import { CommonMailOptions, CommonMailOptionsDTO } from './Mailable';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface ISaleEstimate {
   id?: number;
@@ -38,6 +39,7 @@ export interface ISaleEstimateDTO {
 
   branchId?: number;
   warehouseId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface ISalesEstimatesFilter extends IDynamicListFilterDTO {
@@ -70,6 +72,7 @@ export interface ISaleEstimateEditedPayload {
   estimateId: number;
   saleEstimate: ISaleEstimate;
   oldSaleEstimate: ISaleEstimate;
+  estimateDTO: ISaleEstimateDTO;
   trx: Knex.Transaction;
 }
 

@@ -18,6 +18,10 @@ import {
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -56,6 +60,7 @@ export const defaultReceipt = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultReceiptEntry, MIN_LINES_NUMBER)],
+  attachments: [],
 };
 
 const ERRORS = {
@@ -81,9 +86,12 @@ export const transformToEditForm = (receipt) => {
     updateItemsEntriesTotal,
   )(initialEntries);
 
+  const attachments = transformAttachmentsToForm(receipt);
+
   return {
     ...transformToForm(receipt, defaultReceipt),
     entries,
+    attachments,
   };
 };
 
@@ -142,6 +150,7 @@ export const transformFormValuesToRequest = (values) => {
   const entries = values.entries.filter(
     (item) => item.item_id && item.quantity,
   );
+  const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...omit(values, ['receipt_number_manually', 'receipt_number']),
@@ -152,6 +161,7 @@ export const transformFormValuesToRequest = (values) => {
       ...transformToForm(entry, defaultReceiptEntryReq),
     })),
     closed: false,
+    attachments,
   };
 };
 

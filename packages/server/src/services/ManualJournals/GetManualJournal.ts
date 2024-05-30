@@ -28,7 +28,7 @@ export class GetManualJournal {
       .withGraphFetched('entries.contact')
       .withGraphFetched('entries.branch')
       .withGraphFetched('transactions')
-      .withGraphFetched('media')
+      .withGraphFetched('attachments')
       .throwIfNotFound();
 
     return this.transformer.transform(

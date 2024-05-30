@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { EstimateFormFooterLeft } from './EstimateFormFooterLeft';
 import { EstimateFormFooterRight } from './EstimateFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Estimate form footer.
@@ -18,6 +19,7 @@ export default function EstiamteFormFooter() {
         <Row>
           <Col md={8}>
             <EstimateFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

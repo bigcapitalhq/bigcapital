@@ -62,6 +62,7 @@ import { ImportController } from './controllers/Import/ImportController';
 import { BankingController } from './controllers/Banking/BankingController';
 import { Webhooks } from './controllers/Webhooks/Webhooks';
 import { ExportController } from './controllers/Export/ExportController';
+import { AttachmentsController } from './controllers/Attachments/AttachmentsController';
 
 export default () => {
   const app = Router();
@@ -142,7 +143,8 @@ export default () => {
   dashboard.use('/projects', Container.get(ProjectsController).router());
   dashboard.use('/tax-rates', Container.get(TaxRatesController).router());
   dashboard.use('/import', Container.get(ImportController).router());
-  dashboard.use('/export', Container.get(ExportController).router())
+  dashboard.use('/export', Container.get(ExportController).router());
+  dashboard.use('/attachments', Container.get(AttachmentsController).router());
 
   dashboard.use('/', Container.get(ProjectTasksController).router());
   dashboard.use('/', Container.get(ProjectTimesController).router());

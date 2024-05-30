@@ -36,6 +36,8 @@ export default class SaleInvoicesController extends BaseController {
       [
         ...this.saleInvoiceValidationSchema,
         check('from_estimate_id').optional().isNumeric().toInt(),
+        check('attachments').isArray().optional(),
+        check('attachments.*.key').exists().isString(),
       ],
       this.validationResult,
       asyncMiddleware(this.newSaleInvoice.bind(this)),
@@ -98,6 +100,8 @@ export default class SaleInvoicesController extends BaseController {
       [
         ...this.saleInvoiceValidationSchema,
         ...this.specificSaleInvoiceValidation,
+        check('attachments').isArray().optional(),
+        check('attachments.*.key').exists().isString(),
       ],
       this.validationResult,
       asyncMiddleware(this.editSaleInvoice.bind(this)),

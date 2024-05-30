@@ -180,7 +180,7 @@ export default class Expense extends mixin(TenantModel, [
   static get relationMappings() {
     const Account = require('models/Account');
     const ExpenseCategory = require('models/ExpenseCategory');
-    const Media = require('models/Media');
+    const Document = require('models/Document');
     const Branch = require('models/Branch');
 
     return {
@@ -217,21 +217,21 @@ export default class Expense extends mixin(TenantModel, [
       },
 
       /**
-       * 
+       * Expense transaction may has many attached attachments.
        */
-      media: {
+      attachments: {
         relation: Model.ManyToManyRelation,
-        modelClass: Media.default,
+        modelClass: Document.default,
         join: {
           from: 'expenses_transactions.id',
           through: {
-            from: 'media_links.model_id',
-            to: 'media_links.media_id',
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
           },
-          to: 'media.id',
+          to: 'documents.id',
         },
         filter(query) {
-          query.where('model_name', 'Expense');
+          query.where('model_ref', 'Expense');
         },
       },
     };

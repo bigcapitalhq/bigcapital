@@ -60,9 +60,10 @@ import Time from 'models/Time';
 import Task from 'models/Task';
 import TaxRate from 'models/TaxRate';
 import TaxRateTransaction from 'models/TaxRateTransaction';
-import Attachment from 'models/Attachment';
 import PlaidItem from 'models/PlaidItem';
 import UncategorizedCashflowTransaction from 'models/UncategorizedCashflowTransaction';
+import Document from '@/models/Document';
+import DocumentLink from '@/models/DocumentLink';
 
 export default (knex) => {
   const models = {
@@ -126,9 +127,10 @@ export default (knex) => {
     Task,
     TaxRate,
     TaxRateTransaction,
-    Attachment,
+    Document,
+    DocumentLink,
     PlaidItem,
-    UncategorizedCashflowTransaction
+    UncategorizedCashflowTransaction,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };

@@ -32,6 +32,7 @@ import {
   defaultManualJournal,
 } from './utils';
 import { JournalSyncIncrementSettingsToForm } from './components';
+import { transformAttachmentsToRequest } from '@/containers/Attachments/utils';
 
 /**
  * Journal entries form.
@@ -61,7 +62,6 @@ function MakeJournalEntriesForm({
     journalNumberPrefix,
     journalNextNumber,
   );
-
   // Form initial values.
   const initialValues = useMemo(
     () => ({
@@ -112,6 +112,7 @@ function MakeJournalEntriesForm({
       setSubmitting(false);
       return;
     }
+    const attachments = transformAttachmentsToRequest(values);
     const form = {
       ...omit(values, ['journal_number_manually']),
       ...(values.journal_number_manually && {
@@ -119,6 +120,7 @@ function MakeJournalEntriesForm({
       }),
       entries: R.compose(orderingLinesIndexes)(entries),
       publish: submitPayload.publish,
+      attachments,
     };
     // Handle the request error.
     const handleError = ({

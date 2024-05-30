@@ -96,7 +96,7 @@ export class BillDTOTransformer {
     )(asyncEntries);
 
     const initialDTO = {
-      ...formatDateFields(omit(billDTO, ['open', 'entries']), [
+      ...formatDateFields(omit(billDTO, ['open', 'entries', 'attachments']), [
         'billDate',
         'dueDate',
       ]),

@@ -93,6 +93,7 @@ export default class EditVendorCredit extends BaseVendorCredit {
         oldVendorCredit,
         vendorCredit,
         vendorCreditId,
+        vendorCreditDTO,
         trx,
       } as IVendorCreditEditedPayload);
 

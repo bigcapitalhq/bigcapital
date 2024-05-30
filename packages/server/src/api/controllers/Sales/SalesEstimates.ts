@@ -184,6 +184,9 @@ export default class SalesEstimatesController extends BaseController {
       check('note').optional().trim().escape(),
       check('terms_conditions').optional().trim().escape(),
       check('send_to_email').optional().trim().escape(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 

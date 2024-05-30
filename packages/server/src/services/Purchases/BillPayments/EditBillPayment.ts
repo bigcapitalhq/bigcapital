@@ -137,6 +137,7 @@ export class EditBillPayment {
         billPaymentId,
         billPayment,
         oldBillPayment,
+        billPaymentDTO,
         trx,
       } as IBillPaymentEventEditedPayload);
 

@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { PaymentMadeFormFooterLeft } from './PaymentMadeFormFooterLeft';
 import { PaymentMadeFormFooterRight } from './PaymentMadeFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 /**
  * Payment made form footer.
@@ -18,6 +19,7 @@ export default function PaymentMadeFooter() {
         <Row>
           <Col md={8}>
             <PaymentMadeFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 import { IBill } from './Bill';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface IBillPaymentEntry {
   id?: number;
@@ -45,6 +46,7 @@ export interface IBillPaymentDTO {
   reference: string;
   entries: IBillPaymentEntryDTO[];
   branchId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IBillReceivePageEntry {
@@ -66,6 +68,7 @@ export interface IBillPaymentsService {
 export interface IBillPaymentEventCreatedPayload {
   tenantId: number;
   billPayment: IBillPayment;
+  billPaymentDTO: IBillPaymentDTO;
   billPaymentId: number;
   trx: Knex.Transaction;
 }
@@ -87,6 +90,7 @@ export interface IBillPaymentEventEditedPayload {
   billPaymentId: number;
   billPayment: IBillPayment;
   oldBillPayment: IBillPayment;
+  billPaymentDTO: IBillPaymentDTO;
   trx: Knex.Transaction;
 }
 

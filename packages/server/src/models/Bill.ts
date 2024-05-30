@@ -403,6 +403,7 @@ export default class Bill extends mixin(TenantModel, [
     const BillLandedCost = require('models/BillLandedCost');
     const Branch = require('models/Branch');
     const TaxRateTransaction = require('models/TaxRateTransaction');
+    const Document = require('models/Document');
 
     return {
       vendor: {
@@ -463,6 +464,25 @@ export default class Bill extends mixin(TenantModel, [
         },
         filter(builder) {
           builder.where('reference_type', 'Bill');
+        },
+      },
+
+      /**
+       * Bill may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'bills.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'Bill');
         },
       },
     };

@@ -108,6 +108,7 @@ export default class SaleReceipt extends mixin(TenantModel, [
     const AccountTransaction = require('models/AccountTransaction');
     const ItemEntry = require('models/ItemEntry');
     const Branch = require('models/Branch');
+    const Document = require('models/Document');
 
     return {
       customer: {
@@ -165,6 +166,25 @@ export default class SaleReceipt extends mixin(TenantModel, [
         join: {
           from: 'sales_receipts.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Sale receipt transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'sales_receipts.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'SaleReceipt');
         },
       },
     };

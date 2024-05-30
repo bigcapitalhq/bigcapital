@@ -78,7 +78,7 @@ export class EditManualJournal {
 
     return {
       id: oldManualJournal.id,
-      ...omit(manualJournalDTO, ['publish']),
+      ...omit(manualJournalDTO, ['publish', 'attachments']),
       ...(manualJournalDTO.publish && !oldManualJournal.publishedAt
         ? { publishedAt: moment().toMySqlDateTime() }
         : {}),
@@ -143,6 +143,7 @@ export class EditManualJournal {
         tenantId,
         manualJournal,
         oldManualJournal,
+        manualJournalDTO,
         trx,
       } as IManualJournalEventEditedPayload);
 

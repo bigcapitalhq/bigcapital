@@ -29,6 +29,7 @@ export class GetExpense {
       .withGraphFetched('categories.expenseAccount')
       .withGraphFetched('paymentAccount')
       .withGraphFetched('branch')
+      .withGraphFetched('attachments')
       .throwIfNotFound();
 
     // Transformes expense model to POJO.

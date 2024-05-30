@@ -68,9 +68,10 @@ export class SaleReceiptDTOTransformer {
 
     const initialDTO = {
       amount,
-      ...formatDateFields(omit(saleReceiptDTO, ['closed', 'entries']), [
-        'receiptDate',
-      ]),
+      ...formatDateFields(
+        omit(saleReceiptDTO, ['closed', 'entries', 'attachments']),
+        ['receiptDate']
+      ),
       currencyCode: paymentCustomer.currencyCode,
       exchangeRate: saleReceiptDTO.exchangeRate || 1,
       receiptNumber,

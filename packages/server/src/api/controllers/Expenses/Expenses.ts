@@ -84,7 +84,7 @@ export class ExpensesController extends BaseController {
   /**
    * Expense DTO schema.
    */
-  get expenseDTOSchema() {
+  private get expenseDTOSchema() {
     return [
       check('reference_no')
         .optional({ nullable: true })
@@ -130,6 +130,9 @@ export class ExpensesController extends BaseController {
         .optional({ nullable: true })
         .isInt({ max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 
@@ -183,6 +186,9 @@ export class ExpensesController extends BaseController {
         .optional({ nullable: true })
         .isInt({ max: DATATYPES_LENGTH.INT_10 })
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 
@@ -269,7 +275,7 @@ export class ExpensesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async deleteExpense(req: Request, res: Response, next: NextFunction) {
+  private async deleteExpense(req: Request, res: Response, next: NextFunction) {
     const { tenantId, user } = req;
     const { id: expenseId } = req.params;
 
@@ -291,7 +297,11 @@ export class ExpensesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async publishExpense(req: Request, res: Response, next: NextFunction) {
+  private async publishExpense(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId, user } = req;
     const { id: expenseId } = req.params;
 
@@ -313,7 +323,11 @@ export class ExpensesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getExpensesList(req: Request, res: Response, next: NextFunction) {
+  private async getExpensesList(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const filter = {
       sortOrder: 'desc',
@@ -343,7 +357,7 @@ export class ExpensesController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  async getExpense(req: Request, res: Response, next: NextFunction) {
+  private async getExpense(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: expenseId } = req.params;
 

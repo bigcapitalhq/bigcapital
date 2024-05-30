@@ -57,7 +57,7 @@ export default class BaseCreditNotes {
       autoNextNumber;
 
     const initialDTO = {
-      ...omit(creditNoteDTO, ['open']),
+      ...omit(creditNoteDTO, ['open', 'attachments']),
       creditNoteNumber,
       amount,
       currencyCode: customerCurrencyCode,

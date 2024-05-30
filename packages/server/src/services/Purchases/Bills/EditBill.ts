@@ -148,6 +148,7 @@ export class EditBill {
         billId,
         oldBill,
         bill,
+        billDTO,
         trx,
       } as IBillEditedPayload);
 

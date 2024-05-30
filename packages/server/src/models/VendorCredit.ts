@@ -177,6 +177,7 @@ export default class VendorCredit extends mixin(TenantModel, [
     const Vendor = require('models/Vendor');
     const ItemEntry = require('models/ItemEntry');
     const Branch = require('models/Branch');
+    const Document = require('models/Document');
 
     return {
       vendor: {
@@ -213,6 +214,25 @@ export default class VendorCredit extends mixin(TenantModel, [
         join: {
           from: 'vendor_credits.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Vendor credit may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'vendor_credits.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'VendorCredit');
         },
       },
     };
