@@ -11,6 +11,9 @@ export interface ISystemUser extends Model {
   password: string;
   email: string;
 
+  verifyToken: string;
+  verified: boolean;
+
   roleId: number;
   tenantId: number;
 
