@@ -2,6 +2,7 @@ import { ISaleEstimate } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 
 export class SaleEstimateTransfromer extends Transformer {
   /**
@@ -18,6 +19,7 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
       'entries',
+      'attachments',
     ];
   };
 
@@ -91,9 +93,18 @@ export class SaleEstimateTransfromer extends Transformer {
    * @param {ISaleEstimate} estimate
    * @returns {}
    */
-  protected entries = (estimate) => {
+  protected entries = (estimate: ISaleEstimate) => {
     return this.item(estimate.entries, new ItemEntryTransformer(), {
       currencyCode: estimate.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the sale estimate attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (estimate: ISaleEstimate) => {
+    return this.item(estimate.attachments, new AttachmentTransformer());
   };
 }

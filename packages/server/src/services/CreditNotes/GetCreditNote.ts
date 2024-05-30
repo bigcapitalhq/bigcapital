@@ -28,7 +28,8 @@ export default class GetCreditNote extends BaseCreditNotes {
       .findById(creditNoteId)
       .withGraphFetched('entries.item')
       .withGraphFetched('customer')
-      .withGraphFetched('branch');
+      .withGraphFetched('branch')
+      .withGraphFetched('attachments');
 
     if (!creditNote) {
       throw new ServiceError(ERRORS.CREDIT_NOTE_NOT_FOUND);

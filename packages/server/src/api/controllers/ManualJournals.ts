@@ -77,14 +77,14 @@ export default class ManualJournalsController extends BaseController {
   /**
    * Specific manual journal id param validation schema.
    */
-  get manualJournalParamSchema() {
+  private get manualJournalParamSchema() {
     return [param('id').exists().isNumeric().toInt()];
   }
 
   /**
    * Manual journal DTO schema.
    */
-  get manualJournalValidationSchema() {
+  private get manualJournalValidationSchema() {
     return [
       check('date').exists().isISO8601(),
       check('currency_code').optional(),
@@ -148,13 +148,16 @@ export default class ManualJournalsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
+
+      check('attachments').isArray().optional(),
+      check('attachments.*.key').exists().isString(),
     ];
   }
 
   /**
    * Manual journals list validation schema.
    */
-  get manualJournalsListSchema() {
+  private get manualJournalsListSchema() {
     return [
       query('page').optional().isNumeric().toInt(),
       query('page_size').optional().isNumeric().toInt(),
@@ -320,7 +323,7 @@ export default class ManualJournalsController extends BaseController {
    * @param {Response} res
    * @param {NextFunction} next
    */
-  getManualJournalsList = async (
+  private getManualJournalsList = async (
     req: Request,
     res: Response,
     next: NextFunction

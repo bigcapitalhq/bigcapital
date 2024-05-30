@@ -110,6 +110,7 @@ export class CreateBill {
           tenantId,
           bill,
           billId: bill.id,
+          billDTO,
           trx,
         } as IBillCreatedPayload);
 

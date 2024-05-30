@@ -6,6 +6,7 @@ import {
 } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
 import { ISaleInvoice } from './SaleInvoice';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface IPaymentReceive {
   id?: number;
@@ -37,6 +38,7 @@ export interface IPaymentReceiveCreateDTO {
   entries: IPaymentReceiveEntryDTO[];
 
   branchId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IPaymentReceiveEditDTO {
@@ -50,6 +52,7 @@ export interface IPaymentReceiveEditDTO {
   statement: string;
   entries: IPaymentReceiveEntryDTO[];
   branchId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IPaymentReceiveEntry {
@@ -114,6 +117,7 @@ export interface IPaymentReceiveCreatedPayload {
   paymentReceive: IPaymentReceive;
   paymentReceiveId: number;
   authorizedUser: ISystemUser;
+  paymentReceiveDTO: IPaymentReceiveCreateDTO;
   trx: Knex.Transaction;
 }
 
@@ -122,6 +126,7 @@ export interface IPaymentReceiveEditedPayload {
   paymentReceiveId: number;
   paymentReceive: IPaymentReceive;
   oldPaymentReceive: IPaymentReceive;
+  paymentReceiveDTO: IPaymentReceiveEditDTO;
   authorizedUser: ISystemUser;
   trx: Knex.Transaction;
 }

@@ -3,6 +3,7 @@ import { ISaleReceipt } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { ItemEntryTransformer } from '../Invoices/ItemEntryTransformer';
+import { AttachmentTransformer } from '@/services/Attachments/AttachmentTransformer';
 
 @Service()
 export class SaleReceiptTransformer extends Transformer {
@@ -17,6 +18,7 @@ export class SaleReceiptTransformer extends Transformer {
       'formattedReceiptDate',
       'formattedClosedAtDate',
       'entries',
+      'attachments',
     ];
   };
 
@@ -67,5 +69,14 @@ export class SaleReceiptTransformer extends Transformer {
     return this.item(receipt.entries, new ItemEntryTransformer(), {
       currencyCode: receipt.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the sale receipt attachments.
+   * @param {ISaleReceipt} invoice
+   * @returns
+   */
+  protected attachments = (receipt) => {
+    return this.item(receipt.attachments, new AttachmentTransformer());
   };
 }

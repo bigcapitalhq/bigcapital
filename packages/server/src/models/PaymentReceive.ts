@@ -56,6 +56,7 @@ export default class PaymentReceive extends mixin(TenantModel, [
     const Customer = require('models/Customer');
     const Account = require('models/Account');
     const Branch = require('models/Branch');
+    const Document = require('models/Document');
 
     return {
       customer: {
@@ -109,6 +110,25 @@ export default class PaymentReceive extends mixin(TenantModel, [
         join: {
           from: 'payment_receives.branchId',
           to: 'branches.id',
+        },
+      },
+
+      /**
+       * Payment transaction may has many attached attachments.
+       */
+      attachments: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Document.default,
+        join: {
+          from: 'payment_receives.id',
+          through: {
+            from: 'document_links.modelId',
+            to: 'document_links.documentId',
+          },
+          to: 'documents.id',
+        },
+        filter(query) {
+          query.where('model_ref', 'PaymentReceive');
         },
       },
     };

@@ -54,7 +54,7 @@ export class ExpenseDTOTransformer {
 
     const initialDTO = {
       categories: [],
-      ...omit(expenseDTO, ['publish']),
+      ...omit(expenseDTO, ['publish', 'attachments']),
       totalAmount,
       landedCostAmount,
       paymentDate: moment(expenseDTO.paymentDate).toMySqlDateTime(),

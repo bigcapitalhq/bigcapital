@@ -10,8 +10,14 @@ import {
   DataError,
 } from 'objection';
 
-// In this example `res` is an express response object.
-export default function ObjectionErrorHandlerMiddleware(
+/**
+ * Handles the Objection error exception.
+ * @param {Error} err
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ */
+export function ObjectionErrorException(
   err: Error,
   req: Request,
   res: Response,
@@ -108,6 +114,7 @@ export default function ObjectionErrorHandlerMiddleware(
       type: 'UnknownDatabaseError',
       data: {},
     });
+  } else {
+    next(err);
   }
-  next(err);
 }

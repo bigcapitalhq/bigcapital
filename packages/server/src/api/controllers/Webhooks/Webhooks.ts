@@ -34,14 +34,21 @@ export class Webhooks extends BaseController {
    * @param {Response} res
    * @returns {Response}
    */
-  public async lemonWebhooks(req: Request, res: Response) {
+  public async lemonWebhooks(req: Request, res: Response, next: any) {
     const data = req.body;
     const signature = req.headers['x-signature'] ?? '';
     const rawBody = req.rawBody;
 
-    await this.lemonWebhooksService.handlePostWebhook(rawBody, data, signature);
-
-    return res.status(200).send();
+    try {
+      await this.lemonWebhooksService.handlePostWebhook(
+        rawBody,
+        data,
+        signature
+      );
+      return res.status(200).send();
+    } catch (error) {
+      next(error);
+    }
   }
 
   /**

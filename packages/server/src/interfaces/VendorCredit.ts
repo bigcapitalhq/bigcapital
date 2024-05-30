@@ -1,5 +1,6 @@
 import { IDynamicListFilter, IItemEntry, IItemEntryDTO } from '@/interfaces';
 import { Knex } from 'knex';
+import { AttachmentLinkDTO } from './Attachments';
 
 export enum VendorCreditAction {
   Create = 'Create',
@@ -61,6 +62,7 @@ export interface IVendorCreditDTO {
 
   branchId?: number;
   warehouseId?: number;
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IVendorCreditCreateDTO extends IVendorCreditDTO {}
@@ -118,6 +120,7 @@ export interface IVendorCreditEditedPayload {
   oldVendorCredit: IVendorCredit;
   vendorCredit: IVendorCredit;
   vendorCreditId: number;
+  vendorCreditDTO: IVendorCreditEditDTO;
   trx: Knex.Transaction;
 }
 

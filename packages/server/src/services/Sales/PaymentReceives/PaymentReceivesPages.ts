@@ -66,7 +66,7 @@ export default class PaymentReceivesPages {
    */
   public async getPaymentReceiveEditPage(
     tenantId: number,
-    paymentReceiveId: number,
+    paymentReceiveId: number
   ): Promise<{
     paymentReceive: Omit<IPaymentReceive, 'entries'>;
     entries: IPaymentReceivePageEntry[];
@@ -76,7 +76,8 @@ export default class PaymentReceivesPages {
     // Retrieve payment receive.
     const paymentReceive = await PaymentReceive.query()
       .findById(paymentReceiveId)
-      .withGraphFetched('entries.invoice');
+      .withGraphFetched('entries.invoice')
+      .withGraphFetched('attachments');
 
     // Throw not found the payment receive.
     if (!paymentReceive) {

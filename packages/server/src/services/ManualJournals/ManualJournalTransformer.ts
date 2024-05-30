@@ -1,6 +1,7 @@
 import { IManualJournal } from '@/interfaces';
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
+import { AttachmentTransformer } from '../Attachments/AttachmentTransformer';
 
 export class ManualJournalTransfromer extends Transformer {
   /**
@@ -8,7 +9,12 @@ export class ManualJournalTransfromer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount', 'formattedDate', 'formattedPublishedAt'];
+    return [
+      'formattedAmount',
+      'formattedDate',
+      'formattedPublishedAt',
+      'attachments',
+    ];
   };
 
   /**
@@ -38,5 +44,14 @@ export class ManualJournalTransfromer extends Transformer {
    */
   protected formattedPublishedAt = (manualJorunal: IManualJournal): string => {
     return this.formatDate(manualJorunal.publishedAt);
+  };
+
+  /**
+   * Retrieves the manual journal attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (manualJorunal: IManualJournal) => {
+    return this.item(manualJorunal.attachments, new AttachmentTransformer());
   };
 }

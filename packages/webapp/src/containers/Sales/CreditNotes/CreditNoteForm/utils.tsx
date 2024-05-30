@@ -8,7 +8,6 @@ import {
   defaultFastFieldShouldUpdate,
   transformToForm,
   repeatValue,
-  transactionNumber,
   formattedAmount,
   orderingLinesIndexes,
 } from '@/utils';
@@ -21,6 +20,10 @@ import {
 } from '@/containers/Entries/utils';
 import { useCurrentOrganization } from '@/hooks/state';
 import { getEntriesTotal } from '@/containers/Entries/utils';
+import {
+  transformAttachmentsToForm,
+  transformAttachmentsToRequest,
+} from '@/containers/Attachments/utils';
 
 export const MIN_LINES_NUMBER = 1;
 
@@ -51,6 +54,7 @@ export const defaultCreditNote = {
   exchange_rate: 1,
   currency_code: '',
   entries: [...repeatValue(defaultCreditNoteEntry, MIN_LINES_NUMBER)],
+  attachments: []
 };
 
 /**
@@ -71,9 +75,12 @@ export function transformToEditForm(creditNote) {
     updateItemsEntriesTotal,
   )(initialEntries);
 
+  const attachment = transformAttachmentsToForm(creditNote);
+
   return {
     ...transformToForm(creditNote, defaultCreditNote),
     entries,
+    attachment,
   };
 }
 
@@ -103,11 +110,13 @@ export const filterNonZeroEntries = (entries) => {
  */
 export const transformFormValuesToRequest = (values) => {
   const entries = filterNonZeroEntries(values.entries);
+  const attachments = transformAttachmentsToRequest(values);
 
   return {
     ...values,
     entries: transformEntriesToSubmit(entries),
     open: false,
+    attachments,
   };
 };
 

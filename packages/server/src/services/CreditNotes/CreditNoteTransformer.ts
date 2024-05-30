@@ -2,6 +2,7 @@ import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from 'utils';
 import { ItemEntryTransformer } from '../Sales/Invoices/ItemEntryTransformer';
 import { ICreditNote } from '@/interfaces';
+import { AttachmentTransformer } from '../Attachments/AttachmentTransformer';
 
 export class CreditNoteTransformer extends Transformer {
   /**
@@ -16,6 +17,7 @@ export class CreditNoteTransformer extends Transformer {
       'formattedCreditsUsed',
       'formattedSubtotal',
       'entries',
+      'attachments',
     ];
   };
 
@@ -79,5 +81,14 @@ export class CreditNoteTransformer extends Transformer {
     return this.item(credit.entries, new ItemEntryTransformer(), {
       currencyCode: credit.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the credit note attachments.
+   * @param {ISaleInvoice} invoice
+   * @returns
+   */
+  protected attachments = (creditNote) => {
+    return this.item(creditNote.attachments, new AttachmentTransformer());
   };
 }

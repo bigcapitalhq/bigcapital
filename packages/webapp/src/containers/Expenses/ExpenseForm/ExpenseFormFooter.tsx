@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Row, Col, Paper } from '@/components';
 import { ExpenseFormFooterLeft } from './ExpenseFormFooterLeft';
 import { ExpenseFormFooterRight } from './ExpenseFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 export default function ExpenseFormFooter() {
   return (
@@ -15,6 +16,7 @@ export default function ExpenseFormFooter() {
         <Row>
           <Col md={8}>
             <ExpenseFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

@@ -7,6 +7,7 @@ import { CLASSES } from '@/constants/classes';
 import { Paper, Row, Col } from '@/components';
 import { ReceiptFormFooterLeft } from './ReceiptFormFooterLeft';
 import { ReceiptFormFooterRight } from './ReceiptFormFooterRight';
+import { UploadAttachmentButton } from '@/containers/Attachments/UploadAttachmentButton';
 
 export default function ReceiptFormFooter({}) {
   return (
@@ -15,6 +16,7 @@ export default function ReceiptFormFooter({}) {
         <Row>
           <Col md={8}>
             <ReceiptFormFooterLeft />
+            <UploadAttachmentButton />
           </Col>
 
           <Col md={4}>

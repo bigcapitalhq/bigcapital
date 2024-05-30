@@ -29,7 +29,8 @@ export class GetBill {
       .withGraphFetched('vendor')
       .withGraphFetched('entries.item')
       .withGraphFetched('branch')
-      .withGraphFetched('taxes.taxRate');
+      .withGraphFetched('taxes.taxRate')
+      .withGraphFetched('attachments');
 
     // Validates the bill existance.
     this.validators.validateBillExistance(bill);

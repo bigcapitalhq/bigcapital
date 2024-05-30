@@ -2,6 +2,7 @@ import { Knex } from 'knex';
 import { IDynamicListFilterDTO } from './DynamicFilter';
 import { ISystemUser } from './User';
 import { IAccount } from './Account';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface IManualJournal {
   id?: number;
@@ -56,6 +57,7 @@ export interface IManualJournalDTO {
   publish?: boolean;
   branchId?: number;
   entries: IManualJournalEntryDTO[];
+  attachments?: AttachmentLinkDTO[];
 }
 
 export interface IManualJournalsFilter extends IDynamicListFilterDTO {
@@ -142,6 +144,7 @@ export interface IManualJournalEventEditedPayload {
   tenantId: number;
   manualJournal: IManualJournal;
   oldManualJournal: IManualJournal;
+  manualJournalDTO: IManualJournalDTO;
   trx: Knex.Transaction;
 }
 export interface IManualJournalEditingPayload {
@@ -161,6 +164,7 @@ export interface IManualJournalEventCreatedPayload {
   tenantId: number;
   manualJournal: IManualJournal;
   manualJournalId: number;
+  manualJournalDTO: IManualJournalDTO;
   trx: Knex.Transaction;
 }
 

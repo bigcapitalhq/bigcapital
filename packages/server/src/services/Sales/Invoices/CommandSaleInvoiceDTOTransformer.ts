@@ -86,7 +86,12 @@ export class CommandSaleInvoiceDTOTransformer {
 
     const initialDTO = {
       ...formatDateFields(
-        omit(saleInvoiceDTO, ['delivered', 'entries', 'fromEstimateId']),
+        omit(saleInvoiceDTO, [
+          'delivered',
+          'entries',
+          'fromEstimateId',
+          'attachments',
+        ]),
         ['invoiceDate', 'dueDate']
       ),
       // Avoid rewrite the deliver date in edit mode when already published.

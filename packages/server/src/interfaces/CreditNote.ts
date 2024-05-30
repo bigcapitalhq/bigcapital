@@ -1,6 +1,7 @@
 import { Knex } from 'knex';
 import { IDynamicListFilter, IItemEntry, IVendorCredit } from '@/interfaces';
 import { ILedgerEntry } from './Ledger';
+import { AttachmentLinkDTO } from './Attachments';
 
 export interface ICreditNoteEntryNewDTO {
   index: number;
@@ -21,6 +22,7 @@ export interface ICreditNoteNewDTO {
   entries: ICreditNoteEntryNewDTO[];
   branchId?: number;
   warehouseId?: number;
+  attachments?: AttachmentLinkDTO[]
 }
 
 export interface ICreditNoteEditDTO {
@@ -33,6 +35,7 @@ export interface ICreditNoteEditDTO {
   entries: ICreditNoteEntryNewDTO[];
   branchId?: number;
   warehouseId?: number;
+  attachments?: AttachmentLinkDTO[]
 }
 
 export interface ICreditNoteEntry extends IItemEntry {}
