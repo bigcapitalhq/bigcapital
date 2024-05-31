@@ -5,7 +5,11 @@ import { PageProperties, PdfFormat } from '@/lib/Chromiumly/_types';
 import { UrlConverter } from '@/lib/Chromiumly/UrlConvert';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { Chromiumly } from '@/lib/Chromiumly/Chromiumly';
-import { PDF_FILE_EXPIRE_IN, getPdfFilesStorageDir } from './utils';
+import {
+  PDF_FILE_EXPIRE_IN,
+  getPdfFilePath,
+  getPdfFilesStorageDir,
+} from './utils';
 
 @Service()
 export class ChromiumlyHtmlConvert {
@@ -22,22 +26,16 @@ export class ChromiumlyHtmlConvert {
     tenantId: number,
     content: string
   ): Promise<[string, () => Promise<void>]> {
-    const { Attachment } = this.tenancy.models(tenantId);
+    const { Document } = this.tenancy.models(tenantId);
 
-    const filename = `document-${Date.now()}.html`;
-    const storageDir = getPdfFilesStorageDir(filename);
-    const filePath = path.join(global.__storage_dir, storageDir);
+    const filename = `document-print-${Date.now()}.html`;
+    const filePath = getPdfFilePath(filename);
 
     await fs.writeFile(filePath, content);
-    await Attachment.query().insert({
-      key: filename,
-      path: storageDir,
-      expire_in: PDF_FILE_EXPIRE_IN, // ms
-      extension: 'html',
-    });
+    await Document.query().insert({ key: filename, mimeType: 'text/html' });
     const cleanup = async () => {
       await fs.unlink(filePath);
-      await Attachment.query().where('key', filename).delete();
+      await Document.query().where('key', filename).delete();
     };
     return [filename, cleanup];
   }
@@ -60,6 +58,7 @@ export class ChromiumlyHtmlConvert {
       html
     );
     const fileDir = getPdfFilesStorageDir(filename);
+
     const url = path.join(Chromiumly.GOTENBERG_DOCS_ENDPOINT, fileDir);
     const urlConverter = new UrlConverter();
 
