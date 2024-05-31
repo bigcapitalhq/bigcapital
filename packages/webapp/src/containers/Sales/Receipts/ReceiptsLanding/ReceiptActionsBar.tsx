@@ -33,7 +33,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useReceiptsListContext } from './ReceiptsListProvider';
 import { useRefreshReceipts } from '@/hooks/query/receipts';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { SaleReceiptAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { DialogsName } from '@/constants/dialogs';
@@ -63,8 +63,8 @@ function ReceiptActionsBar({
   // Sale receipts list context.
   const { receiptsViews, fields } = useReceiptsListContext();
 
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle new receipt button click.
   const onClickNewReceipt = () => {
@@ -101,7 +101,7 @@ function ReceiptActionsBar({
   };
   // Handle print button click.
   const handlePrintButtonClick = () => {
-    exportPdf({ resource: 'SaleReceipt' });
+    downloadExportPdf({ resource: 'SaleReceipt' });
   };
 
   return (
@@ -152,7 +152,6 @@ function ReceiptActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
           onClick={handlePrintButtonClick}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

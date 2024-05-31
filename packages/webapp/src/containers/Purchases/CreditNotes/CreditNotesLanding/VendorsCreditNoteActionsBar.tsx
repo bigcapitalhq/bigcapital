@@ -21,7 +21,7 @@ import {
 } from '@/components';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
@@ -61,9 +61,8 @@ function VendorsCreditNoteActionsBar({
   const { VendorCreditsViews, fields, refresh } =
     useVendorsCreditNoteListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle click a new Vendor.
   const handleClickNewVendorCredit = () => {
@@ -91,7 +90,7 @@ function VendorsCreditNoteActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'VendorCredit' });
+    downloadExportPdf({ resource: 'VendorCredit' });
   };
 
   return (
@@ -132,7 +131,6 @@ function VendorsCreditNoteActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

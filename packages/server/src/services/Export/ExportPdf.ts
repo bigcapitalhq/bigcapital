@@ -12,13 +12,13 @@ export class ExportPdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   /**
-   * 
-   * @param tenantId 
-   * @param columns 
-   * @param data 
-   * @param sheetTitle 
-   * @param sheetDescription 
-   * @returns 
+   *
+   * @param tenantId
+   * @param columns
+   * @param data
+   * @param sheetTitle
+   * @param sheetDescription
+   * @returns
    */
   public async pdf(
     tenantId: number,
@@ -40,7 +40,7 @@ export class ExportPdf {
     );
     // Convert the HTML content to PDF
     return this.chromiumlyTenancy.convertHtmlContent(tenantId, htmlContent, {
-      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      margins: { top: 0.2, bottom: 0.2, left: 0.2, right: 0.2 },
       landscape: true,
     });
   }

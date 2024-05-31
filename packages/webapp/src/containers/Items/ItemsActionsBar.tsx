@@ -27,7 +27,7 @@ import {
 import { ItemAction, AbilitySubject } from '@/constants/abilityOption';
 import { useItemsListContext } from './ItemsListProvider';
 import { useRefreshItems } from '@/hooks/query/items';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withItems from './withItems';
 import withItemsActions from './withItemsActions';
@@ -66,9 +66,8 @@ function ItemsActionsBar({
   // Items list context.
   const { itemsViews, fields } = useItemsListContext();
 
-  //
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Items refresh action.
   const { refresh } = useRefreshItems();
@@ -116,7 +115,7 @@ function ItemsActionsBar({
 
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'Item' });
+    downloadExportPdf({ resource: 'Item' });
   };
 
   return (
@@ -167,7 +166,6 @@ function ItemsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
-          disabled={isExportPdfLoading}
           onClick={handlePrintBtnClick}
         />
         <Button

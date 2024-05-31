@@ -30,7 +30,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 
@@ -59,9 +59,8 @@ function ManualJournalActionsBar({
   // Manual journals context.
   const { journalsViews, fields } = useManualJournalsContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Manual journals refresh action.
   const { refresh } = useRefreshJournals();
@@ -98,7 +97,7 @@ function ManualJournalActionsBar({
 
   // Handle the pdf print button click.
   const handlePdfPrintBtnSubmit = () => {
-    exportPdf({ resource: 'ManualJournal' });
+    downloadExportPdf({ resource: 'ManualJournal' });
   };
 
   return (
@@ -150,7 +149,6 @@ function ManualJournalActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePdfPrintBtnSubmit}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

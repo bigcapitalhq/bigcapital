@@ -32,7 +32,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useBillsListContext } from './BillsListProvider';
 import { useRefreshBills } from '@/hooks/query/bills';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
@@ -64,9 +64,8 @@ function BillActionsBar({
   // Bills list context.
   const { billsViews, fields } = useBillsListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle click a new bill.
   const handleClickNewBill = () => {
@@ -96,7 +95,7 @@ function BillActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'Bill' });
+    downloadExportPdf({ resource: 'Bill' });
   };
 
   return (
@@ -146,7 +145,6 @@ function BillActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
-          disabled={isExportPdfLoading}
           onClick={handlePrintBtnClick}
         />
         <Button

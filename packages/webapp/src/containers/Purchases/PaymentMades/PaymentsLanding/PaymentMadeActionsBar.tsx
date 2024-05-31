@@ -31,7 +31,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { DialogsName } from '@/constants/dialogs';
 import { compose } from '@/utils';
@@ -57,9 +57,8 @@ function PaymentMadeActionsBar({
 }) {
   const history = useHistory();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Payment receives list context.
   const { paymentMadesViews, fields } = usePaymentMadesListContext();
@@ -93,7 +92,7 @@ function PaymentMadeActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'PaymentMade' });
+    downloadExportPdf({ resource: 'PaymentMade' });
   };
 
   return (
@@ -142,7 +141,6 @@ function PaymentMadeActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

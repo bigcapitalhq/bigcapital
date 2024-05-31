@@ -20,7 +20,7 @@ import {
 } from '@/components';
 
 import { useCreditNoteListContext } from './CreditNotesListProvider';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 import withCreditNotes from './withCreditNotes';
@@ -56,9 +56,8 @@ function CreditNotesActionsBar({
   // credit note list context.
   const { CreditNotesView, fields, refresh } = useCreditNoteListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle view tab change.
   const handleTabChange = (view) => {
@@ -88,7 +87,7 @@ function CreditNotesActionsBar({
   };
   // Handle print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'CreditNote' });
+    downloadExportPdf({ resource: 'CreditNote' });
   };
 
   return (
@@ -141,7 +140,6 @@ function CreditNotesActionsBar({
           icon={<Icon icon={'file-export-16'} iconSize={'16'} />}
           text={<T id={'export'} />}
           onClick={handleExportBtnClick}
-          disabled={isExportPdfLoading}
         />
         <NavbarDivider />
         <DashboardRowsHeightButton

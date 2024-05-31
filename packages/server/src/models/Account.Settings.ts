@@ -121,7 +121,7 @@ export default {
     },
     balance: {
       name: 'account.field.balance',
-      accessor: 'amount',
+      accessor: 'formattedAmount',
     },
     description: {
       name: 'account.field.description',

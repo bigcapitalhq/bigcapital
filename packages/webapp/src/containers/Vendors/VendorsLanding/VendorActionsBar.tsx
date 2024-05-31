@@ -22,10 +22,12 @@ import {
   AdvancedFilterPopover,
 } from '@/components';
 
-import { useRefreshVendors } from '@/hooks/query/vendors';
 import { VendorAction, AbilitySubject } from '@/constants/abilityOption';
+
+import { useRefreshVendors } from '@/hooks/query/vendors';
 import { useVendorsListContext } from './VendorsListProvider';
 import { useHistory } from 'react-router-dom';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withVendors from './withVendors';
 import withVendorsActions from './withVendorsActions';
@@ -35,7 +37,6 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 /**
  * Vendors actions bar.
@@ -62,9 +63,8 @@ function VendorActionsBar({
   // Vendors list context.
   const { vendorsViews, fields } = useVendorsListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handles new vendor button click.
   const onClickNewVendor = () => {
@@ -99,7 +99,7 @@ function VendorActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'Vendor' });
+    downloadExportPdf({ resource: 'Vendor' });
   };
 
   return (
@@ -148,7 +148,6 @@ function VendorActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
-          disabled={isExportPdfLoading}
           onClick={handlePrintBtnClick}
         />
         <Button

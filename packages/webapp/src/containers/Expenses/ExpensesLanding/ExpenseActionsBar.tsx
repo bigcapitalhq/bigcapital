@@ -27,7 +27,7 @@ import { DialogsName } from '@/constants/dialogs';
 
 import { useRefreshExpenses } from '@/hooks/query/expenses';
 import { useExpensesListContext } from './ExpensesListProvider';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withExpenses from './withExpenses';
 import withExpensesActions from './withExpensesActions';
@@ -62,9 +62,8 @@ function ExpensesActionsBar({
   // Expenses list context.
   const { expensesViews, fields } = useExpensesListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Expenses refresh action.
   const { refresh } = useRefreshExpenses();
@@ -100,7 +99,7 @@ function ExpensesActionsBar({
   };
   // Handles the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'Expense' });
+    downloadExportPdf({ resource: 'Expense' });
   };
 
   return (
@@ -151,7 +150,6 @@ function ExpensesActionsBar({
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}

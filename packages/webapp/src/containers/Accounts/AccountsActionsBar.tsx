@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, isUndefined } from 'lodash';
 import {
   Button,
   NavbarGroup,
@@ -9,7 +9,11 @@ import {
   Intent,
   Switch,
   Alignment,
+  ProgressBar,
+  ToastProps,
+  Text,
 } from '@blueprintjs/core';
+import clsx from 'classnames';
 
 import {
   AdvancedFilterPopover,
@@ -29,7 +33,7 @@ import { DialogsName } from '@/constants/dialogs';
 import { useHistory } from 'react-router-dom';
 import { useRefreshAccounts } from '@/hooks/query/accounts';
 import { useAccountsChartContext } from './AccountsChartProvider';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withAccounts from './withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
@@ -68,8 +72,8 @@ function AccountsActionsBar({
 
   const { resourceViews, fields } = useAccountsChartContext();
 
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Accounts refresh action.
   const { refresh } = useRefreshAccounts();
@@ -115,7 +119,7 @@ function AccountsActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'Account' });
+    downloadExportPdf({ resource: 'Account' });
   };
   // Handle click new account.
   const onClickNewAccount = () => {
@@ -184,7 +188,6 @@ function AccountsActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon="print-16" iconSize={16} />}
           text={<T id={'print'} />}
-          disabled={isExportPdfLoading}
           onClick={handlePrintBtnClick}
         />
         <Button

@@ -30,7 +30,7 @@ import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { useEstimatesListContext } from './EstimatesListProvider';
 import { useRefreshEstimates } from '@/hooks/query/estimates';
-import { useResourceExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import { SaleEstimateAction, AbilitySubject } from '@/constants/abilityOption';
 import { compose } from '@/utils';
@@ -60,9 +60,8 @@ function EstimateActionsBar({
   // Estimates list context.
   const { estimatesViews, fields } = useEstimatesListContext();
 
-  // Exports the given resource into pdf.
-  const { mutateAsync: exportPdf, isLoading: isExportPdfLoading } =
-    useResourceExportPdf();
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle click a new sale estimate.
   const onClickNewEstimate = () => {
@@ -95,7 +94,7 @@ function EstimateActionsBar({
   };
   // Handles the print button click.
   const handlePrintBtnClick = () => {
-    exportPdf({ resource: 'SaleEstimate' });
+    downloadExportPdf({ resource: 'SaleEstimate' });
   };
 
   return (
@@ -146,7 +145,6 @@ function EstimateActionsBar({
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
           onClick={handlePrintBtnClick}
-          disabled={isExportPdfLoading}
         />
         <Button
           className={Classes.MINIMAL}
