@@ -10,6 +10,9 @@ export default {
   importable: true,
   exportFlattenOn: 'categories',
   exportable: true,
+  print: {
+    pageTitle: 'Expenses',
+  },
   fields: {
     payment_date: {
       name: 'expense.field.payment_date',
@@ -67,7 +70,7 @@ export default {
     paymentReceive: {
       name: 'expense.field.payment_account',
       type: 'text',
-      accessor: 'paymentAccount.name'
+      accessor: 'paymentAccount.name',
     },
     referenceNo: {
       name: 'expense.field.reference_no',
@@ -75,15 +78,18 @@ export default {
     },
     paymentDate: {
       name: 'expense.field.payment_date',
+      accessor: 'formattedDate',
       type: 'date',
     },
     currencyCode: {
       name: 'expense.field.currency_code',
       type: 'text',
+      printable: false,
     },
     exchangeRate: {
       name: 'expense.field.exchange_rate',
       type: 'number',
+      printable: false,
     },
     description: {
       name: 'expense.field.description',
@@ -111,6 +117,7 @@ export default {
     publish: {
       name: 'expense.field.publish',
       type: 'boolean',
+      printable: false,
     },
   },
   fields2: {

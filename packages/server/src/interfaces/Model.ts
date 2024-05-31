@@ -122,6 +122,10 @@ export type IModelMetaCollectionField = IModelMetaCollectionFieldCommon &
 export type IModelMetaRelationField = IModelMetaRelationFieldCommon &
   IModelMetaRelationEnumerationField;
 
+interface IModelPrintMeta{
+  pageTitle: string;
+}
+
 export interface IModelMeta {
   defaultFilterField: string;
   defaultSort: IModelMetaDefaultSort;
@@ -133,6 +137,8 @@ export interface IModelMeta {
   importAggregator?: string;
   importAggregateOn?: string;
   importAggregateBy?: string;
+
+  print?: IModelPrintMeta;
 
   fields: { [key: string]: IModelMetaField };
   columns: { [key: string]: IModelMetaColumn };

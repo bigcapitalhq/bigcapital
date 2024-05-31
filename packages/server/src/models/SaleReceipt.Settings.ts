@@ -98,6 +98,7 @@ export default {
     },
     receiptDate: {
       name: 'receipt.field.receipt_date',
+      accessor: 'formattedReceiptDate',
       type: 'date',
     },
     receiptNumber: {
@@ -114,10 +115,12 @@ export default {
       name: 'receipt.field.receipt_message',
       column: 'receipt_message',
       type: 'text',
+      printable: false,
     },
     statement: {
       name: 'receipt.field.statement',
       type: 'text',
+      printable: false,
     },
     status: {
       name: 'receipt.field.status',
@@ -127,6 +130,7 @@ export default {
         { key: 'closed', label: 'receipt.field.status.closed' },
       ],
       exportable: true,
+      printable: false,
     },
     entries: {
       name: 'Entries',
@@ -148,6 +152,7 @@ export default {
         },
         description: {
           name: 'Item Description',
+          printable: false,
         },
         amount: {
           name: 'Item Amount',
@@ -158,6 +163,7 @@ export default {
     createdAt: {
       name: 'receipt.field.created_at',
       type: 'date',
+      printable: false,
     },
   },
   fields2: {

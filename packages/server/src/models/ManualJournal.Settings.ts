@@ -11,6 +11,11 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'journalNumber',
+
+  print: {
+    pageTitle: 'Manual Journals',
+  },
+
   fields: {
     date: {
       name: 'manual_journal.field.date',
@@ -63,6 +68,7 @@ export default {
     date: {
       name: 'manual_journal.field.date',
       type: 'date',
+      accessor: 'formattedDate',
     },
     journalNumber: {
       name: 'manual_journal.field.journal_number',
@@ -83,10 +89,12 @@ export default {
     currencyCode: {
       name: 'manual_journal.field.currency',
       type: 'text',
+      printable: false,
     },
     exchangeRate: {
       name: 'manual_journal.field.exchange_rate',
       type: 'number',
+      printable: false,
     },
     description: {
       name: 'manual_journal.field.description',
@@ -120,13 +128,17 @@ export default {
       publish: {
         name: 'Publish',
         type: 'boolean',
+        printable: false,
       },
       publishedAt: {
         name: 'Published At',
+        printable: false,
       },
     },
     createdAt: {
       name: 'Created At',
+      accessor: 'formattedCreatedAt',
+      printable: false,
     },
   },
   fields2: {

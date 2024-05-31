@@ -35,7 +35,10 @@ export const getDataAccessor = (col: any) => {
 export const mapPdfRows = (columns: any, data: Record<string, any>) => {
   return data.map((item) => {
     const cells = columns.map((column) => {
-      return { key: column.accessor, value: get(item, column.accessor) };
+      return {
+        key: column.accessor,
+        value: get(item, getDataAccessor(column)),
+      };
     });
     return { cells, classNames: '' };
   });
