@@ -22,11 +22,15 @@ services:
       - server
       - webapp
     restart: on-failure
+    networks:
+      - bigcapital_network
 
   webapp:
     container_name: bigcapital-webapp
     image: bigcapitalhq/webapp:latest
     restart: on-failure
+    networks:
+      - bigcapital_network
 
   server:
     container_name: bigcapital-server
@@ -96,7 +100,7 @@ services:
       - PLAID_ENV=${PLAID_ENV}
       - PLAID_CLIENT_ID=${PLAID_CLIENT_ID}
       - PLAID_SECRET_DEVELOPMENT=${PLAID_SECRET_DEVELOPMENT}
-      - PLAID_SECRET_SANDBOX=${b8cf42b441e110451e2f69ad7e1e9f}
+      - PLAID_SECRET_SANDBOX=${PLAID_SECRET_SANDBOX}
       - PLAID_LINK_WEBHOOK=${PLAID_LINK_WEBHOOK}
 
       # Lemon Squeez
@@ -120,6 +124,8 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
+    networks:
+      - bigcapital_network
 
   database_migration:
     container_name: bigcapital-database-migration
@@ -137,6 +143,8 @@ services:
       - TENANT_DB_NAME_PERFIX=${TENANT_DB_NAME_PERFIX}
     depends_on:
       - mysql
+    networks:
+      - bigcapital_network
 
   mysql:
     container_name: bigcapital-mysql
@@ -152,6 +160,8 @@ services:
       - mysql:/var/lib/mysql
     expose:
       - '3306'
+    networks:
+      - bigcapital_network
 
   mongo:
     container_name: bigcapital-mongo
@@ -161,6 +171,8 @@ services:
       - '27017'
     volumes:
       - mongo:/var/lib/mongodb
+    networks:
+      - bigcapital_network
 
   redis:
     container_name: bigcapital-redis
@@ -171,11 +183,15 @@ services:
       - '6379'
     volumes:
       - redis:/data
+    networks:
+      - bigcapital_network
 
   gotenberg:
     image: gotenberg/gotenberg:7
     expose:
       - '9000'
+    networks:
+      - bigcapital_network
 
 # Volumes
 volumes:
@@ -190,3 +206,8 @@ volumes:
   redis:
     name: bigcapital_prod_redis
     driver: local
+
+# Networks
+networks:
+  bigcapital_network:
+    driver: bridge
