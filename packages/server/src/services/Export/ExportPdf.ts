@@ -12,12 +12,12 @@ export class ExportPdf {
   private chromiumlyTenancy: ChromiumlyTenancy;
 
   /**
-   *
-   * @param tenantId
-   * @param columns
-   * @param data
-   * @param sheetTitle
-   * @param sheetDescription
+   * Generates the pdf table sheet for the given data and columns.
+   * @param {number} tenantId
+   * @param {} columns
+   * @param {Record<string, string>} data
+   * @param {string} sheetTitle
+   * @param {string} sheetDescription
    * @returns
    */
   public async pdf(

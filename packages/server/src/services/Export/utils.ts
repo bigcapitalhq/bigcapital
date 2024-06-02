@@ -27,9 +27,9 @@ export const getDataAccessor = (col: any) => {
 };
 
 /**
- *
- * @param columns
- * @param data
+ * Maps the data retrieved from the service layer to the pdf document.
+ * @param {any} columns
+ * @param {Record<stringm any>} data
  * @returns
  */
 export const mapPdfRows = (columns: any, data: Record<string, any>) => {
