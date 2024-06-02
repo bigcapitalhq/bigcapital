@@ -20,6 +20,10 @@ export default {
   importAggregateOn: 'entries',
   importAggregateBy: 'creditNoteNumber',
 
+  print: {
+    pageTitle: 'Credit Notes',
+  },
+
   fields: {
     customer: {
       name: 'credit_note.field.customer',
@@ -88,36 +92,34 @@ export default {
   columns: {
     customer: {
       name: 'Customer',
-      type: 'relation',
       accessor: 'customer.displayName',
     },
     exchangeRate: {
       name: 'Exchange Rate',
-      type: 'number',
+      printable: false,
     },
     creditNoteDate: {
       name: 'Credit Note Date',
-      type: 'date',
+      accessor: 'formattedCreditNoteDate'
     },
     referenceNo: {
       name: 'Reference No.',
-      type: 'text',
     },
     note: {
       name: 'Note',
-      type: 'text',
     },
     termsConditions: {
       name: 'Terms & Conditions',
-      type: 'text',
+      printable: false,
     },
     creditNoteNumber: {
       name: 'Credit Note Number',
-      type: 'text',
+      printable: false,
     },
     open: {
       name: 'Open',
       type: 'boolean',
+      printable: false,
     },
     entries: {
       name: 'Entries',

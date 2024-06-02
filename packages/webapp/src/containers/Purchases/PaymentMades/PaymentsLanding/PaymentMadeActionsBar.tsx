@@ -92,7 +92,7 @@ function PaymentMadeActionsBar({
   };
   // Handle the print button click.
   const handlePrintBtnClick = () => {
-    downloadExportPdf({ resource: 'PaymentMade' });
+    downloadExportPdf({ resource: 'BillPayment' });
   };
 
   return (

@@ -11,6 +11,10 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'receiptNumber',
+
+  print: {
+    pageTitle: 'Sale Receipts',
+  },
   fields: {
     amount: {
       name: 'receipt.field.amount',
@@ -81,11 +85,6 @@ export default {
     },
   },
   columns: {
-    amount: {
-      name: 'receipt.field.amount',
-      column: 'amount',
-      type: 'number',
-    },
     depositAccount: {
       name: 'receipt.field.deposit_account',
       type: 'text',
@@ -116,6 +115,11 @@ export default {
       column: 'receipt_message',
       type: 'text',
       printable: false,
+    },
+    amount: {
+      name: 'receipt.field.amount',
+      accessor: 'formattedAmount',
+      type: 'number',
     },
     statement: {
       name: 'receipt.field.statement',

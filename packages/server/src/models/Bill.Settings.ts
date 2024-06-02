@@ -10,6 +10,9 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'billNumber',
+  print: {
+    pageTitle: 'Bills',
+  },
   fields: {
     vendor: {
       name: 'bill.field.vendor',
@@ -83,6 +86,10 @@ export default {
     },
   },
   columns: {
+    billDate: {
+      name: 'Date',
+      accessor: 'formattedBillDate',
+    },
     billNumber: {
       name: 'Bill No.',
       type: 'text',
@@ -91,13 +98,10 @@ export default {
       name: 'Reference No.',
       type: 'text',
     },
-    billDate: {
-      name: 'Date',
-      type: 'date',
-    },
     dueDate: {
       name: 'Due Date',
       type: 'date',
+      accessor: 'formattedDueDate',
     },
     vendorId: {
       name: 'Vendor',
@@ -111,10 +115,12 @@ export default {
     exchangeRate: {
       name: 'Exchange Rate',
       type: 'number',
+      printable: false,
     },
     currencyCode: {
       name: 'Currency Code',
       type: 'text',
+      printable: false,
     },
     dueAmount: {
       name: 'Due Amount',
@@ -127,10 +133,12 @@ export default {
     note: {
       name: 'Note',
       type: 'text',
+      printable: false,
     },
     open: {
       name: 'Open',
       type: 'boolean',
+      printable: false,
     },
     entries: {
       name: 'Entries',

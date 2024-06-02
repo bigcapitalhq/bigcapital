@@ -26,7 +26,6 @@ export class ExportController extends BaseController {
       ],
       this.validationResult,
       this.export.bind(this),
-      this.catchServiceErrors
     );
     return router;
   }
@@ -84,27 +83,5 @@ export class ExportController extends BaseController {
     } catch (error) {
       next(error);
     }
-  }
-
-  /**
-   * Transforms service errors to response.
-   * @param {Error}
-   * @param {Request} req
-   * @param {Response} res
-   * @param {ServiceError} error
-   */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    if (error instanceof ServiceError) {
-      return res.status(400).send({
-        errors: [{ type: error.errorType }],
-      });
-    }
-
-    next(error);
   }
 }

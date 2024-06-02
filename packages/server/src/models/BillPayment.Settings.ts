@@ -77,6 +77,7 @@ export default {
     paymentDate: {
       name: 'bill_payment.field.payment_date',
       type: 'date',
+      accessor: 'formattedPaymentDate'
     },
     paymentNumber: {
       name: 'bill_payment.field.payment_number',
@@ -94,14 +95,17 @@ export default {
     currencyCode: {
       name: 'Currency Code',
       type: 'text',
+      printable: false,
     },
     exchangeRate: {
       name: 'bill_payment.field.exchange_rate',
       type: 'number',
+      printable: false,
     },
     statement: {
       name: 'bill_payment.field.note',
       type: 'text',
+      printable: false,
     },
     reference: {
       name: 'bill_payment.field.reference',

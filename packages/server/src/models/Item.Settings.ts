@@ -6,6 +6,9 @@ export default {
     sortField: 'name',
     sortOrder: 'DESC',
   },
+  print: {
+    pageTitle: 'Items',
+  },
   fields: {
     type: {
       name: 'item.field.type',

@@ -20,6 +20,9 @@ export default {
   importAggregateOn: 'entries',
   importAggregateBy: 'vendorCreditNumber',
 
+  print: {
+    pageTitle: 'Vendor Credits',
+  },
   fields: {
     vendor: {
       name: 'vendor_credit.field.vendor',
@@ -89,6 +92,7 @@ export default {
     exchangeRate: {
       name: 'Echange Rate',
       type: 'text',
+      printable: false,
     },
     vendorCreditNumber: {
       name: 'Vendor Credit No.',
@@ -100,7 +104,7 @@ export default {
     },
     vendorCreditDate: {
       name: 'Vendor Credit Date',
-      type: 'date',
+      accessor: 'formattedVendorCreditDate',
     },
     amount: {
       name: 'Amount',
@@ -109,10 +113,12 @@ export default {
     creditRemaining: {
       name: 'Credits Remaining',
       accessor: 'formattedCreditsRemaining',
+      printable: false,
     },
     refundedAmount: {
       name: 'Refunded Amount',
       accessor: 'refundedAmount',
+      printable: false,
     },
     invoicedAmount: {
       name: 'Invoiced Amount',
@@ -121,10 +127,12 @@ export default {
     note: {
       name: 'Note',
       type: 'text',
+      printable: false,
     },
     open: {
       name: 'Open',
       type: 'boolean',
+      printable: false,
     },
     entries: {
       name: 'Entries',
