@@ -5,6 +5,7 @@ import BaseController from '@/api/controllers/BaseController';
 import { ServiceError } from '@/exceptions';
 import { ExportApplication } from '@/services/Export/ExportApplication';
 import { ACCEPT_TYPE } from '@/interfaces/Http';
+import { convertAcceptFormatToFormat } from './_utils';
 
 @Service()
 export class ExportController extends BaseController {
@@ -25,7 +26,6 @@ export class ExportController extends BaseController {
       ],
       this.validationResult,
       this.export.bind(this),
-      this.catchServiceErrors
     );
     return router;
   }
@@ -48,10 +48,12 @@ export class ExportController extends BaseController {
         ACCEPT_TYPE.APPLICATION_CSV,
         ACCEPT_TYPE.APPLICATION_PDF,
       ]);
+      const applicationFormat = convertAcceptFormatToFormat(acceptType);
+
       const data = await this.exportResourceApp.export(
         tenantId,
         query.resource,
-        acceptType === ACCEPT_TYPE.APPLICATION_XLSX ? 'xlsx' : 'csv'
+        applicationFormat
       );
       // Retrieves the csv format.
       if (ACCEPT_TYPE.APPLICATION_CSV === acceptType) {
@@ -70,31 +72,16 @@ export class ExportController extends BaseController {
           'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         );
         return res.send(data);
+        //
+      } else if (ACCEPT_TYPE.APPLICATION_PDF === acceptType) {
+        res.set({
+          'Content-Type': 'application/pdf',
+          'Content-Length': data.length,
+        });
+        res.send(data);
       }
     } catch (error) {
       next(error);
     }
-  }
-
-  /**
-   * Transforms service errors to response.
-   * @param {Error}
-   * @param {Request} req
-   * @param {Response} res
-   * @param {ServiceError} error
-   */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    if (error instanceof ServiceError) {
-      return res.status(400).send({
-        errors: [{ type: error.errorType }],
-      });
-    }
-
-    next(error);
   }
 }

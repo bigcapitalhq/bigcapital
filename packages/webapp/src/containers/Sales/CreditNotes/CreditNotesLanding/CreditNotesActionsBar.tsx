@@ -20,6 +20,8 @@ import {
 } from '@/components';
 
 import { useCreditNoteListContext } from './CreditNotesListProvider';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+
 import { CreditNoteAction, AbilitySubject } from '@/constants/abilityOption';
 import withCreditNotes from './withCreditNotes';
 import withCreditNotesActions from './withCreditNotesActions';
@@ -27,8 +29,8 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
 
 /**
  * Credit note table actions bar.
@@ -54,6 +56,9 @@ function CreditNotesActionsBar({
   // credit note list context.
   const { CreditNotesView, fields, refresh } = useCreditNoteListContext();
 
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
   // Handle view tab change.
   const handleTabChange = (view) => {
     setCreditNotesTableState({ viewSlug: view ? view.slug : null });
@@ -68,20 +73,21 @@ function CreditNotesActionsBar({
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('creditNote', 'tableSize', size);
   };
-
   // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/credit-notes/import');
   };
-
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'credit_note' });
+  };
+  // Handle print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'CreditNote' });
   };
 
   return (
@@ -121,6 +127,7 @@ function CreditNotesActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

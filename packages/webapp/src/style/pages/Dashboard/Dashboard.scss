@@ -190,7 +190,10 @@ $dashboard-views-bar-height: 44px;
           background: #a7b6c21f;
           color: #32304a;
         }
-
+        &.bp4-disabled{
+          background: transparent;
+          color: rgba(50, 48, 74, 0.4);
+        }
         &.has-active-filters {
 
           &,

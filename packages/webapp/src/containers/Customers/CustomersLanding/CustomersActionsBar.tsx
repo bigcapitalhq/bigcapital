@@ -25,6 +25,7 @@ import {
 
 import { useCustomersListContext } from './CustomersListProvider';
 import { useRefreshCustomers } from '@/hooks/query/customers';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withCustomers from './withCustomers';
 import withCustomersActions from './withCustomersActions';
@@ -70,6 +71,9 @@ function CustomerActionsBar({
   // Customers refresh action.
   const { refresh } = useRefreshCustomers();
 
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
   const onClickNewCustomer = () => {
     history.push('/customers/new');
   };
@@ -108,6 +112,10 @@ function CustomerActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'customer' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'Customer' });
   };
 
   return (
@@ -154,6 +162,13 @@ function CustomerActionsBar({
             onClick={handleBulkDelete}
           />
         </If>
+        <NavbarDivider />
+        <Button
+          className={Classes.MINIMAL}
+          icon={<Icon icon="print-16" iconSize={16} />}
+          text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
+        />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="file-import-16" iconSize={16} />}

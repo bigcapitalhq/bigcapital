@@ -131,21 +131,26 @@ export default {
     openingBalance: {
       name: 'vendor.field.opening_balance',
       type: 'number',
+      printable: false
     },
     openingBalanceAt: {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
+      printable: false
     },
     currencyCode: {
       name: 'vendor.field.currency',
       type: 'text',
+      printable: false
     },
     status: {
       name: 'vendor.field.status',
+      printable: false
     },
     note: {
       name: 'vendor.field.note',
       type: 'text',
+      printable: false
     },
     // Billing Address
     billingAddress1: {
@@ -153,42 +158,49 @@ export default {
       column: 'billing_address1',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddress2: {
       name: 'Billing Address 2',
       column: 'billing_address2',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddressCity: {
       name: 'Billing Address City',
       column: 'billing_address_city',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddressCountry: {
       name: 'Billing Address Country',
       column: 'billing_address_country',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddressPostcode: {
       name: 'Billing Address Postcode',
       column: 'billing_address_postcode',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddressState: {
       name: 'Billing Address State',
       column: 'billing_address_state',
       type: 'text',
       exportable: true,
+      printable: false
     },
     billingAddressPhone: {
       name: 'Billing Address Phone',
       column: 'billing_address_phone',
       type: 'text',
       exportable: true,
+      printable: false
     },
     // Shipping Address
     shippingAddress1: {
@@ -196,47 +208,55 @@ export default {
       column: 'shipping_address1',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddress2: {
       name: 'Shipping Address 2',
       column: 'shipping_address2',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddressCity: {
       name: 'Shipping Address City',
       column: 'shipping_address_city',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddressCountry: {
       name: 'Shipping Address Country',
       column: 'shipping_address_country',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddressPostcode: {
       name: 'Shipping Address Postcode',
       column: 'shipping_address_postcode',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddressState: {
       name: 'Shipping Address State',
       column: 'shipping_address_state',
       type: 'text',
       exportable: true,
+      printable: false
     },
     shippingAddressPhone: {
       name: 'Shipping Address Phone',
       column: 'shipping_address_phone',
       type: 'text',
       exportable: true,
+      printable: false
     },
     createdAt: {
       name: 'vendor.field.created_at',
       type: 'date',
       exportable: true,
+      printable: false
     },
   },
   fields2: {

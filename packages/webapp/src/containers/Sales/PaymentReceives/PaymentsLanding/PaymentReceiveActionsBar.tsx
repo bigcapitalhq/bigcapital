@@ -31,8 +31,11 @@ import {
   PaymentReceiveAction,
   AbilitySubject,
 } from '@/constants/abilityOption';
+
 import { usePaymentReceivesListContext } from './PaymentReceiptsListProvider';
 import { useRefreshPaymentReceive } from '@/hooks/query/paymentReceives';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
+
 import { compose } from '@/utils';
 import { DialogsName } from '@/constants/dialogs';
 
@@ -60,6 +63,9 @@ function PaymentReceiveActionsBar({
 
   // Payment receives list context.
   const { paymentReceivesViews, fields } = usePaymentReceivesListContext();
+
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle new payment button click.
   const handleClickNewPaymentReceive = () => {
@@ -90,6 +96,10 @@ function PaymentReceiveActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'payment_receive' });
+  };
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'PaymentReceive' });
   };
 
   return (
@@ -137,6 +147,7 @@ function PaymentReceiveActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

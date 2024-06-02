@@ -8,6 +8,9 @@ export default {
   },
   importable: true,
   exportable: true,
+  print: {
+    pageTitle: 'Chart of Accounts',
+  },
   fields: {
     name: {
       name: 'account.field.name',
@@ -121,7 +124,7 @@ export default {
     },
     balance: {
       name: 'account.field.balance',
-      accessor: 'amount',
+      accessor: 'formattedAmount',
     },
     description: {
       name: 'account.field.description',
@@ -133,6 +136,7 @@ export default {
     },
     createdAt: {
       name: 'account.field.created_at',
+      printable: false,
     },
   },
   fields2: {

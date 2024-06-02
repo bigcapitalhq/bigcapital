@@ -134,7 +134,6 @@ const invalidateResourcesOnImport = (
   queryClient: QueryClient,
   resource: string,
 ) => {
-  debugger;
   switch (resource) {
     case 'Item':
       queryClient.invalidateQueries(T.ITEMS);

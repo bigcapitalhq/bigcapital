@@ -11,6 +11,10 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'invoiceNo',
+
+  print: {
+    pageTitle: 'Sale invoices',
+  },
   fields: {
     customer: {
       name: 'invoice.field.customer',
@@ -94,10 +98,12 @@ export default {
     invoiceDate: {
       name: 'invoice.field.invoice_date',
       type: 'date',
+      accessor: 'invoiceDateFormatted',
     },
     dueDate: {
       name: 'invoice.field.due_date',
       type: 'date',
+      accessor: 'dueDateFormatted',
     },
     referenceNo: {
       name: 'invoice.field.reference_no',
@@ -120,10 +126,12 @@ export default {
     exchangeRate: {
       name: 'invoice.field.exchange_rate',
       type: 'number',
+      printable: false,
     },
     currencyCode: {
       name: 'invoice.field.currency',
       type: 'text',
+      printable: false,
     },
     paidAmount: {
       name: 'Paid Amount',
@@ -136,14 +144,17 @@ export default {
     invoiceMessage: {
       name: 'invoice.field.invoice_message',
       type: 'text',
+      printable: false,
     },
     termsConditions: {
       name: 'invoice.field.terms_conditions',
       type: 'text',
+      printable: false,
     },
     delivered: {
       name: 'invoice.field.delivered',
       type: 'boolean',
+      printable: false,
     },
     entries: {
       name: 'Entries',
@@ -165,6 +176,7 @@ export default {
         },
         description: {
           name: 'Item Description',
+          printable: false,
         },
         amount: {
           name: 'Item Amount',
@@ -202,18 +214,22 @@ export default {
     exchangeRate: {
       name: 'invoice.field.exchange_rate',
       fieldType: 'number',
+      printable: false,
     },
     currencyCode: {
       name: 'invoice.field.currency',
       fieldType: 'text',
+      printable: false,
     },
     invoiceMessage: {
       name: 'invoice.field.invoice_message',
       fieldType: 'text',
+      printable: false,
     },
     termsConditions: {
       name: 'invoice.field.terms_conditions',
       fieldType: 'text',
+      printable: false,
     },
     entries: {
       name: 'invoice.field.entries',
@@ -249,6 +265,7 @@ export default {
     delivered: {
       name: 'invoice.field.delivered',
       fieldType: 'boolean',
+      printable: false,
     },
   },
 };

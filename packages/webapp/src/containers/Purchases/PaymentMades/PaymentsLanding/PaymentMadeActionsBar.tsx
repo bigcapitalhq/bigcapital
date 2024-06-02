@@ -1,5 +1,4 @@
 // @ts-nocheck
-import React from 'react';
 import {
   Button,
   Classes,
@@ -22,19 +21,20 @@ import {
   DashboardRowsHeightButton,
   DashboardActionsBar,
 } from '@/components';
+import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withPaymentMade from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
 import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import { usePaymentMadesListContext } from './PaymentMadesListProvider';
 import { useRefreshPaymentMades } from '@/hooks/query/paymentMades';
-import { PaymentMadeAction, AbilitySubject } from '@/constants/abilityOption';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
-import { compose } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { compose } from '@/utils';
 
 /**
  * Payment made actions bar.
@@ -57,6 +57,9 @@ function PaymentMadeActionsBar({
 }) {
   const history = useHistory();
 
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
   // Payment receives list context.
   const { paymentMadesViews, fields } = usePaymentMadesListContext();
 
@@ -67,30 +70,29 @@ function PaymentMadeActionsBar({
   const handleClickNewPaymentMade = () => {
     history.push('/payment-mades/new');
   };
-
   // Handle tab changing.
   const handleTabChange = (viewSlug) => {
     setPaymentMadesTableState({ viewSlug });
   };
-
   // Handle click a refresh payment receives.
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('billPayments', 'tableSize', size);
   };
-
   // Handle the import button click.
   const handleImportBtnClick = () => {
     history.push('/payment-mades/import');
   };
-
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'bill_payment' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'BillPayment' });
   };
 
   return (
@@ -138,6 +140,7 @@ function PaymentMadeActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

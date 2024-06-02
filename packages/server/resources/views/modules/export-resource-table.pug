@@ -1,0 +1,24 @@
+block head
+  style 
+    include ../../css/modules/export-resource-table.css
+
+style.
+  !{customCSS}
+
+block content 
+  .sheet
+    .sheet__title 
+      h2.sheetTitle= sheetTitle
+      p.sheetDesc= sheetDescription
+
+    table.sheet__table
+      thead
+        tr
+          each column in table.columns
+            th(style=column.style class='column--' + column.key)= column.name
+      tbody
+        each row in table.rows
+          tr(class=row.classNames)
+            each cell in row.cells 
+              td(class='cell--' + cell.key)
+                span!= cell.value

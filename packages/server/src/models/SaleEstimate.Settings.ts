@@ -11,6 +11,11 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'estimateNumber',
+
+  print: {
+    pageTitle: 'Sale Estimates'
+  },
+
   fields: {
     amount: {
       name: 'estimate.field.amount',
@@ -86,11 +91,13 @@ export default {
     estimateDate: {
       name: 'Estimate Date',
       type: 'date',
+      accessor: 'formattedEstimateDate',
       exportable: true,
     },
     expirationDate: {
       name: 'Expiration Date',
       type: 'date',
+      accessor: 'formattedExpirationDate',
       exportable: true,
     },
     estimateNumber: {
@@ -112,26 +119,31 @@ export default {
       name: 'Exchange Rate',
       type: 'number',
       exportable: true,
+      printable: false,
     },
     currencyCode: {
       name: 'Currency',
       type: 'text',
       exportable: true,
+      printable: false,
     },
     note: {
       name: 'Note',
       type: 'text',
       exportable: true,
+      printable: false,
     },
     termsConditions: {
       name: 'Terms & Conditions',
       type: 'text',
       exportable: true,
+      printable: false,
     },
     delivered: {
       name: 'Delivered',
       type: 'boolean',
       exportable: true,
+      printable: false,
     },
     entries: {
       name: 'Entries',
@@ -153,6 +165,7 @@ export default {
         },
         description: {
           name: 'Item Description',
+          printable: false,
         },
         amount: {
           name: 'Item Amount',

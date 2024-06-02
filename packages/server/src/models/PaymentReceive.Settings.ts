@@ -67,10 +67,12 @@ export default {
     paymentDate: {
       name: 'payment_receive.field.payment_date',
       type: 'date',
+      accessor: 'formattedPaymentDate',
     },
     amount: {
       name: 'payment_receive.field.amount',
       type: 'number',
+      accessor: 'formattedAmount'
     },
     referenceNo: {
       name: 'payment_receive.field.reference_no',
@@ -88,10 +90,12 @@ export default {
     statement: {
       name: 'payment_receive.field.statement',
       type: 'text',
+      printable: false,
     },
     created_at: {
       name: 'payment_receive.field.created_at',
       type: 'date',
+      printable: false,
     },
   },
   fields2: {

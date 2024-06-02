@@ -23,6 +23,7 @@ import { SaleInvoiceAction, AbilitySubject } from '@/constants/abilityOption';
 
 import { useRefreshInvoices } from '@/hooks/query/invoices';
 import { useInvoicesListContext } from './InvoicesListProvider';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 
 import withInvoices from './withInvoices';
 import withInvoiceActions from './withInvoiceActions';
@@ -49,12 +50,15 @@ function InvoiceActionsBar({
   addSetting,
 
   // #withDialogsActions
-  openDialog
+  openDialog,
 }) {
   const history = useHistory();
 
   // Sale invoices list context.
   const { invoicesViews, invoicesFields } = useInvoicesListContext();
+
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
 
   // Handle new invoice button click.
   const handleClickNewInvoice = () => {
@@ -87,6 +91,10 @@ function InvoiceActionsBar({
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'sale_invoice' });
+  };
+  // Handles the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'SaleInvoice' });
   };
 
   return (
@@ -134,6 +142,7 @@ function InvoiceActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

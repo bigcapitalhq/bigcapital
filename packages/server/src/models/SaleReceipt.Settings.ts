@@ -11,6 +11,10 @@ export default {
   importAggregator: 'group',
   importAggregateOn: 'entries',
   importAggregateBy: 'receiptNumber',
+
+  print: {
+    pageTitle: 'Sale Receipts',
+  },
   fields: {
     amount: {
       name: 'receipt.field.amount',
@@ -81,11 +85,6 @@ export default {
     },
   },
   columns: {
-    amount: {
-      name: 'receipt.field.amount',
-      column: 'amount',
-      type: 'number',
-    },
     depositAccount: {
       name: 'receipt.field.deposit_account',
       type: 'text',
@@ -98,6 +97,7 @@ export default {
     },
     receiptDate: {
       name: 'receipt.field.receipt_date',
+      accessor: 'formattedReceiptDate',
       type: 'date',
     },
     receiptNumber: {
@@ -114,10 +114,17 @@ export default {
       name: 'receipt.field.receipt_message',
       column: 'receipt_message',
       type: 'text',
+      printable: false,
+    },
+    amount: {
+      name: 'receipt.field.amount',
+      accessor: 'formattedAmount',
+      type: 'number',
     },
     statement: {
       name: 'receipt.field.statement',
       type: 'text',
+      printable: false,
     },
     status: {
       name: 'receipt.field.status',
@@ -127,6 +134,7 @@ export default {
         { key: 'closed', label: 'receipt.field.status.closed' },
       ],
       exportable: true,
+      printable: false,
     },
     entries: {
       name: 'Entries',
@@ -148,6 +156,7 @@ export default {
         },
         description: {
           name: 'Item Description',
+          printable: false,
         },
         amount: {
           name: 'Item Amount',
@@ -158,6 +167,7 @@ export default {
     createdAt: {
       name: 'receipt.field.created_at',
       type: 'date',
+      printable: false,
     },
   },
   fields2: {

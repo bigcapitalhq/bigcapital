@@ -6,9 +6,10 @@ import { sanitizeResourceName } from '../Import/_utils';
 import ResourceService from '../Resource/ResourceService';
 import { ExportableResources } from './ExportResources';
 import { ServiceError } from '@/exceptions';
-import { Errors } from './common';
+import { Errors, ExportFormat } from './common';
 import { IModelMeta, IModelMetaColumn } from '@/interfaces';
 import { flatDataCollections, getDataAccessor } from './utils';
+import { ExportPdf } from './ExportPdf';
 
 @Service()
 export class ExportResourceService {
@@ -18,13 +19,20 @@ export class ExportResourceService {
   @Inject()
   private exportableResources: ExportableResources;
 
+  @Inject()
+  private exportPdf: ExportPdf;
+
   /**
    * Exports the given resource data through csv, xlsx or pdf.
    * @param {number} tenantId - Tenant id.
    * @param {string} resourceName - Resource name.
-   * @param {string} format - File format.
+   * @param {ExportFormat} format - File format.
    */
-  public async export(tenantId: number, resourceName: string, format: string = 'csv') {
+  public async export(
+    tenantId: number,
+    resourceName: string,
+    format: ExportFormat = ExportFormat.Csv
+  ) {
     const resource = sanitizeResourceName(resourceName);
     const resourceMeta = this.getResourceMeta(tenantId, resource);
 
@@ -32,10 +40,24 @@ export class ExportResourceService {
 
     const data = await this.getExportableData(tenantId, resource);
     const transformed = this.transformExportedData(tenantId, resource, data);
-    const exportableColumns = this.getExportableColumns(resourceMeta);
-    const workbook = this.createWorkbook(transformed, exportableColumns);
 
-    return this.exportWorkbook(workbook, format);
+    // Returns the csv, xlsx format.
+    if (format === ExportFormat.Csv || format === ExportFormat.Xlsx) {
+      const exportableColumns = this.getExportableColumns(resourceMeta);
+      const workbook = this.createWorkbook(transformed, exportableColumns);
+
+      return this.exportWorkbook(workbook, format);
+      // Returns the pdf format.
+    } else if (format === ExportFormat.Pdf) {
+      const printableColumns = this.getPrintableColumns(resourceMeta);
+
+      return this.exportPdf.pdf(
+        tenantId,
+        printableColumns,
+        transformed,
+        resourceMeta?.print?.pageTitle
+      );
+    }
   }
 
   /**
@@ -91,6 +113,7 @@ export class ExportResourceService {
   private async getExportableData(tenantId: number, resource: string) {
     const exportable =
       this.exportableResources.registry.getExportable(resource);
+
     return exportable.exportable(tenantId, {});
   }
 
@@ -125,6 +148,32 @@ export class ExportResourceService {
     return processColumns(resourceMeta.columns);
   }
 
+  private getPrintableColumns(resourceMeta: IModelMeta) {
+    const processColumns = (
+      columns: { [key: string]: IModelMetaColumn },
+      parent = ''
+    ) => {
+      return Object.entries(columns)
+        .filter(([_, value]) => value.printable !== false)
+        .flatMap(([key, value]) => {
+          if (value.type === 'collection' && value.collectionOf === 'object') {
+            return processColumns(value.columns, key);
+          } else {
+            const group = parent;
+            return [
+              {
+                name: value.name,
+                type: value.type || 'text',
+                accessor: value.accessor || key,
+                group,
+              },
+            ];
+          }
+        });
+    };
+    return processColumns(resourceMeta.columns);
+  }
+
   /**
    * Creates a workbook from the provided data and columns.
    * @param {any[]} data - The data to be included in the workbook.
@@ -136,7 +185,6 @@ export class ExportResourceService {
     const worksheetData = data.map((item) =>
       exportableColumns.map((col) => get(item, getDataAccessor(col)))
     );
-
     worksheetData.unshift(exportableColumns.map((col) => col.name));
 
     const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);

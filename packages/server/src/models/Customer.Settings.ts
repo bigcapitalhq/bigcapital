@@ -6,6 +6,9 @@ export default {
     sortOrder: 'DESC',
     sortField: 'created_at',
   },
+  print: {
+    pageTitle: 'Customers',
+  },
   fields: {
     first_name: {
       name: 'vendor.field.first_name',
@@ -127,100 +130,121 @@ export default {
     balance: {
       name: 'vendor.field.balance',
       type: 'number',
+      accessor: 'formattedBalance',
     },
     openingBalance: {
       name: 'vendor.field.opening_balance',
       type: 'number',
+      printable: false
     },
     openingBalanceAt: {
       name: 'vendor.field.opening_balance_at',
       type: 'date',
+      printable: false
     },
     currencyCode: {
       name: 'vendor.field.currency',
       type: 'text',
+      printable: false
     },
     status: {
       name: 'vendor.field.status',
+      printable: false
     },
     note: {
       name: 'vendor.field.note',
+      printable: false
     },
     // Billing Address
     billingAddress1: {
       name: 'Billing Address 1',
       column: 'billing_address1',
       type: 'text',
+      printable: false
     },
     billingAddress2: {
       name: 'Billing Address 2',
       column: 'billing_address2',
       type: 'text',
+      printable: false
     },
     billingAddressCity: {
       name: 'Billing Address City',
       column: 'billing_address_city',
       type: 'text',
+      printable: false
     },
     billingAddressCountry: {
       name: 'Billing Address Country',
       column: 'billing_address_country',
       type: 'text',
+      printable: false
     },
     billingAddressPostcode: {
       name: 'Billing Address Postcode',
       column: 'billing_address_postcode',
       type: 'text',
+      printable: false
     },
     billingAddressState: {
       name: 'Billing Address State',
       column: 'billing_address_state',
       type: 'text',
+      printable: false
     },
     billingAddressPhone: {
       name: 'Billing Address Phone',
       column: 'billing_address_phone',
       type: 'text',
+      printable: false
     },
     // Shipping Address
     shippingAddress1: {
       name: 'Shipping Address 1',
       column: 'shipping_address1',
       type: 'text',
+      printable: false
     },
     shippingAddress2: {
       name: 'Shipping Address 2',
       column: 'shipping_address2',
       type: 'text',
+      printable: false
     },
     shippingAddressCity: {
       name: 'Shipping Address City',
       column: 'shipping_address_city',
       type: 'text',
+      printable: false
     },
     shippingAddressCountry: {
       name: 'Shipping Address Country',
       column: 'shipping_address_country',
       type: 'text',
+      printable: false
     },
     shippingAddressPostcode: {
       name: 'Shipping Address Postcode',
       column: 'shipping_address_postcode',
       type: 'text',
+      printable: false
     },
     shippingAddressPhone: {
       name: 'Shipping Address Phone',
       column: 'shipping_address_phone',
       type: 'text',
+      printable: false
     },
     shippingAddressState: {
       name: 'Shipping Address State',
       column: 'shipping_address_state',
       type: 'text',
+      printable: false
     },
     createdAt: {
       name: 'vendor.field.created_at',
       type: 'date',
+      printable: false
     },
   },
   fields2: {

@@ -21,6 +21,7 @@ import {
 } from '@/components';
 
 import { useVendorsCreditNoteListContext } from './VendorsCreditNoteListProvider';
+import { useDownloadExportPdf } from '@/hooks/query/FinancialReports/use-export-pdf';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withVendorsCreditNotesActions from './withVendorsCreditNotesActions';
@@ -60,34 +61,36 @@ function VendorsCreditNoteActionsBar({
   const { VendorCreditsViews, fields, refresh } =
     useVendorsCreditNoteListContext();
 
+  // Exports pdf document.
+  const { downloadAsync: downloadExportPdf } = useDownloadExportPdf();
+
   // Handle click a new Vendor.
   const handleClickNewVendorCredit = () => {
     history.push('/vendor-credits/new');
   };
-
   // Handle view tab change.
   const handleTabChange = (view) => {
     setVendorCreditsTableState({ viewSlug: view ? view.slug : null });
   };
-
   // Handle click a refresh credit note.
   const handleRefreshBtnClick = () => {
     refresh();
   };
-
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
     addSetting('vendorCredit', 'tableSize', size);
   };
-
   // Handle import button click.
   const handleImportBtnClick = () => {
     history.push('/vendor-credits/import');
   };
-
   // Handle the export button click.
   const handleExportBtnClick = () => {
     openDialog(DialogsName.Export, { resource: 'vendor_credit' });
+  };
+  // Handle the print button click.
+  const handlePrintBtnClick = () => {
+    downloadExportPdf({ resource: 'VendorCredit' });
   };
 
   return (
@@ -127,6 +130,7 @@ function VendorsCreditNoteActionsBar({
           className={Classes.MINIMAL}
           icon={<Icon icon={'print-16'} iconSize={'16'} />}
           text={<T id={'print'} />}
+          onClick={handlePrintBtnClick}
         />
         <Button
           className={Classes.MINIMAL}

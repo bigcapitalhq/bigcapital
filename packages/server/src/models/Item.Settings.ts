@@ -6,6 +6,9 @@ export default {
     sortField: 'name',
     sortOrder: 'DESC',
   },
+  print: {
+    pageTitle: 'Items',
+  },
   fields: {
     type: {
       name: 'item.field.type',
@@ -127,6 +130,7 @@ export default {
       name: 'item.field.type',
       type: 'text',
       exportable: true,
+      accessor: 'typeFormatted',
     },
     name: {
       name: 'item.field.name',
@@ -142,11 +146,13 @@ export default {
       name: 'item.field.sellable',
       type: 'boolean',
       exportable: true,
+      printable: false,
     },
     purchasable: {
       name: 'item.field.purchasable',
       type: 'boolean',
       exportable: true,
+      printable: false,
     },
     sellPrice: {
       name: 'item.field.cost_price',
@@ -163,12 +169,14 @@ export default {
       type: 'text',
       accessor: 'costAccount.name',
       exportable: true,
+      printable: false,
     },
     sellAccount: {
       name: 'item.field.sell_description',
       type: 'text',
       accessor: 'sellAccount.name',
       exportable: true,
+      printable: false,
     },
     inventoryAccount: {
       name: 'item.field.inventory_account',
@@ -180,11 +188,13 @@ export default {
       name: 'Sell description',
       type: 'text',
       exportable: true,
+      printable: false,
     },
     purchaseDescription: {
       name: 'Purchase description',
       type: 'text',
       exportable: true,
+      printable: false,
     },
     quantityOnHand: {
       name: 'item.field.quantity_on_hand',
@@ -206,11 +216,13 @@ export default {
       name: 'item.field.active',
       fieldType: 'boolean',
       exportable: true,
+      printable: false,
     },
     createdAt: {
       name: 'item.field.created_at',
       type: 'date',
       exportable: true,
+      printable: false,
     },
   },
   fields2: {
