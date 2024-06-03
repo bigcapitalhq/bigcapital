@@ -50,7 +50,6 @@ import InvoiceMailDialog from '@/containers/Sales/Invoices/InvoiceMailDialog/Inv
 import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/EstimateMailDialog';
 import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
 import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
-import { ConnectBankDialog } from '@/containers/CashFlow/ConnectBankDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 
 /**
@@ -97,7 +96,6 @@ export default function DialogsContainer() {
       <NotifyPaymentReceiveViaSMSDialog
         dialogName={DialogsName.NotifyPaymentViaForm}
       />
-
       <BadDebtDialog dialogName={DialogsName.BadDebtForm} />
       <SMSMessageDialog dialogName={DialogsName.SMSMessageForm} />
       <RefundCreditNoteDialog dialogName={DialogsName.RefundCreditNote} />
@@ -148,8 +146,6 @@ export default function DialogsContainer() {
       <EstimateMailDialog dialogName={DialogsName.EstimateMail} />
       <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
       <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
-      <ConnectBankDialog dialogName={DialogsName.ConnectBankCreditCard} />
-
       <ExportDialog dialogName={DialogsName.Export} />
     </div>
   );
