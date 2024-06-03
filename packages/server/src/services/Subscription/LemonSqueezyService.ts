@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { SystemUser } from '@/system/models';
 import { configureLemonSqueezy } from './utils';
+import config from '@/config';
 
 @Service()
 export class LemonSqueezyService {
@@ -28,7 +29,7 @@ export class LemonSqueezyService {
       },
       productOptions: {
         enabledVariants: [variantId],
-        redirectUrl: `http://localhost:4000/dashboard/billing/`,
+        redirectUrl: config.lemonSqueezy.redirectTo,
         receiptButtonText: 'Go to Dashboard',
         receiptThankYouNote: 'Thank you for signing up to Lemon Stand!',
       },
