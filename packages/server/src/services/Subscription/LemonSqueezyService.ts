@@ -28,7 +28,7 @@ export class LemonSqueezyService {
       },
       productOptions: {
         enabledVariants: [variantId],
-        redirectUrl: `http://localhost:4000/dashboard/billing/`,
+        redirectUrl: config.lemonSqueezy.redirectTo,
         receiptButtonText: 'Go to Dashboard',
         receiptThankYouNote: 'Thank you for signing up to Lemon Stand!',
       },
