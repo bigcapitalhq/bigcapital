@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import { createCheckout } from '@lemonsqueezy/lemonsqueezy.js';
 import { SystemUser } from '@/system/models';
 import { configureLemonSqueezy } from './utils';
+import config from '@/config';
 
 @Service()
 export class LemonSqueezyService {
