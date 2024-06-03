@@ -42,7 +42,12 @@ export const transformPlaidTrxsToCashflowCreate = R.curry(
   ): CreateUncategorizedTransactionDTO => {
     return {
       date: plaidTranasction.date,
-      amount: plaidTranasction.amount,
+
+      // Plaid: Positive values when money moves out of the account; negative values
+      // when money moves in. For example, debit card purchases are positive;
+      // credit card payments, direct deposits, and refunds are negative.
+      amount: -1 * plaidTranasction.amount,
+
       description: plaidTranasction.name,
       payee: plaidTranasction.payment_meta?.payee,
       currencyCode: plaidTranasction.iso_currency_code,
