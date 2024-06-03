@@ -70,10 +70,7 @@ export class PlaidClientWrapper {
       baseOptions: {
         headers: {
           'PLAID-CLIENT-ID': config.plaid.clientId,
-          'PLAID-SECRET':
-            config.plaid.env === 'development'
-              ? config.plaid.secretDevelopment
-              : config.plaid.secretSandbox,
+          'PLAID-SECRET': config.plaid.secret,
           'Plaid-Version': '2020-09-14',
         },
       },

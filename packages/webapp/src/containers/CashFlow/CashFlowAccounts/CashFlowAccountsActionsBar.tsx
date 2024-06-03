@@ -15,6 +15,7 @@ import {
   FeatureCan,
 } from '@/components';
 import { useRefreshCashflowAccounts } from '@/hooks/query';
+import { useOpenPlaidConnect } from '@/hooks/utils/useOpenPlaidConnect';
 import { CashflowAction, AbilitySubject } from '@/constants/abilityOption';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
@@ -38,6 +39,9 @@ function CashFlowAccountsActionsBar({
   setCashflowAccountsTableState,
 }) {
   const { refresh } = useRefreshCashflowAccounts();
+
+  // Opens the Plaid popup.
+  const { openPlaidAsync, isPlaidLoading } = useOpenPlaidConnect();
 
   // Handle refresh button click.
   const handleRefreshBtnClick = () => {
@@ -64,7 +68,7 @@ function CashFlowAccountsActionsBar({
   };
   // Handle connect button click.
   const handleConnectToBank = () => {
-    openDialog(DialogsName.ConnectBankCreditCard);
+    openPlaidAsync();
   };
 
   return (
@@ -116,6 +120,7 @@ function CashFlowAccountsActionsBar({
             className={Classes.MINIMAL}
             text={'Connect to Bank / Credit Card'}
             onClick={handleConnectToBank}
+            disabled={isPlaidLoading}
           />
           <NavbarDivider />
         </FeatureCan>
