@@ -2,11 +2,9 @@ import { Inject, Service } from 'typedi';
 import { UploadDocument } from './UploadDocument';
 import { DeleteAttachment } from './DeleteAttachment';
 import { GetAttachment } from './GetAttachment';
-import { AttachmentUploadPipeline } from './S3UploadPipeline';
 import { LinkAttachment } from './LinkAttachment';
 import { UnlinkAttachment } from './UnlinkAttachment';
 import { getAttachmentPresignedUrl } from './GetAttachmentPresignedUrl';
-import type { Multer } from 'multer';
 
 @Service()
 export class AttachmentsApplication {
@@ -20,9 +18,6 @@ export class AttachmentsApplication {
   private getDocumentService: GetAttachment;
 
   @Inject()
-  private uploadPipelineService: AttachmentUploadPipeline;
-
-  @Inject()
   private linkDocumentService: LinkAttachment;
 
   @Inject()
@@ -30,14 +25,6 @@ export class AttachmentsApplication {
 
   @Inject()
   private getPresignedUrlService: getAttachmentPresignedUrl;
-
-  /**
-   * Express middleware for uploading attachments to an S3 bucket.
-   * @returns {Multer}
-   */
-  get uploadPipeline(): Multer {
-    return this.uploadPipelineService.uploadPipeline();
-  }
 
   /**
    * Saves the metadata of uploaded document to S3 on database.
