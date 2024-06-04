@@ -1,29 +1,25 @@
 import { isEmpty, get, last, sumBy } from 'lodash';
+import moment from 'moment';
 import {
   IGeneralLedgerSheetQuery,
   IGeneralLedgerSheetAccount,
   IGeneralLedgerSheetAccountBalance,
   IGeneralLedgerSheetAccountTransaction,
   IAccount,
-  IJournalPoster,
-  IJournalEntry,
-  IContact,
+  ILedgerEntry,
 } from '@/interfaces';
 import FinancialSheet from '../FinancialSheet';
-import moment from 'moment';
+import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 
 /**
  * General ledger sheet.
  */
 export default class GeneralLedgerSheet extends FinancialSheet {
   tenantId: number;
-  accounts: IAccount[];
   query: IGeneralLedgerSheetQuery;
-  openingBalancesJournal: IJournalPoster;
-  transactions: IJournalPoster;
-  contactsMap: Map<number, IContact>;
   baseCurrency: string;
   i18n: any;
+  repository: GeneralLedgerRepository;
 
   /**
    * Constructor method.
@@ -36,11 +32,7 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   constructor(
     tenantId: number,
     query: IGeneralLedgerSheetQuery,
-    accounts: IAccount[],
-    contactsByIdMap: Map<number, IContact>,
-    transactions: IJournalPoster,
-    openingBalancesJournal: IJournalPoster,
-    baseCurrency: string,
+    repository: GeneralLedgerRepository,
     i18n
   ) {
     super();
@@ -48,11 +40,8 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     this.tenantId = tenantId;
     this.query = query;
     this.numberFormat = this.query.numberFormat;
-    this.accounts = accounts;
-    this.contactsMap = contactsByIdMap;
-    this.transactions = transactions;
-    this.openingBalancesJournal = openingBalancesJournal;
-    this.baseCurrency = baseCurrency;
+    this.repository = repository;
+    this.baseCurrency = this.repository.tenant.metadata.currencyCode;
     this.i18n = i18n;
   }
 
@@ -68,17 +57,17 @@ export default class GeneralLedgerSheet extends FinancialSheet {
 
   /**
    * Entry mapper.
-   * @param {IJournalEntry} entry -
+   * @param {ILedgerEntry} entry -
    * @return {IGeneralLedgerSheetAccountTransaction}
    */
   entryReducer(
     entries: IGeneralLedgerSheetAccountTransaction[],
-    entry: IJournalEntry,
+    entry: ILedgerEntry,
     openingBalance: number
   ): IGeneralLedgerSheetAccountTransaction[] {
     const lastEntry = last(entries);
 
-    const contact = this.contactsMap.get(entry.contactId);
+    const contact = this.repository.contactsById.get(entry.contactId);
     const amount = this.getAmount(
       entry.credit,
       entry.debit,
@@ -130,12 +119,14 @@ export default class GeneralLedgerSheet extends FinancialSheet {
     account: IAccount,
     openingBalance: number
   ): IGeneralLedgerSheetAccountTransaction[] {
-    const entries = this.transactions.getAccountEntries(account.id);
+    const entries = this.repository.transactionsLedger
+      .whereAccountId(account.id)
+      .getEntries();
 
     return entries.reduce(
       (
         entries: IGeneralLedgerSheetAccountTransaction[],
-        entry: IJournalEntry
+        entry: ILedgerEntry
       ) => {
         return this.entryReducer(entries, entry, openingBalance);
       },
@@ -151,7 +142,9 @@ export default class GeneralLedgerSheet extends FinancialSheet {
   private accountOpeningBalance(
     account: IAccount
   ): IGeneralLedgerSheetAccountBalance {
-    const amount = this.openingBalancesJournal.getAccountBalance(account.id);
+    const amount = this.repository.openingBalanceTransactionsLedger
+      .whereAccountId(account.id)
+      .getClosingBalance();
     const formattedAmount = this.formatTotalNumber(amount);
     const currencyCode = this.baseCurrency;
     const date = this.query.fromDate;
@@ -238,6 +231,6 @@ export default class GeneralLedgerSheet extends FinancialSheet {
    * @return {IGeneralLedgerSheetAccount[]}
    */
   public reportData(): IGeneralLedgerSheetAccount[] {
-    return this.accountsWalker(this.accounts);
+    return this.accountsWalker(this.repository.accounts);
   }
 }
