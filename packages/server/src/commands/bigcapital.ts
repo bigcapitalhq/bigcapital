@@ -71,6 +71,10 @@ function getAllSystemTenants(knex) {
   return knex('tenants');
 }
 
+function getAllInitializedSystemTenants(knex) {
+  return knex('tenants').whereNotNull('initializedAt');
+}
+
 // module.exports = {
 //   log,
 //   success,
@@ -183,7 +187,7 @@ commander
   .action(async (cmd) => {
     try {
       const sysKnex = await initSystemKnex();
-      const tenants = await getAllSystemTenants(sysKnex);
+      const tenants = await getAllInitializedSystemTenants(sysKnex);
       const tenantsOrgsIds = tenants.map((tenant) => tenant.organizationId);
 
       if (cmd.tenant_id && tenantsOrgsIds.indexOf(cmd.tenant_id) === -1) {
@@ -220,7 +224,6 @@ commander
         const oper = migrateTenant(cmd.tenant_id);
         migrateOpers.push(oper);
       }
-
       Promise.all(migrateOpers).then(() => {
         success('All tenants are migrated.');
       });
@@ -280,4 +283,3 @@ commander
       exit(error);
     }
   });
-
