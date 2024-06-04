@@ -4,11 +4,15 @@ import { Router, Response, NextFunction, Request } from 'express';
 import { body, param } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import { AttachmentsApplication } from '@/services/Attachments/AttachmentsApplication';
+import { AttachmentUploadPipeline } from '@/services/Attachments/S3UploadPipeline';
 
 @Service()
 export class AttachmentsController extends BaseController {
   @Inject()
   private attachmentsApplication: AttachmentsApplication;
+
+  @Inject()
+  private uploadPipelineService: AttachmentUploadPipeline;
 
   /**
    * Router constructor.
@@ -18,7 +22,8 @@ export class AttachmentsController extends BaseController {
 
     router.post(
       '/',
-      this.attachmentsApplication.uploadPipeline.single('file'),
+      this.uploadPipelineService.validateS3Configured,
+      this.uploadPipelineService.uploadPipeline().single('file'),
       this.validateUploadedFileExistance,
       this.uploadAttachment.bind(this)
     );
