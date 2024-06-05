@@ -83,8 +83,8 @@ export class GeneralLedgerTable extends R.compose(
    */
   private openingBalanceColumnsAccessors(): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: this.meta.fromDate },
-      { key: 'account_name', value: 'Opening Balance' },
+      { key: 'date', value: 'Opening Balance' },
+      { key: 'account_name', value: '' },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
       { key: 'description', accessor: 'description' },
@@ -97,12 +97,15 @@ export class GeneralLedgerTable extends R.compose(
 
   /**
    * Closing balance row column accessors.
+   * @param {IGeneralLedgerSheetAccount} account -
    * @returns {ITableColumnAccessor[]}
    */
-  private closingBalanceColumnAccessors(): IColumnMapperMeta[] {
+  private closingBalanceColumnAccessors(
+    account: IGeneralLedgerSheetAccount
+  ): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: this.meta.toDate },
-      { key: 'account_name', value: 'Closing Balance' },
+      { key: 'date', value: `Closing balance for ${account.name}` },
+      { key: 'account_name', value: `` },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
       { key: 'description', accessor: '_empty_' },
@@ -115,12 +118,21 @@ export class GeneralLedgerTable extends R.compose(
 
   /**
    * Closing balance row column accessors.
+   * @param {IGeneralLedgerSheetAccount} account -
    * @returns {ITableColumnAccessor[]}
    */
-  private closingBalanceWithSubaccountsColumnAccessors(): IColumnMapperMeta[] {
+  private closingBalanceWithSubaccountsColumnAccessors(
+    account: IGeneralLedgerSheetAccount
+  ): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: this.meta.toDate },
-      { key: 'account_name', value: 'Closing Balance with sub-accounts' },
+      {
+        key: 'date',
+        value: `Closing Balance for ${account.name} with sub-accounts`,
+      },
+      {
+        key: 'account_name',
+        value: ``,
+      },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
       { key: 'description', accessor: '_empty_' },
@@ -205,7 +217,7 @@ export class GeneralLedgerTable extends R.compose(
    * @returns {ITableRow}
    */
   private closingBalanceMapper = (account: IGeneralLedgerSheetAccount) => {
-    const columns = this.closingBalanceColumnAccessors();
+    const columns = this.closingBalanceColumnAccessors(account);
     const meta = {
       rowTypes: [ROW_TYPE.CLOSING_BALANCE],
     };
@@ -220,7 +232,7 @@ export class GeneralLedgerTable extends R.compose(
   private closingBalanceWithSubaccountsMapper = (
     account: IGeneralLedgerSheetAccount
   ): ITableRow => {
-    const columns = this.closingBalanceWithSubaccountsColumnAccessors();
+    const columns = this.closingBalanceWithSubaccountsColumnAccessors(account);
     const meta = {
       rowTypes: [ROW_TYPE.CLOSING_BALANCE],
     };

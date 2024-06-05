@@ -96,12 +96,19 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
             }
           }
         }
-        &:not(:first-child).is-expanded .td {
-          border-top: 1px solid #ddd;
-        }
       }
       &--OPENING_BALANCE,
       &--CLOSING_BALANCE {
+        .td {
+          color: #000;
+        }
+        .date {
+          font-weight: 500;
+
+          .cell-inner {
+            position: absolute;
+          }
+        }
         .amount {
           font-weight: 500;
         }
@@ -109,6 +116,9 @@ const GeneralLedgerDataTable = styled(ReportDataTable)`
       &--CLOSING_BALANCE {
         .name {
           font-weight: 500;
+        }
+        .td {
+          border-top: 1px solid #ddd;
         }
       }
     }
