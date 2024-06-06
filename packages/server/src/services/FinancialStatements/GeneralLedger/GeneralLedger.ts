@@ -14,6 +14,7 @@ import { GeneralLedgerRepository } from './GeneralLedgerRepository';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import { flatToNestedArray } from '@/utils';
 import Ledger from '@/services/Accounting/Ledger';
+import { calculateRunningBalance } from './_utils';
 
 /**
  * General ledger sheet.
@@ -21,11 +22,10 @@ import Ledger from '@/services/Accounting/Ledger';
 export default class GeneralLedgerSheet extends R.compose(
   FinancialSheetStructure
 )(FinancialSheet) {
-  tenantId: number;
-  query: IGeneralLedgerSheetQuery;
-  baseCurrency: string;
-  i18n: any;
-  repository: GeneralLedgerRepository;
+  private query: IGeneralLedgerSheetQuery;
+  private baseCurrency: string;
+  private i18n: any;
+  private repository: GeneralLedgerRepository;
 
   /**
    * Constructor method.
@@ -52,17 +52,6 @@ export default class GeneralLedgerSheet extends R.compose(
   }
 
   /**
-   * Calculate the running balance.
-   * @param {number} amount - Transaction amount.
-   * @param {number} lastRunningBalance - Last running balance.
-   * @param {number} openingBalance - Opening balance.
-   * @return {number} Running balance.
-   */
-  calculateRunningBalance(amount: number, lastRunningBalance: number): number {
-    return amount + lastRunningBalance;
-  }
-
-  /**
    * Entry mapper.
    * @param {ILedgerEntry} entry -
    * @return {IGeneralLedgerSheetAccountTransaction}
@@ -79,16 +68,19 @@ export default class GeneralLedgerSheet extends R.compose(
       entry.debit,
       entry.accountNormal
     );
-    return this.calculateRunningBalance(amount, lastRunningBalance);
+    return calculateRunningBalance(amount, lastRunningBalance);
   }
 
   /**
-   *
-   * @param entry
-   * @param runningBalance
-   * @returns
+   * Maps the given ledger entry to G/L transaction.
+   * @param {ILedgerEntry} entry
+   * @param {number} runningBalance
+   * @returns {IGeneralLedgerSheetAccountTransaction}
    */
-  private entryMapper(entry: ILedgerEntry, runningBalance: number) {
+  private transactionMapper(
+    entry: ILedgerEntry,
+    runningBalance: number
+  ): IGeneralLedgerSheetAccountTransaction {
     const contact = this.repository.contactsById.get(entry.contactId);
     const amount = Ledger.getAmount(
       entry.credit,
@@ -155,7 +147,7 @@ export default class GeneralLedgerSheet extends R.compose(
       .map((entryPair: [number, ILedgerEntry]) => {
         const [runningBalance, entry] = entryPair;
 
-        return this.entryMapper(entry, runningBalance);
+        return this.transactionMapper(entry, runningBalance);
       });
   }
 
