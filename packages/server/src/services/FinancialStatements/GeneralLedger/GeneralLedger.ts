@@ -401,7 +401,6 @@ export default class GeneralLedgerSheet extends R.compose(
    * @return {IGeneralLedgerSheetAccount[]}
    */
   public reportData(): IGeneralLedgerSheetAccount[] {
-    console.log(this.repository.accounts);
     return this.accountsWalker(this.repository.accounts);
   }
 }
