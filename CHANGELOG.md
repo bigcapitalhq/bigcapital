@@ -2,6 +2,41 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [0.17.0] - 04-06-2024
+
+### New
+
+* feat: Upload and attach documents by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/461
+* feat: Export resource tables to pdf by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/460
+* feat: Build and deploy develop Docker container by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/476
+* feat: Internal docker virtual network by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/478
+
+### Fixes
+
+* fix: Skip send confirmation email if disabled by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/459
+* fix: Lemon Squeezy redirect to base url by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/479
+* fix: Organize Plaid env variables for development and sandbox envs by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/480
+* fix: Plaid syncs deposit imports as withdrawals by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/481
+* fix: Validate the s3 configures exist by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/482
+* fix: Run migrations only for initialized tenants by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/484
+
+## [0.16.16] - 
+
+* feat: handle http exceptions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/456
+* feat: add the missing Newrelic env vars to docker-compose.prod file by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/457
+* fix: add the signup email confirmation env var by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/458
+
+## [0.16.14] - 
+
+* fix: Typo in setup wizard by @ccantrell72 in https://github.com/bigcapitalhq/bigcapital/pull/440
+* fix: Showing the real mail address on email confirmation view by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/445
+* fix: Auto-increment setting parsing by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/453
+
+## [0.16.12] - 
+
+* feat: Create a manifest list for `webapp` Docker image and push it to DockerHub. by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/436
+* feat: Combine arm64 and amd64 in one Github action runner by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/437
+
 ## [0.16.11] - 06-05-2024
 
 ### improvements
