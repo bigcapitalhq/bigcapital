@@ -1,7 +1,6 @@
-import { NextFunction, Router } from 'express';
-import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
-import { Request, Response } from 'express';
+import { NextFunction, Router, Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
+import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
 import BaseController from '../BaseController';
 import { LemonSqueezyWebhooks } from '@/services/Subscription/LemonSqueezyWebhooks';
 import { PlaidWebhookTenantBootMiddleware } from '@/services/Banking/Plaid/PlaidWebhookTenantBootMiddleware';
@@ -34,7 +33,7 @@ export class Webhooks extends BaseController {
    * @param {Response} res
    * @returns {Response}
    */
-  public async lemonWebhooks(req: Request, res: Response, next: any) {
+  public async lemonWebhooks(req: Request, res: Response, next: NextFunction) {
     const data = req.body;
     const signature = req.headers['x-signature'] ?? '';
     const rawBody = req.rawBody;

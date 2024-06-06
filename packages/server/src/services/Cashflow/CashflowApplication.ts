@@ -125,7 +125,8 @@ export class CashflowApplication {
   ) {
     return this.createUncategorizedTransactionService.create(
       tenantId,
-      createUncategorizedTransactionDTO
+      createUncategorizedTransactionDTO,
+      trx
     );
   }
 
