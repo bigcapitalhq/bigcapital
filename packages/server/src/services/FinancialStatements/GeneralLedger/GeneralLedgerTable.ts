@@ -272,10 +272,14 @@ export class GeneralLedgerTable extends R.compose(
     const closingBalanceWithSubaccounts =
       this.closingBalanceWithSubaccountsMapper(account);
 
+    // Appends the closing balance with sub-accounts row if the account
+    // has children accounts and the node is define.
+    const isAppendClosingSubaccounts = () =>
+      account.children?.length > 0 && !!account.closingBalanceSubaccounts;
+
     const children = R.compose(
-      // Appends the closing balance with sub-accounts row if the account has children accounts.
       R.when(
-        () => account.children?.length > 0,
+        isAppendClosingSubaccounts,
         R.append(closingBalanceWithSubaccounts)
       ),
       R.concat(R.defaultTo([], transactions)),

@@ -117,10 +117,12 @@ export default class GeneralLedgerSheet extends R.compose(
       amount,
       runningBalance,
 
-      formattedAmount: this.formatNumber(amount),
-      formattedCredit: this.formatNumber(entry.credit),
-      formattedDebit: this.formatNumber(entry.debit),
-      formattedRunningBalance: this.formatNumber(runningBalance),
+      formattedAmount: this.formatNumber(amount, { excerptZero: false }),
+      formattedCredit: this.formatNumber(entry.credit, { excerptZero: false }),
+      formattedDebit: this.formatNumber(entry.debit, { excerptZero: false }),
+      formattedRunningBalance: this.formatNumber(runningBalance, {
+        excerptZero: false,
+      }),
 
       currencyCode: this.baseCurrency,
     } as IGeneralLedgerSheetAccountTransaction;
@@ -141,16 +143,20 @@ export default class GeneralLedgerSheet extends R.compose(
 
     return entries
       .reduce((prev: Array<[number, ILedgerEntry]>, current: ILedgerEntry) => {
+        const prevEntry = last(prev);
+        const prevRunningBalance = head(prevEntry) as number;
         const amount = this.getEntryRunningBalance(
           current,
           openingBalance,
-          head(last(prev)) as number
+          prevRunningBalance
         );
-        return new Array([amount, current]);
+        return [...prev, [amount, current]];
       }, [])
-      .map(([runningBalance, entry]: [number, ILedgerEntry]) =>
-        this.entryMapper(entry, runningBalance)
-      );
+      .map((entryPair: [number, ILedgerEntry]) => {
+        const [runningBalance, entry] = entryPair;
+
+        return this.entryMapper(entry, runningBalance);
+      });
   }
 
   /**
@@ -224,8 +230,6 @@ export default class GeneralLedgerSheet extends R.compose(
     const depsAccountsIds =
       this.repository.accountsGraph.dependenciesOf(accountId);
 
-    console.log([...depsAccountsIds, accountId]);
-
     const openingBalance = this.repository.openingBalanceTransactionsLedger
       .whereAccountsIds([...depsAccountsIds, accountId])
       .getClosingBalance();
@@ -241,7 +245,7 @@ export default class GeneralLedgerSheet extends R.compose(
   };
 
   /**
-   *
+   * Retrieves the closing balance with subaccounts total node.
    * @param {number} accountId
    * @returns {IGeneralLedgerSheetAccountBalance}
    */
@@ -254,6 +258,31 @@ export default class GeneralLedgerSheet extends R.compose(
     const date = this.query.toDate;
 
     return { amount, formattedAmount, currencyCode, date };
+  };
+
+  /**
+   * Detarmines whether the closing balance subaccounts node should be exist.
+   * @param {number} accountId
+   * @returns {boolean}
+   */
+  private isAccountNodeIncludesClosingSubaccounts = (accountId: number) => {
+    // Retrun early if there is no accounts in the filter so
+    // return closing subaccounts in all cases.
+    if (isEmpty(this.query.accountsIds)) {
+      return true;
+    }
+    // Returns true if the given account id included in the filter.
+    const isIncluded = this.query.accountsIds.includes(accountId);
+
+    const parentAccountIds =
+      this.repository.accountsGraph.dependantsOf(accountId);
+
+    // Returns true if one of the parent account id exists in the filter.
+    const accountIdInChildren = R.any(
+      (parentAccountId) => R.includes(parentAccountId, this.query.accountsIds),
+      parentAccountIds
+    );
+    return isIncluded || accountIdInChildren;
   };
 
   /**
@@ -271,7 +300,12 @@ export default class GeneralLedgerSheet extends R.compose(
     const closingBalanceSubaccounts =
       this.accountClosingBalanceWithSubaccountsTotal(account.id);
 
-    return {
+    return R.compose(
+      R.when(
+        () => this.isAccountNodeIncludesClosingSubaccounts(account.id),
+        R.assoc('closingBalanceSubaccounts', closingBalanceSubaccounts)
+      )
+    )({
       id: account.id,
       name: account.name,
       code: account.code,
@@ -280,8 +314,7 @@ export default class GeneralLedgerSheet extends R.compose(
       openingBalance,
       transactions,
       closingBalance,
-      closingBalanceSubaccounts,
-    };
+    });
   };
 
   /**
@@ -310,17 +343,40 @@ export default class GeneralLedgerSheet extends R.compose(
    * @param {IGeneralLedgerSheetAccount[]} nodes
    * @returns  {IGeneralLedgerSheetAccount[]}
    */
-  private filterAccountNodes = (
+  private filterAccountNodesByTransactionsFilter = (
     nodes: IGeneralLedgerSheetAccount[]
   ): IGeneralLedgerSheetAccount[] => {
     return this.filterNodesDeep(
       nodes,
-      (generalLedgerAccount: IGeneralLedgerSheetAccount) =>
-        !(
-          generalLedgerAccount.transactions.length === 0 &&
-          this.query.noneTransactions
-        )
+      (account: IGeneralLedgerSheetAccount) =>
+        !(account.transactions.length === 0 && this.query.noneTransactions)
     );
+  };
+
+  /**
+   * Filters account nodes by the acounts filter.
+   * @param {IAccount[]} nodes
+   * @returns {IAccount[]}
+   */
+  private filterAccountNodesByAccountsFilter = (
+    nodes: IAccount[]
+  ): IAccount[] => {
+    return this.filterNodesDeep(nodes, (node: IGeneralLedgerSheetAccount) => {
+      if (R.isEmpty(this.query.accountsIds)) {
+        return true;
+      }
+      // Returns true if the given account id exists in the filter.
+      const isIncluded = this.query.accountsIds?.includes(node.id);
+
+      const parentAccountIds = this.repository.accountsGraph.dependantsOf(
+        node.id
+      );
+      // Returns true if one of th parent account ids exist in the filter.
+      const oneParentAccountIdExistInFilter = parentAccountIds.some((id) =>
+        this.query.accountsIds?.includes(id)
+      );
+      return isIncluded || oneParentAccountIdExistInFilter;
+    });
   };
 
   /**
@@ -331,8 +387,11 @@ export default class GeneralLedgerSheet extends R.compose(
    */
   private accountsWalker(accounts: IAccount[]): IGeneralLedgerSheetAccount[] {
     return R.compose(
-      this.filterAccountNodes,
+      R.defaultTo([]),
+      this.filterAccountNodesByTransactionsFilter,
       this.accountNodesDeepMap,
+      R.defaultTo([]),
+      this.filterAccountNodesByAccountsFilter,
       this.nestedAccountsNode
     )(accounts);
   }
@@ -342,6 +401,7 @@ export default class GeneralLedgerSheet extends R.compose(
    * @return {IGeneralLedgerSheetAccount[]}
    */
   public reportData(): IGeneralLedgerSheetAccount[] {
+    console.log(this.repository.accounts);
     return this.accountsWalker(this.repository.accounts);
   }
 }

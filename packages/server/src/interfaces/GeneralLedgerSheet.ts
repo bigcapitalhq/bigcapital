@@ -56,7 +56,7 @@ export interface IGeneralLedgerSheetAccount {
   transactions: IGeneralLedgerSheetAccountTransaction[];
   openingBalance: IGeneralLedgerSheetAccountBalance;
   closingBalance: IGeneralLedgerSheetAccountBalance;
-  closingBalanceSubaccounts: IGeneralLedgerSheetAccountBalance;
+  closingBalanceSubaccounts?: IGeneralLedgerSheetAccountBalance;
   children?: IGeneralLedgerSheetAccount[];
 }
 

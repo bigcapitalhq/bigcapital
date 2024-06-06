@@ -71,7 +71,9 @@ export class GeneralLedgerRepository {
    * Initialize the accounts.
    */
   public async initAccounts() {
-    this.accounts = await this.repositories.accountRepository.all();
+    this.accounts = await this.repositories.accountRepository
+      .all()
+      .orderBy('name', 'ASC');
   }
 
   /**
@@ -94,11 +96,13 @@ export class GeneralLedgerRepository {
    * Initialize the G/L transactions from/to the given date.
    */
   public async initTransactions() {
-    this.transactions = await this.repositories.transactionsRepository.journal({
-      fromDate: this.filter.fromDate,
-      toDate: this.filter.toDate,
-      branchesIds: this.filter.branchesIds,
-    });
+    this.transactions = await this.repositories.transactionsRepository
+      .journal({
+        fromDate: this.filter.fromDate,
+        toDate: this.filter.toDate,
+        branchesIds: this.filter.branchesIds,
+      })
+      .orderBy('date', 'ASC');
     // Transform array transactions to journal collection.
     this.transactionsLedger = Ledger.fromTransactions(this.transactions);
   }
