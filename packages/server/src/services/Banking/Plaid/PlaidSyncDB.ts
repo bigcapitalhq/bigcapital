@@ -46,7 +46,7 @@ export class PlaidSyncDb {
     trx?: Knex.Transaction
   ) {
     const { Account } = this.tenancy.models(tenantId);
-    const plaidAccount = Account.query().findOne(
+    const plaidAccount = await Account.query().findOne(
       'plaidAccountId',
       createBankAccountDTO.plaidAccountId
     );
@@ -101,11 +101,11 @@ export class PlaidSyncDb {
   ): Promise<void> {
     const { Account } = this.tenancy.models(tenantId);
 
-    const cashflowAccount = await Account.query()
+    const cashflowAccount = await Account.query(trx)
       .findOne({ plaidAccountId })
       .throwIfNotFound();
 
-    const openingEquityBalance = await Account.query().findOne(
+    const openingEquityBalance = await Account.query(trx).findOne(
       'slug',
       'opening-balance-equity'
     );
