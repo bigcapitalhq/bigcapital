@@ -164,3 +164,7 @@ export enum TaxRateAction {
   DELETE = 'Delete',
   VIEW = 'View',
 }
+
+export interface CreateAccountParams {
+  ignoreUniqueName: boolean;
+}

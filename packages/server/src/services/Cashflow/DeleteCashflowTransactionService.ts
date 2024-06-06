@@ -30,7 +30,8 @@ export class DeleteCashflowTransaction {
    */
   public deleteCashflowTransaction = async (
     tenantId: number,
-    cashflowTransactionId: number
+    cashflowTransactionId: number,
+    trx?: Knex.Transaction
   ): Promise<{ oldCashflowTransaction: ICashflowTransaction }> => {
     const { CashflowTransaction, CashflowTransactionLine } =
       this.tenancy.models(tenantId);
@@ -43,34 +44,44 @@ export class DeleteCashflowTransaction {
     this.throwErrorIfTransactionNotFound(oldCashflowTransaction);
 
     // Starting database transaction.
-    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers `onCashflowTransactionDelete` event.
-      await this.eventPublisher.emitAsync(events.cashflow.onTransactionDeleting, {
-        trx,
-        tenantId,
-        oldCashflowTransaction,
-      } as ICommandCashflowDeletingPayload);
+    return this.uow.withTransaction(
+      tenantId,
+      async (trx: Knex.Transaction) => {
+        // Triggers `onCashflowTransactionDelete` event.
+        await this.eventPublisher.emitAsync(
+          events.cashflow.onTransactionDeleting,
+          {
+            trx,
+            tenantId,
+            oldCashflowTransaction,
+          } as ICommandCashflowDeletingPayload
+        );
 
-      // Delete cashflow transaction associated lines first.
-      await CashflowTransactionLine.query(trx)
-        .where('cashflow_transaction_id', cashflowTransactionId)
-        .delete();
+        // Delete cashflow transaction associated lines first.
+        await CashflowTransactionLine.query(trx)
+          .where('cashflow_transaction_id', cashflowTransactionId)
+          .delete();
 
-      // Delete cashflow transaction.
-      await CashflowTransaction.query(trx)
-        .findById(cashflowTransactionId)
-        .delete();
+        // Delete cashflow transaction.
+        await CashflowTransaction.query(trx)
+          .findById(cashflowTransactionId)
+          .delete();
 
-      // Triggers `onCashflowTransactionDeleted` event.
-      await this.eventPublisher.emitAsync(events.cashflow.onTransactionDeleted, {
-        trx,
-        tenantId,
-        cashflowTransactionId,
-        oldCashflowTransaction,
-      } as ICommandCashflowDeletedPayload);
+        // Triggers `onCashflowTransactionDeleted` event.
+        await this.eventPublisher.emitAsync(
+          events.cashflow.onTransactionDeleted,
+          {
+            trx,
+            tenantId,
+            cashflowTransactionId,
+            oldCashflowTransaction,
+          } as ICommandCashflowDeletedPayload
+        );
 
-      return { oldCashflowTransaction };
-    });
+        return { oldCashflowTransaction };
+      },
+      trx
+    );
   };
 
   /**
