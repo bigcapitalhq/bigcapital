@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { NextFunction, Router } from 'express';
 import { PlaidApplication } from '@/services/Banking/Plaid/PlaidApplication';
 import { Request, Response } from 'express';
 import { Inject, Service } from 'typedi';
@@ -57,20 +57,25 @@ export class Webhooks extends BaseController {
    * @param {Response} res
    * @returns {Response}
    */
-  public async plaidWebhooks(req: Request, res: Response) {
+  public async plaidWebhooks(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
-    const {
-      webhook_type: webhookType,
-      webhook_code: webhookCode,
-      item_id: plaidItemId,
-    } = req.body;
 
-    await this.plaidApp.webhooks(
-      tenantId,
-      plaidItemId,
-      webhookType,
-      webhookCode
-    );
-    return res.status(200).send({ code: 200, message: 'ok' });
+    try {
+      const {
+        webhook_type: webhookType,
+        webhook_code: webhookCode,
+        item_id: plaidItemId,
+      } = req.body;
+
+      await this.plaidApp.webhooks(
+        tenantId,
+        plaidItemId,
+        webhookType,
+        webhookCode
+      );
+      return res.status(200).send({ code: 200, message: 'ok' });
+    } catch (error) {
+      next(error);
+    }
   }
 }

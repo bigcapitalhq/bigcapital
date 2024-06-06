@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import { DeleteCashflowTransaction } from './DeleteCashflowTransactionService';
 import { UncategorizeCashflowTransaction } from './UncategorizeCashflowTransaction';
@@ -119,7 +120,8 @@ export class CashflowApplication {
    */
   public createUncategorizedTransaction(
     tenantId: number,
-    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO
+    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO,
+    trx?: Knex.Transaction
   ) {
     return this.createUncategorizedTransactionService.create(
       tenantId,

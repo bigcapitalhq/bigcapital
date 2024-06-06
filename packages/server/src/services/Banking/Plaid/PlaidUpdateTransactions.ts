@@ -3,6 +3,8 @@ import { Inject, Service } from 'typedi';
 import { PlaidClientWrapper } from '@/lib/Plaid/Plaid';
 import { PlaidSyncDb } from './PlaidSyncDB';
 import { PlaidFetchedTransactionsUpdates } from '@/interfaces';
+import UnitOfWork from '@/services/UnitOfWork';
+import { Knex } from 'knex';
 
 @Service()
 export class PlaidUpdateTransactions {
@@ -12,12 +14,40 @@ export class PlaidUpdateTransactions {
   @Inject()
   private plaidSync: PlaidSyncDb;
 
+  @Inject()
+  private uow: UnitOfWork;
+
   /**
-   * Handles the fetching and storing of new, modified, or removed transactions
-   * @param {number} tenantId Tenant ID.
-   * @param {string} plaidItemId the Plaid ID for the item.
+   * Handles sync the Plaid item to Bigcaptial under UOW.
+   * @param {number} tenantId
+   * @param {number} plaidItemId
+   * @returns {Promise<{  addedCount: number; modifiedCount: number; removedCount: number; }>}
    */
   public async updateTransactions(tenantId: number, plaidItemId: string) {
+    return this.uow.withTransaction(tenantId, (trx: Knex.Transaction) => {
+      return this.updateTransactionsWork(tenantId, plaidItemId, trx);
+    });
+  }
+
+  /**
+   * Handles the fetching and storing the following:
+   *  - New, modified, or removed transactions.
+   *  - New bank accounts.
+   *  - Last accounts feeds updated at.
+   *  - Turn on the accounts feed flag.
+   * @param {number} tenantId - Tenant ID.
+   * @param {string} plaidItemId - The Plaid ID for the item.
+   * @returns {Promise<{  addedCount: number; modifiedCount: number; removedCount: number; }>}
+   */
+  public async updateTransactionsWork(
+    tenantId: number,
+    plaidItemId: string,
+    trx?: Knex.Transaction
+  ): Promise<{
+    addedCount: number;
+    modifiedCount: number;
+    removedCount: number;
+  }> {
     // Fetch new transactions from plaid api.
     const { added, modified, removed, cursor, accessToken } =
       await this.fetchTransactionUpdates(tenantId, plaidItemId);
@@ -29,28 +59,42 @@ export class PlaidUpdateTransactions {
     } = await plaidInstance.accountsGet(request);
 
     const plaidAccountsIds = accounts.map((a) => a.account_id);
-
     const {
       data: { institution },
     } = await plaidInstance.institutionsGetById({
       institution_id: item.institution_id,
       country_codes: ['US', 'UK'],
     });
-    // Update the DB.
-    await this.plaidSync.syncBankAccounts(tenantId, accounts, institution);
+    // Sync bank accounts.
+    await this.plaidSync.syncBankAccounts(tenantId, accounts, institution, trx);
+    // Sync bank account transactions.
     await this.plaidSync.syncAccountsTransactions(
       tenantId,
-      added.concat(modified)
+      added.concat(modified),
+      trx
     );
-    await this.plaidSync.syncRemoveTransactions(tenantId, removed);
-    await this.plaidSync.syncTransactionsCursor(tenantId, plaidItemId, cursor);
-
+    // Sync removed transactions.
+    await this.plaidSync.syncRemoveTransactions(tenantId, removed, trx);
+    // Sync transactions cursor.
+    await this.plaidSync.syncTransactionsCursor(
+      tenantId,
+      plaidItemId,
+      cursor,
+      trx
+    );
     // Update the last feeds updated at of the updated accounts.
-    await this.plaidSync.updateLastFeedsUpdatedAt(tenantId, plaidAccountsIds);
-
+    await this.plaidSync.updateLastFeedsUpdatedAt(
+      tenantId,
+      plaidAccountsIds,
+      trx
+    );
     // Turn on the accounts feeds flag.
-    await this.plaidSync.updateAccountsFeedsActive(tenantId, plaidAccountsIds);
-
+    await this.plaidSync.updateAccountsFeedsActive(
+      tenantId,
+      plaidAccountsIds,
+      true,
+      trx
+    );
     return {
       addedCount: added.length,
       modifiedCount: modified.length,

@@ -3,7 +3,11 @@ import { Inject, Service } from 'typedi';
 import bluebird from 'bluebird';
 import { entries, groupBy } from 'lodash';
 import { CreateAccount } from '@/services/Accounts/CreateAccount';
-import { PlaidAccount, PlaidTransaction } from '@/interfaces';
+import {
+  IAccountCreateDTO,
+  PlaidAccount,
+  PlaidTransaction,
+} from '@/interfaces';
 import {
   transformPlaidAccountToCreateAccount,
   transformPlaidTrxsToCashflowCreate,
@@ -11,6 +15,7 @@ import {
 import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
+import { Knex } from 'knex';
 
 const CONCURRENCY_ASYNC = 10;
 
@@ -29,6 +34,35 @@ export class PlaidSyncDb {
   private deleteCashflowTransactionService: DeleteCashflowTransaction;
 
   /**
+   * Syncs the Plaid bank account.
+   * @param {number} tenantId
+   * @param {IAccountCreateDTO} createBankAccountDTO
+   * @param {Knex.Transaction} trx
+   * @returns {Promise<void>}
+   */
+  public async syncBankAccount(
+    tenantId: number,
+    createBankAccountDTO: IAccountCreateDTO,
+    trx?: Knex.Transaction
+  ) {
+    const { Account } = this.tenancy.models(tenantId);
+    const plaidAccount = Account.query().findOne(
+      'plaidAccountId',
+      createBankAccountDTO.plaidAccountId
+    );
+    // Can't continue if the Plaid account is already created.
+    if (plaidAccount) {
+      return;
+    }
+    await this.createAccountService.createAccount(
+      tenantId,
+      createBankAccountDTO,
+      trx,
+      { ignoreUniqueName: true }
+    );
+  }
+
+  /**
    * Syncs the plaid accounts to the system accounts.
    * @param {number} tenantId Tenant ID.
    * @param {PlaidAccount[]} plaidAccounts
@@ -37,7 +71,8 @@ export class PlaidSyncDb {
   public async syncBankAccounts(
     tenantId: number,
     plaidAccounts: PlaidAccount[],
-    institution: any
+    institution: any,
+    trx?: Knex.Transaction
   ): Promise<void> {
     const transformToPlaidAccounts =
       transformPlaidAccountToCreateAccount(institution);
@@ -47,7 +82,7 @@ export class PlaidSyncDb {
     await bluebird.map(
       accountCreateDTOs,
       (createAccountDTO: any) =>
-        this.createAccountService.createAccount(tenantId, createAccountDTO),
+        this.syncBankAccount(tenantId, createAccountDTO, trx),
       { concurrency: CONCURRENCY_ASYNC }
     );
   }
@@ -61,7 +96,8 @@ export class PlaidSyncDb {
   public async syncAccountTranactions(
     tenantId: number,
     plaidAccountId: number,
-    plaidTranasctions: PlaidTransaction[]
+    plaidTranasctions: PlaidTransaction[],
+    trx?: Knex.Transaction
   ): Promise<void> {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -87,7 +123,8 @@ export class PlaidSyncDb {
       (uncategoriedDTO) =>
         this.cashflowApp.createUncategorizedTransaction(
           tenantId,
-          uncategoriedDTO
+          uncategoriedDTO,
+          trx
         ),
       { concurrency: 1 }
     );
@@ -100,7 +137,8 @@ export class PlaidSyncDb {
    */
   public async syncAccountsTransactions(
     tenantId: number,
-    plaidAccountsTransactions: PlaidTransaction[]
+    plaidAccountsTransactions: PlaidTransaction[],
+    trx?: Knex.Transaction
   ): Promise<void> {
     const groupedTrnsxByAccountId = entries(
       groupBy(plaidAccountsTransactions, 'account_id')
@@ -111,7 +149,8 @@ export class PlaidSyncDb {
         return this.syncAccountTranactions(
           tenantId,
           plaidAccountId,
-          plaidTransactions
+          plaidTransactions,
+          trx
         );
       },
       { concurrency: CONCURRENCY_ASYNC }
@@ -124,11 +163,12 @@ export class PlaidSyncDb {
    */
   public async syncRemoveTransactions(
     tenantId: number,
-    plaidTransactionsIds: string[]
+    plaidTransactionsIds: string[],
+    trx?: Knex.Transaction
   ) {
     const { CashflowTransaction } = this.tenancy.models(tenantId);
 
-    const cashflowTransactions = await CashflowTransaction.query().whereIn(
+    const cashflowTransactions = await CashflowTransaction.query(trx).whereIn(
       'plaidTransactionId',
       plaidTransactionsIds
     );
@@ -140,7 +180,8 @@ export class PlaidSyncDb {
       (transactionId: number) =>
         this.deleteCashflowTransactionService.deleteCashflowTransaction(
           tenantId,
-          transactionId
+          transactionId,
+          trx
         ),
       { concurrency: CONCURRENCY_ASYNC }
     );
@@ -155,11 +196,12 @@ export class PlaidSyncDb {
   public async syncTransactionsCursor(
     tenantId: number,
     plaidItemId: string,
-    lastCursor: string
+    lastCursor: string,
+    trx?: Knex.Transaction
   ) {
     const { PlaidItem } = this.tenancy.models(tenantId);
 
-    await PlaidItem.query().findOne({ plaidItemId }).patch({ lastCursor });
+    await PlaidItem.query(trx).findOne({ plaidItemId }).patch({ lastCursor });
   }
 
   /**
@@ -169,13 +211,16 @@ export class PlaidSyncDb {
    */
   public async updateLastFeedsUpdatedAt(
     tenantId: number,
-    plaidAccountIds: string[]
+    plaidAccountIds: string[],
+    trx?: Knex.Transaction
   ) {
     const { Account } = this.tenancy.models(tenantId);
 
-    await Account.query().whereIn('plaid_account_id', plaidAccountIds).patch({
-      lastFeedsUpdatedAt: new Date(),
-    });
+    await Account.query(trx)
+      .whereIn('plaid_account_id', plaidAccountIds)
+      .patch({
+        lastFeedsUpdatedAt: new Date(),
+      });
   }
 
   /**
@@ -187,12 +232,15 @@ export class PlaidSyncDb {
   public async updateAccountsFeedsActive(
     tenantId: number,
     plaidAccountIds: string[],
-    isFeedsActive: boolean = true
+    isFeedsActive: boolean = true,
+    trx?: Knex.Transaction
   ) {
     const { Account } = this.tenancy.models(tenantId);
 
-    await Account.query().whereIn('plaid_account_id', plaidAccountIds).patch({
-      isFeedsActive,
-    });
+    await Account.query(trx)
+      .whereIn('plaid_account_id', plaidAccountIds)
+      .patch({
+        isFeedsActive,
+      });
   }
 }

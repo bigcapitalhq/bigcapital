@@ -7,6 +7,7 @@ import {
   IAccountEventCreatedPayload,
   IAccountEventCreatingPayload,
   IAccountCreateDTO,
+  CreateAccountParams,
 } from '@/interfaces';
 import events from '@/subscribers/events';
 import UnitOfWork from '@/services/UnitOfWork';
@@ -30,19 +31,22 @@ export class CreateAccount {
 
   /**
    * Authorize the account creation.
-   * @param  {number} tenantId
-   * @param  {IAccountCreateDTO} accountDTO
+   * @param {number} tenantId
+   * @param {IAccountCreateDTO} accountDTO
    */
   private authorize = async (
     tenantId: number,
     accountDTO: IAccountCreateDTO,
-    baseCurrency: string
+    baseCurrency: string,
+    params?: CreateAccountParams
   ) => {
     // Validate account name uniquiness.
-    await this.validator.validateAccountNameUniquiness(
-      tenantId,
-      accountDTO.name
-    );
+    if (!params.ignoreUniqueName) {
+      await this.validator.validateAccountNameUniquiness(
+        tenantId,
+        accountDTO.name
+      );
+    }
     // Validate the account code uniquiness.
     if (accountDTO.code) {
       await this.validator.isAccountCodeUniqueOrThrowError(
@@ -82,7 +86,7 @@ export class CreateAccount {
 
   /**
    * Transformes the create account DTO to input model.
-   * @param   {IAccountCreateDTO} createAccountDTO
+   * @param {IAccountCreateDTO} createAccountDTO
    */
   private transformDTOToModel = (
     createAccountDTO: IAccountCreateDTO,
@@ -104,7 +108,8 @@ export class CreateAccount {
   public createAccount = async (
     tenantId: number,
     accountDTO: IAccountCreateDTO,
-    trx?: Knex.Transaction
+    trx?: Knex.Transaction,
+    params: CreateAccountParams = { ignoreUniqueName: false }
   ): Promise<IAccount> => {
     const { Account } = this.tenancy.models(tenantId);
 
@@ -112,8 +117,12 @@ export class CreateAccount {
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Authorize the account creation.
-    await this.authorize(tenantId, accountDTO, tenantMeta.baseCurrency);
-
+    await this.authorize(
+      tenantId,
+      accountDTO,
+      tenantMeta.baseCurrency,
+      params
+    );
     // Transformes the DTO to model.
     const accountInputModel = this.transformDTOToModel(
       accountDTO,
@@ -148,3 +157,4 @@ export class CreateAccount {
     );
   };
 }
+
