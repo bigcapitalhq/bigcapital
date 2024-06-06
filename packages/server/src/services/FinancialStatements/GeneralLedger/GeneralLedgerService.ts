@@ -62,7 +62,6 @@ export class GeneralLedgerService {
 
     // General ledger report instance.
     const generalLedgerInstance = new GeneralLedgerSheet(
-      tenantId,
       filter,
       genealLedgerRepository,
       i18n

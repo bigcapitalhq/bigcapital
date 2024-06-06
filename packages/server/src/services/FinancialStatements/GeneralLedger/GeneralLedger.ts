@@ -36,14 +36,12 @@ export default class GeneralLedgerSheet extends R.compose(
    * @param {IJournalPoster} closingBalancesJournal -
    */
   constructor(
-    tenantId: number,
     query: IGeneralLedgerSheetQuery,
     repository: GeneralLedgerRepository,
     i18n
   ) {
     super();
 
-    this.tenantId = tenantId;
     this.query = query;
     this.numberFormat = this.query.numberFormat;
     this.repository = repository;
