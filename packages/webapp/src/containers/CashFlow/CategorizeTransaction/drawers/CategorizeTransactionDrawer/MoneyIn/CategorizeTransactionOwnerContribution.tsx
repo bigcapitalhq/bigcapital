@@ -8,6 +8,7 @@ import {
   FTextArea,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export default function CategorizeTransactionOwnerContribution() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -63,6 +64,8 @@ export default function CategorizeTransactionOwnerContribution() {
       <FFormGroup name={'description'} label={'Description'} fastField inline>
         <FTextArea name={'description'} growVertically large fill />
       </FFormGroup>
+
+      <CategorizeTransactionBranchField />
     </>
   );
 }

@@ -8,6 +8,7 @@ import {
   FTextArea,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export default function CategorizeTransactionOwnerDrawings() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -68,6 +69,8 @@ export default function CategorizeTransactionOwnerDrawings() {
           fill={true}
         />
       </FFormGroup>
+
+      <CategorizeTransactionBranchField />
     </>
   );
 }

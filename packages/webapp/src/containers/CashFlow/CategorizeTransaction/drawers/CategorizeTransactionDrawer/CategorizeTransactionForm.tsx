@@ -24,8 +24,11 @@ function CategorizeTransactionFormRoot({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const { uncategorizedTransactionId, uncategorizedTransaction } =
-    useCategorizeTransactionBoot();
+  const {
+    uncategorizedTransactionId,
+    uncategorizedTransaction,
+    primaryBranch,
+  } = useCategorizeTransactionBoot();
   const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
 
   // Callbacks handles form submit.
@@ -37,18 +40,28 @@ function CategorizeTransactionFormRoot({
       .then(() => {
         setSubmitting(false);
         closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
-        
+
         AppToaster.show({
           message: 'The uncategorized transaction has been categorized.',
           intent: Intent.SUCCESS,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         setSubmitting(false);
-        AppToaster.show({
-          message: 'Something went wrong!',
-          intent: Intent.DANGER,
-        });
+        if (
+          err.response.data?.errors?.some(
+            (e) => e.type === 'BRANCH_ID_REQUIRED',
+          )
+        ) {
+          setErrors({
+            branchId: 'The branch is required.',
+          });
+        } else {
+          AppToaster.show({
+            message: 'Something went wrong!',
+            intent: Intent.DANGER,
+          });
+        }
       });
   };
   // Form initial values in create and edit mode.
@@ -60,6 +73,9 @@ function CategorizeTransactionFormRoot({
      * as well.
      */
     ...transformToCategorizeForm(uncategorizedTransaction),
+
+    /** Assign the primary branch id as default value. */
+    branchId: primaryBranch?.id || null,
   };
 
   return (

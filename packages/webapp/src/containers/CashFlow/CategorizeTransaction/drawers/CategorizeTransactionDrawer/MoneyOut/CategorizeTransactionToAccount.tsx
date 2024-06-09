@@ -8,6 +8,7 @@ import {
   FTextArea,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
+import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
 
 export default function CategorizeTransactionToAccount() {
   const { accounts } = useCategorizeTransactionBoot();
@@ -49,7 +50,7 @@ export default function CategorizeTransactionToAccount() {
         <AccountsSelect
           name={'creditAccountId'}
           items={accounts}
-          filterByRootTypes={['assset']}
+          filterByRootTypes={['asset']}
           fastField
           fill
           allowCreate
@@ -68,6 +69,8 @@ export default function CategorizeTransactionToAccount() {
           fill={true}
         />
       </FFormGroup>
+
+      <CategorizeTransactionBranchField />
     </>
   );
 }

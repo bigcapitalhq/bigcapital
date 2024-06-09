@@ -12,7 +12,6 @@ import { Knex } from 'knex';
 import { transformCategorizeTransToCashflow } from './utils';
 import { CommandCashflowValidator } from './CommandCasflowValidator';
 import NewCashflowTransactionService from './NewCashflowTransactionService';
-import { TransferAuthorizationGuaranteeDecision } from 'plaid';
 
 @Service()
 export class CategorizeCashflowTransaction {

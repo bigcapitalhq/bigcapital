@@ -11,6 +11,7 @@ export const defaultInitialValues = {
   transactionType: '',
   referenceNo: '',
   description: '',
+  branchId: '',
 };
 
 export const transformToCategorizeForm = (uncategorizedTransaction) => {

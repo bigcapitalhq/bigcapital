@@ -1,5 +1,6 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
+import { first } from 'lodash';
 import { DrawerHeaderContent, DrawerLoading } from '@/components';
 import { DRAWERS } from '@/constants/drawers';
 import {
@@ -34,6 +35,12 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
     isLoading: isUncategorizedTransactionLoading,
   } = useUncategorizedTransaction(uncategorizedTransactionId);
 
+  // Retrieves the primary branch.
+  const primaryBranch = useMemo(
+    () => branches?.find((b) => b.primary) || first(branches),
+    [branches],
+  );
+
   const provider = {
     uncategorizedTransactionId,
     uncategorizedTransaction,
@@ -42,6 +49,7 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
     accounts,
     isBranchesLoading,
     isAccountsLoading,
+    primaryBranch,
   };
   const isLoading =
     isBranchesLoading || isUncategorizedTransactionLoading || isAccountsLoading;
