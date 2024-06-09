@@ -104,10 +104,10 @@ export default class UncategorizedCashflowTransaction extends mixin(
    */
   private async updateUncategorizedTransactionCount(
     queryContext: QueryContext,
-    increment: boolean
+    increment: boolean,
+    amount: number = 1
   ) {
     const operation = increment ? 'increment' : 'decrement';
-    const amount = increment ? 1 : -1;
 
     await Account.query(queryContext.transaction)
       .findById(this.accountId)
