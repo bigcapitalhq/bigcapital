@@ -25,6 +25,7 @@
     "@casl/ability": "^5.4.3",
     "@hapi/boom": "^7.4.3",
     "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
+    "@supercharge/promise-pool": "^3.2.0",
     "@types/express": "^4.17.21",
     "@types/i18n": "^0.8.7",
     "@types/knex": "^0.16.1",
