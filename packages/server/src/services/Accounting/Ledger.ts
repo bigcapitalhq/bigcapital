@@ -51,7 +51,7 @@ export default class Ledger implements ILedger {
 
   /**
    * Filters entries by the given accounts ids then returns a new ledger.
-   * @param {number[]} accountIds 
+   * @param {number[]} accountIds
    * @returns {ILedger}
    */
   public whereAccountsIds(accountIds: number[]): ILedger {
@@ -273,5 +273,15 @@ export default class Ledger implements ILedger {
   static fromTransactions(transactions: IAccountTransaction[]): Ledger {
     const entries = Ledger.mappingTransactions(transactions);
     return new Ledger(entries);
+  }
+
+  /**
+   * Retrieve the transaction amount.
+   * @param {number} credit - Credit amount.
+   * @param {number} debit - Debit amount.
+   * @param {string} normal - Credit or debit.
+   */
+  static getAmount(credit: number, debit: number, normal: string) {
+    return normal === 'credit' ? credit - debit : debit - credit;
   }
 }

@@ -83,8 +83,8 @@ export class GeneralLedgerTable extends R.compose(
    */
   private openingBalanceColumnsAccessors(): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: this.meta.fromDate },
-      { key: 'account_name', value: 'Opening Balance' },
+      { key: 'date', value: 'Opening Balance' },
+      { key: 'account_name', value: '' },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
       { key: 'description', accessor: 'description' },
@@ -97,12 +97,15 @@ export class GeneralLedgerTable extends R.compose(
 
   /**
    * Closing balance row column accessors.
+   * @param {IGeneralLedgerSheetAccount} account -
    * @returns {ITableColumnAccessor[]}
    */
-  private closingBalanceColumnAccessors(): IColumnMapperMeta[] {
+  private closingBalanceColumnAccessors(
+    account: IGeneralLedgerSheetAccount
+  ): IColumnMapperMeta[] {
     return [
-      { key: 'date', value: this.meta.toDate },
-      { key: 'account_name', value: 'Closing Balance' },
+      { key: 'date', value: `Closing balance for ${account.name}` },
+      { key: 'account_name', value: `` },
       { key: 'reference_type', accessor: '_empty_' },
       { key: 'reference_number', accessor: '_empty_' },
       { key: 'description', accessor: '_empty_' },
@@ -110,6 +113,36 @@ export class GeneralLedgerTable extends R.compose(
       { key: 'debit', accessor: '_empty_' },
       { key: 'amount', accessor: 'closingBalance.formattedAmount' },
       { key: 'running_balance', accessor: 'closingBalance.formattedAmount' },
+    ];
+  }
+
+  /**
+   * Closing balance row column accessors.
+   * @param {IGeneralLedgerSheetAccount} account -
+   * @returns {ITableColumnAccessor[]}
+   */
+  private closingBalanceWithSubaccountsColumnAccessors(
+    account: IGeneralLedgerSheetAccount
+  ): IColumnMapperMeta[] {
+    return [
+      {
+        key: 'date',
+        value: `Closing Balance for ${account.name} with sub-accounts`,
+      },
+      {
+        key: 'account_name',
+        value: ``,
+      },
+      { key: 'reference_type', accessor: '_empty_' },
+      { key: 'reference_number', accessor: '_empty_' },
+      { key: 'description', accessor: '_empty_' },
+      { key: 'credit', accessor: '_empty_' },
+      { key: 'debit', accessor: '_empty_' },
+      { key: 'amount', accessor: 'closingBalanceSubaccounts.formattedAmount' },
+      {
+        key: 'running_balance',
+        accessor: 'closingBalanceSubaccounts.formattedAmount',
+      },
     ];
   }
 
@@ -184,7 +217,22 @@ export class GeneralLedgerTable extends R.compose(
    * @returns {ITableRow}
    */
   private closingBalanceMapper = (account: IGeneralLedgerSheetAccount) => {
-    const columns = this.closingBalanceColumnAccessors();
+    const columns = this.closingBalanceColumnAccessors(account);
+    const meta = {
+      rowTypes: [ROW_TYPE.CLOSING_BALANCE],
+    };
+    return tableRowMapper(account, columns, meta);
+  };
+
+  /**
+   * Maps the given account node to opening balance table row.
+   * @param {IGeneralLedgerSheetAccount} account
+   * @returns {ITableRow}
+   */
+  private closingBalanceWithSubaccountsMapper = (
+    account: IGeneralLedgerSheetAccount
+  ): ITableRow => {
+    const columns = this.closingBalanceWithSubaccountsColumnAccessors(account);
     const meta = {
       rowTypes: [ROW_TYPE.CLOSING_BALANCE],
     };
@@ -221,8 +269,27 @@ export class GeneralLedgerTable extends R.compose(
       rowTypes: [ROW_TYPE.ACCOUNT],
     };
     const row = tableRowMapper(account, columns, meta);
+    const closingBalanceWithSubaccounts =
+      this.closingBalanceWithSubaccountsMapper(account);
 
-    return R.assoc('children', transactions)(row);
+    // Appends the closing balance with sub-accounts row if the account
+    // has children accounts and the node is define.
+    const isAppendClosingSubaccounts = () =>
+      account.children?.length > 0 && !!account.closingBalanceSubaccounts;
+
+    const children = R.compose(
+      R.when(
+        isAppendClosingSubaccounts,
+        R.append(closingBalanceWithSubaccounts)
+      ),
+      R.concat(R.defaultTo([], transactions)),
+      R.when(
+        () => account?.children?.length > 0,
+        R.concat(R.defaultTo([], account.children))
+      )
+    )([]);
+
+    return R.assoc('children', children)(row);
   };
 
   /**
@@ -233,7 +300,7 @@ export class GeneralLedgerTable extends R.compose(
   private accountsMapper = (
     accounts: IGeneralLedgerSheetAccount[]
   ): ITableRow[] => {
-    return this.mapNodesDeep(accounts, this.accountMapper);
+    return this.mapNodesDeepReverse(accounts, this.accountMapper);
   };
 
   /**
@@ -250,7 +317,6 @@ export class GeneralLedgerTable extends R.compose(
    */
   public tableColumns(): ITableColumn[] {
     const columns = this.commonColumns();
-
     return R.compose(this.tableColumnsCellIndexing)(columns);
   }
 }

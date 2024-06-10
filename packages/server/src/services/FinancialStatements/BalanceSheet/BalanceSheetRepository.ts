@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import {
-  IAccount,
   IAccountTransactionsGroupBy,
   IBalanceSheetQuery,
   ILedger,
@@ -12,7 +11,6 @@ import { transformToMapBy } from 'utils';
 import Ledger from '@/services/Accounting/Ledger';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 
 @Service()

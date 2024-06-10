@@ -1,6 +1,4 @@
 import * as R from 'ramda';
-import { FinancialPreviousPeriod } from '../FinancialPreviousPeriod';
-import { FinancialHorizTotals } from '../FinancialHorizTotals';
 import { FinancialSheetStructure } from '../FinancialSheetStructure';
 import {
   BALANCE_SHEET_SCHEMA_NODE_TYPE,
