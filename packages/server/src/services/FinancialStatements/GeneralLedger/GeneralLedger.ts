@@ -261,18 +261,8 @@ export default class GeneralLedgerSheet extends R.compose(
     if (isEmpty(this.query.accountsIds)) {
       return true;
     }
-    // Returns true if the given account id included in the filter.
-    const isIncluded = this.query.accountsIds.includes(accountId);
-
-    const parentAccountIds =
-      this.repository.accountsGraph.dependantsOf(accountId);
-
-    // Returns true if one of the parent account id exists in the filter.
-    const accountIdInChildren = R.any(
-      (parentAccountId) => R.includes(parentAccountId, this.query.accountsIds),
-      parentAccountIds
-    );
-    return isIncluded || accountIdInChildren;
+    // Returns true if the given account id includes transactions.
+    return this.repository.accountNodesIncludeTransactions.includes(accountId);
   };
 
   /**
@@ -290,12 +280,7 @@ export default class GeneralLedgerSheet extends R.compose(
     const closingBalanceSubaccounts =
       this.accountClosingBalanceWithSubaccountsTotal(account.id);
 
-    return R.compose(
-      R.when(
-        () => this.isAccountNodeIncludesClosingSubaccounts(account.id),
-        R.assoc('closingBalanceSubaccounts', closingBalanceSubaccounts)
-      )
-    )({
+    const initialNode = {
       id: account.id,
       name: account.name,
       code: account.code,
@@ -304,7 +289,14 @@ export default class GeneralLedgerSheet extends R.compose(
       openingBalance,
       transactions,
       closingBalance,
-    });
+    };
+
+    return R.compose(
+      R.when(
+        () => this.isAccountNodeIncludesClosingSubaccounts(account.id),
+        R.assoc('closingBalanceSubaccounts', closingBalanceSubaccounts)
+      )
+    )(initialNode);
   };
 
   /**
@@ -356,16 +348,7 @@ export default class GeneralLedgerSheet extends R.compose(
         return true;
       }
       // Returns true if the given account id exists in the filter.
-      const isIncluded = this.query.accountsIds?.includes(node.id);
-
-      const parentAccountIds = this.repository.accountsGraph.dependantsOf(
-        node.id
-      );
-      // Returns true if one of th parent account ids exist in the filter.
-      const oneParentAccountIdExistInFilter = parentAccountIds.some((id) =>
-        this.query.accountsIds?.includes(id)
-      );
-      return isIncluded || oneParentAccountIdExistInFilter;
+      return this.repository.accountNodeInclude?.includes(node.id);
     });
   };
 

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as R from 'ramda';
 import {
   IAccount,
   IAccountTransaction,
@@ -9,6 +10,7 @@ import {
 import Ledger from '@/services/Accounting/Ledger';
 import { transformToMap } from '@/utils';
 import { Tenant } from '@/system/models';
+import { flatten, isEmpty, uniq } from 'lodash';
 
 export class GeneralLedgerRepository {
   public filter: IGeneralLedgerSheetQuery;
@@ -29,6 +31,9 @@ export class GeneralLedgerRepository {
 
   public tenantId: number;
   public tenant: ITenant;
+
+  public accountNodesIncludeTransactions: Array<number> = [];
+  public accountNodeInclude: Array<number> = [];
 
   /**
    * Constructor method.
@@ -54,8 +59,10 @@ export class GeneralLedgerRepository {
     await this.initAccounts();
     await this.initAccountsGraph();
     await this.initContacts();
-    await this.initTransactions();
     await this.initAccountsOpeningBalance();
+    this.initAccountNodesIncludeTransactions();
+    await this.initTransactions();
+    this.initAccountNodesIncluded();
   }
 
   /**
@@ -102,7 +109,12 @@ export class GeneralLedgerRepository {
         toDate: this.filter.toDate,
         branchesIds: this.filter.branchesIds,
       })
-      .orderBy('date', 'ASC');
+      .orderBy('date', 'ASC')
+      .onBuild((query) => {
+        if (this.filter.accountsIds?.length > 0) {
+          query.whereIn('accountId', this.accountNodesIncludeTransactions);
+        }
+      });
     // Transform array transactions to journal collection.
     this.transactionsLedger = Ledger.fromTransactions(this.transactions);
   }
@@ -123,5 +135,46 @@ export class GeneralLedgerRepository {
     this.openingBalanceTransactionsLedger = Ledger.fromTransactions(
       this.openingBalanceTransactions
     );
+  }
+
+  /**
+   * Initialize the account nodes that should include transactions.
+   * @returns {void}
+   */
+  public initAccountNodesIncludeTransactions() {
+    if (isEmpty(this.filter.accountsIds)) {
+      return;
+    }
+    const childrenNodeIds = this.filter.accountsIds?.map(
+      (accountId: number) => {
+        return this.accountsGraph.dependenciesOf(accountId);
+      }
+    );
+    const nodeIds = R.concat(this.filter.accountsIds, childrenNodeIds);
+
+    this.accountNodesIncludeTransactions = uniq(flatten(nodeIds));
+  }
+
+  /**
+   * Initialize the account node ids should be included,
+   * if the filter by acounts is presented.
+   * @returns {void}
+   */
+  public initAccountNodesIncluded() {
+    if (isEmpty(this.filter.accountsIds)) {
+      return;
+    }
+    const nodeIds = this.filter.accountsIds.map((accountId) => {
+      const childrenIds = this.accountsGraph.dependenciesOf(accountId);
+      const parentIds = this.accountsGraph.dependantsOf(accountId);
+
+      return R.concat(childrenIds, parentIds);
+    });
+
+    this.accountNodeInclude = R.compose(
+      R.uniq,
+      R.flatten,
+      R.concat(this.filter.accountsIds)
+    )(nodeIds);
   }
 }
