@@ -146,6 +146,7 @@ export class EditPaymentReceive {
         paymentReceiveId,
         paymentReceive,
         oldPaymentReceive,
+        paymentReceiveDTO,
         authorizedUser,
         trx,
       } as IPaymentReceiveEditedPayload);
