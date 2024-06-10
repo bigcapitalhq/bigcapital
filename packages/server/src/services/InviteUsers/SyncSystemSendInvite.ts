@@ -46,6 +46,9 @@ export default class SyncSystemSendInvite {
       email: user.email,
       active: user.active,
       tenantId,
+
+      // Email should be verified since the user got the invite token through email.
+      verified: true,
     });
     // Creates a invite user token.
     const invite = await Invite.query().insert({
