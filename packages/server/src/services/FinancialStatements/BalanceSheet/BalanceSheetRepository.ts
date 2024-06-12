@@ -3,7 +3,6 @@ import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
 import {
-  IAccount,
   IAccountTransactionsGroupBy,
   IBalanceSheetQuery,
   ILedger,
@@ -12,7 +11,6 @@ import { transformToMapBy } from 'utils';
 import Ledger from '@/services/Accounting/Ledger';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
 import { FinancialDatePeriods } from '../FinancialDatePeriods';
-import { ACCOUNT_PARENT_TYPE, ACCOUNT_TYPE } from '@/data/AccountTypes';
 import { BalanceSheetRepositoryNetIncome } from './BalanceSheetRepositoryNetIncome';
 
 @Service()
@@ -39,6 +37,11 @@ export default class BalanceSheetRepository extends R.compose(
    * @param {}
    */
   public accounts: any;
+
+  /**
+   * @param {}
+   */
+  public accountsGraph: any;
 
   /**
    *
@@ -163,6 +166,8 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public asyncInitialize = async () => {
     await this.initAccounts();
+    await this.initAccountsGraph();
+
     await this.initAccountsTotalLedger();
 
     // Date periods.
@@ -202,6 +207,15 @@ export default class BalanceSheetRepository extends R.compose(
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
     this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
+  };
+
+  /**
+   * Initialize accounts graph.
+   */
+  public initAccountsGraph = async () => {
+    const { Account } = this.models;
+
+    this.accountsGraph = Account.toDependencyGraph(this.accounts);
   };
 
   // ----------------------------

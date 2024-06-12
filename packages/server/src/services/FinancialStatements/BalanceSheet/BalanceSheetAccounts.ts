@@ -20,6 +20,8 @@ import { BalanceSheetPercentage } from './BalanceSheetPercentage';
 import { BalanceSheetSchema } from './BalanceSheetSchema';
 import { BalanceSheetBase } from './BalanceSheetBase';
 import { BalanceSheetQuery } from './BalanceSheetQuery';
+import { flatToNestedArray } from '@/utils';
+import BalanceSheetRepository from './BalanceSheetRepository';
 
 export const BalanceSheetAccounts = (Base: any) =>
   class extends R.compose(
@@ -57,6 +59,11 @@ export const BalanceSheetAccounts = (Base: any) =>
     readonly i18n: any;
 
     /**
+     * Balance sheet repository.
+     */
+    readonly repository: BalanceSheetRepository;
+
+    /**
      * Retrieve the accounts node of accounts types.
      * @param   {string} accountsTypes
      * @returns {IAccount[]}
@@ -78,8 +85,12 @@ export const BalanceSheetAccounts = (Base: any) =>
     private reportSchemaAccountNodeMapper = (
       account: IAccount
     ): IBalanceSheetAccountNode => {
+      const childrenAccountsIds = this.repository.accountsGraph.dependenciesOf(
+        account.id
+      );
+      const accountIds = R.uniq(R.append(account.id, childrenAccountsIds));
       const total = this.repository.totalAccountsLedger
-        .whereAccountId(account.id)
+        .whereAccountsIds(accountIds)
         .getClosingBalance();
 
       return {
@@ -128,8 +139,19 @@ export const BalanceSheetAccounts = (Base: any) =>
     private getAccountsNodesByAccountTypes = (
       accountsTypes: string[]
     ): IBalanceSheetAccountNode[] => {
+      // Retrieves accounts from the given defined node account types.
       const accounts = this.getAccountsByAccountTypes(accountsTypes);
-      return R.map(this.reportSchemaAccountNodeComposer, accounts);
+
+      // Converts the flatten accounts to tree.
+      const accountsTree = flatToNestedArray(accounts, {
+        id: 'id',
+        parentId: 'parentAccountId',
+      });
+      // Maps over the accounts tree.
+      return this.mapNodesDeep(
+        accountsTree,
+        this.reportSchemaAccountNodeComposer
+      );
     };
 
     /**
