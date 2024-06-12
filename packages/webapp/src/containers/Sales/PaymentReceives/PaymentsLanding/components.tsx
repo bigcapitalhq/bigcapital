@@ -90,8 +90,7 @@ export function usePaymentReceivesColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        accessor: 'payment_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_payment_date',
         width: 140,
         className: 'payment_date',
         clickable: true,

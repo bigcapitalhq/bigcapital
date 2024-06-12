@@ -1,5 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 import { formatNumber } from '@/utils';
+import { PurchaseInvoiceTransformer } from '../Bills/PurchaseInvoiceTransformer';
 
 export class BillPaymentEntryTransformer extends Transformer {
   /**
@@ -7,7 +8,14 @@ export class BillPaymentEntryTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['paymentAmountFormatted'];
+    return ['paymentAmountFormatted', 'bill'];
+  };
+
+  /**
+   * Retreives the
+   */
+  protected bill = (entry) => {
+    return this.item(entry.bill, new PurchaseInvoiceTransformer());
   };
 
   /**

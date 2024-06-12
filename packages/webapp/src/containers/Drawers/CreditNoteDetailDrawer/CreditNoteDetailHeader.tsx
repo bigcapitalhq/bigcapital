@@ -47,7 +47,7 @@ export default function CreditNoteDetailHeader() {
             <DetailItem
               label={intl.get('credit_note.drawer.label_credit_note_date')}
             >
-              <FormatDate value={creditNote.formatted_credit_note_date} />
+              {creditNote.formatted_credit_note_date}
             </DetailItem>
 
             <DetailItem

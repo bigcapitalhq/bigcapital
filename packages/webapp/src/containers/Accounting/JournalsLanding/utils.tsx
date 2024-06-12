@@ -16,8 +16,7 @@ export const useManualJournalsColumns = () => {
       {
         id: 'date',
         Header: intl.get('date'),
-        accessor: 'date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_date',
         width: 115,
         className: 'date',
         clickable: true,

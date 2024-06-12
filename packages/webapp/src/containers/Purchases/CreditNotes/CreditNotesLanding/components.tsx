@@ -5,14 +5,7 @@ import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 
 import { CLASSES } from '@/constants/classes';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Choose,
-  If,
-  Icon,
-  Can,
-} from '@/components';
+import { FormattedMessage as T, Choose, If, Icon, Can } from '@/components';
 import { safeCallback } from '@/utils';
 import { VendorCreditAction, AbilitySubject } from '@/constants/abilityOption';
 
@@ -119,7 +112,6 @@ export function useVendorsCreditNoteTableColumns() {
         id: 'credit_date',
         Header: intl.get('date'),
         accessor: 'formatted_vendor_credit_date',
-        Cell: FormatDateCell,
         width: 110,
         className: 'credit_date',
         clickable: true,

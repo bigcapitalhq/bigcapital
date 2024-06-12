@@ -119,8 +119,7 @@ export function useReceiptsTableColumns() {
       {
         id: 'receipt_date',
         Header: intl.get('receipt_date'),
-        accessor: 'receipt_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_receipt_date',
         width: 140,
         className: 'receipt_date',
         clickable: true,

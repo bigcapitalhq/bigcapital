@@ -1,16 +1,13 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
-
 
 export const useGLEntriesTableColumns = () => {
   return React.useMemo(
     () => [
       {
         Header: intl.get('date'),
-        accessor: ({ formatted_date }) =>
-          moment(formatted_date).format('YYYY MMM DD'),
+        accessor: 'date.formatted_date',
         width: 140,
         className: 'date',
         textOverview: true,

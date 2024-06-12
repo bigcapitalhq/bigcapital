@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import moment from 'moment';
 import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
@@ -42,7 +41,7 @@ export default function ExpenseDrawerHeader() {
         <Col xs={6}>
           <DetailsMenu direction={'horizantal'} minLabelSize={'180px'}>
             <DetailItem name={'date'} label={<T id={'date'} />}>
-              {moment(expense.payment_date).format('YYYY MMM DD')}
+              {expense.formatted_payment_date}
             </DetailItem>
 
             <DetailItem name={'reference'} label={<T id={'reference_no'} />}>

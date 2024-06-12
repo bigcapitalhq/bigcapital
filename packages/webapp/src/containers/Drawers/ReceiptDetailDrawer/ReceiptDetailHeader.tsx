@@ -54,11 +54,11 @@ export default function ReceiptDetailHeader() {
             </DetailItem>
             <DetailItem
               label={intl.get('receipt_date')}
-              children={<FormatDate value={receipt.receipt_date} />}
+              children={receipt.formatted_receipt_date}
             />
             <DetailItem
               label={intl.get('closed_date')}
-              children={<FormatDate value={receipt.closed_at_date} />}
+              children={receipt.formatted_closed_at_date}
             />
             <ExchangeRateDetailItem
               exchangeRate={receipt?.exchange_rate}

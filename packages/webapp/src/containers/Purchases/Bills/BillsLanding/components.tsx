@@ -161,8 +161,7 @@ export function useBillsTableColumns() {
       {
         id: 'bill_date',
         Header: intl.get('bill_date'),
-        accessor: 'bill_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_bill_date',
         width: 110,
         className: 'bill_date',
         clickable: true,
