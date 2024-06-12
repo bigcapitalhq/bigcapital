@@ -24,6 +24,7 @@ import { ProfitLossSheetPreviousYear } from './ProfitLossSheetPreviousYear';
 import { ProfitLossSheetPreviousPeriod } from './ProfitLossSheetPreviousPeriod';
 import { FinancialDateRanges } from '../FinancialDateRanges';
 import { ProfitLossSheetFilter } from './ProfitLossSheetFilter';
+import { flatToNestedArray } from '@/utils';
 
 export default class ProfitLossSheet extends R.compose(
   ProfitLossSheetPreviousYear,
@@ -82,14 +83,22 @@ export default class ProfitLossSheet extends R.compose(
 
   /**
    * Retrieve the sheet account node from the given account.
-   * @param   {IAccount} account
+   * @param {IAccount} account
    * @returns {IProfitLossSheetAccountNode}
    */
   private accountNodeMapper = (
     account: IAccount
   ): IProfitLossSheetAccountNode => {
+    // Retrieves the children account ids of the given account id.
+    const childrenAccountIds = this.repository.accountsGraph.dependenciesOf(
+      account.id
+    );
+    // Concat the children and the given account id.
+    const accountIds = R.uniq(R.append(account.id, childrenAccountIds));
+
+    // Retrieves the closing balance of the account included children accounts.
     const total = this.repository.totalAccountsLedger
-      .whereAccountId(account.id)
+      .whereAccountsIds(accountIds)
       .getClosingBalance();
 
     return {
@@ -126,18 +135,19 @@ export default class ProfitLossSheet extends R.compose(
   };
 
   /**
-   * Retrieve report accounts nodes by the given accounts types.
-   * @param   {string[]} types
+   * Retrieves report accounts nodes by the given accounts types.
+   * @param {string[]} types
    * @returns {IBalanceSheetAccountNode}
    */
   private getAccountsNodesByTypes = (
     types: string[]
   ): IProfitLossSheetAccountNode[] => {
-    return R.compose(
-      R.map(this.accountNodeCompose),
-      R.flatten,
-      R.map(this.repository.getAccountsByType)
-    )(types);
+    const accounts = this.repository.getAccountsByType(types);
+    const accountsTree = flatToNestedArray(accounts, {
+      id: 'id',
+      parentId: 'parentAccountId',
+    });
+    return this.mapNodesDeep(accountsTree, this.accountNodeCompose);
   };
 
   /**

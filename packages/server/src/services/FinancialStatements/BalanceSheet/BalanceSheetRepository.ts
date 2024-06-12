@@ -39,6 +39,11 @@ export default class BalanceSheetRepository extends R.compose(
   public accounts: any;
 
   /**
+   * @param {}
+   */
+  public accountsGraph: any;
+
+  /**
    *
    */
   public accountsByType: any;
@@ -161,6 +166,8 @@ export default class BalanceSheetRepository extends R.compose(
    */
   public asyncInitialize = async () => {
     await this.initAccounts();
+    await this.initAccountsGraph();
+
     await this.initAccountsTotalLedger();
 
     // Date periods.
@@ -200,6 +207,15 @@ export default class BalanceSheetRepository extends R.compose(
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
     this.accountsByParentType = transformToMapBy(accounts, 'accountParentType');
+  };
+
+  /**
+   * Initialize accounts graph.
+   */
+  public initAccountsGraph = async () => {
+    const { Account } = this.models;
+
+    this.accountsGraph = Account.toDependencyGraph(this.accounts);
   };
 
   // ----------------------------

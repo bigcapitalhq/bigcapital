@@ -1,4 +1,4 @@
-import { defaultTo } from 'lodash';
+import { castArray, defaultTo } from 'lodash';
 import * as R from 'ramda';
 import { Knex } from 'knex';
 import { isEmpty } from 'lodash';
@@ -30,6 +30,11 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    * @param {}
    */
   public accounts: IAccount[];
+
+  /**
+   *
+   */
+  public accountsGraph: any;
 
   /**
    * Transactions group type.
@@ -135,6 +140,8 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
    */
   public asyncInitialize = async () => {
     await this.initAccounts();
+    await this.initAccountsGraph();
+
     await this.initAccountsTotalLedger();
 
     // Date Periods.
@@ -175,6 +182,15 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     // Inject to the repository.
     this.accounts = accounts;
     this.accountsByType = transformToMapBy(accounts, 'accountType');
+  };
+
+  /**
+   * Initialize accounts graph.
+   */
+  private initAccountsGraph = async () => {
+    const { Account } = this.models;
+
+    this.accountsGraph = Account.toDependencyGraph(this.accounts);
   };
 
   // ----------------------------
@@ -337,7 +353,18 @@ export class ProfitLossSheetRepository extends R.compose(FinancialDatePeriods)(
     return Account.query();
   };
 
-  public getAccountsByType = (type: string) => {
-    return defaultTo(this.accountsByType.get(type), []);
+  /**
+   * 
+   * @param type 
+   * @returns 
+   */
+  public getAccountsByType = (type: string[] | string) => {
+    return R.compose(
+      R.flatten,
+      R.map((accountType) =>
+        R.defaultTo([], this.accountsByType.get(accountType))
+      ),
+      castArray
+    )(type);
   };
 }
