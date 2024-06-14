@@ -11,12 +11,11 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
-import { CLASSES } from '@/constants/classes';
-
 import { usePaymentReceiveFormContext } from './PaymentReceiveFormProvider';
+import { CLASSES } from '@/constants/classes';
 
 /**
  * Payment receive floating actions bar.
@@ -55,7 +54,10 @@ export default function PaymentReceiveFormFloatingActions() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save and New ----------- */}
       <ButtonGroup>
         <Button
@@ -107,6 +109,6 @@ export default function PaymentReceiveFormFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

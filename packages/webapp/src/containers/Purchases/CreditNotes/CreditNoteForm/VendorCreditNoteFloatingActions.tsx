@@ -13,7 +13,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T } from '@/components';
+import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useVendorCreditNoteFormContext } from './VendorCreditNoteFormProvider';
 
@@ -69,11 +69,15 @@ export default function VendorCreditNoteFloatingActions() {
     history.goBack();
   };
 
+  // Handle the clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Open  ----------- */}
       <If condition={!vendorCredit || !vendorCredit?.is_open}>
         <ButtonGroup>
@@ -185,6 +189,6 @@ export default function VendorCreditNoteFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

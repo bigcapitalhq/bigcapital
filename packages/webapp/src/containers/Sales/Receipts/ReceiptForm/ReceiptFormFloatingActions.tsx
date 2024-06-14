@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { FormattedMessage as T } from '@/components';
+import { Group, FormattedMessage as T } from '@/components';
 import { useFormikContext } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { CLASSES } from '@/constants/classes';
@@ -71,12 +71,16 @@ export default function ReceiptFormFloatingActions() {
     history.goBack();
   };
 
+  // Handle the clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Close ----------- */}
       <If condition={!receipt || !receipt?.is_closed}>
         <ButtonGroup>
@@ -187,6 +191,6 @@ export default function ReceiptFormFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { If, Icon, FormattedMessage as T } from '@/components';
+import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
@@ -63,16 +63,21 @@ export default function EstimateFloatingActions() {
     submitForm();
   };
 
+  // Handle the cancel button click.
   const handleCancelBtnClick = (event) => {
     history.goBack();
   };
 
+  // Handle the clear button click.
   const handleClearBtnClick = (event) => {
     resetForm();
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Deliver ----------- */}
       <If condition={!estimate || !estimate?.is_delivered}>
         <ButtonGroup>
@@ -188,6 +193,6 @@ export default function EstimateFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

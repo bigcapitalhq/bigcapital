@@ -73,13 +73,11 @@
   }
 
   #{$self}__floating-actions {
-    // margin-left: -40px;
-    // margin-right: -40px;
 
     .form-group--active {
       display: inline-block;
       margin: 0;
-      margin-left: 40px;
+      margin-left: 20px;
     }
   }
 
