@@ -11,7 +11,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { FormattedMessage as T } from '@/components';
+import { Group, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 
 import { CLASSES } from '@/constants/classes';
@@ -78,7 +78,10 @@ export default function ExpenseFloatingFooter() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Publish ----------- */}
       <If condition={isNewMode}>
         <ButtonGroup>
@@ -190,6 +193,6 @@ export default function ExpenseFloatingFooter() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

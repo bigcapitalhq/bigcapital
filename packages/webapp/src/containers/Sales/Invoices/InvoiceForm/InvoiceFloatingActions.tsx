@@ -13,7 +13,7 @@ import {
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 import { useFormikContext } from 'formik';
-import { If, Icon, FormattedMessage as T } from '@/components';
+import { If, Icon, FormattedMessage as T, Group } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useInvoiceFormContext } from './InvoiceFormProvider';
 
@@ -76,7 +76,10 @@ export default function InvoiceFloatingActions() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Deliver ----------- */}
       <If condition={!invoice || !invoice?.is_delivered}>
         <ButtonGroup>
@@ -189,6 +192,6 @@ export default function InvoiceFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

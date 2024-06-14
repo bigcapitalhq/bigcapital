@@ -11,13 +11,11 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core';
-import { Icon, FormattedMessage as T } from '@/components';
+import { Group, Icon, FormattedMessage as T } from '@/components';
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
 import { CLASSES } from '@/constants/classes';
-
-
 
 /**
  * Payment made floating actions bar.
@@ -56,11 +54,14 @@ export default function PaymentMadeFloatingActions() {
   // Handle submit & continue editing button click.
   const handleSubmitContinueEditingBtnClick = (event) => {
     setSubmitPayload({ redirect: false, publish: true });
-    submitForm()
+    submitForm();
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save and New ----------- */}
       <ButtonGroup>
         <Button
@@ -109,6 +110,6 @@ export default function PaymentMadeFloatingActions() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }

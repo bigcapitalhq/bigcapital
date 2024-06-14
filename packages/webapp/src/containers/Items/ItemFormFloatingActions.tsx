@@ -5,9 +5,8 @@ import classNames from 'classnames';
 import { Button, Intent, FormGroup, Checkbox } from '@blueprintjs/core';
 import { FastField, useFormikContext } from 'formik';
 import { CLASSES } from '@/constants/classes';
-
 import { useItemFormContext } from './ItemFormProvider';
-import { FormattedMessage as T } from '@/components';
+import { Group, FormattedMessage as T } from '@/components';
 import { saveInvoke } from '@/utils';
 
 /**
@@ -37,7 +36,10 @@ export default function ItemFormFloatingActions({ onCancel }) {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       <SaveButton
         intent={Intent.PRIMARY}
         disabled={isSubmitting}
@@ -78,7 +80,7 @@ export default function ItemFormFloatingActions({ onCancel }) {
           </FormGroup>
         )}
       </FastField>
-    </div>
+    </Group>
   );
 }
 

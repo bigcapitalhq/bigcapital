@@ -13,7 +13,7 @@ import {
 import { useHistory } from 'react-router-dom';
 import { useFormikContext } from 'formik';
 import classNames from 'classnames';
-import { Icon, If, FormattedMessage as T } from '@/components';
+import { Group, Icon, If, FormattedMessage as T } from '@/components';
 import { CLASSES } from '@/constants/classes';
 import { useMakeJournalFormContext } from './MakeJournalProvider';
 
@@ -76,7 +76,10 @@ export default function MakeJournalFloatingAction() {
   };
 
   return (
-    <div className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}>
+    <Group
+      spacing={10}
+      className={classNames(CLASSES.PAGE_FORM_FLOATING_ACTIONS)}
+    >
       {/* ----------- Save And Publish ----------- */}
       <If condition={!manualJournal || !manualJournal?.is_published}>
         <ButtonGroup>
@@ -188,6 +191,6 @@ export default function MakeJournalFloatingAction() {
         onClick={handleCancelBtnClick}
         text={<T id={'cancel'} />}
       />
-    </div>
+    </Group>
   );
 }
