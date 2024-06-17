@@ -3,24 +3,17 @@
 version: '3.3'
 
 services:
-  nginx:
-    container_name: bigcapital-nginx-gateway
-    build:
-      context: ./docker/nginx
-      args:
-        - SERVER_PROXY_PORT=3000
-        - WEB_SSL=false
-        - SELF_SIGNED=false
-    volumes:
-      - ./data/logs/nginx/:/var/log/nginx
-      - ./docker/certbot/certs/:/var/certs
+  proxy:
+    image: envoyproxy/envoy:v1.30-latest
+    depends_on:
+      - server
+      - webapp
     ports:
       - '${PUBLIC_PROXY_PORT:-80}:80'
       - '${PUBLIC_PROXY_SSL_PORT:-443}:443'
     tty: true
-    depends_on:
-      - server
-      - webapp
+    volumes:
+      - ./docker/envoy/envoy.yaml:/etc/envoy/envoy.yaml
     restart: on-failure
     networks:
       - bigcapital_network
@@ -46,6 +39,8 @@ services:
       - mongo
       - redis
     restart: on-failure
+    networks:
+      - bigcapital_network
     environment:
       # Mail
       - MAIL_HOST=${MAIL_HOST}
@@ -127,8 +122,6 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
-    networks:
-      - bigcapital_network
 
   database_migration:
     container_name: bigcapital-database-migration
