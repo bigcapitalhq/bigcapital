@@ -1,6 +1,6 @@
 import { Container, Inject } from 'typedi';
 import { cloneDeep } from 'lodash';
-import { Tenant } from '@/system/models';
+import { SystemUser, Tenant } from '@/system/models';
 import {
   IAuthSignedInEventPayload,
   IAuthSigningInEventPayload,
@@ -64,7 +64,9 @@ export class AuthSigninService {
     const { systemUserRepository } = this.sysRepositories;
 
     // Finds the user of the given email address.
-    const user = await systemUserRepository.findOneByEmail(email);
+    const user = await SystemUser.query()
+      .findOne('email', email)
+      .modify('inviteAccepted');
 
     // Validate the given email and password.
     await this.validateSignIn(user, email, password);

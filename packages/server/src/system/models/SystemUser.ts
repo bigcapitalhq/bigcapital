@@ -91,6 +91,20 @@ export default class SystemUser extends SystemModel {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the invite accepted users.
+       */
+      inviteAccepted(query) {
+        query.whereNotNull('invite_accepted_at');
+      },
+    };
+  }
+
+  /**
    * Verify the password of the user.
    * @param  {String} password - The given password.
    * @return {Boolean}
