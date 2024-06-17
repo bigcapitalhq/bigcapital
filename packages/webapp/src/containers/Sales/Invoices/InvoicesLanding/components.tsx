@@ -128,7 +128,7 @@ export function ActionsMenu({
     onQuick,
     onViewDetails,
     onPrint,
-    onSendMail
+    onSendMail,
   },
   row: { original },
 }) {
@@ -202,8 +202,7 @@ export function useInvoicesTableColumns() {
       {
         id: 'invoice_date',
         Header: intl.get('invoice_date'),
-        accessor: 'invoice_date',
-        Cell: FormatDateCell,
+        accessor: 'invoice_date_formatted',
         width: 110,
         className: 'invoice_date',
         clickable: true,

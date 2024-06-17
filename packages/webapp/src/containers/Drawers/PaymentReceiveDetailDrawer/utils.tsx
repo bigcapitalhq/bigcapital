@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import moment from 'moment';
 import {
   Button,
   Popover,
@@ -26,7 +25,7 @@ export const usePaymentReceiveEntriesColumns = () => {
     () => [
       {
         Header: intl.get('date'),
-        accessor: (row) => moment(row.payment_date).format('YYYY MMM DD'),
+        accessor: 'invoice.invoice_date_formatted',
         width: 100,
         className: 'date',
         disableSortBy: true,

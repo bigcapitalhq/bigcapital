@@ -14,6 +14,7 @@ export class PurchaseInvoiceTransformer extends Transformer {
     return [
       'formattedBillDate',
       'formattedDueDate',
+      'formattedCreatedAt',
       'formattedAmount',
       'formattedPaymentAmount',
       'formattedBalance',
@@ -55,6 +56,15 @@ export class PurchaseInvoiceTransformer extends Transformer {
    */
   protected formattedDueDate = (bill: IBill): string => {
     return this.formatDate(bill.dueDate);
+  };
+
+  /**
+   * Retrieve the formatted created at date.
+   * @param {IBill} bill
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (bill: IBill): string => {
+    return this.formatDate(bill.createdAt);
   };
 
   /**

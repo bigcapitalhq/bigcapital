@@ -13,6 +13,8 @@ export class CreditNoteTransformer extends Transformer {
     return [
       'formattedCreditsRemaining',
       'formattedCreditNoteDate',
+      'formattedCreatedAt',
+      'formattedCreatedAt',
       'formattedAmount',
       'formattedCreditsUsed',
       'formattedSubtotal',
@@ -28,6 +30,15 @@ export class CreditNoteTransformer extends Transformer {
    */
   protected formattedCreditNoteDate = (credit): string => {
     return this.formatDate(credit.creditNoteDate);
+  };
+
+  /**
+   * Retrieve formatted created at date.
+   * @param credit 
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (credit): string => {
+    return this.formatDate(credit.createdAt);
   };
 
   /**

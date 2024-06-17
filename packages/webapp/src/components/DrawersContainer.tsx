@@ -21,9 +21,9 @@ import RefundCreditNoteDetailDrawer from '@/containers/Drawers/RefundCreditNoteD
 import RefundVendorCreditDetailDrawer from '@/containers/Drawers/RefundVendorCreditDetailDrawer';
 import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransferDetailDrawer';
 import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
+import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
-import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
 
 /**
  * Drawers container of the dashboard.

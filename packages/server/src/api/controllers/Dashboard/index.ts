@@ -5,7 +5,7 @@ import DashboardService from '@/services/Dashboard/DashboardService';
 @Service()
 export default class DashboardMetaController {
   @Inject()
-  dashboardService: DashboardService;
+  private dashboardService: DashboardService;
 
   /**
    * Constructor router.

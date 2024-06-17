@@ -7,7 +7,12 @@ export class CashflowTransactionTransformer extends Transformer {
    * @returns {string[]}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount', 'transactionTypeFormatted'];
+    return [
+      'formattedAmount',
+      'transactionTypeFormatted',
+      'formattedDate',
+      'formattedCreatedAt',
+    ];
   };
 
   /**
@@ -24,10 +29,28 @@ export class CashflowTransactionTransformer extends Transformer {
 
   /**
    * Formatted transaction type.
-   * @param transaction 
+   * @param transaction
    * @returns {string}
    */
   protected transactionTypeFormatted = (transaction) => {
     return this.context.i18n.__(transaction.transactionTypeFormatted);
-  }
+  };
+
+  /**
+   * Retrieve the formatted transaction date.
+   * @param invoice
+   * @returns {string}
+   */
+  protected formattedDate = (invoice): string => {
+    return this.formatDate(invoice.date);
+  };
+
+  /**
+   * Retrieve the formatted created at date.
+   * @param invoice
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (invoice): string => {
+    return this.formatDate(invoice.createdAt);
+  };
 }

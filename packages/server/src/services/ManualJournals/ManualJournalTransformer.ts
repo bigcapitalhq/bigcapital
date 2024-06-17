@@ -13,6 +13,7 @@ export class ManualJournalTransfromer extends Transformer {
       'formattedAmount',
       'formattedDate',
       'formattedPublishedAt',
+      'formattedCreatedAt',
       'attachments',
     ];
   };
@@ -35,6 +36,15 @@ export class ManualJournalTransfromer extends Transformer {
    */
   protected formattedDate = (manualJorunal: IManualJournal): string => {
     return this.formatDate(manualJorunal.date);
+  };
+
+  /**
+   * Retrieve formatted created at date.
+   * @param {IManualJournal} manualJournal
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (manualJorunal: IManualJournal): string => {
+    return this.formatDate(manualJorunal.createdAt);
   };
 
   /**

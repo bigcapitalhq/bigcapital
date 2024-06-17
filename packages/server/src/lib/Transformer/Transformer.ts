@@ -149,13 +149,19 @@ export class Transformer {
     return this.excludeAttributes().length > 0;
   };
 
+  private dateFormat = 'YYYY MMM DD';
+
+  setDateFormat(format: string) {
+    this.dateFormat = format;
+  }
+
   /**
    *
    * @param date
    * @returns
    */
   protected formatDate(date) {
-    return date ? moment(date).format('YYYY/MM/DD') : '';
+    return date ? moment(date).format(this.dateFormat) : '';
   }
 
   /**
@@ -193,6 +199,7 @@ export class Transformer {
   ) {
     transformer.setOptions(options);
     transformer.setContext(this.context);
+    transformer.setDateFormat(this.dateFormat);
 
     return transformer.work(obj);
   }

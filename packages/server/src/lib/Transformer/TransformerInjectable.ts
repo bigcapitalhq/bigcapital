@@ -25,6 +25,17 @@ export class TransformerInjectable {
   }
 
   /**
+   * Retrieves the given tenatn date format.
+   * @param {number} tenantId
+   * @returns {string}
+   */
+  async getTenantDateFormat(tenantId: number) {
+    const metadata = await TenantMetadata.query().findOne('tenantId', tenantId);
+
+    return metadata.dateFormat;
+  }
+
+  /**
    * Transformes the given transformer after inject the tenant context.
    * @param   {number} tenantId
    * @param   {Record<string, any> | Record<string, any>[]} object
@@ -41,7 +52,11 @@ export class TransformerInjectable {
     if (!isNull(tenantId)) {
       const context = await this.getApplicationContext(tenantId);
       transformer.setContext(context);
+
+      const dateFormat = await this.getTenantDateFormat(tenantId);
+      transformer.setDateFormat(dateFormat);
     }
+
     transformer.setOptions(options);
 
     return transformer.work(object);

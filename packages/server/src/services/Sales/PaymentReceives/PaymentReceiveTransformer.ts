@@ -12,6 +12,7 @@ export class PaymentReceiveTransfromer extends Transformer {
     return [
       'subtotalFormatted',
       'formattedPaymentDate',
+      'formattedCreatedAt',
       'formattedAmount',
       'formattedExchangeRate',
       'entries',
@@ -28,8 +29,17 @@ export class PaymentReceiveTransfromer extends Transformer {
   };
 
   /**
+   * Retrieves the formatted created at date.
+   * @param {IPaymentReceive} payment
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (payment: IPaymentReceive): string => {
+    return this.formatDate(payment.createdAt);
+  };
+
+  /**
    * Retrieve the formatted payment subtotal.
-   * @param {IPaymentReceive} payment 
+   * @param {IPaymentReceive} payment
    * @returns {string}
    */
   protected subtotalFormatted = (payment: IPaymentReceive): string => {

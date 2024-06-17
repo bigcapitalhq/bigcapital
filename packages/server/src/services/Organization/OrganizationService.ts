@@ -207,7 +207,7 @@ export default class OrganizationService {
   ): IOrganizationBuildDTO {
     return {
       ...buildDTO,
-      dateFormat: defaultTo(buildDTO.dateFormat, 'DD/MM/yyyy'),
+      dateFormat: defaultTo(buildDTO.dateFormat, 'DD MMM yyyy'),
     };
   }
 

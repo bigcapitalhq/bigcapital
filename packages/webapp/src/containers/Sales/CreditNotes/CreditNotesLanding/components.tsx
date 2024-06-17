@@ -5,7 +5,6 @@ import clsx from 'classnames';
 import { Intent, Tag, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { CLASSES } from '@/constants/classes';
 import {
-  FormatDateCell,
   FormattedMessage as T,
   Choose,
   If,
@@ -112,7 +111,6 @@ export function useCreditNoteTableColumns() {
         id: 'credit_date',
         Header: intl.get('credit_note.column.credit_date'),
         accessor: 'formatted_credit_note_date',
-        Cell: FormatDateCell,
         width: 110,
         className: 'credit_date',
         clickable: true,
