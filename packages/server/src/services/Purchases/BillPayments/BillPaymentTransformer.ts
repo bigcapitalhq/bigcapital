@@ -12,6 +12,7 @@ export class BillPaymentTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'formattedPaymentDate',
+      'formattedCreatedAt',
       'formattedAmount',
       'entries',
       'attachments',
@@ -26,6 +27,15 @@ export class BillPaymentTransformer extends Transformer {
   protected formattedPaymentDate = (billPayment: IBillPayment): string => {
     return this.formatDate(billPayment.paymentDate);
   };
+
+  /**
+   * Retrieve formatted created at date.
+   * @param {IBillPayment} billPayment 
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (billPayment: IBillPayment): string => {
+    return this.formatDate(billPayment.createdAt);
+  }
 
   /**
    * Retrieve formatted bill amount.

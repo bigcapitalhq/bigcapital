@@ -65,11 +65,11 @@ export default function ExpenseDrawerHeader() {
             minLabelSize={'180px'}
           >
             <DetailItem label={<T id={'published_at'} />}>
-              <FormatDate value={expense.published_at} />
+              {expense.formatted_date}
             </DetailItem>
 
             <DetailItem label={<T id={'created_at'} />}>
-              <FormatDate value={expense.created_at} />
+              {expense.formatted_created_at}
             </DetailItem>
           </DetailsMenu>
         </Col>

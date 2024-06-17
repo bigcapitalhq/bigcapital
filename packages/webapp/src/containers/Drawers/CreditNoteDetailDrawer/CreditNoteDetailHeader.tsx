@@ -5,13 +5,11 @@ import styled from 'styled-components';
 import { defaultTo } from 'lodash';
 
 import {
-  FormatDate,
   T,
   Row,
   Col,
   DetailsMenu,
   DetailItem,
-  ButtonLink,
   CommercialDocHeader,
   CommercialDocTopHeader,
   CustomerDrawerLink,
@@ -85,7 +83,7 @@ export default function CreditNoteDetailHeader() {
             />
             <DetailItem
               label={<T id={'credit_note.drawer.label_created_at'} />}
-              children={<FormatDate value={creditNote.created_at} />}
+              children={creditNote.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

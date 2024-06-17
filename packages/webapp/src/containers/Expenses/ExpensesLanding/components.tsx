@@ -17,13 +17,7 @@ import clsx from 'classnames';
 
 import { CLASSES } from '@/constants/classes';
 import { ExpenseAction, AbilitySubject } from '@/constants/abilityOption';
-import {
-  FormatDateCell,
-  FormattedMessage as T,
-  Icon,
-  If,
-  Can,
-} from '@/components';
+import { FormattedMessage as T, Icon, If, Can } from '@/components';
 import { safeCallback } from '@/utils';
 
 /**
@@ -137,8 +131,7 @@ export function useExpensesTableColumns() {
       {
         id: 'payment_date',
         Header: intl.get('payment_date'),
-        accessor: 'payment_date',
-        Cell: FormatDateCell,
+        accessor: 'formatted_date',
         width: 140,
         className: 'payment_date',
         clickable: true,

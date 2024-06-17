@@ -86,7 +86,7 @@ export default function InvoiceDetailHeader() {
             />
             <DetailItem
               label={intl.get('invoice.details.created_at')}
-              children={<FormatDate value={invoice.created_at} />}
+              children={invoice.created_at_formatted}
             />
           </DetailsMenu>
         </Col>

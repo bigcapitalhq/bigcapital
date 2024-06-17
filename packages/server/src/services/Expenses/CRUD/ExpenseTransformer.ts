@@ -15,6 +15,7 @@ export class ExpenseTransfromer extends Transformer {
       'formattedLandedCostAmount',
       'formattedAllocatedCostAmount',
       'formattedDate',
+      'formattedCreatedAt',
       'categories',
       'attachments',
     ];
@@ -61,6 +62,15 @@ export class ExpenseTransfromer extends Transformer {
   protected formattedDate = (expense: IExpense): string => {
     return this.formatDate(expense.paymentDate);
   };
+
+  /**
+   * Retrieve formatted created at date.
+   * @param {IExpense} expense 
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (expense: IExpense): string => {
+    return this.formatDate(expense.createdAt);
+  }
 
   /**
    * Retrieves the transformed expense categories.

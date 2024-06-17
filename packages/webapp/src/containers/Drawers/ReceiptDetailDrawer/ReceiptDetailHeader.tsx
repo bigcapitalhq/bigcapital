@@ -82,7 +82,7 @@ export default function ReceiptDetailHeader() {
             />
             <DetailItem
               label={intl.get('receipt.details.created_at')}
-              children={<FormatDate value={receipt.created_at} />}
+              children={receipt.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

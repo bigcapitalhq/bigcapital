@@ -5,7 +5,6 @@ import { defaultTo } from 'lodash';
 import {
   Row,
   Col,
-  FormatDate,
   DetailsMenu,
   DetailItem,
   CommercialDocHeader,
@@ -71,7 +70,7 @@ export default function PaymentReceiveDetailHeader() {
             />
             <DetailItem
               label={intl.get('created_at')}
-              children={<FormatDate value={paymentReceive.created_at} />}
+              children={paymentReceive.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

@@ -17,6 +17,7 @@ export class SaleReceiptTransformer extends Transformer {
       'formattedAmount',
       'formattedReceiptDate',
       'formattedClosedAtDate',
+      'formattedCreatedAt',
       'entries',
       'attachments',
     ];
@@ -38,6 +39,15 @@ export class SaleReceiptTransformer extends Transformer {
    */
   protected formattedClosedAtDate = (receipt: ISaleReceipt): string => {
     return this.formatDate(receipt.closedAt);
+  };
+
+  /**
+   * Retrieve formatted receipt created at date.
+   * @param receipt 
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (receipt: ISaleReceipt): string => {
+    return this.formatDate(receipt.createdAt);
   };
 
   /**

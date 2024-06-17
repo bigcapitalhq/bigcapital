@@ -78,7 +78,7 @@ export default function VendorCreditDetailHeader() {
             />
             <DetailItem
               label={<T id={'vendor_credit.drawer.label_created_at'} />}
-              children={<FormatDate value={vendorCredit.created_at} />}
+              children={vendorCredit.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

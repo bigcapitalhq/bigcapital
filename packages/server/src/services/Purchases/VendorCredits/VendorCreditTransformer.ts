@@ -14,6 +14,7 @@ export class VendorCreditTransformer extends Transformer {
       'formattedAmount',
       'formattedSubtotal',
       'formattedVendorCreditDate',
+      'formattedCreatedAt',
       'formattedCreditsRemaining',
       'formattedInvoicedAmount',
       'entries',
@@ -28,6 +29,15 @@ export class VendorCreditTransformer extends Transformer {
    */
   protected formattedVendorCreditDate = (vendorCredit): string => {
     return this.formatDate(vendorCredit.vendorCreditDate);
+  };
+
+  /**
+   * Retireve formatted created at date.
+   * @param vendorCredit 
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (vendorCredit): string => {
+    return this.formatDate(vendorCredit.createdAt);
   };
 
   /**

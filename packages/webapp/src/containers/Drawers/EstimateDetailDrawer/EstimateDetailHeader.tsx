@@ -81,7 +81,7 @@ export default function EstimateDetailHeader() {
             />
             <DetailItem
               label={<T id={'estimate.details.created_at'} />}
-              children={<FormatDate value={estimate.created_at} />}
+              children={estimate.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

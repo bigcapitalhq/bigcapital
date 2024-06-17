@@ -18,6 +18,7 @@ export class SaleEstimateTransfromer extends Transformer {
       'formattedDeliveredAtDate',
       'formattedApprovedAtDate',
       'formattedRejectedAtDate',
+      'formattedCreatedAt',
       'entries',
       'attachments',
     ];
@@ -39,6 +40,15 @@ export class SaleEstimateTransfromer extends Transformer {
    */
   protected formattedExpirationDate = (estimate: ISaleEstimate): string => {
     return this.formatDate(estimate.expirationDate);
+  };
+
+  /**
+   * Retrieves the formatted estimate created at.
+   * @param {ISaleEstimate} estimate -
+   * @returns {string}
+   */
+  protected formattedCreatedAt = (estimate: ISaleEstimate): string => {
+    return this.formatDate(estimate.createdAt);
   };
 
   /**

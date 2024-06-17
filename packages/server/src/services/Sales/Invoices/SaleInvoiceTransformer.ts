@@ -13,6 +13,7 @@ export class SaleInvoiceTransformer extends Transformer {
     return [
       'invoiceDateFormatted',
       'dueDateFormatted',
+      'createdAtFormatted',
       'dueAmountFormatted',
       'paymentAmountFormatted',
       'balanceAmountFormatted',
@@ -46,6 +47,15 @@ export class SaleInvoiceTransformer extends Transformer {
    */
   protected dueDateFormatted = (invoice): string => {
     return this.formatDate(invoice.dueDate);
+  };
+
+  /**
+   * Retrieve the formatted created at date.
+   * @param invoice
+   * @returns {string}
+   */
+  protected createdAtFormatted = (invoice): string => {
+    return this.formatDate(invoice.createdAt);
   };
 
   /**

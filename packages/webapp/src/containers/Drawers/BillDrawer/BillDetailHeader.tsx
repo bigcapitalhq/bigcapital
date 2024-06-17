@@ -79,7 +79,7 @@ export default function BillDetailHeader() {
             />
             <DetailItem
               label={intl.get('bill.details.created_at')}
-              children={<FormatDate value={bill.created_at} />}
+              children={bill.formatted_created_at}
             />
           </DetailsMenu>
         </Col>

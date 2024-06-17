@@ -58,6 +58,7 @@ export default function PaymentMadeDetailHeader() {
             />
           </DetailsMenu>
         </Col>
+
         <Col xs={6}>
           <DetailsMenu
             textAlign={'right'}
@@ -70,7 +71,7 @@ export default function PaymentMadeDetailHeader() {
             />
             <DetailItem
               label={intl.get('created_at')}
-              children={<FormatDate value={paymentMade.created_at} />}
+              children={paymentMade.formatted_created_at}
             />
           </DetailsMenu>
         </Col>
