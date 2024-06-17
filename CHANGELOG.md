@@ -2,6 +2,14 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [v0.17.5] - 17-06-2024
+
+* fix: Balance sheet and P/L nested accounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/501
+* fix: add space between buttons on floating actions bar by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/508
+* feat: Migrating to Envoy proxy instead of Nginx by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/509
+* fix: Disable email confirmation does not work with invited users by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/497
+* feat: Setting up the date format in the whole system dates by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/506
+
 ## [0.17.0] - 04-06-2024
 
 ### New
