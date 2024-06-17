@@ -46,7 +46,7 @@ export default function CashflowTransactionDrawerHeader() {
             </DetailItem>
 
             <DetailItem label={<T id={'date'} />}>
-              <FormatDate value={cashflowTransaction.date} />
+              {cashflowTransaction.formatted_date}
             </DetailItem>
 
             <DetailItem name={'reference-no'} label={<T id={'reference_no'} />}>
