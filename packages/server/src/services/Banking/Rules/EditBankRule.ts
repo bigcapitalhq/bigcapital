@@ -1,9 +1,9 @@
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { Inject, Service } from 'typedi';
 import {
   IBankRuleEventEditedPayload,
   IBankRuleEventEditingPayload,
@@ -56,6 +56,7 @@ export class EditBankRuleService {
       async (trx?: Knex.Transaction) => {
         // Triggers `onBankRuleEditing` event.
         await this.eventPublisher.emitAsync(events.bankRules.onEditing, {
+          tenantId,
           oldBankRule,
           ruleId,
           editRuleDTO,
@@ -63,12 +64,13 @@ export class EditBankRuleService {
         } as IBankRuleEventEditingPayload);
 
         // Updates the given bank rule.
-        await BankRule.query()
+        await BankRule.query(trx)
           .findById(ruleId)
           .patch({ ...tranformDTO });
 
         // Triggers `onBankRuleEdited` event.
         await this.eventPublisher.emitAsync(events.bankRules.onEdited, {
+          tenantId,
           oldBankRule,
           ruleId,
           editRuleDTO,

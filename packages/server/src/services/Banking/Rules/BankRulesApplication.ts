@@ -27,9 +27,12 @@ export class BankRulesApplication {
    * Creates new bank rule.
    * @param {number} tenantId
    * @param {ICreateBankRuleDTO} createRuleDTO
-   * @returns
+   * @returns {Promise<void>}
    */
-  public createBankRule(tenantId: number, createRuleDTO: ICreateBankRuleDTO) {
+  public createBankRule(
+    tenantId: number,
+    createRuleDTO: ICreateBankRuleDTO
+  ): Promise<void> {
     return this.createBankRuleService.createBankRule(tenantId, createRuleDTO);
   }
 
@@ -37,13 +40,13 @@ export class BankRulesApplication {
    * Edits the given bank rule.
    * @param {number} tenantId
    * @param {IEditBankRuleDTO} editRuleDTO
-   * @returns
+   * @returns {Promise<void>}
    */
   public editBankRule(
     tenantId: number,
     ruleId: number,
     editRuleDTO: IEditBankRuleDTO
-  ) {
+  ): Promise<void> {
     return this.editBankRuleService.editBankRule(tenantId, ruleId, editRuleDTO);
   }
 
@@ -51,9 +54,9 @@ export class BankRulesApplication {
    * Deletes the given bank rule.
    * @param {number} tenantId
    * @param {number} ruleId
-   * @returns
+   * @returns {Promise<void>}
    */
-  public deleteBankRule(tenantId: number, ruleId: number) {
+  public deleteBankRule(tenantId: number, ruleId: number): Promise<void> {
     return this.deleteBankRuleService.deleteBankRule(tenantId, ruleId);
   }
 
@@ -61,9 +64,9 @@ export class BankRulesApplication {
    * Retrieves the given bank rule.
    * @param {number} tenantId
    * @param {number} ruleId
-   * @returns
+   * @returns {Promise<any>}
    */
-  public getBankRule(tenantId: number, ruleId: number) {
+  public getBankRule(tenantId: number, ruleId: number): Promise<any> {
     return this.getBankRuleService.getBankRule(tenantId, ruleId);
   }
 
@@ -71,9 +74,9 @@ export class BankRulesApplication {
    * Retrieves the bank rules of the given account.
    * @param {number} tenantId
    * @param {number} accountId
-   * @returns
+   * @returns {Promise<any>}
    */
-  public getBankRules(tenantId: number) {
+  public getBankRules(tenantId: number): Promise<any> {
     return this.getBankRulesService.getBankRules(tenantId);
   }
 }

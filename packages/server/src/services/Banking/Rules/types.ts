@@ -33,32 +33,38 @@ export interface ICreateBankRuleDTO extends IBankRuleCommonDTO {}
 export interface IEditBankRuleDTO extends IBankRuleCommonDTO {}
 
 export interface IBankRuleEventCreatingPayload {
+  tenantId: number;
   createRuleDTO: ICreateBankRuleDTO;
   trx?: Knex.Transaction;
 }
 export interface IBankRuleEventCreatedPayload {
+  tenantId: number;
   createRuleDTO: ICreateBankRuleDTO;
   trx?: Knex.Transaction;
 }
 
 export interface IBankRuleEventEditingPayload {
+  tenantId: number;
   ruleId: number;
   oldBankRule: any;
   editRuleDTO: IEditBankRuleDTO;
   trx?: Knex.Transaction;
 }
 export interface IBankRuleEventEditedPayload {
+  tenantId: number;
   ruleId: number;
   editRuleDTO: IEditBankRuleDTO;
   trx?: Knex.Transaction;
 }
 
 export interface IBankRuleEventDeletingPayload {
+  tenantId: number;
   oldBankRule: any;
   ruleId: number;
   trx?: Knex.Transaction;
 }
 export interface IBankRuleEventDeletedPayload {
+  tenantId: number;
   ruleId: number;
   trx?: Knex.Transaction;
 }

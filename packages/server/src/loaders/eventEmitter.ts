@@ -102,6 +102,7 @@ import { AttachmentsOnVendorCredits } from '@/services/Attachments/events/Attach
 import { AttachmentsOnCreditNote } from '@/services/Attachments/events/AttachmentsOnCreditNote';
 import { AttachmentsOnBillPayments } from '@/services/Attachments/events/AttachmentsOnPaymentsMade';
 import { AttachmentsOnSaleEstimates } from '@/services/Attachments/events/AttachmentsOnSaleEstimates';
+import { TriggerRecognizedTransactions } from '@/services/Banking/RegonizeTranasctions/events/TriggerRecognizedTransactions';
 
 export default () => {
   return new EventPublisher();
@@ -246,5 +247,8 @@ export const susbcribers = () => {
     AttachmentsOnBillPayments,
     AttachmentsOnManualJournals,
     AttachmentsOnExpenses,
+
+    // Bank Rules
+    TriggerRecognizedTransactions,
   ];
 };

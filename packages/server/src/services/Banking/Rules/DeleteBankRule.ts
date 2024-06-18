@@ -1,6 +1,6 @@
 import { Knex } from 'knex';
-import UnitOfWork from '@/services/UnitOfWork';
 import { Inject, Service } from 'typedi';
+import UnitOfWork from '@/services/UnitOfWork';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import {
@@ -26,7 +26,7 @@ export class DeleteBankRuleSerivce {
    * @param {number} ruleId
    * @returns {Promise<void>}
    */
-  public async deleteBankRule(tenantId: number, ruleId: number) {
+  public async deleteBankRule(tenantId: number, ruleId: number): Promise<void> {
     const { BankRule } = this.tenancy.models(tenantId);
 
     const oldBankRule = await BankRule.query()
@@ -36,6 +36,7 @@ export class DeleteBankRuleSerivce {
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBankRuleDeleting` event.
       await this.eventPublisher.emitAsync(events.bankRules.onDeleting, {
+        tenantId,
         oldBankRule,
         ruleId,
         trx,
@@ -45,6 +46,7 @@ export class DeleteBankRuleSerivce {
 
       // Triggers `onBankRuleDeleted` event.
       await await this.eventPublisher.emitAsync(events.bankRules.onDeleted, {
+        tenantId,
         ruleId,
         trx,
       } as IBankRuleEventDeletedPayload);

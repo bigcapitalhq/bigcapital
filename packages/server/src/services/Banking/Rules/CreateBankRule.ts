@@ -36,8 +36,12 @@ export class CreateBankRuleService {
    * Creates a new bank rule.
    * @param {number} tenantId
    * @param {ICreateBankRuleDTO} createRuleDTO
+   * @returns {Promise<void>}
    */
-  public createBankRule(tenantId: number, createRuleDTO: ICreateBankRuleDTO) {
+  public createBankRule(
+    tenantId: number,
+    createRuleDTO: ICreateBankRuleDTO
+  ): Promise<void> {
     const { BankRule } = this.tenancy.models(tenantId);
 
     const transformDTO = this.transformDTO(createRuleDTO);
@@ -45,6 +49,7 @@ export class CreateBankRuleService {
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBankRuleCreating` event.
       await this.eventPublisher.emitAsync(events.bankRules.onCreating, {
+        tenantId,
         createRuleDTO,
         trx,
       } as IBankRuleEventCreatingPayload);
@@ -55,6 +60,7 @@ export class CreateBankRuleService {
 
       // Triggers `onBankRuleCreated` event.
       await this.eventPublisher.emitAsync(events.bankRules.onCreated, {
+        tenantId,
         createRuleDTO,
         trx,
       } as IBankRuleEventCreatedPayload);

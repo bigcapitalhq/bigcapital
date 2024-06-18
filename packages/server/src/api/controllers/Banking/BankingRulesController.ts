@@ -96,9 +96,13 @@ export class BankingRulesController extends BaseController {
    * Creates a new bank rule.
    * @param {Request} req
    * @param {Response} res
-   * @param next
+   * @param {NextFunction} next
    */
-  public async createBankRule(req: Request, res: Response, next: NextFunction) {
+  private async createBankRule(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { tenantId } = req;
     const createBankRuleDTO = this.matchedBodyData(req) as ICreateBankRuleDTO;
 
@@ -118,11 +122,11 @@ export class BankingRulesController extends BaseController {
 
   /**
    * Edits the given bank rule.
-   * @param req
-   * @param res
-   * @param next
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  public async editBankRule(req: Request, res: Response, next: NextFunction) {
+  private async editBankRule(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
     const { id: ruleId } = req.params;
     const editBankRuleDTO = this.matchedBodyData(req) as IEditBankRuleDTO;
@@ -144,11 +148,15 @@ export class BankingRulesController extends BaseController {
 
   /**
    * Deletes the given bank rule.
-   * @param req
-   * @param res
-   * @param next
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  public async deleteBankRule(req: Request, res: Response, next: NextFunction) {
+  private async deleteBankRule(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     const { id: ruleId } = req.params;
     try {
       await this.bankRulesApplication.deleteBankRule(tenantId, ruleId);
@@ -163,11 +171,11 @@ export class BankingRulesController extends BaseController {
 
   /**
    * Retrieve the given bank rule.
-   * @param req
-   * @param res
-   * @param next
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  public async getBankRule(req: Request, res: Response, next: NextFunction) {
+  private async getBankRule(req: Request, res: Response, next: NextFunction) {
     const { id: ruleId } = req.params;
     const { tenantId } = req;
 
@@ -185,11 +193,11 @@ export class BankingRulesController extends BaseController {
 
   /**
    * Retrieves the bank rules.
-   * @param req
-   * @param res
-   * @param next
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    */
-  public async getBankRules(req: Request, res: Response, next: NextFunction) {
+  private async getBankRules(req: Request, res: Response, next: NextFunction) {
     const { tenantId } = req;
 
     try {

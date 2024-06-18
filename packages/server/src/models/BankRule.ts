@@ -2,6 +2,17 @@ import TenantModel from 'models/TenantModel';
 import { Model } from 'objection';
 
 export class BankRule extends TenantModel {
+  id!: number;
+  name!: string;
+  order!: number;
+  applyIfAccountId!: number;
+  applyIfTransactionType!: string;
+  assignCategory!: string;
+  assignAccountId!: number;
+  assignPayee!: string;
+  assignMemo!: string;
+  conditionsType!: string;
+
   /**
    * Table name
    */

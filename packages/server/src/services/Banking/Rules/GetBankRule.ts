@@ -16,9 +16,9 @@ export class GetBankRuleService {
    * Retrieves the bank rule.
    * @param {number} tenantId
    * @param {number} ruleId
-   * @returns
+   * @returns {Promise<any>}
    */
-  async getBankRule(tenantId: number, ruleId: number) {
+  async getBankRule(tenantId: number, ruleId: number): Promise<any> {
     const { BankRule } = this.tenancy.models(tenantId);
 
     const bankRule = await BankRule.query()
