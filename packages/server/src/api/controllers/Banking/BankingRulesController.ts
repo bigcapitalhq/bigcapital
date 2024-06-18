@@ -1,0 +1,202 @@
+import { Inject, Service } from 'typedi';
+import { NextFunction, Request, Response, Router } from 'express';
+import BaseController from '@/api/controllers/BaseController';
+import { BankRulesApplication } from '@/services/Banking/Rules/BankRulesApplication';
+import { body, param } from 'express-validator';
+import {
+  ICreateBankRuleDTO,
+  IEditBankRuleDTO,
+} from '@/services/Banking/Rules/types';
+
+@Service()
+export class BankingRulesController extends BaseController {
+  @Inject()
+  private bankRulesApplication: BankRulesApplication;
+
+  /**
+   * Bank rule DTO validation schema.
+   */
+  private get bankRuleValidationSchema() {
+    return [
+      body('name').isString().exists(),
+      body('order').isInt({ min: 0 }),
+
+      // Apply to if transaction is.
+      body('apply_if_account_id')
+        .isInt({ min: 0 })
+        .optional({ nullable: true }),
+      body('apply_if_transaction_type').isIn(['deposit', 'withdrawal']),
+
+      // Conditions
+      body('conditions_type').isString().isIn(['and', 'or']).default('and'),
+      body('conditions').isArray({ min: 1 }),
+      body('conditions.*.field').exists().isIn(['description', 'amount']),
+      body('conditions.*.comparator')
+        .exists()
+        .isIn(['equals', 'contains', 'not_contain'])
+        .default('contain'),
+      body('conditions.*.value').exists(),
+
+      // Assign
+      body('assign_category')
+        .isString()
+        .isIn([
+          'interest_income',
+          'other_income',
+          'deposit',
+          'expense',
+          'owner_drawings',
+        ]),
+      body('assign_account_id').isInt({ min: 0 }),
+      body('assign_payee').isString().optional({ nullable: true }),
+      body('assign_memo').isString().optional({ nullable: true }),
+    ];
+  }
+
+  /**
+   * Router constructor.
+   */
+  public router() {
+    const router = Router();
+
+    router.post(
+      '/',
+      [...this.bankRuleValidationSchema],
+      this.validationResult,
+      this.createBankRule.bind(this)
+    );
+    router.post(
+      '/:id',
+      [param('id').toInt().exists(), ...this.bankRuleValidationSchema],
+      this.validationResult,
+      this.editBankRule.bind(this)
+    );
+    router.delete(
+      '/:id',
+      [param('id').toInt().exists()],
+      this.validationResult,
+      this.deleteBankRule.bind(this)
+    );
+    router.get(
+      '/:id',
+      [param('id').toInt().exists()],
+      this.validationResult,
+      this.getBankRule.bind(this)
+    );
+    router.get(
+      '/',
+      [param('id').toInt().exists()],
+      this.validationResult,
+      this.getBankRules.bind(this)
+    );
+    return router;
+  }
+
+  /**
+   * Creates a new bank rule.
+   * @param {Request} req
+   * @param {Response} res
+   * @param next
+   */
+  public async createBankRule(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const createBankRuleDTO = this.matchedBodyData(req) as ICreateBankRuleDTO;
+
+    try {
+      const bankRule = await this.bankRulesApplication.createBankRule(
+        tenantId,
+        createBankRuleDTO
+      );
+      return res.status(200).send({
+        id: bankRule.id,
+        message: 'The bank rule has been created successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Edits the given bank rule.
+   * @param req
+   * @param res
+   * @param next
+   */
+  public async editBankRule(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+    const { id: ruleId } = req.params;
+    const editBankRuleDTO = this.matchedBodyData(req) as IEditBankRuleDTO;
+
+    try {
+      await this.bankRulesApplication.editBankRule(
+        tenantId,
+        ruleId,
+        editBankRuleDTO
+      );
+      return res.status(200).send({
+        id: ruleId,
+        message: 'The bank rule has been updated successfully.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Deletes the given bank rule.
+   * @param req
+   * @param res
+   * @param next
+   */
+  public async deleteBankRule(req: Request, res: Response, next: NextFunction) {
+    const { id: ruleId } = req.params;
+    try {
+      await this.bankRulesApplication.deleteBankRule(tenantId, ruleId);
+
+      return res
+        .status(200)
+        .send({ message: 'The bank rule has been deleted.' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieve the given bank rule.
+   * @param req
+   * @param res
+   * @param next
+   */
+  public async getBankRule(req: Request, res: Response, next: NextFunction) {
+    const { id: ruleId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      const bankRule = await this.bankRulesApplication.getBankRule(
+        tenantId,
+        ruleId
+      );
+
+      return res.status(200).send({ bankRule });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the bank rules.
+   * @param req
+   * @param res
+   * @param next
+   */
+  public async getBankRules(req: Request, res: Response, next: NextFunction) {
+    const { tenantId } = req;
+
+    try {
+      const bankRules = await this.bankRulesApplication.getBankRules(tenantId);
+      return res.status(200).send({ bankRules });
+    } catch (error) {
+      next(error);
+    }
+  }
+}
