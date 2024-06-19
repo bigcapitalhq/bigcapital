@@ -618,6 +618,7 @@ export default {
     onItemCreated: 'onPlaidItemCreated',
   },
 
+  // Bank rules.
   bankRules: {
     onCreating: 'onBankRuleCreating',
     onCreated: 'onBankRuleCreated',
@@ -628,4 +629,13 @@ export default {
     onDeleting: 'onBankRuleDeleting',
     onDeleted: 'onBankRuleDeleted',
   },
+
+  // Bank matching.
+  bankMatch: {
+    onMatching: 'onBankTransactionMatching',
+    onMatched: 'onBankTransactionMatched',
+
+    onUnmatching: 'onBankTransactionUnmathcing',
+    onUnmatched: 'onBankTransactionUnmathced',
+  }
 };

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { PlaidBankingController } from './PlaidBankingController';
 import { BankingRulesController } from './BankingRulesController';
+import { BankTransactionsMatchingController } from './BankTransactionsMatchingController';
 
 @Service()
 export class BankingController extends BaseController {
@@ -14,6 +15,10 @@ export class BankingController extends BaseController {
 
     router.use('/plaid', Container.get(PlaidBankingController).router());
     router.use('/rules', Container.get(BankingRulesController).router());
+    router.use(
+      '/matches',
+      Container.get(BankTransactionsMatchingController).router()
+    );
 
     return router;
   }
