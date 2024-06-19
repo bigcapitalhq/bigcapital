@@ -1,5 +1,48 @@
 import { Knex } from 'knex';
 
+export enum BankRuleConditionField {
+  Amount = 'Amount',
+  Description = 'Description',
+}
+
+export enum BankRuleConditionComparator {
+  Contains = 'contains',
+  Equals = 'equals',
+  NotContain = 'not_contain';
+}
+
+export interface IBankRuleCondition {
+  id?: number;
+  field: BankRuleConditionField;
+  comparator: BankRuleConditionComparator;
+  value: number;
+}
+
+export enum BankRuleConditionType {
+  Or = 'or',
+  And = 'and'
+}
+
+export enum BankRuleApplyIfTransactionType  {
+  Deposit = 'deposit',
+  Withdrawal = 'withdrawal',
+}
+
+export interface IBankRule {
+  name: string;
+  order?: number;
+  applyIfAccountId: number;
+  applyIfTransactionType: BankRuleApplyIfTransactionType;
+  
+  conditionsType: BankRuleConditionType;
+  conditions: IBankRuleCondition[];
+
+  assignCategory: BankRuleAssignCategory;
+  assignAccountId: number;
+  assignPayee?: string;
+  assignMemo?: string;
+}
+
 export enum BankRuleAssignCategory {
   InterestIncome = 'InterestIncome',
   OtherIncome = 'OtherIncome',

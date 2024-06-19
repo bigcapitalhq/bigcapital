@@ -5,11 +5,19 @@ exports.up = function (knex) {
       table.string('name');
       table.integer('order').unsigned();
 
-      table.integer('apply_if_account_id').unsigned();
+      table
+        .integer('apply_if_account_id')
+        .unsigned()
+        .references('id')
+        .inTable('accounts');
       table.string('apply_if_transaction_type');
 
       table.string('assign_category');
-      table.integer('assign_account_id').unsigned();
+      table
+        .integer('assign_account_id')
+        .unsigned()
+        .references('id')
+        .inTable('accounts');
       table.string('assign_payee');
       table.string('assign_memo');
 
@@ -19,7 +27,11 @@ exports.up = function (knex) {
     })
     .createTable('bank_rule_conditions', (table) => {
       table.increments('id').primary();
-      table.integer('rule_id').unsigned();
+      table
+        .integer('rule_id')
+        .unsigned()
+        .references('id')
+        .inTable('bank_rules');
       table.string('field');
       table.string('comparator');
       table.string('value');

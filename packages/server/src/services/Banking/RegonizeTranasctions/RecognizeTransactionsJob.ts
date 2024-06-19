@@ -1,5 +1,5 @@
 import Container, { Service } from 'typedi';
-import { RegonizeTranasctionsService } from './RecognizeTranasctionsService';
+import { RecognizeTranasctionsService } from './RecognizeTranasctionsService';
 
 @Service()
 export class RegonizeTransactionsJob {
@@ -8,7 +8,7 @@ export class RegonizeTransactionsJob {
    */
   constructor(agenda) {
     agenda.define(
-      'regonize-uncategorized-transactions-job',
+      'recognize-uncategorized-transactions-job',
       { priority: 'high', concurrency: 2 },
       this.handler
     );
@@ -19,10 +19,10 @@ export class RegonizeTransactionsJob {
    */
   private handler = async (job, done: Function) => {
     const { tenantId } = job.attrs.data;
-    const regonizeTransactions = Container.get(RegonizeTranasctionsService);
+    const regonizeTransactions = Container.get(RecognizeTranasctionsService);
 
     try {
-      await regonizeTransactions.regonizeTransactions(tenantId);
+      await regonizeTransactions.recognizeTransactions(tenantId);
       done();
     } catch (error) {
       console.log(error);

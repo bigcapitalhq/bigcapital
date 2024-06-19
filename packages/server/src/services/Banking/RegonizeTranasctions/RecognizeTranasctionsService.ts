@@ -1,37 +1,90 @@
+import { Knex } from 'knex';
 import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTransaction';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformToMapBy } from '@/utils';
 import { Inject, Service } from 'typedi';
 import { PromisePool } from '@supercharge/promise-pool';
+import { BankRule } from '@/models/BankRule';
+import { bankRulesMatchTransaction } from './_utils';
 
 @Service()
-export class RecognizeedTranasctionsService {
+export class RecognizeTranasctionsService {
   @Inject()
   private tenancy: HasTenancyService;
 
   /**
-   * Regonized the uncategorized transactions.
-   * @param {number} tenantId
+   * Marks the uncategorized transaction as recognized from the given bank rule.
+   * @param {number} tenantId -
+   * @param {BankRule} bankRule -
+   * @param {UncategorizedCashflowTransaction} transaction -
+   * @param {Knex.Transaction} trx -
    */
-  public async recognizeTransactions(tenantId: number) {
+  private markBankRuleAsRecognized = async (
+    tenantId: number,
+    bankRule: BankRule,
+    transaction: UncategorizedCashflowTransaction,
+    trx?: Knex.Transaction
+  ) => {
+    const { RecognizedBankTransaction, UncategorizedCashflowTransaction } =
+      this.tenancy.models(tenantId);
+
+    const recognizedTransaction = await RecognizedBankTransaction.query(
+      trx
+    ).insert({
+      bankRuleId: bankRule.id,
+      cashflowTransactionId: transaction.id,
+      assignedCategory: bankRule.assignCategory,
+      assignedAccountId: bankRule.assignAccountId,
+      assignedPayee: bankRule.assignPayee,
+      assignedMemo: bankRule.assignMemo,
+    });
+    await UncategorizedCashflowTransaction.query(trx)
+      .findById(transaction.id)
+      .patch({
+        recognizedTransactionId: recognizedTransaction.id,
+      });
+  };
+
+  /**
+   * Regonized the uncategorized transactions.
+   * @param {number} tenantId -
+   * @param {Knex.Transaction} trx -
+   */
+  public async recognizeTransactions(tenantId: number, trx?: Knex.Transaction) {
     const { UncategorizedCashflowTransaction, BankRule } =
       this.tenancy.models(tenantId);
 
     const uncategorizedTranasctions =
-      await UncategorizedCashflowTransaction.query().where(
-        'regonized_transaction_id',
-        null
-      );
+      await UncategorizedCashflowTransaction.query()
+        .where('recognized_transaction_id', null)
+        .where('categorized', false);
 
-    const bankRules = await BankRule.query();
-    const bankRulesByAccountId = transformToMapBy(bankRules, 'accountId');
-
-    console.log(bankRulesByAccountId);
-
-    const regonizeTransaction = (
+    const bankRules = await BankRule.query().withGraphFetched('conditions');
+    const bankRulesByAccountId = transformToMapBy(
+      bankRules,
+      'applyIfAccountId'
+    );
+    // Try to recognize the transaction.
+    const regonizeTransaction = async (
       transaction: UncategorizedCashflowTransaction
-    ) => {};
-
+    ) => {
+      const allAccountsBankRules = bankRulesByAccountId.get(`null`);
+      const accountBankRules = bankRulesByAccountId.get(
+        `${transaction.accountId}`
+      );
+      const recognizedBankRule = bankRulesMatchTransaction(
+        transaction,
+        accountBankRules
+      );
+      if (recognizedBankRule) {
+        await this.markBankRuleAsRecognized(
+          tenantId,
+          recognizedBankRule,
+          transaction,
+          trx
+        );
+      }
+    };
     await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTranasctions)
       .process((transaction: UncategorizedCashflowTransaction, index, pool) => {
@@ -39,6 +92,10 @@ export class RecognizeedTranasctionsService {
       });
   }
 
+  /**
+   * 
+   * @param {number} uncategorizedTransaction 
+   */
   public async regonizeTransaction(
     uncategorizedTransaction: UncategorizedCashflowTransaction
   ) {}

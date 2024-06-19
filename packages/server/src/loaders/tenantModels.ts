@@ -66,6 +66,7 @@ import Document from '@/models/Document';
 import DocumentLink from '@/models/DocumentLink';
 import { BankRule } from '@/models/BankRule';
 import { BankRuleCondition } from '@/models/BankRuleCondition';
+import { RecognizedBankTransaction } from '@/models/RecognizedBankTransaction';
 
 export default (knex) => {
   const models = {
@@ -135,6 +136,7 @@ export default (knex) => {
     UncategorizedCashflowTransaction,
     BankRule,
     BankRuleCondition,
+    RecognizedBankTransaction,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };

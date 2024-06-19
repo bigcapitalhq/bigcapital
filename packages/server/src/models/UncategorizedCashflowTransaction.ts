@@ -11,9 +11,15 @@ export default class UncategorizedCashflowTransaction extends mixin(
   [ModelSettings]
 ) {
   id!: number;
+  date!: Date | string;
   amount!: number;
   categorized!: boolean;
   accountId!: number;
+  referenceNo!: string;
+  payee!: string;
+  description!: string;
+  plaidTransactionId!: string;
+  recognizedTransactionId!: number;
 
   /**
    * Table name.
@@ -76,10 +82,20 @@ export default class UncategorizedCashflowTransaction extends mixin(
   }
 
   /**
+   * Detarmines whether the transaction is recognized.
+   */
+  public get isRecognized(): boolean {
+    return !!this.recognizedTransactionId;
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {
     const Account = require('models/Account');
+    const {
+      RecognizedBankTransaction,
+    } = require('models/RecognizedBankTransaction');
 
     return {
       /**
@@ -91,6 +107,18 @@ export default class UncategorizedCashflowTransaction extends mixin(
         join: {
           from: 'uncategorized_cashflow_transactions.accountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Transaction may has association to recognized transaction.
+       */
+      recognizedTransaction: {
+        relation: Model.HasOneRelation,
+        modelClass: RecognizedBankTransaction,
+        join: {
+          from: 'uncategorized_cashflow_transactions.recognizedTransactionId',
+          to: 'recognized_bank_transactions.id',
         },
       },
     };
