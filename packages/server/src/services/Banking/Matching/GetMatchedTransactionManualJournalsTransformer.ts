@@ -6,27 +6,104 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['referenceNo'];
+    return [
+      'referenceNo',
+      'amount',
+      'amountFormatted',
+      'transactionNo',
+      'date',
+      'dateFromatted',
+      'transactionId',
+      'transactionNo',
+      'transactionType',
+      'transsactionTypeFormatted',
+    ];
   };
 
+  /**
+   * Exclude all attributes.
+   * @returns {Array<string>}
+   */
   public excludeAttributes = (): string[] => {
     return ['*'];
   };
 
-  protected referenceNo(invoice) {
-    return invoice.referenceNo;
+  /**
+   * Retrieves the manual journal reference no.
+   * @param manualJournal
+   * @returns {string}
+   */
+  protected referenceNo(manualJournal) {
+    return manualJournal.referenceNo;
   }
 
-  amount(invoice) {
-    return 1;
+  /**
+   * Retrieves the manual journal amount.
+   * @param manualJournal
+   * @returns {number}
+   */
+  protected amount(manualJournal) {
+    return manualJournal.totalAmount;
   }
-  amountFormatted() {}
-  date() {}
-  dateFromatted() {}
-  transactionId(invoice) {
-    return invoice.id;
+
+  /**
+   * Retrieves the manual journal formatted amount.
+   * @param manualJournal
+   * @returns {string}
+   */
+  protected amountFormatted(manualJournal) {
+    return this.formatNumber(manualJournal.totalAmount, {
+      currencyCode: manualJournal.currencyCode,
+    });
   }
-  transactionNo() {}
-  transactionType() {}
-  transsactionTypeFormatted() {}
+
+  /**
+   * Retreives the manual journal date.
+   * @param manualJournal
+   * @returns {Date}
+   */
+  protected date(manualJournal) {
+    return manualJournal.date;
+  }
+
+  /**
+   * Retrieves the manual journal formatted date.
+   * @param manualJournal
+   * @returns {string}
+   */
+  protected dateFromatted(manualJournal) {
+    return this.formatDate(manualJournal.date);
+  }
+
+  /**
+   * Retrieve the manual journal transaction id.
+   * @returns {number}
+   */
+  protected transactionId(manualJournal) {
+    return manualJournal.id;
+  }
+
+  /**
+   * Retrieve the manual journal transaction number.
+   * @param manualJournal
+   */
+  protected transactionNo(manualJournal) {
+    return manualJournal.journalNumber;
+  }
+
+  /**
+   * Retrieve the manual journal transaction type.
+   * @returns {string}
+   */
+  protected transactionType() {
+    return 'ManualJournal';
+  }
+
+  /**
+   * Retrieves the manual journal formatted transaction type.
+   * @returns {string}
+   */
+  protected transsactionTypeFormatted() {
+    return 'Manual Journal';
+  }
 }

@@ -45,7 +45,7 @@ export class MatchBankTransactions {
         trx,
       } as IBankTransactionMatchingEventPayload);
 
-      // 
+      //  Matches the given transactions under promise pool concurrency controlling.
       await PromisePool.withConcurrency(10)
         .for(matchedTransactions)
         .process(async (matchedTransaction) => {

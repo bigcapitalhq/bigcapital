@@ -6,35 +6,81 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['referenceNo'];
+    return [
+      'referenceNo',
+      'amount',
+      'amountFormatted',
+      'transactionNo',
+      'date',
+      'dateFromatted',
+      'transactionId',
+      'transactionNo',
+      'transactionType',
+      'transsactionTypeFormatted',
+    ];
   };
 
+  /**
+   * Exclude all attributes.
+   * @returns {Array<string>}
+   */
   public excludeAttributes = (): string[] => {
     return ['*'];
   };
 
-  protected referenceNo(invoice) {
-    return invoice.referenceNo;
+  /**
+   * Retrieve the reference number of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {string}
+   */
+  protected referenceNo(bill) {
+    return bill.referenceNo;
   }
 
-  amount(invoice) {
-    return 1;
+  /**
+   * Retrieve the amount of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {number}
+   */
+  protected amount(bill) {
+    return bill.amount;
   }
-  amountFormatted() {
 
+  /**
+   * Retrieve the formatted amount of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {string}
+   */
+  protected amountFormatted(bill) {
+    return this.formatNumber(bill.totalAmount, {
+      currencyCode: bill.currencyCode,
+    });
   }
-  date() {
 
+  /**
+   * Retrieve the date of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {string}
+   */
+  protected date(bill) {
+    return bill.date;
   }
-  dateFromatted() {
 
+  /**
+   * Retrieve the formatted date of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {string}
+   */
+  protected dateFromatted(bill) {
+    return this.formatDate(bill.date);
   }
-  transactionId(invoice) {
-    return invoice.id;
+
+  /**
+   * Retrieve the transcation id of the bill.
+   * @param {Object} bill - The bill object.
+   * @returns {number}
+   */
+  protected transactionId(bill) {
+    return bill.id;
   }
-  transactionNo() {
-    
-  }
-  transactionType() {}
-  transsactionTypeFormatted() {}
 }
