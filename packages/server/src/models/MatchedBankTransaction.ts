@@ -1,4 +1,5 @@
 import TenantModel from 'models/TenantModel';
+import { Model } from 'objection';
 
 export class MatchedBankTransaction extends TenantModel {
   /**
@@ -12,7 +13,7 @@ export class MatchedBankTransaction extends TenantModel {
    * Timestamps columns.
    */
   get timestamps() {
-    return [];
+    return ['createdAt', 'updatedAt'];
   }
 
   /**
@@ -20,5 +21,12 @@ export class MatchedBankTransaction extends TenantModel {
    */
   static get virtualAttributes() {
     return [];
+  }
+
+  /**
+   * Relationship mapping.
+   */
+  static get relationMappings() {
+    return {};
   }
 }

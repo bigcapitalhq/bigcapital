@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { NextFunction, Request, Response, Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { MatchBankTransactionsApplication } from '@/services/Banking/Matching/MatchBankTransactionsApplication';
-import { param } from 'express-validator';
+import { body, param } from 'express-validator';
 import {
   GetMatchedTransactionsFilter,
   IMatchTransactionDTO,
@@ -21,7 +21,14 @@ export class BankTransactionsMatchingController extends BaseController {
 
     router.post(
       '/:transactionId',
-      [param('transactionId').exists()],
+      [
+        param('transactionId').exists(),
+
+        body('matchedTransactions').isArray({ min: 1 }),
+        body('matchedTransactions.*.reference_type').exists(),
+        body('matchedTransactions.*.reference_id').isNumeric().toInt(),
+        body('matchedTransactions.*.amount').exists().isNumeric().toFloat(),
+      ],
       this.validationResult,
       this.matchBankTransaction.bind(this)
     );
@@ -60,7 +67,6 @@ export class BankTransactionsMatchingController extends BaseController {
         transactionId,
         matchTransactionDTO
       );
-
       return res.status(200).send({
         message: 'The bank transaction has been matched.',
       });

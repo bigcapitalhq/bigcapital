@@ -3,14 +3,14 @@ import { Knex } from 'knex';
 export interface IBankTransactionMatchingEventPayload {
   tenantId: number;
   uncategorizedTransactionId: number;
-  matchTransactionsDTO: IMatchTransactionDTO;
+  matchTransactionsDTO: IMatchTransactionsDTO;
   trx?: Knex.Transaction;
 }
 
 export interface IBankTransactionMatchedEventPayload {
   tenantId: number;
   uncategorizedTransactionId: number;
-  matchTransactionsDTO: IMatchTransactionDTO;
+  matchTransactionsDTO: IMatchTransactionsDTO;
   trx?: Knex.Transaction;
 }
 
@@ -23,11 +23,12 @@ export interface IBankTransactionUnmatchedEventPayload {
 }
 
 export interface IMatchTransactionDTO {
-  matchedTransactions: Array<{
-    referenceType: string;
-    referenceId: number;
-    amount: number;
-  }>;
+  referenceType: string;
+  referenceId: number;
+}
+
+export interface IMatchTransactionsDTO {
+  matchedTransactions: Array<IMatchTransactionDTO>;
 }
 
 export interface GetMatchedTransactionsFilter {
@@ -37,3 +38,24 @@ export interface GetMatchedTransactionsFilter {
   maxAmount: number;
   transactionType: string;
 }
+
+export interface MatchedTransactionPOJO {
+  amount: number;
+  amountFormatted: string;
+  date: string;
+  dateFormatted: string;
+  referenceNo: string;
+  transactionNo: string;
+  transactionId: number;
+}
+
+export type MatchedTransactionsPOJO = Array<MatchedTransactionPOJO[]>;
+
+export const ERRORS = {
+  RESOURCE_TYPE_MATCHING_TRANSACTION_INVALID:
+    'RESOURCE_TYPE_MATCHING_TRANSACTION_INVALID',
+  RESOURCE_ID_MATCHING_TRANSACTION_INVALID:
+    'RESOURCE_ID_MATCHING_TRANSACTION_INVALID',
+
+  TOTAL_MATCHING_TRANSACTIONS_INVALID: 'TOTAL_MATCHING_TRANSACTIONS_INVALID',
+};

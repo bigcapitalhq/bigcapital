@@ -411,6 +411,7 @@ export default class SaleInvoice extends mixin(TenantModel, [
     const Account = require('models/Account');
     const TaxRateTransaction = require('models/TaxRateTransaction');
     const Document = require('models/Document');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       /**
@@ -541,6 +542,21 @@ export default class SaleInvoice extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'SaleInvoice');
+        },
+      },
+
+      /**
+       * Sale invocie may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'sales_invoices.id',
+          to: "matched_bank_transactions.referenceId",
+        },
+        filter(query) {
+          query.where('reference_type', 'SaleInvoice');
         },
       },
     };

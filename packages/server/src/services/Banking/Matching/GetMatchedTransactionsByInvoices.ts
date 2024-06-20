@@ -1,16 +1,21 @@
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionInvoicesTransformer } from './GetMatchedTransactionInvoicesTransformer';
-import { GetMatchedTransactionsFilter } from './types';
+import {
+  GetMatchedTransactionsFilter,
+  MatchedTransactionPOJO,
+  MatchedTransactionsPOJO,
+} from './types';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { Inject, Service } from 'typedi';
+import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 
 @Service()
-export class GetMatchedTransactionsByInvoices {
+export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByType {
   @Inject()
-  private tenancy: HasTenancyService;
+  protected tenancy: HasTenancyService;
 
   @Inject()
-  private transformer: TransformerInjectable;
+  protected transformer: TransformerInjectable;
 
   /**
    * Retrieves the matched transactions.
@@ -20,7 +25,7 @@ export class GetMatchedTransactionsByInvoices {
   public async getMatchedTransactions(
     tenantId: number,
     filter: GetMatchedTransactionsFilter
-  ) {
+  ): Promise<MatchedTransactionsPOJO> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
     const invoices = await SaleInvoice.query();
@@ -28,6 +33,29 @@ export class GetMatchedTransactionsByInvoices {
     return this.transformer.transform(
       tenantId,
       invoices,
+      new GetMatchedTransactionInvoicesTransformer()
+    );
+  }
+
+  /**
+   *
+   * @param {number} tenantId
+   * @param {number} transactionId
+   * @returns
+   */
+  public async getMatchedTransaction(
+    tenantId: number,
+    transactionId: number
+  ): Promise<MatchedTransactionPOJO> {
+    const { SaleInvoice } = this.tenancy.models(tenantId);
+
+    console.log(transactionId);
+
+    const invoice = await SaleInvoice.query().findById(transactionId);
+
+    return this.transformer.transform(
+      tenantId,
+      invoice,
       new GetMatchedTransactionInvoicesTransformer()
     );
   }

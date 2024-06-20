@@ -7,7 +7,7 @@ import { ExcludeBankTransactionsApplication } from '@/services/Banking/Exclude/E
 @Service()
 export class ExcludeBankTransactionsController extends BaseController {
   @Inject()
-  prviate excludeBankTransactionApp: ExcludeBankTransactionsApplication;
+  private excludeBankTransactionApp: ExcludeBankTransactionsApplication;
 
   /**
    * Router constructor.

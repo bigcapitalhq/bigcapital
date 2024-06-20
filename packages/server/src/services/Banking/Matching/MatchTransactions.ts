@@ -1,3 +1,4 @@
+import { sumBy } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -6,10 +7,13 @@ import events from '@/subscribers/events';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import {
+  ERRORS,
   IBankTransactionMatchedEventPayload,
   IBankTransactionMatchingEventPayload,
-  IMatchTransactionDTO,
+  IMatchTransactionsDTO,
 } from './types';
+import { MatchTransactionsTypes } from './MatchTransactionsTypes';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export class MatchBankTransactions {
@@ -22,22 +26,90 @@ export class MatchBankTransactions {
   @Inject()
   private eventPublisher: EventPublisher;
 
+  @Inject()
+  private matchedBankTransactions: MatchTransactionsTypes;
+
+  /**
+   * Validates the match bank transactions DTO.
+   * @param {number} tenantId
+   * @param {number} uncategorizedTransactionId
+   * @param {IMatchTransactionsDTO} matchTransactionsDTO
+   */
+  async validate(
+    tenantId: number,
+    uncategorizedTransactionId: number,
+    matchTransactionsDTO: IMatchTransactionsDTO
+  ) {
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
+    const { matchedTransactions } = matchTransactionsDTO;
+
+    const uncategorizedTransaction =
+      await UncategorizedCashflowTransaction.query()
+        .findById(uncategorizedTransactionId)
+        .throwIfNotFound();
+
+    // Validates the given matched transaction.
+    const validateMatchedTransaction = async (matchedTransaction) => {
+      const getMatchedTransactionsService =
+        this.matchedBankTransactions.registry.get(
+          matchedTransaction.referenceType
+        );
+      if (!getMatchedTransactionsService) {
+        throw new ServiceError(
+          ERRORS.RESOURCE_TYPE_MATCHING_TRANSACTION_INVALID
+        );
+      }
+      const foundMatchedTransaction =
+        await getMatchedTransactionsService.getMatchedTransaction(
+          tenantId,
+          matchedTransaction.referenceId
+        );
+      if (!foundMatchedTransaction) {
+        throw new ServiceError(ERRORS.RESOURCE_ID_MATCHING_TRANSACTION_INVALID);
+      }
+      return foundMatchedTransaction;
+    };
+    // Matches the given transactions under promise pool concurrency controlling.
+    const validatationResult = await PromisePool.withConcurrency(10)
+      .for(matchedTransactions)
+      .process(validateMatchedTransaction);
+
+    if (validatationResult.errors?.length > 0) {
+      const error = validatationResult.errors.map((er) => er.raw)[0];
+      throw new ServiceError(error);
+    }
+    // Calculate the total given matching transactions.
+    const totalMatchedTranasctions = sumBy(
+      validatationResult.results,
+      'amount'
+    );
+    // Validates the total given matching transcations whether is not equal
+    // uncategorized transaction amount.
+    if (totalMatchedTranasctions !== uncategorizedTransaction.amount) {
+      throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
+    }
+  }
+
   /**
    * Matches the given uncategorized transaction to the given references.
    * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    */
-  public matchTransaction(
+  public async matchTransaction(
     tenantId: number,
     uncategorizedTransactionId: number,
-    matchTransactionsDTO: IMatchTransactionDTO
+    matchTransactionsDTO: IMatchTransactionsDTO
   ) {
     const { matchedTransactions } = matchTransactionsDTO;
-    const { MatchBankTransaction } = this.tenancy.models(tenantId);
 
-    //
+    // Validates the given matching transactions DTO.
+    await this.validate(
+      tenantId,
+      uncategorizedTransactionId,
+      matchTransactionsDTO
+    );
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      // Triggers the event `onSaleInvoiceCreated`.
+      // Triggers the event `onBankTransactionMatching`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatching, {
         tenantId,
         uncategorizedTransactionId,
@@ -45,19 +117,23 @@ export class MatchBankTransactions {
         trx,
       } as IBankTransactionMatchingEventPayload);
 
-      //  Matches the given transactions under promise pool concurrency controlling.
+      // Matches the given transactions under promise pool concurrency controlling.
       await PromisePool.withConcurrency(10)
         .for(matchedTransactions)
         .process(async (matchedTransaction) => {
-          await MatchBankTransaction.query(trx).insert({
+          const getMatchedTransactionsService =
+            this.matchedBankTransactions.registry.get(
+              matchedTransaction.referenceType
+            );
+          await getMatchedTransactionsService.createMatchedTransaction(
+            tenantId,
             uncategorizedTransactionId,
-            referenceType: matchedTransaction.referenceType,
-            referenceId: matchedTransaction.referenceId,
-            amount: matchedTransaction.amount,
-          });
+            matchedTransaction,
+            trx
+          );
         });
 
-      // Triggers the event `onSaleInvoiceCreated`.
+      // Triggers the event `onBankTransactionMatched`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatched, {
         tenantId,
         uncategorizedTransactionId,

@@ -3,14 +3,15 @@ import { GetMatchedTransactionManualJournalsTransformer } from './GetMatchedTran
 import { GetMatchedTransactionsFilter } from './types';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 
 @Service()
-export class GetMatchedTransactionsByExpenses {
+export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByType {
   @Inject()
-  private tenancy: HasTenancyService;
+  protected tenancy: HasTenancyService;
 
   @Inject()
-  private transformer: TransformerInjectable;
+  protected transformer: TransformerInjectable;
 
   /**
    *

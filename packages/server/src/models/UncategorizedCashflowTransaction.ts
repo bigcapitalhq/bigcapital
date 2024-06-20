@@ -97,6 +97,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
     const {
       RecognizedBankTransaction,
     } = require('models/RecognizedBankTransaction');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       /**
@@ -120,6 +121,18 @@ export default class UncategorizedCashflowTransaction extends mixin(
         join: {
           from: 'uncategorized_cashflow_transactions.recognizedTransactionId',
           to: 'recognized_bank_transactions.id',
+        },
+      },
+
+      /**
+       * Uncategorized transaction may has association to matched transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'uncategorized_cashflow_transactions.id',
+          to: 'matched_bank_transactions.uncategorizedTransactionId',
         },
       },
     };

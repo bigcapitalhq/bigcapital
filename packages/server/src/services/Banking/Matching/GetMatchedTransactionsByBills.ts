@@ -1,12 +1,12 @@
+import { Inject, Service } from 'typedi';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionBillsTransformer } from './GetMatchedTransactionBillsTransformer';
-import { GetMatchedTransactionInvoicesTransformer } from './GetMatchedTransactionInvoicesTransformer';
 import { GetMatchedTransactionsFilter } from './types';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
+import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
 
 @Service()
-export class GetMatchedTransactionsByBills {
+export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType {
   @Inject()
   private tenancy: HasTenancyService;
 

@@ -43,7 +43,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @returns {number}
    */
   protected amount(manualJournal) {
-    return manualJournal.totalAmount;
+    return manualJournal.amount;
   }
 
   /**
@@ -52,7 +52,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @returns {string}
    */
   protected amountFormatted(manualJournal) {
-    return this.formatNumber(manualJournal.totalAmount, {
+    return this.formatNumber(manualJournal.amount, {
       currencyCode: manualJournal.currencyCode,
     });
   }

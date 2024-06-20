@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
 import { PromisePool } from '@supercharge/promise-pool';
-import { GetMatchedTransactionsFilter } from './types';
+import { GetMatchedTransactionsFilter, MatchedTransactionsPOJO } from './types';
 import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpenses';
 import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals';
@@ -20,6 +20,9 @@ export class GetMatchedTransactions {
   @Inject()
   private getMatchedExpensesService: GetMatchedTransactionsByExpenses;
 
+  /**
+   * Registered matched transactions types.
+   */
   get registered() {
     return [
       { type: 'SaleInvoice', service: this.getMatchedInvoicesService },
@@ -37,7 +40,7 @@ export class GetMatchedTransactions {
   public async getMatchedTransactions(
     tenantId: number,
     filter: GetMatchedTransactionsFilter
-  ) {
+  ): Promise<MatchedTransactionsPOJO> {
     const filtered = filter.transactionType
       ? this.registered.filter((item) => item.type === filter.transactionType)
       : this.registered;
@@ -49,14 +52,4 @@ export class GetMatchedTransactions {
       });
     return R.compose(R.flatten)(matchedTransactions?.results);
   }
-}
-
-interface MatchedTransaction {
-  amount: number;
-  amountFormatted: string;
-  date: string;
-  dateFormatted: string;
-  referenceNo: string;
-  transactionNo: string;
-  transactionId: number;
 }
