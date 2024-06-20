@@ -44,6 +44,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'deposit',
       'isDepositTransaction',
       'isWithdrawalTransaction',
+      'isRecognized',
     ];
   }
 
