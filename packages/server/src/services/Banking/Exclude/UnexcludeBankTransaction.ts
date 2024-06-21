@@ -19,20 +19,20 @@ export class UnexcludeBankTransaction {
    */
   public async unexcludeBankTransaction(
     tenantId: number,
-    bankTransactionId: number
+    uncategorizedTransactionId: number
   ) {
-    const { UncategorizeCashflowTransaction } = this.tenancy.models(tenantId);
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     const oldUncategorizedTransaction =
-      await UncategorizeCashflowTransaction.query()
-        .findById(bankTransactionId)
+      await UncategorizedCashflowTransaction.query()
+        .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
     validateTransactionNotCategorized(oldUncategorizedTransaction);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
-      await UncategorizeCashflowTransaction.query(trx)
-        .findById(bankTransactionId)
+      await UncategorizedCashflowTransaction.query(trx)
+        .findById(uncategorizedTransactionId)
         .patch({
           excluded: false,
         });
