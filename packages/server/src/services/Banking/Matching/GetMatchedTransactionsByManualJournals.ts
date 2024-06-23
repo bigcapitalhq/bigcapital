@@ -1,8 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionManualJournalsTransformer } from './GetMatchedTransactionManualJournalsTransformer';
-import { Inject, Service } from 'typedi';
-import { GetMatchedTransactionsFilter } from './types';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
+import { GetMatchedTransactionsFilter } from './types';
 
 @Service()
 export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactionsByType {
@@ -17,12 +17,27 @@ export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactio
    */
   async getMatchedTransactions(
     tenantId: number,
-    filter: GetMatchedTransactionsFilter
+    filter: Omit<GetMatchedTransactionsFilter, 'transactionType'>
   ) {
     const { ManualJournal } = this.tenancy.models(tenantId);
 
-    const manualJournals = await ManualJournal.query();
-
+    const manualJournals = await ManualJournal.query().onBuild((query) => {
+      query.whereNotExists(
+        ManualJournal.relatedQuery('matchedBankTransaction')
+      );
+      if (filter.fromDate) {
+        query.where('date', '>=', filter.fromDate);
+      }
+      if (filter.toDate) {
+        query.where('date', '<=', filter.toDate);
+      }
+      if (filter.minAmount) {
+        query.where('amount', '>=', filter.minAmount);
+      }
+      if (filter.maxAmount) {
+        query.where('amount', '<=', filter.maxAmount);
+      }
+    });
     return this.transformer.transform(
       tenantId,
       manualJournals,
@@ -41,6 +56,7 @@ export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactio
 
     const manualJournal = await ManualJournal.query()
       .findById(transactionId)
+      .whereNotExists(ManualJournal.relatedQuery('matchedBankTransaction'))
       .throwIfNotFound();
 
     return this.transformer.transform(

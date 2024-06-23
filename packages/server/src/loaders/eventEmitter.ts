@@ -108,6 +108,7 @@ import { ValidateMatchingOnManualJournalDelete } from '@/services/Banking/Matchi
 import { ValidateMatchingOnPaymentReceivedDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnPaymentReceivedDelete';
 import { ValidateMatchingOnPaymentMadeDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnPaymentMadeDelete';
 import { ValidateMatchingOnCashflowDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnCashflowDelete';
+import { RecognizeSyncedBankTranasctions } from '@/services/Banking/Plaid/subscribers/RecognizeSyncedBankTransactions';
 
 export default () => {
   return new EventPublisher();
@@ -262,5 +263,8 @@ export const susbcribers = () => {
     ValidateMatchingOnManualJournalDelete,
     ValidateMatchingOnPaymentReceivedDelete,
     ValidateMatchingOnPaymentMadeDelete,
+
+    // Plaid 
+    RecognizeSyncedBankTranasctions,
   ];
 };

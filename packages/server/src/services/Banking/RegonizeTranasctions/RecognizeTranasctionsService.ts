@@ -50,14 +50,21 @@ export class RecognizeTranasctionsService {
    * @param {number} tenantId -
    * @param {Knex.Transaction} trx -
    */
-  public async recognizeTransactions(tenantId: number, trx?: Knex.Transaction) {
+  public async recognizeTransactions(
+    tenantId: number,
+    batch: string = '',
+    trx?: Knex.Transaction
+  ) {
     const { UncategorizedCashflowTransaction, BankRule } =
       this.tenancy.models(tenantId);
 
     const uncategorizedTranasctions =
-      await UncategorizedCashflowTransaction.query()
-        .where('recognized_transaction_id', null)
-        .where('categorized', false);
+      await UncategorizedCashflowTransaction.query().onBuild((query) => {
+        query.where('recognized_transaction_id', null);
+        query.where('categorized', false);
+
+        if (batch) query.where('batch', batch);
+      });
 
     const bankRules = await BankRule.query().withGraphFetched('conditions');
     const bankRulesByAccountId = transformToMapBy(
@@ -93,8 +100,8 @@ export class RecognizeTranasctionsService {
   }
 
   /**
-   * 
-   * @param {number} uncategorizedTransaction 
+   *
+   * @param {number} uncategorizedTransaction
    */
   public async regonizeTransaction(
     uncategorizedTransaction: UncategorizedCashflowTransaction

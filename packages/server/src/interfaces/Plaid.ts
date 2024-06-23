@@ -1,3 +1,5 @@
+import { Knex } from "knex";
+
 export interface IPlaidItemCreatedEventPayload {
   tenantId: number;
   plaidAccessToken: string;
@@ -53,4 +55,11 @@ export interface SyncAccountsTransactionsTask {
   tenantId: number;
   plaidAccountId: number;
   plaidTransactions: PlaidTransaction[];
+}
+
+export interface IPlaidTransactionsSyncedEventPayload {
+  tenantId: number;
+  plaidAccountId: number;
+  batch: string;
+  trx?: Knex.Transaction
 }

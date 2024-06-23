@@ -616,6 +616,7 @@ export default {
 
   plaid: {
     onItemCreated: 'onPlaidItemCreated',
+    onTransactionsSynced: 'onPlaidTransactionsSynced',
   },
 
   // Bank rules.
@@ -637,5 +638,5 @@ export default {
 
     onUnmatching: 'onBankTransactionUnmathcing',
     onUnmatched: 'onBankTransactionUnmathced',
-  }
+  },
 };

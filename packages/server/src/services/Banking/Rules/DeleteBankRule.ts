@@ -27,7 +27,7 @@ export class DeleteBankRuleSerivce {
    * @returns {Promise<void>}
    */
   public async deleteBankRule(tenantId: number, ruleId: number): Promise<void> {
-    const { BankRule } = this.tenancy.models(tenantId);
+    const { BankRule, BankRuleCondition } = this.tenancy.models(tenantId);
 
     const oldBankRule = await BankRule.query()
       .findById(ruleId)
@@ -42,6 +42,7 @@ export class DeleteBankRuleSerivce {
         trx,
       } as IBankRuleEventDeletingPayload);
 
+      await BankRuleCondition.query(trx).where('ruleId', ruleId).delete();
       await BankRule.query(trx).findById(ruleId).delete();
 
       // Triggers `onBankRuleDeleted` event.

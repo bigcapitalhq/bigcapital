@@ -1,7 +1,7 @@
+import { Inject, Service } from 'typedi';
 import { IManualJournalDeletingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import { ValidateTransactionMatched } from '../ValidateTransactionsMatched';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class ValidateMatchingOnCashflowDelete {
