@@ -70,6 +70,8 @@ export interface IBankRuleCommonDTO {
   assignAccountId: number;
   assignPayee?: string;
   assignMemo?: string;
+
+  recognition?: boolean;
 }
 
 export interface ICreateBankRuleDTO extends IBankRuleCommonDTO {}

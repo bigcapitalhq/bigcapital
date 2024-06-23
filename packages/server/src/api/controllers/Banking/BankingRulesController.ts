@@ -50,6 +50,8 @@ export class BankingRulesController extends BaseController {
       body('assign_account_id').isInt({ min: 0 }),
       body('assign_payee').isString().optional({ nullable: true }),
       body('assign_memo').isString().optional({ nullable: true }),
+
+      body('recognition').isBoolean().toBoolean().optional({ nullable: true }),
     ];
   }
 

@@ -23,11 +23,9 @@ export class BankTransactionsMatchingController extends BaseController {
       '/:transactionId',
       [
         param('transactionId').exists(),
-
         body('matchedTransactions').isArray({ min: 1 }),
         body('matchedTransactions.*.reference_type').exists(),
         body('matchedTransactions.*.reference_id').isNumeric().toInt(),
-        body('matchedTransactions.*.amount').exists().isNumeric().toFloat(),
       ],
       this.validationResult,
       this.matchBankTransaction.bind(this)

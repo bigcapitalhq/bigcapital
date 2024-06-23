@@ -32,7 +32,7 @@ export class RecognizeTranasctionsService {
       trx
     ).insert({
       bankRuleId: bankRule.id,
-      cashflowTransactionId: transaction.id,
+      uncategorizedTransactionId: transaction.id,
       assignedCategory: bankRule.assignCategory,
       assignedAccountId: bankRule.assignAccountId,
       assignedPayee: bankRule.assignPayee,

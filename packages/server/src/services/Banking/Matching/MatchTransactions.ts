@@ -1,11 +1,11 @@
-import { sumBy } from 'lodash';
+import { isEmpty, sumBy } from 'lodash';
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { PromisePool } from '@supercharge/promise-pool';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { Knex } from 'knex';
-import { Inject, Service } from 'typedi';
 import {
   ERRORS,
   IBankTransactionMatchedEventPayload,
@@ -34,6 +34,7 @@ export class MatchBankTransactions {
    * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
    * @param {IMatchTransactionsDTO} matchTransactionsDTO
+   * @returns {Promise<void>}
    */
   async validate(
     tenantId: number,
@@ -43,11 +44,21 @@ export class MatchBankTransactions {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
     const { matchedTransactions } = matchTransactionsDTO;
 
+    // Validates the uncategorized transaction existance.
     const uncategorizedTransaction =
       await UncategorizedCashflowTransaction.query()
         .findById(uncategorizedTransactionId)
+        .withGraphFetched('matchedBankTransactions')
         .throwIfNotFound();
 
+    // Validates the uncategorized transaction is not already matched.
+    if (!isEmpty(uncategorizedTransaction.matchedBankTransactions)) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_MATCHED);
+    }
+    // Validate the uncategorized transaction is not excluded.
+    if (uncategorizedTransaction.excluded) {
+      throw new ServiceError(ERRORS.CANNOT_MATCH_EXCLUDED_TRANSACTION);
+    }
     // Validates the given matched transaction.
     const validateMatchedTransaction = async (matchedTransaction) => {
       const getMatchedTransactionsService =

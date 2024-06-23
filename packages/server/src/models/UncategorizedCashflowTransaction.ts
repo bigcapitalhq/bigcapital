@@ -127,8 +127,8 @@ export default class UncategorizedCashflowTransaction extends mixin(
       /**
        * Uncategorized transaction may has association to matched transaction.
        */
-      matchedBankTransaction: {
-        relation: Model.BelongsToOneRelation,
+      matchedBankTransactions: {
+        relation: Model.HasManyRelation,
         modelClass: MatchedBankTransaction,
         join: {
           from: 'uncategorized_cashflow_transactions.id',

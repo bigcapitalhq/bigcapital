@@ -2,7 +2,7 @@ exports.up = function (knex) {
   return knex.schema.createTable('recognized_bank_transactions', (table) => {
     table.increments('id');
     table
-      .integer('cashflow_transaction_id')
+      .integer('uncategorized_transaction_id')
       .unsigned()
       .references('id')
       .inTable('uncategorized_cashflow_transactions');

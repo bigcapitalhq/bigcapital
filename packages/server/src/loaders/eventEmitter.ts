@@ -103,6 +103,11 @@ import { AttachmentsOnCreditNote } from '@/services/Attachments/events/Attachmen
 import { AttachmentsOnBillPayments } from '@/services/Attachments/events/AttachmentsOnPaymentsMade';
 import { AttachmentsOnSaleEstimates } from '@/services/Attachments/events/AttachmentsOnSaleEstimates';
 import { TriggerRecognizedTransactions } from '@/services/Banking/RegonizeTranasctions/events/TriggerRecognizedTransactions';
+import { ValidateMatchingOnExpenseDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnExpenseDelete';
+import { ValidateMatchingOnManualJournalDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnManualJournalDelete';
+import { ValidateMatchingOnPaymentReceivedDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnPaymentReceivedDelete';
+import { ValidateMatchingOnPaymentMadeDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnPaymentMadeDelete';
+import { ValidateMatchingOnCashflowDelete } from '@/services/Banking/Matching/events/ValidateMatchingOnCashflowDelete';
 
 export default () => {
   return new EventPublisher();
@@ -250,5 +255,12 @@ export const susbcribers = () => {
 
     // Bank Rules
     TriggerRecognizedTransactions,
+
+    // Validate matching
+    ValidateMatchingOnCashflowDelete,
+    ValidateMatchingOnExpenseDelete,
+    ValidateMatchingOnManualJournalDelete,
+    ValidateMatchingOnPaymentReceivedDelete,
+    ValidateMatchingOnPaymentMadeDelete,
   ];
 };

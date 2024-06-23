@@ -21,6 +21,7 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
    * Retrieves the matched transactions.
    * @param {number} tenantId -
    * @param {GetMatchedTransactionsFilter} filter -
+   * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
     tenantId: number,
@@ -38,18 +39,16 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
   }
 
   /**
-   *
+   * Retrieves the matched transaction.
    * @param {number} tenantId
    * @param {number} transactionId
-   * @returns
+   * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
     tenantId: number,
     transactionId: number
   ): Promise<MatchedTransactionPOJO> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
-
-    console.log(transactionId);
 
     const invoice = await SaleInvoice.query().findById(transactionId);
 

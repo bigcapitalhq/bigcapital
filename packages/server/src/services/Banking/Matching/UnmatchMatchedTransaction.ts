@@ -1,8 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { Inject, Service } from 'typedi';
 import { IBankTransactionUnmatchingEventPayload } from './types';
 
 @Service()
@@ -16,10 +16,16 @@ export class UnmatchMatchedBankTransaction {
   @Inject()
   private eventPublisher: EventPublisher;
 
+  /**
+   * Unmatch the matched the given uncategorized bank transaction.
+   * @param {number} tenantId
+   * @param {number} uncategorizedTransactionId
+   * @returns {Promise<void>}
+   */
   public unmatchMatchedTransaction(
     tenantId: number,
     uncategorizedTransactionId: number
-  ) {
+  ): Promise<void> {
     const { MatchedBankTransaction } = this.tenancy.models(tenantId);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
