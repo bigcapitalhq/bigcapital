@@ -12,6 +12,8 @@ import { Knex } from 'knex';
 import { transformCategorizeTransToCashflow } from './utils';
 import { CommandCashflowValidator } from './CommandCasflowValidator';
 import NewCashflowTransactionService from './NewCashflowTransactionService';
+import { ServiceError } from '@/exceptions';
+import { ERRORS } from './constants';
 
 @Service()
 export class CategorizeCashflowTransaction {
@@ -47,6 +49,10 @@ export class CategorizeCashflowTransaction {
       .findById(uncategorizedTransactionId)
       .throwIfNotFound();
 
+    // Validate cannot categorize excluded transaction.
+    if (transaction.excluded) {
+      throw new ServiceError(ERRORS.CANNOT_CATEGORIZE_EXCLUDED_TRANSACTION);
+    }
     // Validates the transaction shouldn't be categorized before.
     this.commandValidators.validateTransactionShouldNotCategorized(transaction);
 
