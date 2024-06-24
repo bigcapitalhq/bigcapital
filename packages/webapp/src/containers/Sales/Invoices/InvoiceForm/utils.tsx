@@ -70,6 +70,17 @@ export const defaultInvoice = {
   attachments: [],
 };
 
+// Invoice entry request schema.
+export const defaultReqInvoiceEntry = {
+  index: 0,
+  item_id: '',
+  rate: '',
+  discount: '',
+  quantity: '',
+  description: '',
+  tax_rate_id: '',
+};
+
 /**
  * Transform invoice to initial values in edit mode.
  */
@@ -176,12 +187,26 @@ export const ITEMS_FILTER_ROLES_QUERY = JSON.stringify([
 ]);
 
 /**
+ * Transformes bill entries to submit request.
+ */
+const transformEntriesToRequest = (entries) => {
+  return R.compose(
+    R.map(R.compose(R.curry(transformToForm)(R.__, defaultReqInvoiceEntry))),
+    filterNonZeroEntries,
+  )(entries);
+};
+
+/**
+ * Filters the givne non-zero entries.
+ */
+const filterNonZeroEntries = (entries) => {
+  return entries.filter((item) => item.item_id && item.quantity);
+};
+
+/**
  * Transformes the form values to request body values.
  */
 export function transformValueToRequest(values) {
-  const entries = values.entries.filter(
-    (item) => item.item_id && item.quantity,
-  );
   return {
     ...omit(values, [
       'invoice_no',
@@ -194,9 +219,7 @@ export function transformValueToRequest(values) {
       invoice_no: values.invoice_no,
     }),
     is_inclusive_tax: values.inclusive_exclusive_tax === TaxType.Inclusive,
-    entries: entries.map((entry) => ({
-      ...omit(entry, ['amount', 'tax_amount', 'tax_rate']),
-    })),
+    entries: transformEntriesToRequest(values.entries),
     delivered: false,
     attachments: transformAttachmentsToRequest(values),
   };
