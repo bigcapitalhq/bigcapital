@@ -50,8 +50,8 @@ export class JournalSheetTable extends R.compose(
       { key: 'description', accessor: 'entry.note' },
       { key: 'account_code', accessor: 'entry.accountCode' },
       { key: 'account_name', accessor: 'entry.accountName' },
-      { key: 'credit', accessor: 'entry.formattedCredit' },
       { key: 'debit', accessor: 'entry.formattedDebit' },
+      { key: 'credit', accessor: 'entry.formattedCredit' },
     ];
   };
 
@@ -67,8 +67,8 @@ export class JournalSheetTable extends R.compose(
       { key: 'description', accessor: 'note' },
       { key: 'account_code', accessor: 'accountCode' },
       { key: 'account_name', accessor: 'accountName' },
-      { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
+      { key: 'credit', accessor: 'formattedCredit' },
     ];
   };
 
@@ -84,8 +84,8 @@ export class JournalSheetTable extends R.compose(
       { key: 'description', accessor: '_empty_' },
       { key: 'account_code', accessor: '_empty_' },
       { key: 'account_name', accessor: '_empty_' },
-      { key: 'credit', accessor: 'formattedCredit' },
       { key: 'debit', accessor: 'formattedDebit' },
+      { key: 'credit', accessor: 'formattedCredit' },
     ];
   };
 
@@ -101,8 +101,8 @@ export class JournalSheetTable extends R.compose(
       { key: 'description', value: '' },
       { key: 'account_code', value: '' },
       { key: 'account_name', value: '' },
-      { key: 'credit', value: '' },
       { key: 'debit', value: '' },
+      { key: 'credit', value: '' },
     ];
   };
 
@@ -118,8 +118,8 @@ export class JournalSheetTable extends R.compose(
       { key: 'description', label: 'Description' },
       { key: 'account_code', label: 'Acc. Code' },
       { key: 'account_name', label: 'Account' },
-      { key: 'credit', label: 'Credit' },
       { key: 'debit', label: 'Debit' },
+      { key: 'credit', label: 'Credit' },
     ];
   }
 

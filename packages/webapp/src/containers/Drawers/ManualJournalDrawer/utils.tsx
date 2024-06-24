@@ -83,20 +83,6 @@ export const useManualJournalEntriesColumns = () => {
           ]
         : []),
       {
-        Header: intl.get('credit'),
-        accessor: 'credit',
-        Cell: FormatNumberCell,
-        width: getColumnWidth(entries, 'credit', {
-          minWidth: 60,
-          magicSpacing: 5,
-        }),
-        disableResizable: true,
-        disableSortBy: true,
-        textOverview: true,
-        formatNumber: { noZero: true },
-        align: 'right',
-      },
-      {
         Header: intl.get('debit'),
         accessor: 'debit',
         Cell: FormatNumberCell,
@@ -107,6 +93,20 @@ export const useManualJournalEntriesColumns = () => {
         disableResizable: true,
         textOverview: true,
         disableSortBy: true,
+        formatNumber: { noZero: true },
+        align: 'right',
+      },
+      {
+        Header: intl.get('credit'),
+        accessor: 'credit',
+        Cell: FormatNumberCell,
+        width: getColumnWidth(entries, 'credit', {
+          minWidth: 60,
+          magicSpacing: 5,
+        }),
+        disableResizable: true,
+        disableSortBy: true,
+        textOverview: true,
         formatNumber: { noZero: true },
         align: 'right',
       },
