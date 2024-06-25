@@ -155,17 +155,19 @@ export class BankingRulesController extends BaseController {
    * @param {NextFunction} next
    */
   private async deleteBankRule(
-    req: Request,
+    req: Request<{ id: number }>,
     res: Response,
     next: NextFunction
   ) {
     const { id: ruleId } = req.params;
+    const { tenantId } = req;
+
     try {
       await this.bankRulesApplication.deleteBankRule(tenantId, ruleId);
 
       return res
         .status(200)
-        .send({ message: 'The bank rule has been deleted.' });
+        .send({ message: 'The bank rule has been deleted.', id: ruleId });
     } catch (error) {
       next(error);
     }
