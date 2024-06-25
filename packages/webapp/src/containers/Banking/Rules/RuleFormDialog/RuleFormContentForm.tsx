@@ -12,6 +12,7 @@ import {
   FRadioGroup,
   FSelect,
   Group,
+  Stack,
 } from '@/components';
 import { useCreateBankRule } from '@/hooks/query/bank-rules';
 import {
@@ -72,13 +73,14 @@ function RuleFormContentFormRoot({
       onSubmit={handleSubmit}
     >
       <Form>
-        <FFormGroup name={'name'} label={'Rule Name'}>
+        <FFormGroup name={'name'} label={'Rule Name'} style={{ maxWidth: 300 }}>
           <FInputGroup name={'name'} />
         </FFormGroup>
 
         <FFormGroup
           name={'applyIfAccountId'}
           label={'Apply the rule to account'}
+          style={{ maxWidth: 350 }}
         >
           <AccountsSelect name={'applyIfAccountId'} items={accounts} />
         </FFormGroup>
@@ -86,10 +88,12 @@ function RuleFormContentFormRoot({
         <FFormGroup
           name={'applyIfTransactionType'}
           label={'Apply to transactions are'}
+          style={{ maxWidth: 350 }}
         >
           <FSelect
             name={'applyIfTransactionType'}
             items={TransactionTypeOptions}
+            popoverProps={{ minimal: true, inline: false }}
           />
         </FFormGroup>
 
@@ -107,20 +111,35 @@ function RuleFormContentFormRoot({
         </FFormGroup>
 
         <RuleFormConditions />
-        <h3>Then Assign</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 600, marginBottom: '0.8rem' }}>
+          Then Assign
+        </h3>
 
-        <FFormGroup name={'assignCategory'} label={'Transaction type'}>
+        <FFormGroup
+          name={'assignCategory'}
+          label={'Transaction type'}
+          style={{ maxWidth: 300 }}
+        >
           <FSelect
             name={'assignCategory'}
             items={AssignTransactionTypeOptions}
+            popoverProps={{ minimal: true, inline: false }}
           />
         </FFormGroup>
 
-        <FFormGroup name={'assignAccountId'} label={'Account category'}>
+        <FFormGroup
+          name={'assignAccountId'}
+          label={'Account category'}
+          style={{ maxWidth: 300 }}
+        >
           <AccountsSelect name={'assignAccountId'} items={accounts} />
         </FFormGroup>
 
-        <FFormGroup name={'assignRef'} label={'Reference'}>
+        <FFormGroup
+          name={'assignRef'}
+          label={'Reference'}
+          style={{ maxWidth: 300 }}
+        >
           <FInputGroup name={'assignRef'} />
         </FFormGroup>
 
@@ -146,54 +165,87 @@ function RuleFormConditions() {
   };
 
   return (
-    <Box>
-      {values?.conditions?.map((condition, index) => (
-        <Group>
-          <FFormGroup name={`conditions[${index}].field`} label={'Field'}>
-            <FSelect name={`conditions[${index}].field`} items={Fields} />
-          </FFormGroup>
+    <Box style={{ marginBottom: 15 }}>
+      <Stack spacing={15}>
+        {values?.conditions?.map((condition, index) => (
+          <Group key={index} style={{ width: 500 }}>
+            <FFormGroup
+              name={`conditions[${index}].field`}
+              label={'Field'}
+              style={{ marginBottom: 0, flex: '1 0' }}
+            >
+              <FSelect
+                name={`conditions[${index}].field`}
+                items={Fields}
+                popoverProps={{ minimal: true, inline: false }}
+              />
+            </FFormGroup>
 
-          <FFormGroup
-            name={`conditions[${index}].comparator`}
-            label={'Condition'}
-          >
-            <FSelect
+            <FFormGroup
               name={`conditions[${index}].comparator`}
-              items={FieldCondition}
-            />
-          </FFormGroup>
+              label={'Condition'}
+              style={{ marginBottom: 0, flex: '1 0' }}
+            >
+              <FSelect
+                name={`conditions[${index}].comparator`}
+                items={FieldCondition}
+                popoverProps={{ minimal: true, inline: false }}
+              />
+            </FFormGroup>
 
-          <FFormGroup name={`conditions[${index}].value`} label={'Condition'}>
-            <FInputGroup name={`conditions[${index}].value`} />
-          </FFormGroup>
-        </Group>
-      ))}
+            <FFormGroup
+              name={`conditions[${index}].value`}
+              label={'Value'}
+              style={{ marginBottom: 0, flex: '1 0 ', width: '40%' }}
+            >
+              <FInputGroup name={`conditions[${index}].value`} />
+            </FFormGroup>
+          </Group>
+        ))}
+      </Stack>
 
-      <Button type={'button'} onClick={handleAddConditionBtnClick}>
+      <Button
+        minimal
+        small
+        intent={Intent.PRIMARY}
+        type={'button'}
+        onClick={handleAddConditionBtnClick}
+        style={{ marginTop: 8 }}
+      >
         Add Condition
       </Button>
     </Box>
   );
 }
 
-function RuleFormActions() {
+function RuleFormActionsRoot({
+  // #withDialogActions
+  closeDialog,
+}) {
   const { isSubmitting, submitForm } = useFormikContext<RuleFormValues>();
 
   const handleSaveBtnClick = () => {
     submitForm();
   };
-  const handleCancelBtnClick = () => {};
+  const handleCancelBtnClick = () => {
+    closeDialog(DialogsName.BankRuleForm);
+  };
 
   return (
     <Box className={Classes.DIALOG_FOOTER}>
-      <Button
-        intent={Intent.PRIMARY}
-        loading={isSubmitting}
-        onClick={handleSaveBtnClick}
-      >
-        Save
-      </Button>
-      <Button onClick={handleCancelBtnClick}>Cancel</Button>
+      <Box className={Classes.DIALOG_FOOTER_ACTIONS}>
+        <Button onClick={handleCancelBtnClick}>Cancel</Button>
+        <Button
+          intent={Intent.PRIMARY}
+          loading={isSubmitting}
+          onClick={handleSaveBtnClick}
+          style={{ minWidth: 100 }}
+        >
+          Save
+        </Button>
+      </Box>
     </Box>
   );
 }
+
+const RuleFormActions = R.compose(withDialogActions)(RuleFormActionsRoot);

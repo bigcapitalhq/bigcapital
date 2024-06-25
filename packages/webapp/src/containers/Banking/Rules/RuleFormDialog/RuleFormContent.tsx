@@ -1,3 +1,4 @@
+import { Classes } from '@blueprintjs/core';
 import { RuleFormBoot } from './RuleFormBoot';
 import { RuleFormContentForm } from './RuleFormContentForm';
 
@@ -12,7 +13,9 @@ export default function RuleFormContent({
 }: RuleFormContentProps) {
   return (
     <RuleFormBoot bankRuleId={bankRuleId}>
-      <RuleFormContentForm />
+      <div className={Classes.DIALOG_BODY}>
+        <RuleFormContentForm />
+      </div>
     </RuleFormBoot>
   );
 }

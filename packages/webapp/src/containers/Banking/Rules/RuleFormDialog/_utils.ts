@@ -3,12 +3,12 @@ export const initialValues = {
   order: 0,
   applyIfAccountId: '',
   applyIfTransactionType: '',
-  conditionsType: '',
+  conditionsType: 'and',
   conditions: [
     {
       field: 'description',
       comparator: 'contains',
-      value: 'payment',
+      value: '',
     },
   ],
   assignCategory: '',
@@ -41,7 +41,7 @@ export const Fields = [
 ];
 export const FieldCondition = [
   { value: 'contains', text: 'Contains' },
-  { value: 'equals', text: 'equals' },
+  { value: 'equals', text: 'Equals' },
   { value: 'not_contains', text: 'Not Contains' },
 ];
 export const AssignTransactionTypeOptions = [

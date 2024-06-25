@@ -14,6 +14,8 @@ import {
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
 import { AccountTransactionsProgressBar } from './components';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
+import { AppShell } from '@/components/AppShell/AppShell';
+import { CategorizeTransactionAside } from '../CategorizeTransactionAside/CategorizeTransactionAside';
 
 /**
  * Account transactions list.
@@ -21,17 +23,25 @@ import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
 function AccountTransactionsList() {
   return (
     <AccountTransactionsProvider>
-      <AccountTransactionsActionsBar />
-      <AccountTransactionsDetailsBar />
-      <AccountTransactionsProgressBar />
+      <AppShell>
+        <AppShell.Main>
+          <AccountTransactionsActionsBar />
+          <AccountTransactionsDetailsBar />
+          <AccountTransactionsProgressBar />
 
-      <DashboardPageContent>
-        <AccountTransactionsFilterTabs />
+          <DashboardPageContent>
+            <AccountTransactionsFilterTabs />
 
-        <Suspense fallback={<Spinner size={30} />}>
-          <AccountTransactionsContent />
-        </Suspense>
-      </DashboardPageContent>
+            <Suspense fallback={<Spinner size={30} />}>
+              <AccountTransactionsContent />
+            </Suspense>
+          </DashboardPageContent>
+        </AppShell.Main>
+
+        <AppShell.Aside>
+          <CategorizeTransactionAside />
+        </AppShell.Aside>
+      </AppShell>
     </AccountTransactionsProvider>
   );
 }

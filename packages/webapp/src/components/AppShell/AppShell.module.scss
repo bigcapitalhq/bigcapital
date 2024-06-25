@@ -1,0 +1,14 @@
+
+.main{
+  flex: 1 0;
+}
+
+.aside{
+  width: 500px;
+  height: 100dvh;
+  border-left: 1px solid rgba(17, 20, 24, 0.15);
+}
+
+.root {
+  display: flex;
+}
