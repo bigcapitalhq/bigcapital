@@ -1,5 +1,5 @@
 import { Form, Formik, useFormikContext } from 'formik';
-import { Button, Radio } from '@blueprintjs/core';
+import { Button, Classes, Intent, Radio } from '@blueprintjs/core';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
 import {
   Box,
@@ -61,7 +61,10 @@ export function RuleFormContentForm() {
           <FSelect name={'conditionsType'} items={[]} />
         </FFormGroup>
 
-        <FFormGroup name={''} label={'Categorize the transactions when'}>
+        <FFormGroup
+          name={'conditionsType'}
+          label={'Categorize the transactions when'}
+        >
           <FRadioGroup name={'conditionsType'}>
             <Radio value={'and'} label={'All the following criteria matches'} />
             <Radio
@@ -72,7 +75,6 @@ export function RuleFormContentForm() {
         </FFormGroup>
 
         <RuleFormConditions />
-
         <h3>Then Assign</h3>
 
         <FFormGroup name={'assignCategory'} label={'Transaction type'}>
@@ -86,6 +88,8 @@ export function RuleFormContentForm() {
         <FFormGroup name={'assignRef'} label={'Reference'}>
           <FInputGroup name={'assignRef'} />
         </FFormGroup>
+
+        <RuleFormActions />
       </Form>
     </Formik>
   );
@@ -129,6 +133,28 @@ function RuleFormConditions() {
       <Button type={'button'} onClick={handleAddConditionBtnClick}>
         Add Condition
       </Button>
+    </Box>
+  );
+}
+
+function RuleFormActions() {
+  const { isSubmitting, submitForm } = useFormikContext<RuleFormValues>();
+
+  const handleSaveBtnClick = () => {
+    submitForm();
+  };
+  const handleCancelBtnClick = () => {};
+
+  return (
+    <Box className={Classes.DIALOG_FOOTER}>
+      <Button
+        intent={Intent.PRIMARY}
+        loading={isSubmitting}
+        onClick={handleSaveBtnClick}
+      >
+        Save
+      </Button>
+      <Button onClick={handleCancelBtnClick}>Cancel</Button>
     </Box>
   );
 }

@@ -38,8 +38,10 @@ function RulesTable({
   // Handle delete bank rule.
   const handleEditBankRule = () => {};
 
+  const isEmptyState = false;
+
   // Display invoice empty status instead of the table.
-  if (isEmptyStatus) {
+  if (isEmptyState) {
     return <BankRulesLandingEmptyState />;
   }
 
@@ -62,11 +64,11 @@ function RulesTable({
         TableLoadingRenderer={TableSkeletonRows}
         TableHeaderSkeletonRenderer={TableSkeletonHeader}
         ContextMenu={BankRulesTableActionsMenu}
-        onCellClick={handleCellClick}
+        // onCellClick={handleCellClick}
         size={'medium'}
         payload={{
-          onDelete: handleDeleteTaxRate,
-          onEdit: handleEditTaxRate,
+          onDelete: handleDeleteBankRule,
+          onEdit: handleEditBankRule,
         }}
       />
     </DashboardContentTable>

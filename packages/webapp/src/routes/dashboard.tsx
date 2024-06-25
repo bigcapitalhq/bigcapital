@@ -1225,7 +1225,7 @@ export const getDashboardRoutes = () => [
   {
     path: '/bank-rules',
     component: lazy(
-      () => import('@/containers/Banking/Rules/RulesList/RulesList'),
+      () => import('@/containers/Banking/Rules/RulesList/RulesLandingPage'),
     ),
     pageTitle: 'Bank Rules',
   },

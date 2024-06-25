@@ -9,14 +9,14 @@ const RuleFormContent = React.lazy(() => import('./RuleFormContent'));
 /**
  * Payment mail dialog.
  */
-function RuleFormDialog({
+function RuleFormDialogRoot({
   dialogName,
   payload: { bankRuleId = null },
   isOpen,
 }) {
   return (
     <Dialog
-      name={dialogName}
+      name={dialogName}f
       title={'New Bank Rule'}
       isOpen={isOpen}
       canEscapeJeyClose={true}
@@ -30,4 +30,6 @@ function RuleFormDialog({
   );
 }
 
-export default compose(withDialogRedux())(RuleFormDialog);
+export const RuleFormDialog = compose(withDialogRedux())(RuleFormDialogRoot);
+
+RuleFormDialog.displayName = 'RuleFormDialog';
