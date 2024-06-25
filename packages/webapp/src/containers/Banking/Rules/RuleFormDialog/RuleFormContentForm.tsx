@@ -14,7 +14,7 @@ import {
   Group,
   Stack,
 } from '@/components';
-import { useCreateBankRule } from '@/hooks/query/bank-rules';
+import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
 import {
   AssignTransactionTypeOptions,
   FieldCondition,
@@ -24,7 +24,11 @@ import {
   initialValues,
 } from './_utils';
 import { useRuleFormDialogBoot } from './RuleFormBoot';
-import { transfromToSnakeCase } from '@/utils';
+import {
+  transformToCamelCase,
+  transformToForm,
+  transfromToSnakeCase,
+} from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
@@ -33,42 +37,53 @@ function RuleFormContentFormRoot({
   openDialog,
   closeDialog,
 }) {
-  const { accounts } = useRuleFormDialogBoot();
+  const { accounts, bankRule, isEditMode, bankRuleId } =
+    useRuleFormDialogBoot();
   const { mutateAsync: createBankRule } = useCreateBankRule();
+  const { mutateAsync: editBankRule } = useEditBankRule();
 
   const validationSchema = CreateRuleFormSchema;
+
+  const _initialValues = {
+    ...initialValues,
+    ...transformToForm(transformToCamelCase(bankRule), initialValues),
+  };
 
   // Handles the form submitting.
   const handleSubmit = (
     values: RuleFormValues,
     { setSubmitting }: FormikHelpers<RuleFormValues>,
   ) => {
-    const _value = transfromToSnakeCase(values);
-
+    const _values = transfromToSnakeCase(values);
     setSubmitting(true);
-    createBankRule(_value)
-      .then(() => {
-        setSubmitting(false);
-        closeDialog(DialogsName.BankRuleForm);
 
-        AppToaster.show({
-          intent: Intent.SUCCESS,
-          message: 'The bank rule has been created successfully.',
-        });
-      })
-      .catch((error) => {
-        setSubmitting(false);
-
-        AppToaster.show({
-          intent: Intent.DANGER,
-          message: 'Something went wrong!',
-        });
+    const handleSuccess = () => {
+      setSubmitting(false);
+      closeDialog(DialogsName.BankRuleForm);
+      AppToaster.show({
+        intent: Intent.SUCCESS,
+        message: 'The bank rule has been created successfully.',
       });
+    };
+    const handleError = (error) => {
+      setSubmitting(false);
+      AppToaster.show({
+        intent: Intent.DANGER,
+        message: 'Something went wrong!',
+      });
+    };
+    if (isEditMode) {
+      editBankRule([bankRuleId, _values])
+        .then(handleSuccess)
+        .catch(handleError);
+    } else {
+      createBankRule(_values).then(handleSuccess).catch(handleError);
+    }
   };
 
   return (
     <Formik<RuleFormValues>
-      initialValues={initialValues}
+      initialValues={_initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >

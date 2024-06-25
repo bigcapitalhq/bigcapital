@@ -16,6 +16,7 @@ import { useBankRulesTableColumns } from './hooks';
 import { BankRulesTableActionsMenu } from './_components';
 import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
 import { useRulesListBoot } from './RulesListBoot';
+import { DialogsName } from '@/constants/dialogs';
 
 /**
  * Invoices datatable.
@@ -41,7 +42,9 @@ function RulesTable({
   };
 
   // Handle delete bank rule.
-  const handleEditBankRule = () => {};
+  const handleEditBankRule = ({ id }) => {
+    openDialog(DialogsName.BankRuleForm, { bankRuleId: id });
+  };
 
   const isEmptyState = false;
 

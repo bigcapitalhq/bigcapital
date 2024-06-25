@@ -21,12 +21,15 @@ export function useEditBankRule(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id: number) => apiRequest.post(`/bank-rules/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate queries.
+  return useMutation(
+    ([id, values]) => apiRequest.post(`/banking/rules/${id}`, values),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+      },
+      ...props,
     },
-    ...props,
-  });
+  );
 }
 
 export function useDeleteBankRule(props) {

@@ -16,8 +16,8 @@ function RuleFormDialogRoot({
 }) {
   return (
     <Dialog
-      name={dialogName}f
-      title={'New Bank Rule'}
+      name={dialogName}
+      title={bankRuleId ? 'Edit Bank Rule' : 'New Bank Rule'}
       isOpen={isOpen}
       canEscapeJeyClose={true}
       autoFocus={true}

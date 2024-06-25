@@ -7,6 +7,8 @@ interface RuleFormBootValues {
   bankRule?: null;
   bankRuleId?: null;
   isBankRuleLoading: boolean;
+  isEditMode: boolean;
+  isNewMode: boolean;
 }
 
 const RuleFormBootContext = createContext<RuleFormBootValues>(
@@ -27,11 +29,17 @@ function RuleFormBoot({ bankRuleId, ...props }: RuleFormBootProps) {
   );
   const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
 
+  const isNewMode = !bankRuleId;
+  const isEditMode = !isNewMode;
+
   const provider = {
+    bankRuleId,
     bankRule,
     accounts,
     isBankRuleLoading,
     isAccountsLoading,
+    isEditMode,
+    isNewMode,
   } as RuleFormBootValues;
 
   const isLoading = isBankRuleLoading || isAccountsLoading;
