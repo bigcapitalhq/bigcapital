@@ -15,6 +15,7 @@ import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 import { useBankRulesTableColumns } from './hooks';
 import { BankRulesTableActionsMenu } from './_components';
 import { BankRulesLandingEmptyState } from './BankRulesLandingEmptyState';
+import { useRulesListBoot } from './RulesListBoot';
 
 /**
  * Invoices datatable.
@@ -32,8 +33,12 @@ function RulesTable({
   // Invoices table columns.
   const columns = useBankRulesTableColumns();
 
+  const { bankRules } = useRulesListBoot();
+
   // Handle edit bank rule.
-  const handleDeleteBankRule = ({ id }) => {};
+  const handleDeleteBankRule = ({ id }) => {
+    openAlert('bank-rule-delete', { id });
+  };
 
   // Handle delete bank rule.
   const handleEditBankRule = () => {};
@@ -49,7 +54,7 @@ function RulesTable({
     <DashboardContentTable>
       <DataTable
         columns={columns}
-        data={[]}
+        data={bankRules}
         loading={false}
         headerLoading={false}
         progressBarLoading={false}

@@ -33,12 +33,15 @@ export function useDeleteBankRule(props) {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((id: number) => apiRequest.delete(`/bank-rules/${id}`), {
-    onSuccess: (res, id) => {
-      // Invalidate queries.
+  return useMutation(
+    (id: number) => apiRequest.delete(`/banking/rules/${id}`),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+      },
+      ...props,
     },
-    ...props,
-  });
+  );
 }
 
 /**

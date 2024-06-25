@@ -16,14 +16,12 @@ export function BankRulesTableActionsMenu({
   return (
     <Menu>
       <Can I={BankRuleAction.Edit} a={AbilitySubject.BankRule}>
-        <MenuDivider />
         <MenuItem
           icon={<Icon icon="pen-18" />}
           text={'Edit Rule'}
           onClick={safeCallback(onEdit, original)}
         />
       </Can>
-      <MenuDivider />
       <Can I={BankRuleAction.Delete} a={AbilitySubject.BankRule}>
         <MenuDivider />
         <MenuItem

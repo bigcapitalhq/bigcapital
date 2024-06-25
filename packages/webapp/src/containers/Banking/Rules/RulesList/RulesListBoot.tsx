@@ -4,6 +4,7 @@ import { useBankRules } from '@/hooks/query/bank-rules';
 
 interface RulesListBootValues {
   bankRules: any;
+  isBankRulesLoading: boolean;
 }
 
 const RulesListBootContext = createContext<RulesListBootValues>(
@@ -18,10 +19,11 @@ function RulesListBoot({ ...props }: RulesListBootProps) {
   const { data: bankRules, isLoading: isBankRulesLoading } = useBankRules();
 
   const provider = { bankRules, isBankRulesLoading } as RulesListBootValues;
+  const isLoading = isBankRulesLoading;
 
   return (
-    <DialogContent isLoading={false}>
-      <RulesListBootContext.Provider value={provider} {...props} />
+    <DialogContent isLoading={isLoading}>
+      <RulesListBootContext.Provider {...props} value={provider} />
     </DialogContent>
   );
 }
