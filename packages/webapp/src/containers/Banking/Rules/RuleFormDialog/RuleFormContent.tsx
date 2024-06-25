@@ -11,10 +11,8 @@ export default function RuleFormContent({
   bankRuleId,
 }: RuleFormContentProps) {
   return (
-    <div>
-      <RuleFormBoot bankRuleId={bankRuleId}>
-        <RuleFormContentForm />
-      </RuleFormBoot>
-    </div>
+    <RuleFormBoot bankRuleId={bankRuleId}>
+      <RuleFormContentForm />
+    </RuleFormBoot>
   );
 }

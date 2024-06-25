@@ -1,5 +1,7 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
+import { useBankRule } from '@/hooks/query/bank-rules';
+import { useAccounts } from '@/hooks/query';
 
 interface RuleFormBootValues {
   bankRule?: null;
@@ -17,10 +19,25 @@ interface RuleFormBootProps {
 }
 
 function RuleFormBoot({ bankRuleId, ...props }: RuleFormBootProps) {
-  const provider = {} as RuleFormBootValues;
+  const { data: bankRule, isLoading: isBankRuleLoading } = useBankRule(
+    bankRuleId as number,
+    {
+      enabled: !!bankRuleId,
+    },
+  );
+  const { data: accounts, isLoading: isAccountsLoading } = useAccounts({}, {});
+
+  const provider = {
+    bankRule,
+    accounts,
+    isBankRuleLoading,
+    isAccountsLoading,
+  } as RuleFormBootValues;
+
+  const isLoading = isBankRuleLoading || isAccountsLoading;
 
   return (
-    <DialogContent isLoading={false}>
+    <DialogContent isLoading={isLoading}>
       <RuleFormBootContext.Provider value={provider} {...props} />
     </DialogContent>
   );

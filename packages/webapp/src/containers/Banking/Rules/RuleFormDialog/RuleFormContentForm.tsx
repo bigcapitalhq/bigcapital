@@ -1,7 +1,11 @@
-import { Form, Formik, useFormikContext } from 'formik';
+// @ts-nocheck
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Button, Classes, Intent, Radio } from '@blueprintjs/core';
+import * as R from 'ramda';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
 import {
+  AccountsSelect,
+  AppToaster,
   Box,
   FFormGroup,
   FInputGroup,
@@ -9,42 +13,57 @@ import {
   FSelect,
   Group,
 } from '@/components';
+import { useCreateBankRule } from '@/hooks/query/bank-rules';
+import {
+  AssignTransactionTypeOptions,
+  FieldCondition,
+  Fields,
+  RuleFormValues,
+  TransactionTypeOptions,
+  initialValues,
+} from './_utils';
+import { useRuleFormDialogBoot } from './RuleFormBoot';
+import { transfromToSnakeCase } from '@/utils';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { DialogsName } from '@/constants/dialogs';
 
-const initialValues = {
-  name: '',
-  order: 0,
-  applyIfAccountId: '',
-  applyIfTransactionType: '',
-  conditionsType: '',
-  conditions: [
-    {
-      field: 'description',
-      comparator: 'contains',
-      value: 'payment',
-    },
-  ],
-  assignCategory: '',
-  assignAccountId: '',
-};
+function RuleFormContentFormRoot({
+  // #withDialogActions
+  openDialog,
+  closeDialog,
+}) {
+  const { accounts } = useRuleFormDialogBoot();
+  const { mutateAsync: createBankRule } = useCreateBankRule();
 
-interface RuleFormValues {
-  name: string;
-  order: number;
-  applyIfAccountId: string;
-  applyIfTransactionType: string;
-  conditionsType: string;
-  conditions: Array<{
-    field: string;
-    comparator: string;
-    value: string;
-  }>;
-  assignCategory: string;
-  assignAccountId: string;
-}
-
-export function RuleFormContentForm() {
   const validationSchema = CreateRuleFormSchema;
-  const handleSubmit = () => {};
+
+  // Handles the form submitting.
+  const handleSubmit = (
+    values: RuleFormValues,
+    { setSubmitting }: FormikHelpers<RuleFormValues>,
+  ) => {
+    const _value = transfromToSnakeCase(values);
+
+    setSubmitting(true);
+    createBankRule(_value)
+      .then(() => {
+        setSubmitting(false);
+        closeDialog(DialogsName.BankRuleForm);
+
+        AppToaster.show({
+          intent: Intent.SUCCESS,
+          message: 'The bank rule has been created successfully.',
+        });
+      })
+      .catch((error) => {
+        setSubmitting(false);
+
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong!',
+        });
+      });
+  };
 
   return (
     <Formik<RuleFormValues>
@@ -57,8 +76,21 @@ export function RuleFormContentForm() {
           <FInputGroup name={'name'} />
         </FFormGroup>
 
-        <FFormGroup name={'conditionsType'} label={'Apply to transactions are'}>
-          <FSelect name={'conditionsType'} items={[]} />
+        <FFormGroup
+          name={'applyIfAccountId'}
+          label={'Apply the rule to account'}
+        >
+          <AccountsSelect name={'applyIfAccountId'} items={accounts} />
+        </FFormGroup>
+
+        <FFormGroup
+          name={'applyIfTransactionType'}
+          label={'Apply to transactions are'}
+        >
+          <FSelect
+            name={'applyIfTransactionType'}
+            items={TransactionTypeOptions}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -78,11 +110,14 @@ export function RuleFormContentForm() {
         <h3>Then Assign</h3>
 
         <FFormGroup name={'assignCategory'} label={'Transaction type'}>
-          <FSelect name={'assignCategory'} items={[]} />
+          <FSelect
+            name={'assignCategory'}
+            items={AssignTransactionTypeOptions}
+          />
         </FFormGroup>
 
         <FFormGroup name={'assignAccountId'} label={'Account category'}>
-          <FSelect name={'assignAccountId'} items={[]} />
+          <AccountsSelect name={'assignAccountId'} items={accounts} />
         </FFormGroup>
 
         <FFormGroup name={'assignRef'} label={'Reference'}>
@@ -95,15 +130,19 @@ export function RuleFormContentForm() {
   );
 }
 
+export const RuleFormContentForm = R.compose(withDialogActions)(
+  RuleFormContentFormRoot,
+);
+
 function RuleFormConditions() {
-  const { values } = useFormikContext<RuleFormValues>();
+  const { values, setFieldValue } = useFormikContext<RuleFormValues>();
 
   const handleAddConditionBtnClick = () => {
-    values.conditions.push({
-      field: '',
-      comparator: '',
-      value: '',
-    });
+    const _conditions = [
+      ...values.conditions,
+      { field: '', comparator: '', value: '' },
+    ];
+    setFieldValue('conditions', _conditions);
   };
 
   return (
@@ -111,20 +150,20 @@ function RuleFormConditions() {
       {values?.conditions?.map((condition, index) => (
         <Group>
           <FFormGroup name={`conditions[${index}].field`} label={'Field'}>
-            <FSelect name={`conditions[${index}].field`} items={[]} />
+            <FSelect name={`conditions[${index}].field`} items={Fields} />
           </FFormGroup>
 
           <FFormGroup
             name={`conditions[${index}].comparator`}
             label={'Condition'}
           >
-            <FSelect name={`conditions[${index}].comparator`} items={[]} />
+            <FSelect
+              name={`conditions[${index}].comparator`}
+              items={FieldCondition}
+            />
           </FFormGroup>
 
-          <FFormGroup
-            name={`conditions[${index}].condition`}
-            label={'Condition'}
-          >
+          <FFormGroup name={`conditions[${index}].value`} label={'Condition'}>
             <FInputGroup name={`conditions[${index}].value`} />
           </FFormGroup>
         </Group>

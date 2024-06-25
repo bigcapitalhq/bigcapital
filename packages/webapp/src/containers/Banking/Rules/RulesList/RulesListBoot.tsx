@@ -1,9 +1,9 @@
 import React, { createContext } from 'react';
 import { DialogContent } from '@/components';
+import { useBankRules } from '@/hooks/query/bank-rules';
 
 interface RulesListBootValues {
-  rules: any;
-  isRulesLoading: boolean;
+  bankRules: any;
 }
 
 const RulesListBootContext = createContext<RulesListBootValues>(
@@ -15,7 +15,9 @@ interface RulesListBootProps {
 }
 
 function RulesListBoot({ ...props }: RulesListBootProps) {
-  const provider = {} as RulesListBootValues;
+  const { data: bankRules, isLoading: isBankRulesLoading } = useBankRules();
+
+  const provider = { bankRules, isBankRulesLoading } as RulesListBootValues;
 
   return (
     <DialogContent isLoading={false}>

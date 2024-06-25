@@ -13,7 +13,9 @@ export function RulesList() {
       <RulesListActionsBar />
 
       <DashboardPageContent>
-        <BankRulesTable />
+        <RulesListBoot>
+          <BankRulesTable />
+        </RulesListBoot>
       </DashboardPageContent>
     </RulesListBoot>
   );
