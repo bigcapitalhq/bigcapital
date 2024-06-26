@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import useApiRequest from '../useRequest';
+import { transformToCamelCase } from '@/utils';
 
 /**
  *
@@ -73,5 +74,74 @@ export function useBankRule(bankRuleId: number, props) {
         .get(`/banking/rules/${bankRuleId}`)
         .then((res) => res.data.bank_rule),
     props,
+  );
+}
+
+/**
+ *
+ * @returns
+ */
+export function useMatchingTransactions(props?: any) {
+  const apiRequest = useApiRequest();
+
+  return useQuery(
+    ['MATCHING_TRANSACTION'],
+    () =>
+      apiRequest
+        .get(`/banking/matches`)
+        .then((res) => transformToCamelCase(res.data.data)),
+    props,
+  );
+}
+
+export function useExcludeUncategorizedTransaction(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (uncategorizedTransactionId: number) =>
+      apiRequest.put(
+        `/cashflow/transactions/${uncategorizedTransactionId}/exclude`,
+      ),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+      },
+      ...props,
+    },
+  );
+}
+
+export function useUnexcludeUncategorizedTransaction(props) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    (uncategorizedTransactionId: number) =>
+      apiRequest.post(
+        `/cashflow/transactions/${uncategorizedTransactionId}/unexclude`,
+      ),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+      },
+      ...props,
+    },
+  );
+}
+
+export function useMatchTransaction(props?: any) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation(
+    ([uncategorizedTransactionId, values]) =>
+      apiRequest.post(`/banking/matches/${uncategorizedTransactionId}`, values),
+    {
+      onSuccess: (res, id) => {
+        // Invalidate queries.
+      },
+      ...props,
+    },
   );
 }

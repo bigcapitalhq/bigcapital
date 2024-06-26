@@ -33,7 +33,6 @@ function RulesTable({
 }) {
   // Invoices table columns.
   const columns = useBankRulesTableColumns();
-
   const { bankRules } = useRulesListBoot();
 
   // Handle edit bank rule.

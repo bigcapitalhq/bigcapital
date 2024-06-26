@@ -9,6 +9,7 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
   FormattedMessage as T,
+  AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
@@ -24,6 +25,8 @@ import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUnc
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { Intent } from '@blueprintjs/core';
 
 /**
  * Account transactions data table.
@@ -42,6 +45,9 @@ function AccountTransactionsDataTable({
   const { uncategorizedTransactions, isUncategorizedTransactionsLoading } =
     useAccountUncategorizedTransactionsContext();
 
+  const { mutateAsync: excludeTransaction } =
+    useExcludeUncategorizedTransaction();
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
@@ -51,6 +57,22 @@ function AccountTransactionsDataTable({
     openDrawer(DRAWERS.CATEGORIZE_TRANSACTION, {
       uncategorizedTransactionId: cell.row.original.id,
     });
+  };
+  // Handle exclude transaction.
+  const handleExcludeTransaction = (transaction) => {
+    excludeTransaction(transaction.id)
+      .then(() => {
+        AppToaster.show({
+          intent: Intent.SUCCESS,
+          message: 'The bank transaction has been excluded successfully.',
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong.',
+        });
+      });
   };
 
   return (
@@ -77,6 +99,9 @@ function AccountTransactionsDataTable({
       onColumnResizing={handleColumnResizing}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
+      payload={{
+        onExclude: handleExcludeTransaction,
+      }}
     />
   );
 }

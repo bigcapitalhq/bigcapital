@@ -1,45 +1,23 @@
 
 
 .transaction {
-  background: #fff;
-  border-radius: 5px;
-  border: 1px solid #D6DBE3;
-  padding: 12px 16px;
-}
-
-.asideHeader {
-  align-items: center;
-  background: #fff;
-  border-bottom: 1px solid #E1E2E9;
-  display: flex;
-  flex: 0 0 auto;
-  min-height: 40px;
-  padding: 5px 5px 5px 15px;
-  z-index: 0;
-}
-
-.tabs :global .bp4-tab-panel{
-  margin-top: 0;
-}
-.tabs :global .bp4-tab-list{
-  background: #fff;
-  border-bottom: 1px solid #c7d5db;
-  padding: 0 22px;
-}
-
-.tabs :global .bp4-large > .bp4-tab{
-  font-size: 14px;
+  
 }
 
 .matchBar{
-  padding: 16px 18px;
+  padding: 12px 18px;
   background: #fff;
   border-bottom: 1px solid #E1E2E9; 
   border-top: 1px solid #E1E2E9; 
 }
+
 .matchBarTitle {
   font-size: 14px;
   font-weight: 500;
+}
+
+.footer {
+  background-color: #fff;
 }
 
 .footerActions {
@@ -51,11 +29,3 @@
   padding: 8px 16px;
   border: 1px solid #E1E2E9;
 }
-
-.checkbox:global(.bp4-control.bp4-checkbox){
-  margin: 0;
-}
-.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
-  border-color: #CBCBCB;
-}
-

@@ -1,0 +1,13 @@
+
+.tabs :global .bp4-tab-panel{
+  margin-top: 0;
+}
+.tabs :global .bp4-tab-list{
+  background: #fff;
+  border-bottom: 1px solid #c7d5db;
+  padding: 0 22px;
+}
+
+.tabs :global .bp4-large > .bp4-tab{
+  font-size: 14px;
+}

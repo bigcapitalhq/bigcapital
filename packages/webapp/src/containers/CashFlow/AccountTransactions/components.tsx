@@ -15,7 +15,7 @@ import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 export function ActionsMenu({
-  payload: { onDelete, onViewDetails },
+  payload: { onDelete, onViewDetails, onExclude },
   row: { original },
 }) {
   return (
@@ -36,6 +36,12 @@ export function ActionsMenu({
           />
         </If>
       </Can>
+      <MenuDivider />
+      <MenuItem
+        text={'Exclude'}
+        onClick={safeCallback(onExclude, original)}
+        // icon={<Icon icon="trash-16" iconSize={16} />}
+      />
     </Menu>
   );
 }

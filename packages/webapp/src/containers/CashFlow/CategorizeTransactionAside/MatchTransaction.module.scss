@@ -1,0 +1,22 @@
+
+.root{
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #D6DBE3;
+  padding: 12px 16px;
+  cursor: pointer;
+
+  &.active{
+    border-color: #88ABDB;
+  }
+
+}
+
+
+.checkbox:global(.bp4-control.bp4-checkbox){
+  margin: 0;
+}
+.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
+  border-color: #CBCBCB;
+}
+
