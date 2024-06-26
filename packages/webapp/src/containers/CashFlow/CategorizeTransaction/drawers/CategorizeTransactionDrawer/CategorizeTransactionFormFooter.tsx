@@ -48,9 +48,9 @@ export const CategorizeTransactionFormFooter = R.compose(withDrawerActions)(
 );
 
 const Root = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff;
+  // position: absolute;
+  // bottom: 0;
+  // left: 0;
+  // right: 0;
+  // background: #fff;
 `;

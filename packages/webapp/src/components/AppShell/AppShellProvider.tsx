@@ -1,22 +1,37 @@
+// @ts-nocheck
 import React, { createContext } from 'react';
 
-interface AppShellContextValue {
-  topbarOffset: number
+interface ContentShellCommonValue {
+  mainProps: any;
+  asideProps: any;
+  topbarOffset: number;
+  hideAside: boolean;
+  hideMain: boolean;
+}
+
+interface AppShellContextValue extends ContentShellCommonValue {
+  topbarOffset: number;
 }
 
 const AppShellContext = createContext<AppShellContextValue>(
   {} as AppShellContextValue,
 );
 
-interface AppShellProviderProps {
+interface AppShellProviderProps extends ContentShellCommonValue {
   children: React.ReactNode;
-  mainProps: any;
-  asideProps: any;
-  topbarOffset: number;
 }
 
-export function AppShellProvider({ topbarOffset, ...props }: AppShellProviderProps) {
-  const provider = { topbarOffset } as AppShellContextValue;
+export function AppShellProvider({
+  topbarOffset,
+  hideAside,
+  hideMain,
+  ...props
+}: AppShellProviderProps) {
+  const provider = {
+    topbarOffset,
+    hideAside,
+    hideMain,
+  } as AppShellContextValue;
 
   return <AppShellContext.Provider value={provider} {...props} />;
 }

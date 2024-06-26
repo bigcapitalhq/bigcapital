@@ -4,9 +4,9 @@ import { DrawerBody } from '@/components';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
 
-export default function CategorizeTransactionContent({
-  uncategorizedTransactionId,
-}) {
+export function CategorizeTransactionContent({}) {
+  const uncategorizedTransactionId = 4;
+
   return (
     <CategorizeTransactionBoot
       uncategorizedTransactionId={uncategorizedTransactionId}
@@ -18,7 +18,7 @@ export default function CategorizeTransactionContent({
   );
 }
 
-export const CategorizeTransactionDrawerBody = styled(DrawerBody)`
+const CategorizeTransactionDrawerBody = styled(DrawerBody)`
   padding: 20px;
   background-color: #fff;
 `;

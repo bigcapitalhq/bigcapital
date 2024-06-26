@@ -1,10 +1,16 @@
 // @ts-nocheck
 import styled from 'styled-components';
+import * as R from 'ramda';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import AccountTransactionsUncategorizedTable from './AccountTransactionsUncategorizedTable';
 import { AccountUncategorizedTransactionsBoot } from './AllTransactionsUncategorizedBoot';
+import {
+  WithBankingActionsProps,
+  withBankingActions,
+} from '../withBankingActions';
+import { useEffect } from 'react';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -18,7 +24,18 @@ const CashflowTransactionsTableCard = styled.div`
   flex: 0 1;
 `;
 
-export default function AllTransactionsUncategorized() {
+interface AllTransactionsUncategorizedProps extends WithBankingActionsProps {}
+
+function AllTransactionsUncategorizedRoot({
+  // #withBankingActions
+  closeMatchingTransactionAside,
+}: AllTransactionsUncategorizedProps) {
+  useEffect(
+    () => () => {
+      closeMatchingTransactionAside();
+    },
+    [closeMatchingTransactionAside],
+  );
   return (
     <AccountUncategorizedTransactionsBoot>
       <Box>
@@ -29,3 +46,5 @@ export default function AllTransactionsUncategorized() {
     </AccountUncategorizedTransactionsBoot>
   );
 }
+
+export default R.compose(withBankingActions)(AllTransactionsUncategorizedRoot);

@@ -1,9 +1,7 @@
 import { Tab, Tabs } from '@blueprintjs/core';
-import {
-  CategorizeBankTransactionContent,
-  MatchingBankTransaction,
-} from './MatchingTransaction';
+import { MatchingBankTransaction } from './MatchingTransaction';
 import styles from './CategorizeTransactionTabs.module.scss';
+import { CategorizeTransactionContent } from '../CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionContent';
 
 export function CategorizeTransactionTabs() {
   return (
@@ -11,7 +9,7 @@ export function CategorizeTransactionTabs() {
       <Tab
         id="categorize"
         title="Categorize Transaction"
-        panel={<CategorizeBankTransactionContent />}
+        panel={<CategorizeTransactionContent />}
       />
       <Tab
         id="matching"

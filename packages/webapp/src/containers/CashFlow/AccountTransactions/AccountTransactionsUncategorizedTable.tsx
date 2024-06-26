@@ -15,6 +15,7 @@ import { TABLES } from '@/constants/tables';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import {
@@ -24,7 +25,6 @@ import {
 import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
 
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { Intent } from '@blueprintjs/core';
 
@@ -34,6 +34,9 @@ import { Intent } from '@blueprintjs/core';
 function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
+
+  // #withBankingActions
+  setUncategorizedTransactionIdForMatching,
 
   // #withDrawerActions
   openDrawer,
@@ -53,10 +56,8 @@ function AccountTransactionsDataTable({
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
-    openDrawer(DRAWERS.CATEGORIZE_TRANSACTION, {
-      uncategorizedTransactionId: cell.row.original.id,
-    });
+  const handleCellClick = (cell) => {
+    setUncategorizedTransactionIdForMatching(cell.row.original.id);
   };
   // Handle exclude transaction.
   const handleExcludeTransaction = (transaction) => {
@@ -111,6 +112,7 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withDrawerActions,
+  withBankingActions,
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

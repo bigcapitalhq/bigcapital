@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React, { useMemo } from 'react';
 import { first } from 'lodash';
-import { DrawerHeaderContent, DrawerLoading } from '@/components';
-import { DRAWERS } from '@/constants/drawers';
+import { DrawerLoading } from '@/components';
 import {
   useAccounts,
   useBranches,
@@ -56,10 +55,6 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
 
   return (
     <DrawerLoading loading={isLoading}>
-      <DrawerHeaderContent
-        name={DRAWERS.CATEGORIZE_TRANSACTION}
-        title={'Categorize Transaction'}
-      />
       <CategorizeTransactionBootContext.Provider value={provider} {...props} />
     </DrawerLoading>
   );
