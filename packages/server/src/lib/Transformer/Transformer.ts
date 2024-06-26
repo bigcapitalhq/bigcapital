@@ -169,8 +169,8 @@ export class Transformer {
    * @param number
    * @returns
    */
-  protected formatNumber(number) {
-    return formatNumber(number, { money: false });
+  protected formatNumber(number, props?) {
+    return formatNumber(number, { money: false, ...props });
   }
 
   /**

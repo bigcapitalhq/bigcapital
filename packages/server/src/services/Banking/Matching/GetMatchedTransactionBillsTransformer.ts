@@ -12,7 +12,7 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
       'amountFormatted',
       'transactionNo',
       'date',
-      'dateFromatted',
+      'dateFormatted',
       'transactionId',
       'transactionNo',
       'transactionType',
@@ -52,8 +52,9 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {string}
    */
   protected amountFormatted(bill) {
-    return this.formatNumber(bill.totalAmount, {
+    return this.formatNumber(bill.amount, {
       currencyCode: bill.currencyCode,
+      money: true,
     });
   }
 
@@ -63,7 +64,7 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {string}
    */
   protected date(bill) {
-    return bill.date;
+    return bill.billDate;
   }
 
   /**
@@ -71,8 +72,8 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @param {Object} bill - The bill object.
    * @returns {string}
    */
-  protected dateFromatted(bill) {
-    return this.formatDate(bill.date);
+  protected dateFormatted(bill) {
+    return this.formatDate(bill.billDate);
   }
 
   /**
@@ -82,5 +83,21 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    */
   protected transactionId(bill) {
     return bill.id;
+  }
+
+  /**
+   * Retrieve the manual journal transaction type.
+   * @returns {string}
+   */
+  protected transactionType() {
+    return 'Bill';
+  }
+
+  /**
+   * Retrieves the manual journal formatted transaction type.
+   * @returns {string}
+   */
+  protected transsactionTypeFormatted() {
+    return 'Bill';
   }
 }

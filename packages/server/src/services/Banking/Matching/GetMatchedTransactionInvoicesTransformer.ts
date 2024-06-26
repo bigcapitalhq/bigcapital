@@ -12,7 +12,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
       'amountFormatted',
       'transactionNo',
       'date',
-      'dateFromatted',
+      'dateFormatted',
       'transactionId',
       'transactionNo',
       'transactionType',
@@ -52,6 +52,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
   protected formatAmount(invoice) {
     return this.formatNumber(invoice.dueAmount, {
       currencyCode: invoice.currencyCode,
+      money: true,
     });
   }
 
@@ -60,7 +61,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {Date}
    */
-  protected getDate(invoice) {
+  protected date(invoice) {
     return invoice.invoiceDate;
   }
 
@@ -69,7 +70,7 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {string}
    */
-  protected formatDate(invoice) {
+  protected dateFormatted(invoice) {
     return this.formatDate(invoice.invoiceDate);
   }
 

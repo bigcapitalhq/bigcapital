@@ -12,7 +12,7 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
       'amountFormatted',
       'transactionNo',
       'date',
-      'dateFromatted',
+      'dateFormatted',
       'transactionId',
       'transactionNo',
       'transactionType',
@@ -54,6 +54,7 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
   protected amountFormatted(expense) {
     return this.formatNumber(expense.totalAmount, {
       currencyCode: expense.currencyCode,
+      money: true,
     });
   }
 
@@ -71,7 +72,7 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
    * @param expense
    * @returns {string}
    */
-  protected dateFromatted(expense) {
+  protected dateFormatted(expense) {
     return this.formatDate(expense.paymentDate);
   }
 

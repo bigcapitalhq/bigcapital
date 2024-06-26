@@ -12,7 +12,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
       'amountFormatted',
       'transactionNo',
       'date',
-      'dateFromatted',
+      'dateFormatted',
       'transactionId',
       'transactionNo',
       'transactionType',
@@ -54,6 +54,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
   protected amountFormatted(manualJournal) {
     return this.formatNumber(manualJournal.amount, {
       currencyCode: manualJournal.currencyCode,
+      money: true,
     });
   }
 
@@ -71,7 +72,7 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
    * @param manualJournal
    * @returns {string}
    */
-  protected dateFromatted(manualJournal) {
+  protected dateFormatted(manualJournal) {
     return this.formatDate(manualJournal.date);
   }
 
@@ -107,3 +108,4 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
     return 'Manual Journal';
   }
 }
+
