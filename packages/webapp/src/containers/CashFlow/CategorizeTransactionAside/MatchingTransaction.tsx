@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { isEmpty } from 'lodash';
+import * as R from 'ramda';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
 import { AppToaster, Box, Group, Stack } from '@/components';
 import {
@@ -12,6 +13,10 @@ import { FastField, FastFieldProps, Form, Formik } from 'formik';
 import { useMatchTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
 import { transformToReq } from './utils';
+import {
+  WithBankingActionsProps,
+  withBankingActions,
+} from '../withBankingActions';
 
 const initialValues = {
   matched: {},
@@ -60,7 +65,7 @@ export function MatchingBankTransaction() {
 
 function MatchingBankTransactionContent() {
   return (
-    <Box>
+    <Box className={styles.root}>
       <PerfectMatchingTransactions />
       <GoodMatchingTransactions />
       <MatchTransactionFooter />
@@ -84,13 +89,13 @@ function PerfectMatchingTransactions() {
       <Box className={styles.matchBar}>
         <Group spacing={6}>
           <h2 className={styles.matchBarTitle}>Perfect Matchines</h2>
-          <Tag minimal intent={Intent.SUCCESS}>
+          <Tag minimal round intent={Intent.SUCCESS}>
             2
           </Tag>
         </Group>
       </Box>
 
-      <Stack spacing={9} style={{ padding: 15 }}>
+      <Stack spacing={9} style={{ padding: '12px 15px' }}>
         {matchingTransactions.map((match, index) => (
           <MatchTransactionField
             key={index}
@@ -127,7 +132,7 @@ function GoodMatchingTransactions() {
         </Stack>
       </Box>
 
-      <Stack spacing={9} style={{ padding: 15 }}>
+      <Stack spacing={9} style={{ padding: '12px 15px' }}>
         {matchingTransactions.map((match, index) => (
           <MatchTransaction
             key={index}
@@ -171,34 +176,44 @@ export function CategorizeBankTransactionContent() {
   return <h1>Categorizing</h1>;
 }
 
+interface MatchTransctionFooterProps extends WithBankingActionsProps {}
+
 /**
  * Renders the match transactions footer.
  * @returns {React.ReactNode}
  */
-function MatchTransactionFooter() {
-  return (
-    <Box className={styles.footer}>
-      <Box className={styles.footerTotal}>
-        <Group position={'apart'}>
-          <AnchorButton small minimal intent={Intent.PRIMARY}>
-            Add Reconcile Transaction +
-          </AnchorButton>
-          <Text style={{ fontSize: 13 }}>Pending $10,000</Text>
-        </Group>
-      </Box>
+const MatchTransactionFooter = R.compose(withBankingActions)(
+  ({ closeMatchingTransactionAside }: MatchTransctionFooterProps) => {
+    const handleCancelBtnClick = () => {
+      closeMatchingTransactionAside();
+    };
+    return (
+      <Box className={styles.footer}>
+        <Box className={styles.footerTotal}>
+          <Group position={'apart'}>
+            <AnchorButton small minimal intent={Intent.PRIMARY}>
+              Add Reconcile Transaction +
+            </AnchorButton>
+            <Text style={{ fontSize: 13 }}>Pending $10,000</Text>
+          </Group>
+        </Box>
 
-      <Box className={styles.footerActions}>
-        <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            style={{ minWidth: 85 }}
-            type="submit"
-          >
-            Match
-          </Button>
-          <Button>Cancel</Button>
-        </Group>
+        <Box className={styles.footerActions}>
+          <Group spacing={10}>
+            <Button
+              intent={Intent.PRIMARY}
+              style={{ minWidth: 85 }}
+              type="submit"
+            >
+              Match
+            </Button>
+
+            <Button onClick={handleCancelBtnClick}>Cancel</Button>
+          </Group>
+        </Box>
       </Box>
-    </Box>
-  );
-}
+    );
+  },
+);
+
+MatchTransactionFooter.displayName = 'MatchTransactionFooter';

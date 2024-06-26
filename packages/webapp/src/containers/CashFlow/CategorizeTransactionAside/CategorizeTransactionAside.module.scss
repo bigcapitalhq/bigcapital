@@ -1,14 +1,21 @@
 
+.root {
+  position: relative;
+  padding-bottom: 110px;
+}
 
 .transaction {
   
 }
 
 .matchBar{
-  padding: 12px 18px;
+  padding: 12px 14px;
   background: #fff;
   border-bottom: 1px solid #E1E2E9; 
-  border-top: 1px solid #E1E2E9; 
+  
+  &:not(:first-of-type) {
+    border-top: 1px solid #E1E2E9; 
+  }
 }
 
 .matchBarTitle {
@@ -18,14 +25,17 @@
 
 .footer {
   background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 
 .footerActions {
   padding: 14px 16px;
-  border-top: 1px solid #E1E2E9;
+  border-top: 1px solid #d8d9d9;
 }
 
 .footerTotal {
   padding: 8px 16px;
-  border: 1px solid #E1E2E9;
+  border-top: 1px solid #d8d9d9;
 }
