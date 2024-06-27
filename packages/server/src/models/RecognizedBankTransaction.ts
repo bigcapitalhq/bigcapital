@@ -29,6 +29,7 @@ export class RecognizedBankTransaction extends TenantModel {
   static get relationMappings() {
     const UncategorizedCashflowTransaction = require('./UncategorizedCashflowTransaction');
     const Account = require('./Account');
+    const { BankRule } = require('./BankRule');
 
     return {
       /**
@@ -52,6 +53,18 @@ export class RecognizedBankTransaction extends TenantModel {
         join: {
           from: 'recognized_bank_transactions.assignedAccountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Recognized bank transaction may belongs to bank rule.
+       */
+      bankRule: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: BankRule,
+        join: {
+          from: 'recognized_bank_transactions.bankRuleId',
+          to: 'bank_rules.id',
         },
       },
     };

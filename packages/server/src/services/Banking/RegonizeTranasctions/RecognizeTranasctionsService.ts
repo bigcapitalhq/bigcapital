@@ -65,7 +65,6 @@ export class RecognizeTranasctionsService {
 
         if (batch) query.where('batch', batch);
       });
-
     const bankRules = await BankRule.query().withGraphFetched('conditions');
     const bankRulesByAccountId = transformToMapBy(
       bankRules,
@@ -92,7 +91,7 @@ export class RecognizeTranasctionsService {
         );
       }
     };
-    await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
+    const result = await PromisePool.withConcurrency(MIGRATION_CONCURRENCY)
       .for(uncategorizedTranasctions)
       .process((transaction: UncategorizedCashflowTransaction, index, pool) => {
         return regonizeTransaction(transaction);

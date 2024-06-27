@@ -1,6 +1,8 @@
 import { Inject, Service } from 'typedi';
 import { ExcludeBankTransaction } from './ExcludeBankTransaction';
 import { UnexcludeBankTransaction } from './UnexcludeBankTransaction';
+import { GetExcludedBankTransactionsService } from './GetExcludedBankTransactions';
+import { ExcludedBankTransactionsQuery } from './_types';
 
 @Service()
 export class ExcludeBankTransactionsApplication {
@@ -9,6 +11,9 @@ export class ExcludeBankTransactionsApplication {
 
   @Inject()
   private unexcludeBankTransactionService: UnexcludeBankTransaction;
+
+  @Inject()
+  private getExcludedBankTransactionsService: GetExcludedBankTransactionsService;
 
   /**
    * Marks a bank transaction as excluded.
@@ -33,6 +38,22 @@ export class ExcludeBankTransactionsApplication {
     return this.unexcludeBankTransactionService.unexcludeBankTransaction(
       tenantId,
       bankTransactionId
+    );
+  }
+
+  /**
+   * Retrieves the excluded bank transactions.
+   * @param {number} tenantId
+   * @param {ExcludedBankTransactionsQuery} filter
+   * @returns {}
+   */
+  public getExcludedBankTransactions(
+    tenantId: number,
+    filter: ExcludedBankTransactionsQuery
+  ) {
+    return this.getExcludedBankTransactionsService.getExcludedBankTransactions(
+      tenantId,
+      filter
     );
   }
 }

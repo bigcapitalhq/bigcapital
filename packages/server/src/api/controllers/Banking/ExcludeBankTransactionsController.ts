@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { param } from 'express-validator';
-import { NextFunction, Request, Response, Router } from 'express';
+import { NextFunction, Request, Response, Router, query } from 'express';
 import BaseController from '../BaseController';
 import { ExcludeBankTransactionsApplication } from '@/services/Banking/Exclude/ExcludeBankTransactionsApplication';
 
@@ -26,6 +26,12 @@ export class ExcludeBankTransactionsController extends BaseController {
       [param('transactionId').exists()],
       this.validationResult,
       this.unexcludeBankTransaction.bind(this)
+    );
+    router.get(
+      '/excluded',
+      [],
+      this.validationResult,
+      this.getExcludedBankTransactions.bind(this)
     );
     return router;
   }
@@ -83,6 +89,34 @@ export class ExcludeBankTransactionsController extends BaseController {
         message: 'The bank transaction has been unexcluded.',
         id: transactionId,
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the excluded uncategorized bank transactions.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response|null>}
+   */
+  private async getExcludedBankTransactions(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | void> {
+    const { tenantId } = req;
+    const filter = this.matchedBodyData(req);
+
+    console.log('123');
+    try {
+      const data =
+        await this.excludeBankTransactionApp.getExcludedBankTransactions(
+          tenantId,
+          filter
+        );
+      return res.status(200).send(data);
     } catch (error) {
       next(error);
     }

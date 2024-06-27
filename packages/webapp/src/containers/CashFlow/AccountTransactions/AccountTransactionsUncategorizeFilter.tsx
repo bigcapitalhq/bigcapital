@@ -28,6 +28,7 @@ export function AccountTransactionsUncategorizeFilter() {
       <FilterTag round interactive>
         All <strong>(2)</strong>
       </FilterTag>
+
       <FilterTag round minimal interactive>
         Recognized <strong>(0)</strong>
       </FilterTag>

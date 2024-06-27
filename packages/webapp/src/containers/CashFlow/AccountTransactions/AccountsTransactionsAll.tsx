@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import AccountTransactionsDataTable from './AccountTransactionsDataTable';
-import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
 import { AccountTransactionsAllProvider } from './AccountTransactionsAllBoot';
 
 const Box = styled.div`
@@ -23,8 +22,6 @@ export default function AccountTransactionsAll() {
   return (
     <AccountTransactionsAllProvider>
       <Box>
-        <AccountTransactionsUncategorizeFilter />
-
         <CashflowTransactionsTableCard>
           <AccountTransactionsDataTable />
         </CashflowTransactionsTableCard>

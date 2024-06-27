@@ -1,5 +1,10 @@
 // @ts-nocheck
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from 'react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 
@@ -118,7 +123,7 @@ export function useUnexcludeUncategorizedTransaction(props) {
 
   return useMutation(
     (uncategorizedTransactionId: number) =>
-      apiRequest.post(
+      apiRequest.put(
         `/cashflow/transactions/${uncategorizedTransactionId}/unexclude`,
       ),
     {
@@ -142,6 +147,73 @@ export function useMatchTransaction(props?: any) {
         // Invalidate queries.
       },
       ...props,
+    },
+  );
+}
+
+/**
+ * @returns
+ */
+export function useRecognizedBankTransactionsInfinity(
+  query,
+  infinityProps,
+  axios,
+) {
+  const apiRequest = useApiRequest();
+
+  return useInfiniteQuery(
+    ['RECOGNIZED_BANK_TRANSACTIONS_INFINITY', query],
+    async ({ pageParam = 1 }) => {
+      const response = await apiRequest.http({
+        ...axios,
+        method: 'get',
+        url: `/api/banking/recognized`,
+        params: { page: pageParam, ...query },
+      });
+      return response.data;
+    },
+    {
+      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
+      getNextPageParam: (lastPage) => {
+        const { pagination } = lastPage;
+
+        return pagination.total > pagination.page_size * pagination.page
+          ? lastPage.pagination.page + 1
+          : undefined;
+      },
+      ...infinityProps,
+    },
+  );
+}
+
+export function useExcludedBankTransactionsInfinity(
+  query,
+  infinityProps,
+  axios,
+) {
+  const apiRequest = useApiRequest();
+
+  return useInfiniteQuery(
+    ['EXCLUDED_BANK_TRANSACTIONS_INFINITY', query],
+    async ({ pageParam = 1 }) => {
+      const response = await apiRequest.http({
+        ...axios,
+        method: 'get',
+        url: `/api/cashflow/excluded`,
+        params: { page: pageParam, ...query },
+      });
+      return response.data;
+    },
+    {
+      getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
+      getNextPageParam: (lastPage) => {
+        const { pagination } = lastPage;
+
+        return pagination.total > pagination.page_size * pagination.page
+          ? lastPage.pagination.page + 1
+          : undefined;
+      },
+      ...infinityProps,
     },
   );
 }

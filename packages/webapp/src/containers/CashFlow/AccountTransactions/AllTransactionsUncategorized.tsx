@@ -1,16 +1,22 @@
 // @ts-nocheck
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import * as R from 'ramda';
 
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
-import AccountTransactionsUncategorizedTable from './AccountTransactionsUncategorizedTable';
-import { AccountUncategorizedTransactionsBoot } from './AllTransactionsUncategorizedBoot';
+import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
+import { UncategorizedTransactionsFilterProvider } from './AccountUncategorizedTransactionsFilterProvider';
+import { RecognizedTransactionsTableBoot } from './RecognizedTransactions/RecognizedTransactionsTableBoot';
+import { RecognizedTransactionsTable } from './RecognizedTransactions/RecognizedTransactionsTable';
 import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../withBankingActions';
-import { useEffect } from 'react';
+import { AccountUncategorizedTransactionsBoot } from './AllTransactionsUncategorizedBoot';
+import AccountTransactionsUncategorizedTable from './AccountTransactionsUncategorizedTable';
+import { ExcludedBankTransactionsTableBoot } from './ExcludedTransactions/ExcludedTransactionsTableBoot';
+import { ExcludedTransactionsTable } from './ExcludedTransactions/ExcludedTransactionsTable';
 
 const Box = styled.div`
   margin: 30px 15px;
@@ -36,14 +42,31 @@ function AllTransactionsUncategorizedRoot({
     },
     [closeMatchingTransactionAside],
   );
+
   return (
-    <AccountUncategorizedTransactionsBoot>
+    <UncategorizedTransactionsFilterProvider>
       <Box>
-        <CashflowTransactionsTableCard>
-          <AccountTransactionsUncategorizedTable />
-        </CashflowTransactionsTableCard>
+        <AccountTransactionsUncategorizeFilter />
+
+        <ExcludedBankTransactionsTableBoot>
+          <CashflowTransactionsTableCard>
+            <ExcludedTransactionsTable />
+          </CashflowTransactionsTableCard>
+        </ExcludedBankTransactionsTableBoot>
+
+        {/* <RecognizedTransactionsTableBoot>
+          <CashflowTransactionsTableCard>
+            <RecognizedTransactionsTable />
+          </CashflowTransactionsTableCard>
+        </RecognizedTransactionsTableBoot> */}
+
+        {/* <AccountUncategorizedTransactionsBoot>
+          <CashflowTransactionsTableCard>
+            <AccountTransactionsUncategorizedTable />
+          </CashflowTransactionsTableCard>
+        </AccountUncategorizedTransactionsBoot> */}
       </Box>
-    </AccountUncategorizedTransactionsBoot>
+    </UncategorizedTransactionsFilterProvider>
   );
 }
 

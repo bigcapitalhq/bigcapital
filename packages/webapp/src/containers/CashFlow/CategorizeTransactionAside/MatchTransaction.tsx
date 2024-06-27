@@ -44,7 +44,7 @@ export function MatchTransaction({
       onClick={handleClick}
     >
       <Stack spacing={3}>
-        <span>{label}</span>
+        <span className={styles.label}>{label}</span>
         <Text style={{ fontSize: 12, color: '#5C7080' }}>Date: {date}</Text>
       </Stack>
 

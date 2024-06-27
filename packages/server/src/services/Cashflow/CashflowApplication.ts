@@ -9,6 +9,7 @@ import {
   ICashflowAccountsFilter,
   ICashflowNewCommandDTO,
   ICategorizeCashflowTransactioDTO,
+  IGetRecognizedTransactionsQuery,
   IGetUncategorizedTransactionsQuery,
 } from '@/interfaces';
 import { CategorizeTransactionAsExpense } from './CategorizeTransactionAsExpense';
@@ -18,6 +19,7 @@ import { GetUncategorizedTransaction } from './GetUncategorizedTransaction';
 import NewCashflowTransactionService from './NewCashflowTransactionService';
 import GetCashflowAccountsService from './GetCashflowAccountsService';
 import { GetCashflowTransactionService } from './GetCashflowTransactionsService';
+import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
 
 @Service()
 export class CashflowApplication {
@@ -50,6 +52,9 @@ export class CashflowApplication {
 
   @Inject()
   private createUncategorizedTransactionService: CreateUncategorizedTransaction;
+
+  @Inject()
+  private getRecognizedTranasctionsService: GetRecognizedTransactionsService;
 
   /**
    * Creates a new cashflow transaction.
@@ -211,6 +216,22 @@ export class CashflowApplication {
     return this.getUncategorizedTransactionService.getTransaction(
       tenantId,
       uncategorizedTransactionId
+    );
+  }
+
+  /**
+   * Retrieves the recognized bank transactions.
+   * @param {number} tenantId
+   * @param {number} accountId
+   * @returns
+   */
+  public getRecognizedTransactions(
+    tenantId: number,
+    filter?: IGetRecognizedTransactionsQuery
+  ) {
+    return this.getRecognizedTranasctionsService.getRecognizedTranactions(
+      tenantId,
+      filter
     );
   }
 }

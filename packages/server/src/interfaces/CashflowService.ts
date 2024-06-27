@@ -164,3 +164,10 @@ export interface IGetUncategorizedTransactionsQuery {
   page?: number;
   pageSize?: number;
 }
+
+
+export interface IGetRecognizedTransactionsQuery {
+  page?: number;
+  pageSize?: number;
+  accountId?: number;
+}

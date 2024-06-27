@@ -14,14 +14,11 @@ export class RecognizedTransactionsController extends BaseController {
   router() {
     const router = Router();
 
-    router.get(
-      '/accounts/:accountId',
-      this.getRecognizedTransactions.bind(this)
-    );
+    router.get('/', this.getRecognizedTransactions.bind(this));
 
     return router;
   }
-  k;
+
   /**
    * Retrieves the recognized bank transactions.
    * @param {Request} req
@@ -34,15 +31,15 @@ export class RecognizedTransactionsController extends BaseController {
     res: Response,
     next: NextFunction
   ) {
-    const { accountId } = req.params;
+    const filter = this.matchedQueryData(req);
     const { tenantId } = req;
 
     try {
       const data = await this.cashflowApplication.getRecognizedTransactions(
         tenantId,
-        accountId
+        filter
       );
-      return res.status(200).send({ data });
+      return res.status(200).send(data);
     } catch (error) {
       next(error);
     }
