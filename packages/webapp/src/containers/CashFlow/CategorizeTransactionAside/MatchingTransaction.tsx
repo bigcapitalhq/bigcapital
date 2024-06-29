@@ -2,7 +2,7 @@
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
-import { AppToaster, Box, Group, Stack } from '@/components';
+import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
 import {
   MatchingTransactionBoot,
   useMatchingTransactionBoot,
@@ -12,7 +12,7 @@ import styles from './CategorizeTransactionAside.module.scss';
 import { FastField, FastFieldProps, Form, Formik } from 'formik';
 import { useMatchTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
-import { transformToReq } from './utils';
+import { transformToReq, useGetPendingAmountMatched } from './utils';
 import {
   WithBankingActionsProps,
   withBankingActions,
@@ -136,10 +136,12 @@ function GoodMatchingTransactions() {
 
       <Stack spacing={9} style={{ padding: '12px 15px' }}>
         {possibleMatches.map((match, index) => (
-          <MatchTransaction
+          <MatchTransactionField
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
             date={match.dateFormatted}
+            transactionId={match.transactionId}
+            transactionType={match.transactionType}
           />
         ))}
       </Stack>
@@ -189,6 +191,9 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
     const handleCancelBtnClick = () => {
       closeMatchingTransactionAside();
     };
+
+    const totalPending = useGetPendingAmountMatched();
+
     return (
       <Box className={styles.footer}>
         <Box className={styles.footerTotal}>
@@ -196,7 +201,10 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
             <AnchorButton small minimal intent={Intent.PRIMARY}>
               Add Reconcile Transaction +
             </AnchorButton>
-            <Text style={{ fontSize: 13 }}>Pending $10,000</Text>
+
+            <Text style={{ fontSize: 13 }} tagName='span'>
+              Pending <FormatNumber value={totalPending} currency={'USD'} />
+            </Text>
           </Group>
         </Box>
 

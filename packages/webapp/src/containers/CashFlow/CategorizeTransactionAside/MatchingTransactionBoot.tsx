@@ -1,5 +1,6 @@
-import { useMatchingTransactions } from '@/hooks/query/bank-rules';
+import { defaultTo } from 'lodash';
 import React, { createContext } from 'react';
+import { useMatchingTransactions } from '@/hooks/query/bank-rules';
 
 interface MatchingTransactionBootValues {
   isMatchingTransactionsLoading: boolean;
@@ -29,9 +30,9 @@ function MatchingTransactionBoot({
 
   const provider = {
     isMatchingTransactionsLoading,
-    possibleMatches: matchingTransactions?.possibleMatches,
-    perfectMatchesCount: 2,
-    perfectMatches: matchingTransactions?.perfectMatches,
+    possibleMatches: defaultTo(matchingTransactions?.possibleMatches, []),
+    perfectMatchesCount: matchingTransactions?.perfectMatches?.length || 0,
+    perfectMatches: defaultTo(matchingTransactions?.perfectMatches, []),
   } as MatchingTransactionBootValues;
 
   return <RuleFormBootContext.Provider value={provider} {...props} />;
