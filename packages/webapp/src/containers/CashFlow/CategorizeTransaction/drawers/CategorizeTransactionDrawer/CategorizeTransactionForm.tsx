@@ -16,6 +16,7 @@ import { compose } from '@/utils';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { AppToaster } from '@/components';
 import { Intent } from '@blueprintjs/core';
+import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
 /**
  * Categorize cashflow transaction form dialog content.
@@ -24,11 +25,9 @@ function CategorizeTransactionFormRoot({
   // #withDrawerActions
   closeDrawer,
 }) {
-  const {
-    uncategorizedTransactionId,
-    uncategorizedTransaction,
-    primaryBranch,
-  } = useCategorizeTransactionBoot();
+  const { uncategorizedTransactionId, uncategorizedTransaction } =
+    useCategorizeTransactionTabsBoot();
+  const { primaryBranch } = useCategorizeTransactionBoot();
   const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
 
   // Callbacks handles form submit.

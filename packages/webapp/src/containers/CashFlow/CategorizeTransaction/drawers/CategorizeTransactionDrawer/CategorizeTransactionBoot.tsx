@@ -2,20 +2,34 @@
 import React, { useMemo } from 'react';
 import { first } from 'lodash';
 import { DrawerLoading } from '@/components';
-import {
-  useAccounts,
-  useBranches,
-  useUncategorizedTransaction,
-} from '@/hooks/query';
+import { useAccounts, useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
+import { Spinner } from '@blueprintjs/core';
 
-const CategorizeTransactionBootContext = React.createContext();
+interface CategorizeTransactionBootProps {
+  children: React.ReactNode;
+}
+
+interface CategorizeTransactionBootValue {
+  branches: any;
+  accounts: any;
+  isBranchesLoading: boolean;
+  isAccountsLoading: boolean;
+  primaryBranch: any;
+}
+
+const CategorizeTransactionBootContext =
+  React.createContext<CategorizeTransactionBootValue>(
+    {} as CategorizeTransactionBootValue,
+  );
 
 /**
  * Categorize transcation boot.
  */
-function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
+function CategorizeTransactionBoot({
+  ...props
+}: CategorizeTransactionBootProps) {
   // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -28,12 +42,6 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
     {},
     { enabled: isBranchFeatureCan },
   );
-  // Retrieves the uncategorized transaction.
-  const {
-    data: uncategorizedTransaction,
-    isLoading: isUncategorizedTransactionLoading,
-  } = useUncategorizedTransaction(uncategorizedTransactionId);
-
   // Retrieves the primary branch.
   const primaryBranch = useMemo(
     () => branches?.find((b) => b.primary) || first(branches),
@@ -41,18 +49,17 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
   );
 
   const provider = {
-    uncategorizedTransactionId,
-    uncategorizedTransaction,
-    isUncategorizedTransactionLoading,
     branches,
     accounts,
     isBranchesLoading,
     isAccountsLoading,
     primaryBranch,
   };
-  const isLoading =
-    isBranchesLoading || isUncategorizedTransactionLoading || isAccountsLoading;
+  const isLoading = isBranchesLoading || isAccountsLoading;
 
+  if (isLoading) {
+    <Spinner size={30} />;
+  }
   return (
     <DrawerLoading loading={isLoading}>
       <CategorizeTransactionBootContext.Provider value={provider} {...props} />
@@ -61,6 +68,8 @@ function CategorizeTransactionBoot({ uncategorizedTransactionId, ...props }) {
 }
 
 const useCategorizeTransactionBoot = () =>
-  React.useContext(CategorizeTransactionBootContext);
+  React.useContext<CategorizeTransactionBootValue>(
+    CategorizeTransactionBootContext,
+  );
 
 export { CategorizeTransactionBoot, useCategorizeTransactionBoot };

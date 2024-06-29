@@ -189,7 +189,7 @@ export function useAccountUncategorizedTransactionsColumns() {
       {
         id: 'deposit',
         Header: intl.get('cash_flow.label.deposit'),
-        accessor: 'formattet_deposit_amount',
+        accessor: 'formatted_deposit_amount',
         width: 40,
         className: 'deposit',
         textOverview: true,

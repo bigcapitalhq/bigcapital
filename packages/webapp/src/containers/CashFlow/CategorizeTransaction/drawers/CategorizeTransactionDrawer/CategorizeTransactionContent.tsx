@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { DrawerBody } from '@/components';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
+import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
 export function CategorizeTransactionContent({}) {
-  const uncategorizedTransactionId = 4;
+  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
 
   return (
     <CategorizeTransactionBoot

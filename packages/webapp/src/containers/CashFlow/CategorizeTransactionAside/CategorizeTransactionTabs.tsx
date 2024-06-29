@@ -5,7 +5,7 @@ import { CategorizeTransactionContent } from '../CategorizeTransaction/drawers/C
 
 export function CategorizeTransactionTabs() {
   return (
-    <Tabs large className={styles.tabs}>
+    <Tabs large renderActiveTabPanelOnly className={styles.tabs}>
       <Tab
         id="categorize"
         title="Categorize Transaction"

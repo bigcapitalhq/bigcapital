@@ -3,18 +3,17 @@ import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import styled from 'styled-components';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
 import { Group } from '@/components';
+import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 
 function CategorizeTransactionFormFooterRoot({
-  // #withDrawerActions
-  closeDrawer,
+  // #withBankingActions
+  closeMatchingTransactionAside,
 }) {
   const { isSubmitting } = useFormikContext();
 
   const handleClose = () => {
-    closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
+    closeMatchingTransactionAside();
   };
 
   return (
@@ -23,8 +22,8 @@ function CategorizeTransactionFormFooterRoot({
         <Group spacing={10}>
           <Button
             intent={Intent.PRIMARY}
-            loading={isSubmitting}
             style={{ minWidth: '75px' }}
+            loading={isSubmitting}
             type="submit"
           >
             Save
@@ -43,7 +42,7 @@ function CategorizeTransactionFormFooterRoot({
   );
 }
 
-export const CategorizeTransactionFormFooter = R.compose(withDrawerActions)(
+export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
   CategorizeTransactionFormFooterRoot,
 );
 

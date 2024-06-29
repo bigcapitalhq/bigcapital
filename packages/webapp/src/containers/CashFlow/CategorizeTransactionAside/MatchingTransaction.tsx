@@ -13,6 +13,7 @@ import { FastField, FastFieldProps, Form, Formik } from 'formik';
 import { useMatchTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
 import { transformToReq, useGetPendingAmountMatched } from './utils';
+import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import {
   WithBankingActionsProps,
   withBankingActions,
@@ -23,7 +24,7 @@ const initialValues = {
 };
 
 export function MatchingBankTransaction() {
-  const uncategorizedTransactionId = 4;
+  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchTransaction();
 
   // Handles the form submitting.
@@ -191,7 +192,6 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
     const handleCancelBtnClick = () => {
       closeMatchingTransactionAside();
     };
-
     const totalPending = useGetPendingAmountMatched();
 
     return (
@@ -202,7 +202,7 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
               Add Reconcile Transaction +
             </AnchorButton>
 
-            <Text style={{ fontSize: 13 }} tagName='span'>
+            <Text style={{ fontSize: 13 }} tagName="span">
               Pending <FormatNumber value={totalPending} currency={'USD'} />
             </Text>
           </Group>
