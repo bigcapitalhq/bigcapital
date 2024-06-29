@@ -12,6 +12,7 @@ import { useDeletePaymentMade } from '@/hooks/query';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { handleDeleteErrors } from './_utils';
 
 /**
  * Payment made delete alert.
@@ -47,6 +48,15 @@ function PaymentMadeDeleteAlert({
         });
         closeDrawer(DRAWERS.PAYMENT_MADE_DETAILS);
       })
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+        },
+      )
       .finally(() => {
         closeAlert(name);
       });

@@ -117,6 +117,12 @@ export const handleDeleteErrors = (errors) => {
       intent: Intent.DANGER,
     });
   }
+  if (errors.find((e) => e.type === 'CANNOT_DELETE_TRANSACTION_MATCHED')) {
+    AppToaster.show({
+      intent: Intent.DANGER,
+      message: 'Cannot delete a transaction matched with a bank transaction.',
+    });
+  }
 };
 
 export function ActionsMenu({
