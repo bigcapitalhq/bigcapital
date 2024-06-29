@@ -1,6 +1,9 @@
 // @ts-nocheck
 import styled from 'styled-components';
 import { Tag } from '@blueprintjs/core';
+import { useAppQueryString } from '@/hooks';
+import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { Group } from '@/components';
 
 const Root = styled.div`
   display: flex;
@@ -23,15 +26,56 @@ const FilterTag = styled(Tag)`
 `;
 
 export function AccountTransactionsUncategorizeFilter() {
+  const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const handleTabsChange = (value) => {
+    setLocationQuery({ uncategorizedFilter: value });
+  };
+
+  return (
+    <Group position={'apart'}>
+      <SegmentedTabs
+        options={[
+          { value: 'all', label: 'All' },
+          { value: 'recognized', label: 'Recognized' },
+        ]}
+        value={locationQuery?.uncategorizedFilter || 'all'}
+        onValueChange={handleTabsChange}
+      />
+      <SegmentedTabs
+        options={[{ value: 'excluded', label: 'Excluded' }]}
+        value={locationQuery?.uncategorizedFilter || 'all'}
+        onValueChange={handleTabsChange}
+      />
+    </Group>
+  );
+}
+
+interface SegmentedTabs {
+  options: Array<{ label: string; value: string }>;
+  initialValue?: string;
+  value?: string;
+  onValueChange?: (value: string) => void;
+}
+
+function SegmentedTabs({ options, initialValue, value, onValueChange }) {
+  const [_value, handleChange] = useUncontrolled({
+    initialValue,
+    value,
+    onChange: onValueChange,
+  });
   return (
     <Root>
-      <FilterTag round interactive>
-        All <strong>(2)</strong>
-      </FilterTag>
-
-      <FilterTag round minimal interactive>
-        Recognized <strong>(0)</strong>
-      </FilterTag>
+      {options.map((option) => (
+        <FilterTag
+          round
+          interactive
+          onClick={() => handleChange(option.value)}
+          minimal={option.value !== _value}
+        >
+          {option.label}
+        </FilterTag>
+      ))}
     </Root>
   );
 }
