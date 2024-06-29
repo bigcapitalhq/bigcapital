@@ -23,10 +23,12 @@ export class MatchBankTransactionsApplication {
    */
   public getMatchedTransactions(
     tenantId: number,
+    uncategorizedTransactionId: number,
     filter: GetMatchedTransactionsFilter
   ) {
     return this.getMatchedTransactionsService.getMatchedTransactions(
       tenantId,
+      uncategorizedTransactionId,
       filter
     );
   }

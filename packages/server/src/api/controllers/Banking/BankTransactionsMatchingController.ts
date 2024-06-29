@@ -36,8 +36,6 @@ export class BankTransactionsMatchingController extends BaseController {
       this.validationResult,
       this.unmatchMatchedBankTransaction.bind(this)
     );
-    router.get('/', this.getMatchedTransactions.bind(this));
-
     return router;
   }
 

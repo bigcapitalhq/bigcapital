@@ -1,5 +1,7 @@
 // @ts-nocheck
 import {
+  UseMutateFunction,
+  UseMutationResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -86,15 +88,18 @@ export function useBankRule(bankRuleId: number, props) {
  *
  * @returns
  */
-export function useMatchingTransactions(props?: any) {
+export function useMatchingTransactions(
+  uncategorizedTransactionId: number,
+  props?: any,
+) {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    ['MATCHING_TRANSACTION'],
+  return useQuery<any>(
+    ['MATCHING_TRANSACTION', uncategorizedTransactionId],
     () =>
       apiRequest
-        .get(`/banking/matches`)
-        .then((res) => transformToCamelCase(res.data.data)),
+        .get(`/cashflow/transactions/${uncategorizedTransactionId}/matches`)
+        .then((res) => transformToCamelCase(res.data)),
     props,
   );
 }
@@ -135,11 +140,18 @@ export function useUnexcludeUncategorizedTransaction(props) {
   );
 }
 
-export function useMatchTransaction(props?: any) {
+interface MatchUncategorizedTransactionValues {
+  id: number;
+  value: any;
+}
+
+export function useMatchTransaction(
+  props?: any,
+): UseMutationResult<MatchUncategorizedTransactionValues> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
+  return useMutation<MatchUncategorizedTransactionValues>(
     ([uncategorizedTransactionId, values]) =>
       apiRequest.post(`/banking/matches/${uncategorizedTransactionId}`, values),
     {

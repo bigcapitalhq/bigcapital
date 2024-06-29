@@ -1,13 +1,18 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
+import moment from 'moment';
 import { PromisePool } from '@supercharge/promise-pool';
 import { GetMatchedTransactionsFilter, MatchedTransactionsPOJO } from './types';
 import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpenses';
 import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class GetMatchedTransactions {
+  @Inject()
+  private tenancy: HasTenancyService;
+
   @Inject()
   private getMatchedInvoicesService: GetMatchedTransactionsByExpenses;
 
@@ -36,11 +41,20 @@ export class GetMatchedTransactions {
    * Retrieves the matched transactions.
    * @param {number} tenantId -
    * @param {GetMatchedTransactionsFilter} filter -
+   * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
     tenantId: number,
+    uncategorizedTransactionId: number,
     filter: GetMatchedTransactionsFilter
   ): Promise<MatchedTransactionsPOJO> {
+    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
+
+    const uncategorizedTransaction =
+      await UncategorizedCashflowTransaction.query()
+        .findById(uncategorizedTransactionId)
+        .throwIfNotFound();
+
     const filtered = filter.transactionType
       ? this.registered.filter((item) => item.type === filter.transactionType)
       : this.registered;
@@ -50,6 +64,39 @@ export class GetMatchedTransactions {
       .process(async ({ type, service }) => {
         return service.getMatchedTransactions(tenantId, filter);
       });
-    return R.compose(R.flatten)(matchedTransactions?.results);
+
+    const { perfectMatches, possibleMatches } = this.groupMatchedResults(
+      uncategorizedTransaction,
+      matchedTransactions
+    );
+    return {
+      perfectMatches,
+      possibleMatches,
+    };
+  }
+
+  /**
+   * Groups the given results for getting perfect and possible matches
+   * based on the given uncategorized transaction.
+   * @param uncategorizedTransaction
+   * @param matchedTransactions
+   * @returns {MatchedTransactionsPOJO}
+   */
+  private groupMatchedResults(
+    uncategorizedTransaction,
+    matchedTransactions
+  ): MatchedTransactionsPOJO {
+    const results = R.compose(R.flatten)(matchedTransactions?.results);
+
+    const perfectMatches = R.filter(
+      (match) =>
+        match.amount === uncategorizedTransaction.amount &&
+        moment(match.date).isSame(uncategorizedTransaction.date, 'day'),
+      results
+    );
+
+    const possibleMatches = R.difference(results, perfectMatches);
+
+    return { perfectMatches, possibleMatches };
   }
 }

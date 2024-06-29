@@ -23,7 +23,7 @@ const initialValues = {
 };
 
 export function MatchingBankTransaction() {
-  const uncategorizedTransactionId = 1;
+  const uncategorizedTransactionId = 4;
   const { mutateAsync: matchTransaction } = useMatchTransaction();
 
   // Handles the form submitting.
@@ -37,7 +37,7 @@ export function MatchingBankTransaction() {
       });
       return;
     }
-    matchTransaction([uncategorizedTransactionId, _values])
+    matchTransaction({ id: uncategorizedTransactionId, values: _values })
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
@@ -53,7 +53,9 @@ export function MatchingBankTransaction() {
   };
 
   return (
-    <MatchingTransactionBoot>
+    <MatchingTransactionBoot
+      uncategorizedTransactionId={uncategorizedTransactionId}
+    >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <MatchingBankTransactionContent />
@@ -78,10 +80,10 @@ function MatchingBankTransactionContent() {
  * @returns {React.ReactNode}
  */
 function PerfectMatchingTransactions() {
-  const { matchingTransactions } = useMatchingTransactionBoot();
+  const { perfectMatches, perfectMatchesCount } = useMatchingTransactionBoot();
 
   // Can't continue if the perfect matches is empty.
-  if (isEmpty(matchingTransactions)) {
+  if (isEmpty(perfectMatches)) {
     return null;
   }
   return (
@@ -90,13 +92,13 @@ function PerfectMatchingTransactions() {
         <Group spacing={6}>
           <h2 className={styles.matchBarTitle}>Perfect Matchines</h2>
           <Tag minimal round intent={Intent.SUCCESS}>
-            2
+            {perfectMatchesCount}
           </Tag>
         </Group>
       </Box>
 
       <Stack spacing={9} style={{ padding: '12px 15px' }}>
-        {matchingTransactions.map((match, index) => (
+        {perfectMatches.map((match, index) => (
           <MatchTransactionField
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
@@ -115,10 +117,10 @@ function PerfectMatchingTransactions() {
  * @returns {React.ReactNode}
  */
 function GoodMatchingTransactions() {
-  const { matchingTransactions } = useMatchingTransactionBoot();
+  const { possibleMatches } = useMatchingTransactionBoot();
 
   // Can't continue if the possible matches is emoty.
-  if (isEmpty(matchingTransactions)) {
+  if (isEmpty(possibleMatches)) {
     return null;
   }
   return (
@@ -133,7 +135,7 @@ function GoodMatchingTransactions() {
       </Box>
 
       <Stack spacing={9} style={{ padding: '12px 15px' }}>
-        {matchingTransactions.map((match, index) => (
+        {possibleMatches.map((match, index) => (
           <MatchTransaction
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}

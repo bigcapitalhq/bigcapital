@@ -3,7 +3,7 @@ import React, { createContext } from 'react';
 
 interface MatchingTransactionBootValues {
   isMatchingTransactionsLoading: boolean;
-  matchingTransactions: Array<any>;
+  possibleMatches: Array<any>;
   perfectMatchesCount: number;
   perfectMatches: Array<any>;
   matches: Array<any>;
@@ -14,21 +14,24 @@ const RuleFormBootContext = createContext<MatchingTransactionBootValues>(
 );
 
 interface RuleFormBootProps {
+  uncategorizedTransactionId: number;
   children: React.ReactNode;
 }
 
-function MatchingTransactionBoot({ ...props }: RuleFormBootProps) {
+function MatchingTransactionBoot({
+  uncategorizedTransactionId,
+  ...props
+}: RuleFormBootProps) {
   const {
     data: matchingTransactions,
     isLoading: isMatchingTransactionsLoading,
-  } = useMatchingTransactions();
+  } = useMatchingTransactions(uncategorizedTransactionId);
 
   const provider = {
     isMatchingTransactionsLoading,
-    matchingTransactions,
+    possibleMatches: matchingTransactions?.possibleMatches,
     perfectMatchesCount: 2,
-    perfectMatches: [],
-    matches: [],
+    perfectMatches: matchingTransactions?.perfectMatches,
   } as MatchingTransactionBootValues;
 
   return <RuleFormBootContext.Provider value={provider} {...props} />;

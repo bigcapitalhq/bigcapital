@@ -49,7 +49,10 @@ export interface MatchedTransactionPOJO {
   transactionId: number;
 }
 
-export type MatchedTransactionsPOJO = Array<MatchedTransactionPOJO[]>;
+export type MatchedTransactionsPOJO = {
+  perfectMatches: Array<MatchedTransactionPOJO[]>;
+  possibleMatches: Array<MatchedTransactionPOJO[]>;
+};
 
 export const ERRORS = {
   RESOURCE_TYPE_MATCHING_TRANSACTION_INVALID:
@@ -59,5 +62,5 @@ export const ERRORS = {
   TOTAL_MATCHING_TRANSACTIONS_INVALID: 'TOTAL_MATCHING_TRANSACTIONS_INVALID',
   TRANSACTION_ALREADY_MATCHED: 'TRANSACTION_ALREADY_MATCHED',
   CANNOT_MATCH_EXCLUDED_TRANSACTION: 'CANNOT_MATCH_EXCLUDED_TRANSACTION',
-  CANNOT_DELETE_TRANSACTION_MATCHED: 'CANNOT_DELETE_TRANSACTION_MATCHED'
+  CANNOT_DELETE_TRANSACTION_MATCHED: 'CANNOT_DELETE_TRANSACTION_MATCHED',
 };
