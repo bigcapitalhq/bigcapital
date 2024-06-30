@@ -1,7 +1,10 @@
 // @ts-nocheck
 import {
-  UseMutateFunction,
+  QueryClient,
+  UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -9,38 +12,96 @@ import {
 } from 'react-query';
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
+import t from './types';
+
+const QUERY_KEY = {
+  BANK_RULES: 'BANK_RULE',
+  BANK_TRANSACTION_MATCHES: 'BANK_TRANSACTION_MATCHES',
+  EXCLUDED_BANK_TRANSACTIONS_INFINITY: 'EXCLUDED_BANK_TRANSACTIONS_INFINITY',
+  RECOGNIZED_BANK_TRANSACTIONS_INFINITY:
+    'RECOGNIZED_BANK_TRANSACTIONS_INFINITY',
+};
+
+const commonInvalidateQueries = (query: QueryClient) => {
+  query.invalidateQueries(QUERY_KEY.BANK_RULES);
+  query.invalidateQueries(QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY);
+};
+
+interface CreateBankRuleValues {
+  value: any;
+}
+interface CreateBankRuleResponse {}
 
 /**
- *
+ * Creates a new bank rule.
+ * @param {UseMutationOptions<CreateBankRuleValues, Error, CreateBankRuleValues>} options -
+ * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}
  */
-export function useCreateBankRule(props) {
+export function useCreateBankRule(
+  options?: UseMutationOptions<
+    CreateBankRuleValues,
+    Error,
+    CreateBankRuleValues
+  >,
+): UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation((values) => apiRequest.post(`/banking/rules`, values), {
-    onSuccess: (res, id) => {
-      // Invalidate queries.
-    },
-    ...props,
-  });
-}
-
-export function useEditBankRule(props) {
-  const queryClient = useQueryClient();
-  const apiRequest = useApiRequest();
-
-  return useMutation(
-    ([id, values]) => apiRequest.post(`/banking/rules/${id}`, values),
+  return useMutation<CreateBankRuleValues, Error, CreateBankRuleValues>(
+    (values) =>
+      apiRequest.post(`/banking/rules`, values).then((res) => res.data),
     {
-      onSuccess: (res, id) => {
-        // Invalidate queries.
+      ...options,
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
       },
-      ...props,
     },
   );
 }
 
-export function useDeleteBankRule(props) {
+interface EditBankRuleValues {
+  id: number;
+  value: any;
+}
+interface EditBankRuleResponse {}
+
+/**
+ * Edits the given bank rule.
+ * @param {UseMutationOptions<EditBankRuleResponse, Error, EditBankRuleValues>} options -
+ * @returns
+ */
+export function useEditBankRule(
+  options?: UseMutationOptions<EditBankRuleResponse, Error, EditBankRuleValues>,
+): UseMutationResult<EditBankRuleResponse, Error, EditBankRuleValues> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<EditBankRuleResponse, Error, EditBankRuleValues>(
+    ({ id, value }) => apiRequest.post(`/banking/rules/${id}`, values),
+    {
+      ...options,
+      onSuccess: () => {
+        commonInvalidateQueries(queryClient);
+      },
+    },
+  );
+}
+
+interface DeleteBankRuleResponse {}
+type DeleteBankRuleValue = number;
+
+/**
+ * Deletes the given bank rule.
+ * @param {UseMutationOptions<DeleteBankRuleResponse, Error, DeleteBankRuleValue>} options
+ * @returns {UseMutationResult<DeleteBankRuleResponse, Error, DeleteBankRuleValue}
+ */
+export function useDeleteBankRule(
+  options?: UseMutationOptions<
+    DeleteBankRuleResponse,
+    Error,
+    DeleteBankRuleValue
+  >,
+): UseMutationResult<DeleteBankRuleResponse, Error, DeleteBankRuleValue> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
@@ -48,67 +109,110 @@ export function useDeleteBankRule(props) {
     (id: number) => apiRequest.delete(`/banking/rules/${id}`),
     {
       onSuccess: (res, id) => {
-        // Invalidate queries.
+        commonInvalidateQueries(queryClient);
       },
-      ...props,
+      ...options,
     },
   );
 }
 
+interface BankRulesResponse {}
+
 /**
- *
- * @returns
+ * Retrieves all bank rules.
+ * @param {UseQueryOptions<BankRulesResponse, Error>} params -
+ * @returns {UseQueryResult<BankRulesResponse, Error>}
  */
-export function useBankRules() {
+export function useBankRules(
+  options?: UseQueryOptions<BankRulesResponse, Error>,
+): UseQueryResult<BankRulesResponse, Error> {
   const apiRequest = useApiRequest();
 
-  return useQuery(['BANK_RULEs'], () =>
-    apiRequest.get('/banking/rules').then((res) => res.data.bank_rules),
+  return useQuery<BankRulesResponse, Error>(
+    [QUERY_KEY.BANK_RULES],
+    () => apiRequest.get('/banking/rules').then((res) => res.data.bank_rules),
+    { ...options },
   );
 }
 
+interface GetBankRuleRes {}
+
 /**
- *
- * @returns
+ * Retrieve the given bank rule.
+ * @param {number} bankRuleId -
+ * @param {UseQueryOptions<GetBankRuleRes, Error>} options -
+ * @returns {UseQueryResult<GetBankRuleRes, Error>}
  */
-export function useBankRule(bankRuleId: number, props) {
+export function useBankRule(
+  bankRuleId: number,
+  options?: UseQueryOptions<GetBankRuleRes, Error>,
+): UseQueryResult<GetBankRuleRes, Error> {
   const apiRequest = useApiRequest();
 
-  return useQuery(
-    ['BANK_RULEs', bankRuleId],
+  return useQuery<GetBankRuleRes, Error>(
+    [QUERY_KEY.BANK_RULES, bankRuleId],
     () =>
       apiRequest
         .get(`/banking/rules/${bankRuleId}`)
         .then((res) => res.data.bank_rule),
-    props,
+    { ...options },
   );
 }
 
+type GetBankTransactionsMatchesValue = number;
+interface GetBankTransactionsMatchesResponse {
+  perfectMatches: Array<any>;
+  possibleMatches: Array<any>;
+}
+
 /**
- *
- * @returns
+ * Retrieves the bank transactions matches.
+ * @param {UseQueryOptions<GetBankTransactionsMatchesResponse, Error>} params -
+ * @returns {UseQueryResult<GetBankTransactionsMatchesResponse, Error>}
  */
-export function useMatchingTransactions(
+export function useGetBankTransactionsMatches(
   uncategorizedTransactionId: number,
-  props?: any,
-) {
+  options?: UseQueryOptions<GetBankTransactionsMatchesResponse, Error>,
+): UseQueryResult<GetBankTransactionsMatchesResponse, Error> {
   const apiRequest = useApiRequest();
 
-  return useQuery<any>(
-    ['MATCHING_TRANSACTION', uncategorizedTransactionId],
+  return useQuery<GetBankTransactionsMatchesResponse, Error>(
+    [QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionId],
     () =>
       apiRequest
         .get(`/cashflow/transactions/${uncategorizedTransactionId}/matches`)
         .then((res) => transformToCamelCase(res.data)),
-    props,
+    options,
   );
 }
 
-export function useExcludeUncategorizedTransaction(props) {
+type ExcludeUncategorizedTransactionValue = number;
+
+interface ExcludeUncategorizedTransactionRes {}
+/**
+ * Excludes the given uncategorized transaction.
+ * @param {UseMutationOptions<ExcludeUncategorizedTransactionRes, Error, ExcludeUncategorizedTransactionValue>}
+ * @returns {UseMutationResult<ExcludeUncategorizedTransactionRes, Error, ExcludeUncategorizedTransactionValue> }
+ */
+export function useExcludeUncategorizedTransaction(
+  options?: UseMutationOptions<
+    ExcludeUncategorizedTransactionRes,
+    Error,
+    ExcludeUncategorizedTransactionValue
+  >,
+): UseMutationResult<
+  ExcludeUncategorizedTransactionRes,
+  Error,
+  ExcludeUncategorizedTransactionValue
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
+  return useMutation<
+    ExcludeUncategorizedTransactionRes,
+    Error,
+    ExcludeUncategorizedTransactionValue
+  >(
     (uncategorizedTransactionId: number) =>
       apiRequest.put(
         `/cashflow/transactions/${uncategorizedTransactionId}/exclude`,
@@ -116,17 +220,43 @@ export function useExcludeUncategorizedTransaction(props) {
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
+        queryClient.invalidateQueries(
+          QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
+        );
       },
-      ...props,
+      ...options,
     },
   );
 }
 
-export function useUnexcludeUncategorizedTransaction(props) {
+type ExcludeBankTransactionValue = number;
+
+interface ExcludeBankTransactionResponse {}
+
+/**
+ * Excludes the uncategorized bank transaction.
+ * @param {UseMutationResult<ExcludeBankTransactionResponse, Error, ExcludeBankTransactionValue>} options
+ * @returns {UseMutationResult<ExcludeBankTransactionResponse, Error, ExcludeBankTransactionValue>}
+ */
+export function useUnexcludeUncategorizedTransaction(
+  options?: UseMutationOptions<
+    ExcludeBankTransactionResponse,
+    Error,
+    ExcludeBankTransactionValue
+  >,
+): UseMutationResult<
+  ExcludeBankTransactionResponse,
+  Error,
+  ExcludeBankTransactionValue
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation(
+  return useMutation<
+    ExcludeBankTransactionResponse,
+    Error,
+    ExcludeBankTransactionValue
+  >(
     (uncategorizedTransactionId: number) =>
       apiRequest.put(
         `/cashflow/transactions/${uncategorizedTransactionId}/unexclude`,
@@ -134,8 +264,11 @@ export function useUnexcludeUncategorizedTransaction(props) {
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
+        queryClient.invalidateQueries(
+          QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
+        );
       },
-      ...props,
+      ...options,
     },
   );
 }
@@ -144,23 +277,39 @@ interface MatchUncategorizedTransactionValues {
   id: number;
   value: any;
 }
+interface MatchUncategorizedTransactionRes {}
 
-export function useMatchTransaction(
-  props?: any,
-): UseMutationResult<MatchUncategorizedTransactionValues> {
+/**
+ * Matchess the given uncateogrized transaction.
+ * @param props
+ * @returns
+ */
+export function useMatchUncategorizedTransaction(
+  props?: UseMutationOptions<
+    MatchUncategorizedTransactionRes,
+    Error,
+    MatchUncategorizedTransactionValues
+  >,
+): UseMutationResult<
+  MatchUncategorizedTransactionRes,
+  Error,
+  MatchUncategorizedTransactionValues
+> {
   const queryClient = useQueryClient();
   const apiRequest = useApiRequest();
 
-  return useMutation<MatchUncategorizedTransactionValues>(
-    ([uncategorizedTransactionId, values]) =>
-      apiRequest.post(`/banking/matches/${uncategorizedTransactionId}`, values),
-    {
-      onSuccess: (res, id) => {
-        // Invalidate queries.
-      },
-      ...props,
+  return useMutation<
+    MatchUncategorizedTransactionRes,
+    Error,
+    MatchUncategorizedTransactionValues
+  >(({ id, value }) => apiRequest.post(`/banking/matches/${id}`, value), {
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries(
+        t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+      );
     },
-  );
+    ...props,
+  });
 }
 
 /**
@@ -174,7 +323,7 @@ export function useRecognizedBankTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    ['RECOGNIZED_BANK_TRANSACTIONS_INFINITY', query],
+    [QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,
@@ -206,7 +355,7 @@ export function useExcludedBankTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    ['EXCLUDED_BANK_TRANSACTIONS_INFINITY', query],
+    [QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,

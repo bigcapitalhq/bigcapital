@@ -10,7 +10,7 @@ import {
 import { MatchTransaction, MatchTransactionProps } from './MatchTransaction';
 import styles from './CategorizeTransactionAside.module.scss';
 import { FastField, FastFieldProps, Form, Formik } from 'formik';
-import { useMatchTransaction } from '@/hooks/query/bank-rules';
+import { useMatchUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
 import { transformToReq, useGetPendingAmountMatched } from './utils';
 import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
@@ -25,7 +25,7 @@ const initialValues = {
 
 export function MatchingBankTransaction() {
   const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
-  const { mutateAsync: matchTransaction } = useMatchTransaction();
+  const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
 
   // Handles the form submitting.
   const handleSubmit = (values: MatchingTransactionFormValues) => {

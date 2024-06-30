@@ -1,6 +1,6 @@
 import { defaultTo } from 'lodash';
 import React, { createContext } from 'react';
-import { useMatchingTransactions } from '@/hooks/query/bank-rules';
+import { useGetBankTransactionsMatches } from '@/hooks/query/bank-rules';
 
 interface MatchingTransactionBootValues {
   isMatchingTransactionsLoading: boolean;
@@ -26,7 +26,7 @@ function MatchingTransactionBoot({
   const {
     data: matchingTransactions,
     isLoading: isMatchingTransactionsLoading,
-  } = useMatchingTransactions(uncategorizedTransactionId);
+  } = useGetBankTransactionsMatches(uncategorizedTransactionId);
 
   const provider = {
     isMatchingTransactionsLoading,
