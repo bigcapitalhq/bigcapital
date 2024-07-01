@@ -7,6 +7,7 @@ import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpe
 import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { sortClosestMatchTransactions } from './_utils';
 
 @Service()
 export class GetMatchedTransactions {
@@ -88,14 +89,19 @@ export class GetMatchedTransactions {
   ): MatchedTransactionsPOJO {
     const results = R.compose(R.flatten)(matchedTransactions?.results);
 
+    // Sort the results based on amount, date, and transaction type
+    const closestResullts = sortClosestMatchTransactions(
+      uncategorizedTransaction,
+      results
+    );
     const perfectMatches = R.filter(
       (match) =>
         match.amount === uncategorizedTransaction.amount &&
         moment(match.date).isSame(uncategorizedTransaction.date, 'day'),
-      results
+      closestResullts
     );
 
-    const possibleMatches = R.difference(results, perfectMatches);
+    const possibleMatches = R.difference(closestResullts, perfectMatches);
 
     return { perfectMatches, possibleMatches };
   }

@@ -47,11 +47,12 @@ export interface MatchedTransactionPOJO {
   referenceNo: string;
   transactionNo: string;
   transactionId: number;
+  transactionType: string;
 }
 
 export type MatchedTransactionsPOJO = {
-  perfectMatches: Array<MatchedTransactionPOJO[]>;
-  possibleMatches: Array<MatchedTransactionPOJO[]>;
+  perfectMatches: Array<MatchedTransactionPOJO>;
+  possibleMatches: Array<MatchedTransactionPOJO>;
 };
 
 export const ERRORS = {
