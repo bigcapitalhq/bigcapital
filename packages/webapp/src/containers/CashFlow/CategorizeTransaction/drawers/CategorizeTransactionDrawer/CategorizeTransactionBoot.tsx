@@ -6,6 +6,8 @@ import { useAccounts, useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { Spinner } from '@blueprintjs/core';
+import { useGetRecognizedBankTransaction } from '@/hooks/query/bank-rules';
+import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
 interface CategorizeTransactionBootProps {
   children: React.ReactNode;
@@ -17,6 +19,8 @@ interface CategorizeTransactionBootValue {
   isBranchesLoading: boolean;
   isAccountsLoading: boolean;
   primaryBranch: any;
+  recognizedTranasction: any;
+  isRecognizedTransactionLoading: boolean;
 }
 
 const CategorizeTransactionBootContext =
@@ -30,6 +34,9 @@ const CategorizeTransactionBootContext =
 function CategorizeTransactionBoot({
   ...props
 }: CategorizeTransactionBootProps) {
+  const { uncategorizedTransaction, uncategorizedTransactionId } =
+    useCategorizeTransactionTabsBoot();
+
   // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -42,6 +49,14 @@ function CategorizeTransactionBoot({
     {},
     { enabled: isBranchFeatureCan },
   );
+  // Fetches the recognized transaction.
+  const {
+    data: recognizedTranasction,
+    isLoading: isRecognizedTransactionLoading,
+  } = useGetRecognizedBankTransaction(uncategorizedTransactionId, {
+    enabled: !!uncategorizedTransaction.is_recognized,
+  });
+
   // Retrieves the primary branch.
   const primaryBranch = useMemo(
     () => branches?.find((b) => b.primary) || first(branches),
@@ -54,6 +69,8 @@ function CategorizeTransactionBoot({
     isBranchesLoading,
     isAccountsLoading,
     primaryBranch,
+    recognizedTranasction,
+    isRecognizedTransactionLoading,
   };
   const isLoading = isBranchesLoading || isAccountsLoading;
 

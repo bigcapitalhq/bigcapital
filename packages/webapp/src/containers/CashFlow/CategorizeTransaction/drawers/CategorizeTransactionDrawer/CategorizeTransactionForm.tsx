@@ -6,16 +6,14 @@ import { CreateCategorizeTransactionSchema } from './CategorizeTransactionForm.s
 import { CategorizeTransactionFormContent } from './CategorizeTransactionFormContent';
 import { CategorizeTransactionFormFooter } from './CategorizeTransactionFormFooter';
 import { useCategorizeTransaction } from '@/hooks/query';
-import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import {
-  transformToCategorizeForm,
-  defaultInitialValues,
   tranformToRequest,
+  useCategorizeTransactionFormInitialValues,
 } from './_utils';
-import { compose } from '@/utils';
 import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { AppToaster } from '@/components';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
+import { compose } from '@/utils';
 
 /**
  * Categorize cashflow transaction form dialog content.
@@ -24,10 +22,11 @@ function CategorizeTransactionFormRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
 }) {
-  const { uncategorizedTransactionId, uncategorizedTransaction } =
-    useCategorizeTransactionTabsBoot();
-  const { primaryBranch } = useCategorizeTransactionBoot();
+  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
+
+  // Form initial values in create and edit mode.
+  const initialValues = useCategorizeTransactionFormInitialValues();
 
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
@@ -61,19 +60,6 @@ function CategorizeTransactionFormRoot({
           });
         }
       });
-  };
-  // Form initial values in create and edit mode.
-  const initialValues = {
-    ...defaultInitialValues,
-    /**
-     * We only care about the fields in the form. Previously unfilled optional
-     * values such as `notes` come back from the API as null, so remove those
-     * as well.
-     */
-    ...transformToCategorizeForm(uncategorizedTransaction),
-
-    /** Assign the primary branch id as default value. */
-    branchId: primaryBranch?.id || null,
   };
 
   return (

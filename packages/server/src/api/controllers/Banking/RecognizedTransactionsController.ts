@@ -15,6 +15,10 @@ export class RecognizedTransactionsController extends BaseController {
     const router = Router();
 
     router.get('/', this.getRecognizedTransactions.bind(this));
+    router.get(
+      '/transactions/:uncategorizedTransactionId',
+      this.getRecognizedTransaction.bind(this)
+    );
 
     return router;
   }
@@ -40,6 +44,32 @@ export class RecognizedTransactionsController extends BaseController {
         filter
       );
       return res.status(200).send(data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the recognized transaction of the ginen uncategorized transaction.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response|null>}
+   */
+  async getRecognizedTransaction(
+    req: Request<{ uncategorizedTransactionId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { uncategorizedTransactionId } = req.params;
+
+    try {
+      const data = await this.cashflowApplication.getRecognizedTransaction(
+        tenantId,
+        uncategorizedTransactionId
+      );
+      return res.status(200).send({ data });
     } catch (error) {
       next(error);
     }

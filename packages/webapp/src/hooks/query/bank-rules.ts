@@ -17,6 +17,7 @@ import t from './types';
 const QUERY_KEY = {
   BANK_RULES: 'BANK_RULE',
   BANK_TRANSACTION_MATCHES: 'BANK_TRANSACTION_MATCHES',
+  RECOGNIZED_BANK_TRANSACTION: 'RECOGNIZED_BANK_TRANSACTION',
   EXCLUDED_BANK_TRANSACTIONS_INFINITY: 'EXCLUDED_BANK_TRANSACTIONS_INFINITY',
   RECOGNIZED_BANK_TRANSACTIONS_INFINITY:
     'RECOGNIZED_BANK_TRANSACTIONS_INFINITY',
@@ -316,6 +317,30 @@ export function useMatchUncategorizedTransaction(
     },
     ...props,
   });
+}
+
+interface GetRecognizedBankTransactionRes {}
+
+/**
+ * REtrieves the given recognized bank transaction.
+ * @param {number} uncategorizedTransactionId 
+ * @param {UseQueryOptions<GetRecognizedBankTransactionRes, Error>} options 
+ * @returns {UseQueryResult<GetRecognizedBankTransactionRes, Error>}
+ */
+export function useGetRecognizedBankTransaction(
+  uncategorizedTransactionId: number,
+  options?: UseQueryOptions<GetRecognizedBankTransactionRes, Error>,
+): UseQueryResult<GetRecognizedBankTransactionRes, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetRecognizedBankTransactionRes, Error>(
+    [QUERY_KEY.RECOGNIZED_BANK_TRANSACTION, uncategorizedTransactionId],
+    () =>
+      apiRequest
+        .get(`/banking/recognized/transactions/${uncategorizedTransactionId}`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    options,
+  );
 }
 
 /**

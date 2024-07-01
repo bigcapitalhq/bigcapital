@@ -20,6 +20,7 @@ import NewCashflowTransactionService from './NewCashflowTransactionService';
 import GetCashflowAccountsService from './GetCashflowAccountsService';
 import { GetCashflowTransactionService } from './GetCashflowTransactionsService';
 import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
+import { GetRecognizedTransactionService } from './GetRecognizedTransaction';
 
 @Service()
 export class CashflowApplication {
@@ -55,6 +56,9 @@ export class CashflowApplication {
 
   @Inject()
   private getRecognizedTranasctionsService: GetRecognizedTransactionsService;
+
+  @Inject()
+  private getRecognizedTransactionService: GetRecognizedTransactionService;
 
   /**
    * Creates a new cashflow transaction.
@@ -232,6 +236,22 @@ export class CashflowApplication {
     return this.getRecognizedTranasctionsService.getRecognizedTranactions(
       tenantId,
       filter
+    );
+  }
+
+  /**
+   * Retrieves the recognized transaction of the given uncategorized transaction.
+   * @param {number} tenantId 
+   * @param {number} uncategorizedTransactionId 
+   * @returns 
+   */
+  public getRecognizedTransaction(
+    tenantId: number,
+    uncategorizedTransactionId: number
+  ) {
+    return this.getRecognizedTransactionService.getRecognizedTransaction(
+      tenantId,
+      uncategorizedTransactionId
     );
   }
 }
