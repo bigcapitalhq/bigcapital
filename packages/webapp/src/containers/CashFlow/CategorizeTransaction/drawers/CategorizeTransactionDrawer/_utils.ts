@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as R from 'ramda';
 import { transformToForm, transfromToSnakeCase } from '@/utils';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';

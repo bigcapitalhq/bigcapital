@@ -45,7 +45,7 @@ export function MatchTransaction({
     >
       <Stack spacing={3}>
         <span className={styles.label}>{label}</span>
-        <Text style={{ fontSize: 12, color: '#5C7080' }}>Date: {date}</Text>
+        <Text className={styles.date}>Date: {date}</Text>
       </Stack>
 
       <Checkbox

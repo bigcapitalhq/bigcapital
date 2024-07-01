@@ -58,9 +58,10 @@ export function MatchingBankTransaction() {
       uncategorizedTransactionId={uncategorizedTransactionId}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        <Form>
+        <>
           <MatchingBankTransactionContent />
-        </Form>
+          <MatchTransactionFooter />
+        </>
       </Formik>
     </MatchingTransactionBoot>
   );
@@ -71,7 +72,6 @@ function MatchingBankTransactionContent() {
     <Box className={styles.root}>
       <PerfectMatchingTransactions />
       <GoodMatchingTransactions />
-      <MatchTransactionFooter />
     </Box>
   );
 }

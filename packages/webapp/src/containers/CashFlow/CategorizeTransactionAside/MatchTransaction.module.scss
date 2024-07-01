@@ -9,6 +9,11 @@
   &.active{
     border-color: #88ABDB;
     box-shadow: 0 0 0 2px rgba(136, 171, 219, 0.2);
+
+    .label,
+    .date {
+      color: rgb(21, 82, 200),
+    }
   }
 
   &:hover:not(.active){
@@ -32,4 +37,9 @@
 .label {
   color: #10161A;
   font-size: 15px;
+}
+
+.date {
+  font-size: 12px;
+  color: #5C7080;
 }

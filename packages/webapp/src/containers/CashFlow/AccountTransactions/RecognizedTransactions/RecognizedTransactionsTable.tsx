@@ -51,7 +51,8 @@ function RecognizedTransactionsTableRoot({
   const { mutateAsync: excludeBankTransaction } =
     useExcludeUncategorizedTransaction();
 
-  const { recognizedTransactions } = useRecognizedTransactionsBoot();
+  const { recognizedTransactions, isRecongizedTransactionsLoading } =
+    useRecognizedTransactionsBoot();
 
   // Retrieve table columns.
   const columns = useUncategorizedTransactionsColumns();
@@ -96,8 +97,8 @@ function RecognizedTransactionsTableRoot({
       columns={columns}
       data={recognizedTransactions}
       sticky={true}
-      loading={false}
-      headerLoading={false}
+      loading={isRecongizedTransactionsLoading}
+      headerLoading={isRecongizedTransactionsLoading}
       expandColumnSpace={1}
       expandToggleColumn={2}
       selectionColumnWidth={45}

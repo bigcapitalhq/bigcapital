@@ -20,7 +20,7 @@ export function Aside({
     onClose && onClose();
   };
   return (
-    <Box>
+    <Box className={styles.root}>
       <Group position="apart" className={styles.title}>
         {title}
 
@@ -34,7 +34,7 @@ export function Aside({
           />
         )}
       </Group>
-      <Box>{children}</Box>
+      <Box className={styles.content}>{children}</Box>
     </Box>
   );
 }
