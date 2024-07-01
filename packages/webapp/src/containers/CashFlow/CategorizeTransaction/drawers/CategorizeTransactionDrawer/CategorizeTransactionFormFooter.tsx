@@ -1,6 +1,6 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { Button, Classes, Intent } from '@blueprintjs/core';
+import { Button, Intent } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
 import styled from 'styled-components';
 import { Group } from '@/components';
@@ -18,26 +18,24 @@ function CategorizeTransactionFormFooterRoot({
 
   return (
     <Root>
-      <div className={Classes.DRAWER_FOOTER}>
-        <Group spacing={10}>
-          <Button
-            intent={Intent.PRIMARY}
-            style={{ minWidth: '75px' }}
-            loading={isSubmitting}
-            type="submit"
-          >
-            Save
-          </Button>
+      <Group spacing={10}>
+        <Button
+          intent={Intent.PRIMARY}
+          style={{ minWidth: '85px' }}
+          loading={isSubmitting}
+          type="submit"
+        >
+          Save
+        </Button>
 
-          <Button
-            disabled={isSubmitting}
-            onClick={handleClose}
-            style={{ minWidth: '75px' }}
-          >
-            Close
-          </Button>
-        </Group>
-      </div>
+        <Button
+          disabled={isSubmitting}
+          onClick={handleClose}
+          style={{ minWidth: '75px' }}
+        >
+          Close
+        </Button>
+      </Group>
     </Root>
   );
 }
@@ -47,9 +45,6 @@ export const CategorizeTransactionFormFooter = R.compose(withBankingActions)(
 );
 
 const Root = styled.div`
-  // position: absolute;
-  // bottom: 0;
-  // left: 0;
-  // right: 0;
-  // background: #fff;
+  border-top: 1px solid #c7d5db;
+  padding: 14px 20px;
 `;

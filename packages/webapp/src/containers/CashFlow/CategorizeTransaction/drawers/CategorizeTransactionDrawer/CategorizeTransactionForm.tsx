@@ -63,18 +63,16 @@ function CategorizeTransactionFormRoot({
   };
 
   return (
-    <DivRoot>
-      <Formik
-        validationSchema={CreateCategorizeTransactionSchema}
-        initialValues={initialValues}
-        onSubmit={handleFormSubmit}
-      >
-        <Form>
-          <CategorizeTransactionFormContent />
-          <CategorizeTransactionFormFooter />
-        </Form>
-      </Formik>
-    </DivRoot>
+    <Formik
+      validationSchema={CreateCategorizeTransactionSchema}
+      initialValues={initialValues}
+      onSubmit={handleFormSubmit}
+    >
+      <FormRoot>
+        <CategorizeTransactionFormContent />
+        <CategorizeTransactionFormFooter />
+      </FormRoot>
+    </Formik>
   );
 }
 
@@ -82,7 +80,11 @@ export const CategorizeTransactionForm = compose(withBankingActions)(
   CategorizeTransactionFormRoot,
 );
 
-const DivRoot = styled.div`
+const FormRoot = styled(Form)`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+
   .bp4-form-group .bp4-form-content {
     flex: 1 0;
   }

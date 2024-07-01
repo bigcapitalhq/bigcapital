@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormGroup } from '@blueprintjs/core';
-import { FFormGroup, FSelect, } from '@/components';
+import { Box, FFormGroup, FSelect } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 import { useFormikContext } from 'formik';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
@@ -25,7 +25,7 @@ export function CategorizeTransactionFormContent() {
     : MoneyOutOptions;
 
   return (
-    <>
+    <Box style={{ flex: 1, margin: 20 }}>
       <FormGroup label={'Amount'} inline>
         <Title>{uncategorizedTransaction.formatted_amount}</Title>
       </FormGroup>
@@ -42,7 +42,7 @@ export function CategorizeTransactionFormContent() {
       </FFormGroup>
 
       <CategorizeTransactionFormSubContent />
-    </>
+    </Box>
   );
 }
 

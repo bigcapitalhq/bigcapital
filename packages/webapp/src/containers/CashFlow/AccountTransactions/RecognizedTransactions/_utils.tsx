@@ -55,14 +55,17 @@ export function useUncategorizedTransactionsColumns() {
         Header: 'Date',
         accessor: 'formatted_date',
         width: 110,
+        textOverview: true,
       },
       {
         Header: 'Description',
         accessor: descriptionAccessor,
+        textOverview: true,
       },
       {
         Header: 'Payee',
         accessor: 'payee',
+        textOverview: true,
       },
       {
         Header: 'Recognize',
@@ -72,6 +75,7 @@ export function useUncategorizedTransactionsColumns() {
       {
         Header: 'Rule',
         accessor: 'bank_rule_name',
+        textOverview: true,
       },
       {
         Header: 'Deposit',

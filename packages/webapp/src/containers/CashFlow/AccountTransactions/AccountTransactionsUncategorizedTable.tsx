@@ -120,6 +120,10 @@ const DashboardConstrantTable = styled(DataTable)`
     .thead {
       .th {
         background: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;i
+        font-weight: 500;
       }
     }
 
