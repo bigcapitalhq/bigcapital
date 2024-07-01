@@ -29,7 +29,9 @@ export class GetMatchedTransactionsByInvoices extends GetMatchedTransactionsByTy
   ): Promise<MatchedTransactionsPOJO> {
     const { SaleInvoice } = this.tenancy.models(tenantId);
 
-    const invoices = await SaleInvoice.query();
+    const invoices = await SaleInvoice.query().onBuild((q) => {
+      q.whereNotExists(SaleInvoice.relatedQuery('matchedBankTransaction'));
+    });
 
     return this.transformer.transform(
       tenantId,

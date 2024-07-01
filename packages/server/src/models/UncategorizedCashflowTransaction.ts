@@ -90,6 +90,27 @@ export default class UncategorizedCashflowTransaction extends mixin(
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the not excluded transactions.
+       */
+      notExcluded(query) {
+        query.whereNull('excluded');
+      },
+
+      /**
+       * Filters the excluded transactions.
+       */
+      excluded(query) {
+        query.where('excluded', true)
+      }
+    };
+  },
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

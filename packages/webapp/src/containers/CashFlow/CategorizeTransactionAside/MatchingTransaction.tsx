@@ -38,7 +38,7 @@ export function MatchingBankTransaction() {
       });
       return;
     }
-    matchTransaction({ id: uncategorizedTransactionId, values: _values })
+    matchTransaction({ id: uncategorizedTransactionId, value: _values })
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,

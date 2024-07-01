@@ -223,6 +223,9 @@ export function useExcludeUncategorizedTransaction(
         queryClient.invalidateQueries(
           QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
         );
+        queryClient.invalidateQueries(
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+        );
       },
       ...options,
     },
@@ -266,6 +269,9 @@ export function useUnexcludeUncategorizedTransaction(
         // Invalidate queries.
         queryClient.invalidateQueries(
           QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
+        );
+        queryClient.invalidateQueries(
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
       },
       ...options,

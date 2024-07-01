@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { GetMatchedTransactionsFilter } from './types';
+import { GetMatchedTransactionsFilter, MatchedTransactionPOJO } from './types';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
@@ -43,6 +43,29 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
     return this.transformer.transform(
       tenantId,
       expenses,
+      new GetMatchedTransactionExpensesTransformer()
+    );
+  }
+
+  /**
+   * Retrieves the given matched expense transaction.
+   * @param {number} tenantId
+   * @param {number} transactionId
+   * @returns {GetMatchedTransactionExpensesTransformer-}
+   */
+  public async getMatchedTransaction(
+    tenantId: number,
+    transactionId: number
+  ): Promise<MatchedTransactionPOJO> {
+    const { Expense } = this.tenancy.models(tenantId);
+
+    const expense = await Expense.query()
+      .findById(transactionId)
+      .throwIfNotFound();
+
+    return this.transformer.transform(
+      tenantId,
+      expense,
       new GetMatchedTransactionExpensesTransformer()
     );
   }

@@ -34,6 +34,7 @@ export class GetUncategorizedTransactions {
       await UncategorizedCashflowTransaction.query()
         .where('accountId', accountId)
         .where('categorized', false)
+        .modify('notExcluded')
         .withGraphFetched('account')
         .orderBy('date', 'DESC')
         .pagination(_query.page - 1, _query.pageSize);

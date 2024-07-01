@@ -1,29 +1,28 @@
 // @ts-nocheck
 import { Formik, Form } from 'formik';
+import { Intent } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { CreateCategorizeTransactionSchema } from './CategorizeTransactionForm.schema';
 import { CategorizeTransactionFormContent } from './CategorizeTransactionFormContent';
 import { CategorizeTransactionFormFooter } from './CategorizeTransactionFormFooter';
 import { useCategorizeTransaction } from '@/hooks/query';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
-import { DRAWERS } from '@/constants/drawers';
 import {
   transformToCategorizeForm,
   defaultInitialValues,
   tranformToRequest,
 } from './_utils';
 import { compose } from '@/utils';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withBankingActions } from '@/containers/CashFlow/withBankingActions';
 import { AppToaster } from '@/components';
-import { Intent } from '@blueprintjs/core';
 import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
 /**
  * Categorize cashflow transaction form dialog content.
  */
 function CategorizeTransactionFormRoot({
-  // #withDrawerActions
-  closeDrawer,
+  // #withBankingActions
+  closeMatchingTransactionAside,
 }) {
   const { uncategorizedTransactionId, uncategorizedTransaction } =
     useCategorizeTransactionTabsBoot();
@@ -38,12 +37,12 @@ function CategorizeTransactionFormRoot({
     categorizeTransaction([uncategorizedTransactionId, transformedValues])
       .then(() => {
         setSubmitting(false);
-        closeDrawer(DRAWERS.CATEGORIZE_TRANSACTION);
 
         AppToaster.show({
           message: 'The uncategorized transaction has been categorized.',
           intent: Intent.SUCCESS,
         });
+        closeMatchingTransactionAside();
       })
       .catch((err) => {
         setSubmitting(false);
@@ -93,7 +92,7 @@ function CategorizeTransactionFormRoot({
   );
 }
 
-export const CategorizeTransactionForm = compose(withDrawerActions)(
+export const CategorizeTransactionForm = compose(withBankingActions)(
   CategorizeTransactionFormRoot,
 );
 

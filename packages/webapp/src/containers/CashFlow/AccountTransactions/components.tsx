@@ -40,7 +40,7 @@ export function ActionsMenu({
       <MenuItem
         text={'Exclude'}
         onClick={safeCallback(onExclude, original)}
-        // icon={<Icon icon="trash-16" iconSize={16} />}
+        icon={<Icon icon="disable" iconSize={16} />}
       />
     </Menu>
   );
