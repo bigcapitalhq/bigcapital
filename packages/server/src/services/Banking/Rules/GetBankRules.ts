@@ -13,14 +13,16 @@ export class GetBankRulesService {
 
   /**
    * Retrieves the bank rules of the given account.
-   * @param {number} tenantId 
-   * @param {number} accountId 
+   * @param {number} tenantId
+   * @param {number} accountId
    * @returns {Promise<any>}
    */
   public async getBankRules(tenantId: number): Promise<any> {
     const { BankRule } = this.tenancy.models(tenantId);
 
-    const bankRule = await BankRule.query();
+    const bankRule = await BankRule.query()
+      .withGraphFetched('conditions')
+      .withGraphFetched('assignAccount');
 
     return this.transformer.transform(
       tenantId,

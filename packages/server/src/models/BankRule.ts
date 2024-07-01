@@ -39,6 +39,7 @@ export class BankRule extends TenantModel {
    */
   static get relationMappings() {
     const { BankRuleCondition } = require('models/BankRuleCondition');
+    const Account = require('models/Account');
 
     return {
       /**
@@ -52,6 +53,15 @@ export class BankRule extends TenantModel {
           to: 'bank_rule_conditions.ruleId',
         },
       },
+
+      assignAccount: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Account.default,
+        join: {
+          from: 'bank_rules.assignAccountId',
+          to: 'accounts.id'
+        }
+      }
     };
   }
 }
