@@ -9,11 +9,13 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
   FormattedMessage as T,
+  AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
+import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import {
@@ -23,7 +25,8 @@ import {
 import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
 
 import { compose } from '@/utils';
-import { DRAWERS } from '@/constants/drawers';
+import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { Intent } from '@blueprintjs/core';
 
 /**
  * Account transactions data table.
@@ -31,6 +34,9 @@ import { DRAWERS } from '@/constants/drawers';
 function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
+
+  // #withBankingActions
+  setUncategorizedTransactionIdForMatching,
 
   // #withDrawerActions
   openDrawer,
@@ -42,15 +48,36 @@ function AccountTransactionsDataTable({
   const { uncategorizedTransactions, isUncategorizedTransactionsLoading } =
     useAccountUncategorizedTransactionsContext();
 
+  const { mutateAsync: excludeTransaction } =
+    useExcludeUncategorizedTransaction();
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_CASHFLOW_TRANSACTION);
 
   // Handle cell click.
-  const handleCellClick = (cell, event) => {
-    openDrawer(DRAWERS.CATEGORIZE_TRANSACTION, {
-      uncategorizedTransactionId: cell.row.original.id,
-    });
+  const handleCellClick = (cell) => {
+    setUncategorizedTransactionIdForMatching(cell.row.original.id);
+  };
+  // Handles categorize button click.
+  const handleCategorizeBtnClick = (transaction) => {
+    setUncategorizedTransactionIdForMatching(transaction.id);
+  };
+  // Handle exclude transaction.
+  const handleExcludeTransaction = (transaction) => {
+    excludeTransaction(transaction.id)
+      .then(() => {
+        AppToaster.show({
+          intent: Intent.SUCCESS,
+          message: 'The bank transaction has been excluded successfully.',
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          intent: Intent.DANGER,
+          message: 'Something went wrong.',
+        });
+      });
   };
 
   return (
@@ -77,6 +104,10 @@ function AccountTransactionsDataTable({
       onColumnResizing={handleColumnResizing}
       noResults={<T id={'cash_flow.account_transactions.no_results'} />}
       className="table-constrant"
+      payload={{
+        onExclude: handleExcludeTransaction,
+        onCategorize: handleCategorizeBtnClick,
+      }}
     />
   );
 }
@@ -86,6 +117,7 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withDrawerActions,
+  withBankingActions,
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`
@@ -93,6 +125,10 @@ const DashboardConstrantTable = styled(DataTable)`
     .thead {
       .th {
         background: #fff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;i
+        font-weight: 500;
       }
     }
 

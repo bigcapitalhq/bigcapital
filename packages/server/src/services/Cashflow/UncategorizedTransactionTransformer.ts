@@ -10,7 +10,7 @@ export class UncategorizedTransactionTransformer extends Transformer {
     return [
       'formattedAmount',
       'formattedDate',
-      'formattetDepositAmount',
+      'formattedDepositAmount',
       'formattedWithdrawalAmount',
     ];
   };
@@ -40,7 +40,7 @@ export class UncategorizedTransactionTransformer extends Transformer {
    * @param transaction
    * @returns {string}
    */
-  protected formattetDepositAmount(transaction) {
+  protected formattedDepositAmount(transaction) {
     if (transaction.isDepositTransaction) {
       return formatNumber(transaction.deposit, {
         currencyCode: transaction.currencyCode,

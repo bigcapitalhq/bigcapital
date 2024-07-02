@@ -20,8 +20,9 @@ export const AbilitySubject = {
   SubscriptionBilling: 'SubscriptionBilling',
   CreditNote: 'CreditNote',
   VendorCredit: 'VendorCredit',
-  Project:'Project',
+  Project: 'Project',
   TaxRate: 'TaxRate',
+  BankRule: 'BankRule',
 };
 
 export const ItemAction = {
@@ -188,8 +189,14 @@ export const SubscriptionBillingAbility = {
   Payment: 'payment',
 };
 
-
 export const TaxRateAction = {
+  View: 'View',
+  Create: 'Create',
+  Edit: 'Edit',
+  Delete: 'Delete',
+};
+
+export const BankRuleAction = {
   View: 'View',
   Create: 'Create',
   Edit: 'Edit',

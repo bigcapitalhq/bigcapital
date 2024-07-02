@@ -26,6 +26,7 @@ import BranchesAlerts from '@/containers/Preferences/Branches/BranchesAlerts';
 import ProjectAlerts from '@/containers/Projects/containers/ProjectAlerts';
 import TaxRatesAlerts from '@/containers/TaxRates/alerts';
 import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
+import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 
 export default [
   ...AccountsAlerts,
@@ -55,4 +56,5 @@ export default [
   ...ProjectAlerts,
   ...TaxRatesAlerts,
   ...CashflowAlerts,
+  ...BankRulesAlerts
 ];

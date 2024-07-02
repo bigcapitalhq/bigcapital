@@ -3,7 +3,15 @@ import React from 'react';
 import clsx from 'classnames';
 import { Navbar } from '@blueprintjs/core';
 
-export function DashboardActionsBar({ className, children, name }) {
+interface DashboardActionsBarProps {
+  children?: React.ReactNode;
+}
+
+export function DashboardActionsBar({
+  className,
+  children,
+  name,
+}: DashboardActionsBarProps) {
   return (
     <div
       className={clsx(

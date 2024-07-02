@@ -182,6 +182,7 @@ export default class Expense extends mixin(TenantModel, [
     const ExpenseCategory = require('models/ExpenseCategory');
     const Document = require('models/Document');
     const Branch = require('models/Branch');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       paymentAccount: {
@@ -232,6 +233,21 @@ export default class Expense extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'Expense');
+        },
+      },
+
+      /**
+       * Expense may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'expenses_transactions.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'Expense');
         },
       },
     };

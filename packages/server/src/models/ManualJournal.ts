@@ -97,6 +97,7 @@ export default class ManualJournal extends mixin(TenantModel, [
     const AccountTransaction = require('models/AccountTransaction');
     const ManualJournalEntry = require('models/ManualJournalEntry');
     const Document = require('models/Document');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       entries: {
@@ -138,6 +139,21 @@ export default class ManualJournal extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'ManualJournal');
+        },
+      },
+
+      /**
+       * Manual journal may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'manual_journals.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'ManualJournal');
         },
       },
     };

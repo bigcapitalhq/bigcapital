@@ -6,11 +6,16 @@ import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
 import { AbilitySubject, CashflowAction } from '@/interfaces';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
+import { GetMatchedTransactionsFilter } from '@/services/Banking/Matching/types';
+import { MatchBankTransactionsApplication } from '@/services/Banking/Matching/MatchBankTransactionsApplication';
 
 @Service()
 export default class GetCashflowAccounts extends BaseController {
   @Inject()
   private cashflowApplication: CashflowApplication;
+
+  @Inject()
+  private bankTransactionsMatchingApp: MatchBankTransactionsApplication;
 
   /**
    * Controller router.
@@ -18,6 +23,10 @@ export default class GetCashflowAccounts extends BaseController {
   public router() {
     const router = Router();
 
+    router.get(
+      '/transactions/:transactionId/matches',
+      this.getMatchedTransactions.bind(this)
+    );
     router.get(
       '/transactions/:transactionId',
       CheckPolicies(CashflowAction.View, AbilitySubject.Cashflow),
@@ -47,7 +56,6 @@ export default class GetCashflowAccounts extends BaseController {
         tenantId,
         transactionId
       );
-
       return res.status(200).send({
         cashflow_transaction: this.transfromToResponse(cashflowTransaction),
       });
@@ -55,6 +63,34 @@ export default class GetCashflowAccounts extends BaseController {
       next(error);
     }
   };
+
+  /**
+   * Retrieves the matched transactions.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private async getMatchedTransactions(
+    req: Request<{ transactionId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { transactionId } = req.params;
+    const filter = this.matchedQueryData(req) as GetMatchedTransactionsFilter;
+
+    try {
+      const data =
+        await this.bankTransactionsMatchingApp.getMatchedTransactions(
+          tenantId,
+          transactionId,
+          filter
+        );
+      return res.status(200).send(data);
+    } catch (error) {
+      next(error);
+    }
+  }
 
   /**
    * Catches the service errors.

@@ -102,6 +102,7 @@ export default class CashflowTransaction extends TenantModel {
     const CashflowTransactionLine = require('models/CashflowTransactionLine');
     const AccountTransaction = require('models/AccountTransaction');
     const Account = require('models/Account');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       /**
@@ -156,6 +157,22 @@ export default class CashflowTransaction extends TenantModel {
         join: {
           from: 'cashflow_transactions.creditAccountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Cashflow transaction may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'cashflow_transactions.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter: (query) => {
+          const referenceTypes = getCashflowAccountTransactionsTypes();
+          query.whereIn('reference_type', referenceTypes);
         },
       },
     };

@@ -2,16 +2,28 @@ import Container, { Inject, Service } from 'typedi';
 import { Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { PlaidBankingController } from './PlaidBankingController';
+import { BankingRulesController } from './BankingRulesController';
+import { BankTransactionsMatchingController } from './BankTransactionsMatchingController';
+import { RecognizedTransactionsController } from './RecognizedTransactionsController';
 
 @Service()
 export class BankingController extends BaseController {
   /**
    * Router constructor.
    */
-  router() {
+  public router() {
     const router = Router();
 
     router.use('/plaid', Container.get(PlaidBankingController).router());
+    router.use('/rules', Container.get(BankingRulesController).router());
+    router.use(
+      '/matches',
+      Container.get(BankTransactionsMatchingController).router()
+    );
+    router.use(
+      '/recognized',
+      Container.get(RecognizedTransactionsController).router()
+    );
 
     return router;
   }

@@ -1,12 +1,12 @@
 // @ts-nocheck
 import styled from 'styled-components';
-import { DrawerBody } from '@/components';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
+import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
-export default function CategorizeTransactionContent({
-  uncategorizedTransactionId,
-}) {
+export function CategorizeTransactionContent() {
+  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
+
   return (
     <CategorizeTransactionBoot
       uncategorizedTransactionId={uncategorizedTransactionId}
@@ -18,7 +18,8 @@ export default function CategorizeTransactionContent({
   );
 }
 
-export const CategorizeTransactionDrawerBody = styled(DrawerBody)`
-  padding: 20px;
-  background-color: #fff;
+const CategorizeTransactionDrawerBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 `;

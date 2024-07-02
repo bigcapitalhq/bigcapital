@@ -58,7 +58,7 @@ export default function CategorizeTransactionOtherIncome() {
       </FFormGroup>
 
       <FFormGroup name={'referenceNo'} label={'Reference No.'} fastField inline>
-        <FInputGroup name={'reference_no'} fill />
+        <FInputGroup name={'referenceNo'} fill />
       </FFormGroup>
 
       <FFormGroup name={'description'} label={'Description'} fastField inline>

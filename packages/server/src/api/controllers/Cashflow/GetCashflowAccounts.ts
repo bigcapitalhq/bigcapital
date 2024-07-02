@@ -31,7 +31,6 @@ export default class GetCashflowAccounts extends BaseController {
         query('search_keyword').optional({ nullable: true }).isString().trim(),
       ],
       this.asyncMiddleware(this.getCashflowAccounts),
-      this.catchServiceErrors
     );
     return router;
   }
@@ -67,22 +66,4 @@ export default class GetCashflowAccounts extends BaseController {
       next(error);
     }
   };
-
-  /**
-   * Catches the service errors.
-   * @param {Error} error - Error.
-   * @param {Request} req - Request.
-   * @param {Response} res - Response.
-   * @param {NextFunction} next -
-   */
-  private catchServiceErrors(
-    error,
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    if (error instanceof ServiceError) {
-    }
-    next(error);
-  }
 }

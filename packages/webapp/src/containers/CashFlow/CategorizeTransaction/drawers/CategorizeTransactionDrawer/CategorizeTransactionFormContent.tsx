@@ -2,10 +2,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FormGroup } from '@blueprintjs/core';
-import { FFormGroup, FSelect, } from '@/components';
+import { Box, FFormGroup, FSelect } from '@/components';
 import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
 import { useFormikContext } from 'formik';
-import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 
 // Retrieves the add money in button options.
 const MoneyInOptions = getAddMoneyInOptions();
@@ -18,14 +18,14 @@ const Title = styled('h3')`
 `;
 
 export function CategorizeTransactionFormContent() {
-  const { uncategorizedTransaction } = useCategorizeTransactionBoot();
+  const { uncategorizedTransaction } = useCategorizeTransactionTabsBoot();
 
   const transactionTypes = uncategorizedTransaction?.is_deposit_transaction
     ? MoneyInOptions
     : MoneyOutOptions;
 
   return (
-    <>
+    <Box style={{ flex: 1, margin: 20 }}>
       <FormGroup label={'Amount'} inline>
         <Title>{uncategorizedTransaction.formatted_amount}</Title>
       </FormGroup>
@@ -42,7 +42,7 @@ export function CategorizeTransactionFormContent() {
       </FFormGroup>
 
       <CategorizeTransactionFormSubContent />
-    </>
+    </Box>
   );
 }
 

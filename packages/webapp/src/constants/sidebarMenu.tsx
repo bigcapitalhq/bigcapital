@@ -458,6 +458,11 @@ export const SidebarMenu = [
               ability: CashflowAction.View,
             },
           },
+          {
+            text: 'Rules',
+            href: '/bank-rules',
+            type: ISidebarMenuItemType.Link,
+          },
         ],
       },
       {

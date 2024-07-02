@@ -51,6 +51,7 @@ import EstimateMailDialog from '@/containers/Sales/Estimates/EstimateMailDialog/
 import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/ReceiptMailDialog';
 import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
+import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
 
 /**
  * Dialogs container.
@@ -147,6 +148,7 @@ export default function DialogsContainer() {
       <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
       <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
       <ExportDialog dialogName={DialogsName.Export} />
+      <RuleFormDialog dialogName={DialogsName.BankRuleForm} />      
     </div>
   );
 }

@@ -11,9 +11,15 @@ export default class UncategorizedCashflowTransaction extends mixin(
   [ModelSettings]
 ) {
   id!: number;
+  date!: Date | string;
   amount!: number;
   categorized!: boolean;
   accountId!: number;
+  referenceNo!: string;
+  payee!: string;
+  description!: string;
+  plaidTransactionId!: string;
+  recognizedTransactionId!: number;
 
   /**
    * Table name.
@@ -38,6 +44,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'deposit',
       'isDepositTransaction',
       'isWithdrawalTransaction',
+      'isRecognized',
     ];
   }
 
@@ -76,10 +83,42 @@ export default class UncategorizedCashflowTransaction extends mixin(
   }
 
   /**
+   * Detarmines whether the transaction is recognized.
+   */
+  public get isRecognized(): boolean {
+    return !!this.recognizedTransactionId;
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filters the not excluded transactions.
+       */
+      notExcluded(query) {
+        query.whereNull('excluded_at');
+      },
+
+      /**
+       * Filters the excluded transactions.
+       */
+      excluded(query) {
+        query.whereNotNull('excluded_at')
+      }
+    };
+  },
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {
     const Account = require('models/Account');
+    const {
+      RecognizedBankTransaction,
+    } = require('models/RecognizedBankTransaction');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       /**
@@ -91,6 +130,30 @@ export default class UncategorizedCashflowTransaction extends mixin(
         join: {
           from: 'uncategorized_cashflow_transactions.accountId',
           to: 'accounts.id',
+        },
+      },
+
+      /**
+       * Transaction may has association to recognized transaction.
+       */
+      recognizedTransaction: {
+        relation: Model.HasOneRelation,
+        modelClass: RecognizedBankTransaction,
+        join: {
+          from: 'uncategorized_cashflow_transactions.recognizedTransactionId',
+          to: 'recognized_bank_transactions.id',
+        },
+      },
+
+      /**
+       * Uncategorized transaction may has association to matched transaction.
+       */
+      matchedBankTransactions: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'uncategorized_cashflow_transactions.id',
+          to: 'matched_bank_transactions.uncategorizedTransactionId',
         },
       },
     };

@@ -205,7 +205,7 @@ export default {
 
     onPreMailSend: 'onSaleReceiptPreMailSend',
     onMailSend: 'onSaleReceiptMailSend',
-    onMailSent: 'onSaleReceiptMailSent', 
+    onMailSent: 'onSaleReceiptMailSent',
   },
 
   /**
@@ -229,7 +229,7 @@ export default {
 
     onPreMailSend: 'onPaymentReceivePreMailSend',
     onMailSend: 'onPaymentReceiveMailSend',
-    onMailSent: 'onPaymentReceiveMailSent', 
+    onMailSent: 'onPaymentReceiveMailSent',
   },
 
   /**
@@ -616,5 +616,27 @@ export default {
 
   plaid: {
     onItemCreated: 'onPlaidItemCreated',
+    onTransactionsSynced: 'onPlaidTransactionsSynced',
+  },
+
+  // Bank rules.
+  bankRules: {
+    onCreating: 'onBankRuleCreating',
+    onCreated: 'onBankRuleCreated',
+
+    onEditing: 'onBankRuleEditing',
+    onEdited: 'onBankRuleEdited',
+
+    onDeleting: 'onBankRuleDeleting',
+    onDeleted: 'onBankRuleDeleted',
+  },
+
+  // Bank matching.
+  bankMatch: {
+    onMatching: 'onBankTransactionMatching',
+    onMatched: 'onBankTransactionMatched',
+
+    onUnmatching: 'onBankTransactionUnmathcing',
+    onUnmatched: 'onBankTransactionUnmathced',
   },
 };
