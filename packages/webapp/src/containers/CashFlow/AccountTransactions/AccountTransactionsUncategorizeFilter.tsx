@@ -4,6 +4,7 @@ import { Tag } from '@blueprintjs/core';
 import { useAppQueryString } from '@/hooks';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
 import { Group } from '@/components';
+import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 
 const Root = styled.div`
   display: flex;
@@ -26,7 +27,12 @@ const FilterTag = styled(Tag)`
 `;
 
 export function AccountTransactionsUncategorizeFilter() {
+  const { bankAccountMetaSummary } = useAccountTransactionsContext();
   const [locationQuery, setLocationQuery] = useAppQueryString();
+
+  const totalUncategorized =
+    bankAccountMetaSummary?.totalUncategorizedTransactions;
+  const totalRecognized = bankAccountMetaSummary?.totalRecognizedTransactions;
 
   const handleTabsChange = (value) => {
     setLocationQuery({ uncategorizedFilter: value });
@@ -36,8 +42,22 @@ export function AccountTransactionsUncategorizeFilter() {
     <Group position={'apart'}>
       <SegmentedTabs
         options={[
-          { value: 'all', label: 'All' },
-          { value: 'recognized', label: 'Recognized' },
+          {
+            value: 'all',
+            label: (
+              <>
+                All <strong>({totalUncategorized})</strong>
+              </>
+            ),
+          },
+          {
+            value: 'recognized',
+            label: (
+              <>
+                Recognized <strong>({totalRecognized})</strong>
+              </>
+            ),
+          },
         ]}
         value={locationQuery?.uncategorizedFilter || 'all'}
         onValueChange={handleTabsChange}
@@ -66,8 +86,9 @@ function SegmentedTabs({ options, initialValue, value, onValueChange }) {
   });
   return (
     <Root>
-      {options.map((option) => (
+      {options.map((option, index) => (
         <FilterTag
+          key={index}
           round
           interactive
           onClick={() => handleChange(option.value)}

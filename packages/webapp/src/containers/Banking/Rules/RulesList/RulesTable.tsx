@@ -33,7 +33,7 @@ function RulesTable({
 }) {
   // Invoices table columns.
   const columns = useBankRulesTableColumns();
-  const { bankRules } = useRulesListBoot();
+  const { bankRules, isEmptyState } = useRulesListBoot();
 
   // Handle edit bank rule.
   const handleDeleteBankRule = ({ id }) => {
@@ -44,8 +44,6 @@ function RulesTable({
   const handleEditBankRule = ({ id }) => {
     openDialog(DialogsName.BankRuleForm, { bankRuleId: id });
   };
-
-  const isEmptyState = false;
 
   // Display invoice empty status instead of the table.
   if (isEmptyState) {

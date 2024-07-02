@@ -21,6 +21,7 @@ const QUERY_KEY = {
   EXCLUDED_BANK_TRANSACTIONS_INFINITY: 'EXCLUDED_BANK_TRANSACTIONS_INFINITY',
   RECOGNIZED_BANK_TRANSACTIONS_INFINITY:
     'RECOGNIZED_BANK_TRANSACTIONS_INFINITY',
+  BANK_ACCOUNT_SUMMARY_META: 'BANK_ACCOUNT_SUMMARY_META',
 };
 
 const commonInvalidateQueries = (query: QueryClient) => {
@@ -111,6 +112,10 @@ export function useDeleteBankRule(
     {
       onSuccess: (res, id) => {
         commonInvalidateQueries(queryClient);
+
+        queryClient.invalidateQueries(
+          QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
+        );
       },
       ...options,
     },
@@ -323,8 +328,8 @@ interface GetRecognizedBankTransactionRes {}
 
 /**
  * REtrieves the given recognized bank transaction.
- * @param {number} uncategorizedTransactionId 
- * @param {UseQueryOptions<GetRecognizedBankTransactionRes, Error>} options 
+ * @param {number} uncategorizedTransactionId
+ * @param {UseQueryOptions<GetRecognizedBankTransactionRes, Error>} options
  * @returns {UseQueryResult<GetRecognizedBankTransactionRes, Error>}
  */
 export function useGetRecognizedBankTransaction(
@@ -340,6 +345,34 @@ export function useGetRecognizedBankTransaction(
         .get(`/banking/recognized/transactions/${uncategorizedTransactionId}`)
         .then((res) => transformToCamelCase(res.data?.data)),
     options,
+  );
+}
+
+interface GetBankAccountSummaryMetaRes {
+  name: string;
+  totalUncategorizedTransactions: number;
+  totalRecognizedTransactions: number;
+}
+
+/**
+ * Get the given bank account meta summary.
+ * @param {number} bankAccountId
+ * @param {UseQueryOptions<GetBankAccountSummaryMetaRes, Error>} options
+ * @returns {UseQueryResult<GetBankAccountSummaryMetaRes, Error>}
+ */
+export function useGetBankAccountSummaryMeta(
+  bankAccountId: number,
+  options?: UseQueryOptions<GetBankAccountSummaryMetaRes, Error>,
+): UseQueryResult<GetBankAccountSummaryMetaRes, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetBankAccountSummaryMetaRes, Error>(
+    [QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
+    () =>
+      apiRequest
+        .get(`/banking/bank_accounts/${bankAccountId}/meta`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
   );
 }
 

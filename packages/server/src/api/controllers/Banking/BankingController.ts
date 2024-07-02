@@ -5,6 +5,7 @@ import { PlaidBankingController } from './PlaidBankingController';
 import { BankingRulesController } from './BankingRulesController';
 import { BankTransactionsMatchingController } from './BankTransactionsMatchingController';
 import { RecognizedTransactionsController } from './RecognizedTransactionsController';
+import { BankAccountsController } from './BankAccountsController';
 
 @Service()
 export class BankingController extends BaseController {
@@ -24,7 +25,10 @@ export class BankingController extends BaseController {
       '/recognized',
       Container.get(RecognizedTransactionsController).router()
     );
-
+    router.use(
+      '/bank_accounts',
+      Container.get(BankAccountsController).router()
+    );
     return router;
   }
 }

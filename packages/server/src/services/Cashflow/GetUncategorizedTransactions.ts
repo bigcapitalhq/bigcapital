@@ -32,11 +32,16 @@ export class GetUncategorizedTransactions {
     };
     const { results, pagination } =
       await UncategorizedCashflowTransaction.query()
-        .where('accountId', accountId)
-        .where('categorized', false)
-        .modify('notExcluded')
-        .withGraphFetched('account')
-        .orderBy('date', 'DESC')
+        .onBuild((q) => {
+          q.where('accountId', accountId);
+          q.where('categorized', false);
+          q.modify('notExcluded');
+
+          q.withGraphFetched('account');
+          q.withGraphFetched('recognizedTransaction.assignAccount');
+
+          q.orderBy('date', 'DESC');
+        })
         .pagination(_query.page - 1, _query.pageSize);
 
     const data = await this.transformer.transform(

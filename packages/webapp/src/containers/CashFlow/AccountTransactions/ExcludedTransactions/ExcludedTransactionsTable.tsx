@@ -81,7 +81,7 @@ function ExcludedTransactionsTableRoot() {
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      // noResults={<T id={'cash_flow.account_transactions.no_results'} />}
+      noResults={'There is no excluded bank transactions.'}
       className="table-constrant"
       payload={{
         onRestore: handleRestoreClick,

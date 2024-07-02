@@ -10,6 +10,7 @@ import {
   TableVirtualizedListRows,
   FormattedMessage as T,
   AppToaster,
+  Stack,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
@@ -24,11 +25,12 @@ import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot
 import { ActionsMenu } from './_components';
 import { compose } from '@/utils';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
-import { Intent } from '@blueprintjs/core';
+import { Intent, Text } from '@blueprintjs/core';
 import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../../withBankingActions';
+import styles from './RecognizedTransactionsTable.module.scss';
 
 interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
 
@@ -114,7 +116,7 @@ function RecognizedTransactionsTableRoot({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      noResults={<T id={'cash_flow.account_transactions.no_results'} />}
+      noResults={<RecognizedTransactionsTableNoResults />}
       className="table-constrant"
       payload={{
         onExclude: handleExcludeClick,
@@ -168,3 +170,26 @@ const CashflowTransactionsTable = styled(DashboardConstrantTable)`
     }
   }
 `;
+
+function RecognizedTransactionsTableNoResults() {
+  return (
+    <Stack spacing={12} className={styles.emptyState}>
+      <Text>
+        There are no Recognized transactions due to one of the following
+        reasons:
+      </Text>
+
+      <ul>
+        <li>
+          Transaction Rules have not yet been created. Transactions are
+          recognized based on the rule criteria.
+        </li>
+
+        <li>
+          The transactions in your bank do not satisfy the criteria in any of
+          your transaction rule(s).
+        </li>
+      </ul>
+    </Stack>
+  );
+}

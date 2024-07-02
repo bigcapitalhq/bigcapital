@@ -2,22 +2,26 @@
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
+import { FastField, FastFieldProps, Formik } from 'formik';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
 import {
   MatchingTransactionBoot,
   useMatchingTransactionBoot,
 } from './MatchingTransactionBoot';
 import { MatchTransaction, MatchTransactionProps } from './MatchTransaction';
-import styles from './CategorizeTransactionAside.module.scss';
-import { FastField, FastFieldProps, Form, Formik } from 'formik';
 import { useMatchUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
-import { transformToReq, useGetPendingAmountMatched } from './utils';
+import {
+  transformToReq,
+  useGetPendingAmountMatched,
+  useIsShowReconcileTransactionLink,
+} from './utils';
 import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../withBankingActions';
+import styles from './CategorizeTransactionAside.module.scss';
 
 const initialValues = {
   matched: {},
@@ -189,20 +193,26 @@ interface MatchTransctionFooterProps extends WithBankingActionsProps {}
  */
 const MatchTransactionFooter = R.compose(withBankingActions)(
   ({ closeMatchingTransactionAside }: MatchTransctionFooterProps) => {
+    const totalPending = useGetPendingAmountMatched();
+    const showReconcileLink = useIsShowReconcileTransactionLink();
+
     const handleCancelBtnClick = () => {
       closeMatchingTransactionAside();
     };
-    const totalPending = useGetPendingAmountMatched();
 
     return (
       <Box className={styles.footer}>
         <Box className={styles.footerTotal}>
           <Group position={'apart'}>
-            <AnchorButton small minimal intent={Intent.PRIMARY}>
-              Add Reconcile Transaction +
-            </AnchorButton>
-
-            <Text style={{ fontSize: 13 }} tagName="span">
+            {showReconcileLink && (
+              <AnchorButton small minimal intent={Intent.PRIMARY}>
+                Add Reconcile Transaction +
+              </AnchorButton>
+            )}
+            <Text
+              style={{ fontSize: 14, marginLeft: 'auto', color: '#5F6B7C' }}
+              tagName="span"
+            >
               Pending <FormatNumber value={totalPending} currency={'USD'} />
             </Text>
           </Group>

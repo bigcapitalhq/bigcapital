@@ -1,8 +1,24 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem, MenuDivider, Tag } from '@blueprintjs/core';
-import { Can, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
+import {
+  Intent,
+  Menu,
+  MenuItem,
+  MenuDivider,
+  Tag,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Tooltip,
+} from '@blueprintjs/core';
+import {
+  Box,
+  Can,
+  FormatDateCell,
+  Icon,
+  MaterialProgressBar,
+} from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { safeCallback } from '@/utils';
 
@@ -128,6 +144,34 @@ export function AccountTransactionsProgressBar() {
   ) : null;
 }
 
+function statusAccessor(transaction) {
+  return transaction.is_recognized ? (
+    <Tooltip
+      compact
+      interactionKind={PopoverInteractionKind.HOVER}
+      position={Position.RIGHT}
+      content={
+        <Box>
+          <span>{transaction.assigned_category_formatted}</span>
+          <Icon
+            icon={'arrowRight'}
+            color={'#8F99A8'}
+            iconSize={12}
+            style={{ marginLeft: 8, marginRight: 8 }}
+          />
+          <span>{transaction.assigned_account_name}</span>
+        </Box>
+      }
+    >
+      <Box>
+        <Tag intent={Intent.SUCCESS} interactive>
+          Recognized
+        </Tag>
+      </Box>
+    </Tooltip>
+  ) : null;
+}
+
 /**
  * Retrieve account uncategorized transctions table columns.
  */
@@ -170,16 +214,7 @@ export function useAccountUncategorizedTransactionsColumns() {
       {
         id: 'status',
         Header: 'Status',
-        accessor: () =>
-          false ? (
-            <Tag intent={Intent.SUCCESS} interactive>
-              1 Matches
-            </Tag>
-          ) : (
-            <Tag intent={Intent.SUCCESS} interactive>
-              Recognized
-            </Tag>
-          ),
+        accessor: statusAccessor,
       },
       {
         id: 'deposit',

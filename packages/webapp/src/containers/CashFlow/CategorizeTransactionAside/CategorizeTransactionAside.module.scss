@@ -2,6 +2,7 @@
 .root {
   flex: 1 1 auto;
   overflow: auto;
+  padding-bottom: 60px;
 }
 
 .transaction {
@@ -35,4 +36,5 @@
 .footerTotal {
   padding: 8px 16px;
   border-top: 1px solid #d8d9d9;
+  line-height: 24px;
 }

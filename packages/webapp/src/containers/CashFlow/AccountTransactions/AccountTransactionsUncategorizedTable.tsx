@@ -102,7 +102,7 @@ function AccountTransactionsDataTable({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      noResults={<T id={'cash_flow.account_transactions.no_results'} />}
+      noResults={'There is no uncategorized transactions in the current account.'}
       className="table-constrant"
       payload={{
         onExclude: handleExcludeTransaction,
