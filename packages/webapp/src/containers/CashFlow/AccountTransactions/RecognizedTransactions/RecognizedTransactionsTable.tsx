@@ -84,7 +84,7 @@ function RecognizedTransactionsTableRoot({
       });
   };
 
-  //
+  // Handles categorize button click.
   const handleCategorizeClick = (transaction) => {
     setUncategorizedTransactionIdForMatching(
       transaction.uncategorized_transaction_id,
@@ -137,7 +137,6 @@ const DashboardConstrantTable = styled(DataTable)`
         background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
-        font-weight: 500;
         font-size: 13px;
       }
     }

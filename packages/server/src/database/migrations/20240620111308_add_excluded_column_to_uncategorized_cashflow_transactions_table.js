@@ -1,11 +1,11 @@
 exports.up = function (knex) {
   return knex.schema.table('uncategorized_cashflow_transactions', (table) => {
-    table.boolean('excluded');
+    table.datetime('excluded_at');
   });
 };
 
 exports.down = function (knex) {
   return knex.schema.table('uncategorized_cashflow_transactions', (table) => {
-    table.dropColumn('excluded');
+    table.dropColumn('excluded_at');
   });
 };

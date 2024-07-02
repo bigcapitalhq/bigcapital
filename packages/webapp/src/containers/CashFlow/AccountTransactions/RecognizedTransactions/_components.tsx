@@ -11,6 +11,7 @@ export function ActionsMenu({
     <Menu>
       <MenuItem
         text={'Categorize'}
+        icon={<Icon icon="reader-18" />}
         onClick={safeCallback(onCategorize, original)}
       />
       <MenuDivider />

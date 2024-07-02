@@ -1,41 +1,22 @@
 // @ts-nocheck
 import React from 'react';
 import intl from 'react-intl-universal';
-import { Intent, Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
-import {
-  Can,
-  FormatDateCell,
-  If,
-  Icon,
-  MaterialProgressBar,
-} from '@/components';
+import { Intent, Menu, MenuItem, MenuDivider, Tag } from '@blueprintjs/core';
+import { Can, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
-import { TRANSACRIONS_TYPE } from '@/constants/cashflowOptions';
-import { AbilitySubject, CashflowAction } from '@/constants/abilityOption';
 import { safeCallback } from '@/utils';
 
 export function ActionsMenu({
-  payload: { onDelete, onViewDetails, onExclude },
+  payload: { onCategorize, onExclude },
   row: { original },
 }) {
   return (
     <Menu>
       <MenuItem
         icon={<Icon icon="reader-18" />}
-        text={intl.get('view_details')}
-        onClick={safeCallback(onViewDetails, original)}
+        text={'Categorize'}
+        onClick={safeCallback(onCategorize, original)}
       />
-      <Can I={CashflowAction.Delete} a={AbilitySubject.Cashflow}>
-        <If condition={TRANSACRIONS_TYPE.includes(original.reference_type)}>
-          <MenuDivider />
-          <MenuItem
-            text={intl.get('delete_transaction')}
-            intent={Intent.DANGER}
-            onClick={safeCallback(onDelete, original)}
-            icon={<Icon icon="trash-16" iconSize={16} />}
-          />
-        </If>
-      </Can>
       <MenuDivider />
       <MenuItem
         text={'Exclude'}
@@ -185,6 +166,20 @@ export function useAccountUncategorizedTransactionsColumns() {
         className: 'reference_number',
         clickable: true,
         textOverview: true,
+      },
+      {
+        id: 'status',
+        Header: 'Status',
+        accessor: () =>
+          false ? (
+            <Tag intent={Intent.SUCCESS} interactive>
+              1 Matches
+            </Tag>
+          ) : (
+            <Tag intent={Intent.SUCCESS} interactive>
+              Recognized
+            </Tag>
+          ),
       },
       {
         id: 'deposit',

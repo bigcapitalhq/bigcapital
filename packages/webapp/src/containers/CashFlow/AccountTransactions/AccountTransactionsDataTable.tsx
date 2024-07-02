@@ -18,10 +18,10 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
+import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
-import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
 
 /**
  * Account transactions data table.
@@ -108,7 +108,6 @@ const DashboardConstrantTable = styled(DataTable)`
         background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
-        font-weight: 500;
         font-size: 13px;
       }
     }

@@ -34,7 +34,7 @@ export class ExcludeBankTransaction {
       await UncategorizedCashflowTransaction.query(trx)
         .findById(uncategorizedTransactionId)
         .patch({
-          excluded: true,
+          excludedAt: new Date(),
         });
     });
   }

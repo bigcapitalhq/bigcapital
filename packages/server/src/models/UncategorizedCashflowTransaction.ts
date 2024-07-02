@@ -98,14 +98,14 @@ export default class UncategorizedCashflowTransaction extends mixin(
        * Filters the not excluded transactions.
        */
       notExcluded(query) {
-        query.whereNull('excluded');
+        query.whereNull('excluded_at');
       },
 
       /**
        * Filters the excluded transactions.
        */
       excluded(query) {
-        query.where('excluded', true)
+        query.whereNotNull('excluded_at')
       }
     };
   },

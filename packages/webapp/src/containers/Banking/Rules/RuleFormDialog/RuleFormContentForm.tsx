@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
-import { Button, Classes, Intent, Radio } from '@blueprintjs/core';
+import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { CreateRuleFormSchema } from './RuleFormContentForm.schema';
 import {
@@ -73,7 +73,7 @@ function RuleFormContentFormRoot({
       });
     };
     if (isEditMode) {
-      editBankRule([bankRuleId, _values])
+      editBankRule({ id: bankRuleId, value: _values })
         .then(handleSuccess)
         .catch(handleError);
     } else {
@@ -88,16 +88,26 @@ function RuleFormContentFormRoot({
       onSubmit={handleSubmit}
     >
       <Form>
-        <FFormGroup name={'name'} label={'Rule Name'} style={{ maxWidth: 300 }}>
+        <FFormGroup
+          name={'name'}
+          label={'Rule Name'}
+          labelInfo={<Tag minimal>Required</Tag>}
+          style={{ maxWidth: 300 }}
+        >
           <FInputGroup name={'name'} />
         </FFormGroup>
 
         <FFormGroup
           name={'applyIfAccountId'}
           label={'Apply the rule to account'}
+          labelInfo={<Tag minimal>Required</Tag>}
           style={{ maxWidth: 350 }}
         >
-          <AccountsSelect name={'applyIfAccountId'} items={accounts} />
+          <AccountsSelect
+            name={'applyIfAccountId'}
+            items={accounts}
+            filterByTypes={['cash', 'bank']}
+          />
         </FFormGroup>
 
         <FFormGroup
@@ -133,6 +143,7 @@ function RuleFormContentFormRoot({
         <FFormGroup
           name={'assignCategory'}
           label={'Transaction type'}
+          labelInfo={<Tag minimal>Required</Tag>}
           style={{ maxWidth: 300 }}
         >
           <FSelect
@@ -145,6 +156,7 @@ function RuleFormContentFormRoot({
         <FFormGroup
           name={'assignAccountId'}
           label={'Account category'}
+          labelInfo={<Tag minimal>Required</Tag>}
           style={{ maxWidth: 300 }}
         >
           <AccountsSelect name={'assignAccountId'} items={accounts} />
@@ -251,6 +263,7 @@ function RuleFormActionsRoot({
       <Box className={Classes.DIALOG_FOOTER_ACTIONS}>
         <Button onClick={handleCancelBtnClick}>Cancel</Button>
         <Button
+          type="submit"
           intent={Intent.PRIMARY}
           loading={isSubmitting}
           onClick={handleSaveBtnClick}

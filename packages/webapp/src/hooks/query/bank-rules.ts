@@ -78,7 +78,7 @@ export function useEditBankRule(
   const apiRequest = useApiRequest();
 
   return useMutation<EditBankRuleResponse, Error, EditBankRuleValues>(
-    ({ id, value }) => apiRequest.post(`/banking/rules/${id}`, values),
+    ({ id, value }) => apiRequest.post(`/banking/rules/${id}`, value),
     {
       ...options,
       onSuccess: () => {

@@ -9,7 +9,7 @@ const Root = styled.div`
   display: flex;
   flex-direction: row;
   gap: 10px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 `;
 
 const FilterTag = styled(Tag)`

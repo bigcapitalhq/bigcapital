@@ -23,12 +23,10 @@ import { ActionsMenu } from './_components';
 import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { Intent } from '@blueprintjs/core';
 
-interface ExcludedTransactionsTableProps {}
-
 /**
  * Renders the recognized account transactions datatable.
  */
-function ExcludedTransactionsTableRoot({}: ExcludedTransactionsTableProps) {
+function ExcludedTransactionsTableRoot() {
   const { excludedBankTransactions } = useExcludedTransactionsBoot();
   const { mutateAsync: unexcludeBankTransaction } =
     useUnexcludeUncategorizedTransaction();
@@ -103,7 +101,6 @@ const DashboardConstrantTable = styled(DataTable)`
         background: #fff;
         letter-spacing: 1px;
         text-transform: uppercase;
-        font-weight: 500;
         font-size: 13px;
       }
     }

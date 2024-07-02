@@ -33,7 +33,7 @@ export class GetExcludedBankTransactionsService {
     const { results, pagination } =
       await UncategorizedCashflowTransaction.query()
         .onBuild((q) => {
-          q.where('excluded', true);
+          q.modify('excluded');
           q.orderBy('date', 'DESC');
 
           if (_query.accountId) {

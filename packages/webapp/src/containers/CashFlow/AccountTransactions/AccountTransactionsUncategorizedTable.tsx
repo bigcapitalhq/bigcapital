@@ -59,6 +59,10 @@ function AccountTransactionsDataTable({
   const handleCellClick = (cell) => {
     setUncategorizedTransactionIdForMatching(cell.row.original.id);
   };
+  // Handles categorize button click.
+  const handleCategorizeBtnClick = (transaction) => {
+    setUncategorizedTransactionIdForMatching(transaction.id);
+  };
   // Handle exclude transaction.
   const handleExcludeTransaction = (transaction) => {
     excludeTransaction(transaction.id)
@@ -102,6 +106,7 @@ function AccountTransactionsDataTable({
       className="table-constrant"
       payload={{
         onExclude: handleExcludeTransaction,
+        onCategorize: handleCategorizeBtnClick,
       }}
     />
   );
