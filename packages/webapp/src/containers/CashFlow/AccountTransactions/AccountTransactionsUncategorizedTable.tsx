@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
-
+import { Intent } from '@blueprintjs/core';
 import {
   DataTable,
   TableFastCell,
@@ -14,7 +14,6 @@ import {
 import { TABLES } from '@/constants/tables';
 
 import withSettings from '@/containers/Settings/withSettings';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
@@ -26,7 +25,6 @@ import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUnc
 
 import { compose } from '@/utils';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
-import { Intent } from '@blueprintjs/core';
 
 /**
  * Account transactions data table.
@@ -37,9 +35,6 @@ function AccountTransactionsDataTable({
 
   // #withBankingActions
   setUncategorizedTransactionIdForMatching,
-
-  // #withDrawerActions
-  openDrawer,
 }) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
@@ -102,7 +97,9 @@ function AccountTransactionsDataTable({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
-      noResults={'There is no uncategorized transactions in the current account.'}
+      noResults={
+        'There is no uncategorized transactions in the current account.'
+      }
       className="table-constrant"
       payload={{
         onExclude: handleExcludeTransaction,
@@ -116,7 +113,6 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
-  withDrawerActions,
   withBankingActions,
 )(AccountTransactionsDataTable);
 

@@ -8,7 +8,6 @@ import {
 } from './types';
 import { Inject, Service } from 'typedi';
 
-// @Service()
 export abstract class GetMatchedTransactionsByType {
   @Inject()
   protected tenancy: HasTenancyService;
@@ -17,6 +16,7 @@ export abstract class GetMatchedTransactionsByType {
    * Retrieves the matched transactions.
    * @param {number} tenantId -
    * @param {GetMatchedTransactionsFilter} filter -
+   * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
     tenantId: number,
@@ -31,6 +31,7 @@ export abstract class GetMatchedTransactionsByType {
    * Retrieves the matched transaction details.
    * @param {number} tenantId -
    * @param {number} transactionId -
+   * @returns {Promise<MatchedTransactionPOJO>}
    */
   public async getMatchedTransaction(
     tenantId: number,

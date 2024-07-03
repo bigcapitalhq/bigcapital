@@ -6,7 +6,6 @@ import * as R from 'ramda';
 import '@/style/pages/CashFlow/AccountTransactions/List.scss';
 
 import { AccountTransactionsUncategorizeFilter } from './AccountTransactionsUncategorizeFilter';
-import { UncategorizedTransactionsFilterProvider } from './AccountUncategorizedTransactionsFilterProvider';
 import {
   WithBankingActionsProps,
   withBankingActions,
@@ -23,6 +22,7 @@ function AllTransactionsUncategorizedRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
 }: AllTransactionsUncategorizedProps) {
+  // Close the match aside once leaving the page.
   useEffect(
     () => () => {
       closeMatchingTransactionAside();
@@ -31,12 +31,10 @@ function AllTransactionsUncategorizedRoot({
   );
 
   return (
-    <UncategorizedTransactionsFilterProvider>
-      <Box>
-        <AccountTransactionsUncategorizeFilter />
-        <AccountTransactionsSwitcher />
-      </Box>
-    </UncategorizedTransactionsFilterProvider>
+    <Box>
+      <AccountTransactionsUncategorizeFilter />
+      <AccountTransactionsSwitcher />
+    </Box>
   );
 }
 

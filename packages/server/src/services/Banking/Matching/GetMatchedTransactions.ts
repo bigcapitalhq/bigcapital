@@ -100,7 +100,6 @@ export class GetMatchedTransactions {
         moment(match.date).isSame(uncategorizedTransaction.date, 'day'),
       closestResullts
     );
-
     const possibleMatches = R.difference(closestResullts, perfectMatches);
 
     return { perfectMatches, possibleMatches };

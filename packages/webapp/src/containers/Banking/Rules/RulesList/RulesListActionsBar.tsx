@@ -3,7 +3,6 @@ import { Button, Classes, NavbarGroup } from '@blueprintjs/core';
 import * as R from 'ramda';
 import { Can, DashboardActionsBar, Icon } from '@/components';
 import { AbilitySubject, BankRuleAction } from '@/constants/abilityOption';
-import withAlertActions from '@/containers/Alert/withAlertActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
 
@@ -31,7 +30,6 @@ function RulesListActionsBarRoot({
   );
 }
 
-export const RulesListActionsBar = R.compose(
-  withDialogActions,
-  withAlertActions,
-)(RulesListActionsBarRoot);
+export const RulesListActionsBar = R.compose(withDialogActions)(
+  RulesListActionsBarRoot,
+);

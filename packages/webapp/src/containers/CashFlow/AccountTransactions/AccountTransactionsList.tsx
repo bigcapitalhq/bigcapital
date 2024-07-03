@@ -15,7 +15,7 @@ import {
 import { AccountTransactionsDetailsBar } from './AccountTransactionsDetailsBar';
 import { AccountTransactionsProgressBar } from './components';
 import { AccountTransactionsFilterTabs } from './AccountTransactionsFilterTabs';
-import { AppShell } from '@/components/AppShell/AppShell';
+import { AppContentShell } from '@/components/AppShell';
 import { CategorizeTransactionAside } from '../CategorizeTransactionAside/CategorizeTransactionAside';
 import { withBanking } from '../withBanking';
 
@@ -28,8 +28,8 @@ function AccountTransactionsListRoot({
 }) {
   return (
     <AccountTransactionsProvider>
-      <AppShell hideAside={!openMatchingTransactionAside}>
-        <AppShell.Main>
+      <AppContentShell hideAside={!openMatchingTransactionAside}>
+        <AppContentShell.Main>
           <AccountTransactionsActionsBar />
           <AccountTransactionsDetailsBar />
           <AccountTransactionsProgressBar />
@@ -41,12 +41,12 @@ function AccountTransactionsListRoot({
               <AccountTransactionsContent />
             </Suspense>
           </DashboardPageContent>
-        </AppShell.Main>
+        </AppContentShell.Main>
 
-        <AppShell.Aside>
+        <AppContentShell.Aside>
           <CategorizeTransactionAside />
-        </AppShell.Aside>
-      </AppShell>
+        </AppContentShell.Aside>
+      </AppContentShell>
     </AccountTransactionsProvider>
   );
 }

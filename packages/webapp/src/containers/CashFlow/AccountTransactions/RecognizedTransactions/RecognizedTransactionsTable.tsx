@@ -14,7 +14,6 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
-import withSettings from '@/containers/Settings/withSettings';
 import withAlertsActions from '@/containers/Alert/withAlertActions';
 import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 

@@ -1,25 +1,25 @@
 import React from 'react';
-import { AppShellProvider, useAppShellContext } from './AppShellProvider';
-import { Box } from '../Layout';
+import { AppShellProvider, useAppShellContext } from './AppContentShellProvider';
+import { Box, BoxProps } from '../../Layout';
 import styles from './AppShell.module.scss';
 
-interface AppShellProps {
+interface AppContentShellProps {
   topbarOffset?: number;
-  mainProps: any;
-  asideProps: any;
+  mainProps?: BoxProps;
+  asideProps?: BoxProps;
   children: React.ReactNode;
   hideAside?: boolean;
   hideMain?: boolean;
 }
 
-export function AppShell({
+export function AppContentShell({
   asideProps,
   mainProps,
   topbarOffset = 0,
   hideAside = false,
   hideMain = false,
   ...restProps
-}: AppShellProps) {
+}: AppContentShellProps) {
   return (
     <AppShellProvider
       mainProps={mainProps}
@@ -33,29 +33,29 @@ export function AppShell({
   );
 }
 
-AppShell.Main = AppShellMain;
-AppShell.Aside = AppShellAside;
+interface AppContentShellMainProps extends BoxProps {}
 
-function AppShellMain({ ...props }) {
+function AppContentShellMain({ ...props }: AppContentShellMainProps) {
   const { hideMain } = useAppShellContext();
 
   if (hideMain === true) {
     return null;
   }
-
   return <Box {...props} className={styles.main} />;
 }
 
-interface AppShellAsideProps {
+interface AppContentShellAsideProps extends BoxProps {
   children: React.ReactNode;
 }
 
-function AppShellAside({ ...props }: AppShellAsideProps) {
+function AppContentShellAside({ ...props }: AppContentShellAsideProps) {
   const { hideAside } = useAppShellContext();
 
-  console.log(hideAside, 'hideAsidehideAsidehideAsidehideAside');
   if (hideAside === true) {
     return null;
   }
   return <Box {...props} className={styles.aside} />;
 }
+
+AppContentShell.Main = AppContentShellMain;
+AppContentShell.Aside = AppContentShellAside;

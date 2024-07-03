@@ -8,9 +8,7 @@ import {
 } from '@/components';
 
 import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import withDashboardActions from '@/containers/Dashboard/withDashboardActions';
 
 import { useBankRulesTableColumns } from './hooks';
 import { BankRulesTableActionsMenu } from './_components';
@@ -24,9 +22,6 @@ import { DialogsName } from '@/constants/dialogs';
 function RulesTable({
   // #withAlertsActions
   openAlert,
-
-  // #withDrawerActions
-  openDrawer,
 
   // #withDialogAction
   openDialog,
@@ -81,8 +76,6 @@ function RulesTable({
 }
 
 export const BankRulesTable = R.compose(
-  withDashboardActions,
   withAlertsActions,
-  withDrawerActions,
   withDialogActions,
 )(RulesTable);

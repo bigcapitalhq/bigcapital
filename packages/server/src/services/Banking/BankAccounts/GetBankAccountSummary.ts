@@ -24,12 +24,14 @@ export class GetBankAccountSummary {
       .findById(bankAccountId)
       .throwIfNotFound();
 
+    // Retrieves the uncategorized transactions count of the given bank account.
     const uncategorizedTranasctionsCount =
       await UncategorizedCashflowTransaction.query()
         .where('accountId', bankAccountId)
         .count('id as total')
         .first();
 
+    // Retrieves the recognized transactions count of the given bank account.
     const recognizedTransactionsCount = await RecognizedBankTransaction.query()
       .whereExists(
         UncategorizedCashflowTransaction.query().where(
