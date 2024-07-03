@@ -17,7 +17,8 @@ import { useRulesListBoot } from './RulesListBoot';
 import { DialogsName } from '@/constants/dialogs';
 
 /**
- * Invoices datatable.
+ * Retrieves the rules table.
+ * @returns {React.ReactNode}
  */
 function RulesTable({
   // #withAlertsActions

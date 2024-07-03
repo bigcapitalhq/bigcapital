@@ -1,11 +1,11 @@
 // @ts-nocheck
 import clsx from 'classnames';
-import { Group, Stack } from '@/components';
 import { Checkbox, Text } from '@blueprintjs/core';
-import styles from './MatchTransaction.module.scss';
 import { useUncontrolled } from '@/hooks/useUncontrolled';
+import { Group, Stack } from '@/components';
+import styles from './MatchTransactionCheckbox.module.scss';
 
-export interface MatchTransactionProps {
+export interface MatchTransactionCheckboxProps {
   active?: boolean;
   initialActive?: boolean;
   onChange?: (state: boolean) => void;
@@ -13,13 +13,13 @@ export interface MatchTransactionProps {
   date: string;
 }
 
-export function MatchTransaction({
+export function MatchTransactionCheckbox({
   active,
   initialActive,
   onChange,
   label,
   date,
-}: MatchTransactionProps) {
+}: MatchTransactionCheckboxProps) {
   const [_active, handleChange] = useUncontrolled<boolean>({
     value: active,
     initialValue: initialActive,

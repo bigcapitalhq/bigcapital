@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { Intent } from '@blueprintjs/core';
 
 import {
   DataTable,
@@ -12,21 +13,17 @@ import {
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludedTransactionsColumns } from './_utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
 
-import { compose } from '@/utils';
 import { ActionsMenu } from './_components';
 import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
-import { Intent } from '@blueprintjs/core';
 
 /**
  * Renders the recognized account transactions datatable.
  */
-function ExcludedTransactionsTableRoot() {
+export function ExcludedTransactionsTable() {
   const { excludedBankTransactions } = useExcludedTransactionsBoot();
   const { mutateAsync: unexcludeBankTransaction } =
     useUnexcludeUncategorizedTransaction();
@@ -54,7 +51,7 @@ function ExcludedTransactionsTableRoot() {
         AppToaster.show({
           message: 'Something went wrong.',
           intent: Intent.DANGER,
-        }); 
+        });
       });
   };
 
@@ -89,10 +86,6 @@ function ExcludedTransactionsTableRoot() {
     />
   );
 }
-
-export const ExcludedTransactionsTable = compose(withDrawerActions)(
-  ExcludedTransactionsTableRoot,
-);
 
 const DashboardConstrantTable = styled(DataTable)`
   .table {

@@ -72,7 +72,8 @@ function CategorizeTransactionBoot({
     recognizedTranasction,
     isRecognizedTransactionLoading,
   };
-  const isLoading = isBranchesLoading || isAccountsLoading;
+  const isLoading =
+    isBranchesLoading || isAccountsLoading || isRecognizedTransactionLoading;
 
   if (isLoading) {
     <Spinner size={30} />;

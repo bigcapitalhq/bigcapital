@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { Intent, Text } from '@blueprintjs/core';
 
 import {
   DataTable,
@@ -8,14 +9,10 @@ import {
   TableSkeletonRows,
   TableSkeletonHeader,
   TableVirtualizedListRows,
-  FormattedMessage as T,
   AppToaster,
   Stack,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-
-import withAlertsActions from '@/containers/Alert/withAlertActions';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useUncategorizedTransactionsColumns } from './_utils';
@@ -24,7 +21,6 @@ import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot
 import { ActionsMenu } from './_components';
 import { compose } from '@/utils';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
-import { Intent, Text } from '@blueprintjs/core';
 import {
   WithBankingActionsProps,
   withBankingActions,
@@ -37,15 +33,6 @@ interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
  * Renders the recognized account transactions datatable.
  */
 function RecognizedTransactionsTableRoot({
-  // #withSettings
-  cashflowTansactionsTableSize,
-
-  // #withAlertsActions
-  openAlert,
-
-  // #withDrawerActions
-  openDrawer,
-
   // #withBanking
   setUncategorizedTransactionIdForMatching,
 }: RecognizedTransactionsTableProps) {
@@ -125,11 +112,9 @@ function RecognizedTransactionsTableRoot({
   );
 }
 
-export const RecognizedTransactionsTable = compose(
-  withAlertsActions,
-  withDrawerActions,
-  withBankingActions,
-)(RecognizedTransactionsTableRoot);
+export const RecognizedTransactionsTable = compose(withBankingActions)(
+  RecognizedTransactionsTableRoot,
+);
 
 const DashboardConstrantTable = styled(DataTable)`
   .table {

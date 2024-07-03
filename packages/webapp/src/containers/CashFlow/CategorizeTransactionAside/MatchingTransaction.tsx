@@ -8,7 +8,10 @@ import {
   MatchingTransactionBoot,
   useMatchingTransactionBoot,
 } from './MatchingTransactionBoot';
-import { MatchTransaction, MatchTransactionProps } from './MatchTransaction';
+import {
+  MatchTransactionCheckbox,
+  MatchTransactionCheckboxProps,
+} from './MatchTransactionCheckbox';
 import { useMatchUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { MatchingTransactionFormValues } from './types';
 import {
@@ -27,6 +30,10 @@ const initialValues = {
   matched: {},
 };
 
+/**
+ * Renders the bank transaction matching form.
+ * @returns {React.ReactNode}
+ */
 function MatchingBankTransactionRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
@@ -89,7 +96,7 @@ function MatchingBankTransactionContent() {
   return (
     <Box className={styles.root}>
       <PerfectMatchingTransactions />
-      <GoodMatchingTransactions />
+      <PossibleMatchingTransactions />
     </Box>
   );
 }
@@ -135,7 +142,7 @@ function PerfectMatchingTransactions() {
  * Renders the possible match transactions.
  * @returns {React.ReactNode}
  */
-function GoodMatchingTransactions() {
+function PossibleMatchingTransactions() {
   const { possibleMatches } = useMatchingTransactionBoot();
 
   // Can't continue if the possible matches is emoty.
@@ -168,7 +175,10 @@ function GoodMatchingTransactions() {
   );
 }
 interface MatchTransactionFieldProps
-  extends Omit<MatchTransactionProps, 'onChange' | 'active' | 'initialActive'> {
+  extends Omit<
+    MatchTransactionCheckboxProps,
+    'onChange' | 'active' | 'initialActive'
+  > {
   transactionId: number;
   transactionType: string;
 }
@@ -183,7 +193,7 @@ function MatchTransactionField({
   return (
     <FastField name={name}>
       {({ form, field: { value } }: FastFieldProps) => (
-        <MatchTransaction
+        <MatchTransactionCheckbox
           {...props}
           active={!!value}
           onChange={(state) => {
@@ -193,10 +203,6 @@ function MatchTransactionField({
       )}
     </FastField>
   );
-}
-
-export function CategorizeBankTransactionContent() {
-  return <h1>Categorizing</h1>;
 }
 
 interface MatchTransctionFooterProps extends WithBankingActionsProps {}
@@ -210,6 +216,7 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
     const { submitForm, isSubmitting } = useFormikContext();
     const totalPending = useGetPendingAmountMatched();
     const showReconcileLink = useIsShowReconcileTransactionLink();
+    const submitDisabled = totalPending !== 0;
 
     const handleCancelBtnClick = () => {
       closeMatchingTransactionAside();
@@ -243,6 +250,7 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
               style={{ minWidth: 85 }}
               onClick={handleSubmitBtnClick}
               loading={isSubmitting}
+              disabled={submitDisabled}
             >
               Match
             </Button>

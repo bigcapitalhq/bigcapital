@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppShellProvider, useAppShellContext } from './AppContentShellProvider';
 import { Box, BoxProps } from '../../Layout';
-import styles from './AppShell.module.scss';
+import styles from './AppContentShell.module.scss';
 
 interface AppContentShellProps {
   topbarOffset?: number;

@@ -1,0 +1,19 @@
+.root{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.tag{
+  min-height: 26px;
+
+  &:global(.bp4-minimal:not([class*='bp4-intent-'])) {
+    background: #fff;
+    border: 1px solid #e1e2e8;
+
+    &:global(.bp4-interactive:hover) {
+      background-color: rgba(143, 153, 168, 0.05);
+    }
+  }
+}
