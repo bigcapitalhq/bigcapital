@@ -6,6 +6,11 @@ import {
   Classes,
   NavbarDivider,
   Alignment,
+  Popover,
+  Menu,
+  MenuItem,
+  PopoverInteractionKind,
+  Position,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -39,18 +44,20 @@ function AccountTransactionsActionsBar({
   // #withSettingsActions
   addSetting,
 }) {
-  // Handle table row size change.
-  const handleTableRowSizeChange = (size) => {
-    addSetting('cashflowTransactions', 'tableSize', size);
-  };
+  const history = useHistory();
   const { accountId } = useAccountTransactionsContext();
+
+  // Refresh cashflow infinity transactions hook.
+  const { refresh } = useRefreshCashflowTransactionsInfinity();
 
   // Retrieves the money in/out buttons options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
-  const history = useHistory();
-
+  // Handle table row size change.
+  const handleTableRowSizeChange = (size) => {
+    addSetting('cashflowTransactions', 'tableSize', size);
+  };
   // Handle money in form
   const handleMoneyInFormTransaction = (account) => {
     openDialog('money-in', {
@@ -71,10 +78,10 @@ function AccountTransactionsActionsBar({
   const handleImportBtnClick = () => {
     history.push(`/cashflow-accounts/${accountId}/import`);
   };
-
-  // Refresh cashflow infinity transactions hook.
-  const { refresh } = useRefreshCashflowTransactionsInfinity();
-
+  // Handle bank rules click.
+  const handleBankRulesClick = () => {
+    history.push(`/bank-rules?accountId=${accountId}`);
+  };
   // Handle the refresh button click.
   const handleRefreshBtnClick = () => {
     refresh();
@@ -125,6 +132,22 @@ function AccountTransactionsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        <Popover
+          minimal={true}
+          interactionKind={PopoverInteractionKind.CLICK}
+          position={Position.BOTTOM_RIGHT}
+          modifiers={{
+            offset: { offset: '0, 4' },
+          }}
+          content={
+            <Menu>
+              <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
+            </Menu>
+          }
+        >
+          <Button icon={<Icon icon="cog-16" iconSize={16} />} minimal={true} />
+        </Popover>
+        <NavbarDivider />
         <Button
           className={Classes.MINIMAL}
           icon={<Icon icon="refresh-16" iconSize={14} />}

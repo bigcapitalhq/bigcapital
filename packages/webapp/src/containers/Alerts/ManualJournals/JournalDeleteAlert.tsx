@@ -11,6 +11,7 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 
 import { compose } from '@/utils';
 import { DRAWERS } from '@/constants/drawers';
+import { handleDeleteErrors } from './_utils';
 
 /**
  * Journal delete alert.
@@ -48,9 +49,16 @@ function JournalDeleteAlert({
         closeAlert(name);
         closeDrawer(DRAWERS.JOURNAL_DETAILS);
       })
-      .catch(() => {
-        closeAlert(name);
-      });
+      .catch(
+        ({
+          response: {
+            data: { errors },
+          },
+        }) => {
+          handleDeleteErrors(errors);
+          closeAlert(name);
+        },
+      );
   };
 
   return (

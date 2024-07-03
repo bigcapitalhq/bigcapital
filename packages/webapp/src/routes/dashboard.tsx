@@ -1221,6 +1221,16 @@ export const getDashboardRoutes = () => [
     pageTitle: 'Tax Rates',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  // Bank Rules
+  {
+    path: '/bank-rules',
+    component: lazy(
+      () => import('@/containers/Banking/Rules/RulesList/RulesLandingPage'),
+    ),
+    pageTitle: 'Bank Rules',
+    breadcrumb: 'Bank Rules',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // Homepage
   {
     path: `/`,

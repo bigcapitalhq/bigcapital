@@ -10,9 +10,25 @@ export class UncategorizedTransactionTransformer extends Transformer {
     return [
       'formattedAmount',
       'formattedDate',
-      'formattetDepositAmount',
+      'formattedDepositAmount',
       'formattedWithdrawalAmount',
+
+      'assignedAccountId',
+      'assignedAccountName',
+      'assignedAccountCode',
+      'assignedPayee',
+      'assignedMemo',
+      'assignedCategory',
+      'assignedCategoryFormatted',
     ];
+  };
+
+  /**
+   * Exclude all attributes.
+   * @returns {Array<string>}
+   */
+  public excludeAttributes = (): string[] => {
+    return ['recognizedTransaction'];
   };
 
   /**
@@ -26,7 +42,7 @@ export class UncategorizedTransactionTransformer extends Transformer {
 
   /**
    * Formatted amount.
-   * @param transaction 
+   * @param transaction
    * @returns {string}
    */
   public formattedAmount(transaction) {
@@ -40,7 +56,7 @@ export class UncategorizedTransactionTransformer extends Transformer {
    * @param transaction
    * @returns {string}
    */
-  protected formattetDepositAmount(transaction) {
+  protected formattedDepositAmount(transaction) {
     if (transaction.isDepositTransaction) {
       return formatNumber(transaction.deposit, {
         currencyCode: transaction.currencyCode,
@@ -61,5 +77,70 @@ export class UncategorizedTransactionTransformer extends Transformer {
       });
     }
     return '';
+  }
+
+  // --------------------------------------------------------
+  // # Recgonized transaction
+  // --------------------------------------------------------
+  /**
+   * Get the assigned account ID of the transaction.
+   * @param {object} transaction
+   * @returns {number}
+   */
+  public assignedAccountId(transaction: any): number {
+    return transaction.recognizedTransaction?.assignedAccountId;
+  }
+
+  /**
+   * Get the assigned account name of the transaction.
+   * @param {object} transaction
+   * @returns {string}
+   */
+  public assignedAccountName(transaction: any): string {
+    return transaction.recognizedTransaction?.assignAccount?.name;
+  }
+
+  /**
+   * Get the assigned account code of the transaction.
+   * @param {object} transaction
+   * @returns {string}
+   */
+  public assignedAccountCode(transaction: any): string {
+    return transaction.recognizedTransaction?.assignAccount?.code;
+  }
+
+  /**
+   * Get the assigned payee of the transaction.
+   * @param {object} transaction
+   * @returns {string}
+   */
+  public getAssignedPayee(transaction: any): string {
+    return transaction.recognizedTransaction?.assignedPayee;
+  }
+
+  /**
+   * Get the assigned memo of the transaction.
+   * @param {object} transaction
+   * @returns {string}
+   */
+  public assignedMemo(transaction: any): string {
+    return transaction.recognizedTransaction?.assignedMemo;
+  }
+
+  /**
+   * Get the assigned category of the transaction.
+   * @param {object} transaction
+   * @returns {string}
+   */
+  public assignedCategory(transaction: any): string {
+    return transaction.recognizedTransaction?.assignedCategory;
+  }
+
+  /**
+   * Get the assigned formatted category.
+   * @returns {string}
+   */
+  public assignedCategoryFormatted() {
+    return 'Other Income';
   }
 }

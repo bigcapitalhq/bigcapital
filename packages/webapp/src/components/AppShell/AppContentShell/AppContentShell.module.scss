@@ -1,0 +1,27 @@
+:root {
+  --aside-topbar-offset: 60px;
+  --aside-width: 34%;
+  --aside-min-width: 400px;
+}
+
+.main{
+  flex: 1 0;
+  height: inherit;  
+  overflow: auto;
+}
+
+.aside{
+  width: var(--aside-width);
+  min-width: var(--aside-min-width);
+  height: 100dvh;
+  border-left: 1px solid rgba(17, 20, 24, 0.15);
+  height: inherit;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.root {
+  display: flex;
+  height: calc(100dvh - var(--aside-topbar-offset));
+}

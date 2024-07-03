@@ -1,0 +1,45 @@
+
+.root{
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #D6DBE3;
+  padding: 10px 16px;
+  cursor: pointer;
+
+  &.active{
+    border-color: #88ABDB;
+    box-shadow: 0 0 0 2px rgba(136, 171, 219, 0.2);
+
+    .label,
+    .date {
+      color: rgb(21, 82, 200),
+    }
+  }
+
+  &:hover:not(.active){
+    border-color: #c0c0c0;
+  }
+}
+
+.checkbox:global(.bp4-control.bp4-checkbox){
+  margin: 0;
+}
+.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
+  border-color: #CBCBCB;
+}
+.checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
+  margin-right: 4px;
+  margin-left: 0;
+  height: 16px;
+  width: 16px;
+}
+
+.label {
+  color: #10161A;
+  font-size: 15px;
+}
+
+.date {
+  font-size: 12px;
+  color: #5C7080;
+}

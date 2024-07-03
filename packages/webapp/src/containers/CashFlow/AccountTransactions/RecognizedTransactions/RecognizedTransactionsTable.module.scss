@@ -1,0 +1,20 @@
+
+
+.emptyState{
+  text-align: center;
+  font-size: 15px;
+  color: #738091;
+
+  :global ul{
+    list-style: inside;
+
+    li{
+      margin-bottom: 12px;
+  
+      &::marker{
+        color: #C5CBD3;
+        font-size: 12px;
+      }
+    }
+  }
+}

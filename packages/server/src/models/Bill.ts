@@ -404,6 +404,7 @@ export default class Bill extends mixin(TenantModel, [
     const Branch = require('models/Branch');
     const TaxRateTransaction = require('models/TaxRateTransaction');
     const Document = require('models/Document');
+    const { MatchedBankTransaction } = require('models/MatchedBankTransaction');
 
     return {
       vendor: {
@@ -483,6 +484,21 @@ export default class Bill extends mixin(TenantModel, [
         },
         filter(query) {
           query.where('model_ref', 'Bill');
+        },
+      },
+
+      /**
+       * Bill may belongs to matched bank transaction.
+       */
+      matchedBankTransaction: {
+        relation: Model.HasManyRelation,
+        modelClass: MatchedBankTransaction,
+        join: {
+          from: 'bills.id',
+          to: 'matched_bank_transactions.referenceId',
+        },
+        filter(query) {
+          query.where('reference_type', 'Bill');
         },
       },
     };

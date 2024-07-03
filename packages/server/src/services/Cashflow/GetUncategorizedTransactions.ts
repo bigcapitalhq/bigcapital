@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { initialize } from 'objection';
 import HasTenancyService from '../Tenancy/TenancyService';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { UncategorizedTransactionTransformer } from './UncategorizedTransactionTransformer';
@@ -22,7 +23,13 @@ export class GetUncategorizedTransactions {
     accountId: number,
     query: IGetUncategorizedTransactionsQuery
   ) {
-    const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
+    const {
+      UncategorizedCashflowTransaction,
+      RecognizedBankTransaction,
+      MatchedBankTransaction,
+      Account,
+    } = this.tenancy.models(tenantId);
+    const knex = this.tenancy.knex(tenantId);
 
     // Parsed query with default values.
     const _query = {
@@ -30,12 +37,30 @@ export class GetUncategorizedTransactions {
       pageSize: 20,
       ...query,
     };
+
+    // Initialize the ORM models metadata.
+    await initialize(knex, [
+      UncategorizedCashflowTransaction,
+      MatchedBankTransaction,
+      RecognizedBankTransaction,
+      Account,
+    ]);
+
     const { results, pagination } =
       await UncategorizedCashflowTransaction.query()
-        .where('accountId', accountId)
-        .where('categorized', false)
-        .withGraphFetched('account')
-        .orderBy('date', 'DESC')
+        .onBuild((q) => {
+          q.where('accountId', accountId);
+          q.where('categorized', false);
+          q.modify('notExcluded');
+
+          q.withGraphFetched('account');
+          q.withGraphFetched('recognizedTransaction.assignAccount');
+
+          q.withGraphJoined('matchedBankTransactions');
+
+          q.whereNull('matchedBankTransactions.id');
+          q.orderBy('date', 'DESC');
+        })
         .pagination(_query.page - 1, _query.pageSize);
 
     const data = await this.transformer.transform(

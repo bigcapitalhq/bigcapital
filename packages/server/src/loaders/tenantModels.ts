@@ -64,6 +64,10 @@ import PlaidItem from 'models/PlaidItem';
 import UncategorizedCashflowTransaction from 'models/UncategorizedCashflowTransaction';
 import Document from '@/models/Document';
 import DocumentLink from '@/models/DocumentLink';
+import { BankRule } from '@/models/BankRule';
+import { BankRuleCondition } from '@/models/BankRuleCondition';
+import { RecognizedBankTransaction } from '@/models/RecognizedBankTransaction';
+import { MatchedBankTransaction } from '@/models/MatchedBankTransaction';
 
 export default (knex) => {
   const models = {
@@ -131,6 +135,10 @@ export default (knex) => {
     DocumentLink,
     PlaidItem,
     UncategorizedCashflowTransaction,
+    BankRule,
+    BankRuleCondition,
+    RecognizedBankTransaction,
+    MatchedBankTransaction,
   };
   return mapValues(models, (model) => model.bindKnex(knex));
 };
