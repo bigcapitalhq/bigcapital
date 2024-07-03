@@ -14,15 +14,15 @@ export class ValidateMatchingOnManualJournalDelete {
   public attach(bus) {
     bus.subscribe(
       events.manualJournals.onDeleting,
-      this.validateMatchingOnManualJournalDelete.bind(this)
+      this.validateMatchingOnManualJournalDeleting.bind(this)
     );
   }
 
   /**
-   * 
+   * Validates the manual journal transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  public async validateMatchingOnManualJournalDelete({
+  public async validateMatchingOnManualJournalDeleting({
     tenantId,
     oldManualJournal,
     trx,

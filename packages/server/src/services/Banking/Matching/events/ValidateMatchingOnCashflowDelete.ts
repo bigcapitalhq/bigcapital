@@ -14,15 +14,15 @@ export class ValidateMatchingOnCashflowDelete {
   public attach(bus) {
     bus.subscribe(
       events.cashflow.onTransactionDeleting,
-      this.validateMatchingOnCashflowDelete.bind(this)
+      this.validateMatchingOnCashflowDeleting.bind(this)
     );
   }
 
   /**
-   *
+   * Validates the cashflow transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  public async validateMatchingOnCashflowDelete({
+  public async validateMatchingOnCashflowDeleting({
     tenantId,
     oldManualJournal,
     trx,

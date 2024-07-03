@@ -116,6 +116,9 @@ export function useDeleteBankRule(
         queryClient.invalidateQueries(
           QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
         );
+        queryClient.invalidateQueries([
+          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+        ]);
       },
       ...options,
     },

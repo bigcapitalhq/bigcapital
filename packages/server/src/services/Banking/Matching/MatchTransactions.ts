@@ -105,12 +105,13 @@ export class MatchBankTransactions {
    * Matches the given uncategorized transaction to the given references.
    * @param {number} tenantId
    * @param {number} uncategorizedTransactionId
+   * @returns {Promise<void>}
    */
   public async matchTransaction(
     tenantId: number,
     uncategorizedTransactionId: number,
     matchTransactionsDTO: IMatchTransactionsDTO
-  ) {
+  ): Promise<void> {
     const { matchedTransactions } = matchTransactionsDTO;
 
     // Validates the given matching transactions DTO.

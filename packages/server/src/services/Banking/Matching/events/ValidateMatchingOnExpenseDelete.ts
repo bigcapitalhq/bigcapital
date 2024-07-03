@@ -14,15 +14,15 @@ export class ValidateMatchingOnExpenseDelete {
   public attach(bus) {
     bus.subscribe(
       events.expenses.onDeleting,
-      this.validateMatchingOnExpenseDelete.bind(this)
+      this.validateMatchingOnExpenseDeleting.bind(this)
     );
   }
 
   /**
-   *
+   * Validates the expense transaction whether matched with bank transaction on deleting.
    * @param {IExpenseEventDeletePayload}
    */
-  public async validateMatchingOnExpenseDelete({
+  public async validateMatchingOnExpenseDeleting({
     tenantId,
     oldExpense,
     trx,

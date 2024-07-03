@@ -3,6 +3,7 @@ import { Knex } from 'knex';
 export enum BankRuleConditionField {
   Amount = 'Amount',
   Description = 'Description',
+  Payee = 'Payee'
 }
 
 export enum BankRuleConditionComparator {

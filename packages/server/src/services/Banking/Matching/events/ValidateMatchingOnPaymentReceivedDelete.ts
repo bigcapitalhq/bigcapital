@@ -14,15 +14,15 @@ export class ValidateMatchingOnPaymentReceivedDelete {
   public attach(bus) {
     bus.subscribe(
       events.paymentReceive.onDeleting,
-      this.validateMatchingOnPaymentReceivedDelete.bind(this)
+      this.validateMatchingOnPaymentReceivedDeleting.bind(this)
     );
   }
 
   /**
-   *
+   * Validates the payment received transaction whether matched with bank transaction on deleting.
    * @param {IPaymentReceiveDeletedPayload}
    */
-  public async validateMatchingOnPaymentReceivedDelete({
+  public async validateMatchingOnPaymentReceivedDeleting({
     tenantId,
     oldPaymentReceive,
     trx,

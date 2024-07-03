@@ -135,7 +135,7 @@ function AccountTransactionsActionsBar({
         <Popover
           minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
-          position={Position.BOTTOM_LEFT}
+          position={Position.BOTTOM_RIGHT}
           modifiers={{
             offset: { offset: '0, 4' },
           }}

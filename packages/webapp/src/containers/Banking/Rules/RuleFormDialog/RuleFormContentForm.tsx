@@ -34,7 +34,6 @@ import { DialogsName } from '@/constants/dialogs';
 
 function RuleFormContentFormRoot({
   // #withDialogActions
-  openDialog,
   closeDialog,
 }) {
   const { accounts, bankRule, isEditMode, bankRuleId } =
@@ -180,6 +179,10 @@ export const RuleFormContentForm = R.compose(withDialogActions)(
   RuleFormContentFormRoot,
 );
 
+/**
+ * Rule form conditions stack.
+ * @returns {React.ReactNode}
+ */
 function RuleFormConditions() {
   const { values, setFieldValue } = useFormikContext<RuleFormValues>();
 
@@ -245,6 +248,10 @@ function RuleFormConditions() {
   );
 }
 
+/**
+ * Rule form actions buttons.
+ * @returns {React.ReactNode}
+ */
 function RuleFormActionsRoot({
   // #withDialogActions
   closeDialog,

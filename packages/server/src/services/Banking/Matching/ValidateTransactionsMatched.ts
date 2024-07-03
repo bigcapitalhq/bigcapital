@@ -9,10 +9,11 @@ export class ValidateTransactionMatched {
   private tenancy: HasTenancyService;
 
   /**
-   *
+   * Validate the given transaction whether is matched with bank transactions.
    * @param {number} tenantId
-   * @param {string} referenceType
-   * @param {number} referenceId
+   * @param {string} referenceType - Transaction reference type.
+   * @param {number} referenceId - Transaction reference id.
+   * @returns {Promise<void>}
    */
   public async validateTransactionNoMatchLinking(
     tenantId: number,

@@ -2,7 +2,7 @@
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
-import { FastField, FastFieldProps, Formik } from 'formik';
+import { FastField, FastFieldProps, Formik, useFormikContext } from 'formik';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
 import {
   MatchingTransactionBoot,
@@ -27,12 +27,18 @@ const initialValues = {
   matched: {},
 };
 
-export function MatchingBankTransaction() {
+function MatchingBankTransactionRoot({
+  // #withBankingActions
+  closeMatchingTransactionAside,
+}) {
   const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
 
   // Handles the form submitting.
-  const handleSubmit = (values: MatchingTransactionFormValues) => {
+  const handleSubmit = (
+    values: MatchingTransactionFormValues,
+    { setSubmitting }: FormikHelpers<MatchingTransactionFormValues>,
+  ) => {
     const _values = transformToReq(values);
 
     if (_values.matchedTransactions?.length === 0) {
@@ -42,18 +48,22 @@ export function MatchingBankTransaction() {
       });
       return;
     }
+    setSubmitting(true);
     matchTransaction({ id: uncategorizedTransactionId, value: _values })
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
           message: 'The bank transaction has been matched successfully.',
         });
+        setSubmitting(false);
+        closeMatchingTransactionAside();
       })
       .catch((err) => {
         AppToaster.show({
           intent: Intent.DANGER,
           message: 'Something went wrong.',
         });
+        setSubmitting(false);
       });
   };
 
@@ -70,6 +80,10 @@ export function MatchingBankTransaction() {
     </MatchingTransactionBoot>
   );
 }
+
+export const MatchingBankTransaction = R.compose(withBankingActions)(
+  MatchingBankTransactionRoot,
+);
 
 function MatchingBankTransactionContent() {
   return (
@@ -193,11 +207,15 @@ interface MatchTransctionFooterProps extends WithBankingActionsProps {}
  */
 const MatchTransactionFooter = R.compose(withBankingActions)(
   ({ closeMatchingTransactionAside }: MatchTransctionFooterProps) => {
+    const { submitForm, isSubmitting } = useFormikContext();
     const totalPending = useGetPendingAmountMatched();
     const showReconcileLink = useIsShowReconcileTransactionLink();
 
     const handleCancelBtnClick = () => {
       closeMatchingTransactionAside();
+    };
+    const handleSubmitBtnClick = () => {
+      submitForm();
     };
 
     return (
@@ -223,7 +241,8 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
             <Button
               intent={Intent.PRIMARY}
               style={{ minWidth: 85 }}
-              type="submit"
+              onClick={handleSubmitBtnClick}
+              loading={isSubmitting}
             >
               Match
             </Button>

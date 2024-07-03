@@ -3,7 +3,7 @@ exports.up = function (knex) {
     table.increments('id');
     table.integer('uncategorized_transaction_id').unsigned();
     table.string('reference_type');
-    table.integer('reference_id');
+    table.integer('reference_id').unsigned();
     table.decimal('amount');
     table.timestamps();
   });

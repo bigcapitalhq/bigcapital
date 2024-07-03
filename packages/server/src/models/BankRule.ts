@@ -54,14 +54,17 @@ export class BankRule extends TenantModel {
         },
       },
 
+      /**
+       * Bank rule may associated to the assign account.
+       */
       assignAccount: {
         relation: Model.BelongsToOneRelation,
         modelClass: Account.default,
         join: {
           from: 'bank_rules.assignAccountId',
-          to: 'accounts.id'
-        }
-      }
+          to: 'accounts.id',
+        },
+      },
     };
   }
 }

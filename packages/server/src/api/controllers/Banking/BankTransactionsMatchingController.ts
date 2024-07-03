@@ -5,7 +5,7 @@ import { MatchBankTransactionsApplication } from '@/services/Banking/Matching/Ma
 import { body, param } from 'express-validator';
 import {
   GetMatchedTransactionsFilter,
-  IMatchTransactionDTO,
+  IMatchTransactionsDTO,
 } from '@/services/Banking/Matching/types';
 
 @Service()
@@ -44,10 +44,10 @@ export class BankTransactionsMatchingController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
+   * @returns {Promise<Response|null>}
    */
   private async matchBankTransaction(
-    req: Request,
+    req: Request<{ transactionId: number }>,
     res: Response,
     next: NextFunction
   ) {
@@ -55,7 +55,7 @@ export class BankTransactionsMatchingController extends BaseController {
     const { transactionId } = req.params;
     const matchTransactionDTO = this.matchedBodyData(
       req
-    ) as IMatchTransactionDTO;
+    ) as IMatchTransactionsDTO;
 
     try {
       await this.bankTransactionsMatchingApp.matchTransaction(
@@ -64,6 +64,7 @@ export class BankTransactionsMatchingController extends BaseController {
         matchTransactionDTO
       );
       return res.status(200).send({
+        id: transactionId,
         message: 'The bank transaction has been matched.',
       });
     } catch (error) {
@@ -72,58 +73,29 @@ export class BankTransactionsMatchingController extends BaseController {
   }
 
   /**
-   *
+   * Unmatches the matched bank transaction.
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
-   * @returns
+   * @returns {Promise<Response|null>}
    */
   private async unmatchMatchedBankTransaction(
-    req: Request,
+    req: Request<{ transactionId: number }>,
     res: Response,
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const transactionId = req.params?.transactionId;
+    const { transactionId } = req.params;
 
     try {
       await this.bankTransactionsMatchingApp.unmatchMatchedTransaction(
         tenantId,
         transactionId
       );
-
       return res.status(200).send({
+        id: transactionId,
         message: 'The bank matched transaction has been unmatched.',
       });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  /**
-   * Retrieves the matched transactions.
-   * @param {Request} req
-   * @param {Response} res
-   * @param {NextFunction} next
-   */
-  private async getMatchedTransactions(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    const { tenantId } = req;
-    const filter = this.matchedQueryData(req) as GetMatchedTransactionsFilter;
-
-    console.log('test');
-
-    try {
-      const matchedTransactions =
-        await this.bankTransactionsMatchingApp.getMatchedTransactions(
-          tenantId,
-          filter
-        );
-
-      return res.status(200).send({ data: matchedTransactions });
     } catch (error) {
       next(error);
     }

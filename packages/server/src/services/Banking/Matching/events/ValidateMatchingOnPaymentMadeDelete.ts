@@ -17,15 +17,15 @@ export class ValidateMatchingOnPaymentMadeDelete {
   public attach(bus) {
     bus.subscribe(
       events.billPayment.onDeleting,
-      this.validateMatchingOnPaymentMadeDelete.bind(this)
+      this.validateMatchingOnPaymentMadeDeleting.bind(this)
     );
   }
 
   /**
-   *
+   * Validates the payment made transaction whether matched with bank transaction on deleting.
    * @param {IPaymentReceiveDeletedPayload}
    */
-  public async validateMatchingOnPaymentMadeDelete({
+  public async validateMatchingOnPaymentMadeDeleting({
     tenantId,
     oldBillPayment,
     trx,

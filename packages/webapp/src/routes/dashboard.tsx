@@ -1228,6 +1228,8 @@ export const getDashboardRoutes = () => [
       () => import('@/containers/Banking/Rules/RulesList/RulesLandingPage'),
     ),
     pageTitle: 'Bank Rules',
+    breadcrumb: 'Bank Rules',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   // Homepage
   {
