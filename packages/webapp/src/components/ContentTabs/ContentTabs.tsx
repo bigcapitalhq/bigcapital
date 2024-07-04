@@ -20,6 +20,12 @@ const ContentTabItemRoot = styled.button<ContentTabItemRootProps>`
   cursor: pointer;
 
   ${(props) =>
+    props.small &&
+    `
+    padding: 8px 10px;
+    `}
+
+  ${(props) =>
     props.active &&
     `
       border-color: #1552c8;
@@ -55,6 +61,8 @@ interface ContentTabsItemProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   active?: boolean;
+  className?: string;
+  small?: booean;
 }
 
 const ContentTabsItem = ({
@@ -62,11 +70,18 @@ const ContentTabsItem = ({
   description,
   active,
   onClick,
+  small,
+  className,
 }: ContentTabsItemProps) => {
   return (
-    <ContentTabItemRoot active={active} onClick={onClick}>
+    <ContentTabItemRoot
+      active={active}
+      onClick={onClick}
+      className={className}
+      small={small}
+    >
       <ContentTabTitle>{title}</ContentTabTitle>
-      <ContentTabDesc>{description}</ContentTabDesc>
+      {description && <ContentTabDesc>{description}</ContentTabDesc>}
     </ContentTabItemRoot>
   );
 };
@@ -77,6 +92,7 @@ interface ContentTabsProps {
   onChange?: (value: string) => void;
   children?: React.ReactNode;
   className?: string;
+  small?: boolean;
 }
 
 export function ContentTabs({
@@ -85,6 +101,7 @@ export function ContentTabs({
   onChange,
   children,
   className,
+  small,
 }: ContentTabsProps) {
   const [localValue, handleItemChange] = useUncontrolled<string>({
     initialValue,
@@ -102,6 +119,7 @@ export function ContentTabs({
           {...tab.props}
           active={localValue === tab.props.id}
           onClick={() => handleItemChange(tab.props?.id)}
+          small={small}
         />
       ))}
     </ContentTabsRoot>

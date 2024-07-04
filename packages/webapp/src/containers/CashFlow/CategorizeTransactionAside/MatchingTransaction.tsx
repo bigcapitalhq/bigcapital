@@ -25,6 +25,8 @@ import {
   withBankingActions,
 } from '../withBankingActions';
 import styles from './CategorizeTransactionAside.module.scss';
+import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
+import { withBanking } from '../withBanking';
 
 const initialValues = {
   matched: {},
@@ -37,6 +39,9 @@ const initialValues = {
 function MatchingBankTransactionRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
+
+  // #withBanking
+  openReconcileMatchingTransaction,
 }) {
   const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
@@ -81,16 +86,23 @@ function MatchingBankTransactionRoot({
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <>
           <MatchingBankTransactionContent />
-          <MatchTransactionFooter />
+
+          {openReconcileMatchingTransaction && (
+            <MatchingReconcileTransactionForm />
+          )}
+          {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
         </>
       </Formik>
     </MatchingTransactionBoot>
   );
 }
 
-export const MatchingBankTransaction = R.compose(withBankingActions)(
-  MatchingBankTransactionRoot,
-);
+export const MatchingBankTransaction = R.compose(
+  withBankingActions,
+  withBanking(({ openReconcileMatchingTransaction }) => ({
+    openReconcileMatchingTransaction,
+  })),
+)(MatchingBankTransactionRoot);
 
 function MatchingBankTransactionContent() {
   return (
@@ -212,7 +224,10 @@ interface MatchTransctionFooterProps extends WithBankingActionsProps {}
  * @returns {React.ReactNode}
  */
 const MatchTransactionFooter = R.compose(withBankingActions)(
-  ({ closeMatchingTransactionAside }: MatchTransctionFooterProps) => {
+  ({
+    closeMatchingTransactionAside,
+    openReconcileMatchingTransaction,
+  }: MatchTransctionFooterProps) => {
     const { submitForm, isSubmitting } = useFormikContext();
     const totalPending = useGetPendingAmountMatched();
     const showReconcileLink = useIsShowReconcileTransactionLink();
@@ -224,13 +239,21 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
     const handleSubmitBtnClick = () => {
       submitForm();
     };
+    const handleReconcileTransaction = () => {
+      openReconcileMatchingTransaction();
+    };
 
     return (
       <Box className={styles.footer}>
         <Box className={styles.footerTotal}>
           <Group position={'apart'}>
             {showReconcileLink && (
-              <AnchorButton small minimal intent={Intent.PRIMARY}>
+              <AnchorButton
+                small
+                minimal
+                intent={Intent.PRIMARY}
+                onClick={handleReconcileTransaction}
+              >
                 Add Reconcile Transaction +
               </AnchorButton>
             )}

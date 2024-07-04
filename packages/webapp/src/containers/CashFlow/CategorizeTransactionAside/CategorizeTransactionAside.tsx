@@ -28,11 +28,13 @@ function CategorizeTransactionAsideRoot({
   }
   return (
     <Aside title={'Categorize Bank Transaction'} onClose={handleClose}>
-      <CategorizeTransactionTabsBoot
-        uncategorizedTransactionId={uncategorizedTransactionId}
-      >
-        <CategorizeTransactionTabs />
-      </CategorizeTransactionTabsBoot>
+      <Aside.Body>
+        <CategorizeTransactionTabsBoot
+          uncategorizedTransactionId={uncategorizedTransactionId}
+        >
+          <CategorizeTransactionTabs />
+        </CategorizeTransactionTabsBoot>
+      </Aside.Body>
     </Aside>
   );
 }
