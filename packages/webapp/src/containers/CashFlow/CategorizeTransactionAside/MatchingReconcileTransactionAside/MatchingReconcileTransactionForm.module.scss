@@ -1,0 +1,43 @@
+
+
+
+.content{
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.footer {
+  padding: 11px 20px;
+  border-top: 1px solid #ced4db;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+
+  :global .bp4-form-group{
+    margin-bottom: 0;
+  }
+  :global .bp4-input {
+    line-height: 30px;
+    height: 30px;
+  }
+}
+
+.asideContent{
+  background: #F6F7F9;
+  height: 335px;
+}
+
+.asideRoot {
+  flex: 1 1 0;
+  box-shadow: 0 0 0 1px rgba(17,20,24,.1),0 1px 1px rgba(17,20,24,.2),0 2px 6px rgba(17,20,24,.2);
+}
+
+.asideFooter {
+  background: #F6F7F9; 
+}

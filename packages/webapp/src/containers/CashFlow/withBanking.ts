@@ -8,6 +8,8 @@ export const withBanking = (mapState) => {
       openMatchingTransactionAside: state.plaid.openMatchingTransactionAside,
       selectedUncategorizedTransactionId:
         state.plaid.uncategorizedTransactionIdForMatching,
+      openReconcileMatchingTransaction:
+        state.plaid.openReconcileMatchingTransaction,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };
