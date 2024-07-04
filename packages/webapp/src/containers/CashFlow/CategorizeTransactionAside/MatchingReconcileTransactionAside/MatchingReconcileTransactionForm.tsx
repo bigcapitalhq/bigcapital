@@ -25,11 +25,18 @@ import {
 import { useCreateCashflowTransaction } from '@/hooks/query';
 import { useAccountTransactionsContext } from '../../AccountTransactions/AccountTransactionsProvider';
 import { MatchingReconcileFormSchema } from './MatchingReconcileTransactionForm.schema';
-import { initialValues } from './_utils';
+import { initialValues, transformToReq } from './_utils';
+
+interface MatchingReconcileTransactionFormProps {
+  onSubmitSuccess?: (values: any) => void;
+}
 
 function MatchingReconcileTransactionFormRoot({
   closeReconcileMatchingTransaction,
-}) {
+
+  // #props¿
+  onSubmitSuccess,
+}: MatchingReconcileTransactionFormProps) {
   // Mutation create cashflow transaction.
   const { mutateAsync: createCashflowTransactionMutate } =
     useCreateCashflowTransaction();
@@ -47,7 +54,7 @@ function MatchingReconcileTransactionFormRoot({
     const _values = transformToReq(values, accountId);
 
     createCashflowTransactionMutate(_values)
-      .then(() => {
+      .then((res) => {
         setSubmitting(false);
 
         AppToaster.show({
@@ -55,6 +62,8 @@ function MatchingReconcileTransactionFormRoot({
           intent: Intent.SUCCESS,
         });
         closeReconcileMatchingTransaction();
+        onSubmitSuccess &&
+          onSubmitSuccess({ id: res.data.id, type: 'CashflowTransaction' });
       })
       .catch((error) => {
         setSubmitting(false);
@@ -97,25 +106,6 @@ export const MatchingReconcileTransactionForm = R.compose(withBankingActions)(
   MatchingReconcileTransactionFormRoot,
 );
 
-export function MatchingReconcileTransactionFooter() {
-  const { isSubmitting } = useFormikContext();
-
-  return (
-    <Box className={styles.footer}>
-      <Group>
-        <Button
-          fill
-          type={'submit'}
-          intent={Intent.PRIMARY}
-          loading={isSubmitting}
-        >
-          Submit
-        </Button>
-      </Group>
-    </Box>
-  );
-}
-
 function ReconcileMatchingType() {
   const { setFieldValue, values } =
     useFormikContext<MatchingReconcileFormValues>();
@@ -135,7 +125,7 @@ function ReconcileMatchingType() {
   );
 }
 
-export function CreateReconcileTransactionContent() {
+function CreateReconcileTransactionContent() {
   const { accounts, branches } = useMatchingReconcileTransactionBoot();
 
   return (
@@ -194,6 +184,25 @@ export function CreateReconcileTransactionContent() {
           popoverProps={{ minimal: true }}
         />
       </FFormGroup>
+    </Box>
+  );
+}
+
+function MatchingReconcileTransactionFooter() {
+  const { isSubmitting } = useFormikContext();
+
+  return (
+    <Box className={styles.footer}>
+      <Group>
+        <Button
+          fill
+          type={'submit'}
+          intent={Intent.PRIMARY}
+          loading={isSubmitting}
+        >
+          Submit
+        </Button>
+      </Group>
     </Box>
   );
 }

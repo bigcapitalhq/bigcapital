@@ -58,6 +58,8 @@ export function useCreateCashflowTransaction(props) {
       onSuccess: () => {
         // Invalidate queries.
         commonInvalidateQueries(queryClient);
+
+        queryClient.invalidateQueries('BANK_TRANSACTION_MATCHES');
       },
       ...props,
     },

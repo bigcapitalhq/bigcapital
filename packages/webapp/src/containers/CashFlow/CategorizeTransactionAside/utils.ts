@@ -24,7 +24,7 @@ export const useGetPendingAmountMatched = () => {
   return useMemo(() => {
     const matchedItems = [...perfectMatches, ...possibleMatches].filter(
       (match) => {
-        const key = `${match.transactionType}-${match.transactionId}`;
+        const key = `${match.referenceType}-${match.referenceId}`;
         return values.matched[key];
       },
     );

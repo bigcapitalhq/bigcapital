@@ -8,6 +8,7 @@ import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { sortClosestMatchTransactions } from './_utils';
+import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCashflow';
 
 @Service()
 export class GetMatchedTransactions {
@@ -26,6 +27,9 @@ export class GetMatchedTransactions {
   @Inject()
   private getMatchedExpensesService: GetMatchedTransactionsByExpenses;
 
+  @Inject()
+  private getMatchedCashflowService: GetMatchedTransactionsByCashflow;
+
   /**
    * Registered matched transactions types.
    */
@@ -35,6 +39,7 @@ export class GetMatchedTransactions {
       { type: 'Bill', service: this.getMatchedBillsService },
       { type: 'Expense', service: this.getMatchedExpensesService },
       { type: 'ManualJournal', service: this.getMatchedManualJournalService },
+      { type: 'Cashflow', service: this.getMatchedCashflowService },
     ];
   }
 
