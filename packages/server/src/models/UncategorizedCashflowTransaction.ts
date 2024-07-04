@@ -108,7 +108,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
         query.whereNotNull('excluded_at')
       }
     };
-  },
+  }
 
   /**
    * Relationship mapping.

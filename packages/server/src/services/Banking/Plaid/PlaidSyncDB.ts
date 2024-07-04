@@ -5,7 +5,7 @@ import { entries, groupBy } from 'lodash';
 import { CreateAccount } from '@/services/Accounts/CreateAccount';
 import {
   IAccountCreateDTO,
-\  IPlaidTransactionsSyncedEventPayload,
+  IPlaidTransactionsSyncedEventPayload,
   PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';

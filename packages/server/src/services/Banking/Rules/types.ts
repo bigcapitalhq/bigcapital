@@ -3,13 +3,13 @@ import { Knex } from 'knex';
 export enum BankRuleConditionField {
   Amount = 'Amount',
   Description = 'Description',
-  Payee = 'Payee'
+  Payee = 'Payee',
 }
 
 export enum BankRuleConditionComparator {
   Contains = 'contains',
   Equals = 'equals',
-  NotContain = 'not_contain';
+  NotContain = 'not_contain',
 }
 
 export interface IBankRuleCondition {
@@ -21,10 +21,10 @@ export interface IBankRuleCondition {
 
 export enum BankRuleConditionType {
   Or = 'or',
-  And = 'and'
+  And = 'and',
 }
 
-export enum BankRuleApplyIfTransactionType  {
+export enum BankRuleApplyIfTransactionType {
   Deposit = 'deposit',
   Withdrawal = 'withdrawal',
 }
@@ -34,7 +34,7 @@ export interface IBankRule {
   order?: number;
   applyIfAccountId: number;
   applyIfTransactionType: BankRuleApplyIfTransactionType;
-  
+
   conditionsType: BankRuleConditionType;
   conditions: IBankRuleCondition[];
 
