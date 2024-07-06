@@ -1,5 +1,5 @@
 import { Inject, Service } from 'typedi';
-import { IManualJournalDeletingPayload } from '@/interfaces';
+import { ICommandCashflowDeletingPayload, IManualJournalDeletingPayload } from '@/interfaces';
 import events from '@/subscribers/events';
 import { ValidateTransactionMatched } from '../ValidateTransactionsMatched';
 
@@ -24,13 +24,14 @@ export class ValidateMatchingOnCashflowDelete {
    */
   public async validateMatchingOnCashflowDeleting({
     tenantId,
-    oldManualJournal,
+    oldCashflowTransaction,
     trx,
-  }: IManualJournalDeletingPayload) {
+  }: ICommandCashflowDeletingPayload) {
     await this.validateNoMatchingLinkedService.validateTransactionNoMatchLinking(
       tenantId,
-      'ManualJournal',
-      oldManualJournal.id
+      'CashflowTransaction',
+      oldCashflowTransaction.id,
+      trx
     );
   }
 }

@@ -16,10 +16,14 @@ export interface IBankTransactionMatchedEventPayload {
 
 export interface IBankTransactionUnmatchingEventPayload {
   tenantId: number;
+  uncategorizedTransactionId: number;
+  trx?: Knex.Transaction;
 }
 
 export interface IBankTransactionUnmatchedEventPayload {
   tenantId: number;
+  uncategorizedTransactionId: number;
+  trx?: Knex.Transaction;
 }
 
 export interface IMatchTransactionDTO {

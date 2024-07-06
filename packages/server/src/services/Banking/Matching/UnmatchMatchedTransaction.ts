@@ -31,6 +31,7 @@ export class UnmatchMatchedBankTransaction {
     return this.uow.withTransaction(tenantId, async (trx) => {
       await this.eventPublisher.emitAsync(events.bankMatch.onUnmatching, {
         tenantId,
+        uncategorizedTransactionId,
         trx,
       } as IBankTransactionUnmatchingEventPayload);
 
@@ -40,6 +41,7 @@ export class UnmatchMatchedBankTransaction {
 
       await this.eventPublisher.emitAsync(events.bankMatch.onUnmatched, {
         tenantId,
+        uncategorizedTransactionId,
         trx,
       } as IBankTransactionUnmatchingEventPayload);
     });

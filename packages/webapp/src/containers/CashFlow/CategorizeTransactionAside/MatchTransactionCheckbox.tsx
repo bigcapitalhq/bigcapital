@@ -9,7 +9,7 @@ export interface MatchTransactionCheckboxProps {
   active?: boolean;
   initialActive?: boolean;
   onChange?: (state: boolean) => void;
-  label: string;
+  label: string | React.ReactNode;
   date: string;
 }
 
@@ -43,7 +43,7 @@ export function MatchTransactionCheckbox({
       position="apart"
       onClick={handleClick}
     >
-      <Stack spacing={3}>
+      <Stack spacing={2}>
         <span className={styles.label}>{label}</span>
         <Text className={styles.date}>Date: {date}</Text>
       </Stack>

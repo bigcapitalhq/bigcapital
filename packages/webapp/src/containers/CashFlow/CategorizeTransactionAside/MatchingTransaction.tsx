@@ -237,9 +237,6 @@ function PossibleMatchingTransactions() {
       <Box className={styles.matchBar}>
         <Stack spacing={2}>
           <h2 className={styles.matchBarTitle}>Possible Matches</h2>
-          <Text style={{ fontSize: 12, color: '#5C7080' }}>
-            Transactions up to 20 Aug 2019
-          </Text>
         </Stack>
       </Box>
 
@@ -247,7 +244,12 @@ function PossibleMatchingTransactions() {
         {possibleMatches.map((match, index) => (
           <MatchTransactionField
             key={index}
-            label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
+            label={
+              <>
+                {`${match.transsactionTypeFormatted} for `}
+                <strong>{match.amountFormatted}</strong>
+              </>
+            }
             date={match.dateFormatted}
             transactionId={match.referenceId}
             transactionType={match.referenceType}
@@ -329,7 +331,7 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
               </AnchorButton>
             )}
             <Text
-              style={{ fontSize: 14, marginLeft: 'auto', color: '#5F6B7C' }}
+              style={{ fontSize: 14, marginLeft: 'auto', color: '#404854' }}
               tagName="span"
             >
               Pending <FormatNumber value={totalPending} currency={'USD'} />
@@ -343,8 +345,8 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
               intent={Intent.PRIMARY}
               style={{ minWidth: 85 }}
               onClick={handleSubmitBtnClick}
-              // loading={isSubmitting}
-              // disabled={submitDisabled}
+              loading={isSubmitting}
+              disabled={submitDisabled}
             >
               Match
             </Button>

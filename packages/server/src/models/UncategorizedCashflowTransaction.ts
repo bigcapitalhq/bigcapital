@@ -105,8 +105,34 @@ export default class UncategorizedCashflowTransaction extends mixin(
        * Filters the excluded transactions.
        */
       excluded(query) {
-        query.whereNotNull('excluded_at')
-      }
+        query.whereNotNull('excluded_at');
+      },
+
+      /**
+       * Filter out the recognized transactions.
+       * @param query
+       */
+      recognized(query) {
+        query.whereNotNull('recognizedTransactionId');
+      },
+
+      /**
+       * Filter out the not recognized transactions.
+       * @param query
+       */
+      notRecognized(query) {
+        query.whereNull('recognizedTransactionId');
+      },
+
+      categorized(query) {
+        query.whereNotNull('categorizeRefType');
+        query.whereNotNull('categorizeRefId');
+      },
+
+      notCategorized(query) {
+        query.whereNull('categorizeRefType');
+        query.whereNull('categorizeRefId');
+      },
     };
   }
 
