@@ -1,4 +1,4 @@
-import { isEmpty, sumBy } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import { PromisePool } from '@supercharge/promise-pool';
@@ -14,6 +14,7 @@ import {
 } from './types';
 import { MatchTransactionsTypes } from './MatchTransactionsTypes';
 import { ServiceError } from '@/exceptions';
+import { sumMatchTranasctions } from './_utils';
 
 @Service()
 export class MatchBankTransactions {
@@ -90,9 +91,8 @@ export class MatchBankTransactions {
       throw new ServiceError(error);
     }
     // Calculate the total given matching transactions.
-    const totalMatchedTranasctions = sumBy(
-      validatationResult.results,
-      'amount'
+    const totalMatchedTranasctions = sumMatchTranasctions(
+      validatationResult.results
     );
     // Validates the total given matching transcations whether is not equal
     // uncategorized transaction amount.

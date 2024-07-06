@@ -11,7 +11,7 @@ export interface WithBankingActionsProps {
   setUncategorizedTransactionIdForMatching: (
     uncategorizedTransactionId: number,
   ) => void;
-  openReconcileMatchingTransaction: () => void;
+  openReconcileMatchingTransaction: (pendingAmount: number) => void;
   closeReconcileMatchingTransaction: () => void;
 }
 
@@ -24,8 +24,8 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
     dispatch(
       setUncategorizedTransactionIdForMatching(uncategorizedTransactionId),
     ),
-  openReconcileMatchingTransaction: () =>
-    dispatch(openReconcileMatchingTransaction()),
+  openReconcileMatchingTransaction: (pendingAmount: number) =>
+    dispatch(openReconcileMatchingTransaction({ pending: pendingAmount })),
   closeReconcileMatchingTransaction: () =>
     dispatch(closeReconcileMatchingTransaction()),
 });

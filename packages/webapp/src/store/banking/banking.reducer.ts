@@ -4,7 +4,7 @@ interface StorePlaidState {
   plaidToken: string;
   openMatchingTransactionAside: boolean;
   uncategorizedTransactionIdForMatching: number | null;
-  openReconcileMatchingTransaction: boolean;
+  openReconcileMatchingTransaction: { isOpen: boolean; pending: number };
 }
 
 export const PlaidSlice = createSlice({
@@ -13,7 +13,10 @@ export const PlaidSlice = createSlice({
     plaidToken: '',
     openMatchingTransactionAside: false,
     uncategorizedTransactionIdForMatching: null,
-    openReconcileMatchingTransaction: false,
+    openReconcileMatchingTransaction: {
+      isOpen: false,
+      pending: 0,
+    },
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -37,12 +40,17 @@ export const PlaidSlice = createSlice({
       state.uncategorizedTransactionIdForMatching = null;
     },
 
-    openReconcileMatchingTransaction: (state: StorePlaidState) => {
-      state.openReconcileMatchingTransaction = true;
+    openReconcileMatchingTransaction: (
+      state: StorePlaidState,
+      action: PayloadAction<{ pending: number }>,
+    ) => {
+      state.openReconcileMatchingTransaction.isOpen = true;
+      state.openReconcileMatchingTransaction.pending = action.payload.pending;
     },
 
     closeReconcileMatchingTransaction: (state: StorePlaidState) => {
-      state.openReconcileMatchingTransaction = false;
+      state.openReconcileMatchingTransaction.isOpen = false;
+      state.openReconcileMatchingTransaction.pending = 0;
     },
   },
 });

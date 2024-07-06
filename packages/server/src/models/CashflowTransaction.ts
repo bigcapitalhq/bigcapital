@@ -96,6 +96,17 @@ export default class CashflowTransaction extends TenantModel {
   }
 
   /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      published(query) {
+        query.whereNot('published_at', null);
+      },
+    };
+  }
+
+  /**
    * Relationship mapping.
    */
   static get relationMappings() {

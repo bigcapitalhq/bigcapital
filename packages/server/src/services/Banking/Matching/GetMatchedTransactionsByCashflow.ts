@@ -27,9 +27,22 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
     // Initialize the ORM models metadata.
     await initialize(knex, [CashflowTransaction, MatchedBankTransaction]);
 
-    const transactions = await CashflowTransaction.query()
-      .withGraphJoined('matchedBankTransaction')
-      .whereNull('matchedBankTransaction.id');
+    const transactions = await CashflowTransaction.query().onBuild((q) => {
+      // Not matched to bank transaction.
+      q.withGraphJoined('matchedBankTransaction');
+      q.whereNull('matchedBankTransaction.id');
+
+      // Published.
+      q.modify('published');
+
+      if (filter.fromDate) {
+        q.where('date', '>=', filter.fromDate);
+      }
+      if (filter.toDate) {
+        q.where('date', '<=', filter.toDate);
+      }
+      q.orderBy('date', 'DESC');
+    });
 
     return this.transformer.transform(
       tenantId,

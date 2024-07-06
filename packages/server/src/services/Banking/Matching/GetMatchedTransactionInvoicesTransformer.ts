@@ -17,6 +17,9 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
       'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
+      'transactionNormal',
+      'referenceType',
+      'referenceId'
     ];
   };
 
@@ -107,5 +110,29 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    */
   protected transsactionTypeFormatted(invoice) {
     return 'Sale invoice';
+  }
+
+  /**
+   * Retrieve the transaction normal of invoice (credit or debit).
+   * @returns {string}
+   */
+  protected transactionNormal() {
+    return 'debit';
+  }
+
+  /**
+   * Retrieve the transaction reference type.
+   * @returns {string}
+   */  protected referenceType() {
+    return 'SaleInvoice';
+  }
+
+  /**
+   * Retrieve the transaction reference id.
+   * @param transaction 
+   * @returns {number}
+   */
+  protected referenceId(transaction) {
+    return transaction.id;
   }
 }

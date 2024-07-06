@@ -9,6 +9,7 @@ import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactions
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { sortClosestMatchTransactions } from './_utils';
 import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCashflow';
+import { GetMatchedTransactionsByInvoices } from './GetMatchedTransactionsByInvoices';
 
 @Service()
 export class GetMatchedTransactions {
@@ -16,7 +17,7 @@ export class GetMatchedTransactions {
   private tenancy: HasTenancyService;
 
   @Inject()
-  private getMatchedInvoicesService: GetMatchedTransactionsByExpenses;
+  private getMatchedInvoicesService: GetMatchedTransactionsByInvoices;
 
   @Inject()
   private getMatchedBillsService: GetMatchedTransactionsByBills;

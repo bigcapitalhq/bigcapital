@@ -17,6 +17,7 @@ export class GetMatchedTransactionCashflowTransformer extends Transformer {
       'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
+      'transactionNormal',
       'referenceId',
       'referenceType',
     ];
@@ -113,10 +114,28 @@ export class GetMatchedTransactionCashflowTransformer extends Transformer {
     return transaction.transactionTypeFormatted;
   }
 
+  /**
+   * Retrieve the cashflow transaction normal (credit or debit).
+   * @param transaction
+   * @returns {string}
+   */
+  protected transactionNormal(transaction) {
+    return transaction.isCashCredit ? 'credit' : 'debit';
+  }
+
+  /**
+   * Retrieves the cashflow transaction reference id.
+   * @param transaction
+   * @returns {number}
+   */
   protected referenceId(transaction) {
     return transaction.id;
   }
 
+  /**
+   * Retrieves the cashflow transaction reference type.
+   * @returns {string}
+   */
   protected referenceType() {
     return 'CashflowTransaction';
   }

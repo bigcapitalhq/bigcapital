@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { initialize } from 'objection';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionBillsTransformer } from './GetMatchedTransactionBillsTransformer';
 import { GetMatchedTransactionsFilter, MatchedTransactionPOJO } from './types';
@@ -22,10 +23,25 @@ export class GetMatchedTransactionsByBills extends GetMatchedTransactionsByType 
     tenantId: number,
     filter: GetMatchedTransactionsFilter
   ) {
-    const { Bill } = this.tenancy.models(tenantId);
+    const { Bill, MatchedBankTransaction } = this.tenancy.models(tenantId);
+    const knex = this.tenancy.knex(tenantId);
 
+    // Initialize the models metadata.
+    await initialize(knex, [Bill, MatchedBankTransaction]);
+
+    // Retrieves the bill matches.
     const bills = await Bill.query().onBuild((q) => {
-      q.whereNotExists(Bill.relatedQuery('matchedBankTransaction'));
+      q.withGraphJoined('matchedBankTransaction');
+      q.whereNull('matchedBankTransaction.id');
+      q.modify('published');
+
+      if (filter.fromDate) {
+        q.where('billDate', '>=', filter.fromDate);
+      }
+      if (filter.toDate) {
+        q.where('billDate', '<=', filter.toDate);
+      }
+      q.orderBy('billDate', 'DESC');
     });
 
     return this.transformer.transform(

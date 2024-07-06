@@ -29,7 +29,9 @@ export const useGetPendingAmountMatched = () => {
       },
     );
     const totalMatchedAmount = matchedItems.reduce(
-      (total, item) => total + parseFloat(item.amount),
+      (total, item) =>
+        total +
+        (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
       0,
     );
     const amount = uncategorizedTransaction.amount;

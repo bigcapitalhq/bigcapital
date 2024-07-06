@@ -20,3 +20,12 @@ export const sortClosestMatchTransactions = (
     ),
   ])(matches);
 };
+
+export const sumMatchTranasctions = (transactions: Array<any>) => {
+  return transactions.reduce(
+    (total, item) =>
+      total +
+      (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
+    0
+  );
+};

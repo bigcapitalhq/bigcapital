@@ -9,7 +9,10 @@ export const withBanking = (mapState) => {
       selectedUncategorizedTransactionId:
         state.plaid.uncategorizedTransactionIdForMatching,
       openReconcileMatchingTransaction:
-        state.plaid.openReconcileMatchingTransaction,
+        state.plaid.openReconcileMatchingTransaction.isOpen,
+
+      reconcileMatchingTransactionPendingAmount:
+        state.plaid.openReconcileMatchingTransaction.pending,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

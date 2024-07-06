@@ -69,6 +69,18 @@ function MatchingBankTransactionRoot({
         closeMatchingTransactionAside();
       })
       .catch((err) => {
+        if (
+          err.response?.data.errors.find(
+            (e) => e.type === 'TOTAL_MATCHING_TRANSACTIONS_INVALID',
+          )
+        ) {
+          AppToaster.show({
+            message: `The total amount does not equal the uncategorized transaction.`,
+            intent: Intent.DANGER,
+          });
+
+          return;
+        }
         AppToaster.show({
           intent: Intent.DANGER,
           message: 'Something went wrong.',
@@ -103,9 +115,6 @@ const MatchingBankTransactionFormContent = R.compose(
   })),
 )(
   ({
-    // #withBankingActions
-    closeMatchingTransactionAside,
-
     // #withBanking
     openReconcileMatchingTransaction,
   }) => {
@@ -302,7 +311,7 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
       submitForm();
     };
     const handleReconcileTransaction = () => {
-      openReconcileMatchingTransaction();
+      openReconcileMatchingTransaction(totalPending);
     };
 
     return (
@@ -334,8 +343,8 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
               intent={Intent.PRIMARY}
               style={{ minWidth: 85 }}
               onClick={handleSubmitBtnClick}
-              loading={isSubmitting}
-              disabled={submitDisabled}
+              // loading={isSubmitting}
+              // disabled={submitDisabled}
             >
               Match
             </Button>
