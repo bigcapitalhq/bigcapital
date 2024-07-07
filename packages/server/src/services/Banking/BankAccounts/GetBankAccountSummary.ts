@@ -19,11 +19,13 @@ export class GetBankAccountSummary {
       Account,
       UncategorizedCashflowTransaction,
       RecognizedBankTransaction,
+      MatchedBankTransaction,
     } = this.tenancy.models(tenantId);
 
     await initialize(knex, [
       UncategorizedCashflowTransaction,
       RecognizedBankTransaction,
+      MatchedBankTransaction,
     ]);
     const bankAccount = await Account.query()
       .findById(bankAccountId)

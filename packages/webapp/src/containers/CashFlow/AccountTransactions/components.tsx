@@ -5,43 +5,56 @@ import {
   Intent,
   Menu,
   MenuItem,
-  MenuDivider,
   Tag,
-  Popover,
   PopoverInteractionKind,
   Position,
   Tooltip,
+  MenuDivider,
 } from '@blueprintjs/core';
-import {
-  Box,
-  Can,
-  FormatDateCell,
-  Icon,
-  MaterialProgressBar,
-} from '@/components';
+import { Box, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { safeCallback } from '@/utils';
 
 export function ActionsMenu({
-  payload: { onCategorize, onExclude },
+  payload: { onUncategorize, onUnmatch },
   row: { original },
 }) {
   return (
     <Menu>
-      <MenuItem
-        icon={<Icon icon="reader-18" />}
-        text={'Categorize'}
-        onClick={safeCallback(onCategorize, original)}
-      />
-      <MenuDivider />
-      <MenuItem
-        text={'Exclude'}
-        onClick={safeCallback(onExclude, original)}
-        icon={<Icon icon="disable" iconSize={16} />}
-      />
+      {original.status === 'categorized' && (
+        <MenuItem
+          icon={<Icon icon="reader-18" />}
+          text={'Uncategorize'}
+          onClick={safeCallback(onUncategorize, original)}
+        />
+      )}
+      {original.status === 'matched' && (
+        <MenuItem
+          text={'Unmatch'}
+          icon={<Icon icon="unlink" iconSize={16} />}
+          onClick={safeCallback(onUnmatch, original)}
+        />
+      )}
     </Menu>
   );
 }
+
+const allTransactionsStatusAccessor = (transaction) => {
+  return (
+    <Tag
+      intent={
+        transaction.status === 'categorized'
+          ? Intent.SUCCESS
+          : transaction.status === 'matched'
+          ? Intent.SUCCESS
+          : Intent.NONE
+      }
+      minimal={transaction.status === 'manual'}
+    >
+      {transaction.formatted_status}
+    </Tag>
+  );
+};
 
 /**
  * Retrieve account transctions table columns.
@@ -70,7 +83,7 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'transaction_number',
-        Header: intl.get('transaction_number'),
+        Header: 'Transaction #',
         accessor: 'transaction_number',
         width: 160,
         className: 'transaction_number',
@@ -79,12 +92,17 @@ export function useAccountTransactionsColumns() {
       },
       {
         id: 'reference_number',
-        Header: intl.get('reference_no'),
+        Header: 'Ref.#',
         accessor: 'reference_number',
         width: 160,
         className: 'reference_number',
         clickable: true,
         textOverview: true,
+      },
+      {
+        id: 'status',
+        Header: 'Status',
+        accessor: allTransactionsStatusAccessor,
       },
       {
         id: 'deposit',
@@ -115,16 +133,6 @@ export function useAccountTransactionsColumns() {
         textOverview: true,
         align: 'right',
         clickable: true,
-      },
-      {
-        id: 'balance',
-        Header: intl.get('balance'),
-        accessor: 'formatted_balance',
-        className: 'balance',
-        width: 150,
-        textOverview: true,
-        clickable: true,
-        align: 'right',
       },
     ],
     [],
@@ -204,7 +212,7 @@ export function useAccountUncategorizedTransactionsColumns() {
       },
       {
         id: 'reference_number',
-        Header: intl.get('reference_no'),
+        Header: 'Ref.#',
         accessor: 'reference_number',
         width: 50,
         className: 'reference_number',

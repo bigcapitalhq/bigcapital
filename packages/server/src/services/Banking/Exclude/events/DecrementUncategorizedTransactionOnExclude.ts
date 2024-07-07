@@ -1,13 +1,13 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import {
-  IBankTransactionMatchedEventPayload,
-  IBankTransactionUnmatchedEventPayload,
-} from '../types';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import {
+  IBankTransactionExcludedEventPayload,
+  IBankTransactionUnexcludedEventPayload,
+} from '../_types';
 
 @Service()
-export class DecrementUncategorizedTransactionOnMatching {
+export class DecrementUncategorizedTransactionOnExclude {
   @Inject()
   private tenancy: HasTenancyService;
   /**
@@ -15,12 +15,12 @@ export class DecrementUncategorizedTransactionOnMatching {
    */
   public attach(bus) {
     bus.subscribe(
-      events.bankMatch.onMatched,
-      this.decrementUnCategorizedTransactionsOnMatching.bind(this)
+      events.bankTransactions.onExcluded,
+      this.decrementUnCategorizedTransactionsOnExclude.bind(this)
     );
     bus.subscribe(
-      events.bankMatch.onUnmatched,
-      this.incrementUnCategorizedTransactionsOnUnmatching.bind(this)
+      events.bankTransactions.onUnexcluded,
+      this.incrementUnCategorizedTransactionsOnUnexclude.bind(this)
     );
   }
 
@@ -28,18 +28,18 @@ export class DecrementUncategorizedTransactionOnMatching {
    * Validates the cashflow transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  public async decrementUnCategorizedTransactionsOnMatching({
+  public async decrementUnCategorizedTransactionsOnExclude({
     tenantId,
     uncategorizedTransactionId,
     trx,
-  }: IBankTransactionMatchedEventPayload) {
+  }: IBankTransactionExcludedEventPayload) {
     const { UncategorizedCashflowTransaction, Account } =
       this.tenancy.models(tenantId);
 
-    const transaction = await UncategorizedCashflowTransaction.query().findById(
-      uncategorizedTransactionId
-    );
-    //
+    const transaction = await UncategorizedCashflowTransaction.query(
+      trx
+    ).findById(uncategorizedTransactionId);
+
     await Account.query(trx)
       .findById(transaction.accountId)
       .decrement('uncategorizedTransactions', 1);
@@ -49,11 +49,11 @@ export class DecrementUncategorizedTransactionOnMatching {
    * Validates the cashflow transaction whether matched with bank transaction on deleting.
    * @param {IManualJournalDeletingPayload}
    */
-  public async incrementUnCategorizedTransactionsOnUnmatching({
+  public async incrementUnCategorizedTransactionsOnUnexclude({
     tenantId,
     uncategorizedTransactionId,
     trx,
-  }: IBankTransactionUnmatchedEventPayload) {
+  }: IBankTransactionUnexcludedEventPayload) {
     const { UncategorizedCashflowTransaction, Account } =
       this.tenancy.models(tenantId);
 

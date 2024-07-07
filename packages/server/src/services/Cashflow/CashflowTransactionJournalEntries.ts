@@ -34,11 +34,12 @@ export default class CashflowTransactionJournalEntries {
       currencyCode: transaction.currencyCode,
       exchangeRate: transaction.exchangeRate,
 
-      transactionType: transformCashflowTransactionType(
-        transaction.transactionType
-      ),
+      transactionType: 'CashflowTransaction',
       transactionId: transaction.id,
       transactionNumber: transaction.transactionNumber,
+      transactionSubType: transformCashflowTransactionType(
+        transaction.transactionType
+      ),
       referenceNumber: transaction.referenceNo,
 
       note: transaction.description,
@@ -161,12 +162,10 @@ export default class CashflowTransactionJournalEntries {
     cashflowTransactionId: number,
     trx?: Knex.Transaction
   ): Promise<void> => {
-    const transactionTypes = getCashflowAccountTransactionsTypes();
-
     await this.ledgerStorage.deleteByReference(
       tenantId,
       cashflowTransactionId,
-      transactionTypes,
+      'CashflowTransaction',
       trx
     );
   };

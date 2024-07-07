@@ -1,30 +1,59 @@
-import { Service, Inject } from 'typedi';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { ICashflowAccountTransactionsQuery, IPaginationMeta } from '@/interfaces';
+import * as R from 'ramda';
+import { ICashflowAccountTransactionsQuery } from '@/interfaces';
+import {
+  groupMatchedBankTransactions,
+  groupUncategorizedTransactions,
+} from './utils';
 
-@Service()
-export default class CashflowAccountTransactionsRepo {
-  @Inject()
-  private tenancy: HasTenancyService;
+export class CashflowAccountTransactionsRepo {
+  private models: any;
+  public query: ICashflowAccountTransactionsQuery;
+  public transactions: any;
+  public uncategorizedTransactions: any;
+  public uncategorizedTransactionsMapByRef: Map<string, any>;
+  public matchedBankTransactions: any;
+  public matchedBankTransactionsMapByRef: Map<string, any>;
+  public pagination: any;
+  public openingBalance: any;
+
+  /**
+   * Constructor method.
+   * @param {any} models
+   * @param {ICashflowAccountTransactionsQuery} query
+   */
+  constructor(models: any, query: ICashflowAccountTransactionsQuery) {
+    this.models = models;
+    this.query = query;
+  }
+
+  /**
+   * Async initalize the resources.
+   */
+  async asyncInit() {
+    await this.initCashflowAccountTransactions();
+    await this.initCashflowAccountOpeningBalance();
+    await this.initCategorizedTransactions();
+    await this.initMatchedTransactions();
+  }
 
   /**
    * Retrieve the cashflow account transactions.
    * @param {number} tenantId -
    * @param {ICashflowAccountTransactionsQuery} query -
    */
-  async getCashflowAccountTransactions(
-    tenantId: number,
-    query: ICashflowAccountTransactionsQuery
-  ) {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
+  async initCashflowAccountTransactions() {
+    const { AccountTransaction } = this.models;
 
-    return AccountTransaction.query()
-      .where('account_id', query.accountId)
+    const { results, pagination } = await AccountTransaction.query()
+      .where('account_id', this.query.accountId)
       .orderBy([
         { column: 'date', order: 'desc' },
         { column: 'created_at', order: 'desc' },
       ])
-      .pagination(query.page - 1, query.pageSize);
+      .pagination(this.query.page - 1, this.query.pageSize);
+
+    this.transactions = results;
+    this.pagination = pagination;
   }
 
   /**
@@ -34,22 +63,18 @@ export default class CashflowAccountTransactionsRepo {
    * @param {IPaginationMeta} pagination
    * @return {Promise<number>}
    */
-  async getCashflowAccountOpeningBalance(
-    tenantId: number,
-    accountId: number,
-    pagination: IPaginationMeta
-  ): Promise<number> {
-    const { AccountTransaction } = this.tenancy.models(tenantId);
+  async initCashflowAccountOpeningBalance(): Promise<void> {
+    const { AccountTransaction } = this.models;
 
     // Retrieve the opening balance of credit and debit balances.
     const openingBalancesSubquery = AccountTransaction.query()
-      .where('account_id', accountId)
+      .where('account_id', this.query.accountId)
       .orderBy([
         { column: 'date', order: 'desc' },
         { column: 'created_at', order: 'desc' },
       ])
-      .limit(pagination.total)
-      .offset(pagination.pageSize * (pagination.page - 1));
+      .limit(this.pagination.total)
+      .offset(this.pagination.pageSize * (this.pagination.page - 1));
 
     // Sumation of credit and debit balance.
     const openingBalances = await AccountTransaction.query()
@@ -60,6 +85,43 @@ export default class CashflowAccountTransactionsRepo {
 
     const openingBalance = openingBalances.debit - openingBalances.credit;
 
-    return openingBalance;
+    this.openingBalance = openingBalance;
+  }
+
+  /**
+   * Initialize the uncategorized transactions of the bank account.
+   */
+  async initCategorizedTransactions() {
+    const { UncategorizedCashflowTransaction } = this.models;
+    const refs = this.transactions.map((t) => [t.referenceType, t.referenceId]);
+
+    const uncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query().whereIn(
+        ['categorizeRefType', 'categorizeRefId'],
+        refs
+      );
+
+    this.uncategorizedTransactions = uncategorizedTransactions;
+    this.uncategorizedTransactionsMapByRef = groupUncategorizedTransactions(
+      uncategorizedTransactions
+    );
+  }
+
+  /**
+   * Initialize the matched bank transactions of the bank account.
+   */
+  async initMatchedTransactions(): Promise<void> {
+    const { MatchedBankTransaction } = this.models;
+    const refs = this.transactions.map((t) => [t.referenceType, t.referenceId]);
+
+    const matchedBankTransactions =
+      await MatchedBankTransaction.query().whereIn(
+        ['referenceType', 'referenceId'],
+        refs
+      );
+    this.matchedBankTransactions = matchedBankTransactions;
+    this.matchedBankTransactionsMapByRef = groupMatchedBankTransactions(
+      matchedBankTransactions
+    );
   }
 }

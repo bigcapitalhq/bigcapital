@@ -212,8 +212,8 @@ function PerfectMatchingTransactions() {
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
             date={match.dateFormatted}
-            transactionId={match.transactionId}
-            transactionType={match.transactionType}
+            transactionId={match.referenceId}
+            transactionType={match.referenceType}
           />
         ))}
       </Stack>

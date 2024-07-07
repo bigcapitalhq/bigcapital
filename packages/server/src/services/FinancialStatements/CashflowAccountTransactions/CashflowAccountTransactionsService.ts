@@ -1,26 +1,16 @@
 import { Service, Inject } from 'typedi';
-import { includes } from 'lodash';
 import * as qim from 'qim';
 import { ICashflowAccountTransactionsQuery, IAccount } from '@/interfaces';
 import TenancyService from '@/services/Tenancy/TenancyService';
 import FinancialSheet from '../FinancialSheet';
-import CashflowAccountTransactionsRepo from './CashflowAccountTransactionsRepo';
-import CashflowAccountTransactionsReport from './CashflowAccountTransactions';
-import { ACCOUNT_TYPE } from '@/data/AccountTypes';
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
+import { CashflowAccountTransactionReport } from './CashflowAccountTransactions';
 import I18nService from '@/services/I18n/I18nService';
+import { CashflowAccountTransactionsRepo } from './CashflowAccountTransactionsRepo';
 
 @Service()
 export default class CashflowAccountTransactionsService extends FinancialSheet {
   @Inject()
-  tenancy: TenancyService;
-
-  @Inject()
-  cashflowTransactionsRepo: CashflowAccountTransactionsRepo;
-
-  @Inject()
-  i18nService: I18nService;
+  private tenancy: TenancyService;
 
   /**
    * Defaults balance sheet filter query.
@@ -50,59 +40,24 @@ export default class CashflowAccountTransactionsService extends FinancialSheet {
     tenantId: number,
     query: ICashflowAccountTransactionsQuery
   ) {
-    const { Account } = this.tenancy.models(tenantId);
+    const models = this.tenancy.models(tenantId);
     const parsedQuery = { ...this.defaultQuery, ...query };
 
-    // Retrieve the given account or throw not found service error.
-    const account = await Account.query().findById(parsedQuery.accountId);
-
-    // Validates the cashflow account type.
-    this.validateCashflowAccountType(account);
-
-    // Retrieve the cashflow account transactions.
-    const { results: transactions, pagination } =
-      await this.cashflowTransactionsRepo.getCashflowAccountTransactions(
-        tenantId,
-        parsedQuery
-      );
-    // Retrieve the cashflow account opening balance.
-    const openingBalance =
-      await this.cashflowTransactionsRepo.getCashflowAccountOpeningBalance(
-        tenantId,
-        parsedQuery.accountId,
-        pagination
-      );
-    // Retrieve the computed report.
-    const report = new CashflowAccountTransactionsReport(
-      transactions,
-      openingBalance,
+    // Initalize the bank transactions report repository.
+    const cashflowTransactionsRepo = new CashflowAccountTransactionsRepo(
+      models,
       parsedQuery
     );
-    const reportTranasctions = report.reportData();
+    await cashflowTransactionsRepo.asyncInit();
 
-    return {
-      transactions: this.i18nService.i18nApply(
-        [[qim.$each, 'formattedTransactionType']],
-        reportTranasctions,
-        tenantId
-      ),
-      pagination,
-    };
-  }
+    // Retrieve the computed report.
+    const report = new CashflowAccountTransactionReport(
+      cashflowTransactionsRepo,
+      parsedQuery
+    );
+    const transactions = report.reportData();
+    const pagination = cashflowTransactionsRepo.pagination;
 
-  /**
-   * Validates the cashflow account type.
-   * @param {IAccount} account -
-   */
-  private validateCashflowAccountType(account: IAccount) {
-    const cashflowTypes = [
-      ACCOUNT_TYPE.CASH,
-      ACCOUNT_TYPE.CREDIT_CARD,
-      ACCOUNT_TYPE.BANK,
-    ];
-
-    if (!includes(cashflowTypes, account.accountType)) {
-      throw new ServiceError(ERRORS.ACCOUNT_ID_HAS_INVALID_TYPE);
-    }
+    return { transactions, pagination };
   }
 }

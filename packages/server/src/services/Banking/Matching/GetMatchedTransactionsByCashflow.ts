@@ -32,6 +32,9 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
       q.withGraphJoined('matchedBankTransaction');
       q.whereNull('matchedBankTransaction.id');
 
+      // Not categorized.
+      q.modify('notCategorized');
+
       // Published.
       q.modify('published');
 
@@ -69,6 +72,8 @@ export class GetMatchedTransactionsByCashflow extends GetMatchedTransactionsByTy
       .findById(transactionId)
       .withGraphJoined('matchedBankTransaction')
       .whereNull('matchedBankTransaction.id')
+      .modify('notCategorized')
+      .modify('published')
       .throwIfNotFound();
 
     return this.transformer.transform(

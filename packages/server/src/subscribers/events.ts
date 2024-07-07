@@ -639,4 +639,12 @@ export default {
     onUnmatching: 'onBankTransactionUnmathcing',
     onUnmatched: 'onBankTransactionUnmathced',
   },
+
+  bankTransactions: {
+    onExcluding: 'onBankTransactionExclude',
+    onExcluded: 'onBankTransactionExcluded',
+
+    onUnexcluding: 'onBankTransactionExcluding',
+    onUnexcluded: 'onBankTransactionExcluded',
+  },
 };

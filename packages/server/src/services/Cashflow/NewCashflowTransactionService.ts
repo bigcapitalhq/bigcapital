@@ -101,6 +101,7 @@ export default class NewCashflowTransactionService {
       ...fromDTO,
       transactionNumber,
       currencyCode: cashflowAccount.currencyCode,
+      exchangeRate: fromDTO?.exchangeRate || 1,
       transactionType: transformCashflowTransactionType(
         fromDTO.transactionType
       ),

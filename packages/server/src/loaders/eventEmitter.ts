@@ -111,6 +111,7 @@ import { ValidateMatchingOnCashflowDelete } from '@/services/Banking/Matching/ev
 import { RecognizeSyncedBankTranasctions } from '@/services/Banking/Plaid/subscribers/RecognizeSyncedBankTransactions';
 import { UnlinkBankRuleOnDeleteBankRule } from '@/services/Banking/Rules/events/UnlinkBankRuleOnDeleteBankRule';
 import { DecrementUncategorizedTransactionOnMatching } from '@/services/Banking/Matching/events/DecrementUncategorizedTransactionsOnMatch';
+import { DecrementUncategorizedTransactionOnExclude } from '@/services/Banking/Exclude/events/DecrementUncategorizedTransactionOnExclude';
 
 export default () => {
   return new EventPublisher();
@@ -260,6 +261,7 @@ export const susbcribers = () => {
     TriggerRecognizedTransactions,
     UnlinkBankRuleOnDeleteBankRule,
     DecrementUncategorizedTransactionOnMatching,
+    DecrementUncategorizedTransactionOnExclude,
 
     // Validate matching
     ValidateMatchingOnCashflowDelete,

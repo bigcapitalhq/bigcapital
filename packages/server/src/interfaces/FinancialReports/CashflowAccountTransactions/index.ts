@@ -29,4 +29,9 @@ export interface ICashflowAccountTransaction {
 
   date: Date;
   formattedDate: string;
+
+  status: string;
+  formattedStatus: string;
+
+  uncategorizedTransactionId: number;
 }
