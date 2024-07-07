@@ -29,7 +29,7 @@ export class UnexcludeBankTransaction {
   public async unexcludeBankTransaction(
     tenantId: number,
     uncategorizedTransactionId: number
-  ) {
+  ): Promise<void> {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     const oldUncategorizedTransaction =
@@ -40,10 +40,13 @@ export class UnexcludeBankTransaction {
     validateTransactionNotCategorized(oldUncategorizedTransaction);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
-      await this.eventPublisher.emitAsync(events.bankTransactions.onExcluding, {
-        tenantId,
-        uncategorizedTransactionId,
-      } as IBankTransactionExcludingEventPayload);
+      await this.eventPublisher.emitAsync(
+        events.bankTransactions.onUnexcluding,
+        {
+          tenantId,
+          uncategorizedTransactionId,
+        } as IBankTransactionExcludingEventPayload
+      );
 
       await UncategorizedCashflowTransaction.query(trx)
         .findById(uncategorizedTransactionId)
@@ -51,10 +54,13 @@ export class UnexcludeBankTransaction {
           excludedAt: null,
         });
 
-      await this.eventPublisher.emitAsync(events.bankTransactions.onExcluded, {
-        tenantId,
-        uncategorizedTransactionId,
-      } as IBankTransactionExcludedEventPayload);
+      await this.eventPublisher.emitAsync(
+        events.bankTransactions.onUnexcluded,
+        {
+          tenantId,
+          uncategorizedTransactionId,
+        } as IBankTransactionExcludedEventPayload
+      );
     });
   }
 }

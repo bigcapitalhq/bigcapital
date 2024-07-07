@@ -644,7 +644,7 @@ export default {
     onExcluding: 'onBankTransactionExclude',
     onExcluded: 'onBankTransactionExcluded',
 
-    onUnexcluding: 'onBankTransactionExcluding',
-    onUnexcluded: 'onBankTransactionExcluded',
+    onUnexcluding: 'onBankTransactionUnexcluding',
+    onUnexcluded: 'onBankTransactionUnexcluded',
   },
 };
