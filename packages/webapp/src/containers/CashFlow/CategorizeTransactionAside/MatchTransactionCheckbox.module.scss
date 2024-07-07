@@ -15,7 +15,6 @@
       color: rgb(21, 82, 200),
     }
   }
-
   &:hover:not(.active){
     border-color: #c0c0c0;
   }
@@ -25,7 +24,7 @@
   margin: 0;
 }
 .checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
-  border-color: #CBCBCB;
+  box-shadow: 0 0 0 1px #CBCBCB;
 }
 .checkbox:global(.bp4-control.bp4-checkbox) :global .bp4-control-indicator{
   margin-right: 4px;
@@ -34,9 +33,17 @@
   width: 16px;
 }
 
+.checkbox:global(.bp4-control.bp4-checkbox) :global input:checked ~ .bp4-control-indicator{
+  box-shadow:  0 0 0 1px #0069ff;
+}
+
 .label {
-  color: #10161A;
-  font-size: 15px;
+  color: #252A33;
+  font-size: 15px; 
+}
+.label :global strong {
+  font-weight: 500;
+  font-variant-numeric:tabular-nums;
 }
 
 .date {

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import styled from 'styled-components';
+import { Intent } from '@blueprintjs/core';
 
 import {
   DataTable,
@@ -9,6 +10,7 @@ import {
   TableSkeletonHeader,
   TableVirtualizedListRows,
   FormattedMessage as T,
+  AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
 
@@ -19,9 +21,11 @@ import withDrawerActions from '@/containers/Drawer/withDrawerActions';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountTransactionsColumns, ActionsMenu } from './components';
 import { useAccountTransactionsAllContext } from './AccountTransactionsAllBoot';
+import { useUnmatchMatchedUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { handleCashFlowTransactionType } from './utils';
 
 import { compose } from '@/utils';
+import { useUncategorizeTransaction } from '@/hooks/query';
 
 /**
  * Account transactions data table.
@@ -43,14 +47,14 @@ function AccountTransactionsDataTable({
   const { cashflowTransactions, isCashFlowTransactionsLoading } =
     useAccountTransactionsAllContext();
 
+  const { mutateAsync: uncategorizeTransaction } = useUncategorizeTransaction();
+  const { mutateAsync: unmatchTransaction } =
+    useUnmatchMatchedUncategorizedTransaction();
+
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.CASHFLOW_Transactions);
 
-  // handle delete transaction
-  const handleDeleteTransaction = ({ reference_id }) => {
-    openAlert('account-transaction-delete', { referenceId: reference_id });
-  };
   // Handle view details action.
   const handleViewDetailCashflowTransaction = (referenceType) => {
     handleCashFlowTransactionType(referenceType, openDrawer);
@@ -59,6 +63,38 @@ function AccountTransactionsDataTable({
   const handleCellClick = (cell, event) => {
     const referenceType = cell.row.original;
     handleCashFlowTransactionType(referenceType, openDrawer);
+  };
+  // Handles the unmatching the matched transaction.
+  const handleUnmatchTransaction = (transaction) => {
+    unmatchTransaction({ id: transaction.uncategorized_transaction_id })
+      .then(() => {
+        AppToaster.show({
+          message: 'The bank transaction has been unmatched.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+  // Handle uncategorize transaction.
+  const handleUncategorizeTransaction = (transaction) => {
+    uncategorizeTransaction(transaction.uncategorized_transaction_id)
+      .then(() => {
+        AppToaster.show({
+          message: 'The bank transaction has been uncategorized.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
   };
 
   return (
@@ -87,7 +123,8 @@ function AccountTransactionsDataTable({
       className="table-constrant"
       payload={{
         onViewDetails: handleViewDetailCashflowTransaction,
-        onDelete: handleDeleteTransaction,
+        onUncategorize: handleUncategorizeTransaction,
+        onUnmatch: handleUnmatchTransaction,
       }}
     />
   );

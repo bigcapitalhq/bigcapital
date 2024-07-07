@@ -1,13 +1,16 @@
 import { Button, Classes } from '@blueprintjs/core';
-import { Box, Group } from '../Layout';
+import clsx from 'classnames';
+import { Box, BoxProps, Group } from '../Layout';
 import { Icon } from '../Icon';
 import styles from './Aside.module.scss';
 
-interface AsideProps {
+interface AsideProps extends BoxProps {
   title?: string;
   onClose?: () => void;
   children?: React.ReactNode;
   hideCloseButton?: boolean;
+  classNames?: Record<string, string>;
+  className?: string;
 }
 
 export function Aside({
@@ -15,13 +18,15 @@ export function Aside({
   onClose,
   children,
   hideCloseButton,
+  classNames,
+  className
 }: AsideProps) {
   const handleClose = () => {
     onClose && onClose();
   };
   return (
-    <Box className={styles.root}>
-      <Group position="apart" className={styles.title}>
+    <Box className={clsx(styles.root, className, classNames?.root)}>
+      <Group position="apart" className={clsx(styles.title, classNames?.title)}>
         {title}
 
         {hideCloseButton !== true && (
@@ -34,7 +39,23 @@ export function Aside({
           />
         )}
       </Group>
-      <Box className={styles.content}>{children}</Box>
+
+      {children}
     </Box>
   );
 }
+
+interface AsideContentProps extends BoxProps {}
+
+function AsideContent({ ...props }: AsideContentProps) {
+  return <Box {...props} className={clsx(styles.content, props?.className)} />;
+}
+
+interface AsideFooterProps extends BoxProps {}
+
+function AsideFooter({ ...props }: AsideFooterProps) {
+  return <Box {...props} />;
+}
+
+Aside.Body = AsideContent;
+Aside.Footer = AsideFooter;

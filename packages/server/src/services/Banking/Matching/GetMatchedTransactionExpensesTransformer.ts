@@ -17,6 +17,9 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
       'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
+      'transactionNormal',
+      'referenceType',
+      'referenceId',
     ];
   };
 
@@ -110,5 +113,30 @@ export class GetMatchedTransactionExpensesTransformer extends Transformer {
    */
   protected transsactionTypeFormatted() {
     return 'Expense';
+  }
+
+  /**
+   * Retrieve the expense transaction normal (credit or debit).
+   * @returns {string}
+   */
+  protected transactionNormal() {
+    return 'credit';
+  }
+
+  /**
+   * Retrieve the transaction reference type.
+   * @returns {string}
+   */
+  protected referenceType() {
+    return 'Expense';
+  }
+
+  /**
+   * Retrieve the transaction reference id.
+   * @param transaction
+   * @returns {number}
+   */
+  protected referenceId(transaction) {
+    return transaction.id;
   }
 }

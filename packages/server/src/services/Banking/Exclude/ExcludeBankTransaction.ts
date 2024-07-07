@@ -2,6 +2,12 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import { Inject, Service } from 'typedi';
 import { validateTransactionNotCategorized } from './utils';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import {
+  IBankTransactionUnexcludedEventPayload,
+  IBankTransactionUnexcludingEventPayload,
+} from './_types';
 
 @Service()
 export class ExcludeBankTransaction {
@@ -10,6 +16,9 @@ export class ExcludeBankTransaction {
 
   @Inject()
   private uow: UnitOfWork;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Marks the given bank transaction as excluded.
@@ -31,11 +40,23 @@ export class ExcludeBankTransaction {
     validateTransactionNotCategorized(oldUncategorizedTransaction);
 
     return this.uow.withTransaction(tenantId, async (trx) => {
+      await this.eventPublisher.emitAsync(events.bankTransactions.onExcluding, {
+        tenantId,
+        uncategorizedTransactionId,
+        trx,
+      } as IBankTransactionUnexcludingEventPayload);
+
       await UncategorizedCashflowTransaction.query(trx)
         .findById(uncategorizedTransactionId)
         .patch({
           excludedAt: new Date(),
         });
+
+      await this.eventPublisher.emitAsync(events.bankTransactions.onExcluded, {
+        tenantId,
+        uncategorizedTransactionId,
+        trx,
+      } as IBankTransactionUnexcludedEventPayload);
     });
   }
 }

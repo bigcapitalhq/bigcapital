@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { initialize } from 'objection';
 import { GetMatchedTransactionsFilter, MatchedTransactionPOJO } from './types';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -23,22 +24,34 @@ export class GetMatchedTransactionsByExpenses extends GetMatchedTransactionsByTy
     tenantId: number,
     filter: GetMatchedTransactionsFilter
   ) {
-    const { Expense } = this.tenancy.models(tenantId);
+    const { Expense, MatchedBankTransaction } = this.tenancy.models(tenantId);
+    const knex = this.tenancy.knex(tenantId);
 
+    // Initialize the models metadata.
+    await initialize(knex, [Expense, MatchedBankTransaction]);
+
+    // Retrieve the expense matches.
     const expenses = await Expense.query().onBuild((query) => {
-      query.whereNotExists(Expense.relatedQuery('matchedBankTransaction'));
+      // Filter out the not matched to bank transactions.
+      query.withGraphJoined('matchedBankTransaction');
+      query.whereNull('matchedBankTransaction.id');
+
+      // Filter the published onyl
+      query.modify('filterByPublished');
+
       if (filter.fromDate) {
-        query.where('payment_date', '>=', filter.fromDate);
+        query.where('paymentDate', '>=', filter.fromDate);
       }
       if (filter.toDate) {
-        query.where('payment_date', '<=', filter.toDate);
+        query.where('paymentDate', '<=', filter.toDate);
       }
       if (filter.minAmount) {
-        query.where('total_amount', '>=', filter.minAmount);
+        query.where('totalAmount', '>=', filter.minAmount);
       }
       if (filter.maxAmount) {
-        query.where('total_amount', '<=', filter.maxAmount);
+        query.where('totalAmount', '<=', filter.maxAmount);
       }
+      query.orderBy('paymentDate', 'DESC');
     });
     return this.transformer.transform(
       tenantId,

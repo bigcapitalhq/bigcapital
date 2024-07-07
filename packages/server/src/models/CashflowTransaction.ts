@@ -5,9 +5,9 @@ import {
   getCashflowAccountTransactionsTypes,
   getCashflowTransactionType,
 } from '@/services/Cashflow/utils';
-import AccountTransaction from './AccountTransaction';
 import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
 import { getTransactionTypeLabel } from '@/utils/transactions-types';
+
 export default class CashflowTransaction extends TenantModel {
   transactionType: string;
   amount: number;
@@ -93,6 +93,34 @@ export default class CashflowTransaction extends TenantModel {
    */
   get isCategroizedTranasction() {
     return !!this.uncategorizedTransaction;
+  }
+
+  /**
+   * Model modifiers.
+   */
+  static get modifiers() {
+    return {
+      /**
+       * Filter the published transactions.
+       */
+      published(query) {
+        query.whereNot('published_at', null);
+      },
+
+      /**
+       * Filter the not categorized transactions.
+       */
+      notCategorized(query) {
+        query.whereNull('cashflowTransactions.uncategorizedTransactionId');
+      },
+
+      /**
+       * Filter the categorized transactions.
+       */
+      categorized(query) {
+        query.whereNotNull('cashflowTransactions.uncategorizedTransactionId');
+      },
+    };
   }
 
   /**

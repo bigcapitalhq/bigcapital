@@ -1,6 +1,7 @@
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
 import { ERRORS } from './types';
 
 @Service()
@@ -18,12 +19,13 @@ export class ValidateTransactionMatched {
   public async validateTransactionNoMatchLinking(
     tenantId: number,
     referenceType: string,
-    referenceId: number
+    referenceId: number,
+    trx?: Knex.Transaction
   ) {
     const { MatchedBankTransaction } = this.tenancy.models(tenantId);
 
     const foundMatchedTransaction =
-      await MatchedBankTransaction.query().findOne({
+      await MatchedBankTransaction.query(trx).findOne({
         referenceType,
         referenceId,
       });

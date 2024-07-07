@@ -37,7 +37,7 @@ interface CreateBankRuleResponse {}
 /**
  * Creates a new bank rule.
  * @param {UseMutationOptions<CreateBankRuleValues, Error, CreateBankRuleValues>} options -
- * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}
+ * @returns {UseMutationResult<CreateBankRuleValues, Error, CreateBankRuleValues>}TCHES
  */
 export function useCreateBankRule(
   options?: UseMutationOptions<
@@ -322,6 +322,46 @@ export function useMatchUncategorizedTransaction(
       queryClient.invalidateQueries(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
       );
+      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+    },
+    ...props,
+  });
+}
+
+interface UnmatchUncategorizedTransactionValues {
+  id: number;
+}
+interface UnmatchUncategorizedTransactionRes {}
+
+/**
+ * Unmatch the given matched uncategorized transaction.
+ * @param {UseMutationOptions<UnmatchUncategorizedTransactionRes, Error, UnmatchUncategorizedTransactionValues>} props
+ * @returns {UseMutationResult<UnmatchUncategorizedTransactionRes, Error, UnmatchUncategorizedTransactionValues>}
+ */
+export function useUnmatchMatchedUncategorizedTransaction(
+  props?: UseMutationOptions<
+    UnmatchUncategorizedTransactionRes,
+    Error,
+    UnmatchUncategorizedTransactionValues
+  >,
+): UseMutationResult<
+  UnmatchUncategorizedTransactionRes,
+  Error,
+  UnmatchUncategorizedTransactionValues
+> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    UnmatchUncategorizedTransactionRes,
+    Error,
+    UnmatchUncategorizedTransactionValues
+  >(({ id }) => apiRequest.post(`/banking/matches/unmatch/${id}`), {
+    onSuccess: (res, id) => {
+      queryClient.invalidateQueries(
+        t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+      );
+      queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
     },
     ...props,
   });

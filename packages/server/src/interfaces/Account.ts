@@ -66,7 +66,9 @@ export interface IAccountTransaction {
   referenceId: number;
 
   referenceNumber?: string;
+
   transactionNumber?: string;
+  transactionType?: string;
 
   note?: string;
 

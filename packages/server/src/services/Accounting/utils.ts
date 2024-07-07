@@ -19,6 +19,8 @@ export const transformLedgerEntryToTransaction = (
     referenceId: entry.transactionId,
 
     transactionNumber: entry.transactionNumber,
+    transactionType: entry.transactionSubType,
+
     referenceNumber: entry.referenceNumber,
 
     note: entry.note,

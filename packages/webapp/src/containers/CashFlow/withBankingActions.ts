@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 import {
   closeMatchingTransactionAside,
   setUncategorizedTransactionIdForMatching,
+  openReconcileMatchingTransaction,
+  closeReconcileMatchingTransaction,
 } from '@/store/banking/banking.reducer';
 
 export interface WithBankingActionsProps {
@@ -9,6 +11,8 @@ export interface WithBankingActionsProps {
   setUncategorizedTransactionIdForMatching: (
     uncategorizedTransactionId: number,
   ) => void;
+  openReconcileMatchingTransaction: (pendingAmount: number) => void;
+  closeReconcileMatchingTransaction: () => void;
 }
 
 const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
@@ -20,6 +24,10 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
     dispatch(
       setUncategorizedTransactionIdForMatching(uncategorizedTransactionId),
     ),
+  openReconcileMatchingTransaction: (pendingAmount: number) =>
+    dispatch(openReconcileMatchingTransaction({ pending: pendingAmount })),
+  closeReconcileMatchingTransaction: () =>
+    dispatch(closeReconcileMatchingTransaction()),
 });
 
 export const withBankingActions = connect<

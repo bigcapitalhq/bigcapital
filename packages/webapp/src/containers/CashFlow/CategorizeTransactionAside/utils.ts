@@ -24,12 +24,14 @@ export const useGetPendingAmountMatched = () => {
   return useMemo(() => {
     const matchedItems = [...perfectMatches, ...possibleMatches].filter(
       (match) => {
-        const key = `${match.transactionType}-${match.transactionId}`;
+        const key = `${match.referenceType}-${match.referenceId}`;
         return values.matched[key];
       },
     );
     const totalMatchedAmount = matchedItems.reduce(
-      (total, item) => total + parseFloat(item.amount),
+      (total, item) =>
+        total +
+        (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
       0,
     );
     const amount = uncategorizedTransaction.amount;

@@ -30,7 +30,8 @@ export class ValidateMatchingOnManualJournalDelete {
     await this.validateNoMatchingLinkedService.validateTransactionNoMatchLinking(
       tenantId,
       'ManualJournal',
-      oldManualJournal.id
+      oldManualJournal.id,
+      trx
     );
   }
 }

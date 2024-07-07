@@ -50,3 +50,9 @@ $form-check-input-indeterminate-bg-image: url("data:image/svg+xml,<svg xmlns='ht
 // z-indexs
 $zindex-dashboard-splash-screen: 39;
 $zindex-toast: 40;
+
+// Controls
+$control-checked-background-color: #0069ff !default;
+$control-checked-background-color-hover: #0069ff !default;
+$control-checked-background-color-active: #0069ff !default;
+$control-box-shadow: inset 0 0 0 1px #666 !default;

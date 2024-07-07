@@ -4,6 +4,8 @@ import { GetMatchedTransactionsByBills } from './GetMatchedTransactionsByBills';
 import { GetMatchedTransactionsByManualJournals } from './GetMatchedTransactionsByManualJournals';
 import { MatchTransactionsTypesRegistry } from './MatchTransactionsTypesRegistry';
 import { GetMatchedTransactionsByInvoices } from './GetMatchedTransactionsByInvoices';
+import { GetMatchedTransactionCashflowTransformer } from './GetMatchedTransactionCashflowTransformer';
+import { GetMatchedTransactionsByCashflow } from './GetMatchedTransactionsByCashflow';
 
 @Service()
 export class MatchTransactionsTypes {
@@ -24,6 +26,10 @@ export class MatchTransactionsTypes {
       {
         type: 'ManualJournal',
         service: GetMatchedTransactionsByManualJournals,
+      },
+      {
+        type: 'CashflowTransaction',
+        service: GetMatchedTransactionsByCashflow,
       },
     ];
   }

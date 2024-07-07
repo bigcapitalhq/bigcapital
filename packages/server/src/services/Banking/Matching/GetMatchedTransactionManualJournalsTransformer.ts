@@ -1,4 +1,6 @@
+import { sumBy } from 'lodash';
 import { Transformer } from '@/lib/Transformer/Transformer';
+import { AccountNormal } from '@/interfaces';
 
 export class GetMatchedTransactionManualJournalsTransformer extends Transformer {
   /**
@@ -17,6 +19,9 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
       'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
+      'transactionNormal',
+      'referenceType',
+      'referenceId',
     ];
   };
 
@@ -37,13 +42,20 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
     return manualJournal.referenceNo;
   }
 
+  protected total(manualJournal) {
+    const credit = sumBy(manualJournal?.entries, 'credit');
+    const debit = sumBy(manualJournal?.entries, 'debit');
+
+    return debit - credit;
+  }
+
   /**
    * Retrieves the manual journal amount.
    * @param manualJournal
    * @returns {number}
    */
   protected amount(manualJournal) {
-    return manualJournal.amount;
+    return Math.abs(this.total(manualJournal));
   }
 
   /**
@@ -107,5 +119,31 @@ export class GetMatchedTransactionManualJournalsTransformer extends Transformer 
   protected transsactionTypeFormatted() {
     return 'Manual Journal';
   }
-}
 
+  /**
+   * Retrieve the manual journal transaction normal (credit or debit).
+   * @returns {string}
+   */
+  protected transactionNormal(transaction) {
+    const amount = this.total(transaction);
+
+    return amount >= 0 ? AccountNormal.DEBIT : AccountNormal.CREDIT;
+  }
+
+  /**
+   * Retrieve the manual journal reference type.
+   * @returns {string}
+   */
+  protected referenceType() {
+    return 'ManualJournal';
+  }
+
+  /**
+   * Retrieves the manual journal reference id.
+   * @param transaction
+   * @returns {number}
+   */
+  protected referenceId(transaction) {
+    return transaction.id;
+  }
+}

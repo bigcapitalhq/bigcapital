@@ -1,4 +1,5 @@
 import { Inject, Service } from 'typedi';
+import { initialize } from 'objection';
 import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
 import { GetMatchedTransactionManualJournalsTransformer } from './GetMatchedTransactionManualJournalsTransformer';
 import { GetMatchedTransactionsByType } from './GetMatchedTransactionsByType';
@@ -19,12 +20,26 @@ export class GetMatchedTransactionsByManualJournals extends GetMatchedTransactio
     tenantId: number,
     filter: Omit<GetMatchedTransactionsFilter, 'transactionType'>
   ) {
-    const { ManualJournal } = this.tenancy.models(tenantId);
+    const { ManualJournal, ManualJournalEntry, MatchedBankTransaction } =
+      this.tenancy.models(tenantId);
+    const knex = this.tenancy.knex(tenantId);
+
+    await initialize(knex, [
+      ManualJournal,
+      ManualJournalEntry,
+      MatchedBankTransaction,
+    ]);
+    const accountId = 1000;
 
     const manualJournals = await ManualJournal.query().onBuild((query) => {
-      query.whereNotExists(
-        ManualJournal.relatedQuery('matchedBankTransaction')
-      );
+      query.withGraphJoined('matchedBankTransaction');
+      query.whereNull('matchedBankTransaction.id');
+
+      query.withGraphJoined('entries');
+      query.where('entries.accountId', accountId);
+
+      query.modify('filterByPublished');
+
       if (filter.fromDate) {
         query.where('date', '>=', filter.fromDate);
       }

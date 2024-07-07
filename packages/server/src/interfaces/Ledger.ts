@@ -40,6 +40,8 @@ export interface ILedgerEntry {
   date: Date | string;
 
   transactionType: string;
+  transactionSubType: string;
+
   transactionId: number;
 
   transactionNumber?: string;

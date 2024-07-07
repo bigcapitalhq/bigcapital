@@ -12,19 +12,17 @@ import {
   AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
+import { ActionsMenu } from './UncategorizedTransactions/components';
 
 import withSettings from '@/containers/Settings/withSettings';
 import { withBankingActions } from '../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
-import {
-  ActionsMenu,
-  useAccountUncategorizedTransactionsColumns,
-} from './components';
+import { useAccountUncategorizedTransactionsColumns } from './components';
 import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
+import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 
 import { compose } from '@/utils';
-import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 
 /**
  * Account transactions data table.

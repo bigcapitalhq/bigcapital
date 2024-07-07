@@ -1,6 +1,6 @@
 import { Transformer } from '@/lib/Transformer/Transformer';
 
-export class GetMatchedTransactionInvoicesTransformer extends Transformer {
+export class GetMatchedTransactionCashflowTransformer extends Transformer {
   /**
    * Include these attributes to sale credit note object.
    * @returns {Array}
@@ -18,8 +18,8 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
       'transactionType',
       'transsactionTypeFormatted',
       'transactionNormal',
+      'referenceId',
       'referenceType',
-      'referenceId'
     ];
   };
 
@@ -40,21 +40,22 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
   }
 
   /**
-   * Retrieve the invoice amount.
-   * @param invoice
+   * Retrieve the transaction amount.
+   * @param transaction
    * @returns {number}
    */
-  protected amount(invoice) {
-    return invoice.dueAmount;
+  protected amount(transaction) {
+    return transaction.amount;
   }
+
   /**
-   * Format the amount of the invoice.
-   * @param invoice
+   * Retrieve the transaction formatted amount.
+   * @param transaction
    * @returns {string}
    */
-  protected amountFormatted(invoice) {
-    return this.formatNumber(invoice.dueAmount, {
-      currencyCode: invoice.currencyCode,
+  protected amountFormatted(transaction) {
+    return this.formatNumber(transaction.amount, {
+      currencyCode: transaction.currencyCode,
       money: true,
     });
   }
@@ -64,8 +65,8 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {Date}
    */
-  protected date(invoice) {
-    return invoice.invoiceDate;
+  protected date(transaction) {
+    return transaction.date;
   }
 
   /**
@@ -73,8 +74,8 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {string}
    */
-  protected dateFormatted(invoice) {
-    return this.formatDate(invoice.invoiceDate);
+  protected dateFormatted(transaction) {
+    return this.formatDate(transaction.date);
   }
 
   /**
@@ -82,16 +83,17 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {number}
    */
-  protected transactionId(invoice) {
-    return invoice.id;
+  protected transactionId(transaction) {
+    return transaction.id;
   }
+
   /**
    * Retrieve the invoice transaction number.
    * @param invoice
    * @returns {string}
    */
-  protected transactionNo(invoice) {
-    return invoice.invoiceNo;
+  protected transactionNo(transaction) {
+    return transaction.transactionNumber;
   }
 
   /**
@@ -99,8 +101,8 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {String}
    */
-  protected transactionType(invoice) {
-    return 'SaleInvoice';
+  protected transactionType(transaction) {
+    return transaction.transactionType;
   }
 
   /**
@@ -108,31 +110,33 @@ export class GetMatchedTransactionInvoicesTransformer extends Transformer {
    * @param invoice
    * @returns {string}
    */
-  protected transsactionTypeFormatted(invoice) {
-    return 'Sale invoice';
+  protected transsactionTypeFormatted(transaction) {
+    return transaction.transactionTypeFormatted;
   }
 
   /**
-   * Retrieve the transaction normal of invoice (credit or debit).
+   * Retrieve the cashflow transaction normal (credit or debit).
+   * @param transaction
    * @returns {string}
    */
-  protected transactionNormal() {
-    return 'debit';
+  protected transactionNormal(transaction) {
+    return transaction.isCashCredit ? 'credit' : 'debit';
   }
 
   /**
-   * Retrieve the transaction reference type.
-   * @returns {string}
-   */  protected referenceType() {
-    return 'SaleInvoice';
-  }
-
-  /**
-   * Retrieve the transaction reference id.
-   * @param transaction 
+   * Retrieves the cashflow transaction reference id.
+   * @param transaction
    * @returns {number}
    */
   protected referenceId(transaction) {
     return transaction.id;
+  }
+
+  /**
+   * Retrieves the cashflow transaction reference type.
+   * @returns {string}
+   */
+  protected referenceType() {
+    return 'CashflowTransaction';
   }
 }

@@ -30,7 +30,8 @@ export class ValidateMatchingOnPaymentReceivedDelete {
     await this.validateNoMatchingLinkedService.validateTransactionNoMatchLinking(
       tenantId,
       'PaymentReceive',
-      oldPaymentReceive.id
+      oldPaymentReceive.id,
+      trx
     );
   }
 }

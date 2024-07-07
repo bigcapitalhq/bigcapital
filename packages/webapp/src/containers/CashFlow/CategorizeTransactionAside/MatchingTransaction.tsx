@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
+import { useEffect, useState } from 'react';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
 import { FastField, FastFieldProps, Formik, useFormikContext } from 'formik';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
@@ -25,6 +26,8 @@ import {
   withBankingActions,
 } from '../withBankingActions';
 import styles from './CategorizeTransactionAside.module.scss';
+import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
+import { withBanking } from '../withBanking';
 
 const initialValues = {
   matched: {},
@@ -66,6 +69,18 @@ function MatchingBankTransactionRoot({
         closeMatchingTransactionAside();
       })
       .catch((err) => {
+        if (
+          err.response?.data.errors.find(
+            (e) => e.type === 'TOTAL_MATCHING_TRANSACTIONS_INVALID',
+          )
+        ) {
+          AppToaster.show({
+            message: `The total amount does not equal the uncategorized transaction.`,
+            intent: Intent.DANGER,
+          });
+
+          return;
+        }
         AppToaster.show({
           intent: Intent.DANGER,
           message: 'Something went wrong.',
@@ -79,10 +94,7 @@ function MatchingBankTransactionRoot({
       uncategorizedTransactionId={uncategorizedTransactionId}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        <>
-          <MatchingBankTransactionContent />
-          <MatchTransactionFooter />
-        </>
+        <MatchingBankTransactionFormContent />
       </Formik>
     </MatchingTransactionBoot>
   );
@@ -90,6 +102,77 @@ function MatchingBankTransactionRoot({
 
 export const MatchingBankTransaction = R.compose(withBankingActions)(
   MatchingBankTransactionRoot,
+);
+
+/**
+ * Matching bank transaction form content.
+ * @returns {React.ReactNode}
+ */
+const MatchingBankTransactionFormContent = R.compose(
+  withBankingActions,
+  withBanking(({ openReconcileMatchingTransaction }) => ({
+    openReconcileMatchingTransaction,
+  })),
+)(
+  ({
+    // #withBanking
+    openReconcileMatchingTransaction,
+  }) => {
+    const {
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+    } = useMatchingTransactionBoot();
+    const [pending, setPending] = useState<null | {
+      refId: number;
+      refType: string;
+    }>(null);
+
+    const { setFieldValue } = useFormikContext();
+
+    // This effect is responsible for automatically marking a transaction as matched
+    // when the matching process is successful and not currently fetching.
+    useEffect(() => {
+      if (
+        pending &&
+        isMatchingTransactionsSuccess &&
+        !isMatchingTransactionsFetching
+      ) {
+        const foundMatch = matches?.find(
+          (m) =>
+            m.referenceType === pending?.refType &&
+            m.referenceId === pending?.refId,
+        );
+        if (foundMatch) {
+          setFieldValue(`matched.${pending.refType}-${pending.refId}`, true);
+        }
+        setPending(null);
+      }
+    }, [
+      isMatchingTransactionsFetching,
+      isMatchingTransactionsSuccess,
+      matches,
+      pending,
+      setFieldValue,
+    ]);
+
+    const handleReconcileFormSubmitSuccess = (payload) => {
+      setPending({ refId: payload.id, refType: payload.type });
+    };
+
+    return (
+      <>
+        <MatchingBankTransactionContent />
+
+        {openReconcileMatchingTransaction && (
+          <MatchingReconcileTransactionForm
+            onSubmitSuccess={handleReconcileFormSubmitSuccess}
+          />
+        )}
+        {!openReconcileMatchingTransaction && <MatchTransactionFooter />}
+      </>
+    );
+  },
 );
 
 function MatchingBankTransactionContent() {
@@ -129,8 +212,8 @@ function PerfectMatchingTransactions() {
             key={index}
             label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
             date={match.dateFormatted}
-            transactionId={match.transactionId}
-            transactionType={match.transactionType}
+            transactionId={match.referenceId}
+            transactionType={match.referenceType}
           />
         ))}
       </Stack>
@@ -154,9 +237,6 @@ function PossibleMatchingTransactions() {
       <Box className={styles.matchBar}>
         <Stack spacing={2}>
           <h2 className={styles.matchBarTitle}>Possible Matches</h2>
-          <Text style={{ fontSize: 12, color: '#5C7080' }}>
-            Transactions up to 20 Aug 2019
-          </Text>
         </Stack>
       </Box>
 
@@ -164,10 +244,15 @@ function PossibleMatchingTransactions() {
         {possibleMatches.map((match, index) => (
           <MatchTransactionField
             key={index}
-            label={`${match.transsactionTypeFormatted} for ${match.amountFormatted}`}
+            label={
+              <>
+                {`${match.transsactionTypeFormatted} for `}
+                <strong>{match.amountFormatted}</strong>
+              </>
+            }
             date={match.dateFormatted}
-            transactionId={match.transactionId}
-            transactionType={match.transactionType}
+            transactionId={match.referenceId}
+            transactionType={match.referenceType}
           />
         ))}
       </Stack>
@@ -212,7 +297,10 @@ interface MatchTransctionFooterProps extends WithBankingActionsProps {}
  * @returns {React.ReactNode}
  */
 const MatchTransactionFooter = R.compose(withBankingActions)(
-  ({ closeMatchingTransactionAside }: MatchTransctionFooterProps) => {
+  ({
+    closeMatchingTransactionAside,
+    openReconcileMatchingTransaction,
+  }: MatchTransctionFooterProps) => {
     const { submitForm, isSubmitting } = useFormikContext();
     const totalPending = useGetPendingAmountMatched();
     const showReconcileLink = useIsShowReconcileTransactionLink();
@@ -224,18 +312,26 @@ const MatchTransactionFooter = R.compose(withBankingActions)(
     const handleSubmitBtnClick = () => {
       submitForm();
     };
+    const handleReconcileTransaction = () => {
+      openReconcileMatchingTransaction(totalPending);
+    };
 
     return (
       <Box className={styles.footer}>
         <Box className={styles.footerTotal}>
           <Group position={'apart'}>
             {showReconcileLink && (
-              <AnchorButton small minimal intent={Intent.PRIMARY}>
+              <AnchorButton
+                small
+                minimal
+                intent={Intent.PRIMARY}
+                onClick={handleReconcileTransaction}
+              >
                 Add Reconcile Transaction +
               </AnchorButton>
             )}
             <Text
-              style={{ fontSize: 14, marginLeft: 'auto', color: '#5F6B7C' }}
+              style={{ fontSize: 14, marginLeft: 'auto', color: '#404854' }}
               tagName="span"
             >
               Pending <FormatNumber value={totalPending} currency={'USD'} />

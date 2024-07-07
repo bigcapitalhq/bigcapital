@@ -17,6 +17,9 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
       'transactionNo',
       'transactionType',
       'transsactionTypeFormatted',
+      'transactionNormal',
+      'referenceId',
+      'referenceType',
     ];
   };
 
@@ -98,6 +101,31 @@ export class GetMatchedTransactionBillsTransformer extends Transformer {
    * @returns {string}
    */
   protected transsactionTypeFormatted() {
+    return 'Bill';
+  }
+
+  /**
+   * Retrieves the bill transaction normal (debit or credit).
+   * @returns {string}
+   */
+  protected transactionNormal() {
+    return 'credit';
+  }
+
+  /**
+   * Retrieve the match transaction reference id.
+   * @param bill
+   * @returns {number}
+   */
+  protected referenceId(bill) {
+    return bill.id;
+  }
+
+  /**
+   * Retrieve the match transaction referenece type.
+   * @returns {string}
+   */
+  protected referenceType() {
     return 'Bill';
   }
 }

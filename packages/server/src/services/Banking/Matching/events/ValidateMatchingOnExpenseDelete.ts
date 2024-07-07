@@ -30,7 +30,8 @@ export class ValidateMatchingOnExpenseDelete {
     await this.validateNoMatchingLinkedService.validateTransactionNoMatchLinking(
       tenantId,
       'Expense',
-      oldExpense.id
+      oldExpense.id,
+      trx
     );
   }
 }
