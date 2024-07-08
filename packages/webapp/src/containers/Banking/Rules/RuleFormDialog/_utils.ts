@@ -1,8 +1,11 @@
+import { camelCase, get, upperFirst } from 'lodash';
+import { MoneyCategoryPerCreditAccountRootType } from '@/constants/cashflowOptions';
+
 export const initialValues = {
   name: '',
   order: 0,
   applyIfAccountId: '',
-  applyIfTransactionType: '',
+  applyIfTransactionType: 'deposit',
   conditionsType: 'and',
   conditions: [
     {
@@ -47,3 +50,9 @@ export const FieldCondition = [
 export const AssignTransactionTypeOptions = [
   { value: 'expense', text: 'Expense' },
 ];
+
+export const getAccountRootFromMoneyCategory = (category: string): string[] => {
+  const _category = upperFirst(camelCase(category));
+
+  return get(MoneyCategoryPerCreditAccountRootType, _category) || [];
+};
