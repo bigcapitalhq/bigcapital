@@ -18,11 +18,11 @@ export class RegonizeTransactionsJob {
    * Triggers sending invoice mail.
    */
   private handler = async (job, done: Function) => {
-    const { tenantId } = job.attrs.data;
+    const { tenantId, batch } = job.attrs.data;
     const regonizeTransactions = Container.get(RecognizeTranasctionsService);
 
     try {
-      await regonizeTransactions.recognizeTransactions(tenantId);
+      await regonizeTransactions.recognizeTransactions(tenantId, batch);
       done();
     } catch (error) {
       console.log(error);

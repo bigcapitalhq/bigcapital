@@ -74,7 +74,7 @@ export class CashflowAccountTransactionReport extends FinancialSheet {
     const firstMatchedTrans = first(matchedTrans);
 
     return (
-      (firstCategorizedTrans?.id ||
+      firstCategorizedTrans?.id ||
       firstMatchedTrans?.uncategorizedTransactionId ||
       null
     );

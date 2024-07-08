@@ -5,7 +5,8 @@ exports.up = function (knex) {
       .integer('uncategorized_transaction_id')
       .unsigned()
       .references('id')
-      .inTable('uncategorized_cashflow_transactions');
+      .inTable('uncategorized_cashflow_transactions')
+      .withKeyName('recognizedBankTransactionsUncategorizedTransIdForeign');
     table
       .integer('bank_rule_id')
       .unsigned()

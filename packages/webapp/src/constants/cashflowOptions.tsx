@@ -39,3 +39,12 @@ export const TRANSACRIONS_TYPE = [
   'OtherExpense',
   'TransferToAccount',
 ];
+
+export const MoneyCategoryPerCreditAccountRootType = {
+  OwnerContribution: ['equity'],
+  OtherIncome: ['income'],
+  OwnerDrawing: ['equity'],
+  OtherExpense: ['expense'],
+  TransferToAccount: ['asset'],
+  TransferFromAccount: ['asset'],
+};

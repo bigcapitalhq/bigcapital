@@ -15,14 +15,10 @@ import { ServiceError } from '@/exceptions';
 import { getUniqueImportableValue, trimObject } from './_utils';
 import { ImportableResources } from './ImportableResources';
 import ResourceService from '../Resource/ResourceService';
-import HasTenancyService from '../Tenancy/TenancyService';
 import { Import } from '@/system/models';
 
 @Service()
 export class ImportFileCommon {
-  @Inject()
-  private tenancy: HasTenancyService;
-
   @Inject()
   private importFileValidator: ImportFileDataValidator;
 

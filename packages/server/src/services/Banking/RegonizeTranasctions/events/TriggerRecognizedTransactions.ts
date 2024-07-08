@@ -5,6 +5,8 @@ import {
   IBankRuleEventDeletedPayload,
   IBankRuleEventEditedPayload,
 } from '../../Rules/types';
+import { IImportFileCommitedEventPayload } from '@/interfaces/Import';
+import { Import } from '@/system/models';
 
 @Service()
 export class TriggerRecognizedTransactions {
@@ -26,6 +28,10 @@ export class TriggerRecognizedTransactions {
     bus.subscribe(
       events.bankRules.onDeleted,
       this.recognizedTransactionsOnRuleDeleted.bind(this)
+    );
+    bus.subscribe(
+      events.import.onImportCommitted,
+      this.triggerRecognizeTransactionsOnImportCommitted.bind(this)
     );
   }
 
@@ -71,6 +77,22 @@ export class TriggerRecognizedTransactions {
     tenantId,
   }: IBankRuleEventDeletedPayload) {
     const payload = { tenantId };
+    await this.agenda.now('recognize-uncategorized-transactions-job', payload);
+  }
+
+  /**
+   * Triggers the recognize bank transactions once the imported file commit.
+   * @param {IImportFileCommitedEventPayload} payload -
+   */
+  private async triggerRecognizeTransactionsOnImportCommitted({
+    tenantId,
+    importId,
+    meta,
+  }: IImportFileCommitedEventPayload) {
+    const importFile = await Import.query().findOne({ importId });
+    const batch = importFile.paramsParsed.batch;
+    const payload = { tenantId, batch };
+
     await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }
 }

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useCallback, useMemo } from 'react';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Button, Classes, Intent, Radio, Tag } from '@blueprintjs/core';
 import * as R from 'ramda';
@@ -16,11 +17,11 @@ import {
 } from '@/components';
 import { useCreateBankRule, useEditBankRule } from '@/hooks/query/bank-rules';
 import {
-  AssignTransactionTypeOptions,
   FieldCondition,
   Fields,
   RuleFormValues,
   TransactionTypeOptions,
+  getAccountRootFromMoneyCategory,
   initialValues,
 } from './_utils';
 import { useRuleFormDialogBoot } from './RuleFormBoot';
@@ -31,6 +32,11 @@ import {
 } from '@/utils';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import { getAddMoneyInOptions, getAddMoneyOutOptions } from '@/constants';
+
+// Retrieves the add money in button options.
+const MoneyInOptions = getAddMoneyInOptions();
+const MoneyOutOptions = getAddMoneyOutOptions();
 
 function RuleFormContentFormRoot({
   // #withDialogActions
@@ -47,7 +53,6 @@ function RuleFormContentFormRoot({
     ...initialValues,
     ...transformToForm(transformToCamelCase(bankRule), initialValues),
   };
-
   // Handles the form submitting.
   const handleSubmit = (
     values: RuleFormValues,
@@ -92,8 +97,9 @@ function RuleFormContentFormRoot({
           label={'Rule Name'}
           labelInfo={<Tag minimal>Required</Tag>}
           style={{ maxWidth: 300 }}
+          fastField
         >
-          <FInputGroup name={'name'} />
+          <FInputGroup name={'name'} fastField />
         </FFormGroup>
 
         <FFormGroup
@@ -101,29 +107,22 @@ function RuleFormContentFormRoot({
           label={'Apply the rule to account'}
           labelInfo={<Tag minimal>Required</Tag>}
           style={{ maxWidth: 350 }}
+          fastField
         >
           <AccountsSelect
             name={'applyIfAccountId'}
             items={accounts}
             filterByTypes={['cash', 'bank']}
+            fastField
           />
         </FFormGroup>
 
-        <FFormGroup
-          name={'applyIfTransactionType'}
-          label={'Apply to transactions are'}
-          style={{ maxWidth: 350 }}
-        >
-          <FSelect
-            name={'applyIfTransactionType'}
-            items={TransactionTypeOptions}
-            popoverProps={{ minimal: true, inline: false }}
-          />
-        </FFormGroup>
+        <RuleApplyIfTransactionTypeField />
 
         <FFormGroup
           name={'conditionsType'}
           label={'Categorize the transactions when'}
+          fastField
         >
           <FRadioGroup name={'conditionsType'}>
             <Radio value={'and'} label={'All the following criteria matches'} />
@@ -139,34 +138,16 @@ function RuleFormContentFormRoot({
           Then Assign
         </h3>
 
-        <FFormGroup
-          name={'assignCategory'}
-          label={'Transaction type'}
-          labelInfo={<Tag minimal>Required</Tag>}
-          style={{ maxWidth: 300 }}
-        >
-          <FSelect
-            name={'assignCategory'}
-            items={AssignTransactionTypeOptions}
-            popoverProps={{ minimal: true, inline: false }}
-          />
-        </FFormGroup>
-
-        <FFormGroup
-          name={'assignAccountId'}
-          label={'Account category'}
-          labelInfo={<Tag minimal>Required</Tag>}
-          style={{ maxWidth: 300 }}
-        >
-          <AccountsSelect name={'assignAccountId'} items={accounts} />
-        </FFormGroup>
+        <RuleAssignCategoryField />
+        <RuleAssignCategoryAccountField />
 
         <FFormGroup
           name={'assignRef'}
           label={'Reference'}
           style={{ maxWidth: 300 }}
+          fastField
         >
-          <FInputGroup name={'assignRef'} />
+          <FInputGroup name={'assignRef'} fastField />
         </FFormGroup>
 
         <RuleFormActions />
@@ -203,11 +184,13 @@ function RuleFormConditions() {
               name={`conditions[${index}].field`}
               label={'Field'}
               style={{ marginBottom: 0, flex: '1 0' }}
+              fastField
             >
               <FSelect
                 name={`conditions[${index}].field`}
                 items={Fields}
                 popoverProps={{ minimal: true, inline: false }}
+                fastField
               />
             </FFormGroup>
 
@@ -215,11 +198,13 @@ function RuleFormConditions() {
               name={`conditions[${index}].comparator`}
               label={'Condition'}
               style={{ marginBottom: 0, flex: '1 0' }}
+              fastField
             >
               <FSelect
                 name={`conditions[${index}].comparator`}
                 items={FieldCondition}
                 popoverProps={{ minimal: true, inline: false }}
+                fastField
               />
             </FFormGroup>
 
@@ -227,8 +212,9 @@ function RuleFormConditions() {
               name={`conditions[${index}].value`}
               label={'Value'}
               style={{ marginBottom: 0, flex: '1 0 ', width: '40%' }}
+              fastField
             >
-              <FInputGroup name={`conditions[${index}].value`} />
+              <FInputGroup name={`conditions[${index}].value`} fastField />
             </FFormGroup>
           </Group>
         ))}
@@ -284,3 +270,104 @@ function RuleFormActionsRoot({
 }
 
 const RuleFormActions = R.compose(withDialogActions)(RuleFormActionsRoot);
+
+function RuleApplyIfTransactionTypeField() {
+  const { setFieldValue } = useFormikContext<RuleFormValues>();
+
+  const handleItemChange = useCallback(
+    (item: any) => {
+      setFieldValue('applyIfTransactionType', item.value);
+      setFieldValue('assignCategory', '');
+      setFieldValue('assignAccountId', '');
+    },
+    [setFieldValue],
+  );
+
+  return (
+    <FFormGroup
+      name={'applyIfTransactionType'}
+      label={'Apply to transactions are'}
+      style={{ maxWidth: 350 }}
+      fastField
+    >
+      <FSelect
+        name={'applyIfTransactionType'}
+        items={TransactionTypeOptions}
+        popoverProps={{ minimal: true, inline: false }}
+        onItemChange={handleItemChange}
+        fastField
+      />
+    </FFormGroup>
+  );
+}
+
+function RuleAssignCategoryField() {
+  const { values, setFieldValue } = useFormikContext<RuleFormValues>();
+
+  // Retrieves the transaction types if it is deposit or withdrawal.
+  const transactionTypes = useMemo(
+    () =>
+      values?.applyIfTransactionType === 'deposit'
+        ? MoneyInOptions
+        : MoneyOutOptions,
+    [values?.applyIfTransactionType],
+  );
+
+  // Handles the select item change.
+  const handleItemChange = useCallback(
+    (item: any) => {
+      setFieldValue('assignCategory', item.value);
+      setFieldValue('assignAccountId', '');
+    },
+    [setFieldValue],
+  );
+
+  return (
+    <FFormGroup
+      name={'assignCategory'}
+      label={'Transaction type'}
+      labelInfo={<Tag minimal>Required</Tag>}
+      style={{ maxWidth: 300 }}
+      fastField
+    >
+      <FSelect
+        name={'assignCategory'}
+        items={transactionTypes}
+        popoverProps={{ minimal: true, inline: false }}
+        valueAccessor={'value'}
+        textAccessor={'name'}
+        onItemChange={handleItemChange}
+        fastField
+      />
+    </FFormGroup>
+  );
+}
+
+function RuleAssignCategoryAccountField() {
+  const { values } = useFormikContext<RuleFormValues>();
+  const { accounts } = useRuleFormDialogBoot();
+
+  const accountRoot = useMemo(
+    () => getAccountRootFromMoneyCategory(values.assignCategory),
+    [values.assignCategory],
+  );
+
+  return (
+    <FFormGroup
+      name={'assignAccountId'}
+      label={'Account category'}
+      labelInfo={<Tag minimal>Required</Tag>}
+      style={{ maxWidth: 300 }}
+      fastField
+      shouldUpdateDeps={{ accountRoot }}
+    >
+      <AccountsSelect
+        name={'assignAccountId'}
+        items={accounts}
+        filterByRootTypes={accountRoot}
+        shouldUpdateDeps={{ accountRoot }}
+        fastField
+      />
+    </FFormGroup>
+  );
+}

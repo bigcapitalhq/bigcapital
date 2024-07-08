@@ -39,7 +39,6 @@ export class DecrementUncategorizedTransactionOnMatching {
     const transaction = await UncategorizedCashflowTransaction.query().findById(
       uncategorizedTransactionId
     );
-    //
     await Account.query(trx)
       .findById(transaction.accountId)
       .decrement('uncategorizedTransactions', 1);
@@ -60,7 +59,6 @@ export class DecrementUncategorizedTransactionOnMatching {
     const transaction = await UncategorizedCashflowTransaction.query().findById(
       uncategorizedTransactionId
     );
-    //
     await Account.query(trx)
       .findById(transaction.accountId)
       .increment('uncategorizedTransactions', 1);
