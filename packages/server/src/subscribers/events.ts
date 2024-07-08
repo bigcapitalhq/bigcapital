@@ -647,4 +647,9 @@ export default {
     onUnexcluding: 'onBankTransactionUnexcluding',
     onUnexcluded: 'onBankTransactionUnexcluded',
   },
+
+  // Import files.
+  import: {
+    onImportCommitted: 'onImportFileCommitted',
+  },
 };

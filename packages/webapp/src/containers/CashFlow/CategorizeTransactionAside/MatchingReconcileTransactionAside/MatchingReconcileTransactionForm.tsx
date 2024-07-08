@@ -1,14 +1,9 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { Button, Intent, Position, Tag } from '@blueprintjs/core';
-import {
-  Form,
-  Formik,
-  FormikHelpers,
-  FormikValues,
-  useFormikContext,
-} from 'formik';
+import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import moment from 'moment';
+import { round } from 'lodash';
 import {
   AccountsSelect,
   AppToaster,
@@ -19,6 +14,7 @@ import {
   FInputGroup,
   FMoneyInputGroup,
   Group,
+  Icon,
 } from '@/components';
 import { Aside } from '@/components/Aside/Aside';
 import { momentFormatter } from '@/utils';
@@ -100,7 +96,7 @@ function MatchingReconcileTransactionFormRoot({
 
   const _initialValues = {
     ...initialValues,
-    amount: Math.abs(reconcileMatchingTransactionPendingAmount) || 0,
+    amount: round(Math.abs(reconcileMatchingTransactionPendingAmount), 2) || 0,
     date: moment().format('YYYY-MM-DD'),
     type:
       reconcileMatchingTransactionPendingAmount > 0 ? 'deposit' : 'withdrawal',
@@ -179,7 +175,7 @@ function CreateReconcileTransactionContent() {
             },
             boundary: 'viewport',
           }}
-          inputProps={{ fill: true }}
+          inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
           fill
           fastField
         />

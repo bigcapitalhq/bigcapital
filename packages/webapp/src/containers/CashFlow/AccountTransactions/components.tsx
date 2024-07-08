@@ -9,7 +9,6 @@ import {
   PopoverInteractionKind,
   Position,
   Tooltip,
-  MenuDivider,
 } from '@blueprintjs/core';
 import { Box, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
@@ -213,9 +212,8 @@ export function useAccountUncategorizedTransactionsColumns() {
       {
         id: 'reference_number',
         Header: 'Ref.#',
-        accessor: 'reference_number',
+        accessor: 'reference_no',
         width: 50,
-        className: 'reference_number',
         clickable: true,
         textOverview: true,
       },

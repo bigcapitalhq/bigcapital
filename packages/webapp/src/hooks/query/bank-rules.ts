@@ -235,6 +235,12 @@ export function useExcludeUncategorizedTransaction(
         queryClient.invalidateQueries(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
+        // Invalidate accounts.
+        queryClient.invalidateQueries(t.ACCOUNTS);
+        queryClient.invalidateQueries(t.ACCOUNT);
+
+        // invalidate bank account summary.
+        queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
       },
       ...options,
     },
@@ -282,6 +288,12 @@ export function useUnexcludeUncategorizedTransaction(
         queryClient.invalidateQueries(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
+        // Invalidate accounts.
+        queryClient.invalidateQueries(t.ACCOUNTS);
+        queryClient.invalidateQueries(t.ACCOUNT);
+
+        // Invalidate bank account summary.
+        queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
       },
       ...options,
     },
@@ -323,6 +335,13 @@ export function useMatchUncategorizedTransaction(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
       );
       queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+      // Invalidate accounts.
+      queryClient.invalidateQueries(t.ACCOUNTS);
+      queryClient.invalidateQueries(t.ACCOUNT);
+
+      // Invalidate bank account summary.
+      queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
     },
     ...props,
   });
@@ -362,6 +381,13 @@ export function useUnmatchMatchedUncategorizedTransaction(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
       );
       queryClient.invalidateQueries(t.CASHFLOW_ACCOUNT_TRANSACTIONS_INFINITY);
+
+      // Invalidate accounts.
+      queryClient.invalidateQueries(t.ACCOUNTS);
+      queryClient.invalidateQueries(t.ACCOUNT);
+
+      // Invalidate bank account summary.
+      queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
     },
     ...props,
   });

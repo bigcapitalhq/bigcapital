@@ -6,6 +6,7 @@ import {
   FFormGroup,
   FInputGroup,
   FTextArea,
+  Icon,
 } from '@/components';
 import { useCategorizeTransactionBoot } from '../CategorizeTransactionBoot';
 import { CategorizeTransactionBranchField } from '../CategorizeTransactionBranchField';
@@ -21,7 +22,7 @@ export default function CategorizeTransactionTransferFrom() {
           popoverProps={{ position: Position.BOTTOM, minimal: true }}
           formatDate={(date) => date.toLocaleDateString()}
           parseDate={(str) => new Date(str)}
-          inputProps={{ fill: true }}
+          inputProps={{ fill: true, leftElement: <Icon icon={'date-range'} /> }}
         />
       </FFormGroup>
 

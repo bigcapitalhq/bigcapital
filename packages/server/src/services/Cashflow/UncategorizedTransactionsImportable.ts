@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { Knex } from 'knex';
 import * as yup from 'yup';
+import uniqid from 'uniqid';
 import { Importable } from '../Import/Importable';
 import { CreateUncategorizedTransaction } from './CreateUncategorizedTransaction';
 import { CreateUncategorizedTransactionDTO } from '@/interfaces';
@@ -15,6 +16,7 @@ export class UncategorizedTransactionsImportable extends Importable {
 
   @Inject()
   private tenancy: HasTenancyService;
+
   /**
    * Passing the sheet DTO to create uncategorized transaction.
    * @param {number} tenantId
@@ -43,6 +45,7 @@ export class UncategorizedTransactionsImportable extends Importable {
     return {
       ...createDTO,
       accountId: context.import.paramsParsed.accountId,
+      batch: context.import.paramsParsed.batch,
     };
   }
 
@@ -54,6 +57,9 @@ export class UncategorizedTransactionsImportable extends Importable {
     return BankTransactionsSampleData;
   }
 
+  // ------------------
+  // # Params
+  // ------------------
   /**
    * Params validation schema.
    * @returns {ValidationSchema[]}
@@ -78,5 +84,18 @@ export class UncategorizedTransactionsImportable extends Importable {
     if (params.accountId) {
       await Account.query().findById(params.accountId).throwIfNotFound({});
     }
+  }
+
+  /**
+   * Transformes the import params before storing them.
+   * @param {Record<string, any>} parmas
+   */
+  public transformParams(parmas: Record<string, any>) {
+    const batch = uniqid();
+
+    return {
+      ...parmas,
+      batch,
+    };
   }
 }

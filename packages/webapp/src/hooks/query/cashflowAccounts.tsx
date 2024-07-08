@@ -253,6 +253,9 @@ export function useCategorizeTransaction(props) {
         queryClient.invalidateQueries(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
+
+        // Invalidate bank account summary.
+        queryClient.invalidateQueries('BANK_ACCOUNT_SUMMARY_META');
       },
       ...props,
     },
@@ -276,6 +279,9 @@ export function useUncategorizeTransaction(props) {
         queryClient.invalidateQueries(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
+
+        // Invalidate bank account summary.
+        queryClient.invalidateQueries('BANK_ACCOUNT_SUMMARY_META');
       },
       ...props,
     },

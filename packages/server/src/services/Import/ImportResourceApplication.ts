@@ -6,6 +6,7 @@ import { ImportFileProcess } from './ImportFileProcess';
 import { ImportFilePreview } from './ImportFilePreview';
 import { ImportSampleService } from './ImportSample';
 import { ImportFileMeta } from './ImportFileMeta';
+import { ImportFileProcessCommit } from './ImportFileProcessCommit';
 
 @Inject()
 export class ImportResourceApplication {
@@ -26,6 +27,9 @@ export class ImportResourceApplication {
 
   @Inject()
   private importMetaService: ImportFileMeta;
+
+  @Inject()
+  private importProcessCommit: ImportFileProcessCommit;
 
   /**
    * Reads the imported file and stores the import file meta under unqiue id.
@@ -74,12 +78,12 @@ export class ImportResourceApplication {
    * @returns {Promise<ImportFilePreviewPOJO>}
    */
   public async process(tenantId: number, importId: number) {
-    return this.importProcessService.import(tenantId, importId);
+    return this.importProcessCommit.commit(tenantId, importId);
   }
 
   /**
    * Retrieves the import meta of the given import id.
-   * @param {number} tenantId - 
+   * @param {number} tenantId -
    * @param {string} importId - Import id.
    * @returns {}
    */
