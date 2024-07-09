@@ -38,15 +38,7 @@ export class BankingRulesController extends BaseController {
       body('conditions.*.value').exists(),
 
       // Assign
-      body('assign_category')
-        .isString()
-        .isIn([
-          'interest_income',
-          'other_income',
-          'deposit',
-          'expense',
-          'owner_drawings',
-        ]),
+      body('assign_category').isString(),
       body('assign_account_id').isInt({ min: 0 }),
       body('assign_payee').isString().optional({ nullable: true }),
       body('assign_memo').isString().optional({ nullable: true }),
