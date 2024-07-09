@@ -10,6 +10,7 @@ export default class AccountTransaction extends TenantModel {
   debit: number;
   exchangeRate: number;
   taxRate: number;
+  transactionType: string;
 
   /**
    * Table name
@@ -53,7 +54,7 @@ export default class AccountTransaction extends TenantModel {
    * @return {string}
    */
   get referenceTypeFormatted() {
-    return getTransactionTypeLabel(this.referenceType);
+    return getTransactionTypeLabel(this.referenceType, this.transactionType);
   }
 
   /**

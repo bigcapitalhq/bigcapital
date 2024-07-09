@@ -6,7 +6,7 @@ import {
   getCashflowTransactionType,
 } from '@/services/Cashflow/utils';
 import { CASHFLOW_DIRECTION } from '@/services/Cashflow/constants';
-import { getTransactionTypeLabel } from '@/utils/transactions-types';
+import { getCashflowTransactionFormattedType } from '@/utils/transactions-types';
 
 export default class CashflowTransaction extends TenantModel {
   transactionType: string;
@@ -64,7 +64,7 @@ export default class CashflowTransaction extends TenantModel {
    * @returns {string}
    */
   get transactionTypeFormatted() {
-    return getTransactionTypeLabel(this.transactionType);
+    return getCashflowTransactionFormattedType(this.transactionType);
   }
 
   get typeMeta() {
@@ -159,8 +159,7 @@ export default class CashflowTransaction extends TenantModel {
           to: 'accounts_transactions.referenceId',
         },
         filter(builder) {
-          const referenceTypes = getCashflowAccountTransactionsTypes();
-          builder.whereIn('reference_type', referenceTypes);
+          builder.where('reference_type', 'CashflowTransaction');
         },
       },
 

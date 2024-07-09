@@ -1,6 +1,5 @@
-import { upperFirst, camelCase } from 'lodash';
 import { Transformer } from '@/lib/Transformer/Transformer';
-import { getTransactionTypeLabel } from '@/utils/transactions-types';
+import { getCashflowTransactionFormattedType } from '@/utils/transactions-types';
 
 export class GetBankRulesTransformer extends Transformer {
   /**
@@ -29,8 +28,7 @@ export class GetBankRulesTransformer extends Transformer {
    * @returns {string}
    */
   protected assignCategoryFormatted(bankRule: any) {
-    const assignCategory = upperFirst(camelCase(bankRule.assignCategory));
-    return getTransactionTypeLabel(assignCategory);
+    return getCashflowTransactionFormattedType(bankRule.assignCategory);
   }
 
   /**

@@ -1,7 +1,16 @@
+export const CashflowTransactionTypes = {
+  OtherIncome: 'Other income',
+  OtherExpense: 'Other expense',
+  OwnerDrawing: 'Owner drawing',
+  OwnerContribution: 'Owner contribution',
+  TransferToAccount: 'Transfer to account',
+  TransferFromAccount: 'Transfer from account',
+};
+
 export const TransactionTypes = {
   SaleInvoice: 'Sale invoice',
   SaleReceipt: 'Sale receipt',
-  PaymentReceive: 'Payment receive',
+  PaymentReceive: 'Payment received',
   Bill: 'Bill',
   BillPayment: 'Payment made',
   VendorOpeningBalance: 'Vendor opening balance',
@@ -17,12 +26,10 @@ export const TransactionTypes = {
   OtherExpense: 'Other expense',
   OwnerDrawing: 'Owner drawing',
   InvoiceWriteOff: 'Invoice write-off',
-
   CreditNote: 'transaction_type.credit_note',
   VendorCredit: 'transaction_type.vendor_credit',
-
   RefundCreditNote: 'transaction_type.refund_credit_note',
   RefundVendorCredit: 'transaction_type.refund_vendor_credit',
-
   LandedCost: 'transaction_type.landed_cost',
+  CashflowTransaction: CashflowTransactionTypes,
 };
