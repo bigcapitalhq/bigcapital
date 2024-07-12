@@ -17,7 +17,7 @@ import { DeleteCashflowTransaction } from '@/services/Cashflow/DeleteCashflowTra
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 import { Knex } from 'knex';
-import { uniqid } from 'uniqid';
+import uniqid from 'uniqid';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 
