@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import {
   IFinancialSheetCommonMeta,
   INumberFormatQuery,
@@ -257,7 +258,6 @@ export interface IUncategorizedCashflowTransaction {
   categorized: boolean;
 }
 
-
 export interface CreateUncategorizedTransactionDTO {
   date: Date | string;
   accountId: number;
@@ -268,4 +268,17 @@ export interface CreateUncategorizedTransactionDTO {
   referenceNo?: string | null;
   plaidTransactionId?: string | null;
   batch?: string;
+}
+
+export interface IUncategorizedTransactionCreatingEventPayload {
+  tenantId: number;
+  createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO;
+  trx: Knex.Transaction;
+}
+
+export interface IUncategorizedTransactionCreatedEventPayload {
+  tenantId: number;
+  uncategorizedTransaction: any;
+  createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO;
+  trx: Knex.Transaction;
 }

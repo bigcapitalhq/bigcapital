@@ -148,7 +148,6 @@ export class PlaidSyncDb {
    */
   public async syncAccountsTransactions(
     tenantId: number,
-    batchNo: string,
     plaidAccountsTransactions: PlaidTransaction[],
     trx?: Knex.Transaction
   ): Promise<void> {
@@ -161,7 +160,6 @@ export class PlaidSyncDb {
         return this.syncAccountTranactions(
           tenantId,
           plaidAccountId,
-          batchNo,
           plaidTransactions,
           trx
         );

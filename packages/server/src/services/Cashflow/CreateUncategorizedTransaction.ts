@@ -2,7 +2,13 @@ import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import HasTenancyService from '../Tenancy/TenancyService';
 import UnitOfWork from '../UnitOfWork';
-import { CreateUncategorizedTransactionDTO } from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
+import {
+  CreateUncategorizedTransactionDTO,
+  IUncategorizedTransactionCreatedEventPayload,
+  IUncategorizedTransactionCreatingEventPayload,
+} from '@/interfaces';
 
 @Service()
 export class CreateUncategorizedTransaction {
@@ -12,6 +18,9 @@ export class CreateUncategorizedTransaction {
   @Inject()
   private uow: UnitOfWork;
 
+  @Inject()
+  private eventPublisher: EventPublisher;
+
   /**
    * Creates an uncategorized cashflow transaction.
    * @param {number} tenantId
@@ -19,7 +28,7 @@ export class CreateUncategorizedTransaction {
    */
   public create(
     tenantId: number,
-    createDTO: CreateUncategorizedTransactionDTO,
+    createUncategorizedTransactionDTO: CreateUncategorizedTransactionDTO,
     trx?: Knex.Transaction
   ) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
@@ -27,12 +36,30 @@ export class CreateUncategorizedTransaction {
     return this.uow.withTransaction(
       tenantId,
       async (trx: Knex.Transaction) => {
-        const transaction = await UncategorizedCashflowTransaction.query(
-          trx
-        ).insertAndFetch({
-          ...createDTO,
-        });
-        return transaction;
+        await this.eventPublisher.emitAsync(
+          events.cashflow.onTransactionUncategorizedCreated,
+          {
+            tenantId,
+            createUncategorizedTransactionDTO,
+            trx,
+          } as IUncategorizedTransactionCreatingEventPayload
+        );
+
+        const uncategorizedTransaction =
+          await UncategorizedCashflowTransaction.query(trx).insertAndFetch({
+            ...createUncategorizedTransactionDTO,
+          });
+
+        await this.eventPublisher.emitAsync(
+          events.cashflow.onTransactionUncategorizedCreated,
+          {
+            tenantId,
+            uncategorizedTransaction,
+            createUncategorizedTransactionDTO,
+            trx,
+          } as IUncategorizedTransactionCreatedEventPayload
+        );
+        return uncategorizedTransaction;
       },
       trx
     );

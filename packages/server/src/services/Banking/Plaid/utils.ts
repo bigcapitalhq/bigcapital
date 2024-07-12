@@ -37,7 +37,6 @@ export const transformPlaidAccountToCreateAccount = R.curry(
 export const transformPlaidTrxsToCashflowCreate = R.curry(
   (
     cashflowAccountId: number,
-    creditAccountId: number,
     plaidTranasction: PlaidTransaction
   ): CreateUncategorizedTransactionDTO => {
     return {
