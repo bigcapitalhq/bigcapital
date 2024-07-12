@@ -22,6 +22,10 @@ export class DecrementUncategorizedTransactionOnCategorize {
       events.cashflow.onTransactionUncategorized,
       this.incrementUnCategorizedTransactionsOnUncategorized.bind(this)
     );
+    bus.subscribe(
+      events.cashflow.onTransactionUncategorizedCreated,
+      this.incrementUncategoirzedTransactionsOnCreated.bind(this)
+    );
   }
 
   /**
@@ -50,6 +54,24 @@ export class DecrementUncategorizedTransactionOnCategorize {
     const { Account } = this.tenancy.models(tenantId);
 
     await Account.query()
+      .findById(uncategorizedTransaction.accountId)
+      .increment('uncategorizedTransactions', 1);
+  }
+
+  /**
+   * Increments uncategorized transactions count once creating a new transaction.
+   * @param {ICommandCashflowCreatedPayload} payload -
+   */
+  public async incrementUncategoirzedTransactionsOnCreated({
+    tenantId,
+    uncategorizedTransaction,
+    trx,
+  }: any) {
+    const { Account } = this.tenancy.models(tenantId);
+
+    if (!uncategorizedTransaction.accountId) return;
+
+    await Account.query(trx)
       .findById(uncategorizedTransaction.accountId)
       .increment('uncategorizedTransactions', 1);
   }

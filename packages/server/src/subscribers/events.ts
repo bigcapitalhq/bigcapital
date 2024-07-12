@@ -399,6 +399,9 @@ export default {
     onTransactionCategorizing: 'onTransactionCategorizing',
     onTransactionCategorized: 'onCashflowTransactionCategorized',
 
+    onTransactionUncategorizedCreating: 'onTransactionUncategorizedCreating',
+    onTransactionUncategorizedCreated: 'onTransactionUncategorizedCreated',
+
     onTransactionUncategorizing: 'onTransactionUncategorizing',
     onTransactionUncategorized: 'onTransactionUncategorized',
 
