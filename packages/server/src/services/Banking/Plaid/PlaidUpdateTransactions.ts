@@ -73,8 +73,6 @@ export class PlaidUpdateTransactions {
       added.concat(modified),
       trx
     );
-    // Sync removed transactions.
-    await this.plaidSync.syncRemoveTransactions(tenantId, removed, trx);
     // Sync transactions cursor.
     await this.plaidSync.syncTransactionsCursor(
       tenantId,
