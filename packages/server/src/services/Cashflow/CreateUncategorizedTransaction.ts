@@ -37,7 +37,7 @@ export class CreateUncategorizedTransaction {
       tenantId,
       async (trx: Knex.Transaction) => {
         await this.eventPublisher.emitAsync(
-          events.cashflow.onTransactionUncategorizedCreated,
+          events.cashflow.onTransactionUncategorizedCreating,
           {
             tenantId,
             createUncategorizedTransactionDTO,
