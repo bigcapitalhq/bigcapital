@@ -19,6 +19,8 @@ export function SubscriptionPlans() {
           monthlyPriceLabel={plan.monthlyPriceLabel}
           annuallyPrice={plan.annuallyPrice}
           annuallyPriceLabel={plan.annuallyPriceLabel}
+          monthlyVariantId={plan.monthlyVariantId}
+          annuallyVariantId={plan.annuallyVariantId}
         />
       ))}
     </Group>

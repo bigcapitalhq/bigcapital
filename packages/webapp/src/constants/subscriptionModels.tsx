@@ -14,6 +14,8 @@ interface SubscriptionPlan {
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
+  monthlyVariantId: string;
+  annuallyVariantId: string;
 }
 
 export const SubscriptionPlans = [
@@ -39,6 +41,8 @@ export const SubscriptionPlans = [
     monthlyPriceLabel: 'Per month',
     annuallyPrice: '$7.5',
     annuallyPriceLabel: 'Per month',
+    monthlyVariantId: '446152',
+    annuallyVariantId: '446153',
   },
   {
     name: 'Capital Essential',
@@ -57,6 +61,8 @@ export const SubscriptionPlans = [
     monthlyPriceLabel: 'Per month',
     annuallyPrice: '$15',
     annuallyPriceLabel: 'Per month',
+    monthlyVariantId: '446165',
+    annuallyVariantId: '446164',
   },
   {
     name: 'Capital Plus',
@@ -74,6 +80,8 @@ export const SubscriptionPlans = [
     annuallyPrice: '$18',
     annuallyPriceLabel: 'Per month',
     featured: true,
+    monthlyVariantId: '446165',
+    annuallyVariantId: '446164',
   },
   {
     name: 'Capital Big',
@@ -88,5 +96,7 @@ export const SubscriptionPlans = [
     monthlyPriceLabel: 'Per month',
     annuallyPrice: '$30',
     annuallyPriceLabel: 'Per month',
+    monthlyVariantId: '446167',
+    annuallyVariantId: '446168',
   },
 ] as SubscriptionPlan[];

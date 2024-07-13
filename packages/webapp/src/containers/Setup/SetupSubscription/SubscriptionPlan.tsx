@@ -27,6 +27,8 @@ interface SubscriptionPricingProps {
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
+  monthlyVariantId?: string;
+  annuallyVariantId?: string;
 }
 
 interface SubscriptionPricingCombinedProps
@@ -42,6 +44,8 @@ function SubscriptionPlanRoot({
   monthlyPriceLabel,
   annuallyPrice,
   annuallyPriceLabel,
+  monthlyVariantId,
+  annuallyVariantId,
 
   // #withPlans
   plansPeriod,
@@ -50,7 +54,12 @@ function SubscriptionPlanRoot({
     useGetLemonSqueezyCheckout();
 
   const handleClick = () => {
-    getLemonCheckout({ variantId: '338516' })
+    const variantId =
+      SubscriptionPlansPeriod.Monthly === plansPeriod
+        ? monthlyVariantId
+        : annuallyVariantId;
+
+    getLemonCheckout({ variantId })
       .then((res) => {
         const checkoutUrl = res.data.data.attributes.url;
         window.LemonSqueezy.Url.Open(checkoutUrl);
