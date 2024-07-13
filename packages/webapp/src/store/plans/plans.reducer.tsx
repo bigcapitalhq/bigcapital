@@ -1,70 +1,46 @@
-// @ts-nocheck
-import { createReducer } from '@reduxjs/toolkit';
-import t from '@/store/types';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { SubscriptionPlans } from '@/constants/subscriptionModels';
 
-const getSubscriptionPlans = () => [
-  {
-    name: 'Capital Basic',
-    slug: 'capital_basic',
-    description: 'Good for service businesses that just started.',
-    features: [
-      'Sale Invoices and Estimates',
-      'Tracking Expenses',
-      'Customize Invoice',
-      'Manual Journals',
-      'Bank Reconciliation',
-      'Chart of Accounts',
-      'Taxes',
-      'Basic Financial Reports & Insights',
-    ],
-    price: '$29',
-    pricePeriod: 'Per Year',
-  },
-  {
-    name: 'Capital Plus',
-    slug: 'capital_plus',
-    description:
-      'Good for businesses have inventory and want more financial reports.',
-    features: [
-      'All Capital Basic features',
-      'Manage Bills',
-      'Inventory Tracking',
-      'Multi Currencies',
-      'Predefined user roles.',
-      'Transactions locking.',
-      'Smart Financial Reports.',
-    ],
-    price: '$29',
-    pricePeriod: 'Per Year',
-    featured: true,
-  },
-  {
-    name: 'Capital Big',
-    slug: 'essentials',
-    description: 'Good for businesses have multiple inventory or branches.',
-    features: [
-      'All Capital Plus features',
-      'Multiple Warehouses',
-      'Multiple Branches',
-      'Invite >= 15 Users',
-    ],
-    price: '$29',
-    pricePeriod: 'Per Year',
-  },
-];
+export enum SubscriptionPlansPeriod {
+  Monthly = 'monthly',
+  Annually = 'Annually',
+}
 
-const initialState = {
-  plans: [],
-  periods: [],
-};
+interface StorePlansState {
+  plans: any;
+  plansPeriod: SubscriptionPlansPeriod;
+}
 
-export default createReducer(initialState, {
-  /**
-   * Initialize the subscription plans.
-   */
-  [t.INIT_SUBSCRIPTION_PLANS]: (state) => {
-    const plans = getSubscriptionPlans();
+export const SubscriptionPlansSlice = createSlice({
+  name: 'plans',
+  initialState: {
+    plans: [],
+    periods: [],
+    plansPeriod: 'monthly',
+  } as StorePlansState,
+  reducers: {
+    /**
+     * Initialize the subscription plans.
+     * @param {StorePlansState} state
+     */
+    initSubscriptionPlans: (state: StorePlansState) => {
+      const plans = SubscriptionPlans;
+      state.plans = plans;
+    },
 
-    state.plans = plans;
+    /**
+     * Changes the plans period (monthly or annually).
+     * @param {StorePlansState} state
+     * @param {PayloadAction<{ period: SubscriptionPlansPeriod }>} action
+     */
+    changePlansPeriod: (
+      state: StorePlansState,
+      action: PayloadAction<{ period: SubscriptionPlansPeriod }>,
+    ) => {
+      state.plansPeriod = action.payload.period;
+    },
   },
 });
+
+export const { initSubscriptionPlans, changePlansPeriod } =
+  SubscriptionPlansSlice.actions;

@@ -1,29 +1,21 @@
-// @ts-nocheck
 import { Callout } from '@blueprintjs/core';
-import { SubscriptionPlans } from './SubscriptionPlan';
-import withPlans from '../../Subscriptions/withPlans';
-import { compose } from '@/utils';
+import { SubscriptionPlans } from './SubscriptionPlans';
+import { SubscriptionPlansPeriodSwitcher } from './SubscriptionPlansPeriodSwitcher';
 
 /**
  * Billing plans.
  */
-function SubscriptionPlansSectionRoot({ plans }) {
+export function SubscriptionPlansSection() {
   return (
     <section>
-      <Callout
-        style={{ marginBottom: '1.5rem' }}
-        icon={null}
-        title={'Early Adopter Plan'}
-      >
-        We're looking for 200 early adopters, when you subscribe you'll get the
-        full features and unlimited users for a year regardless of the
-        subscribed plan.
+      <Callout style={{ marginBottom: '2rem' }} icon={null}>
+        Simple plans. Simple prices. Only pay for what you really need. All
+        plans come with award-winning 24/7 customer support. Prices do not
+        include applicable taxes.
       </Callout>
-      <SubscriptionPlans plans={plans} />
+
+      <SubscriptionPlansPeriodSwitcher />
+      <SubscriptionPlans />
     </section>
   );
 }
-
-export const SubscriptionPlansSection = compose(
-  withPlans(({ plans }) => ({ plans })),
-)(SubscriptionPlansSectionRoot);

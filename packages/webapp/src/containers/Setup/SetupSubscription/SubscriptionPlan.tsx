@@ -1,27 +1,51 @@
 // @ts-nocheck
-import { AppToaster, Group, T } from '@/components';
-import { useGetLemonSqueezyCheckout } from '@/hooks/query';
 import { Intent } from '@blueprintjs/core';
+import * as R from 'ramda';
+import { AppToaster } from '@/components';
+import { useGetLemonSqueezyCheckout } from '@/hooks/query';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
+import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
+import {
+  WithPlansProps,
+  withPlans,
+} from '@/containers/Subscriptions/withPlans';
+
+interface SubscriptionPricingFeature {
+  text: string;
+  hint?: string;
+  hintLabel?: string;
+  style?: Record<string, string>;
+}
 
 interface SubscriptionPricingProps {
   slug: string;
   label: string;
   description: string;
-  features?: Array<String>;
+  features?: Array<SubscriptionPricingFeature>;
   featured?: boolean;
-  price: string;
-  pricePeriod: string;
+  monthlyPrice: string;
+  monthlyPriceLabel: string;
+  annuallyPrice: string;
+  annuallyPriceLabel: string;
 }
 
-function SubscriptionPricing({
-  featured,
+interface SubscriptionPricingCombinedProps
+  extends SubscriptionPricingProps,
+    WithPlansProps {}
+
+function SubscriptionPlanRoot({
   label,
   description,
+  featured,
   features,
-  price,
-  pricePeriod,
-}: SubscriptionPricingProps) {
+  monthlyPrice,
+  monthlyPriceLabel,
+  annuallyPrice,
+  annuallyPriceLabel,
+
+  // #withPlans
+  plansPeriod,
+}: SubscriptionPricingCombinedProps) {
   const { mutateAsync: getLemonCheckout, isLoading } =
     useGetLemonSqueezyCheckout();
 
@@ -42,37 +66,34 @@ function SubscriptionPricing({
   return (
     <PricingPlan featured={featured}>
       {featured && <PricingPlan.Featured>Most Popular</PricingPlan.Featured>}
-
       <PricingPlan.Header label={label} description={description} />
-      <PricingPlan.Price price={price} subPrice={pricePeriod} />
+
+      {plansPeriod === SubscriptionPlansPeriod.Monthly ? (
+        <PricingPlan.Price price={monthlyPrice} subPrice={monthlyPriceLabel} />
+      ) : (
+        <PricingPlan.Price
+          price={annuallyPrice}
+          subPrice={annuallyPriceLabel}
+        />
+      )}
       <PricingPlan.BuyButton loading={isLoading} onClick={handleClick}>
         Subscribe
       </PricingPlan.BuyButton>
 
       <PricingPlan.Features>
         {features?.map((feature) => (
-          <PricingPlan.FeatureLine>{feature}</PricingPlan.FeatureLine>
+          <PricingPlan.FeatureLine
+            hintLabel={feature.hintLabel}
+            hintContent={feature.hint}
+          >
+            {feature.text}
+          </PricingPlan.FeatureLine>
         ))}
       </PricingPlan.Features>
     </PricingPlan>
   );
 }
 
-export function SubscriptionPlans({ plans }) {
-  return (
-    <Group spacing={18} noWrap align='stretch'>
-      {plans.map((plan, index) => (
-        <SubscriptionPricing
-          key={index}
-          slug={plan.slug}
-          label={plan.name}
-          description={plan.description}
-          features={plan.features}
-          featured={plan.featured}
-          price={plan.price}
-          pricePeriod={plan.pricePeriod}
-        />
-      ))}
-    </Group>
-  );
-}
+export const SubscriptionPlan = R.compose(
+  withPlans(({ plansPeriod }) => ({ plansPeriod })),
+)(SubscriptionPlanRoot);

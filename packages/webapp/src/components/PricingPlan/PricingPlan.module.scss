@@ -23,9 +23,10 @@
   color: #fff;
   text-align: center;
   font-size: 12px;
+  text-transform: uppercase;
 }
 .label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: #2F343C;
   
@@ -47,13 +48,31 @@
 }
 .price {
   font-size: 18px;
-    line-height: 1;
-    font-weight: 500;
-    color: #404854;
+  line-height: 1;
+  font-weight: 500;
+  color: #252A31;
 }
 
 .pricePer{ 
   color: #738091;
   font-size: 12px;
   line-height: 1;
+}
+
+.featureItem{ 
+  flex: 1;
+  color: #1C2127;
+}
+
+.featurePopover :global .bp4-popover-content{
+  border-radius: 0;
+}
+.featurePopoverContent{
+  font-size: 12px
+}
+.featurePopoverLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-size: 12px;
+  font-weight: 500;
 }
