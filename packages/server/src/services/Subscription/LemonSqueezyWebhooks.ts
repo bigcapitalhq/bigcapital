@@ -1,4 +1,3 @@
-import { getPrice } from '@lemonsqueezy/lemonsqueezy.js';
 import config from '@/config';
 import { Inject, Service } from 'typedi';
 import {
@@ -10,7 +9,6 @@ import {
 } from './utils';
 import { Plan } from '@/system/models';
 import { Subscription } from './Subscription';
-import { isEmpty } from 'lodash';
 
 @Service()
 export class LemonSqueezyWebhooks {
@@ -18,7 +16,7 @@ export class LemonSqueezyWebhooks {
   private subscriptionService: Subscription;
 
   /**
-   * handle the LemonSqueezy webhooks.
+   * Handles the Lemon Squeezy webhooks.
    * @param {string} rawBody
    * @param {string} signature
    * @returns {Promise<void>}
@@ -74,7 +72,7 @@ export class LemonSqueezyWebhooks {
         const variantId = attributes.variant_id as string;
 
         // We assume that the Plan table is up to date.
-        const plan = await Plan.query().findOne('slug', 'early-adaptor');
+        const plan = await Plan.query().findOne('lemonVariantId', variantId);
 
         if (!plan) {
           throw new Error(`Plan with variantId ${variantId} not found.`);
@@ -82,26 +80,9 @@ export class LemonSqueezyWebhooks {
           // Update the subscription in the database.
           const priceId = attributes.first_subscription_item.price_id;
 
-          // Get the price data from Lemon Squeezy.
-          const priceData = await getPrice(priceId);
-
-          if (priceData.error) {
-            throw new Error(
-              `Failed to get the price data for the subscription ${eventBody.data.id}.`
-            );
-          }
-          const isUsageBased =
-            attributes.first_subscription_item.is_usage_based;
-          const price = isUsageBased
-            ? priceData.data?.data.attributes.unit_price_decimal
-            : priceData.data?.data.attributes.unit_price;
-
           // Create a new subscription of the tenant.
           if (webhookEvent === 'subscription_created') {
-            await this.subscriptionService.newSubscribtion(
-              tenantId,
-              'early-adaptor'
-            );
+            await this.subscriptionService.newSubscribtion(tenantId, plan.slug);
           }
         }
       } else if (webhookEvent.startsWith('order_')) {
