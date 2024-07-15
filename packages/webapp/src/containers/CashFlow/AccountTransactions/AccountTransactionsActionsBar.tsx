@@ -11,6 +11,7 @@ import {
   MenuItem,
   PopoverInteractionKind,
   Position,
+  Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -18,6 +19,7 @@ import {
   DashboardActionsBar,
   DashboardRowsHeightButton,
   FormattedMessage as T,
+  AppToaster,
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
@@ -33,6 +35,7 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
+import { useDisconnectBankAccount } from '@/hooks/query/bank-rules';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -49,6 +52,8 @@ function AccountTransactionsActionsBar({
 
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
+
+  const { mutateAsync: disconnectBankAccount } = useDisconnectBankAccount();
 
   // Retrieves the money in/out buttons options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
@@ -82,6 +87,26 @@ function AccountTransactionsActionsBar({
   const handleBankRulesClick = () => {
     history.push(`/bank-rules?accountId=${accountId}`);
   };
+
+  const isConnected = true;
+
+  // Handles the bank account disconnect click.
+  const handleDisconnectClick = () => {
+    disconnectBankAccount(accountId)
+      .then(() => {
+        AppToaster.show({
+          message: 'The bank account has been disconnected.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+
   // Handle the refresh button click.
   const handleRefreshBtnClick = () => {
     refresh();
@@ -142,6 +167,10 @@ function AccountTransactionsActionsBar({
           content={
             <Menu>
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
+
+              {isConnected && (
+                <MenuItem onClick={handleDisconnectClick} text={'Disconnect'} />
+              )}
             </Menu>
           }
         >

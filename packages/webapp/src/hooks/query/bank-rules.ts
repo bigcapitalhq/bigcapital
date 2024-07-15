@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   QueryClient,
   UseMutationOptions,
@@ -57,6 +56,26 @@ export function useCreateBankRule(
       onSuccess: () => {
         commonInvalidateQueries(queryClient);
       },
+    },
+  );
+}
+
+interface DisconnectBankAccountRes {}
+
+export function useDisconnectBankAccount(
+  options?: UseMutationOptions<number, Error, DisconnectBankAccountRes>,
+) {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<number, Error, DisconnectBankAccountRes>(
+    (bankAccountId: number) =>
+      apiRequest
+        .post(`/banking/bank_accounts/${bankAccountId}`)
+        .then((res) => res.data),
+    {
+      ...options,
+      onSuccess: () => {},
     },
   );
 }
