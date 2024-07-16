@@ -6,6 +6,7 @@ import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
+import { ERRORS } from './types';
 
 @Service()
 export class DisconnectBankAccount {
@@ -20,45 +21,46 @@ export class DisconnectBankAccount {
 
   /**
    * Disconnects the given bank account.
-   * @param {number} tenantId 
-   * @param {number} bankAccountId 
+   * @param {number} tenantId
+   * @param {number} bankAccountId
    * @returns {Promise<void>}
    */
   async disconnectBankAccount(tenantId: number, bankAccountId: number) {
     const { Account, PlaidItem } = this.tenancy.models(tenantId);
 
+    // Retrieve the bank account or throw not found error.
     const account = await Account.query()
       .findById(bankAccountId)
-      .where('type', ['bank'])
+      .whereIn('account_type', ['bank', 'cash'])
       .throwIfNotFound();
 
-    const plaidItem = await PlaidItem.query().findById(account.plaidAccountId);
+    const oldPlaidItem = await PlaidItem.query().findById(account.plaidItemId);
 
-    if (!plaidItem) {
+    if (!oldPlaidItem) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
-    const request = {
-      accessToken: plaidItem.plaidAccessToken,
-    };
     const plaidInstance = new PlaidClientWrapper();
 
-    // 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
+      // Triggers `onBankAccountDisconnecting` event.
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnecting, {
         tenantId,
         bankAccountId,
       });
-      // Remove the Plaid item.
-      const data = await plaidInstance.itemRemove(request);
-
       // Remove the Plaid item from the system.
-      await PlaidItem.query().findById(account.plaidAccountId).delete();
+      await PlaidItem.query(trx).findById(account.plaidItemId).delete();
 
       // Remove the plaid item association to the bank account.
-      await Account.query().findById(bankAccountId).patch({
+      await Account.query(trx).findById(bankAccountId).patch({
         plaidAccountId: null,
+        plaidItemId: null,
         isFeedsActive: false,
       });
+      // Remove the Plaid item.
+      const data = await plaidInstance.itemRemove({
+        access_token: oldPlaidItem.plaidAccessToken,
+      });
+      // Triggers `onBankAccountDisconnected` event.
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnected, {
         tenantId,
         bankAccountId,
@@ -66,7 +68,3 @@ export class DisconnectBankAccount {
     });
   }
 }
-
-const ERRORS = {
-  BANK_ACCOUNT_NOT_CONNECTED: 'BANK_ACCOUNT_NOT_CONNECTED',
-};

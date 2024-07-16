@@ -52,6 +52,7 @@ const noAccessTokenLogger = async (
 
 // Plaid client methods used in this app, mapped to their appropriate logging functions.
 const clientMethodLoggingFns = {
+  transactionsRefresh: defaultLogger,
   accountsGet: defaultLogger,
   institutionsGet: noAccessTokenLogger,
   institutionsGetById: noAccessTokenLogger,

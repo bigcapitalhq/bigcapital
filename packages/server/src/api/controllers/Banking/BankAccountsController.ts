@@ -22,8 +22,9 @@ export class BankAccountsController extends BaseController {
     router.get('/:bankAccountId/meta', this.getBankAccountSummary.bind(this));
     router.post(
       '/:bankAccountId/disconnect',
-      this.discountBankAccount.bind(this)
+      this.disconnectBankAccount.bind(this)
     );
+    router.post('/:bankAccountId/update', this.refreshBankAccount.bind(this));
 
     return router;
   }
@@ -72,6 +73,33 @@ export class BankAccountsController extends BaseController {
 
     try {
       await this.bankAccountsApp.disconnectBankAccount(tenantId, bankAccountId);
+
+      return res.status(200).send({
+        id: bankAccountId,
+        message: 'The bank account has been disconnected.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Refresh the given bank account.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response|null>}
+   */
+  async refreshBankAccount(
+    req: Request<{ bankAccountId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { bankAccountId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.bankAccountsApp.refreshBankAccount(tenantId, bankAccountId);
 
       return res.status(200).send({
         id: bankAccountId,

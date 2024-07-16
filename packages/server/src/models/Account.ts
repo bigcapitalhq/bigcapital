@@ -197,6 +197,7 @@ export default class Account extends mixin(TenantModel, [
     const ExpenseEntry = require('models/ExpenseCategory');
     const ItemEntry = require('models/ItemEntry');
     const UncategorizedTransaction = require('models/UncategorizedCashflowTransaction');
+    const PlaidItem = require('models/PlaidItem');
 
     return {
       /**
@@ -319,6 +320,18 @@ export default class Account extends mixin(TenantModel, [
         },
         filter: (query) => {
           query.where('categorized', false);
+        },
+      },
+
+      /**
+       * Account model may belongs to a Plaid item.
+       */
+      plaidItem: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: PlaidItem.default,
+        join: {
+          from: 'accounts.plaidItemId',
+          to: 'plaid_items.id',
         },
       },
     };

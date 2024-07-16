@@ -12,6 +12,8 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Tooltip,
+  MenuDivider,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -35,7 +37,10 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
-import { useDisconnectBankAccount } from '@/hooks/query/bank-rules';
+import {
+  useDisconnectBankAccount,
+  useUpdateBankAccount,
+} from '@/hooks/query/bank-rules';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -54,6 +59,7 @@ function AccountTransactionsActionsBar({
   const { refresh } = useRefreshCashflowTransactionsInfinity();
 
   const { mutateAsync: disconnectBankAccount } = useDisconnectBankAccount();
+  const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
 
   // Retrieves the money in/out buttons options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
@@ -92,7 +98,7 @@ function AccountTransactionsActionsBar({
 
   // Handles the bank account disconnect click.
   const handleDisconnectClick = () => {
-    disconnectBankAccount(accountId)
+    disconnectBankAccount({ bankAccountId: accountId })
       .then(() => {
         AppToaster.show({
           message: 'The bank account has been disconnected.',
@@ -106,7 +112,22 @@ function AccountTransactionsActionsBar({
         });
       });
   };
-
+  // handles the bank update button click.
+  const handleBankUpdateClick = () => {
+    updateBankAccount({ bankAccountId: accountId })
+      .then(() => {
+        AppToaster.show({
+          message: 'The transactions of the bank account has been updated.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
   // Handle the refresh button click.
   const handleRefreshBtnClick = () => {
     refresh();
@@ -154,6 +175,18 @@ function AccountTransactionsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
+
+        <Tooltip
+          content={'The bank syncing is active'}
+          minimal={true}
+          position={Position.BOTTOM}
+        >
+          <Button
+            className={Classes.MINIMAL}
+            icon={<Icon icon="feed" iconSize={16} color="#238C2C" />}
+            intent={Intent.SUCCESS}
+          />
+        </Tooltip>
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
@@ -166,6 +199,10 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
+              {isConnected && (
+                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+              )}
+              <MenuDivider />
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
               {isConnected && (
