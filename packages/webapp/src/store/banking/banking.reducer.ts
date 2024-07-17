@@ -5,6 +5,9 @@ interface StorePlaidState {
   openMatchingTransactionAside: boolean;
   uncategorizedTransactionIdForMatching: number | null;
   openReconcileMatchingTransaction: { isOpen: boolean; pending: number };
+
+  uncategorizedTransactionsSelected: Array<number | string>;
+  excludedTransactionsSelected: Array<number | string>;
 }
 
 export const PlaidSlice = createSlice({
@@ -17,6 +20,8 @@ export const PlaidSlice = createSlice({
       isOpen: false,
       pending: 0,
     },
+    uncategorizedTransactionsSelected: [],
+    excludedTransactionsSelected: [],
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -52,6 +57,28 @@ export const PlaidSlice = createSlice({
       state.openReconcileMatchingTransaction.isOpen = false;
       state.openReconcileMatchingTransaction.pending = 0;
     },
+
+    setUncategorizedTransactionsSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ transactionIds: Array<string | number> }>,
+    ) => {
+      state.uncategorizedTransactionsSelected = action.payload.transactionIds;
+    },
+
+    resetUncategorizedTransactionsSelected: (state: StorePlaidState) => {
+      state.uncategorizedTransactionsSelected = [];
+    },
+
+    setExcludedTransactionsSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ ids: Array<string | number> }>,
+    ) => {
+      state.excludedTransactionsSelected = action.payload.ids;
+    },
+
+    resetExcludedTransactionsSelected: (state: StorePlaidState) => {
+      state.excludedTransactionsSelected = [];
+    },
   },
 });
 
@@ -62,6 +89,10 @@ export const {
   closeMatchingTransactionAside,
   openReconcileMatchingTransaction,
   closeReconcileMatchingTransaction,
+  setUncategorizedTransactionsSelected,
+  resetUncategorizedTransactionsSelected,
+  setExcludedTransactionsSelected,
+  resetExcludedTransactionsSelected,
 } = PlaidSlice.actions;
 
 export const getPlaidToken = (state: any) => state.plaid.plaidToken;

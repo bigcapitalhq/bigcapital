@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
-
+import * as R from 'ramda';
 import {
   DataTable,
   TableFastCell,
@@ -19,11 +19,20 @@ import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
 
 import { ActionsMenu } from './_components';
 import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import {
+  WithBankingActionsProps,
+  withBankingActions,
+} from '../../withBankingActions';
+
+interface ExcludeTransactionsTableProps extends WithBankingActionsProps {}
 
 /**
  * Renders the recognized account transactions datatable.
  */
-export function ExcludedTransactionsTable() {
+function ExcludedTransactionsTableRoot({
+  // #withBankingActions
+  setExcludedTransactionsSelected,
+}: ExcludeTransactionsTableProps) {
   const { excludedBankTransactions } = useExcludedTransactionsBoot();
   const { mutateAsync: unexcludeBankTransaction } =
     useUnexcludeUncategorizedTransaction();
@@ -55,6 +64,12 @@ export function ExcludedTransactionsTable() {
       });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const _selectedIds = selected?.map((row) => row.original.id);
+    setExcludedTransactionsSelected(_selectedIds);
+  };
+
   return (
     <CashflowTransactionsTable
       noInitialFetch={true}
@@ -80,12 +95,18 @@ export function ExcludedTransactionsTable() {
       onColumnResizing={handleColumnResizing}
       noResults={'There is no excluded bank transactions.'}
       className="table-constrant"
+      selectionColumn={true}
+      onSelectedRowsChange={handleSelectedRowsChange}
       payload={{
         onRestore: handleRestoreClick,
       }}
     />
   );
 }
+
+export const ExcludedTransactionsTable = R.compose(withBankingActions)(
+  ExcludedTransactionsTableRoot,
+);
 
 const DashboardConstrantTable = styled(DataTable)`
   .table {

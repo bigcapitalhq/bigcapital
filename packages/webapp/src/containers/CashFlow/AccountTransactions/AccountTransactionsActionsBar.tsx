@@ -11,6 +11,7 @@ import {
   MenuItem,
   PopoverInteractionKind,
   Position,
+  Intent,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -18,6 +19,7 @@ import {
   DashboardActionsBar,
   DashboardRowsHeightButton,
   FormattedMessage as T,
+  AppToaster,
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
@@ -33,6 +35,13 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
+import { withBanking } from '../withBanking';
+import { isEmpty } from 'lodash';
+import {
+  useExcludeUncategorizedTransactions,
+  useUnexcludeUncategorizedTransaction,
+  useUnexcludeUncategorizedTransactions,
+} from '@/hooks/query/bank-rules';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -43,6 +52,10 @@ function AccountTransactionsActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withBanking
+  uncategorizedTransationsIdsSelected,
+  excludedTransactionsIdsSelected,
 }) {
   const history = useHistory();
   const { accountId } = useAccountTransactionsContext();
@@ -87,6 +100,54 @@ function AccountTransactionsActionsBar({
     refresh();
   };
 
+  const {
+    mutateAsync: excludeUncategorizedTransactions,
+    isLoading: isExcludingLoading,
+  } = useExcludeUncategorizedTransactions();
+
+  const {
+    mutateAsync: unexcludeUncategorizedTransactions,
+    isLoading: isUnexcludingLoading,
+  } = useUnexcludeUncategorizedTransactions();
+
+  // Handles the exclude uncategorized transactions in bulk.
+  const handleExcludeUncategorizedBtnClick = () => {
+    excludeUncategorizedTransactions({
+      ids: uncategorizedTransationsIdsSelected,
+    })
+      .then(() => {
+        AppToaster.show({
+          message: 'The selected transactions have been excluded.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+
+  // Handles the unexclude categorized button click.
+  const handleUnexcludeUncategorizedBtnClick = () => {
+    unexcludeUncategorizedTransactions({
+      ids: excludedTransactionsIdsSelected,
+    })
+      .then(() => {
+        AppToaster.show({
+          message: 'The selected transactions have been unexcluded.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          message: 'Something went wrong',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -129,6 +190,28 @@ function AccountTransactionsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
+
+        {!isEmpty(uncategorizedTransationsIdsSelected) && (
+          <Button
+            icon={<Icon icon="disable" iconSize={16} />}
+            text={'Exclude'}
+            onClick={handleExcludeUncategorizedBtnClick}
+            className={Classes.MINIMAL}
+            intent={Intent.DANGER}
+            disable={isExcludingLoading}
+          />
+        )}
+
+        {!isEmpty(excludedTransactionsIdsSelected) && (
+          <Button
+            icon={<Icon icon="disable" iconSize={16} />}
+            text={'Unexclude'}
+            onClick={handleUnexcludeUncategorizedBtnClick}
+            className={Classes.MINIMAL}
+            intent={Intent.DANGER}
+            disable={isUnexcludingLoading}
+          />
+        )}
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
@@ -164,4 +247,13 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
+  withBanking(
+    ({
+      uncategorizedTransationsIdsSelected,
+      excludedTransactionsIdsSelected,
+    }) => ({
+      uncategorizedTransationsIdsSelected,
+      excludedTransactionsIdsSelected,
+    }),
+  ),
 )(AccountTransactionsActionsBar);
