@@ -2,6 +2,14 @@
 
 All notable changes to Bigcapital server-side will be in this file.
 
+## [v0.18.0] - 10-08-2024
+
+* feat: Bank rules for automated categorization by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/511
+* feat: Categorize & match bank transaction by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/511
+* feat: Reconcile match transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/522
+* fix: Issues in matching transactions by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/523
+* fix: Cashflow transactions types by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/524
+
 ## [v0.17.5] - 17-06-2024
 
 * fix: Balance sheet and P/L nested accounts by @abouolia in https://github.com/bigcapitalhq/bigcapital/pull/501
