@@ -23,6 +23,10 @@ export class LoopsEventsSubscriber {
     email,
     userId,
   }: IAuthSignUpVerifiedEventPayload) {
+    // Can't continue since the Loops the api key is not configured.
+    if (!config.loops.apiKey) {
+      return;
+    }
     const user = await SystemUser.query().findById(userId);
 
     const options = {
