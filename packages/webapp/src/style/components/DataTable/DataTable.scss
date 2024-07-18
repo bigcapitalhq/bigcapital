@@ -124,7 +124,7 @@
         }
       }
 
-      .bp4-control.bp4-checkbox .bp4-control-indicator {
+      .bp4-control.bp4-checkbox:not(.bp4-large) .bp4-control-indicator {
         cursor: auto;
 
         &,

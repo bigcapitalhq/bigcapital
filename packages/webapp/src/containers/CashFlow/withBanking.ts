@@ -18,6 +18,7 @@ export const withBanking = (mapState) => {
         state.plaid.uncategorizedTransactionsSelected,
 
       excludedTransactionsIdsSelected: state.plaid.excludedTransactionsSelected,
+      isMultipleCategorization: state.plaid.isMultipleCategorization,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

@@ -9,6 +9,7 @@ import {
   getTransactionsToCategorizeSelected,
   addTransactionsToCategorizeSelected,
   removeTransactionsToCategorizeSelected,
+  getOpenMatchingTransactionAside,
 } from '@/store/banking/banking.reducer';
 
 export const useSetBankingPlaidToken = () => {
@@ -81,4 +82,15 @@ export const useResetTransactionsToCategorizeSelected = () => {
   return useCallback(() => {
     dispatch(resetTransactionsToCategorizeSelected());
   }, [dispatch]);
+};
+
+export const useGetOpenMatchingTransactionAside = () => {
+  const openMatchingTransactionAside = useSelector(
+    getOpenMatchingTransactionAside,
+  );
+
+  return useMemo(
+    () => openMatchingTransactionAside,
+    [openMatchingTransactionAside],
+  );
 };

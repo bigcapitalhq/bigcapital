@@ -1,0 +1,15 @@
+
+
+.table :global .td.categorize_include,
+.table :global .th.categorize_include {
+  display: none;  
+}
+
+.table.showCategorizeColumn :global .td.categorize_include,
+.table.showCategorizeColumn :global .th.categorize_include {
+  display: flex;
+}
+
+.categorizeCheckbox:global(.bp4-checkbox) :global .bp4-control-indicator {
+  border-radius: 20px;
+}

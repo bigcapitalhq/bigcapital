@@ -12,6 +12,8 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Switch,
+  Tooltip,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -39,9 +41,9 @@ import { withBanking } from '../withBanking';
 import { isEmpty } from 'lodash';
 import {
   useExcludeUncategorizedTransactions,
-  useUnexcludeUncategorizedTransaction,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
+import { withBankingActions } from '../withBankingActions';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -56,6 +58,9 @@ function AccountTransactionsActionsBar({
   // #withBanking
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
+
+  // #withBankingActions
+  enableMultipleCategorization,
 }) {
   const history = useHistory();
   const { accountId } = useAccountTransactionsContext();
@@ -148,6 +153,10 @@ function AccountTransactionsActionsBar({
       });
   };
 
+  const handleMultipleCategorizingSwitch = (event) => {
+    enableMultipleCategorization(event.currentTarget.checked);
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -201,7 +210,6 @@ function AccountTransactionsActionsBar({
             disable={isExcludingLoading}
           />
         )}
-
         {!isEmpty(excludedTransactionsIdsSelected) && (
           <Button
             icon={<Icon icon="disable" iconSize={16} />}
@@ -215,6 +223,20 @@ function AccountTransactionsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        <Tooltip
+          content={
+            'Enables to categorize or matching multiple bank transactions into one transaction.'
+          }
+          position={Position.BOTTOM}
+          minimal
+        >
+          <Switch
+            label={'Multi Select'}
+            inline
+            onChange={handleMultipleCategorizingSwitch}
+          />
+        </Tooltip>
+        <NavbarDivider />
         <Popover
           minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
@@ -256,4 +278,5 @@ export default compose(
       excludedTransactionsIdsSelected,
     }),
   ),
+  withBankingActions,
 )(AccountTransactionsActionsBar);

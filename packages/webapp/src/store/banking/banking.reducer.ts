@@ -10,6 +10,8 @@ interface StorePlaidState {
   uncategorizedTransactionsSelected: Array<number | string>;
   excludedTransactionsSelected: Array<number | string>;
   transactionsToCategorizeSelected: Array<number | string>;
+
+  enableMultipleCategorization: boolean;
 }
 
 export const PlaidSlice = createSlice({
@@ -25,6 +27,7 @@ export const PlaidSlice = createSlice({
     uncategorizedTransactionsSelected: [],
     excludedTransactionsSelected: [],
     transactionsToCategorizeSelected: [],
+    enableMultipleCategorization: false,
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -113,6 +116,13 @@ export const PlaidSlice = createSlice({
     resetTransactionsToCategorizeSelected: (state: StorePlaidState) => {
       state.transactionsToCategorizeSelected = [];
     },
+
+    enableMultipleCategorization: (
+      state: StorePlaidState,
+      action: PayloadAction<{ enable: boolean }>,
+    ) => {
+      state.enableMultipleCategorization = action.payload.enable;
+    },
   },
 });
 
@@ -131,8 +141,15 @@ export const {
   addTransactionsToCategorizeSelected,
   removeTransactionsToCategorizeSelected,
   resetTransactionsToCategorizeSelected,
+  enableMultipleCategorization,
 } = PlaidSlice.actions;
 
 export const getPlaidToken = (state: any) => state.plaid.plaidToken;
 export const getTransactionsToCategorizeSelected = (state: any) =>
   state.plaid.transactionsToCategorizeSelected;
+
+export const getOpenMatchingTransactionAside = (state: any) =>
+  state.plaid.openMatchingTransactionAside;
+
+export const isMultipleCategorization = (state: any) =>
+  state.plaid.enableMultipleCategorization;
