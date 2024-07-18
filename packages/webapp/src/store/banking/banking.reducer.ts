@@ -1,3 +1,4 @@
+import { uniq } from 'lodash';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface StorePlaidState {
@@ -8,6 +9,7 @@ interface StorePlaidState {
 
   uncategorizedTransactionsSelected: Array<number | string>;
   excludedTransactionsSelected: Array<number | string>;
+  transactionsToCategorizeSelected: Array<number | string>;
 }
 
 export const PlaidSlice = createSlice({
@@ -22,6 +24,7 @@ export const PlaidSlice = createSlice({
     },
     uncategorizedTransactionsSelected: [],
     excludedTransactionsSelected: [],
+    transactionsToCategorizeSelected: [],
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -79,6 +82,37 @@ export const PlaidSlice = createSlice({
     resetExcludedTransactionsSelected: (state: StorePlaidState) => {
       state.excludedTransactionsSelected = [];
     },
+
+    setTransactionsToCategorizeSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ ids: Array<string | number> }>,
+    ) => {
+      state.transactionsToCategorizeSelected = action.payload.ids;
+    },
+
+    addTransactionsToCategorizeSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ id: string | number }>,
+    ) => {
+      state.transactionsToCategorizeSelected = uniq([
+        ...state.transactionsToCategorizeSelected,
+        action.payload.id,
+      ]);
+    },
+
+    removeTransactionsToCategorizeSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ id: string | number }>,
+    ) => {
+      state.transactionsToCategorizeSelected =
+        state.transactionsToCategorizeSelected.filter(
+          (t) => t !== action.payload.id,
+        );
+    },
+
+    resetTransactionsToCategorizeSelected: (state: StorePlaidState) => {
+      state.transactionsToCategorizeSelected = [];
+    },
   },
 });
 
@@ -93,6 +127,12 @@ export const {
   resetUncategorizedTransactionsSelected,
   setExcludedTransactionsSelected,
   resetExcludedTransactionsSelected,
+  setTransactionsToCategorizeSelected,
+  addTransactionsToCategorizeSelected,
+  removeTransactionsToCategorizeSelected,
+  resetTransactionsToCategorizeSelected,
 } = PlaidSlice.actions;
 
 export const getPlaidToken = (state: any) => state.plaid.plaidToken;
+export const getTransactionsToCategorizeSelected = (state: any) =>
+  state.plaid.transactionsToCategorizeSelected;

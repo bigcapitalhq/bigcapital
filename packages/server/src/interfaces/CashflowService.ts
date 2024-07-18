@@ -130,14 +130,15 @@ export interface ICommandCashflowDeletedPayload {
 
 export interface ICashflowTransactionCategorizedPayload {
   tenantId: number;
-  uncategorizedTransaction: any;
+  uncategorizedTransactions: any;
   cashflowTransaction: ICashflowTransaction;
+  oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   categorizeDTO: any;
   trx: Knex.Transaction;
 }
 export interface ICashflowTransactionUncategorizingPayload {
   tenantId: number;
-  uncategorizedTransaction: IUncategorizedCashflowTransaction;
+  oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   trx: Knex.Transaction;
 }
 export interface ICashflowTransactionUncategorizedPayload {

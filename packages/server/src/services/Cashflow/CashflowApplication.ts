@@ -164,12 +164,12 @@ export class CashflowApplication {
    */
   public categorizeTransaction(
     tenantId: number,
-    cashflowTransactionId: number,
+    uncategorizeTransactionIds: Array<number>,
     categorizeDTO: ICategorizeCashflowTransactioDTO
   ) {
     return this.categorizeTransactionService.categorize(
       tenantId,
-      cashflowTransactionId,
+      uncategorizeTransactionIds,
       categorizeDTO
     );
   }

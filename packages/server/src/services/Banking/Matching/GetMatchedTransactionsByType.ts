@@ -7,6 +7,7 @@ import {
   MatchedTransactionsPOJO,
 } from './types';
 import { Inject, Service } from 'typedi';
+import PromisePool from '@supercharge/promise-pool';
 
 export abstract class GetMatchedTransactionsByType {
   @Inject()
@@ -45,22 +46,26 @@ export abstract class GetMatchedTransactionsByType {
   /**
    *
    * @param {number} tenantId
-   * @param {number} uncategorizedTransactionId
+   * @param {Array<number>} uncategorizedTransactionIds
    * @param {IMatchTransactionDTO} matchTransactionDTO
    * @param {Knex.Transaction} trx
    */
   public async createMatchedTransaction(
     tenantId: number,
-    uncategorizedTransactionId: number,
+    uncategorizedTransactionIds: Array<number>,
     matchTransactionDTO: IMatchTransactionDTO,
     trx?: Knex.Transaction
   ) {
     const { MatchedBankTransaction } = this.tenancy.models(tenantId);
 
-    await MatchedBankTransaction.query(trx).insert({
-      uncategorizedTransactionId,
-      referenceType: matchTransactionDTO.referenceType,
-      referenceId: matchTransactionDTO.referenceId,
-    });
+    await PromisePool.withConcurrency(2)
+      .for(uncategorizedTransactionIds)
+      .process(async (uncategorizedTransactionId) => {
+        await MatchedBankTransaction.query(trx).insert({
+          uncategorizedTransactionId,
+          referenceType: matchTransactionDTO.referenceType,
+          referenceId: matchTransactionDTO.referenceId,
+        });
+      });
   }
 }

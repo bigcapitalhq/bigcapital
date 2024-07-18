@@ -2,15 +2,15 @@ import { Knex } from 'knex';
 
 export interface IBankTransactionMatchingEventPayload {
   tenantId: number;
-  uncategorizedTransactionId: number;
-  matchTransactionsDTO: IMatchTransactionsDTO;
+  uncategorizedTransactionIds: Array<number>;
+  matchedTransactions: Array<IMatchTransactionDTO>;
   trx?: Knex.Transaction;
 }
 
 export interface IBankTransactionMatchedEventPayload {
   tenantId: number;
-  uncategorizedTransactionId: number;
-  matchTransactionsDTO: IMatchTransactionsDTO;
+  uncategorizedTransactionIds: Array<number>;
+  matchedTransactions: Array<IMatchTransactionDTO>;
   trx?: Knex.Transaction;
 }
 
@@ -32,6 +32,7 @@ export interface IMatchTransactionDTO {
 }
 
 export interface IMatchTransactionsDTO {
+  uncategorizedTransactionIds: Array<number>;
   matchedTransactions: Array<IMatchTransactionDTO>;
 }
 

@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { castArray } from 'lodash';
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
 import { PromisePool } from '@supercharge/promise-pool';
@@ -10,11 +10,15 @@ import {
   ERRORS,
   IBankTransactionMatchedEventPayload,
   IBankTransactionMatchingEventPayload,
-  IMatchTransactionsDTO,
+  IMatchTransactionDTO,
 } from './types';
 import { MatchTransactionsTypes } from './MatchTransactionsTypes';
 import { ServiceError } from '@/exceptions';
-import { sumMatchTranasctions } from './_utils';
+import {
+  sumMatchTranasctions,
+  validateUncategorizedTransactionsExcluded,
+  validateUncategorizedTransactionsNotMatched,
+} from './_utils';
 
 @Service()
 export class MatchBankTransactions {
@@ -39,27 +43,24 @@ export class MatchBankTransactions {
    */
   async validate(
     tenantId: number,
-    uncategorizedTransactionId: number,
-    matchTransactionsDTO: IMatchTransactionsDTO
+    uncategorizedTransactionId: number | Array<number>,
+    matchedTransactions: Array<IMatchTransactionDTO>
   ) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
-    const { matchedTransactions } = matchTransactionsDTO;
+    const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
     // Validates the uncategorized transaction existance.
-    const uncategorizedTransaction =
+    const uncategorizedTransactions =
       await UncategorizedCashflowTransaction.query()
-        .findById(uncategorizedTransactionId)
-        .withGraphFetched('matchedBankTransactions')
-        .throwIfNotFound();
+        .whereIn('id', uncategorizedTransactionIds)
+        .withGraphFetched('matchedBankTransactions');
 
     // Validates the uncategorized transaction is not already matched.
-    if (!isEmpty(uncategorizedTransaction.matchedBankTransactions)) {
-      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_MATCHED);
-    }
+    validateUncategorizedTransactionsNotMatched(uncategorizedTransactions);
+
     // Validate the uncategorized transaction is not excluded.
-    if (uncategorizedTransaction.excluded) {
-      throw new ServiceError(ERRORS.CANNOT_MATCH_EXCLUDED_TRANSACTION);
-    }
+    validateUncategorizedTransactionsExcluded(uncategorizedTransactions);
+
     // Validates the given matched transaction.
     const validateMatchedTransaction = async (matchedTransaction) => {
       const getMatchedTransactionsService =
@@ -96,9 +97,9 @@ export class MatchBankTransactions {
     );
     // Validates the total given matching transcations whether is not equal
     // uncategorized transaction amount.
-    if (totalMatchedTranasctions !== uncategorizedTransaction.amount) {
-      throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
-    }
+    // if (totalMatchedTranasctions !== uncategorizedTransaction.amount) {
+    //   throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
+    // }
   }
 
   /**
@@ -109,23 +110,23 @@ export class MatchBankTransactions {
    */
   public async matchTransaction(
     tenantId: number,
-    uncategorizedTransactionId: number,
-    matchTransactionsDTO: IMatchTransactionsDTO
+    uncategorizedTransactionId: number | Array<number>,
+    matchedTransactions: Array<IMatchTransactionDTO>
   ): Promise<void> {
-    const { matchedTransactions } = matchTransactionsDTO;
+    const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
     // Validates the given matching transactions DTO.
     await this.validate(
       tenantId,
-      uncategorizedTransactionId,
-      matchTransactionsDTO
+      uncategorizedTransactionIds,
+      matchedTransactions
     );
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers the event `onBankTransactionMatching`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatching, {
         tenantId,
-        uncategorizedTransactionId,
-        matchTransactionsDTO,
+        uncategorizedTransactionIds,
+        matchedTransactions,
         trx,
       } as IBankTransactionMatchingEventPayload);
 
@@ -139,17 +140,16 @@ export class MatchBankTransactions {
             );
           await getMatchedTransactionsService.createMatchedTransaction(
             tenantId,
-            uncategorizedTransactionId,
+            uncategorizedTransactionIds,
             matchedTransaction,
             trx
           );
         });
-
       // Triggers the event `onBankTransactionMatched`.
       await this.eventPublisher.emitAsync(events.bankMatch.onMatched, {
         tenantId,
-        uncategorizedTransactionId,
-        matchTransactionsDTO,
+        uncategorizedTransactionIds,
+        matchedTransactions,
         trx,
       } as IBankTransactionMatchedEventPayload);
     });

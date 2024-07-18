@@ -1,10 +1,15 @@
 import { Service, Inject } from 'typedi';
 import { ValidationChain, check, param, query } from 'express-validator';
 import { Router, Request, Response, NextFunction } from 'express';
+import { omit } from 'lodash';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
-import { AbilitySubject, CashflowAction } from '@/interfaces';
+import {
+  AbilitySubject,
+  CashflowAction,
+  ICategorizeCashflowTransactioDTO,
+} from '@/interfaces';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
 @Service()
@@ -44,7 +49,7 @@ export default class NewCashflowTransactionController extends BaseController {
       this.catchServiceErrors
     );
     router.post(
-      '/transactions/:id/categorize',
+      '/transactions/categorize',
       this.categorizeCashflowTransactionValidationSchema,
       this.validationResult,
       this.categorizeCashflowTransaction,
@@ -89,6 +94,7 @@ export default class NewCashflowTransactionController extends BaseController {
    */
   public get categorizeCashflowTransactionValidationSchema() {
     return [
+      check('uncategorized_transaction_ids').exists().isArray({ min: 1 }),
       check('date').exists().isISO8601().toDate(),
       check('credit_account_id').exists().isInt().toInt(),
       check('transaction_number').optional(),
@@ -191,14 +197,18 @@ export default class NewCashflowTransactionController extends BaseController {
     next: NextFunction
   ) => {
     const { tenantId } = req;
-    const { id: cashflowTransactionId } = req.params;
-    const cashflowTransaction = this.matchedBodyData(req);
+    const matchedObject = this.matchedBodyData(req);
+    const categorizeDTO = omit(matchedObject, [
+      'uncategorizedTransactionIds',
+    ]) as ICategorizeCashflowTransactioDTO;
+    const uncategorizedTransactionIds =
+      matchedObject.uncategorizedTransactionIds;
 
     try {
       await this.cashflowApplication.categorizeTransaction(
         tenantId,
-        cashflowTransactionId,
-        cashflowTransaction
+        uncategorizedTransactionIds,
+        categorizeDTO
       );
       return res.status(200).send({
         message: 'The cashflow transaction has been created successfully.',

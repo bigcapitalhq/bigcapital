@@ -9,10 +9,15 @@ import {
   PopoverInteractionKind,
   Position,
   Tooltip,
+  Checkbox,
 } from '@blueprintjs/core';
 import { Box, FormatDateCell, Icon, MaterialProgressBar } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { safeCallback } from '@/utils';
+import {
+  useAddTransactionsToCategorizeSelected,
+  useRemoveTransactionsToCategorizeSelected,
+} from '@/hooks/state/banking';
 
 export function ActionsMenu({
   payload: { onUncategorize, onUnmatch },
@@ -183,6 +188,20 @@ function statusAccessor(transaction) {
  * Retrieve account uncategorized transctions table columns.
  */
 export function useAccountUncategorizedTransactionsColumns() {
+  const addTransactionsToCategorizeSelected =
+    useAddTransactionsToCategorizeSelected();
+
+  const removeTransactionsToCategorizeSelected =
+    useRemoveTransactionsToCategorizeSelected();
+
+  const handleChange = (value) => (event) => {
+    if (event.currentTarget.checked) {
+      addTransactionsToCategorizeSelected(value.id);
+    } else {
+      removeTransactionsToCategorizeSelected(value.id);
+    }
+  };
+
   return React.useMemo(
     () => [
       {
@@ -241,6 +260,15 @@ export function useAccountUncategorizedTransactionsColumns() {
         textOverview: true,
         align: 'right',
         clickable: true,
+      },
+      {
+        id: 'categorize_include',
+        Header: 'Include',
+        accessor: (value) => <Checkbox large onChange={handleChange(value)} />,
+        width: 10,
+        minWidth: 10,
+        maxWidth: 10,
+        align: 'right',
       },
     ],
     [],

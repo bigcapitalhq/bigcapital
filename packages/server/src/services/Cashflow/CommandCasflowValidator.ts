@@ -68,10 +68,12 @@ export class CommandCashflowValidator {
    * Validate the given transcation shouldn't be categorized.
    * @param {CashflowTransaction} cashflowTransaction
    */
-  public validateTransactionShouldNotCategorized(
-    cashflowTransaction: CashflowTransaction
+  public validateTransactionsShouldNotCategorized(
+    cashflowTransactions: Array<IUncategorizedCashflowTransaction>
   ) {
-    if (cashflowTransaction.uncategorize) {
+    const categorized = cashflowTransactions.filter((t) => t.categorized);
+
+    if (categorized?.length > 0) {
       throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
     }
   }
@@ -87,7 +89,7 @@ export class CommandCashflowValidator {
     transactionType: string
   ) {
     const type = getCashflowTransactionType(
-      upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE
+      transactionType as CASHFLOW_TRANSACTION_TYPE
     );
     if (
       (type.direction === CASHFLOW_DIRECTION.IN &&

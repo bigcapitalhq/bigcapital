@@ -1,7 +1,9 @@
 import moment from 'moment';
 import * as R from 'ramda';
 import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTransaction';
-import { MatchedTransactionPOJO } from './types';
+import { ERRORS, MatchedTransactionPOJO } from './types';
+import { isEmpty } from 'lodash';
+import { ServiceError } from '@/exceptions';
 
 export const sortClosestMatchTransactions = (
   uncategorizedTransaction: UncategorizedCashflowTransaction,
@@ -28,4 +30,27 @@ export const sumMatchTranasctions = (transactions: Array<any>) => {
       (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
     0
   );
+};
+
+export const validateUncategorizedTransactionsNotMatched = (
+  uncategorizedTransactions: any
+) => {
+  const isMatchedTransactions = uncategorizedTransactions.filter(
+    (trans) => !isEmpty(trans.matchedBankTransactions)
+  );
+  //
+  if (isMatchedTransactions.length > 0) {
+    throw new ServiceError(ERRORS.TRANSACTION_ALREADY_MATCHED);
+  }
+};
+
+export const validateUncategorizedTransactionsExcluded = (
+  uncategorizedTransactions: any
+) => {
+  const excludedTransactions = uncategorizedTransactions.filter(
+    (trans) => trans.excluded
+  );
+  if (excludedTransactions.length > 0) {
+    throw new ServiceError(ERRORS.CANNOT_MATCH_EXCLUDED_TRANSACTION);
+  }
 };
