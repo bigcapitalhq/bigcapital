@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Router, Switch, Route } from 'react-router';
+import { CompactRoute } from 'react-router-dom-v5-compat';
 import { createBrowserHistory } from 'history';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
@@ -37,31 +38,31 @@ function AppInsider({ history }) {
       <DashboardThemeProvider>
         <Router history={history}>
           <Switch>
-            <Route path={'/auth/register/verify'}>
+            <CompatRoute path={'/auth/register/verify'}>
               <EnsureAuthenticated>
                 <EnsureUserEmailNotVerified>
                   <RegisterVerify />
                 </EnsureUserEmailNotVerified>
               </EnsureAuthenticated>
-            </Route>
+            </CompatRoute>
 
-            <Route path={'/auth/email_confirmation'}>
+            <CompatRoute path={'/auth/email_confirmation'}>
               <EmailConfirmation />
-            </Route>
+            </CompatRoute>
 
-            <Route path={'/auth'}>
+            <CompatRoute path={'/auth'}>
               <EnsureAuthNotAuthenticated>
                 <Authentication />
               </EnsureAuthNotAuthenticated>
-            </Route>
+            </CompatRoute>
 
-            <Route path={'/'}>
+            <CompatRoute path={'/'}>
               <EnsureAuthenticated>
                 <EnsureUserEmailVerified>
                   <DashboardPrivatePages />
                 </EnsureUserEmailVerified>
               </EnsureAuthenticated>
-            </Route>
+            </CompatRoute>
           </Switch>
         </Router>
 
