@@ -113,6 +113,8 @@ import { UnlinkBankRuleOnDeleteBankRule } from '@/services/Banking/Rules/events/
 import { DecrementUncategorizedTransactionOnMatching } from '@/services/Banking/Matching/events/DecrementUncategorizedTransactionsOnMatch';
 import { DecrementUncategorizedTransactionOnExclude } from '@/services/Banking/Exclude/events/DecrementUncategorizedTransactionOnExclude';
 import { DecrementUncategorizedTransactionOnCategorize } from '@/services/Cashflow/subscribers/DecrementUncategorizedTransactionOnCategorize';
+import { AutoApplyUnearnedRevenueOnInvoiceCreated } from '@/services/Sales/PaymentReceives/events/AutoApplyUnearnedRevenueOnInvoiceCreated';
+import { AutoApplyPrepardExpensesOnBillCreated } from '@/services/Purchases/Bills/events/AutoApplyPrepardExpensesOnBillCreated';
 
 export default () => {
   return new EventPublisher();
@@ -274,5 +276,9 @@ export const susbcribers = () => {
 
     // Plaid
     RecognizeSyncedBankTranasctions,
+
+    // Advanced Payments 
+    AutoApplyUnearnedRevenueOnInvoiceCreated,
+    AutoApplyPrepardExpensesOnBillCreated
   ];
 };

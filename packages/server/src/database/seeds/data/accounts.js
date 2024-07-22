@@ -323,4 +323,24 @@ export default [
     index: 1,
     predefined: 0,
   },
+  {
+    name: 'Unearned Revenue',
+    slug: 'unearned-revenue',
+    account_type: 'other-income',
+    parent_account_id: null,
+    code: '50005',
+    active: true,
+    index: 1,
+    predefined: true,
+  },
+  {
+    name: 'Prepaid Expenses',
+    slug: 'prepaid-expenses',
+    account_type: 'prepaid-expenses',
+    parent_account_id: null,
+    code: '',
+    active: true,
+    index: 1,
+    predefined: true,
+  }
 ];

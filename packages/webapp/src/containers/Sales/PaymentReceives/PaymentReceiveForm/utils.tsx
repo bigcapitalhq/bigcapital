@@ -42,7 +42,7 @@ export const defaultPaymentReceive = {
   // Holds the payment number that entered manually only.
   payment_receive_no_manually: '',
   statement: '',
-  full_amount: '',
+  amount: '',
   currency_code: '',
   branch_id: '',
   exchange_rate: 1,

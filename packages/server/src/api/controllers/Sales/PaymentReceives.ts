@@ -151,6 +151,8 @@ export default class PaymentReceivesController extends BaseController {
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
       check('payment_date').exists(),
+      check('amount').exists().isNumeric().toFloat(),
+
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
       check('payment_receive_no').optional({ nullable: true }).trim().escape(),
@@ -158,15 +160,20 @@ export default class PaymentReceivesController extends BaseController {
 
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('entries').isArray({ min: 1 }),
+      check('entries').isArray(),
 
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').optional().isNumeric().toInt(),
       check('entries.*.invoice_id').exists().isNumeric().toInt(),
-      check('entries.*.payment_amount').exists().isNumeric().toFloat(),
+      check('entries.*.amount_applied').exists().isNumeric().toFloat(),
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      check('unearned_revenue_account_id')
+        .optional({ nullable: true })
+        .isNumeric()
+        .toInt(),
     ];
   }
 

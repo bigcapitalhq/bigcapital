@@ -78,10 +78,10 @@ export class CreatePaymentReceive {
       paymentReceiveDTO.entries
     );
     // Validate invoice payment amount.
-    await this.validators.validateInvoicesPaymentsAmount(
-      tenantId,
-      paymentReceiveDTO.entries
-    );
+    // await this.validators.validateInvoicesPaymentsAmount(
+    //   tenantId,
+    //   paymentReceiveDTO.entries
+    // );
     // Validates the payment account currency code.
     this.validators.validatePaymentAccountCurrency(
       depositAccount.currencyCode,

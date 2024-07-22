@@ -25,6 +25,7 @@ export interface IPaymentReceive {
   updatedAt: Date;
   localAmount?: number;
   branchId?: number;
+  unearnedRevenueAccountId?: number;
 }
 export interface IPaymentReceiveCreateDTO {
   customerId: number;
@@ -39,6 +40,8 @@ export interface IPaymentReceiveCreateDTO {
 
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
+
+  unearnedRevenueAccountId?: number;
 }
 
 export interface IPaymentReceiveEditDTO {
@@ -69,7 +72,7 @@ export interface IPaymentReceiveEntryDTO {
   index: number;
   paymentReceiveId: number;
   invoiceId: number;
-  paymentAmount: number;
+  amountApplied: number;
 }
 
 export interface IPaymentReceivesFilter extends IDynamicListFilterDTO {

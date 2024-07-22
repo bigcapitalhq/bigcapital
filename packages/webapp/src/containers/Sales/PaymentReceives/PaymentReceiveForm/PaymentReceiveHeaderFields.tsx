@@ -124,7 +124,7 @@ export default function PaymentReceiveHeaderFields() {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'full_amount'}>
+      <Field name={'amount'}>
         {({
           form: {
             setFieldValue,
@@ -146,7 +146,7 @@ export default function PaymentReceiveHeaderFields() {
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
-                  setFieldValue('full_amount', value);
+                  setFieldValue('amount', value);
                 }}
                 onBlurValue={onFullAmountBlur}
               />
