@@ -13,7 +13,7 @@ export class AutoApplyPrepardExpensesOnBillCreated {
    */
   public attach(bus) {
     bus.subscribe(
-      events.saleInvoice.onCreated,
+      events.bill.onCreated,
       this.handleAutoApplyPrepardExpensesOnBillCreated.bind(this)
     );
   }

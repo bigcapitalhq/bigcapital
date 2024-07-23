@@ -142,6 +142,8 @@ export default {
 
     onMailReminderSend: 'onSaleInvoiceMailReminderSend',
     onMailReminderSent: 'onSaleInvoiceMailReminderSent',
+
+    onUnearnedRevenueApplied: 'onSaleInvoiceUnearnedRevenue',
   },
 
   /**
@@ -230,6 +232,8 @@ export default {
     onPreMailSend: 'onPaymentReceivePreMailSend',
     onMailSend: 'onPaymentReceiveMailSend',
     onMailSent: 'onPaymentReceiveMailSent',
+
+    onUnearnedRevenueApplied: 'onPaymentReceivedUnearnedRevenue',
   },
 
   /**

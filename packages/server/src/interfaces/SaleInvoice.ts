@@ -216,3 +216,9 @@ export interface ISaleInvoiceMailSent {
   saleInvoiceId: number;
   messageOptions: SendInvoiceMailDTO;
 }
+
+export interface SaleInvoiceAppliedUnearnedRevenueOnCreatedEventPayload {
+  tenantId: number;
+  saleInvoiceId: number;
+  trx?: Knex.Transaction;
+}

@@ -187,3 +187,11 @@ export interface PaymentReceiveMailPresendEvent {
   paymentReceiveId: number;
   messageOptions: PaymentReceiveMailOptsDTO;
 }
+
+export interface PaymentReceiveUnearnedRevenueAppliedEventPayload {
+  tenantId: number;
+  paymentReceiveId: number;
+  saleInvoiceId: number;
+  appliedAmount: number;
+  trx?: Knex.Transaction;
+}

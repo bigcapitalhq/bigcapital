@@ -1,3 +1,4 @@
+import { Knex } from 'knex';
 import { sumBy } from 'lodash';
 import {
   AccountNormal,
@@ -5,7 +6,6 @@ import {
   IPaymentReceive,
   IPaymentReceiveGLCommonEntry,
 } from '@/interfaces';
-import { Knex } from 'knex';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 
 export class PaymentReceivedGLCommon {

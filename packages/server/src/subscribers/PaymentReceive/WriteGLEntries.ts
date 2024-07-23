@@ -3,14 +3,19 @@ import {
   IPaymentReceiveCreatedPayload,
   IPaymentReceiveDeletedPayload,
   IPaymentReceiveEditedPayload,
+  PaymentReceiveUnearnedRevenueAppliedEventPayload,
 } from '@/interfaces';
 import events from '@/subscribers/events';
 import { PaymentReceiveGLEntries } from '@/services/Sales/PaymentReceives/PaymentReceiveGLEntries';
+import { PaymentReceivedUnearnedGLEntries } from '@/services/Sales/PaymentReceives/PaymentReceivedUnearnedGLEntries';
 
 @Service()
 export default class PaymentReceivesWriteGLEntriesSubscriber {
   @Inject()
   private paymentReceiveGLEntries: PaymentReceiveGLEntries;
+
+  @Inject()
+  private paymentReceivedUnearnedGLEntries: PaymentReceivedUnearnedGLEntries;
 
   /**
    * Attaches events with handlers.
@@ -19,6 +24,14 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
     bus.subscribe(
       events.paymentReceive.onCreated,
       this.handleWriteJournalEntriesOnceCreated
+    );
+    bus.subscribe(
+      events.paymentReceive.onCreated,
+      this.handleWriteUnearnedRevenueGLEntriesOnCreated.bind(this)
+    );
+    bus.subscribe(
+      events.paymentReceive.onUnearnedRevenueApplied,
+      this.handleRewriteUnearnedRevenueGLEntriesOnApply
     );
     bus.subscribe(
       events.paymentReceive.onEdited,
@@ -32,6 +45,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
 
   /**
    * Handle journal entries writing once the payment receive created.
+   * @param {IPaymentReceiveCreatedPayload} payload -
    */
   private handleWriteJournalEntriesOnceCreated = async ({
     tenantId,
@@ -46,7 +60,40 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
   };
 
   /**
+   * Handles rewrite payment GL entries on unearned revenue payload.
+   * @param {PaymentReceiveUnearnedRevenueAppliedEventPayload} payload -
+   */
+  private handleWriteUnearnedRevenueGLEntriesOnCreated = async ({
+    tenantId,
+    paymentReceiveId,
+    trx,
+  }: IPaymentReceiveCreatedPayload) => {
+    await this.paymentReceivedUnearnedGLEntries.writePaymentGLEntries(
+      tenantId,
+      paymentReceiveId,
+      trx
+    );
+  };
+
+  /**
+   * Handles rewrite unearned revenue GL entries on payment received applied. 
+   * @param {PaymentReceiveUnearnedRevenueAppliedEventPayload} payload -
+   */
+  private handleRewriteUnearnedRevenueGLEntriesOnApply = async ({
+    tenantId,
+    paymentReceiveId,
+    trx,
+  }: PaymentReceiveUnearnedRevenueAppliedEventPayload) => {
+    await this.paymentReceivedUnearnedGLEntries.rewritePaymentGLEntries(
+      tenantId,
+      paymentReceiveId,
+      trx
+    );
+  };
+
+  /**
    * Handle journal entries writing once the payment receive edited.
+   * @param {IPaymentReceiveEditedPayload} payload -
    */
   private handleOverwriteJournalEntriesOnceEdited = async ({
     tenantId,
@@ -62,6 +109,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
 
   /**
    * Handles revert journal entries once deleted.
+   * @param {IPaymentReceiveDeletedPayload} payload -
    */
   private handleRevertJournalEntriesOnceDeleted = async ({
     tenantId,
