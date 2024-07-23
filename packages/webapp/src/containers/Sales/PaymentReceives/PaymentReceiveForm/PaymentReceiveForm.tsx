@@ -21,6 +21,7 @@ import { PaymentReceiveInnerProvider } from './PaymentReceiveInnerProvider';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import {
   EditPaymentReceiveFormSchema,
@@ -51,6 +52,9 @@ function PaymentReceiveForm({
 
   // #withCurrentOrganization
   organization: { base_currency },
+
+  // #withDialogActions
+  openDialog
 }) {
   const history = useHistory();
 
@@ -101,6 +105,11 @@ function PaymentReceiveForm({
     { setSubmitting, resetForm, setFieldError },
   ) => {
     setSubmitting(true);
+
+    if (true) {
+      openDialog('payment-received-excessed-payment');
+      return;
+    }
 
     // Transformes the form values to request body.
     const form = transformFormToRequest(values);
@@ -191,4 +200,5 @@ export default compose(
     preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
   withCurrentOrganization(),
+  withDialogActions
 )(PaymentReceiveForm);

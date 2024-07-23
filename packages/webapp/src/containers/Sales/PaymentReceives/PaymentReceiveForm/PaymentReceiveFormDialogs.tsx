@@ -2,6 +2,7 @@
 import React from 'react';
 import { useFormikContext } from 'formik';
 import PaymentReceiveNumberDialog from '@/containers/Dialogs/PaymentReceiveNumberDialog';
+import { ExcessPaymentDialog } from './dialogs/ExcessPaymentDialog';
 
 /**
  * Payment receive form dialogs.
@@ -21,9 +22,12 @@ export default function PaymentReceiveFormDialogs() {
   };
 
   return (
-    <PaymentReceiveNumberDialog
-      dialogName={'payment-receive-number-form'}
-      onConfirm={handleUpdatePaymentNumber}
-    />
+    <>
+      <PaymentReceiveNumberDialog
+        dialogName={'payment-receive-number-form'}
+        onConfirm={handleUpdatePaymentNumber}
+      />
+      <ExcessPaymentDialog dialogName={'payment-received-excessed-payment'} />
+    </>
   );
 }

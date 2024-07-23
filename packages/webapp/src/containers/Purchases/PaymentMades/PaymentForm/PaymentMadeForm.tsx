@@ -14,6 +14,7 @@ import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
 import PaymentMadeFormBody from './PaymentMadeFormBody';
 import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
+import { PaymentMadeDialogs } from './PaymentMadeDialogs';
 
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -21,6 +22,7 @@ import { compose, orderingLinesIndexes } from '@/utils';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import {
   EditPaymentMadeFormSchema,
@@ -42,6 +44,9 @@ function PaymentMadeForm({
 
   // #withCurrentOrganization
   organization: { base_currency },
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -149,6 +154,7 @@ function PaymentMadeForm({
             <PaymentMadeFormBody />
             <PaymentMadeFooter />
             <PaymentMadeFloatingActions />
+            <PaymentMadeDialogs />
           </PaymentMadeInnerProvider>
         </Form>
       </Formik>
@@ -163,4 +169,5 @@ export default compose(
     preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
   })),
   withCurrentOrganization(),
+  withDialogActions,
 )(PaymentMadeForm);

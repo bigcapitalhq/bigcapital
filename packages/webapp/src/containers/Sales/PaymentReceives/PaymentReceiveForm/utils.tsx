@@ -47,7 +47,8 @@ export const defaultPaymentReceive = {
   branch_id: '',
   exchange_rate: 1,
   entries: [],
-  attachments: []
+  attachments: [],
+  unearned_revenue_account_id: '',
 };
 
 export const defaultRequestPaymentEntry = {
