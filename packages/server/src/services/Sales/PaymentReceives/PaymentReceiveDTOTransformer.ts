@@ -37,7 +37,6 @@ export class PaymentReceiveDTOTransformer {
     oldPaymentReceive?: IPaymentReceive
   ): Promise<IPaymentReceive> {
     const appliedAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
-    const unappliedAmount = paymentReceiveDTO.amount - appliedAmount;
 
     // Retreive the next invoice number.
     const autoNextNumber =
@@ -55,7 +54,7 @@ export class PaymentReceiveDTOTransformer {
       ...formatDateFields(omit(paymentReceiveDTO, ['entries', 'attachments']), [
         'paymentDate',
       ]),
-      unappliedAmount,
+      appliedAmount,
       currencyCode: customer.currencyCode,
       ...(paymentReceiveNo ? { paymentReceiveNo } : {}),
       exchangeRate: paymentReceiveDTO.exchangeRate || 1,

@@ -31,26 +31,27 @@ export class AutoApplyUnearnedRevenue {
   ): Promise<void> {
     const { PaymentReceive, SaleInvoice } = this.tenancy.models(tenantId);
 
-    const unappliedPayments = await PaymentReceive.query(trx).where(
-      'unappliedAmount',
-      '>',
-      0
-    );
     const invoice = await SaleInvoice.query(trx)
       .findById(saleInvoiceId)
       .throwIfNotFound();
 
+    const unappliedPayments = await PaymentReceive.query(trx)
+      .where('customerId', invoice.customerId)
+      .whereRaw('amount - applied_amount > 0')
+      .whereNotNull('unearnedRevenueAccountId');
+
     let unappliedAmount = invoice.total;
-    let appliedTotalAmount = 0;
+    let appliedTotalAmount = 0; // Total applied amount after applying.
 
     const processHandler: ProcessHandler<
       IPaymentReceive,
       Promise<void>
     > = async (unappliedPayment: IPaymentReceive, index: number, pool) => {
-      const appliedAmount = Math.min(unappliedAmount, unappliedAmount);
+      const appliedAmount = Math.min(unappliedAmount, unappliedPayment.amount);
       unappliedAmount = unappliedAmount - appliedAmount;
       appliedTotalAmount += appliedAmount;
 
+      // Stop applying once the unapplied amount reache zero or less.
       if (appliedAmount <= 0) {
         pool.stop();
         return;
@@ -108,7 +109,7 @@ export class AutoApplyUnearnedRevenue {
       invoiceId,
       paymentAmount: appliedAmount,
     });
-    await PaymentReceive.query(trx).increment('usedAmount', appliedAmount);
+    await PaymentReceive.query(trx).increment('appliedAmount', appliedAmount);
 
     // Triggers the event `onPaymentReceivedUnearnedRevenue`.
     await this.eventPublisher.emitAsync(
