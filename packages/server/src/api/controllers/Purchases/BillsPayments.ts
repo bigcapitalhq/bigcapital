@@ -111,6 +111,7 @@ export default class BillsPayments extends BaseController {
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
+      check('amount').exists().isNumeric().toFloat(),
       check('payment_account_id').exists().isNumeric().toInt(),
       check('payment_number').optional({ nullable: true }).trim().escape(),
       check('payment_date').exists(),
@@ -125,6 +126,8 @@ export default class BillsPayments extends BaseController {
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
+
+      check('prepard_expenses_account_id').optional().isNumeric().toInt(),
     ];
   }
 

@@ -1,8 +1,14 @@
 import moment from 'moment';
-import { sumBy } from 'lodash';
+import { sumBy, chain } from 'lodash';
 import { Service, Inject } from 'typedi';
 import { Knex } from 'knex';
-import { AccountNormal, IBillPayment, ILedgerEntry } from '@/interfaces';
+import {
+  AccountNormal,
+  IBillPayment,
+  IBillPaymentEntry,
+  ILedger,
+  ILedgerEntry,
+} from '@/interfaces';
 import Ledger from '@/services/Accounting/Ledger';
 import LedgerStorageService from '@/services/Accounting/LedgerStorageService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
@@ -21,6 +27,7 @@ export class BillPaymentGLEntries {
    * @param {number} tenantId
    * @param {number} billPaymentId
    * @param {Knex.Transaction} trx
+   * @returns {Promise<void>}
    */
   public writePaymentGLEntries = async (
     tenantId: number,
@@ -65,6 +72,7 @@ export class BillPaymentGLEntries {
    * @param {number} tenantId
    * @param {number} billPaymentId
    * @param {Knex.Transaction} trx
+   * @returns {Promise<void>}
    */
   public rewritePaymentGLEntries = async (
     tenantId: number,
@@ -102,7 +110,7 @@ export class BillPaymentGLEntries {
    * @param {IBillPayment} billPayment
    * @returns {}
    */
-  private getPaymentCommonEntry = (billPayment: IBillPayment) => {
+  private getPaymentCommonEntry = (billPayment: IBillPayment): ILedgerEntry => {
     const formattedDate = moment(billPayment.paymentDate).format('YYYY-MM-DD');
 
     return {
@@ -127,7 +135,7 @@ export class BillPaymentGLEntries {
 
   /**
    * Calculates the payment total exchange gain/loss.
-   * @param   {IBillPayment} paymentReceive - Payment receive with entries.
+   * @param {IBillPayment} paymentReceive - Payment receive with entries.
    * @returns {number}
    */
   private getPaymentExGainOrLoss = (billPayment: IBillPayment): number => {
@@ -141,10 +149,10 @@ export class BillPaymentGLEntries {
 
   /**
    * Retrieves the payment exchange gain/loss entries.
-   * @param   {IBillPayment} billPayment -
-   * @param   {number} APAccountId -
-   * @param   {number} gainLossAccountId -
-   * @param   {string} baseCurrency -
+   * @param {IBillPayment} billPayment -
+   * @param {number} APAccountId -
+   * @param {number} gainLossAccountId -
+   * @param {string} baseCurrency -
    * @returns {ILedgerEntry[]}
    */
   private getPaymentExGainOrLossEntries = (
@@ -186,7 +194,7 @@ export class BillPaymentGLEntries {
 
   /**
    * Retrieves the payment deposit GL entry.
-   * @param   {IBillPayment} billPayment
+   * @param {IBillPayment} billPayment
    * @returns {ILedgerEntry}
    */
   private getPaymentGLEntry = (billPayment: IBillPayment): ILedgerEntry => {
@@ -198,6 +206,7 @@ export class BillPaymentGLEntries {
       accountId: billPayment.paymentAccountId,
       accountNormal: AccountNormal.DEBIT,
       index: 2,
+      indexGroup: 10,
     };
   };
 
@@ -226,8 +235,8 @@ export class BillPaymentGLEntries {
 
   /**
    * Retrieves the payment GL entries.
-   * @param   {IBillPayment} billPayment
-   * @param   {number} APAccountId
+   * @param {IBillPayment} billPayment
+   * @param {number} APAccountId
    * @returns {ILedgerEntry[]}
    */
   private getPaymentGLEntries = (
@@ -255,9 +264,52 @@ export class BillPaymentGLEntries {
   };
 
   /**
+   *
+   * BEFORE APPLYING TO PAYMENT TO BILLS.
+   * -----------------------------------------
+   * - Cash/Bank - Credit.
+   *    - Prepard Expenses - Debit
+   *
+   * AFTER APPLYING BILLS TO PAYMENT.
+   * -----------------------------------------
+   * - Prepard Expenses - Credit
+   *    - A/P - Debit
+   *
+   * @param {number} APAccountId - A/P account id.
+   * @param {IBillPayment} billPayment
+   */
+  private getPrepardExpenseGLEntries = (
+    APAccountId: number,
+    billPayment: IBillPayment
+  ) => {
+    const prepardExpenseEntry = this.getPrepardExpenseEntry(billPayment);
+    const withdrawalEntry = this.getPaymentGLEntry(billPayment);
+
+    const paymentLinesEntries = chain(billPayment.entries)
+      .map((billPaymentEntry) => {
+        const APEntry = this.getAccountPayablePaymentLineEntry(
+          APAccountId,
+          billPayment,
+          billPaymentEntry
+        );
+        const creditPrepardExpenseEntry = this.getCreditPrepardExpenseEntry(
+          billPayment,
+          billPaymentEntry
+        );
+        return [creditPrepardExpenseEntry, APEntry];
+      })
+      .flatten()
+      .value();
+    const prepardExpenseEntries = [prepardExpenseEntry, withdrawalEntry];
+    const combinedEntries = [...prepardExpenseEntries, ...paymentLinesEntries];
+
+    return combinedEntries;
+  };
+
+  /**
    * Retrieves the bill payment ledger.
-   * @param   {IBillPayment} billPayment
-   * @param   {number} APAccountId
+   * @param {IBillPayment} billPayment
+   * @param {number} APAccountId
    * @returns {Ledger}
    */
   private getBillPaymentLedger = (
@@ -266,12 +318,79 @@ export class BillPaymentGLEntries {
     gainLossAccountId: number,
     baseCurrency: string
   ): Ledger => {
-    const entries = this.getPaymentGLEntries(
-      billPayment,
-      APAccountId,
-      gainLossAccountId,
-      baseCurrency
-    );
+    const entries = billPayment.isPrepardExpense
+      ? this.getPrepardExpenseGLEntries(APAccountId, billPayment)
+      : this.getPaymentGLEntries(
+          billPayment,
+          APAccountId,
+          gainLossAccountId,
+          baseCurrency
+        );
     return new Ledger(entries);
+  };
+
+  /**
+   * Retrieves the prepard expense GL entry.
+   * @param {IBillPayment} billPayment
+   * @returns {ILedgerEntry}
+   */
+  private getPrepardExpenseEntry = (
+    billPayment: IBillPayment
+  ): ILedgerEntry => {
+    const commonJournal = this.getPaymentCommonEntry(billPayment);
+
+    return {
+      ...commonJournal,
+      debit: billPayment.localAmount,
+      accountId: billPayment.prepardExpensesAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      indexGroup: 10,
+      index: 1,
+    };
+  };
+
+  /**
+   * Retrieves the GL entries of credit prepard expense for the give payment line.
+   * @param {IBillPayment} billPayment
+   * @param {IBillPaymentEntry} billPaymentEntry
+   * @returns {ILedgerEntry}
+   */
+  private getCreditPrepardExpenseEntry = (
+    billPayment: IBillPayment,
+    billPaymentEntry: IBillPaymentEntry
+  ) => {
+    const commonJournal = this.getPaymentCommonEntry(billPayment);
+
+    return {
+      ...commonJournal,
+      credit: billPaymentEntry.paymentAmount,
+      accountId: billPayment.prepardExpensesAccountId,
+      accountNormal: AccountNormal.DEBIT,
+      index: 2,
+      indexGroup: 20,
+    };
+  };
+
+  /**
+   * Retrieves the A/P debit of the payment line.
+   * @param {number} APAccountId
+   * @param {IBillPayment} billPayment
+   * @param {IBillPaymentEntry} billPaymentEntry
+   * @returns {ILedgerEntry}
+   */
+  private getAccountPayablePaymentLineEntry = (
+    APAccountId: number,
+    billPayment: IBillPayment,
+    billPaymentEntry: IBillPaymentEntry
+  ): ILedgerEntry => {
+    const commonJournal = this.getPaymentCommonEntry(billPayment);
+
+    return {
+      ...commonJournal,
+      debit: billPaymentEntry.paymentAmount,
+      accountId: APAccountId,
+      index: 1,
+      indexGroup: 20,
+    };
   };
 }

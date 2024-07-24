@@ -23,11 +23,13 @@ export class CommandBillPaymentDTOTransformer {
     vendor: IVendor,
     oldBillPayment?: IBillPayment
   ): Promise<IBillPayment> {
+    const appliedAmount = sumBy(billPaymentDTO.entries, 'paymentAmount');
+
     const initialDTO = {
       ...formatDateFields(omit(billPaymentDTO, ['attachments']), [
         'paymentDate',
       ]),
-      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
+      appliedAmount,
       currencyCode: vendor.currencyCode,
       exchangeRate: billPaymentDTO.exchangeRate || 1,
       entries: billPaymentDTO.entries,

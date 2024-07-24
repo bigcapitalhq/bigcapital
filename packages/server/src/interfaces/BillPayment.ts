@@ -29,6 +29,9 @@ export interface IBillPayment {
 
   localAmount?: number;
   branchId?: number;
+
+  prepardExpensesAccountId?: number;
+  isPrepardExpense: boolean;
 }
 
 export interface IBillPaymentEntryDTO {

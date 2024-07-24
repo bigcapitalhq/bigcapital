@@ -18,6 +18,10 @@ export class PaymentWriteGLEntriesSubscriber {
   public attach(bus) {
     bus.subscribe(events.billPayment.onCreated, this.handleWriteJournalEntries);
     bus.subscribe(
+      events.billPayment.onPrepardExpensesApplied,
+      this.handleWritePrepardExpenseGLEntries
+    );
+    bus.subscribe(
       events.billPayment.onEdited,
       this.handleRewriteJournalEntriesOncePaymentEdited
     );
@@ -28,7 +32,8 @@ export class PaymentWriteGLEntriesSubscriber {
   }
 
   /**
-   * Handle bill payment writing journal entries once created.
+   * Handles bill payment writing journal entries once created.
+   * @param {IBillPaymentEventCreatedPayload} payload -
    */
   private handleWriteJournalEntries = async ({
     tenantId,
@@ -40,6 +45,22 @@ export class PaymentWriteGLEntriesSubscriber {
     await this.billPaymentGLEntries.writePaymentGLEntries(
       tenantId,
       billPayment.id,
+      trx
+    );
+  };
+
+  /**
+   * Handles rewrite prepard expense GL entries once the bill payment applying to bills.
+   * @param {IBillPaymentEventCreatedPayload} payload -
+   */
+  private handleWritePrepardExpenseGLEntries = async ({
+    tenantId,
+    billPaymentId,
+    trx,
+  }: IBillPaymentEventCreatedPayload) => {
+    await this.billPaymentGLEntries.rewritePaymentGLEntries(
+      tenantId,
+      billPaymentId,
       trx
     );
   };

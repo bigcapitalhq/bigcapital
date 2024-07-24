@@ -11,6 +11,8 @@ export default class BillPayment extends mixin(TenantModel, [
   CustomViewBaseModel,
   ModelSearchable,
 ]) {
+  prepardExpensesAccountId: number;
+
   /**
    * Table name
    */
@@ -45,6 +47,14 @@ export default class BillPayment extends mixin(TenantModel, [
    */
   static get meta() {
     return BillPaymentSettings;
+  }
+
+  /**
+   * Detarmines whether the payment is prepard expense.
+   * @returns {boolean}
+   */
+  get isPrepardExpense() {
+    return !!this.prepardExpensesAccountId;
   }
 
   /**
