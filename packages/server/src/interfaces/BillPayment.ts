@@ -41,6 +41,7 @@ export interface IBillPaymentEntryDTO {
 
 export interface IBillPaymentDTO {
   vendorId: number;
+  amount: number;
   paymentAccountId: number;
   paymentNumber?: string;
   paymentDate: Date;
@@ -50,6 +51,7 @@ export interface IBillPaymentDTO {
   entries: IBillPaymentEntryDTO[];
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
+  prepardExpensesAccountId?: number;
 }
 
 export interface IBillReceivePageEntry {

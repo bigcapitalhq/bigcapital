@@ -12,8 +12,7 @@ export default class SeedAccounts extends TenantSeeder {
       description: this.i18n.__(account.description),
       currencyCode: this.tenant.metadata.baseCurrency,
       seededAt: new Date(),
-    })
-);
+    }));
     return knex('accounts').then(async () => {
       // Inserts seed entries.
       return knex('accounts').insert(data);

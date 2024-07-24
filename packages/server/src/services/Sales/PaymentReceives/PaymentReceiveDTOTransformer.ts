@@ -11,6 +11,7 @@ import { PaymentReceiveValidators } from './PaymentReceiveValidators';
 import { PaymentReceiveIncrement } from './PaymentReceiveIncrement';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class PaymentReceiveDTOTransformer {
@@ -22,6 +23,9 @@ export class PaymentReceiveDTOTransformer {
 
   @Inject()
   private branchDTOTransform: BranchTransactionDTOTransform;
+
+  @Inject()
+  private tenancy: HasTenancyService;
 
   /**
    * Transformes the create payment receive DTO to model object.
@@ -36,6 +40,7 @@ export class PaymentReceiveDTOTransformer {
     paymentReceiveDTO: IPaymentReceiveCreateDTO | IPaymentReceiveEditDTO,
     oldPaymentReceive?: IPaymentReceive
   ): Promise<IPaymentReceive> {
+    const { accountRepository } = this.tenancy.repositories(tenantId);
     const appliedAmount = sumBy(paymentReceiveDTO.entries, 'paymentAmount');
 
     // Retreive the next invoice number.
@@ -50,6 +55,17 @@ export class PaymentReceiveDTOTransformer {
 
     this.validators.validatePaymentNoRequire(paymentReceiveNo);
 
+    const hasUnearnedPayment = appliedAmount < paymentReceiveDTO.amount;
+    const unearnedRevenueAccount = hasUnearnedPayment
+      ? await accountRepository.findOrCreateUnearnedRevenue()
+      : null;
+
+    const unearnedRevenueAccountId =
+      hasUnearnedPayment && unearnedRevenueAccount
+        ? paymentReceiveDTO.unearnedRevenueAccountId ??
+          unearnedRevenueAccount?.id
+        : paymentReceiveDTO.unearnedRevenueAccountId;
+
     const initialDTO = {
       ...formatDateFields(omit(paymentReceiveDTO, ['entries', 'attachments']), [
         'paymentDate',
@@ -61,6 +77,7 @@ export class PaymentReceiveDTOTransformer {
       entries: paymentReceiveDTO.entries.map((entry) => ({
         ...entry,
       })),
+      unearnedRevenueAccountId,
     };
     return R.compose(
       this.branchDTOTransform.transformDTO<IPaymentReceive>(tenantId)

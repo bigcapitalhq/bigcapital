@@ -27,7 +27,11 @@ export interface IPaymentReceive {
   branchId?: number;
   unearnedRevenueAccountId?: number;
 }
-export interface IPaymentReceiveCreateDTO {
+
+interface IPaymentReceivedCommonDTO {
+  unearnedRevenueAccountId?: number;
+}
+export interface IPaymentReceiveCreateDTO extends IPaymentReceivedCommonDTO {
   customerId: number;
   paymentDate: Date;
   amount: number;
@@ -40,11 +44,9 @@ export interface IPaymentReceiveCreateDTO {
 
   branchId?: number;
   attachments?: AttachmentLinkDTO[];
-
-  unearnedRevenueAccountId?: number;
 }
 
-export interface IPaymentReceiveEditDTO {
+export interface IPaymentReceiveEditDTO extends IPaymentReceivedCommonDTO {
   customerId: number;
   paymentDate: Date;
   amount: number;
