@@ -1,12 +1,12 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import { useFormikContext } from 'formik';
-import { sumBy } from 'lodash';
 import { CLASSES } from '@/constants/classes';
 import { Money, FormattedMessage as T } from '@/components';
 
 import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
+import { usePaymentmadeTotalAmount } from './utils';
 
 /**
  * Payment made header form.
@@ -14,11 +14,10 @@ import PaymentMadeFormHeaderFields from './PaymentMadeFormHeaderFields';
 function PaymentMadeFormHeader() {
   // Formik form context.
   const {
-    values: { entries, currency_code },
+    values: { currency_code },
   } = useFormikContext();
 
-  // Calculate the payment amount of the entries.
-  const amountPaid = useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
+  const totalAmount = usePaymentmadeTotalAmount();
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER)}>
@@ -31,7 +30,7 @@ function PaymentMadeFormHeader() {
               <T id={'amount_received'} />
             </span>
             <h1 class="big-amount__number">
-              <Money amount={amountPaid} currency={currency_code} />
+              <Money amount={totalAmount} currency={currency_code} />
             </h1>
           </div>
         </div>

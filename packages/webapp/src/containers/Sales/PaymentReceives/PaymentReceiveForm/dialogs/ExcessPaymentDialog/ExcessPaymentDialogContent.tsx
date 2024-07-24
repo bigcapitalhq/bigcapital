@@ -7,6 +7,7 @@ import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
 import { AccountsSelect, FFormGroup } from '@/components';
 import { usePaymentReceiveFormContext } from '../../PaymentReceiveFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
+import { usePaymentReceivedTotalExceededAmount } from '../../utils';
 
 interface ExcessPaymentValues {
   accountId: string;
@@ -23,15 +24,23 @@ const Schema = Yup.object().shape({
 const DEFAULT_ACCOUNT_SLUG = 'depreciation-expense';
 
 export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
-  const { setFieldValue } = useFormikContext();
+  const { setFieldValue, submitForm } = useFormikContext();
+  const { setIsExcessConfirmed } = usePaymentReceiveFormContext();
   const initialAccountId = useDefaultExcessPaymentDeposit();
+  const exceededAmount = usePaymentReceivedTotalExceededAmount();
 
   const handleSubmit = (
     values: ExcessPaymentValues,
     { setSubmitting }: FormikHelpers<ExcessPaymentValues>,
   ) => {
-    closeDialog(dialogName);
+    setSubmitting(true);
+    setIsExcessConfirmed(true);
     setFieldValue('unearned_revenue_account_id', values.accountId);
+
+    submitForm().then(() => {
+      closeDialog(dialogName);
+      setSubmitting(false);
+    });
   };
   const handleClose = () => {
     closeDialog(dialogName);
@@ -47,7 +56,10 @@ export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
       onSubmit={handleSubmit}
     >
       <Form>
-        <ExcessPaymentDialogContentForm onClose={handleClose} />
+        <ExcessPaymentDialogContentForm
+          exceededAmount={exceededAmount}
+          onClose={handleClose}
+        />
       </Form>
     </Formik>
   );
@@ -57,9 +69,9 @@ export const ExcessPaymentDialogContent = R.compose(withDialogActions)(
   ExcessPaymentDialogContentRoot,
 );
 
-function ExcessPaymentDialogContentForm({ onClose }) {
+function ExcessPaymentDialogContentForm({ onClose, exceededAmount }) {
   const { accounts } = usePaymentReceiveFormContext();
-  const { submitForm } = useFormikContext();
+  const { submitForm, isSubmitting } = useFormikContext();
 
   const handleCloseBtn = () => {
     onClose && onClose();
@@ -69,8 +81,9 @@ function ExcessPaymentDialogContentForm({ onClose }) {
     <>
       <div className={Classes.DIALOG_BODY}>
         <p>
-          Would you like to record the excess amount of $1000 as advanced
-          payment from the customer.
+          Would you like to record the excess amount of{' '}
+          <strong>{exceededAmount}</strong> as advanced payment from the
+          customer.
         </p>
 
         <FFormGroup
@@ -87,7 +100,12 @@ function ExcessPaymentDialogContentForm({ onClose }) {
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button intent={Intent.PRIMARY} onClick={() => submitForm()}>
+          <Button
+            intent={Intent.PRIMARY}
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            onClick={() => submitForm()}
+          >
             Continue to Payment
           </Button>
           <Button onClick={handleCloseBtn}>Cancel</Button>

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { sumBy, isEmpty, defaultTo } from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -37,6 +37,7 @@ import {
   transformFormToRequest,
   transformErrors,
   resetFormState,
+  getExceededAmountFromValues,
 } from './utils';
 import { PaymentReceiveSyncIncrementSettingsToForm } from './components';
 
@@ -54,7 +55,7 @@ function PaymentReceiveForm({
   organization: { base_currency },
 
   // #withDialogActions
-  openDialog
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -67,6 +68,7 @@ function PaymentReceiveForm({
     submitPayload,
     editPaymentReceiveMutate,
     createPaymentReceiveMutate,
+    isExcessConfirmed,
   } = usePaymentReceiveFormContext();
 
   // Payment receive number.
@@ -98,19 +100,21 @@ function PaymentReceiveForm({
       preferredDepositAccount,
     ],
   );
-
   // Handle form submit.
   const handleSubmitForm = (
     values,
     { setSubmitting, resetForm, setFieldError },
   ) => {
     setSubmitting(true);
+    const exceededAmount = getExceededAmountFromValues(values);
 
-    if (true) {
+    // Show the confirm popup if the excessed amount bigger than zero and
+    // excess confirmation has not been confirmed yet.
+    if (exceededAmount > 0 && !isExcessConfirmed) {
+      setSubmitting(false);
       openDialog('payment-received-excessed-payment');
       return;
     }
-
     // Transformes the form values to request body.
     const form = transformFormToRequest(values);
 
@@ -146,11 +150,11 @@ function PaymentReceiveForm({
     };
 
     if (paymentReceiveId) {
-      editPaymentReceiveMutate([paymentReceiveId, form])
+      return editPaymentReceiveMutate([paymentReceiveId, form])
         .then(onSaved)
         .catch(onError);
     } else {
-      createPaymentReceiveMutate(form).then(onSaved).catch(onError);
+      return createPaymentReceiveMutate(form).then(onSaved).catch(onError);
     }
   };
   return (
@@ -200,5 +204,5 @@ export default compose(
     preferredDepositAccount: paymentReceiveSettings?.preferredDepositAccount,
   })),
   withCurrentOrganization(),
-  withDialogActions
+  withDialogActions,
 )(PaymentReceiveForm);

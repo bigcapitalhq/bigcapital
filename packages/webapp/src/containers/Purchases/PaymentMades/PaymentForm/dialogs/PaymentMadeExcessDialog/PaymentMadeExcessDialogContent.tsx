@@ -23,14 +23,24 @@ const Schema = Yup.object().shape({
 const DEFAULT_ACCOUNT_SLUG = 'depreciation-expense';
 
 function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
-  const { setFieldValue } = useFormikContext();
+  const {
+    setFieldValue,
+    submitForm,
+  } = useFormikContext();
+  const { setIsExcessConfirmed } = usePaymentMadeFormContext();
 
   const handleSubmit = (
     values: ExcessPaymentValues,
     { setSubmitting }: FormikHelpers<ExcessPaymentValues>,
   ) => {
-    closeDialog(dialogName);
     setFieldValue(values.accountId);
+    setSubmitting(true);
+    setIsExcessConfirmed(true);
+
+    return submitForm().then(() => {
+      setSubmitting(false);
+      closeDialog(dialogName);
+    });
   };
 
   // Handle close button click.
@@ -66,7 +76,7 @@ interface ExcessPaymentDialogContentFormProps {
 function ExcessPaymentDialogContentForm({
   onClose,
 }: ExcessPaymentDialogContentFormProps) {
-  const { submitForm } = useFormikContext();
+  const { submitForm, isSubmitting } = useFormikContext();
   const { accounts } = usePaymentMadeFormContext();
 
   const handleCloseBtn = () => {
@@ -94,7 +104,11 @@ function ExcessPaymentDialogContentForm({
 
       <div className={Classes.DIALOG_FOOTER}>
         <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <Button intent={Intent.PRIMARY} onClick={() => submitForm()}>
+          <Button
+            intent={Intent.PRIMARY}
+            loading={isSubmitting}
+            onClick={() => submitForm()}
+          >
             Continue to Payment
           </Button>
           <Button onClick={handleCloseBtn}>Cancel</Button>

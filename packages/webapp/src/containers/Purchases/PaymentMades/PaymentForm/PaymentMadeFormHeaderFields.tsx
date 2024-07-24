@@ -68,7 +68,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
     const fullAmount = safeSumBy(newEntries, 'payment_amount');
 
     setFieldValue('entries', newEntries);
-    setFieldValue('full_amount', fullAmount);
+    setFieldValue('amount', fullAmount);
   };
 
   // Handles the full-amount field blur.
@@ -129,14 +129,14 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             className={('form-group--full-amount', Classes.FILL)}
             intent={inputIntent({ error, touched })}
             labelInfo={<Hint />}
-            helperText={<ErrorMessage name="full_amount" />}
+            helperText={<ErrorMessage name="amount" />}
           >
             <ControlGroup>
               <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
-                  setFieldValue('full_amount', value);
+                  setFieldValue('amount', value);
                 }}
                 onBlurValue={onFullAmountBlur}
               />
