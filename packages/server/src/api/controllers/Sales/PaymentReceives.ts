@@ -165,7 +165,7 @@ export default class PaymentReceivesController extends BaseController {
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').optional().isNumeric().toInt(),
       check('entries.*.invoice_id').exists().isNumeric().toInt(),
-      check('entries.*.amount_applied').exists().isNumeric().toFloat(),
+      check('entries.*.payment_amount').exists().isNumeric().toFloat(),
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),

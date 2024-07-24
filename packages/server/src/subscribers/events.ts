@@ -254,6 +254,8 @@ export default {
 
     onOpening: 'onBillOpening',
     onOpened: 'onBillOpened',
+
+    onPrepardExpensesApplied: 'onBillPrepardExpensesApplied'
   },
 
   /**
@@ -271,6 +273,8 @@ export default {
 
     onPublishing: 'onBillPaymentPublishing',
     onPublished: 'onBillPaymentPublished',
+
+    onPrepardExpensesApplied: 'onBillPaymentPrepardExpensesApplied'
   },
 
   /**

@@ -161,6 +161,13 @@ export function useCustomersTableColumns() {
         clickable: true,
       },
       {
+        id: 'credit_balance',
+        Header: 'Credit Balance',
+        accessor: 'formatted_unused_credit',
+        width: 100,
+        align: 'right',
+      },
+      {
         id: 'balance',
         Header: intl.get('receivable_balance'),
         accessor: BalanceAccessor,

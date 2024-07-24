@@ -12,6 +12,8 @@ export default class CustomerTransfromer extends ContactTransfromer {
       'formattedOpeningBalanceAt',
       'customerType',
       'formattedCustomerType',
+      'unusedCredit',
+      'formattedUnusedCredit',
     ];
   };
 

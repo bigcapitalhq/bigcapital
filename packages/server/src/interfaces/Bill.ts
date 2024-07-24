@@ -166,3 +166,10 @@ export interface IBillOpenedPayload {
   oldBill: IBill;
   tenantId: number;
 }
+
+
+export interface IBillPrepardExpensesAppliedEventPayload {
+  tenantId: number;
+  billId: number;
+  trx?: Knex.Transaction;
+}

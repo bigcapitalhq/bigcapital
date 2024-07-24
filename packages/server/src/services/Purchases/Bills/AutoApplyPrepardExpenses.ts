@@ -1,12 +1,22 @@
 import { Knex } from 'knex';
-import HasTenancyService from '@/services/Tenancy/TenancyService';
-import PromisePool from '@supercharge/promise-pool';
 import { Inject, Service } from 'typedi';
+import PromisePool, { ProcessHandler } from '@supercharge/promise-pool';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
+import {
+  IBillPayment,
+  IBillPrepardExpensesAppliedEventPayload,
+  IPaymentPrepardExpensesAppliedEventPayload,
+} from '@/interfaces';
+import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
+import events from '@/subscribers/events';
 
 @Service()
 export class AutoApplyPrepardExpenses {
   @Inject()
   private tenancy: HasTenancyService;
+
+  @Inject()
+  private eventPublisher: EventPublisher;
 
   /**
    * Auto apply prepard expenses to the given bill.
@@ -19,31 +29,53 @@ export class AutoApplyPrepardExpenses {
     billId: number,
     trx?: Knex.Transaction
   ): Promise<void> {
-    const { PaymentMade, Bill } = this.tenancy.models(tenantId);
+    const { BillPayment, Bill } = this.tenancy.models(tenantId);
 
-    const unappliedPayments = await PaymentMade.query(trx).where(
-      'unappliedAmount',
-      '>',
-      0
-    );
-    const bill = Bill.query(trx).findById(billId).throwIfNotFound();
+    const bill = await Bill.query(trx).findById(billId).throwIfNotFound();
 
+    const unappliedPayments = await BillPayment.query(trx)
+      .where('vendorId', bill.vendorId)
+      .whereRaw('amount - applied_amount > 0')
+      .whereNotNull('prepardExpensesAccountId');
+
+    let unappliedAmount = bill.total;
+    let appliedTotalAmount = 0; // Total applied amount after applying.
+
+    const precessHandler: ProcessHandler<IBillPayment, void> = async (
+      unappliedPayment: IBillPayment,
+      index: number,
+      pool
+    ) => {
+      const appliedAmount = Math.min(unappliedAmount, unappliedPayment.amount);
+      unappliedAmount = unappliedAmount - appliedAmount;
+      appliedTotalAmount += appliedAmount;
+
+      // Stop applying once the unapplied amount reach zero or less.
+      if (appliedAmount <= 0) {
+        pool.stop();
+        return;
+      }
+      await this.applyBillToPaymentMade(
+        tenantId,
+        unappliedPayment.id,
+        bill.id,
+        appliedAmount,
+        trx
+      );
+    };
     await PromisePool.withConcurrency(1)
       .for(unappliedPayments)
-      .process(async (unappliedPayment: any) => {
-        const appliedAmount = 1;
-
-        await this.applyBillToPaymentMade(
-          tenantId,
-          unappliedPayment.id,
-          bill.id,
-          appliedAmount,
-          trx
-        );
-      });
+      .process(precessHandler);
 
     // Increase the paid amount of the purchase invoice.
-    await Bill.changePaymentAmount(billId, 0, trx);
+    await Bill.changePaymentAmount(billId, appliedTotalAmount, trx);
+
+    // Triggers `onBillPrepardExpensesApplied` event.
+    await this.eventPublisher.emitAsync(events.bill.onPrepardExpensesApplied, {
+      tenantId,
+      billId,
+      trx,
+    } as IBillPrepardExpensesAppliedEventPayload);
   }
 
   /**
@@ -68,6 +100,18 @@ export class AutoApplyPrepardExpenses {
       billId,
       paymentAmount: appliedAmount,
     });
-    await BillPayment.query().increment('usedAmount', appliedAmount);
+    await BillPayment.query(trx).increment('appliedAmount', appliedAmount);
+
+    // Triggers `onBillPaymentPrepardExpensesApplied` event.
+    await this.eventPublisher.emitAsync(
+      events.billPayment.onPrepardExpensesApplied,
+      {
+        tenantId,
+        billPaymentId,
+        billId,
+        appliedAmount,
+        trx,
+      } as IPaymentPrepardExpensesAppliedEventPayload
+    );
   };
 }

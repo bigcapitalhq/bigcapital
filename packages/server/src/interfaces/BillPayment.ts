@@ -119,3 +119,11 @@ export enum IPaymentMadeAction {
   Delete = 'Delete',
   View = 'View',
 }
+
+export interface IPaymentPrepardExpensesAppliedEventPayload {
+  tenantId: number;
+  billPaymentId: number;
+  billId: number;
+  appliedAmount: number;
+  trx?: Knex.Transaction;
+}

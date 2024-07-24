@@ -72,7 +72,7 @@ export interface IPaymentReceiveEntryDTO {
   index: number;
   paymentReceiveId: number;
   invoiceId: number;
-  amountApplied: number;
+  paymentAmount: number;
 }
 
 export interface IPaymentReceivesFilter extends IDynamicListFilterDTO {

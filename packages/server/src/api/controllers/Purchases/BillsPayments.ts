@@ -118,7 +118,7 @@ export default class BillsPayments extends BaseController {
       check('reference').optional().trim().escape(),
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('entries').exists().isArray({ min: 1 }),
+      check('entries').exists().isArray(),
       check('entries.*.index').optional().isNumeric().toInt(),
       check('entries.*.bill_id').exists().isNumeric().toInt(),
       check('entries.*.payment_amount').exists().isNumeric().toFloat(),

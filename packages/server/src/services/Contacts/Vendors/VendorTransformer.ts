@@ -1,4 +1,3 @@
-import { Service } from 'typedi';
 import ContactTransfromer from '../ContactTransformer';
 
 export default class VendorTransfromer extends ContactTransfromer {
@@ -10,7 +9,9 @@ export default class VendorTransfromer extends ContactTransfromer {
     return [
       'formattedBalance',
       'formattedOpeningBalance',
-      'formattedOpeningBalanceAt'
+      'formattedOpeningBalanceAt',
+      'unusedCredit',
+      'formattedUnusedCredit',
     ];
   };
 }
