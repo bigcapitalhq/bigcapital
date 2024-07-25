@@ -276,9 +276,5 @@ export const susbcribers = () => {
 
     // Plaid
     RecognizeSyncedBankTranasctions,
-
-    // Advanced Payments 
-    AutoApplyUnearnedRevenueOnInvoiceCreated,
-    AutoApplyPrepardExpensesOnBillCreated
   ];
 };

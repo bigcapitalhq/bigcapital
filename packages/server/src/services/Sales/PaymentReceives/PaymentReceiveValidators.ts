@@ -107,7 +107,6 @@ export class PaymentReceiveValidators {
     const invoicesIds = paymentReceiveEntries.map(
       (e: IPaymentReceiveEntryDTO) => e.invoiceId
     );
-
     const storedInvoices = await SaleInvoice.query().whereIn('id', invoicesIds);
 
     const storedInvoicesMap = new Map(

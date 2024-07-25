@@ -108,6 +108,15 @@ function PaymentReceiveForm({
     setSubmitting(true);
     const exceededAmount = getExceededAmountFromValues(values);
 
+    // Validates the amount should be bigger than zero.
+    if (values.amount <= 0) {
+      AppToaster.show({
+        message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
+        intent: Intent.DANGER,
+      });
+      setSubmitting(false);
+      return;
+    }
     // Show the confirm popup if the excessed amount bigger than zero and
     // excess confirmation has not been confirmed yet.
     if (exceededAmount > 0 && !isExcessConfirmed) {

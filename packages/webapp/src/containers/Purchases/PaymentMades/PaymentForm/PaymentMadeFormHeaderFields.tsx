@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
+import { isEmpty, toSafeInteger } from 'lodash';
 import {
   FormGroup,
   InputGroup,
@@ -13,7 +14,6 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T, VendorsSelect } from '@/components';
-import { toSafeInteger } from 'lodash';
 import { CLASSES } from '@/constants/classes';
 
 import {
@@ -115,10 +115,10 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'full_amount'}>
+      <Field name={'amount'}>
         {({
           form: {
-            values: { currency_code },
+            values: { currency_code, entries },
           },
           field: { value },
           meta: { error, touched },
@@ -142,15 +142,17 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
               />
             </ControlGroup>
 
-            <Button
-              onClick={handleReceiveFullAmountClick}
-              className={'receive-full-amount'}
-              small={true}
-              minimal={true}
-            >
-              <T id={'receive_full_amount'} /> (
-              <Money amount={payableFullAmount} currency={currency_code} />)
-            </Button>
+            {!isEmpty(entries) && (
+              <Button
+                onClick={handleReceiveFullAmountClick}
+                className={'receive-full-amount'}
+                small={true}
+                minimal={true}
+              >
+                <T id={'receive_full_amount'} /> (
+                <Money amount={payableFullAmount} currency={currency_code} />)
+              </Button>
+            )}
           </FormGroup>
         )}
       </Field>

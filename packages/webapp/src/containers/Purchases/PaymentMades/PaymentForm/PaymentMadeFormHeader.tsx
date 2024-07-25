@@ -29,6 +29,7 @@ function PaymentMadeFormHeader() {
             <span class="big-amount__label">
               <T id={'amount_received'} />
             </span>
+
             <h1 class="big-amount__number">
               <Money amount={totalAmount} currency={currency_code} />
             </h1>

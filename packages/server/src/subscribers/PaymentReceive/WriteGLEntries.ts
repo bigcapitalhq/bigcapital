@@ -26,14 +26,6 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
       this.handleWriteJournalEntriesOnceCreated
     );
     bus.subscribe(
-      events.paymentReceive.onCreated,
-      this.handleWriteUnearnedRevenueGLEntriesOnCreated.bind(this)
-    );
-    bus.subscribe(
-      events.paymentReceive.onUnearnedRevenueApplied,
-      this.handleRewriteUnearnedRevenueGLEntriesOnApply
-    );
-    bus.subscribe(
       events.paymentReceive.onEdited,
       this.handleOverwriteJournalEntriesOnceEdited
     );
@@ -57,34 +49,7 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
       paymentReceiveId,
       trx
     );
-  };
-
-  /**
-   * Handles rewrite payment GL entries on unearned revenue payload.
-   * @param {PaymentReceiveUnearnedRevenueAppliedEventPayload} payload -
-   */
-  private handleWriteUnearnedRevenueGLEntriesOnCreated = async ({
-    tenantId,
-    paymentReceiveId,
-    trx,
-  }: IPaymentReceiveCreatedPayload) => {
     await this.paymentReceivedUnearnedGLEntries.writePaymentGLEntries(
-      tenantId,
-      paymentReceiveId,
-      trx
-    );
-  };
-
-  /**
-   * Handles rewrite unearned revenue GL entries on payment received applied. 
-   * @param {PaymentReceiveUnearnedRevenueAppliedEventPayload} payload -
-   */
-  private handleRewriteUnearnedRevenueGLEntriesOnApply = async ({
-    tenantId,
-    paymentReceiveId,
-    trx,
-  }: PaymentReceiveUnearnedRevenueAppliedEventPayload) => {
-    await this.paymentReceivedUnearnedGLEntries.rewritePaymentGLEntries(
       tenantId,
       paymentReceiveId,
       trx
@@ -98,11 +63,17 @@ export default class PaymentReceivesWriteGLEntriesSubscriber {
   private handleOverwriteJournalEntriesOnceEdited = async ({
     tenantId,
     paymentReceive,
+    paymentReceiveId,
     trx,
   }: IPaymentReceiveEditedPayload) => {
     await this.paymentReceiveGLEntries.rewritePaymentGLEntries(
       tenantId,
       paymentReceive.id,
+      trx
+    );
+    await this.paymentReceivedUnearnedGLEntries.rewritePaymentGLEntries(
+      tenantId,
+      paymentReceiveId,
       trx
     );
   };
