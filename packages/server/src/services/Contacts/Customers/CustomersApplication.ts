@@ -45,9 +45,9 @@ export class CustomersApplication {
 
   /**
    * Creates a new customer.
-   * @param   {number} tenantId
-   * @param   {ICustomerNewDTO} customerDTO
-   * @param   {ISystemUser} authorizedUser
+   * @param  {number} tenantId
+   * @param {ICustomerNewDTO} customerDTO
+   * @param {ISystemUser} authorizedUser
    * @returns {Promise<ICustomer>}
    */
   public createCustomer = (tenantId: number, customerDTO: ICustomerNewDTO) => {
@@ -56,9 +56,9 @@ export class CustomersApplication {
 
   /**
    * Edits details of the given customer.
-   * @param  {number} tenantId
-   * @param  {number} customerId
-   * @param  {ICustomerEditDTO} customerDTO
+   * @param {number} tenantId
+   * @param {number} customerId
+   * @param {ICustomerEditDTO} customerDTO
    * @return {Promise<ICustomer>}
    */
   public editCustomer = (
@@ -75,9 +75,9 @@ export class CustomersApplication {
 
   /**
    * Deletes the given customer and associated transactions.
-   * @param   {number} tenantId
-   * @param   {number} customerId
-   * @param   {ISystemUser} authorizedUser
+   * @param {number} tenantId
+   * @param {number} customerId
+   * @param {ISystemUser} authorizedUser
    * @returns {Promise<void>}
    */
   public deleteCustomer = (
@@ -94,9 +94,9 @@ export class CustomersApplication {
 
   /**
    * Changes the opening balance of the given customer.
-   * @param   {number} tenantId
-   * @param   {number} customerId
-   * @param   {Date|string} openingBalanceEditDTO
+   * @param {number} tenantId
+   * @param {number} customerId
+   * @param {Date|string} openingBalanceEditDTO
    * @returns {Promise<ICustomer>}
    */
   public editOpeningBalance = (

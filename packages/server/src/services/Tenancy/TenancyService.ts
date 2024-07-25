@@ -77,7 +77,12 @@ export default class HasTenancyService {
       const knex = this.knex(tenantId);
       const i18n = this.i18n(tenantId);
 
-      return tenantRepositoriesLoader(knex, cache, i18n);
+      const repositories = tenantRepositoriesLoader(knex, cache, i18n);
+
+      Object.values(repositories).forEach((repository) => {
+        repository.setTenantId(tenantId);
+      });
+      return repositories;
     });
   }
 
