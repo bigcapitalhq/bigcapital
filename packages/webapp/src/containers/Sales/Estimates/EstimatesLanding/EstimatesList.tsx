@@ -1,11 +1,10 @@
 // @ts-nocheck
 import React from 'react';
-import { DashboardContentTable, DashboardPageContent } from '@/components';
+import { DashboardPageContent } from '@/components';
 
 import '@/style/pages/SaleEstimate/List.scss';
 
 import EstimatesActionsBar from './EstimatesActionsBar';
-import EstimatesViewTabs from './EstimatesViewTabs';
 import EstimatesDataTable from './EstimatesDataTable';
 
 import withEstimates from './withEstimates';
@@ -41,7 +40,6 @@ function EstimatesList({
       <EstimatesActionsBar />
 
       <DashboardPageContent>
-        <EstimatesViewTabs />
         <EstimatesDataTable />
       </DashboardPageContent>
     </EstimatesListProvider>
