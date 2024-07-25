@@ -4,6 +4,7 @@ import { omit, sumBy } from 'lodash';
 import { IBillPayment, IBillPaymentDTO, IVendor } from '@/interfaces';
 import { BranchTransactionDTOTransform } from '@/services/Branches/Integrations/BranchTransactionDTOTransform';
 import { formatDateFields } from '@/utils';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class CommandBillPaymentDTOTransformer {
@@ -23,11 +24,14 @@ export class CommandBillPaymentDTOTransformer {
     vendor: IVendor,
     oldBillPayment?: IBillPayment
   ): Promise<IBillPayment> {
+    const amount =
+      billPaymentDTO.amount ?? sumBy(billPaymentDTO.entries, 'paymentAmount');
+
     const initialDTO = {
       ...formatDateFields(omit(billPaymentDTO, ['attachments']), [
         'paymentDate',
       ]),
-      amount: sumBy(billPaymentDTO.entries, 'paymentAmount'),
+      amount,
       currencyCode: vendor.currencyCode,
       exchangeRate: billPaymentDTO.exchangeRate || 1,
       entries: billPaymentDTO.entries,
