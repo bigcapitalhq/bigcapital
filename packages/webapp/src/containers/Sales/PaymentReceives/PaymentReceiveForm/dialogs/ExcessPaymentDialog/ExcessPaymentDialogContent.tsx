@@ -4,10 +4,11 @@ import * as Yup from 'yup';
 import * as R from 'ramda';
 import { Button, Classes, Intent } from '@blueprintjs/core';
 import { Form, Formik, FormikHelpers, useFormikContext } from 'formik';
-import { AccountsSelect, FFormGroup } from '@/components';
+import { AccountsSelect, FFormGroup, FormatNumber } from '@/components';
 import { usePaymentReceiveFormContext } from '../../PaymentReceiveFormProvider';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { usePaymentReceivedTotalExceededAmount } from '../../utils';
+import { ACCOUNT_TYPE } from '@/constants';
 
 interface ExcessPaymentValues {
   accountId: string;
@@ -21,10 +22,14 @@ const Schema = Yup.object().shape({
   accountId: Yup.number().required(),
 });
 
-const DEFAULT_ACCOUNT_SLUG = 'depreciation-expense';
+const DEFAULT_ACCOUNT_SLUG = 'unearned-revenue';
 
 export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
-  const { setFieldValue, submitForm } = useFormikContext();
+  const {
+    setFieldValue,
+    submitForm,
+    values: { currency_code: currencyCode },
+  } = useFormikContext();
   const { setIsExcessConfirmed } = usePaymentReceiveFormContext();
   const initialAccountId = useDefaultExcessPaymentDeposit();
   const exceededAmount = usePaymentReceivedTotalExceededAmount();
@@ -57,7 +62,9 @@ export function ExcessPaymentDialogContentRoot({ dialogName, closeDialog }) {
     >
       <Form>
         <ExcessPaymentDialogContentForm
-          exceededAmount={exceededAmount}
+          exceededAmount={
+            <FormatNumber value={exceededAmount} currency={currencyCode} />
+          }
           onClose={handleClose}
         />
       </Form>
@@ -80,7 +87,7 @@ function ExcessPaymentDialogContentForm({ onClose, exceededAmount }) {
   return (
     <>
       <div className={Classes.DIALOG_BODY}>
-        <p>
+        <p style={{ marginBottom: 20 }}>
           Would you like to record the excess amount of{' '}
           <strong>{exceededAmount}</strong> as advanced payment from the
           customer.
@@ -89,11 +96,18 @@ function ExcessPaymentDialogContentForm({ onClose, exceededAmount }) {
         <FFormGroup
           name={'accountId'}
           label={'The excessed amount will be deposited in the'}
+          helperText={
+            'Only other other current liability and non current liability accounts will show.'
+          }
         >
           <AccountsSelect
             name={'accountId'}
             items={accounts}
             buttonProps={{ small: true }}
+            filterByTypes={[
+              ACCOUNT_TYPE.OTHER_CURRENT_LIABILITY,
+              ACCOUNT_TYPE.NON_CURRENT_LIABILITY,
+            ]}
           />
         </FFormGroup>
       </div>
@@ -106,7 +120,7 @@ function ExcessPaymentDialogContentForm({ onClose, exceededAmount }) {
             disabled={isSubmitting}
             onClick={() => submitForm()}
           >
-            Continue to Payment
+            Save Payment
           </Button>
           <Button onClick={handleCloseBtn}>Cancel</Button>
         </div>
