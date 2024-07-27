@@ -1,9 +1,12 @@
-// @ts-nocheck
+// @ts-ignore
 import {
   useMutation,
   UseMutationOptions,
   UseMutationResult,
+  useQuery,
   useQueryClient,
+  UseQueryOptions,
+  UseQueryResult,
 } from 'react-query';
 import useApiRequest from '../useRequest';
 
@@ -108,6 +111,32 @@ export function useChangeSubscriptionPlan(
   >(
     (values) =>
       apiRequest.post(`/subscription/change`, values).then((res) => res.data),
+    {
+      ...options,
+    },
+  );
+}
+
+interface GetSubscriptionsQuery {}
+interface GetSubscriptionsResponse {}
+
+/**
+ * Changese the main subscription of the current organization.
+ * @param {UseMutationOptions<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>} options -
+ * @returns {UseMutationResult<ChangeMainSubscriptionPlanValues, Error, ChangeMainSubscriptionPlanResponse>}
+ */
+export function useGetSubscriptions(
+  options?: UseQueryOptions<
+    GetSubscriptionsQuery,
+    Error,
+    GetSubscriptionsResponse
+  >,
+): UseQueryResult<GetSubscriptionsResponse, Error> {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetSubscriptionsQuery, Error, GetSubscriptionsResponse>(
+    ['SUBSCRIPTIONS'],
+    (values) => apiRequest.get(`/subscription`).then((res) => res.data),
     {
       ...options,
     },

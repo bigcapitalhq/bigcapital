@@ -1,8 +1,13 @@
-import { Service } from 'typedi';
+import { Inject, Service } from 'typedi';
 import { PlanSubscription } from '@/system/models';
+import { TransformerInjectable } from '@/lib/Transformer/TransformerInjectable';
+import { GetSubscriptionsTransformer } from './GetSubscriptionsTransformer';
 
 @Service()
 export default class SubscriptionService {
+  @Inject()
+  private transformer: TransformerInjectable;
+
   /**
    * Retrieve all subscription of the given tenant.
    * @param {number} tenantId
@@ -12,6 +17,10 @@ export default class SubscriptionService {
       'tenant_id',
       tenantId
     );
-    return subscriptions;
+    return this.transformer.transform(
+      tenantId,
+      subscriptions,
+      new GetSubscriptionsTransformer()
+    );
   }
 }

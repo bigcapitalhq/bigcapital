@@ -2,6 +2,7 @@
 import * as R from 'ramda';
 import { Button } from '@blueprintjs/core';
 import withAlertActions from '../Alert/withAlertActions';
+import { BillingPageBoot } from './BillingPageBoot';
 
 function BillingPageRoot({ openAlert }) {
   const handleCancelSubBtnClick = () => {
@@ -13,11 +14,13 @@ function BillingPageRoot({ openAlert }) {
   const handleUpdatePaymentMethod = () => {};
 
   return (
-    <h1>
-      <Button onClick={handleCancelSubBtnClick}>Cancel Subscription</Button>
-      <Button onClick={handleResumeSubBtnClick}>Resume Subscription</Button>
-      <Button>Update Payment Method</Button>
-    </h1>
+    <BillingPageBoot>
+      <h1>
+        <Button onClick={handleCancelSubBtnClick}>Cancel Subscription</Button>
+        <Button onClick={handleResumeSubBtnClick}>Resume Subscription</Button>
+        <Button>Update Payment Method</Button>
+      </h1>
+    </BillingPageBoot>
   );
 }
 
