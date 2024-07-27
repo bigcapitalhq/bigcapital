@@ -58,6 +58,7 @@ function DashboardTopbarUser({
             }
           />
           <MenuDivider />
+          <MenuItem text={'Billing'} onClick={() => history.push('/billing')} />
           <MenuItem
             text={<T id={'keyboard_shortcuts'} />}
             onClick={onKeyboardShortcut}
@@ -79,6 +80,4 @@ function DashboardTopbarUser({
     </Popover>
   );
 }
-export default compose(
-  withDialogActions,
-)(DashboardTopbarUser);
+export default compose(withDialogActions)(DashboardTopbarUser);

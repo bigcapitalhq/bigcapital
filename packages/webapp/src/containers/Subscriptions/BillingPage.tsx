@@ -3,24 +3,16 @@ import * as R from 'ramda';
 import { Button } from '@blueprintjs/core';
 import withAlertActions from '../Alert/withAlertActions';
 import { BillingPageBoot } from './BillingPageBoot';
+import { BillingPageContent } from './BillingPageContent';
+import { DashboardInsider } from '@/components';
 
 function BillingPageRoot({ openAlert }) {
-  const handleCancelSubBtnClick = () => {
-    openAlert('cancel-main-subscription');
-  };
-  const handleResumeSubBtnClick = () => {
-    openAlert('resume-main-subscription');
-  };
-  const handleUpdatePaymentMethod = () => {};
-
   return (
-    <BillingPageBoot>
-      <h1>
-        <Button onClick={handleCancelSubBtnClick}>Cancel Subscription</Button>
-        <Button onClick={handleResumeSubBtnClick}>Resume Subscription</Button>
-        <Button>Update Payment Method</Button>
-      </h1>
-    </BillingPageBoot>
+    <DashboardInsider>
+      <BillingPageBoot>
+        <BillingPageContent />
+      </BillingPageBoot>
+    </DashboardInsider>
   );
 }
 

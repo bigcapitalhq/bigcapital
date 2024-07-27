@@ -1,0 +1,64 @@
+
+.root {
+  width: 450px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow:  0 -8px 0 0px #BFCCD6, rgb(0 8 36 / 9%) 0px 4px 20px -5px;
+  border: 1px solid #C4D2D7;
+  min-height: 420px;
+  display: flex;  
+  flex-direction: column;
+}
+
+.title{
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #3D4C58;
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #394B59;
+  margin-top: 14px;
+}
+
+.period {
+  div + div {
+    &::before{
+      content: " • ";
+      text-align: center;
+      margin-right: 3px;
+      color: #999;
+      margin-left: 6px;
+    }
+  }
+}
+.periodStatus{
+  text-transform: uppercase;
+  color: #A82A2A;
+  font-weight: 500;
+}
+.periodText{
+  color: #AF6161;
+}
+.priceAmount {
+  font-size: 24px;
+  font-weight: 500;
+}
+.pricePeriod {
+  color: #8F99A8;
+}
+.subscribeButton{
+  border-radius: 32px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.actions{
+  margin-top: 20px;
+
+  button{
+    font-size: 15px;
+  }
+}
