@@ -1231,6 +1231,13 @@ export const getDashboardRoutes = () => [
     breadcrumb: 'Bank Rules',
     subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
+  {
+    path: '/billing',
+    component: lazy(() => import('@/containers/Subscriptions/BillingPage')),
+    pageTitle: 'Billing',
+    breadcrumb: 'Billing',
+    subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
+  },
   // Homepage
   {
     path: `/`,

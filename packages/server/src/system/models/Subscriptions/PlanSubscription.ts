@@ -4,6 +4,8 @@ import moment from 'moment';
 import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 
 export default class PlanSubscription extends mixin(SystemModel) {
+  lemonSubscriptionId: number;
+  
   /**
    * Table name.
    */

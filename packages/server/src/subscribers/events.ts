@@ -41,6 +41,15 @@ export default {
   },
 
   /**
+   * Organization subscription.
+   */
+  subscription: {
+    onSubscriptionCanceled: 'onSubscriptionCanceled',
+    onSubscriptionResumed: 'onSubscriptionResumed',
+    onSubscriptionPlanChanged: 'onSubscriptionPlanChanged',
+  },
+
+  /**
    * Tenants managment service.
    */
   tenantManager: {
