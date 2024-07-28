@@ -1,6 +1,6 @@
+import { Inject, Service } from 'typedi';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
-import { Inject, Service } from 'typedi';
 import { configureLemonSqueezy } from './utils';
 import { PlanSubscription } from '@/system/models';
 import { ServiceError } from '@/exceptions';

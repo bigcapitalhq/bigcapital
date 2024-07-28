@@ -9,6 +9,11 @@ import {
   UseQueryResult,
 } from 'react-query';
 import useApiRequest from '../useRequest';
+import { transformToCamelCase } from '@/utils';
+
+const QueryKeys = {
+  Subscriptions: 'Subscriptions',
+};
 
 interface CancelMainSubscriptionValues {}
 interface CancelMainSubscriptionResponse {}
@@ -40,6 +45,9 @@ export function useCancelMainSubscription(
     (values) =>
       apiRequest.post(`/subscription/cancel`, values).then((res) => res.data),
     {
+      onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.Subscriptions);
+      },
       ...options,
     },
   );
@@ -75,6 +83,9 @@ export function useResumeMainSubscription(
     (values) =>
       apiRequest.post(`/subscription/resume`, values).then((res) => res.data),
     {
+      onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.Subscriptions);
+      },
       ...options,
     },
   );
@@ -105,20 +116,58 @@ export function useChangeSubscriptionPlan(
   const apiRequest = useApiRequest();
 
   return useMutation<
-    ChangeMainSubscriptionPlanValues,
+    ChangeMainSubscriptionPlanResponse,
     Error,
-    ChangeMainSubscriptionPlanResponse
+    ChangeMainSubscriptionPlanValues
   >(
     (values) =>
       apiRequest.post(`/subscription/change`, values).then((res) => res.data),
     {
+      onSuccess: () => {
+        queryClient.invalidateQueries(QueryKeys.Subscriptions);
+      },
       ...options,
     },
   );
 }
 
+interface LemonSubscription {
+  active: boolean;
+  canceled: string | null;
+  canceledAt: string | null;
+  canceledAtFormatted: string | null;
+  cancelsAt: string | null;
+  cancelsAtFormatted: string | null;
+  createdAt: string;
+  ended: boolean;
+  endsAt: string | null;
+  inactive: boolean;
+  lemonSubscriptionId: string;
+  lemon_urls: {
+    updatePaymentMethod: string;
+    customerPortal: string;
+    customerPortalUpdateSubscription: string;
+  };
+  onTrial: boolean;
+  planId: number;
+  planName: string;
+  planSlug: string;
+  slug: string;
+  startsAt: string | null;
+  status: string;
+  statusFormatted: string;
+  tenantId: number;
+  trialEndsAt: string | null;
+  trialEndsAtFormatted: string | null;
+  trialStartsAt: string | null;
+  trialStartsAtFormatted: string | null;
+  updatedAt: string;
+}
+
 interface GetSubscriptionsQuery {}
-interface GetSubscriptionsResponse {}
+interface GetSubscriptionsResponse {
+  subscriptions: Array<LemonSubscription>;
+}
 
 /**
  * Changese the main subscription of the current organization.
@@ -135,8 +184,11 @@ export function useGetSubscriptions(
   const apiRequest = useApiRequest();
 
   return useQuery<GetSubscriptionsQuery, Error, GetSubscriptionsResponse>(
-    ['SUBSCRIPTIONS'],
-    (values) => apiRequest.get(`/subscription`).then((res) => res.data),
+    [QueryKeys.Subscriptions],
+    (values) =>
+      apiRequest
+        .get(`/subscription`)
+        .then((res) => transformToCamelCase(res.data)),
     {
       ...options,
     },

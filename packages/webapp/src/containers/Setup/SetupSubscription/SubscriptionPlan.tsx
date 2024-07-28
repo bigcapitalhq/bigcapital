@@ -29,6 +29,7 @@ interface SubscriptionPricingProps {
   annuallyPriceLabel: string;
   monthlyVariantId?: string;
   annuallyVariantId?: string;
+  onSubscribe?: (variantId: number) => void;
 }
 
 interface SubscriptionPricingCombinedProps
@@ -46,6 +47,7 @@ function SubscriptionPlanRoot({
   annuallyPriceLabel,
   monthlyVariantId,
   annuallyVariantId,
+  onSubscribe,
 
   // #withPlans
   plansPeriod,
@@ -59,17 +61,19 @@ function SubscriptionPlanRoot({
         ? monthlyVariantId
         : annuallyVariantId;
 
-    getLemonCheckout({ variantId })
-      .then((res) => {
-        const checkoutUrl = res.data.data.attributes.url;
-        window.LemonSqueezy.Url.Open(checkoutUrl);
-      })
-      .catch(() => {
-        AppToaster.show({
-          message: 'Something went wrong!',
-          intent: Intent.DANGER,
-        });
-      });
+    onSubscribe && onSubscribe(variantId);
+
+    // getLemonCheckout({ variantId })
+    //   .then((res) => {
+    //     const checkoutUrl = res.data.data.attributes.url;
+    //     window.LemonSqueezy.Url.Open(checkoutUrl);
+    //   })
+    //   .catch(() => {
+    //     AppToaster.show({
+    //       message: 'Something went wrong!',
+    //       intent: Intent.DANGER,
+    //     });
+    //   });
   };
 
   return (

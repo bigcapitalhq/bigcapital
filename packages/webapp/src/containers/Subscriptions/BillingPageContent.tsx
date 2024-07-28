@@ -1,9 +1,17 @@
+// @ts-nocheck
 import { Box, Group } from '@/components';
-import { Text } from '@blueprintjs/core';
+import { Spinner, Text } from '@blueprintjs/core';
 import { Subscription } from './BillingSubscription';
+import { useBillingPageBoot } from './BillingPageBoot';
 import styles from './BillingPageContent.module.scss';
 
 export function BillingPageContent() {
+  const { isSubscriptionsLoading, subscriptions } = useBillingPageBoot();
+
+  if (isSubscriptionsLoading || !subscriptions) {
+    return <Spinner size={30} />;
+  }
+
   return (
     <Box className={styles.root}>
       <Text>

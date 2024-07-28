@@ -15,12 +15,17 @@ interface BillingPageBootProps {
 }
 
 export function BillingPageBoot({ children }: BillingPageBootProps) {
-  const { isLoading: isSubscriptionsLoading, data: subscriptions } =
+  const { isLoading: isSubscriptionsLoading, data: subscriptionsRes } =
     useGetSubscriptions();
+
+  const mainSubscription = subscriptionsRes?.subscriptions?.find(
+    (s) => s.slug === 'main',
+  );
 
   const value = {
     isSubscriptionsLoading,
-    subscriptions,
+    subscriptions: subscriptionsRes?.subscriptions,
+    mainSubscription,
   };
   return <BillingBoot.Provider value={value}>{children}</BillingBoot.Provider>;
 }
