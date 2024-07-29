@@ -2,6 +2,11 @@ import * as R from 'ramda';
 import { Inject, Service } from 'typedi';
 import bluebird from 'bluebird';
 import { entries, groupBy } from 'lodash';
+import {
+  AccountBase as PlaidAccountBase,
+  Item as PlaidItem,
+  Institution as PlaidInstitution,
+} from 'plaid';
 import { CreateAccount } from '@/services/Accounts/CreateAccount';
 import {
   IAccountCreateDTO,
@@ -53,6 +58,7 @@ export class PlaidSyncDb {
     trx?: Knex.Transaction
   ) {
     const { Account } = this.tenancy.models(tenantId);
+
     const plaidAccount = await Account.query().findOne(
       'plaidAccountId',
       createBankAccountDTO.plaidAccountId
@@ -77,13 +83,15 @@ export class PlaidSyncDb {
    */
   public async syncBankAccounts(
     tenantId: number,
-    plaidAccounts: PlaidAccount[],
-    institution: any,
+    plaidAccounts: PlaidAccountBase[],
+    institution: PlaidInstitution,
+    item: PlaidItem,
     trx?: Knex.Transaction
   ): Promise<void> {
-    const transformToPlaidAccounts =
-      transformPlaidAccountToCreateAccount(institution);
-
+    const transformToPlaidAccounts = transformPlaidAccountToCreateAccount(
+      item,
+      institution
+    );
     const accountCreateDTOs = R.map(transformToPlaidAccounts)(plaidAccounts);
 
     await bluebird.map(

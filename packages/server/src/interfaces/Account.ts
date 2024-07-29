@@ -15,6 +15,7 @@ export interface IAccountDTO {
 export interface IAccountCreateDTO extends IAccountDTO {
   currencyCode?: string;
   plaidAccountId?: string;
+  plaidItemId?: string;
 }
 
 export interface IAccountEditDTO extends IAccountDTO {}
@@ -38,6 +39,7 @@ export interface IAccount {
   accountParentType: string;
   bankBalance: string;
   plaidItemId: number | null
+  lastFeedsUpdatedAt: Date;
 }
 
 export enum AccountNormal {

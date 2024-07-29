@@ -331,7 +331,7 @@ export default class Account extends mixin(TenantModel, [
         modelClass: PlaidItem.default,
         join: {
           from: 'accounts.plaidItemId',
-          to: 'plaid_items.id',
+          to: 'plaid_items.plaidItemId',
         },
       },
     };

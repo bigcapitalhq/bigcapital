@@ -13,7 +13,12 @@ export class AccountTransformer extends Transformer {
    * @returns {Array}
    */
   public includeAttributes = (): string[] => {
-    return ['formattedAmount', 'flattenName', 'bankBalanceFormatted'];
+    return [
+      'formattedAmount',
+      'flattenName',
+      'bankBalanceFormatted',
+      'lastFeedsUpdatedAtFormatted',
+    ];
   };
 
   /**
@@ -50,6 +55,15 @@ export class AccountTransformer extends Transformer {
     return formatNumber(account.bankBalance, {
       currencyCode: account.currencyCode,
     });
+  };
+
+  /**
+   * Retrieves the formatted last feeds update at.
+   * @param {IAccount} account
+   * @returns {string}
+   */
+  protected lastFeedsUpdatedAtFormatted = (account: IAccount): string => {
+    return this.formatDate(account.lastFeedsUpdatedAt);
   };
 
   /**

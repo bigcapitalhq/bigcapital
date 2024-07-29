@@ -27,7 +27,7 @@ export class RefreshBankAccountService {
     if (!bankAccount.plaidItem) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
-    const plaidInstance = new PlaidClientWrapper();
+    const plaidInstance = PlaidClientWrapper.getClient();
 
     await plaidInstance.transactionsRefresh({
       access_token: bankAccount.plaidItem.plaidAccessToken,

@@ -35,20 +35,24 @@ export class DisconnectPlaidItemOnAccountDeleted {
     if (!oldAccount.plaidItemId) return;
 
     // Retrieves the Plaid item that associated to the deleted account.
-    const oldPlaidItem = await PlaidItem.query(trx).findById(
+    const oldPlaidItem = await PlaidItem.query(trx).findOne(
+      'plaidItemId',
       oldAccount.plaidItemId
     );
     // Unlink the Plaid item from all account before deleting it.
     await Account.query(trx)
       .where('plaidItemId', oldAccount.plaidItemId)
       .patch({
+        plaidAccountId: null,
         plaidItemId: null,
       });
     // Remove the Plaid item from the system.
-    await PlaidItem.query(trx).findById(oldAccount.plaidItemId).delete();
+    await PlaidItem.query(trx)
+      .findOne('plaidItemId', oldAccount.plaidItemId)
+      .delete();
 
     if (oldPlaidItem) {
-      const plaidInstance = new PlaidClientWrapper();
+      const plaidInstance = PlaidClientWrapper.getClient();
 
       // Remove the Plaid item.
       await plaidInstance.itemRemove({

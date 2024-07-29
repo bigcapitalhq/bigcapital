@@ -33,14 +33,15 @@ export class DisconnectBankAccount {
     const account = await Account.query()
       .findById(bankAccountId)
       .whereIn('account_type', [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK])
+      .withGraphFetched('plaidItem')
       .throwIfNotFound();
 
-    const oldPlaidItem = await PlaidItem.query().findById(account.plaidItemId);
+    const oldPlaidItem = account.plaidItem;
 
     if (!oldPlaidItem) {
       throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
-    const plaidInstance = new PlaidClientWrapper();
+    const plaidInstance = PlaidClientWrapper.getClient();
 
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onBankAccountDisconnecting` event.

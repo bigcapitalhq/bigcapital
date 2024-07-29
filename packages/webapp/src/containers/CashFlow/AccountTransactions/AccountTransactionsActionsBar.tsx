@@ -22,6 +22,7 @@ import {
   DashboardRowsHeightButton,
   FormattedMessage as T,
   AppToaster,
+  If,
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
@@ -41,6 +42,7 @@ import {
   useDisconnectBankAccount,
   useUpdateBankAccount,
 } from '@/hooks/query/bank-rules';
+import { current } from '@reduxjs/toolkit';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -66,6 +68,7 @@ function AccountTransactionsActionsBar({
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   const isFeedsActive = !!currentAccount.is_feeds_active;
+  const isSyncingOwner = currentAccount.is_syncing_owner;
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
@@ -176,21 +179,23 @@ function AccountTransactionsActionsBar({
         />
         <NavbarDivider />
 
-        <Tooltip
-          content={
-            isFeedsActive
-              ? 'The bank syncing is active'
-              : 'The bank syncing is disconnected'
-          }
-          minimal={true}
-          position={Position.BOTTOM}
-        >
-          <Button
-            className={Classes.MINIMAL}
-            icon={<Icon icon="feed" iconSize={16} />}
-            intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
-          />
-        </Tooltip>
+        <If condition={isSyncingOwner}>
+          <Tooltip
+            content={
+              isFeedsActive
+                ? 'The bank syncing is active'
+                : 'The bank syncing is disconnected'
+            }
+            minimal={true}
+            position={Position.BOTTOM}
+          >
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="feed" iconSize={16} />}
+              intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
+            />
+          </Tooltip>
+        </If>
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
@@ -203,17 +208,15 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
-              {isFeedsActive && (
-                <>
-                  <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
-                  <MenuDivider />
-                </>
-              )}
+              <If condition={isSyncingOwner && isFeedsActive}>
+                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                <MenuDivider />
+              </If>
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
-              {isFeedsActive && (
+              <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem onClick={handleDisconnectClick} text={'Disconnect'} />
-              )}
+              </If>
             </Menu>
           }
         >
