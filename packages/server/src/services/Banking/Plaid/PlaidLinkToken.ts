@@ -26,7 +26,7 @@ export class PlaidLinkTokenService {
       webhook: config.plaid.linkWebhook,
       access_token: accessToken,
     };
-    const plaidInstance = new PlaidClientWrapper();
+    const plaidInstance = PlaidClientWrapper.getClient();
     const createResponse = await plaidInstance.linkTokenCreate(linkTokenParams);
 
     return createResponse.data;

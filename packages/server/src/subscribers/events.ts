@@ -658,6 +658,11 @@ export default {
     onUnexcluded: 'onBankTransactionUnexcluded',
   },
 
+  bankAccount: {
+    onDisconnecting: 'onBankAccountDisconnecting',
+    onDisconnected: 'onBankAccountDisconnected',
+  },
+
   // Import files.
   import: {
     onImportCommitted: 'onImportFileCommitted',

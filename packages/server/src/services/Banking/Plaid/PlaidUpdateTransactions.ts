@@ -53,7 +53,7 @@ export class PlaidUpdateTransactions {
       await this.fetchTransactionUpdates(tenantId, plaidItemId);
 
     const request = { access_token: accessToken };
-    const plaidInstance = new PlaidClientWrapper();
+    const plaidInstance = PlaidClientWrapper.getClient();
     const {
       data: { accounts, item },
     } = await plaidInstance.accountsGet(request);
@@ -66,7 +66,13 @@ export class PlaidUpdateTransactions {
       country_codes: ['US', 'UK'],
     });
     // Sync bank accounts.
-    await this.plaidSync.syncBankAccounts(tenantId, accounts, institution, trx);
+    await this.plaidSync.syncBankAccounts(
+      tenantId,
+      accounts,
+      institution,
+      item,
+      trx
+    );
     // Sync bank account transactions.
     await this.plaidSync.syncAccountsTransactions(
       tenantId,
@@ -141,7 +147,7 @@ export class PlaidUpdateTransactions {
           cursor: cursor,
           count: batchSize,
         };
-        const plaidInstance = new PlaidClientWrapper();
+        const plaidInstance = PlaidClientWrapper.getClient();
         const response = await plaidInstance.transactionsSync(request);
         const data = response.data;
         // Add this page of results
