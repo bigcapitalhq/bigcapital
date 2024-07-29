@@ -16,6 +16,7 @@ export const defaultPaymentMade = {
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference: '',
   payment_number: '',
+  amount: '',
   // statement: '',
   exchange_rate: 1,
   branch_id: '',
