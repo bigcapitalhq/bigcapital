@@ -208,11 +208,15 @@ $dashboard-views-bar-height: 44px;
         }
 
         &.#{$ns}-minimal.#{$ns}-intent-danger {
-          color: #c23030;
+          color: rgb(194, 48, 48);
 
+          &:not(.bp4-disabled)
           &:hover,
           &:focus {
             background: rgba(219, 55, 55, 0.1);
+          }
+          &.bp4-disabled{
+            color: rgb(194, 48, 48, 0.6);
           }
         }
         &.#{$ns}-minimal.#{$ns}-intent-success{

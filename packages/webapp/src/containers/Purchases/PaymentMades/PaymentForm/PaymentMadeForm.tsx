@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { sumBy, defaultTo } from 'lodash';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +14,7 @@ import PaymentMadeFloatingActions from './PaymentMadeFloatingActions';
 import PaymentMadeFooter from './PaymentMadeFooter';
 import PaymentMadeFormBody from './PaymentMadeFormBody';
 import PaymentMadeFormTopBar from './PaymentMadeFormTopBar';
+import { PaymentMadeDialogs } from './PaymentMadeDialogs';
 
 import { PaymentMadeInnerProvider } from './PaymentMadeInnerProvider';
 import { usePaymentMadeFormContext } from './PaymentMadeFormProvider';
@@ -21,6 +22,7 @@ import { compose, orderingLinesIndexes } from '@/utils';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withCurrentOrganization from '@/containers/Organization/withCurrentOrganization';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 
 import {
   EditPaymentMadeFormSchema,
@@ -31,6 +33,7 @@ import {
   transformToEditForm,
   transformErrors,
   transformFormToRequest,
+  getPaymentExcessAmountFromValues,
 } from './utils';
 
 /**
@@ -42,6 +45,9 @@ function PaymentMadeForm({
 
   // #withCurrentOrganization
   organization: { base_currency },
+
+  // #withDialogActions
+  openDialog,
 }) {
   const history = useHistory();
 
@@ -54,6 +60,7 @@ function PaymentMadeForm({
     submitPayload,
     createPaymentMadeMutate,
     editPaymentMadeMutate,
+    isExcessConfirmed,
   } = usePaymentMadeFormContext();
 
   // Form initial values.
@@ -76,18 +83,26 @@ function PaymentMadeForm({
   // Handle the form submit.
   const handleSubmitForm = (
     values,
-    { setSubmitting, resetForm, setFieldError },
+    { setSubmitting, resetForm, setFieldError }: FormikHelpers<any>,
   ) => {
     setSubmitting(true);
-    // Total payment amount of entries.
-    const totalPaymentAmount = sumBy(values.entries, 'payment_amount');
 
-    if (totalPaymentAmount <= 0) {
+    if (values.amount <= 0) {
       AppToaster.show({
         message: intl.get('you_cannot_make_payment_with_zero_total_amount'),
         intent: Intent.DANGER,
       });
       setSubmitting(false);
+      return;
+    }
+    const excessAmount = getPaymentExcessAmountFromValues(values);
+
+    // Show the confirmation popup if the excess amount bigger than zero and
+    // has not been confirmed yet.
+    if (excessAmount > 0 && !isExcessConfirmed) {
+      openDialog('payment-made-excessed-payment');
+      setSubmitting(false);
+
       return;
     }
     // Transformes the form values to request body.
@@ -119,11 +134,12 @@ function PaymentMadeForm({
       }
       setSubmitting(false);
     };
-
     if (!isNewMode) {
-      editPaymentMadeMutate([paymentMadeId, form]).then(onSaved).catch(onError);
+      return editPaymentMadeMutate([paymentMadeId, form])
+        .then(onSaved)
+        .catch(onError);
     } else {
-      createPaymentMadeMutate(form).then(onSaved).catch(onError);
+      return createPaymentMadeMutate(form).then(onSaved).catch(onError);
     }
   };
 
@@ -149,6 +165,7 @@ function PaymentMadeForm({
             <PaymentMadeFormBody />
             <PaymentMadeFooter />
             <PaymentMadeFloatingActions />
+            <PaymentMadeDialogs />
           </PaymentMadeInnerProvider>
         </Form>
       </Formik>
@@ -163,4 +180,5 @@ export default compose(
     preferredPaymentAccount: parseInt(billPaymentSettings?.withdrawalAccount),
   })),
   withCurrentOrganization(),
+  withDialogActions,
 )(PaymentMadeForm);

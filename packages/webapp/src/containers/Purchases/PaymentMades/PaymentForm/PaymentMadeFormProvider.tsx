@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import {
@@ -71,6 +71,8 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
   const isFeatureLoading = isBranchesLoading;
 
+  const [isExcessConfirmed, setIsExcessConfirmed] = useState<boolean>(false);
+
   // Provider payload.
   const provider = {
     paymentMadeId,
@@ -98,6 +100,9 @@ function PaymentMadeFormProvider({ query, paymentMadeId, ...props }) {
 
     setSubmitPayload,
     setPaymentVendorId,
+
+    isExcessConfirmed,
+    setIsExcessConfirmed,
   };
 
   return (

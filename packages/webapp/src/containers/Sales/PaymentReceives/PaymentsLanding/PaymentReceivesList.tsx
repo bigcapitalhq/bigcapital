@@ -5,7 +5,6 @@ import '@/style/pages/PaymentReceive/List.scss';
 
 import { DashboardPageContent } from '@/components';
 import { PaymentReceivesListProvider } from './PaymentReceiptsListProvider';
-import PaymentReceiveViewTabs from './PaymentReceiveViewTabs';
 import PaymentReceivesTable from './PaymentReceivesTable';
 import PaymentReceiveActionsBar from './PaymentReceiveActionsBar';
 
@@ -41,7 +40,6 @@ function PaymentReceiveList({
       <PaymentReceiveActionsBar />
 
       <DashboardPageContent>
-        <PaymentReceiveViewTabs />
         <PaymentReceivesTable />
       </DashboardPageContent>
     </PaymentReceivesListProvider>

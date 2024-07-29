@@ -9,6 +9,28 @@ export const TaxPayableAccount = {
   predefined: 1,
 };
 
+export const UnearnedRevenueAccount = {
+  name: 'Unearned Revenue',
+  slug: 'unearned-revenue',
+  account_type: 'other-current-liability',
+  parent_account_id: null,
+  code: '50005',
+  active: true,
+  index: 1,
+  predefined: true,
+};
+
+export const PrepardExpenses = {
+  name: 'Prepaid Expenses',
+  slug: 'prepaid-expenses',
+  account_type: 'other-current-asset',
+  parent_account_id: null,
+  code: '100010',
+  active: true,
+  index: 1,
+  predefined: true,
+};
+
 export default [
   {
     name: 'Bank Account',
@@ -323,4 +345,6 @@ export default [
     index: 1,
     predefined: 0,
   },
+  UnearnedRevenueAccount,
+  PrepardExpenses,
 ];

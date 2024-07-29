@@ -124,22 +124,18 @@
         }
       }
 
-      .bp4-control.bp4-checkbox .bp4-control-indicator {
+      .bp4-control.bp4-checkbox .bp4-control-indicator {        
         cursor: auto;
 
         &,
-        &:hover {
+        &::before {
           height: 15px;
           width: 15px;
         }
       }
 
-      .bp4-control.bp4-checkbox {
-
-        input:checked~.bp4-control-indicator,
-        input:indeterminate~.bp4-control-indicator {
-          border-color: #0052ff;
-        }
+      .bp4-control.bp4-checkbox input:not(:checked):not(:indeterminate) ~ .bp4-control-indicator{
+        box-shadow: inset 0 0 0 1px #C5CBD3;
       }
 
       .skeleton {

@@ -3,6 +3,8 @@ import { ExcludeBankTransaction } from './ExcludeBankTransaction';
 import { UnexcludeBankTransaction } from './UnexcludeBankTransaction';
 import { GetExcludedBankTransactionsService } from './GetExcludedBankTransactions';
 import { ExcludedBankTransactionsQuery } from './_types';
+import { UnexcludeBankTransactions } from './UnexcludeBankTransactions';
+import { ExcludeBankTransactions } from './ExcludeBankTransactions';
 
 @Service()
 export class ExcludeBankTransactionsApplication {
@@ -14,6 +16,12 @@ export class ExcludeBankTransactionsApplication {
 
   @Inject()
   private getExcludedBankTransactionsService: GetExcludedBankTransactionsService;
+
+  @Inject()
+  private excludeBankTransactionsService: ExcludeBankTransactions;
+
+  @Inject()
+  private unexcludeBankTransactionsService: UnexcludeBankTransactions;
 
   /**
    * Marks a bank transaction as excluded.
@@ -54,6 +62,38 @@ export class ExcludeBankTransactionsApplication {
     return this.getExcludedBankTransactionsService.getExcludedBankTransactions(
       tenantId,
       filter
+    );
+  }
+
+  /**
+   * Exclude the given bank transactions in bulk.
+   * @param {number} tenantId
+   * @param {Array<number> | number} bankTransactionIds
+   * @returns {Promise<void>}
+   */
+  public excludeBankTransactions(
+    tenantId: number,
+    bankTransactionIds: Array<number> | number
+  ): Promise<void> {
+    return this.excludeBankTransactionsService.excludeBankTransactions(
+      tenantId,
+      bankTransactionIds
+    );
+  }
+
+  /**
+   * Exclude the given bank transactions in bulk.
+   * @param {number} tenantId
+   * @param {Array<number> | number} bankTransactionIds
+   * @returns {Promise<void>}
+   */
+  public unexcludeBankTransactions(
+    tenantId: number,
+    bankTransactionIds: Array<number> | number
+  ): Promise<void> {
+    return this.unexcludeBankTransactionsService.unexcludeBankTransactions(
+      tenantId,
+      bankTransactionIds
     );
   }
 }

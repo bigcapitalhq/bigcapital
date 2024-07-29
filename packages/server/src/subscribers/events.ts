@@ -41,6 +41,13 @@ export default {
   },
 
   /**
+   * User subscription events.
+   */
+  subscription: {
+    onSubscribed: 'onOrganizationSubscribed',
+  },
+
+  /**
    * Tenants managment service.
    */
   tenantManager: {

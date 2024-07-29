@@ -1,8 +1,9 @@
 import { Inject, Service } from 'typedi';
-import { param } from 'express-validator';
-import { NextFunction, Request, Response, Router, query } from 'express';
+import { body, param, query } from 'express-validator';
+import { NextFunction, Request, Response, Router } from 'express';
 import BaseController from '../BaseController';
 import { ExcludeBankTransactionsApplication } from '@/services/Banking/Exclude/ExcludeBankTransactionsApplication';
+import { map, parseInt, trim } from 'lodash';
 
 @Service()
 export class ExcludeBankTransactionsController extends BaseController {
@@ -16,8 +17,20 @@ export class ExcludeBankTransactionsController extends BaseController {
     const router = Router();
 
     router.put(
+      '/transactions/exclude',
+      [body('ids').exists()],
+      this.validationResult,
+      this.excludeBulkBankTransactions.bind(this)
+    );
+    router.put(
+      '/transactions/unexclude',
+      [body('ids').exists()],
+      this.validationResult,
+      this.unexcludeBulkBankTransactins.bind(this)
+    );
+    router.put(
       '/transactions/:transactionId/exclude',
-      [param('transactionId').exists()],
+      [param('transactionId').exists().toInt()],
       this.validationResult,
       this.excludeBankTransaction.bind(this)
     );
@@ -95,6 +108,63 @@ export class ExcludeBankTransactionsController extends BaseController {
   }
 
   /**
+   * Exclude bank transactions in bulk.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  private async excludeBulkBankTransactions(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+    const { ids } = this.matchedBodyData(req);
+
+    try {
+      await this.excludeBankTransactionApp.excludeBankTransactions(
+        tenantId,
+        ids
+      );
+      return res.status(200).send({
+        message: 'The given bank transactions have been excluded',
+        ids,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Unexclude the given bank transactions in bulk.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @returns {Promise<Response | null>}
+   */
+  private async unexcludeBulkBankTransactins(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<Response | null> {
+    const { tenantId } = req;
+    const { ids } = this.matchedBodyData(req);
+
+    try {
+      await this.excludeBankTransactionApp.unexcludeBankTransactions(
+        tenantId,
+        ids
+      );
+      return res.status(200).send({
+        message: 'The given bank transactions have been excluded',
+        ids,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
    * Retrieves the excluded uncategorized bank transactions.
    * @param {Request} req
    * @param {Response} res
@@ -109,7 +179,6 @@ export class ExcludeBankTransactionsController extends BaseController {
     const { tenantId } = req;
     const filter = this.matchedBodyData(req);
 
-    console.log('123');
     try {
       const data =
         await this.excludeBankTransactionApp.getExcludedBankTransactions(

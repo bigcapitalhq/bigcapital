@@ -5,6 +5,9 @@ interface StorePlaidState {
   openMatchingTransactionAside: boolean;
   uncategorizedTransactionIdForMatching: number | null;
   openReconcileMatchingTransaction: { isOpen: boolean; pending: number };
+
+  uncategorizedTransactionsSelected: Array<number | string>;
+  excludedTransactionsSelected: Array<number | string>;
 }
 
 export const PlaidSlice = createSlice({
@@ -17,6 +20,8 @@ export const PlaidSlice = createSlice({
       isOpen: false,
       pending: 0,
     },
+    uncategorizedTransactionsSelected: [],
+    excludedTransactionsSelected: [],
   } as StorePlaidState,
   reducers: {
     setPlaidId: (state: StorePlaidState, action: PayloadAction<string>) => {
@@ -52,6 +57,46 @@ export const PlaidSlice = createSlice({
       state.openReconcileMatchingTransaction.isOpen = false;
       state.openReconcileMatchingTransaction.pending = 0;
     },
+
+    /**
+     * Sets the selected uncategorized transactions.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ transactionIds: Array<string | number> }>} action
+     */
+    setUncategorizedTransactionsSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ transactionIds: Array<string | number> }>,
+    ) => {
+      state.uncategorizedTransactionsSelected = action.payload.transactionIds;
+    },
+
+    /**
+     * Resets the selected uncategorized transactions.
+     * @param {StorePlaidState} state
+     */
+    resetUncategorizedTransactionsSelected: (state: StorePlaidState) => {
+      state.uncategorizedTransactionsSelected = [];
+    },
+
+    /**
+     * Sets excluded selected transactions.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ ids: Array<string | number> }>} action
+     */
+    setExcludedTransactionsSelected: (
+      state: StorePlaidState,
+      action: PayloadAction<{ ids: Array<string | number> }>,
+    ) => {
+      state.excludedTransactionsSelected = action.payload.ids;
+    },
+
+    /**
+     * Resets the excluded selected transactions
+     * @param {StorePlaidState} state
+     */
+    resetExcludedTransactionsSelected: (state: StorePlaidState) => {
+      state.excludedTransactionsSelected = [];
+    },
   },
 });
 
@@ -62,6 +107,10 @@ export const {
   closeMatchingTransactionAside,
   openReconcileMatchingTransaction,
   closeReconcileMatchingTransaction,
+  setUncategorizedTransactionsSelected,
+  resetUncategorizedTransactionsSelected,
+  setExcludedTransactionsSelected,
+  resetExcludedTransactionsSelected,
 } = PlaidSlice.actions;
 
 export const getPlaidToken = (state: any) => state.plaid.plaidToken;

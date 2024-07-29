@@ -6,7 +6,6 @@ import '@/style/pages/SaleInvoice/List.scss';
 import { DashboardPageContent } from '@/components';
 import { InvoicesListProvider } from './InvoicesListProvider';
 
-import InvoiceViewTabs from './InvoiceViewTabs';
 import InvoicesDataTable from './InvoicesDataTable';
 import InvoicesActionsBar from './InvoicesActionsBar';
 
@@ -43,7 +42,6 @@ function InvoicesList({
       <InvoicesActionsBar />
 
       <DashboardPageContent>
-        <InvoiceViewTabs />
         <InvoicesDataTable />
       </DashboardPageContent>
     </InvoicesListProvider>
