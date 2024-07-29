@@ -7,6 +7,7 @@ import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
 import { ERRORS } from './types';
+import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 @Service()
 export class DisconnectBankAccount {
@@ -31,7 +32,7 @@ export class DisconnectBankAccount {
     // Retrieve the bank account or throw not found error.
     const account = await Account.query()
       .findById(bankAccountId)
-      .whereIn('account_type', ['bank', 'cash'])
+      .whereIn('account_type', [ACCOUNT_TYPE.CASH, ACCOUNT_TYPE.BANK])
       .throwIfNotFound();
 
     const oldPlaidItem = await PlaidItem.query().findById(account.plaidItemId);

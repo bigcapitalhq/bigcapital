@@ -53,7 +53,7 @@ function AccountTransactionsActionsBar({
   addSetting,
 }) {
   const history = useHistory();
-  const { accountId } = useAccountTransactionsContext();
+  const { accountId, currentAccount } = useAccountTransactionsContext();
 
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
@@ -64,6 +64,8 @@ function AccountTransactionsActionsBar({
   // Retrieves the money in/out buttons options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
+
+  const isFeedsActive = !!currentAccount.is_feeds_active;
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
@@ -93,8 +95,6 @@ function AccountTransactionsActionsBar({
   const handleBankRulesClick = () => {
     history.push(`/bank-rules?accountId=${accountId}`);
   };
-
-  const isConnected = true;
 
   // Handles the bank account disconnect click.
   const handleDisconnectClick = () => {
@@ -177,14 +177,18 @@ function AccountTransactionsActionsBar({
         <NavbarDivider />
 
         <Tooltip
-          content={'The bank syncing is active'}
+          content={
+            isFeedsActive
+              ? 'The bank syncing is active'
+              : 'The bank syncing is disconnected'
+          }
           minimal={true}
           position={Position.BOTTOM}
         >
           <Button
             className={Classes.MINIMAL}
-            icon={<Icon icon="feed" iconSize={16} color="#238C2C" />}
-            intent={Intent.SUCCESS}
+            icon={<Icon icon="feed" iconSize={16} />}
+            intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
           />
         </Tooltip>
       </NavbarGroup>
@@ -199,13 +203,15 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
-              {isConnected && (
-                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+              {isFeedsActive && (
+                <>
+                  <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                  <MenuDivider />
+                </>
               )}
-              <MenuDivider />
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
-              {isConnected && (
+              {isFeedsActive && (
                 <MenuItem onClick={handleDisconnectClick} text={'Disconnect'} />
               )}
             </Menu>

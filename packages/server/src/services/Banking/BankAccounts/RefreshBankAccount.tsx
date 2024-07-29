@@ -1,19 +1,19 @@
+import { Inject, Service } from 'typedi';
 import { ServiceError } from '@/exceptions';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import UnitOfWork from '@/services/UnitOfWork';
-import { Inject } from 'typedi';
+import { ERRORS } from './types';
+
+@Service()
 export class RefreshBankAccountService {
   @Inject()
   private tenancy: HasTenancyService;
 
-  @Inject()
-  private uow: UnitOfWork;
-
   /**
-   *
+   * Asks Plaid to trigger syncing the given bank account.
    * @param {number} tenantId
    * @param {number} bankAccountId
+   * @returns {Promise<void>}
    */
   public async refreshBankAccount(tenantId: number, bankAccountId: number) {
     const { Account } = this.tenancy.models(tenantId);
@@ -23,17 +23,14 @@ export class RefreshBankAccountService {
       .withGraphFetched('plaidItem')
       .throwIfNotFound();
 
+    // Can't continue if the given account is not linked with Plaid item.
     if (!bankAccount.plaidItem) {
-      throw new ServiceError('');
+      throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
     }
     const plaidInstance = new PlaidClientWrapper();
 
-    const data = await plaidInstance.transactionsRefresh({
+    await plaidInstance.transactionsRefresh({
       access_token: bankAccount.plaidItem.plaidAccessToken,
-    });
-    await Account.query().findById(bankAccountId).patch({
-      isFeedsActive: true,
-      lastFeedsUpdatedAt: new Date(),
     });
   }
 }

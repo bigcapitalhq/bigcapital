@@ -1,8 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { IAccountEventDeletedPayload } from '@/interfaces';
 import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import events from '@/subscribers/events';
-import { Inject, Service } from 'typedi';
 
 @Service()
 export class DisconnectPlaidItemOnAccountDeleted {
