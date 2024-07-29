@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { pick } from 'lodash';
+import { pick, omit } from 'lodash';
 
 import { AppToaster } from '@/components';
 import { CreateQuickPaymentMadeFormSchema } from './QuickPaymentMade.schema';
@@ -21,7 +21,7 @@ function QuickPaymentMadeForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
+
   const {
     bill,
     dialogName,
@@ -44,8 +44,9 @@ function QuickPaymentMadeForm({
       }));
 
     const form = {
-      ...values,
+      ...omit(values, ['payment_amount']),
       vendor_id: values?.vendor?.id,
+      amount: values?.payment_amount,
       entries,
     };
 
