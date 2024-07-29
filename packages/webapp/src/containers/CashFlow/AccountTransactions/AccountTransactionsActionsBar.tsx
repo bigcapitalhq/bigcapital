@@ -39,7 +39,6 @@ import { withBanking } from '../withBanking';
 import { isEmpty } from 'lodash';
 import {
   useExcludeUncategorizedTransactions,
-  useUnexcludeUncategorizedTransaction,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
 
@@ -136,7 +135,7 @@ function AccountTransactionsActionsBar({
     })
       .then(() => {
         AppToaster.show({
-          message: 'The selected transactions have been unexcluded.',
+          message: 'The selected excluded transactions have been unexcluded.',
           intent: Intent.SUCCESS,
         });
       })
@@ -198,10 +197,9 @@ function AccountTransactionsActionsBar({
             onClick={handleExcludeUncategorizedBtnClick}
             className={Classes.MINIMAL}
             intent={Intent.DANGER}
-            disable={isExcludingLoading}
+            disabled={isExcludingLoading}
           />
         )}
-
         {!isEmpty(excludedTransactionsIdsSelected) && (
           <Button
             icon={<Icon icon="disable" iconSize={16} />}
@@ -209,7 +207,7 @@ function AccountTransactionsActionsBar({
             onClick={handleUnexcludeUncategorizedBtnClick}
             className={Classes.MINIMAL}
             intent={Intent.DANGER}
-            disable={isUnexcludingLoading}
+            disabled={isUnexcludingLoading}
           />
         )}
       </NavbarGroup>

@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
-import { ExcludeBankTransaction } from './ExcludeBankTransaction';
 import PromisePool from '@supercharge/promise-pool';
 import { castArray } from 'lodash';
+import { ExcludeBankTransaction } from './ExcludeBankTransaction';
 
 @Service()
 export class ExcludeBankTransactions {
@@ -12,6 +12,7 @@ export class ExcludeBankTransactions {
    * Exclude bank transactions in bulk.
    * @param {number} tenantId
    * @param {number} bankTransactionIds
+   * @returns {Promise<void>}
    */
   public async excludeBankTransactions(
     tenantId: number,
@@ -21,7 +22,7 @@ export class ExcludeBankTransactions {
 
     await PromisePool.withConcurrency(1)
       .for(_bankTransactionIds)
-      .process(async (bankTransactionId: number) => {
+      .process((bankTransactionId: number) => {
         return this.excludeBankTransaction.excludeBankTransaction(
           tenantId,
           bankTransactionId
