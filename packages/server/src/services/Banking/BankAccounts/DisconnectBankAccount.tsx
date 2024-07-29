@@ -25,7 +25,7 @@ export class DisconnectBankAccount {
    * @param {number} bankAccountId
    * @returns {Promise<void>}
    */
-  async disconnectBankAccount(tenantId: number, bankAccountId: number) {
+  public async disconnectBankAccount(tenantId: number, bankAccountId: number) {
     const { Account, PlaidItem } = this.tenancy.models(tenantId);
 
     // Retrieve the bank account or throw not found error.
@@ -57,7 +57,7 @@ export class DisconnectBankAccount {
         isFeedsActive: false,
       });
       // Remove the Plaid item.
-      const data = await plaidInstance.itemRemove({
+      await plaidInstance.itemRemove({
         access_token: oldPlaidItem.plaidAccessToken,
       });
       // Triggers `onBankAccountDisconnected` event.

@@ -37,6 +37,7 @@ export interface IAccount {
   accountNormal: string;
   accountParentType: string;
   bankBalance: string;
+  plaidItemId: number | null
 }
 
 export enum AccountNormal {
