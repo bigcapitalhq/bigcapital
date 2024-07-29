@@ -525,9 +525,9 @@ export default class Bill extends mixin(TenantModel, [
     return notFoundBillsIds;
   }
 
-  static changePaymentAmount(billId, amount) {
+  static changePaymentAmount(billId, amount, trx) {
     const changeMethod = amount > 0 ? 'increment' : 'decrement';
-    return this.query()
+    return this.query(trx)
       .where('id', billId)
       [changeMethod]('payment_amount', Math.abs(amount));
   }

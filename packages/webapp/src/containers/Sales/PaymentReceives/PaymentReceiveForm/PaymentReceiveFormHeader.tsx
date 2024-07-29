@@ -30,14 +30,8 @@ function PaymentReceiveFormHeader() {
 function PaymentReceiveFormBigTotal() {
   // Formik form context.
   const {
-    values: { currency_code, entries },
+    values: { currency_code, amount },
   } = useFormikContext();
-
-  // Calculates the total payment amount from due amount.
-  const paymentFullAmount = useMemo(
-    () => sumBy(entries, 'payment_amount'),
-    [entries],
-  );
 
   return (
     <div className={classNames(CLASSES.PAGE_FORM_HEADER_BIG_NUMBERS)}>
@@ -46,7 +40,7 @@ function PaymentReceiveFormBigTotal() {
           <T id={'amount_received'} />
         </span>
         <h1 class="big-amount__number">
-          <Money amount={paymentFullAmount} currency={currency_code} />
+          <Money amount={amount} currency={currency_code} />
         </h1>
       </div>
     </div>

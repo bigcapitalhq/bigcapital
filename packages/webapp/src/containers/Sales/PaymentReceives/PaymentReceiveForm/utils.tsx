@@ -42,12 +42,12 @@ export const defaultPaymentReceive = {
   // Holds the payment number that entered manually only.
   payment_receive_no_manually: '',
   statement: '',
-  full_amount: '',
+  amount: '',
   currency_code: '',
   branch_id: '',
   exchange_rate: 1,
   entries: [],
-  attachments: []
+  attachments: [],
 };
 
 export const defaultRequestPaymentEntry = {
@@ -249,6 +249,30 @@ export const usePaymentReceiveTotals = () => {
   };
 };
 
+export const usePaymentReceivedTotalAppliedAmount = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  return React.useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
+};
+
+export const usePaymentReceivedTotalAmount = () => {
+  const {
+    values: { amount },
+  } = useFormikContext();
+
+  return amount;
+};
+
+export const usePaymentReceivedTotalExceededAmount = () => {
+  const totalAmount = usePaymentReceivedTotalAmount();
+  const totalApplied = usePaymentReceivedTotalAppliedAmount();
+
+  return Math.abs(totalAmount - totalApplied);
+};
+
 /**
  * Detarmines whether the payment has foreign customer.
  * @returns {boolean}
@@ -272,4 +296,11 @@ export const resetFormState = ({ initialValues, values, resetForm }) => {
       brand_id: values.brand_id,
     },
   });
+};
+
+export const getExceededAmountFromValues = (values) => {
+  const totalApplied = sumBy(values.entries, 'payment_amount');
+  const totalAmount = values.amount;
+
+  return totalAmount - totalApplied;
 };

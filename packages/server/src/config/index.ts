@@ -237,4 +237,8 @@ module.exports = {
     endpoint: process.env.S3_ENDPOINT,
     bucket: process.env.S3_BUCKET || 'bigcapital-documents',
   },
+
+  loops: {
+    apiKey: process.env.LOOPS_API_KEY,
+  },
 };

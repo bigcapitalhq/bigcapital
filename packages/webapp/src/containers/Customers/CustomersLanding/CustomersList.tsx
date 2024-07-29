@@ -6,7 +6,6 @@ import '@/style/pages/Customers/List.scss';
 import { DashboardPageContent } from '@/components';
 
 import CustomersActionsBar from './CustomersActionsBar';
-import CustomersViewsTabs from './CustomersViewsTabs';
 import CustomersTable from './CustomersTable';
 import { CustomersListProvider } from './CustomersListProvider';
 
@@ -42,7 +41,6 @@ function CustomersList({
       <CustomersActionsBar />
 
       <DashboardPageContent>
-        <CustomersViewsTabs />
         <CustomersTable />
       </DashboardPageContent>
     </CustomersListProvider>

@@ -6,7 +6,6 @@ import '@/style/pages/Expense/List.scss';
 import { DashboardPageContent } from '@/components';
 
 import ExpenseActionsBar from './ExpenseActionsBar';
-import ExpenseViewTabs from './ExpenseViewTabs';
 import ExpenseDataTable from './ExpenseDataTable';
 
 import withExpenses from './withExpenses';
@@ -42,7 +41,6 @@ function ExpensesList({
       <ExpenseActionsBar />
 
       <DashboardPageContent>
-        <ExpenseViewTabs />
         <ExpenseDataTable />
       </DashboardPageContent>
     </ExpensesListProvider>
