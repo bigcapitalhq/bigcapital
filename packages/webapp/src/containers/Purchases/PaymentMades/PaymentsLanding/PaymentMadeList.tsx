@@ -7,7 +7,6 @@ import { DashboardPageContent } from '@/components';
 import { PaymentMadesListProvider } from './PaymentMadesListProvider';
 import PaymentMadeActionsBar from './PaymentMadeActionsBar';
 import PaymentMadesTable from './PaymentMadesTable';
-import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
 import withPaymentMades from './withPaymentMade';
 import withPaymentMadeActions from './withPaymentMadeActions';
@@ -41,7 +40,6 @@ function PaymentMadeList({
       <PaymentMadeActionsBar />
 
       <DashboardPageContent>
-        <PaymentMadeViewTabs />
         <PaymentMadesTable />
       </DashboardPageContent>
     </PaymentMadesListProvider>

@@ -11,7 +11,7 @@ import {
   Button,
 } from '@blueprintjs/core';
 import { DateInput } from '@blueprintjs/datetime';
-import { toSafeInteger } from 'lodash';
+import { isEmpty, toSafeInteger } from 'lodash';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 
 import {
@@ -124,11 +124,11 @@ export default function PaymentReceiveHeaderFields() {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'full_amount'}>
+      <Field name={'amount'}>
         {({
           form: {
             setFieldValue,
-            values: { currency_code },
+            values: { currency_code, entries },
           },
           field: { value, onChange },
           meta: { error, touched },
@@ -146,21 +146,23 @@ export default function PaymentReceiveHeaderFields() {
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
-                  setFieldValue('full_amount', value);
+                  setFieldValue('amount', value);
                 }}
                 onBlurValue={onFullAmountBlur}
               />
             </ControlGroup>
 
-            <Button
-              onClick={handleReceiveFullAmountClick}
-              className={'receive-full-amount'}
-              small={true}
-              minimal={true}
-            >
-              <T id={'receive_full_amount'} /> (
-              <Money amount={totalDueAmount} currency={currency_code} />)
-            </Button>
+            {!isEmpty(entries) && (
+              <Button
+                onClick={handleReceiveFullAmountClick}
+                className={'receive-full-amount'}
+                small={true}
+                minimal={true}
+              >
+                <T id={'receive_full_amount'} /> (
+                <Money amount={totalDueAmount} currency={currency_code} />)
+              </Button>
+            )}
           </FormGroup>
         )}
       </Field>

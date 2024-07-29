@@ -150,6 +150,7 @@ export default class PaymentReceivesController extends BaseController {
       check('customer_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
+      check('amount').exists().isNumeric().toFloat(),
       check('payment_date').exists(),
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
@@ -158,8 +159,7 @@ export default class PaymentReceivesController extends BaseController {
 
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('entries').isArray({ min: 1 }),
-
+      check('entries').isArray({}),
       check('entries.*.id').optional({ nullable: true }).isNumeric().toInt(),
       check('entries.*.index').optional().isNumeric().toInt(),
       check('entries.*.invoice_id').exists().isNumeric().toInt(),

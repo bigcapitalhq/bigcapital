@@ -2,7 +2,12 @@ import { Account } from 'models';
 import TenantRepository from '@/repositories/TenantRepository';
 import { IAccount } from '@/interfaces';
 import { Knex } from 'knex';
-import { TaxPayableAccount } from '@/database/seeds/data/accounts';
+import {
+  PrepardExpenses,
+  TaxPayableAccount,
+  UnearnedRevenueAccount,
+} from '@/database/seeds/data/accounts';
+import { TenantMetadata } from '@/system/models';
 
 export default class AccountRepository extends TenantRepository {
   /**
@@ -179,4 +184,67 @@ export default class AccountRepository extends TenantRepository {
     }
     return result;
   };
+
+  /**
+   * Finds or creates the unearned revenue.
+   * @param {Record<string, string>} extraAttrs 
+   * @param {Knex.Transaction} trx 
+   * @returns 
+   */
+  public async findOrCreateUnearnedRevenue(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction
+  ) {
+    // Retrieves the given tenant metadata.
+    const tenantMeta = await TenantMetadata.query().findOne({
+      tenantId: this.tenantId,
+    });
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: UnearnedRevenueAccount.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...UnearnedRevenueAccount,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
+
+  /**
+   * Finds or creates the prepard expenses account.
+   * @param {Record<string, string>} extraAttrs 
+   * @param {Knex.Transaction} trx 
+   * @returns 
+   */
+  public async findOrCreatePrepardExpenses(
+    extraAttrs: Record<string, string> = {},
+    trx?: Knex.Transaction
+  ) {
+    // Retrieves the given tenant metadata.
+    const tenantMeta = await TenantMetadata.query().findOne({
+      tenantId: this.tenantId,
+    });
+    const _extraAttrs = {
+      currencyCode: tenantMeta.baseCurrency,
+      ...extraAttrs,
+    };
+
+    let result = await this.model
+      .query(trx)
+      .findOne({ slug: PrepardExpenses.slug, ..._extraAttrs });
+
+    if (!result) {
+      result = await this.model.query(trx).insertAndFetch({
+        ...PrepardExpenses,
+        ..._extraAttrs,
+      });
+    }
+    return result;
+  }
 }

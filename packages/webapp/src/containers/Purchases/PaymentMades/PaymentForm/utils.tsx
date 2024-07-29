@@ -37,7 +37,7 @@ export const defaultPaymentMadeEntry = {
 
 // Default initial values of payment made.
 export const defaultPaymentMade = {
-  full_amount: '',
+  amount: '',
   vendor_id: '',
   payment_account_id: '',
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -53,10 +53,10 @@ export const defaultPaymentMade = {
 
 export const transformToEditForm = (paymentMade, paymentMadeEntries) => {
   const attachments = transformAttachmentsToForm(paymentMade);
+  const appliedAmount = safeSumBy(paymentMadeEntries, 'payment_amount');
 
   return {
     ...transformToForm(paymentMade, defaultPaymentMade),
-    full_amount: safeSumBy(paymentMadeEntries, 'payment_amount'),
     entries: [
       ...paymentMadeEntries.map((paymentMadeEntry) => ({
         ...transformToForm(paymentMadeEntry, defaultPaymentMadeEntry),
@@ -177,6 +177,30 @@ export const usePaymentMadeTotals = () => {
   };
 };
 
+export const usePaymentmadeTotalAmount = () => {
+  const {
+    values: { amount },
+  } = useFormikContext();
+
+  return amount;
+};
+
+export const usePaymentMadeAppliedAmount = () => {
+  const {
+    values: { entries },
+  } = useFormikContext();
+
+  // Retrieves the invoice entries total.
+  return React.useMemo(() => sumBy(entries, 'payment_amount'), [entries]);
+};
+
+export const usePaymentMadeExcessAmount = () => {
+  const appliedAmount = usePaymentMadeAppliedAmount();
+  const totalAmount = usePaymentmadeTotalAmount();
+
+  return Math.abs(totalAmount - appliedAmount);
+};
+
 /**
  * Detarmines whether the bill has foreign customer.
  * @returns {boolean}
@@ -190,4 +214,11 @@ export const usePaymentMadeIsForeignCustomer = () => {
     [values.currency_code, currentOrganization.base_currency],
   );
   return isForeignCustomer;
+};
+
+export const getPaymentExcessAmountFromValues = (values) => {
+  const appliedAmount = sumBy(values.entries, 'payment_amount');
+  const totalAmount = values.amount;
+
+  return Math.abs(totalAmount - appliedAmount);
 };

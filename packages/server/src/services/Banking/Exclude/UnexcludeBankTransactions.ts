@@ -21,7 +21,7 @@ export class UnexcludeBankTransactions {
 
     await PromisePool.withConcurrency(1)
       .for(_bankTransactionIds)
-      .process(async (bankTransactionId: number) => {
+      .process((bankTransactionId: number) => {
         return this.unexcludeBankTransaction.unexcludeBankTransaction(
           tenantId,
           bankTransactionId

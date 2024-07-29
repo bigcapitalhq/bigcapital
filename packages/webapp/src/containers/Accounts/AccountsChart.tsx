@@ -2,15 +2,15 @@
 import React, { useEffect } from 'react';
 
 import '@/style/pages/Accounts/List.scss';
-import { DashboardPageContent, DashboardContentTable } from '@/components';
 
+import { DashboardPageContent, DashboardContentTable } from '@/components';
 import { AccountsChartProvider } from './AccountsChartProvider';
-import AccountsViewsTabs from './AccountsViewsTabs';
 import AccountsActionsBar from './AccountsActionsBar';
 import AccountsDataTable from './AccountsDataTable';
 
 import withAccounts from '@/containers/Accounts/withAccounts';
 import withAccountsTableActions from './withAccountsTableActions';
+
 import { transformAccountsStateToQuery } from './utils';
 import { compose } from '@/utils';
 
@@ -41,8 +41,6 @@ function AccountsChart({
       <AccountsActionsBar />
 
       <DashboardPageContent>
-        <AccountsViewsTabs />
-
         <DashboardContentTable>
           <AccountsDataTable />
         </DashboardContentTable>

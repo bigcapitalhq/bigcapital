@@ -47,21 +47,37 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
   closeReconcileMatchingTransaction: () =>
     dispatch(closeReconcileMatchingTransaction()),
 
+  /**
+   * Sets the selected uncategorized transactions.
+   * @param {Array<string | number>} ids 
+   */
   setUncategorizedTransactionsSelected: (ids: Array<string | number>) =>
     dispatch(
       setUncategorizedTransactionsSelected({
         transactionIds: ids,
       }),
     ),
+
+  /**
+   * Resets the selected uncategorized transactions.
+   */
   resetUncategorizedTransactionsSelected: () =>
     dispatch(resetUncategorizedTransactionsSelected()),
 
+  /**
+   * Sets excluded selected transactions.
+   * @param {Array<string | number>} ids
+   */
   setExcludedTransactionsSelected: (ids: Array<string | number>) =>
     dispatch(
       setExcludedTransactionsSelected({
         ids,
       }),
     ),
+
+  /**
+   * Resets the excluded selected transactions
+   */
   resetExcludedTransactionsSelected: () =>
     dispatch(resetExcludedTransactionsSelected()),
 

@@ -64,6 +64,11 @@ export const PlaidSlice = createSlice({
       state.openReconcileMatchingTransaction.pending = 0;
     },
 
+    /**
+     * Sets the selected uncategorized transactions.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ transactionIds: Array<string | number> }>} action
+     */
     setUncategorizedTransactionsSelected: (
       state: StorePlaidState,
       action: PayloadAction<{ transactionIds: Array<string | number> }>,
@@ -71,10 +76,19 @@ export const PlaidSlice = createSlice({
       state.uncategorizedTransactionsSelected = action.payload.transactionIds;
     },
 
+    /**
+     * Resets the selected uncategorized transactions.
+     * @param {StorePlaidState} state
+     */
     resetUncategorizedTransactionsSelected: (state: StorePlaidState) => {
       state.uncategorizedTransactionsSelected = [];
     },
 
+    /**
+     * Sets excluded selected transactions.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ ids: Array<string | number> }>} action
+     */
     setExcludedTransactionsSelected: (
       state: StorePlaidState,
       action: PayloadAction<{ ids: Array<string | number> }>,
@@ -82,6 +96,10 @@ export const PlaidSlice = createSlice({
       state.excludedTransactionsSelected = action.payload.ids;
     },
 
+    /**
+     * Resets the excluded selected transactions
+     * @param {StorePlaidState} state
+     */
     resetExcludedTransactionsSelected: (state: StorePlaidState) => {
       state.excludedTransactionsSelected = [];
     },

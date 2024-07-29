@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { DashboardInsider } from '@/components';
@@ -74,6 +74,8 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
   const { mutateAsync: editPaymentReceiveMutate } = useEditPaymentReceive();
   const { mutateAsync: createPaymentReceiveMutate } = useCreatePaymentReceive();
 
+  const [isExcessConfirmed, setIsExcessConfirmed] = useState<boolean>(false);
+
   // Provider payload.
   const provider = {
     paymentReceiveId,
@@ -97,6 +99,9 @@ function PaymentReceiveFormProvider({ query, paymentReceiveId, ...props }) {
 
     editPaymentReceiveMutate,
     createPaymentReceiveMutate,
+
+    isExcessConfirmed,
+    setIsExcessConfirmed,
   };
 
   return (
