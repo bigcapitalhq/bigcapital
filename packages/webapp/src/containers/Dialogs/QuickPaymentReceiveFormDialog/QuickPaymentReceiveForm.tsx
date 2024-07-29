@@ -28,7 +28,7 @@ function QuickPaymentReceiveForm({
   paymentReceiveNextNumber,
   preferredDepositAccount
 }) {
-  
+
   const {
     dialogName,
     invoice,
@@ -61,11 +61,12 @@ function QuickPaymentReceiveForm({
       }));
 
     const form = {
-      ...omit(values, ['payment_receive_no']),
+      ...omit(values, ['payment_receive_no', 'payment_amount']),
       ...(!paymentReceiveAutoIncrement && {
         payment_receive_no: values.payment_receive_no,
       }),
       customer_id: values.customer.id,
+      amount: values.payment_amount,
       entries,
     };
 
