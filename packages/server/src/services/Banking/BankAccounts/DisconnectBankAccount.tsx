@@ -6,7 +6,11 @@ import { PlaidClientWrapper } from '@/lib/Plaid';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
 import events from '@/subscribers/events';
-import { ERRORS } from './types';
+import {
+  ERRORS,
+  IBankAccountDisconnectedEventPayload,
+  IBankAccountDisconnectingEventPayload,
+} from './types';
 import { ACCOUNT_TYPE } from '@/data/AccountTypes';
 
 @Service()
@@ -48,7 +52,8 @@ export class DisconnectBankAccount {
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnecting, {
         tenantId,
         bankAccountId,
-      });
+      } as IBankAccountDisconnectingEventPayload);
+
       // Remove the Plaid item from the system.
       await PlaidItem.query(trx).findById(account.plaidItemId).delete();
 
@@ -66,7 +71,8 @@ export class DisconnectBankAccount {
       await this.eventPublisher.emitAsync(events.bankAccount.onDisconnected, {
         tenantId,
         bankAccountId,
-      });
+        trx,
+      } as IBankAccountDisconnectedEventPayload);
     });
   }
 }
