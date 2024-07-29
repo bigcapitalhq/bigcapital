@@ -104,6 +104,11 @@ export const PlaidSlice = createSlice({
       state.excludedTransactionsSelected = [];
     },
 
+    /**
+     * Sets the selected transactions to categorize or match.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ ids: Array<string | number> }>} action
+     */
     setTransactionsToCategorizeSelected: (
       state: StorePlaidState,
       action: PayloadAction<{ ids: Array<string | number> }>,
@@ -111,6 +116,11 @@ export const PlaidSlice = createSlice({
       state.transactionsToCategorizeSelected = action.payload.ids;
     },
 
+    /**
+     * Adds a transaction to selected transactions to categorize or match.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ id: string | number }>} action
+     */
     addTransactionsToCategorizeSelected: (
       state: StorePlaidState,
       action: PayloadAction<{ id: string | number }>,
@@ -121,6 +131,11 @@ export const PlaidSlice = createSlice({
       ]);
     },
 
+    /**
+     * Removes a transaction from the selected transactions to categorize or match.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ id: string | number }>} action
+     */
     removeTransactionsToCategorizeSelected: (
       state: StorePlaidState,
       action: PayloadAction<{ id: string | number }>,
@@ -131,10 +146,19 @@ export const PlaidSlice = createSlice({
         );
     },
 
+    /**
+     * Resets the selected transactions to categorize or match.
+     * @param {StorePlaidState} state
+     */
     resetTransactionsToCategorizeSelected: (state: StorePlaidState) => {
       state.transactionsToCategorizeSelected = [];
     },
 
+    /**
+     * Enables/Disables the multiple selection to categorize or match.
+     * @param {StorePlaidState} state
+     * @param {PayloadAction<{ enable: boolean }>} action
+     */
     enableMultipleCategorization: (
       state: StorePlaidState,
       action: PayloadAction<{ enable: boolean }>,

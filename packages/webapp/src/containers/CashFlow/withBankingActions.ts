@@ -49,7 +49,7 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
 
   /**
    * Sets the selected uncategorized transactions.
-   * @param {Array<string | number>} ids 
+   * @param {Array<string | number>} ids
    */
   setUncategorizedTransactionsSelected: (ids: Array<string | number>) =>
     dispatch(
@@ -76,17 +76,29 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
     ),
 
   /**
-   * Resets the excluded selected transactions
+   * Resets the excluded selected transactions.
    */
   resetExcludedTransactionsSelected: () =>
     dispatch(resetExcludedTransactionsSelected()),
 
+  /**
+   * Sets the selected transactions to categorize or match.
+   * @param {Array<string | number>} ids
+   */
   setTransactionsToCategorizeSelected: (ids: Array<string | number>) =>
     dispatch(setTransactionsToCategorizeSelected({ ids })),
+
+  /**
+   * Resets the selected transactions to categorize or match.
+   */
   resetTransactionsToCategorizeSelected: () =>
     dispatch(resetTransactionsToCategorizeSelected()),
 
-  enableMultipleCategorization: (enable) =>
+  /**
+   * Enables/Disables the multiple selection to categorize or match.
+   * @param {boolean} enable
+   */
+  enableMultipleCategorization: (enable: boolean) =>
     dispatch(enableMultipleCategorization({ enable })),
 });
 
