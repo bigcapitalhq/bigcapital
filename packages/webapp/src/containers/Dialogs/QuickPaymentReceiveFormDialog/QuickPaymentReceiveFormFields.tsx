@@ -128,7 +128,7 @@ function QuickPaymentReceiveFormFields({
         </Col>
       </Row>
       {/*------------ Amount Received -----------*/}
-      <FastField name={'payment_amount'}>
+      <FastField name={'amount'}>
         {({
           form: { values, setFieldValue },
           field: { value },
@@ -139,7 +139,7 @@ function QuickPaymentReceiveFormFields({
             labelInfo={<FieldRequiredHint />}
             className={classNames('form-group--payment_amount', CLASSES.FILL)}
             intent={inputIntent({ error, touched })}
-            helperText={<ErrorMessage name="payment_amount" />}
+            helperText={<ErrorMessage name="amount" />}
           >
             <ControlGroup>
               <InputPrependText text={values.currency_code} />
@@ -148,7 +148,7 @@ function QuickPaymentReceiveFormFields({
                 value={value}
                 minimal={true}
                 onChange={(amount) => {
-                  setFieldValue('payment_amount', amount);
+                  setFieldValue('amount', amount);
                 }}
                 intent={inputIntent({ error, touched })}
                 inputRef={(ref) => (paymentReceiveFieldRef.current = ref)}

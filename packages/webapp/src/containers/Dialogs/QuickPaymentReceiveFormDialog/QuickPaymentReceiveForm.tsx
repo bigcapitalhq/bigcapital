@@ -3,7 +3,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { pick, defaultTo, omit } from 'lodash';
+import { defaultTo, omit } from 'lodash';
 
 import { AppToaster } from '@/components';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
@@ -26,14 +26,10 @@ function QuickPaymentReceiveForm({
   paymentReceiveAutoIncrement,
   paymentReceiveNumberPrefix,
   paymentReceiveNextNumber,
-  preferredDepositAccount
+  preferredDepositAccount,
 }) {
-
-  const {
-    dialogName,
-    invoice,
-    createPaymentReceiveMutate,
-  } = useQuickPaymentReceiveContext();
+  const { dialogName, invoice, createPaymentReceiveMutate } =
+    useQuickPaymentReceiveContext();
 
   // Payment receive number.
   const nextPaymentNumber = transactionNumber(
@@ -53,13 +49,12 @@ function QuickPaymentReceiveForm({
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
-    const entries = [values]
-      .filter((entry) => entry.id && entry.payment_amount)
-      .map((entry) => ({
-        invoice_id: entry.id,
-        ...pick(entry, ['payment_amount']),
-      }));
-
+    const entries = [
+      {
+        invoice_id: values.id,
+        payment_amount: values.amount,
+      },
+    ];
     const form = {
       ...omit(values, ['payment_receive_no', 'payment_amount']),
       ...(!paymentReceiveAutoIncrement && {

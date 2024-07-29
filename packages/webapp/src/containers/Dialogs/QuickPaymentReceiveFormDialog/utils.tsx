@@ -15,6 +15,7 @@ export const defaultInitialValues = {
   payment_receive_no: '',
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
+  amount: '',
   // statement: '',
   exchange_rate: 1,
   branch_id: '',
