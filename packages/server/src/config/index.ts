@@ -236,6 +236,10 @@ module.exports = {
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     endpoint: process.env.S3_ENDPOINT,
     bucket: process.env.S3_BUCKET || 'bigcapital-documents',
+    forcePathStyle: parseBoolean(
+      defaultTo(process.env.S3_FORCE_PATH_STYLE, false),
+      false
+    ),
   },
 
   loops: {
