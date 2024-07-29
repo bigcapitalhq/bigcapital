@@ -94,7 +94,9 @@ export function useDisconnectBankAccount(
       apiRequest.post(`/banking/bank_accounts/${bankAccountId}/disconnect`),
     {
       ...options,
-      onSuccess: () => {},
+      onSuccess: (res, values) => {
+        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
+      },
     },
   );
 }
