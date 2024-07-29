@@ -195,6 +195,20 @@ export function useGetBankTransactionsMatches(
   );
 }
 
+const onValidateExcludeUncategorizedTransaction = (queryClient) => {
+  // Invalidate queries.
+  queryClient.invalidateQueries(QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY);
+  queryClient.invalidateQueries(
+    t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
+  );
+  // Invalidate accounts.
+  queryClient.invalidateQueries(t.ACCOUNTS);
+  queryClient.invalidateQueries(t.ACCOUNT);
+
+  // invalidate bank account summary.
+  queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+};
+
 type ExcludeUncategorizedTransactionValue = number;
 
 interface ExcludeUncategorizedTransactionRes {}
@@ -228,19 +242,7 @@ export function useExcludeUncategorizedTransaction(
       ),
     {
       onSuccess: (res, id) => {
-        // Invalidate queries.
-        queryClient.invalidateQueries(
-          QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
-        );
-        queryClient.invalidateQueries(
-          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-        );
-        // Invalidate accounts.
-        queryClient.invalidateQueries(t.ACCOUNTS);
-        queryClient.invalidateQueries(t.ACCOUNT);
-
-        // invalidate bank account summary.
-        queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+        onValidateExcludeUncategorizedTransaction(queryClient);
       },
       ...options,
     },
@@ -281,19 +283,83 @@ export function useUnexcludeUncategorizedTransaction(
       ),
     {
       onSuccess: (res, id) => {
-        // Invalidate queries.
-        queryClient.invalidateQueries(
-          QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
-        );
-        queryClient.invalidateQueries(
-          t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
-        );
-        // Invalidate accounts.
-        queryClient.invalidateQueries(t.ACCOUNTS);
-        queryClient.invalidateQueries(t.ACCOUNT);
+        onValidateExcludeUncategorizedTransaction(queryClient);
+      },
+      ...options,
+    },
+  );
+}
 
-        // Invalidate bank account summary.
-        queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+type ExcludeBankTransactionsValue = { ids: Array<number | string> };
+interface ExcludeBankTransactionsResponse {}
+
+/**
+ * Excludes the uncategorized bank transactions in bulk.
+ * @param {UseMutationResult<ExcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>} options
+ * @returns {UseMutationResult<ExcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>}
+ */
+export function useExcludeUncategorizedTransactions(
+  options?: UseMutationOptions<
+    ExcludeBankTransactionsResponse,
+    Error,
+    ExcludeBankTransactionsValue
+  >,
+): UseMutationResult<
+  ExcludeBankTransactionsResponse,
+  Error,
+  ExcludeBankTransactionsValue
+> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    ExcludeBankTransactionsResponse,
+    Error,
+    ExcludeBankTransactionsValue
+  >(
+    (value: { ids: Array<number | string> }) =>
+      apiRequest.put(`/cashflow/transactions/exclude`, { ids: value.ids }),
+    {
+      onSuccess: (res, id) => {
+        onValidateExcludeUncategorizedTransaction(queryClient);
+      },
+      ...options,
+    },
+  );
+}
+
+type UnexcludeBankTransactionsValue = { ids: Array<number | string> };
+interface UnexcludeBankTransactionsResponse {}
+
+/**
+ * Excludes the uncategorized bank transactions in bulk.
+ * @param {UseMutationResult<UnexcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>} options
+ * @returns {UseMutationResult<UnexcludeBankTransactionsResponse, Error, ExcludeBankTransactionValue>}
+ */
+export function useUnexcludeUncategorizedTransactions(
+  options?: UseMutationOptions<
+    UnexcludeBankTransactionsResponse,
+    Error,
+    UnexcludeBankTransactionsValue
+  >,
+): UseMutationResult<
+  UnexcludeBankTransactionsResponse,
+  Error,
+  UnexcludeBankTransactionsValue
+> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    UnexcludeBankTransactionsResponse,
+    Error,
+    UnexcludeBankTransactionsValue
+  >(
+    (value: { ids: Array<number | string> }) =>
+      apiRequest.put(`/cashflow/transactions/unexclude`, { ids: value.ids }),
+    {
+      onSuccess: (res, id) => {
+        onValidateExcludeUncategorizedTransaction(queryClient);
       },
       ...options,
     },

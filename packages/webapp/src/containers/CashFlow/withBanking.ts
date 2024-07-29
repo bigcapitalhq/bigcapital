@@ -13,6 +13,11 @@ export const withBanking = (mapState) => {
 
       reconcileMatchingTransactionPendingAmount:
         state.plaid.openReconcileMatchingTransaction.pending,
+
+      uncategorizedTransationsIdsSelected:
+        state.plaid.uncategorizedTransactionsSelected,
+
+      excludedTransactionsIdsSelected: state.plaid.excludedTransactionsSelected,
     };
     return mapState ? mapState(mapped, state, props) : mapped;
   };

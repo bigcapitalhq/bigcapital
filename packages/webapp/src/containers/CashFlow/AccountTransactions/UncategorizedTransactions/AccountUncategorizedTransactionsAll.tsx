@@ -1,8 +1,26 @@
+import * as R from 'ramda';
+import { useEffect } from 'react';
 import AccountTransactionsUncategorizedTable from '../AccountTransactionsUncategorizedTable';
 import { AccountUncategorizedTransactionsBoot } from '../AllTransactionsUncategorizedBoot';
 import { AccountTransactionsCard } from './AccountTransactionsCard';
+import {
+  WithBankingActionsProps,
+  withBankingActions,
+} from '../../withBankingActions';
 
-export function AccountUncategorizedTransactionsAll() {
+interface AccountUncategorizedTransactionsAllRootProps
+  extends WithBankingActionsProps {}
+
+function AccountUncategorizedTransactionsAllRoot({
+  resetUncategorizedTransactionsSelected,
+}: AccountUncategorizedTransactionsAllRootProps) {
+  useEffect(
+    () => () => {
+      resetUncategorizedTransactionsSelected();
+    },
+    [resetUncategorizedTransactionsSelected],
+  );
+
   return (
     <AccountUncategorizedTransactionsBoot>
       <AccountTransactionsCard>
@@ -11,3 +29,7 @@ export function AccountUncategorizedTransactionsAll() {
     </AccountUncategorizedTransactionsBoot>
   );
 }
+
+export const AccountUncategorizedTransactionsAll = R.compose(
+  withBankingActions,
+)(AccountUncategorizedTransactionsAllRoot);
