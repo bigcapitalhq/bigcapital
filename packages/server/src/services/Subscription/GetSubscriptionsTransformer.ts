@@ -8,7 +8,7 @@ export class GetSubscriptionsTransformer extends Transformer {
   public includeAttributes = (): string[] => {
     return [
       'canceledAtFormatted',
-      'cancelsAtFormatted',
+      'endsAtFormatted',
       'trialStartsAtFormatted',
       'trialEndsAtFormatted',
       'statusFormatted',
@@ -42,13 +42,13 @@ export class GetSubscriptionsTransformer extends Transformer {
   };
 
   /**
-   * Retrieves the cancels at formatted.
+   * Retrieves the ends at date formatted.
    * @param subscription
    * @returns {string}
    */
-  public cancelsAtFormatted = (subscription) => {
+  public endsAtFormatted = (subscription) => {
     return subscription.cancelsAt
-      ? this.formatDate(subscription.cancelsAt)
+      ? this.formatDate(subscription.endsAt)
       : null;
   };
 

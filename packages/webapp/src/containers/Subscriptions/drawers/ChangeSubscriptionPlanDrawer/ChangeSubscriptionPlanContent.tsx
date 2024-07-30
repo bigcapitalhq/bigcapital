@@ -1,34 +1,11 @@
 // @ts-nocheck
 import * as R from 'ramda';
-import { Callout, Classes, Intent } from '@blueprintjs/core';
-import { AppToaster, Box } from '@/components';
-import { SubscriptionPlans } from '@/containers/Setup/SetupSubscription/SubscriptionPlans';
+import { Callout, Classes } from '@blueprintjs/core';
+import { Box } from '@/components';
 import { SubscriptionPlansPeriodSwitcher } from '@/containers/Setup/SetupSubscription/SubscriptionPlansPeriodSwitcher';
-import { useChangeSubscriptionPlan } from '@/hooks/query/subscription';
-import withDrawerActions from '@/containers/Drawer/withDrawerActions';
-import { DRAWERS } from '@/constants/drawers';
+import { ChangeSubscriptionPlans } from './ChangeSubscriptionPlans';
 
-function ChangeSubscriptionPlanContent({ closeDrawer }) {
-  const { mutateAsync: changeSubscriptionPlan } = useChangeSubscriptionPlan();
-
-  // Handle the subscribe button click.
-  const handleSubscribe = (variantId: number) => {
-    changeSubscriptionPlan({ variant_id: variantId })
-      .then(() => {
-        closeDrawer(DRAWERS.CHANGE_SUBSCARIPTION_PLAN);
-        AppToaster.show({
-          intent: Intent.SUCCESS,
-          message: 'The subscription plan has been changed successfully.',
-        });
-      })
-      .catch(() => {
-        AppToaster.show({
-          intent: Intent.DANGER,
-          message: 'Something went wrong.',
-        });
-      });
-  };
-
+export default function ChangeSubscriptionPlanContent() {
   return (
     <Box className={Classes.DRAWER_BODY}>
       <Box
@@ -45,10 +22,8 @@ function ChangeSubscriptionPlanContent({ closeDrawer }) {
         </Callout>
 
         <SubscriptionPlansPeriodSwitcher />
-        <SubscriptionPlans onSubscribe={handleSubscribe} />
+        <ChangeSubscriptionPlans />
       </Box>
     </Box>
   );
 }
-
-export default R.compose(withDrawerActions)(ChangeSubscriptionPlanContent);

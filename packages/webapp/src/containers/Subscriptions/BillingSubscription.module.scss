@@ -33,21 +33,21 @@
       margin-left: 6px;
     }
   }
+  &:global(.bp4-intent-success){
+    color: #3e703e;
+  }
+  &:global(.bp4-intent-danger){
+    color: #A82A2A;
+  }
 }
 .periodStatus{
   text-transform: uppercase;
-  color: #A82A2A;
   font-weight: 500;
-}
-.periodText{
-  color: #AF6161;
+  
 }
 .priceAmount {
   font-size: 24px;
   font-weight: 500;
-}
-.pricePeriod {
-  color: #8F99A8;
 }
 .subscribeButton{
   border-radius: 32px;

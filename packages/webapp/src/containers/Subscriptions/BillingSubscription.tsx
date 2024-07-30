@@ -1,12 +1,15 @@
 // @ts-nocheck
 import * as R from 'ramda';
+import clsx from 'classnames';
+import { includes } from 'lodash';
 import { Box, Group, Stack } from '@/components';
-import { Button, Card, Intent, Text } from '@blueprintjs/core';
+import { Button, Card, Classes, Intent, Text } from '@blueprintjs/core';
 import withAlertActions from '../Alert/withAlertActions';
 import styles from './BillingSubscription.module.scss';
 import withDrawerActions from '../Drawer/withDrawerActions';
 import { DRAWERS } from '@/constants/drawers';
 import { useBillingPageBoot } from './BillingPageBoot';
+import { getSubscriptionStatusText } from './_utils';
 
 function SubscriptionRoot({ openAlert, openDrawer }) {
   const { mainSubscription } = useBillingPageBoot();
@@ -36,11 +39,24 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
       <Stack spacing={6}>
         <h1 className={styles.title}>{mainSubscription.planName}</h1>
 
-        <Group spacing={0} className={styles.period}>
+        <Group
+          spacing={0}
+          className={clsx(styles.period, {
+            [Classes.INTENT_DANGER]: includes(
+              ['on_trial', 'inactive'],
+              mainSubscription.status,
+            ),
+            [Classes.INTENT_SUCCESS]: includes(
+              ['active', 'canceled'],
+              mainSubscription.status,
+            ),
+          })}
+        >
           <Text className={styles.periodStatus}>
             {mainSubscription.statusFormatted}
           </Text>
-          <Text className={styles.periodText}>Trial ends in 10 days.</Text>
+
+          <SubscriptionStatusText subscription={mainSubscription} />
         </Group>
       </Stack>
 
@@ -131,3 +147,11 @@ export const Subscription = R.compose(
   withAlertActions,
   withDrawerActions,
 )(SubscriptionRoot);
+
+function SubscriptionStatusText({ subscription }) {
+  const text = getSubscriptionStatusText(subscription);
+
+  if (!text) return null;
+
+  return <Text className={styles.periodText}>{text}</Text>;
+}

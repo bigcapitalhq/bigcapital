@@ -4,16 +4,14 @@ import moment from 'moment';
 import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 
 export default class PlanSubscription extends mixin(SystemModel) {
-  lemonSubscriptionId: number;
+  public lemonSubscriptionId: number;
 
-  canceledAt: Date;
-  cancelsAt: Date;
+  public endsAt: Date;
+  public startsAt: Date;
 
-  trialStartsAt: Date;
-  trialEndsAt: Date;
+  public canceledAt: Date;
 
-  endsAt: Date;
-  startsAt: Date;
+  public trialEndsAt: Date;
 
   /**
    * Table name.
@@ -109,26 +107,15 @@ export default class PlanSubscription extends mixin(SystemModel) {
   }
 
   /**
-   * Check if the subscription is expired.
-   * Expired mens the user his lost the right to use the product.
-   * @returns {Boolean}
-   */
-  public expired() {
-    return this.ended() && !this.onTrial();
-  }
-
-  /**
-   * Check if paid subscription is active.
+   * Check if the subscription is active.
    * @return {Boolean}
    */
   public active() {
-    return (
-      !this.canceled() && !this.onTrial() && !this.ended() && this.started()
-    );
+    return this.onTrial() || !this.ended();
   }
 
   /**
-   * Check if subscription is inactive.
+   * Check if the subscription is inactive.
    * @return {Boolean}
    */
   public inactive() {
@@ -164,11 +151,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
    * @returns {boolean}
    */
   public canceled() {
-    return (
-      this.canceledAt ||
-      (this.cancelsAt && moment().isAfter(this.cancelsAt)) ||
-      false
-    );
+    return !!this.canceledAt;
   }
 
   /**

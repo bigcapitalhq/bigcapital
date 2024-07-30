@@ -92,7 +92,7 @@ export function useResumeMainSubscription(
 }
 
 interface ChangeMainSubscriptionPlanValues {
-  variantId: string;
+  variant_id: string;
 }
 interface ChangeMainSubscriptionPlanResponse {}
 
