@@ -7,6 +7,18 @@ import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 export function EstimateFormFooterLeft() {
   return (
     <React.Fragment>
+      {/* --------- Terms and conditions --------- */}
+      <TermsConditsFormGroup
+        label={<T id={'estimate_form.label.terms_conditions'} />}
+        name={'terms_conditions'}
+      >
+        <FEditableText
+          name={'terms_conditions'}
+          placeholder={intl.get('estimate_form.terms_and_conditions.placeholder')}
+          multiline={true}
+        />
+      </TermsConditsFormGroup>
+
       {/* --------- Customer Note --------- */}
       <EstimateMsgFormGroup
         name={'note'}
@@ -19,18 +31,6 @@ export function EstimateFormFooterLeft() {
           multiline={true}
         />
       </EstimateMsgFormGroup>
-
-      {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'estimate_form.label.terms_conditions'} />}
-        name={'terms_conditions'}
-      >
-        <FEditableText
-          name={'terms_conditions'}
-          placeholder={intl.get('estimate_form.terms_and_conditions.placeholder')}
-          multiline={true}
-        />
-      </TermsConditsFormGroup>
     </React.Fragment>
   );
 }

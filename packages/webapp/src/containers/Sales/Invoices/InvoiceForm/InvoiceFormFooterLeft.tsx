@@ -7,18 +7,6 @@ import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 export function InvoiceFormFooterLeft() {
   return (
     <React.Fragment>
-      {/* --------- Invoice message --------- */}
-      <InvoiceMsgFormGroup
-        name={'invoice_message'}
-        label={<T id={'invoice_message'} />}
-      >
-        <FEditableText
-          name={'invoice_message'}
-          placeholder={intl.get('invoice_form.invoice_message.placeholder')}
-          multiline={true}
-        />
-      </InvoiceMsgFormGroup>
-
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={<T id={'invoice_form.label.terms_conditions'} />}
@@ -32,6 +20,18 @@ export function InvoiceFormFooterLeft() {
           multiline={true}
         />
       </TermsConditsFormGroup>
+
+      {/* --------- Invoice message --------- */}
+      <InvoiceMsgFormGroup
+        name={'invoice_message'}
+        label={<T id={'invoice_message'} />}
+      >
+        <FEditableText
+          name={'invoice_message'}
+          placeholder={intl.get('invoice_form.invoice_message.placeholder')}
+          multiline={true}
+        />
+      </InvoiceMsgFormGroup>
     </React.Fragment>
   );
 }

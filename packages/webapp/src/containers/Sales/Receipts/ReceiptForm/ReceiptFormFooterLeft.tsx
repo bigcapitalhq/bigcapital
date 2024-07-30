@@ -7,19 +7,6 @@ import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 export function ReceiptFormFooterLeft() {
   return (
     <React.Fragment>
-      {/* --------- Receipt message --------- */}
-      <ReceiptMsgFormGroup
-        name={'receipt_message'}
-        label={<T id={'receipt_form.label.receipt_message'} />}
-        hintText={'Will be displayed on the Receipt'}
-      >
-        <FEditableText
-          name={'receipt_message'}
-          placeholder={intl.get('receipt_form.receipt_message.placeholder')}
-          multiline={true}
-        />
-      </ReceiptMsgFormGroup>
-
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={<T id={'receipt_form.label.terms_conditions'} />}
@@ -33,6 +20,19 @@ export function ReceiptFormFooterLeft() {
           multiline={true}
         />
       </TermsConditsFormGroup>
+
+      {/* --------- Receipt message --------- */}
+      <ReceiptMsgFormGroup
+        name={'receipt_message'}
+        label={<T id={'receipt_form.label.receipt_message'} />}
+        hintText={'Will be displayed on the Receipt'}
+      >
+        <FEditableText
+          name={'receipt_message'}
+          placeholder={intl.get('receipt_form.receipt_message.placeholder')}
+          multiline={true}
+        />
+      </ReceiptMsgFormGroup>
     </React.Fragment>
   );
 }
