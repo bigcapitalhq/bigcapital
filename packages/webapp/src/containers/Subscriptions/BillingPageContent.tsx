@@ -15,9 +15,7 @@ export function BillingPageContent() {
   return (
     <Box className={styles.root}>
       <Text>
-        Transactions locking has the ability to lock all organization
-        transactions so users can’t edit, delete or create new transactions
-        during the past period.
+        Only pay for what you really need. All plans come with 24/7 customer support.
       </Text>
 
       <Group style={{ marginTop: '2rem' }}>

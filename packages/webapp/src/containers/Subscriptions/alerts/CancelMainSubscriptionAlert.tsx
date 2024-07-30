@@ -37,7 +37,7 @@ function CancelMainSubscriptionAlert({
     cancelSubscription()
       .then(() => {
         AppToaster.show({
-          message: 'The subscription has been cancel.',
+          message: 'The subscription has been canceled.',
           intent: Intent.SUCCESS,
         });
       })
@@ -63,7 +63,14 @@ function CancelMainSubscriptionAlert({
       onConfirm={handleConfirm}
       loading={isLoading}
     >
-      <p>asdfsadf asdf asdfdsaf</p>
+      <p>
+        <strong>The subscription for this organization will end.</strong>
+      </p>
+
+      <p>
+        It will no longer be accessible to you or any other users. Make sure any
+        data has already been exported.
+      </p>
     </Alert>
   );
 }

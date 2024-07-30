@@ -15,7 +15,7 @@ import { useAuthActions } from '@/hooks/state';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
 
-import { useAuthenticatedAccount } from '@/hooks/query';
+import { useAuthenticatedAccount, useDashboardMeta } from '@/hooks/query';
 import { firstLettersArgs, compose } from '@/utils';
 
 /**
@@ -31,6 +31,9 @@ function DashboardTopbarUser({
   // Retrieve authenticated user information.
   const { data: user } = useAuthenticatedAccount();
 
+  const { data: dashboardMeta } = useDashboardMeta({
+    keepPreviousData: true,
+  });
   const onClickLogout = () => {
     setLogout();
   };
@@ -58,7 +61,12 @@ function DashboardTopbarUser({
             }
           />
           <MenuDivider />
-          <MenuItem text={'Billing'} onClick={() => history.push('/billing')} />
+          {dashboardMeta.is_bigcapital_cloud && (
+            <MenuItem
+              text={'Billing'}
+              onClick={() => history.push('/billing')}
+            />
+          )}
           <MenuItem
             text={<T id={'keyboard_shortcuts'} />}
             onClick={onKeyboardShortcut}

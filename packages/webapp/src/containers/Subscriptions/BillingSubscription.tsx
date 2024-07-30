@@ -61,9 +61,8 @@ function SubscriptionRoot({ openAlert, openDrawer }) {
       </Stack>
 
       <Text className={styles.description}>
-        Transactions locking has the ability to lock all organization
-        transactions so users can’t edit, delete or create new transactions
-        during the past period.
+        Control your business bookkeeping with automated accounting, to run
+        intelligent reports for faster decision-making.
       </Text>
 
       <Stack align="flex-start" spacing={8} className={styles.actions}>

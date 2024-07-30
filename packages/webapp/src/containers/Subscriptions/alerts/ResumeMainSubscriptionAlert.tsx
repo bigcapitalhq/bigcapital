@@ -62,7 +62,13 @@ function ResumeMainSubscriptionAlert({
       onConfirm={handleConfirm}
       loading={isLoading}
     >
-      <p>asdfsadf asdf asdfdsaf</p>
+      <p>
+        <strong>The subscription for this organization will resume.</strong>
+
+        <p>
+          Are you sure want to resume the subscription of this organization?
+        </p>
+      </p>
     </Alert>
   );
 }
