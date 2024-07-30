@@ -12,7 +12,11 @@ import QuickPaymentReceiveFormContent from './QuickPaymentReceiveFormContent';
 
 import withSettings from '@/containers/Settings/withSettings';
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { defaultInitialValues, transformErrors } from './utils';
+import {
+  defaultInitialValues,
+  transformErrors,
+  transformInvoiceToForm,
+} from './utils';
 import { compose, transactionNumber } from '@/utils';
 
 /**
@@ -44,24 +48,22 @@ function QuickPaymentReceiveForm({
       payment_receive_no: nextPaymentNumber,
     }),
     deposit_account_id: defaultTo(preferredDepositAccount, ''),
-    ...invoice,
+    ...transformInvoiceToForm(invoice),
   };
 
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
     const entries = [
       {
-        invoice_id: values.id,
+        invoice_id: values.invoice_id,
         payment_amount: values.amount,
       },
     ];
     const form = {
-      ...omit(values, ['payment_receive_no', 'payment_amount']),
+      ...omit(values, ['payment_receive_no', 'invoice_id']),
       ...(!paymentReceiveAutoIncrement && {
         payment_receive_no: values.payment_receive_no,
       }),
-      customer_id: values.customer.id,
-      amount: values.payment_amount,
       entries,
     };
 
