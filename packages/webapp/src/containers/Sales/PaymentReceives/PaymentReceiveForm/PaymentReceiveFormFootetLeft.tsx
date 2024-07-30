@@ -19,6 +19,7 @@ export function PaymentReceiveFormFootetLeft() {
             'payment_receive_form.internal_note.placeholder',
           )}
           fastField={true}
+          multiline={true}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

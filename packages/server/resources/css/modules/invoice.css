@@ -547,6 +547,7 @@ html[lang^=en] body {
 }
 .invoice__conditions p, .invoice__notes p {
   margin: 0;
+  white-space: pre-line;
 }
 .invoice__conditions + .invoice__notes {
   margin-top: 20px;

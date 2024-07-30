@@ -547,6 +547,7 @@ html[lang^=en] body {
 }
 .credit__conditions p, .credit__notes p {
   margin: 0;
+  white-space: pre-line;
 }
 .credit__conditions + .credit__notes {
   margin-top: 20px;

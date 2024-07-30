@@ -15,6 +15,7 @@ export function InvoiceFormFooterLeft() {
         <FEditableText
           name={'invoice_message'}
           placeholder={intl.get('invoice_form.invoice_message.placeholder')}
+          multiline={true}
         />
       </InvoiceMsgFormGroup>
 
@@ -28,6 +29,7 @@ export function InvoiceFormFooterLeft() {
           placeholder={intl.get(
             'invoice_form.terms_and_conditions.placeholder',
           )}
+          multiline={true}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

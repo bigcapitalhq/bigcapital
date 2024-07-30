@@ -21,6 +21,7 @@ export function PaymentMadeFormFooterLeft() {
           name={'statement'}
           placeholder={intl.get('payment_made.form.internal_note.placeholder')}
           fastField={true}
+          multiline={true}
         />
       </InternalNoteFormGroup>
     </React.Fragment>

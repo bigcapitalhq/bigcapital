@@ -48,6 +48,10 @@
     &__content {
       text-transform: capitalize;
     }
+
+    &__children {
+      white-space: pre-line;
+    }
   }
 
   + .details-menu{
