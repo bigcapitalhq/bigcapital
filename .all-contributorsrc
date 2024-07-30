@@ -132,6 +132,15 @@
       "contributions": [
         "bug"
       ]
+    },
+    {
+      "login": "oleynikd",
+      "name": "Denis",
+      "avatar_url": "https://avatars.githubusercontent.com/u/3976868?v=4",
+      "profile": "https://github.com/oleynikd",
+      "contributions": [
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
