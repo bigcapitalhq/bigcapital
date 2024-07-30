@@ -10,7 +10,7 @@ import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import QuickPaymentMadeFormContent from './QuickPaymentMadeFormContent';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { defaultPaymentMade, transformErrors } from './utils';
+import { defaultPaymentMade, transformBillToForm, transformErrors } from './utils';
 import { compose } from '@/utils';
 
 /**
@@ -20,29 +20,24 @@ function QuickPaymentMadeForm({
   // #withDialogActions
   closeDialog,
 }) {
-  const {
-    bill,
-    dialogName,
-    createPaymentMadeMutate,
-  } = useQuickPaymentMadeContext();
+  const { bill, dialogName, createPaymentMadeMutate } =
+    useQuickPaymentMadeContext();
 
   // Initial form values.
   const initialValues = {
     ...defaultPaymentMade,
-    ...bill,
+    ...transformBillToForm(bill),
   };
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
     const entries = [
       {
         payment_amount: values.amount,
-        bill_id: values.id,
+        bill_id: values.bill_id,
       },
     ];
     const form = {
-      ...omit(values, ['payment_amount']),
-      vendor_id: values?.vendor?.id,
-      amount: values?.payment_amount,
+      ...omit(values, ['bill_id']),
       entries,
     };
 

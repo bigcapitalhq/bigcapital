@@ -2,7 +2,7 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { first } from 'lodash';
+import { first, pick } from 'lodash';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
 
@@ -10,6 +10,7 @@ import { useFormikContext } from 'formik';
 import { useQuickPaymentReceiveContext } from './QuickPaymentReceiveFormProvider';
 
 export const defaultInitialValues = {
+  invoice_id: '',
   customer_id: '',
   deposit_account_id: '',
   payment_receive_no: '',
@@ -19,7 +20,6 @@ export const defaultInitialValues = {
   // statement: '',
   exchange_rate: 1,
   branch_id: '',
-  entries: [{ invoice_id: '', payment_amount: '' }],
 };
 
 export const transformErrors = (errors, { setFieldError }) => {
@@ -45,7 +45,9 @@ export const transformErrors = (errors, { setFieldError }) => {
   }
   if (getError('PAYMENT_ACCOUNT_CURRENCY_INVALID')) {
     AppToaster.show({
-      message: intl.get('payment_Receive.error.payment_account_currency_invalid'),
+      message: intl.get(
+        'payment_Receive.error.payment_account_currency_invalid',
+      ),
       intent: Intent.DANGER,
     });
   }
@@ -64,4 +66,12 @@ export const useSetPrimaryBranchToForm = () => {
       }
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
+};
+
+export const transformInvoiceToForm = (invoice) => {
+  return {
+    ...pick(invoice, ['customer_id', 'currency_code']),
+    amount: invoice.due_amount,
+    invoice_id: invoice.id,
+  };
 };

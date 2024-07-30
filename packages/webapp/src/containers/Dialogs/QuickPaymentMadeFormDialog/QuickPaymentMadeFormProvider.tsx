@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useMemo } from 'react';
 import { DialogContent } from '@/components';
 import {
   useBill,
@@ -10,7 +10,6 @@ import {
 import { Features } from '@/constants';
 import { useFeatureCan } from '@/hooks/state';
 import { pick } from 'lodash';
-
 
 const QuickPaymentMadeContext = React.createContext();
 
@@ -40,13 +39,14 @@ function QuickPaymentMadeFormProvider({ query, billId, dialogName, ...props }) {
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
+  const paymentBill = useMemo(
+    () => pick(bill, ['id', 'due_amount', 'vendor_id', 'currency_code']),
+    [bill],
+  );
+
   // State provider.
   const provider = {
-    bill: {
-      ...pick(bill, ['id', 'due_amount', 'vendor', 'currency_code']),
-      vendor_id: bill?.vendor?.display_name,
-      payment_amount: bill?.due_amount,
-    },
+    bill: paymentBill,
     accounts,
     branches,
     dialogName,

@@ -2,15 +2,16 @@
 import React from 'react';
 import moment from 'moment';
 import intl from 'react-intl-universal';
-import { first } from 'lodash';
+import { first, pick } from 'lodash';
+import { useFormikContext } from 'formik';
 import { Intent } from '@blueprintjs/core';
 import { AppToaster } from '@/components';
-import { useFormikContext } from 'formik';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import { PAYMENT_MADE_ERRORS } from '@/containers/Purchases/PaymentMades/constants';
 
 // Default initial values of payment made.
 export const defaultPaymentMade = {
+  bill_id: '',
   vendor_id: '',
   payment_account_id: '',
   payment_date: moment(new Date()).format('YYYY-MM-DD'),
@@ -20,7 +21,6 @@ export const defaultPaymentMade = {
   // statement: '',
   exchange_rate: 1,
   branch_id: '',
-  entries: [{ bill_id: '', payment_amount: '' }],
 };
 
 export const transformErrors = (errors, { setFieldError }) => {
@@ -59,3 +59,11 @@ export const useSetPrimaryBranchToForm = () => {
     }
   }, [isBranchesSuccess, setFieldValue, branches]);
 };
+
+export const transformBillToForm = (bill) => {
+  return {
+    ...pick(bill, ['vendor_id', 'currency_code']),
+    amount: bill.due_amount,
+    bill_id: bill.id,
+  };
+}
