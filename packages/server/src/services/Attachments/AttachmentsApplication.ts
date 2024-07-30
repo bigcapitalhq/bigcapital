@@ -96,10 +96,11 @@ export class AttachmentsApplication {
 
   /**
    * Retrieves the presigned url of the given attachment key.
+   * @param {number} tenantId
    * @param {string} key
    * @returns {Promise<string>}
    */
-  public getPresignedUrl(key: string): Promise<string> {
-    return this.getPresignedUrlService.getPresignedUrl(key);
+  public getPresignedUrl(tenantId: number, key: string): Promise<string> {
+    return this.getPresignedUrlService.getPresignedUrl(tenantId, key);
   }
 }
