@@ -7,11 +7,16 @@ import {
   TotalLine,
   TotalLineBorderStyle,
   TotalLineTextStyle,
+  FormatNumber,
 } from '@/components';
-import { usePaymentReceiveTotals } from './utils';
+import {
+  usePaymentReceiveTotals,
+  usePaymentReceivedTotalExceededAmount,
+} from './utils';
 
 export function PaymentReceiveFormFootetRight() {
   const { formattedSubtotal, formattedTotal } = usePaymentReceiveTotals();
+  const exceededAmount = usePaymentReceivedTotalExceededAmount();
 
   return (
     <PaymentReceiveTotalLines labelColWidth={'180px'} amountColWidth={'180px'}>
@@ -24,6 +29,11 @@ export function PaymentReceiveFormFootetRight() {
         title={<T id={'payment_receive_form.label.total'} />}
         value={formattedTotal}
         textStyle={TotalLineTextStyle.Bold}
+      />
+      <TotalLine
+        title={'Exceeded Amount'}
+        value={<FormatNumber value={exceededAmount} />}
+        textStyle={TotalLineTextStyle.Regular}
       />
     </PaymentReceiveTotalLines>
   );

@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import classNames from 'classnames';
+import { isEmpty, toSafeInteger } from 'lodash';
 import {
   FormGroup,
   InputGroup,
@@ -13,7 +14,6 @@ import {
 import { DateInput } from '@blueprintjs/datetime';
 import { FastField, Field, useFormikContext, ErrorMessage } from 'formik';
 import { FormattedMessage as T, VendorsSelect } from '@/components';
-import { toSafeInteger } from 'lodash';
 import { CLASSES } from '@/constants/classes';
 
 import {
@@ -68,7 +68,7 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
     const fullAmount = safeSumBy(newEntries, 'payment_amount');
 
     setFieldValue('entries', newEntries);
-    setFieldValue('full_amount', fullAmount);
+    setFieldValue('amount', fullAmount);
   };
 
   // Handles the full-amount field blur.
@@ -115,10 +115,10 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
       </FastField>
 
       {/* ------------ Full amount ------------ */}
-      <Field name={'full_amount'}>
+      <Field name={'amount'}>
         {({
           form: {
-            values: { currency_code },
+            values: { currency_code, entries },
           },
           field: { value },
           meta: { error, touched },
@@ -129,28 +129,30 @@ function PaymentMadeFormHeaderFields({ organization: { base_currency } }) {
             className={('form-group--full-amount', Classes.FILL)}
             intent={inputIntent({ error, touched })}
             labelInfo={<Hint />}
-            helperText={<ErrorMessage name="full_amount" />}
+            helperText={<ErrorMessage name="amount" />}
           >
             <ControlGroup>
               <InputPrependText text={currency_code} />
               <MoneyInputGroup
                 value={value}
                 onChange={(value) => {
-                  setFieldValue('full_amount', value);
+                  setFieldValue('amount', value);
                 }}
                 onBlurValue={onFullAmountBlur}
               />
             </ControlGroup>
 
-            <Button
-              onClick={handleReceiveFullAmountClick}
-              className={'receive-full-amount'}
-              small={true}
-              minimal={true}
-            >
-              <T id={'receive_full_amount'} /> (
-              <Money amount={payableFullAmount} currency={currency_code} />)
-            </Button>
+            {!isEmpty(entries) && (
+              <Button
+                onClick={handleReceiveFullAmountClick}
+                className={'receive-full-amount'}
+                small={true}
+                minimal={true}
+              >
+                <T id={'receive_full_amount'} /> (
+                <Money amount={payableFullAmount} currency={currency_code} />)
+              </Button>
+            )}
           </FormGroup>
         )}
       </Field>

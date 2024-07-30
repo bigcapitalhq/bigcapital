@@ -11,13 +11,19 @@ import {
   MenuItem,
   PopoverInteractionKind,
   Position,
+  Intent,
+  Tooltip,
+  MenuDivider,
 } from '@blueprintjs/core';
 import { useHistory } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import {
   Icon,
   DashboardActionsBar,
   DashboardRowsHeightButton,
   FormattedMessage as T,
+  AppToaster,
+  If,
 } from '@/components';
 
 import { CashFlowMenuItems } from './utils';
@@ -33,6 +39,13 @@ import withSettings from '@/containers/Settings/withSettings';
 import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
+import {
+  useDisconnectBankAccount,
+  useUpdateBankAccount,
+  useExcludeUncategorizedTransactions,
+  useUnexcludeUncategorizedTransactions,
+} from '@/hooks/query/bank-rules';
+import { withBanking } from '../withBanking';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -43,16 +56,26 @@ function AccountTransactionsActionsBar({
 
   // #withSettingsActions
   addSetting,
+
+  // #withBanking
+  uncategorizedTransationsIdsSelected,
+  excludedTransactionsIdsSelected,
 }) {
   const history = useHistory();
-  const { accountId } = useAccountTransactionsContext();
+  const { accountId, currentAccount } = useAccountTransactionsContext();
 
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
 
+  const { mutateAsync: disconnectBankAccount } = useDisconnectBankAccount();
+  const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
+
   // Retrieves the money in/out buttons options.
   const addMoneyInOptions = useMemo(() => getAddMoneyInOptions(), []);
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
+
+  const isFeedsActive = !!currentAccount.is_feeds_active;
+  const isSyncingOwner = currentAccount.is_syncing_owner;
 
   // Handle table row size change.
   const handleTableRowSizeChange = (size) => {
@@ -82,9 +105,90 @@ function AccountTransactionsActionsBar({
   const handleBankRulesClick = () => {
     history.push(`/bank-rules?accountId=${accountId}`);
   };
+
+  // Handles the bank account disconnect click.
+  const handleDisconnectClick = () => {
+    disconnectBankAccount({ bankAccountId: accountId })
+      .then(() => {
+        AppToaster.show({
+          message: 'The bank account has been disconnected.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+  // handles the bank update button click.
+  const handleBankUpdateClick = () => {
+    updateBankAccount({ bankAccountId: accountId })
+      .then(() => {
+        AppToaster.show({
+          message: 'The transactions of the bank account has been updated.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong.',
+          intent: Intent.DANGER,
+        });
+      });
+  };
   // Handle the refresh button click.
   const handleRefreshBtnClick = () => {
     refresh();
+  };
+
+  const {
+    mutateAsync: excludeUncategorizedTransactions,
+    isLoading: isExcludingLoading,
+  } = useExcludeUncategorizedTransactions();
+
+  const {
+    mutateAsync: unexcludeUncategorizedTransactions,
+    isLoading: isUnexcludingLoading,
+  } = useUnexcludeUncategorizedTransactions();
+
+  // Handles the exclude uncategorized transactions in bulk.
+  const handleExcludeUncategorizedBtnClick = () => {
+    excludeUncategorizedTransactions({
+      ids: uncategorizedTransationsIdsSelected,
+    })
+      .then(() => {
+        AppToaster.show({
+          message: 'The selected transactions have been excluded.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch(() => {
+        AppToaster.show({
+          message: 'Something went wrong',
+          intent: Intent.DANGER,
+        });
+      });
+  };
+
+  // Handles the unexclude categorized button click.
+  const handleUnexcludeUncategorizedBtnClick = () => {
+    unexcludeUncategorizedTransactions({
+      ids: excludedTransactionsIdsSelected,
+    })
+      .then(() => {
+        AppToaster.show({
+          message: 'The selected excluded transactions have been unexcluded.',
+          intent: Intent.SUCCESS,
+        });
+      })
+      .catch((error) => {
+        AppToaster.show({
+          message: 'Something went wrong',
+          intent: Intent.DANGER,
+        });
+      });
   };
 
   return (
@@ -129,6 +233,45 @@ function AccountTransactionsActionsBar({
           onChange={handleTableRowSizeChange}
         />
         <NavbarDivider />
+
+        <If condition={isSyncingOwner}>
+          <Tooltip
+            content={
+              isFeedsActive
+                ? 'The bank syncing is active'
+                : 'The bank syncing is disconnected'
+            }
+            minimal={true}
+            position={Position.BOTTOM}
+          >
+            <Button
+              className={Classes.MINIMAL}
+              icon={<Icon icon="feed" iconSize={16} />}
+              intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
+            />
+          </Tooltip>
+        </If>
+
+        {!isEmpty(uncategorizedTransationsIdsSelected) && (
+          <Button
+            icon={<Icon icon="disable" iconSize={16} />}
+            text={'Exclude'}
+            onClick={handleExcludeUncategorizedBtnClick}
+            className={Classes.MINIMAL}
+            intent={Intent.DANGER}
+            disabled={isExcludingLoading}
+          />
+        )}
+        {!isEmpty(excludedTransactionsIdsSelected) && (
+          <Button
+            icon={<Icon icon="disable" iconSize={16} />}
+            text={'Unexclude'}
+            onClick={handleUnexcludeUncategorizedBtnClick}
+            className={Classes.MINIMAL}
+            intent={Intent.DANGER}
+            disabled={isUnexcludingLoading}
+          />
+        )}
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
@@ -141,7 +284,15 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
+              <If condition={isSyncingOwner && isFeedsActive}>
+                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                <MenuDivider />
+              </If>
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
+
+              <If condition={isSyncingOwner && isFeedsActive}>
+                <MenuItem onClick={handleDisconnectClick} text={'Disconnect'} />
+              </If>
             </Menu>
           }
         >
@@ -164,4 +315,13 @@ export default compose(
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
+  withBanking(
+    ({
+      uncategorizedTransationsIdsSelected,
+      excludedTransactionsIdsSelected,
+    }) => ({
+      uncategorizedTransationsIdsSelected,
+      excludedTransactionsIdsSelected,
+    }),
+  ),
 )(AccountTransactionsActionsBar);

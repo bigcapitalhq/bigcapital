@@ -96,6 +96,11 @@ export class CreateAccount {
       ...createAccountDTO,
       slug: kebabCase(createAccountDTO.name),
       currencyCode: createAccountDTO.currencyCode || baseCurrency,
+
+      // Mark the account is Plaid owner since Plaid item/account is defined on creating.
+      isSyncingOwner: Boolean(
+        createAccountDTO.plaidAccountId || createAccountDTO.plaidItemId
+      ),
     };
   };
 
@@ -117,12 +122,7 @@ export class CreateAccount {
     const tenantMeta = await TenantMetadata.query().findOne({ tenantId });
 
     // Authorize the account creation.
-    await this.authorize(
-      tenantId,
-      accountDTO,
-      tenantMeta.baseCurrency,
-      params
-    );
+    await this.authorize(tenantId, accountDTO, tenantMeta.baseCurrency, params);
     // Transformes the DTO to model.
     const accountInputModel = this.transformDTOToModel(
       accountDTO,
@@ -157,4 +157,3 @@ export class CreateAccount {
     );
   };
 }
-

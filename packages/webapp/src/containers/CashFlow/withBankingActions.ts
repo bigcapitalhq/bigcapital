@@ -4,6 +4,10 @@ import {
   setUncategorizedTransactionIdForMatching,
   openReconcileMatchingTransaction,
   closeReconcileMatchingTransaction,
+  setUncategorizedTransactionsSelected,
+  resetUncategorizedTransactionsSelected,
+  resetExcludedTransactionsSelected,
+  setExcludedTransactionsSelected,
 } from '@/store/banking/banking.reducer';
 
 export interface WithBankingActionsProps {
@@ -13,6 +17,12 @@ export interface WithBankingActionsProps {
   ) => void;
   openReconcileMatchingTransaction: (pendingAmount: number) => void;
   closeReconcileMatchingTransaction: () => void;
+
+  setUncategorizedTransactionsSelected: (ids: Array<string | number>) => void;
+  resetUncategorizedTransactionsSelected: () => void;
+
+  setExcludedTransactionsSelected: (ids: Array<string | number>) => void;
+  resetExcludedTransactionsSelected: () => void;
 }
 
 const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
@@ -28,6 +38,40 @@ const mapDipatchToProps = (dispatch: any): WithBankingActionsProps => ({
     dispatch(openReconcileMatchingTransaction({ pending: pendingAmount })),
   closeReconcileMatchingTransaction: () =>
     dispatch(closeReconcileMatchingTransaction()),
+
+  /**
+   * Sets the selected uncategorized transactions.
+   * @param {Array<string | number>} ids 
+   */
+  setUncategorizedTransactionsSelected: (ids: Array<string | number>) =>
+    dispatch(
+      setUncategorizedTransactionsSelected({
+        transactionIds: ids,
+      }),
+    ),
+
+  /**
+   * Resets the selected uncategorized transactions.
+   */
+  resetUncategorizedTransactionsSelected: () =>
+    dispatch(resetUncategorizedTransactionsSelected()),
+
+  /**
+   * Sets excluded selected transactions.
+   * @param {Array<string | number>} ids
+   */
+  setExcludedTransactionsSelected: (ids: Array<string | number>) =>
+    dispatch(
+      setExcludedTransactionsSelected({
+        ids,
+      }),
+    ),
+
+  /**
+   * Resets the excluded selected transactions
+   */
+  resetExcludedTransactionsSelected: () =>
+    dispatch(resetExcludedTransactionsSelected()),
 });
 
 export const withBankingActions = connect<

@@ -33,6 +33,7 @@ function AccountTransactionsDataTable({
 
   // #withBankingActions
   setUncategorizedTransactionIdForMatching,
+  setUncategorizedTransactionsSelected,
 }) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
@@ -73,12 +74,19 @@ function AccountTransactionsDataTable({
       });
   };
 
+  // Handle selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const _selectedIds = selected?.map((row) => row.original.id);
+    setUncategorizedTransactionsSelected(_selectedIds);
+  };
+
   return (
     <CashflowTransactionsTable
       noInitialFetch={true}
       columns={columns}
       data={uncategorizedTransactions || []}
       sticky={true}
+      selectionColumn={true}
       loading={isUncategorizedTransactionsLoading}
       headerLoading={isUncategorizedTransactionsLoading}
       expandColumnSpace={1}
@@ -99,6 +107,7 @@ function AccountTransactionsDataTable({
         'There is no uncategorized transactions in the current account.'
       }
       className="table-constrant"
+      onSelectedRowsChange={handleSelectedRowsChange}
       payload={{
         onExclude: handleExcludeTransaction,
         onCategorize: handleCategorizeBtnClick,

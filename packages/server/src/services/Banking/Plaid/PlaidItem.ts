@@ -28,7 +28,7 @@ export class PlaidItemService {
     const { PlaidItem } = this.tenancy.models(tenantId);
     const { publicToken, institutionId } = itemDTO;
 
-    const plaidInstance = new PlaidClientWrapper();
+    const plaidInstance = PlaidClientWrapper.getClient();
 
     // Exchange the public token for a private access token and store with the item.
     const response = await plaidInstance.itemPublicTokenExchange({
