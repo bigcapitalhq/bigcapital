@@ -163,8 +163,6 @@ export class GetSubscriptionsTransformer extends Transformer {
    */
   public lemonUrls = (subscription) => {
     const lemonSusbcription = this.lemonSubscription(subscription);
-    console.log(lemonSusbcription);
-
     return lemonSusbcription?.data?.attributes?.urls;
   };
 }
