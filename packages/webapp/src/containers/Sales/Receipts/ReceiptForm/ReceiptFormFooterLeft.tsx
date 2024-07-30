@@ -7,19 +7,19 @@ import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 export function ReceiptFormFooterLeft() {
   return (
     <React.Fragment>
-      {/* --------- Terms and conditions --------- */}
-      <TermsConditsFormGroup
-        label={<T id={'receipt_form.label.terms_conditions'} />}
-        name={'terms_conditions'}
+      {/* --------- Statement --------- */}
+      <StatementFormGroup
+        label={<T id={'receipt_form.label.statement'} />}
+        name={'statement'}
       >
         <FEditableText
-          name={'terms_conditions'}
+          name={'statement'}
           placeholder={intl.get(
-            'receipt_form.terms_and_conditions.placeholder',
+            'receipt_form.statement.placeholder',
           )}
           multiline={true}
         />
-      </TermsConditsFormGroup>
+      </StatementFormGroup>
 
       {/* --------- Receipt message --------- */}
       <ReceiptMsgFormGroup
@@ -51,7 +51,7 @@ const ReceiptMsgFormGroup = styled(FFormGroup)`
   }
 `;
 
-const TermsConditsFormGroup = styled(FFormGroup)`
+const StatementFormGroup = styled(FFormGroup)`
   &.bp4-form-group {
     .bp4-label {
       font-size: 12px;

@@ -19,15 +19,15 @@ export function PreferencesReceiptsForm({ isSubmitting }) {
 
   return (
     <Form>
-      {/* ---------- Terms & Conditions ----------  */}
+      {/* ---------- Statement ----------  */}
       <FFormGroup
-        name={'termsConditions'}
-        label={<T id={'pref.receipts.termsConditions.field'} />}
+        name={'statement'}
+        label={<T id={'pref.receipts.statement.field'} />}
         fastField={true}
       >
         <FTextArea
           medium={'true'}
-          name={'termsConditions'}
+          name={'statement'}
           fastField={true}
           fill={true}
         />

@@ -83,7 +83,7 @@ function ReceiptForm({
           entries: orderingLinesIndexes(defaultReceipt.entries),
           currency_code: base_currency,
           receipt_message: receiptMessage,
-          terms_conditions: receiptTermsConditions,
+          statement: receiptTermsConditions,
         }),
   };
   // Handle the form submit.
