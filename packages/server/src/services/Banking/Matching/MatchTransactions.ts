@@ -16,6 +16,7 @@ import { MatchTransactionsTypes } from './MatchTransactionsTypes';
 import { ServiceError } from '@/exceptions';
 import {
   sumMatchTranasctions,
+  sumUncategorizedTransactions,
   validateUncategorizedTransactionsExcluded,
   validateUncategorizedTransactionsNotMatched,
 } from './_utils';
@@ -95,11 +96,14 @@ export class MatchBankTransactions {
     const totalMatchedTranasctions = sumMatchTranasctions(
       validatationResult.results
     );
+    const totalUncategorizedTransactions = sumUncategorizedTransactions(
+      uncategorizedTransactions
+    );
     // Validates the total given matching transcations whether is not equal
     // uncategorized transaction amount.
-    // if (totalMatchedTranasctions !== uncategorizedTransaction.amount) {
-    //   throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
-    // }
+    if (totalUncategorizedTransactions === totalMatchedTranasctions) {
+      throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
+    }
   }
 
   /**
