@@ -168,7 +168,9 @@ export function useBankRule(
   );
 }
 
-type GetBankTransactionsMatchesValue = number;
+interface GetBankTransactionsMatchesValue {
+  uncategorizeTransactionsIds: Array<number>;
+}
 interface GetBankTransactionsMatchesResponse {
   perfectMatches: Array<any>;
   possibleMatches: Array<any>;
@@ -180,16 +182,18 @@ interface GetBankTransactionsMatchesResponse {
  * @returns {UseQueryResult<GetBankTransactionsMatchesResponse, Error>}
  */
 export function useGetBankTransactionsMatches(
-  uncategorizedTransactionId: number,
+  uncategorizeTransactionsIds: Array<number>,
   options?: UseQueryOptions<GetBankTransactionsMatchesResponse, Error>,
 ): UseQueryResult<GetBankTransactionsMatchesResponse, Error> {
   const apiRequest = useApiRequest();
 
   return useQuery<GetBankTransactionsMatchesResponse, Error>(
-    [QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizedTransactionId],
+    [QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizeTransactionsIds],
     () =>
       apiRequest
-        .get(`/cashflow/transactions/${uncategorizedTransactionId}/matches`)
+        .get(`/cashflow/transactions/matches`, {
+          params: { uncategorizeTransactionsIds },
+        })
         .then((res) => transformToCamelCase(res.data)),
     options,
   );

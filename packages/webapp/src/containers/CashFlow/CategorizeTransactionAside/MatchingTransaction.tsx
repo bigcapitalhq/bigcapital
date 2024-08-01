@@ -1,7 +1,8 @@
 // @ts-nocheck
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+import { uniq } from 'lodash';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
 import { FastField, FastFieldProps, Formik, useFormikContext } from 'formik';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
@@ -25,9 +26,9 @@ import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../withBankingActions';
-import styles from './CategorizeTransactionAside.module.scss';
-import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
 import { withBanking } from '../withBanking';
+import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
+import styles from './CategorizeTransactionAside.module.scss';
 
 const initialValues = {
   matched: {},
@@ -40,9 +41,21 @@ const initialValues = {
 function MatchingBankTransactionRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
+
+  // #withBanking
+  transactionsToCategorizeIdsSelected,
 }) {
   const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
+
+  const selectedTransactionsIds = useMemo(
+    () =>
+      uniq([
+        ...transactionsToCategorizeIdsSelected,
+        uncategorizedTransactionId,
+      ]),
+    [uncategorizedTransactionId, transactionsToCategorizeIdsSelected],
+  );
 
   // Handles the form submitting.
   const handleSubmit = (
@@ -91,7 +104,7 @@ function MatchingBankTransactionRoot({
 
   return (
     <MatchingTransactionBoot
-      uncategorizedTransactionId={uncategorizedTransactionId}
+      uncategorizedTransactionsIds={selectedTransactionsIds}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <MatchingBankTransactionFormContent />
@@ -100,9 +113,12 @@ function MatchingBankTransactionRoot({
   );
 }
 
-export const MatchingBankTransaction = R.compose(withBankingActions)(
-  MatchingBankTransactionRoot,
-);
+export const MatchingBankTransaction = R.compose(
+  withBankingActions,
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    transactionsToCategorizeIdsSelected,
+  })),
+)(MatchingBankTransactionRoot);
 
 /**
  * Matching bank transaction form content.

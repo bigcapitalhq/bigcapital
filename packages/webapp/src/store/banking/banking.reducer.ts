@@ -195,3 +195,6 @@ export const getOpenMatchingTransactionAside = (state: any) =>
 
 export const isMultipleCategorization = (state: any) =>
   state.plaid.enableMultipleCategorization;
+
+export const getTransactionsToCategorizeIdsSelected = (state: any) =>
+  state.plaid.transactionsToCategorizeSelected;

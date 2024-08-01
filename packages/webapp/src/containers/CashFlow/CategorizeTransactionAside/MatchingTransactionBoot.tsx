@@ -18,12 +18,12 @@ const RuleFormBootContext = createContext<MatchingTransactionBootValues>(
 );
 
 interface RuleFormBootProps {
-  uncategorizedTransactionId: number;
+  uncategorizedTransactionsIds: Array<number>;
   children: React.ReactNode;
 }
 
 function MatchingTransactionBoot({
-  uncategorizedTransactionId,
+  uncategorizedTransactionsIds,
   ...props
 }: RuleFormBootProps) {
   const {
@@ -31,7 +31,7 @@ function MatchingTransactionBoot({
     isLoading: isMatchingTransactionsLoading,
     isFetching: isMatchingTransactionsFetching,
     isSuccess: isMatchingTransactionsSuccess,
-  } = useGetBankTransactionsMatches(uncategorizedTransactionId);
+  } = useGetBankTransactionsMatches(uncategorizedTransactionsIds);
 
   const possibleMatches = defaultTo(matchingTransactions?.possibleMatches, []);
   const perfectMatchesCount = matchingTransactions?.perfectMatches?.length || 0;
