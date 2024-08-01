@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useContext, createContext } from 'react';
+import React, { useContext, createContext, useMemo } from 'react';
 import { pick } from 'lodash';
 import { DialogContent } from '@/components';
 import { Features } from '@/constants';
@@ -47,15 +47,16 @@ function QuickPaymentReceiveFormProvider({
     isSuccess: isBranchesSuccess,
   } = useBranches(query, { enabled: isBranchFeatureCan });
 
+  const invoicePayment = useMemo(
+    () => pick(invoice, ['id', 'due_amount', 'customer_id', 'currency_code']),
+    [invoice],
+  );
+
   // State provider.
   const provider = {
     accounts,
     branches,
-    invoice: {
-      ...pick(invoice, ['id', 'due_amount', 'customer', 'currency_code']),
-      customer_id: invoice?.customer?.display_name,
-      payment_amount: invoice.due_amount,
-    },
+    invoice: invoicePayment,
     isAccountsLoading,
     isSettingsLoading,
     isBranchesSuccess,

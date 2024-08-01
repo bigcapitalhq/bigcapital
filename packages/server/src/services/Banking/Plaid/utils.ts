@@ -1,18 +1,28 @@
 import * as R from 'ramda';
 import {
+  Item as PlaidItem,
+  Institution as PlaidInstitution,
+  AccountBase as PlaidAccount,
+} from 'plaid';
+import {
   CreateUncategorizedTransactionDTO,
   IAccountCreateDTO,
-  PlaidAccount,
   PlaidTransaction,
 } from '@/interfaces';
 
 /**
  * Transformes the Plaid account to create cashflow account DTO.
- * @param {PlaidAccount} plaidAccount
+ * @param {PlaidItem} item -
+ * @param {PlaidInstitution} institution -
+ * @param {PlaidAccount} plaidAccount -
  * @returns {IAccountCreateDTO}
  */
 export const transformPlaidAccountToCreateAccount = R.curry(
-  (institution: any, plaidAccount: PlaidAccount): IAccountCreateDTO => {
+  (
+    item: PlaidItem,
+    institution: PlaidInstitution,
+    plaidAccount: PlaidAccount
+  ): IAccountCreateDTO => {
     return {
       name: `${institution.name} - ${plaidAccount.name}`,
       code: '',
@@ -20,9 +30,10 @@ export const transformPlaidAccountToCreateAccount = R.curry(
       currencyCode: plaidAccount.balances.iso_currency_code,
       accountType: 'cash',
       active: true,
-      plaidAccountId: plaidAccount.account_id,
       bankBalance: plaidAccount.balances.current,
       accountMask: plaidAccount.mask,
+      plaidAccountId: plaidAccount.account_id,
+      plaidItemId: item.item_id,
     };
   }
 );

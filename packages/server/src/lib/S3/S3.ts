@@ -8,4 +8,5 @@ export const s3 = new S3Client({
     secretAccessKey: config.s3.secretAccessKey,
   },
   endpoint: config.s3.endpoint,
+  forcePathStyle: config.s3.forcePathStyle,
 });

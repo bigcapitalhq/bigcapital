@@ -1,14 +1,12 @@
 // @ts-nocheck
-import { Intent } from '@blueprintjs/core';
 import * as R from 'ramda';
-import { AppToaster } from '@/components';
-import { useGetLemonSqueezyCheckout } from '@/hooks/query';
 import { PricingPlan } from '@/components/PricingPlan/PricingPlan';
 import { SubscriptionPlansPeriod } from '@/store/plans/plans.reducer';
 import {
   WithPlansProps,
   withPlans,
 } from '@/containers/Subscriptions/withPlans';
+import { ButtonProps } from '@blueprintjs/core';
 
 interface SubscriptionPricingFeature {
   text: string;
@@ -27,8 +25,8 @@ interface SubscriptionPricingProps {
   monthlyPriceLabel: string;
   annuallyPrice: string;
   annuallyPriceLabel: string;
-  monthlyVariantId?: string;
-  annuallyVariantId?: string;
+  onSubscribe?: (variantId: number) => void;
+  subscribeButtonProps?: Optional<ButtonProps>;
 }
 
 interface SubscriptionPricingCombinedProps
@@ -44,32 +42,14 @@ function SubscriptionPlanRoot({
   monthlyPriceLabel,
   annuallyPrice,
   annuallyPriceLabel,
-  monthlyVariantId,
-  annuallyVariantId,
+  onSubscribe,
+  subscribeButtonProps,
 
   // #withPlans
   plansPeriod,
 }: SubscriptionPricingCombinedProps) {
-  const { mutateAsync: getLemonCheckout, isLoading } =
-    useGetLemonSqueezyCheckout();
-
   const handleClick = () => {
-    const variantId =
-      SubscriptionPlansPeriod.Monthly === plansPeriod
-        ? monthlyVariantId
-        : annuallyVariantId;
-
-    getLemonCheckout({ variantId })
-      .then((res) => {
-        const checkoutUrl = res.data.data.attributes.url;
-        window.LemonSqueezy.Url.Open(checkoutUrl);
-      })
-      .catch(() => {
-        AppToaster.show({
-          message: 'Something went wrong!',
-          intent: Intent.DANGER,
-        });
-      });
+    onSubscribe && onSubscribe();
   };
 
   return (
@@ -85,7 +65,7 @@ function SubscriptionPlanRoot({
           subPrice={annuallyPriceLabel}
         />
       )}
-      <PricingPlan.BuyButton loading={isLoading} onClick={handleClick}>
+      <PricingPlan.BuyButton onClick={handleClick} {...subscribeButtonProps}>
         Subscribe
       </PricingPlan.BuyButton>
 

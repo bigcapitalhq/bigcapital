@@ -22,6 +22,7 @@ import RefundVendorCreditDetailDrawer from '@/containers/Drawers/RefundVendorCre
 import WarehouseTransferDetailDrawer from '@/containers/Drawers/WarehouseTransferDetailDrawer';
 import TaxRateDetailsDrawer from '@/containers/TaxRates/drawers/TaxRateDetailsDrawer/TaxRateDetailsDrawer';
 import CategorizeTransactionDrawer from '@/containers/CashFlow/CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionDrawer';
+import ChangeSubscriptionPlanDrawer from '@/containers/Subscriptions/drawers/ChangeSubscriptionPlanDrawer/ChangeSubscriptionPlanDrawer';
 
 import { DRAWERS } from '@/constants/drawers';
 
@@ -63,6 +64,7 @@ export default function DrawersContainer() {
       />
       <TaxRateDetailsDrawer name={DRAWERS.TAX_RATE_DETAILS} />
       <CategorizeTransactionDrawer name={DRAWERS.CATEGORIZE_TRANSACTION} />
+      <ChangeSubscriptionPlanDrawer name={DRAWERS.CHANGE_SUBSCARIPTION_PLAN} />
     </div>
   );
 }

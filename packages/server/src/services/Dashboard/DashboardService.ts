@@ -1,7 +1,8 @@
+import { Inject, Service } from 'typedi';
 import { IFeatureAllItem, ISystemUser } from '@/interfaces';
 import { FeaturesManager } from '@/services/Features/FeaturesManager';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
-import { Inject, Service } from 'typedi';
+import config from '@/config';
 
 interface IRoleAbility {
   subject: string;
@@ -11,15 +12,16 @@ interface IRoleAbility {
 interface IDashboardBootMeta {
   abilities: IRoleAbility[];
   features: IFeatureAllItem[];
+  isBigcapitalCloud: boolean;
 }
 
 @Service()
 export default class DashboardService {
   @Inject()
-  tenancy: HasTenancyService;
+  private tenancy: HasTenancyService;
 
   @Inject()
-  featuresManager: FeaturesManager;
+  private featuresManager: FeaturesManager;
 
   /**
    * Retrieve dashboard meta.
@@ -39,6 +41,7 @@ export default class DashboardService {
     return {
       abilities,
       features,
+      isBigcapitalCloud: config.hostedOnBigcapitalCloud
     };
   };
 

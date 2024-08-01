@@ -4,6 +4,15 @@ import moment from 'moment';
 import SubscriptionPeriod from '@/services/Subscription/SubscriptionPeriod';
 
 export default class PlanSubscription extends mixin(SystemModel) {
+  public lemonSubscriptionId: number;
+
+  public endsAt: Date;
+  public startsAt: Date;
+
+  public canceledAt: Date;
+
+  public trialEndsAt: Date;
+
   /**
    * Table name.
    */
@@ -22,7 +31,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
    * Defined virtual attributes.
    */
   static get virtualAttributes() {
-    return ['active', 'inactive', 'ended', 'onTrial'];
+    return ['active', 'inactive', 'ended', 'canceled', 'onTrial', 'status'];
   }
 
   /**
@@ -38,7 +47,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
         builder.where('trial_ends_at', '>', now);
       },
 
-      inactiveSubscriptions() {
+      inactiveSubscriptions(builder) {
         builder.modify('endedTrial');
         builder.modify('endedPeriod');
       },
@@ -98,35 +107,65 @@ export default class PlanSubscription extends mixin(SystemModel) {
   }
 
   /**
-   * Check if subscription is active.
+   * Check if the subscription is active.
    * @return {Boolean}
    */
-  active() {
-    return !this.ended() || this.onTrial();
+  public active() {
+    return this.onTrial() || !this.ended();
   }
 
   /**
-   * Check if subscription is inactive.
+   * Check if the subscription is inactive.
    * @return {Boolean}
    */
-  inactive() {
+  public inactive() {
     return !this.active();
   }
 
   /**
-   * Check if subscription period has ended.
+   * Check if paid subscription period has ended.
    * @return {Boolean}
    */
-  ended() {
+  public ended() {
     return this.endsAt ? moment().isAfter(this.endsAt) : false;
+  }
+
+  /**
+   * Check if the paid subscription has started.
+   * @returns {Boolean}
+   */
+  public started() {
+    return this.startsAt ? moment().isAfter(this.startsAt) : false;
   }
 
   /**
    * Check if subscription is currently on trial.
    * @return {Boolean}
    */
-  onTrial() {
-    return this.trailEndsAt ? moment().isAfter(this.trailEndsAt) : false;
+  public onTrial() {
+    return this.trialEndsAt ? moment().isBefore(this.trialEndsAt) : false;
+  }
+
+  /**
+   * Check if the subscription is canceled.
+   * @returns {boolean}
+   */
+  public canceled() {
+    return !!this.canceledAt;
+  }
+
+  /**
+   * Retrieves the subscription status.
+   * @returns {string}
+   */
+  public status() {
+    return this.canceled()
+      ? 'canceled'
+      : this.onTrial()
+      ? 'on_trial'
+      : this.active()
+      ? 'active'
+      : 'inactive';
   }
 
   /**
@@ -141,7 +180,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
     const period = new SubscriptionPeriod(
       invoiceInterval,
       invoicePeriod,
-      start,
+      start
     );
 
     const startsAt = period.getStartDate();
@@ -157,7 +196,7 @@ export default class PlanSubscription extends mixin(SystemModel) {
   renew(invoiceInterval, invoicePeriod) {
     const { startsAt, endsAt } = PlanSubscription.setNewPeriod(
       invoiceInterval,
-      invoicePeriod,
+      invoicePeriod
     );
     return this.$query().update({ startsAt, endsAt });
   }

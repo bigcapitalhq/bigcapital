@@ -41,9 +41,12 @@ export default {
   },
 
   /**
-   * User subscription events.
+   * Organization subscription.
    */
   subscription: {
+    onSubscriptionCanceled: 'onSubscriptionCanceled',
+    onSubscriptionResumed: 'onSubscriptionResumed',
+    onSubscriptionPlanChanged: 'onSubscriptionPlanChanged',
     onSubscribed: 'onOrganizationSubscribed',
   },
 
@@ -656,6 +659,11 @@ export default {
 
     onUnexcluding: 'onBankTransactionUnexcluding',
     onUnexcluded: 'onBankTransactionUnexcluded',
+  },
+
+  bankAccount: {
+    onDisconnecting: 'onBankAccountDisconnecting',
+    onDisconnected: 'onBankAccountDisconnected',
   },
 
   // Import files.

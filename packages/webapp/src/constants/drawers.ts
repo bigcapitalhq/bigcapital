@@ -24,4 +24,5 @@ export enum DRAWERS {
   WAREHOUSE_TRANSFER_DETAILS = 'warehouse-transfer-detail-drawer',
   TAX_RATE_DETAILS = 'tax-rate-detail-drawer',
   CATEGORIZE_TRANSACTION = 'categorize-transaction',
+  CHANGE_SUBSCARIPTION_PLAN = 'change-subscription-plan'
 }

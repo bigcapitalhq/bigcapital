@@ -61,6 +61,76 @@ export function useCreateBankRule(
   );
 }
 
+interface DisconnectBankAccountRes {}
+interface DisconnectBankAccountValues {
+  bankAccountId: number;
+}
+
+/**
+ * Disconnects the given bank account.
+ * @param {UseMutationOptions<DisconnectBankAccountRes, Error, DisconnectBankAccountValues>} options
+ * @returns {UseMutationResult<DisconnectBankAccountRes, Error, DisconnectBankAccountValues>}
+ */
+export function useDisconnectBankAccount(
+  options?: UseMutationOptions<
+    DisconnectBankAccountRes,
+    Error,
+    DisconnectBankAccountValues
+  >,
+): UseMutationResult<
+  DisconnectBankAccountRes,
+  Error,
+  DisconnectBankAccountValues
+> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<
+    DisconnectBankAccountRes,
+    Error,
+    DisconnectBankAccountValues
+  >(
+    ({ bankAccountId }) =>
+      apiRequest.post(`/banking/bank_accounts/${bankAccountId}/disconnect`),
+    {
+      ...options,
+      onSuccess: (res, values) => {
+        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
+      },
+    },
+  );
+}
+
+interface UpdateBankAccountRes {}
+interface UpdateBankAccountValues {
+  bankAccountId: number;
+}
+
+/**
+ * Update the bank transactions of the bank account.
+ * @param {UseMutationOptions<UpdateBankAccountRes, Error, UpdateBankAccountValues>}
+ * @returns {UseMutationResult<UpdateBankAccountRes, Error, UpdateBankAccountValues>}
+ */
+export function useUpdateBankAccount(
+  options?: UseMutationOptions<
+    UpdateBankAccountRes,
+    Error,
+    UpdateBankAccountValues
+  >,
+): UseMutationResult<UpdateBankAccountRes, Error, UpdateBankAccountValues> {
+  const queryClient = useQueryClient();
+  const apiRequest = useApiRequest();
+
+  return useMutation<DisconnectBankAccountRes, Error, UpdateBankAccountValues>(
+    ({ bankAccountId }) =>
+      apiRequest.post(`/banking/bank_accounts/${bankAccountId}/update`),
+    {
+      ...options,
+      onSuccess: () => {},
+    },
+  );
+}
+
 interface EditBankRuleValues {
   id: number;
   value: any;

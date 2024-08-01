@@ -3,15 +3,14 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import { Formik } from 'formik';
 import { Intent } from '@blueprintjs/core';
-import { pick } from 'lodash';
-
+import { omit } from 'lodash';
 import { AppToaster } from '@/components';
 import { CreateQuickPaymentMadeFormSchema } from './QuickPaymentMade.schema';
 import { useQuickPaymentMadeContext } from './QuickPaymentMadeFormProvider';
 import QuickPaymentMadeFormContent from './QuickPaymentMadeFormContent';
 
 import withDialogActions from '@/containers/Dialog/withDialogActions';
-import { defaultPaymentMade, transformErrors } from './utils';
+import { defaultPaymentMade, transformBillToForm, transformErrors } from './utils';
 import { compose } from '@/utils';
 
 /**
@@ -21,31 +20,24 @@ function QuickPaymentMadeForm({
   // #withDialogActions
   closeDialog,
 }) {
-  
-  const {
-    bill,
-    dialogName,
-    createPaymentMadeMutate,
-  } = useQuickPaymentMadeContext();
+  const { bill, dialogName, createPaymentMadeMutate } =
+    useQuickPaymentMadeContext();
 
-  // Initial form values
+  // Initial form values.
   const initialValues = {
     ...defaultPaymentMade,
-    ...bill,
+    ...transformBillToForm(bill),
   };
-
   // Handles the form submit.
   const handleFormSubmit = (values, { setSubmitting, setFieldError }) => {
-    const entries = [values]
-      .filter((entry) => entry.id && entry.payment_amount)
-      .map((entry) => ({
-        bill_id: entry.id,
-        ...pick(entry, ['payment_amount']),
-      }));
-
+    const entries = [
+      {
+        payment_amount: values.amount,
+        bill_id: values.bill_id,
+      },
+    ];
     const form = {
-      ...values,
-      vendor_id: values?.vendor?.id,
+      ...omit(values, ['bill_id']),
       entries,
     };
 
