@@ -6,7 +6,7 @@ export function SubscriptionPlans() {
   const subscriptionPlans = useSubscriptionPlans();
 
   return (
-    <Group spacing={14} noWrap align="stretch">
+    <Group spacing={10} noWrap align="stretch">
       {subscriptionPlans.map((plan, index) => (
         <SubscriptionPlan
           key={index}

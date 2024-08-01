@@ -1,36 +1,25 @@
 @import "../../_base.scss";
 
 .setup-page {
+  display: grid;
+  grid-template-columns: 40% 60%;
   max-width: 1600px;
+  min-height: 100vh;
+
+  @media only screen and (max-width: 1500px) {
+    grid-template-columns: 35% 65%;
+  }
+  @media only screen and (max-width: 1200px) {
+    grid-template-columns: 26% 74%;
+  }
 
   &__right-section {
-    display: flex;
-    flex-direction: row;
     width: 100%;
-
-    &:before {
-      content: '';
-      display: block;
-      width: 100%;
-      height: 1px;
-      max-width: 600px;
-      min-width: 600px;
-
-      @media only screen and (max-width: 1500px) {
-        min-width: 500px;
-        max-width: 500px;
-      }
-
-      @media only screen and (max-width: 1024px) {
-        min-width: 400px;
-        max-width: 400px;
-      }
-    }
+    overflow: auto;
 
     h1 {
       font-size: 22px;
     }
-
     h1,
     h3 {
       font-weight: 500;
@@ -44,22 +33,9 @@
   }
 
   &__left-section {
-    position: fixed;
     background-color: #2f3d6f;
-    overflow: auto;
     z-index: 1;
-    height: 100%;
     width: 100%;
-    left: 0;
-    top: 0;
-    width: 600px;
-
-    @media only screen and (max-width: 1500px) {
-      width: 500px;
-    }
-    @media only screen and (max-width: 1024px) {
-      width: 400px;
-    }
 
     .content {
       display: flex;
@@ -76,6 +52,11 @@
         padding-left: 10px;
       }
 
+      &__header{
+        position: sticky;
+        top: 0;
+      }
+
       &__title {
         font-size: 50px;
         font-weight: 100;
@@ -84,8 +65,8 @@
         margin-top: 14px;
         color: rgba(255, 255, 255, 0.75);
 
-        @media only screen and (max-width: 1024px) {
-          font-size: 45px;
+        @media only screen and (max-width: 1200px) {
+          font-size: 36px;
         }
       }
 
@@ -111,16 +92,20 @@
 
       &__footer {
         margin-top: auto;
+        position: sticky;
+        bottom: 20px;
       }
 
       &__links {
         text-align: left;
         opacity: 0.65;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        flex-wrap: wrap;
 
         >div {
           font-size: 13px;
-          margin-right: 15px;
-          display: inline;
 
           a {
             color: #fff;
