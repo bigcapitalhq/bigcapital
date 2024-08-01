@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import * as R from 'ramda';
 import moment from 'moment';
+import { first, sumBy } from 'lodash';
 import { PromisePool } from '@supercharge/promise-pool';
 import { GetMatchedTransactionsFilter, MatchedTransactionsPOJO } from './types';
 import { GetMatchedTransactionsByExpenses } from './GetMatchedTransactionsByExpenses';
@@ -47,19 +48,20 @@ export class GetMatchedTransactions {
   /**
    * Retrieves the matched transactions.
    * @param {number} tenantId -
+   * @param {Array<number>} uncategorizedTransactionIds - Uncategorized transactions ids.
    * @param {GetMatchedTransactionsFilter} filter -
    * @returns {Promise<MatchedTransactionsPOJO>}
    */
   public async getMatchedTransactions(
     tenantId: number,
-    uncategorizedTransactionId: number,
+    uncategorizedTransactionIds: Array<number>,
     filter: GetMatchedTransactionsFilter
   ): Promise<MatchedTransactionsPOJO> {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
-    const uncategorizedTransaction =
+    const uncategorizedTransactions =
       await UncategorizedCashflowTransaction.query()
-        .findById(uncategorizedTransactionId)
+        .whereIn('id', uncategorizedTransactionIds)
         .throwIfNotFound();
 
     const filtered = filter.transactionType
@@ -71,9 +73,8 @@ export class GetMatchedTransactions {
       .process(async ({ type, service }) => {
         return service.getMatchedTransactions(tenantId, filter);
       });
-
     const { perfectMatches, possibleMatches } = this.groupMatchedResults(
-      uncategorizedTransaction,
+      uncategorizedTransactions,
       matchedTransactions
     );
     return {
@@ -90,20 +91,20 @@ export class GetMatchedTransactions {
    * @returns {MatchedTransactionsPOJO}
    */
   private groupMatchedResults(
-    uncategorizedTransaction,
+    uncategorizedTransactions: Array<any>,
     matchedTransactions
   ): MatchedTransactionsPOJO {
     const results = R.compose(R.flatten)(matchedTransactions?.results);
 
+    const firstUncategorized = first(uncategorizedTransactions);
+    const amount = sumBy(uncategorizedTransactions, 'amount');
+    const date = firstUncategorized.date;
+
     // Sort the results based on amount, date, and transaction type
-    const closestResullts = sortClosestMatchTransactions(
-      uncategorizedTransaction,
-      results
-    );
+    const closestResullts = sortClosestMatchTransactions(amount, date, results);
     const perfectMatches = R.filter(
       (match) =>
-        match.amount === uncategorizedTransaction.amount &&
-        moment(match.date).isSame(uncategorizedTransaction.date, 'day'),
+        match.amount === amount && moment(match.date).isSame(date, 'day'),
       closestResullts
     );
     const possibleMatches = R.difference(closestResullts, perfectMatches);
