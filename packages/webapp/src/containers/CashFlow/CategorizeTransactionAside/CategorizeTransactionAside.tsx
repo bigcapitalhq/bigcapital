@@ -19,13 +19,26 @@ function CategorizeTransactionAsideRoot({
 
   // #withBanking
   selectedUncategorizedTransactionId,
+  resetTransactionsToCategorizeSelected,
+  enableMultipleCategorization,
 }: CategorizeTransactionAsideProps) {
-  // 
+  //
   useEffect(
     () => () => {
+      // Close the reconcile matching form.
       closeReconcileMatchingTransaction();
+
+      // Reset the selected transactions to categorize.
+      resetTransactionsToCategorizeSelected();
+
+      // Disable multi matching.
+      enableMultipleCategorization(false);
     },
-    [closeReconcileMatchingTransaction],
+    [
+      closeReconcileMatchingTransaction,
+      resetTransactionsToCategorizeSelected,
+      enableMultipleCategorization,
+    ],
   );
 
   const handleClose = () => {

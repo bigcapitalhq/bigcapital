@@ -62,6 +62,7 @@ function AccountTransactionsActionsBar({
   // #withBanking
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
+  openMatchingTransactionAside,
 
   // #withBankingActions
   enableMultipleCategorization,
@@ -284,19 +285,21 @@ function AccountTransactionsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
-        <Tooltip
-          content={
-            'Enables to categorize or matching multiple bank transactions into one transaction.'
-          }
-          position={Position.BOTTOM}
-          minimal
-        >
-          <Switch
-            label={'Multi Select'}
-            inline
-            onChange={handleMultipleCategorizingSwitch}
-          />
-        </Tooltip>
+        {openMatchingTransactionAside && (
+          <Tooltip
+            content={
+              'Enables to categorize or matching multiple bank transactions into one transaction.'
+            }
+            position={Position.BOTTOM}
+            minimal
+          >
+            <Switch
+              label={'Multi Select'}
+              inline
+              onChange={handleMultipleCategorizingSwitch}
+            />
+          </Tooltip>
+        )}
         <NavbarDivider />
         <Popover
           minimal={true}
@@ -342,9 +345,11 @@ export default compose(
     ({
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
+      openMatchingTransactionAside,
     }) => ({
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
+      openMatchingTransactionAside,
     }),
   ),
   withBankingActions,
