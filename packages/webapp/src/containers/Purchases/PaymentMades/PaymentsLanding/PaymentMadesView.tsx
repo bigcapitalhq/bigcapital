@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import PaymentMadeViewTabs from './PaymentMadeViewTabs';
 
@@ -18,7 +19,7 @@ function PaymentMadesViewPage({
 }) {
   return (
     <Switch>
-      <Route
+      <CompatRoute
         exact={true}
         path={['/payment-mades/:custom_view_id/custom_view', '/payment-mades']}
       >
@@ -28,7 +29,7 @@ function PaymentMadesViewPage({
               onEditPaymentMade={handleEditPaymentMade}
               onSelectedRowsChange={handleSelectedRowsChange}
             /> */}
-      </Route>
+      </CompatRoute>
     </Switch>
   );
 }

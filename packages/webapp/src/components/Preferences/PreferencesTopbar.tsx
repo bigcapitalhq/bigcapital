@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 import classNames from 'classnames';
 import { CLASSES } from '@/constants/classes';
 
@@ -32,18 +33,18 @@ function PreferencesTopbar({ preferencesPageTitle }) {
       <div class="preferences-topbar__actions">
         <Route pathname="/preferences">
           <Switch>
-            <Route exact path={'/preferences/users'} component={UsersActions} />
-            <Route
+            <CompatRoute exact path={'/preferences/users'} component={UsersActions} />
+            <CompatRoute
               exact
               path={'/preferences/currencies'}
               component={CurrenciesActions}
             />
-            <Route
+            <CompatRoute
               exact
               path={'/preferences/warehouses'}
               component={WarehousesActions}
             />
-            <Route
+            <CompatRoute
               exact
               path={'/preferences/branches'}
               component={BranchesActions}

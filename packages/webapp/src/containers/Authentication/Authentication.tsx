@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Route, Switch, useLocation } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 import BodyClassName from 'react-body-classname';
 import styled from 'styled-components';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -41,7 +42,7 @@ function AuthenticationRoutes() {
       >
         <Switch>
           {authenticationRoutes.map((route, index) => (
-            <Route
+            <CompatRoute
               key={index}
               path={route.path}
               exact={route.exact}

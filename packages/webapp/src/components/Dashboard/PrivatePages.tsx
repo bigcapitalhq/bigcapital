@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React from 'react';
-import { Switch, Route } from 'react-router';
+import { Switch,  } from 'react-router';
+import { CompatRoute } from 'react-router-dom-v5-compat';
 
 import Dashboard from '@/components/Dashboard/Dashboard';
 import SetupWizardPage from '@/containers/Setup/WizardSetupPage';
@@ -18,17 +19,17 @@ export default function DashboardPrivatePages() {
   return (
     <PrivatePagesProvider>
       <Switch>
-        <Route path={'/setup'}>
+        <CompatRoute path={'/setup'}>
           <EnsureOrganizationIsNotReady>
             <SetupWizardPage />
           </EnsureOrganizationIsNotReady>
-        </Route>
+        </CompatRoute>
 
-        <Route path="/">
+        <CompatRoute path="/">
           <EnsureOrganizationIsReady>
             <Dashboard />
           </EnsureOrganizationIsReady>
-        </Route>
+        </CompatRoute>
       </Switch>
     </PrivatePagesProvider>
   );
