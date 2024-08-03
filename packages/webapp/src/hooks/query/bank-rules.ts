@@ -22,6 +22,7 @@ const QUERY_KEY = {
   RECOGNIZED_BANK_TRANSACTIONS_INFINITY:
     'RECOGNIZED_BANK_TRANSACTIONS_INFINITY',
   BANK_ACCOUNT_SUMMARY_META: 'BANK_ACCOUNT_SUMMARY_META',
+  AUTOFILL_CATEGORIZE_BANK_TRANSACTION: 'AUTOFILL_CATEGORIZE_BANK_TRANSACTION',
 };
 
 const commonInvalidateQueries = (query: QueryClient) => {
@@ -244,6 +245,7 @@ interface GetBankTransactionsMatchesValue {
 interface GetBankTransactionsMatchesResponse {
   perfectMatches: Array<any>;
   possibleMatches: Array<any>;
+  totalPending: number;
 }
 
 /**
@@ -441,8 +443,8 @@ export function useUnexcludeUncategorizedTransactions(
 }
 
 interface MatchUncategorizedTransactionValues {
-  id: number;
-  value: any;
+  uncategorizedTransactions: Array<number>;
+  matchedTransactions: Array<{ reference_type: string; reference_id: number }>;
 }
 interface MatchUncategorizedTransactionRes {}
 
@@ -469,7 +471,7 @@ export function useMatchUncategorizedTransaction(
     MatchUncategorizedTransactionRes,
     Error,
     MatchUncategorizedTransactionValues
-  >(({ id, value }) => apiRequest.post(`/banking/matches/${id}`, value), {
+  >((value) => apiRequest.post('/banking/matches/match', value), {
     onSuccess: (res, id) => {
       queryClient.invalidateQueries(
         t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
@@ -580,6 +582,42 @@ export function useGetBankAccountSummaryMeta(
     () =>
       apiRequest
         .get(`/banking/bank_accounts/${bankAccountId}/meta`)
+        .then((res) => transformToCamelCase(res.data?.data)),
+    { ...options },
+  );
+}
+
+export interface GetAutofillCategorizeTransaction {
+  accountId: number | null;
+  amount: number;
+  category: string | null;
+  date: Date;
+  formattedAmount: string;
+  formattedDate: string;
+  isRecognized: boolean;
+  recognizedByRuleId: number | null;
+  recognizedByRuleName: string | null;
+  referenceNo: null | string;
+  isDepositTransaction: boolean;
+  isWithdrawalTransaction: boolean;
+}
+
+export function useGetAutofillCategorizeTransaction(
+  uncategorizedTransactionIds: number[],
+  options: any,
+) {
+  const apiRequest = useApiRequest();
+
+  return useQuery<GetAutofillCategorizeTransaction, Error>(
+    [
+      QUERY_KEY.AUTOFILL_CATEGORIZE_BANK_TRANSACTION,
+      uncategorizedTransactionIds,
+    ],
+    () =>
+      apiRequest
+        .get(`/banking/categorize/autofill`, {
+          params: { uncategorizedTransactionIds },
+        })
         .then((res) => transformToCamelCase(res.data?.data)),
     { ...options },
   );

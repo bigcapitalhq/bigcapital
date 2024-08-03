@@ -58,6 +58,7 @@ export interface MatchedTransactionPOJO {
 export type MatchedTransactionsPOJO = {
   perfectMatches: Array<MatchedTransactionPOJO>;
   possibleMatches: Array<MatchedTransactionPOJO>;
+  totalPending: number;
 };
 
 export const ERRORS = {

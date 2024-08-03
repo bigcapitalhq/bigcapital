@@ -58,14 +58,14 @@ export class CategorizeCashflowTransaction {
 
     // Validates the transaction shouldn't be categorized before.
     this.commandValidators.validateTransactionsShouldNotCategorized(
-      oldIncategorizedTransactions
+      oldUncategorizedTransactions
     );
     // Validate the uncateogirzed transaction if it's deposit the transaction direction
     // should `IN` and the same thing if it's withdrawal the direction should be OUT.
-    // this.commandValidators.validateUncategorizeTransactionType(
-    //   uncategorizedTransactions,
-    //   categorizeDTO.transactionType
-    // );
+    this.commandValidators.validateUncategorizeTransactionType(
+      oldUncategorizedTransactions,
+      categorizeDTO.transactionType
+    );
     // Edits the cashflow transaction under UOW env.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTransactionCategorizing` event.
@@ -88,6 +88,7 @@ export class CategorizeCashflowTransaction {
           tenantId,
           cashflowTransactionDTO
         );
+
       // Updates the uncategorized transaction as categorized.
       await UncategorizedCashflowTransaction.query(trx)
         .whereIn('id', uncategorizedTransactionIds)
@@ -102,7 +103,6 @@ export class CategorizeCashflowTransaction {
           'id',
           uncategorizedTransactionIds
         );
-
       // Triggers `onCashflowTransactionCategorized` event.
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionCategorized,

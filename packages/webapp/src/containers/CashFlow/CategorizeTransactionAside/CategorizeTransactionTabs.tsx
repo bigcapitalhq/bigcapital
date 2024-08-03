@@ -2,14 +2,10 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { MatchingBankTransaction } from './MatchingTransaction';
 import { CategorizeTransactionContent } from '../CategorizeTransaction/drawers/CategorizeTransactionDrawer/CategorizeTransactionContent';
-import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import styles from './CategorizeTransactionTabs.module.scss';
 
 export function CategorizeTransactionTabs() {
-  const { uncategorizedTransaction } = useCategorizeTransactionTabsBoot();
-  const defaultSelectedTabId = uncategorizedTransaction?.is_recognized
-    ? 'categorize'
-    : 'matching';
+  const defaultSelectedTabId = 'categorize';
 
   return (
     <Tabs

@@ -1,8 +1,8 @@
 import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTransaction';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformToMapBy } from '@/utils';
-import { Inject, Service } from 'typedi';
 import { PromisePool } from '@supercharge/promise-pool';
 import { BankRule } from '@/models/BankRule';
 import { bankRulesMatchTransaction } from './_utils';

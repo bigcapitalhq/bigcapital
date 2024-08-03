@@ -10,6 +10,7 @@ interface MatchingTransactionBootValues {
   possibleMatches: Array<any>;
   perfectMatchesCount: number;
   perfectMatches: Array<any>;
+  totalPending: number;
   matches: Array<any>;
 }
 
@@ -36,6 +37,7 @@ function MatchingTransactionBoot({
   const possibleMatches = defaultTo(matchingTransactions?.possibleMatches, []);
   const perfectMatchesCount = matchingTransactions?.perfectMatches?.length || 0;
   const perfectMatches = defaultTo(matchingTransactions?.perfectMatches, []);
+  const totalPending = defaultTo(matchingTransactions?.totalPending, 0);
 
   const matches = R.concat(perfectMatches, possibleMatches);
 
@@ -46,6 +48,7 @@ function MatchingTransactionBoot({
     possibleMatches,
     perfectMatchesCount,
     perfectMatches,
+    totalPending,
     matches,
   } as MatchingTransactionBootValues;
 

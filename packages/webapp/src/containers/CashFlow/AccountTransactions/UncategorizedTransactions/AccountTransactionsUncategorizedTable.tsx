@@ -36,10 +36,14 @@ function AccountTransactionsDataTable({
 
   // #withBanking
   openMatchingTransactionAside,
+  enableMultipleCategorization,
 
   // #withBankingActions
   setUncategorizedTransactionIdForMatching,
   setUncategorizedTransactionsSelected,
+
+  addTransactionsToCategorizeSelected,
+  setTransactionsToCategorizeSelected,
 }) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
@@ -57,7 +61,11 @@ function AccountTransactionsDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell) => {
-    setUncategorizedTransactionIdForMatching(cell.row.original.id);
+    if (enableMultipleCategorization) {
+      addTransactionsToCategorizeSelected(cell.row.original.id);
+    } else {
+      setTransactionsToCategorizeSelected(cell.row.original.id);
+    }
   };
   // Handles categorize button click.
   const handleCategorizeBtnClick = (transaction) => {
@@ -78,12 +86,6 @@ function AccountTransactionsDataTable({
           message: 'Something went wrong.',
         });
       });
-  };
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = (selected) => {
-    const _selectedIds = selected?.map((row) => row.original.id);
-    setUncategorizedTransactionsSelected(_selectedIds);
   };
 
   return (
@@ -112,13 +114,12 @@ function AccountTransactionsDataTable({
       noResults={
         'There is no uncategorized transactions in the current account.'
       }
-      onSelectedRowsChange={handleSelectedRowsChange}
       payload={{
         onExclude: handleExcludeTransaction,
         onCategorize: handleCategorizeBtnClick,
       }}
       className={clsx('table-constrant', styles.table, {
-        [styles.showCategorizeColumn]: openMatchingTransactionAside,
+        [styles.showCategorizeColumn]: enableMultipleCategorization,
       })}
     />
   );
@@ -129,9 +130,12 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withBankingActions,
-  withBanking(({ openMatchingTransactionAside }) => ({
-    openMatchingTransactionAside,
-  })),
+  withBanking(
+    ({ openMatchingTransactionAside, enableMultipleCategorization }) => ({
+      openMatchingTransactionAside,
+      enableMultipleCategorization,
+    }),
+  ),
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

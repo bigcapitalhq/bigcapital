@@ -1,8 +1,7 @@
 // @ts-nocheck
 import { isEmpty } from 'lodash';
 import * as R from 'ramda';
-import { useEffect, useState, useMemo } from 'react';
-import { uniq } from 'lodash';
+import { useEffect, useState } from 'react';
 import { AnchorButton, Button, Intent, Tag, Text } from '@blueprintjs/core';
 import { FastField, FastFieldProps, Formik, useFormikContext } from 'formik';
 import { AppToaster, Box, FormatNumber, Group, Stack } from '@/components';
@@ -45,24 +44,15 @@ function MatchingBankTransactionRoot({
   // #withBanking
   transactionsToCategorizeIdsSelected,
 }) {
-  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
+  const { uncategorizedTransactionIds } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
-
-  const selectedTransactionsIds = useMemo(
-    () =>
-      uniq([
-        ...transactionsToCategorizeIdsSelected,
-        uncategorizedTransactionId,
-      ]),
-    [uncategorizedTransactionId, transactionsToCategorizeIdsSelected],
-  );
 
   // Handles the form submitting.
   const handleSubmit = (
     values: MatchingTransactionFormValues,
     { setSubmitting }: FormikHelpers<MatchingTransactionFormValues>,
   ) => {
-    const _values = transformToReq(values);
+    const _values = transformToReq(values, uncategorizedTransactionIds);
 
     if (_values.matchedTransactions?.length === 0) {
       AppToaster.show({
@@ -72,7 +62,7 @@ function MatchingBankTransactionRoot({
       return;
     }
     setSubmitting(true);
-    matchTransaction({ id: uncategorizedTransactionId, value: _values })
+    matchTransaction(_values)
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
@@ -91,7 +81,7 @@ function MatchingBankTransactionRoot({
             message: `The total amount does not equal the uncategorized transaction.`,
             intent: Intent.DANGER,
           });
-
+          setSubmitting(false);
           return;
         }
         AppToaster.show({
@@ -104,7 +94,7 @@ function MatchingBankTransactionRoot({
 
   return (
     <MatchingTransactionBoot
-      uncategorizedTransactionsIds={selectedTransactionsIds}
+      uncategorizedTransactionsIds={uncategorizedTransactionIds}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <MatchingBankTransactionFormContent />

@@ -6,6 +6,7 @@ import { BankingRulesController } from './BankingRulesController';
 import { BankTransactionsMatchingController } from './BankTransactionsMatchingController';
 import { RecognizedTransactionsController } from './RecognizedTransactionsController';
 import { BankAccountsController } from './BankAccountsController';
+import { BankingUncategorizedController } from './BankingUncategorizedController';
 
 @Service()
 export class BankingController extends BaseController {
@@ -28,6 +29,10 @@ export class BankingController extends BaseController {
     router.use(
       '/bank_accounts',
       Container.get(BankAccountsController).router()
+    );
+    router.use(
+      '/categorize',
+      Container.get(BankingUncategorizedController).router()
     );
     return router;
   }

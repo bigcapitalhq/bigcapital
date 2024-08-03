@@ -43,9 +43,8 @@ function CategorizeTransactionAsideRoot({
 
   const handleClose = () => {
     closeMatchingTransactionAside();
-  };
-  const uncategorizedTransactionId = selectedUncategorizedTransactionId;
-
+  }
+  // Cannot continue if there is no selected transactions.;
   if (!selectedUncategorizedTransactionId) {
     return null;
   }
@@ -53,7 +52,7 @@ function CategorizeTransactionAsideRoot({
     <Aside title={'Categorize Bank Transaction'} onClose={handleClose}>
       <Aside.Body>
         <CategorizeTransactionTabsBoot
-          uncategorizedTransactionId={uncategorizedTransactionId}
+          uncategorizedTransactionId={selectedUncategorizedTransactionId}
         >
           <CategorizeTransactionTabs />
         </CategorizeTransactionTabsBoot>
@@ -64,7 +63,7 @@ function CategorizeTransactionAsideRoot({
 
 export const CategorizeTransactionAside = R.compose(
   withBankingActions,
-  withBanking(({ selectedUncategorizedTransactionId }) => ({
-    selectedUncategorizedTransactionId,
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    selectedUncategorizedTransactionId: transactionsToCategorizeIdsSelected,
   })),
 )(CategorizeTransactionAsideRoot);

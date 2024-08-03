@@ -201,6 +201,7 @@ export default class NewCashflowTransactionController extends BaseController {
     const categorizeDTO = omit(matchedObject, [
       'uncategorizedTransactionIds',
     ]) as ICategorizeCashflowTransactioDTO;
+
     const uncategorizedTransactionIds =
       matchedObject.uncategorizedTransactionIds;
 

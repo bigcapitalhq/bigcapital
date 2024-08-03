@@ -1,6 +1,5 @@
 import { upperFirst, camelCase, first, sum, sumBy } from 'lodash';
 import {
-  CASHFLOW_DIRECTION,
   CASHFLOW_TRANSACTION_TYPE,
   CASHFLOW_TRANSACTION_TYPE_META,
   ERRORS,
@@ -81,6 +80,8 @@ export const validateUncategorizedTransactionsNotExcluded = (
   const excluded = transactions.filter((tran) => tran.excluded);
 
   if (excluded?.length > 0) {
-    throw new ServiceError(ERRORS.CANNOT_CATEGORIZE_EXCLUDED_TRANSACTION);
+    throw new ServiceError(ERRORS.CANNOT_CATEGORIZE_EXCLUDED_TRANSACTION, '', {
+      ids: excluded.map((t) => t.id),
+    });
   }
 };

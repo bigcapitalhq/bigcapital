@@ -6,10 +6,13 @@ import { useAccounts, useBranches } from '@/hooks/query';
 import { useFeatureCan } from '@/hooks/state';
 import { Features } from '@/constants';
 import { Spinner } from '@blueprintjs/core';
-import { useGetRecognizedBankTransaction } from '@/hooks/query/bank-rules';
-import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
+import {
+  GetAutofillCategorizeTransaction,
+  useGetAutofillCategorizeTransaction,
+} from '@/hooks/query/bank-rules';
 
 interface CategorizeTransactionBootProps {
+  uncategorizedTransactionsIds: Array<number>;
   children: React.ReactNode;
 }
 
@@ -19,8 +22,8 @@ interface CategorizeTransactionBootValue {
   isBranchesLoading: boolean;
   isAccountsLoading: boolean;
   primaryBranch: any;
-  recognizedTranasction: any;
-  isRecognizedTransactionLoading: boolean;
+  autofillCategorizeValues: null | GetAutofillCategorizeTransaction;
+  isAutofillCategorizeValuesLoading: boolean;
 }
 
 const CategorizeTransactionBootContext =
@@ -32,11 +35,9 @@ const CategorizeTransactionBootContext =
  * Categorize transcation boot.
  */
 function CategorizeTransactionBoot({
+  uncategorizedTransactionsIds,
   ...props
 }: CategorizeTransactionBootProps) {
-  const { uncategorizedTransaction, uncategorizedTransactionId } =
-    useCategorizeTransactionTabsBoot();
-
   // Detarmines whether the feature is enabled.
   const { featureCan } = useFeatureCan();
   const isBranchFeatureCan = featureCan(Features.Branches);
@@ -49,13 +50,11 @@ function CategorizeTransactionBoot({
     {},
     { enabled: isBranchFeatureCan },
   );
-  // Fetches the recognized transaction.
+  // Fetches the autofill values of categorize transaction.
   const {
-    data: recognizedTranasction,
-    isLoading: isRecognizedTransactionLoading,
-  } = useGetRecognizedBankTransaction(uncategorizedTransactionId, {
-    enabled: !!uncategorizedTransaction.is_recognized,
-  });
+    data: autofillCategorizeValues,
+    isLoading: isAutofillCategorizeValuesLoading,
+  } = useGetAutofillCategorizeTransaction(uncategorizedTransactionsIds, {});
 
   // Retrieves the primary branch.
   const primaryBranch = useMemo(
@@ -69,11 +68,11 @@ function CategorizeTransactionBoot({
     isBranchesLoading,
     isAccountsLoading,
     primaryBranch,
-    recognizedTranasction,
-    isRecognizedTransactionLoading,
+    autofillCategorizeValues,
+    isAutofillCategorizeValuesLoading,
   };
   const isLoading =
-    isBranchesLoading || isAccountsLoading || isRecognizedTransactionLoading;
+    isBranchesLoading || isAccountsLoading || isAutofillCategorizeValuesLoading;
 
   if (isLoading) {
     <Spinner size={30} />;

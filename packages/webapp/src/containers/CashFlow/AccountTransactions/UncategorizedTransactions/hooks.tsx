@@ -131,9 +131,9 @@ export function useAccountUncategorizedTransactionsColumns() {
             className={styles.categorizeCheckbox}
           />
         ),
-        width: 10,
-        minWidth: 10,
-        maxWidth: 10,
+        width: 20,
+        minWidth: 20,
+        maxWidth: 20,
         align: 'right',
         className: 'categorize_include',
       },

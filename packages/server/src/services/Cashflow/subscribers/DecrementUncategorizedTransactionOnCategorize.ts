@@ -34,12 +34,13 @@ export class DecrementUncategorizedTransactionOnCategorize {
    */
   public async decrementUnCategorizedTransactionsOnCategorized({
     tenantId,
-    uncategorizedTransaction,
+    uncategorizedTransactions,
   }: ICashflowTransactionCategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
+    const accountIds = uncategorizedTransactions.map((a) => a.id);
 
     await Account.query()
-      .findById(uncategorizedTransaction.accountId)
+      .whereIn('id', accountIds)
       .decrement('uncategorizedTransactions', 1);
   }
 

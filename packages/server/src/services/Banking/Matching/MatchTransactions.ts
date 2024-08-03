@@ -101,7 +101,7 @@ export class MatchBankTransactions {
     );
     // Validates the total given matching transcations whether is not equal
     // uncategorized transaction amount.
-    if (totalUncategorizedTransactions === totalMatchedTranasctions) {
+    if (totalUncategorizedTransactions !== totalMatchedTranasctions) {
       throw new ServiceError(ERRORS.TOTAL_MATCHING_TRANSACTIONS_INVALID);
     }
   }
