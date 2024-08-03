@@ -138,13 +138,15 @@ export interface ICashflowTransactionCategorizedPayload {
 }
 export interface ICashflowTransactionUncategorizingPayload {
   tenantId: number;
+  uncategorizedTransactionId: number;
   oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   trx: Knex.Transaction;
 }
 export interface ICashflowTransactionUncategorizedPayload {
   tenantId: number;
-  uncategorizedTransaction: IUncategorizedCashflowTransaction;
-  oldUncategorizedTransaction: IUncategorizedCashflowTransaction;
+  uncategorizedTransactionId: number;
+  uncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
+  oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   trx: Knex.Transaction;
 }
 

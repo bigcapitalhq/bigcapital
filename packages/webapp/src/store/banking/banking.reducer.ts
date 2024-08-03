@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import { castArray, uniq } from 'lodash';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface StorePlaidState {
@@ -113,7 +113,10 @@ export const PlaidSlice = createSlice({
       state: StorePlaidState,
       action: PayloadAction<{ ids: Array<string | number> }>,
     ) => {
-      state.transactionsToCategorizeSelected = action.payload.ids;
+      const ids = castArray(action.payload.ids);
+
+      state.transactionsToCategorizeSelected = ids;
+      state.openMatchingTransactionAside = true;
     },
 
     /**
@@ -129,6 +132,7 @@ export const PlaidSlice = createSlice({
         ...state.transactionsToCategorizeSelected,
         action.payload.id,
       ]);
+      state.openMatchingTransactionAside = true;
     },
 
     /**
@@ -144,6 +148,12 @@ export const PlaidSlice = createSlice({
         state.transactionsToCategorizeSelected.filter(
           (t) => t !== action.payload.id,
         );
+
+      if (state.transactionsToCategorizeSelected.length === 0) {
+        state.openMatchingTransactionAside = false;
+      } else {
+        state.openMatchingTransactionAside = true;
+      }
     },
 
     /**
@@ -152,6 +162,7 @@ export const PlaidSlice = createSlice({
      */
     resetTransactionsToCategorizeSelected: (state: StorePlaidState) => {
       state.transactionsToCategorizeSelected = [];
+      state.openMatchingTransactionAside = false;
     },
 
     /**

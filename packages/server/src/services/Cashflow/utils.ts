@@ -85,3 +85,12 @@ export const validateUncategorizedTransactionsNotExcluded = (
     });
   }
 };
+
+
+export const validateTransactionShouldBeCategorized = (
+  uncategorizedTransaction: any
+) => {
+  if (!uncategorizedTransaction.categorized) {
+    throw new ServiceError(ERRORS.TRANSACTION_NOT_CATEGORIZED);
+  }
+};

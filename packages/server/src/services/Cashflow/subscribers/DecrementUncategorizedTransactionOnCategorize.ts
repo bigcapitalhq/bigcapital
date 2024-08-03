@@ -50,12 +50,15 @@ export class DecrementUncategorizedTransactionOnCategorize {
    */
   public async incrementUnCategorizedTransactionsOnUncategorized({
     tenantId,
-    uncategorizedTransaction,
+    uncategorizedTransactions,
   }: ICashflowTransactionUncategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
 
+    const uncategorizedTransactionIds = uncategorizedTransactions?.map(
+      (t) => t.id
+    );
     await Account.query()
-      .findById(uncategorizedTransaction.accountId)
+      .whereIn('id', uncategorizedTransactionIds)
       .increment('uncategorizedTransactions', 1);
   }
 
