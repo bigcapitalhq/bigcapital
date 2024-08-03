@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { DisconnectBankAccount } from './DisconnectBankAccount';
 import { RefreshBankAccountService } from './RefreshBankAccount';
+import { ResumeBankAccountFeeds } from './PauseBankAccountFeeds';
 
 @Service()
 export class BankAccountsApplication {
@@ -9,6 +10,12 @@ export class BankAccountsApplication {
 
   @Inject()
   private refreshBankAccountService: RefreshBankAccountService;
+
+  @Inject()
+  private resumeBankAccountFeedsService: ResumeBankAccountFeeds;
+
+  @Inject()
+  private pauseBankAccountFeedsService: ResumeBankAccountFeeds;
 
   /**
    * Disconnects the given bank account.
@@ -27,10 +34,36 @@ export class BankAccountsApplication {
    * Refresh the bank transactions of the given bank account.
    * @param {number} tenantId
    * @param {number} bankAccountId
-   * @returns {Promise<void>} 
+   * @returns {Promise<void>}
    */
   async refreshBankAccount(tenantId: number, bankAccountId: number) {
     return this.refreshBankAccountService.refreshBankAccount(
+      tenantId,
+      bankAccountId
+    );
+  }
+
+  /**
+   * Pauses the feeds sync of the given bank account.
+   * @param {number} tenantId 
+   * @param {number} bankAccountId 
+   * @returns {Promise<void>}
+   */
+  async pauseBankAccount(tenantId: number, bankAccountId: number) {
+    return this.pauseBankAccountFeedsService.resumeBankAccountFeeds(
+      tenantId,
+      bankAccountId
+    );
+  }
+
+  /**
+   * Resumes the feeds sync of the given bank account.
+   * @param {number} tenantId 
+   * @param {number} bankAccountId 
+   * @returns {Promise<void>}
+   */
+  async resumeBankAccount(tenantId: number, bankAccountId: number) {
+    return this.resumeBankAccountFeedsService.resumeBankAccountFeeds(
       tenantId,
       bankAccountId
     );

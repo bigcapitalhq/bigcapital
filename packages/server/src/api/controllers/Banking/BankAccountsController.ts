@@ -1,7 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { NextFunction, Request, Response, Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
-import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 import { GetBankAccountSummary } from '@/services/Banking/BankAccounts/GetBankAccountSummary';
 import { BankAccountsApplication } from '@/services/Banking/BankAccounts/BankAccountsApplication';
 
@@ -25,6 +24,14 @@ export class BankAccountsController extends BaseController {
       this.disconnectBankAccount.bind(this)
     );
     router.post('/:bankAccountId/update', this.refreshBankAccount.bind(this));
+    router.post(
+      '/:bankAccountId/pause_feeds',
+      this.pauseBankAccountFeeds.bind(this)
+    );
+    router.post(
+      '/:bankAccountId/resume_feeds',
+      this.resumeBankAccountFeeds.bind(this)
+    );
 
     return router;
   }
@@ -104,6 +111,44 @@ export class BankAccountsController extends BaseController {
       return res.status(200).send({
         id: bankAccountId,
         message: 'The bank account has been disconnected.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async resumeBankAccountFeeds(
+    req: Request<{ bankAccountId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { bankAccountId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.bankAccountsApp.resumeBankAccount(tenantId, bankAccountId);
+
+      return res.status(200).send({
+        message: '',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async pauseBankAccountFeeds(
+    req: Request<{ bankAccountId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { bankAccountId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.bankAccountsApp.pauseBankAccount(tenantId, bankAccountId);
+
+      return res.status(200).send({
+        message: '',
       });
     } catch (error) {
       next(error);
