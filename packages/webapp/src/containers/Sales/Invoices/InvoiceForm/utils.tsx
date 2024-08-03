@@ -302,8 +302,8 @@ export const useInvoiceTotals = () => {
   );
   // Retrieves the formatted due total.
   const dueTotal = React.useMemo(
-    () => total - paymentTotal,
-    [total, paymentTotal],
+    () => total_ - paymentTotal,
+    [total_, paymentTotal],
   );
   // Retrieves the formatted due total.
   const formattedDueTotal = React.useMemo(
