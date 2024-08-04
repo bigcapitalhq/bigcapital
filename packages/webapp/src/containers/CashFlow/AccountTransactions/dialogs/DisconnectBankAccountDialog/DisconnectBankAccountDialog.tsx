@@ -9,7 +9,7 @@ const DisconnectBankAccountDialogContent = React.lazy(
 );
 
 /**
- * Payment mail dialog.X
+ * Disconnect bank account confirmation dialog.
  */
 function DisconnectBankAccountDialogRoot({
   dialogName,

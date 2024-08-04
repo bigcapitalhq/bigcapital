@@ -10,7 +10,7 @@ import { usePauseFeedsBankAccount } from '@/hooks/query/bank-accounts';
 import { compose } from '@/utils';
 
 /**
- *  Item activate alert.
+ * Pause feeds of the bank account alert.
  */
 function PauseFeedsBankAccountAlert({
   name,
