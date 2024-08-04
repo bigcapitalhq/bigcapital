@@ -5,6 +5,7 @@ import {
   ICashflowTransactionCategorizedPayload,
   ICashflowTransactionUncategorizedPayload,
 } from '@/interfaces';
+import PromisePool from '@supercharge/promise-pool';
 
 @Service()
 export class DecrementUncategorizedTransactionOnCategorize {
@@ -35,13 +36,17 @@ export class DecrementUncategorizedTransactionOnCategorize {
   public async decrementUnCategorizedTransactionsOnCategorized({
     tenantId,
     uncategorizedTransactions,
+    trx
   }: ICashflowTransactionCategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
-    const accountIds = uncategorizedTransactions.map((a) => a.id);
 
-    await Account.query()
-      .whereIn('id', accountIds)
-      .decrement('uncategorizedTransactions', 1);
+    await PromisePool.withConcurrency(1)
+      .for(uncategorizedTransactions)
+      .process(async (uncategorizedTransaction) => {
+        await Account.query(trx)
+          .findById(uncategorizedTransaction.accountId)
+          .decrement('uncategorizedTransactions', 1);
+      });
   }
 
   /**
@@ -51,15 +56,17 @@ export class DecrementUncategorizedTransactionOnCategorize {
   public async incrementUnCategorizedTransactionsOnUncategorized({
     tenantId,
     uncategorizedTransactions,
+    trx
   }: ICashflowTransactionUncategorizedPayload) {
     const { Account } = this.tenancy.models(tenantId);
 
-    const uncategorizedTransactionIds = uncategorizedTransactions?.map(
-      (t) => t.id
-    );
-    await Account.query()
-      .whereIn('id', uncategorizedTransactionIds)
-      .increment('uncategorizedTransactions', 1);
+    await PromisePool.withConcurrency(1)
+      .for(uncategorizedTransactions)
+      .process(async (uncategorizedTransaction) => {
+        await Account.query(trx)
+          .findById(uncategorizedTransaction.accountId)
+          .increment('uncategorizedTransactions', 1);
+      });
   }
 
   /**

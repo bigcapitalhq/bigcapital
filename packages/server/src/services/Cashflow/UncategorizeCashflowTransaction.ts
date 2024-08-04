@@ -75,7 +75,7 @@ export class UncategorizeCashflowTransaction {
           categorizeRefType: null,
         });
       const uncategorizedTransactions =
-        await UncategorizedCashflowTransaction.query().whereIn(
+        await UncategorizedCashflowTransaction.query(trx).whereIn(
           'id',
           oldUncategoirzedTransactionsIds
         );

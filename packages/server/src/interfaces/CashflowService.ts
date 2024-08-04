@@ -130,7 +130,7 @@ export interface ICommandCashflowDeletedPayload {
 
 export interface ICashflowTransactionCategorizedPayload {
   tenantId: number;
-  uncategorizedTransactions: any;
+  uncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   cashflowTransaction: ICashflowTransaction;
   oldUncategorizedTransactions: Array<IUncategorizedCashflowTransaction>;
   categorizeDTO: any;

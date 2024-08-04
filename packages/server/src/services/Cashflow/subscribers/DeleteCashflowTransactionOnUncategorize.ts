@@ -45,7 +45,7 @@ export class DeleteCashflowTransactionOnUncategorize {
             trx
           );
         });
-      if (result.errors) {
+      if (result.errors.length > 0) {
         throw new ServiceError('SOMETHING_WRONG');
       }
     }

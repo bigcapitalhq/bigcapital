@@ -37,12 +37,13 @@ export class DecrementUncategorizedTransactionOnMatching {
     const { UncategorizedCashflowTransaction, Account } =
       this.tenancy.models(tenantId);
 
-    const transactions = await UncategorizedCashflowTransaction.query().whereIn(
-      'id',
-      uncategorizedTransactionIds
-    );
+    const uncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query().whereIn(
+        'id',
+        uncategorizedTransactionIds
+      );
     await PromisePool.withConcurrency(1)
-      .for(transactions)
+      .for(uncategorizedTransactions)
       .process(async (transaction) => {
         await Account.query(trx)
           .findById(transaction.accountId)
