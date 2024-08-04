@@ -167,7 +167,7 @@ export default class NewCashflowTransactionController extends BaseController {
    * @param {NextFunction} next
    */
   private revertCategorizedCashflowTransaction = async (
-    req: Request,
+    req: Request<{ id: number }>,
     res: Response,
     next: NextFunction
   ) => {
@@ -280,7 +280,7 @@ export default class NewCashflowTransactionController extends BaseController {
    * @param {NextFunction} next
    */
   public getUncategorizedCashflowTransactions = async (
-    req: Request,
+    req: Request<{ id: number }>,
     res: Response,
     next: NextFunction
   ) => {

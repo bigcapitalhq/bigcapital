@@ -49,7 +49,7 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {NextFunction} next
    */
   private getCashflowTransaction = async (
-    req: Request,
+    req: Request<{ transactionId: number }>,
     res: Response,
     next: NextFunction
   ) => {
@@ -76,13 +76,17 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {NextFunction} next
    */
   private async getMatchedTransactions(
-    req: Request<{ transactionId: number }>,
+    req: Request<
+      { transactionId: number },
+      null,
+      null,
+      { uncategorizeTransactionsIds: Array<number> }
+    >,
     res: Response,
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const uncategorizeTransactionsIds: Array<number> =
-      req.query.uncategorizeTransactionsIds;
+    const uncategorizeTransactionsIds = req.query.uncategorizeTransactionsIds;
     const filter = this.matchedQueryData(req) as GetMatchedTransactionsFilter;
 
     try {

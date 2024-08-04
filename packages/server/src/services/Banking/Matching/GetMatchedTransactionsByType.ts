@@ -44,7 +44,7 @@ export abstract class GetMatchedTransactionsByType {
   }
 
   /**
-   *
+   * Creates the common matched transaction.
    * @param {number} tenantId
    * @param {Array<number>} uncategorizedTransactionIds
    * @param {IMatchTransactionDTO} matchTransactionDTO

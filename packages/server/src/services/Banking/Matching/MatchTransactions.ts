@@ -54,7 +54,8 @@ export class MatchBankTransactions {
     const uncategorizedTransactions =
       await UncategorizedCashflowTransaction.query()
         .whereIn('id', uncategorizedTransactionIds)
-        .withGraphFetched('matchedBankTransactions');
+        .withGraphFetched('matchedBankTransactions')
+        .throwIfNotFound();
 
     // Validates the uncategorized transaction is not already matched.
     validateUncategorizedTransactionsNotMatched(uncategorizedTransactions);
