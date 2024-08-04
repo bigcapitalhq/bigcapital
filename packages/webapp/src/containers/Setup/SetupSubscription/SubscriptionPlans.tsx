@@ -21,7 +21,7 @@ export function SubscriptionPlans({
   const subscriptionPlans = useSubscriptionPlans();
 
   return (
-    <Group spacing={14} noWrap align="stretch" {...wrapProps}>
+    <Group spacing={10} noWrap align="stretch" {...wrapProps}>
       {subscriptionPlans.map((plan, index) => (
         <SubscriptionPlanMapped key={index} plan={plan} />
       ))}

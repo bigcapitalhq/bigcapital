@@ -41,13 +41,14 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
 import {
-  useDisconnectBankAccount,
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
 import { withBankingActions } from '../withBankingActions';
 import { withBanking } from '../withBanking';
+import withAlertActions from '@/containers/Alert/withAlertActions';
+import { DialogsName } from '@/constants/dialogs';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -66,6 +67,9 @@ function AccountTransactionsActionsBar({
 
   // #withBankingActions
   enableMultipleCategorization,
+
+  // #withAlerts
+  openAlert,
 }) {
   const history = useHistory();
   const { accountId, currentAccount } = useAccountTransactionsContext();
@@ -73,7 +77,6 @@ function AccountTransactionsActionsBar({
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
 
-  const { mutateAsync: disconnectBankAccount } = useDisconnectBankAccount();
   const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
 
   // Retrieves the money in/out buttons options.
@@ -81,6 +84,7 @@ function AccountTransactionsActionsBar({
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   const isFeedsActive = !!currentAccount.is_feeds_active;
+  const isFeedsPaused = currentAccount.is_feeds_paused;
   const isSyncingOwner = currentAccount.is_syncing_owner;
 
   // Handle table row size change.
@@ -114,19 +118,9 @@ function AccountTransactionsActionsBar({
 
   // Handles the bank account disconnect click.
   const handleDisconnectClick = () => {
-    disconnectBankAccount({ bankAccountId: accountId })
-      .then(() => {
-        AppToaster.show({
-          message: 'The bank account has been disconnected.',
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((error) => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
+    openDialog(DialogsName.DisconnectBankAccountConfirmation, {
+      bankAccountId: accountId,
+    });
   };
   // handles the bank update button click.
   const handleBankUpdateClick = () => {
@@ -197,8 +191,21 @@ function AccountTransactionsActionsBar({
       });
   };
 
+  // Handle multi select transactions for categorization or matching.
   const handleMultipleCategorizingSwitch = (event) => {
     enableMultipleCategorization(event.currentTarget.checked);
+  }
+  // Handle resume bank feeds syncing.
+  const handleResumeFeedsSyncing = () => {
+    openAlert('resume-feeds-syncing-bank-accounnt', {
+      bankAccountId: accountId,
+    });
+  };
+  // Handles pause bank feeds syncing.
+  const handlePauseFeedsSyncing = () => {
+    openAlert('pause-feeds-syncing-bank-accounnt', {
+      bankAccountId: accountId,
+    });
   };
 
   return (
@@ -248,7 +255,9 @@ function AccountTransactionsActionsBar({
           <Tooltip
             content={
               isFeedsActive
-                ? 'The bank syncing is active'
+                ? isFeedsPaused
+                  ? 'The bank syncing is paused'
+                  : 'The bank syncing is active'
                 : 'The bank syncing is disconnected'
             }
             minimal={true}
@@ -257,7 +266,13 @@ function AccountTransactionsActionsBar({
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon="feed" iconSize={16} />}
-              intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
+              intent={
+                isFeedsActive
+                  ? isFeedsPaused
+                    ? Intent.WARNING
+                    : Intent.SUCCESS
+                  : Intent.DANGER
+              }
             />
           </Tooltip>
         </If>
@@ -314,6 +329,23 @@ function AccountTransactionsActionsBar({
                 <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
                 <MenuDivider />
               </If>
+
+              <If condition={isSyncingOwner && isFeedsActive && !isFeedsPaused}>
+                <MenuItem
+                  onClick={handlePauseFeedsSyncing}
+                  text={'Pause bank feeds'}
+                />
+                <MenuDivider />
+              </If>
+
+              <If condition={isSyncingOwner && isFeedsActive && isFeedsPaused}>
+                <MenuItem
+                  onClick={handleResumeFeedsSyncing}
+                  text={'Resume bank feeds'}
+                />
+                <MenuDivider />
+              </If>
+
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
               <If condition={isSyncingOwner && isFeedsActive}>
@@ -337,6 +369,7 @@ function AccountTransactionsActionsBar({
 
 export default compose(
   withDialogActions,
+  withAlertActions,
   withSettingsActions,
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,

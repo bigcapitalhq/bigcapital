@@ -9,7 +9,7 @@ export function useUploadAttachments(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (values) => apiRequest.post('/attachments', values),
+    (values) => apiRequest.post('attachments', values),
     props,
   );
 }
@@ -21,7 +21,7 @@ export function useDeleteAttachment(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    (key: string) => apiRequest.delete(`/attachments/${key}`),
+    (key: string) => apiRequest.delete(`attachments/${key}`),
     props,
   );
 }
@@ -35,7 +35,7 @@ export function useGetPresignedUrlAttachment(props) {
   return useMutation(
     (key: string) =>
       apiRequest
-        .get(`/attachments/${key}/presigned-url`)
+        .get(`attachments/${key}/presigned-url`)
         .then((res) => res.data),
     props,
   );

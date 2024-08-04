@@ -1,10 +1,14 @@
 import { Inject, Service } from 'typedi';
 import { PlaidUpdateTransactions } from './PlaidUpdateTransactions';
+import HasTenancyService from '@/services/Tenancy/TenancyService';
 
 @Service()
 export class PlaidWebooks {
   @Inject()
   private updateTransactionsService: PlaidUpdateTransactions;
+
+  @Inject()
+  private tenancy: HasTenancyService;
 
   /**
    * Listens to Plaid webhooks
@@ -61,7 +65,7 @@ export class PlaidWebooks {
     plaidItemId: string
   ): void {
     console.log(
-      `WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`
+      `PLAID WEBHOOK: TRANSACTIONS: ${webhookCode}: Plaid_item_id ${plaidItemId}: ${additionalInfo}`
     );
   }
 
@@ -78,8 +82,21 @@ export class PlaidWebooks {
     plaidItemId: string,
     webhookCode: string
   ): Promise<void> {
+    const { PlaidItem } = this.tenancy.models(tenantId);
+    const plaidItem = await PlaidItem.query()
+      .findById(plaidItemId)
+      .throwIfNotFound();
+
     switch (webhookCode) {
       case 'SYNC_UPDATES_AVAILABLE': {
+        if (plaidItem.isPaused) {
+          this.serverLogAndEmitSocket(
+            'Plaid item syncing is paused.',
+            webhookCode,
+            plaidItemId
+          );
+          return;
+        }
         // Fired when new transactions data becomes available.
         const { addedCount, modifiedCount, removedCount } =
           await this.updateTransactionsService.updateTransactions(

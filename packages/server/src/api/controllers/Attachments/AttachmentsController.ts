@@ -250,10 +250,12 @@ export class AttachmentsController extends BaseController {
     res: Response,
     next: NextFunction
   ): Promise<Response | void> {
+    const { tenantId } = req;
     const { id: documentKey } = req.params;
 
     try {
       const presignedUrl = await this.attachmentsApplication.getPresignedUrl(
+        tenantId,
         documentKey
       );
       return res.status(200).send({ presignedUrl });

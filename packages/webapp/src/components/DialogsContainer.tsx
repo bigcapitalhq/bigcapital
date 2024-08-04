@@ -52,6 +52,7 @@ import ReceiptMailDialog from '@/containers/Sales/Receipts/ReceiptMailDialog/Rec
 import PaymentMailDialog from '@/containers/Sales/PaymentReceives/PaymentMailDialog/PaymentMailDialog';
 import { ExportDialog } from '@/containers/Dialogs/ExportDialog';
 import { RuleFormDialog } from '@/containers/Banking/Rules/RuleFormDialog/RuleFormDialog';
+import { DisconnectBankAccountDialog } from '@/containers/CashFlow/AccountTransactions/dialogs/DisconnectBankAccountDialog/DisconnectBankAccountDialog';
 
 /**
  * Dialogs container.
@@ -148,7 +149,10 @@ export default function DialogsContainer() {
       <ReceiptMailDialog dialogName={DialogsName.ReceiptMail} />
       <PaymentMailDialog dialogName={DialogsName.PaymentMail} />
       <ExportDialog dialogName={DialogsName.Export} />
-      <RuleFormDialog dialogName={DialogsName.BankRuleForm} />      
+      <RuleFormDialog dialogName={DialogsName.BankRuleForm} />
+      <DisconnectBankAccountDialog
+        dialogName={DialogsName.DisconnectBankAccountConfirmation}
+      />
     </div>
   );
 }

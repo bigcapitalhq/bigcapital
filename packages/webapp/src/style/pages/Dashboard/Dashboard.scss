@@ -229,6 +229,9 @@ $dashboard-views-bar-height: 44px;
           }
         }
 
+        &.#{$ns}-minimal.#{$ns}-intent-warning{
+          color: #cc7e25;
+        }
 
         &.button--blue-highlight {
           background-color: #ebfaff;
