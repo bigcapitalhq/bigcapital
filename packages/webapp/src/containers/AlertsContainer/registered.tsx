@@ -28,6 +28,7 @@ import TaxRatesAlerts from '@/containers/TaxRates/alerts';
 import { CashflowAlerts } from '../CashFlow/CashflowAlerts';
 import { BankRulesAlerts } from '../Banking/Rules/RulesList/BankRulesAlerts';
 import { SubscriptionAlerts } from '../Subscriptions/alerts/alerts';
+import { BankAccountAlerts } from '@/containers/CashFlow/AccountTransactions/alerts';
 
 export default [
   ...AccountsAlerts,
@@ -58,5 +59,6 @@ export default [
   ...TaxRatesAlerts,
   ...CashflowAlerts,
   ...BankRulesAlerts,
-  ...SubscriptionAlerts
+  ...SubscriptionAlerts,
+  ...BankAccountAlerts,
 ];

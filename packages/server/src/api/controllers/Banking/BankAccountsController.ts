@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
 import { GetBankAccountSummary } from '@/services/Banking/BankAccounts/GetBankAccountSummary';
 import { BankAccountsApplication } from '@/services/Banking/BankAccounts/BankAccountsApplication';
+import { param } from 'express-validator';
 
 @Service()
 export class BankAccountsController extends BaseController {
@@ -26,10 +27,18 @@ export class BankAccountsController extends BaseController {
     router.post('/:bankAccountId/update', this.refreshBankAccount.bind(this));
     router.post(
       '/:bankAccountId/pause_feeds',
+      [
+        param('bankAccountId').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
       this.pauseBankAccountFeeds.bind(this)
     );
     router.post(
       '/:bankAccountId/resume_feeds',
+      [
+        param('bankAccountId').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
       this.resumeBankAccountFeeds.bind(this)
     );
 
@@ -117,6 +126,13 @@ export class BankAccountsController extends BaseController {
     }
   }
 
+  /**
+   * 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns {Promise<Response | void>}
+   */
   async resumeBankAccountFeeds(
     req: Request<{ bankAccountId: number }>,
     res: Response,
@@ -129,13 +145,21 @@ export class BankAccountsController extends BaseController {
       await this.bankAccountsApp.resumeBankAccount(tenantId, bankAccountId);
 
       return res.status(200).send({
-        message: '',
+        message: 'The bank account feeds syncing has been resumed.',
+        id: bankAccountId,
       });
     } catch (error) {
       next(error);
     }
   }
 
+  /**
+   * 
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns {Promise<Response | void>}
+   */
   async pauseBankAccountFeeds(
     req: Request<{ bankAccountId: number }>,
     res: Response,
@@ -148,7 +172,8 @@ export class BankAccountsController extends BaseController {
       await this.bankAccountsApp.pauseBankAccount(tenantId, bankAccountId);
 
       return res.status(200).send({
-        message: '',
+        message: 'The bank account feeds syncing has been paused.',
+        id: bankAccountId,
       });
     } catch (error) {
       next(error);

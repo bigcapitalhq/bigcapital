@@ -46,6 +46,7 @@ import {
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
 import { withBanking } from '../withBanking';
+import withAlertActions from '@/containers/Alert/withAlertActions';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -60,6 +61,9 @@ function AccountTransactionsActionsBar({
   // #withBanking
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
+
+  // #withAlerts
+  openAlert,
 }) {
   const history = useHistory();
   const { accountId, currentAccount } = useAccountTransactionsContext();
@@ -191,6 +195,16 @@ function AccountTransactionsActionsBar({
       });
   };
 
+  // Handle resume bank feeds syncing.
+  const handleResumeFeedsSyncing = () => {
+    openAlert('resume-feeds-syncing-bank-accounnt');
+  };
+
+  // Handles pause bank feeds syncing.
+  const handlePauseFeedsSyncing = () => {
+    openAlert('pause-feeds-syncing-bank-accounnt');
+  };
+
   return (
     <DashboardActionsBar>
       <NavbarGroup>
@@ -284,6 +298,15 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
+              <MenuItem
+                onClick={handlePauseFeedsSyncing}
+                text={'Pause bankfeeds syncing'}
+              />
+              <MenuItem
+                onClick={handleResumeFeedsSyncing}
+                text={'Resume bankfeeds syncing'}
+              />
+
               <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
                 <MenuDivider />
@@ -311,6 +334,7 @@ function AccountTransactionsActionsBar({
 
 export default compose(
   withDialogActions,
+  withAlertActions,
   withSettingsActions,
   withSettings(({ cashflowTransactionsSettings }) => ({
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
