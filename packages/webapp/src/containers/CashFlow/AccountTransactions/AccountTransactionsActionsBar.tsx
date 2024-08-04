@@ -197,12 +197,15 @@ function AccountTransactionsActionsBar({
 
   // Handle resume bank feeds syncing.
   const handleResumeFeedsSyncing = () => {
-    openAlert('resume-feeds-syncing-bank-accounnt');
+    openAlert('resume-feeds-syncing-bank-accounnt', {
+      bankAccountId: accountId,
+    });
   };
-
   // Handles pause bank feeds syncing.
   const handlePauseFeedsSyncing = () => {
-    openAlert('pause-feeds-syncing-bank-accounnt');
+    openAlert('pause-feeds-syncing-bank-accounnt', {
+      bankAccountId: accountId,
+    });
   };
 
   return (
@@ -298,14 +301,21 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
-              <MenuItem
-                onClick={handlePauseFeedsSyncing}
-                text={'Pause bankfeeds syncing'}
-              />
-              <MenuItem
-                onClick={handleResumeFeedsSyncing}
-                text={'Resume bankfeeds syncing'}
-              />
+              <If condition={isSyncingOwner}>
+                <MenuItem
+                  onClick={handlePauseFeedsSyncing}
+                  text={'Pause bank feeds'}
+                />
+                <MenuDivider />
+              </If>
+
+              <If condition={isSyncingOwner}>
+                <MenuItem
+                  onClick={handleResumeFeedsSyncing}
+                  text={'Resume bank feeds'}
+                />
+                <MenuDivider />
+              </If>
 
               <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem onClick={handleBankUpdateClick} text={'Update'} />

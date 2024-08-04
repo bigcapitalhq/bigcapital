@@ -1,6 +1,5 @@
 // @ts-nocheck
 import React from 'react';
-import intl from 'react-intl-universal';
 import { Intent, Alert } from '@blueprintjs/core';
 
 import { AppToaster, FormattedMessage as T } from '@/components';
@@ -30,10 +29,9 @@ function PauseFeedsBankAccountAlert({
   const handleCancelActivateItem = () => {
     closeAlert(name);
   };
-
   // Handle confirm item activated.
   const handleConfirmItemActivate = () => {
-    pauseBankAccountFeeds(bankAccountId)
+    pauseBankAccountFeeds({ bankAccountId })
       .then(() => {
         AppToaster.show({
           message: 'The bank feeds of the bank account has been paused.',
@@ -49,14 +47,17 @@ function PauseFeedsBankAccountAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
+      confirmButtonText={'Pause bank feeds'}
       intent={Intent.WARNING}
       isOpen={isOpen}
       onCancel={handleCancelActivateItem}
       loading={isLoading}
       onConfirm={handleConfirmItemActivate}
     >
-      <p>Are you sure.</p>
+      <p>
+        Are you sure want to pause bank feeds syncing of this bank account, you
+        can always resume it again?
+      </p>
     </Alert>
   );
 }

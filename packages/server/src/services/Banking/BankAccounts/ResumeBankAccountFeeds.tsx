@@ -1,6 +1,9 @@
+import { Inject, Service } from 'typedi';
+import { Knex } from 'knex';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { Inject, Service } from 'typedi';
+import { ServiceError } from '@/exceptions';
+import { ERRORS } from './types';
 
 @Service()
 export class ResumeBankAccountFeeds {
@@ -23,8 +26,16 @@ export class ResumeBankAccountFeeds {
       .findById(bankAccountId)
       .withGraphFetched('plaidItem');
 
+    // Can't continue if the bank account is not connected.
+    if (!oldAccount.plaidItem) {
+      throw new ServiceError(ERRORS.BANK_ACCOUNT_NOT_CONNECTED);
+    }
+    // Cannot continue if the bank account feeds is already paused.
+    if (!oldAccount.plaidItem.isPaused) {
+      throw new ServiceError(ERRORS.BANK_ACCOUNT_FEEDS_ALREADY_RESUMED);
+    }
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
-      await PlaidItem.query().findById(oldAccount.plaidItem.id).patch({
+      await PlaidItem.query(trx).findById(oldAccount.plaidItem.id).patch({
         pausedAt: new Date(),
       });
     });

@@ -33,7 +33,7 @@ function ResumeFeedsBankAccountAlert({
 
   // Handle confirm item activated.
   const handleConfirmItemActivate = () => {
-    resumeFeedsBankAccount(bankAccountId)
+    resumeFeedsBankAccount({ bankAccountId })
       .then(() => {
         AppToaster.show({
           message: 'The bank feeds of the bank account has been resumed.',
@@ -49,14 +49,17 @@ function ResumeFeedsBankAccountAlert({
   return (
     <Alert
       cancelButtonText={<T id={'cancel'} />}
-      confirmButtonText={<T id={'activate'} />}
-      intent={Intent.WARNING}
+      confirmButtonText={'Resume bank feeds'}
+      intent={Intent.SUCCESS}
       isOpen={isOpen}
       onCancel={handleCancelActivateItem}
       loading={isLoading}
       onConfirm={handleConfirmItemActivate}
     >
-      <p>Are you sure.</p>
+      <p>
+        Are you sure want to resume bank feeds syncing of this bank account, you
+        can always pause it again?
+      </p>
     </Alert>
   );
 }
