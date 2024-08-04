@@ -11,6 +11,7 @@ import {
 } from '@blueprintjs/core';
 import {
   useAddTransactionsToCategorizeSelected,
+  useIsTransactionToCategorizeSelected,
   useRemoveTransactionsToCategorizeSelected,
 } from '@/hooks/state/banking';
 import { Box, Icon } from '@/components';
@@ -19,7 +20,6 @@ import styles from './AccountTransactionsUncategorizedTable.module.scss';
 function statusAccessor(transaction) {
   return transaction.is_recognized ? (
     <Tooltip
-      // compact
       interactionKind={PopoverInteractionKind.HOVER}
       position={Position.RIGHT}
       content={
@@ -44,24 +44,42 @@ function statusAccessor(transaction) {
   ) : null;
 }
 
-/**
- * Retrieve account uncategorized transctions table columns.
- */
-export function useAccountUncategorizedTransactionsColumns() {
+interface TransactionSelectCheckboxProps {
+  transactionId: number;
+}
+
+function TransactionSelectCheckbox({
+  transactionId,
+}: TransactionSelectCheckboxProps) {
   const addTransactionsToCategorizeSelected =
     useAddTransactionsToCategorizeSelected();
 
   const removeTransactionsToCategorizeSelected =
     useRemoveTransactionsToCategorizeSelected();
 
-  const handleChange = (value) => (event) => {
-    if (event.currentTarget.checked) {
-      addTransactionsToCategorizeSelected(value.id);
-    } else {
-      removeTransactionsToCategorizeSelected(value.id);
-    }
+  const isTransactionSelected =
+    useIsTransactionToCategorizeSelected(transactionId);
+
+  const handleChange = (event) => {
+    isTransactionSelected
+      ? removeTransactionsToCategorizeSelected(transactionId)
+      : addTransactionsToCategorizeSelected(transactionId);
   };
 
+  return (
+    <Checkbox
+      large
+      checked={isTransactionSelected}
+      onChange={handleChange}
+      className={styles.categorizeCheckbox}
+    />
+  );
+}
+
+/**
+ * Retrieve account uncategorized transctions table columns.
+ */
+export function useAccountUncategorizedTransactionsColumns() {
   return React.useMemo(
     () => [
       {
@@ -125,17 +143,13 @@ export function useAccountUncategorizedTransactionsColumns() {
         id: 'categorize_include',
         Header: '',
         accessor: (value) => (
-          <Checkbox
-            large
-            onChange={handleChange(value)}
-            className={styles.categorizeCheckbox}
-          />
+          <TransactionSelectCheckbox transactionId={value.id} />
         ),
         width: 20,
         minWidth: 20,
         maxWidth: 20,
         align: 'right',
-        className: 'categorize_include',
+        className: 'categorize_include selection-checkbox',
       },
     ],
     [],

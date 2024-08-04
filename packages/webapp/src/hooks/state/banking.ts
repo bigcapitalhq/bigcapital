@@ -10,6 +10,7 @@ import {
   addTransactionsToCategorizeSelected,
   removeTransactionsToCategorizeSelected,
   getOpenMatchingTransactionAside,
+  getTransactionsToCategorizeIdsSelected,
 } from '@/store/banking/banking.reducer';
 
 export const useSetBankingPlaidToken = () => {
@@ -92,5 +93,20 @@ export const useGetOpenMatchingTransactionAside = () => {
   return useMemo(
     () => openMatchingTransactionAside,
     [openMatchingTransactionAside],
+  );
+};
+
+/**
+ * Returns the detarmined value whether the given transaction id is checked.
+ * @param {number} transactionId
+ * @returns {boolean}
+ */
+export const useIsTransactionToCategorizeSelected = (transactionId: number) => {
+  const transactionsToCategorizeIdsSelected = useSelector(
+    getTransactionsToCategorizeIdsSelected,
+  );
+  return useMemo(
+    () => transactionsToCategorizeIdsSelected.indexOf(transactionId) !== -1,
+    [transactionsToCategorizeIdsSelected, transactionId],
   );
 };
