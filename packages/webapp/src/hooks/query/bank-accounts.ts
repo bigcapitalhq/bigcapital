@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   UseMutationOptions,
   UseMutationResult,
@@ -5,6 +6,7 @@ import {
   useMutation,
 } from 'react-query';
 import useApiRequest from '../useRequest';
+import t from './types';
 
 type PuaseFeedsBankAccountValues = { bankAccountId: number };
 
@@ -39,7 +41,9 @@ export function usePauseFeedsBankAccount(
         `/banking/bank_accounts/${values.bankAccountId}/pause_feeds`,
       ),
     {
-      onSuccess: (res, id) => {},
+      onSuccess: (res, values) => {
+        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
+      },
       ...options,
     },
   );
@@ -78,7 +82,9 @@ export function useResumeFeedsBankAccount(
         `/banking/bank_accounts/${values.bankAccountId}/resume_feeds`,
       ),
     {
-      onSuccess: (res, id) => {},
+      onSuccess: (res, values) => {
+        queryClient.invalidateQueries([t.ACCOUNT, values.bankAccountId]);
+      },
       ...options,
     },
   );

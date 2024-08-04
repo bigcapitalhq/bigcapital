@@ -40,13 +40,13 @@ import withSettingsActions from '@/containers/Settings/withSettingsActions';
 
 import { compose } from '@/utils';
 import {
-  useDisconnectBankAccount,
   useUpdateBankAccount,
   useExcludeUncategorizedTransactions,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
 import { withBanking } from '../withBanking';
 import withAlertActions from '@/containers/Alert/withAlertActions';
+import { DialogsName } from '@/constants/dialogs';
 
 function AccountTransactionsActionsBar({
   // #withDialogActions
@@ -71,7 +71,6 @@ function AccountTransactionsActionsBar({
   // Refresh cashflow infinity transactions hook.
   const { refresh } = useRefreshCashflowTransactionsInfinity();
 
-  const { mutateAsync: disconnectBankAccount } = useDisconnectBankAccount();
   const { mutateAsync: updateBankAccount } = useUpdateBankAccount();
 
   // Retrieves the money in/out buttons options.
@@ -112,19 +111,9 @@ function AccountTransactionsActionsBar({
 
   // Handles the bank account disconnect click.
   const handleDisconnectClick = () => {
-    disconnectBankAccount({ bankAccountId: accountId })
-      .then(() => {
-        AppToaster.show({
-          message: 'The bank account has been disconnected.',
-          intent: Intent.SUCCESS,
-        });
-      })
-      .catch((error) => {
-        AppToaster.show({
-          message: 'Something went wrong.',
-          intent: Intent.DANGER,
-        });
-      });
+    openDialog(DialogsName.DisconnectBankAccountConfirmation, {
+      bankAccountId: accountId,
+    });
   };
   // handles the bank update button click.
   const handleBankUpdateClick = () => {
@@ -301,7 +290,7 @@ function AccountTransactionsActionsBar({
           }}
           content={
             <Menu>
-              <If condition={isSyncingOwner}>
+              <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem
                   onClick={handlePauseFeedsSyncing}
                   text={'Pause bank feeds'}
@@ -309,7 +298,7 @@ function AccountTransactionsActionsBar({
                 <MenuDivider />
               </If>
 
-              <If condition={isSyncingOwner}>
+              <If condition={isSyncingOwner && isFeedsActive}>
                 <MenuItem
                   onClick={handleResumeFeedsSyncing}
                   text={'Resume bank feeds'}
