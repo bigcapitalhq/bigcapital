@@ -36,7 +36,7 @@ export class ResumeBankAccountFeeds {
     }
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await PlaidItem.query(trx).findById(oldAccount.plaidItem.id).patch({
-        pausedAt: new Date(),
+        pausedAt: null,
       });
     });
   }

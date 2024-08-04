@@ -127,7 +127,7 @@ export class BankAccountsController extends BaseController {
   }
 
   /**
-   * 
+   * Resumes the bank account feeds sync.
    * @param {Request} req 
    * @param {Response} res 
    * @param {NextFunction} next 
@@ -154,7 +154,7 @@ export class BankAccountsController extends BaseController {
   }
 
   /**
-   * 
+   * Pauses the bank account feeds sync.
    * @param {Request} req 
    * @param {Response} res 
    * @param {NextFunction} next 

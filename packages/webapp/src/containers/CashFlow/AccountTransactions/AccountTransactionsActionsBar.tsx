@@ -78,6 +78,7 @@ function AccountTransactionsActionsBar({
   const addMoneyOutOptions = useMemo(() => getAddMoneyOutOptions(), []);
 
   const isFeedsActive = !!currentAccount.is_feeds_active;
+  const isFeedsPaused = currentAccount.is_feeds_paused;
   const isSyncingOwner = currentAccount.is_syncing_owner;
 
   // Handle table row size change.
@@ -244,7 +245,9 @@ function AccountTransactionsActionsBar({
           <Tooltip
             content={
               isFeedsActive
-                ? 'The bank syncing is active'
+                ? isFeedsPaused
+                  ? 'The bank syncing is paused'
+                  : 'The bank syncing is active'
                 : 'The bank syncing is disconnected'
             }
             minimal={true}
@@ -253,7 +256,13 @@ function AccountTransactionsActionsBar({
             <Button
               className={Classes.MINIMAL}
               icon={<Icon icon="feed" iconSize={16} />}
-              intent={isFeedsActive ? Intent.SUCCESS : Intent.DANGER}
+              intent={
+                isFeedsActive
+                  ? isFeedsPaused
+                    ? Intent.WARNING
+                    : Intent.SUCCESS
+                  : Intent.DANGER
+              }
             />
           </Tooltip>
         </If>
@@ -291,6 +300,11 @@ function AccountTransactionsActionsBar({
           content={
             <Menu>
               <If condition={isSyncingOwner && isFeedsActive}>
+                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
+                <MenuDivider />
+              </If>
+
+              <If condition={isSyncingOwner && isFeedsActive && !isFeedsPaused}>
                 <MenuItem
                   onClick={handlePauseFeedsSyncing}
                   text={'Pause bank feeds'}
@@ -298,7 +312,7 @@ function AccountTransactionsActionsBar({
                 <MenuDivider />
               </If>
 
-              <If condition={isSyncingOwner && isFeedsActive}>
+              <If condition={isSyncingOwner && isFeedsActive && isFeedsPaused}>
                 <MenuItem
                   onClick={handleResumeFeedsSyncing}
                   text={'Resume bank feeds'}
@@ -306,10 +320,6 @@ function AccountTransactionsActionsBar({
                 <MenuDivider />
               </If>
 
-              <If condition={isSyncingOwner && isFeedsActive}>
-                <MenuItem onClick={handleBankUpdateClick} text={'Update'} />
-                <MenuDivider />
-              </If>
               <MenuItem onClick={handleBankRulesClick} text={'Bank rules'} />
 
               <If condition={isSyncingOwner && isFeedsActive}>
