@@ -25,7 +25,10 @@ export class GetAccount {
     const { accountRepository } = this.tenancy.repositories(tenantId);
 
     // Find the given account or throw not found error.
-    const account = await Account.query().findById(accountId).throwIfNotFound();
+    const account = await Account.query()
+      .findById(accountId)
+      .withGraphFetched('plaidItem')
+      .throwIfNotFound();
 
     const accountsGraph = await accountRepository.getDependencyGraph();
 

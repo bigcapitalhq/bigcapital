@@ -1,9 +1,9 @@
 import { Inject, Service } from 'typedi';
 import { NextFunction, Request, Response, Router } from 'express';
 import BaseController from '@/api/controllers/BaseController';
-import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 import { GetBankAccountSummary } from '@/services/Banking/BankAccounts/GetBankAccountSummary';
 import { BankAccountsApplication } from '@/services/Banking/BankAccounts/BankAccountsApplication';
+import { param } from 'express-validator';
 
 @Service()
 export class BankAccountsController extends BaseController {
@@ -25,6 +25,22 @@ export class BankAccountsController extends BaseController {
       this.disconnectBankAccount.bind(this)
     );
     router.post('/:bankAccountId/update', this.refreshBankAccount.bind(this));
+    router.post(
+      '/:bankAccountId/pause_feeds',
+      [
+        param('bankAccountId').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
+      this.pauseBankAccountFeeds.bind(this)
+    );
+    router.post(
+      '/:bankAccountId/resume_feeds',
+      [
+        param('bankAccountId').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
+      this.resumeBankAccountFeeds.bind(this)
+    );
 
     return router;
   }
@@ -104,6 +120,60 @@ export class BankAccountsController extends BaseController {
       return res.status(200).send({
         id: bankAccountId,
         message: 'The bank account has been disconnected.',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Resumes the bank account feeds sync.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns {Promise<Response | void>}
+   */
+  async resumeBankAccountFeeds(
+    req: Request<{ bankAccountId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { bankAccountId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.bankAccountsApp.resumeBankAccount(tenantId, bankAccountId);
+
+      return res.status(200).send({
+        message: 'The bank account feeds syncing has been resumed.',
+        id: bankAccountId,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Pauses the bank account feeds sync.
+   * @param {Request} req 
+   * @param {Response} res 
+   * @param {NextFunction} next 
+   * @returns {Promise<Response | void>}
+   */
+  async pauseBankAccountFeeds(
+    req: Request<{ bankAccountId: number }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { bankAccountId } = req.params;
+    const { tenantId } = req;
+
+    try {
+      await this.bankAccountsApp.pauseBankAccount(tenantId, bankAccountId);
+
+      return res.status(200).send({
+        message: 'The bank account feeds syncing has been paused.',
+        id: bankAccountId,
       });
     } catch (error) {
       next(error);

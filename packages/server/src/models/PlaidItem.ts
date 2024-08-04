@@ -1,6 +1,8 @@
 import TenantModel from 'models/TenantModel';
 
 export default class PlaidItem extends TenantModel {
+  pausedAt: Date;
+
   /**
    * Table name.
    */
@@ -20,5 +22,20 @@ export default class PlaidItem extends TenantModel {
    */
   static get relationMappings() {
     return {};
+  }
+
+  /**
+   * Virtual attributes.
+   */
+  static get virtualAttributes() {
+    return ['isPaused'];
+  }
+
+  /**
+   * Detarmines whether the Plaid item feeds syncing is paused.
+   * @return {boolean}
+   */
+  get isPaused() {
+    return !!this.pausedAt;
   }
 }

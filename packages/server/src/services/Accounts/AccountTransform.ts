@@ -18,7 +18,16 @@ export class AccountTransformer extends Transformer {
       'flattenName',
       'bankBalanceFormatted',
       'lastFeedsUpdatedAtFormatted',
+      'isFeedsPaused',
     ];
+  };
+
+  /**
+   * Exclude attributes.
+   * @returns {string[]}
+   */
+  public excludeAttributes = (): string[] => {
+    return ['plaidItem'];
   };
 
   /**
@@ -64,6 +73,15 @@ export class AccountTransformer extends Transformer {
    */
   protected lastFeedsUpdatedAtFormatted = (account: IAccount): string => {
     return this.formatDate(account.lastFeedsUpdatedAt);
+  };
+
+  /**
+   * Detarmines whether the bank account connection is paused.
+   * @param account
+   * @returns {boolean}
+   */
+  protected isFeedsPaused = (account: any): boolean => {
+    return account.plaidItem?.isPaused || false;
   };
 
   /**
