@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React from 'react';
+import clsx from 'classnames';
 import styled from 'styled-components';
 import { Intent } from '@blueprintjs/core';
 import {
@@ -12,17 +13,19 @@ import {
   AppToaster,
 } from '@/components';
 import { TABLES } from '@/constants/tables';
-import { ActionsMenu } from './UncategorizedTransactions/components';
+import { ActionsMenu } from './components';
 
 import withSettings from '@/containers/Settings/withSettings';
-import { withBankingActions } from '../withBankingActions';
+import { withBankingActions } from '../../withBankingActions';
 
 import { useMemorizedColumnsWidths } from '@/hooks';
-import { useAccountUncategorizedTransactionsColumns } from './components';
-import { useAccountUncategorizedTransactionsContext } from './AllTransactionsUncategorizedBoot';
+import { useAccountUncategorizedTransactionsContext } from '../AllTransactionsUncategorizedBoot';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
+import { useAccountUncategorizedTransactionsColumns } from './hooks';
 
 import { compose } from '@/utils';
+import { withBanking } from '../../withBanking';
+import styles from './AccountTransactionsUncategorizedTable.module.scss';
 
 /**
  * Account transactions data table.
@@ -31,9 +34,16 @@ function AccountTransactionsDataTable({
   // #withSettings
   cashflowTansactionsTableSize,
 
+  // #withBanking
+  openMatchingTransactionAside,
+  enableMultipleCategorization,
+
   // #withBankingActions
   setUncategorizedTransactionIdForMatching,
   setUncategorizedTransactionsSelected,
+
+  addTransactionsToCategorizeSelected,
+  setTransactionsToCategorizeSelected,
 }) {
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
@@ -51,7 +61,11 @@ function AccountTransactionsDataTable({
 
   // Handle cell click.
   const handleCellClick = (cell) => {
-    setUncategorizedTransactionIdForMatching(cell.row.original.id);
+    if (enableMultipleCategorization) {
+      addTransactionsToCategorizeSelected(cell.row.original.id);
+    } else {
+      setTransactionsToCategorizeSelected(cell.row.original.id);
+    }
   };
   // Handles categorize button click.
   const handleCategorizeBtnClick = (transaction) => {
@@ -66,18 +80,12 @@ function AccountTransactionsDataTable({
           message: 'The bank transaction has been excluded successfully.',
         });
       })
-      .catch((error) => {
+      .catch(() => {
         AppToaster.show({
           intent: Intent.DANGER,
           message: 'Something went wrong.',
         });
       });
-  };
-
-  // Handle selected rows change.
-  const handleSelectedRowsChange = (selected) => {
-    const _selectedIds = selected?.map((row) => row.original.id);
-    setUncategorizedTransactionsSelected(_selectedIds);
   };
 
   return (
@@ -106,12 +114,13 @@ function AccountTransactionsDataTable({
       noResults={
         'There is no uncategorized transactions in the current account.'
       }
-      className="table-constrant"
-      onSelectedRowsChange={handleSelectedRowsChange}
       payload={{
         onExclude: handleExcludeTransaction,
         onCategorize: handleCategorizeBtnClick,
       }}
+      className={clsx('table-constrant', styles.table, {
+        [styles.showCategorizeColumn]: enableMultipleCategorization,
+      })}
     />
   );
 }
@@ -121,6 +130,12 @@ export default compose(
     cashflowTansactionsTableSize: cashflowTransactionsSettings?.tableSize,
   })),
   withBankingActions,
+  withBanking(
+    ({ openMatchingTransactionAside, enableMultipleCategorization }) => ({
+      openMatchingTransactionAside,
+      enableMultipleCategorization,
+    }),
+  ),
 )(AccountTransactionsDataTable);
 
 const DashboardConstrantTable = styled(DataTable)`

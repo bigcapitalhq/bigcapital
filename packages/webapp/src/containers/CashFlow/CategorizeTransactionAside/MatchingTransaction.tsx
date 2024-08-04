@@ -25,9 +25,9 @@ import {
   WithBankingActionsProps,
   withBankingActions,
 } from '../withBankingActions';
-import styles from './CategorizeTransactionAside.module.scss';
-import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
 import { withBanking } from '../withBanking';
+import { MatchingReconcileTransactionForm } from './MatchingReconcileTransactionAside/MatchingReconcileTransactionForm';
+import styles from './CategorizeTransactionAside.module.scss';
 
 const initialValues = {
   matched: {},
@@ -40,8 +40,11 @@ const initialValues = {
 function MatchingBankTransactionRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
+
+  // #withBanking
+  transactionsToCategorizeIdsSelected,
 }) {
-  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
+  const { uncategorizedTransactionIds } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: matchTransaction } = useMatchUncategorizedTransaction();
 
   // Handles the form submitting.
@@ -49,7 +52,7 @@ function MatchingBankTransactionRoot({
     values: MatchingTransactionFormValues,
     { setSubmitting }: FormikHelpers<MatchingTransactionFormValues>,
   ) => {
-    const _values = transformToReq(values);
+    const _values = transformToReq(values, uncategorizedTransactionIds);
 
     if (_values.matchedTransactions?.length === 0) {
       AppToaster.show({
@@ -59,7 +62,7 @@ function MatchingBankTransactionRoot({
       return;
     }
     setSubmitting(true);
-    matchTransaction({ id: uncategorizedTransactionId, value: _values })
+    matchTransaction(_values)
       .then(() => {
         AppToaster.show({
           intent: Intent.SUCCESS,
@@ -78,7 +81,7 @@ function MatchingBankTransactionRoot({
             message: `The total amount does not equal the uncategorized transaction.`,
             intent: Intent.DANGER,
           });
-
+          setSubmitting(false);
           return;
         }
         AppToaster.show({
@@ -91,7 +94,7 @@ function MatchingBankTransactionRoot({
 
   return (
     <MatchingTransactionBoot
-      uncategorizedTransactionId={uncategorizedTransactionId}
+      uncategorizedTransactionsIds={uncategorizedTransactionIds}
     >
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <MatchingBankTransactionFormContent />
@@ -100,9 +103,12 @@ function MatchingBankTransactionRoot({
   );
 }
 
-export const MatchingBankTransaction = R.compose(withBankingActions)(
-  MatchingBankTransactionRoot,
-);
+export const MatchingBankTransaction = R.compose(
+  withBankingActions,
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    transactionsToCategorizeIdsSelected,
+  })),
+)(MatchingBankTransactionRoot);
 
 /**
  * Matching bank transaction form content.

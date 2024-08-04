@@ -1,16 +1,13 @@
 // @ts-nocheck
-import React from 'react';
-import { Spinner } from '@blueprintjs/core';
-import { useUncategorizedTransaction } from '@/hooks/query';
+import React, { useMemo } from 'react';
+import { castArray, uniq } from 'lodash';
 
 interface CategorizeTransactionTabsValue {
-  uncategorizedTransactionId: number;
-  isUncategorizedTransactionLoading: boolean;
-  uncategorizedTransaction: any;
+  uncategorizedTransactionIds: Array<number>;
 }
 
 interface CategorizeTransactionTabsBootProps {
-  uncategorizedTransactionId: number;
+  uncategorizedTransactionIds: number | Array<number>;
   children: React.ReactNode;
 }
 
@@ -26,28 +23,23 @@ export function CategorizeTransactionTabsBoot({
   uncategorizedTransactionId,
   children,
 }: CategorizeTransactionTabsBootProps) {
-  const {
-    data: uncategorizedTransaction,
-    isLoading: isUncategorizedTransactionLoading,
-  } = useUncategorizedTransaction(uncategorizedTransactionId);
+  const uncategorizedTransactionIds = useMemo(
+    () => uniq(castArray(uncategorizedTransactionId)),
+    [uncategorizedTransactionId],
+  );
 
   const provider = {
-    uncategorizedTransactionId,
-    uncategorizedTransaction,
-    isUncategorizedTransactionLoading,
+    uncategorizedTransactionIds,
   };
-  const isLoading = isUncategorizedTransactionLoading;
-
-  // Use a key prop to force re-render of children when uncategorizedTransactionId changes
+  // Use a key prop to force re-render of children when `uncategorizedTransactionIds` changes
   const childrenPerKey = React.useMemo(() => {
     return React.Children.map(children, (child) =>
-      React.cloneElement(child, { key: uncategorizedTransactionId }),
+      React.cloneElement(child, {
+        key: uncategorizedTransactionIds?.join(','),
+      }),
     );
-  }, [children, uncategorizedTransactionId]);
+  }, [children, uncategorizedTransactionIds]);
 
-  if (isLoading) {
-    return <Spinner size={30} />;
-  }
   return (
     <CategorizeTransactionTabsBootContext.Provider value={provider}>
       {childrenPerKey}

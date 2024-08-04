@@ -1,8 +1,8 @@
 // @ts-nocheck
 import * as R from 'ramda';
 import { transformToForm, transfromToSnakeCase } from '@/utils';
-import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
 import { useCategorizeTransactionBoot } from './CategorizeTransactionBoot';
+import { GetAutofillCategorizeTransaction } from '@/hooks/query/bank-rules';
 
 // Default initial form values.
 export const defaultInitialValues = {
@@ -18,38 +18,19 @@ export const defaultInitialValues = {
 };
 
 export const transformToCategorizeForm = (
-  uncategorizedTransaction: any,
-  recognizedTransaction?: any,
+  autofillCategorizeTransaction: GetAutofillCategorizeTransaction,
 ) => {
-  let defaultValues = {
-    debitAccountId: uncategorizedTransaction.account_id,
-    transactionType: uncategorizedTransaction.is_deposit_transaction
-      ? 'other_income'
-      : 'other_expense',
-    amount: uncategorizedTransaction.amount,
-    date: uncategorizedTransaction.date,
-  };
-  if (recognizedTransaction) {
-    const recognizedDefaults = getRecognizedTransactionDefaultValues(
-      recognizedTransaction,
-    );
-    defaultValues = R.merge(defaultValues, recognizedDefaults);
-  }
-  return transformToForm(defaultValues, defaultInitialValues);
+  return transformToForm(autofillCategorizeTransaction, defaultInitialValues);
 };
 
-export const getRecognizedTransactionDefaultValues = (
-  recognizedTransaction: any,
+export const tranformToRequest = (
+  formValues: Record<string, any>,
+  uncategorizedTransactionIds: Array<number>,
 ) => {
   return {
-    creditAccountId: recognizedTransaction.assignedAccountId || '',
-    // transactionType: recognizedTransaction.assignCategory,
-    referenceNo: recognizedTransaction.referenceNo || '',
+    uncategorized_transaction_ids: uncategorizedTransactionIds,
+    ...transfromToSnakeCase(formValues),
   };
-};
-
-export const tranformToRequest = (formValues: Record<string, any>) => {
-  return transfromToSnakeCase(formValues);
 };
 
 /**
@@ -57,9 +38,8 @@ export const tranformToRequest = (formValues: Record<string, any>) => {
  * @returns
  */
 export const useCategorizeTransactionFormInitialValues = () => {
-  const { primaryBranch, recognizedTranasction } =
+  const { primaryBranch, autofillCategorizeValues } =
     useCategorizeTransactionBoot();
-  const { uncategorizedTransaction } = useCategorizeTransactionTabsBoot();
 
   return {
     ...defaultInitialValues,
@@ -68,10 +48,7 @@ export const useCategorizeTransactionFormInitialValues = () => {
      * values such as `notes` come back from the API as null, so remove those
      * as well.
      */
-    ...transformToCategorizeForm(
-      uncategorizedTransaction,
-      recognizedTranasction,
-    ),
+    ...transformToCategorizeForm(autofillCategorizeValues),
 
     /** Assign the primary branch id as default value. */
     branchId: primaryBranch?.id || null,

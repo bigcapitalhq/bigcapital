@@ -8,6 +8,7 @@ import {
   ICashflowTransactionUncategorizedPayload,
   ICashflowTransactionUncategorizingPayload,
 } from '@/interfaces';
+import { validateTransactionShouldBeCategorized } from './utils';
 
 @Service()
 export class UncategorizeCashflowTransaction {
@@ -24,11 +25,12 @@ export class UncategorizeCashflowTransaction {
    * Uncategorizes the given cashflow transaction.
    * @param {number} tenantId
    * @param {number} cashflowTransactionId
+   * @returns {Promise<Array<number>>}
    */
   public async uncategorize(
     tenantId: number,
     uncategorizedTransactionId: number
-  ) {
+  ): Promise<Array<number>> {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
 
     const oldUncategorizedTransaction =
@@ -36,6 +38,22 @@ export class UncategorizeCashflowTransaction {
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
+    validateTransactionShouldBeCategorized(oldUncategorizedTransaction);
+
+    const associatedUncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query()
+        .where('categorizeRefId', oldUncategorizedTransaction.categorizeRefId)
+        .where(
+          'categorizeRefType',
+          oldUncategorizedTransaction.categorizeRefType
+        );
+    const oldUncategorizedTransactions = [
+      oldUncategorizedTransaction,
+      ...associatedUncategorizedTransactions,
+    ];
+    const oldUncategoirzedTransactionsIds = oldUncategorizedTransactions.map(
+      (t) => t.id
+    );
     // Updates the transaction under UOW.
     return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       // Triggers `onTransactionUncategorizing` event.
@@ -43,30 +61,36 @@ export class UncategorizeCashflowTransaction {
         events.cashflow.onTransactionUncategorizing,
         {
           tenantId,
+          uncategorizedTransactionId,
+          oldUncategorizedTransactions,
           trx,
         } as ICashflowTransactionUncategorizingPayload
       );
       // Removes the ref relation with the related transaction.
-      const uncategorizedTransaction =
-        await UncategorizedCashflowTransaction.query(trx).updateAndFetchById(
-          uncategorizedTransactionId,
-          {
-            categorized: false,
-            categorizeRefId: null,
-            categorizeRefType: null,
-          }
+      await UncategorizedCashflowTransaction.query(trx)
+        .whereIn('id', oldUncategoirzedTransactionsIds)
+        .patch({
+          categorized: false,
+          categorizeRefId: null,
+          categorizeRefType: null,
+        });
+      const uncategorizedTransactions =
+        await UncategorizedCashflowTransaction.query(trx).whereIn(
+          'id',
+          oldUncategoirzedTransactionsIds
         );
       // Triggers `onTransactionUncategorized` event.
       await this.eventPublisher.emitAsync(
         events.cashflow.onTransactionUncategorized,
         {
           tenantId,
-          uncategorizedTransaction,
-          oldUncategorizedTransaction,
+          uncategorizedTransactionId,
+          uncategorizedTransactions,
+          oldUncategorizedTransactions,
           trx,
         } as ICashflowTransactionUncategorizedPayload
       );
-      return uncategorizedTransaction;
+      return oldUncategoirzedTransactionsIds;
     });
   }
 }

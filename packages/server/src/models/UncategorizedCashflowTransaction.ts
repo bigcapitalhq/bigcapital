@@ -31,7 +31,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
   /**
    * Timestamps columns.
    */
-  static get timestamps() {
+  get timestamps() {
     return ['createdAt', 'updatedAt'];
   }
 

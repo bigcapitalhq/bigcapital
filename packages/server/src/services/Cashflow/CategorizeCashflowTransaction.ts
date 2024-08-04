@@ -1,4 +1,6 @@
 import { Inject, Service } from 'typedi';
+import { castArray } from 'lodash';
+import { Knex } from 'knex';
 import HasTenancyService from '../Tenancy/TenancyService';
 import events from '@/subscribers/events';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
@@ -8,12 +10,12 @@ import {
   ICashflowTransactionUncategorizingPayload,
   ICategorizeCashflowTransactioDTO,
 } from '@/interfaces';
-import { Knex } from 'knex';
-import { transformCategorizeTransToCashflow } from './utils';
+import {
+  transformCategorizeTransToCashflow,
+  validateUncategorizedTransactionsNotExcluded,
+} from './utils';
 import { CommandCashflowValidator } from './CommandCasflowValidator';
 import NewCashflowTransactionService from './NewCashflowTransactionService';
-import { ServiceError } from '@/exceptions';
-import { ERRORS } from './constants';
 
 @Service()
 export class CategorizeCashflowTransaction {
@@ -39,27 +41,29 @@ export class CategorizeCashflowTransaction {
    */
   public async categorize(
     tenantId: number,
-    uncategorizedTransactionId: number,
+    uncategorizedTransactionId: number | Array<number>,
     categorizeDTO: ICategorizeCashflowTransactioDTO
   ) {
     const { UncategorizedCashflowTransaction } = this.tenancy.models(tenantId);
+    const uncategorizedTransactionIds = castArray(uncategorizedTransactionId);
 
     // Retrieves the uncategorized transaction or throw an error.
-    const transaction = await UncategorizedCashflowTransaction.query()
-      .findById(uncategorizedTransactionId)
-      .throwIfNotFound();
+    const oldUncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query()
+        .whereIn('id', uncategorizedTransactionIds)
+        .throwIfNotFound();
 
     // Validate cannot categorize excluded transaction.
-    if (transaction.excluded) {
-      throw new ServiceError(ERRORS.CANNOT_CATEGORIZE_EXCLUDED_TRANSACTION);
-    }
-    // Validates the transaction shouldn't be categorized before.
-    this.commandValidators.validateTransactionShouldNotCategorized(transaction);
+    validateUncategorizedTransactionsNotExcluded(oldUncategorizedTransactions);
 
+    // Validates the transaction shouldn't be categorized before.
+    this.commandValidators.validateTransactionsShouldNotCategorized(
+      oldUncategorizedTransactions
+    );
     // Validate the uncateogirzed transaction if it's deposit the transaction direction
     // should `IN` and the same thing if it's withdrawal the direction should be OUT.
     this.commandValidators.validateUncategorizeTransactionType(
-      transaction,
+      oldUncategorizedTransactions,
       categorizeDTO.transactionType
     );
     // Edits the cashflow transaction under UOW env.
@@ -69,12 +73,13 @@ export class CategorizeCashflowTransaction {
         events.cashflow.onTransactionCategorizing,
         {
           tenantId,
+          oldUncategorizedTransactions,
           trx,
         } as ICashflowTransactionUncategorizingPayload
       );
       // Transformes the categorize DTO to the cashflow transaction.
       const cashflowTransactionDTO = transformCategorizeTransToCashflow(
-        transaction,
+        oldUncategorizedTransactions,
         categorizeDTO
       );
       // Creates a new cashflow transaction.
@@ -83,15 +88,20 @@ export class CategorizeCashflowTransaction {
           tenantId,
           cashflowTransactionDTO
         );
+
       // Updates the uncategorized transaction as categorized.
-      const uncategorizedTransaction =
-        await UncategorizedCashflowTransaction.query(trx).patchAndFetchById(
-          uncategorizedTransactionId,
-          {
-            categorized: true,
-            categorizeRefType: 'CashflowTransaction',
-            categorizeRefId: cashflowTransaction.id,
-          }
+      await UncategorizedCashflowTransaction.query(trx)
+        .whereIn('id', uncategorizedTransactionIds)
+        .patch({
+          categorized: true,
+          categorizeRefType: 'CashflowTransaction',
+          categorizeRefId: cashflowTransaction.id,
+        });
+      // Fetch the new updated uncategorized transactions.
+      const uncategorizedTransactions =
+        await UncategorizedCashflowTransaction.query(trx).whereIn(
+          'id',
+          uncategorizedTransactionIds
         );
       // Triggers `onCashflowTransactionCategorized` event.
       await this.eventPublisher.emitAsync(
@@ -99,7 +109,8 @@ export class CategorizeCashflowTransaction {
         {
           tenantId,
           cashflowTransaction,
-          uncategorizedTransaction,
+          uncategorizedTransactions,
+          oldUncategorizedTransactions,
           categorizeDTO,
           trx,
         } as ICashflowTransactionCategorizedPayload

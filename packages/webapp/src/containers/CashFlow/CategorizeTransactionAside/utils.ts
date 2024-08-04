@@ -4,7 +4,10 @@ import { useMatchingTransactionBoot } from './MatchingTransactionBoot';
 import { useCategorizeTransactionTabsBoot } from './CategorizeTransactionTabsBoot';
 import { useMemo } from 'react';
 
-export const transformToReq = (values: MatchingTransactionFormValues) => {
+export const transformToReq = (
+  values: MatchingTransactionFormValues,
+  uncategorizedTransactions: Array<number>,
+) => {
   const matchedTransactions = Object.entries(values.matched)
     .filter(([key, value]) => value)
     .map(([key]) => {
@@ -12,14 +15,13 @@ export const transformToReq = (values: MatchingTransactionFormValues) => {
 
       return { reference_type, reference_id: parseInt(reference_id, 10) };
     });
-
-  return { matchedTransactions };
+  return { matchedTransactions, uncategorizedTransactions };
 };
 
 export const useGetPendingAmountMatched = () => {
   const { values } = useFormikContext<MatchingTransactionFormValues>();
-  const { perfectMatches, possibleMatches } = useMatchingTransactionBoot();
-  const { uncategorizedTransaction } = useCategorizeTransactionTabsBoot();
+  const { perfectMatches, possibleMatches, totalPending } =
+    useMatchingTransactionBoot();
 
   return useMemo(() => {
     const matchedItems = [...perfectMatches, ...possibleMatches].filter(
@@ -34,11 +36,10 @@ export const useGetPendingAmountMatched = () => {
         (item.transactionNormal === 'debit' ? 1 : -1) * parseFloat(item.amount),
       0,
     );
-    const amount = uncategorizedTransaction.amount;
-    const pendingAmount = amount - totalMatchedAmount;
+    const pendingAmount = totalPending - totalMatchedAmount;
 
     return pendingAmount;
-  }, [uncategorizedTransaction, perfectMatches, possibleMatches, values]);
+  }, [totalPending, perfectMatches, possibleMatches, values]);
 };
 
 export const useAtleastOneMatchedSelected = () => {

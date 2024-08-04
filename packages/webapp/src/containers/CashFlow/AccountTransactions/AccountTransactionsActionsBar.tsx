@@ -12,6 +12,7 @@ import {
   PopoverInteractionKind,
   Position,
   Intent,
+  Switch,
   Tooltip,
   MenuDivider,
 } from '@blueprintjs/core';
@@ -44,6 +45,7 @@ import {
   useExcludeUncategorizedTransactions,
   useUnexcludeUncategorizedTransactions,
 } from '@/hooks/query/bank-rules';
+import { withBankingActions } from '../withBankingActions';
 import { withBanking } from '../withBanking';
 import withAlertActions from '@/containers/Alert/withAlertActions';
 import { DialogsName } from '@/constants/dialogs';
@@ -61,6 +63,10 @@ function AccountTransactionsActionsBar({
   // #withBanking
   uncategorizedTransationsIdsSelected,
   excludedTransactionsIdsSelected,
+  openMatchingTransactionAside,
+
+  // #withBankingActions
+  enableMultipleCategorization,
 
   // #withAlerts
   openAlert,
@@ -185,6 +191,10 @@ function AccountTransactionsActionsBar({
       });
   };
 
+  // Handle multi select transactions for categorization or matching.
+  const handleMultipleCategorizingSwitch = (event) => {
+    enableMultipleCategorization(event.currentTarget.checked);
+  }
   // Handle resume bank feeds syncing.
   const handleResumeFeedsSyncing = () => {
     openAlert('resume-feeds-syncing-bank-accounnt', {
@@ -290,6 +300,22 @@ function AccountTransactionsActionsBar({
       </NavbarGroup>
 
       <NavbarGroup align={Alignment.RIGHT}>
+        {openMatchingTransactionAside && (
+          <Tooltip
+            content={
+              'Enables to categorize or matching multiple bank transactions into one transaction.'
+            }
+            position={Position.BOTTOM}
+            minimal
+          >
+            <Switch
+              label={'Multi Select'}
+              inline
+              onChange={handleMultipleCategorizingSwitch}
+            />
+          </Tooltip>
+        )}
+        <NavbarDivider />
         <Popover
           minimal={true}
           interactionKind={PopoverInteractionKind.CLICK}
@@ -352,9 +378,12 @@ export default compose(
     ({
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
+      openMatchingTransactionAside,
     }) => ({
       uncategorizedTransationsIdsSelected,
       excludedTransactionsIdsSelected,
+      openMatchingTransactionAside,
     }),
   ),
+  withBankingActions,
 )(AccountTransactionsActionsBar);

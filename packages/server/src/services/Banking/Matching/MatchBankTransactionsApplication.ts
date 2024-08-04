@@ -2,7 +2,7 @@ import { Inject, Service } from 'typedi';
 import { GetMatchedTransactions } from './GetMatchedTransactions';
 import { MatchBankTransactions } from './MatchTransactions';
 import { UnmatchMatchedBankTransaction } from './UnmatchMatchedTransaction';
-import { GetMatchedTransactionsFilter, IMatchTransactionsDTO } from './types';
+import { GetMatchedTransactionsFilter, IMatchTransactionDTO } from './types';
 
 @Service()
 export class MatchBankTransactionsApplication {
@@ -23,12 +23,12 @@ export class MatchBankTransactionsApplication {
    */
   public getMatchedTransactions(
     tenantId: number,
-    uncategorizedTransactionId: number,
+    uncategorizedTransactionsIds: Array<number>,
     filter: GetMatchedTransactionsFilter
   ) {
     return this.getMatchedTransactionsService.getMatchedTransactions(
       tenantId,
-      uncategorizedTransactionId,
+      uncategorizedTransactionsIds,
       filter
     );
   }
@@ -42,13 +42,13 @@ export class MatchBankTransactionsApplication {
    */
   public matchTransaction(
     tenantId: number,
-    uncategorizedTransactionId: number,
-    matchTransactionsDTO: IMatchTransactionsDTO
+    uncategorizedTransactionId: number | Array<number>,
+    matchedTransactions: Array<IMatchTransactionDTO>
   ): Promise<void> {
     return this.matchTransactionService.matchTransaction(
       tenantId,
       uncategorizedTransactionId,
-      matchTransactionsDTO
+      matchedTransactions
     );
   }
 

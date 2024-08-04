@@ -22,7 +22,7 @@ function CategorizeTransactionFormRoot({
   // #withBankingActions
   closeMatchingTransactionAside,
 }) {
-  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
+  const { uncategorizedTransactionIds } = useCategorizeTransactionTabsBoot();
   const { mutateAsync: categorizeTransaction } = useCategorizeTransaction();
 
   // Form initial values in create and edit mode.
@@ -30,10 +30,10 @@ function CategorizeTransactionFormRoot({
 
   // Callbacks handles form submit.
   const handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    const transformedValues = tranformToRequest(values);
+    const _values = tranformToRequest(values, uncategorizedTransactionIds);
 
     setSubmitting(true);
-    categorizeTransaction([uncategorizedTransactionId, transformedValues])
+    categorizeTransaction(_values)
       .then(() => {
         setSubmitting(false);
 

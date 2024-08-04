@@ -1,6 +1,6 @@
 import { Service, Inject } from 'typedi';
 import { Router, Request, Response, NextFunction } from 'express';
-import { param } from 'express-validator';
+import { param, query } from 'express-validator';
 import BaseController from '../BaseController';
 import { ServiceError } from '@/exceptions';
 import CheckPolicies from '@/api/middleware/CheckPolicies';
@@ -24,7 +24,12 @@ export default class GetCashflowAccounts extends BaseController {
     const router = Router();
 
     router.get(
-      '/transactions/:transactionId/matches',
+      '/transactions/matches',
+      [
+        query('uncategorizeTransactionsIds').exists().isArray({ min: 1 }),
+        query('uncategorizeTransactionsIds.*').exists().isNumeric().toInt(),
+      ],
+      this.validationResult,
       this.getMatchedTransactions.bind(this)
     );
     router.get(
@@ -44,7 +49,7 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {NextFunction} next
    */
   private getCashflowTransaction = async (
-    req: Request,
+    req: Request<{ transactionId: number }>,
     res: Response,
     next: NextFunction
   ) => {
@@ -71,19 +76,24 @@ export default class GetCashflowAccounts extends BaseController {
    * @param {NextFunction} next
    */
   private async getMatchedTransactions(
-    req: Request<{ transactionId: number }>,
+    req: Request<
+      { transactionId: number },
+      null,
+      null,
+      { uncategorizeTransactionsIds: Array<number> }
+    >,
     res: Response,
     next: NextFunction
   ) {
     const { tenantId } = req;
-    const { transactionId } = req.params;
+    const uncategorizeTransactionsIds = req.query.uncategorizeTransactionsIds;
     const filter = this.matchedQueryData(req) as GetMatchedTransactionsFilter;
 
     try {
       const data =
         await this.bankTransactionsMatchingApp.getMatchedTransactions(
           tenantId,
-          transactionId,
+          uncategorizeTransactionsIds,
           filter
         );
       return res.status(200).send(data);

@@ -243,8 +243,7 @@ export function useCategorizeTransaction(props) {
   const apiRequest = useApiRequest();
 
   return useMutation(
-    ([id, values]) =>
-      apiRequest.post(`cashflow/transactions/${id}/categorize`, values),
+    (values) => apiRequest.post(`cashflow/transactions/categorize`, values),
     {
       onSuccess: (res, id) => {
         // Invalidate queries.
@@ -279,7 +278,6 @@ export function useUncategorizeTransaction(props) {
         queryClient.invalidateQueries(
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
         );
-
         // Invalidate bank account summary.
         queryClient.invalidateQueries('BANK_ACCOUNT_SUMMARY_META');
       },

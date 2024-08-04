@@ -1,15 +1,16 @@
 // @ts-nocheck
 import styled from 'styled-components';
+import * as R from 'ramda';
 import { CategorizeTransactionBoot } from './CategorizeTransactionBoot';
 import { CategorizeTransactionForm } from './CategorizeTransactionForm';
-import { useCategorizeTransactionTabsBoot } from '@/containers/CashFlow/CategorizeTransactionAside/CategorizeTransactionTabsBoot';
+import { withBanking } from '@/containers/CashFlow/withBanking';
 
-export function CategorizeTransactionContent() {
-  const { uncategorizedTransactionId } = useCategorizeTransactionTabsBoot();
-
+function CategorizeTransactionContentRoot({
+  transactionsToCategorizeIdsSelected,
+}) {
   return (
     <CategorizeTransactionBoot
-      uncategorizedTransactionId={uncategorizedTransactionId}
+      uncategorizedTransactionsIds={transactionsToCategorizeIdsSelected}
     >
       <CategorizeTransactionDrawerBody>
         <CategorizeTransactionForm />
@@ -17,6 +18,12 @@ export function CategorizeTransactionContent() {
     </CategorizeTransactionBoot>
   );
 }
+
+export const CategorizeTransactionContent = R.compose(
+  withBanking(({ transactionsToCategorizeIdsSelected }) => ({
+    transactionsToCategorizeIdsSelected,
+  })),
+)(CategorizeTransactionContentRoot);
 
 const CategorizeTransactionDrawerBody = styled.div`
   display: flex;

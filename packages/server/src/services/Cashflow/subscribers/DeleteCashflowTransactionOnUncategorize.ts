@@ -1,8 +1,10 @@
 import { Inject, Service } from 'typedi';
+import { PromisePool } from '@supercharge/promise-pool';
 import events from '@/subscribers/events';
 import { ICashflowTransactionUncategorizedPayload } from '@/interfaces';
 import { DeleteCashflowTransaction } from '../DeleteCashflowTransactionService';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { ServiceError } from '@/exceptions';
 
 @Service()
 export class DeleteCashflowTransactionOnUncategorize {
@@ -25,18 +27,27 @@ export class DeleteCashflowTransactionOnUncategorize {
    */
   public async deleteCashflowTransactionOnUncategorize({
     tenantId,
-    oldUncategorizedTransaction,
+    oldUncategorizedTransactions,
     trx,
   }: ICashflowTransactionUncategorizedPayload) {
-    // Deletes the cashflow transaction.
-    if (
-      oldUncategorizedTransaction.categorizeRefType === 'CashflowTransaction'
-    ) {
-      await this.deleteCashflowTransactionService.deleteCashflowTransaction(
-        tenantId,
+    const _oldUncategorizedTransactions = oldUncategorizedTransactions.filter(
+      (transaction) => transaction.categorizeRefType === 'CashflowTransaction'
+    );
 
-        oldUncategorizedTransaction.categorizeRefId
-      );
+    // Deletes the cashflow transaction.
+    if (_oldUncategorizedTransactions.length > 0) {
+      const result = await PromisePool.withConcurrency(1)
+        .for(_oldUncategorizedTransactions)
+        .process(async (oldUncategorizedTransaction) => {
+          await this.deleteCashflowTransactionService.deleteCashflowTransaction(
+            tenantId,
+            oldUncategorizedTransaction.categorizeRefId,
+            trx
+          );
+        });
+      if (result.errors.length > 0) {
+        throw new ServiceError('SOMETHING_WRONG');
+      }
     }
   }
 }

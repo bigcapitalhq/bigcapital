@@ -5,6 +5,7 @@ import {
   IBankTransactionUnmatchedEventPayload,
 } from '../types';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import PromisePool from '@supercharge/promise-pool';
 
 @Service()
 export class DecrementUncategorizedTransactionOnMatching {
@@ -30,18 +31,24 @@ export class DecrementUncategorizedTransactionOnMatching {
    */
   public async decrementUnCategorizedTransactionsOnMatching({
     tenantId,
-    uncategorizedTransactionId,
+    uncategorizedTransactionIds,
     trx,
   }: IBankTransactionMatchedEventPayload) {
     const { UncategorizedCashflowTransaction, Account } =
       this.tenancy.models(tenantId);
 
-    const transaction = await UncategorizedCashflowTransaction.query().findById(
-      uncategorizedTransactionId
-    );
-    await Account.query(trx)
-      .findById(transaction.accountId)
-      .decrement('uncategorizedTransactions', 1);
+    const uncategorizedTransactions =
+      await UncategorizedCashflowTransaction.query().whereIn(
+        'id',
+        uncategorizedTransactionIds
+      );
+    await PromisePool.withConcurrency(1)
+      .for(uncategorizedTransactions)
+      .process(async (transaction) => {
+        await Account.query(trx)
+          .findById(transaction.accountId)
+          .decrement('uncategorizedTransactions', 1);
+      });
   }
 
   /**

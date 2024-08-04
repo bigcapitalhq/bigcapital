@@ -236,6 +236,7 @@ export interface ICashflowTransactionSchema {
 export interface ICashflowTransactionInput extends ICashflowTransactionSchema {}
 
 export interface ICategorizeCashflowTransactioDTO {
+  date: Date;
   creditAccountId: number;
   referenceNo: string;
   transactionNumber: string;

@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { includes, camelCase, upperFirst } from 'lodash';
+import { includes, camelCase, upperFirst, sumBy } from 'lodash';
 import { IAccount, IUncategorizedCashflowTransaction } from '@/interfaces';
 import { getCashflowTransactionType } from './utils';
 import { ServiceError } from '@/exceptions';
@@ -68,11 +68,15 @@ export class CommandCashflowValidator {
    * Validate the given transcation shouldn't be categorized.
    * @param {CashflowTransaction} cashflowTransaction
    */
-  public validateTransactionShouldNotCategorized(
-    cashflowTransaction: CashflowTransaction
+  public validateTransactionsShouldNotCategorized(
+    cashflowTransactions: Array<IUncategorizedCashflowTransaction>
   ) {
-    if (cashflowTransaction.uncategorize) {
-      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+    const categorized = cashflowTransactions.filter((t) => t.categorized);
+
+    if (categorized?.length > 0) {
+      throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED, '', {
+        ids: categorized.map((t) => t.id),
+      });
     }
   }
 
@@ -83,17 +87,19 @@ export class CommandCashflowValidator {
    * @throws {ServiceError(ERRORS.UNCATEGORIZED_TRANSACTION_TYPE_INVALID)}
    */
   public validateUncategorizeTransactionType(
-    uncategorizeTransaction: IUncategorizedCashflowTransaction,
+    uncategorizeTransactions: Array<IUncategorizedCashflowTransaction>,
     transactionType: string
   ) {
+    const amount = sumBy(uncategorizeTransactions, 'amount');
+    const isDepositTransaction = amount > 0;
+    const isWithdrawalTransaction = amount <= 0;
+
     const type = getCashflowTransactionType(
-      upperFirst(camelCase(transactionType)) as CASHFLOW_TRANSACTION_TYPE
+      transactionType as CASHFLOW_TRANSACTION_TYPE
     );
     if (
-      (type.direction === CASHFLOW_DIRECTION.IN &&
-        uncategorizeTransaction.isDepositTransaction) ||
-      (type.direction === CASHFLOW_DIRECTION.OUT &&
-        uncategorizeTransaction.isWithdrawalTransaction)
+      (type.direction === CASHFLOW_DIRECTION.IN && isDepositTransaction) ||
+      (type.direction === CASHFLOW_DIRECTION.OUT && isWithdrawalTransaction)
     ) {
       return;
     }

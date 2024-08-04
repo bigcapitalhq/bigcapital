@@ -1,7 +1,8 @@
-import { upperFirst, camelCase } from 'lodash';
+import { upperFirst, camelCase, first, sum, sumBy } from 'lodash';
 import {
   CASHFLOW_TRANSACTION_TYPE,
   CASHFLOW_TRANSACTION_TYPE_META,
+  ERRORS,
   ICashflowTransactionTypeMeta,
 } from './constants';
 import {
@@ -9,6 +10,8 @@ import {
   ICategorizeCashflowTransactioDTO,
   IUncategorizedCashflowTransaction,
 } from '@/interfaces';
+import { UncategorizeCashflowTransaction } from './UncategorizeCashflowTransaction';
+import { ServiceError } from '@/exceptions';
 
 /**
  * Ensures the given transaction type to transformed to appropriate format.
@@ -27,7 +30,9 @@ export const transformCashflowTransactionType = (type) => {
 export function getCashflowTransactionType(
   transactionType: CASHFLOW_TRANSACTION_TYPE
 ): ICashflowTransactionTypeMeta {
-  return CASHFLOW_TRANSACTION_TYPE_META[transactionType];
+  const _transactionType = transformCashflowTransactionType(transactionType);
+
+  return CASHFLOW_TRANSACTION_TYPE_META[_transactionType];
 }
 
 /**
@@ -46,22 +51,46 @@ export const getCashflowAccountTransactionsTypes = () => {
  * @returns {ICashflowNewCommandDTO}
  */
 export const transformCategorizeTransToCashflow = (
-  uncategorizeModel: IUncategorizedCashflowTransaction,
+  uncategorizeTransactions: Array<IUncategorizedCashflowTransaction>,
   categorizeDTO: ICategorizeCashflowTransactioDTO
 ): ICashflowNewCommandDTO => {
+  const uncategorizeTransaction = first(uncategorizeTransactions);
+  const amount = sumBy(uncategorizeTransactions, 'amount');
+  const amountAbs = Math.abs(amount);
+
   return {
-    date: uncategorizeModel.date,
-    referenceNo: categorizeDTO.referenceNo || uncategorizeModel.referenceNo,
-    description: categorizeDTO.description || uncategorizeModel.description,
-    cashflowAccountId: uncategorizeModel.accountId,
+    date: categorizeDTO.date,
+    referenceNo: categorizeDTO.referenceNo,
+    description: categorizeDTO.description,
+    cashflowAccountId: uncategorizeTransaction.accountId,
     creditAccountId: categorizeDTO.creditAccountId,
     exchangeRate: categorizeDTO.exchangeRate || 1,
-    currencyCode: uncategorizeModel.currencyCode,
-    amount: uncategorizeModel.amount,
+    currencyCode: categorizeDTO.currencyCode,
+    amount: amountAbs,
     transactionNumber: categorizeDTO.transactionNumber,
     transactionType: categorizeDTO.transactionType,
-    uncategorizedTransactionId: uncategorizeModel.id,
     branchId: categorizeDTO?.branchId,
     publish: true,
   };
+};
+
+export const validateUncategorizedTransactionsNotExcluded = (
+  transactions: Array<UncategorizeCashflowTransaction>
+) => {
+  const excluded = transactions.filter((tran) => tran.excluded);
+
+  if (excluded?.length > 0) {
+    throw new ServiceError(ERRORS.CANNOT_CATEGORIZE_EXCLUDED_TRANSACTION, '', {
+      ids: excluded.map((t) => t.id),
+    });
+  }
+};
+
+
+export const validateTransactionShouldBeCategorized = (
+  uncategorizedTransaction: any
+) => {
+  if (!uncategorizedTransaction.categorized) {
+    throw new ServiceError(ERRORS.TRANSACTION_NOT_CATEGORIZED);
+  }
 };
