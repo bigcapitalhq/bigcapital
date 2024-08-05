@@ -31,17 +31,21 @@ export class GetBankAccountSummary {
       .findById(bankAccountId)
       .throwIfNotFound();
 
+    const commonQuery = (q) => {
+      // Include just the given account.
+      q.where('accountId', bankAccountId);
+
+      // Only the not excluded.
+      q.modify('notExcluded');
+
+      // Only the not categorized.
+      q.modify('notCategorized');
+    };
+
     // Retrieves the uncategorized transactions count of the given bank account.
     const uncategorizedTranasctionsCount =
       await UncategorizedCashflowTransaction.query().onBuild((q) => {
-        // Include just the given account.
-        q.where('accountId', bankAccountId);
-
-        // Only the not excluded.
-        q.modify('notExcluded');
-
-        // Only the not categorized.
-        q.modify('notCategorized');
+        commonQuery(q);
 
         // Only the not matched bank transactions.
         q.withGraphJoined('matchedBankTransactions');
@@ -52,16 +56,18 @@ export class GetBankAccountSummary {
         q.first();
       });
 
-    // Retrieves the recognized transactions count of the given bank account.
-    const recognizedTransactionsCount = await RecognizedBankTransaction.query()
-      .whereExists(
-        UncategorizedCashflowTransaction.query().where(
-          'accountId',
-          bankAccountId
-        )
-      )
-      .count('id as total')
-      .first();
+    // Retrives the recognized transactions count.
+    const recognizedTransactionsCount =
+      await UncategorizedCashflowTransaction.query().onBuild((q) => {
+        commonQuery(q);
+
+        q.withGraphJoined('recognizedTransaction');
+        q.whereNotNull('recognizedTransaction.id');
+
+        // Count the results.
+        q.count('uncategorized_cashflow_transactions.id as total');
+        q.first();
+      });
 
     const totalUncategorizedTransactions =
       uncategorizedTranasctionsCount?.total || 0;
