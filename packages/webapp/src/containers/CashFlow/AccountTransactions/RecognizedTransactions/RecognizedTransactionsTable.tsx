@@ -20,6 +20,7 @@ import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot
 
 import { ActionsMenu } from './_components';
 import { compose } from '@/utils';
+import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import {
   WithBankingActionsProps,
@@ -33,8 +34,8 @@ interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
  * Renders the recognized account transactions datatable.
  */
 function RecognizedTransactionsTableRoot({
-  // #withBanking
-  setUncategorizedTransactionIdForMatching,
+  // #withBankingActions
+  setTransactionsToCategorizeSelected,
 }: RecognizedTransactionsTableProps) {
   const { mutateAsync: excludeBankTransaction } =
     useExcludeUncategorizedTransaction();
@@ -49,9 +50,11 @@ function RecognizedTransactionsTableRoot({
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_ACCOUNT_TRANSACTIONS);
 
+  const { scrollableRef } = useAccountTransactionsContext();
+
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    setUncategorizedTransactionIdForMatching(
+    setTransactionsToCategorizeSelected(
       cell.row.original.uncategorized_transaction_id,
     );
   };
@@ -74,7 +77,7 @@ function RecognizedTransactionsTableRoot({
 
   // Handles categorize button click.
   const handleCategorizeClick = (transaction) => {
-    setUncategorizedTransactionIdForMatching(
+    setTransactionsToCategorizeSelected(
       transaction.uncategorized_transaction_id,
     );
   };
@@ -102,6 +105,7 @@ function RecognizedTransactionsTableRoot({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
+      windowScrollerProps={{ scrollElement: scrollableRef }}
       noResults={<RecognizedTransactionsTableNoResults />}
       className="table-constrant"
       payload={{

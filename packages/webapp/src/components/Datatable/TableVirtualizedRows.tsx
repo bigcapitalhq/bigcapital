@@ -25,14 +25,13 @@ function TableVirtualizedListRow({ index, isScrolling, isVisible, style }) {
 export function TableVirtualizedListRows() {
   const {
     table: { page },
-    props: { vListrowHeight, vListOverscanRowCount },
+    props: { vListrowHeight, vListOverscanRowCount, windowScrollerProps },
   } = useContext(TableContext);
 
   // Dashboard content pane.
-  const dashboardContentPane = React.useMemo(
-    () => document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`),
-    [],
-  );
+  const scrollElement =
+    windowScrollerProps?.scrollElement ||
+    document.querySelector(`.${CLASSES.DASHBOARD_CONTENT_PANE}`);
 
   const rowRenderer = React.useCallback(
     ({ key, ...args }) => <TableVirtualizedListRow {...args} key={key} />,
@@ -40,7 +39,7 @@ export function TableVirtualizedListRows() {
   );
 
   return (
-    <WindowScroller scrollElement={dashboardContentPane}>
+    <WindowScroller scrollElement={scrollElement}>
       {({ height, isScrolling, onChildScroll, scrollTop }) => (
         <AutoSizer disableHeight>
           {({ width }) => (

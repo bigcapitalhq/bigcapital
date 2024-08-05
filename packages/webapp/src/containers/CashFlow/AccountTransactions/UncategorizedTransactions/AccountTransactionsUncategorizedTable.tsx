@@ -22,6 +22,7 @@ import { useMemorizedColumnsWidths } from '@/hooks';
 import { useAccountUncategorizedTransactionsContext } from '../AllTransactionsUncategorizedBoot';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import { useAccountUncategorizedTransactionsColumns } from './hooks';
+import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 
 import { compose } from '@/utils';
 import { withBanking } from '../../withBanking';
@@ -48,6 +49,8 @@ function AccountTransactionsDataTable({
   // Retrieve table columns.
   const columns = useAccountUncategorizedTransactionsColumns();
 
+  const { scrollableRef } = useAccountTransactionsContext();
+
   // Retrieve list context.
   const { uncategorizedTransactions, isUncategorizedTransactionsLoading } =
     useAccountUncategorizedTransactionsContext();
@@ -70,6 +73,11 @@ function AccountTransactionsDataTable({
   // Handles categorize button click.
   const handleCategorizeBtnClick = (transaction) => {
     setUncategorizedTransactionIdForMatching(transaction.id);
+  };
+  // handles table selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const transactionIds = selected.map((r) => r.original.id);
+    setUncategorizedTransactionsSelected(transactionIds);
   };
   // Handle exclude transaction.
   const handleExcludeTransaction = (transaction) => {
@@ -118,6 +126,8 @@ function AccountTransactionsDataTable({
         onExclude: handleExcludeTransaction,
         onCategorize: handleCategorizeBtnClick,
       }}
+      onSelectedRowsChange={handleSelectedRowsChange}
+      windowScrollerProps={{ scrollElement: scrollableRef }}
       className={clsx('table-constrant', styles.table, {
         [styles.showCategorizeColumn]: enableMultipleCategorization,
       })}

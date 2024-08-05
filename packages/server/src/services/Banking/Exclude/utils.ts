@@ -3,6 +3,8 @@ import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTran
 
 const ERRORS = {
   TRANSACTION_ALREADY_CATEGORIZED: 'TRANSACTION_ALREADY_CATEGORIZED',
+  TRANSACTION_ALREADY_EXCLUDED: 'TRANSACTION_ALREADY_EXCLUDED',
+  TRANSACTION_NOT_EXCLUDED: 'TRANSACTION_NOT_EXCLUDED',
 };
 
 export const validateTransactionNotCategorized = (
@@ -10,5 +12,21 @@ export const validateTransactionNotCategorized = (
 ) => {
   if (transaction.categorized) {
     throw new ServiceError(ERRORS.TRANSACTION_ALREADY_CATEGORIZED);
+  }
+};
+
+export const validateTransactionNotExcluded = (
+  transaction: UncategorizedCashflowTransaction
+) => {
+  if (transaction.isExcluded) {
+    throw new ServiceError(ERRORS.TRANSACTION_ALREADY_EXCLUDED);
+  }
+};
+
+export const validateTransactionShouldBeExcluded = (
+  transaction: UncategorizedCashflowTransaction
+) => {
+  if (!transaction.isExcluded) {
+    throw new ServiceError(ERRORS.TRANSACTION_NOT_EXCLUDED);
   }
 };

@@ -9,6 +9,7 @@ import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 import { downloadFile, useDownloadFile } from '../useDownloadFile';
 import T from './types';
+import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 
 const QueryKeys = {
   ImportPreview: 'ImportPreview',
@@ -127,8 +128,8 @@ export const useSampleSheetImport = () => {
 
 /**
  * Invalidates resources cached queries based on the given resource name,
- * @param queryClient 
- * @param resource 
+ * @param queryClient
+ * @param resource
  */
 const invalidateResourcesOnImport = (
   queryClient: QueryClient,
@@ -215,6 +216,7 @@ const invalidateResourcesOnImport = (
         T.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
       );
       queryClient.invalidateQueries(T.CASHFLOW_UNCAATEGORIZED_TRANSACTION);
+      queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
       break;
   }
 };

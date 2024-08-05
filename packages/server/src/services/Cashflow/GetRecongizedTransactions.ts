@@ -34,6 +34,7 @@ export class GetRecognizedTransactionsService {
           q.withGraphFetched('recognizedTransaction.assignAccount');
           q.withGraphFetched('recognizedTransaction.bankRule');
           q.whereNotNull('recognizedTransactionId');
+          q.modify('notExcluded');
 
           if (_filter.accountId) {
             q.where('accountId', _filter.accountId);

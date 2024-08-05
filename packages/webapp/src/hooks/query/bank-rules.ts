@@ -13,21 +13,12 @@ import {
 import useApiRequest from '../useRequest';
 import { transformToCamelCase } from '@/utils';
 import t from './types';
+import { BANK_QUERY_KEY } from '@/constants/query-keys/banking';
 
-const QUERY_KEY = {
-  BANK_RULES: 'BANK_RULE',
-  BANK_TRANSACTION_MATCHES: 'BANK_TRANSACTION_MATCHES',
-  RECOGNIZED_BANK_TRANSACTION: 'RECOGNIZED_BANK_TRANSACTION',
-  EXCLUDED_BANK_TRANSACTIONS_INFINITY: 'EXCLUDED_BANK_TRANSACTIONS_INFINITY',
-  RECOGNIZED_BANK_TRANSACTIONS_INFINITY:
-    'RECOGNIZED_BANK_TRANSACTIONS_INFINITY',
-  BANK_ACCOUNT_SUMMARY_META: 'BANK_ACCOUNT_SUMMARY_META',
-  AUTOFILL_CATEGORIZE_BANK_TRANSACTION: 'AUTOFILL_CATEGORIZE_BANK_TRANSACTION',
-};
-
+// Common cache invalidator.
 const commonInvalidateQueries = (query: QueryClient) => {
-  query.invalidateQueries(QUERY_KEY.BANK_RULES);
-  query.invalidateQueries(QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY);
+  query.invalidateQueries(BANK_QUERY_KEY.BANK_RULES);
+  query.invalidateQueries(BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY);
 };
 
 interface CreateBankRuleValues {
@@ -185,7 +176,7 @@ export function useDeleteBankRule(
         commonInvalidateQueries(queryClient);
 
         queryClient.invalidateQueries(
-          QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
+          BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
         );
         queryClient.invalidateQueries([
           t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
@@ -209,7 +200,7 @@ export function useBankRules(
   const apiRequest = useApiRequest();
 
   return useQuery<BankRulesResponse, Error>(
-    [QUERY_KEY.BANK_RULES],
+    [BANK_QUERY_KEY.BANK_RULES],
     () => apiRequest.get('/banking/rules').then((res) => res.data.bank_rules),
     { ...options },
   );
@@ -230,7 +221,7 @@ export function useBankRule(
   const apiRequest = useApiRequest();
 
   return useQuery<GetBankRuleRes, Error>(
-    [QUERY_KEY.BANK_RULES, bankRuleId],
+    [BANK_QUERY_KEY.BANK_RULES, bankRuleId],
     () =>
       apiRequest
         .get(`/banking/rules/${bankRuleId}`)
@@ -260,7 +251,7 @@ export function useGetBankTransactionsMatches(
   const apiRequest = useApiRequest();
 
   return useQuery<GetBankTransactionsMatchesResponse, Error>(
-    [QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizeTransactionsIds],
+    [BANK_QUERY_KEY.BANK_TRANSACTION_MATCHES, uncategorizeTransactionsIds],
     () =>
       apiRequest
         .get(`/cashflow/transactions/matches`, {
@@ -273,7 +264,9 @@ export function useGetBankTransactionsMatches(
 
 const onValidateExcludeUncategorizedTransaction = (queryClient) => {
   // Invalidate queries.
-  queryClient.invalidateQueries(QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY);
+  queryClient.invalidateQueries(
+    BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY,
+  );
   queryClient.invalidateQueries(
     t.CASHFLOW_ACCOUNT_UNCATEGORIZED_TRANSACTIONS_INFINITY,
   );
@@ -282,7 +275,7 @@ const onValidateExcludeUncategorizedTransaction = (queryClient) => {
   queryClient.invalidateQueries(t.ACCOUNT);
 
   // invalidate bank account summary.
-  queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+  queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
 };
 
 type ExcludeUncategorizedTransactionValue = number;
@@ -319,6 +312,10 @@ export function useExcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
+        queryClient.invalidateQueries([
+          BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
+          id,
+        ]);
       },
       ...options,
     },
@@ -360,6 +357,10 @@ export function useUnexcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
+        queryClient.invalidateQueries([
+          BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
+          id,
+        ]);
       },
       ...options,
     },
@@ -483,7 +484,7 @@ export function useMatchUncategorizedTransaction(
       queryClient.invalidateQueries(t.ACCOUNT);
 
       // Invalidate bank account summary.
-      queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+      queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
     },
     ...props,
   });
@@ -529,7 +530,7 @@ export function useUnmatchMatchedUncategorizedTransaction(
       queryClient.invalidateQueries(t.ACCOUNT);
 
       // Invalidate bank account summary.
-      queryClient.invalidateQueries(QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+      queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
     },
     ...props,
   });
@@ -550,7 +551,7 @@ export function useGetRecognizedBankTransaction(
   const apiRequest = useApiRequest();
 
   return useQuery<GetRecognizedBankTransactionRes, Error>(
-    [QUERY_KEY.RECOGNIZED_BANK_TRANSACTION, uncategorizedTransactionId],
+    [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTION, uncategorizedTransactionId],
     () =>
       apiRequest
         .get(`/banking/recognized/transactions/${uncategorizedTransactionId}`)
@@ -578,7 +579,7 @@ export function useGetBankAccountSummaryMeta(
   const apiRequest = useApiRequest();
 
   return useQuery<GetBankAccountSummaryMetaRes, Error>(
-    [QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
+    [BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META, bankAccountId],
     () =>
       apiRequest
         .get(`/banking/bank_accounts/${bankAccountId}/meta`)
@@ -610,7 +611,7 @@ export function useGetAutofillCategorizeTransaction(
 
   return useQuery<GetAutofillCategorizeTransaction, Error>(
     [
-      QUERY_KEY.AUTOFILL_CATEGORIZE_BANK_TRANSACTION,
+      BANK_QUERY_KEY.AUTOFILL_CATEGORIZE_BANK_TRANSACTION,
       uncategorizedTransactionIds,
     ],
     () =>
@@ -634,7 +635,7 @@ export function useRecognizedBankTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    [QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
+    [BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY, query],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,
@@ -666,7 +667,7 @@ export function useExcludedBankTransactionsInfinity(
   const apiRequest = useApiRequest();
 
   return useInfiniteQuery(
-    [QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
+    [BANK_QUERY_KEY.EXCLUDED_BANK_TRANSACTIONS_INFINITY, query],
     async ({ pageParam = 1 }) => {
       const response = await apiRequest.http({
         ...axios,

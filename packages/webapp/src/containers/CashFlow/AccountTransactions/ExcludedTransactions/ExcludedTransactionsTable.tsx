@@ -16,6 +16,7 @@ import { TABLES } from '@/constants/tables';
 import { useMemorizedColumnsWidths } from '@/hooks';
 import { useExcludedTransactionsColumns } from './_utils';
 import { useExcludedTransactionsBoot } from './ExcludedTransactionsTableBoot';
+import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 
 import { ActionsMenu } from './_components';
 import { useUnexcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
@@ -36,6 +37,8 @@ function ExcludedTransactionsTableRoot({
   const { excludedBankTransactions } = useExcludedTransactionsBoot();
   const { mutateAsync: unexcludeBankTransaction } =
     useUnexcludeUncategorizedTransaction();
+
+  const { scrollableRef } = useAccountTransactionsContext();
 
   // Retrieve table columns.
   const columns = useExcludedTransactionsColumns();
@@ -97,6 +100,7 @@ function ExcludedTransactionsTableRoot({
       className="table-constrant"
       selectionColumn={true}
       onSelectedRowsChange={handleSelectedRowsChange}
+      windowScrollerProps={{ scrollElement: scrollableRef }}
       payload={{
         onRestore: handleRestoreClick,
       }}

@@ -1,7 +1,11 @@
+import { Knex } from 'knex';
+import { Inject, Service } from 'typedi';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import UnitOfWork from '@/services/UnitOfWork';
-import { Inject, Service } from 'typedi';
-import { validateTransactionNotCategorized } from './utils';
+import {
+  validateTransactionNotCategorized,
+  validateTransactionShouldBeExcluded,
+} from './utils';
 import { EventPublisher } from '@/lib/EventPublisher/EventPublisher';
 import events from '@/subscribers/events';
 import {
@@ -37,9 +41,13 @@ export class UnexcludeBankTransaction {
         .findById(uncategorizedTransactionId)
         .throwIfNotFound();
 
+    // Validate the transaction should be excludded.
+    validateTransactionShouldBeExcluded(oldUncategorizedTransaction);
+
+    // Validate the transaction shouldn't be categorized.
     validateTransactionNotCategorized(oldUncategorizedTransaction);
 
-    return this.uow.withTransaction(tenantId, async (trx) => {
+    return this.uow.withTransaction(tenantId, async (trx: Knex.Transaction) => {
       await this.eventPublisher.emitAsync(
         events.bankTransactions.onUnexcluding,
         {

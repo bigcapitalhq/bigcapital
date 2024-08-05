@@ -20,6 +20,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
   description!: string;
   plaidTransactionId!: string;
   recognizedTransactionId!: number;
+  excludedAt: Date;
 
   /**
    * Table name.
@@ -45,6 +46,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'isDepositTransaction',
       'isWithdrawalTransaction',
       'isRecognized',
+      'isExcluded'
     ];
   }
 
@@ -87,6 +89,14 @@ export default class UncategorizedCashflowTransaction extends mixin(
    */
   public get isRecognized(): boolean {
     return !!this.recognizedTransactionId;
+  }
+
+  /**
+   * Detarmines whether the transaction is excluded.
+   * @returns {boolean}
+   */
+  public get isExcluded(): boolean {
+    return !!this.excludedAt;
   }
 
   /**

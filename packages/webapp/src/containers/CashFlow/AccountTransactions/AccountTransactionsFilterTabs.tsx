@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { useMemo } from 'react';
 import styled from 'styled-components';
 import { ContentTabs } from '@/components/ContentTabs/ContentTabs';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
@@ -8,15 +9,19 @@ const AccountContentTabs = styled(ContentTabs)`
 `;
 
 export function AccountTransactionsFilterTabs() {
-  const { filterTab, setFilterTab, currentAccount } =
+  const { filterTab, setFilterTab, bankAccountMetaSummary, currentAccount } =
     useAccountTransactionsContext();
 
   const handleChange = (value) => {
     setFilterTab(value);
   };
 
-  const hasUncategorizedTransx = Boolean(
-    currentAccount.uncategorized_transactions,
+  // Detarmines whether show the uncategorized transactions tab.
+  const hasUncategorizedTransx = useMemo(
+    () =>
+      bankAccountMetaSummary?.totalUncategorizedTransactions > 0 ||
+      bankAccountMetaSummary?.totalExcludedTransactions > 0,
+    [bankAccountMetaSummary],
   );
 
   return (
