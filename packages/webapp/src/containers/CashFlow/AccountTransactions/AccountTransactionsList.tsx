@@ -29,25 +29,38 @@ function AccountTransactionsListRoot({
   return (
     <AccountTransactionsProvider>
       <AppContentShell hideAside={!openMatchingTransactionAside}>
-        <AppContentShell.Main>
-          <AccountTransactionsActionsBar />
-          <AccountTransactionsDetailsBar />
-          <AccountTransactionsProgressBar />
-
-          <DashboardPageContent>
-            <AccountTransactionsFilterTabs />
-
-            <Suspense fallback={<Spinner size={30} />}>
-              <AccountTransactionsContent />
-            </Suspense>
-          </DashboardPageContent>
-        </AppContentShell.Main>
-
-        <AppContentShell.Aside>
-          <CategorizeTransactionAside />
-        </AppContentShell.Aside>
+        <AccountTransactionsMain />
+        <AccountTransactionsAside />
       </AppContentShell>
     </AccountTransactionsProvider>
+  );
+}
+
+function AccountTransactionsMain() {
+  const { setScrollableRef } = useAccountTransactionsContext();
+
+  return (
+    <AppContentShell.Main ref={(e) => setScrollableRef(e)}>
+      <AccountTransactionsActionsBar />
+      <AccountTransactionsDetailsBar />
+      <AccountTransactionsProgressBar />
+
+      <DashboardPageContent>
+        <AccountTransactionsFilterTabs />
+
+        <Suspense fallback={<Spinner size={30} />}>
+          <AccountTransactionsContent />
+        </Suspense>
+      </DashboardPageContent>
+    </AppContentShell.Main>
+  );
+}
+
+function AccountTransactionsAside() {
+  return (
+    <AppContentShell.Aside>
+      <CategorizeTransactionAside />
+    </AppContentShell.Aside>
   );
 }
 

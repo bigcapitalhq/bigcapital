@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DashboardInsider } from '@/components';
 import { useCashflowAccounts, useAccount } from '@/hooks/query';
@@ -41,6 +41,8 @@ function AccountTransactionsProvider({ query, ...props }) {
     isLoading: isBankAccountMetaSummaryLoading,
   } = useGetBankAccountSummaryMeta(accountId);
 
+  const [scrollableRef, setScrollableRef] = useState();
+
   // Provider payload.
   const provider = {
     accountId,
@@ -56,6 +58,9 @@ function AccountTransactionsProvider({ query, ...props }) {
 
     filterTab,
     setFilterTab,
+
+    scrollableRef,
+    setScrollableRef
   };
 
   return (

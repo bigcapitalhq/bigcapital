@@ -20,6 +20,7 @@ import { useRecognizedTransactionsBoot } from './RecognizedTransactionsTableBoot
 
 import { ActionsMenu } from './_components';
 import { compose } from '@/utils';
+import { useAccountTransactionsContext } from '../AccountTransactionsProvider';
 import { useExcludeUncategorizedTransaction } from '@/hooks/query/bank-rules';
 import {
   WithBankingActionsProps,
@@ -48,6 +49,8 @@ function RecognizedTransactionsTableRoot({
   // Local storage memorizing columns widths.
   const [initialColumnsWidths, , handleColumnResizing] =
     useMemorizedColumnsWidths(TABLES.UNCATEGORIZED_ACCOUNT_TRANSACTIONS);
+
+  const { scrollableRef } = useAccountTransactionsContext();
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
@@ -102,6 +105,7 @@ function RecognizedTransactionsTableRoot({
       vListOverscanRowCount={0}
       initialColumnsWidths={initialColumnsWidths}
       onColumnResizing={handleColumnResizing}
+      windowScrollerProps={{ scrollElement: scrollableRef }}
       noResults={<RecognizedTransactionsTableNoResults />}
       className="table-constrant"
       payload={{
