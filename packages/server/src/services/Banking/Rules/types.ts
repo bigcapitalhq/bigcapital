@@ -16,7 +16,7 @@ export interface IBankRuleCondition {
   id?: number;
   field: BankRuleConditionField;
   comparator: BankRuleConditionComparator;
-  value: number;
+  value: string;
 }
 
 export enum BankRuleConditionType {

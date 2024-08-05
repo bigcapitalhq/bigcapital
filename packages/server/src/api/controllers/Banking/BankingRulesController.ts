@@ -34,8 +34,9 @@ export class BankingRulesController extends BaseController {
       body('conditions.*.comparator')
         .exists()
         .isIn(['equals', 'contains', 'not_contain'])
-        .default('contain'),
-      body('conditions.*.value').exists(),
+        .default('contain')
+        .trim(),
+      body('conditions.*.value').exists().trim(),
 
       // Assign
       body('assign_category').isString(),
