@@ -8,15 +8,15 @@ export function CategorizeTransactionBranchField() {
   const { branches } = useCategorizeTransactionBoot();
 
   return (
-    <FFormGroup name={'branchId'} label={'Branch'} fastField inline>
-      <FeatureCan feature={Features.Branches}>
+    <FeatureCan feature={Features.Branches}>
+      <FFormGroup name={'branchId'} label={'Branch'} fastField inline>
         <BranchSuggestField
           name={'branchId'}
           items={branches}
           popoverProps={{ minimal: true }}
           fill
         />
-      </FeatureCan>
-    </FFormGroup>
+      </FFormGroup>
+    </FeatureCan>
   );
 }

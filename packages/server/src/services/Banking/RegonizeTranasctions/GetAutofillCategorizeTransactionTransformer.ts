@@ -115,17 +115,19 @@ export class GetAutofillCategorizeTransctionTransformer extends Transformer {
   }
 
   /**
-   *
+   * Retrieves the assigned category of recognized transaction, if is not recognized
+   * returns the default transaction type depends on the transaction normal.
    * @returns {string}
    */
   public transactionType() {
-    const assignCategory =
+    const assignedCategory =
       this.options.firstUncategorizedTransaction?.recognizedTransaction
-        ?.assignCategory || null;
+        ?.assignedCategory;
 
-    return assignCategory || this.isDepositTransaction()
-      ? 'other_income'
-      : 'other_expense';
+    return (
+      assignedCategory ||
+      (this.isDepositTransaction() ? 'other_income' : 'other_expense')
+    );
   }
 
   /**

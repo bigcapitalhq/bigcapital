@@ -1,3 +1,4 @@
+import { lowerCase } from 'lodash';
 import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTransaction';
 import {
   BankRuleApplyIfTransactionType,
@@ -51,12 +52,15 @@ const matchNumberCondition = (
 const matchTextCondition = (
   transaction: UncategorizedCashflowTransaction,
   condition: IBankRuleCondition
-) => {
+): boolean => {
   switch (condition.comparator) {
     case BankRuleConditionComparator.Equals:
       return transaction[condition.field] === condition.value;
     case BankRuleConditionComparator.Contains:
-      return transaction[condition.field]?.includes(condition.value.toString());
+      const fieldValue = lowerCase(transaction[condition.field]);
+      const conditionValue = lowerCase(condition.value);
+
+      return fieldValue.includes(conditionValue);
     case BankRuleConditionComparator.NotContain:
       return !transaction[condition.field]?.includes(
         condition.value.toString()

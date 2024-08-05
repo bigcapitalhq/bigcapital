@@ -64,9 +64,10 @@ export class EditBankRuleService {
         } as IBankRuleEventEditingPayload);
 
         // Updates the given bank rule.
-        await BankRule.query(trx)
-          .findById(ruleId)
-          .patch({ ...tranformDTO });
+        await BankRule.query(trx).upsertGraphAndFetch({
+          ...tranformDTO,
+          id: ruleId,
+        });
 
         // Triggers `onBankRuleEdited` event.
         await this.eventPublisher.emitAsync(events.bankRules.onEdited, {
