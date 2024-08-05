@@ -1,7 +1,7 @@
 import { Inject, Service } from 'typedi';
 import PromisePool from '@supercharge/promise-pool';
 import { UnexcludeBankTransaction } from './UnexcludeBankTransaction';
-import { castArray } from 'lodash';
+import { castArray, uniq } from 'lodash';
 
 @Service()
 export class UnexcludeBankTransactions {
@@ -17,7 +17,7 @@ export class UnexcludeBankTransactions {
     tenantId: number,
     bankTransactionIds: Array<number> | number
   ) {
-    const _bankTransactionIds = castArray(bankTransactionIds);
+    const _bankTransactionIds = uniq(castArray(bankTransactionIds));
 
     await PromisePool.withConcurrency(1)
       .for(_bankTransactionIds)

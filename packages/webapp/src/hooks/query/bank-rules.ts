@@ -319,6 +319,10 @@ export function useExcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
+        queryClient.invalidateQueries([
+          QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
+          id,
+        ]);
       },
       ...options,
     },
@@ -360,6 +364,10 @@ export function useUnexcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
+        queryClient.invalidateQueries([
+          QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
+          id,
+        ]);
       },
       ...options,
     },

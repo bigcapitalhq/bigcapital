@@ -71,6 +71,11 @@ function AccountTransactionsDataTable({
   const handleCategorizeBtnClick = (transaction) => {
     setUncategorizedTransactionIdForMatching(transaction.id);
   };
+  // handles table selected rows change.
+  const handleSelectedRowsChange = (selected) => {
+    const transactionIds = selected.map((r) => r.original.id);
+    setUncategorizedTransactionsSelected(transactionIds);
+  };
   // Handle exclude transaction.
   const handleExcludeTransaction = (transaction) => {
     excludeTransaction(transaction.id)
@@ -118,6 +123,7 @@ function AccountTransactionsDataTable({
         onExclude: handleExcludeTransaction,
         onCategorize: handleCategorizeBtnClick,
       }}
+      onSelectedRowsChange={handleSelectedRowsChange}
       className={clsx('table-constrant', styles.table, {
         [styles.showCategorizeColumn]: enableMultipleCategorization,
       })}
