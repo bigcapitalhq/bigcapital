@@ -34,8 +34,8 @@ interface RecognizedTransactionsTableProps extends WithBankingActionsProps {}
  * Renders the recognized account transactions datatable.
  */
 function RecognizedTransactionsTableRoot({
-  // #withBanking
-  setUncategorizedTransactionIdForMatching,
+  // #withBankingActions
+  setTransactionsToCategorizeSelected,
 }: RecognizedTransactionsTableProps) {
   const { mutateAsync: excludeBankTransaction } =
     useExcludeUncategorizedTransaction();
@@ -54,7 +54,7 @@ function RecognizedTransactionsTableRoot({
 
   // Handle cell click.
   const handleCellClick = (cell, event) => {
-    setUncategorizedTransactionIdForMatching(
+    setTransactionsToCategorizeSelected(
       cell.row.original.uncategorized_transaction_id,
     );
   };
@@ -77,7 +77,7 @@ function RecognizedTransactionsTableRoot({
 
   // Handles categorize button click.
   const handleCategorizeClick = (transaction) => {
-    setUncategorizedTransactionIdForMatching(
+    setTransactionsToCategorizeSelected(
       transaction.uncategorized_transaction_id,
     );
   };
