@@ -1,6 +1,7 @@
 import { Inject, Service } from 'typedi';
 import { initialize } from 'objection';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
+import { UncategorizedTransactionTransformer } from '@/services/Cashflow/UncategorizedTransactionTransformer';
 
 @Service()
 export class GetBankAccountSummary {
@@ -69,14 +70,27 @@ export class GetBankAccountSummary {
         q.first();
       });
 
+    const excludedTransactionsCount =
+      await UncategorizedCashflowTransaction.query().onBuild((q) => {
+        q.where('accountId', bankAccountId);
+        q.modify('excluded');
+
+        // Count the results.
+        q.count('uncategorized_cashflow_transactions.id as total');
+        q.first();
+      });
+
     const totalUncategorizedTransactions =
       uncategorizedTranasctionsCount?.total || 0;
     const totalRecognizedTransactions = recognizedTransactionsCount?.total || 0;
+
+    const totalExcludedTransactions = excludedTransactionsCount?.total || 0;
 
     return {
       name: bankAccount.name,
       totalUncategorizedTransactions,
       totalRecognizedTransactions,
+      totalExcludedTransactions,
     };
   }
 }
