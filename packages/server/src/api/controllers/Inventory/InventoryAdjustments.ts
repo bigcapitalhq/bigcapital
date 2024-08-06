@@ -113,8 +113,9 @@ export default class InventoryAdjustmentsController extends BaseController {
       check('quantity')
         .if(check('type').exists().isIn(['increment', 'decrement']))
         .exists()
-        .isInt()
-        .toInt(),
+        .isDecimal()
+        .toFloat(),
+      // TODO: Is the cost supposed to be an integer here if it's a float everywhere else?
       check('cost')
         .if(check('type').exists().isIn(['increment']))
         .exists()
