@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { lazy } from 'react';
 import General from '@/containers/Preferences/General/General';
 import Users from '../containers/Preferences/Users/Users';
 import Roles from '../containers/Preferences/Users/Roles/RolesForm/RolesFormPage';
@@ -12,7 +13,9 @@ import Branches from '../containers/Preferences/Branches';
 import Invoices from '../containers/Preferences/Invoices/PreferencesInvoices';
 import { PreferencesCreditNotes } from '../containers/Preferences/CreditNotes/PreferencesCreditNotes';
 import { PreferencesEstimates } from '@/containers/Preferences/Estimates/PreferencesEstimates';
-import{ PreferencesReceipts } from '@/containers/Preferences/Receipts/PreferencesReceipts'
+import { PreferencesReceipts } from '@/containers/Preferences/Receipts/PreferencesReceipts';
+
+import BillingPage from '@/containers/Subscriptions/BillingPage';
 
 const BASE_URL = '/preferences';
 
@@ -86,6 +89,14 @@ export default [
     path: `${BASE_URL}/sms-message`,
     component: SMSIntegration,
     exact: true,
+  },
+  {
+    path: `${BASE_URL}/billing`,
+    component: BillingPage,
+    exact: true,
+    // pageTitle: 'Billing',
+    // breadcrumb: 'Billing',
+    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `${BASE_URL}/`,

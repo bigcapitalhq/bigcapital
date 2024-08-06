@@ -9,6 +9,10 @@ export default [
     href: '/preferences/general',
   },
   {
+    text: 'Billing',
+    href: '/preferences/billing',
+  },
+  {
     text: <T id={'users'} />,
     href: '/preferences/users',
   },
