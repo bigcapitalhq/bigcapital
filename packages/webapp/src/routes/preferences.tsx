@@ -94,9 +94,6 @@ export default [
     path: `${BASE_URL}/billing`,
     component: BillingPage,
     exact: true,
-    // pageTitle: 'Billing',
-    // breadcrumb: 'Billing',
-    // subscriptionActive: [SUBSCRIPTION_TYPE.MAIN],
   },
   {
     path: `${BASE_URL}/`,
