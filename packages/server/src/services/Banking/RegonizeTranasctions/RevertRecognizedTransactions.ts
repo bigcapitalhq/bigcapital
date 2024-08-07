@@ -43,7 +43,7 @@ export class RevertRecognizedTransactions {
             q.whereNotNull('recognizedTransaction.id');
 
             if (rulesIds.length > 0) {
-              q.where('recognizedTransaction.bankRuleId', rulesIds);
+              q.whereIn('recognizedTransaction.bankRuleId', rulesIds);
             }
             if (transactionsCriteria?.accountId) {
               q.where('accountId', transactionsCriteria.accountId);

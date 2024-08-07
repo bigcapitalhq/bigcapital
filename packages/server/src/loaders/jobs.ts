@@ -13,7 +13,9 @@ import { PaymentReceiveMailNotificationJob } from '@/services/Sales/PaymentRecei
 import { PlaidFetchTransactionsJob } from '@/services/Banking/Plaid/PlaidFetchTransactionsJob';
 import { ImportDeleteExpiredFilesJobs } from '@/services/Import/jobs/ImportDeleteExpiredFilesJob';
 import { SendVerifyMailJob } from '@/services/Authentication/jobs/SendVerifyMailJob';
-import { RegonizeTransactionsJob } from '@/services/Banking/RegonizeTranasctions/RecognizeTransactionsJob';
+import { ReregonizeTransactionsJob } from '@/services/Banking/RegonizeTranasctions/jobs/RerecognizeTransactionsJob';
+import { RegonizeTransactionsJob } from '@/services/Banking/RegonizeTranasctions/jobs/RecognizeTransactionsJob';
+import { RevertRegonizeTransactionsJob } from '@/services/Banking/RegonizeTranasctions/jobs/RevertRecognizedTransactionsJob';
 
 export default ({ agenda }: { agenda: Agenda }) => {
   new ResetPasswordMailJob(agenda);
@@ -31,6 +33,8 @@ export default ({ agenda }: { agenda: Agenda }) => {
   new ImportDeleteExpiredFilesJobs(agenda);
   new SendVerifyMailJob(agenda);
   new RegonizeTransactionsJob(agenda);
+  new ReregonizeTransactionsJob(agenda);
+  new RevertRegonizeTransactionsJob(agenda);
 
   agenda.start().then(() => {
     agenda.every('1 hours', 'delete-expired-imported-files', {});
