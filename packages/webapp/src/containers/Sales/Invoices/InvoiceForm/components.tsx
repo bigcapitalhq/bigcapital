@@ -4,14 +4,21 @@ import intl from 'react-intl-universal';
 import * as R from 'ramda';
 import { Button } from '@blueprintjs/core';
 import { useFormikContext } from 'formik';
-import { ExchangeRateInputGroup } from '@/components';
+import { ExchangeRateInputGroup, FormatNumber } from '@/components';
 import { useCurrentOrganization } from '@/hooks/state';
-import { useInvoiceIsForeignCustomer, useInvoiceTotal } from './utils';
-import withSettings from '@/containers/Settings/withSettings';
+import {
+  useInvoiceCurrencyCode,
+  useInvoiceDueAmount,
+  useInvoiceIsForeignCustomer,
+  useInvoicePaidAmount,
+  useInvoiceSubtotal,
+  useInvoiceTotal,
+} from './utils';
 import { useUpdateEffect } from '@/hooks';
 import { transactionNumber } from '@/utils';
-import withDialogActions from '@/containers/Dialog/withDialogActions';
 import { DialogsName } from '@/constants/dialogs';
+import withSettings from '@/containers/Settings/withSettings';
+import withDialogActions from '@/containers/Dialog/withDialogActions';
 import {
   useSyncExRateToForm,
   withExchangeRateFetchingLoading,
@@ -109,3 +116,47 @@ export const InvoiceExchangeRateSync = R.compose(withDialogActions)(
     return null;
   },
 );
+
+/**
+ *Renders the invoice formatted total.
+ * @returns {JSX.Element}
+ */
+export const InvoiceTotalFormatted = () => {
+  const currencyCode = useInvoiceCurrencyCode();
+  const total = useInvoiceTotal();
+
+  return <FormatNumber value={total} currency={currencyCode} />;
+};
+
+/**
+ * Renders the invoice formatted subtotal.
+ * @returns {JSX.Element}
+ */
+export const InvoiceSubTotalFormatted = () => {
+  const currencyCode = useInvoiceCurrencyCode();
+  const subTotal = useInvoiceSubtotal();
+
+  return <FormatNumber value={subTotal} currency={currencyCode} />;
+};
+
+/**
+ * Renders the invoice formatted due amount.
+ * @returns {JSX.Element}
+ */
+export const InvoiceDueAmountFormatted = () => {
+  const currencyCode = useInvoiceCurrencyCode();
+  const dueAmount = useInvoiceDueAmount();
+
+  return <FormatNumber value={dueAmount} currency={currencyCode} />;
+};
+
+/**
+ * Renders the invoice formatted paid amount.
+ * @returns {JSX.Element}
+ */
+export const InvoicePaidAmountFormatted = () => {
+  const currencyCode = useInvoiceCurrencyCode();
+  const paidAmount = useInvoicePaidAmount();
+
+  return <FormatNumber value={paidAmount} currency={currencyCode} />;
+};
