@@ -35,7 +35,8 @@ export class RecognizeSyncedBankTranasctions extends EventSubscriber {
     runAfterTransaction(trx, async () => {
       await this.recognizeTranasctionsService.recognizeTransactions(
         tenantId,
-        batch
+        null,
+        { batch }
       );
     });
   };

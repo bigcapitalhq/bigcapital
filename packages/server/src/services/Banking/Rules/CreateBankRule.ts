@@ -62,6 +62,7 @@ export class CreateBankRuleService {
       await this.eventPublisher.emitAsync(events.bankRules.onCreated, {
         tenantId,
         createRuleDTO,
+        bankRule,
         trx,
       } as IBankRuleEventCreatedPayload);
 

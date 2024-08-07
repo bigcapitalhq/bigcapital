@@ -1,5 +1,5 @@
 import Container, { Service } from 'typedi';
-import { RecognizeTranasctionsService } from './RecognizeTranasctionsService';
+import { RecognizeTranasctionsService } from '../RecognizeTranasctionsService';
 
 @Service()
 export class RegonizeTransactionsJob {
@@ -18,11 +18,15 @@ export class RegonizeTransactionsJob {
    * Triggers sending invoice mail.
    */
   private handler = async (job, done: Function) => {
-    const { tenantId, batch } = job.attrs.data;
+    const { tenantId, ruleId, transactionsCriteria } = job.attrs.data;
     const regonizeTransactions = Container.get(RecognizeTranasctionsService);
 
     try {
-      await regonizeTransactions.recognizeTransactions(tenantId, batch);
+      await regonizeTransactions.recognizeTransactions(
+        tenantId,
+        ruleId,
+        transactionsCriteria
+      );
       done();
     } catch (error) {
       console.log(error);
