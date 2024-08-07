@@ -1,11 +1,13 @@
 import { Knex } from 'knex';
 import { Inject, Service } from 'typedi';
+import { castArray, isEmpty } from 'lodash';
 import UncategorizedCashflowTransaction from '@/models/UncategorizedCashflowTransaction';
 import HasTenancyService from '@/services/Tenancy/TenancyService';
 import { transformToMapBy } from '@/utils';
 import { PromisePool } from '@supercharge/promise-pool';
 import { BankRule } from '@/models/BankRule';
 import { bankRulesMatchTransaction } from './_utils';
+import { RecognizeTransactionsCriteria } from './_types';
 
 @Service()
 export class RecognizeTranasctionsService {
@@ -48,24 +50,42 @@ export class RecognizeTranasctionsService {
   /**
    * Regonized the uncategorized transactions.
    * @param {number} tenantId -
+   * @param {number|Array<number>} ruleId - The target rule id/ids.
+   * @param {RecognizeTransactionsCriteria}
    * @param {Knex.Transaction} trx -
    */
   public async recognizeTransactions(
     tenantId: number,
-    batch: string = '',
+    ruleId?: number | Array<number>,
+    transactionsCriteria?: RecognizeTransactionsCriteria,
     trx?: Knex.Transaction
   ) {
     const { UncategorizedCashflowTransaction, BankRule } =
       this.tenancy.models(tenantId);
 
     const uncategorizedTranasctions =
-      await UncategorizedCashflowTransaction.query().onBuild((query) => {
-        query.where('recognized_transaction_id', null);
-        query.where('categorized', false);
+      await UncategorizedCashflowTransaction.query(trx).onBuild((query) => {
+        query.modify('notRecognized');
+        query.modify('notCategorized');
 
-        if (batch) query.where('batch', batch);
+        // Filter the transactions based on the given criteria.
+        if (transactionsCriteria?.batch) {
+          query.where('batch', transactionsCriteria.batch);
+        }
+        if (transactionsCriteria?.accountId) {
+          query.where('accountId', transactionsCriteria.accountId);
+        }
       });
-    const bankRules = await BankRule.query().withGraphFetched('conditions');
+
+    const bankRules = await BankRule.query(trx).onBuild((q) => {
+      const rulesIds = castArray(ruleId);
+
+      if (!isEmpty(rulesIds)) {
+        q.whereIn('id', rulesIds);
+      }
+      q.withGraphFetched('conditions');
+    });
+
     const bankRulesByAccountId = transformToMapBy(
       bankRules,
       'applyIfAccountId'

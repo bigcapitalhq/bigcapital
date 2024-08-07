@@ -1,12 +1,12 @@
 import { Inject, Service } from 'typedi';
 import events from '@/subscribers/events';
-import { UnlinkBankRuleRecognizedTransactions } from '../UnlinkBankRuleRecognizedTransactions';
 import { IBankRuleEventDeletingPayload } from '../types';
+import { RevertRecognizedTransactions } from '../../RegonizeTranasctions/RevertRecognizedTransactions';
 
 @Service()
 export class UnlinkBankRuleOnDeleteBankRule {
   @Inject()
-  private unlinkBankRule: UnlinkBankRuleRecognizedTransactions;
+  private revertRecognizedTransactionsService: RevertRecognizedTransactions;
 
   /**
    * Constructor method.
@@ -26,7 +26,7 @@ export class UnlinkBankRuleOnDeleteBankRule {
     tenantId,
     ruleId,
   }: IBankRuleEventDeletingPayload) {
-    await this.unlinkBankRule.unlinkBankRuleOutRecognizedTransactions(
+    await this.revertRecognizedTransactionsService.revertRecognizedTransactions(
       tenantId,
       ruleId
     );

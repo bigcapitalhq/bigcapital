@@ -41,14 +41,10 @@ export class TriggerRecognizedTransactions {
    */
   private async recognizedTransactionsOnRuleCreated({
     tenantId,
-    createRuleDTO,
+    bankRule,
   }: IBankRuleEventCreatedPayload) {
-    const payload = { tenantId };
+    const payload = { tenantId, ruleId: bankRule.id };
 
-    // Cannot run recognition if the option is not enabled.
-    if (createRuleDTO.recognition) {
-      return;
-    }
     await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }
 
@@ -59,14 +55,14 @@ export class TriggerRecognizedTransactions {
   private async recognizedTransactionsOnRuleEdited({
     tenantId,
     editRuleDTO,
+    ruleId,
   }: IBankRuleEventEditedPayload) {
-    const payload = { tenantId };
+    const payload = { tenantId, ruleId };
 
-    // Cannot run recognition if the option is not enabled.
-    if (!editRuleDTO.recognition) {
-      return;
-    }
-    await this.agenda.now('recognize-uncategorized-transactions-job', payload);
+    await this.agenda.now(
+      'rerecognize-uncategorized-transactions-job',
+      payload
+    );
   }
 
   /**
@@ -75,9 +71,13 @@ export class TriggerRecognizedTransactions {
    */
   private async recognizedTransactionsOnRuleDeleted({
     tenantId,
+    ruleId,
   }: IBankRuleEventDeletedPayload) {
-    const payload = { tenantId };
-    await this.agenda.now('recognize-uncategorized-transactions-job', payload);
+    const payload = { tenantId, ruleId };
+    await this.agenda.now(
+      'revert-recognized-uncategorized-transactions-job',
+      payload
+    );
   }
 
   /**
@@ -91,7 +91,7 @@ export class TriggerRecognizedTransactions {
   }: IImportFileCommitedEventPayload) {
     const importFile = await Import.query().findOne({ importId });
     const batch = importFile.paramsParsed.batch;
-    const payload = { tenantId, batch };
+    const payload = { tenantId, transactionsCriteria: { batch } };
 
     await this.agenda.now('recognize-uncategorized-transactions-job', payload);
   }

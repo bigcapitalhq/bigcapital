@@ -30,6 +30,7 @@ export enum BankRuleApplyIfTransactionType {
 }
 
 export interface IBankRule {
+  id?: number;
   name: string;
   order?: number;
   applyIfAccountId: number;
@@ -71,8 +72,6 @@ export interface IBankRuleCommonDTO {
   assignAccountId: number;
   assignPayee?: string;
   assignMemo?: string;
-
-  recognition?: boolean;
 }
 
 export interface ICreateBankRuleDTO extends IBankRuleCommonDTO {}
@@ -86,6 +85,7 @@ export interface IBankRuleEventCreatingPayload {
 export interface IBankRuleEventCreatedPayload {
   tenantId: number;
   createRuleDTO: ICreateBankRuleDTO;
+  bankRule: IBankRule;
   trx?: Knex.Transaction;
 }
 
