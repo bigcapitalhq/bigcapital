@@ -43,6 +43,7 @@ function RecognizedTransactionsTableBoot({
     hasNextPage: hasUncategorizedTransactionsNextPage,
   } = useRecognizedBankTransactionsInfinity({
     page_size: 50,
+    account_id: accountId,
   });
   // Memorized the cashflow account transactions.
   const recognizedTransactions = React.useMemo(

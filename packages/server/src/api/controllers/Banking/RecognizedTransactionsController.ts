@@ -1,5 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { NextFunction, Request, Response, Router } from 'express';
+import { query } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import { CashflowApplication } from '@/services/Cashflow/CashflowApplication';
 
@@ -14,7 +15,16 @@ export class RecognizedTransactionsController extends BaseController {
   router() {
     const router = Router();
 
-    router.get('/', this.getRecognizedTransactions.bind(this));
+    router.get(
+      '/',
+      [
+        query('page').optional().isNumeric().toInt(),
+        query('page_size').optional().isNumeric().toInt(),
+        query('account_id').optional().isNumeric().toInt(),
+      ],
+      this.validationResult,
+      this.getRecognizedTransactions.bind(this)
+    );
     router.get(
       '/transactions/:uncategorizedTransactionId',
       this.getRecognizedTransaction.bind(this)
