@@ -276,6 +276,11 @@ const onValidateExcludeUncategorizedTransaction = (queryClient) => {
 
   // invalidate bank account summary.
   queryClient.invalidateQueries(BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META);
+
+  // Invalidate the recognized transactions.
+  queryClient.invalidateQueries([
+    BANK_QUERY_KEY.RECOGNIZED_BANK_TRANSACTIONS_INFINITY,
+  ]);
 };
 
 type ExcludeUncategorizedTransactionValue = number;
@@ -312,10 +317,6 @@ export function useExcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
-        queryClient.invalidateQueries([
-          BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
-          id,
-        ]);
       },
       ...options,
     },
@@ -357,10 +358,6 @@ export function useUnexcludeUncategorizedTransaction(
     {
       onSuccess: (res, id) => {
         onValidateExcludeUncategorizedTransaction(queryClient);
-        queryClient.invalidateQueries([
-          BANK_QUERY_KEY.BANK_ACCOUNT_SUMMARY_META,
-          id,
-        ]);
       },
       ...options,
     },
@@ -649,7 +646,6 @@ export function useRecognizedBankTransactionsInfinity(
       getPreviousPageParam: (firstPage) => firstPage.pagination.page - 1,
       getNextPageParam: (lastPage) => {
         const { pagination } = lastPage;
-
         return pagination.total > pagination.page_size * pagination.page
           ? lastPage.pagination.page + 1
           : undefined;

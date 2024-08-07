@@ -42,7 +42,11 @@ export class ExcludeBankTransactionsController extends BaseController {
     );
     router.get(
       '/excluded',
-      [],
+      [
+        query('account_id').optional().isNumeric().toInt(),
+        query('page').optional().isNumeric().toInt(),
+        query('page_size').optional().isNumeric().toInt(),
+      ],
       this.validationResult,
       this.getExcludedBankTransactions.bind(this)
     );
@@ -177,7 +181,7 @@ export class ExcludeBankTransactionsController extends BaseController {
     next: NextFunction
   ): Promise<Response | void> {
     const { tenantId } = req;
-    const filter = this.matchedBodyData(req);
+    const filter = this.matchedQueryData(req);
 
     try {
       const data =
