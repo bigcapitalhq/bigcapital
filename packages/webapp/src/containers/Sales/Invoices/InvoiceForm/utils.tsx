@@ -270,59 +270,6 @@ export const useInvoiceSubtotal = () => {
 };
 
 /**
- * Retreives the invoice totals.
- */
-export const useInvoiceTotals = () => {
-  const {
-    values: { entries, currency_code: currencyCode },
-  } = useFormikContext();
-
-  // Retrieves the invoice entries total.
-  const total = React.useMemo(() => getEntriesTotal(entries), [entries]);
-
-  const total_ = useInvoiceTotal();
-
-  // Retrieves the formatted total money.
-  const formattedTotal = React.useMemo(
-    () => formattedAmount(total_, currencyCode),
-    [total_, currencyCode],
-  );
-  // Retrieves the formatted subtotal.
-  const formattedSubtotal = React.useMemo(
-    () => formattedAmount(total, currencyCode, { money: false }),
-    [total, currencyCode],
-  );
-  // Retrieves the payment total.
-  const paymentTotal = React.useMemo(() => 0, []);
-
-  // Retireves the formatted payment total.
-  const formattedPaymentTotal = React.useMemo(
-    () => formattedAmount(paymentTotal, currencyCode),
-    [paymentTotal, currencyCode],
-  );
-  // Retrieves the formatted due total.
-  const dueTotal = React.useMemo(
-    () => total_ - paymentTotal,
-    [total_, paymentTotal],
-  );
-  // Retrieves the formatted due total.
-  const formattedDueTotal = React.useMemo(
-    () => formattedAmount(dueTotal, currencyCode),
-    [dueTotal, currencyCode],
-  );
-
-  return {
-    total,
-    paymentTotal,
-    dueTotal,
-    formattedTotal,
-    formattedSubtotal,
-    formattedPaymentTotal,
-    formattedDueTotal,
-  };
-};
-
-/**
  * Detarmines whether the invoice has foreign customer.
  * @returns {boolean}
  */
@@ -410,13 +357,24 @@ export const useInvoiceTotal = () => {
 };
 
 /**
+ * Retrieves the paid amount of the invoice.
+ * @returns {number}
+ */
+export const useInvoicePaidAmount = () => {
+  const { invoice } = useInvoiceFormContext();
+
+  return invoice?.payment_amount || 0;
+};
+
+/**
  * Retreives the invoice due amount.
  * @returns {number}
  */
 export const useInvoiceDueAmount = () => {
   const total = useInvoiceTotal();
+  const paidAmount = useInvoicePaidAmount();
 
-  return total;
+  return Math.max(total - paidAmount, 0);
 };
 
 /**
@@ -437,4 +395,14 @@ export const useIsInvoiceTaxExclusive = () => {
   const { values } = useFormikContext();
 
   return values.inclusive_exclusive_tax === TaxType.Exclusive;
+};
+
+/**
+ * Retrieves the invoice currency code.
+ * @returns {string}
+ */
+export const useInvoiceCurrencyCode = () => {
+  const { values } = useFormikContext();
+
+  return values.currency_code;
 };

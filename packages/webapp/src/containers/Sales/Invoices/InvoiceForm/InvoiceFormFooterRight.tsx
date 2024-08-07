@@ -10,18 +10,16 @@ import {
   TotalLineBorderStyle,
   TotalLineTextStyle,
 } from '@/components';
-import { useInvoiceAggregatedTaxRates, useInvoiceTotals } from './utils';
+import { useInvoiceAggregatedTaxRates } from './utils';
 import { TaxType } from '@/interfaces/TaxRates';
+import {
+  InvoiceDueAmountFormatted,
+  InvoicePaidAmountFormatted,
+  InvoiceSubTotalFormatted,
+  InvoiceTotalFormatted,
+} from './components';
 
 export function InvoiceFormFooterRight() {
-  // Calculate the total due amount of invoice entries.
-  const {
-    formattedSubtotal,
-    formattedTotal,
-    formattedDueTotal,
-    formattedPaymentTotal,
-  } = useInvoiceTotals();
-
   const {
     values: { inclusive_exclusive_tax, currency_code },
   } = useFormikContext();
@@ -38,7 +36,7 @@ export function InvoiceFormFooterRight() {
               : 'Subtotal'}
           </>
         }
-        value={formattedSubtotal}
+        value={<InvoiceSubTotalFormatted />}
       />
       {taxEntries.map((tax, index) => (
         <TotalLine
@@ -50,18 +48,18 @@ export function InvoiceFormFooterRight() {
       ))}
       <TotalLine
         title={`Total (${currency_code})`}
-        value={formattedTotal}
+        value={<InvoiceTotalFormatted />}
         borderStyle={TotalLineBorderStyle.SingleDark}
         textStyle={TotalLineTextStyle.Bold}
       />
       <TotalLine
         title={<T id={'invoice_form.label.payment_amount'} />}
-        value={formattedPaymentTotal}
+        value={<InvoicePaidAmountFormatted />}
         borderStyle={TotalLineBorderStyle.None}
       />
       <TotalLine
         title={<T id={'invoice_form.label.due_amount'} />}
-        value={formattedDueTotal}
+        value={<InvoiceDueAmountFormatted />}
         textStyle={TotalLineTextStyle.Bold}
       />
     </InvoiceTotalLines>
