@@ -53,7 +53,7 @@ export const defaultReceipt = {
   receipt_date: moment(new Date()).format('YYYY-MM-DD'),
   reference_no: '',
   receipt_message: '',
-  terms_conditions: '',
+  statement: '',
   closed: '',
   branch_id: '',
   warehouse_id: '',

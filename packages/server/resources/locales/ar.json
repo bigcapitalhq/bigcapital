@@ -227,7 +227,7 @@
   "credit.paper.remaining": "رصيد المتبقي",
   "credit.paper.billed_to": "إيصال إلي",
   "credit.paper.credit_date": "تاريخ الاشعار",
-  "credit.paper.terms_conditions": "الشروط والاحكام",
+  "credit.paper.conditions_title": "الشروط والاحكام",
   "credit.paper.notes": "ملاحظات",
   "credit.paper.total": "إجمالي",
   "credit.paper.credits_used": "قيمة المستخدمه",

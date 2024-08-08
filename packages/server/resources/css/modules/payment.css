@@ -547,6 +547,7 @@ html[lang^=en] body {
 }
 .payment__conditions p, .payment__notes p {
   margin: 0;
+  white-space: pre-line;
 }
 .payment__conditions + .payment__notes {
   margin-top: 20px;

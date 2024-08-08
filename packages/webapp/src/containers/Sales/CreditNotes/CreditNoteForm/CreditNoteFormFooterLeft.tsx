@@ -7,16 +7,6 @@ import { FFormGroup, FEditableText, FormattedMessage as T } from '@/components';
 export function CreditNoteFormFooterLeft() {
   return (
     <React.Fragment>
-      {/* --------- Customer notes --------- */}
-      <CreditNoteMsgFormGroup
-        name={'note'}
-        label={<T id={'credit_note.label_customer_note'} />}
-      >
-        <FEditableText
-          name={'note'}
-          placeholder={intl.get('credit_note.label_customer_note.placeholder')}
-        />
-      </CreditNoteMsgFormGroup>
       {/* --------- Terms and conditions --------- */}
       <TermsConditsFormGroup
         label={<T id={'credit_note.label_terms_conditions'} />}
@@ -27,8 +17,20 @@ export function CreditNoteFormFooterLeft() {
           placeholder={intl.get(
             'credit_note.label_terms_and_conditions.placeholder',
           )}
+          multiline={true}
         />
       </TermsConditsFormGroup>
+      {/* --------- Customer notes --------- */}
+      <CreditNoteMsgFormGroup
+        name={'note'}
+        label={<T id={'credit_note.label_customer_note'} />}
+      >
+        <FEditableText
+          name={'note'}
+          placeholder={intl.get('credit_note.label_customer_note.placeholder')}
+          multiline={true}
+        />
+      </CreditNoteMsgFormGroup>
     </React.Fragment>
   );
 }

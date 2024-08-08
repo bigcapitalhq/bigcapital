@@ -15,6 +15,7 @@ export function VendorCreditNoteFormFooterLeft() {
         <FEditableText
           name={'note'}
           placeholder={intl.get('vendor_credit_form.note.placeholder')}
+          multiline={true}
         />
       </TermsConditsFormGroup>
     </React.Fragment>

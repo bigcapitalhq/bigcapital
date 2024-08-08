@@ -541,4 +541,5 @@ html[lang^=en] body {
 }
 .estimate__conditions p, .estimate__notes p {
   margin: 0 0 20px;
+  white-space: pre-line;
 }

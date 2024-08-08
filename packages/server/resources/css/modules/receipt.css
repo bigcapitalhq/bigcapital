@@ -543,4 +543,5 @@ html[lang^=en] body {
 }
 .receipt__conditions p, .receipt__notes p {
   margin: 0 0 20px;
+  white-space: pre-line;
 }

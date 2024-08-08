@@ -1952,8 +1952,8 @@
   "receipt_form.label.payment_amount": "Payment amount",
   "receipt_form.label.receipt_message": "Receipt Message",
   "receipt_form.receipt_message.placeholder": "This message will be displayed on the receipt.",
-  "receipt_form.label.terms_conditions": "Terms & Conditions",
-  "receipt_form.terms_and_conditions.placeholder": "Enter the terms and conditions of your business to be displayed on the receipt.",
+  "receipt_form.label.statement": "Statement",
+  "receipt_form.statement.placeholder": "Enter the statement to be displayed on the receipt.",
   "payment_receive_form.label.note": "Note",
   "payment_receive_form.internal_note.placeholder": "Internal notes (Not visible to the customer).",
   "payment_receive_form.message.label": "Payment Message",
@@ -2260,7 +2260,7 @@
   "pref.estimates.termsConditions.field": "Terms & Conditions",
   "pref.estimates.customerNotes.field": "Customer Notes",
 
-  "pref.receipts.termsConditions.field": "Terms & Conditions",
+  "pref.receipts.statement.field": "Statement",
   "pref.receipts.receiptMessage.field": "Receipt Message",
 
   "preferences.invoices": "Invoices",

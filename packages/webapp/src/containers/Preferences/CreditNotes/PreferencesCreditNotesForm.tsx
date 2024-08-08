@@ -19,20 +19,6 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
 
   return (
     <Form>
-      {/* ---------- Customer Notes ----------  */}
-      <FFormGroup
-        name={'customerNotes'}
-        label={<T id={'pref.creditNotes.customerNotes.field'} />}
-        fastField={true}
-      >
-        <FTextArea
-          medium={'true'}
-          name={'customerNotes'}
-          fastField={true}
-          fill={true}
-        />
-      </FFormGroup>
-
       {/* ---------- Terms & Conditions ----------  */}
       <FFormGroup
         name={'termsConditions'}
@@ -42,6 +28,20 @@ export function PreferencesCreditNotesForm({ isSubmitting }) {
         <FTextArea
           medium={'true'}
           name={'termsConditions'}
+          fastField={true}
+          fill={true}
+        />
+      </FFormGroup>
+
+      {/* ---------- Customer Notes ----------  */}
+      <FFormGroup
+        name={'customerNotes'}
+        label={<T id={'pref.creditNotes.customerNotes.field'} />}
+        fastField={true}
+      >
+        <FTextArea
+          medium={'true'}
+          name={'customerNotes'}
           fastField={true}
           fill={true}
         />
