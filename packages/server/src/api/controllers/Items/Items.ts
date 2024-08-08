@@ -96,13 +96,11 @@ export default class ItemsController extends BaseController {
         .exists()
         .isString()
         .trim()
-        .escape()
         .isIn(['service', 'non-inventory', 'inventory']),
       check('code')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       // Purchase attributes.
       check('purchasable').optional().isBoolean().toBoolean(),
@@ -141,13 +139,11 @@ export default class ItemsController extends BaseController {
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('purchase_description')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('sell_tax_rate_id').optional({ nullable: true }).isInt().toInt(),
       check('purchase_tax_rate_id')
@@ -162,7 +158,6 @@ export default class ItemsController extends BaseController {
         .optional()
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
 
@@ -184,7 +179,7 @@ export default class ItemsController extends BaseController {
    */
   private get validateListQuerySchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
+      query('column_sort_by').optional().trim(),
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('page').optional().isNumeric().toInt(),

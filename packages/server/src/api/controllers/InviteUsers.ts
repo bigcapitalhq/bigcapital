@@ -25,7 +25,7 @@ export default class InviteUsersController extends BaseController {
     router.post(
       '/send',
       [
-        body('email').exists().trim().escape(),
+        body('email').exists().trim(),
         body('role_id').exists().isNumeric().toInt(),
       ],
       this.validationResult,
@@ -57,7 +57,7 @@ export default class InviteUsersController extends BaseController {
     );
     router.get(
       '/invited/:token',
-      [param('token').exists().trim().escape()],
+      [param('token').exists().trim()],
       this.validationResult,
       asyncMiddleware(this.invited.bind(this)),
       this.handleServicesError
@@ -72,10 +72,10 @@ export default class InviteUsersController extends BaseController {
    */
   private get inviteUserDTO() {
     return [
-      check('first_name').exists().trim().escape(),
-      check('last_name').exists().trim().escape(),
-      check('password').exists().trim().escape().isLength({ min: 5 }),
-      param('token').exists().trim().escape(),
+      check('first_name').exists().trim(),
+      check('last_name').exists().trim(),
+      check('password').exists().trim().isLength({ min: 5 }),
+      param('token').exists().trim(),
     ];
   }
 

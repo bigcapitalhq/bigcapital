@@ -154,8 +154,8 @@ export default class PaymentReceivesController extends BaseController {
       check('payment_date').exists(),
       check('reference_no').optional(),
       check('deposit_account_id').exists().isNumeric().toInt(),
-      check('payment_receive_no').optional({ nullable: true }).trim().escape(),
-      check('statement').optional().trim().escape(),
+      check('payment_receive_no').optional({ nullable: true }).trim(),
+      check('statement').optional().trim(),
 
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
 
@@ -176,7 +176,6 @@ export default class PaymentReceivesController extends BaseController {
   private get validatePaymentReceiveList(): ValidationChain[] {
     return [
       query('stringified_filter_roles').optional().isJSON(),
-
       query('view_slug').optional({ nullable: true }).isString().trim(),
 
       query('column_sort_by').optional(),

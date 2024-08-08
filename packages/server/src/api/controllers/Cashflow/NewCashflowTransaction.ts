@@ -112,12 +112,11 @@ export default class NewCashflowTransactionController extends BaseController {
   public get newTransactionValidationSchema() {
     return [
       check('date').exists().isISO8601().toDate(),
-      check('reference_no').optional({ nullable: true }).trim().escape(),
+      check('reference_no').optional({ nullable: true }).trim(),
       check('description')
         .optional({ nullable: true })
         .isLength({ min: 3 })
-        .trim()
-        .escape(),
+        .trim(),
       check('transaction_type').exists(),
 
       check('amount').exists().isFloat().toFloat(),

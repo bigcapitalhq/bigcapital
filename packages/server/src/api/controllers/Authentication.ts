@@ -90,27 +90,23 @@ export default class AuthenticationController extends BaseController {
         .exists()
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('last_name')
         .exists()
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('email')
         .exists()
         .isString()
         .isEmail()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('password')
         .exists()
         .isString()
         .isLength({ min: 6 })
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
     ];
   }
@@ -150,7 +146,7 @@ export default class AuthenticationController extends BaseController {
    * @returns {ValidationChain[]}
    */
   private get sendResetPasswordSchema(): ValidationChain[] {
-    return [check('email').exists().isEmail().trim().escape()];
+    return [check('email').exists().isEmail().trim()];
   }
 
   /**
@@ -158,7 +154,11 @@ export default class AuthenticationController extends BaseController {
    * @param {Request} req
    * @param {Response} res
    */
-  private async login(req: Request, res: Response, next: Function): Response {
+  private async login(
+    req: Request,
+    res: Response,
+    next: Function
+  ): Promise<Response | null> {
     const userDTO: ILoginDTO = this.matchedBodyData(req);
 
     try {

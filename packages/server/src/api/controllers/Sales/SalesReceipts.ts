@@ -130,8 +130,8 @@ export default class SalesReceiptsController extends BaseController {
 
       check('deposit_account_id').exists().isNumeric().toInt(),
       check('receipt_date').exists().isISO8601(),
-      check('receipt_number').optional().trim().escape(),
-      check('reference_no').optional().trim().escape(),
+      check('receipt_number').optional().trim(),
+      check('reference_no').optional().trim(),
       check('closed').default(false).isBoolean().toBoolean(),
 
       check('warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
@@ -150,14 +150,13 @@ export default class SalesReceiptsController extends BaseController {
         .toInt(),
       check('entries.*.description')
         .optional({ nullable: true })
-        .trim()
-        .escape(),
+        .trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
         .toInt(),
-      check('receipt_message').optional().trim().escape(),
-      check('statement').optional().trim().escape(),
+      check('receipt_message').optional().trim(),
+      check('statement').optional().trim(),
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),
     ];

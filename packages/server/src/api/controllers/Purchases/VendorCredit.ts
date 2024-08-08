@@ -156,13 +156,10 @@ export default class VendorCreditController extends BaseController {
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
-      check('vendor_credit_number')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('reference_no').optional().trim().escape(),
+      check('vendor_credit_number').optional({ nullable: true }).trim(),
+      check('reference_no').optional().trim(),
       check('vendor_credit_date').exists().isISO8601().toDate(),
-      check('note').optional().trim().escape(),
+      check('note').optional().trim(),
       check('open').default(false).isBoolean().toBoolean(),
 
       check('warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
@@ -178,10 +175,7 @@ export default class VendorCreditController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()
@@ -202,13 +196,10 @@ export default class VendorCreditController extends BaseController {
       check('vendor_id').exists().isNumeric().toInt(),
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
-      check('vendor_credit_number')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
-      check('reference_no').optional().trim().escape(),
+      check('vendor_credit_number').optional({ nullable: true }).trim(),
+      check('reference_no').optional().trim(),
       check('vendor_credit_date').exists().isISO8601().toDate(),
-      check('note').optional().trim().escape(),
+      check('note').optional().trim(),
 
       check('warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
@@ -223,10 +214,7 @@ export default class VendorCreditController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()

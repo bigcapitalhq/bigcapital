@@ -18,9 +18,7 @@ export default class ResourceController extends BaseController {
 
     router.get(
       '/:resource_model/meta',
-      [
-        param('resource_model').exists().trim().escape()
-      ],
+      [param('resource_model').exists().trim()],
       this.asyncMiddleware(this.resourceMeta.bind(this)),
       this.handleServiceErrors
     );
@@ -48,9 +46,7 @@ export default class ResourceController extends BaseController {
         resourceModel
       );
       return res.status(200).send({
-        resource_meta: this.transfromToResponse(
-          resourceMeta,
-        ),
+        resource_meta: this.transfromToResponse(resourceMeta),
       });
     } catch (error) {
       next(error);

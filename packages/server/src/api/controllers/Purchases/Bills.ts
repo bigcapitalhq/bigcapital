@@ -100,8 +100,8 @@ export default class BillsController extends BaseController {
    */
   private get billValidationSchema() {
     return [
-      check('bill_number').exists().trim().escape(),
-      check('reference_no').optional().trim().escape(),
+      check('bill_number').exists().trim(),
+      check('reference_no').optional().trim(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
 
@@ -112,7 +112,7 @@ export default class BillsController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('project_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('note').optional().trim().escape(),
+      check('note').optional().trim(),
       check('open').default(false).isBoolean().toBoolean(),
 
       check('is_inclusive_tax').default(false).isBoolean().toBoolean(),
@@ -126,10 +126,7 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.landed_cost')
         .optional({ nullable: true })
         .isBoolean()
@@ -141,7 +138,6 @@ export default class BillsController extends BaseController {
       check('entries.*.tax_code')
         .optional({ nullable: true })
         .trim()
-        .escape()
         .isString(),
       check('entries.*.tax_rate_id')
         .optional({ nullable: true })
@@ -158,8 +154,8 @@ export default class BillsController extends BaseController {
    */
   private get billEditValidationSchema() {
     return [
-      check('bill_number').optional().trim().escape(),
-      check('reference_no').optional().trim().escape(),
+      check('bill_number').optional().trim(),
+      check('reference_no').optional().trim(),
       check('bill_date').exists().isISO8601(),
       check('due_date').optional().isISO8601(),
 
@@ -170,7 +166,7 @@ export default class BillsController extends BaseController {
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('project_id').optional({ nullable: true }).isNumeric().toInt(),
 
-      check('note').optional().trim().escape(),
+      check('note').optional().trim(),
       check('open').default(false).isBoolean().toBoolean(),
 
       check('entries').isArray({ min: 1 }),
@@ -184,10 +180,7 @@ export default class BillsController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.landed_cost')
         .optional({ nullable: true })
         .isBoolean()
@@ -222,8 +215,8 @@ export default class BillsController extends BaseController {
 
   private get dueBillsListingValidationSchema() {
     return [
-      query('vendor_id').optional().trim().escape(),
-      query('payment_made_id').optional().trim().escape(),
+      query('vendor_id').optional().trim(),
+      query('payment_made_id').optional().trim(),
     ];
   }
 

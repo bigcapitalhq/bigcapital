@@ -89,7 +89,6 @@ export class ExpensesController extends BaseController {
       check('reference_no')
         .optional({ nullable: true })
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('payment_date').exists().isISO8601().toDate(),
       check('payment_account_id')
@@ -123,7 +122,6 @@ export class ExpensesController extends BaseController {
       check('categories.*.description')
         .optional()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('categories.*.landed_cost').optional().isBoolean().toBoolean(),
       check('categories.*.project_id')
@@ -144,7 +142,6 @@ export class ExpensesController extends BaseController {
       check('reference_no')
         .optional({ nullable: true })
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('payment_date').exists().isISO8601().toDate(),
       check('payment_account_id')
@@ -179,7 +176,6 @@ export class ExpensesController extends BaseController {
       check('categories.*.description')
         .optional()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('categories.*.landed_cost').optional().isBoolean().toBoolean(),
       check('categories.*.project_id')

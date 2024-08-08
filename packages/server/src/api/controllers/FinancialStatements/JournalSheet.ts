@@ -36,7 +36,7 @@ export default class JournalSheetController extends BaseFinancialReportControlle
     return [
       query('from_date').optional().isISO8601(),
       query('to_date').optional().isISO8601(),
-      query('transaction_type').optional().trim().escape(),
+      query('transaction_type').optional().trim(),
       query('transaction_id').optional().isInt().toInt(),
       oneOf(
         [

@@ -40,8 +40,7 @@ export default class TransactionsByReferenceController extends BaseController {
       query('number_format.negative_format')
         .optional()
         .isIn(['parentheses', 'mines'])
-        .trim()
-        .escape(),
+        .trim(),
     ];
   }
 

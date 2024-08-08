@@ -106,7 +106,6 @@ export default class VendorsController extends ContactsController {
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ min: 3, max: 3 }),
     ];
   }

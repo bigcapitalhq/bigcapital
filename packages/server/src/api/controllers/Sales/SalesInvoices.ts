@@ -200,12 +200,12 @@ export default class SaleInvoicesController extends BaseController {
       check('customer_id').exists().isNumeric().toInt(),
       check('invoice_date').exists().isISO8601().toDate(),
       check('due_date').exists().isISO8601().toDate(),
-      check('invoice_no').optional().trim().escape(),
-      check('reference_no').optional().trim().escape(),
+      check('invoice_no').optional().trim(),
+      check('reference_no').optional().trim(),
       check('delivered').default(false).isBoolean().toBoolean(),
 
-      check('invoice_message').optional().trim().escape(),
-      check('terms_conditions').optional().trim().escape(),
+      check('invoice_message').optional().trim(),
+      check('terms_conditions').optional().trim(),
 
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
 
@@ -226,12 +226,10 @@ export default class SaleInvoicesController extends BaseController {
         .toFloat(),
       check('entries.*.description')
         .optional({ nullable: true })
-        .trim()
-        .escape(),
+        .trim(),
       check('entries.*.tax_code')
         .optional({ nullable: true })
         .trim()
-        .escape()
         .isString(),
       check('entries.*.tax_rate_id')
         .optional({ nullable: true })

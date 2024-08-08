@@ -103,24 +103,20 @@ export default class AccountsController extends BaseController {
       check('name')
         .exists()
         .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
-        .trim()
-        .escape(),
+        .trim(),
       check('code')
         .optional({ nullable: true })
         .isLength({ min: 3, max: 6 })
-        .trim()
-        .escape(),
+        .trim(),
       check('currency_code').optional(),
       check('account_type')
         .exists()
         .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
-        .trim()
-        .escape(),
+        .trim(),
       check('description')
         .optional({ nullable: true })
         .isLength({ max: DATATYPES_LENGTH.TEXT })
-        .trim()
-        .escape(),
+        .trim(),
       check('parent_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })
@@ -136,23 +132,19 @@ export default class AccountsController extends BaseController {
       check('name')
         .exists()
         .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
-        .trim()
-        .escape(),
+        .trim(),
       check('code')
         .optional({ nullable: true })
         .isLength({ min: 3, max: 6 })
-        .trim()
-        .escape(),
+        .trim(),
       check('account_type')
         .exists()
         .isLength({ min: 3, max: DATATYPES_LENGTH.STRING })
-        .trim()
-        .escape(),
+        .trim(),
       check('description')
         .optional({ nullable: true })
         .isLength({ max: DATATYPES_LENGTH.TEXT })
-        .trim()
-        .escape(),
+        .trim(),
       check('parent_account_id')
         .optional({ nullable: true })
         .isInt({ min: 0, max: DATATYPES_LENGTH.INT_10 })

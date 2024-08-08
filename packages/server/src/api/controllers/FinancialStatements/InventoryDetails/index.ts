@@ -51,8 +51,7 @@ export default class InventoryDetailsController extends BaseController {
       query('number_format.negative_format')
         .optional()
         .isIn(['parentheses', 'mines'])
-        .trim()
-        .escape(),
+        .trim(),
       query('from_date').optional(),
       query('to_date').optional(),
 
