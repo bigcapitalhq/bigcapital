@@ -481,8 +481,8 @@ importers:
         specifier: ^4.4.37
         version: 4.4.37(@types/react@16.14.60)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/popover2':
-        specifier: ^0.11.1
-        version: 0.11.4(react-dom@18.3.1)(react@18.3.1)
+        specifier: ^1.14.11
+        version: 1.14.11(@types/react@16.14.60)(react-dom@18.3.1)(react@18.3.1)
       '@blueprintjs/select':
         specifier: ^4.9.24
         version: 4.9.24(@types/react@16.14.60)(react-dom@18.3.1)(react@18.3.1)
@@ -3136,29 +3136,6 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@blueprintjs/core@3.54.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-u2c1s6MNn0ocxhnC6CuiG5g3KV6b4cKUvSobznepA9SC3/AL1s3XOvT7DLWoHRv2B/vBOHFYEDzLw2/vlcGGZg==}
-    hasBin: true
-    peerDependencies:
-      react: ^15.3.0 || 16 || 17
-      react-dom: ^15.3.0 || 16 || 17
-    dependencies:
-      '@blueprintjs/colors': 4.1.19
-      '@blueprintjs/icons': 3.33.0
-      '@juggle/resize-observer': 3.4.0
-      '@types/dom4': 2.0.4
-      classnames: 2.5.1
-      dom4: 2.1.6
-      normalize.css: 8.0.1
-      popper.js: 1.16.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-lifecycles-compat: 3.0.4
-      react-popper: 1.3.11(react@18.3.1)
-      react-transition-group: 2.9.0(react-dom@18.3.1)(react@18.3.1)
-      tslib: 2.3.1
-    dev: false
-
   /@blueprintjs/core@4.20.2(@types/react@16.14.60)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-5v4Nr0jozfAjiOkjY4zvt1XSpt4ldnrSaxtwo506S2cxJYfwFeMTmDshXNPFcc8L1fjZMxi0IWI2WABXzZXS6w==}
     hasBin: true
@@ -3205,36 +3182,12 @@ packages:
       tslib: 2.5.3
     dev: false
 
-  /@blueprintjs/icons@3.33.0:
-    resolution: {integrity: sha512-Q6qoSDIm0kRYQZISm59UUcDCpV3oeHulkLuh3bSlw0HhcSjvEQh2PSYbtaifM60Q4aK4PCd6bwJHg7lvF1x5fQ==}
-    dependencies:
-      classnames: 2.5.1
-      tslib: 2.3.1
-    dev: false
-
   /@blueprintjs/icons@4.16.0:
     resolution: {integrity: sha512-cyfgjUZcZCtQrXWUV8FwqYTFEzduV4a0N7yhOU38jY+cBRCLu/sDrD0Osvfk4DGRvNe4YjY7pohVLFSxpg68Uw==}
     dependencies:
       change-case: 4.1.2
       classnames: 2.5.1
       tslib: 2.5.3
-    dev: false
-
-  /@blueprintjs/popover2@0.11.4(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-KTietd+thBzeen9yP0WWzHJDAaqoey1H3AXvjaF94ypQQKdUaIzSmIop9Z3lJK44ynlYiI+dSzFYQbRdbpd0/w==}
-    peerDependencies:
-      react: ^16.8.0 || ^17
-    dependencies:
-      '@blueprintjs/core': 3.54.0(react-dom@18.3.1)(react@18.3.1)
-      '@popperjs/core': 2.11.8
-      classnames: 2.5.1
-      dom4: 2.1.6
-      react: 18.3.1
-      react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.3.1)(react@18.3.1)
-      resize-observer-polyfill: 1.5.1
-      tslib: 1.13.0
-    transitivePeerDependencies:
-      - react-dom
     dev: false
 
   /@blueprintjs/popover2@1.14.11(@types/react@16.14.60)(react-dom@18.3.1)(react@18.3.1):
@@ -10980,12 +10933,6 @@ packages:
     resolution: {integrity: sha512-gd3ypIPfOMr9h5jIKq8E3sHOTCjeirnl0WK5ZdS1AW0Odt0b1PaWaHdJ4Qk4klv+YB9aJBS7mESXjFoDQPu6DA==}
     dependencies:
       utila: 0.4.0
-    dev: false
-
-  /dom-helpers@3.4.0:
-    resolution: {integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==}
-    dependencies:
-      '@babel/runtime': 7.24.5
     dev: false
 
   /dom-helpers@5.2.1:
@@ -21862,20 +21809,6 @@ packages:
       react: 18.3.1
     dev: false
 
-  /react-transition-group@2.9.0(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
-    peerDependencies:
-      react: '>=15.0.0'
-      react-dom: '>=15.0.0'
-    dependencies:
-      dom-helpers: 3.4.0
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      react-lifecycles-compat: 3.0.4
-    dev: false
-
   /react-transition-group@4.4.5(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -24785,16 +24718,8 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tslib@1.13.0:
-    resolution: {integrity: sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==}
-    dev: false
-
   /tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
-
-  /tslib@2.3.1:
-    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
-    dev: false
 
   /tslib@2.5.3:
     resolution: {integrity: sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==}
