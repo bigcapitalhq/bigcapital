@@ -1,9 +1,7 @@
 import { query } from 'express-validator';
-import BaseController from "../BaseController";
+import BaseController from '../BaseController';
 
 export default class BaseFinancialReportController extends BaseController {
-
-
   get sheetNumberFormatValidationSchema() {
     return [
       query('number_format.precision')
@@ -19,8 +17,7 @@ export default class BaseFinancialReportController extends BaseController {
       query('number_format.negative_format')
         .optional()
         .isIn(['parentheses', 'mines'])
-        .trim()
-        .escape(),
+        .trim(),
     ];
   }
 }

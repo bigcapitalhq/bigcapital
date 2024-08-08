@@ -210,9 +210,9 @@ export default class PaymentReceivesController extends BaseController {
 
       check('credit_note_date').exists().isISO8601().toDate(),
       check('reference_no').optional(),
-      check('credit_note_number').optional({ nullable: true }).trim().escape(),
-      check('note').optional().trim().escape(),
-      check('terms_conditions').optional().trim().escape(),
+      check('credit_note_number').optional({ nullable: true }).trim(),
+      check('note').optional().trim(),
+      check('terms_conditions').optional().trim(),
       check('open').default(false).isBoolean().toBoolean(),
 
       check('warehouse_id').optional({ nullable: true }).isNumeric().toInt(),
@@ -228,10 +228,7 @@ export default class PaymentReceivesController extends BaseController {
         .optional({ nullable: true })
         .isNumeric()
         .toFloat(),
-      check('entries.*.description')
-        .optional({ nullable: true })
-        .trim()
-        .escape(),
+      check('entries.*.description').optional({ nullable: true }).trim(),
       check('entries.*.warehouse_id')
         .optional({ nullable: true })
         .isNumeric()

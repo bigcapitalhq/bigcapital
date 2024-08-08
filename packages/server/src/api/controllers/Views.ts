@@ -32,7 +32,7 @@ export default class ViewsController extends BaseController {
    * Custom views list validation schema.
    */
   get viewsListSchemaValidation() {
-    return [param('resource_model').exists().trim().escape()];
+    return [param('resource_model').exists().trim()];
   }
 
   /**

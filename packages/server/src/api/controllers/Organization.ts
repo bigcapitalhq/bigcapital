@@ -62,7 +62,7 @@ export default class OrganizationController extends BaseController {
   private get commonOrganizationValidationSchema(): ValidationChain[] {
     return [
       check('name').exists().trim(),
-      check('industry').optional({ nullable: true }).isString().trim().escape(),
+      check('industry').optional({ nullable: true }).isString().trim(),
       check('location').exists().isString().isISO31661Alpha2(),
       check('base_currency').exists().isISO4217(),
       check('timezone').exists().isIn(moment.tz.names()),
@@ -87,11 +87,7 @@ export default class OrganizationController extends BaseController {
   private get updateOrganizationValidationSchema(): ValidationChain[] {
     return [
       ...this.commonOrganizationValidationSchema,
-      check('tax_number')
-        .optional({ nullable: true })
-        .isString()
-        .trim()
-        .escape(),
+      check('tax_number').optional({ nullable: true }).isString().trim(),
     ];
   }
 

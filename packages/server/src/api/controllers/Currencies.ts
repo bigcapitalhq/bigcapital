@@ -67,7 +67,7 @@ export default class CurrenciesController extends BaseController {
   }
 
   get currencyParamSchema(): ValidationChain[] {
-    return [param('currency_code').exists().trim().escape()];
+    return [param('currency_code').exists().trim()];
   }
 
   get listSchema(): ValidationChain[] {
@@ -187,11 +187,13 @@ export default class CurrenciesController extends BaseController {
       }
       if (error.errorType === 'currency_code_exists') {
         return res.boom.badRequest(null, {
-          errors: [{
-            type: 'CURRENCY_CODE_EXISTS',
-            message: 'The given currency code is already exists.',
-            code: 200,
-           }],
+          errors: [
+            {
+              type: 'CURRENCY_CODE_EXISTS',
+              message: 'The given currency code is already exists.',
+              code: 200,
+            },
+          ],
         });
       }
       if (error.errorType === 'CANNOT_DELETE_BASE_CURRENCY') {

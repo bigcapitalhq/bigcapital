@@ -86,7 +86,7 @@ export default class InventoryAdjustmentsController extends BaseController {
    */
   get validateListQuerySchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
+      query('column_sort_by').optional().trim(),
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('page').optional().isNumeric().toInt(),

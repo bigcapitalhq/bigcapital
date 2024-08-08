@@ -61,15 +61,14 @@ export default class MediaController extends BaseController {
 
   get uploadValidationSchema() {
     return [
-      // check('attachment'),
-      check('model_name').optional().trim().escape(),
-      check('model_id').optional().isNumeric().toInt(),
+      check('model_name').optional().trim(),
+      check('model_id').optional().isNumeric(),
     ];
   }
 
   get linkValidationSchema() {
     return [
-      check('model_name').exists().trim().escape(),
+      check('model_name').exists().trim(),
       check('model_id').exists().isNumeric().toInt(),
     ]
   }

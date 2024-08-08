@@ -106,11 +106,7 @@ export default class CustomersController extends ContactsController {
    */
   get customerDTOSchema() {
     return [
-      check('customer_type')
-        .exists()
-        .isIn(['business', 'individual'])
-        .trim()
-        .escape(),
+      check('customer_type').exists().isIn(['business', 'individual']).trim(),
     ];
   }
 
@@ -123,7 +119,6 @@ export default class CustomersController extends ContactsController {
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: 3 }),
     ];
   }
@@ -133,7 +128,7 @@ export default class CustomersController extends ContactsController {
    */
   get validateListQuerySchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
+      query('column_sort_by').optional().trim(),
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('page').optional().isNumeric().toInt(),

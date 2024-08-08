@@ -94,25 +94,21 @@ export default class ManualJournalsController extends BaseController {
         .optional()
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('journal_type')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('reference')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('description')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('branch_id').optional({ nullable: true }).isNumeric().toInt(),
       check('publish').optional().isBoolean().toBoolean(),
@@ -163,7 +159,7 @@ export default class ManualJournalsController extends BaseController {
       query('page_size').optional().isNumeric().toInt(),
       query('custom_view_id').optional().isNumeric().toInt(),
 
-      query('column_sort_by').optional().trim().escape(),
+      query('column_sort_by').optional().trim(),
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('stringified_filter_roles').optional().isJSON(),

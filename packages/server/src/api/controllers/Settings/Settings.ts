@@ -52,10 +52,7 @@ export default class SettingsController extends BaseController {
    * Retrieve the application options from the storage.
    */
   private get getSettingsSchema() {
-    return [
-      query('key').optional().trim().escape(),
-      query('group').optional().trim().escape(),
-    ];
+    return [query('key').optional().trim(), query('group').optional().trim()];
   }
 
   /**

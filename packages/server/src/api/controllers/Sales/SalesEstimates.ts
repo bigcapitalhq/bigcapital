@@ -155,7 +155,7 @@ export default class SalesEstimatesController extends BaseController {
       check('estimate_date').exists().isISO8601().toDate(),
       check('expiration_date').exists().isISO8601().toDate(),
       check('reference').optional(),
-      check('estimate_number').optional().trim().escape(),
+      check('estimate_number').optional().trim(),
       check('delivered').default(false).isBoolean().toBoolean(),
 
       check('exchange_rate').optional().isFloat({ gt: 0 }).toFloat(),
@@ -170,8 +170,7 @@ export default class SalesEstimatesController extends BaseController {
       check('entries.*.rate').exists().isNumeric().toFloat(),
       check('entries.*.description')
         .optional({ nullable: true })
-        .trim()
-        .escape(),
+        .trim(),
       check('entries.*.discount')
         .optional({ nullable: true })
         .isNumeric()
@@ -181,9 +180,9 @@ export default class SalesEstimatesController extends BaseController {
         .isNumeric()
         .toInt(),
 
-      check('note').optional().trim().escape(),
-      check('terms_conditions').optional().trim().escape(),
-      check('send_to_email').optional().trim().escape(),
+      check('note').optional().trim(),
+      check('terms_conditions').optional().trim(),
+      check('send_to_email').optional().trim(),
 
       check('attachments').isArray().optional(),
       check('attachments.*.key').exists().isString(),

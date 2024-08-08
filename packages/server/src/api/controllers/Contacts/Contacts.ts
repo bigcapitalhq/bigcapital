@@ -56,7 +56,7 @@ export default class ContactsController extends BaseController {
    */
   get autocompleteQuerySchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
+      query('column_sort_by').optional().trim(),
       query('sort_order').optional().isIn(['desc', 'asc']),
 
       query('stringified_filter_roles').optional().isJSON(),
@@ -122,32 +122,27 @@ export default class ContactsController extends BaseController {
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('first_name')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('last_name')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('company_name')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
       check('display_name')
         .exists()
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
       check('email')
@@ -165,120 +160,101 @@ export default class ContactsController extends BaseController {
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('personal_phone')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
       check('billing_address_1')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_2')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_city')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_country')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_email')
         .optional({ nullable: true })
         .isString()
         .isEmail()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_postcode')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_phone')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('billing_address_state')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
       check('shipping_address_1')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_2')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_city')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_country')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_email')
         .optional({ nullable: true })
         .isString()
         .isEmail()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_postcode')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_phone')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
       check('shipping_address_state')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.STRING }),
 
       check('note')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('active').optional().isBoolean().toBoolean(),
     ];

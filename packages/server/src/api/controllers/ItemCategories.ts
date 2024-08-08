@@ -73,13 +73,11 @@ export default class ItemsCategoriesController extends BaseController {
       check('name')
         .exists()
         .trim()
-        .escape()
         .isLength({ min: 0, max: DATATYPES_LENGTH.STRING }),
       check('description')
         .optional({ nullable: true })
         .isString()
         .trim()
-        .escape()
         .isLength({ max: DATATYPES_LENGTH.TEXT }),
       check('sell_account_id')
         .optional({ nullable: true })
@@ -101,9 +99,8 @@ export default class ItemsCategoriesController extends BaseController {
    */
   get categoriesListValidationSchema() {
     return [
-      query('column_sort_by').optional().trim().escape(),
-      query('sort_order').optional().trim().escape().isIn(['desc', 'asc']),
-
+      query('column_sort_by').optional().trim(),
+      query('sort_order').optional().trim().isIn(['desc', 'asc']),
       query('stringified_filter_roles').optional().isJSON(),
     ];
   }
@@ -207,14 +204,12 @@ export default class ItemsCategoriesController extends BaseController {
     };
 
     try {
-      const {
-        itemCategories,
-        filterMeta,
-      } = await this.itemCategoriesService.getItemCategoriesList(
-        tenantId,
-        itemCategoriesFilter,
-        user
-      );
+      const { itemCategories, filterMeta } =
+        await this.itemCategoriesService.getItemCategoriesList(
+          tenantId,
+          itemCategoriesFilter,
+          user
+        );
       return res.status(200).send({
         item_categories: itemCategories,
         filter_meta: this.transfromToResponse(filterMeta),
