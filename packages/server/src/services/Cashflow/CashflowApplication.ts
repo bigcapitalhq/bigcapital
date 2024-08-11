@@ -21,6 +21,7 @@ import GetCashflowAccountsService from './GetCashflowAccountsService';
 import { GetCashflowTransactionService } from './GetCashflowTransactionsService';
 import { GetRecognizedTransactionsService } from './GetRecongizedTransactions';
 import { GetRecognizedTransactionService } from './GetRecognizedTransaction';
+import { UncategorizeCashflowTransactionsBulk } from './UncategorizeCashflowTransactionsBulk';
 
 @Service()
 export class CashflowApplication {
@@ -38,6 +39,9 @@ export class CashflowApplication {
 
   @Inject()
   private uncategorizeTransactionService: UncategorizeCashflowTransaction;
+
+  @Inject()
+  private uncategorizeTransasctionsService: UncategorizeCashflowTransactionsBulk;
 
   @Inject()
   private categorizeTransactionService: CategorizeCashflowTransaction;
@@ -156,6 +160,22 @@ export class CashflowApplication {
   }
 
   /**
+   * Uncategorize the given transactions in bulk.
+   * @param {number} tenantId 
+   * @param {number | Array<number>} transactionId 
+   * @returns 
+   */
+  public uncategorizeTransactions(
+    tenantId: number,
+    transactionId: number | Array<number>
+  ) {
+    return this.uncategorizeTransasctionsService.uncategorizeBulk(
+      tenantId,
+      transactionId
+    );
+  }
+
+  /**
    * Categorize the given cashflow transaction.
    * @param {number} tenantId
    * @param {number} cashflowTransactionId
@@ -241,9 +261,9 @@ export class CashflowApplication {
 
   /**
    * Retrieves the recognized transaction of the given uncategorized transaction.
-   * @param {number} tenantId 
-   * @param {number} uncategorizedTransactionId 
-   * @returns 
+   * @param {number} tenantId
+   * @param {number} uncategorizedTransactionId
+   * @returns
    */
   public getRecognizedTransaction(
     tenantId: number,

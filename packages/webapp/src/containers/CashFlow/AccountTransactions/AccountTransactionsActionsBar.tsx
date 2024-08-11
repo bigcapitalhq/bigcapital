@@ -210,7 +210,11 @@ function AccountTransactionsActionsBar({
   };
 
   // Handles uncategorize the categorized transactions in bulk.
-  const handleUncategorizeCategorizedBulkBtnClick = () => {};
+  const handleUncategorizeCategorizedBulkBtnClick = () => {
+    openAlert('uncategorize-transactions-bulk', {
+      uncategorizeTransactionsIds: categorizedTransactionsSelected,
+    });
+  };
 
   return (
     <DashboardActionsBar>
