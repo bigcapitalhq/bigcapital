@@ -70,6 +70,8 @@ function AccountTransactionsSwitcher() {
     case 'all':
     default:
       return <AccountUncategorizedTransactions />;
+    case 'pending':
+      return null;
   }
 }
 

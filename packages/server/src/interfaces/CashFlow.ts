@@ -268,6 +268,8 @@ export interface CreateUncategorizedTransactionDTO {
   description?: string;
   referenceNo?: string | null;
   plaidTransactionId?: string | null;
+  pending?: boolean;
+  pendingPlaidTransactionId?: string | null;
   batch?: string;
 }
 

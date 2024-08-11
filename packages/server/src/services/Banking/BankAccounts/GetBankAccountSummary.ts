@@ -69,7 +69,7 @@ export class GetBankAccountSummary {
         q.count('uncategorized_cashflow_transactions.id as total');
         q.first();
       });
-
+    // Retrieves excluded transactions count.
     const excludedTransactionsCount =
       await UncategorizedCashflowTransaction.query().onBuild((q) => {
         q.where('accountId', bankAccountId);
@@ -79,18 +79,29 @@ export class GetBankAccountSummary {
         q.count('uncategorized_cashflow_transactions.id as total');
         q.first();
       });
+    // Retrieves the pending transactions count.
+    const pendingTransactionsCount =
+      await UncategorizedCashflowTransaction.query().onBuild((q) => {
+        q.where('accountId', bankAccountId);
+        q.modify('pending');
+
+        // Count the results.
+        q.count('uncategorized_cashflow_transactions.id as total');
+        q.first();
+      });
 
     const totalUncategorizedTransactions =
       uncategorizedTranasctionsCount?.total || 0;
     const totalRecognizedTransactions = recognizedTransactionsCount?.total || 0;
-
     const totalExcludedTransactions = excludedTransactionsCount?.total || 0;
+    const totalPendingTransactions = pendingTransactionsCount?.total || 0;
 
     return {
       name: bankAccount.name,
       totalUncategorizedTransactions,
       totalRecognizedTransactions,
       totalExcludedTransactions,
+      totalPendingTransactions,
     };
   }
 }

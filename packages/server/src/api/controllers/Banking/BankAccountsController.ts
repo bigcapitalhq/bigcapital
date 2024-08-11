@@ -1,9 +1,10 @@
 import { Inject, Service } from 'typedi';
 import { NextFunction, Request, Response, Router } from 'express';
+import { param, query } from 'express-validator';
 import BaseController from '@/api/controllers/BaseController';
 import { GetBankAccountSummary } from '@/services/Banking/BankAccounts/GetBankAccountSummary';
 import { BankAccountsApplication } from '@/services/Banking/BankAccounts/BankAccountsApplication';
-import { param } from 'express-validator';
+import { GetPendingBankAccountTransactions } from '@/services/Cashflow/GetPendingBankAccountTransaction';
 
 @Service()
 export class BankAccountsController extends BaseController {
@@ -13,6 +14,9 @@ export class BankAccountsController extends BaseController {
   @Inject()
   private bankAccountsApp: BankAccountsApplication;
 
+  @Inject()
+  private getPendingTransactionsService: GetPendingBankAccountTransactions;
+
   /**
    * Router constructor.
    */
@@ -20,6 +24,16 @@ export class BankAccountsController extends BaseController {
     const router = Router();
 
     router.get('/:bankAccountId/meta', this.getBankAccountSummary.bind(this));
+    router.get(
+      '/pending_transactions',
+      [
+        query('account_id').optional().isNumeric().toInt(),
+        query('page').optional().isNumeric().toInt(),
+        query('page_size').optional().isNumeric().toInt(),        
+      ],
+      this.validationResult,
+      this.getBankAccountsPendingTransactions.bind(this)
+    );
     router.post(
       '/:bankAccountId/disconnect',
       this.disconnectBankAccount.bind(this)
@@ -27,17 +41,13 @@ export class BankAccountsController extends BaseController {
     router.post('/:bankAccountId/update', this.refreshBankAccount.bind(this));
     router.post(
       '/:bankAccountId/pause_feeds',
-      [
-        param('bankAccountId').exists().isNumeric().toInt(),
-      ],
+      [param('bankAccountId').exists().isNumeric().toInt()],
       this.validationResult,
       this.pauseBankAccountFeeds.bind(this)
     );
     router.post(
       '/:bankAccountId/resume_feeds',
-      [
-        param('bankAccountId').exists().isNumeric().toInt(),
-      ],
+      [param('bankAccountId').exists().isNumeric().toInt()],
       this.validationResult,
       this.resumeBankAccountFeeds.bind(this)
     );
@@ -67,6 +77,30 @@ export class BankAccountsController extends BaseController {
           bankAccountId
         );
       return res.status(200).send({ data });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * Retrieves the bank account pending transactions.
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   */
+  async getBankAccountsPendingTransactions(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { tenantId } = req;
+
+    try {
+      const data =
+        await this.getPendingTransactionsService.getPendingTransactions(
+          tenantId
+        );
+      return res.status(200).send(data);
     } catch (error) {
       next(error);
     }
@@ -128,9 +162,9 @@ export class BankAccountsController extends BaseController {
 
   /**
    * Resumes the bank account feeds sync.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @returns {Promise<Response | void>}
    */
   async resumeBankAccountFeeds(
@@ -155,9 +189,9 @@ export class BankAccountsController extends BaseController {
 
   /**
    * Pauses the bank account feeds sync.
-   * @param {Request} req 
-   * @param {Response} res 
-   * @param {NextFunction} next 
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
    * @returns {Promise<Response | void>}
    */
   async pauseBankAccountFeeds(
