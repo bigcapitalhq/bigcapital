@@ -29,7 +29,7 @@ export class BankAccountsController extends BaseController {
       [
         query('account_id').optional().isNumeric().toInt(),
         query('page').optional().isNumeric().toInt(),
-        query('page_size').optional().isNumeric().toInt(),        
+        query('page_size').optional().isNumeric().toInt(),
       ],
       this.validationResult,
       this.getBankAccountsPendingTransactions.bind(this)
@@ -94,11 +94,13 @@ export class BankAccountsController extends BaseController {
     next: NextFunction
   ) {
     const { tenantId } = req;
+    const query = this.matchedQueryData(req);
 
     try {
       const data =
         await this.getPendingTransactionsService.getPendingTransactions(
-          tenantId
+          tenantId,
+          query
         );
       return res.status(200).send(data);
     } catch (error) {

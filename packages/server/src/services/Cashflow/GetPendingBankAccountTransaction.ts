@@ -37,7 +37,7 @@ export class GetPendingBankAccountTransactions {
         })
         .pagination(_filter.page - 1, _filter.pageSize);
 
-    const data = this.transformer.transform(
+    const data = await this.transformer.transform(
       tenantId,
       results,
       new GetPendingBankAccountTransactionTransformer()
