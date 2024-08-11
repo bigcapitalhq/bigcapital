@@ -2,8 +2,13 @@ import { mixin, Model, raw } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSearchable from './ModelSearchable';
 import SoftDeleteQueryBuilder from '@/collection/SoftDeleteQueryBuilder';
+import TaxRateMeta from './TaxRate.settings';
+import ModelSetting from './ModelSetting';
 
-export default class TaxRate extends mixin(TenantModel, [ModelSearchable]) {
+export default class TaxRate extends mixin(TenantModel, [
+  ModelSetting,
+  ModelSearchable,
+]) {
   /**
    * Table name
    */
@@ -23,6 +28,13 @@ export default class TaxRate extends mixin(TenantModel, [ModelSearchable]) {
    */
   get timestamps() {
     return ['createdAt', 'updatedAt'];
+  }
+
+  /**
+   * Retrieves the tax rate meta.
+   */
+  static get meta() {
+    return TaxRateMeta;
   }
 
   /**
