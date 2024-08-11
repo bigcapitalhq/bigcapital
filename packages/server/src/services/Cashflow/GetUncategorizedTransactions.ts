@@ -60,6 +60,19 @@ export class GetUncategorizedTransactions {
 
           q.whereNull('matchedBankTransactions.id');
           q.orderBy('date', 'DESC');
+
+          if (_query.minDate) {
+            q.modify('fromDate', _query.minDate);
+          }
+          if (_query.maxDate) {
+            q.modify('toDate', _query.maxDate);
+          }
+          if (_query.minAmount) {
+            q.modify('minAmount', _query.minAmount);
+          }
+          if (_query.maxAmount) {
+            q.modify('maxAmount', _query.maxAmount);
+          }
         })
         .pagination(_query.page - 1, _query.pageSize);
 

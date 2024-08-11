@@ -4,6 +4,10 @@ export interface ExcludedBankTransactionsQuery {
   page?: number;
   pageSize?: number;
   accountId?: number;
+  minDate?: Date;
+  maxDate?: Date;
+  minAmount?: number;
+  maxAmount?: number;
 }
 
 export interface IBankTransactionUnexcludingEventPayload {

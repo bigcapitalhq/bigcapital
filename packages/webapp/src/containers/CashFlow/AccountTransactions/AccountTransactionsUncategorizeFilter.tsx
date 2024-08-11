@@ -1,8 +1,21 @@
 // @ts-nocheck
+import * as R from 'ramda';
+import * as Yup from 'yup';
+import { useMemo } from 'react';
 import { useAppQueryString } from '@/hooks';
-import { Group } from '@/components';
+import { Box, FDateInput, FFormGroup, Group, Icon, Stack } from '@/components';
 import { useAccountTransactionsContext } from './AccountTransactionsProvider';
 import { TagsControl } from '@/components/TagsControl';
+import {
+  Button,
+  Classes,
+  FormGroup,
+  Intent,
+  Popover,
+  Position,
+} from '@blueprintjs/core';
+import { DateInput } from '@blueprintjs/datetime';
+import { Form, Formik } from 'formik';
 
 export function AccountTransactionsUncategorizeFilter() {
   const { bankAccountMetaSummary } = useAccountTransactionsContext();
@@ -46,5 +59,72 @@ export function AccountTransactionsUncategorizeFilter() {
         onValueChange={handleTabsChange}
       />
     </Group>
+  );
+}
+
+const initialValues = {
+  fromDate: '',
+  toDate: '',
+};
+
+const validationSchema = Yup.object().shape({
+  fromDate: Yup.date()
+    .nullable()
+    .required('From Date is required')
+    .max(Yup.ref('toDate'), 'From Date cannot be after To Date'),
+  toDate: Yup.date()
+    .nullable()
+    .required('To Date is required')
+    .min(Yup.ref('fromDate'), 'To Date cannot be before From Date'),
+});
+
+function UncategorizedTransactionsDateFilter() {
+  const handleSubmit = () => {};
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={validationSchema}
+    >
+      <Form>
+        <Stack>
+          <Group>
+            <FFormGroup name={'fromDate'} label={'From Date'}>
+              <FDateInput
+                name={'fromDate'}
+                popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                formatDate={(date) => date.toLocaleDateString()}
+                parseDate={(str) => new Date(str)}
+                inputProps={{
+                  fill: true,
+                  leftElement: <Icon icon={'date-range'} />,
+                }}
+                style={{ marginBottom: 0 }}
+              />
+            </FFormGroup>
+
+            <FormGroup label={'To Date'} name={'toDate'}>
+              <FDateInput
+                name={'toDate'}
+                popoverProps={{ position: Position.BOTTOM, minimal: true }}
+                formatDate={(date) => date.toLocaleDateString()}
+                parseDate={(str) => new Date(str)}
+                inputProps={{
+                  fill: true,
+                  leftElement: <Icon icon={'date-range'} />,
+                }}
+                style={{ marginBottom: 0 }}
+              />
+            </FormGroup>
+          </Group>
+
+          <Group spacing={10}>
+            <Button intent={Intent.PRIMARY}>Filter</Button>
+            <Button>Cancel</Button>
+          </Group>
+        </Stack>
+      </Form>
+    </Formik>
   );
 }

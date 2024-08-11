@@ -1,5 +1,5 @@
 /* eslint-disable global-require */
-import * as R from 'ramda';
+import moment from 'moment';
 import { Model, ModelOptions, QueryContext, mixin } from 'objection';
 import TenantModel from 'models/TenantModel';
 import ModelSettings from './ModelSetting';
@@ -46,7 +46,7 @@ export default class UncategorizedCashflowTransaction extends mixin(
       'isDepositTransaction',
       'isWithdrawalTransaction',
       'isRecognized',
-      'isExcluded'
+      'isExcluded',
     ];
   }
 
@@ -142,6 +142,42 @@ export default class UncategorizedCashflowTransaction extends mixin(
       notCategorized(query) {
         query.whereNull('categorizeRefType');
         query.whereNull('categorizeRefId');
+      },
+
+      /**
+       * Filters the not pending transactions.
+       */
+      notPending(query) {
+        query.where('pending', false);
+      },
+
+      /**
+       * Filters the pending transactions.
+       */
+      pending(query) {
+        query.where('pending', true);
+      },
+
+      minAmount(query, minAmount) {
+        query.where('amount', '>=', minAmount);
+      },
+
+      maxAmount(query, maxAmount) {
+        query.where('amount', '<=', maxAmount);
+      },
+
+      toDate(query, toDate) {
+        const dateFormat = 'YYYY-MM-DD';
+        const _toDate = moment(toDate).endOf('day').format(dateFormat);
+
+        query.where('date', '<=', _toDate);
+      },
+
+      fromDate(query, fromDate) {
+        const dateFormat = 'YYYY-MM-DD';
+        const _fromDate = moment(fromDate).startOf('day').format(dateFormat);
+
+        query.where('date', '>=', _fromDate);
       },
     };
   }
