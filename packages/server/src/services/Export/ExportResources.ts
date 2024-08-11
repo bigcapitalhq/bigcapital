@@ -15,6 +15,7 @@ import { ManualJournalsExportable } from '../ManualJournals/ManualJournalExporta
 import { CreditNotesExportable } from '../CreditNotes/CreditNotesExportable';
 import { VendorCreditsExportable } from '../Purchases/VendorCredits/VendorCreditsExportable';
 import { ItemCategoriesExportable } from '../ItemCategories/ItemCategoriesExportable';
+import { TaxRatesExportable } from '../TaxRates/TaxRatesExportable';
 
 @Service()
 export class ExportableResources {
@@ -46,6 +47,7 @@ export class ExportableResources {
     { resource: 'ManualJournal', exportable: ManualJournalsExportable },
     { resource: 'CreditNote', exportable: CreditNotesExportable },
     { resource: 'VendorCredit', exportable: VendorCreditsExportable },
+    { resource: 'TaxRate', exportable: TaxRatesExportable },
   ];
 
   /**

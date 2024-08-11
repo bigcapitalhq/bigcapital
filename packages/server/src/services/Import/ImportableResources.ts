@@ -16,6 +16,7 @@ import { VendorCreditsImportable } from '../Purchases/VendorCredits/VendorCredit
 import { PaymentReceivesImportable } from '../Sales/PaymentReceives/PaymentReceivesImportable';
 import { CreditNotesImportable } from '../CreditNotes/CreditNotesImportable';
 import { SaleReceiptsImportable } from '../Sales/Receipts/SaleReceiptsImportable';
+import { TaxRatesImportable } from '../TaxRates/TaxRatesImportable';
 
 @Service()
 export class ImportableResources {
@@ -47,7 +48,8 @@ export class ImportableResources {
     { resource: 'PaymentReceive', importable: PaymentReceivesImportable },
     { resource: 'VendorCredit', importable: VendorCreditsImportable },
     { resource: 'CreditNote', importable: CreditNotesImportable },
-    { resource: 'SaleReceipt', importable: SaleReceiptsImportable }
+    { resource: 'SaleReceipt', importable: SaleReceiptsImportable },
+    { resource: 'TaxRate', importable: TaxRatesImportable },
   ];
 
   public get registry() {
