@@ -83,8 +83,9 @@ export class PlaidWebooks {
     webhookCode: string
   ): Promise<void> {
     const { PlaidItem } = this.tenancy.models(tenantId);
+
     const plaidItem = await PlaidItem.query()
-      .findById(plaidItemId)
+      .findOne({ plaidItemId })
       .throwIfNotFound();
 
     switch (webhookCode) {
